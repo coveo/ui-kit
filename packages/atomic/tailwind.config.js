@@ -37,6 +37,11 @@ module.exports = {
         normal: 'var(--atomic-font-normal)',
         bold: 'var(--atomic-font-bold)',
       },
+      fontSize: {
+        sm: 'var(--atomic-text-sm)',
+        base: 'var(--atomic-text-base)',
+        lg: 'var(--atomic-text-lg)',
+      }
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),

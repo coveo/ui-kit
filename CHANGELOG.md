@@ -3,6 +3,272 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.28.1](https://github.com/coveo/ui-kit/compare/v0.28.0...v0.28.1) (2021-06-18)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.28.0](https://github.com/coveo/ui-kit/compare/v0.27.0...v0.28.0) (2021-06-18)
+
+
+### Features
+
+* **atomic:** add manual ranges for new numeric facet ([#903](https://github.com/coveo/ui-kit/issues/903)) ([8477e33](https://github.com/coveo/ui-kit/commit/8477e33f577d646fd967d00de3297e5553a3e7b0))
+
+
+
+
+
+# [0.27.0](https://github.com/coveo/ui-kit/compare/v0.26.0...v0.27.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **headless:** send originLevel3 to searchapi using referrer parameter ([#905](https://github.com/coveo/ui-kit/issues/905)) ([e5cde7a](https://github.com/coveo/ui-kit/commit/e5cde7ad512cdbc8606c178f50c5513cf9a089fb))
+
+
+### Features
+
+* **headless:** expose logRecommendationOpen action ([#902](https://github.com/coveo/ui-kit/issues/902)) ([68fca5b](https://github.com/coveo/ui-kit/commit/68fca5b58621d17afe8baeda4e12310b8167f483))
+
+
+
+
+
+# [0.26.0](https://github.com/coveo/ui-kit/compare/v0.25.0...v0.26.0) (2021-06-17)
+
+
+### Features
+
+* **atomic:** create new numeric facet with basic functionality ([#900](https://github.com/coveo/ui-kit/issues/900)) ([50b1578](https://github.com/coveo/ui-kit/commit/50b1578e0653809edcb0f743088172d4f424054e))
+
+
+
+
+
+# [0.25.0](https://github.com/coveo/ui-kit/compare/v0.24.0...v0.25.0) (2021-06-17)
+
+
+### Features
+
+* **headless:** add analytics support for smart snippet feature ([#901](https://github.com/coveo/ui-kit/issues/901)) ([7079a04](https://github.com/coveo/ui-kit/commit/7079a04736f3d720cf0e02ea742241a6950cede3))
+* **headless:** add single selection feature for facets ([#899](https://github.com/coveo/ui-kit/issues/899)) ([e250d58](https://github.com/coveo/ui-kit/commit/e250d58da7d52795119af885877e1580ddb36e75))
+
+
+
+
+
+# [0.24.0](https://github.com/coveo/ui-kit/compare/v0.23.6...v0.24.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **headless:** prevented folding loop & added tests ([#894](https://github.com/coveo/ui-kit/issues/894)) ([b6d5542](https://github.com/coveo/ui-kit/commit/b6d5542165c6daf41055876b1c9d59a6a3c2e578))
+
+
+### Features
+
+* **headless:** initial support for question answering ([#897](https://github.com/coveo/ui-kit/issues/897)) ([45e7d64](https://github.com/coveo/ui-kit/commit/45e7d6490cde5fefd371795d3adb853629d9b05e))
+
+
+
+
+
+## [0.23.6](https://github.com/coveo/ui-kit/compare/v0.23.5...v0.23.6) (2021-06-16)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.23.5](https://github.com/coveo/ui-kit/compare/v0.23.4...v0.23.5) (2021-06-15)
+
+
+### Bug Fixes
+
+* **atomic:** unsubscribe controllers after delay, if element is still removed from the DOM ([#885](https://github.com/coveo/ui-kit/issues/885)) ([d827428](https://github.com/coveo/ui-kit/commit/d8274288f8a02c99c5473d270183c732bd5323c2))
+
+
+
+
+
+## [0.23.4](https://github.com/coveo/ui-kit/compare/v0.23.3...v0.23.4) (2021-06-14)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.23.3](https://github.com/coveo/ui-kit/compare/v0.23.2...v0.23.3) (2021-06-11)
+
+
+### Bug Fixes
+
+* **headless:** fix analytics payload for query suggestion selection ([#881](https://github.com/coveo/ui-kit/issues/881)) ([2b74297](https://github.com/coveo/ui-kit/commit/2b7429777c7c8d2e860fdbb579a4471fe7401c02))
+
+
+
+
+
+## [0.23.2](https://github.com/coveo/ui-kit/compare/v0.23.1...v0.23.2) (2021-06-10)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.23.1](https://github.com/coveo/ui-kit/compare/v0.23.0...v0.23.1) (2021-06-10)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.23.0](https://github.com/coveo/ui-kit/compare/v0.22.1...v0.23.0) (2021-06-10)
+
+
+### Features
+
+* **atomic:** add new facet link & box values  ([#874](https://github.com/coveo/ui-kit/issues/874)) ([1aeb7ce](https://github.com/coveo/ui-kit/commit/1aeb7ceb14c6ba8d0910cf94d3fcea1ca9d0d99d))
+
+
+
+
+
+## [0.22.1](https://github.com/coveo/ui-kit/compare/v0.22.0...v0.22.1) (2021-06-10)
+
+
+### Bug Fixes
+
+* **atomic,headless:** add new packages to dev files being copied ([#880](https://github.com/coveo/ui-kit/issues/880)) ([36ab657](https://github.com/coveo/ui-kit/commit/36ab6579cf0e301275bfde1f4d668e505842b323))
+
+
+
+
+
+# [0.22.0](https://github.com/coveo/ui-kit/compare/v0.21.0...v0.22.0) (2021-06-09)
+
+
+### Features
+
+* **headless:** expose and migrate to new engines ([#872](https://github.com/coveo/ui-kit/issues/872)) ([23e61b3](https://github.com/coveo/ui-kit/commit/23e61b3f344b9e3f20995a21a6958711f64481d5))
+* **headless:** expose generic analytics actions via loader function ([#873](https://github.com/coveo/ui-kit/issues/873)) ([b61e099](https://github.com/coveo/ui-kit/commit/b61e0990e577c3dec4a972bbcf44fa7659ab1951))
+
+
+
+
+
+# [0.21.0](https://github.com/coveo/ui-kit/compare/v0.20.0...v0.21.0) (2021-06-09)
+
+
+### Features
+
+* **atomic:** add new facet show more/less buttons  ([#871](https://github.com/coveo/ui-kit/issues/871)) ([44c27bd](https://github.com/coveo/ui-kit/commit/44c27bdd2e32c2eae772d720278d0b0c2a78c6bd))
+
+
+
+
+
+# [0.20.0](https://github.com/coveo/ui-kit/compare/v0.19.0...v0.20.0) (2021-06-08)
+
+
+### Bug Fixes
+
+* **headless:** use console.log for RelevanceInspector and deprecate logging method + option ([#870](https://github.com/coveo/ui-kit/issues/870)) ([ae2d6fb](https://github.com/coveo/ui-kit/commit/ae2d6fb9b9e89aa44cf0b57723f66deecc1671e5))
+
+
+### Features
+
+* **atomic:** add new facet checkbox values ([#869](https://github.com/coveo/ui-kit/issues/869)) ([f1b8e6a](https://github.com/coveo/ui-kit/commit/f1b8e6a080cea86dc36ecda749c8afecb5346191))
+
+
+
+
+
+# [0.19.0](https://github.com/coveo/ui-kit/compare/v0.18.0...v0.19.0) (2021-06-08)
+
+
+### Features
+
+* **headless:** added folding show more ([#862](https://github.com/coveo/ui-kit/issues/862)) ([e0cc1dc](https://github.com/coveo/ui-kit/commit/e0cc1dcfe959f531070d85382da9b7742f2da594))
+* **headless,atomic:** added error when losing connection ([#865](https://github.com/coveo/ui-kit/issues/865)) ([37e0dc6](https://github.com/coveo/ui-kit/commit/37e0dc6cbfbfca4b6d9c60c8bd2b2958ea00092f))
+
+
+
+
+
+# [0.18.0](https://github.com/coveo/ui-kit/compare/v0.17.0...v0.18.0) (2021-06-08)
+
+
+### Features
+
+* **atomic:** add facet search input + matches  ([#864](https://github.com/coveo/ui-kit/issues/864)) ([16ddd5d](https://github.com/coveo/ui-kit/commit/16ddd5d1014c1d79369fd85335742e6f2f8ed563))
+
+
+
+
+
+# [0.17.0](https://github.com/coveo/ui-kit/compare/v0.16.2...v0.17.0) (2021-06-07)
+
+
+### Bug Fixes
+
+* **atomic:** re-render FacetManager's content when language changes ([#861](https://github.com/coveo/ui-kit/issues/861)) ([aae598d](https://github.com/coveo/ui-kit/commit/aae598d1a5092811c5b6a67bf91688308a58f91e))
+
+
+### Features
+
+* **headless:** allow algorithm choice for Range Facets (equiprobable vs even distribution) ([#843](https://github.com/coveo/ui-kit/issues/843)) ([b1c5051](https://github.com/coveo/ui-kit/commit/b1c50513e0e24745ac90692a0ef32a62be6d8a75))
+
+
+
+
+
+## [0.16.2](https://github.com/coveo/ui-kit/compare/v0.16.1...v0.16.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* **headless:** fix invalid field usage for sourceName click event ([#860](https://github.com/coveo/ui-kit/issues/860)) ([4b49540](https://github.com/coveo/ui-kit/commit/4b49540b9bb12fff4d65702ed782866c92e8b2e6))
+
+
+
+
+
+## [0.16.1](https://github.com/coveo/ui-kit/compare/v0.16.0...v0.16.1) (2021-06-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.16.0](https://github.com/coveo/ui-kit/compare/v0.15.6...v0.16.0) (2021-06-02)
+
+
+### Features
+
+* **atomic:** add new facet header + wrapper ([#858](https://github.com/coveo/ui-kit/issues/858)) ([c6301ec](https://github.com/coveo/ui-kit/commit/c6301ecd5926638a99fd295f4add6fdf6d80be26))
+
+
+
+
+
+## [0.15.6](https://github.com/coveo/ui-kit/compare/v0.15.5...v0.15.6) (2021-06-01)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 ## [0.15.5](https://github.com/coveo/ui-kit/compare/v0.15.4...v0.15.5) (2021-06-01)
 
 **Note:** Version bump only for package ui-kit

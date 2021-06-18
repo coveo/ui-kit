@@ -3,6 +3,7 @@ import {
   SearchResponseSuccessWithDebugInfo,
 } from '../api/search/search/search-response';
 import {emptyCorrection} from '../features/did-you-mean/did-you-mean-state';
+import {emptyQuestionAnswer} from '../features/search/search-state';
 
 export function buildMockSearchResponse(
   config: Partial<SearchResponseSuccess> = {}
@@ -13,6 +14,7 @@ export function buildMockSearchResponse(
     totalCountFiltered: 0,
     facets: [],
     queryCorrections: [emptyCorrection()],
+    questionAnswer: emptyQuestionAnswer(),
     ...config,
   };
 }

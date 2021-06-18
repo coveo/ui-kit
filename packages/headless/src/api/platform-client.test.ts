@@ -154,17 +154,14 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it('when status is 419 should throw a TokenExpiredError', async (done) => {
+  it('when status is 419 should return a TokenExpiredError', async (done) => {
     mockFetch.mockReturnValueOnce(
       Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
     );
 
-    try {
-      await platformCall();
-    } catch (e) {
-      expect(e.name).toEqual(new ExpiredTokenError().name);
-      done();
-    }
+    const response = await platformCall();
+    expect(response).toBeInstanceOf(ExpiredTokenError);
+    done();
   });
 
   it('when status is 429 should try exponential backOff', async (done) => {
@@ -208,16 +205,13 @@ describe('PlatformClient call', () => {
     done();
   });
 
-  it('should throw when there is an AbortError', async (done) => {
+  it('should return when there is an AbortError', async (done) => {
     const abortError = new Error();
     abortError.name = 'AbortError';
 
-    try {
-      mockFetch.mockRejectedValue(abortError);
-      await platformCall();
-    } catch (error) {
-      expect(error).toBe(abortError);
-      done();
-    }
+    mockFetch.mockRejectedValue(abortError);
+    const response = await platformCall();
+    expect(response).toBe(abortError);
+    done();
   });
 });

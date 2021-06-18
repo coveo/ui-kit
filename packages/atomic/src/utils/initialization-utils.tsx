@@ -1,6 +1,6 @@
-import {Engine} from '@coveo/headless';
-import {ComponentInterface, getElement, h} from '@stencil/core';
-import {i18n, StringMap} from 'i18next';
+import {SearchEngine} from '@coveo/headless';
+import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
+import {i18n, TOptions} from 'i18next';
 import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
 
@@ -18,9 +18,9 @@ export type AtomicStore = {
  */
 export interface Bindings {
   /**
-   * Headless Engine instance.
+   * A headless search engine instance.
    */
-  engine: Engine;
+  engine: SearchEngine;
   /**
    * i18n instance, for localization.
    */
@@ -73,7 +73,9 @@ export function InitializeBindings() {
       render,
       componentDidRender,
       componentDidLoad,
+      disconnectedCallback,
     } = component;
+    let unsubscribeLanguage = () => {};
 
     if (bindingsProperty !== 'bindings') {
       return console.error(
@@ -88,6 +90,11 @@ export function InitializeBindings() {
         'atomic/initializeComponent',
         (bindings: Bindings) => {
           this.bindings = bindings;
+
+          const updateLanguage = () => forceUpdate(this);
+          this.bindings.i18n.on('languageChanged', updateLanguage);
+          unsubscribeLanguage = () =>
+            this.bindings.i18n.off('languageChanged', updateLanguage);
 
           try {
             this.initialize && this.initialize();
@@ -129,6 +136,11 @@ export function InitializeBindings() {
       return render && render.call(this);
     };
 
+    component.disconnectedCallback = function () {
+      unsubscribeLanguage();
+      disconnectedCallback && disconnectedCallback.call(this);
+    };
+
     component.componentDidRender = function () {
       if (!hasRendered) {
         return;
@@ -154,30 +166,14 @@ export function BindStateToController(
   controllerProperty: string,
   options?: {
     /**
-     * Whether the component should resubscribe when disconnected and reconnected from the DOM
-     */
-    subscribeOnConnectedCallback?: boolean;
-    /**
      * Component's method to be called when state is updated.
      */
     onUpdateCallbackMethod?: string;
   }
 ) {
   return (component: InitializableComponent, stateProperty: string) => {
-    const {connectedCallback, disconnectedCallback, initialize} = component;
-    let unsubscribe = () => {};
-
-    component.connectedCallback = function () {
-      if (options?.subscribeOnConnectedCallback && this[controllerProperty]) {
-        unsubscribe = this[controllerProperty].subscribe(() => {
-          this[stateProperty] = this[controllerProperty].state;
-          options?.onUpdateCallbackMethod &&
-            this[options.onUpdateCallbackMethod] &&
-            this[options.onUpdateCallbackMethod]();
-        });
-      }
-      connectedCallback && connectedCallback.call(this);
-    };
+    const {disconnectedCallback, initialize} = component;
+    let unsubscribeController = () => {};
 
     component.initialize = function () {
       initialize && initialize.call(this);
@@ -206,7 +202,7 @@ export function BindStateToController(
         );
       }
 
-      unsubscribe = this[controllerProperty].subscribe(() => {
+      unsubscribeController = this[controllerProperty].subscribe(() => {
         this[stateProperty] = this[controllerProperty].state;
         options?.onUpdateCallbackMethod &&
           this[options.onUpdateCallbackMethod]();
@@ -214,38 +210,19 @@ export function BindStateToController(
     };
 
     component.disconnectedCallback = function () {
-      unsubscribe();
+      !getElement(this).isConnected && unsubscribeController();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };
 }
 
-export type I18nState = Record<string, (variables?: StringMap) => string>;
+export type I18nState = Record<string, (variables?: TOptions) => string>;
 
 /**
- * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to the i18next language change.
- * The state should be of the `I18nState` format and use the `i18n` binding to retrieve strings.
+ * TODO: remove this method once no component calls it
+ * @deprecated This binding method is not needed anymore and should be removed.
  */
 export function BindStateToI18n() {
-  return (component: InitializableComponent, stateProperty: string) => {
-    const {disconnectedCallback, initialize} = component;
-    let unsubscribe = () => {};
-
-    component.initialize = function () {
-      const updateStrings = () => {
-        this[stateProperty] = {...this[stateProperty]};
-      };
-      updateStrings(); // Ensures re-render of localized strings on initialization
-      this.bindings.i18n.on('languageChanged', updateStrings);
-      unsubscribe = () =>
-        this.bindings.i18n.off('languageChanged', updateStrings);
-
-      initialize && initialize.call(this);
-    };
-
-    component.disconnectedCallback = function () {
-      unsubscribe();
-      disconnectedCallback && disconnectedCallback.call(this);
-    };
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return (_component: InitializableComponent, _stateProperty: string) => {};
 }

@@ -64,7 +64,7 @@
     "**/*.ts?(x)": [
       "npm run lint:fix"
     ],
-    "**/*.{scss,css,html}": [
+    "**/*.{scss,css,pcss,html}": [
       "prettier --print-width 120 --write"
     ]
   },

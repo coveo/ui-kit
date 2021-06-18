@@ -394,6 +394,18 @@ describe('facet-set slice', () => {
       expect(numberOfValues).toBe(currentValues.length);
     });
 
+    it('it sets #freezeCurrentValues to true', () => {
+      dispatchSelectFacetSearchResult();
+      const {freezeCurrentValues} = getFacetRequest();
+      expect(freezeCurrentValues).toBe(true);
+    });
+
+    it('it sets #preventAutoSelect to true', () => {
+      dispatchSelectFacetSearchResult();
+      const {preventAutoSelect} = getFacetRequest();
+      expect(preventAutoSelect).toBe(true);
+    });
+
     it('when the #value.rawValue already exists and is selected, it does not add a duplicate', () => {
       dispatchSelectFacetSearchResult();
       dispatchSelectFacetSearchResult();

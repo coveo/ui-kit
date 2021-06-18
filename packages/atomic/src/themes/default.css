@@ -8,7 +8,7 @@
 
   /* Secondary colors */
   --atomic-secondary: #1565c0;
-  --atomic-secondary-light: #5e92f3;
+  --atomic-secondary-light: #286ef0;
   --atomic-secondary-dark: #003c8f;
   --atomic-on-secondary: #ffffff;
 
@@ -32,6 +32,11 @@
     Ubuntu, roboto, noto, arial, sans-serif; /* Following https://systemfontstack.com/ */
   --atomic-font-normal: 400;
   --atomic-font-bold: 700;
+
+  /* Text size */
+  --atomic-text-base: 0.875rem; /* 14px */
+  --atomic-text-sm: 0.75rem; /* 12px */
+  --atomic-text-lg: 1rem; /* 16px */
 
   /* Others */
   --atomic-icon-size: 30px;

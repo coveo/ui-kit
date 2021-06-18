@@ -54,12 +54,16 @@
     "fr": "Insérer une requête. Appuyez sur Entrée pour envoyer."
   },
   "facetSearch": {
-    "en": "Search for values in {{label}} facet",
+    "en": "Search for values in the {{label}} facet",
     "fr": "Rechercher des valeurs dans la facette {{label}}"
   },
   "facetValue": {
-    "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
-    "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
+    "en": "Inclusion filter on {{value}}; {{count}} result",
+    "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultat"
+  },
+  "facetValue_plural": {
+    "en": "Inclusion filter on {{value}}; {{count}} results",
+    "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultats"
   },
   "removeFilterOn": {
     "en": "Remove inclusion filter on {{value}}",
@@ -126,6 +130,14 @@
     "tr": "Daha az göster",
     "zh-cn": "显示较少的值",
     "zh-tw": "顯示較少的值"
+  },
+  "showLessFacetValues": {
+    "en": "Show fewer values for the {{label}} facet",
+    "fr": "Afficher moins de valeurs pour la facette {{label}}"
+  },
+  "showMoreFacetValues": {
+    "en": "Show more values for the {{label}} facet",
+    "fr": "Afficher plus de valeurs pour la facette {{label}}"
   },
   "pagination": {
     "en": "Pagination",
@@ -271,6 +283,30 @@
   "mostRecent": {
     "en": "Most recent",
     "fr": "Plus récents"
+  },
+  "clearFilters": {
+    "en": "Clear filter",
+    "fr": "Enlever le filtre"
+  },
+  "clearFilters_plural": {
+    "en": "Clear {{count}} filters",
+    "fr": "Enlever {{count}} filtres"
+  },
+  "clearFiltersForFacet": {
+    "en": "Clear {{count}} filter for the {{label}} facet",
+    "fr": "Enlever {{count}} filtre pour la facette {{label}}"
+  },
+  "clearFiltersForFacet_plural": {
+    "en": "Clear {{count}} filters for the {{label}} facet",
+    "fr": "Enlever {{count}} filtres pour la facette {{label}}"
+  },
+  "collapseFacet": {
+    "en": "Collapse the {{label}} facet",
+    "fr": "Réduire la facette {{label}}"
+  },
+  "expandFacet": {
+    "en": "Expand the {{label}} facet",
+    "fr": "Agrandir la facette {{label}}"
   },
   "showingResultsOf": {
     "en": "Result {{first}} of {{total}}",
@@ -451,6 +487,14 @@
     "en": "No results",
     "fr": "Aucun résultat",
     "es-es": "No hay resultados"
+  },
+  "moreMatchesFor": {
+    "en": "More matches for {{query}}",
+    "fr": "Plus de correspondances pour {{query}}"
+  },
+  "noMatchesFoundFor": {
+    "en": "No matches found for {{query}}",
+    "fr": "Aucune correspondance trouvée pour {{query}}"
   },
   "cancelLastAction": {
     "en": "Cancel last action",
@@ -659,6 +703,14 @@
   "collapsedUriParts": {
     "en": "Collapsed URI parts",
     "fr": "Segments d'URI réduits"
+  },
+  "disconnected": {
+    "en": "Could not connect.",
+    "fr": "Impossible de se connecter."
+  },
+  "checkYourConnection": {
+    "en": "Your query couldn't be sent. Verify your internet connection.",
+    "fr": "Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet."
   },
   "noEndpoints": {
     "en": "The Coveo Organization has no registered endpoints.",

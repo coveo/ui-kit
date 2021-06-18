@@ -47,13 +47,9 @@ import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevanc
 import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {
-  HeadlessEngine,
-  Engine,
-  searchAppReducers,
-  recommendationAppReducers,
-  RecommendationAppState,
-  SearchActions,
-  AnalyticsActions,
+  SearchEngine,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
   Unsubscribe,
   RecommendationList as HeadlessRecommendationList,
   buildRecommendationList,
@@ -105,6 +101,11 @@ import {
   buildStandaloneSearchBox,
   SearchAppState,
 } from '@coveo/headless';
+import {
+  RecommendationEngine,
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
+} from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -131,8 +132,8 @@ const resultsPerPageOptions = [10, 25, 50, 100];
 export class SearchPage extends Component {
   static contextType = AppContext;
 
-  private engine!: Engine;
-  private readonly recommendationEngine: Engine<RecommendationAppState>;
+  private engine!: SearchEngine;
+  private readonly recommendationEngine: RecommendationEngine;
 
   private readonly recommendationList: HeadlessRecommendationList;
   private readonly tabs: {
@@ -169,9 +170,8 @@ export class SearchPage extends Component {
 
     this.initEngine();
 
-    this.recommendationEngine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: recommendationAppReducers,
+    this.recommendationEngine = buildRecommendationEngine({
+      configuration: getSampleRecommendationEngineConfiguration(),
     });
 
     this.recommendationList = buildRecommendationList(
@@ -287,10 +287,8 @@ export class SearchPage extends Component {
       return;
     }
 
-    this.engine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: searchAppReducers,
-      preloadedState: window.HEADLESS_STATE,
+    this.engine = buildSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
     });
   }
 
@@ -314,15 +312,7 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
-    const searchStatus = buildSearchStatus(this.engine);
-
-    if (searchStatus.state.firstSearchExecuted) {
-      return;
-    }
-
-    this.engine.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
+    this.engine.executeFirstSearch();
   }
 
   private updateAnalyticsContext() {

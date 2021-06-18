@@ -10,6 +10,7 @@ import {
   SearchStatusState,
   SearchStatus,
   buildSearchStatus,
+  RangeFacetRangeAlgorithm,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -53,7 +54,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   private facet!: DateFacet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   private facetState!: DateFacetState;
   @State() public error!: Error;
@@ -91,6 +92,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    * The number of values to request for this facet, when there are no manual ranges.
    */
   @Prop({mutable: true}) public numberOfValues = 8;
+  /**
+   * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
+   */
+  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'even';
 
   private buildManualRanges() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
@@ -110,6 +115,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
       numberOfValues: this.numberOfValues,
+      rangeAlgorithm: this.rangeAlgorithm,
     };
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});

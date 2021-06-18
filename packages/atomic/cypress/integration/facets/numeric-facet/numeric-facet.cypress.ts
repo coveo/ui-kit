@@ -286,6 +286,36 @@ describe('Numeric Facet Test Suites', () => {
     });
   });
 
+  describe('Numeric facet with even as algorithm choice for automatic range creation', () => {
+    before(() => {
+      setupNumericFacet({rangeAlgorithm: 'even', field: 'ytlikecount'});
+    });
+    FacetAssertions.assertDisplayFacet(
+      true,
+      'ytlikecount',
+      numericFacetComponent
+    );
+    NumericFacetAssertions.assertRangesGeneratedWithAlgorithm(
+      'even',
+      'ytlikecount'
+    );
+  });
+
+  describe('Numeric facet with equiprobable as algorithm choice for automatic range creation', () => {
+    before(() => {
+      setupNumericFacet({rangeAlgorithm: 'equiprobable', field: 'ytlikecount'});
+    });
+    FacetAssertions.assertDisplayFacet(
+      true,
+      'ytlikecount',
+      numericFacetComponent
+    );
+    NumericFacetAssertions.assertRangesGeneratedWithAlgorithm(
+      'equiprobable',
+      'ytlikecount'
+    );
+  });
+
   describe('When no first search has yet been executed', () => {
     beforeEach(() => {
       setupNumericFacet({executeFirstSearch: false});

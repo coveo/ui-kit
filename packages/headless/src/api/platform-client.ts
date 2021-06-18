@@ -6,7 +6,7 @@ export type HTTPContentType =
   | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
-import {ExpiredTokenError} from '../utils/errors';
+import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
 
@@ -44,8 +44,15 @@ export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
   request
 ) => request;
 
+export type PlatformClientCallError =
+  | ExpiredTokenError
+  | DisconnectedError
+  | Error;
+
 export class PlatformClient {
-  static async call(options: PlatformClientCallOptions): Promise<Response> {
+  static async call(
+    options: PlatformClientCallOptions
+  ): Promise<Response | PlatformClientCallError> {
     // TODO: use options directly when removing deprecatedPreprocessRequest
     const processedOptions = {
       ...options,
@@ -90,12 +97,8 @@ export class PlatformClient {
 
       return response;
     } catch (error) {
-      if (error.name === 'AbortError') {
-        throw error;
-      }
-
-      if (error instanceof ExpiredTokenError) {
-        throw error;
+      if (error.message === 'Failed to fetch') {
+        return new DisconnectedError();
       }
 
       return error;

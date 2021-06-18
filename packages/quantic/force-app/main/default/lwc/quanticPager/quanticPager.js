@@ -26,7 +26,7 @@ export default class QuanticPager extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").Engine} engine
+   * @param {import("coveo").SearchEngine} engine
    */
   @api
   initialize(engine) {

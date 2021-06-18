@@ -4,8 +4,12 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {buildEngine, EngineOptions, ExternalEngineOptions} from '../engine';
-import {Engine} from '../headless-engine';
+import {
+  buildEngine,
+  CoreEngine,
+  EngineOptions,
+  ExternalEngineOptions,
+} from '../engine';
 import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
@@ -17,21 +21,32 @@ import {updateSearchConfiguration} from '../../features/configuration/configurat
 import {
   SearchEngineConfiguration,
   searchEngineConfigurationSchema,
+  getSampleSearchEngineConfiguration,
 } from './search-engine-configuration';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {SearchAppState} from '../../state/search-app-state';
+import {SearchThunkExtraArguments} from '../headless-engine';
+
+export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
-export interface SearchEngine extends Engine<SearchEngineState> {
+/**
+ * The engine for powering search experiences.
+ */
+export interface SearchEngine
+  extends CoreEngine<SearchEngineState, SearchThunkExtraArguments> {
   executeFirstSearch(): void;
 }
 
+/**
+ * The search engine options.
+ */
 export interface SearchEngineOptions
   extends ExternalEngineOptions<SearchEngineState> {
   /**
@@ -40,6 +55,12 @@ export interface SearchEngineOptions
   configuration: SearchEngineConfiguration;
 }
 
+/**
+ * Creates a search engine instance.
+ *
+ * @param options - The search engine options.
+ * @returns A search engine instance.
+ */
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);

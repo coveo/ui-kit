@@ -3,9 +3,13 @@ import {Engine} from '../../app/headless-engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {
   foldingOptionsSchemaDefinition,
+  loadCollection,
   registerFolding,
 } from '../../features/folding/folding-actions';
-import {FoldedResult} from '../../features/folding/folding-state';
+import {
+  FoldedCollection,
+  FoldedResult,
+} from '../../features/folding/folding-state';
 import {
   ConfigurationSection,
   FoldingSection,
@@ -13,14 +17,14 @@ import {
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   buildResultList,
-  ResultList,
   ResultListOptions,
-  ResultListState,
 } from '../result-list/headless-result-list';
+import {SearchStatusState} from '../search-status/headless-search-status';
 
-export {FoldedResult};
+export {FoldedCollection, FoldedResult};
 
 const optionsSchema = new Schema<Required<FoldingOptions>>(
   foldingOptionsSchemaDefinition
@@ -67,7 +71,20 @@ export interface FoldedResultListProps {
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  */
-export interface FoldedResultList extends ResultList {
+export interface FoldedResultList extends Controller {
+  /**
+   * Using the same parameters as the last successful query, fetch another batch of results, if available.
+   * Particularly useful for infinite scrolling, for example.
+   *
+   * This method is not compatible with the `Pager` controller.
+   */
+  fetchMoreResults(): void;
+  /**
+   * Loads all the folded results for a given collection.
+   *
+   * @param collection - The collection for which to load more results.
+   */
+  loadCollection(collection: FoldedCollection): void;
   /**
    * The state of the `FoldedResultList` controller.
    */
@@ -77,11 +94,21 @@ export interface FoldedResultList extends ResultList {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `FoldedResultList` controller.
  * */
-export interface FoldedResultListState extends ResultListState {
+export interface FoldedResultListState extends SearchStatusState {
   /**
-   * The hierarchical collections of results.
+   * The ordered list of collections.
    * */
-  results: FoldedResult[];
+  results: FoldedCollection[];
+  /**
+   * The unique identifier of the last executed search.
+   */
+  searchUid: string;
+  /**
+   * Whether more results are available, using the same parameters as the last successful query.
+   *
+   * This property is not compatible with the `Pager` controller.
+   */
+  moreResultsAvailable: boolean;
 }
 
 /**
@@ -117,12 +144,35 @@ export function buildFoldedResultList(
   return {
     ...controller,
 
+    loadCollection: (collection) => {
+      dispatch(
+        loadCollection(
+          collection.result.raw[
+            engine.state.folding.fields.collection
+          ] as string
+        )
+      );
+    },
+
     get state() {
       const state = getState();
 
       return {
         ...controller.state,
-        results: state.folding.collections,
+        results: controller.state.results.map((result) => {
+          const collectionId = result.raw[state.folding.fields.collection] as
+            | string
+            | undefined;
+          if (!collectionId || !state.folding.collections[collectionId]) {
+            return {
+              result,
+              moreResultsAvailable: false,
+              isLoadingMoreResults: false,
+              children: [],
+            };
+          }
+          return state.folding.collections[collectionId];
+        }),
       };
     },
   };

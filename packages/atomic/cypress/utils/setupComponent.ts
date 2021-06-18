@@ -1,5 +1,4 @@
-export const buildTestUrl = (hash = '') =>
-  `http://localhost:3333/test.html#${hash}`;
+export const buildTestUrl = (hash = '') => `test.html#${hash}`;
 
 const searchInterfaceTag = 'atomic-search-interface';
 export function injectComponent(

@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {Schema} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
@@ -9,6 +8,7 @@ import {Controller} from '../controller/headless-controller';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {CartRecommendationsListOptions} from './headless-cart-recommendations-options';
 import {ErrorPayload} from '../controller/error-payload';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
 export {CartRecommendationsListOptions, ProductRecommendation};
 
@@ -74,7 +74,7 @@ export interface CartRecommendationsListState {
  * @returns A `CartRecommendationsList` controller instance.
  */
 export function buildCartRecommendationsList(
-  engine: Engine<object>,
+  engine: ProductRecommendationEngine,
   props: CartRecommendationsListProps
 ): CartRecommendationsList {
   const options = validateOptions(

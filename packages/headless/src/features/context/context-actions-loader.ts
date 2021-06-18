@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {context} from '../../app/reducers';
 import {
   addContext,
@@ -48,9 +48,7 @@ export interface ContextActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadContextActions(
-  engine: Engine<object>
-): ContextActionCreators {
+export function loadContextActions(engine: CoreEngine): ContextActionCreators {
   engine.addReducers({context});
 
   return {

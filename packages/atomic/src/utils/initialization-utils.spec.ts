@@ -192,18 +192,5 @@ describe('BindStateToController decorator', () => {
 
       expect(controller.subscribe).toHaveBeenCalledTimes(1);
     });
-
-    it(`when "subscribeOnConnectedCallback" is true
-    should resubscribe to the controller`, () => {
-      spyOn(controller, 'subscribe');
-      BindStateToController('controller', {subscribeOnConnectedCallback: true})(
-        component,
-        'controllerState'
-      );
-      component.initialize!();
-      component.connectedCallback!();
-
-      expect(controller.subscribe).toHaveBeenCalledTimes(2);
-    });
   });
 });

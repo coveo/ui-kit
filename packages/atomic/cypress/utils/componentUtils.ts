@@ -11,9 +11,9 @@ export function doSortAlphanumeric(originalValues: string[]) {
 export function doSortOccurences(originalValues: string[]) {
   return originalValues
     .concat()
-    .sort((first, second) =>
-      second.localeCompare(first, 'en', {numeric: true})
-    );
+    .map((value) => parseInt(value.replaceAll(',', '')))
+    .sort((a, b) => b - a)
+    .map((value) => value.toLocaleString('en'));
 }
 
 export const aliasNoAtSignBuilder = (aliasWithAtSign: IAlias) => {

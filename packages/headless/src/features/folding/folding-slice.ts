@@ -2,8 +2,10 @@ import {createReducer} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
 import {isArray, removeDuplicates} from '../../utils/utils';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
-import {registerFolding} from './folding-actions';
+import {loadCollection, registerFolding} from './folding-actions';
 import {
+  FoldedCollection,
+  CollectionId,
   FoldedResult,
   FoldingFields,
   getFoldingInitialState,
@@ -14,8 +16,12 @@ export interface ResultWithFolding extends Result {
   childResults: ResultWithFolding[];
 }
 
+function getCollectionField(result: ResultWithFolding, fields: FoldingFields) {
+  return result.raw[fields.collection] as string | undefined;
+}
+
 function getParentField(result: ResultWithFolding, fields: FoldingFields) {
-  return result.raw[fields.parent];
+  return result.raw[fields.parent] as string | undefined;
 }
 
 function getChildField(result: ResultWithFolding, fields: FoldingFields) {
@@ -33,70 +39,114 @@ function areDefinedAndEqual<T>(
   return (value1 || value2) !== undefined && value1 === value2;
 }
 
-function flattenResultTree(result: ResultWithFolding): ResultWithFolding[] {
-  const results = [result];
-  if (result.parentResult) {
-    results.unshift(result.parentResult);
+function getChildResultsRecursively(
+  result: ResultWithFolding
+): ResultWithFolding[] {
+  if (!result.childResults) {
+    return [];
   }
-  if (result.childResults?.length) {
-    results.push(
-      ...result.childResults.flatMap((childResult) =>
-        flattenResultTree(childResult)
-      )
-    );
-  }
-  return results;
+  return result.childResults.flatMap((childResult) => [
+    childResult,
+    ...getChildResultsRecursively(childResult),
+  ]);
 }
 
-function foldResult(
-  source: ResultWithFolding,
+function resolveChildrenFromFields(
+  parent: ResultWithFolding,
+  results: ResultWithFolding[],
+  fields: FoldingFields,
+  resolvedAncestors: string[] = []
+): FoldedResult[] {
+  const sourceChildValue = getChildField(parent, fields);
+  if (!sourceChildValue) {
+    return [];
+  }
+  if (resolvedAncestors.indexOf(sourceChildValue) !== -1) {
+    return [];
+  }
+  return results
+    .filter((result) => {
+      const isSameResultAsSource =
+        getChildField(result, fields) === getChildField(parent, fields);
+      const isChildOfSource =
+        getParentField(result, fields) === sourceChildValue;
+      return isChildOfSource && !isSameResultAsSource;
+    })
+    .map((result) => ({
+      result,
+      children: resolveChildrenFromFields(result, results, fields, [
+        ...resolvedAncestors,
+        sourceChildValue,
+      ]),
+    }));
+}
+
+function resolveRootFromFields(
   results: ResultWithFolding[],
   fields: FoldingFields
-): FoldedResult {
-  const sourceChildValue = getChildField(source, fields);
-  return {
-    ...source,
-    children: sourceChildValue
-      ? results
-          .filter((result) => {
-            const isSameResultAsSource =
-              getChildField(result, fields) === getChildField(source, fields);
-            const isChildOfSource =
-              getParentField(result, fields) === sourceChildValue;
-            return isChildOfSource && !isSameResultAsSource;
-          })
-          .map((result) => foldResult(result, results, fields))
-      : [],
-  };
+) {
+  return results.find((result) => {
+    const hasNoParent = getParentField(result, fields) === undefined;
+    const isParentOfItself = areDefinedAndEqual(
+      getParentField(result, fields),
+      getChildField(result, fields)
+    );
+    return hasNoParent || isParentOfItself;
+  });
 }
 
-function createCollection(
-  relevantResult: ResultWithFolding,
-  fields: FoldingFields
-): FoldedResult {
-  const flattenedResults = removeDuplicates(
-    flattenResultTree(relevantResult),
+function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
+  const foldedResults = getChildResultsRecursively(relevantResult);
+
+  const parentResults = [relevantResult, ...foldedResults]
+    .filter((result) => result.parentResult)
+    .map((result) => result.parentResult!);
+
+  const resultsInCollection = removeDuplicates(
+    [relevantResult, ...foldedResults, ...parentResults],
     (result) => result.uniqueId
   );
 
-  const topLevelResult =
-    flattenedResults.find((result) => {
-      const hasNoParent = getParentField(result, fields) === undefined;
-      const isParentOfItself = areDefinedAndEqual(
-        getParentField(result, fields),
-        getChildField(result, fields)
-      );
-      return hasNoParent || isParentOfItself;
-    }) ?? relevantResult;
+  return resultsInCollection;
+}
 
-  return foldResult(topLevelResult, flattenedResults, fields);
+function createCollectionFromResult(
+  relevantResult: ResultWithFolding,
+  fields: FoldingFields
+): FoldedCollection {
+  const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
+
+  const rootResult =
+    resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
+
+  return {
+    result: rootResult,
+    children: resolveChildrenFromFields(
+      rootResult,
+      resultsInCollection,
+      fields
+    ),
+    moreResultsAvailable: true,
+    isLoadingMoreResults: false,
+  };
 }
 
 function createCollections(
   results: ResultWithFolding[],
   fields: FoldingFields
-): FoldedResult[] {
-  return results.map((result) => createCollection(result, fields));
+) {
+  const collections: Record<CollectionId, FoldedCollection> = {};
+  results.forEach((result) => {
+    const collectionId = getCollectionField(result, fields);
+    if (!collectionId) {
+      return;
+    }
+    if (!getChildField(result, fields)) {
+      return;
+    }
+    collections[collectionId] = createCollectionFromResult(result, fields);
+  });
+  return collections;
 }
 
 export const foldingReducer = createReducer(
@@ -109,32 +159,62 @@ export const foldingReducer = createReducer(
               payload.response.results as ResultWithFolding[],
               state.fields
             )
-          : [];
+          : {};
       })
       .addCase(fetchMoreResults.fulfilled, (state, {payload}) => {
         state.collections = state.enabled
-          ? [
+          ? {
               ...state.collections,
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
                 state.fields
               ),
-            ]
-          : [];
+            }
+          : {};
       })
       .addCase(registerFolding, (state, {payload}) =>
         state.enabled
           ? state
           : {
               enabled: true,
-              collections: [],
+              collections: {},
               fields: {
                 collection: payload.collectionField ?? state.fields.collection,
                 parent: payload.parentField ?? state.fields.parent,
                 child: payload.childField ?? state.fields.child,
               },
-              numberOfFoldedResults:
-                payload.numberOfFoldedResults ?? state.numberOfFoldedResults,
+              filterFieldRange:
+                payload.numberOfFoldedResults ?? state.filterFieldRange,
             }
+      )
+      .addCase(loadCollection.pending, (state, {meta}) => {
+        const collectionId = meta.arg;
+        state.collections[collectionId].isLoadingMoreResults = true;
+      })
+      .addCase(loadCollection.rejected, (state, {meta}) => {
+        const collectionId = meta.arg;
+        state.collections[collectionId].isLoadingMoreResults = false;
+      })
+      .addCase(
+        loadCollection.fulfilled,
+        (state, {payload: {collectionId, results}}) => {
+          const rootResult = resolveRootFromFields(
+            results as ResultWithFolding[],
+            state.fields
+          );
+          if (!rootResult) {
+            return;
+          }
+          state.collections[collectionId] = {
+            result: rootResult,
+            children: resolveChildrenFromFields(
+              rootResult,
+              results as ResultWithFolding[],
+              state.fields
+            ),
+            moreResultsAvailable: false,
+            isLoadingMoreResults: false,
+          };
+        }
       )
 );

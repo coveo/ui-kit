@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {searchHub} from '../../app/reducers';
 import {setSearchHub} from './search-hub-actions';
 
@@ -23,7 +23,7 @@ export interface SearchHubActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadSearchHubActions(
-  engine: Engine<object>
+  engine: CoreEngine
 ): SearchHubActionCreators {
   engine.addReducers({searchHub});
 

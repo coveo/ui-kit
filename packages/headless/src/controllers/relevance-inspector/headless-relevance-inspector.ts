@@ -75,6 +75,7 @@ export interface RelevanceInspectorInitialState {
 export interface RelevanceInspectorOptions {
   /**
    * Whether to automatically log state to console on new responses.
+   * @deprecated Subscribe to the state changes instead if you wish to log the debug output.
    * */
   automaticallyLogInformation?: boolean;
 }
@@ -95,6 +96,7 @@ export interface RelevanceInspector extends Controller {
 
   /**
    * Logs debug information to the console.
+   * @deprecated Subscribe to the state changes instead if you wish to log the debug output.
    */
   logInformation(): void;
 
@@ -255,7 +257,7 @@ export function buildRelevanceInspector(
 
     logInformation() {
       if (this.state.isEnabled) {
-        engine.logger.info(
+        console.log(
           this.state,
           'Relevance inspector information for new query'
         );

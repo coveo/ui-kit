@@ -277,6 +277,7 @@ export const buildSearchRequest = (
     locale: state.configuration.search.locale,
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,
+    referrer: state.configuration.analytics.originLevel3,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
@@ -318,7 +319,7 @@ export const buildSearchRequest = (
       filterField: state.folding.fields.collection,
       childField: state.folding.fields.parent,
       parentField: state.folding.fields.child,
-      filterFieldRange: state.folding.numberOfFoldedResults,
+      filterFieldRange: state.folding.filterFieldRange,
     }),
   };
 };

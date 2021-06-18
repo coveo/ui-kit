@@ -6,7 +6,9 @@ import {
   FieldsToIncludeParam,
   PipelineParam,
   RecommendationParam,
+  ReferrerParam,
   SearchHubParam,
+  TabParam,
 } from '../search-api-params';
 
 export type RecommendationRequest = BaseParam &
@@ -17,4 +19,6 @@ export type RecommendationRequest = BaseParam &
   FieldsToIncludeParam &
   AdvancedQueryParam &
   ConstantQueryParam &
-  ActionsHistoryParam;
+  ActionsHistoryParam &
+  TabParam &
+  ReferrerParam;

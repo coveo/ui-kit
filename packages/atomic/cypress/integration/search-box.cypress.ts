@@ -70,7 +70,7 @@ describe('Search Box Test Suites', () => {
       cy.get('@searchBoxFirstDiv').find('.search-input').should('be.empty');
     });
 
-    it('should log UA when excute a query', async () => {
+    it('should log UA when executing a query', async () => {
       cy.get('@searchBoxFirstDiv')
         .find('.search-input')
         .type(queryText, {force: true});
@@ -80,12 +80,51 @@ describe('Search Box Test Suites', () => {
         actionCause: 'searchboxSubmit',
       };
 
-      const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
+      const analytics = await getAnalyticsAt('@coveoAnalytics', 0);
       expect(analytics.response.statusCode).to.eq(200);
       expect(analytics.request.body).to.have.property(
         'actionCause',
         searchUA['actionCause']
       );
+    });
+
+    it('should log UA when selecting a suggestion', async () => {
+      cy.get('@searchBoxFirstDiv')
+        .find('.search-input')
+        .type('te', {delay: 1000});
+
+      cy.get('@searchBoxFirstDiv')
+        .find(SearchBoxSelectors.querySuggestionList)
+        .children()
+        .first()
+        .click();
+
+      const searchUA = {
+        actionCause: 'omniboxAnalytics',
+      };
+
+      const analytics = await getAnalyticsAt('@coveoAnalytics', 0);
+      expect(analytics.response.statusCode).to.eq(200);
+
+      expect(analytics.request.body).to.have.property(
+        'actionCause',
+        searchUA['actionCause']
+      );
+      expect(analytics.request.body.customData).to.have.property(
+        'suggestionRanking',
+        0
+      );
+      expect(analytics.request.body.customData).to.have.property(
+        'partialQuery',
+        'te'
+      );
+      expect(analytics.request.body.customData).to.have.property(
+        'partialQueries',
+        't;te'
+      );
+      expect(
+        analytics.request.body.customData.suggestions
+      ).length.to.be.greaterThan(0);
     });
 
     it('passes automated accessibility tests with no query', () => {

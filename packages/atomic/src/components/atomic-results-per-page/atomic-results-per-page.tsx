@@ -56,7 +56,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
-  @Prop() initialChoice?: number;
+  @Prop({mutable: true}) initialChoice?: number;
 
   public initialize() {
     this.choices = this.validateChoicesDisplayed();
@@ -120,7 +120,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
     return (
       <div class="flex items-center">
-        <span part="label" class="text-on-background pr-4 text-sm">
+        <span part="label" class="text-on-background pr-4">
           {this.strings.resultsPerPage()}
         </span>
         <div

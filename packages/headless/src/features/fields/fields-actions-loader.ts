@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {fields} from '../../app/reducers';
 import {registerFieldsToInclude} from './fields-actions';
 
@@ -22,7 +22,7 @@ export interface FieldActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadFieldActions(engine: Engine<object>): FieldActionCreators {
+export function loadFieldActions(engine: CoreEngine): FieldActionCreators {
   engine.addReducers({fields});
 
   return {
