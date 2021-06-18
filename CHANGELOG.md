@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.28.0](https://github.com/coveo/ui-kit/compare/v0.27.0...v0.28.0) (2021-06-18)
+
+
+### Features
+
+* **atomic:** add manual ranges for new numeric facet ([#903](https://github.com/coveo/ui-kit/issues/903)) ([8477e33](https://github.com/coveo/ui-kit/commit/8477e33f577d646fd967d00de3297e5553a3e7b0))
+
+
+
+
+
+# [0.27.0](https://github.com/coveo/ui-kit/compare/v0.26.0...v0.27.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **headless:** send originLevel3 to searchapi using referrer parameter ([#905](https://github.com/coveo/ui-kit/issues/905)) ([e5cde7a](https://github.com/coveo/ui-kit/commit/e5cde7ad512cdbc8606c178f50c5513cf9a089fb))
+
+
+### Features
+
+* **headless:** expose logRecommendationOpen action ([#902](https://github.com/coveo/ui-kit/issues/902)) ([68fca5b](https://github.com/coveo/ui-kit/commit/68fca5b58621d17afe8baeda4e12310b8167f483))
+
+
+
+
+
 # [0.26.0](https://github.com/coveo/ui-kit/compare/v0.25.0...v0.26.0) (2021-06-17)
 
 
