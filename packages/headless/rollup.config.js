@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
+import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import tsPlugin from '@rollup/plugin-typescript';
 import replacePlugin from '@rollup/plugin-replace';
@@ -66,7 +67,9 @@ function buildNodeConfiguration({input, outDir}) {
       {file: `${outDir}/headless.esm.js`, format: 'es'},
     ],
     plugins: [
-      resolve({modulesOnly: true}),
+      nodeCoveoAnalytics(),
+      resolve({preferBuiltins: true}),
+      json(),
       commonjs({
         // https://github.com/pinojs/pino/issues/688
         ignore: ['pino-pretty'],
@@ -74,11 +77,33 @@ function buildNodeConfiguration({input, outDir}) {
       typescript(),
       replace(),
     ],
-    external: ['cross-fetch', 'web-encoding'],
+    external: [
+      'os',
+      'https',
+      'http',
+      'stream',
+      'zlib',
+      'fs',
+      'vm',
+      'util',
+    ],
     onwarn: onWarn,
   };
 }
 
+function nodeCoveoAnalytics() {
+  return alias({
+    entries: [
+      {
+        find: 'coveo.analytics',
+        replacement: pathResolve(
+          __dirname,
+          './node_modules/coveo.analytics/dist/library.js'
+        ),
+      }
+    ]
+  })
+}
 
 // Browser Bundles
 
