@@ -14,12 +14,18 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {
+  ResultDisplayLayout,
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+} from '../atomic-result/atomic-result';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  */
 @Component({
   tag: 'atomic-result-list',
+  styleUrl: 'atomic-result-list.pcss',
   shadow: false,
 })
 export class AtomicResultList implements InitializableComponent {
@@ -46,6 +52,12 @@ export class AtomicResultList implements InitializableComponent {
    * A list of fields to include in the query results, separated by commas.
    */
   @Prop() public fieldsToInclude = '';
+
+  @Prop() display: ResultDisplayLayout = 'list';
+
+  @Prop() density: ResultDisplayDensity = 'normal';
+
+  @Prop() image: ResultDisplayImageSize = 'icon';
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -116,6 +128,9 @@ export class AtomicResultList implements InitializableComponent {
         key={`${result.raw.permanentid}${this.resultListState.searchUid}`}
         result={result}
         engine={this.bindings.engine}
+        display={this.display}
+        density={this.density}
+        image={this.image}
         // TODO: decide to get rid of Mustache or not
         content={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',

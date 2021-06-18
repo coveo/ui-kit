@@ -193,7 +193,54 @@
           </atomic-sort-dropdown>
         </div>
         <atomic-no-results></atomic-no-results>
-        <atomic-result-list></atomic-result-list>
+        <atomic-result-list>
+          <atomic-result-template>
+            <template>
+              <section class="visual"><atomic-result-icon></atomic-result-icon></section>
+              <section class="badges">
+                <atomic-field-condition must-match-sourcetype="Salesforce">
+                  <span
+                    class="inline-flex place-items-center h-full px-3 bg-gray-100 text-gray-400 rounded-full text-xs"
+                  >
+                    Salesforce
+                  </span>
+                </atomic-field-condition>
+              </section>
+              <section class="actions"><atomic-result-quickview></atomic-result-quickview></section>
+              <section class="title"><atomic-result-link></atomic-result-link></section>
+              <section class="title-metadata">
+                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+              </section>
+              <section class="excerpt"><atomic-result-text field="excerpt"></atomic-result-text></section>
+              <section class="bottom-metadata">
+                <atomic-field-condition if-defined="author" class="whitespace-nowrap mr-2">
+                  <atomic-text value="author" class="font-bold mr-1"></atomic-text>
+                  <atomic-result-text field="author"></atomic-result-text>
+                </atomic-field-condition>
+
+                <atomic-field-condition if-defined="source" class="whitespace-nowrap mr-2">
+                  <atomic-text value="source" class="font-bold mr-1"></atomic-text>
+                  <atomic-result-text field="source"></atomic-result-text>
+                </atomic-field-condition>
+
+                <atomic-field-condition if-defined="language" class="whitespace-nowrap mr-2">
+                  <atomic-text value="language" class="font-bold mr-1"></atomic-text>
+                  <atomic-result-text field="language"></atomic-result-text>
+                </atomic-field-condition>
+
+                <atomic-field-condition if-defined="filetype" class="whitespace-nowrap mr-2">
+                  <atomic-text value="fileType" class="font-bold mr-1"></atomic-text>
+                  <atomic-result-text field="filetype"></atomic-result-text>
+                </atomic-field-condition>
+
+                <span class="whitespace-nowrap mr-2">
+                  <span class="font-bold mr-1">Date</span>
+                  <atomic-result-date></atomic-result-date>
+                </span>
+              </section>
+            </template>
+          </atomic-result-template>
+        </atomic-result-list>
         <div class="footer-item side-by-side-container">
           <atomic-pager></atomic-pager>
           <atomic-results-per-page></atomic-results-per-page>

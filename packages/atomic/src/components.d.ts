@@ -7,6 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, RangeFacetRangeAlgorithm, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result";
+import { ResultDisplayDensity as ResultDisplayDensity1, ResultDisplayImageSize as ResultDisplayImageSize1, ResultDisplayLayout as ResultDisplayLayout1 } from "./components/atomic-result/atomic-result";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -253,9 +255,21 @@ export namespace Components {
          */
         "content": string;
         /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display": ResultDisplayLayout;
+        /**
           * The headless search engine.
          */
         "engine": SearchEngine;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image": ResultDisplayImageSize;
         /**
           * The result item.
          */
@@ -290,10 +304,13 @@ export namespace Components {
         "target": string;
     }
     interface AtomicResultList {
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
         /**
           * A list of fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        "image": ResultDisplayImageSize;
     }
     interface AtomicResultListPlaceholder {
     }
@@ -968,9 +985,21 @@ declare namespace LocalJSX {
          */
         "content": string;
         /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
           * The headless search engine.
          */
         "engine": SearchEngine;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
@@ -1005,10 +1034,13 @@ declare namespace LocalJSX {
         "target"?: string;
     }
     interface AtomicResultList {
+        "density"?: ResultDisplayDensity;
+        "display"?: ResultDisplayLayout;
         /**
           * A list of fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
+        "image"?: ResultDisplayImageSize;
     }
     interface AtomicResultListPlaceholder {
     }
