@@ -1,6 +1,9 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {QuestionAnswerDocumentIdentifier} from '../../controllers';
 
+/**
+ * Identifies the document from which the answer originate.
+ */
 export interface QuestionAnsweringDocumentIdActionCreatorPayload
   extends QuestionAnswerDocumentIdentifier {}
 
