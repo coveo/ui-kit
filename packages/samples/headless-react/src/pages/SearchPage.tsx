@@ -99,6 +99,7 @@ import {
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
   SearchAppState,
+  loadSearchAnalyticsActions,
 } from '@coveo/headless';
 import {
   RecommendationEngine,
@@ -111,10 +112,11 @@ import {dateRanges} from '../components/date-facet/date-utils';
 
 declare global {
   interface Window {
-    // Injected during server-side rendering.
     HEADLESS_STATE?: SearchAppState;
   }
 }
+
+const isServerSideRendered = !!window.HEADLESS_STATE;
 
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
 
@@ -313,6 +315,12 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
+    if (isServerSideRendered) {
+      const {logInterfaceLoad} = loadSearchAnalyticsActions(this.engine);
+      this.engine.dispatch(logInterfaceLoad());
+      return;
+    }
+
     this.engine.executeFirstSearch();
   }
 
