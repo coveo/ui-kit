@@ -111,7 +111,7 @@ import {dateRanges} from '../components/date-facet/date-utils';
 
 declare global {
   interface Window {
-    // The global is injected during server-side rendering.
+    // Injected during server-side rendering.
     HEADLESS_STATE: SearchAppState;
   }
 }
@@ -130,8 +130,6 @@ const initialCriterion = criteria[0][1];
 const resultsPerPageOptions = [10, 25, 50, 100];
 
 export class SearchPage extends Component {
-  static contextType = AppContext;
-
   private engine!: SearchEngine;
   private readonly recommendationEngine: RecommendationEngine;
 
@@ -165,8 +163,8 @@ export class SearchPage extends Component {
 
   private unsubscribeUrlManager!: Unsubscribe;
 
-  constructor(props: {}, context: AppContextType) {
-    super(props, context);
+  constructor(props: {}) {
+    super(props);
 
     this.initEngine();
 
