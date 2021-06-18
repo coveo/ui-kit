@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/coveo/ui-kit/compare/v0.26.0...v0.27.0) (2021-06-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.26.0](https://github.com/coveo/ui-kit/compare/v0.25.0...v0.26.0) (2021-06-17)
+
+
+### Features
+
+* **atomic:** create new numeric facet with basic functionality ([#900](https://github.com/coveo/ui-kit/issues/900)) ([50b1578](https://github.com/coveo/ui-kit/commit/50b1578e0653809edcb0f743088172d4f424054e))
+
+
+
+
+
+# [0.25.0](https://github.com/coveo/ui-kit/compare/v0.24.0...v0.25.0) (2021-06-17)
+
+
+### Features
+
+* **headless:** add single selection feature for facets ([#899](https://github.com/coveo/ui-kit/issues/899)) ([e250d58](https://github.com/coveo/ui-kit/commit/e250d58da7d52795119af885877e1580ddb36e75))
+
+
+
+
+
+# [0.24.0](https://github.com/coveo/ui-kit/compare/v0.23.6...v0.24.0) (2021-06-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.23.6](https://github.com/coveo/ui-kit/compare/v0.23.5...v0.23.6) (2021-06-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [0.23.5](https://github.com/coveo/ui-kit/compare/v0.23.4...v0.23.5) (2021-06-15)
 
 

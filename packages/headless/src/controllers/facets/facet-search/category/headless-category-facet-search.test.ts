@@ -64,7 +64,7 @@ describe('CategoryFacetSearch', () => {
       controller.select(value);
     });
 
-    it('#select dispatches #selectCategoryFacetSearchResult action', () => {
+    it('dispatches #selectCategoryFacetSearchResult action', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
@@ -84,7 +84,7 @@ describe('CategoryFacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('#select dispatches #executeSearch action', () => {
+    it('dispatches #executeSearch action', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );

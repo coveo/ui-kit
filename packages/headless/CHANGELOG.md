@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/coveo/ui-kit/compare/v0.26.0...v0.27.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **headless:** send originLevel3 to searchapi using referrer parameter ([#905](https://github.com/coveo/ui-kit/issues/905)) ([e5cde7a](https://github.com/coveo/ui-kit/commit/e5cde7ad512cdbc8606c178f50c5513cf9a089fb))
+
+
+### Features
+
+* **headless:** expose logRecommendationOpen action ([#902](https://github.com/coveo/ui-kit/issues/902)) ([68fca5b](https://github.com/coveo/ui-kit/commit/68fca5b58621d17afe8baeda4e12310b8167f483))
+
+
+
+
+
+# [0.26.0](https://github.com/coveo/ui-kit/compare/v0.25.0...v0.26.0) (2021-06-17)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.25.0](https://github.com/coveo/ui-kit/compare/v0.24.0...v0.25.0) (2021-06-17)
+
+
+### Features
+
+* **headless:** add analytics support for smart snippet feature ([#901](https://github.com/coveo/ui-kit/issues/901)) ([7079a04](https://github.com/coveo/ui-kit/commit/7079a04736f3d720cf0e02ea742241a6950cede3))
+* **headless:** add single selection feature for facets ([#899](https://github.com/coveo/ui-kit/issues/899)) ([e250d58](https://github.com/coveo/ui-kit/commit/e250d58da7d52795119af885877e1580ddb36e75))
+
+
+
+
+
+# [0.24.0](https://github.com/coveo/ui-kit/compare/v0.23.6...v0.24.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **headless:** prevented folding loop & added tests ([#894](https://github.com/coveo/ui-kit/issues/894)) ([b6d5542](https://github.com/coveo/ui-kit/commit/b6d5542165c6daf41055876b1c9d59a6a3c2e578))
+
+
+### Features
+
+* **headless:** initial support for question answering ([#897](https://github.com/coveo/ui-kit/issues/897)) ([45e7d64](https://github.com/coveo/ui-kit/commit/45e7d6490cde5fefd371795d3adb853629d9b05e))
+
+
+
+
+
 ## [0.23.3](https://github.com/coveo/ui-kit/compare/v0.23.2...v0.23.3) (2021-06-11)
 
 
