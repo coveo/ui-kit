@@ -1,13 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
-import {QuestionAnswerDocumentIdentifier} from '../../controllers';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   documentIdentifierPayloadDefinition,
-  QuestionAnsweringDocumentIdentifierActionCreatorPayload,
-} from './question-answering-common';
-
-export interface SmartSnippetRelatedQuestionActionCreatorPayload
-  extends QuestionAnswerDocumentIdentifier {}
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+} from './question-answering-document-id';
 
 /**
  * Expand a smart snippet.
@@ -31,7 +27,7 @@ export const dislikeSmartSnippet = createAction('smartSnippet/dislike');
  */
 export const expandSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/expand',
-  (payload: QuestionAnsweringDocumentIdentifierActionCreatorPayload) =>
+  (payload: QuestionAnsweringDocumentIdActionCreatorPayload) =>
     validatePayload(payload, documentIdentifierPayloadDefinition())
 );
 
@@ -40,6 +36,6 @@ export const expandSmartSnippetRelatedQuestion = createAction(
  */
 export const collapseSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/collapse',
-  (payload: QuestionAnsweringDocumentIdentifierActionCreatorPayload) =>
+  (payload: QuestionAnsweringDocumentIdActionCreatorPayload) =>
     validatePayload(payload, documentIdentifierPayloadDefinition())
 );

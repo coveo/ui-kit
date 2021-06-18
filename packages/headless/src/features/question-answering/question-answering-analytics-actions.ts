@@ -2,8 +2,8 @@ import {validatePayload} from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {
   documentIdentifierPayloadDefinition,
-  QuestionAnsweringDocumentIdentifierActionCreatorPayload,
-} from './question-answering-common';
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+} from './question-answering-document-id';
 
 export const logExpandSmartSnippet = makeAnalyticsAction(
   'analytics/smartSnippet/expand',
@@ -30,7 +30,7 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
 );
 
 export const logExpandSmartSnippetSuggestion = (
-  payload: QuestionAnsweringDocumentIdentifierActionCreatorPayload
+  payload: QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
@@ -42,7 +42,7 @@ export const logExpandSmartSnippetSuggestion = (
   )();
 
 export const logCollapseSmartSnippetSuggestion = (
-  payload: QuestionAnsweringDocumentIdentifierActionCreatorPayload
+  payload: QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',

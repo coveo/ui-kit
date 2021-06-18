@@ -1,7 +1,7 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {QuestionAnswerDocumentIdentifier} from '../../controllers';
 
-export interface QuestionAnsweringDocumentIdentifierActionCreatorPayload
+export interface QuestionAnsweringDocumentIdActionCreatorPayload
   extends QuestionAnswerDocumentIdentifier {}
 
 export const documentIdentifierPayloadDefinition = () =>

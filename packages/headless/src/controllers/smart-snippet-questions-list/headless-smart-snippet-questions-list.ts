@@ -44,7 +44,7 @@ export interface SmartSnippetQuestionsListState {
   /**
    * The related questions for the current query
    */
-  relatedQuestions: SmartSnippetRelatedQuestion[];
+  questions: SmartSnippetRelatedQuestion[];
 }
 
 export interface SmartSnippetRelatedQuestion {
@@ -105,10 +105,10 @@ export function buildSmartSnippetQuestionsList(
       const state = getState();
 
       return {
-        relatedQuestions: state.search.response.questionAnswer.relatedQuestions.map(
+        questions: state.search.response.questionAnswer.relatedQuestions.map(
           (relatedQuestion) => ({
-            question: relatedQuestion.answerSnippet,
-            answer: relatedQuestion.question,
+            question: relatedQuestion.question,
+            answer: relatedQuestion.answerSnippet,
             documentId: relatedQuestion.documentId,
             expanded: getIsExpanded(
               relatedQuestion,
@@ -119,13 +119,13 @@ export function buildSmartSnippetQuestionsList(
       };
     },
 
-    expand(documentIdentifier: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logExpandSmartSnippetSuggestion(documentIdentifier));
-      engine.dispatch(expandSmartSnippetRelatedQuestion(documentIdentifier));
+    expand(documentId: QuestionAnswerDocumentIdentifier) {
+      engine.dispatch(logExpandSmartSnippetSuggestion(documentId));
+      engine.dispatch(expandSmartSnippetRelatedQuestion(documentId));
     },
-    collapse(documentIdentifier: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logCollapseSmartSnippetSuggestion(documentIdentifier));
-      engine.dispatch(collapseSmartSnippetRelatedQuestion(documentIdentifier));
+    collapse(documentId: QuestionAnswerDocumentIdentifier) {
+      engine.dispatch(logCollapseSmartSnippetSuggestion(documentId));
+      engine.dispatch(collapseSmartSnippetRelatedQuestion(documentId));
     },
   };
 }
