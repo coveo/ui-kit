@@ -67,8 +67,7 @@ function buildNodeConfiguration({input, outDir}) {
       {file: `${outDir}/headless.esm.js`, format: 'es'},
     ],
     plugins: [
-      nodeCoveoAnalytics(),
-      resolve({preferBuiltins: true}),
+      resolve({preferBuiltins: true, mainFields: ['main']}),
       json(),
       commonjs({
         // https://github.com/pinojs/pino/issues/688
@@ -89,20 +88,6 @@ function buildNodeConfiguration({input, outDir}) {
     ],
     onwarn: onWarn,
   };
-}
-
-function nodeCoveoAnalytics() {
-  return alias({
-    entries: [
-      {
-        find: 'coveo.analytics',
-        replacement: pathResolve(
-          __dirname,
-          './node_modules/coveo.analytics/dist/library.js'
-        ),
-      }
-    ]
-  })
 }
 
 // Browser Bundles
