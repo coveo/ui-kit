@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -10,6 +10,8 @@ import {
   buildSearchStatus,
   RangeFacetRangeAlgorithm,
   NumericFacetValue,
+  buildNumericRange,
+  NumericRangeRequest,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -23,6 +25,10 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {BaseFacet} from '../facet-common';
+
+interface NumericRangeWithLabel extends NumericRangeRequest {
+  label?: string;
+}
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -56,6 +62,8 @@ export class AtomicNumericFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
+  private manualRanges: NumericRangeWithLabel[] = [];
 
   @BindStateToController('facet')
   @State()
@@ -103,6 +111,7 @@ export class AtomicNumericFacet
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.manualRanges = this.buildManualRanges();
 
     const options: NumericFacetOptions = {
       facetId: this.facetId,
@@ -110,14 +119,23 @@ export class AtomicNumericFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       rangeAlgorithm: this.rangeAlgorithm,
-      // TODO: implement manual ranges
-      generateAutomaticRanges: true,
+      currentValues: this.manualRanges,
+      generateAutomaticRanges: !this.manualRanges.length,
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
+  }
+
+  private buildManualRanges(): NumericRangeWithLabel[] {
+    return Array.from(this.host.querySelectorAll('atomic-numeric-range')).map(
+      ({start, end, endInclusive, label}) => ({
+        ...buildNumericRange({start, end, endInclusive}),
+        label,
+      })
+    );
   }
 
   private get numberOfSelectedValues() {
@@ -138,12 +156,28 @@ export class AtomicNumericFacet
     );
   }
 
+  private areRangesEqual(
+    firstRange: NumericRangeRequest,
+    secondRange: NumericRangeRequest
+  ) {
+    return (
+      firstRange.start === secondRange.start &&
+      firstRange.end === secondRange.end &&
+      firstRange.endInclusive === secondRange.endInclusive
+    );
+  }
+
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
-    // TODO: implement formats
-    const displayValue = this.bindings.i18n.t('to', {
-      start: facetValue.start,
-      end: facetValue.end,
-    });
+    const manualRangeLabel = this.manualRanges.find((range) =>
+      this.areRangesEqual(range, facetValue)
+    )?.label;
+    const displayValue = manualRangeLabel
+      ? this.bindings.i18n.t(manualRangeLabel)
+      : // TODO: implement formats
+        this.bindings.i18n.t('to', {
+          start: facetValue.start,
+          end: facetValue.end,
+        });
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
@@ -179,13 +213,19 @@ export class AtomicNumericFacet
 
   private renderValues() {
     return this.renderValuesContainer(
-      this.facetState.values.map((value) =>
+      this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
             ? this.facet.toggleSingleSelect(value)
             : this.facet.toggleSelect(value)
         )
       )
+    );
+  }
+
+  private get valuesToRender() {
+    return this.facetState.values.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
     );
   }
 
@@ -202,7 +242,7 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.facetState.values.length) {
+    if (!this.valuesToRender.length) {
       return;
     }
 
