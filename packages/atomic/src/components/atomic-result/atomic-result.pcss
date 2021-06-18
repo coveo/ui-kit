@@ -1,5 +1,4 @@
 @import 'tailwindcss/base';
-@import '../../global/global.pcss';
 
 :host {
   @apply font-sans font-normal;
@@ -221,7 +220,7 @@ section.emphasized {
 section.excerpt {
   grid-area: excerpt;
 
-  color: #626971;
+  color: var(--atomic-neutral-dark);
 }
 
 section.bottom-metadata {
@@ -229,7 +228,7 @@ section.bottom-metadata {
 
   font-size: 0.75rem;
   line-height: 1rem;
-  color: #626971;
+  color: var(--atomic-neutral-dark);
 }
 
 section atomic-result-quickview {

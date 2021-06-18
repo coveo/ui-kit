@@ -203,14 +203,33 @@
         <atomic-result-list>
           <atomic-result-template>
             <template>
+              <style>
+                .badge {
+                  display: inline-flex;
+                  place-items: center;
+                  height: 100%;
+                  padding: 0 0.75rem;
+                  background-color: var(--atomic-neutral-light);
+                  color: var(--atomic-neutral-dark);
+                  font-size: 0.75rem;
+                  line-height: 1rem;
+                  border-radius: 9999px;
+                }
+
+                .field {
+                  white-space: nowrap;
+                  margin-right: 0.5rem;
+                }
+
+                .field-label {
+                  font-weight: bold;
+                  margin-right: 0.25rem;
+                }
+              </style>
               <section class="visual"><atomic-result-icon></atomic-result-icon></section>
               <section class="badges">
                 <atomic-field-condition must-match-sourcetype="Salesforce">
-                  <span
-                    class="inline-flex place-items-center h-full px-3 bg-gray-100 text-gray-400 rounded-full text-xs"
-                  >
-                    Salesforce
-                  </span>
+                  <span class="badge"> Salesforce </span>
                 </atomic-field-condition>
               </section>
               <section class="actions"><atomic-result-quickview></atomic-result-quickview></section>
@@ -220,28 +239,28 @@
               </section>
               <section class="excerpt"><atomic-result-text field="excerpt"></atomic-result-text></section>
               <section class="bottom-metadata">
-                <atomic-field-condition if-defined="author" class="whitespace-nowrap mr-2">
-                  <atomic-text value="author" class="font-bold mr-1"></atomic-text>
+                <atomic-field-condition class="field" if-defined="author">
+                  <atomic-text value="author" class="field-label"></atomic-text>
                   <atomic-result-text field="author"></atomic-result-text>
                 </atomic-field-condition>
 
-                <atomic-field-condition if-defined="source" class="whitespace-nowrap mr-2">
-                  <atomic-text value="source" class="font-bold mr-1"></atomic-text>
+                <atomic-field-condition class="field" if-defined="source">
+                  <atomic-text value="source" class="field-label"></atomic-text>
                   <atomic-result-text field="source"></atomic-result-text>
                 </atomic-field-condition>
 
-                <atomic-field-condition if-defined="language" class="whitespace-nowrap mr-2">
-                  <atomic-text value="language" class="font-bold mr-1"></atomic-text>
+                <atomic-field-condition class="field" if-defined="language">
+                  <atomic-text value="language" class="field-label"></atomic-text>
                   <atomic-result-text field="language"></atomic-result-text>
                 </atomic-field-condition>
 
-                <atomic-field-condition if-defined="filetype" class="whitespace-nowrap mr-2">
-                  <atomic-text value="fileType" class="font-bold mr-1"></atomic-text>
+                <atomic-field-condition class="field" if-defined="filetype">
+                  <atomic-text value="fileType" class="field-label"></atomic-text>
                   <atomic-result-text field="filetype"></atomic-result-text>
                 </atomic-field-condition>
 
-                <span class="whitespace-nowrap mr-2">
-                  <span class="font-bold mr-1">Date</span>
+                <span class="field">
+                  <span class="field-label">Date</span>
                   <atomic-result-date></atomic-result-date>
                 </span>
               </section>
