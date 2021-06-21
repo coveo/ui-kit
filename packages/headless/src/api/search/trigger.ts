@@ -38,6 +38,10 @@ export interface TriggerQuery {
   content: string;
 }
 
+export function isTriggerQuery(trigger: Trigger): trigger is TriggerRedirect {
+  return trigger.type === 'query';
+}
+
 /**
  * Execute a javascript function present in the page.
  */

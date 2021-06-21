@@ -15,7 +15,7 @@ describe('trigger slice', () => {
     );
   });
 
-  it('when a executeSearch fulfilled is received and the payload does not contain any Trigger objects, it does not update `state.redirectTo`', () => {
+  it('when a executeSearch fulfilled is received and the payload does not contain any Trigger objects, it does not update `state`', () => {
     const state = getTriggerInitialState();
     const response = buildMockSearchResponse();
     const searchState = buildMockSearch({
@@ -30,6 +30,7 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual('');
+    expect(finalState.query).toEqual('');
   });
 
   it('when a executeSearch fulfilled is received and the payload does not contain any TriggerRedirect objects, it does not update `state.redirectTo`', () => {
@@ -75,5 +76,48 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual('https://www.coveo.com');
+  });
+
+  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerQuery objects, it does not update `state.query`', () => {
+    const state = getTriggerInitialState();
+    const triggers = [
+      buildMockTriggerNotify({content: 'notification'}),
+      buildMockTriggerRedirect({content: 'redirect'}),
+    ];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.query).toEqual('');
+  });
+
+  it('when a executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates `state.query`', () => {
+    const state = getTriggerInitialState();
+    const triggers = [buildMockTriggerQuery({content: 'Euro'})];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.query).toEqual('Euro');
   });
 });
