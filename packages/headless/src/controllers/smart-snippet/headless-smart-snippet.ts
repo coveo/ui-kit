@@ -1,7 +1,6 @@
 import {buildController, Controller} from '../controller/headless-controller';
-import {search} from '../../app/reducers';
+import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {SearchSection} from '../../state/state-sections';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
@@ -11,6 +10,13 @@ import {
   logLikeSmartSnippet,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  collapseSmartSnippet,
+  dislikeSmartSnippet,
+  expandSmartSnippet,
+  likeSmartSnippet,
+} from '../../features/question-answering/question-answering-actions';
+import {QuestionAnsweringSection} from '../../state/state-sections';
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
@@ -84,38 +90,46 @@ export function buildSmartSnippet(engine: SearchEngine): SmartSnippet {
   }
 
   const controller = buildController(engine);
+  const getState = () => engine.state;
 
   return {
     ...controller,
 
     get state() {
+      const state = getState();
       return {
-        // TODO
-      } as SmartSnippetState;
+        disliked: state.questionAnswering.disliked,
+        liked: state.questionAnswering.liked,
+        expanded: state.questionAnswering.expanded,
+        answerFound: state.search.response.questionAnswer.answerSnippet !== '',
+        question: state.search.response.questionAnswer.question,
+        answer: state.search.response.questionAnswer.answerSnippet,
+        documentId: state.search.response.questionAnswer.documentId,
+      };
     },
 
     expand() {
       engine.dispatch(logExpandSmartSnippet());
-      // TODO manage state expanded
+      engine.dispatch(expandSmartSnippet());
     },
     collapse() {
       engine.dispatch(logCollapseSmartSnippet());
-      // TODO manage state expanded
+      engine.dispatch(collapseSmartSnippet());
     },
     like() {
       engine.dispatch(logLikeSmartSnippet());
-      // TODO manage state liked
+      engine.dispatch(likeSmartSnippet());
     },
     dislike() {
       engine.dispatch(logDislikeSmartSnippet());
-      // TODO manage state disliked
+      engine.dispatch(dislikeSmartSnippet());
     },
   };
 }
 
 function loadSmartSnippetReducers(
   engine: SearchEngine
-): engine is SearchEngine<SearchSection> {
-  engine.addReducers({search});
+): engine is SearchEngine<QuestionAnsweringSection> {
+  engine.addReducers({search, questionAnswering});
   return true;
 }

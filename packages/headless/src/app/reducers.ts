@@ -22,6 +22,7 @@ import {productRecommendationsReducer} from '../features/product-recommendations
 import {querySetReducer} from '../features/query-set/query-set-slice';
 import {querySuggestReducer} from '../features/query-suggest/query-suggest-slice';
 import {queryReducer} from '../features/query/query-slice';
+import {questionAnsweringReducer} from '../features/question-answering/question-answering-slice';
 import {recommendationReducer} from '../features/recommendation/recommendation-slice';
 import {redirectionReducer} from '../features/redirection/redirection-slice';
 import {resultPreviewReducer} from '../features/result-preview/result-preview-slice';
@@ -57,6 +58,7 @@ export const searchHub = searchHubReducer;
 export const debug = debugReducer;
 export const resultPreview = resultPreviewReducer;
 export const version = versionReducer;
+export const questionAnswering = questionAnsweringReducer;
 
 export const history = undoable({
   actionTypes: {
