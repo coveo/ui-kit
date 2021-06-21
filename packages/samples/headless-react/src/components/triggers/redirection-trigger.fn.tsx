@@ -16,8 +16,6 @@ export const RedirectionTrigger: FunctionComponent<HeadlessRedirectionTriggerPro
 
   const redirect = () => {
     setState(props.controller.state);
-    console.log(state);
-    console.log(props.controller.state);
     if (state.redirectTo) {
       window.location.href = controller.state.redirectTo!;
     }

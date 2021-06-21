@@ -58,7 +58,7 @@ export const searchHub = searchHubReducer;
 export const debug = debugReducer;
 export const resultPreview = resultPreviewReducer;
 export const version = versionReducer;
-export const trigger = triggerReducer;
+export const triggers = triggerReducer;
 
 export const history = undoable({
   actionTypes: {

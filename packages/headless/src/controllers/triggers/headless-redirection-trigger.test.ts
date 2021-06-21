@@ -4,7 +4,7 @@ import {
 } from './headless-redirection-trigger';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
-import {trigger, configuration} from '../../app/reducers';
+import {triggers, configuration} from '../../app/reducers';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 
 describe('RedirectionTrigger', () => {
@@ -36,7 +36,7 @@ describe('RedirectionTrigger', () => {
 
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      trigger,
+      triggers,
       configuration,
     });
   });
@@ -47,7 +47,7 @@ describe('RedirectionTrigger', () => {
 
   it('when the #engine.state.redirection.redirectTo is already initialized, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
     const listener = jest.fn();
-    engine.state.trigger.redirectTo = 'https://www.google.com';
+    engine.state.triggers.redirectTo = 'https://www.google.com';
     redirectionTrigger.subscribe(listener);
 
     expect(listener).toHaveBeenCalledTimes(1);
@@ -64,9 +64,9 @@ describe('RedirectionTrigger', () => {
 
   it('when the #engine.state.redirection.redirectTo is updated, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
     const listener = jest.fn();
-    engine.state.trigger.redirectTo = 'https://www.google.com';
+    engine.state.triggers.redirectTo = 'https://www.google.com';
     redirectionTrigger.subscribe(listener);
-    engine.state.trigger.redirectTo = 'https://www.coveo.com';
+    engine.state.triggers.redirectTo = 'https://www.coveo.com';
     const [firstListener] = registeredListeners();
     firstListener();
 

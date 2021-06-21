@@ -235,5 +235,5 @@ export interface TriggerSection {
   /**
    * The information related to the triggers.
    */
-  trigger: TriggerState;
+  triggers: TriggerState;
 }

@@ -1,6 +1,6 @@
 import {Engine} from '../../app/headless-engine';
 import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
-import {configuration, trigger} from '../../app/reducers';
+import {configuration, triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
@@ -43,7 +43,7 @@ export function buildRedirectionTrigger(
 
   const getState = () => engine.state;
 
-  let previousRedirectTo: string | null = null;
+  let previousRedirectTo: string | null = getState().triggers.redirectTo;
 
   return {
     ...controller,
@@ -64,7 +64,7 @@ export function buildRedirectionTrigger(
 
     get state() {
       return {
-        redirectTo: getState().trigger.redirectTo,
+        redirectTo: getState().triggers.redirectTo,
       };
     },
   };
@@ -73,6 +73,6 @@ export function buildRedirectionTrigger(
 function loadRedirectionReducers(
   engine: Engine<object>
 ): engine is Engine<TriggerSection & ConfigurationSection> {
-  engine.addReducers({configuration, trigger});
+  engine.addReducers({configuration, triggers});
   return true;
 }

@@ -58,7 +58,7 @@ export function createMockState(
     resultPreview: getResultPreviewInitialState(),
     version: 'unit-testing-version',
     folding: getFoldingInitialState(),
-    trigger: getTriggerInitialState(),
+    triggers: getTriggerInitialState(),
     ...config,
   };
 }
