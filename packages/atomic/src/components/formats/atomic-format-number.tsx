@@ -1,9 +1,9 @@
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {dispatchNumberFormatEvent} from './format-common';
+import {dispatchNumberFormatEvent, NumberFormatter} from './format-common';
 
 /**
  * The `atomic-format-number` component is used for number formatting.
- * It will set the numerical format on compatible parents according to the options.
+ * The numerical format of compatible parents will be set according to the properties of this component.
  */
 @Component({
   tag: 'atomic-format-number',
@@ -46,15 +46,15 @@ export class AtomicFormatNumber {
     }
   }
 
-  private format(value: number | string, languages: string[]) {
-    return parseFloat(`${value}`).toLocaleString(languages, {
+  private format: NumberFormatter = (value, languages) => {
+    return value.toLocaleString(languages, {
       minimumIntegerDigits: this.minimumIntegerDigits,
       minimumFractionDigits: this.minimumFractionDigits,
       maximumFractionDigits: this.maximumFractionDigits,
       minimumSignificantDigits: this.minimumSignificantDigits,
       maximumSignificantDigits: this.maximumSignificantDigits,
     });
-  }
+  };
 
   public render() {
     if (this.error) {

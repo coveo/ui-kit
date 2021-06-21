@@ -1,9 +1,6 @@
 import {buildCustomEvent} from '../../utils/event-utils';
 
-export type NumberFormatter = (
-  value: number | string,
-  languages: string[]
-) => string;
+export type NumberFormatter = (value: number, languages: string[]) => string;
 
 export const dispatchNumberFormatEvent = (
   formatter: NumberFormatter,
@@ -20,4 +17,4 @@ export const dispatchNumberFormatEvent = (
 };
 
 export const defaultNumberFormatter: NumberFormatter = (value, languages) =>
-  parseFloat(`${value}`).toLocaleString(languages);
+  value.toLocaleString(languages);

@@ -1,9 +1,9 @@
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {dispatchNumberFormatEvent} from './format-common';
+import {dispatchNumberFormatEvent, NumberFormatter} from './format-common';
 
 /**
  * The `atomic-format-currency` component is used for formatting currencies.
- * It will set the numerical format on compatible parents according to the options.
+ * The numerical format of compatible parents will be set according to the currency property of this component.
  */
 @Component({
   tag: 'atomic-format-currency',
@@ -16,7 +16,7 @@ export class AtomicFormatCurrency {
 
   /**
    * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
-   * See the current [currency & funds code list](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-currency-codes).
+   * See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
    */
   @Prop() public currency!: string;
 
@@ -31,12 +31,12 @@ export class AtomicFormatCurrency {
     }
   }
 
-  private format(value: number | string, languages: string[]) {
-    return parseFloat(`${value}`).toLocaleString(languages, {
+  private format: NumberFormatter = (value, languages) => {
+    return value.toLocaleString(languages, {
       style: 'currency',
       currency: this.currency,
     });
-  }
+  };
 
   public render() {
     if (this.error) {

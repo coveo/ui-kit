@@ -145,7 +145,7 @@ export class AtomicNumericFacet
     try {
       return this.formatter(value, this.bindings.i18n.languages);
     } catch (error) {
-      this.bindings.engine.logger.warn(
+      this.bindings.engine.logger.error(
         `atomic-numeric-facet facet value "${value}" could not be formatted correctly.`,
         error
       );

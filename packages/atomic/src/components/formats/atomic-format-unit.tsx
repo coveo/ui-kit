@@ -1,9 +1,9 @@
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {dispatchNumberFormatEvent} from './format-common';
+import {dispatchNumberFormatEvent, NumberFormatter} from './format-common';
 
 /**
  * The `atomic-format-unit` component is used for formatting numbers with units.
- * It will set the numerical format on compatible parents according to the options.
+ * The numerical format of compatible parents will be set according to the properties of this component.
  */
 @Component({
   tag: 'atomic-format-unit',
@@ -17,7 +17,7 @@ export class AtomicFormatUnit {
   /**
    * The unit to use in unit formatting.
    * Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor.
-   * Has to be a [sanctionned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+   * The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
    */
   @Prop() public unit!: string;
   /**
@@ -39,13 +39,13 @@ export class AtomicFormatUnit {
     }
   }
 
-  private format(value: number | string, languages: string[]) {
-    return parseFloat(`${value}`).toLocaleString(languages, {
+  private format: NumberFormatter = (value, languages) => {
+    return value.toLocaleString(languages, {
       style: 'unit',
       unit: this.unit,
       unitDisplay: this.unitDisplay,
     });
-  }
+  };
 
   public render() {
     if (this.error) {
