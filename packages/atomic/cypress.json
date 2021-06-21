@@ -1,4 +1,5 @@
 {
+  "baseUrl": "http://localhost:3333",
   "projectId": "5ph2j4",
   "integrationFolder": "cypress/integration",
   "testFiles": ["**/*.cypress.ts"],

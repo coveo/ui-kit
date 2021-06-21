@@ -1,5 +1,5 @@
 import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {configuration} from '../../app/reducers';
 import {
   disableAnalytics,
@@ -100,7 +100,7 @@ export interface ConfigurationActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadConfigurationActions(
-  engine: Engine<object>
+  engine: CoreEngine
 ): ConfigurationActionCreators {
   engine.addReducers({configuration});
 

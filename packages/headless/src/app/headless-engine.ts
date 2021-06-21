@@ -33,6 +33,10 @@ type HeadlessState = StateFromReducersMapObject<HeadlessReducers>;
 
 /**
  * The global headless engine options.
+ *
+ * @deprecated - For a search app, use `SearchEngineOptions`.
+ * For a recommendation, use `RecommendationEngineOptions` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `ProductRecommendationEngineOptions` from "@coveo/headless/product-recommendation".
  */
 export interface HeadlessOptions<Reducers extends ReducersMapObject>
   extends EngineOptions<Reducers> {
@@ -44,6 +48,10 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject>
 
 /**
  * The global headless engine configuration options.
+ *
+ * @deprecated - For a search app, use `SearchEngineConfiguration`.
+ * For a recommendation, use `RecommendationEngineConfiguration` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `ProductRecommendationEngineConfiguration` from "@coveo/headless/product-recommendation".
  */
 export interface HeadlessConfigurationOptions extends EngineConfiguration {
   /**
@@ -54,6 +62,10 @@ export interface HeadlessConfigurationOptions extends EngineConfiguration {
 
 /**
  * The engine for powering search experiences.
+ *
+ * @deprecated - For a search app, use `SearchEngine`.
+ * For a recommendation, use `RecommendationEngine` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `ProductRecommendationEngine` from "@coveo/headless/product-recommendation".
  */
 export interface Engine<State = SearchAppState>
   extends CoreEngine<State & HeadlessState, SearchThunkExtraArguments> {}
@@ -66,6 +78,10 @@ export interface SearchThunkExtraArguments extends ThunkExtraArguments {
  * The global headless engine.
  * You should instantiate one `HeadlessEngine` class per application and share it.
  * Every headless controller requires an instance of `Engine` as a parameter.
+ *
+ * @deprecated - For a search app, use `buildSearchEngine`.
+ * For a recommendation, use `buildRecommendationEngine` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `buildProductRecommendationEngine` from "@coveo/headless/product-recommendation".
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
@@ -73,6 +89,12 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
+    console.warn(
+      'The HeadlessEngine class is deprecated and will be removed in the next major version. Please use either:\n',
+      'import {buildSearchEngine} from "@coveo/headless" or,\n',
+      'import {buildRecommendationEngine} from "@coveo/headless/recommendation" or,\n',
+      'import {buildProductRecommendationEngine} from "@coveo/headless/product-recommendation".'
+    );
     this.logger = buildLogger(options.loggerOptions);
     this.validateConfiguration(options);
 
@@ -159,6 +181,13 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
    * @returns A configuration with sample data for testing purposes.
    */
   static getSampleConfiguration(): HeadlessConfigurationOptions {
+    console.warn(
+      'The HeadlessEngine.getSampleConfiguration static method is deprecated and will be removed in the next major version. Please use either:\n',
+      'import {getSampleSearchEngineConfiguration} from "@coveo/headless" or,\n',
+      'import {getSampleRecommendationEngineConfiguration} from "@coveo/headless/recommendation" or,\n',
+      'import {getSampleProductRecommendationEngineConfiguration} from "@coveo/headless/product-recommendation".'
+    );
+
     return {
       organizationId: 'searchuisamples',
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',

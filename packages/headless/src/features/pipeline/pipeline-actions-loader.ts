@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {pipeline} from '../../app/reducers';
 import {setPipeline} from './pipeline-actions';
 
@@ -23,7 +23,7 @@ export interface PipelineActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadPipelineActions(
-  engine: Engine<object>
+  engine: CoreEngine
 ): PipelineActionCreators {
   engine.addReducers({pipeline});
 

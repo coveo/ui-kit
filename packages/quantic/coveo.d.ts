@@ -11,15 +11,16 @@ declare global {
           element: LightningElement;
           initialized: boolean;
         }[];
-        options:
-          | Deferred
-          | {
-              configuration: HeadlessConfigurationOptions;
-              reducers: Reducers;
-            };
-        initializedCallback?: Function;
-        engine: HeadlessTypes.HeadlessEngine;
+        config: Deferred<HeadlessTypes.SearchEngineConfiguration>;
+        engine: Promise<HeadlessTypes.SearchEngine>;
       };
     };
   }
+}
+
+class Deferred<T> {
+  promise: Promise<T>;
+  isResolved: boolean;
+  resolve: (value: T) => void;
+  reject: (reason?: unknown) => void;
 }

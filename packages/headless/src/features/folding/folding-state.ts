@@ -1,10 +1,27 @@
 import {Result} from '../../api/search/search/result';
 
-export interface FoldedResult extends Result {
+export type CollectionId = string;
+
+export interface FoldedResult {
+  /**
+   * The result at this position in the collection.
+   */
+  result: Result;
   /**
    * The children of this result sorted in the same order as the search results.
    */
   children: FoldedResult[];
+}
+
+export interface FoldedCollection extends FoldedResult {
+  /**
+   * Whether more results might be available in the collection.
+   */
+  moreResultsAvailable: boolean;
+  /**
+   * Whether there is an ongoing query to add more results to the collection.
+   */
+  isLoadingMoreResults: boolean;
 }
 
 export interface FoldingFields {
@@ -16,8 +33,8 @@ export interface FoldingFields {
 export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
-  numberOfFoldedResults: number;
-  collections: FoldedResult[];
+  filterFieldRange: number;
+  collections: Record<CollectionId, FoldedCollection>;
 }
 
 export const getFoldingInitialState: () => FoldingState = () => ({
@@ -27,6 +44,6 @@ export const getFoldingInitialState: () => FoldingState = () => ({
     parent: 'foldingparent',
     child: 'foldingchild',
   },
-  numberOfFoldedResults: 2,
-  collections: [],
+  filterFieldRange: 2,
+  collections: {},
 });

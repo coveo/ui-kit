@@ -23,7 +23,7 @@ export default class QuanticResultsPerPage extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").Engine} engine
+   * @param {import("coveo").SearchEngine} engine
    */
   @api
   initialize(engine) {

@@ -22,6 +22,8 @@ import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {PipelineSection} from '../../state/state-sections';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
 
 export enum AnalyticsType {
   Search,
@@ -117,6 +119,26 @@ export const partialDocumentInformation = (
       ({uniqueId}) => result.uniqueId === uniqueId
     ) || 0;
 
+  return buildPartialDocumentInformation(result, resultIndex, state);
+};
+
+export const partialRecommendationInformation = (
+  result: Result,
+  state: Partial<RecommendationAppState>
+): PartialDocumentInformation => {
+  const resultIndex =
+    state.recommendation?.recommendations.findIndex(
+      ({uniqueId}) => result.uniqueId === uniqueId
+    ) || 0;
+
+  return buildPartialDocumentInformation(result, resultIndex, state);
+};
+
+function buildPartialDocumentInformation(
+  result: Result,
+  resultIndex: number,
+  state: Partial<PipelineSection>
+): PartialDocumentInformation {
   const collection = result.raw.collection;
   const collectionName =
     typeof collection === 'string' ? collection : 'default';
@@ -133,7 +155,7 @@ export const partialDocumentInformation = (
     sourceName: getSourceName(result),
     queryPipeline: state.pipeline || getPipelineInitialState(),
   };
-};
+}
 
 export const documentIdentifier = (result: Result): DocumentIdentifier => {
   return {

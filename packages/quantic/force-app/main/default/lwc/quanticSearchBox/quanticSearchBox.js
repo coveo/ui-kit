@@ -46,7 +46,7 @@ export default class QuanticSearchBox extends LightningElement {
   getSuggestionElements = () => this.template.querySelectorAll('.slds-listbox__option');
 
   /**
-   * @param {import("coveo").Engine} engine
+   * @param {import("coveo").SearchEngine} engine
    */
   @api
   initialize(engine) {

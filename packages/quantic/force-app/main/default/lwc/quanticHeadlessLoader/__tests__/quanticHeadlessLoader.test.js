@@ -7,21 +7,17 @@ import {
   getHeadlessEngine,
   initializeWithHeadless
 } from '../quanticHeadlessLoader';
-import { CoveoHeadlessStub, MockEngine } from '../../testUtils/coveoHeadlessStub';
+import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
 import {Deferred} from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
-  const dispatchMock = jest.fn();
   const testOptions = {
-    configuration: {
-      organizationId: 'testOrganization',
-      accessToken: 'bogus-token-xxxxx-xxxxx',
-      search: {
-        pipeline: 'default',
-        searchHub: 'default',
-      }
-    },
-    reducers: {}
+    organizationId: 'testOrganization',
+    accessToken: 'bogus-token-xxxxx-xxxxx',
+    search: {
+      pipeline: 'default',
+      searchHub: 'default',
+    }
   };
 
   let resolvedTestOptions;
@@ -141,9 +137,7 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            engine: {
-              dispatch: dispatchMock
-            }
+            engine: CoveoHeadlessStub.buildSearchEngine()
           }
         }
       });
@@ -183,10 +177,8 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            engine: Promise.resolve({
-              dispatch: dispatchMock
-            }),
-            options: new Deferred()
+            engine: Promise.resolve(CoveoHeadlessStub.buildSearchEngine()),
+            config: new Deferred()
           }
         }
       });
@@ -202,12 +194,13 @@ describe('c/quanticHeadlessLoader', () => {
           ];
         });
 
-        it('should set the component to initialized', () => {
+        it('should set the component to initialized', async () => {
           setComponentInitialized(testElement, testId);
   
           assertComponentIsSetInitialized(testElement, testId);
           jest.runAllTimers();
-          expect(dispatchMock).not.toBeCalled();
+          const engine = await window.coveoHeadless[testId].engine;
+          expect(engine.executeFirstSearch).not.toBeCalled();
         });
       });
 
@@ -226,6 +219,11 @@ describe('c/quanticHeadlessLoader', () => {
           setComponentInitialized(testElement, testId);
   
           assertComponentIsSetInitialized(testElement, testId);
+
+          jest.runAllTimers();
+          await window.coveoHeadless.engine;
+          const engine = await window.coveoHeadless[testId].engine;
+          expect(engine.executeFirstSearch).toBeCalled();
         });
 
         describe('when initialized callback is set', () => {
@@ -261,7 +259,7 @@ describe('c/quanticHeadlessLoader', () => {
       it('should init the engine return a promise that resolves to that instance', async () => {
         const engine = await getHeadlessEngine(testId);
 
-        expect(engine).toBeInstanceOf(MockEngine);
+        expect(engine).toBeTruthy();
       });
     });
 
@@ -326,7 +324,7 @@ describe('c/quanticHeadlessLoader', () => {
         await initializeWithHeadless(testElement, testId, initialize);
         const engine = await window.coveoHeadless[testId].engine;
 
-        expect(engine).toBeInstanceOf(MockEngine);
+        expect(engine).toBeTruthy();
         expect(initialize).toHaveBeenCalled();
         assertComponentIsSetInitialized(testElement, testId);
       });

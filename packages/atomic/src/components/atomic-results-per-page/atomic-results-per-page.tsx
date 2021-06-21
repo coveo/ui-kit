@@ -120,7 +120,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
     return (
       <div class="flex items-center">
-        <span part="label" class="text-on-background pr-4 text-sm">
+        <span part="label" class="text-on-background pr-4">
           {this.strings.resultsPerPage()}
         </span>
         <div

@@ -110,9 +110,8 @@ async function initEngine(engineId) {
     if (!window.coveoHeadless[engineId].options) {
       throw new Error('Engine configuration has not been set.');
     }
-    const options = await window.coveoHeadless[engineId].options.promise;
-
-    return new CoveoHeadless.HeadlessEngine(options);
+    const configuration = await window.coveoHeadless[engineId].config.promise;
+    return CoveoHeadless.buildSearchEngine({configuration})
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }

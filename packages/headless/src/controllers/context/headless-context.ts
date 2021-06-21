@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
   ContextPayload,
@@ -12,6 +11,7 @@ import {
 import {ContextSection} from '../../state/state-sections';
 import {context} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {CoreEngine} from '../../app/engine';
 
 export {ContextPayload, ContextValue};
 
@@ -61,7 +61,7 @@ export interface ContextState {
  * @param engine - The headless engine.
  * @returns A `Context` controller instance.
  */
-export function buildContext(engine: Engine<object>): Context {
+export function buildContext(engine: CoreEngine): Context {
   if (!loadContextReducers(engine)) {
     throw loadReducerError;
   }
@@ -94,8 +94,8 @@ export function buildContext(engine: Engine<object>): Context {
 }
 
 function loadContextReducers(
-  engine: Engine<object>
-): engine is Engine<ContextSection> {
+  engine: CoreEngine
+): engine is CoreEngine<ContextSection> {
   engine.addReducers({context});
   return true;
 }

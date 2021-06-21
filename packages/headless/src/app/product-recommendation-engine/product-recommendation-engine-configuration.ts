@@ -5,6 +5,9 @@ import {
   getSampleEngineConfiguration,
 } from '../engine-configuration';
 
+/**
+ * The product recommendation engine configuration.
+ */
 export interface ProductRecommendationEngineConfiguration
   extends EngineConfiguration {
   /**
@@ -24,6 +27,11 @@ export const productRecommendationEngineConfigurationSchema = new Schema<
   searchHub: new StringValue({required: false, emptyAllowed: false}),
 });
 
+/**
+ * Creates a sample product recommendation engine configuration.
+ *
+ * @returns The sample product recommendation engine configuration.
+ */
 export function getSampleProductRecommendationEngineConfiguration(): ProductRecommendationEngineConfiguration {
   return {
     ...getSampleEngineConfiguration(),
