@@ -14,6 +14,7 @@ export function buildMockSearchResponse(
     totalCountFiltered: 0,
     facets: [],
     queryCorrections: [emptyCorrection()],
+    triggers: [],
     questionAnswer: emptyQuestionAnswer(),
     ...config,
   };
