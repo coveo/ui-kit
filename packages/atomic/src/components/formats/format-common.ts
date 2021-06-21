@@ -11,7 +11,7 @@ export const dispatchNumberFormatEvent = (
   const canceled = element.dispatchEvent(event);
   if (canceled) {
     throw new Error(
-      'The Atomic number format component was not handled as it is not a child of a compatible component'
+      'The Atomic number format component was not handled, as it is not a child of a compatible component'
     );
   }
 };
