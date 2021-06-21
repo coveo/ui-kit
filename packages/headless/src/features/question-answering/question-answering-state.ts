@@ -1,3 +1,9 @@
+import {QuestionAnswerDocumentIdentifier} from '../../controllers';
+
+export interface QuestionAnsweringRelatedQuestionState
+  extends QuestionAnswerDocumentIdentifier {
+  expanded: boolean;
+}
 export interface QuestionAnsweringState {
   /**
    * Determines if the snippet is liked, or upvoted by the end user.
@@ -11,10 +17,12 @@ export interface QuestionAnsweringState {
    * Determines if the snippet is expanded.
    */
   expanded: boolean;
+  relatedQuestions: QuestionAnsweringRelatedQuestionState[];
 }
 
 export const getQuestionAnsweringInitialState: () => QuestionAnsweringState = () => ({
   liked: false,
   disliked: false,
   expanded: false,
+  relatedQuestions: [],
 });

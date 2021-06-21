@@ -53,8 +53,8 @@ import {
   logLikeSmartSnippet,
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
-  LogSmartSnippetSuggestionActionCreatorPayload,
 } from '../question-answering/question-answering-analytics-actions';
+import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -65,7 +65,7 @@ export {
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
-  LogSmartSnippetSuggestionActionCreatorPayload,
+  QuestionAnsweringDocumentIdActionCreatorPayload,
 };
 
 /**
@@ -461,7 +461,7 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logExpandSmartSnippetSuggestion(
-    payload: LogSmartSnippetSuggestionActionCreatorPayload
+    payload: QuestionAnsweringDocumentIdActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
@@ -477,7 +477,7 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCollapseSmartSnippetSuggestion(
-    payload: LogSmartSnippetSuggestionActionCreatorPayload
+    payload: QuestionAnsweringDocumentIdActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
