@@ -176,6 +176,44 @@ export namespace Components {
          */
         "ifNotDefined"?: string;
     }
+    interface AtomicFormatCurrency {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-currency-codes).
+         */
+        "currency": string;
+    }
+    interface AtomicFormatNumber {
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicFormatUnit {
+        /**
+          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. Has to be a [sanctionned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+         */
+        "unit": string;
+        /**
+          * The unit formatting style to use in unit formatting. - "long" (e.g., 16 litres) - "short" (e.g., 16 l) - "narrow" (e.g., 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
+    }
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicModal {
@@ -553,6 +591,24 @@ declare global {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
     };
+    interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatCurrencyElement: {
+        prototype: HTMLAtomicFormatCurrencyElement;
+        new (): HTMLAtomicFormatCurrencyElement;
+    };
+    interface HTMLAtomicFormatNumberElement extends Components.AtomicFormatNumber, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatNumberElement: {
+        prototype: HTMLAtomicFormatNumberElement;
+        new (): HTMLAtomicFormatNumberElement;
+    };
+    interface HTMLAtomicFormatUnitElement extends Components.AtomicFormatUnit, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatUnitElement: {
+        prototype: HTMLAtomicFormatUnitElement;
+        new (): HTMLAtomicFormatUnitElement;
+    };
     interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
     }
     var HTMLAtomicFrequentlyBoughtTogetherElement: {
@@ -738,6 +794,9 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-v1": HTMLAtomicFacetV1Element;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
+        "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
+        "atomic-format-number": HTMLAtomicFormatNumberElement;
+        "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -935,6 +994,44 @@ declare namespace LocalJSX {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+    }
+    interface AtomicFormatCurrency {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-currency-codes).
+         */
+        "currency": string;
+    }
+    interface AtomicFormatNumber {
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicFormatUnit {
+        /**
+          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. Has to be a [sanctionned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+         */
+        "unit": string;
+        /**
+          * The unit formatting style to use in unit formatting. - "long" (e.g., 16 litres) - "short" (e.g., 16 l) - "narrow" (e.g., 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     interface AtomicFrequentlyBoughtTogether {
     }
@@ -1250,6 +1347,9 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-v1": AtomicFacetV1;
         "atomic-field-condition": AtomicFieldCondition;
+        "atomic-format-currency": AtomicFormatCurrency;
+        "atomic-format-number": AtomicFormatNumber;
+        "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -1295,6 +1395,9 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
+            "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
+            "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
+            "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
