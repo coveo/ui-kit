@@ -9,6 +9,7 @@ import {
 } from '../../utils/initialization-utils';
 
 // TODO: Get type from Headless once the API provides more streamlined errors.
+const disconnectedException = 'Disconnected';
 const noEndpointsException = 'NoEndpointsException';
 const invalidTokenException = 'InvalidTokenException';
 
@@ -33,6 +34,8 @@ export class AtomicQueryError implements InitializableComponent {
   @BindStateToI18n()
   @State()
   private strings = {
+    disconnectedTitle: () => this.bindings.i18n.t('disconnected'),
+    disconnectedDesc: () => this.bindings.i18n.t('checkYourConnection'),
     noEndpointsTitle: () => this.bindings.i18n.t('noEndpoints'),
     noEndpointsDesc: () => this.bindings.i18n.t('addSources'),
     invalidTokenTitle: () => this.bindings.i18n.t('cannotAccess'),
@@ -68,7 +71,7 @@ export class AtomicQueryError implements InitializableComponent {
     return (
       <pre
         part="error-info"
-        class="text-left border border-divider bg-background-variant p-3 rounded my-4 whitespace-pre-wrap"
+        class="text-left border border-neutral bg-neutral-light p-3 rounded my-4 whitespace-pre-wrap"
       >
         <code>{JSON.stringify(this.queryErrorState.error, null, 2)}</code>
       </pre>
@@ -77,6 +80,8 @@ export class AtomicQueryError implements InitializableComponent {
 
   private get title() {
     switch (this.queryErrorState.error!.type) {
+      case disconnectedException:
+        return this.strings.disconnectedTitle();
       case noEndpointsException:
         return this.strings.noEndpointsTitle();
       case invalidTokenException:
@@ -88,6 +93,8 @@ export class AtomicQueryError implements InitializableComponent {
 
   private get description() {
     switch (this.queryErrorState.error!.type) {
+      case disconnectedException:
+        return this.strings.disconnectedDesc();
       case noEndpointsException:
         return this.strings.noEndpointsDesc();
       case invalidTokenException:
@@ -125,7 +132,7 @@ export class AtomicQueryError implements InitializableComponent {
           <a
             href={this.link}
             part="doc-link"
-            class="text-primary hover:underline visited:text-visited"
+            class="text-primary hover:underline"
           >
             {this.strings.helpLink()}
           </a>

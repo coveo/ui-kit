@@ -1,3 +1,4 @@
+import {RangeFacetRangeAlgorithm} from '@coveo/headless';
 import {setUpPage} from '../../../utils/setupComponent';
 
 export const numericField = 'size';
@@ -28,6 +29,7 @@ export interface NumericFacetSetupOptions {
   ranges: NumericRange[];
   attributes: string;
   executeFirstSearch: boolean;
+  rangeAlgorithm: RangeFacetRangeAlgorithm;
 }
 
 export function generateDateRangeHtml(numericRanges: NumericRange[]) {
@@ -48,15 +50,16 @@ export function setupNumericFacet(
     field: numericField,
     label: numericLabel,
     ranges: [],
+    rangeAlgorithm: 'even',
     ...options,
   };
   setUpPage(
     `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
   <atomic-numeric-facet field="${setupOptions.field}" label="${
       setupOptions.label
-    }" ${setupOptions.attributes}>${generateDateRangeHtml(
-      setupOptions.ranges
-    )}</atomic-numeric-facet>`,
+    }" ${setupOptions.attributes} range-algorithm="${
+      setupOptions.rangeAlgorithm
+    }">${generateDateRangeHtml(setupOptions.ranges)}</atomic-numeric-facet>`,
     setupOptions.executeFirstSearch
   );
 }
@@ -76,4 +79,16 @@ export function convertRangeToFacetValue(
   const formatedEndValue = new Intl.NumberFormat().format(range.end);
 
   return `${formatedStartValue}${valueSeparator}${formatedEndValue}`;
+}
+
+export function convertFacetValueToRange(
+  facetValue: string,
+  valueSeparator?: string
+) {
+  valueSeparator = valueSeparator ? valueSeparator : ' to ';
+  const splitFacetValue = facetValue.split(valueSeparator);
+  return {
+    start: Number(splitFacetValue[0].replace(',', '')),
+    end: Number(splitFacetValue[1].replace(',', '')),
+  };
 }

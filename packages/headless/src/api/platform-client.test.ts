@@ -10,6 +10,7 @@ import * as BackOff from 'exponential-backoff';
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
 import {NoopPreprocessRequest} from './preprocess-request';
+import {ExpiredTokenError} from '../utils/errors';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
@@ -153,28 +154,13 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it(`when status is 419
-  should renewToken and retry call with new token`, async (done) => {
-    mockFetch
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
-      )
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
+  it('when status is 419 should return a TokenExpiredError', async (done) => {
+    mockFetch.mockReturnValueOnce(
+      Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
+    );
 
-    await platformCall();
-
-    expect(mockFetch).toHaveBeenNthCalledWith(2, platformUrl(), {
-      body: JSON.stringify({
-        test: 123,
-      }),
-      headers: {
-        Authorization: 'Bearer accessToken2',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
+    const response = await platformCall();
+    expect(response).toBeInstanceOf(ExpiredTokenError);
     done();
   });
 
@@ -219,16 +205,13 @@ describe('PlatformClient call', () => {
     done();
   });
 
-  it('should throw when there is an AbortError', async (done) => {
+  it('should return when there is an AbortError', async (done) => {
     const abortError = new Error();
     abortError.name = 'AbortError';
 
-    try {
-      mockFetch.mockRejectedValue(abortError);
-      await platformCall();
-    } catch (error) {
-      expect(error).toBe(abortError);
-      done();
-    }
+    mockFetch.mockRejectedValue(abortError);
+    const response = await platformCall();
+    expect(response).toBe(abortError);
+    done();
   });
 });

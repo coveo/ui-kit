@@ -64,7 +64,7 @@ import {
   setOriginLevel3 as setOriginLevel3Alias,
 } from './configuration/configuration-actions';
 /**
- * @deprecated - This namespace will be removed. Please use `loadConfigurationActions` instead.
+ * @deprecated - This namespace will be removed. Please use `loadConfigurationActions` or `loadSearchConfigurationActions` instead.
  */
 export namespace ConfigurationActions {
   export const updateBasicConfiguration = updateBasicConfigurationAlias;
@@ -78,6 +78,7 @@ export namespace ConfigurationActions {
 }
 
 export * from './configuration/configuration-actions-loader';
+export * from './configuration/search-configuration-actions-loader';
 
 import {
   setContext as setContextAlias,
@@ -397,7 +398,40 @@ export namespace ProductRecommendationsActions {
   export type StateNeededByGetProductRecommendations = StateNeededByGetProductRecommendationsAlias;
 }
 
-export * from './product-recommendations/product-recommendations-actions-loader';
+export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  ProductRecommendationsActionCreators,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  SetProductRecommendationsAdditionalFieldsActionCreatorPayload,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  SetProductRecommendationsBrandFilterActionCreatorPayload,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  SetProductRecommendationsCategoryFilterActionCreatorPayload,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  SetProductRecommendationsRecommenderIdActionCreatorPayload,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  SetProductRecommendationsSkusActionCreatorPayload,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
+  loadProductRecommendationsActions,
+} from './product-recommendations/product-recommendations-actions-loader';
 
 import {deselectAllFacets as deselectAllFacetsAlias} from './facets/generic/facet-actions';
 /**

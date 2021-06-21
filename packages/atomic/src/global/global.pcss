@@ -1,9 +1,9 @@
-@import "tailwindcss/base";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/utilities';
 
 :host {
   display: block;
-  @apply font-sans;
+  @apply font-sans font-normal text-base;
 }
 
 @layer utilities {
@@ -13,5 +13,13 @@
 
   .ellipsed {
     @apply whitespace-nowrap overflow-ellipsis overflow-hidden;
+  }
+
+  .with-parentheses::before {
+    content: '(';
+  }
+
+  .with-parentheses::after {
+    content: ')';
   }
 }

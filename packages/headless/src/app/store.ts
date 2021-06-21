@@ -5,11 +5,7 @@ import {
   Middleware,
   Reducer,
 } from '@reduxjs/toolkit';
-import {analyticsMiddleware} from './analytics-middleware';
-import {
-  logActionErrorMiddleware,
-  logActionMiddleware,
-} from './logger-middlewares';
+import {logActionMiddleware} from './logger-middlewares';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
@@ -38,8 +34,6 @@ export function configureStore<Reducers extends ReducersMapObject>({
       name,
     },
     middleware: (getDefaultMiddleware) => [
-      logActionErrorMiddleware(thunkExtraArguments.logger),
-      analyticsMiddleware,
       ...middlewares,
       ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
       logActionMiddleware(thunkExtraArguments.logger),

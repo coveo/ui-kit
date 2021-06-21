@@ -6,6 +6,7 @@ export type HTTPContentType =
   | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
+import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
 
@@ -20,6 +21,9 @@ export interface PlatformClientCallOptions {
   headers?: Record<string, string>;
   requestParams: unknown;
   accessToken: string;
+  /**
+   * @deprecated - Please configure this option when configuring the engine. It will be removed from `PlatformClientCallOptions` in the next major version.
+   */
   renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequest;
   deprecatedPreprocessRequest: PreprocessRequestMiddleware;
@@ -40,8 +44,15 @@ export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
   request
 ) => request;
 
+export type PlatformClientCallError =
+  | ExpiredTokenError
+  | DisconnectedError
+  | Error;
+
 export class PlatformClient {
-  static async call(options: PlatformClientCallOptions): Promise<Response> {
+  static async call(
+    options: PlatformClientCallOptions
+  ): Promise<Response | PlatformClientCallError> {
     // TODO: use options directly when removing deprecatedPreprocessRequest
     const processedOptions = {
       ...options,
@@ -79,19 +90,15 @@ export class PlatformClient {
       });
       if (response.status === 419) {
         logger.info('Platform renewing token');
-        const accessToken = await processedOptions.renewAccessToken();
-
-        if (accessToken !== '') {
-          return PlatformClient.call({...processedOptions, accessToken});
-        }
+        throw new ExpiredTokenError();
       }
 
       logger.info({response, requestInfo}, 'Platform response');
 
       return response;
     } catch (error) {
-      if (error.name === 'AbortError') {
-        throw error;
+      if (error.message === 'Failed to fetch') {
+        return new DisconnectedError();
       }
 
       return error;

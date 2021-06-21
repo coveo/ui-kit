@@ -7,19 +7,10 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {sanitize} from '../../utils/xss-utils';
-
-interface Summary {
-  count: number;
-  first: string;
-  last: string;
-  total: string;
-  query: string;
-}
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -39,30 +30,11 @@ interface Summary {
 export class AtomicQuerySummary implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public querySummary!: QuerySummary;
-  private unescapeStringOption = {interpolation: {escapeValue: false}};
 
   @BindStateToController('querySummary')
   @State()
   private querySummaryState!: QuerySummaryState;
-  @BindStateToI18n()
-  @State()
   private strings = {
-    noResults: () => this.bindings.i18n.t('noResults'),
-    noResultsFor: (query: string) =>
-      this.bindings.i18n.t('noResultsFor', {
-        ...this.unescapeStringOption,
-        query,
-      }),
-    showingResultsOf: (resultOfOptions: Summary) =>
-      this.bindings.i18n.t('showingResultsOf', {
-        ...this.unescapeStringOption,
-        ...resultOfOptions,
-      }),
-    showingResultsOfWithQuery: (resultOfOptions: Summary) =>
-      this.bindings.i18n.t('showingResultsOfWithQuery', {
-        ...this.unescapeStringOption,
-        ...resultOfOptions,
-      }),
     inSeconds: (count: number) => this.bindings.i18n.t('inSeconds', {count}),
   };
   @State() public error!: Error;
@@ -93,16 +65,18 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.strings.noResultsFor(
-          this.wrapHighlight(sanitize(this.querySummaryState.query))
-        )
-      : this.strings.noResults();
+      ? this.bindings.i18n.t('noResultsFor', {
+          interpolation: {escapeValue: false},
+          query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
+        })
+      : this.bindings.i18n.t('noResults');
     return <span part="no-results" innerHTML={content}></span>;
   }
 
-  private get resultOfOptions(): Summary {
+  private get resultOfOptions() {
     const locales = this.bindings.i18n.languages;
     return {
+      interpolation: {escapeValue: false},
       count: this.querySummaryState.lastResult,
       first: this.wrapHighlight(
         this.querySummaryState.firstResult.toLocaleString(locales)
@@ -119,8 +93,8 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private renderHasResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.strings.showingResultsOfWithQuery(this.resultOfOptions)
-      : this.strings.showingResultsOf(this.resultOfOptions);
+      ? this.bindings.i18n.t('showingResultsOfWithQuery', this.resultOfOptions)
+      : this.bindings.i18n.t('showingResultsOf', this.resultOfOptions);
 
     return <span part="results" innerHTML={content}></span>;
   }
@@ -135,7 +109,7 @@ export class AtomicQuerySummary implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden="true"
-          class="h-6 my-2 w-60 bg-divider animate-pulse"
+          class="h-6 my-2 w-60 bg-neutral-light animate-pulse"
         ></div>
       );
     }

@@ -35,6 +35,7 @@ import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {Response} from 'cross-fetch';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
+import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -376,7 +377,16 @@ describe('search api client', () => {
 
       it(`when calling SearchAPIClient.recommendations
       should call PlatformClient.call with the right options`, () => {
+        const originLevel2 = 'tab';
+        const originLevel3 = 'referrer';
+        const analytics = buildMockAnalyticsConfiguration({
+          originLevel2,
+          originLevel3,
+        });
+
         const recommendationState = createMockRecommendationState();
+        recommendationState.configuration.analytics = analytics;
+
         const req = buildRecommendationRequest(recommendationState);
 
         searchAPIClient.recommendations(req);
@@ -399,6 +409,8 @@ describe('search api client', () => {
             pipeline: recommendationState.pipeline,
             searchHub: recommendationState.searchHub,
             actionsHistory: expect.any(Array),
+            tab: originLevel2,
+            referrer: originLevel3,
           },
           preprocessRequest: NoopPreprocessRequest,
           deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,

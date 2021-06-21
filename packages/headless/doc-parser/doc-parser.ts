@@ -306,6 +306,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
     initializer: 'loadConfigurationActions',
   },
   {
+    initializer: 'loadSearchConfigurationActions',
+  },
+  {
     initializer: 'loadContextActions',
   },
   {
@@ -370,6 +373,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadClickAnalyticsActions',
+  },
+  {
+    initializer: 'loadGenericAnalyticsActions',
   },
 ];
 

@@ -143,4 +143,10 @@ describe('search request', () => {
     state.configuration.analytics.originLevel2 = originLevel2;
     expect(buildSearchRequest(state).tab).toBe(originLevel2);
   });
+
+  it('#searchRequest.referrer holds the #originLevel3', () => {
+    const originLevel3 = 'www.coveo.com';
+    state.configuration.analytics.originLevel3 = originLevel3;
+    expect(buildSearchRequest(state).referrer).toBe(originLevel3);
+  });
 });

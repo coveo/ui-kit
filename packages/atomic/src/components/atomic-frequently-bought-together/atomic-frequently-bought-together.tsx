@@ -1,14 +1,13 @@
 import {Component, h, State} from '@stencil/core';
 import {
+  ProductRecommendationEngine,
+  buildProductRecommendationEngine,
+  getSampleProductRecommendationEngineConfiguration,
   buildFrequentlyBoughtTogetherList,
   FrequentlyBoughtTogetherList,
   FrequentlyBoughtTogetherListState,
   Unsubscribe,
-  Engine,
-  ProductRecommendationsAppState,
-  HeadlessEngine,
-  productRecommendationsAppReducers,
-} from '@coveo/headless';
+} from '@coveo/headless/product-recommendation';
 
 /**
  * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
@@ -20,22 +19,19 @@ import {
 export class AtomicProductRecommendations {
   @State() state!: FrequentlyBoughtTogetherListState;
 
-  private engine!: Engine<ProductRecommendationsAppState>;
+  private engine!: ProductRecommendationEngine;
   private frequentlyBoughtTogether!: FrequentlyBoughtTogetherList;
   private unsubscribe: Unsubscribe = () => {};
 
   componentWillLoad() {
-    const sampleConfiguration = HeadlessEngine.getSampleConfiguration();
-    this.engine = new HeadlessEngine({
+    const sampleConfiguration = getSampleProductRecommendationEngineConfiguration();
+    this.engine = buildProductRecommendationEngine({
       configuration: {
         ...sampleConfiguration,
-        search: {
-          ...sampleConfiguration.search,
-          searchHub: 'frequently_bought_recommendations',
-        },
+        searchHub: 'frequently_bought_recommendations',
       },
-      reducers: productRecommendationsAppReducers,
     });
+
     this.frequentlyBoughtTogether = buildFrequentlyBoughtTogetherList(
       this.engine,
       {

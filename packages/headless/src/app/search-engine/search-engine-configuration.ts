@@ -9,8 +9,12 @@ import {localeValidation} from '../../features/configuration/configuration-actio
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
+  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
+/**
+ * The search engine configuration.
+ */
 export interface SearchEngineConfiguration extends EngineConfiguration {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
@@ -80,10 +84,14 @@ export const searchEngineConfigurationSchema = new Schema<
   }),
 });
 
+/**
+ * Creates a sample search engine configuration.
+ *
+ * @returns The sample search engine configuration.
+ */
 export function getSampleSearchEngineConfiguration(): SearchEngineConfiguration {
   return {
-    organizationId: 'searchuisamples',
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    ...getSampleEngineConfiguration(),
     search: {
       pipeline: 'default',
       searchHub: 'default',

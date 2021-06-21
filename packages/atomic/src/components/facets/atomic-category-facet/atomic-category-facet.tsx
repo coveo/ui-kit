@@ -77,7 +77,7 @@ export class AtomicCategoryFacet
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
   @BindStateToController('searchStatus')
@@ -341,7 +341,7 @@ export class AtomicCategoryFacet
         </span>
       </div>,
       <div
-        class="flex text-on-background-variant"
+        class="flex text-neutral-dark"
         aria-hidden="true"
         title={searchResult.path.join(SEPARATOR)}
         part="search-result-path"
@@ -382,7 +382,7 @@ export class AtomicCategoryFacet
         hasActiveValues={this.facetState.hasActiveValues}
       >
         {this.facetSearch?.render()}
-        <div class="mt-1 lg:text-sm">
+        <div class="mt-1 text-lg lg:text-base">
           {this.allCategoriesButton}
           <div>{this.parents}</div>
           <div class={this.parents.length ? 'pl-9' : 'pl-0'}>

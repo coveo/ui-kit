@@ -112,11 +112,7 @@ export class AtomicSortDropdown implements InitializableComponent {
 
   private renderLabel() {
     return (
-      <label
-        class="text-on-background text-sm m-2"
-        part="label"
-        htmlFor={this.id}
-      >
+      <label class="text-on-background m-2" part="label" htmlFor={this.id}>
         {this.strings.sortBy()}
       </label>
     );
@@ -127,7 +123,7 @@ export class AtomicSortDropdown implements InitializableComponent {
       <div class="relative">
         <select
           id={this.id}
-          class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-3 pl-4 pr-24"
+          class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-neutral py-3 pl-4 pr-24"
           part="select"
           aria-label={this.strings.sortBy()}
           onChange={(option) => this.select(option)}
@@ -152,7 +148,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-6 my-2 w-44 bg-divider animate-pulse"
+          class="h-6 my-2 w-44 bg-neutral-light animate-pulse"
         ></div>
       );
     }

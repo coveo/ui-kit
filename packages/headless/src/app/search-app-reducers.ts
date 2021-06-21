@@ -29,10 +29,13 @@ import {
   resultPreview,
   version,
   folding,
+  questionAnswering,
 } from './reducers';
 
 /**
  * Map of reducers that make up the SearchAppState.
+ *
+ * @deprecated - Please use `buildSearchEngine` instead of `HeadlessEngine` to instantiate an engine. The new approach configures reducers behind the scenes, so `searchAppReducers` is no longer needed and will be removed in the next major version.
  */
 export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   configuration,
@@ -62,4 +65,5 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   resultPreview,
   version,
   folding,
+  questionAnswering,
 };

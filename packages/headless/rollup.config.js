@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
+import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import tsPlugin from '@rollup/plugin-typescript';
 import replacePlugin from '@rollup/plugin-replace';
@@ -52,6 +53,10 @@ const nodejs = [
     input: 'src/recommendation.index.ts',
     outDir: 'dist/recommendation'
   },
+  {
+    input: 'src/product-recommendation.index.ts',
+    outDir: 'dist/product-recommendation'
+  },
 ].map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
@@ -62,7 +67,8 @@ function buildNodeConfiguration({input, outDir}) {
       {file: `${outDir}/headless.esm.js`, format: 'es'},
     ],
     plugins: [
-      resolve({modulesOnly: true}),
+      resolve({preferBuiltins: true, mainFields: ['main']}),
+      json(),
       commonjs({
         // https://github.com/pinojs/pino/issues/688
         ignore: ['pino-pretty'],
@@ -70,11 +76,19 @@ function buildNodeConfiguration({input, outDir}) {
       typescript(),
       replace(),
     ],
-    external: ['cross-fetch', 'web-encoding'],
+    external: [
+      'os',
+      'https',
+      'http',
+      'stream',
+      'zlib',
+      'fs',
+      'vm',
+      'util',
+    ],
     onwarn: onWarn,
   };
 }
-
 
 // Browser Bundles
 
@@ -98,6 +112,13 @@ const browser = [
     output: [
       buildUmdOutput('dist/browser/recommendation', 'CoveoHeadlessRecommendation'),
       buildEsmOutput('dist/browser/recommendation')
+    ]
+  },
+  {
+    input: 'src/product-recommendation.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/product-recommendation', 'CoveoHeadlessProductRecommendation'),
+      buildEsmOutput('dist/browser/product-recommendation')
     ]
   },
 ].map(buildBrowserConfiguration);
@@ -153,16 +174,25 @@ function buildEsmOutput(outDir) {
   }
 }
 
-
-
 // For Atomic's development purposes only
-const dev = buildBrowserConfiguration({
-  input: 'src/index.ts',
-  output: [
-    buildEsmOutput('../atomic/src/external-builds')
-  ]
-});
-
+const dev = [
+  {
+    input: 'src/index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds')],
+  },
+  {
+    input: 'src/case-assist.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/case-assist')],
+  },
+  {
+    input: 'src/recommendation.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/recommendation')],
+  },
+  {
+    input: 'src/product-recommendation.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/product-recommendation')],
+  },
+].map(buildBrowserConfiguration);
 
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
 // can consume. When the api-extractor limitation is resolved, this step will not be necessary.
@@ -173,6 +203,6 @@ const typeDefinitions = {
   plugins: [dts()]
 }
 
-const config = isProduction ? [...nodejs, typeDefinitions, ...browser] : [dev];
+const config = isProduction ? [...nodejs, typeDefinitions, ...browser] : dev;
 
 export default config;

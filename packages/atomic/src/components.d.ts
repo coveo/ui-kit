@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -83,6 +83,10 @@ export namespace Components {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues": number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
+         */
+        "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
     interface AtomicDateRange {
         /**
@@ -127,6 +131,36 @@ export namespace Components {
         "sortCriteria": FacetSortCriterion;
     }
     interface AtomicFacetManager {
+    }
+    interface AtomicFacetV1 {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs": 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
     }
     interface AtomicFieldCondition {
         /**
@@ -174,6 +208,44 @@ export namespace Components {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues": number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
+         */
+        "rangeAlgorithm": RangeFacetRangeAlgorithm;
+    }
+    interface AtomicNumericFacetV1 {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs": 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues": number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm": RangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": RangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges.
+         */
+        "withInput": boolean;
     }
     interface AtomicNumericRange {
         /**
@@ -184,6 +256,10 @@ export namespace Components {
           * Specifies whether the end value should be included in the range.
          */
         "endInclusive": boolean;
+        /**
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
         /**
           * The starting value for the numeric range.
          */
@@ -205,7 +281,7 @@ export namespace Components {
     }
     interface AtomicRelevanceInspector {
         /**
-          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+          * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
         "bindings": Bindings;
     }
@@ -215,9 +291,9 @@ export namespace Components {
          */
         "content": string;
         /**
-          * The Headless engine.
+          * The headless search engine.
          */
-        "engine": Engine;
+        "engine": SearchEngine;
         /**
           * The result item.
          */
@@ -357,11 +433,11 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         /**
-          * The search interface Headless engine.
+          * The search interface headless engine.
          */
-        "engine"?: Engine;
+        "engine"?: SearchEngine;
         /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
         /**
@@ -369,7 +445,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * Initializes the connection with the Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
@@ -465,6 +541,12 @@ declare global {
         prototype: HTMLAtomicFacetManagerElement;
         new (): HTMLAtomicFacetManagerElement;
     };
+    interface HTMLAtomicFacetV1Element extends Components.AtomicFacetV1, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetV1Element: {
+        prototype: HTMLAtomicFacetV1Element;
+        new (): HTMLAtomicFacetV1Element;
+    };
     interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
     }
     var HTMLAtomicFieldConditionElement: {
@@ -494,6 +576,12 @@ declare global {
     var HTMLAtomicNumericFacetElement: {
         prototype: HTMLAtomicNumericFacetElement;
         new (): HTMLAtomicNumericFacetElement;
+    };
+    interface HTMLAtomicNumericFacetV1Element extends Components.AtomicNumericFacetV1, HTMLStencilElement {
+    }
+    var HTMLAtomicNumericFacetV1Element: {
+        prototype: HTMLAtomicNumericFacetV1Element;
+        new (): HTMLAtomicNumericFacetV1Element;
     };
     interface HTMLAtomicNumericRangeElement extends Components.AtomicNumericRange, HTMLStencilElement {
     }
@@ -648,11 +736,13 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
+        "atomic-facet-v1": HTMLAtomicFacetV1Element;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
+        "atomic-numeric-facet-v1": HTMLAtomicNumericFacetV1Element;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -753,6 +843,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues"?: number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
+         */
+        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
     interface AtomicDateRange {
         /**
@@ -797,6 +891,36 @@ declare namespace LocalJSX {
         "sortCriteria"?: FacetSortCriterion;
     }
     interface AtomicFacetManager {
+    }
+    interface AtomicFacetV1 {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
     }
     interface AtomicFieldCondition {
         /**
@@ -844,6 +968,44 @@ declare namespace LocalJSX {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues"?: number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
+         */
+        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
+    }
+    interface AtomicNumericFacetV1 {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: RangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges.
+         */
+        "withInput"?: boolean;
     }
     interface AtomicNumericRange {
         /**
@@ -854,6 +1016,10 @@ declare namespace LocalJSX {
           * Specifies whether the end value should be included in the range.
          */
         "endInclusive"?: boolean;
+        /**
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
         /**
           * The starting value for the numeric range.
          */
@@ -875,7 +1041,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRelevanceInspector {
         /**
-          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+          * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
         "bindings": Bindings;
     }
@@ -885,9 +1051,9 @@ declare namespace LocalJSX {
          */
         "content": string;
         /**
-          * The Headless engine.
+          * The headless search engine.
          */
-        "engine": Engine;
+        "engine": SearchEngine;
         /**
           * The result item.
          */
@@ -1023,9 +1189,9 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchInterface {
         /**
-          * The search interface Headless engine.
+          * The search interface headless engine.
          */
-        "engine"?: Engine;
+        "engine"?: SearchEngine;
         /**
           * The search interface i18next instance.
          */
@@ -1082,11 +1248,13 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
+        "atomic-facet-v1": AtomicFacetV1;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
+        "atomic-numeric-facet-v1": AtomicNumericFacetV1;
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
@@ -1125,11 +1293,13 @@ declare module "@stencil/core" {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
+            "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
+            "atomic-numeric-facet-v1": LocalJSX.AtomicNumericFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetV1Element>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;

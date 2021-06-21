@@ -13,7 +13,10 @@ import {
   Value,
   ArrayValue,
 } from '@coveo/bueno';
-import {RangeFacetSortCriterion} from '../generic/interfaces/request';
+import {
+  RangeFacetRangeAlgorithm,
+  RangeFacetSortCriterion,
+} from '../generic/interfaces/request';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {NumericRangeRequest} from './interfaces/request';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
@@ -81,6 +84,13 @@ export interface RegisterNumericFacetActionCreatorPayload {
    * @defaultValue `ascending`
    */
   sortCriteria?: RangeFacetSortCriterion;
+
+  /**
+   * The range algorithm to apply to automatically generated ranges for the range facet.
+   *
+   * @defaultValue `even`
+   */
+  rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
 const numericFacetRequestDefinition = {
@@ -102,6 +112,7 @@ const numericFacetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
+  rangeAlgorithm: new Value<RangeFacetRangeAlgorithm>({required: false}),
 };
 
 export function validateManualNumericRanges(

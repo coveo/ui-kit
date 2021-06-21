@@ -74,6 +74,27 @@ export const config: Config = {
         alias({
           entries: [
             {
+              find: '@coveo/headless/case-assist',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/case-assist/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/recommendation',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/recommendation/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/product-recommendation',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/product-recommendation/headless.esm.js'
+              ),
+            },
+            {
               find: '@coveo/headless',
               replacement: path.resolve(
                 __dirname,

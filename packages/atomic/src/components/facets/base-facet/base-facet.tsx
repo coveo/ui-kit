@@ -51,7 +51,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
       <button
         part="clear-button"
         onClick={() => props.clearAll!()}
-        class="block text-primary mr-2 lg:mr-0 text-sm"
+        class="block text-primary mr-2 lg:mr-0"
       >
         {props.controller.state.strings.clear()}
       </button>
@@ -61,10 +61,10 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     <button
       title={props.label}
       part="modal-button"
-      class={`rounded-3xl text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
+      class={`rounded-lg text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
         props.hasActiveValues
           ? 'border-2 border-primary text-primary'
-          : 'border border-divider text-on-background'
+          : 'border border-neutral text-on-background'
       }`}
       onClick={() => props.controller.openModal()}
     >
@@ -73,7 +73,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
   );
 
   const facetWrapperDesktop =
-    'lg:h-auto lg:w-auto lg:static lg:block lg:border lg:border-divider lg:rounded-xl lg:overflow-visible';
+    'lg:h-auto lg:w-auto lg:static lg:block lg:border lg:border-neutral lg:rounded-lg lg:overflow-visible';
   const facetWrapperMobile =
     'box-border p-5 h-screen w-screen overflow-auto overflow-x-hidden fixed object-left-top bg-background top-0 left-0 z-10';
 

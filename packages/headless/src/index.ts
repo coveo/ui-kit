@@ -15,6 +15,15 @@ export {
   HeadlessEngine,
   Engine,
 } from './app/headless-engine';
+
+export {
+  SearchEngine,
+  SearchEngineOptions,
+  SearchEngineConfiguration,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from './app/search-engine/search-engine';
+
 export {LogLevel} from './app/logger';
 
 export {searchAppReducers} from './app/search-app-reducers';
@@ -80,7 +89,10 @@ export {CategoryFacetValue} from './features/facets/category-facet-set/interface
 export {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
-export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
+export {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from './features/facets/range-facets/generic/interfaces/request';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export * as HighlightUtils from './utils/highlight';
 export {HighlightKeyword} from './utils/highlight';

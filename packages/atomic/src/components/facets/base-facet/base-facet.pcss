@@ -1,5 +1,5 @@
 .value-count {
-  @apply text-on-background-variant ml-1.5;
+  @apply text-neutral-dark ml-1.5;
 }
 
 .value-count::before {
@@ -14,11 +14,13 @@
   @apply w-full flex items-center text-left py-1;
 }
 
-.show-more, .show-less {
-  @apply w-full text-base text-left mt-1 text-primary;
+.show-more,
+.show-less {
+  @apply w-full text-base text-left mt-1 text-secondary hover:text-secondary-light;
 }
 
-.show-more::before, .show-less::before {
+.show-more::before,
+.show-less::before {
   @apply text-lg w-4 inline-block;
 }
 
@@ -31,11 +33,11 @@
 }
 
 .checkbox {
-  @apply w-5 h-5 flex-none rounded bg-background relative border border-divider;
+  @apply w-5 h-5 flex-none rounded bg-background relative border border-neutral;
 }
 
 .checked {
-    @apply bg-primary border-none;
+  @apply bg-primary border-none;
 }
 
 .checked + label {

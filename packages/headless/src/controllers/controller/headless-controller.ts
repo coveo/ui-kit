@@ -1,5 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 
 export interface Controller {
   /**
@@ -13,7 +13,7 @@ export interface Controller {
 }
 
 export function buildController<T extends object>(
-  engine: Engine<T>
+  engine: CoreEngine<T>
 ): Controller {
   let prevState: string;
 
