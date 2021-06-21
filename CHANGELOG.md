@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/coveo/ui-kit/compare/v0.28.1...v0.29.0) (2021-06-21)
+
+
+### Features
+
+* **headless:** handle smart snippet expand/collapse/like/dislike ([#904](https://github.com/coveo/ui-kit/issues/904)) ([2db0c85](https://github.com/coveo/ui-kit/commit/2db0c858abd0519a8f1b0731505a78b9b861942b))
+
+
+
+
+
 ## [0.28.1](https://github.com/coveo/ui-kit/compare/v0.28.0...v0.28.1) (2021-06-18)
 
 **Note:** Version bump only for package ui-kit
