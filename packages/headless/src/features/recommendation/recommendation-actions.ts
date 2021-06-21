@@ -94,6 +94,8 @@ export const buildRecommendationRequest = (
   organizationId: s.configuration.organizationId,
   url: s.configuration.search.apiBaseUrl,
   recommendation: s.recommendation.id,
+  tab: s.configuration.analytics.originLevel2,
+  referrer: s.configuration.analytics.originLevel3,
   actionsHistory: s.configuration.analytics.enabled
     ? historyStore.getHistory()
     : [],

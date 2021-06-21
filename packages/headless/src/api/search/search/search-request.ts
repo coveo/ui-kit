@@ -18,6 +18,7 @@ import {
   FirstResultParam,
   PipelineParam,
   QueryParam,
+  ReferrerParam,
   SearchHubParam,
   SortCriteriaParam,
   TabParam,
@@ -42,4 +43,5 @@ export type SearchRequest = BaseParam &
   DebugParam &
   LocaleParam &
   FoldingParam &
-  TabParam;
+  TabParam &
+  ReferrerParam;
