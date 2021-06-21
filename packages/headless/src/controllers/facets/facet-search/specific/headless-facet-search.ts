@@ -10,6 +10,7 @@ import {
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../../state/state-sections';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;
@@ -37,10 +38,20 @@ export function buildFacetSearch(
     ...genericFacetSearch,
 
     /**
-     * Selects the provided value if unselected
+     * Selects the provided value.
      * @param result A single specificFacetSearchResult object
      */
     select(value: SpecificFacetSearchResult) {
+      dispatch(selectFacetSearchResult({facetId, value}));
+      genericFacetSearch.select(value);
+    },
+
+    /**
+     * Selects the provided value, and deselects other values.
+     * @param result A single specificFacetSearchResult object
+     */
+    singleSelect(value: SpecificFacetSearchResult) {
+      dispatch(deselectAllFacetValues(facetId));
       dispatch(selectFacetSearchResult({facetId, value}));
       genericFacetSearch.select(value);
     },

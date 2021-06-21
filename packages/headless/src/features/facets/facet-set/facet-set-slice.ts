@@ -98,12 +98,12 @@ export const facetSetReducer = createReducer(
       })
       .addCase(deselectAllFacetValues, (state, action) => {
         const request = state[action.payload];
-        handleFacetDeselectAll<FacetRequest>(request);
+        handleFacetDeselectAll(request);
       })
       .addCase(deselectAllFacets, (state) => {
         Object.keys(state).forEach((facetId) => {
           const request = state[facetId];
-          handleFacetDeselectAll<FacetRequest>(request);
+          handleFacetDeselectAll(request);
         });
       })
       .addCase(updateFacetSortCriterion, (state, action) => {
@@ -176,6 +176,8 @@ export const facetSetReducer = createReducer(
           ...valuesAfter,
         ];
         facetRequest.numberOfValues = facetRequest.currentValues.length;
+        facetRequest.freezeCurrentValues = true;
+        facetRequest.preventAutoSelect = true;
       });
   }
 );

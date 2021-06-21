@@ -142,12 +142,16 @@ export namespace QuerySuggestAnalyticsActions {
   export const logQuerySuggestionClick = logQuerySuggestionClickAlias;
 }
 
-import {logRecommendationUpdate as logRecommendationUpdateAlias} from '../recommendation/recommendation-analytics-actions';
+import {
+  logRecommendationUpdate as logRecommendationUpdateAlias,
+  logRecommendationOpen as logRecommendationOpenAlias,
+} from '../recommendation/recommendation-analytics-actions';
 /**
- * @deprecated - This namespace will be removed. Please use `loadSearchAnalyticsActions` instead.
+ * @deprecated - This namespace will be removed. Please use `loadClickAnalyticsActions` from "@coveo/headless/recommendation" instead.
  */
 export namespace RecommendationAnalyticsActions {
   export const logRecommendationUpdate = logRecommendationUpdateAlias;
+  export const logRecommendationOpen = logRecommendationOpenAlias;
 }
 
 import {logTriggerRedirect as logTriggerRedirectAlias} from '../redirection/redirection-analytics-actions';

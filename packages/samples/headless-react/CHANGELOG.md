@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.1](https://github.com/coveo/ui-kit/compare/v0.29.0...v0.29.1) (2021-06-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.29.0](https://github.com/coveo/ui-kit/compare/v0.28.1...v0.29.0) (2021-06-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.28.1](https://github.com/coveo/ui-kit/compare/v0.28.0...v0.28.1) (2021-06-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.28.0](https://github.com/coveo/ui-kit/compare/v0.27.0...v0.28.0) (2021-06-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.27.0](https://github.com/coveo/ui-kit/compare/v0.26.0...v0.27.0) (2021-06-17)
+
+
+### Features
+
+* **headless:** expose logRecommendationOpen action ([#902](https://github.com/coveo/ui-kit/issues/902)) ([68fca5b](https://github.com/coveo/ui-kit/commit/68fca5b58621d17afe8baeda4e12310b8167f483))
+
+
+
+
+
+# [0.26.0](https://github.com/coveo/ui-kit/compare/v0.25.0...v0.26.0) (2021-06-17)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.25.0](https://github.com/coveo/ui-kit/compare/v0.24.0...v0.25.0) (2021-06-17)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.24.0](https://github.com/coveo/ui-kit/compare/v0.23.6...v0.24.0) (2021-06-17)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.23.3](https://github.com/coveo/ui-kit/compare/v0.23.2...v0.23.3) (2021-06-11)
 
 **Note:** Version bump only for package headless-react

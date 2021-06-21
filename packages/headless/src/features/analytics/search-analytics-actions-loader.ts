@@ -46,13 +46,6 @@ import {
   LogQuerySuggestionClickActionCreatorPayload,
 } from '../query-suggest/query-suggest-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
-import {
-  logCollapseSmartSnippet,
-  logExpandSmartSnippet,
-  logSmartSnippetExplanationFeedback,
-  logSmartSnippetNegativeFeedback,
-  logSmartSnippetPositiveFeedback,
-} from '../question-answering/question-answering-analytics-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -398,71 +391,6 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
-
-  /**
-   * The event to log when a smart snipped is collapsed.
-   *
-   * @returns A dispatchable action.
-   */
-  logCollapseSmartSnippet(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when a smart snipped is expanded.
-   *
-   * @returns A dispatchable action.
-   */
-  logExpandSmartSnippet(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when a user provides detailed feedback for a given smart snippet answer.
-   *
-   * @returns A dispatchable action.
-   */
-  logSmartSnippetExplanationFeedback(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when a user provides negative feedback for a given smart snippet answer.
-   *
-   * @returns A dispatchable action.
-   */
-  logSmartSnippetNegativeFeedback(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when a user provides positive feedback for a given smart snippet answer.
-   *
-   * @returns A dispatchable action.
-   */
-  logSmartSnippetPositiveFeedback(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
 }
 
 /**
@@ -500,10 +428,5 @@ export function loadSearchAnalyticsActions(
     logSearchboxSubmit,
     logQuerySuggestionClick,
     logResultsSort,
-    logCollapseSmartSnippet,
-    logExpandSmartSnippet,
-    logSmartSnippetExplanationFeedback,
-    logSmartSnippetNegativeFeedback,
-    logSmartSnippetPositiveFeedback,
   };
 }

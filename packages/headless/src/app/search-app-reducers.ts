@@ -30,6 +30,7 @@ import {
   version,
   folding,
   triggers,
+  questionAnswering,
 } from './reducers';
 
 /**
@@ -66,4 +67,5 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   version,
   folding,
   triggers,
+  questionAnswering,
 };

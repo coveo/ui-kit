@@ -1,9 +1,22 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
-import {search} from '../../app/reducers';
+import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {SearchSection} from '../../state/state-sections';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {
+  logCollapseSmartSnippet,
+  logDislikeSmartSnippet,
+  logExpandSmartSnippet,
+  logLikeSmartSnippet,
+} from '../../features/question-answering/question-answering-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  collapseSmartSnippet,
+  dislikeSmartSnippet,
+  expandSmartSnippet,
+  likeSmartSnippet,
+} from '../../features/question-answering/question-answering-actions';
+import {QuestionAnsweringSection} from '../../state/state-sections';
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
@@ -24,11 +37,11 @@ export interface SmartSnippet extends Controller {
   /**
    * Allows the user to signal that a particular answer was relevant.
    */
-  thumbsUp(): void;
+  like(): void;
   /**
    * Allows the user to signal that a particular answer was not relevant.
    */
-  thumbsDown(): void;
+  dislike(): void;
 }
 
 /**
@@ -55,6 +68,14 @@ export interface SmartSnippetState {
    * Determines of there is an available answer for the current query.
    */
   answerFound: boolean;
+  /**
+   * Determines if the snippet was liked, or upvoted by the end user.
+   */
+  liked: boolean;
+  /**
+   * Determines if the snippet was disliked, or downvoted by the end user.
+   */
+  disliked: boolean;
 }
 
 /**
@@ -63,40 +84,52 @@ export interface SmartSnippetState {
  * @param engine - The headless engine.
  * @returns A `SmartSnippet` controller instance.
  * */
-export function buildSmartSnippet(engine: Engine<object>): SmartSnippet {
+export function buildSmartSnippet(engine: SearchEngine): SmartSnippet {
   if (!loadSmartSnippetReducers(engine)) {
     throw loadReducerError;
   }
 
   const controller = buildController(engine);
+  const getState = () => engine.state;
 
   return {
     ...controller,
 
     get state() {
+      const state = getState();
       return {
-        // TODO
-      } as SmartSnippetState;
+        disliked: state.questionAnswering.disliked,
+        liked: state.questionAnswering.liked,
+        expanded: state.questionAnswering.expanded,
+        answerFound: state.search.response.questionAnswer.answerSnippet !== '',
+        question: state.search.response.questionAnswer.question,
+        answer: state.search.response.questionAnswer.answerSnippet,
+        documentId: state.search.response.questionAnswer.documentId,
+      };
     },
 
     expand() {
-      // TODO
+      engine.dispatch(logExpandSmartSnippet());
+      engine.dispatch(expandSmartSnippet());
     },
     collapse() {
-      // TODO
+      engine.dispatch(logCollapseSmartSnippet());
+      engine.dispatch(collapseSmartSnippet());
     },
-    thumbsUp() {
-      // TODO
+    like() {
+      engine.dispatch(logLikeSmartSnippet());
+      engine.dispatch(likeSmartSnippet());
     },
-    thumbsDown() {
-      // TODO
+    dislike() {
+      engine.dispatch(logDislikeSmartSnippet());
+      engine.dispatch(dislikeSmartSnippet());
     },
   };
 }
 
 function loadSmartSnippetReducers(
-  engine: Engine<object>
-): engine is Engine<SearchSection> {
-  engine.addReducers({search});
+  engine: SearchEngine
+): engine is SearchEngine<QuestionAnsweringSection> {
+  engine.addReducers({search, questionAnswering});
   return true;
 }
