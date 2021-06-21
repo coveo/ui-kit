@@ -1,5 +1,5 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
-import {QuestionAnswerDocumentIdentifier} from '../../controllers';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 /**
  * Identifies the document from which the answer originate.

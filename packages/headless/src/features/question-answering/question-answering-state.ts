@@ -1,4 +1,4 @@
-import {QuestionAnswerDocumentIdentifier} from '../../controllers';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 export interface QuestionAnsweringRelatedQuestionState
   extends QuestionAnswerDocumentIdentifier {

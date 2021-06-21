@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {QuestionAnswerDocumentIdentifier} from '../../controllers';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {executeSearch} from '../search/search-actions';
 import {
   collapseSmartSnippet,
