@@ -1,8 +1,6 @@
-import {buildSearchEngine} from '../app/search-engine/search-engine';
-import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine-configuration';
 import {
-  buildSearchEngine,
   SearchEngine,
+  buildSearchEngine,
 } from '../app/search-engine/search-engine';
 import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine-configuration';
 import {
