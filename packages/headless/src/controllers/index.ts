@@ -415,6 +415,7 @@ export {
   SmartSnippet,
   SmartSnippetState,
   buildSmartSnippet,
+  QuestionAnswerDocumentIdentifier,
 } from './smart-snippet/headless-smart-snippet';
 
 export {
