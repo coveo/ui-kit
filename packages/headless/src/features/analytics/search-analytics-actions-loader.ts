@@ -65,7 +65,7 @@ export {
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
-  QuestionAnsweringDocumentIdActionCreatorPayload as QuestionAnsweringDocumentIdentifierActionCreatorPayload,
+  QuestionAnsweringDocumentIdActionCreatorPayload,
 };
 
 /**
