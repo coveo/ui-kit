@@ -1,6 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {isNullOrUndefined} from '@coveo/bueno';
+import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {executeSearch, fetchMoreResults} from './search-actions';
-import {getSearchInitialState, SearchState} from './search-state';
+import {
+  emptyQuestionAnswer,
+  getSearchInitialState,
+  SearchState,
+} from './search-state';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
 
@@ -17,7 +23,7 @@ function handleFulfilledSearch(
   action: ReturnType<SearchAction['fulfilled']>
 ) {
   state.error = null;
-  state.response = action.payload.response;
+  state.response = shimResponsePayload(action.payload.response);
   state.queryExecuted = action.payload.queryExecuted;
   state.duration = action.payload.duration;
   state.isLoading = false;
@@ -25,6 +31,17 @@ function handleFulfilledSearch(
 
 function handlePendingSearch(state: SearchState) {
   state.isLoading = true;
+}
+
+function shimResponsePayload(response: SearchResponseSuccess) {
+  const empty = emptyQuestionAnswer();
+  if (isNullOrUndefined(response.questionAnswer)) {
+    response.questionAnswer = empty;
+    return response;
+  }
+
+  response.questionAnswer = {...empty, ...response.questionAnswer};
+  return response;
 }
 
 export const searchReducer = createReducer(
