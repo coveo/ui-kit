@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.31.0",
-    "@coveo/headless": "^0.31.1",
+    "@coveo/headless": "1.0.0-alpha.0",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "i18next": "^20.2.2",
