@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.31.0",
+  "version": "0.31.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.31.0",
-    "@coveo/headless": "^0.31.0",
+    "@coveo/headless": "^0.31.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "i18next": "^20.2.2",
