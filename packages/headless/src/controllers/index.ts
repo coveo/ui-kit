@@ -404,3 +404,21 @@ export {
   FoldedResultListState,
   buildFoldedResultList,
 } from './folded-result-list/headless-folded-result-list';
+
+export {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+  buildRedirectionTrigger,
+} from './triggers/headless-redirection-trigger';
+
+export {
+  SmartSnippet,
+  SmartSnippetState,
+  buildSmartSnippet,
+} from './smart-snippet/headless-smart-snippet';
+
+export {
+  SmartSnippetQuestionsList,
+  SmartSnippetQuestionsListState,
+  buildSmartSnippetQuestionsList,
+} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';

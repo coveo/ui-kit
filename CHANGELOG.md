@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.1](https://github.com/coveo/ui-kit/compare/v0.31.0...v0.31.1) (2021-06-22)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.31.0](https://github.com/coveo/ui-kit/compare/v0.30.0...v0.31.0) (2021-06-21)
+
+
+### Features
+
+* **atomic:** add formats for new numeric facet ([#911](https://github.com/coveo/ui-kit/issues/911)) ([aca6a25](https://github.com/coveo/ui-kit/commit/aca6a25538874a748ae9690af3a7bee7e7208817))
+
+
+
+
+
+# [0.30.0](https://github.com/coveo/ui-kit/compare/v0.29.1...v0.30.0) (2021-06-21)
+
+
+### Features
+
+* **headless:** TriggerRedirection ([#875](https://github.com/coveo/ui-kit/issues/875)) ([1439c9c](https://github.com/coveo/ui-kit/commit/1439c9c5eda19355898a203024f3d85c1f191045))
+
+
+
+
+
+## [0.29.1](https://github.com/coveo/ui-kit/compare/v0.29.0...v0.29.1) (2021-06-21)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.29.0](https://github.com/coveo/ui-kit/compare/v0.28.1...v0.29.0) (2021-06-21)
 
 

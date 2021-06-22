@@ -34,6 +34,8 @@ import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
 import {SearchThunkExtraArguments} from '../../app/headless-engine';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -144,6 +146,7 @@ export class SearchAPIClient {
     const payload = {response, body};
 
     if (isSuccessSearchResponse(body)) {
+      payload.body = shimResponse(body);
       const processedResponse = await this.options.postprocessSearchResponseMiddleware(
         payload
       );
@@ -368,4 +371,15 @@ function pickNonBaseParams<Params extends BaseParam>(req: Params) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {url, accessToken, organizationId, ...nonBase} = req;
   return nonBase;
+}
+
+function shimResponse(response: SearchResponseSuccess) {
+  const empty = emptyQuestionAnswer();
+  if (isNullOrUndefined(response.questionAnswer)) {
+    response.questionAnswer = empty;
+    return response;
+  }
+
+  response.questionAnswer = {...empty, ...response.questionAnswer};
+  return response;
 }

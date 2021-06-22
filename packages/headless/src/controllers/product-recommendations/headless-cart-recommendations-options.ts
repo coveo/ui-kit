@@ -1,6 +1,6 @@
 export interface CartRecommendationsListOptions {
   /**
-   * The SKUs of products in the cart.
+   * The SKUs of the products in the cart.
    */
   skus?: string[];
   /**
