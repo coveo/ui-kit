@@ -7,12 +7,18 @@ import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {PlatformClient} from '../../api/platform-client';
 import {createMockState} from '../../test/mock-state';
-import {getSearchInitialState, SearchState} from './search-state';
+import {
+  emptyQuestionAnswer,
+  getSearchInitialState,
+  SearchState,
+} from './search-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {Result} from '../../api/search/search/result';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {Response} from 'cross-fetch';
+import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {QuestionsAnswers} from '../../api/search/search/question-answering';
 
 jest.mock('../../api/platform-client');
 
@@ -56,6 +62,46 @@ describe('search-slice', () => {
     expect(finalState.duration).toEqual(123);
     expect(finalState.queryExecuted).toEqual('foo');
     expect(finalState.isLoading).toBe(false);
+  });
+
+  it('when a execute search fulfilled is received, it shims the content of #questionAnswer if not available', () => {
+    const response = buildMockSearchResponse();
+    delete (response as Partial<SearchResponseSuccess>).questionAnswer;
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(searchState, '', null as never);
+    const finalState = searchReducer(state, action);
+    expect(finalState.response.questionAnswer).toBeDefined();
+    expect(finalState.response.questionAnswer).toMatchObject(
+      emptyQuestionAnswer()
+    );
+  });
+
+  it('when a execute search fulfilled is received, it shims the content of #questionAnswer if partially available', () => {
+    const response = buildMockSearchResponse();
+    response.questionAnswer.question = 'foo';
+    response.questionAnswer.answerSnippet = 'bar';
+    delete (response.questionAnswer as Partial<QuestionsAnswers>).documentId;
+    delete (response.questionAnswer as Partial<QuestionsAnswers>)
+      .relatedQuestions;
+
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(searchState, '', null as never);
+    const finalState = searchReducer(state, action);
+    expect(finalState.response.questionAnswer.question).toBe('foo');
+    expect(finalState.response.questionAnswer.answerSnippet).toBe('bar');
+    expect(finalState.response.questionAnswer.documentId).toMatchObject({
+      ...emptyQuestionAnswer().documentId,
+    });
+    expect(finalState.response.questionAnswer.relatedQuestions).toBeDefined();
+    expect(finalState.response.questionAnswer.relatedQuestions.length).toEqual(
+      emptyQuestionAnswer().relatedQuestions.length
+    );
   });
 
   it('when a fetchMoreResults fulfilled is received, it updates the state to the received payload', () => {
