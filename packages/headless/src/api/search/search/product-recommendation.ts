@@ -8,37 +8,37 @@ export interface ProductRecommendation {
    */
   clickUri: string;
   /**
-   * Name of the product.
+   * The name of the product.
    *
    * From the `ec_name` field.
    */
   ec_name?: string;
   /**
-   * Product brand.
+   * The brand of the product.
    *
    * From the `ec_brand` field.
    */
   ec_brand?: string;
   /**
-   * Category of the product (e.g., `"Electronics"`, `"Electronics|Televisions"`, or `"Electronics|Televisions|4K Televisions"`)
+   * The category of the product (e.g., `"Electronics"`, `"Electronics|Televisions"`, or `"Electronics|Televisions|4K Televisions"`).
    *
    * From the `ec_category` field.
    */
   ec_category?: string;
   /**
-   * Base price of the product or variant.
+   * The base price of the product or variant.
    *
    * From the `ec_price` field.
    */
   ec_price?: number;
   /**
-   * Promotional price of product or variant.
+   * The promotional price of the product or variant.
    *
    * From the `ec_promo_price` field.
    */
   ec_promo_price?: number;
   /**
-   * Short description of the product.
+   * A short description of the product.
    *
    * From the `ec_shortdesc` field.
    */
@@ -57,13 +57,13 @@ export interface ProductRecommendation {
   ec_images?: string[];
 
   /**
-   * Availability of the product (i.e., whether the product is in stock).
+   * The availability of the product (i.e., whether it's in stock).
    *
    * From the `ec_in_stock` field.
    */
   ec_in_stock?: boolean;
   /**
-   * A rating based system from 0-10.
+   * A rating system. Ratings range from 0-10.
    *
    * From the `ec_rating` field.
    */
