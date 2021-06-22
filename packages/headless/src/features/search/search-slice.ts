@@ -35,13 +35,14 @@ function handlePendingSearch(state: SearchState) {
 
 function shimResponsePayload(response: SearchResponseSuccess) {
   const empty = emptyQuestionAnswer();
-  if (isNullOrUndefined(response.questionAnswer)) {
-    response.questionAnswer = empty;
-    return response;
+  const copy = {...response};
+  if (isNullOrUndefined(copy.questionAnswer)) {
+    copy.questionAnswer = empty;
+    return copy;
   }
 
-  response.questionAnswer = {...empty, ...response.questionAnswer};
-  return response;
+  copy.questionAnswer = {...empty, ...copy.questionAnswer};
+  return copy;
 }
 
 export const searchReducer = createReducer(

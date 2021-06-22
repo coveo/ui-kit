@@ -48,6 +48,7 @@ import {StandaloneSearchBox} from '../components/standalone-search-box/standalon
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
+import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
 import {
   SearchEngine,
   buildSearchEngine,
@@ -409,6 +410,7 @@ export class SearchPage extends Component {
             <SortFn controller={this.sort} criteria={criteria} />
           </Section>
           <Section title="result-list">
+            <SmartSnippet />
             <ResultList />
             <ResultListFn controller={this.resultList} />
           </Section>
