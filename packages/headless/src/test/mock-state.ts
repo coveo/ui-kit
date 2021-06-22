@@ -25,6 +25,7 @@ import {getDebugInitialState} from '../features/debug/debug-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
 import {getFoldingInitialState} from '../features/folding/folding-state';
+import {getTriggerInitialState} from '../features/triggers/triggers-state';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state';
 
 export function createMockState(
@@ -58,6 +59,7 @@ export function createMockState(
     resultPreview: getResultPreviewInitialState(),
     version: 'unit-testing-version',
     folding: getFoldingInitialState(),
+    triggers: getTriggerInitialState(),
     questionAnswering: getQuestionAnsweringInitialState(),
     ...config,
   };
