@@ -29,7 +29,7 @@ export interface CartRecommendationsList extends Controller {
   /**
    * Sets the SKUs in the cart.
    *
-   * @param skus - The SKUs of products in the cart.
+   * @param skus - The SKUs of the products in the cart.
    */
   setSkus(skus: string[]): void;
 
@@ -41,7 +41,7 @@ export interface CartRecommendationsList extends Controller {
 
 export interface CartRecommendationsListState {
   /**
-   * The SKUs of products in the cart.
+   * The SKUs of the products in the cart.
    */
   skus: string[];
 
@@ -56,12 +56,12 @@ export interface CartRecommendationsListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * The error returned by the Coveo platform while executing the cart recommendation request, if any. `null` otherwise.
+   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
    */
   error: ErrorPayload | null;
 
   /**
-   * Whether the cart recommendation request is currently being executed against the Coveo platform.
+   * Whether a cart recommendation request is currently being executed against the Coveo platform.
    */
   isLoading: boolean;
 }

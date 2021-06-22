@@ -56,7 +56,7 @@ export interface CategoryFacetProps {
 }
 
 /**
- * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values in a hierarchical fashion.
+ * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
  */
 export interface CategoryFacet extends Controller {
   /**
@@ -79,7 +79,7 @@ export interface CategoryFacet extends Controller {
   /**
    * Sorts the facet values according to the specified criterion.
    *
-   * @param criterion - The criterion to use for sorting values.
+   * @param criterion - The criterion by which to sort values.
    */
   sortBy(criterion: CategoryFacetSortCriterion): void;
 
@@ -114,25 +114,25 @@ export interface CategoryFacetState {
   /** The facet ID. */
   facetId: string;
 
-  /** The parent values of the facet. */
+  /** The facet's parent values. */
   parents: CategoryFacetValue[];
 
-  /** The values of the facet. */
+  /** The facet's values. */
   values: CategoryFacetValue[];
 
-  /** The active sortCriterion of the facet. */
+  /** The facet's active `sortCriterion`. */
   sortCriteria: CategoryFacetSortCriterion;
 
-  /** `true` if a search is in progress and `false` otherwise. */
+  /** Returns `true` if a search is in progress, and `false` if not. */
   isLoading: boolean;
 
-  /** `true` if there is at least one non-idle value and `false` otherwise. */
+  /** Returns `true` if there's at least one non-idle value, and `false` if not. */
   hasActiveValues: boolean;
 
-  /** `true` if there are more values to display and `false` otherwise. */
+  /** Returns `true` if there are more values to display and, `false` if not. */
   canShowMoreValues: boolean;
 
-  /** `true` if fewer values can be displayed and `false` otherwise. */
+  /** Returns `true` if fewer values can be displayed, and `false` if not. */
   canShowLessValues: boolean;
 
   /** The state of the facet's searchbox. */
@@ -143,7 +143,7 @@ export interface CategoryFacetSearch {
   /**
    * Updates the facet search query.
    *
-   * @param text - The query to search.
+   * @param text - The facet search query.
    * */
   updateText(text: string): void;
 
@@ -177,7 +177,7 @@ export interface CategoryFacetSearchState {
   values: CategoryFacetSearchResult[];
 
   /**
-   * `true` if the facet search is in progress and `false` otherwise.
+   * Returns `true` if the facet search is in progress, and `false` if not.
    * */
   isLoading: boolean;
 
@@ -204,8 +204,8 @@ export interface CategoryFacetSearchResult {
   rawValue: string;
 
   /**
-   * An estimate of the number of result items matching both the current query and
-   * the filter expression that would get generated if the facet value were selected.
+   * An estimate of the number of result items that match both the current query and
+   * the filter expression which would be generated if the facet value were selected.
    */
   count: number;
 
