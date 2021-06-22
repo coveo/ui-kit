@@ -400,6 +400,22 @@ export namespace Components {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+    }
     interface AtomicResultTemplate {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
@@ -696,6 +712,54 @@ declare global {
         prototype: HTMLAtomicResultQuickviewElement;
         new (): HTMLAtomicResultQuickviewElement;
     };
+    interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionActionsElement: {
+        prototype: HTMLAtomicResultSectionActionsElement;
+        new (): HTMLAtomicResultSectionActionsElement;
+    };
+    interface HTMLAtomicResultSectionBadgesElement extends Components.AtomicResultSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBadgesElement: {
+        prototype: HTMLAtomicResultSectionBadgesElement;
+        new (): HTMLAtomicResultSectionBadgesElement;
+    };
+    interface HTMLAtomicResultSectionBottomMetadataElement extends Components.AtomicResultSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBottomMetadataElement: {
+        prototype: HTMLAtomicResultSectionBottomMetadataElement;
+        new (): HTMLAtomicResultSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionEmphasizedElement: {
+        prototype: HTMLAtomicResultSectionEmphasizedElement;
+        new (): HTMLAtomicResultSectionEmphasizedElement;
+    };
+    interface HTMLAtomicResultSectionExcerptElement extends Components.AtomicResultSectionExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionExcerptElement: {
+        prototype: HTMLAtomicResultSectionExcerptElement;
+        new (): HTMLAtomicResultSectionExcerptElement;
+    };
+    interface HTMLAtomicResultSectionTitleElement extends Components.AtomicResultSectionTitle, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleElement: {
+        prototype: HTMLAtomicResultSectionTitleElement;
+        new (): HTMLAtomicResultSectionTitleElement;
+    };
+    interface HTMLAtomicResultSectionTitleMetadataElement extends Components.AtomicResultSectionTitleMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleMetadataElement: {
+        prototype: HTMLAtomicResultSectionTitleMetadataElement;
+        new (): HTMLAtomicResultSectionTitleMetadataElement;
+    };
+    interface HTMLAtomicResultSectionVisualElement extends Components.AtomicResultSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionVisualElement: {
+        prototype: HTMLAtomicResultSectionVisualElement;
+        new (): HTMLAtomicResultSectionVisualElement;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
@@ -776,6 +840,14 @@ declare global {
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
+        "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
+        "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
+        "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
+        "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
+        "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
+        "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
+        "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
+        "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
@@ -1175,6 +1247,22 @@ declare namespace LocalJSX {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+    }
     interface AtomicResultTemplate {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
@@ -1303,6 +1391,14 @@ declare namespace LocalJSX {
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
+        "atomic-result-section-actions": AtomicResultSectionActions;
+        "atomic-result-section-badges": AtomicResultSectionBadges;
+        "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
+        "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
+        "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
+        "atomic-result-section-title": AtomicResultSectionTitle;
+        "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
+        "atomic-result-section-visual": AtomicResultSectionVisual;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-results-per-page": AtomicResultsPerPage;
@@ -1348,6 +1444,14 @@ declare module "@stencil/core" {
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
+            "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
+            "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
+            "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
+            "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
+            "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
+            "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
+            "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
+            "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
