@@ -9,12 +9,15 @@ import {
   ToggleSelectDateFacetValueActionCreatorPayload,
   updateDateFacetSortCriterion,
   UpdateDateFacetSortCriterionActionCreatorPayload,
+  UpdateDateFacetValuesActionCreatorPayload,
+  updateDateFacetValues,
 } from './date-facet-actions';
 
 export {
   RegisterDateFacetActionCreatorPayload,
   ToggleSelectDateFacetValueActionCreatorPayload,
   UpdateDateFacetSortCriterionActionCreatorPayload,
+  UpdateDateFacetValuesActionCreatorPayload,
 };
 
 /**
@@ -58,6 +61,15 @@ export interface DateFacetSetActionCreators {
   updateDateFacetSortCriterion(
     payload: UpdateDateFacetSortCriterionActionCreatorPayload
   ): PayloadAction<UpdateDateFacetSortCriterionActionCreatorPayload>;
+
+  /**
+   * Updates date facet values.
+   * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+   * @param values (DateFacetValue[]) The date facet values.
+   */
+  updateDateFacetValues(
+    payload: UpdateDateFacetValuesActionCreatorPayload
+  ): PayloadAction<UpdateDateFacetValuesActionCreatorPayload>;
 }
 
 /**
@@ -76,5 +88,6 @@ export function loadDateFacetSetActions(
     registerDateFacet,
     toggleSelectDateFacetValue,
     updateDateFacetSortCriterion,
+    updateDateFacetValues,
   };
 }

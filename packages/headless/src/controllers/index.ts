@@ -86,6 +86,24 @@ export {
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
 export {
+  buildNumericFilter,
+  NumericFilter,
+  NumericFilterOptions,
+  NumericFilterProps,
+  NumericFilterRange,
+  NumericFilterState,
+} from './facets/range-facet/numeric-facet/headless-numeric-filter';
+
+export {
+  buildDateFilter,
+  DateFilter,
+  DateFilterOptions,
+  DateFilterProps,
+  DateFilterRange,
+  DateFilterState,
+} from './facets/range-facet/date-facet/headless-date-filter';
+
+export {
   History,
   HistoryState,
   buildHistory,

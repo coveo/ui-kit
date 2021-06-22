@@ -9,12 +9,15 @@ import {
   ToggleSelectNumericFacetValueActionCreatorPayload,
   updateNumericFacetSortCriterion,
   UpdateNumericFacetSortCriterionActionCreatorPayload,
+  updateNumericFacetValues,
+  UpdateNumericFacetValuesActionCreatorPayload,
 } from './numeric-facet-actions';
 
 export {
   RegisterNumericFacetActionCreatorPayload,
   ToggleSelectNumericFacetValueActionCreatorPayload,
   UpdateNumericFacetSortCriterionActionCreatorPayload,
+  UpdateNumericFacetValuesActionCreatorPayload,
 };
 
 /**
@@ -58,6 +61,15 @@ export interface NumericFacetSetActionCreators {
   updateNumericFacetSortCriterion(
     payload: UpdateNumericFacetSortCriterionActionCreatorPayload
   ): PayloadAction<UpdateNumericFacetSortCriterionActionCreatorPayload>;
+
+  /**
+   * Updates numeric facet values.
+   * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+   * @param values (NumericFacetValue[]) The numeric facet values.
+   */
+  updateNumericFacetValues(
+    payload: UpdateNumericFacetValuesActionCreatorPayload
+  ): PayloadAction<UpdateNumericFacetValuesActionCreatorPayload>;
 }
 
 /**
@@ -76,5 +88,6 @@ export function loadNumericFacetSetActions(
     registerNumericFacet,
     toggleSelectNumericFacetValue,
     updateNumericFacetSortCriterion,
+    updateNumericFacetValues,
   };
 }
