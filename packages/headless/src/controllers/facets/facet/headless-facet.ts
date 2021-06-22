@@ -224,7 +224,7 @@ export interface FacetValue {
   state: FacetValueState;
 
   /**
-   * The number of results having the facet value.
+   * The number of results that have the facet value.
    * */
   numberOfResults: number;
 

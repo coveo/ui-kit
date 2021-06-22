@@ -75,7 +75,7 @@ export interface DateFacet extends Controller {
 
   /** Sorts the facet values according to the specified criterion.
    *
-   * @param criterion - The criterion to sort values by.
+   * @param criterion - The criterion by which to sort values.
    */
   sortBy(criterion: RangeFacetSortCriterion): void;
 
