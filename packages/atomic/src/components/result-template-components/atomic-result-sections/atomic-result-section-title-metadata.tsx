@@ -1,9 +1,4 @@
-import {Element, Component, State} from '@stencil/core';
-import {
-  InitializableComponent,
-  Bindings,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
+import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
@@ -15,10 +10,7 @@ import {containsVisualElement} from '../../../utils/utils';
   tag: 'atomic-result-section-title-metadata',
   shadow: false,
 })
-export class AtomicResultSectionTitleMetadata
-  implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
-  @State() public error!: Error;
+export class AtomicResultSectionTitleMetadata {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {
