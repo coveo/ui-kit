@@ -32,6 +32,12 @@ To run the unit tests and watch, run:
 npm run test:watch
 ```
 
+To use @coveo/headless locally, you have to build the package by running:
+
+```bash
+npm run build
+```
+
 ### Redux
 
 The headless project intensively uses ["Redux"](https://redux.js.org) along with ["Redux Toolkit"](https://redux-toolkit.js.org), so prior knowledge is necessary.

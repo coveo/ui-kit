@@ -24,6 +24,8 @@ import {ResultPreviewState} from '../features/result-preview/result-preview-stat
 import {StateWithHistory} from '../app/undoable';
 import {HistoryState} from '../features/history/history-state';
 import {FoldingState} from '../features/folding/folding-state';
+import {TriggerState} from '../features/triggers/triggers-state';
+import {QuestionAnsweringState} from '../features/question-answering/question-answering-state';
 
 export interface QuerySection {
   /**
@@ -228,4 +230,18 @@ export interface ProductRecommendationsSection {
    * The information related to the product recommendations endpoint.
    */
   productRecommendations: ProductRecommendationsState;
+}
+
+export interface TriggerSection {
+  /**
+   * The information related to the triggers.
+   */
+  triggers: TriggerState;
+}
+
+export interface QuestionAnsweringSection {
+  /**
+   * The question and answers for a given query, also known as smart snippet.
+   */
+  questionAnswering: QuestionAnsweringState;
 }
