@@ -64,8 +64,9 @@ export interface DateFacetSetActionCreators {
 
   /**
    * Updates date facet values.
-   * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
-   * @param values (DateFacetValue[]) The date facet values.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
    */
   updateDateFacetValues(
     payload: UpdateDateFacetValuesActionCreatorPayload

@@ -64,8 +64,9 @@ export interface NumericFacetSetActionCreators {
 
   /**
    * Updates numeric facet values.
-   * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
-   * @param values (NumericFacetValue[]) The numeric facet values.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
    */
   updateNumericFacetValues(
     payload: UpdateNumericFacetValuesActionCreatorPayload
