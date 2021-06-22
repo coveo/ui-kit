@@ -36,6 +36,9 @@ import {NoopPreprocessRequest} from '../preprocess-request';
 import {Response} from 'cross-fetch';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
+import {SearchResponseSuccess} from './search/search-response';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {QuestionsAnswers} from './search/question-answering';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -501,6 +504,53 @@ describe('search api client', () => {
 
         expect(res.success).toBe('hello');
       });
+    });
+  });
+
+  describe('SearchAPIClient.search question answering', () => {
+    const doMockPlatformResponseAndAssertSuccess = async (
+      mockResponse: SearchResponseSuccess
+    ) => {
+      const body = JSON.stringify(mockResponse);
+      const response = new Response(body);
+
+      PlatformClient.call = () => Promise.resolve(response);
+      const res = await searchAPIClient.search(buildSearchRequest(state));
+      if (isErrorResponse(res)) {
+        fail(
+          'SearchAPIClient should not return an error when processing question answering'
+        );
+      }
+      return res.success;
+    };
+
+    it('should shim the content of #questionAnswer if not available', async () => {
+      const mockResponse = buildMockSearchResponse();
+      delete (mockResponse as Partial<SearchResponseSuccess>).questionAnswer;
+
+      const res = await doMockPlatformResponseAndAssertSuccess(mockResponse);
+      expect(res.questionAnswer).toMatchObject(emptyQuestionAnswer());
+    });
+
+    it('should shim the content of #questionAnswer if partially available', async () => {
+      const mockResponse = buildMockSearchResponse();
+      mockResponse.questionAnswer.question = 'foo';
+      mockResponse.questionAnswer.answerSnippet = 'bar';
+      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>)
+        .documentId;
+      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>)
+        .relatedQuestions;
+
+      const res = await doMockPlatformResponseAndAssertSuccess(mockResponse);
+      expect(res.questionAnswer.question).toBe('foo');
+      expect(res.questionAnswer.answerSnippet).toBe('bar');
+      expect(res.questionAnswer.documentId).toMatchObject({
+        ...emptyQuestionAnswer().documentId,
+      });
+      expect(res.questionAnswer.relatedQuestions).toBeDefined();
+      expect(res.questionAnswer.relatedQuestions.length).toEqual(
+        emptyQuestionAnswer().relatedQuestions.length
+      );
     });
   });
 });
