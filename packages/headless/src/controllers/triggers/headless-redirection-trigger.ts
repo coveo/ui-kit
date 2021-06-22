@@ -1,9 +1,9 @@
-import {Engine} from '../../app/headless-engine';
 import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
 import {configuration, triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The `RedirectionTrigger` controller handles redirection actions.
@@ -32,7 +32,7 @@ export interface RedirectionTriggerState {
  * @returns A `RedirectionTrigger` controller instance.
  * */
 export function buildRedirectionTrigger(
-  engine: Engine<object>
+  engine: SearchEngine
 ): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
@@ -71,8 +71,8 @@ export function buildRedirectionTrigger(
 }
 
 function loadRedirectionReducers(
-  engine: Engine<object>
-): engine is Engine<TriggerSection & ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<TriggerSection & ConfigurationSection> {
   engine.addReducers({configuration, triggers});
   return true;
 }
