@@ -1,8 +1,7 @@
 import {
   buildMockProductRecommendationsAppEngine,
-  MockEngine,
+  MockProductRecommendationEngine,
 } from '../../test/mock-engine';
-import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   buildFrequentlyViewedTogetherList,
   FrequentlyViewedTogetherList,
@@ -11,7 +10,7 @@ import {
 
 describe('headless frequently-viewed-together', () => {
   let frequentlyViewedTogether: FrequentlyViewedTogetherList;
-  let engine: MockEngine<ProductRecommendationsAppState>;
+  let engine: MockProductRecommendationEngine;
 
   const baseOptions: Partial<FrequentlyViewedTogetherListOptions> = {
     skus: ['some-sku'],

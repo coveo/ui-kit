@@ -1,16 +1,18 @@
 import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/reducers';
 import {logDocumentOpenThunk} from '../../features/result/result-analytics-actions';
-import {SearchAppState} from '../../state/search-app-state';
 import {buildMockResult} from '../../test';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {
   buildInteractiveResult,
   InteractiveResult,
 } from './headless-interactive-result';
 
 describe('InteractiveResult', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let mockResult: Result;
   let interactiveResult: InteractiveResult;
   let logDocumentOpenPendingActionType: string;

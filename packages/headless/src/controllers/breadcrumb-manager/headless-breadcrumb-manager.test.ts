@@ -1,7 +1,7 @@
 import {
   buildMockSearchAppEngine,
   createMockState,
-  MockEngine,
+  MockSearchEngine,
 } from '../../test';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
@@ -49,7 +49,7 @@ import {
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let state: SearchAppState;
   let breadcrumbManager: BreadcrumbManager;
 

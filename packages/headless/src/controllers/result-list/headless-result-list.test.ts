@@ -1,6 +1,8 @@
 import {buildResultList, ResultList} from './headless-result-list';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {SchemaValidationError} from '@coveo/bueno';
 import {fetchMoreResults} from '../../features/search/search-actions';
@@ -8,7 +10,7 @@ import {buildMockResult} from '../../test';
 import {configuration, fields, search} from '../../app/reducers';
 
 describe('ResultList', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();

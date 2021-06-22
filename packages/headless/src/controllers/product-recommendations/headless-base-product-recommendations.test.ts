@@ -1,8 +1,7 @@
 import {
   buildMockProductRecommendationsAppEngine,
-  MockEngine,
+  MockProductRecommendationEngine,
 } from '../../test/mock-engine';
-import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   buildBaseProductRecommendationsList,
   ProductRecommendationsList,
@@ -21,7 +20,7 @@ import {productRecommendationsReducer} from '../../features/product-recommendati
 
 describe('headless product-recommendations', () => {
   let productRecommendations: ProductRecommendationsList;
-  let engine: MockEngine<ProductRecommendationsAppState>;
+  let engine: MockProductRecommendationEngine;
 
   const baseOptions: Partial<ProductRecommendationsListOptions> = {
     id: 'bloup',

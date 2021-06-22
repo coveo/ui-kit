@@ -7,7 +7,10 @@ import {checkForRedirection} from '../../features/redirection/redirection-action
 import {createMockState} from '../../test/mock-state';
 import {updateQuery} from '../../features/query/query-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
 import {registerQuerySetQuery} from '../../features/query-set/query-set-actions';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
@@ -17,7 +20,7 @@ describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
   let state: SearchAppState;
 
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let searchBox: StandaloneSearchBox;
   let options: StandaloneSearchBoxOptions;
 

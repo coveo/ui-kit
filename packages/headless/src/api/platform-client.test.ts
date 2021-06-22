@@ -1,7 +1,6 @@
 import {
   platformUrl,
   PlatformClient,
-  NoopPreprocessRequestMiddleware,
   PlatformClientCallOptions,
 } from './platform-client';
 import pino from 'pino';
@@ -9,7 +8,10 @@ import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
-import {NoopPreprocessRequest} from './preprocess-request';
+import {
+  NoopPreprocessRequest,
+  PlatformRequestOptions,
+} from './preprocess-request';
 import {ExpiredTokenError} from '../utils/errors';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
@@ -58,8 +60,6 @@ describe('PlatformClient call', () => {
         test: 123,
       },
       url: platformUrl(),
-      renewAccessToken: async () => 'accessToken2',
-      deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
       ...options,
@@ -94,15 +94,16 @@ describe('PlatformClient call', () => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
-    const middleware = (request: PlatformClientCallOptions) => {
+    const middleware = (request: PlatformRequestOptions) => {
       return {
         ...request,
         headers: {
+          ...request.headers,
           test: 'header',
         },
       };
     };
-    await platformCall({deprecatedPreprocessRequest: middleware});
+    await platformCall({preprocessRequest: middleware});
 
     expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
       body: JSON.stringify({
