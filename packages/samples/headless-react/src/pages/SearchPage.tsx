@@ -48,6 +48,8 @@ import {StandaloneSearchBox} from '../components/standalone-search-box/standalon
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
+import {QueryTrigger} from '../components/triggers/query-trigger.class';
+import {QueryTrigger as QueryTriggerFn} from '../components/triggers/query-trigger.fn';
 import {
   SearchEngine,
   buildSearchEngine,
@@ -103,6 +105,8 @@ import {
   buildStandaloneSearchBox,
   RedirectionTrigger as HeadlessRedirectionTrigger,
   buildRedirectionTrigger,
+  QueryTrigger as HeadlessQueryTrigger,
+  buildQueryTrigger,
 } from '@coveo/headless';
 import {
   RecommendationEngine,
@@ -158,6 +162,7 @@ export class SearchPage extends Component {
   private readonly relevanceInspector: HeadlessRelevanceInspector;
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
+  private readonly queryTrigger: HeadlessQueryTrigger;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -274,6 +279,8 @@ export class SearchPage extends Component {
     });
 
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
+
+    this.queryTrigger = buildQueryTrigger(this.engine);
   }
 
   componentDidMount() {
@@ -444,6 +451,10 @@ export class SearchPage extends Component {
             <RedirectionTriggerFn
               controller={this.redirectionTrigger}
             ></RedirectionTriggerFn>
+          </Section>
+          <Section title="query-trigger">
+            <QueryTrigger></QueryTrigger>
+            <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
           </Section>
         </AppContext.Provider>
       </div>

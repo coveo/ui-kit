@@ -412,6 +412,12 @@ export {
 } from './triggers/headless-redirection-trigger';
 
 export {
+  QueryTrigger,
+  QueryTriggerState,
+  buildQueryTrigger,
+} from './triggers/headless-query-trigger';
+
+export {
   SmartSnippet,
   SmartSnippetState,
   buildSmartSnippet,
