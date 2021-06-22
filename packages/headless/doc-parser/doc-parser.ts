@@ -278,6 +278,28 @@ const controllerConfiguration: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildSmartSnippet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/smart-snippet/smart-snippet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/smart-snippet/smart-snippet.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSmartSnippetQuestionsList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/smart-snippet/smart-snippet-questions-list.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
