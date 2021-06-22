@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Host} from '@stencil/core';
 import {
   CategoryFacetState,
   CategoryFacet,
@@ -372,28 +372,30 @@ export class AtomicCategoryFacet
       this.facetState.values.length === 0 &&
       this.facetState.parents.length === 0
     ) {
-      return;
+      return <Host class="without-values"></Host>;
     }
 
     return (
-      <BaseFacet
-        controller={new BaseFacetController(this)}
-        label={this.strings[this.label]()}
-        hasActiveValues={this.facetState.hasActiveValues}
-      >
-        {this.facetSearch?.render()}
-        <div class="mt-1 text-lg lg:text-base">
-          {this.allCategoriesButton}
-          <div>{this.parents}</div>
-          <div class={this.parents.length ? 'pl-9' : 'pl-0'}>
-            <ul>{this.children}</ul>
-            <div class="flex flex-col items-start space-y-1">
-              {this.showLessButton}
-              {this.showMoreButton}
+      <Host class="with-values">
+        <BaseFacet
+          controller={new BaseFacetController(this)}
+          label={this.strings[this.label]()}
+          hasActiveValues={this.facetState.hasActiveValues}
+        >
+          {this.facetSearch?.render()}
+          <div class="mt-1 text-lg lg:text-base">
+            {this.allCategoriesButton}
+            <div>{this.parents}</div>
+            <div class={this.parents.length ? 'pl-9' : 'pl-0'}>
+              <ul>{this.children}</ul>
+              <div class="flex flex-col items-start space-y-1">
+                {this.showLessButton}
+                {this.showMoreButton}
+              </div>
             </div>
           </div>
-        </div>
-      </BaseFacet>
+        </BaseFacet>
+      </Host>
     );
   }
 }

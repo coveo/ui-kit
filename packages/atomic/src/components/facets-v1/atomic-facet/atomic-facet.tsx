@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -310,19 +310,21 @@ export class AtomicFacet
     }
 
     if (!this.facetState.values.length) {
-      return;
+      return <Host class="without-values"></Host>;
     }
 
     return (
-      <FacetContainer>
-        {this.renderHeader()}
-        {!this.isCollapsed && [
-          this.renderSearchInput(),
-          shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [this.renderValues(), this.renderShowMoreLess()],
-        ]}
-      </FacetContainer>
+      <Host class="with-values">
+        <FacetContainer>
+          {this.renderHeader()}
+          {!this.isCollapsed && [
+            this.renderSearchInput(),
+            shouldDisplaySearchResults(this.facetState.facetSearch)
+              ? [this.renderSearchResults(), this.renderMatches()]
+              : [this.renderValues(), this.renderShowMoreLess()],
+          ]}
+        </FacetContainer>
+      </Host>
     );
   }
 }

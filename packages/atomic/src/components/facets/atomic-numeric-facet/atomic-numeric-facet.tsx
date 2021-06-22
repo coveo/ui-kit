@@ -1,4 +1,4 @@
-import {Component, Element, h, Prop, State} from '@stencil/core';
+import {Component, Element, h, Prop, State, Host} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -182,18 +182,20 @@ export class AtomicNumericFacet
     }
 
     if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return;
+      return <Host class="without-values"></Host>;
     }
 
     return (
-      <BaseFacet
-        controller={new BaseFacetController(this)}
-        label={this.strings[this.label]()}
-        hasActiveValues={this.facetState.hasActiveValues}
-        clearAll={() => this.facet.deselectAll()}
-      >
-        <ul>{this.values}</ul>
-      </BaseFacet>
+      <Host class="with-values">
+        <BaseFacet
+          controller={new BaseFacetController(this)}
+          label={this.strings[this.label]()}
+          hasActiveValues={this.facetState.hasActiveValues}
+          clearAll={() => this.facet.deselectAll()}
+        >
+          <ul>{this.values}</ul>
+        </BaseFacet>
+      </Host>
     );
   }
 }
