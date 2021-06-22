@@ -41,7 +41,7 @@ export interface NumericFilterOptions {
 
   /**
    * A unique identifier for the controller.
-   * By default, a unique random identifier is generated.
+   * By default, a unique random ID is generated.
    */
   facetId?: string;
 
@@ -99,7 +99,7 @@ export interface NumericFilterState {
   range?: NumericFacetValue;
 
   /**
-   * `true` if a search is in progress and `false` otherwise.
+   * Returns `true` if a search is in progress, and `false` if not.
    */
   isLoading: boolean;
 }

@@ -99,7 +99,7 @@ export interface DateFilterState {
   range?: DateFacetValue;
 
   /**
-   * `true` if a search is in progress and `false` otherwise.
+   * Returns `true` if a search is in progress, and `false` if not.
    */
   isLoading: boolean;
 }
