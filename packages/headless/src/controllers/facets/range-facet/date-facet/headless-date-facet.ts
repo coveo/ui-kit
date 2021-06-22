@@ -2,7 +2,6 @@ import {
   DateFacetRequest,
   DateRangeRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {Engine} from '../../../../app/headless-engine';
 import {
   DateFacetResponse,
   DateFacetValue,
@@ -32,6 +31,7 @@ import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 
 export {
@@ -138,7 +138,7 @@ export interface DateFacetState {
  * @returns A `DateFacet` controller instance.
  */
 export function buildDateFacet(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: DateFacetProps
 ): DateFacet {
   if (!loadDateFacetReducers(engine)) {
@@ -191,8 +191,10 @@ export function buildDateFacet(
 }
 
 function loadDateFacetReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection & SearchSection & DateFacetSection> {
+  engine: SearchEngine
+): engine is SearchEngine<
+  ConfigurationSection & SearchSection & DateFacetSection
+> {
   engine.addReducers({configuration, search, dateFacetSet});
   return true;
 }

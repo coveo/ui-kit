@@ -3,13 +3,15 @@ import {
   buildResultTemplatesManager,
 } from './result-templates-manager';
 import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchAppEngine} from '../../test/mock-engine';
-import {Engine} from '../../app/headless-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {fields} from '../../app/reducers';
 
 describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;
-  let engine: Engine;
+  let engine: MockSearchEngine;
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();

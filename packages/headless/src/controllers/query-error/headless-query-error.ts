@@ -1,5 +1,5 @@
-import {Engine} from '../../app/headless-engine';
 import {search} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {SearchSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {ErrorPayload} from '../controller/error-payload';
@@ -35,7 +35,7 @@ export interface QueryErrorState {
  *
  * @param engine - The headless engine.
  */
-export function buildQueryError(engine: Engine<object>): QueryError {
+export function buildQueryError(engine: SearchEngine): QueryError {
   if (!loadQueryErrorReducers(engine)) {
     throw loadReducerError;
   }
@@ -56,8 +56,8 @@ export function buildQueryError(engine: Engine<object>): QueryError {
 }
 
 function loadQueryErrorReducers(
-  engine: Engine<object>
-): engine is Engine<SearchSection> {
+  engine: SearchEngine
+): engine is SearchEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

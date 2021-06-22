@@ -1,8 +1,4 @@
-import {
-  PlatformClient,
-  PlatformResponse,
-  PreprocessRequestMiddleware,
-} from '../platform-client';
+import {PlatformClient, PlatformResponse} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -33,7 +29,7 @@ import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
-import {SearchThunkExtraArguments} from '../../app/headless-engine';
+import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
 
@@ -46,13 +42,8 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 }
 
 export interface SearchAPIClientOptions {
-  /**
-   * @deprecated - Token renewal is now managed using middleware to avoid a circular dependency. Please remove this option in preparation for v1.
-   */
-  renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequest;
-  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;

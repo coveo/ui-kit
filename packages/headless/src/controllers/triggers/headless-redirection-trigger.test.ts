@@ -2,14 +2,16 @@ import {
   RedirectionTrigger,
   buildRedirectionTrigger,
 } from './headless-redirection-trigger';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {triggers, configuration} from '../../app/reducers';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 import {createMockState} from '../../test/mock-state';
 
 describe('RedirectionTrigger', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let redirectionTrigger: RedirectionTrigger;
 
   function initRedirectTrigger() {

@@ -1,6 +1,5 @@
 import {configurationReducer} from './configuration-slice';
 import {
-  renewAccessToken,
   updateBasicConfiguration,
   updateSearchConfiguration,
   disableAnalytics,
@@ -32,7 +31,6 @@ describe('configuration slice', () => {
       apiBaseUrl: `${url}/rest/ua`,
     },
   };
-  const fakeRenewToken = async () => await Promise.resolve('');
 
   it('should have initial state', () => {
     expect(configurationReducer(undefined, {type: 'randomAction'})).toEqual(
@@ -162,35 +160,6 @@ describe('configuration slice', () => {
             apiBaseUrl: 'http://test.com/search',
             locale: 'fr-CA',
           })
-        )
-      ).toEqual(expectedState);
-    });
-  });
-
-  describe('renewAccessToken', () => {
-    it('works on initial state', () => {
-      const expectedState: ConfigurationState = {
-        ...getConfigurationInitialState(),
-        accessToken: 'mytoken123',
-      };
-      expect(
-        configurationReducer(
-          undefined,
-          renewAccessToken.fulfilled('mytoken123', '', fakeRenewToken)
-        )
-      ).toEqual(expectedState);
-    });
-
-    it('works on an existing state', () => {
-      const expectedState: ConfigurationState = {
-        ...existingState,
-        accessToken: 'mynewtoken123',
-      };
-
-      expect(
-        configurationReducer(
-          existingState,
-          renewAccessToken.fulfilled('mynewtoken123', '', fakeRenewToken)
         )
       ).toEqual(expectedState);
     });

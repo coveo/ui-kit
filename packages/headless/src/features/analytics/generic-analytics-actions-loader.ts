@@ -1,6 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
-import {Engine} from '../../app/headless-engine';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 import {
   logSearchEvent,
@@ -10,6 +9,7 @@ import {
   logCustomEvent,
   LogCustomEventActionCreatorPayload,
 } from './analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {
   LogSearchEventActionCreatorPayload,
@@ -77,7 +77,7 @@ export interface GenericAnalyticsActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadGenericAnalyticsActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): GenericAnalyticsActionCreators {
   engine.addReducers({});
 

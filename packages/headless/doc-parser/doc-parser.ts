@@ -144,17 +144,6 @@ const controllerConfiguration: ControllerConfiguration[] = [
     },
   },
   {
-    initializer: 'buildRecommendationList',
-    samplePaths: {
-      react_class: [
-        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.class.tsx',
-      ],
-      react_fn: [
-        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx',
-      ],
-    },
-  },
-  {
     initializer: 'buildQuerySummary',
     samplePaths: {
       react_class: [
@@ -198,10 +187,6 @@ const controllerConfiguration: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
       ],
     },
-  },
-  {
-    initializer: 'buildCartRecommendationsList',
-    samplePaths: {},
   },
   {
     initializer: 'buildSearchBox',
@@ -342,9 +327,6 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
     initializer: 'loadPipelineActions',
   },
   {
-    initializer: 'loadProductRecommendationsActions',
-  },
-  {
     initializer: 'loadQueryActions',
   },
   {
@@ -352,9 +334,6 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadQuerySuggestActions',
-  },
-  {
-    initializer: 'loadRecommendationActions',
   },
   {
     initializer: 'loadRedirectionActions',

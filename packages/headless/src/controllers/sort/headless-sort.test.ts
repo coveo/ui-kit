@@ -1,4 +1,7 @@
-import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../test/mock-engine';
 import {Sort, SortProps, buildSort} from './headless-sort';
 import {
   buildRelevanceSortCriterion,
@@ -15,11 +18,10 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 import {updatePage} from '../../features/pagination/pagination-actions';
-import {SearchAppState} from '../../state/search-app-state';
 import {configuration, sortCriteria} from '../../app/reducers';
 
 describe('Sort', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let props: SortProps;
   let sort: Sort;
 

@@ -5,12 +5,11 @@ import {
 } from '../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockSearchAppEngine, MockEngine} from '../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {UrlManager, buildUrlManager} from './headless-url-manager';
 
 describe('url manager', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let manager: UrlManager;
 
   function initUrlManager(fragment = '') {

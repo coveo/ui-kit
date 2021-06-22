@@ -7,7 +7,6 @@ import {
   StateFromReducersMapObject,
   Middleware,
 } from '@reduxjs/toolkit';
-import {debounce} from 'ts-debounce';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -34,10 +33,7 @@ type EngineDispatch<
 > = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
 
 export interface CoreEngine<
-  /**
-   * @deprecated For v1, restrict "State" generic by extending "object". e.g. State extends object = {}
-   */
-  State = {},
+  State extends object = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments
 > {
   /**
@@ -66,12 +62,6 @@ export interface CoreEngine<
    * The redux store.
    */
   store: Store;
-  /**
-   * A function for headless to call to retrieve a refreshed access token.
-   *
-   * @deprecated - Calling this function directly is not needed because Headless handles token renewal internally. The function will be removed in the next major version.
-   */
-  renewAccessToken: () => Promise<string>;
   /**
    * The logger instance used by headless.
    * */
@@ -171,17 +161,12 @@ function buildCoreEngine<
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
-  const {configuration, reducers} = options;
+  const {reducers} = options;
   const reducerManager = createReducerManager({...coreReducers, ...reducers});
   const logger = thunkExtraArguments.logger;
   const store = createStore(options, thunkExtraArguments, reducerManager);
 
   return {
-    renewAccessToken: createRenewAccessTokenFunction(
-      configuration,
-      store.dispatch
-    ),
-
     addReducers(reducers: ReducersMapObject) {
       reducerManager.add(reducers);
       store.replaceReducer(reducerManager.combinedReducer);
@@ -228,38 +213,6 @@ function createStore<
     thunkExtraArguments,
     name,
   });
-}
-
-function createRenewAccessTokenFunction(
-  configuration: EngineConfiguration,
-  dispatch: Dispatch<AnyAction>
-) {
-  let accessTokenRenewalsAttempts = 0;
-  const resetRenewalTriesAfterDelay = debounce(
-    () => (accessTokenRenewalsAttempts = 0),
-    500
-  );
-
-  return async () => {
-    if (!configuration.renewAccessToken) {
-      return '';
-    }
-
-    accessTokenRenewalsAttempts++;
-    resetRenewalTriesAfterDelay();
-
-    if (accessTokenRenewalsAttempts > 5) {
-      return '';
-    }
-
-    try {
-      const accessToken = await configuration.renewAccessToken();
-      dispatch(updateBasicConfiguration({accessToken}));
-      return accessToken;
-    } catch (error) {
-      return '';
-    }
-  };
 }
 
 function createMiddleware<Reducers extends ReducersMapObject>(

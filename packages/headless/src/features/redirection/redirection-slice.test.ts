@@ -9,9 +9,8 @@ import {
 import {
   buildMockSearchAppEngine,
   createMockState,
-  MockEngine,
+  MockSearchEngine,
 } from '../../test';
-import {SearchAppState} from '../../state/search-app-state';
 import pino from 'pino';
 import {validatePayloadAndThrow} from '../../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
@@ -51,7 +50,7 @@ describe('redirection slice', () => {
     expect(redirectionReducer(existingState, action)).toEqual(expectedState);
   });
 
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   async function mockPlan(trigger?: Trigger) {
     const apiClient = buildMockSearchAPIClient();
     const triggers = trigger ? [trigger] : [];

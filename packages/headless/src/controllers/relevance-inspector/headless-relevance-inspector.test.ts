@@ -3,17 +3,18 @@ import {
   RelevanceInspector,
   RelevanceInspectorProps,
 } from './headless-relevance-inspector';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
 import {createMockState} from '../../test';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {executeSearch} from '../../features/search/search-actions';
 import {configuration, debug, search} from '../../app/reducers';
 
 describe('RelevanceInspector', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let relevanceInspector: RelevanceInspector;
 
   beforeEach(() => {
@@ -85,38 +86,6 @@ describe('RelevanceInspector', () => {
   it should dispatch an "disableDebug" action`, () => {
     relevanceInspector.disable();
     expect(engine.actions).toContainEqual(disableDebug());
-  });
-
-  it(`when debug is enabled
-  when calling logInformation()
-  it should log info to the console`, () => {
-    engine.state.debug = true;
-    spyOn(console, 'log');
-    relevanceInspector.logInformation();
-    expect(console.log).toHaveBeenCalledWith(
-      relevanceInspector.state,
-      'Relevance inspector information for new query'
-    );
-  });
-
-  describe(`when debug is not enabled
-  when calling logInformation()`, () => {
-    it('it should log a warning to the console', () => {
-      spyOn(engine.logger, 'warn');
-      relevanceInspector.logInformation();
-      expect(engine.logger.warn).toHaveBeenCalledTimes(1);
-    });
-
-    it('it should dispatch an "enableDebug" action', () => {
-      relevanceInspector.logInformation();
-      expect(engine.actions).toContainEqual(enableDebug());
-    });
-
-    it('it should dispatch an "executeSearch" action', () => {
-      relevanceInspector.logInformation();
-      const action = engine.findAsyncAction(executeSearch.pending);
-      expect(action).toBeTruthy();
-    });
   });
 
   it('should return the right state when its disabled', () => {

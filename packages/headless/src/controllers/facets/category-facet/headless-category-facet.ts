@@ -1,4 +1,3 @@
-import {Engine} from '../../../app/headless-engine';
 import {
   buildController,
   Controller,
@@ -47,6 +46,7 @@ import {
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 
 export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
 
@@ -223,7 +223,7 @@ export interface CategoryFacetSearchResult {
  * @returns A `CategoryFacet` controller instance.
  * */
 export function buildCategoryFacet(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: CategoryFacetProps
 ): CategoryFacet {
   if (!loadCategoryFacetReducers(engine)) {
@@ -345,8 +345,8 @@ export function buildCategoryFacet(
 }
 
 function loadCategoryFacetReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   CategoryFacetSection &
     CategoryFacetSearchSection &
     ConfigurationSection &
