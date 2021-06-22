@@ -240,11 +240,11 @@ export class AtomicFacet
     }
 
     if (this.facetState.values.length === 0) {
-      return <Host class="without-values"></Host>;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <Host class="with-values">
+      <Host class="atomic-with-values">
         <BaseFacet
           controller={new BaseFacetController(this)}
           label={this.strings[this.label]()}

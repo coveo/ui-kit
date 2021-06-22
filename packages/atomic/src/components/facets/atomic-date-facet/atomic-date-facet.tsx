@@ -179,11 +179,11 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     }
 
     if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return <Host class="without-values"></Host>;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <Host class="with-values">
+      <Host class="atomic-with-values">
         <BaseFacet
           controller={new BaseFacetController(this)}
           label={this.strings[this.label]()}

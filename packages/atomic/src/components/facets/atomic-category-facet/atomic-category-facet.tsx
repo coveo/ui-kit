@@ -372,11 +372,11 @@ export class AtomicCategoryFacet
       this.facetState.values.length === 0 &&
       this.facetState.parents.length === 0
     ) {
-      return <Host class="without-values"></Host>;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <Host class="with-values">
+      <Host class="atomic-with-values">
         <BaseFacet
           controller={new BaseFacetController(this)}
           label={this.strings[this.label]()}

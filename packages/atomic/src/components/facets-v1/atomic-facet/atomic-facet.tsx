@@ -310,11 +310,11 @@ export class AtomicFacet
     }
 
     if (!this.facetState.values.length) {
-      return <Host class="without-values"></Host>;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <Host class="with-values">
+      <Host class="atomic-with-values">
         <FacetContainer>
           {this.renderHeader()}
           {!this.isCollapsed && [
