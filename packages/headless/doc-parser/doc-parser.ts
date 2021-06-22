@@ -296,7 +296,7 @@ const controllerConfiguration: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.class.tsx',
       ],
       react_fn: [
-        'packages/samples/headless-react/src/components/smart-snippet/smart-snippet-questions-list.fn.tsx',
+        'packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx',
       ],
     },
   },

@@ -249,5 +249,6 @@ export {
 export {
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
+  SmartSnippetRelatedQuestion,
   buildSmartSnippetQuestionsList,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
