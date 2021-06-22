@@ -10,12 +10,8 @@ import {
   Controller,
 } from '../../../controller/headless-controller';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
-import {baseFacetResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
 import {determineFacetId} from '../../_common/facet-id-determinor';
-import {
-  DateFacetResponse,
-  DateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
@@ -29,6 +25,7 @@ import {
   updateDateFacetValues,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {validateDateFacetOptions} from './headless-date-facet-options';
+import {dateFacetResponseSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 
 /**
  * The options defining a `DateFilter`.
@@ -136,6 +133,7 @@ export function buildDateFilter(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
   const facetId = determineFacetId(engine, props.options);
   const options: RegisterDateFacetActionCreatorPayload = {
     ...props.options,
@@ -182,10 +180,8 @@ export function buildDateFilter(
     },
 
     get state() {
-      const isLoading = engine.state.search.isLoading;
-      const response = baseFacetResponseSelector(engine.state, facetId) as
-        | DateFacetResponse
-        | undefined;
+      const isLoading = getState().search.isLoading;
+      const response = dateFacetResponseSelector(getState(), facetId);
       const range = response?.values.length ? response.values[0] : undefined;
 
       return {
