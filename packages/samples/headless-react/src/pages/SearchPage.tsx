@@ -49,6 +49,9 @@ import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standa
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
+import {SmartSnippet as SmartSnippetFN} from '../components/smart-snippet/smart-snippet.fn';
+import {SmartSnippetQuestionsList} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.class';
+import {SmartSnippetQuestionsList as SmartSnippetQuestionsListFN} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.fn';
 import {
   SearchEngine,
   buildSearchEngine,
@@ -102,6 +105,10 @@ import {
   buildStandaloneSearchBox,
   RedirectionTrigger as HeadlessRedirectionTrigger,
   buildRedirectionTrigger,
+  SmartSnippet as HeadlessSmartSnippet,
+  buildSmartSnippet,
+  SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
+  buildSmartSnippetQuestionsList,
 } from '@coveo/headless';
 import {
   RecommendationEngine,
@@ -159,6 +166,8 @@ export class SearchPage extends Component {
   private readonly relevanceInspector: HeadlessRelevanceInspector;
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
+  private readonly smartSnippet: HeadlessSmartSnippet;
+  private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -282,6 +291,12 @@ export class SearchPage extends Component {
     });
 
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
+
+    this.smartSnippet = buildSmartSnippet(this.engine);
+
+    this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
+      this.engine
+    );
   }
 
   componentDidMount() {
@@ -424,10 +439,20 @@ export class SearchPage extends Component {
             <SortFn controller={this.sort} criteria={criteria} />
           </Section>
           <Section title="result-list">
-            <SmartSnippet />
             <ResultList />
             <ResultListFn controller={this.resultList} />
           </Section>
+          <Section title="smart-snippet">
+            <SmartSnippet />
+            <SmartSnippetFN controller={this.smartSnippet} />
+          </Section>
+          <Section title="smart-snippet-questions-list">
+            <SmartSnippetQuestionsList />
+            <SmartSnippetQuestionsListFN
+              controller={this.smartSnippetQuestionsList}
+            />
+          </Section>
+
           <Section title="folded-result-list">
             <FoldedResultList />
             <FoldedResultListFn controller={this.foldedResultList} />
