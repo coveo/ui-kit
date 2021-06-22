@@ -1,4 +1,3 @@
-import {Engine} from '../../../../app/headless-engine';
 import {
   registerFacetSearch,
   selectFacetSearchResult,
@@ -10,6 +9,7 @@ import {
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../../state/state-sections';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 
 export interface FacetSearchProps {
@@ -19,7 +19,7 @@ export interface FacetSearchProps {
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 
 export function buildFacetSearch(
-  engine: Engine<FacetSearchSection & ConfigurationSection>,
+  engine: SearchEngine<FacetSearchSection & ConfigurationSection>,
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;

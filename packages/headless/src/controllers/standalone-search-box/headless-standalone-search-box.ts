@@ -1,5 +1,5 @@
-import {Engine} from '../../app/headless-engine';
 import {configuration, query, redirection} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
@@ -59,7 +59,7 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @returns A `StandaloneSearchBox` instance.
  */
 export function buildStandaloneSearchBox(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: StandaloneSearchBoxProps
 ): StandaloneSearchBox {
   if (!loadStandaloneSearchBoxReducers(engine)) {
@@ -117,8 +117,10 @@ export function buildStandaloneSearchBox(
 }
 
 function loadStandaloneSearchBoxReducers(
-  engine: Engine<object>
-): engine is Engine<RedirectionSection & ConfigurationSection & QuerySection> {
+  engine: SearchEngine
+): engine is SearchEngine<
+  RedirectionSection & ConfigurationSection & QuerySection
+> {
   engine.addReducers({redirection, configuration, query});
   return true;
 }

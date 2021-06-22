@@ -1,4 +1,4 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
 import {StringValue, BooleanValue, Value} from '@coveo/bueno';
 import {IRuntimeEnvironment} from 'coveo.analytics';
@@ -134,17 +134,6 @@ export const updateAnalyticsConfiguration = createAction(
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
       runtimeEnvironment: new Value(),
     })
-);
-
-/**
- * Renews the accessToken specified in the global headless engine configuration.
- * @param renew (`() => Promise<string>`) A function that fetches a new access token. The function must return a Promise that resolves to a string (the new access token).
- */
-export const renewAccessToken = createAsyncThunk(
-  'configuration/renewAccessToken',
-  async (renew: () => Promise<string>) => {
-    return await renew();
-  }
 );
 
 /**

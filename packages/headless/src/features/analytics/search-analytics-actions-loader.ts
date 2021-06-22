@@ -1,6 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
-import {Engine} from '../../app/headless-engine';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
 import {logInterfaceChange, logInterfaceLoad} from './analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
@@ -46,6 +45,7 @@ import {
   LogQuerySuggestionClickActionCreatorPayload,
 } from '../query-suggest/query-suggest-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -400,7 +400,7 @@ export interface SearchAnalyticsActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadSearchAnalyticsActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): SearchAnalyticsActionCreators {
   engine.addReducers({});
 

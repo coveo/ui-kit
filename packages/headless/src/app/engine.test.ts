@@ -71,47 +71,6 @@ describe('engine', () => {
     expect(analytics.enabled).toBe(false);
   });
 
-  it(`when renewAccessToken is not defined in the config
-  renewAccessToken should return an empty string`, async (done) => {
-    expect(await engine.renewAccessToken()).toBe('');
-    done();
-  });
-
-  it(`when renewAccessToken is defined in the config
-  renewAccessToken should return a new token`, async (done) => {
-    options.configuration.renewAccessToken = async () => 'newToken';
-    expect(await engine.renewAccessToken()).toBe('newToken');
-    done();
-  });
-
-  it(`after calling renewAccessToken more than 5 times in a row
-  it should return an empty string`, async (done) => {
-    options.configuration.renewAccessToken = async () => 'newToken';
-
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    expect(await engine.renewAccessToken()).toBe('');
-    done();
-  });
-
-  it(`after calling renewAccessToken more than 5 times in a row then waiting at least 500ms
-  it should return a new token`, async (done) => {
-    jest.useFakeTimers();
-    options.configuration.renewAccessToken = async () => 'newToken';
-
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    jest.advanceTimersByTime(1000);
-    expect(await engine.renewAccessToken()).toBe('newToken');
-    done();
-  });
-
   it("when name is specified in the config, the engine's store name is initialized with the config's value", () => {
     options.configuration.name = 'myEngine';
     const spy = jest.spyOn(Store, 'configureStore');

@@ -1,9 +1,4 @@
-export {
-  HeadlessOptions,
-  HeadlessConfigurationOptions,
-  HeadlessEngine,
-  Engine,
-} from './app/headless-engine';
+export {Unsubscribe} from '@reduxjs/toolkit';
 
 export {
   RecommendationEngine,
@@ -12,8 +7,6 @@ export {
   buildRecommendationEngine,
   getSampleRecommendationEngineConfiguration,
 } from './app/recommendation-engine/recommendation-engine';
-
-export {recommendationAppReducers} from './app/recommendation-app-reducers';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';

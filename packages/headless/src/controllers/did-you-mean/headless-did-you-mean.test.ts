@@ -1,15 +1,17 @@
 import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../features/did-you-mean/did-you-mean-actions';
 import {configuration, didYouMean} from '../../app/reducers';
-import {SearchAppState} from '../../state/search-app-state';
 
 describe('did you mean', () => {
   let dym: DidYouMean;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
 
   function initDidYouMean() {
     dym = buildDidYouMean(engine);

@@ -1,8 +1,5 @@
 import {Logger} from 'pino';
-import {
-  NoopPreprocessRequestMiddleware,
-  PlatformClient,
-} from '../../platform-client';
+import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
@@ -22,7 +19,6 @@ import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-doc
 export interface CaseAssistAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
-  renewAccessToken: () => Promise<string>;
 }
 
 /**
@@ -59,10 +55,6 @@ export interface CaseAssistAPIErrorResponse {
  * The client to use to interface with the Case Assist API.
  */
 export class CaseAssistAPIClient {
-  private defaultClientHooks = {
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
-  };
-
   constructor(private options: CaseAssistAPIClientOptions) {}
 
   /**
@@ -79,7 +71,6 @@ export class CaseAssistAPIClient {
     const response = await PlatformClient.call({
       ...buildGetCaseClassificationsRequest(req),
       ...this.options,
-      ...this.defaultClientHooks,
     });
 
     if (response instanceof Error) {
@@ -106,7 +97,6 @@ export class CaseAssistAPIClient {
     const response = await PlatformClient.call({
       ...buildGetDocumentSuggestionsRequest(req),
       ...this.options,
-      ...this.defaultClientHooks,
     });
 
     if (response instanceof Error) {

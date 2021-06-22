@@ -1,10 +1,12 @@
-import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
 import {
   registerAdvancedSearchQueries,
   updateAdvancedSearchQueries,
 } from '../../features/advanced-search-queries/advanced-search-queries-actions';
-import {SearchAppState} from '../../state/search-app-state';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {advancedSearchQueries, configuration} from '../../app/reducers';
 import {setOriginLevel2} from '../../features/configuration/configuration-actions';
@@ -12,7 +14,7 @@ import {getConfigurationInitialState} from '../../features/configuration/configu
 
 describe('Tab', () => {
   const expression = 'abc123';
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let props: TabProps;
   let tab: Tab;
 

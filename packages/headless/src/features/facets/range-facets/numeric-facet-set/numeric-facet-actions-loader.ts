@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../../app/headless-engine';
 import {numericFacetSet} from '../../../../app/reducers';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   deselectAllNumericFacetValues,
   registerNumericFacet,
@@ -79,7 +79,7 @@ export interface NumericFacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadNumericFacetSetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): NumericFacetSetActionCreators {
   engine.addReducers({numericFacetSet});
 

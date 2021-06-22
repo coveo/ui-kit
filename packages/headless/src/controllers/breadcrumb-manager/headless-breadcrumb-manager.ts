@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {BaseFacetValue} from '../../features/facets/facet-api/response';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
@@ -41,6 +40,7 @@ import {
   categoryFacetSet,
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
@@ -173,7 +173,7 @@ export interface BreadcrumbValue<T extends BaseFacetValue> {
  * @returns A `BreadcrumbManager` controller instance.
  */
 export function buildBreadcrumbManager(
-  engine: Engine<object>
+  engine: SearchEngine
 ): BreadcrumbManager {
   if (!loadBreadcrumbManagerReducers(engine)) {
     throw loadReducerError;
@@ -312,8 +312,8 @@ export function buildBreadcrumbManager(
 }
 
 function loadBreadcrumbManagerReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   ConfigurationSection &
     SearchSection &
     FacetSection &

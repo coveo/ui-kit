@@ -111,7 +111,7 @@ async function initEngine(engineId) {
 
 /**
  * 
- * @param {import("coveo").HeadlessConfigurationOptions} config The Headless configuration options for the specified engine ID.
+ * @param {import("coveo").SearchEngineConfiguration} config The Headless configuration options for the specified engine ID.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
  */
