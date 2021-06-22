@@ -16,20 +16,18 @@ import {CoreEngine} from '../../app/engine';
 export {ContextPayload, ContextValue};
 
 /**
- * The `Context` controller injects custom contextual information into the search requests and usage analytics search events sent from a search interface.
- *
- * See [Sending Custom Context Information](https://docs.coveo.com/en/399/).
+ * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/399/) into the search requests and usage analytics search events sent from a search interface.
  */
 export interface Context extends Controller {
   /**
-   * Set the context for the query. Replace any existing context by the new one.
+   * Sets the context for the query. This replaces any existing context with the new one.
    *
-   *  @param ctx - The context to set in the query.
+   *  @param ctx - The context to set for the query.
    */
   set(ctx: ContextPayload): void;
 
   /**
-   * Add, or replace if already present, a new context key and value pair.
+   * Adds (or, if one is already present, replaces) a new context key-value pair.
    *
    * @param contextKey - The context key to add.
    * @param contextValue - The context value to add.
@@ -37,7 +35,7 @@ export interface Context extends Controller {
   add(contextKey: string, contextValue: ContextValue): void;
 
   /**
-   * Remove a context key from the query.
+   * Removes a context key from the query.
    * @param key - The context key to remove.
    */
   remove(key: string): void;

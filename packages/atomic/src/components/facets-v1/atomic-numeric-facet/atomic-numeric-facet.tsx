@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element, Listen} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -25,6 +25,10 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {BaseFacet} from '../facet-common';
+import {
+  defaultNumberFormatter,
+  NumberFormatter,
+} from '../../formats/format-common';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -64,6 +68,7 @@ export class AtomicNumericFacet
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
   private manualRanges: NumericRangeWithLabel[] = [];
+  private formatter: NumberFormatter = defaultNumberFormatter;
 
   @BindStateToController('facet')
   @State()
@@ -129,6 +134,25 @@ export class AtomicNumericFacet
     };
   }
 
+  @Listen('atomic/numberFormat')
+  public setFormat(event: CustomEvent<NumberFormatter>) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.formatter = event.detail;
+  }
+
+  private format(value: number) {
+    try {
+      return this.formatter(value, this.bindings.i18n.languages);
+    } catch (error) {
+      this.bindings.engine.logger.error(
+        `atomic-numeric-facet facet value "${value}" could not be formatted correctly.`,
+        error
+      );
+      return value;
+    }
+  }
+
   private buildManualRanges(): NumericRangeWithLabel[] {
     return Array.from(this.host.querySelectorAll('atomic-numeric-range')).map(
       ({start, end, endInclusive, label}) => ({
@@ -173,10 +197,9 @@ export class AtomicNumericFacet
     )?.label;
     const displayValue = manualRangeLabel
       ? this.bindings.i18n.t(manualRangeLabel)
-      : // TODO: implement formats
-        this.bindings.i18n.t('to', {
-          start: facetValue.start,
-          end: facetValue.end,
+      : this.bindings.i18n.t('to', {
+          start: this.format(facetValue.start),
+          end: this.format(facetValue.end),
         });
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {

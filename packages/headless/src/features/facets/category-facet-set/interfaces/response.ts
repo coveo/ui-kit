@@ -8,7 +8,7 @@ export interface CategoryFacetValue {
   state: FacetValueState;
 
   /**
-   * The number of results having the facet value.
+   * The number of results that match the facet value.
    * */
   numberOfResults: number;
 
@@ -23,7 +23,7 @@ export interface CategoryFacetValue {
   children: CategoryFacetValue[];
 
   /**
-   * Whether more values are available.
+   * Whether more facet values are available.
    * */
   moreValuesAvailable: boolean;
 

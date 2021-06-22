@@ -3,7 +3,7 @@ import {FacetValueState} from '../../../facet-api/value';
 
 export interface NumericFacetValue {
   /**
-   * The number of results having the facet value.
+   * The number of results that have the facet value.
    */
   numberOfResults: number;
 
