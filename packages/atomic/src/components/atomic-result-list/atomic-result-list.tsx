@@ -130,7 +130,6 @@ export class AtomicResultList implements InitializableComponent {
         display={this.display}
         density={this.density}
         image={this.image}
-        // TODO: decide to get rid of Mustache or not
         content={this.resultTemplatesManager.selectTemplate(result) || ''}
       ></atomic-result>
     ));
