@@ -15,7 +15,7 @@ function matchesFound(
   i18n: i18n
 ) {
   return i18n.t(key, {
-    query: `<span class="font-bold italic text-on-background" part="matches-highlight">${sanitize(
+    query: `<span class="font-bold italic text-on-background" part="matches-query">${sanitize(
       query
     )}</span>`,
     interpolation: {escapeValue: false},
