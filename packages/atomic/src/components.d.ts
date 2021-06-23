@@ -503,6 +503,10 @@ export namespace Components {
          */
         "reflectStateInUrl": boolean;
         /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer": string;
+        /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub": string;
@@ -1127,6 +1131,7 @@ declare namespace LocalJSX {
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicQueryError {
     }
@@ -1309,6 +1314,10 @@ declare namespace LocalJSX {
           * Whether the state should be reflected in the URL parameters.
          */
         "reflectStateInUrl"?: boolean;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer"?: string;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */

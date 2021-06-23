@@ -88,6 +88,11 @@ export class AtomicSearchInterface {
    */
   @Prop() public reflectStateInUrl = true;
 
+  /**
+   * The CSS selector for the container where the interface will scroll back to.
+   */
+  @Prop() public scrollContainer = 'atomic-search-interface';
+
   public constructor() {
     setCoveoGlobal();
   }
@@ -149,6 +154,13 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.push(event);
+  }
+
+  @Listen('atomic/scrollToTop')
+  public scrollToTop() {
+    document
+      .querySelector(this.scrollContainer)
+      ?.scrollIntoView({behavior: 'smooth'});
   }
 
   /**
