@@ -243,10 +243,12 @@ export {
   SmartSnippet,
   SmartSnippetState,
   buildSmartSnippet,
+  QuestionAnswerDocumentIdentifier,
 } from './smart-snippet/headless-smart-snippet';
 
 export {
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
+  SmartSnippetRelatedQuestion,
   buildSmartSnippetQuestionsList,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
