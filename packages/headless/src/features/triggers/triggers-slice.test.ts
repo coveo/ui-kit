@@ -15,7 +15,7 @@ describe('trigger slice', () => {
     );
   });
 
-  it('when a executeSearch fulfilled is received and the payload does not contain any Trigger objects, it does not update `state`', () => {
+  it('when a executeSearch fulfilled is received and the payload does not contain any Trigger objects, it does not update #state', () => {
     const state = getTriggerInitialState();
     const response = buildMockSearchResponse();
     const searchState = buildMockSearch({
@@ -33,7 +33,7 @@ describe('trigger slice', () => {
     expect(finalState.query).toEqual('');
   });
 
-  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerRedirect objects, it does not update `state.redirectTo`', () => {
+  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerRedirect objects, it does not update #state.redirectTo', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockNotifyTrigger({content: 'notification'}),
@@ -56,7 +56,7 @@ describe('trigger slice', () => {
     expect(finalState.redirectTo).toEqual('');
   });
 
-  it('when a executeSearch fulfilled is received and the payload contains TriggerRedirect objects, it updates `state.redirectTo`', () => {
+  it('when a executeSearch fulfilled is received and the payload contains TriggerRedirect objects, it updates #state.redirectTo', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockRedirectTrigger({content: 'https://www.coveo.com'}),
@@ -78,7 +78,7 @@ describe('trigger slice', () => {
     expect(finalState.redirectTo).toEqual('https://www.coveo.com');
   });
 
-  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerQuery objects, it does not update `state.query`', () => {
+  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerQuery objects, it does not update #state.query', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockNotifyTrigger({content: 'notification'}),
@@ -101,7 +101,7 @@ describe('trigger slice', () => {
     expect(finalState.query).toEqual('');
   });
 
-  it('when a executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates `state.query`', () => {
+  it('when a executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates #state.query', () => {
     const state = getTriggerInitialState();
     const triggers = [buildMockQueryTrigger({content: 'Euro'})];
     const response = buildMockSearchResponse({
