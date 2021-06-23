@@ -1,6 +1,6 @@
 import {TriggerNotify} from '../../src/api/search/trigger';
 
-export function buildMockTriggerNotify(
+export function buildMockNotifyTrigger(
   config: Partial<TriggerNotify> = {}
 ): TriggerNotify {
   return {
