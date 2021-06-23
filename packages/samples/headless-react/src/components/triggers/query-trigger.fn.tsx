@@ -9,7 +9,7 @@ export const QueryTrigger: FunctionComponent<HeadlessQueryTriggerProps> = (
   props
 ) => {
   const {controller} = props;
-  const [, setState] = useState(controller.state);
+  const [state, setState] = useState(controller.state);
 
   useEffect(() => controller.subscribe(() => updateState()), []);
 
@@ -17,7 +17,11 @@ export const QueryTrigger: FunctionComponent<HeadlessQueryTriggerProps> = (
     setState(props.controller.state);
   };
 
-  return null;
+  return (
+    <div>
+      The query changed from {state.prevQuery} to {state.newQuery}
+    </div>
+  );
 };
 
 // usage

@@ -29,6 +29,10 @@ export class QueryTrigger extends Component<{}, QueryTriggerState> {
   }
 
   render() {
-    return null;
+    return (
+      <div>
+        The query changed from {this.state.prevQuery} to {this.state.newQuery}
+      </div>
+    );
   }
 }
