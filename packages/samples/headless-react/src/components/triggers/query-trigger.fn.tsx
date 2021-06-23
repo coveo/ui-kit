@@ -19,3 +19,13 @@ export const QueryTrigger: FunctionComponent<HeadlessQueryTriggerProps> = (
 
   return null;
 };
+
+// usage
+
+/**
+ * ```tsx
+ * const controller = buildQueryTrigger(engine);
+ *
+ * <QueryTriggerFn controller={controller} />;
+ * ```
+ */
