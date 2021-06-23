@@ -30,13 +30,13 @@ export interface SmartSnippetQuestionsList extends Controller {
   /**
    * Expand the specified snippet suggestion.
    *
-   * @param identifier The identifier of a document used to create the smart snippet.
+   * @param identifier - The identifier of a document used to create the smart snippet.
    */
   expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
    * Collapse the specified snippet suggestion.
    *
-   * @param identifier The identifier of a document used to create the smart snippet.
+   * @param identifier - The identifier of a document used to create the smart snippet.
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
 }

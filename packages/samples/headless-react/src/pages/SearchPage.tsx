@@ -49,9 +49,9 @@ import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standa
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
-import {SmartSnippet as SmartSnippetFN} from '../components/smart-snippet/smart-snippet.fn';
+import {SmartSnippet as SmartSnippetFn} from '../components/smart-snippet/smart-snippet.fn';
 import {SmartSnippetQuestionsList} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.class';
-import {SmartSnippetQuestionsList as SmartSnippetQuestionsListFN} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.fn';
+import {SmartSnippetQuestionsList as SmartSnippetQuestionsListFn} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.fn';
 import {
   SearchEngine,
   buildSearchEngine,
@@ -444,11 +444,11 @@ export class SearchPage extends Component {
           </Section>
           <Section title="smart-snippet">
             <SmartSnippet />
-            <SmartSnippetFN controller={this.smartSnippet} />
+            <SmartSnippetFn controller={this.smartSnippet} />
           </Section>
           <Section title="smart-snippet-questions-list">
             <SmartSnippetQuestionsList />
-            <SmartSnippetQuestionsListFN
+            <SmartSnippetQuestionsListFn
               controller={this.smartSnippetQuestionsList}
             />
           </Section>
