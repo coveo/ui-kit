@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/coveo/ui-kit/compare/headless-react@0.32.0...headless-react@0.33.0) (2021-06-23)
+
+
+### Features
+
+* **headless:** add sample for smart snippet controller  ([#920](https://github.com/coveo/ui-kit/issues/920)) ([a23b638](https://github.com/coveo/ui-kit/commit/a23b6387068ee9166d99b02655abaa15d11443b0))
+
+
+
+
+
 # 0.32.0 (2021-06-22)
 
 
