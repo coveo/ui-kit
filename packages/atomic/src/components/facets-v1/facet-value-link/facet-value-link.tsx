@@ -12,6 +12,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (props) => {
     <li key={props.displayValue}>
       <button
         part="value-link"
+        onMouseUp={(e) => (e.target as HTMLButtonElement).blur()}
         onClick={() => props.onClick()}
         class="value-link w-full flex items-center py-2.5 text-on-background ellipsed focus:outline-none"
         aria-pressed={props.isSelected.toString()}
