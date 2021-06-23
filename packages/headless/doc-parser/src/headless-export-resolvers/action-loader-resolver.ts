@@ -7,7 +7,7 @@ export interface ActionLoaderConfiguration {
   initializer: string;
 }
 
-interface ActionLoader {
+export interface ActionLoader {
   initializer: FuncEntity;
   extractedTypes: ObjEntity[];
 }

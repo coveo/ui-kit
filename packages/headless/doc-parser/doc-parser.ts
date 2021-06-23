@@ -1,8 +1,19 @@
 import {ApiModel} from '@microsoft/api-extractor-model';
 import {writeFileSync} from 'fs';
-import {resolveActionLoader} from './src/headless-export-resolvers/action-loader-resolver';
-import {resolveController} from './src/headless-export-resolvers/controller-resolver';
+import {
+  ActionLoader,
+  resolveActionLoader,
+} from './src/headless-export-resolvers/action-loader-resolver';
+import {
+  Controller,
+  resolveController,
+} from './src/headless-export-resolvers/controller-resolver';
 import {searchConfiguration} from './use-cases/search';
+
+interface UseCase {
+  controllers: Controller[];
+  actionLoaders: ActionLoader[];
+}
 
 const apiModel = new ApiModel();
 const apiPackage = apiModel.loadPackage('temp/headless.api.json');
@@ -15,6 +26,6 @@ const actionLoaders = searchConfiguration.actionLoaders.map((loader) =>
   resolveActionLoader(entryPoint, loader)
 );
 
-const result = {controllers, actionLoaders};
+const result: UseCase = {controllers, actionLoaders};
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(result, null, 2));
