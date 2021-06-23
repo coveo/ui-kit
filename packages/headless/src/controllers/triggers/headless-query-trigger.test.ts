@@ -55,7 +55,7 @@ describe('QueryTrigger', () => {
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
   });
 
-  it('when the #engine.state.triggers.query is updated, it dispatches #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  it('when the #engine.state.triggers.query is updated, it dispatches #updateQuery, #executeSearch, and #logQueryTrigger. It also resets #engine.state.triggers.query to the empty string', () => {
     const listener = jest.fn();
     queryTrigger.subscribe(listener);
 
@@ -66,6 +66,7 @@ describe('QueryTrigger', () => {
     expect(listener).toHaveBeenCalledTimes(1);
     expect(getUpdateQueryAction()).toBeTruthy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    expect(engine.state.triggers.query).toEqual('');
   });
 
   it('when the #engine.state.triggers.query is updated to the empty string, it does not dispatch #updateQuery, #executeSearch, and #logQueryTrigger', () => {

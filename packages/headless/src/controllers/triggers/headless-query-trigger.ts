@@ -63,6 +63,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           };
           dispatch(updateQuery(updateQueryPayload));
           dispatch(executeSearch(logQueryTrigger()));
+          getState().triggers.query = '';
         }
       };
       strictListener();
