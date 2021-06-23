@@ -158,9 +158,15 @@ export class AtomicSearchInterface {
 
   @Listen('atomic/scrollToTop')
   public scrollToTop() {
-    document
-      .querySelector(this.scrollContainer)
-      ?.scrollIntoView({behavior: 'smooth'});
+    const scrollContainerElement = document.querySelector(this.scrollContainer);
+    if (!scrollContainerElement) {
+      this.bindings.engine.logger.warn(
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+      );
+      return;
+    }
+
+    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
   /**
