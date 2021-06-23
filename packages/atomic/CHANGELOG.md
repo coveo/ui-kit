@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.32.1...@coveo/atomic@0.33.0) (2021-06-23)
+
+
+### Features
+
+* **atomic:** scroll to top of the "scrollContainer" when interacting with Pager ([#922](https://github.com/coveo/ui-kit/issues/922)) ([342080a](https://github.com/coveo/ui-kit/commit/342080ad8de2741e0da728c7faca1b824a463119))
+
+
+
+
+
 ## [0.32.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.32.0...@coveo/atomic@0.32.1) (2021-06-23)
 
 **Note:** Version bump only for package @coveo/atomic
