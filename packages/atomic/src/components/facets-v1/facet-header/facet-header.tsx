@@ -41,13 +41,13 @@ export const FacetHeader: FunctionalComponent<{
     props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
-        class="flex w-full p-1 text-secondary hover:text-secondary-light text-sm"
+        class="flex items-baseline w-full p-1 text-secondary hover:text-secondary-light text-sm"
         title={clearFiltersForFacet}
         onClick={() => props.onClearFilters()}
       >
         <span
           part="clear-button-icon"
-          class="fill-current w-2 h-2 self-center mr-1"
+          class="fill-current w-2 h-2 mr-1"
           innerHTML={CloseIcon}
         ></span>
         <span>{clearFilters}</span>
