@@ -61,6 +61,13 @@ export interface NumericFilterOptions {
   injectionDepth?: number;
 }
 
+export interface NumericFilterInitialState {
+  /**
+   * The initial selected range.
+   */
+  range: NumericFilterRange;
+}
+
 export interface NumericFilterRange {
   /**
    * The starting value for the numeric range.
@@ -79,9 +86,9 @@ export interface NumericFilterProps {
    */
   options: NumericFilterOptions;
   /**
-   * The initial range that should be applied to the `NumericFilter` controller.
+   * The initial state.
    */
-  initialState?: NumericFilterRange;
+  initialState?: NumericFilterInitialState;
 }
 
 export interface NumericFilterState {
@@ -106,9 +113,9 @@ export interface NumericFilterState {
  */
 export interface NumericFilter extends Controller {
   /**
-   * Deselects current filter.
+   * Clears the current filter.
    */
-  deselect(): void;
+  clear(): void;
 
   /**
    * Updates the selected range.
@@ -137,8 +144,8 @@ export function buildNumericFilter(
   const facetId = determineFacetId(engine, props.options);
   const options: RegisterNumericFacetActionCreatorPayload = {
     ...props.options,
-    currentValues: props.initialState
-      ? [{...props.initialState, endInclusive: true, state: 'selected'}]
+    currentValues: props.initialState?.range
+      ? [{...props.initialState.range, endInclusive: true, state: 'selected'}]
       : [],
     generateAutomaticRanges: false,
     facetId,
@@ -149,7 +156,7 @@ export function buildNumericFilter(
 
   return {
     ...controller,
-    deselect: () => {
+    clear: () => {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));

@@ -91,6 +91,7 @@ export {
   NumericFilterProps,
   NumericFilterRange,
   NumericFilterState,
+  NumericFilterInitialState,
 } from './facets/range-facet/numeric-facet/headless-numeric-filter';
 
 export {
@@ -100,6 +101,7 @@ export {
   DateFilterProps,
   DateFilterRange,
   DateFilterState,
+  DateFilterInitialState,
 } from './facets/range-facet/date-facet/headless-date-filter';
 
 export {

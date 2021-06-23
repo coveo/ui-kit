@@ -61,14 +61,21 @@ export interface DateFilterOptions {
   injectionDepth?: number;
 }
 
+export interface DateFilterInitialState {
+  /**
+   * The initial selected range.
+   */
+  range: DateFilterRange;
+}
+
 export interface DateFilterRange {
   /**
-   * The starting value for the date range.
+   * The start value of the range, formatted as `YYYY/MM/DD@HH:mm:ss`.
    */
   start: string;
 
   /**
-   * The ending value for the date range.
+   * The end value of the range, formatted as `YYYY/MM/DD@HH:mm:ss`.
    */
   end: string;
 }
@@ -79,9 +86,9 @@ export interface DateFilterProps {
    */
   options: DateFilterOptions;
   /**
-   * The initial range that should be applied to the `DateFilter` controller.
+   * The initial state.
    */
-  initialState?: DateFilterRange;
+  initialState?: DateFilterInitialState;
 }
 
 export interface DateFilterState {
@@ -106,12 +113,14 @@ export interface DateFilterState {
  */
 export interface DateFilter extends Controller {
   /**
-   * Deselects current filter.
+   * Clears the current filter.
    */
-  deselect(): void;
+  clear(): void;
 
   /**
    * Updates the selected range.
+   *
+   * You can use the `buildDateRange` utility method in order to format the range values correctly.
    *
    * @param range - The date range.
    */
@@ -137,8 +146,8 @@ export function buildDateFilter(
   const facetId = determineFacetId(engine, props.options);
   const options: RegisterDateFacetActionCreatorPayload = {
     ...props.options,
-    currentValues: props.initialState
-      ? [{...props.initialState, endInclusive: true, state: 'selected'}]
+    currentValues: props.initialState?.range
+      ? [{...props.initialState.range, endInclusive: true, state: 'selected'}]
       : [],
     generateAutomaticRanges: false,
     facetId,
@@ -149,7 +158,7 @@ export function buildDateFilter(
 
   return {
     ...controller,
-    deselect: () => {
+    clear: () => {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
