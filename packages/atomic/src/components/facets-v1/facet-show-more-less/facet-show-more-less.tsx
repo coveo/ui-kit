@@ -25,7 +25,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
     label,
   });
   const btnClasses =
-    'w-full flex items-baseline text-left py-2 text-secondary text-sm hover:text-secondary-light focus:text-secondary-light mt-2';
+    'w-full flex items-baseline text-left py-2 text-sm mt-2 link';
   const iconClasses = 'fill-current w-2 h-2 mr-1';
   return [
     props.canShowLessValues && (
