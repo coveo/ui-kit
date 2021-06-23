@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {Engine} from '../../app/headless-engine';
 import {redirection} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   checkForRedirection,
   CheckForRedirectionActionCreatorPayload,
@@ -36,7 +36,7 @@ export interface RedirectionActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadRedirectionActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): RedirectionActionCreators {
   engine.addReducers({redirection});
 

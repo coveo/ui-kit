@@ -1,3 +1,4 @@
+import {enableDebug} from '../../features/debug/debug-actions';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {
   buildSearchEngine,
@@ -37,9 +38,15 @@ describe('buildSearchEngine', () => {
     expect(engine.executeFirstSearch).toBeTruthy();
   });
 
-  it('#engine.state retrieves the updated state', () => {
+  it('is possible to change the search hub', () => {
     const initialSearchHub = engine.state.searchHub;
     engine.dispatch(setSearchHub('newHub'));
     expect(engine.state.searchHub).not.toBe(initialSearchHub);
+  });
+
+  it('is possible to toggle debug mode', () => {
+    expect(engine.state.debug).toBe(false);
+    engine.dispatch(enableDebug());
+    expect(engine.state.debug).toBe(true);
   });
 });

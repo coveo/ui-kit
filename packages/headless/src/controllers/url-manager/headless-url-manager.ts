@@ -1,5 +1,4 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
@@ -13,6 +12,7 @@ import {initialSearchParameterSelector} from '../../features/search-parameters/s
 import {loadReducerError} from '../../utils/errors';
 import {deepEqualAnyOrder} from '../../utils/compare-utils';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface UrlManagerProps {
   /**
@@ -65,7 +65,7 @@ export interface UrlManagerState {
  * @returns A `UrlManager` controller instance.
  */
 export function buildUrlManager(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: UrlManagerProps
 ): UrlManager {
   if (!loadUrlManagerReducers(engine)) {
@@ -155,8 +155,10 @@ function deserializeFragment(fragment: string) {
 }
 
 function loadUrlManagerReducers(
-  engine: Engine<object>
-): engine is Engine<Partial<SearchParametersState> & ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<
+  Partial<SearchParametersState> & ConfigurationSection
+> {
   engine.addReducers({configuration});
   return true;
 }

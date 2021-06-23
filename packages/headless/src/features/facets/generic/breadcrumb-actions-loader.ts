@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../app/headless-engine';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {deselectAllFacets} from './facet-actions';
 
 /**
@@ -21,7 +21,7 @@ export interface BreadcrumbActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadBreadcrumbActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): BreadcrumbActionCreators {
   engine.addReducers({});
 

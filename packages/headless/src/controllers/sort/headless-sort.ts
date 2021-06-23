@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {
   registerSortCriterion,
   updateSortCriterion,
@@ -17,6 +16,7 @@ import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {validateInitialState} from '../../utils/validate-payload';
 import {configuration, sortCriteria} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface SortProps {
   /**
@@ -33,7 +33,7 @@ export interface SortInitialState {
 }
 
 function validateSortInitialState(
-  engine: Engine<ConfigurationSection & SortSection>,
+  engine: SearchEngine<ConfigurationSection & SortSection>,
   state: Partial<SortInitialState> | undefined
 ) {
   if (!state) {
@@ -96,7 +96,7 @@ export interface SortState {
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
-export function buildSort(engine: Engine<object>, props: SortProps = {}): Sort {
+export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
   if (!loadSortReducers(engine)) {
     throw loadReducerError;
   }
@@ -136,8 +136,8 @@ export function buildSort(engine: Engine<object>, props: SortProps = {}): Sort {
 }
 
 function loadSortReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection & SortSection> {
+  engine: SearchEngine
+): engine is SearchEngine<ConfigurationSection & SortSection> {
   engine.addReducers({configuration, sortCriteria});
   return true;
 }

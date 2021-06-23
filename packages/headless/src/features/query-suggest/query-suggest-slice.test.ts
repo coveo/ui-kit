@@ -2,7 +2,6 @@ import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
 import {
   clearQuerySuggest,
-  clearQuerySuggestCompletions,
   fetchQuerySuggestions,
   registerQuerySuggest,
   selectQuerySuggestion,
@@ -82,15 +81,6 @@ describe('querySuggest slice', () => {
     expect(querySuggestReducer(existingState, clearQuerySuggest({id}))).toEqual(
       expectedState
     );
-  });
-
-  it('should handle clearQuerySuggestCompletions on existing state', () => {
-    const expectedState = addToDefaultState({completions: []});
-    const existingState = addToDefaultState({completions: getCompletions()});
-
-    expect(
-      querySuggestReducer(existingState, clearQuerySuggestCompletions({id}))
-    ).toEqual(expectedState);
   });
 
   it(`when a query in the querySet is updated,

@@ -36,7 +36,7 @@ export interface CategoryFacetOptions {
   delimitingCharacter?: string;
 
   /**
-   * A unique identifier for the controller. By default, a random unique identifier is generated.
+   * A unique identifier for the controller. By default, a random unique ID is generated.
    * */
   facetId?: string;
 
@@ -46,7 +46,7 @@ export interface CategoryFacetOptions {
   facetSearch?: CategoryFacetSearchOptions;
 
   /**
-   * Whether to use basePath as a filter for the results.
+   * Whether to filter the results using `basePath`.
    *
    * @defaultValue `true`
    */
@@ -60,9 +60,9 @@ export interface CategoryFacetOptions {
   filterFacetCount?: boolean;
 
   /**
-   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * The maximum number of results to scan in the index to ensure that the facet lists all of the potential facet values.
    *
-   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * **Note:** A high `injectionDepth` may reduce facet request performance.
    *
    * Minimum: `0`
    *
@@ -71,7 +71,7 @@ export interface CategoryFacetOptions {
   injectionDepth?: number;
 
   /**
-   * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   * The number of values to request for this facet. This option also determines the number of additional values to request each time this facet is expanded, as well as the number of values to display when this facet is collapsed.
    *
    * Minimum: `1`
    *

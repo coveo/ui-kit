@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../app/headless-engine';
 import {categoryFacetSet} from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
@@ -80,7 +80,7 @@ export interface CategoryFacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadCategoryFacetSetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): CategoryFacetSetActionCreators {
   engine.addReducers({categoryFacetSet});
 

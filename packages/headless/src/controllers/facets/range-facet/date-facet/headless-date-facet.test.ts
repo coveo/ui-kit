@@ -5,7 +5,7 @@ import {
   buildDateRange,
 } from './headless-date-facet';
 import {
-  MockEngine,
+  MockSearchEngine,
   buildMockSearchAppEngine,
 } from '../../../../test/mock-engine';
 import {createMockState} from '../../../../test/mock-state';
@@ -28,7 +28,7 @@ describe('date facet', () => {
   const facetId = '1';
   let options: DateFacetOptions;
   let state: SearchAppState;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let dateFacet: DateFacet;
 
   function initDateFacet() {

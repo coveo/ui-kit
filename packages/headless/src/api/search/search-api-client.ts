@@ -1,8 +1,4 @@
-import {
-  PlatformClient,
-  PlatformResponse,
-  PreprocessRequestMiddleware,
-} from '../platform-client';
+import {PlatformClient, PlatformResponse} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -33,7 +29,9 @@ import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
-import {SearchThunkExtraArguments} from '../../app/headless-engine';
+import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -44,13 +42,8 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 }
 
 export interface SearchAPIClientOptions {
-  /**
-   * @deprecated - Token renewal is now managed using middleware to avoid a circular dependency. Please remove this option in preparation for v1.
-   */
-  renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequest;
-  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
@@ -144,6 +137,7 @@ export class SearchAPIClient {
     const payload = {response, body};
 
     if (isSuccessSearchResponse(body)) {
+      payload.body = shimResponse(body);
       const processedResponse = await this.options.postprocessSearchResponseMiddleware(
         payload
       );
@@ -368,4 +362,15 @@ function pickNonBaseParams<Params extends BaseParam>(req: Params) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {url, accessToken, organizationId, ...nonBase} = req;
   return nonBase;
+}
+
+function shimResponse(response: SearchResponseSuccess) {
+  const empty = emptyQuestionAnswer();
+  if (isNullOrUndefined(response.questionAnswer)) {
+    response.questionAnswer = empty;
+    return response;
+  }
+
+  response.questionAnswer = {...empty, ...response.questionAnswer};
+  return response;
 }
