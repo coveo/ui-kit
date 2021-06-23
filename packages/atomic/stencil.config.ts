@@ -6,6 +6,7 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 
 import tailwind from 'tailwindcss';
+import tailwindNesting from 'tailwindcss/nesting';
 import atImport from 'postcss-import';
 import autoprefixer from 'autoprefixer';
 import replacePlugin from '@rollup/plugin-replace';
@@ -64,7 +65,7 @@ export const config: Config = {
   plugins: [
     inlineSvg(),
     postcss({
-      plugins: [atImport(), tailwind(), autoprefixer()],
+      plugins: [atImport(), tailwind(), tailwindNesting(), autoprefixer()],
     }),
     replace(),
   ],
