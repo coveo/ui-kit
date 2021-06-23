@@ -1,12 +1,14 @@
 import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {triggers, configuration} from '../../app/reducers';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 
 describe('QueryTrigger', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let queryTrigger: QueryTrigger;
 
   function initQueryTrigger() {

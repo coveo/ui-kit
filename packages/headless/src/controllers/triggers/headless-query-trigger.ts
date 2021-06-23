@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
 import {configuration, triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
@@ -27,7 +27,12 @@ export interface QueryTriggerState {
   /**
    * The new query to perform a search with after receiving a query trigger.
    */
-  query: string | null;
+  newQuery: string | null;
+
+  /**
+   * The query used to perform the search that received a query trigger in its response.
+   */
+  prevQuery: string | undefined;
 }
 
 /**
@@ -36,7 +41,7 @@ export interface QueryTriggerState {
  * @param engine - The headless engine.
  * @returns A `QueryTrigger` controller instance.
  * */
-export function buildQueryTrigger(engine: Engine<object>): QueryTrigger {
+export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
   if (!loadQueryTriggerReducers(engine)) {
     throw loadReducerError;
   }
@@ -51,14 +56,12 @@ export function buildQueryTrigger(engine: Engine<object>): QueryTrigger {
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        if (this.state.query) {
+        if (getState().triggers.query) {
           listener();
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
-            q: this.state.query,
+            q: getState().triggers.query!,
           };
           dispatch(updateQuery(updateQueryPayload));
-          //maybe logSearchBoxSubmit instead
-          //and dispatch logQueryTrigger  separately?
           dispatch(executeSearch(logQueryTrigger()));
         }
       };
@@ -68,15 +71,16 @@ export function buildQueryTrigger(engine: Engine<object>): QueryTrigger {
 
     get state() {
       return {
-        query: getState().triggers.query,
+        newQuery: getState().triggers.query,
+        prevQuery: getState().query?.q,
       };
     },
   };
 }
 
 function loadQueryTriggerReducers(
-  engine: Engine<object>
-): engine is Engine<TriggerSection & ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<TriggerSection & ConfigurationSection> {
   engine.addReducers({configuration, triggers});
   return true;
 }
