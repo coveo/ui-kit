@@ -52,6 +52,7 @@ describe('QueryTrigger', () => {
     expect(getUpdateQueryAction()).toBeFalsy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
   });
+
   it('when the #engine.state.triggers.query is updated, it dispatches #updateQuery, #executeSearch, and #logTriggerQuery', () => {
     const listener = jest.fn();
     queryTrigger.subscribe(listener);
@@ -63,5 +64,18 @@ describe('QueryTrigger', () => {
     expect(listener).toHaveBeenCalledTimes(1);
     expect(getUpdateQueryAction()).toBeTruthy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+  });
+
+  it('when the #engine.state.triggers.query is updated to the empty string, it does not dispatch #updateQuery, #executeSearch, and #logTriggerQuery', () => {
+    const listener = jest.fn();
+    queryTrigger.subscribe(listener);
+
+    engine.state.triggers.query = '';
+    const [firstListener] = registeredListeners();
+    firstListener();
+
+    expect(listener).toHaveBeenCalledTimes(0);
+    expect(getUpdateQueryAction()).toBeFalsy();
+    expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
   });
 });
