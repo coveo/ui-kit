@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.1.0...@coveo/headless@1.2.0) (2021-06-25)
+
+
+### Features
+
+* **headless:** add headless-numeric-filter & headless-date-filter controllers ([#916](https://github.com/coveo/ui-kit/issues/916)) ([40f30f9](https://github.com/coveo/ui-kit/commit/40f30f9f7b63bc33390be60d0194631b69b1ab79))
+
+
+
+
+
 # [1.1.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.0.0...@coveo/headless@1.1.0) (2021-06-23)
 
 
