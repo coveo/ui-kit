@@ -7,10 +7,10 @@ export interface TriggerState {
   /**
    * The new query to perform a search with after receiving a query trigger.
    */
-  query: string | null;
+  query: string;
 }
 
 export const getTriggerInitialState: () => TriggerState = () => ({
   redirectTo: null,
-  query: null,
+  query: '',
 });
