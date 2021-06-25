@@ -8,7 +8,7 @@ export const logQueryTrigger = makeAnalyticsAction(
   'analytics/trigger/query',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.triggers && state.triggers.query !== null) {
+    if (state.triggers?.query) {
       return client.logTriggerQuery();
     }
     return;
@@ -22,7 +22,7 @@ export const logNotifyTrigger = makeAnalyticsAction(
   'analytics/trigger/notify',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.triggers && state.triggers.notify !== null) {
+    if (state.triggers?.notify) {
       const meta: TriggerNotifyMetadata = {
         notification: state.triggers.notify,
       };
