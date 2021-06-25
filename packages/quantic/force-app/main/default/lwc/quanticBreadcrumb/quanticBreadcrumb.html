@@ -1,0 +1,56 @@
+<template>
+    <template if:true={hasBreadcrumbs}>
+        <div>
+            <ul>
+                <template for:each={facetBreadcrumbValues} for:item="field">
+                    <li key={field.facetId}>
+                        <span>{field.field}:</span>
+                        <ul>
+                            <template for:each={field.values} for:item="value">
+                                <li key={value.value.value}>
+                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                </template>
+                <template for:each={categoryFacetBreadcrumbs} for:item="field">
+                    <li key={field.facetId}>
+                        <span>{field.field}:</span>
+                        <ul>
+                            <template for:each={field.values} for:item="value">
+                                <li key={value.value.value}>
+                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                </template>
+                <template for:each={numericFacetBreadcrumbs} for:item="field">
+                    <li key={field.facetId}>
+                        <span>{field.field}:</span>
+                        <ul>
+                            <template for:each={field.values} for:item="value">
+                                <li key={value.value.value}>
+                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                </template>
+                <template for:each={dateFacetBreadcrumbs} for:item="field">
+                    <li key={field.facetId}>
+                        <span>{field.field}:</span>
+                        <ul>
+                            <template for:each={field.values} for:item="value">
+                                <li key={value.value.value}>
+                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </template>
+</template>
