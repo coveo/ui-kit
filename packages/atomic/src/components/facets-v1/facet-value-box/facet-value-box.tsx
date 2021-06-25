@@ -30,6 +30,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (props) => {
           {props.displayValue}
         </span>
         <span
+          title={count}
           part="value-count"
           class="text-neutral-dark ellipsed with-parentheses w-full text-sm mt-1"
         >
