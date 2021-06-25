@@ -23,7 +23,7 @@ export interface NotifyTriggerState {
   /**
    * The notification to present to the user after receiving a notification trigger.
    */
-  notify: string | null;
+  notify: string;
 }
 
 /**

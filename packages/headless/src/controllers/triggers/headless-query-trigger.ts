@@ -28,7 +28,7 @@ export interface QueryTriggerState {
   /**
    * The new query to perform a search with after receiving a query trigger.
    */
-  newQuery: string | null;
+  newQuery: string;
 
   /**
    * The query used to perform the search that received a query trigger in its response.
@@ -60,7 +60,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
         if (getState().triggers.query) {
           listener();
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
-            q: getState().triggers.query!,
+            q: getState().triggers.query,
           };
           dispatch(clearQueryTrigger());
           dispatch(updateQuery(updateQueryPayload));
