@@ -53,13 +53,10 @@ describe('date filter', () => {
 
   it('#initDateFacet throws an error when an manual range is invalid', () => {
     initialState = {
-      range: buildDateRange({
-        start: '2021/01/01',
-        end: '2020/01/01',
-      }),
+      range: buildDateRange({start: 1616679091000, end: 1616592691000}),
     };
     expect(() => initDateFilter()).toThrow(
-      'The start value is greater than the end value for the date range 2021/01/01@05:00:00 to 2020/01/01@05:00:00'
+      'The start value is greater than the end value for the date range 2021/03/25@13:31:31 to 2021/03/24@13:31:31'
     );
   });
 
