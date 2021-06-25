@@ -10,7 +10,7 @@ import {
   isNotifyTrigger,
   TriggerNotify,
 } from './../../api/search/trigger';
-import {clearQueryTrigger} from './trigger-actions';
+import {clearQueryTrigger, clearNotifyTrigger} from './trigger-actions';
 
 export const triggerReducer = createReducer(
   getTriggerInitialState(),
@@ -39,5 +39,8 @@ export const triggerReducer = createReducer(
       })
       .addCase(clearQueryTrigger, (state) => {
         state.query = '';
+      })
+      .addCase(clearNotifyTrigger, (state) => {
+        state.notify = '';
       })
 );

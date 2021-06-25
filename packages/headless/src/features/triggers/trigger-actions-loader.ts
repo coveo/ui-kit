@@ -1,5 +1,5 @@
 import {triggers} from '../../app/reducers';
-import {clearQueryTrigger} from './trigger-actions';
+import {clearQueryTrigger, clearNotifyTrigger} from './trigger-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
@@ -7,9 +7,14 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
  */
 export interface TriggerActionCreators {
   /**
-   * Clears the triggers query parameter to an empty string.
+   * Clears the trigger query parameter to an empty string.
    */
   clearQueryTrigger(): void;
+
+  /**
+   * Clears the trigger notify parameter to an empty string.
+   */
+  clearNotifyTrigger(): void;
 }
 
 /**
@@ -25,5 +30,6 @@ export function loadTriggerActions(
 
   return {
     clearQueryTrigger,
+    clearNotifyTrigger,
   };
 }

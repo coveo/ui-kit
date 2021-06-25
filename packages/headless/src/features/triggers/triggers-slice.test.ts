@@ -7,7 +7,7 @@ import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
 import {executeSearch} from '../search/search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {clearQueryTrigger} from './trigger-actions';
+import {clearQueryTrigger, clearNotifyTrigger} from './trigger-actions';
 
 describe('trigger slice', () => {
   it('should have initial state', () => {
@@ -172,5 +172,14 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.notify).toEqual('Hello world');
+  });
+
+  it('when clearNotifyTrigger is dispatched, it updates #state.notify to the empty string', () => {
+    const state = getTriggerInitialState();
+    const action = clearNotifyTrigger;
+    state.notify = 'Hi';
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.notify).toEqual('');
   });
 });
