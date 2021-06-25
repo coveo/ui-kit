@@ -7,6 +7,8 @@ import {
   isRedirectTrigger,
   isQueryTrigger,
   TriggerQuery,
+  isNotifyTrigger,
+  TriggerNotify,
 } from './../../api/search/trigger';
 import {clearQueryTrigger} from './trigger-actions';
 
@@ -27,6 +29,12 @@ export const triggerReducer = createReducer(
         );
         state.query = queryTriggers.length
           ? (queryTriggers[0] as TriggerQuery).content
+          : '';
+        const notifyTriggers: Trigger[] = action.payload.response.triggers.filter(
+          (trigger) => isNotifyTrigger(trigger)
+        );
+        state.notify = notifyTriggers.length
+          ? (notifyTriggers[0] as TriggerNotify).content
           : '';
       })
       .addCase(clearQueryTrigger, (state) => {
