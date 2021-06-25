@@ -7,6 +7,7 @@ import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
 import {executeSearch} from '../search/search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {clearQueryTrigger} from './trigger-actions';
 
 describe('trigger slice', () => {
   it('should have initial state', () => {
@@ -119,5 +120,14 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.query).toEqual('Euro');
+  });
+
+  it('when clearQueryTrigger is dispatched, it updates #state.query to the empty string', () => {
+    const state = getTriggerInitialState();
+    const action = clearQueryTrigger;
+    state.query = 'Euro 2021';
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.query).toEqual('');
   });
 });
