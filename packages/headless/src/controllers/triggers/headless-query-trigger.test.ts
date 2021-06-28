@@ -6,7 +6,6 @@ import {
 import {triggers, configuration} from '../../app/reducers';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {clearQueryTrigger} from '../../features/triggers/trigger-actions';
 
 describe('QueryTrigger', () => {
   let engine: MockSearchEngine;
@@ -18,10 +17,6 @@ describe('QueryTrigger', () => {
 
   function getUpdateQueryAction() {
     return engine.actions.find((a) => a.type === updateQuery.type);
-  }
-
-  function getClearQueryTriggerAction() {
-    return engine.actions.find((a) => a.type === clearQueryTrigger.type);
   }
 
   function registeredListeners() {
@@ -48,7 +43,7 @@ describe('QueryTrigger', () => {
     expect(queryTrigger.subscribe).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.query is not updated, it does not dispatch #clearQueryTrigger, #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  it('when the #engine.state.triggers.query is not updated, it does not dispatch #updateQuery, #executeSearch, and #logQueryTrigger', () => {
     const listener = jest.fn();
     queryTrigger.subscribe(listener);
 
@@ -56,12 +51,11 @@ describe('QueryTrigger', () => {
     firstListener();
 
     expect(listener).toHaveBeenCalledTimes(0);
-    expect(getClearQueryTriggerAction()).toBeFalsy();
     expect(getUpdateQueryAction()).toBeFalsy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
   });
 
-  it('when the #engine.state.triggers.query is updated, it dispatches #clearQueryTrigger, #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  it('when the #engine.state.triggers.query is updated, it dispatches #updateQuery, #executeSearch, and #logQueryTrigger', () => {
     const listener = jest.fn();
     queryTrigger.subscribe(listener);
 
@@ -70,12 +64,11 @@ describe('QueryTrigger', () => {
     firstListener();
 
     expect(listener).toHaveBeenCalledTimes(1);
-    expect(getClearQueryTriggerAction()).toBeTruthy();
     expect(getUpdateQueryAction()).toBeTruthy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.query is updated to the empty string, it does not dispatch #clearQueryTrigger, #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  it('when the #engine.state.triggers.query is updated to the empty string, it does not dispatch #updateQuery, #executeSearch, and #logQueryTrigger', () => {
     const listener = jest.fn();
     queryTrigger.subscribe(listener);
 
@@ -84,7 +77,6 @@ describe('QueryTrigger', () => {
     firstListener();
 
     expect(listener).toHaveBeenCalledTimes(0);
-    expect(getClearQueryTriggerAction()).toBeFalsy();
     expect(getUpdateQueryAction()).toBeFalsy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
   });
