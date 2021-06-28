@@ -20,7 +20,6 @@ export * from './search/search-actions-loader';
 export * from './search-hub/search-hub-actions-loader';
 export * from './sort-criteria/sort-criteria-actions-loader';
 export * from './facets/generic/breadcrumb-actions-loader';
-export * from './triggers/trigger-actions-loader';
 
 export {
   ResultTemplatesManager,

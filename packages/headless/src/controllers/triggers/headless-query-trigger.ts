@@ -9,7 +9,6 @@ import {
   UpdateQueryActionCreatorPayload,
 } from '../../features/query/query-actions';
 import {logQueryTrigger} from '../../features/triggers/trigger-analytics-actions';
-import {clearQueryTrigger} from '../../features/triggers/trigger-actions';
 
 /**
  * The `QueryTrigger` controller handles query triggers.
@@ -52,17 +51,21 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
   const getState = () => engine.state;
 
+  let previousQueryTrigger: string = getState().triggers.query;
+
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        if (getState().triggers.query) {
+        const hasChanged = previousQueryTrigger !== this.state.newQuery;
+        previousQueryTrigger = this.state.newQuery;
+
+        if (hasChanged && getState().triggers.query) {
           listener();
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
             q: getState().triggers.query,
           };
-          dispatch(clearQueryTrigger());
           dispatch(updateQuery(updateQueryPayload));
           dispatch(executeSearch(logQueryTrigger()));
         }
