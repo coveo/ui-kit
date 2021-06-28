@@ -4,7 +4,6 @@ import {
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {triggers, configuration} from '../../app/reducers';
-import {clearNotifyTrigger} from '../../features/triggers/trigger-actions';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
 
 describe('NotifyTrigger', () => {
@@ -13,10 +12,6 @@ describe('NotifyTrigger', () => {
 
   function initNotifyTrigger() {
     notifyTrigger = buildNotifyTrigger(engine);
-  }
-
-  function getClearNotifyTriggerAction() {
-    return engine.actions.find((a) => a.type === clearNotifyTrigger.type);
   }
 
   function getLogTriggerNotifyAction() {
@@ -47,7 +42,7 @@ describe('NotifyTrigger', () => {
     expect(notifyTrigger.subscribe).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.notify is not updated, it does not dispatch #clearNotifyTrigger and #logNotifyTrigger', () => {
+  it('when the #engine.state.triggers.notify is not updated, it does not dispatch #logNotifyTrigger', () => {
     const listener = jest.fn();
     notifyTrigger.subscribe(listener);
 
@@ -56,10 +51,9 @@ describe('NotifyTrigger', () => {
 
     expect(listener).toHaveBeenCalledTimes(0);
     expect(getLogTriggerNotifyAction()).toBeFalsy();
-    expect(getClearNotifyTriggerAction()).toBeFalsy();
   });
 
-  it('when the #engine.state.triggers.notify is updated, it dispatches #clearNotifyTrigger and #logNotifyTrigger', () => {
+  it('when the #engine.state.triggers.notify is updated, it dispatches #logNotifyTrigger', () => {
     const listener = jest.fn();
     notifyTrigger.subscribe(listener);
 
@@ -69,10 +63,9 @@ describe('NotifyTrigger', () => {
 
     expect(listener).toHaveBeenCalledTimes(1);
     expect(getLogTriggerNotifyAction()).toBeTruthy();
-    expect(getClearNotifyTriggerAction()).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.notify is updated to the empty string, it does not dispatch #clearNotifyTrigger and #logNotifyTrigger', () => {
+  it('when the #engine.state.triggers.notify is updated to the empty string, it does not dispatch #logNotifyTrigger', () => {
     const listener = jest.fn();
     notifyTrigger.subscribe(listener);
 
@@ -82,6 +75,5 @@ describe('NotifyTrigger', () => {
 
     expect(listener).toHaveBeenCalledTimes(0);
     expect(getLogTriggerNotifyAction()).toBeFalsy();
-    expect(getClearNotifyTriggerAction()).toBeFalsy();
   });
 });

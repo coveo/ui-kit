@@ -4,7 +4,6 @@ import {configuration, triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
-import {clearNotifyTrigger} from '../../features/triggers/trigger-actions';
 
 /**
  * The `NotifyTrigger` controller handles Notify triggers.
@@ -42,15 +41,19 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
   const getState = () => engine.state;
 
+  let previousNotify: string = getState().triggers.notify;
+
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        if (getState().triggers.notify) {
+        const hasChanged = previousNotify !== this.state.notify;
+        previousNotify = this.state.notify;
+
+        if (hasChanged && getState().triggers.notify) {
           listener();
           dispatch(logNotifyTrigger());
-          dispatch(clearNotifyTrigger());
         }
       };
       strictListener();
