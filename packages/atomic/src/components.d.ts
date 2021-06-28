@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -131,6 +131,13 @@ export namespace Components {
         "sortCriteria": FacetSortCriterion;
     }
     interface AtomicFacetManager {
+    }
+    interface AtomicFacetNumberInput {
+        "bindings": Bindings;
+        "facetId": string;
+        "filter": NumericFilter;
+        "filterState": NumericFilterState;
+        "label": string;
     }
     interface AtomicFacetV1 {
         /**
@@ -583,6 +590,12 @@ declare global {
         prototype: HTMLAtomicFacetManagerElement;
         new (): HTMLAtomicFacetManagerElement;
     };
+    interface HTMLAtomicFacetNumberInputElement extends Components.AtomicFacetNumberInput, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetNumberInputElement: {
+        prototype: HTMLAtomicFacetNumberInputElement;
+        new (): HTMLAtomicFacetNumberInputElement;
+    };
     interface HTMLAtomicFacetV1Element extends Components.AtomicFacetV1, HTMLStencilElement {
     }
     var HTMLAtomicFacetV1Element: {
@@ -796,6 +809,7 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
+        "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-facet-v1": HTMLAtomicFacetV1Element;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
@@ -954,6 +968,13 @@ declare namespace LocalJSX {
         "sortCriteria"?: FacetSortCriterion;
     }
     interface AtomicFacetManager {
+    }
+    interface AtomicFacetNumberInput {
+        "bindings": Bindings;
+        "facetId": string;
+        "filter": NumericFilter;
+        "filterState": NumericFilterState;
+        "label": string;
     }
     interface AtomicFacetV1 {
         /**
@@ -1354,6 +1375,7 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
+        "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-facet-v1": AtomicFacetV1;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-format-currency": AtomicFormatCurrency;
@@ -1402,6 +1424,7 @@ declare module "@stencil/core" {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
+            "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;

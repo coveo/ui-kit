@@ -919,6 +919,34 @@
     "en": "{{- start}} to {{- end}}",
     "fr": "{{- start}} à {{- end}}"
   },
+  "min": {
+    "en": "Min",
+    "fr": "Min"
+  },
+  "max": {
+    "en": "Max",
+    "fr": "Max"
+  },
+  "apply": {
+    "en": "Apply",
+    "fr": "Filtrer"
+  },
+  "numberInputMinimum": {
+    "en": "Enter a minimum number value for the {{label}} facet",
+    "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
+  },
+  "numberInputMaximum": {
+    "en": "Enter a maximum number value for the {{label}} facet",
+    "fr": "Entrez une valeur numérique maximale pour la facette {{label}}"
+  },
+  "numberInputApply": {
+    "en": "Apply custom number values for the {{label}} facet",
+    "fr": "Appliquer les filtres manuels pour la facette {{label}}"
+  },
+  "rangeIsInvalid": {
+    "en": "The selected range is not valid",
+    "fr": "La plage sélectionnée n'est pas valide"
+  },
   "in": {
     "en": "in",
     "fr": "dans"

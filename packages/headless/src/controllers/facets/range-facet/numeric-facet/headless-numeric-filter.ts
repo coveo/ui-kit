@@ -12,7 +12,6 @@ import {
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -120,6 +119,8 @@ export interface NumericFilter extends Controller {
   /**
    * Updates the selected range.
    *
+   * Throws an error if the range is invalid.
+   *
    * @param range - The numeric range.
    */
   setRange(range: NumericFilterRange): void;
@@ -157,7 +158,12 @@ export function buildNumericFilter(
   return {
     ...controller,
     clear: () => {
-      dispatch(deselectAllFacetValues(facetId));
+      dispatch(
+        updateNumericFacetValues({
+          facetId,
+          values: [],
+        })
+      );
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
@@ -169,12 +175,16 @@ export function buildNumericFilter(
         endInclusive: true,
       };
 
-      dispatch(
-        updateNumericFacetValues({
-          facetId,
-          values: [facetValue],
-        })
-      );
+      const updateFacetValuesAction = updateNumericFacetValues({
+        facetId,
+        values: [facetValue],
+      });
+
+      if (updateFacetValuesAction.error) {
+        throw updateFacetValuesAction.error;
+      }
+
+      dispatch(updateFacetValuesAction);
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(
         executeSearch(

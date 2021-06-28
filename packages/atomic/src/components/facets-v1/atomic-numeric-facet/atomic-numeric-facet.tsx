@@ -12,6 +12,9 @@ import {
   NumericFacetValue,
   buildNumericRange,
   NumericRangeRequest,
+  buildNumericFilter,
+  NumericFilterState,
+  NumericFilter,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -65,6 +68,7 @@ export class AtomicNumericFacet
     BaseFacet<NumericFacet, NumericFacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
+  public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
   private manualRanges: NumericRangeWithLabel[] = [];
@@ -73,6 +77,9 @@ export class AtomicNumericFacet
   @BindStateToController('facet')
   @State()
   public facetState!: NumericFacetState;
+  @BindStateToController('filter')
+  @State()
+  public filterState?: NumericFilterState;
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
@@ -132,6 +139,21 @@ export class AtomicNumericFacet
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
+
+    this.withInput && this.initializeFilter();
+  }
+
+  private initializeFilter() {
+    const filterId = `${this.facetId}_input`;
+    this.filter = buildNumericFilter(this.bindings.engine, {
+      options: {
+        facetId: filterId,
+        field: this.field,
+      },
+    });
+    this.bindings.store.state.facets[filterId] = {
+      label: this.label,
+    };
   }
 
   @Listen('atomic/numberFormat')
@@ -163,6 +185,10 @@ export class AtomicNumericFacet
   }
 
   private get numberOfSelectedValues() {
+    if (this.filterState?.range) {
+      return 1;
+    }
+
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
   }
@@ -172,11 +198,37 @@ export class AtomicNumericFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          if (this.filterState?.range) {
+            this.filter?.clear();
+            return;
+          }
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
       ></FacetHeader>
+    );
+  }
+
+  private renderNumberInput() {
+    if (this.isCollapsed) {
+      return;
+    }
+
+    if (!this.withInput) {
+      return;
+    }
+
+    return (
+      <atomic-facet-number-input
+        facetId={this.facetId!}
+        bindings={this.bindings}
+        label={this.label}
+        filter={this.filter!}
+        filterState={this.filterState!}
+      ></atomic-facet-number-input>
     );
   }
 
@@ -235,6 +287,14 @@ export class AtomicNumericFacet
   }
 
   private renderValues() {
+    if (this.isCollapsed) {
+      return;
+    }
+
+    if (this.filterState?.range) {
+      return;
+    }
+
     return this.renderValuesContainer(
       this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
@@ -265,14 +325,15 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.valuesToRender.length) {
+    if (!this.withInput && !this.valuesToRender.length) {
       return;
     }
 
     return (
       <FacetContainer>
         {this.renderHeader()}
-        {!this.isCollapsed && this.renderValues()}
+        {this.renderNumberInput()}
+        {this.renderValues()}
       </FacetContainer>
     );
   }

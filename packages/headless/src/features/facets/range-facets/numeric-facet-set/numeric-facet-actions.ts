@@ -4,6 +4,7 @@ import {
   validatePayload,
   requiredNonEmptyString,
   serializeSchemaValidationError,
+  validatePayloadAndThrow,
 } from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
@@ -195,7 +196,7 @@ export const updateNumericFacetValues = createAction(
   'numericFacet/updateFacetValues',
   (payload: UpdateNumericFacetValuesActionCreatorPayload) => {
     try {
-      validatePayload(payload, {
+      validatePayloadAndThrow(payload, {
         facetId: facetIdDefinition,
         values: new ArrayValue({
           each: new RecordValue({values: numericFacetValueDefinition}),

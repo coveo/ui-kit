@@ -12,7 +12,6 @@ import {
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -122,6 +121,8 @@ export interface DateFilter extends Controller {
    *
    * You can use the `buildDateRange` utility method in order to format the range values correctly.
    *
+   * Throws an error if the range is invalid.
+   *
    * @param range - The date range.
    */
   setRange(range: DateFilterRange): void;
@@ -159,7 +160,12 @@ export function buildDateFilter(
   return {
     ...controller,
     clear: () => {
-      dispatch(deselectAllFacetValues(facetId));
+      dispatch(
+        updateDateFacetValues({
+          facetId,
+          values: [],
+        })
+      );
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
@@ -171,12 +177,16 @@ export function buildDateFilter(
         endInclusive: true,
       };
 
-      dispatch(
-        updateDateFacetValues({
-          facetId,
-          values: [facetValue],
-        })
-      );
+      const updateFacetValuesAction = updateDateFacetValues({
+        facetId,
+        values: [facetValue],
+      });
+
+      if (updateFacetValuesAction.error) {
+        throw updateFacetValuesAction.error;
+      }
+
+      dispatch(updateFacetValuesAction);
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(
         executeSearch(

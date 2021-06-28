@@ -21,7 +21,6 @@ import {
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 
 describe('numeric filter', () => {
@@ -129,13 +128,20 @@ describe('numeric filter', () => {
       );
       expect(action).toBeTruthy();
     });
+
+    it('should throw when range is invalid', () => {
+      const value = buildMockNumericFacetValue({start: 10, end: 5});
+      expect(() => numericFacet.setRange(value)).toThrow();
+    });
   });
 
   describe('#clear', () => {
     beforeEach(() => numericFacet.clear());
 
-    it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    it('dispatches #updateNumericFacetValues with the facet id and an empty array', () => {
+      expect(engine.actions).toContainEqual(
+        updateNumericFacetValues({facetId, values: []})
+      );
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {

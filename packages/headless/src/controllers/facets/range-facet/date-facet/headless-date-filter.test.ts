@@ -21,7 +21,6 @@ import {
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 
 describe('date filter', () => {
@@ -126,13 +125,22 @@ describe('date filter', () => {
       );
       expect(action).toBeTruthy();
     });
+
+    it('should throw when range is invalid', () => {
+      const value = buildMockDateFacetValue(
+        buildDateRange({start: 1616679091000, end: 1616592691000})
+      );
+      expect(() => dateFacet.setRange(value)).toThrow();
+    });
   });
 
   describe('#clear', () => {
     beforeEach(() => dateFacet.clear());
 
-    it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    it('dispatches #updateDateFacetValues with the facet id and an empty array', () => {
+      expect(engine.actions).toContainEqual(
+        updateDateFacetValues({facetId, values: []})
+      );
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
