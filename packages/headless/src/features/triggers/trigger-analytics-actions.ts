@@ -1,5 +1,4 @@
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
-import {TriggerNotifyMetadata} from '../../../node_modules/coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 
 /**
  * Log trigger query
@@ -23,10 +22,9 @@ export const logNotifyTrigger = makeAnalyticsAction(
   AnalyticsType.Search,
   (client, state) => {
     if (state.triggers?.notify) {
-      const meta: TriggerNotifyMetadata = {
+      return client.logTriggerNotify({
         notification: state.triggers.notify,
-      };
-      return client.logTriggerNotify(meta);
+      });
     }
     return;
   }
