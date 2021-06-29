@@ -52,6 +52,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
   const getState = () => engine.state;
 
   let previousQueryTrigger: string = getState().triggers.query;
+  let previousQuery: string | undefined = getState().query?.q;
 
   return {
     ...controller,
@@ -60,6 +61,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       const strictListener = () => {
         const hasChanged = previousQueryTrigger !== this.state.newQuery;
         previousQueryTrigger = this.state.newQuery;
+        previousQuery = getState().query?.q;
 
         if (hasChanged && getState().triggers.query) {
           listener();
@@ -77,7 +79,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
     get state() {
       return {
         newQuery: getState().triggers.query,
-        prevQuery: getState().query?.q,
+        prevQuery: previousQuery,
       };
     },
   };
