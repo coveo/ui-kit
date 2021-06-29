@@ -3,7 +3,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers, configuration} from '../../app/reducers';
+import {triggers} from '../../app/reducers';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
 
 describe('NotifyTrigger', () => {
@@ -34,7 +34,6 @@ describe('NotifyTrigger', () => {
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       triggers,
-      configuration,
     });
   });
 

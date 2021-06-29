@@ -1,6 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
-import {configuration, triggers} from '../../app/reducers';
+import {TriggerSection} from '../../state/state-sections';
+import {triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
@@ -70,7 +70,7 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
 function loadNotifyTriggerReducers(
   engine: SearchEngine
-): engine is SearchEngine<TriggerSection & ConfigurationSection> {
-  engine.addReducers({configuration, triggers});
+): engine is SearchEngine<TriggerSection> {
+  engine.addReducers({triggers});
   return true;
 }
