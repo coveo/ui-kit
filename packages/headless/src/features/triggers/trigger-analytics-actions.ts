@@ -21,9 +21,9 @@ export const logNotifyTrigger = makeAnalyticsAction(
   'analytics/trigger/notify',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.triggers?.notify) {
+    if (state.triggers?.notification) {
       return client.logTriggerNotify({
-        notification: state.triggers.notify,
+        notification: state.triggers.notification,
       });
     }
     return;

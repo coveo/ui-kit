@@ -12,11 +12,11 @@ export interface TriggerState {
   /**
    * The notification to present to the user after receiving a notification trigger.
    */
-  notify: string;
+  notification: string;
 }
 
 export const getTriggerInitialState: () => TriggerState = () => ({
   redirectTo: null,
   query: '',
-  notify: '',
+  notification: '',
 });

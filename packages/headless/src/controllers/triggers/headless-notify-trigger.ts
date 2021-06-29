@@ -22,7 +22,7 @@ export interface NotifyTriggerState {
   /**
    * The notification to present to the user after receiving a notification trigger.
    */
-  notify: string;
+  notification: string;
 }
 
 /**
@@ -41,17 +41,17 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
   const getState = () => engine.state;
 
-  let previousNotify: string = getState().triggers.notify;
+  let previousNotify: string = getState().triggers.notification;
 
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const hasChanged = previousNotify !== this.state.notify;
-        previousNotify = this.state.notify;
+        const hasChanged = previousNotify !== this.state.notification;
+        previousNotify = this.state.notification;
 
-        if (hasChanged && getState().triggers.notify) {
+        if (hasChanged && getState().triggers.notification) {
           listener();
           dispatch(logNotifyTrigger());
         }
@@ -62,7 +62,7 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
     get state() {
       return {
-        notify: getState().triggers.notify,
+        notification: getState().triggers.notification,
       };
     },
   };

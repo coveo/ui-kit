@@ -57,7 +57,7 @@ describe('NotifyTrigger', () => {
     const listener = jest.fn();
     notifyTrigger.subscribe(listener);
 
-    engine.state.triggers.notify = 'hello';
+    engine.state.triggers.notification = 'hello';
     const [firstListener] = registeredListeners();
     firstListener();
 
@@ -69,7 +69,7 @@ describe('NotifyTrigger', () => {
     const listener = jest.fn();
     notifyTrigger.subscribe(listener);
 
-    engine.state.triggers.notify = '';
+    engine.state.triggers.notification = '';
     const [firstListener] = registeredListeners();
     firstListener();
 

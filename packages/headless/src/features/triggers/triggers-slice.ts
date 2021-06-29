@@ -31,7 +31,7 @@ export const triggerReducer = createReducer(
       const notifyTriggers: Trigger[] = action.payload.response.triggers.filter(
         (trigger) => isNotifyTrigger(trigger)
       );
-      state.notify = notifyTriggers.length
+      state.notification = notifyTriggers.length
         ? (notifyTriggers[0] as TriggerNotify).content
         : '';
     })

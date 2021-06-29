@@ -141,7 +141,7 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.notify).toEqual('');
+    expect(finalState.notification).toEqual('');
   });
 
   it('when a executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates #state.notify', () => {
@@ -161,6 +161,6 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.notify).toEqual('Hello world');
+    expect(finalState.notification).toEqual('Hello world');
   });
 });
