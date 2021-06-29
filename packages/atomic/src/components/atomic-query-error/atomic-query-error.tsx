@@ -132,10 +132,10 @@ export class AtomicQueryError implements InitializableComponent {
 
     return (
       <div class="text-center">
-        <h3 part="title" class="text-2xl text-secondary my-4">
+        <h3 part="title" class="text-2xl text-primary my-4">
           {this.title}
         </h3>
-        <p part="description" class="text-xl text-secondary my-4">
+        <p part="description" class="text-xl text-primary my-4">
           {this.description}
         </p>
         {this.link ? (
