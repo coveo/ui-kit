@@ -18,7 +18,6 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
         id={id}
         role="checkbox"
         part="value-checkbox"
-        onMouseUp={(e) => (e.target as HTMLButtonElement).blur()}
         onClick={() => props.onClick()}
         aria-checked={props.isSelected.toString()}
         class={`value-checkbox flex justify-center rounded focus:outline-none focus:border-primary-light ${

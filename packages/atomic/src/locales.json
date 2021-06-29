@@ -490,11 +490,11 @@
   },
   "moreMatchesFor": {
     "en": "More matches for {{query}}",
-    "fr": "Plus de correspondances pour {{query}}"
+    "fr": "Plus de résultats pour {{query}}"
   },
   "noMatchesFoundFor": {
     "en": "No matches found for {{query}}",
-    "fr": "Aucune correspondance trouvée pour {{query}}"
+    "fr": "Aucun résultat pour {{query}}"
   },
   "cancelLastAction": {
     "en": "Cancel last action",
