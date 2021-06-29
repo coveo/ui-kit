@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.34.0...@coveo/atomic@0.34.1) (2021-06-29)
+
+
+### Bug Fixes
+
+* **atomic:** various css improvements for facets v1 ([#923](https://github.com/coveo/ui-kit/issues/923)) ([a4c15d9](https://github.com/coveo/ui-kit/commit/a4c15d9a292d9bbf21b81839c19ec31f223f7f7b))
+
+
+
+
+
 # [0.34.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.33.1...@coveo/atomic@0.34.0) (2021-06-29)
 
 
