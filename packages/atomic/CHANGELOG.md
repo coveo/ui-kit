@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.33.1...@coveo/atomic@0.34.0) (2021-06-29)
+
+
+### Features
+
+* **atomic:** add "state" classes on facet for display management ([#921](https://github.com/coveo/ui-kit/issues/921)) ([4ba51fa](https://github.com/coveo/ui-kit/commit/4ba51fa08bce80994badaa26ec4d1c454172a1c2))
+* **atomic:** add specific error message for organization paused ([#925](https://github.com/coveo/ui-kit/issues/925)) ([883a36d](https://github.com/coveo/ui-kit/commit/883a36d755ddc8fb22cfe87a28fc2909cd0bd0af))
+
+
+
+
+
 ## [0.33.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.33.0...@coveo/atomic@0.33.1) (2021-06-25)
 
 **Note:** Version bump only for package @coveo/atomic
