@@ -1,6 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
-import {configuration, triggers} from '../../app/reducers';
+import {TriggerSection} from '../../state/state-sections';
+import {triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {executeSearch} from '../../features/search/search-actions';
@@ -87,7 +87,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
 function loadQueryTriggerReducers(
   engine: SearchEngine
-): engine is SearchEngine<TriggerSection & ConfigurationSection> {
-  engine.addReducers({configuration, triggers});
+): engine is SearchEngine<TriggerSection> {
+  engine.addReducers({triggers});
   return true;
 }
