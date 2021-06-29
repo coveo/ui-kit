@@ -17,7 +17,7 @@ export default class QuanticBreadcrumb extends LightningElement {
   /** @type {import("coveo").FacetBreadcrumb[]} */
   @track facetBreadcrumbs;
   /** @type {import("coveo").CategoryFacetBreadcrumb[]} */
-  @track  categoryFacetBreadcrumbs;
+  @track categoryFacetBreadcrumbs;
   /** @type {import("coveo").NumericFacetBreadcrumb[]} */
   @track numericFacetBreadcrumbs;
   /** @type {import("coveo").DateFacetBreadcrumb[]} */
@@ -27,6 +27,9 @@ export default class QuanticBreadcrumb extends LightningElement {
 
   /** @type {String} */
   @api engineId;
+
+  /** @type {String} */
+  @api categoryDivider = '/';
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -44,7 +47,7 @@ export default class QuanticBreadcrumb extends LightningElement {
   }
 
   disconnectedCallback() {
-    if(this.unsubscribe) {
+    if (this.unsubscribe) {
       this.unsubscribe();
     }
   }
@@ -69,7 +72,65 @@ export default class QuanticBreadcrumb extends LightningElement {
     this.breadcrumbManager.deselectBreadcrumb(breadcrumb);
   }
 
+  formatRangeBreadcrumbValue(breadcrumb) {
+    return {
+      ...breadcrumb,
+      values: (breadcrumb.values.map(range => ({
+        ...range,
+        value: `${range.value.start} - ${range.value.end}`
+      })))
+    };
+  }
+
+  formatCategoryBreadcrumbValue(breadcrumb) {
+    console.log(JSON.stringify(breadcrumb));
+    if (breadcrumb.path.length <= 3) {
+      return breadcrumb.path.map((breadcrumbValue) => breadcrumbValue.value);
+    }
+    const collapsed = '...';
+    const firstBreadcrumbValue = breadcrumb.path[0].value;
+    const lastTwoBreadcrumbsValues = breadcrumb.path
+      .slice(-2)
+      .map((breadcrumbValue) => breadcrumbValue.value);
+    return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
+  }
+
+  formatDate(dateValue) {
+    const date = new Date(dateValue);
+    return date.toLocaleDateString();
+  }
+
+  formatDateRangeFacet(breadcrumb) {
+    return {
+      ...breadcrumb,
+      values: breadcrumb.values.map(range => ({
+        ...range,
+        value: `${this.formatDate(range.value.start)} - ${this.formatDate(range.value.end)}`
+      }))
+    };
+  }
+
   get facetBreadcrumbValues() {
     return this.facetBreadcrumbs || [];
+  }
+
+  get numericFacetBreadcrumbsValues() {
+    return this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
+  }
+
+  get categoryFacetBreadcrumbsValues() {
+    return this.categoryFacetBreadcrumbs.map(breadcrumb => {
+      const breadcrumbValues = this.formatCategoryBreadcrumbValue(breadcrumb);
+      return {
+        facetId: breadcrumb.facetId,
+        field: breadcrumb.field,
+        deselect: breadcrumb.deselect,
+        value:  breadcrumbValues.join(` ${this.categoryDivider} `)
+      };
+    }) || [];
+  }
+
+  get dateFacetBreadcrumbsValues() {
+    return this.dateFacetBreadcrumbs.map(breadcrumb => this.formatDateRangeFacet(breadcrumb)) || [];
   }
 }

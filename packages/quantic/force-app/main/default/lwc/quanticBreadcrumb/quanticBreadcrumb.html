@@ -1,56 +1,63 @@
 <template>
     <template if:true={hasBreadcrumbs}>
-        <div>
-            <ul>
-                <template for:each={facetBreadcrumbValues} for:item="field">
-                    <li key={field.facetId}>
-                        <span>{field.field}:</span>
-                        <ul>
-                            <template for:each={field.values} for:item="value">
-                                <li key={value.value.value}>
-                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
+        <div class="slds-grid slds-var-m-vertical_x-small">
+            <div class="slds-col slds-col_bump-right no-gutters">
+                <ul>
+                    <template for:each={facetBreadcrumbValues} for:item="facetField">
+                        <li key={facetField.facetId} class="slds-list_horizontal align-baseline">
+                            <span>{facetField.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space">
+                                <template for:each={facetField.values} for:item="facetValue">
+                                    <li key={facetValue.value.value} class="coveo-breadcrumb-value-line">
+                                        <a onclick={facetValue.deselect} class="text-hover-underline">{facetValue.value.value} X</a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </li>
+                    </template>
+                    <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
+                            <span>{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space">
+                                <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                                    <li key={breadcrumbValue.value} class="coveo-breadcrumb-value-line">
+                                        <a onclick={breadcrumbValue.deselect} class="text-hover-underline">{breadcrumbValue.value} X</a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </li>
+                    </template>
+                    <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
+                            <span>{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space">
+                                <li class="coveo-breadcrumb-value-line">
+                                    <a onclick={breadcrumb.deselect} class="text-hover-underline">{breadcrumb.value} X</a>
                                 </li>
-                            </template>
-                        </ul>
+                            </ul>
+                        </li>
+                    </template>
+                    <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
+                            <span>{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space">
+                                <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                                    <li key={breadcrumbValue.value} class="coveo-breadcrumb-value-line">
+                                        <a onclick={breadcrumbValue.deselect} class="text-hover-underline">{breadcrumbValue.value} X</a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="slds-col no-gutters">
+                <ul class="slds-list_horizontal slds-has-block-links_space">
+                    <li class="coveo-breadcrumb-value-line">
+                        <a onclick={deselectAll}>Clear All Filters</a>
                     </li>
-                </template>
-                <template for:each={categoryFacetBreadcrumbs} for:item="field">
-                    <li key={field.facetId}>
-                        <span>{field.field}:</span>
-                        <ul>
-                            <template for:each={field.values} for:item="value">
-                                <li key={value.value.value}>
-                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
-                                </li>
-                            </template>
-                        </ul>
-                    </li>
-                </template>
-                <template for:each={numericFacetBreadcrumbs} for:item="field">
-                    <li key={field.facetId}>
-                        <span>{field.field}:</span>
-                        <ul>
-                            <template for:each={field.values} for:item="value">
-                                <li key={value.value.value}>
-                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
-                                </li>
-                            </template>
-                        </ul>
-                    </li>
-                </template>
-                <template for:each={dateFacetBreadcrumbs} for:item="field">
-                    <li key={field.facetId}>
-                        <span>{field.field}:</span>
-                        <ul>
-                            <template for:each={field.values} for:item="value">
-                                <li key={value.value.value}>
-                                    <lightning-pill label={value.value.value} onremove={value.deselect}></lightning-pill>
-                                </li>
-                            </template>
-                        </ul>
-                    </li>
-                </template>
-            </ul>
+                </ul>
+            </div>
         </div>
     </template>
 </template>

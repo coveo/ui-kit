@@ -36,7 +36,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
-        delimitingCharacter: ';',
+        delimitingCharacter: '|',
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());

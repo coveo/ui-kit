@@ -1,0 +1,15 @@
+.align-baseline {
+    align-items: baseline;
+}
+
+.text-hover-underline:hover {
+    text-decoration: underline;
+}
+
+.slds-grid div.no-gutters {
+    padding: var(--lwc-spacingNone, 0);
+}
+
+.coveo-breadcrumb-value-line {
+    line-height: 0.7;
+}
