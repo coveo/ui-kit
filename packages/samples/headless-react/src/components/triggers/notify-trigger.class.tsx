@@ -25,13 +25,14 @@ export class NotifyTrigger extends Component<{}, NotifyTriggerState> {
   }
 
   private updateState() {
-    this.setState(this.controller.state);
+    this.setState(this.controller.state, () => {
+      if (this.state.notification) {
+        alert('Notification: ' + this.state.notification);
+      }
+    });
   }
 
   render() {
-    if (!this.state) {
-      return null;
-    }
-    return <div>The notification is: {this.state.notify}</div>;
+    return null;
   }
 }

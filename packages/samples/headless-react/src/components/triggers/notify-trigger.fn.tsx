@@ -12,12 +12,19 @@ export const NotifyTrigger: FunctionComponent<HeadlessNotifyTriggerProps> = (
   const [state, setState] = useState(controller.state);
 
   useEffect(() => controller.subscribe(() => updateState()), []);
+  useEffect(() => notify(), [state.notification]);
 
   const updateState = () => {
     setState(props.controller.state);
   };
 
-  return <div>The notification is: {state.notify}</div>;
+  const notify = () => {
+    if (state.notification) {
+      alert('Notification: ' + state.notification);
+    }
+  };
+
+  return null;
 };
 
 // usage
