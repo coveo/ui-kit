@@ -3,7 +3,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers} from '../../app/reducers';
+import {triggers, query} from '../../app/reducers';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 
@@ -35,6 +35,7 @@ describe('QueryTrigger', () => {
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       triggers,
+      query,
     });
   });
 

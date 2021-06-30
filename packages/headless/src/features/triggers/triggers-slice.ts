@@ -14,14 +14,14 @@ export const triggerReducer = createReducer(
   (builder) =>
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       const redirectTriggers: Trigger[] = action.payload.response.triggers.filter(
-        (trigger) => isRedirectTrigger(trigger)
+        isRedirectTrigger
       );
       state.redirectTo = redirectTriggers.length
         ? (redirectTriggers[0] as TriggerRedirect).content
         : '';
 
       const queryTriggers: Trigger[] = action.payload.response.triggers.filter(
-        (trigger) => isQueryTrigger(trigger)
+        isQueryTrigger
       );
       state.query = queryTriggers.length
         ? (queryTriggers[0] as TriggerQuery).content

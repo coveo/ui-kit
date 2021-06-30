@@ -1,6 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {TriggerSection} from '../../state/state-sections';
-import {triggers} from '../../app/reducers';
+import {TriggerSection, QuerySection} from '../../state/state-sections';
+import {triggers, query} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {executeSearch} from '../../features/search/search-actions';
@@ -32,7 +32,7 @@ export interface QueryTriggerState {
   /**
    * The query used to perform the search that received a query trigger in its response.
    */
-  prevQuery: string | undefined;
+  previousQuery: string;
 }
 
 /**
@@ -52,7 +52,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
   const getState = () => engine.state;
 
   let previousQueryTrigger: string = getState().triggers.query;
-  let previousQuery: string | undefined = getState().query?.q;
+  let previousQuery: string = getState().query.q;
 
   return {
     ...controller,
@@ -61,16 +61,16 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       const strictListener = () => {
         const hasChanged = previousQueryTrigger !== this.state.newQuery;
         previousQueryTrigger = this.state.newQuery;
-        previousQuery = getState().query?.q;
 
         if (hasChanged && getState().triggers.query) {
-          listener();
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
             q: getState().triggers.query,
           };
           dispatch(updateQuery(updateQueryPayload));
+          listener();
           dispatch(executeSearch(logQueryTrigger()));
         }
+        previousQuery = getState().query.q;
       };
       strictListener();
       return engine.subscribe(strictListener);
@@ -79,7 +79,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
     get state() {
       return {
         newQuery: getState().triggers.query,
-        prevQuery: previousQuery,
+        previousQuery: previousQuery,
       };
     },
   };
@@ -87,7 +87,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
 function loadQueryTriggerReducers(
   engine: SearchEngine
-): engine is SearchEngine<TriggerSection> {
-  engine.addReducers({triggers});
+): engine is SearchEngine<TriggerSection & QuerySection> {
+  engine.addReducers({triggers, query});
   return true;
 }
