@@ -53,6 +53,7 @@ describe('QueryTrigger', () => {
     expect(listener).toHaveBeenCalledTimes(0);
     expect(getUpdateQueryAction()).toBeFalsy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    expect(queryTrigger.state.isTriggered).toEqual(false);
   });
 
   it('when the #engine.state.triggers.query is updated, it dispatches #updateQuery, #executeSearch, and #logQueryTrigger', () => {
@@ -66,6 +67,7 @@ describe('QueryTrigger', () => {
     expect(listener).toHaveBeenCalledTimes(1);
     expect(getUpdateQueryAction()).toBeTruthy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    expect(queryTrigger.state.isTriggered).toEqual(true);
   });
 
   it('when the #engine.state.triggers.query is updated to the empty string, it does not dispatch #updateQuery, #executeSearch, and #logQueryTrigger', () => {
@@ -79,5 +81,6 @@ describe('QueryTrigger', () => {
     expect(listener).toHaveBeenCalledTimes(0);
     expect(getUpdateQueryAction()).toBeFalsy();
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    expect(queryTrigger.state.isTriggered).toEqual(false);
   });
 });

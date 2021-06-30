@@ -33,6 +33,11 @@ export interface QueryTriggerState {
    * The query used to perform the search that received a query trigger in its response.
    */
   previousQuery: string;
+
+  /**
+   * A boolean to specify if the controller was triggered.
+   */
+  isTriggered: boolean;
 }
 
 /**
@@ -63,6 +68,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
         previousQueryTrigger = this.state.newQuery;
 
         if (hasChanged && getState().triggers.query) {
+          previousQuery = getState().query.q;
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
             q: getState().triggers.query,
           };
@@ -70,7 +76,6 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           listener();
           dispatch(executeSearch(logQueryTrigger()));
         }
-        previousQuery = getState().query.q;
       };
       strictListener();
       return engine.subscribe(strictListener);
@@ -80,6 +85,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       return {
         newQuery: getState().triggers.query,
         previousQuery: previousQuery,
+        isTriggered: getState().triggers.query !== '',
       };
     },
   };
