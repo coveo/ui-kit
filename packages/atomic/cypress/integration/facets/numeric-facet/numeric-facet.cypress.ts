@@ -119,7 +119,7 @@ describe('Numeric Facet Test Suites', () => {
       });
 
       describe('When user clicks ClearAll facet button', () => {
-        function setupFacetWithTwoCheckboxesSelected() {
+        function setupFacetClearAll() {
           setupDateFacetWithCheckboxSelected();
           cy.wait(RouteAlias.analytics);
           selectClearAllFacetsButton(numericField, numericFacetComponent);
@@ -127,7 +127,7 @@ describe('Numeric Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupFacetWithTwoCheckboxesSelected);
+          before(setupFacetClearAll);
           FacetAssertions.assertCheckboxDisplay(
             0,
             false,
@@ -143,7 +143,7 @@ describe('Numeric Facet Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupFacetWithTwoCheckboxesSelected);
+          beforeEach(setupFacetClearAll);
           FacetAssertions.assertAnalyticLogClearAllFacets();
         });
       });
