@@ -25,10 +25,12 @@ import {
 import {
   deselectAllDateFacetValues,
   toggleSelectDateFacetValue,
+  updateDateFacetValues,
 } from '../facets/range-facets/date-facet-set/date-facet-actions';
 import {
   toggleSelectNumericFacetValue,
   deselectAllNumericFacetValues,
+  updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
@@ -252,6 +254,14 @@ describe('pagination slice', () => {
 
     it('when all facets are deselected, #firstResult is set to 0', () => {
       testResetPagination(deselectAllFacets);
+    });
+
+    it('when numeric facet values are updated, #firstResult is set to 0', () => {
+      testResetPagination(updateDateFacetValues);
+    });
+
+    it('when date facet values are updated, #firstResult is set to 0', () => {
+      testResetPagination(updateNumericFacetValues);
     });
   });
 });

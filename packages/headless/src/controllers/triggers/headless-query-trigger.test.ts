@@ -3,7 +3,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers, configuration} from '../../app/reducers';
+import {triggers, query} from '../../app/reducers';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 
@@ -35,7 +35,7 @@ describe('QueryTrigger', () => {
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       triggers,
-      configuration,
+      query,
     });
   });
 
@@ -43,41 +43,89 @@ describe('QueryTrigger', () => {
     expect(queryTrigger.subscribe).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.query is not updated, it does not dispatch #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  describe('when the #engine.state.triggers.query is not updated', () => {
     const listener = jest.fn();
-    queryTrigger.subscribe(listener);
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      initQueryTrigger();
+      queryTrigger.subscribe(listener);
 
-    const [firstListener] = registeredListeners();
-    firstListener();
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    expect(listener).toHaveBeenCalledTimes(0);
-    expect(getUpdateQueryAction()).toBeFalsy();
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
+
+    it('it does not dispatch #updateQuery', () => {
+      expect(getUpdateQueryAction()).toBeFalsy();
+    });
+
+    it('it does not dispatch #executeSearch and #logQueryTrigger', () => {
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
+
+    it('#state.wasQueryModified should be false', () => {
+      expect(queryTrigger.state.wasQueryModified).toEqual(false);
+    });
   });
 
-  it('when the #engine.state.triggers.query is updated, it dispatches #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  describe('when the #engine.state.triggers.query is updated', () => {
     const listener = jest.fn();
-    queryTrigger.subscribe(listener);
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      initQueryTrigger();
+      queryTrigger.subscribe(listener);
+      engine.state.triggers.query = 'bananas';
 
-    engine.state.triggers.query = 'bananas';
-    const [firstListener] = registeredListeners();
-    firstListener();
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    expect(listener).toHaveBeenCalledTimes(1);
-    expect(getUpdateQueryAction()).toBeTruthy();
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    it('it calls the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+
+    it('it dispatches #updateQuery', () => {
+      expect(getUpdateQueryAction()).toBeTruthy();
+    });
+
+    it('it dispatches #executeSearch and #logQueryTrigger', () => {
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('#state.wasQueryModified should be true', () => {
+      expect(queryTrigger.state.wasQueryModified).toEqual(true);
+    });
   });
 
-  it('when the #engine.state.triggers.query is updated to the empty string, it does not dispatch #updateQuery, #executeSearch, and #logQueryTrigger', () => {
+  describe('when the #engine.state.triggers.query is updated to the empty string', () => {
     const listener = jest.fn();
-    queryTrigger.subscribe(listener);
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      initQueryTrigger();
+      queryTrigger.subscribe(listener);
+      engine.state.triggers.query = '';
 
-    engine.state.triggers.query = '';
-    const [firstListener] = registeredListeners();
-    firstListener();
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    expect(listener).toHaveBeenCalledTimes(0);
-    expect(getUpdateQueryAction()).toBeFalsy();
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
+
+    it('it does not dispatch #updateQuery', () => {
+      expect(getUpdateQueryAction()).toBeFalsy();
+    });
+
+    it('it does not dispatch #executeSearch and #logQueryTrigger', () => {
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
+
+    it('#state.wasQueryModified should be false', () => {
+      expect(queryTrigger.state.wasQueryModified).toEqual(false);
+    });
   });
 });

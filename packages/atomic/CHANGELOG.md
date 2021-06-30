@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.34.1...@coveo/atomic@0.35.0) (2021-06-30)
+
+
+### Features
+
+* **atomic:** theme changes ([#929](https://github.com/coveo/ui-kit/issues/929)) ([705e7d0](https://github.com/coveo/ui-kit/commit/705e7d0d78e67dc60c78867b59e712f1fa1ef06f))
+
+
+
+
+
+## [0.34.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.34.0...@coveo/atomic@0.34.1) (2021-06-29)
+
+
+### Bug Fixes
+
+* **atomic:** various css improvements for facets v1 ([#923](https://github.com/coveo/ui-kit/issues/923)) ([a4c15d9](https://github.com/coveo/ui-kit/commit/a4c15d9a292d9bbf21b81839c19ec31f223f7f7b))
+
+
+
+
+
+# [0.34.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.33.1...@coveo/atomic@0.34.0) (2021-06-29)
+
+
+### Features
+
+* **atomic:** add "state" classes on facet for display management ([#921](https://github.com/coveo/ui-kit/issues/921)) ([4ba51fa](https://github.com/coveo/ui-kit/commit/4ba51fa08bce80994badaa26ec4d1c454172a1c2))
+* **atomic:** add specific error message for organization paused ([#925](https://github.com/coveo/ui-kit/issues/925)) ([883a36d](https://github.com/coveo/ui-kit/commit/883a36d755ddc8fb22cfe87a28fc2909cd0bd0af))
+
+
+
+
+
+## [0.33.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.33.0...@coveo/atomic@0.33.1) (2021-06-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.32.1...@coveo/atomic@0.33.0) (2021-06-23)
+
+
+### Features
+
+* **atomic:** scroll to top of the "scrollContainer" when interacting with Pager ([#922](https://github.com/coveo/ui-kit/issues/922)) ([342080a](https://github.com/coveo/ui-kit/commit/342080ad8de2741e0da728c7faca1b824a463119))
+
+
+
+
+
 ## [0.32.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.32.0...@coveo/atomic@0.32.1) (2021-06-23)
 
 **Note:** Version bump only for package @coveo/atomic

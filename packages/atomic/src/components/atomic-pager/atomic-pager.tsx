@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Event, EventEmitter} from '@stencil/core';
 import {
   Pager,
   PagerState,
@@ -52,6 +52,11 @@ export class AtomicPager implements InitializableComponent {
   };
   @State() error!: Error;
 
+  @Event({
+    eventName: 'atomic/scrollToTop',
+  })
+  private scrollToTopEvent!: EventEmitter;
+
   /**
    * Specifies how many page buttons to display in the pager.
    */
@@ -62,6 +67,10 @@ export class AtomicPager implements InitializableComponent {
     this.pager = buildPager(this.bindings.engine, {
       options: {numberOfPages: this.numberOfPages},
     });
+  }
+
+  private scrollToTop() {
+    this.scrollToTopEvent.emit();
   }
 
   private buildButton(options: {
@@ -82,7 +91,10 @@ export class AtomicPager implements InitializableComponent {
           }`}
           disabled={options.disabled}
           aria-label={options.ariaLabel}
-          onClick={options.callback}
+          onClick={() => {
+            options.callback();
+            this.scrollToTop();
+          }}
         >
           <span class="fill-current" innerHTML={options.icon}></span>
         </button>
@@ -134,6 +146,7 @@ export class AtomicPager implements InitializableComponent {
           aria-label={this.strings.pageNumber(page)}
           onClick={() => {
             this.pager.selectPage(page);
+            this.scrollToTop();
           }}
         >
           {page.toLocaleString(this.bindings.i18n.language)}

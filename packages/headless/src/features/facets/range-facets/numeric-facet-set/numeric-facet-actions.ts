@@ -174,6 +174,41 @@ export const toggleSelectNumericFacetValue = createAction(
     })
 );
 
+export interface UpdateNumericFacetValuesActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The numeric facet values.
+   */
+  values: NumericFacetValue[];
+}
+
+/**
+ * Updates numeric facet values.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param values (NumericFacetValue[]) The numeric facet values.
+ */
+export const updateNumericFacetValues = createAction(
+  'numericFacet/updateFacetValues',
+  (payload: UpdateNumericFacetValuesActionCreatorPayload) => {
+    try {
+      validatePayload(payload, {
+        facetId: facetIdDefinition,
+        values: new ArrayValue({
+          each: new RecordValue({values: numericFacetValueDefinition}),
+        }),
+      });
+      validateManualNumericRanges({currentValues: payload.values});
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error)};
+    }
+  }
+);
+
 export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

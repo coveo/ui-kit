@@ -1,6 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
-import {configuration, triggers} from '../../app/reducers';
+import {TriggerSection, QuerySection} from '../../state/state-sections';
+import {triggers, query} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {executeSearch} from '../../features/search/search-actions';
@@ -32,7 +32,12 @@ export interface QueryTriggerState {
   /**
    * The query used to perform the search that received a query trigger in its response.
    */
-  prevQuery: string | undefined;
+  originalQuery: string;
+
+  /**
+   * A boolean to specify if the controller was triggered resulting in a modification to the query.
+   */
+  wasQueryModified: boolean;
 }
 
 /**
@@ -52,6 +57,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
   const getState = () => engine.state;
 
   let previousQueryTrigger: string = getState().triggers.query;
+  let originalQuery: string = getState().query.q;
 
   return {
     ...controller,
@@ -61,12 +67,13 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
         const hasChanged = previousQueryTrigger !== this.state.newQuery;
         previousQueryTrigger = this.state.newQuery;
 
-        if (hasChanged && getState().triggers.query) {
-          listener();
+        if (hasChanged && this.state.newQuery) {
+          originalQuery = getState().query.q;
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
             q: getState().triggers.query,
           };
           dispatch(updateQuery(updateQueryPayload));
+          listener();
           dispatch(executeSearch(logQueryTrigger()));
         }
       };
@@ -77,7 +84,8 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
     get state() {
       return {
         newQuery: getState().triggers.query,
-        prevQuery: getState().query?.q,
+        originalQuery,
+        wasQueryModified: getState().triggers.query !== '',
       };
     },
   };
@@ -85,7 +93,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
 function loadQueryTriggerReducers(
   engine: SearchEngine
-): engine is SearchEngine<TriggerSection & ConfigurationSection> {
-  engine.addReducers({configuration, triggers});
+): engine is SearchEngine<TriggerSection & QuerySection> {
+  engine.addReducers({triggers, query});
   return true;
 }
