@@ -5,8 +5,6 @@ import {
   isRedirectTrigger,
   isQueryTrigger,
   isNotifyTrigger,
-  Trigger,
-  TriggerNotify,
 } from './../../api/search/trigger';
 
 export const triggerReducer = createReducer(
@@ -25,11 +23,11 @@ export const triggerReducer = createReducer(
       );
       state.query = queryTriggers.length ? queryTriggers[0].content : '';
 
-      const notifyTriggers: Trigger[] = action.payload.response.triggers.filter(
-        (trigger) => isNotifyTrigger(trigger)
+      const notifyTriggers = action.payload.response.triggers.filter(
+        isNotifyTrigger
       );
       state.notification = notifyTriggers.length
-        ? (notifyTriggers[0] as TriggerNotify).content
+        ? notifyTriggers[0].content
         : '';
     })
 );

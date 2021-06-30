@@ -41,38 +41,62 @@ describe('NotifyTrigger', () => {
     expect(notifyTrigger.subscribe).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.notify is not updated, it does not dispatch #logNotifyTrigger', () => {
+  describe('when the #engine.state.triggers.notify is not updated', () => {
     const listener = jest.fn();
-    notifyTrigger.subscribe(listener);
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      initNotifyTrigger();
+      notifyTrigger.subscribe(listener);
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    const [firstListener] = registeredListeners();
-    firstListener();
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
 
-    expect(listener).toHaveBeenCalledTimes(0);
-    expect(getLogTriggerNotifyAction()).toBeFalsy();
+    it('it does not dispatch #logNotifyTrigger', () => {
+      expect(getLogTriggerNotifyAction()).toBeFalsy();
+    });
   });
 
-  it('when the #engine.state.triggers.notify is updated, it dispatches #logNotifyTrigger', () => {
+  describe('when the #engine.state.triggers.notify is updated', () => {
     const listener = jest.fn();
-    notifyTrigger.subscribe(listener);
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      initNotifyTrigger();
+      notifyTrigger.subscribe(listener);
+      engine.state.triggers.notification = 'hello';
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    engine.state.triggers.notification = 'hello';
-    const [firstListener] = registeredListeners();
-    firstListener();
+    it('it calls the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
 
-    expect(listener).toHaveBeenCalledTimes(1);
-    expect(getLogTriggerNotifyAction()).toBeTruthy();
+    it('it dispatches #logNotifyTrigger', () => {
+      expect(getLogTriggerNotifyAction()).toBeTruthy();
+    });
   });
 
-  it('when the #engine.state.triggers.notify is updated to the empty string, it does not dispatch #logNotifyTrigger', () => {
+  describe('when the #engine.state.triggers.notify is updated to the empty string', () => {
     const listener = jest.fn();
-    notifyTrigger.subscribe(listener);
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      initNotifyTrigger();
+      notifyTrigger.subscribe(listener);
+      engine.state.triggers.notification = '';
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    engine.state.triggers.notification = '';
-    const [firstListener] = registeredListeners();
-    firstListener();
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
 
-    expect(listener).toHaveBeenCalledTimes(0);
-    expect(getLogTriggerNotifyAction()).toBeFalsy();
+    it('it does not dispatch #logNotifyTrigger', () => {
+      expect(getLogTriggerNotifyAction()).toBeFalsy();
+    });
   });
 });
