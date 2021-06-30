@@ -32,10 +32,10 @@ export class QueryTrigger extends Component<{}, QueryTriggerState> {
     if (!this.state) {
       return null;
     }
-    if (this.state.isTriggered) {
+    if (this.state.wasQueryModified) {
       return (
         <div>
-          The query changed from {this.state.previousQuery + ' '}
+          The query changed from {this.state.originalQuery + ' '}
           to {this.state.newQuery}
         </div>
       );

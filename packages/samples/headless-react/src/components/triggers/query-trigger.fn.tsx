@@ -17,10 +17,10 @@ export const QueryTrigger: FunctionComponent<HeadlessQueryTriggerProps> = (
     setState(props.controller.state);
   };
 
-  if (state.isTriggered) {
+  if (state.wasQueryModified) {
     return (
       <div>
-        The query changed from {state.previousQuery} to {state.newQuery}
+        The query changed from {state.originalQuery} to {state.newQuery}
       </div>
     );
   }
