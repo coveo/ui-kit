@@ -13,3 +13,19 @@ export const logQueryTrigger = makeAnalyticsAction(
     return;
   }
 );
+
+/**
+ * Log trigger redirection
+ */
+export const logTriggerRedirect = makeAnalyticsAction(
+  'analytics/trigger/redirect',
+  AnalyticsType.Search,
+  (client, state) => {
+    if (state.triggers?.redirectTo) {
+      return client.logTriggerRedirect({
+        redirectedTo: state.triggers.redirectTo,
+      });
+    }
+    return;
+  }
+);
