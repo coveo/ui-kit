@@ -9,6 +9,7 @@ export const logTriggerRedirect = makeAnalyticsAction(
   (client, state) => {
     if (state.redirection && state.redirection.redirectTo !== null) {
       return client.logTriggerRedirect({
+        //shouldn't this be state.triggers.redirectTo? make another action?
         redirectedTo: state.redirection.redirectTo,
       });
     }
