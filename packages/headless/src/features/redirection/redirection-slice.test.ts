@@ -1,7 +1,7 @@
 import {redirectionReducer} from './redirection-slice';
 import {checkForRedirection} from './redirection-actions';
 import {Trigger} from '../../api/search/trigger';
-import {logTriggerRedirect} from './redirection-analytics-actions';
+import {logRedirection} from './redirection-analytics-actions';
 import {
   getRedirectionInitialState,
   RedirectionState,
@@ -75,10 +75,8 @@ describe('redirection slice', () => {
     return response;
   }
 
-  function getLogTriggerRedirectAction() {
-    return engine.actions.find(
-      (a) => a.type === logTriggerRedirect.pending.type
-    );
+  function getlogRedirectionAction() {
+    return engine.actions.find((a) => a.type === logRedirection.pending.type);
   }
 
   it(`when the plan endpoint doesn't return a redirection trigger
@@ -89,9 +87,9 @@ describe('redirection slice', () => {
   });
 
   it(`when the plan endpoint doesn't return a redirection trigger
-  should not dispatch a logTriggerRedirect action`, async (done) => {
+  should not dispatch a logRedirection action`, async (done) => {
     await mockPlan();
-    expect(getLogTriggerRedirectAction()).toBeFalsy();
+    expect(getlogRedirectionAction()).toBeFalsy();
     done();
   });
 
@@ -102,18 +100,18 @@ describe('redirection slice', () => {
       content: 'https://www.coveo.com',
     });
     expect(response.payload).toBe('https://www.coveo.com');
-    expect(getLogTriggerRedirectAction()).toBeTruthy();
+    expect(getlogRedirectionAction()).toBeTruthy();
     done();
   });
 
   it(`when the plan endpoint returns a redirection trigger
-  should dispatch a logTriggerRedirect action`, async (done) => {
+  should dispatch a logRedirection action`, async (done) => {
     const response = await mockPlan({
       type: 'redirect',
       content: 'https://www.coveo.com',
     });
     expect(response.payload).toBe('https://www.coveo.com');
-    expect(getLogTriggerRedirectAction()).toBeTruthy();
+    expect(getlogRedirectionAction()).toBeTruthy();
     done();
   });
 });

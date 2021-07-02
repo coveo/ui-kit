@@ -5,7 +5,7 @@ import {
 } from '../../api/search/search-api-client';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {StringValue} from '@coveo/bueno';
-import {logTriggerRedirect} from './redirection-analytics-actions';
+import {logRedirection} from './redirection-analytics-actions';
 import {
   ConfigurationSection,
   ContextSection,
@@ -58,7 +58,7 @@ export const checkForRedirection = createAsyncThunk<
 
     const planRedirection = new ExecutionPlan(response.success).redirectionUrl;
     if (planRedirection) {
-      dispatch(logTriggerRedirect());
+      dispatch(logRedirection());
     }
 
     return planRedirection || payload.defaultRedirectionUrl;

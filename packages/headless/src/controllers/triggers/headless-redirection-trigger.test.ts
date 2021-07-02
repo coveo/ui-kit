@@ -6,8 +6,8 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers, configuration} from '../../app/reducers';
-import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
+import {triggers} from '../../app/reducers';
+import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
 import {createMockState} from '../../test/mock-state';
 
 describe('RedirectionTrigger', () => {
@@ -40,7 +40,6 @@ describe('RedirectionTrigger', () => {
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       triggers,
-      configuration,
     });
   });
 
@@ -48,36 +47,75 @@ describe('RedirectionTrigger', () => {
     expect(redirectionTrigger.subscribe).toBeTruthy();
   });
 
-  it('when the #engine.state.triggers.redirectTo is already initialized, it does not call #onRedirect and does not dispatch #logTriggerRedirect', () => {
+  describe('when the #engine.state.triggers.redirectTo is already initialized', () => {
     const listener = jest.fn();
-    const state = createMockState();
-    state.triggers.redirectTo = 'https://www.google.com';
-    engine = buildMockSearchAppEngine({state});
-    initRedirectTrigger();
+    beforeEach(() => {
+      const state = createMockState();
+      state.triggers.redirectTo = 'https://www.google.com';
+      engine = buildMockSearchAppEngine({state});
+      initRedirectTrigger();
+      redirectionTrigger.subscribe(listener);
+    });
 
-    redirectionTrigger.subscribe(listener);
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
 
-    expect(listener).toHaveBeenCalledTimes(0);
-    expect(getLogTriggerRedirectAction()).toBeFalsy();
+    it('it does not dispatch #logTriggerRedirect', () => {
+      expect(getLogTriggerRedirectAction()).toBeFalsy();
+    });
   });
 
-  it('when the #engine.state.triggers.redirectTo is not updated, it does not call #onRedirect and does not dispatch #logTriggerRedirect', () => {
+  describe('when the #engine.state.triggers.redirectTo is not updated', () => {
     const listener = jest.fn();
-    redirectionTrigger.subscribe(listener);
+    beforeEach(() => {
+      redirectionTrigger.subscribe(listener);
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    expect(listener).not.toHaveBeenCalled();
-    expect(getLogTriggerRedirectAction()).toBeFalsy();
+    it('it does not call the listener', () => {
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('it does not dispatch #logTriggerRedirect', () => {
+      expect(getLogTriggerRedirectAction()).toBeFalsy();
+    });
   });
 
-  it('when the #engine.state.triggers.redirectTo is updated, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
+  describe('when the #engine.state.triggers.redirectTo is updated to the empty string', () => {
     const listener = jest.fn();
-    redirectionTrigger.subscribe(listener);
+    beforeEach(() => {
+      redirectionTrigger.subscribe(listener);
+      engine.state.triggers.redirectTo = '';
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
 
-    engine.state.triggers.redirectTo = 'https://www.coveo.com';
-    const [firstListener] = registeredListeners();
-    firstListener();
+    it('it does not call the listener', () => {
+      expect(listener).not.toHaveBeenCalled();
+    });
 
-    expect(listener).toHaveBeenCalledTimes(1);
-    expect(getLogTriggerRedirectAction()).toBeTruthy();
+    it('it does not dispatch #logTriggerRedirect', () => {
+      expect(getLogTriggerRedirectAction()).toBeFalsy();
+    });
+  });
+
+  describe('when the #engine.state.triggers.redirectTo is updated', () => {
+    const listener = jest.fn();
+    beforeEach(() => {
+      redirectionTrigger.subscribe(listener);
+      engine.state.triggers.redirectTo = 'https://www.coveo.com';
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
+
+    it('it calls the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+
+    it('it dispatches #logTriggerRedirect', () => {
+      expect(getLogTriggerRedirectAction()).toBeTruthy();
+    });
   });
 });
