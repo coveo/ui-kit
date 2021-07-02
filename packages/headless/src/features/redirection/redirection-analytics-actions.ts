@@ -1,15 +1,14 @@
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
 /**
- * Log trigger redirection
+ * Log redirection
  */
-export const logTriggerRedirect = makeAnalyticsAction(
-  'analytics/trigger/redirection',
+export const logRedirection = makeAnalyticsAction(
+  'analytics/redirection',
   AnalyticsType.Search,
   (client, state) => {
     if (state.redirection && state.redirection.redirectTo !== null) {
       return client.logTriggerRedirect({
-        //shouldn't this be state.triggers.redirectTo? make another action?
         redirectedTo: state.redirection.redirectTo,
       });
     }

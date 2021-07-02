@@ -7,7 +7,7 @@ import {
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {triggers} from '../../app/reducers';
-import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
+import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
 import {createMockState} from '../../test/mock-state';
 
 describe('RedirectionTrigger', () => {
