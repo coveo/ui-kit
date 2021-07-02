@@ -43,7 +43,7 @@ export function buildRedirectionTrigger(
 
   const getState = () => engine.state;
 
-  let previousRedirectTo: string = getState().triggers.redirectTo;
+  let previousRedirectTo = getState().triggers.redirectTo;
 
   return {
     ...controller,

@@ -300,3 +300,20 @@ export function assertRenderPlaceHolder(
     FacetSelector.facetPlaceHolder(field, type).should('be.visible');
   });
 }
+
+export function assertNumberOfSelectedCheckboxValues(
+  field = facetField,
+  type = facetComponent,
+  value: number
+) {
+  it(`should display ${value} number of selected checkbox values`, () => {
+    if (value > 0) {
+      FacetSelector.selectedCheckboxValue(field, type)
+        .its('length')
+        .should('eq', value);
+      return;
+    }
+
+    FacetSelector.selectedCheckboxValue(field, type).should('not.exist');
+  });
+}
