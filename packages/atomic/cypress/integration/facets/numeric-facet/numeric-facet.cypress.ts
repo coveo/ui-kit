@@ -329,11 +329,10 @@ describe('Numeric Facet Test Suites', () => {
       );
     });
     FacetAssertions.assertAnalyticLogFacetInInterfaceLoadEvent(numericField);
-    FacetAssertions.assertCheckboxDisplay(
-      0,
-      true,
+    FacetAssertions.assertNumberOfSelectedCheckboxValues(
       numericField,
-      numericFacetComponent
+      numericFacetComponent,
+      1
     );
   });
 });
