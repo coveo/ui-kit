@@ -16,7 +16,9 @@ describe('Result List Component', () => {
 
   it('should load', () => {
     setUpPage(resultListComponent());
-    cy.get(ResultListSelectors.component).should('be.visible');
+    cy.get(ResultListSelectors.component)
+      .find(ResultListSelectors.result)
+      .should('have.length.above', 0);
   });
 
   describe('when no first search has yet been executed', () => {
