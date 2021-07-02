@@ -1,5 +1,5 @@
-import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
-import {configuration, triggers} from '../../app/reducers';
+import {TriggerSection} from '../../state/state-sections';
+import {triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
@@ -72,7 +72,7 @@ export function buildRedirectionTrigger(
 
 function loadRedirectionReducers(
   engine: SearchEngine
-): engine is SearchEngine<TriggerSection & ConfigurationSection> {
-  engine.addReducers({configuration, triggers});
+): engine is SearchEngine<TriggerSection> {
+  engine.addReducers({triggers});
   return true;
 }

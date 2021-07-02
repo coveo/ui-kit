@@ -6,7 +6,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers, configuration} from '../../app/reducers';
+import {triggers} from '../../app/reducers';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 import {createMockState} from '../../test/mock-state';
 
@@ -40,7 +40,6 @@ describe('RedirectionTrigger', () => {
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       triggers,
-      configuration,
     });
   });
 
