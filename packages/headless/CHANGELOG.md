@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.2.0...@coveo/headless@1.3.0) (2021-06-30)
+
+
+### Features
+
+* **headless:** Query Triggers ([#918](https://github.com/coveo/ui-kit/issues/918)) ([81d0277](https://github.com/coveo/ui-kit/commit/81d027769a0cc5b3485dd57a53fd5fee3ba2c446))
+
+
+
+
+
 # [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.1.0...@coveo/headless@1.2.0) (2021-06-25)
 
 
