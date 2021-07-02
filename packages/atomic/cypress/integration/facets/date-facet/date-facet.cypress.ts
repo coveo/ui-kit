@@ -310,11 +310,10 @@ describe('Date Facet Test Suites', () => {
       );
     });
     FacetAssertions.assertAnalyticLogFacetInInterfaceLoadEvent(dateField);
-    FacetAssertions.assertCheckboxDisplay(
-      0,
-      true,
+    FacetAssertions.assertNumberOfSelectedCheckboxValues(
       dateField,
-      dateFacetComponent
+      dateFacetComponent,
+      1
     );
   });
 });
