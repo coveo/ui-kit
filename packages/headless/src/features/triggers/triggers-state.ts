@@ -10,7 +10,7 @@ export interface TriggerState {
   query: string;
 
   /**
-   * The notification to present to the user after receiving a notification trigger.
+   * The notification to display to the user after receiving a notification trigger.
    */
   notification: string;
 }

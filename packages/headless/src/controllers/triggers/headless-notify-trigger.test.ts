@@ -80,7 +80,7 @@ describe('NotifyTrigger', () => {
     });
   });
 
-  describe('when the #engine.state.triggers.notify is updated to the empty string', () => {
+  describe('when the #engine.state.triggers.notify is updated with an empty string', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();

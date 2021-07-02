@@ -20,7 +20,7 @@ export interface NotifyTrigger extends Controller {
  */
 export interface NotifyTriggerState {
   /**
-   * The notification to present to the user after receiving a notification trigger.
+   * The notification to display to the user after receiving a notification trigger.
    */
   notification: string;
 }
@@ -41,7 +41,7 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
   const getState = () => engine.state;
 
-  let previousNotify: string = getState().triggers.notification;
+  let previousNotify = getState().triggers.notification;
 
   return {
     ...controller,
