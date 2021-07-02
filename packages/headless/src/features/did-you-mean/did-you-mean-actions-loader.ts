@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
 import {didYouMean, query} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   applyDidYouMeanCorrection,
   disableDidYouMean,
@@ -41,7 +41,7 @@ export interface DidYouMeanActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadDidYouMeanActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): DidYouMeanActionCreators {
   engine.addReducers({didYouMean, query});
 

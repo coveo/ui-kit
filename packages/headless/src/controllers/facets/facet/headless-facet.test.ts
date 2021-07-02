@@ -1,5 +1,8 @@
 import {buildFacet, Facet, FacetOptions} from './headless-facet';
-import {MockEngine, buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../test/mock-engine';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -32,7 +35,7 @@ describe('facet', () => {
   const facetId = '1';
   let options: FacetOptions;
   let state: SearchAppState;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let facet: Facet;
 
   function initFacet() {

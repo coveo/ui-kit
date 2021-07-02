@@ -4,7 +4,10 @@ import {
   PagerInitialState,
   buildPager,
 } from './headless-pager';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {
   updatePage,
   registerPage,
@@ -12,11 +15,10 @@ import {
   previousPage,
 } from '../../features/pagination/pagination-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {SearchAppState} from '../../state/search-app-state';
 import {pagination, configuration} from '../../app/reducers';
 
 describe('Pager', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let options: PagerOptions;
   let initialState: PagerInitialState;
   let pager: Pager;

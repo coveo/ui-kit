@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
   applyDidYouMeanCorrection,
@@ -16,6 +15,7 @@ import {
 } from '../../api/search/search/query-corrections';
 import {loadReducerError} from '../../utils/errors';
 import {configuration, didYouMean} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {QueryCorrection, WordCorrection};
 
@@ -65,7 +65,7 @@ export interface DidYouMeanState {
  *
  * @param engine - The headless engine.
  */
-export function buildDidYouMean(engine: Engine<object>): DidYouMean {
+export function buildDidYouMean(engine: SearchEngine): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {
     throw loadReducerError;
   }
@@ -104,8 +104,8 @@ export function buildDidYouMean(engine: Engine<object>): DidYouMean {
 }
 
 function loadDidYouMeanReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection & DidYouMeanSection> {
+  engine: SearchEngine<object>
+): engine is SearchEngine<ConfigurationSection & DidYouMeanSection> {
   engine.addReducers({configuration, didYouMean});
   return true;
 }

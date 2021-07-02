@@ -19,8 +19,14 @@ import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
-import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/date-facet-actions';
-import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  toggleSelectDateFacetValue,
+  updateDateFacetValues,
+} from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
@@ -106,6 +112,12 @@ export const paginationReducer = createReducer(
         handlePaginationReset(state);
       })
       .addCase(deselectAllFacets, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(updateDateFacetValues, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(updateNumericFacetValues, (state) => {
         handlePaginationReset(state);
       })
       .addCase(selectFacetSearchResult, (state) => {

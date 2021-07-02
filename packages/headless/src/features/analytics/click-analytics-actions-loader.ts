@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/headless-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logDocumentOpen} from '../result/result-analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 
@@ -33,7 +33,7 @@ export interface ClickAnalyticsActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadClickAnalyticsActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): ClickAnalyticsActionCreators {
   engine.addReducers({});
 

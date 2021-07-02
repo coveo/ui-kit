@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
 import {facetOptions} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   updateFacetOptions,
   UpdateFacetOptionsActionCreatorPayload,
@@ -30,7 +30,7 @@ export interface FacetOptionsActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadFacetOptionsActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): FacetOptionsActionCreators {
   engine.addReducers({facetOptions});
 

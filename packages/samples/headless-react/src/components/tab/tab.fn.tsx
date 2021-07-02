@@ -24,7 +24,10 @@ export const Tab: FunctionComponent<TabProps> = (props) => {
  * ```tsx
  * const controller = buildTab(engine, {
  *   initialState: {isActive: true},
- *   options: {expression: '@objecttype==Message'},
+ *   options: {
+ *     id: 'messages',
+ *     expression: '@objecttype==Message',
+ *   },
  * });
  *
  * <Tab controller={controller}>Messages</Tab>;

@@ -3,11 +3,10 @@ import {
   executeToggleCategoryFacetSelect,
 } from './category-facet-set-controller-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockSearchAppEngine, MockEngine} from '../../../test';
-import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 
 describe('category facet controller actions', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   const facetId = 'test';
 
   beforeEach(() => {

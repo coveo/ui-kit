@@ -91,7 +91,7 @@ export class AtomicResultQuickview implements InitializableComponent {
 
     const button = (
       <button
-        class="block w-full text-secondary"
+        class="block w-full text-primary"
         aria-label={this.strings.previewResult()}
         onClick={() => this.openModal()}
       >

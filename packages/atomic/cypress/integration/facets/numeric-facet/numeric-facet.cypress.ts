@@ -60,6 +60,7 @@ describe('Numeric Facet Test Suites', () => {
         cy.wait(RouteAlias.search);
         cy.wait(RouteAlias.analytics);
         selectFacetValueAt(0, numericField, numericFacetComponent);
+        cy.wait(RouteAlias.search);
       }
 
       describe('verify rendering', () => {
@@ -92,68 +93,59 @@ describe('Numeric Facet Test Suites', () => {
           0
         );
       });
-    });
 
-    describe('When user deselects 1 numeric-facet checkbox', () => {
-      function setupNumericFacetWithCheckboxDeSelected() {
-        setupNumericFacet();
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(0, numericField, numericFacetComponent);
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(0, numericField, numericFacetComponent);
-        cy.wait(RouteAlias.search);
-      }
+      describe('When user deselects 1 numeric-facet checkbox', () => {
+        function setupNumericFacetWithCheckboxDeSelected() {
+          setupDateFacetWithCheckboxSelected();
+          cy.wait(RouteAlias.analytics);
+          selectFacetValueAt(0, numericField, numericFacetComponent);
+          cy.wait(RouteAlias.search);
+        }
 
-      describe('verify rendering', () => {
-        before(setupNumericFacetWithCheckboxDeSelected);
-        FacetAssertions.assertCheckboxDisplay(
-          0,
-          false,
-          numericField,
-          numericFacetComponent
-        );
+        describe('verify rendering', () => {
+          before(setupNumericFacetWithCheckboxDeSelected);
+          FacetAssertions.assertCheckboxDisplay(
+            0,
+            false,
+            numericField,
+            numericFacetComponent
+          );
+        });
+
+        describe('verify analytics', () => {
+          beforeEach(setupNumericFacetWithCheckboxDeSelected);
+          FacetAssertions.assertAnalyticLogFacetDeselect(numericField);
+        });
       });
 
-      describe('verify analytics', () => {
-        beforeEach(setupNumericFacetWithCheckboxDeSelected);
-        FacetAssertions.assertAnalyticLogFacetDeselect(numericField);
-      });
-    });
+      describe('When user clicks ClearAll facet button', () => {
+        function setupFacetClearAll() {
+          setupDateFacetWithCheckboxSelected();
+          cy.wait(RouteAlias.analytics);
+          selectClearAllFacetsButton(numericField, numericFacetComponent);
+          cy.wait(RouteAlias.search);
+        }
 
-    describe('When user clicks ClearAll facet button', () => {
-      function setupFacetWithTwoCheckboxesSelected() {
-        setupNumericFacet();
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(0, numericField, numericFacetComponent);
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(1, numericField, numericFacetComponent);
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectClearAllFacetsButton(numericField, numericFacetComponent);
-        cy.wait(RouteAlias.search);
-      }
-      describe('verify rendering', () => {
-        before(setupFacetWithTwoCheckboxesSelected);
-        FacetAssertions.assertCheckboxDisplay(
-          0,
-          false,
-          numericField,
-          numericFacetComponent
-        );
-        FacetAssertions.assertCheckboxDisplay(
-          1,
-          false,
-          numericField,
-          numericFacetComponent
-        );
-      });
+        describe('verify rendering', () => {
+          before(setupFacetClearAll);
+          FacetAssertions.assertCheckboxDisplay(
+            0,
+            false,
+            numericField,
+            numericFacetComponent
+          );
+          FacetAssertions.assertCheckboxDisplay(
+            1,
+            false,
+            numericField,
+            numericFacetComponent
+          );
+        });
 
-      describe('verify analytics', () => {
-        beforeEach(setupFacetWithTwoCheckboxesSelected);
-        FacetAssertions.assertAnalyticLogClearAllFacets();
+        describe('verify analytics', () => {
+          beforeEach(setupFacetClearAll);
+          FacetAssertions.assertAnalyticLogClearAllFacets();
+        });
       });
     });
   });

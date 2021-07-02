@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
 import {pagination} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   nextPage,
   previousPage,
@@ -68,7 +68,7 @@ export interface PaginationActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadPaginationActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): PaginationActionCreators {
   engine.addReducers({pagination});
 

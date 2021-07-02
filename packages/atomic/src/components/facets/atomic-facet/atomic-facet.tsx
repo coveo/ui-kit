@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, Host} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -240,25 +240,27 @@ export class AtomicFacet
     }
 
     if (this.facetState.values.length === 0) {
-      return;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <BaseFacet
-        controller={new BaseFacetController(this)}
-        label={this.strings[this.label]()}
-        hasActiveValues={this.facetState.hasActiveValues}
-        clearAll={() => this.facet.deselectAll()}
-      >
-        {this.facetState.canShowMoreValues && this.facetSearch?.render()}
-        <div class="mt-1">
-          <ul>{this.values}</ul>
-          <div class="flex flex-col items-start space-y-1">
-            {this.showLessButton}
-            {this.showMoreButton}
+      <Host class="atomic-with-values">
+        <BaseFacet
+          controller={new BaseFacetController(this)}
+          label={this.strings[this.label]()}
+          hasActiveValues={this.facetState.hasActiveValues}
+          clearAll={() => this.facet.deselectAll()}
+        >
+          {this.facetState.canShowMoreValues && this.facetSearch?.render()}
+          <div class="mt-1">
+            <ul>{this.values}</ul>
+            <div class="flex flex-col items-start space-y-1">
+              {this.showLessButton}
+              {this.showMoreButton}
+            </div>
           </div>
-        </div>
-      </BaseFacet>
+        </BaseFacet>
+      </Host>
     );
   }
 }

@@ -1,10 +1,9 @@
-import {buildMockSearchAppEngine, MockEngine} from '../../../../test';
-import {SearchAppState} from '../../../../state/search-app-state';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {executeToggleNumericFacetSelect} from './numeric-facet-controller-actions';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 
 describe('numeric facet controller actions', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   const facetId = 'test';
 
   beforeEach(() => {

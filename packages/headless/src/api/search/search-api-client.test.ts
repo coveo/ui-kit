@@ -3,11 +3,7 @@ import {
   SearchAPIClient,
   SearchAPIClientOptions,
 } from './search-api-client';
-import {
-  NoopPreprocessRequestMiddleware,
-  PlatformClient,
-  PlatformClientCallOptions,
-} from '../platform-client';
+import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -36,17 +32,18 @@ import {NoopPreprocessRequest} from '../preprocess-request';
 import {Response} from 'cross-fetch';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
+import {SearchResponseSuccess} from './search/search-response';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {QuestionsAnswers} from './search/question-answering';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
-  const renewAccessToken = async () => 'newToken';
   const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;
   let state: SearchAppState;
 
   function buildSearchAPIClient(options?: Partial<SearchAPIClientOptions>) {
     searchAPIClient = buildMockSearchAPIClient({
-      renewAccessToken,
       logger,
       ...options,
     });
@@ -175,7 +172,6 @@ describe('search api client', () => {
         url: `${
           state.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
-        renewAccessToken,
         logger,
         requestParams: {
           q: state.query.q,
@@ -196,7 +192,6 @@ describe('search api client', () => {
           visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
-        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -229,7 +224,6 @@ describe('search api client', () => {
         url: `${
           state.configuration.search.apiBaseUrl
         }/plan?${getOrganizationIdQueryParam(req)}`,
-        renewAccessToken,
         logger,
         requestParams: {
           q: state.query.q,
@@ -238,7 +232,6 @@ describe('search api client', () => {
           searchHub: state.searchHub,
         },
         preprocessRequest: NoopPreprocessRequest,
-        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -261,7 +254,6 @@ describe('search api client', () => {
         url: `${
           state.configuration.search.apiBaseUrl
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
-        renewAccessToken,
         logger,
         requestParams: {
           q: state.querySuggest[id]!.q,
@@ -272,7 +264,6 @@ describe('search api client', () => {
           actionsHistory: expect.any(Array),
         },
         preprocessRequest: NoopPreprocessRequest,
-        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -299,7 +290,6 @@ describe('search api client', () => {
           url: `${
             state.configuration.search.apiBaseUrl
           }/facet?${getOrganizationIdQueryParam(req)}`,
-          renewAccessToken,
         });
       });
 
@@ -398,7 +388,6 @@ describe('search api client', () => {
           url: `${
             recommendationState.configuration.search.apiBaseUrl
           }?${getOrganizationIdQueryParam(req)}`,
-          renewAccessToken,
           logger,
           requestParams: {
             recommendation: recommendationState.recommendation.id,
@@ -413,7 +402,6 @@ describe('search api client', () => {
             referrer: originLevel3,
           },
           preprocessRequest: NoopPreprocessRequest,
-          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -449,7 +437,6 @@ describe('search api client', () => {
           url: `${
             productRecommendationsState.configuration.search.apiBaseUrl
           }?${getOrganizationIdQueryParam(req)}`,
-          renewAccessToken,
           logger,
           requestParams: {
             recommendation:
@@ -471,7 +458,6 @@ describe('search api client', () => {
             },
           },
           preprocessRequest: NoopPreprocessRequest,
-          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
 
         expect(request).toMatchObject(expectedRequest);
@@ -501,6 +487,53 @@ describe('search api client', () => {
 
         expect(res.success).toBe('hello');
       });
+    });
+  });
+
+  describe('SearchAPIClient.search question answering', () => {
+    const doMockPlatformResponseAndAssertSuccess = async (
+      mockResponse: SearchResponseSuccess
+    ) => {
+      const body = JSON.stringify(mockResponse);
+      const response = new Response(body);
+
+      PlatformClient.call = () => Promise.resolve(response);
+      const res = await searchAPIClient.search(buildSearchRequest(state));
+      if (isErrorResponse(res)) {
+        fail(
+          'SearchAPIClient should not return an error when processing question answering'
+        );
+      }
+      return res.success;
+    };
+
+    it('should shim the content of #questionAnswer if not available', async () => {
+      const mockResponse = buildMockSearchResponse();
+      delete (mockResponse as Partial<SearchResponseSuccess>).questionAnswer;
+
+      const res = await doMockPlatformResponseAndAssertSuccess(mockResponse);
+      expect(res.questionAnswer).toMatchObject(emptyQuestionAnswer());
+    });
+
+    it('should shim the content of #questionAnswer if partially available', async () => {
+      const mockResponse = buildMockSearchResponse();
+      mockResponse.questionAnswer.question = 'foo';
+      mockResponse.questionAnswer.answerSnippet = 'bar';
+      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>)
+        .documentId;
+      delete (mockResponse.questionAnswer as Partial<QuestionsAnswers>)
+        .relatedQuestions;
+
+      const res = await doMockPlatformResponseAndAssertSuccess(mockResponse);
+      expect(res.questionAnswer.question).toBe('foo');
+      expect(res.questionAnswer.answerSnippet).toBe('bar');
+      expect(res.questionAnswer.documentId).toMatchObject({
+        ...emptyQuestionAnswer().documentId,
+      });
+      expect(res.questionAnswer.relatedQuestions).toBeDefined();
+      expect(res.questionAnswer.relatedQuestions.length).toEqual(
+        emptyQuestionAnswer().relatedQuestions.length
+      );
     });
   });
 });

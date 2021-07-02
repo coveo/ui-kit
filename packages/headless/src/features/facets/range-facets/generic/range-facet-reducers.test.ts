@@ -4,6 +4,7 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   handleRangeFacetSearchParameterRestoration,
+  updateRangeValues,
 } from './range-facet-reducers';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {
@@ -304,6 +305,25 @@ describe('range facet reducers', () => {
         );
 
       expect(action).not.toThrow();
+    });
+  });
+
+  describe('#updateRangeValues', () => {
+    const facetId = '1';
+    const values = [buildMockNumericFacetValue(), buildMockNumericFacetValue()];
+
+    it("when the id is unregistered, it doesn't update the values", () => {
+      updateRangeValues(state, facetId, values);
+
+      expect(state[facetId]).toBeFalsy();
+    });
+
+    it('when the id is registered, it updates the values', () => {
+      state[facetId] = buildMockNumericFacetRequest();
+      updateRangeValues(state, facetId, values);
+
+      expect(state[facetId].currentValues).toEqual(values);
+      expect(state[facetId].numberOfValues).toBe(values.length);
     });
   });
 });
