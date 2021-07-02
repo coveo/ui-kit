@@ -1,13 +1,23 @@
 import {buildController, Controller} from '../controller/headless-controller';
-import {search} from '../../app/reducers';
+import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {
+  QuestionAnswer,
+  QuestionAnswerDocumentIdentifier,
+} from '../../api/search/search/question-answering';
 export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
 } from '../../features/question-answering/question-answering-analytics-actions';
+import {QuestionAnsweringSection} from '../../state/state-sections';
+import {QuestionAnsweringRelatedQuestionState} from '../../features/question-answering/question-answering-state';
+import {findRelatedQuestionIdx} from '../../features/question-answering/question-answering-slice';
+import {
+  collapseSmartSnippetRelatedQuestion,
+  expandSmartSnippetRelatedQuestion,
+} from '../../features/question-answering/question-answering-actions';
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
@@ -19,10 +29,14 @@ export interface SmartSnippetQuestionsList extends Controller {
   state: SmartSnippetQuestionsListState;
   /**
    * Expand the specified snippet suggestion.
+   *
+   * @param identifier - The identifier of a document used to create the smart snippet.
    */
   expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
    * Collapse the specified snippet suggestion.
+   *
+   * @param identifier - The identifier of a document used to create the smart snippet.
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
 }
@@ -34,9 +48,12 @@ export interface SmartSnippetQuestionsListState {
   /**
    * The related questions for the current query
    */
-  relatedQuestions: SmartSnippetRelatedQuestion[];
+  questions: SmartSnippetRelatedQuestion[];
 }
 
+/**
+ * The related questions for a given smart snippet.
+ */
 export interface SmartSnippetRelatedQuestion {
   /**
    * The question related to the smart snippet.
@@ -72,30 +89,57 @@ export function buildSmartSnippetQuestionsList(
   }
 
   const controller = buildController(engine);
+  const getState = () => engine.state;
+
+  const getIsExpanded = (
+    questionAndAnswer: QuestionAnswer,
+    relatedQuestions: QuestionAnsweringRelatedQuestionState[]
+  ) => {
+    const idx = findRelatedQuestionIdx(
+      relatedQuestions,
+      questionAndAnswer.documentId
+    );
+    if (idx === -1) {
+      return false;
+    }
+    return relatedQuestions[idx].expanded;
+  };
 
   return {
     ...controller,
 
     get state() {
+      const state = getState();
+
       return {
-        // TODO
-      } as SmartSnippetQuestionsListState;
+        questions: state.search.response.questionAnswer.relatedQuestions.map(
+          (relatedQuestion) => ({
+            question: relatedQuestion.question,
+            answer: relatedQuestion.answerSnippet,
+            documentId: relatedQuestion.documentId,
+            expanded: getIsExpanded(
+              relatedQuestion,
+              state.questionAnswering.relatedQuestions
+            ),
+          })
+        ),
+      };
     },
 
-    expand(documentIdentifier: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logExpandSmartSnippetSuggestion(documentIdentifier));
-      // TODO manage state expanded.
+    expand(documentId: QuestionAnswerDocumentIdentifier) {
+      engine.dispatch(logExpandSmartSnippetSuggestion(documentId));
+      engine.dispatch(expandSmartSnippetRelatedQuestion(documentId));
     },
-    collapse(documentIdentifier: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logCollapseSmartSnippetSuggestion(documentIdentifier));
-      // TODO manage state expanded
+    collapse(documentId: QuestionAnswerDocumentIdentifier) {
+      engine.dispatch(logCollapseSmartSnippetSuggestion(documentId));
+      engine.dispatch(collapseSmartSnippetRelatedQuestion(documentId));
     },
   };
 }
 
 function loadSmartSnippetQuestionsListReducer(
   engine: SearchEngine
-): engine is SearchEngine {
-  engine.addReducers({search});
+): engine is SearchEngine<QuestionAnsweringSection> {
+  engine.addReducers({search, questionAnswering});
   return true;
 }

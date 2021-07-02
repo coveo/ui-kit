@@ -8,7 +8,8 @@ import {
 import {AppContext} from '../../context/engine';
 
 export interface TabProps {
-  expression?: string;
+  id: string;
+  expression: string;
   active?: boolean;
 }
 
@@ -22,7 +23,10 @@ export class Tab extends Component<TabProps, TabState> {
   componentDidMount() {
     this.controller = buildTab(this.context.engine!, {
       initialState: {isActive: !!this.props.active},
-      options: {expression: this.props.expression ?? ''},
+      options: {
+        expression: this.props.expression,
+        id: this.props.id,
+      },
     });
     this.updateState();
 

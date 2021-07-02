@@ -53,6 +53,7 @@ describe('Date Facet Test Suites', () => {
         cy.wait(RouteAlias.search);
         cy.wait(RouteAlias.analytics);
         selectFacetValueAt(0, dateField, dateFacetComponent);
+        cy.wait(RouteAlias.search);
       }
 
       describe('verify rendering', () => {
@@ -81,69 +82,59 @@ describe('Date Facet Test Suites', () => {
           0
         );
       });
-    });
 
-    describe('When user deselects 1 date-facet checkbox', () => {
-      function setupDateFacetWithCheckboxDeSelected() {
-        setupDateFacet();
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(0, dateField, dateFacetComponent);
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(0, dateField, dateFacetComponent);
-        cy.wait(RouteAlias.search);
-      }
+      describe('When user deselects 1 date-facet checkbox', () => {
+        function setupDateFacetWithCheckboxDeSelected() {
+          setupDateFacetWithCheckboxSelected();
+          cy.wait(RouteAlias.analytics);
+          selectFacetValueAt(0, dateField, dateFacetComponent);
+          cy.wait(RouteAlias.search);
+        }
 
-      describe('verify rendering', () => {
-        before(setupDateFacetWithCheckboxDeSelected);
-        FacetAssertions.assertCheckboxDisplay(
-          0,
-          false,
-          dateField,
-          dateFacetComponent
-        );
+        describe('verify rendering', () => {
+          before(setupDateFacetWithCheckboxDeSelected);
+          FacetAssertions.assertCheckboxDisplay(
+            0,
+            false,
+            dateField,
+            dateFacetComponent
+          );
+        });
+
+        describe('verify analytics', () => {
+          beforeEach(setupDateFacetWithCheckboxDeSelected);
+          FacetAssertions.assertAnalyticLogFacetDeselect(dateField);
+        });
       });
 
-      describe('verify analytics', () => {
-        beforeEach(setupDateFacetWithCheckboxDeSelected);
-        FacetAssertions.assertAnalyticLogFacetDeselect(dateField);
-      });
-    });
+      describe('When user clicks ClearAll facet button', () => {
+        function setupFacetClearAll() {
+          setupDateFacetWithCheckboxSelected();
+          cy.wait(RouteAlias.analytics);
+          selectClearAllFacetsButton(dateField, dateFacetComponent);
+          cy.wait(RouteAlias.search);
+        }
 
-    describe('When user clicks ClearAll facet button', () => {
-      function setupFacetWithTwoCheckboxesSelected() {
-        setupDateFacet();
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(0, dateField, dateFacetComponent);
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectFacetValueAt(1, dateField, dateFacetComponent);
-        cy.wait(RouteAlias.search);
-        cy.wait(RouteAlias.analytics);
-        selectClearAllFacetsButton(dateField, dateFacetComponent);
-        cy.wait(RouteAlias.search);
-      }
+        describe('verify rendering', () => {
+          before(setupFacetClearAll);
+          FacetAssertions.assertCheckboxDisplay(
+            0,
+            false,
+            dateField,
+            dateFacetComponent
+          );
+          FacetAssertions.assertCheckboxDisplay(
+            1,
+            false,
+            dateField,
+            dateFacetComponent
+          );
+        });
 
-      describe('verify rendering', () => {
-        before(setupFacetWithTwoCheckboxesSelected);
-        FacetAssertions.assertCheckboxDisplay(
-          0,
-          false,
-          dateField,
-          dateFacetComponent
-        );
-        FacetAssertions.assertCheckboxDisplay(
-          1,
-          false,
-          dateField,
-          dateFacetComponent
-        );
-      });
-
-      describe('verify analytics', () => {
-        beforeEach(setupFacetWithTwoCheckboxesSelected);
-        FacetAssertions.assertAnalyticLogClearAllFacets();
+        describe('verify analytics', () => {
+          beforeEach(setupFacetClearAll);
+          FacetAssertions.assertAnalyticLogClearAllFacets();
+        });
       });
     });
   });

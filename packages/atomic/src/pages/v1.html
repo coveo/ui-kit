@@ -37,7 +37,6 @@
       /* :root {
         --atomic-primary: red;
         --atomic-font-family: "Comic Sans MS", "Comic Sans", cursive;
-        --atomic-secondary: green;
       } */
 
       /* Example on how to customize result templates CSS parts */
@@ -226,19 +225,23 @@
                   margin-right: 0.25rem;
                 }
               </style>
-              <section class="visual"><atomic-result-icon></atomic-result-icon></section>
-              <section class="badges">
+              <atomic-result-section-visual><atomic-result-icon></atomic-result-icon></atomic-result-section-visual>
+              <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
                   <span class="badge"> Salesforce </span>
                 </atomic-field-condition>
-              </section>
-              <section class="actions"><atomic-result-quickview></atomic-result-quickview></section>
-              <section class="title"><atomic-result-link></atomic-result-link></section>
-              <section class="title-metadata">
+              </atomic-result-section-badges>
+              <atomic-result-section-actions
+                ><atomic-result-quickview></atomic-result-quickview
+              ></atomic-result-section-actions>
+              <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+              <atomic-result-section-title-metadata>
                 <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
-              </section>
-              <section class="excerpt"><atomic-result-text field="excerpt"></atomic-result-text></section>
-              <section class="bottom-metadata">
+              </atomic-result-section-title-metadata>
+              <atomic-result-section-excerpt
+                ><atomic-result-text field="excerpt"></atomic-result-text
+              ></atomic-result-section-excerpt>
+              <atomic-result-section-bottom-metadata>
                 <atomic-field-condition class="field" if-defined="author">
                   <atomic-text value="author" class="field-label"></atomic-text>
                   <atomic-result-text field="author"></atomic-result-text>
@@ -263,7 +266,7 @@
                   <span class="field-label">Date</span>
                   <atomic-result-date></atomic-result-date>
                 </span>
-              </section>
+              </atomic-result-section-bottom-metadata>
             </template>
           </atomic-result-template>
         </atomic-result-list>

@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../../app/headless-engine';
 import {numericFacetSet} from '../../../../app/reducers';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   deselectAllNumericFacetValues,
   registerNumericFacet,
@@ -9,12 +9,15 @@ import {
   ToggleSelectNumericFacetValueActionCreatorPayload,
   updateNumericFacetSortCriterion,
   UpdateNumericFacetSortCriterionActionCreatorPayload,
+  updateNumericFacetValues,
+  UpdateNumericFacetValuesActionCreatorPayload,
 } from './numeric-facet-actions';
 
 export {
   RegisterNumericFacetActionCreatorPayload,
   ToggleSelectNumericFacetValueActionCreatorPayload,
   UpdateNumericFacetSortCriterionActionCreatorPayload,
+  UpdateNumericFacetValuesActionCreatorPayload,
 };
 
 /**
@@ -58,6 +61,16 @@ export interface NumericFacetSetActionCreators {
   updateNumericFacetSortCriterion(
     payload: UpdateNumericFacetSortCriterionActionCreatorPayload
   ): PayloadAction<UpdateNumericFacetSortCriterionActionCreatorPayload>;
+
+  /**
+   * Updates numeric facet values.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateNumericFacetValues(
+    payload: UpdateNumericFacetValuesActionCreatorPayload
+  ): PayloadAction<UpdateNumericFacetValuesActionCreatorPayload>;
 }
 
 /**
@@ -67,7 +80,7 @@ export interface NumericFacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadNumericFacetSetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): NumericFacetSetActionCreators {
   engine.addReducers({numericFacetSet});
 
@@ -76,5 +89,6 @@ export function loadNumericFacetSetActions(
     registerNumericFacet,
     toggleSelectNumericFacetValue,
     updateNumericFacetSortCriterion,
+    updateNumericFacetValues,
   };
 }

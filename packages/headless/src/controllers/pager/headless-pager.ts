@@ -1,5 +1,4 @@
 import {Schema, NumberValue} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
   updatePage,
@@ -29,6 +28,7 @@ import {
 } from '../../utils/validate-payload';
 import {configuration, pagination} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface PagerInitialState {
   /**
@@ -138,7 +138,7 @@ export interface PagerState {
  * @returns A `Pager` controller instance.
  * */
 export function buildPager(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: PagerProps = {}
 ): Pager {
   if (!loadPagerReducers(engine)) {
@@ -219,8 +219,8 @@ export function buildPager(
 }
 
 function loadPagerReducers(
-  engine: Engine<object>
-): engine is Engine<PaginationSection & ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<PaginationSection & ConfigurationSection> {
   engine.addReducers({configuration, pagination});
   return true;
 }

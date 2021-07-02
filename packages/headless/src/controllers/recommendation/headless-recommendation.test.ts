@@ -1,13 +1,11 @@
 import {
   buildMockRecommendationAppEngine,
-  MockEngine,
+  MockRecommendationEngine,
 } from '../../test/mock-engine';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {
   buildRecommendationList,
   RecommendationList,
 } from './headless-recommendation';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {Action} from 'redux';
 import {
   getRecommendations,
@@ -17,13 +15,11 @@ import {configuration} from '../../app/reducers';
 import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
 
 describe('headless recommendation', () => {
-  let state: RecommendationAppState;
   let recommendation: RecommendationList;
-  let engine: MockEngine<RecommendationAppState>;
+  let engine: MockRecommendationEngine;
 
   beforeEach(() => {
-    state = createMockRecommendationState();
-    engine = buildMockRecommendationAppEngine({state});
+    engine = buildMockRecommendationAppEngine();
     recommendation = buildRecommendationList(engine);
   });
 

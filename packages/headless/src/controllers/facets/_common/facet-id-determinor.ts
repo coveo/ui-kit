@@ -1,4 +1,4 @@
-import {Engine} from '../../../app/headless-engine';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {AllFacetSections} from '../../../features/facets/generic/interfaces/generic-facet-section';
 import {generateFacetId} from './facet-id-generator';
 
@@ -8,7 +8,7 @@ interface FacetIdConfig {
 }
 
 export function determineFacetId(
-  engine: Engine<Partial<AllFacetSections>>,
+  engine: SearchEngine<Partial<AllFacetSections>>,
   config: FacetIdConfig
 ) {
   const {state, logger} = engine;

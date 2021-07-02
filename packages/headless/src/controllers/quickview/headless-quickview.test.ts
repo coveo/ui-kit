@@ -1,11 +1,10 @@
 import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
-import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
-  MockEngine,
+  MockSearchEngine,
 } from '../../test';
 import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
@@ -15,7 +14,7 @@ import {
 } from './headless-quickview';
 
 describe('Quickview', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let options: QuickviewOptions;
   let quickview: Quickview;
 

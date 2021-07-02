@@ -1,10 +1,9 @@
-import {buildMockSearchAppEngine, MockEngine} from '../../../test';
-import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {executeToggleFacetSelect} from './facet-set-controller-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 
 describe('facet set controller actions', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   const facetId = 'test';
 
   beforeEach(() => {

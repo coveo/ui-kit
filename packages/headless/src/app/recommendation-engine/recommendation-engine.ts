@@ -5,7 +5,7 @@ import {
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
-import {SearchThunkExtraArguments} from '../headless-engine';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {debug, pipeline, recommendation, searchHub} from '../reducers';
 import {
@@ -21,7 +21,6 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 
@@ -45,8 +44,11 @@ type RecommendationEngineState = StateFromReducersMapObject<
 /**
  * The engine for powering recommendation experiences.
  */
-export interface RecommendationEngine
-  extends CoreEngine<RecommendationEngineState, SearchThunkExtraArguments> {}
+export interface RecommendationEngine<State extends object = {}>
+  extends CoreEngine<
+    State & RecommendationEngineState,
+    SearchThunkExtraArguments
+  > {}
 
 /**
  * The recommendation engine options.
@@ -71,15 +73,7 @@ export function buildRecommendationEngine(
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
 
-  const ref = {
-    renewAccessToken: () => Promise.resolve(''),
-  };
-
-  const searchAPIClient = createSearchAPIClient(
-    options.configuration,
-    logger,
-    ref
-  );
+  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
@@ -92,7 +86,6 @@ export function buildRecommendationEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-  ref.renewAccessToken = engine.renewAccessToken;
 
   return {
     ...engine,
@@ -117,14 +110,11 @@ function validateConfiguration(
 
 function createSearchAPIClient(
   configuration: RecommendationEngineConfiguration,
-  logger: Logger,
-  ref: {renewAccessToken: () => Promise<string>}
+  logger: Logger
 ) {
   return new SearchAPIClient({
     logger,
-    renewAccessToken: () => ref.renewAccessToken(),
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
     postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
     postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
