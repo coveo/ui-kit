@@ -1,4 +1,3 @@
-import {Engine} from '../../../app/headless-engine';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -15,6 +14,7 @@ import {
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../state/state-sections';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 
@@ -26,7 +26,7 @@ export interface GenericFacetSearchProps<T extends FacetSearchState> {
 export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
 
 export function buildGenericFacetSearch<T extends FacetSearchState>(
-  engine: Engine<
+  engine: SearchEngine<
     ConfigurationSection & (FacetSearchSection | CategoryFacetSearchSection)
   >,
   props: GenericFacetSearchProps<T>

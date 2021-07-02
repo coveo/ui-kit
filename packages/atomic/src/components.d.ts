@@ -178,6 +178,44 @@ export namespace Components {
          */
         "ifNotDefined"?: string;
     }
+    interface AtomicFormatCurrency {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+         */
+        "currency": string;
+    }
+    interface AtomicFormatNumber {
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicFormatUnit {
+        /**
+          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+         */
+        "unit": string;
+        /**
+          * The unit formatting style to use in unit formatting. - "long" (e.g., 16 litres) - "short" (e.g., 16 l) - "narrow" (e.g., 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
+    }
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicModal {
@@ -400,6 +438,22 @@ export namespace Components {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+    }
     interface AtomicResultTemplate {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
@@ -481,6 +535,10 @@ export namespace Components {
           * Whether the state should be reflected in the URL parameters.
          */
         "reflectStateInUrl": boolean;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer": string;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */
@@ -569,6 +627,24 @@ declare global {
     var HTMLAtomicFieldConditionElement: {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
+    };
+    interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatCurrencyElement: {
+        prototype: HTMLAtomicFormatCurrencyElement;
+        new (): HTMLAtomicFormatCurrencyElement;
+    };
+    interface HTMLAtomicFormatNumberElement extends Components.AtomicFormatNumber, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatNumberElement: {
+        prototype: HTMLAtomicFormatNumberElement;
+        new (): HTMLAtomicFormatNumberElement;
+    };
+    interface HTMLAtomicFormatUnitElement extends Components.AtomicFormatUnit, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatUnitElement: {
+        prototype: HTMLAtomicFormatUnitElement;
+        new (): HTMLAtomicFormatUnitElement;
     };
     interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
     }
@@ -696,6 +772,54 @@ declare global {
         prototype: HTMLAtomicResultQuickviewElement;
         new (): HTMLAtomicResultQuickviewElement;
     };
+    interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionActionsElement: {
+        prototype: HTMLAtomicResultSectionActionsElement;
+        new (): HTMLAtomicResultSectionActionsElement;
+    };
+    interface HTMLAtomicResultSectionBadgesElement extends Components.AtomicResultSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBadgesElement: {
+        prototype: HTMLAtomicResultSectionBadgesElement;
+        new (): HTMLAtomicResultSectionBadgesElement;
+    };
+    interface HTMLAtomicResultSectionBottomMetadataElement extends Components.AtomicResultSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBottomMetadataElement: {
+        prototype: HTMLAtomicResultSectionBottomMetadataElement;
+        new (): HTMLAtomicResultSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionEmphasizedElement: {
+        prototype: HTMLAtomicResultSectionEmphasizedElement;
+        new (): HTMLAtomicResultSectionEmphasizedElement;
+    };
+    interface HTMLAtomicResultSectionExcerptElement extends Components.AtomicResultSectionExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionExcerptElement: {
+        prototype: HTMLAtomicResultSectionExcerptElement;
+        new (): HTMLAtomicResultSectionExcerptElement;
+    };
+    interface HTMLAtomicResultSectionTitleElement extends Components.AtomicResultSectionTitle, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleElement: {
+        prototype: HTMLAtomicResultSectionTitleElement;
+        new (): HTMLAtomicResultSectionTitleElement;
+    };
+    interface HTMLAtomicResultSectionTitleMetadataElement extends Components.AtomicResultSectionTitleMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleMetadataElement: {
+        prototype: HTMLAtomicResultSectionTitleMetadataElement;
+        new (): HTMLAtomicResultSectionTitleMetadataElement;
+    };
+    interface HTMLAtomicResultSectionVisualElement extends Components.AtomicResultSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionVisualElement: {
+        prototype: HTMLAtomicResultSectionVisualElement;
+        new (): HTMLAtomicResultSectionVisualElement;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
@@ -755,6 +879,9 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-v1": HTMLAtomicFacetV1Element;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
+        "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
+        "atomic-format-number": HTMLAtomicFormatNumberElement;
+        "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -776,6 +903,14 @@ declare global {
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
+        "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
+        "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
+        "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
+        "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
+        "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
+        "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
+        "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
+        "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
@@ -953,6 +1088,44 @@ declare namespace LocalJSX {
          */
         "ifNotDefined"?: string;
     }
+    interface AtomicFormatCurrency {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+         */
+        "currency": string;
+    }
+    interface AtomicFormatNumber {
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicFormatUnit {
+        /**
+          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+         */
+        "unit": string;
+        /**
+          * The unit formatting style to use in unit formatting. - "long" (e.g., 16 litres) - "short" (e.g., 16 l) - "narrow" (e.g., 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
+    }
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicModal {
@@ -1047,6 +1220,7 @@ declare namespace LocalJSX {
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicQueryError {
     }
@@ -1175,6 +1349,22 @@ declare namespace LocalJSX {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+    }
     interface AtomicResultTemplate {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
@@ -1245,6 +1435,10 @@ declare namespace LocalJSX {
          */
         "reflectStateInUrl"?: boolean;
         /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer"?: string;
+        /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub"?: string;
@@ -1282,6 +1476,9 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-v1": AtomicFacetV1;
         "atomic-field-condition": AtomicFieldCondition;
+        "atomic-format-currency": AtomicFormatCurrency;
+        "atomic-format-number": AtomicFormatNumber;
+        "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -1303,6 +1500,14 @@ declare namespace LocalJSX {
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
+        "atomic-result-section-actions": AtomicResultSectionActions;
+        "atomic-result-section-badges": AtomicResultSectionBadges;
+        "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
+        "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
+        "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
+        "atomic-result-section-title": AtomicResultSectionTitle;
+        "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
+        "atomic-result-section-visual": AtomicResultSectionVisual;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-results-per-page": AtomicResultsPerPage;
@@ -1327,6 +1532,9 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
+            "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
+            "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
+            "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
@@ -1348,6 +1556,14 @@ declare module "@stencil/core" {
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
+            "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
+            "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
+            "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
+            "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
+            "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
+            "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
+            "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
+            "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;

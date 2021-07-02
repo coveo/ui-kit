@@ -1,11 +1,9 @@
 import {
   fetchQuerySuggestions,
   clearQuerySuggest,
-  clearQuerySuggestCompletions,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {Engine} from '../../app/headless-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,
@@ -46,6 +44,7 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -68,13 +67,6 @@ export interface SearchBox extends Controller {
    * Clears the search box text and the suggestions.
    */
   clear(): void;
-
-  /**
-   * Clears the suggestions.
-   *
-   * @deprecated Suggestions should be hidden using CSS instead for an optimal user experience.
-   */
-  hideSuggestions(): void;
 
   /**
    * Shows the suggestions for the current search box value.
@@ -139,7 +131,7 @@ export interface Suggestion {
  * @returns A `SearchBox` controller instance.
  */
 export function buildSearchBox(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: SearchBoxProps = {}
 ): SearchBox {
   if (!loadSearchBoxReducers(engine)) {
@@ -191,10 +183,6 @@ export function buildSearchBox(
     clear() {
       dispatch(updateQuerySetQuery({id, query: ''}));
       dispatch(clearQuerySuggest({id}));
-    },
-
-    hideSuggestions() {
-      dispatch(clearQuerySuggestCompletions({id}));
     },
 
     showSuggestions() {
@@ -252,8 +240,8 @@ function getSuggestions(
 }
 
 function loadSearchBoxReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   QuerySection &
     QuerySuggestionSection &
     ConfigurationSection &

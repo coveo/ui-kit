@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {BaseFacetValue} from '../../features/facets/facet-api/response';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
@@ -41,6 +40,7 @@ import {
   categoryFacetSet,
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
@@ -53,7 +53,7 @@ export interface BreadcrumbManager extends Controller {
 
   /**
    * Deselects a facet breadcrumb value or category facet breadcrumb.
-   * @param value - The facet breadcrumb value or a category facet breadcrumb to deselect.
+   * @param value - The facet breadcrumb value or category facet breadcrumb to deselect.
    */
   deselectBreadcrumb(
     value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
@@ -66,7 +66,7 @@ export interface BreadcrumbManager extends Controller {
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` controller.
+ * A scoped and simplified part of the headless state that's relevant to the `BreadcrumbManager` controller.
  */
 export interface BreadcrumbManagerState {
   /**
@@ -90,13 +90,13 @@ export interface BreadcrumbManagerState {
   dateFacetBreadcrumbs: DateFacetBreadcrumb[];
 
   /**
-   * `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` otherwise.
+   * Returns `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` if not.
    */
   hasBreadcrumbs: boolean;
 }
 
 /**
- * Represents a breadcrumb for specific facet.
+ * Represents a breadcrumb for a specific facet.
  */
 export type FacetBreadcrumb = Breadcrumb<FacetValue>;
 
@@ -115,7 +115,7 @@ export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
  */
 export interface CategoryFacetBreadcrumb {
   /**
-   * The id for the underlying facet.
+   * The ID of the underlying facet.
    */
   facetId: string;
   /**
@@ -123,7 +123,7 @@ export interface CategoryFacetBreadcrumb {
    */
   field: string;
   /**
-   * The complete path of the underlying category facet value.
+   * The complete path to the underlying facet value.
    */
   path: CategoryFacetValue[];
   /**
@@ -135,11 +135,11 @@ export interface CategoryFacetBreadcrumb {
 /**
  * Represents a generic breadcrumb type.
  *
- * Can either be a `FacetBreadcrumb`, `NumericFacetBreadcrumb`, `DateFacetBreadcrumb`, or `CategoryFacetBreadcrumb`.
+ * This can be a `FacetBreadcrumb`, `NumericFacetBreadcrumb`, `DateFacetBreadcrumb`, or `CategoryFacetBreadcrumb`.
  */
 export interface Breadcrumb<T extends BaseFacetValue> {
   /**
-   * The id for the underlying facet.
+   * The ID of the underlying facet.
    */
   facetId: string;
   /**
@@ -173,7 +173,7 @@ export interface BreadcrumbValue<T extends BaseFacetValue> {
  * @returns A `BreadcrumbManager` controller instance.
  */
 export function buildBreadcrumbManager(
-  engine: Engine<object>
+  engine: SearchEngine
 ): BreadcrumbManager {
   if (!loadBreadcrumbManagerReducers(engine)) {
     throw loadReducerError;
@@ -312,8 +312,8 @@ export function buildBreadcrumbManager(
 }
 
 function loadBreadcrumbManagerReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   ConfigurationSection &
     SearchSection &
     FacetSection &

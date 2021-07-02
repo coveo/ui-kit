@@ -1,16 +1,9 @@
-/* The default theme is a more basic, higher contrast theme */
 :root {
   /* Primary colors */
   --atomic-primary: #303f9f;
   --atomic-primary-light: #666ad1;
   --atomic-primary-dark: #001970;
   --atomic-on-primary: #ffffff;
-
-  /* Secondary colors */
-  --atomic-secondary: #1565c0;
-  --atomic-secondary-light: #286ef0;
-  --atomic-secondary-dark: #003c8f;
-  --atomic-on-secondary: #ffffff;
 
   /* Neutral colors */
   --atomic-neutral-dark: #424242;
@@ -22,6 +15,7 @@
   --atomic-on-background: #000000;
   --atomic-success: #12a244;
   --atomic-error: #ce3f00;
+  --atomic-visited: #752e9c;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;

@@ -4,10 +4,10 @@ import {
   RecommendationList as HeadlessRecommendationList,
   RecommendationListOptions,
   RecommendationListState,
+  loadClickAnalyticsActions,
   Result,
   Unsubscribe,
-} from '@coveo/headless';
-import {loadClickAnalyticsActions} from '@coveo/headless/recommendation';
+} from '@coveo/headless/recommendation';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 

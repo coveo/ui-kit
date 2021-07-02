@@ -61,6 +61,7 @@ export class AtomicResult {
       case 'grid':
         return 'display-grid';
       case 'list':
+      default:
         return 'display-list';
       case 'table':
         return 'display-table';
@@ -72,6 +73,7 @@ export class AtomicResult {
       case 'comfortable':
         return 'density-comfortable';
       case 'normal':
+      default:
         return 'density-normal';
       case 'compact':
         return 'density-compact';
@@ -85,6 +87,7 @@ export class AtomicResult {
       case 'small':
         return 'image-small';
       case 'icon':
+      default:
         return 'image-icon';
       case 'none':
         return 'image-none';

@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {Engine} from '../../app/headless-engine';
 import {search} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {SearchAction} from '../analytics/analytics-utils';
 import {
   executeSearch,
@@ -55,9 +55,7 @@ export interface SearchActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadSearchActions(
-  engine: Engine<object>
-): SearchActionCreators {
+export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
   engine.addReducers({search});
   return {
     executeSearch,

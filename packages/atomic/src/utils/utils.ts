@@ -1,3 +1,5 @@
+import {NODE_TYPES} from '@stencil/core/mock-doc';
+
 /**
  * Returns a function that can be executed only once
  */
@@ -27,4 +29,17 @@ export function randomID(prepend?: string, length = 5) {
 
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
+}
+
+export function containsVisualElement(node: Node) {
+  for (let i = 0; i < node.childNodes.length; i++) {
+    const child = node.childNodes.item(i);
+    if (
+      child.nodeType === NODE_TYPES.ELEMENT_NODE ||
+      (child.nodeType === NODE_TYPES.TEXT_NODE && child.textContent?.trim())
+    ) {
+      return true;
+    }
+  }
+  return false;
 }

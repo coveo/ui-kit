@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
@@ -19,6 +18,7 @@ import {advancedSearchQueries, configuration} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {setOriginLevel2} from '../../features/configuration/configuration-actions';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface TabOptions {
   /**
@@ -33,7 +33,7 @@ export interface TabOptions {
   /**
    * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
    */
-  id?: string;
+  id: string;
 }
 
 export interface TabInitialState {
@@ -46,7 +46,7 @@ export interface TabInitialState {
 
 const optionsSchema = new Schema<Required<TabOptions>>({
   expression: new StringValue({required: true, emptyAllowed: true}),
-  id: new StringValue({required: false, emptyAllowed: false}),
+  id: new StringValue({required: true, emptyAllowed: false}),
 });
 
 const initialStateSchema = new Schema({
@@ -97,7 +97,7 @@ export interface TabState {
  * @param props - The configurable `Tab` properties.
  * @returns A `Tab` controller instance.
  */
-export function buildTab(engine: Engine<object>, props: TabProps): Tab {
+export function buildTab(engine: SearchEngine, props: TabProps): Tab {
   assertIdNotEqualToDefaultOriginLevel2(props.options.id);
 
   if (!loadTabReducers(engine)) {
@@ -120,15 +120,6 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
     props.initialState,
     'buildTab'
   );
-
-  if (!props.options.id) {
-    /**
-     * @deprecated - Make #id option required and remove log.
-     */
-    console.warn(
-      'The #id option on the Tab controller will be required in the future. Please specify it.'
-    );
-  }
 
   if (initialState.isActive) {
     const {id} = options;
@@ -159,8 +150,8 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
 }
 
 function loadTabReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection & AdvancedSearchQueriesSection> {
+  engine: SearchEngine
+): engine is SearchEngine<ConfigurationSection & AdvancedSearchQueriesSection> {
   engine.addReducers({configuration, advancedSearchQueries});
   return true;
 }

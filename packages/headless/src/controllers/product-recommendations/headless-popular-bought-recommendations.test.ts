@@ -1,8 +1,7 @@
 import {
   buildMockProductRecommendationsAppEngine,
-  MockEngine,
+  MockProductRecommendationEngine,
 } from '../../test/mock-engine';
-import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   buildPopularBoughtRecommendationsList,
   PopularBoughtRecommendationsList,
@@ -10,7 +9,7 @@ import {
 
 describe('headless popular-bought-recommendations', () => {
   let popularBought: PopularBoughtRecommendationsList;
-  let engine: MockEngine<ProductRecommendationsAppState>;
+  let engine: MockProductRecommendationEngine;
 
   beforeEach(() => {
     engine = buildMockProductRecommendationsAppEngine();

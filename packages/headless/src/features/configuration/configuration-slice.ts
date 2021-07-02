@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  renewAccessToken,
   updateBasicConfiguration,
   updateSearchConfiguration,
   disableAnalytics,
@@ -57,9 +56,6 @@ export const configurationReducer = createReducer(
           state.analytics.runtimeEnvironment =
             action.payload.runtimeEnvironment;
         }
-      })
-      .addCase(renewAccessToken.fulfilled, (state, action) => {
-        state.accessToken = action.payload;
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;

@@ -1,18 +1,12 @@
 :root {
   /* Primary colors */
-  --atomic-primary: #752e9c;
-  --atomic-primary-light: #9a52c1;
-  --atomic-primary-dark: #451c5c;
+  --atomic-primary: #1372ec;
+  --atomic-primary-light: #399ffe;
+  --atomic-primary-dark: #1a50ad;
   --atomic-on-primary: #ffffff;
 
-  /* Secondary colors */
-  --atomic-secondary: #1372ec;
-  --atomic-secondary-light: #399ffe;
-  --atomic-secondary-dark: #1a50ad;
-  --atomic-on-secondary: #ffffff;
-
   /* Neutral colors */
-  --atomic-neutral-dark: #8e959d;
+  --atomic-neutral-dark: #626971;
   --atomic-neutral: #e5e8e8;
   --atomic-neutral-light: #f6f7f9;
 
@@ -21,58 +15,20 @@
   --atomic-on-background: #282829;
   --atomic-success: #12a244;
   --atomic-error: #ce3f00;
+  --atomic-visited: #752e9c;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
   --atomic-border-radius-lg: 0.5rem;
 
   /* Font */
-  --atomic-font-family: canada-type-gibson, sans-serif;
-  --atomic-font-normal: 300;
-  --atomic-font-bold: 500;
+  --atomic-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica,
+    Ubuntu, roboto, noto, arial, sans-serif; /* Following https://systemfontstack.com/ */
+  --atomic-font-normal: 400;
+  --atomic-font-bold: 700;
 
   /* Text size */
   --atomic-text-base: 0.875rem; /* 14px */
   --atomic-text-sm: 0.75rem; /* 12px */
   --atomic-text-lg: 1rem; /* 16px */
-}
-
-/* TODO: bundle font KIT-708 */
-@font-face {
-  font-family: 'canada-type-gibson';
-  src: url('https://use.typekit.net/af/ef2129/00000000000000003b9b387c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3')
-      format('woff2'),
-    url('https://use.typekit.net/af/ef2129/00000000000000003b9b387c/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3')
-      format('woff'),
-    url('https://use.typekit.net/af/ef2129/00000000000000003b9b387c/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3')
-      format('opentype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'canada-type-gibson';
-  src: url('https://use.typekit.net/af/aa1d64/00000000000000003b9b387a/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3')
-      format('woff2'),
-    url('https://use.typekit.net/af/aa1d64/00000000000000003b9b387a/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3')
-      format('woff'),
-    url('https://use.typekit.net/af/aa1d64/00000000000000003b9b387a/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3')
-      format('opentype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'canada-type-gibson';
-  src: url('https://use.typekit.net/af/aee0aa/00000000000000003b9b3f03/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n5&v=3')
-      format('woff2'),
-    url('https://use.typekit.net/af/aee0aa/00000000000000003b9b3f03/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n5&v=3')
-      format('woff'),
-    url('https://use.typekit.net/af/aee0aa/00000000000000003b9b3f03/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n5&v=3')
-      format('opentype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 500;
 }

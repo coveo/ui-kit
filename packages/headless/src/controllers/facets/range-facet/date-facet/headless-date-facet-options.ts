@@ -22,7 +22,6 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../_common/facet-option-definitions';
-import {Engine} from '../../../../app/headless-engine';
 import {validateOptions} from '../../../../utils/validate-payload';
 import {
   ConfigurationSection,
@@ -30,6 +29,7 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {validateManualDateRanges} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 
 export interface DateFacetOptions {
   /**
@@ -125,7 +125,7 @@ export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
 });
 
 export function validateDateFacetOptions(
-  engine: Engine<ConfigurationSection & SearchSection & DateFacetSection>,
+  engine: SearchEngine<ConfigurationSection & SearchSection & DateFacetSection>,
   options: DateFacetOptions
 ) {
   validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');

@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../../app/headless-engine';
 import {dateFacetSet} from '../../../../app/reducers';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   deselectAllDateFacetValues,
   registerDateFacet,
@@ -9,12 +9,15 @@ import {
   ToggleSelectDateFacetValueActionCreatorPayload,
   updateDateFacetSortCriterion,
   UpdateDateFacetSortCriterionActionCreatorPayload,
+  UpdateDateFacetValuesActionCreatorPayload,
+  updateDateFacetValues,
 } from './date-facet-actions';
 
 export {
   RegisterDateFacetActionCreatorPayload,
   ToggleSelectDateFacetValueActionCreatorPayload,
   UpdateDateFacetSortCriterionActionCreatorPayload,
+  UpdateDateFacetValuesActionCreatorPayload,
 };
 
 /**
@@ -58,6 +61,16 @@ export interface DateFacetSetActionCreators {
   updateDateFacetSortCriterion(
     payload: UpdateDateFacetSortCriterionActionCreatorPayload
   ): PayloadAction<UpdateDateFacetSortCriterionActionCreatorPayload>;
+
+  /**
+   * Updates date facet values.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateDateFacetValues(
+    payload: UpdateDateFacetValuesActionCreatorPayload
+  ): PayloadAction<UpdateDateFacetValuesActionCreatorPayload>;
 }
 
 /**
@@ -67,7 +80,7 @@ export interface DateFacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadDateFacetSetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): DateFacetSetActionCreators {
   engine.addReducers({dateFacetSet});
 
@@ -76,5 +89,6 @@ export function loadDateFacetSetActions(
     registerDateFacet,
     toggleSelectDateFacetValue,
     updateDateFacetSortCriterion,
+    updateDateFacetValues,
   };
 }

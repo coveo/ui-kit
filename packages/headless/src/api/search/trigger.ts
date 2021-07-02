@@ -24,7 +24,7 @@ export interface TriggerRedirect {
   content: string;
 }
 
-export function isTriggerRedirect(
+export function isRedirectTrigger(
   trigger: Trigger
 ): trigger is TriggerRedirect {
   return trigger.type === 'redirect';
@@ -36,6 +36,10 @@ export function isTriggerRedirect(
 export interface TriggerQuery {
   type: 'query';
   content: string;
+}
+
+export function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
+  return trigger.type === 'query';
 }
 
 /**

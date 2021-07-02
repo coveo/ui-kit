@@ -3,13 +3,15 @@ import {
   FoldedResultListOptions,
   buildFoldedResultList,
 } from './headless-folded-result-list';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {search, folding, configuration} from '../../app/reducers';
 import {buildMockResult} from '../../test';
 
 describe('FoldedResultList', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let options: FoldedResultListOptions;
   let foldedResultList: FoldedResultList;
 

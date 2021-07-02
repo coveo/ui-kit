@@ -12,6 +12,7 @@ import {
 const disconnectedException = 'Disconnected';
 const noEndpointsException = 'NoEndpointsException';
 const invalidTokenException = 'InvalidTokenException';
+const organizationIsPausedException = 'OrganizationIsPausedException';
 
 /**
  * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -44,6 +45,9 @@ export class AtomicQueryError implements InitializableComponent {
     genericErrorDesc: () => this.bindings.i18n.t('ifProblemPersists'),
     helpLink: () => this.bindings.i18n.t('coveoOnlineHelp'),
     moreInfo: () => this.bindings.i18n.t('moreInfo'),
+    organizationIsPaused: () => this.bindings.i18n.t('organizationIsPaused'),
+    organizationWillResume: () =>
+      this.bindings.i18n.t('organizationWillResume'),
   };
   @BindStateToController('queryError')
   @State()
@@ -86,6 +90,8 @@ export class AtomicQueryError implements InitializableComponent {
         return this.strings.noEndpointsTitle();
       case invalidTokenException:
         return this.strings.invalidTokenTitle();
+      case organizationIsPausedException:
+        return this.strings.organizationWillResume();
       default:
         return this.strings.genericErrorTitle();
     }
@@ -99,6 +105,8 @@ export class AtomicQueryError implements InitializableComponent {
         return this.strings.noEndpointsDesc();
       case invalidTokenException:
         return this.strings.invalidTokenDesc();
+      case organizationIsPausedException:
+        return this.strings.organizationIsPaused();
       default:
         return this.strings.genericErrorDesc();
     }
@@ -110,6 +118,8 @@ export class AtomicQueryError implements InitializableComponent {
         return 'https://docs.coveo.com/'; // TODO: update link
       case invalidTokenException:
         return 'https://docs.coveo.com/'; // TODO: update link
+      case organizationIsPausedException:
+        return 'https://docs.coveo.com/l6af0467';
       default:
         return null;
     }
@@ -122,17 +132,17 @@ export class AtomicQueryError implements InitializableComponent {
 
     return (
       <div class="text-center">
-        <h3 part="title" class="text-2xl text-secondary my-4">
+        <h3 part="title" class="text-2xl text-primary my-4">
           {this.title}
         </h3>
-        <p part="description" class="text-xl text-secondary my-4">
+        <p part="description" class="text-xl text-primary my-4">
           {this.description}
         </p>
         {this.link ? (
           <a
             href={this.link}
             part="doc-link"
-            class="text-primary hover:underline"
+            class="text-primary text-xl hover:underline"
           >
             {this.strings.helpLink()}
           </a>

@@ -144,17 +144,6 @@ const controllerConfiguration: ControllerConfiguration[] = [
     },
   },
   {
-    initializer: 'buildRecommendationList',
-    samplePaths: {
-      react_class: [
-        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.class.tsx',
-      ],
-      react_fn: [
-        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx',
-      ],
-    },
-  },
-  {
     initializer: 'buildQuerySummary',
     samplePaths: {
       react_class: [
@@ -198,10 +187,6 @@ const controllerConfiguration: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
       ],
     },
-  },
-  {
-    initializer: 'buildCartRecommendationsList',
-    samplePaths: {},
   },
   {
     initializer: 'buildSearchBox',
@@ -293,6 +278,28 @@ const controllerConfiguration: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildSmartSnippet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/smart-snippet/smart-snippet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/smart-snippet/smart-snippet.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSmartSnippetQuestionsList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
@@ -342,9 +349,6 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
     initializer: 'loadPipelineActions',
   },
   {
-    initializer: 'loadProductRecommendationsActions',
-  },
-  {
     initializer: 'loadQueryActions',
   },
   {
@@ -352,9 +356,6 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadQuerySuggestActions',
-  },
-  {
-    initializer: 'loadRecommendationActions',
   },
   {
     initializer: 'loadRedirectionActions',

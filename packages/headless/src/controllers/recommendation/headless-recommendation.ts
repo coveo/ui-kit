@@ -1,12 +1,7 @@
-import {Engine} from '../../app/headless-engine';
 import {
   getRecommendations,
   setRecommendationId,
 } from '../../features/recommendation/recommendation-actions';
-import {
-  ConfigurationSection,
-  RecommendationSection,
-} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 import {Schema, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
@@ -14,6 +9,7 @@ import {Result} from '../../api/search/search/result';
 import {ErrorPayload} from '../controller/error-payload';
 import {configuration, recommendation} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
 
 const optionsSchema = new Schema({
   id: new StringValue<string>({
@@ -76,7 +72,7 @@ export interface RecommendationListState {
  * @returns A `RecommendationList` controller instance.
  */
 export function buildRecommendationList(
-  engine: Engine<object>,
+  engine: RecommendationEngine,
   props: RecommendationListProps = {}
 ): RecommendationList {
   if (!loadRecommendationListReducers(engine)) {
@@ -118,8 +114,8 @@ export function buildRecommendationList(
 }
 
 function loadRecommendationListReducers(
-  engine: Engine<object>
-): engine is Engine<RecommendationSection & ConfigurationSection> {
+  engine: RecommendationEngine
+): engine is RecommendationEngine {
   engine.addReducers({recommendation, configuration});
   return true;
 }
