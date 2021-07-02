@@ -7,7 +7,7 @@ export const logRedirection = makeAnalyticsAction(
   'analytics/redirection',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.redirection && state.redirection.redirectTo !== null) {
+    if (state.redirection?.redirectTo) {
       return client.logTriggerRedirect({
         redirectedTo: state.redirection.redirectTo,
       });
