@@ -70,6 +70,26 @@ describe('RedirectionTrigger', () => {
     const listener = jest.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
+
+    it('it does not call the listener', () => {
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('it does not dispatch #logTriggerRedirect', () => {
+      expect(getLogTriggerRedirectAction()).toBeFalsy();
+    });
+  });
+
+  describe('when the #engine.state.triggers.redirectTo is updated to the empty string', () => {
+    const listener = jest.fn();
+    beforeEach(() => {
+      redirectionTrigger.subscribe(listener);
+      engine.state.triggers.redirectTo = '';
+      const [firstListener] = registeredListeners();
+      firstListener();
     });
 
     it('it does not call the listener', () => {
@@ -85,7 +105,6 @@ describe('RedirectionTrigger', () => {
     const listener = jest.fn();
     beforeEach(() => {
       redirectionTrigger.subscribe(listener);
-
       engine.state.triggers.redirectTo = 'https://www.coveo.com';
       const [firstListener] = registeredListeners();
       firstListener();

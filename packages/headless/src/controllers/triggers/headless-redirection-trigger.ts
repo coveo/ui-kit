@@ -22,7 +22,7 @@ export interface RedirectionTriggerState {
   /**
    * The url used for the redirection.
    */
-  redirectTo: string | null;
+  redirectTo: string;
 }
 
 /**
@@ -43,7 +43,7 @@ export function buildRedirectionTrigger(
 
   const getState = () => engine.state;
 
-  let previousRedirectTo: string | null = getState().triggers.redirectTo;
+  let previousRedirectTo: string = getState().triggers.redirectTo;
 
   return {
     ...controller,
