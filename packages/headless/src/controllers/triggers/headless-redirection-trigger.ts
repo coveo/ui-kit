@@ -1,8 +1,8 @@
-import {ConfigurationSection, TriggerSection} from '../../state/state-sections';
-import {configuration, triggers} from '../../app/reducers';
+import {TriggerSection} from '../../state/state-sections';
+import {triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
-import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
+import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
@@ -22,7 +22,7 @@ export interface RedirectionTriggerState {
   /**
    * The url used for the redirection.
    */
-  redirectTo: string | null;
+  redirectTo: string;
 }
 
 /**
@@ -43,7 +43,7 @@ export function buildRedirectionTrigger(
 
   const getState = () => engine.state;
 
-  let previousRedirectTo: string | null = getState().triggers.redirectTo;
+  let previousRedirectTo = getState().triggers.redirectTo;
 
   return {
     ...controller,
@@ -72,7 +72,7 @@ export function buildRedirectionTrigger(
 
 function loadRedirectionReducers(
   engine: SearchEngine
-): engine is SearchEngine<TriggerSection & ConfigurationSection> {
-  engine.addReducers({configuration, triggers});
+): engine is SearchEngine<TriggerSection> {
+  engine.addReducers({triggers});
   return true;
 }
