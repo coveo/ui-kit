@@ -23,6 +23,7 @@ import {
 } from './product-recommendation-engine-configuration';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export {
   ProductRecommendationEngineConfiguration,
@@ -83,7 +84,8 @@ export function buildProductRecommendationEngine(
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
   const {searchHub} = options.configuration;
-  if (searchHub) {
+
+  if (!isNullOrUndefined(searchHub)) {
     engine.dispatch(setSearchHub(searchHub));
   }
 
