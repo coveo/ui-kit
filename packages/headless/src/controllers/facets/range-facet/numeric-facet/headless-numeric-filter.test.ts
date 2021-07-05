@@ -129,7 +129,7 @@ describe('numeric filter', () => {
       expect(action).toBeTruthy();
     });
 
-    it('should throw when range is invalid', () => {
+    it('should throw when range start value is greater than range end value', () => {
       const value = buildMockNumericFacetValue({start: 10, end: 5});
       expect(() => numericFacet.setRange(value)).toThrow();
     });
