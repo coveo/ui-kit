@@ -120,4 +120,47 @@ describe('trigger slice', () => {
 
     expect(finalState.query).toEqual('Euro');
   });
+
+  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerNotification objects, it does not update #state.notification', () => {
+    const state = getTriggerInitialState();
+    const triggers = [
+      buildMockQueryTrigger({content: 'query'}),
+      buildMockRedirectTrigger({content: 'redirect'}),
+    ];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.notification).toEqual('');
+  });
+
+  it('when a executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates #state.notify', () => {
+    const state = getTriggerInitialState();
+    const triggers = [buildMockNotifyTrigger({content: 'Hello world'})];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.notification).toEqual('Hello world');
+  });
 });
