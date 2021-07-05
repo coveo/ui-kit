@@ -29,3 +29,23 @@ export const logTriggerRedirect = makeAnalyticsAction(
     return;
   }
 );
+
+/**
+ * Log trigger execute
+ */
+export const logTriggerExecute = makeAnalyticsAction(
+  'analytics/trigger/execute',
+  AnalyticsType.Search,
+  (client, state) => {
+    if (state.triggers?.execute) {
+      return client.logTriggerExecute({
+        executed:
+          'name: ' +
+          state.triggers.execute.name +
+          ' params: ' +
+          state.triggers.execute.params,
+      });
+    }
+    return;
+  }
+);
