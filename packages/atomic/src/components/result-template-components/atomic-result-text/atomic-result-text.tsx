@@ -1,7 +1,7 @@
 import {Component, Prop, h, Element, Host, State} from '@stencil/core';
 import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {sanitize} from '../../../utils/xss-utils';
+import escape from 'escape-html';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
@@ -47,7 +47,7 @@ export class AtomicResultText {
         closingDelimiter,
         highlights,
       });
-      const innerHTML = sanitize(highlightedValue)
+      const innerHTML = escape(highlightedValue)
         .replace(new RegExp(openingDelimiter, 'g'), '<b part="highlight">')
         .replace(new RegExp(closingDelimiter, 'g'), '</b>');
       return <Host innerHTML={innerHTML}></Host>;

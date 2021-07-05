@@ -7,7 +7,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {sanitize} from '../../utils/xss-utils';
+import escape from 'escape-html';
 
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -39,7 +39,7 @@ export class AtomicDidYouMean implements InitializableComponent {
     ) =>
       this.bindings.i18n.t(key, {
         interpolation: {escapeValue: false},
-        query: `<b part="highlight">${sanitize(query)}</b>`,
+        query: `<b part="highlight">${escape(query)}</b>`,
       }),
   };
 

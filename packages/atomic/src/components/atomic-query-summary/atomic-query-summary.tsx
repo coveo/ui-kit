@@ -10,7 +10,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {sanitize} from '../../utils/xss-utils';
+import escape from 'escape-html';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -67,7 +67,7 @@ export class AtomicQuerySummary implements InitializableComponent {
     const content = this.querySummaryState.hasQuery
       ? this.bindings.i18n.t('noResultsFor', {
           interpolation: {escapeValue: false},
-          query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
+          query: this.wrapHighlight(escape(this.querySummaryState.query)),
         })
       : this.bindings.i18n.t('noResults');
     return <span part="no-results" innerHTML={content}></span>;
@@ -87,7 +87,7 @@ export class AtomicQuerySummary implements InitializableComponent {
       total: this.wrapHighlight(
         this.querySummaryState.total.toLocaleString(locales)
       ),
-      query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
+      query: this.wrapHighlight(escape(this.querySummaryState.query)),
     };
   }
 
