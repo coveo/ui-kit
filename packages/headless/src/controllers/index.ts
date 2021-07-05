@@ -266,6 +266,12 @@ export {
 } from './triggers/headless-query-trigger';
 
 export {
+  ExecuteTrigger,
+  ExecuteTriggerState,
+  buildExecuteTrigger,
+} from './triggers/headless-execute-trigger';
+
+export {
   SmartSnippet,
   SmartSnippetState,
   buildSmartSnippet,

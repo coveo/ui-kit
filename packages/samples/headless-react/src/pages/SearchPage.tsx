@@ -49,6 +49,8 @@ import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standa
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {QueryTrigger} from '../components/triggers/query-trigger.class';
+import {ExecuteTrigger} from '../components/triggers/execute-trigger.class';
+import {ExecuteTrigger as ExecuteTriggerFn} from '../components/triggers/execute-trigger.fn';
 import {QueryTrigger as QueryTriggerFn} from '../components/triggers/query-trigger.fn';
 import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
 import {SmartSnippet as SmartSnippetFn} from '../components/smart-snippet/smart-snippet.fn';
@@ -109,6 +111,8 @@ import {
   buildRedirectionTrigger,
   QueryTrigger as HeadlessQueryTrigger,
   buildQueryTrigger,
+  ExecuteTrigger as HeadlessExecuteTrigger,
+  buildExecuteTrigger,
   SmartSnippet as HeadlessSmartSnippet,
   buildSmartSnippet,
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
@@ -171,6 +175,7 @@ export class SearchPage extends Component {
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
   private readonly queryTrigger: HeadlessQueryTrigger;
+  private readonly executeTrigger: HeadlessExecuteTrigger;
   private readonly smartSnippet: HeadlessSmartSnippet;
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
 
@@ -298,6 +303,9 @@ export class SearchPage extends Component {
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
 
     this.queryTrigger = buildQueryTrigger(this.engine);
+
+    this.executeTrigger = buildExecuteTrigger(this.engine);
+
     this.smartSnippet = buildSmartSnippet(this.engine);
 
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
@@ -495,6 +503,12 @@ export class SearchPage extends Component {
           <Section title="query-trigger">
             <QueryTrigger></QueryTrigger>
             <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
+          </Section>
+          <Section title="execute-trigger">
+            <ExecuteTrigger></ExecuteTrigger>
+            <ExecuteTriggerFn
+              controller={this.executeTrigger}
+            ></ExecuteTriggerFn>
           </Section>
         </AppContext.Provider>
       </div>
