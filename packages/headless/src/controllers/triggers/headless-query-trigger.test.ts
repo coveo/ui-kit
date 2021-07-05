@@ -62,7 +62,7 @@ describe('QueryTrigger', () => {
       expect(getUpdateQueryAction()).toBeFalsy();
     });
 
-    it('it does not dispatch #executeSearch and #logQueryTrigger', () => {
+    it('it does not dispatch #executeSearch and #logTriggerQuery', () => {
       expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
     });
 
@@ -91,7 +91,7 @@ describe('QueryTrigger', () => {
       expect(getUpdateQueryAction()).toBeTruthy();
     });
 
-    it('it dispatches #executeSearch and #logQueryTrigger', () => {
+    it('it dispatches #executeSearch and #logTriggerQuery', () => {
       expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
 
@@ -120,7 +120,7 @@ describe('QueryTrigger', () => {
       expect(getUpdateQueryAction()).toBeFalsy();
     });
 
-    it('it does not dispatch #executeSearch and #logQueryTrigger', () => {
+    it('it does not dispatch #executeSearch and #logTriggerQuery', () => {
       expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
     });
 

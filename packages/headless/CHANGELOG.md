@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.3...@coveo/headless@1.4.0) (2021-07-05)
+
+
+### Features
+
+* **headless:** Notify Triggers ([#926](https://github.com/coveo/ui-kit/issues/926)) ([cd48b14](https://github.com/coveo/ui-kit/commit/cd48b1420b1d30661e651c5406981f1c068765f6))
+
+
+
+
+
 ## [1.3.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.2...@coveo/headless@1.3.3) (2021-07-02)
 
 **Note:** Version bump only for package @coveo/headless

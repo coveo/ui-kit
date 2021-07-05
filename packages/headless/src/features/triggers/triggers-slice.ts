@@ -1,7 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions';
 import {getTriggerInitialState} from './triggers-state';
-import {isRedirectTrigger, isQueryTrigger} from './../../api/search/trigger';
+import {
+  isRedirectTrigger,
+  isQueryTrigger,
+  isNotifyTrigger,
+} from './../../api/search/trigger';
 
 export const triggerReducer = createReducer(
   getTriggerInitialState(),
@@ -18,5 +22,12 @@ export const triggerReducer = createReducer(
         isQueryTrigger
       );
       state.query = queryTriggers.length ? queryTriggers[0].content : '';
+
+      const notifyTriggers = action.payload.response.triggers.filter(
+        isNotifyTrigger
+      );
+      state.notification = notifyTriggers.length
+        ? notifyTriggers[0].content
+        : '';
     })
 );
