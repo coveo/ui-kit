@@ -7,9 +7,17 @@
 }
 
 .slds-grid div.no-gutters {
-    padding: var(--lwc-spacingNone, 0);
+    padding: 0;
 }
 
 .coveo-breadcrumb-value-line {
     line-height: 0.7;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.breadcrumb-more-button:hover {
+    color: var(--color-text-action-label);
 }

@@ -3,13 +3,18 @@
         <div class="slds-grid slds-var-m-vertical_x-small">
             <div class="slds-col slds-col_bump-right no-gutters">
                 <ul>
-                    <template for:each={facetBreadcrumbValues} for:item="facetField">
-                        <li key={facetField.facetId} class="slds-list_horizontal align-baseline">
-                            <span>{facetField.field} : </span>
-                            <ul class="slds-list_horizontal slds-has-block-links_space">
-                                <template for:each={facetField.values} for:item="facetValue">
-                                    <li key={facetValue.value.value} class="coveo-breadcrumb-value-line">
+                    <template for:each={facetBreadcrumbValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
+                            <span class="nowrap">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                                <template for:each={breadcrumb.values} for:item="facetValue">
+                                    <li key={facetValue.value.value} class="coveo-breadcrumb-value-line nowrap">
                                         <a onclick={facetValue.deselect} class="text-hover-underline">{facetValue.value.value} X</a>
+                                    </li>
+                                </template>
+                                <template if:true={breadcrumb.showMoreButton}>
+                                    <li class="coveo-breadcrumb-value-line nowrap">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-more-button">{breadcrumb.showMoreButtonText}</a>
                                     </li>
                                 </template>
                             </ul>
@@ -17,11 +22,16 @@
                     </template>
                     <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
                         <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
-                            <span>{breadcrumb.field} : </span>
-                            <ul class="slds-list_horizontal slds-has-block-links_space">
+                            <span class="nowrap">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
                                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
-                                    <li key={breadcrumbValue.value} class="coveo-breadcrumb-value-line">
+                                    <li key={breadcrumbValue.value} class="coveo-breadcrumb-value-line nowrap">
                                         <a onclick={breadcrumbValue.deselect} class="text-hover-underline">{breadcrumbValue.value} X</a>
+                                    </li>
+                                </template>
+                                <template if:true={breadcrumb.showMoreButton}>
+                                    <li class="coveo-breadcrumb-value-line nowrap">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-more-button">{breadcrumb.showMoreButtonText}</a>
                                     </li>
                                 </template>
                             </ul>
@@ -29,9 +39,9 @@
                     </template>
                     <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumb">
                         <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
-                            <span>{breadcrumb.field} : </span>
-                            <ul class="slds-list_horizontal slds-has-block-links_space">
-                                <li class="coveo-breadcrumb-value-line">
+                            <span class="nowrap">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                                <li class="coveo-breadcrumb-value-line nowrap">
                                     <a onclick={breadcrumb.deselect} class="text-hover-underline">{breadcrumb.value} X</a>
                                 </li>
                             </ul>
@@ -39,11 +49,16 @@
                     </template>
                     <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
                         <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
-                            <span>{breadcrumb.field} : </span>
-                            <ul class="slds-list_horizontal slds-has-block-links_space">
+                            <span class="nowrap">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
                                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
-                                    <li key={breadcrumbValue.value} class="coveo-breadcrumb-value-line">
+                                    <li key={breadcrumbValue.value} class="coveo-breadcrumb-value-line nowrap">
                                         <a onclick={breadcrumbValue.deselect} class="text-hover-underline">{breadcrumbValue.value} X</a>
+                                    </li>
+                                </template>
+                                <template if:true={breadcrumb.showMoreButton}>
+                                    <li class="coveo-breadcrumb-value-line nowrap">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-more-button">{breadcrumb.showMoreButtonText}</a>
                                     </li>
                                 </template>
                             </ul>
@@ -53,7 +68,7 @@
             </div>
             <div class="slds-col no-gutters">
                 <ul class="slds-list_horizontal slds-has-block-links_space">
-                    <li class="coveo-breadcrumb-value-line">
+                    <li class="coveo-breadcrumb-value-line nowrap">
                         <a onclick={deselectAll}>Clear All Filters</a>
                     </li>
                 </ul>

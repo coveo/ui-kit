@@ -13,23 +13,27 @@ export default class QuanticBreadcrumb extends LightningElement {
   breadcrumbManager;
   /** @type {() => void} */
   unsubscribe;
+  /** @type {String[]} */
+  expandedBreadcrumbFieldsState = [];
 
   /** @type {import("coveo").FacetBreadcrumb[]} */
-  @track facetBreadcrumbs;
+  @track facetBreadcrumbs = [];
   /** @type {import("coveo").CategoryFacetBreadcrumb[]} */
-  @track categoryFacetBreadcrumbs;
+  @track categoryFacetBreadcrumbs = [];
   /** @type {import("coveo").NumericFacetBreadcrumb[]} */
-  @track numericFacetBreadcrumbs;
+  @track numericFacetBreadcrumbs = [];
   /** @type {import("coveo").DateFacetBreadcrumb[]} */
-  @track dateFacetBreadcrumbs;
+  @track dateFacetBreadcrumbs = [];
   /** @type {Boolean} */
   @track hasBreadcrumbs;
+  
 
   /** @type {String} */
   @api engineId;
-
   /** @type {String} */
   @api categoryDivider = '/';
+  /** @type {Number} */
+  @api collapseThreshold = 5;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -53,7 +57,6 @@ export default class QuanticBreadcrumb extends LightningElement {
   }
 
   updateState() {
-    console.log(this.breadcrumbManager.state);
     this.facetBreadcrumbs = this.breadcrumbManager.state.facetBreadcrumbs;
     this.categoryFacetBreadcrumbs = this.breadcrumbManager.state.categoryFacetBreadcrumbs;
     this.numericFacetBreadcrumbs = this.breadcrumbManager.state.numericFacetBreadcrumbs;
@@ -64,6 +67,7 @@ export default class QuanticBreadcrumb extends LightningElement {
   @api
   deselectAll() {
     this.breadcrumbManager.deselectAll();
+    this.expandedBreadcrumbFieldsState = [];
   }
 
   /** @param {import("coveo").BreadcrumbValue | import("coveo").CategoryFacetBreadcrumb} breadcrumb */
@@ -100,7 +104,7 @@ export default class QuanticBreadcrumb extends LightningElement {
     return date.toLocaleDateString();
   }
 
-  formatDateRangeFacet(breadcrumb) {
+  formatDateRangeBreadcrumbValue(breadcrumb) {
     return {
       ...breadcrumb,
       values: breadcrumb.values.map(range => ({
@@ -110,12 +114,48 @@ export default class QuanticBreadcrumb extends LightningElement {
     };
   }
 
+  resetExpandedBreadcrumbFieldState(breadcrumb) {
+    if (breadcrumb.values.length <= this.collapseThreshold) {
+      const newState = [...this.expandedBreadcrumbFieldsState];
+      newState.splice(
+        this.expandedBreadcrumbFieldsState.indexOf(breadcrumb.field),
+        1
+      );
+      this.expandedBreadcrumbFieldsState = newState;
+    }
+  }
+
+  getBreadcrumbValuesCollapsed(breadcrumb) {
+    return ({
+      ...breadcrumb,
+      values: breadcrumb.values.slice(0, this.collapseThreshold),
+      showMoreButton: true,
+      showMoreButtonText: `${breadcrumb.values.length - this.collapseThreshold} more...`,
+      expandButtonClick: () => {
+        this.expandedBreadcrumbFieldsState = [...this.expandedBreadcrumbFieldsState, breadcrumb.field];
+      }
+    });
+  }
+
+  getShouldCollapseBreadcrumbValues(breadcrumb) {
+    this.resetExpandedBreadcrumbFieldState(breadcrumb);
+    return breadcrumb.values.length > this.collapseThreshold && !this.expandedBreadcrumbFieldsState.includes(breadcrumb.field);
+  }
+
+  getBreadcrumbValues(breadcrumb) {
+    return (this.getShouldCollapseBreadcrumbValues(breadcrumb) ?
+      this.getBreadcrumbValuesCollapsed(breadcrumb) :
+      breadcrumb);
+  }
+
   get facetBreadcrumbValues() {
-    return this.facetBreadcrumbs || [];
+    let facetBreadcrumbsToDisplay = this.facetBreadcrumbs || [];
+    return facetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get numericFacetBreadcrumbsValues() {
-    return this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
+    let numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
+    return numericFacetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get categoryFacetBreadcrumbsValues() {
@@ -125,12 +165,13 @@ export default class QuanticBreadcrumb extends LightningElement {
         facetId: breadcrumb.facetId,
         field: breadcrumb.field,
         deselect: breadcrumb.deselect,
-        value:  breadcrumbValues.join(` ${this.categoryDivider} `)
+        value: breadcrumbValues.join(` ${this.categoryDivider} `)
       };
     }) || [];
   }
 
   get dateFacetBreadcrumbsValues() {
-    return this.dateFacetBreadcrumbs.map(breadcrumb => this.formatDateRangeFacet(breadcrumb)) || [];
+    let dateFacetBreadcrumbsToDisplay = this.dateFacetBreadcrumbs.map(breadcrumb => this.formatDateRangeBreadcrumbValue(breadcrumb)) || [];
+    return dateFacetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 }
