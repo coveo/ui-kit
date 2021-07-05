@@ -4,6 +4,7 @@ export * from './force-app/main/default/staticresources/coveoheadless/definition
 import {LightningElement} from 'lwc';
 import {Deferred} from 'utils';
 declare global {
+  const CoveoHeadless: typeof HeadlessTypes;
   interface Window {
     coveoHeadless: {
       [engineId: string]: {
