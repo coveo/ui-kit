@@ -5,6 +5,7 @@ import {buildMockSearch} from '../../test/mock-search';
 import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
 import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
+import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
 import {executeSearch} from '../search/search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 
@@ -119,5 +120,58 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.query).toEqual('Euro');
+  });
+
+  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerExecute objects, it does not update #state.execute', () => {
+    const state = getTriggerInitialState();
+    const triggers = [
+      buildMockNotifyTrigger({content: 'notification'}),
+      buildMockRedirectTrigger({content: 'redirect'}),
+    ];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.execute).toEqual({
+      name: '',
+      params: {} as Array<object>,
+    });
+  });
+
+  it('when a executeSearch fulfilled is received and the payload contains TriggerExecute objects, it updates #state.execute', () => {
+    const state = getTriggerInitialState();
+    const triggers = [
+      buildMockExecuteTrigger({
+        content: {name: 'function', params: {} as Array<object>},
+      }),
+    ];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.execute).toEqual({
+      name: 'function',
+      params: {} as Array<object>,
+    });
   });
 });

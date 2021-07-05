@@ -49,3 +49,7 @@ export interface TriggerExecute {
   type: 'execute';
   content: {name: string; params: {}[]};
 }
+
+export function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
+  return trigger.type === 'execute';
+}
