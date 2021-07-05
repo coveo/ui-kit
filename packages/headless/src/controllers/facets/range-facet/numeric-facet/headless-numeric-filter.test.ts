@@ -159,13 +159,22 @@ describe('numeric filter', () => {
     });
   });
 
-  it('exposes a #state getter property to retrieve the values', () => {
-    const value = buildMockNumericFacetValue();
+  it('the state #range property should return the range if it is selected', () => {
+    const value = buildMockNumericFacetValue({state: 'selected'});
     state.search.response.facets = [
       buildMockNumericFacetResponse({facetId, values: [value]}),
     ];
 
     expect(numericFacet.state.range).toEqual(value);
+  });
+
+  it('the state #range property should not return the range if it is not selected', () => {
+    const value = buildMockNumericFacetValue({state: 'idle'});
+    state.search.response.facets = [
+      buildMockNumericFacetResponse({facetId, values: [value]}),
+    ];
+
+    expect(numericFacet.state.range).toBeUndefined();
   });
 
   it('#state.facetId exposes the facet id', () => {
