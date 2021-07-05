@@ -24,7 +24,7 @@ import {
   updateNumericFacetValues,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {validateNumericFacetOptions} from './headless-numeric-facet-options';
-import {numericFacetResponseSelector} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
+import {numericFacetSelectedValuesSelector} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 
 /**
  * The options defining a `NumericFilter`.
@@ -198,11 +198,11 @@ export function buildNumericFilter(
 
     get state() {
       const isLoading = getState().search.isLoading;
-      const response = numericFacetResponseSelector(getState(), facetId);
-      const range =
-        response?.values.length && response.values[0].state !== 'idle'
-          ? response.values[0]
-          : undefined;
+      const selectedRanges = numericFacetSelectedValuesSelector(
+        getState(),
+        facetId
+      );
+      const range = selectedRanges.length ? selectedRanges[0] : undefined;
 
       return {
         facetId,
