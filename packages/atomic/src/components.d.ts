@@ -291,6 +291,10 @@ export namespace Components {
           * Whether this facet should contain an input allowing users to set custom ranges.
          */
         "withInput": boolean;
+        /**
+          * Whether this facet should contain a defined list of values.
+         */
+        "withRanges": boolean;
     }
     interface AtomicNumericRange {
         /**
@@ -1128,6 +1132,10 @@ declare namespace LocalJSX {
           * Whether this facet should contain an input allowing users to set custom ranges.
          */
         "withInput"?: boolean;
+        /**
+          * Whether this facet should contain a defined list of values.
+         */
+        "withRanges"?: boolean;
     }
     interface AtomicNumericRange {
         /**

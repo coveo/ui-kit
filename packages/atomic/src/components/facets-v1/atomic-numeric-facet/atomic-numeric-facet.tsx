@@ -116,6 +116,10 @@ export class AtomicNumericFacet
    */
   @Prop() public withInput = false;
   /**
+   * Whether this facet should contain a defined list of values.
+   */
+  @Prop() public withRanges = true;
+  /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
    */
@@ -300,6 +304,10 @@ export class AtomicNumericFacet
       return;
     }
 
+    if (!this.withRanges) {
+      return;
+    }
+
     if (this.filterState?.range) {
       return;
     }
@@ -321,6 +329,10 @@ export class AtomicNumericFacet
     );
   }
 
+  private get hasValues() {
+    return this.withInput || (this.withRanges && !!this.valuesToRender.length);
+  }
+
   public render() {
     if (this.searchStatusState.hasError) {
       return;
@@ -334,7 +346,7 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.withInput && !this.valuesToRender.length) {
+    if (!this.hasValues) {
       return <Host class="atomic-without-values"></Host>;
     }
 
