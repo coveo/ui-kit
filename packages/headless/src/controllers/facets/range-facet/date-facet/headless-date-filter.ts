@@ -24,7 +24,7 @@ import {
   updateDateFacetValues,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {validateDateFacetOptions} from './headless-date-facet-options';
-import {dateFacetResponseSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {dateFacetSelectedValuesSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 
 /**
  * The options defining a `DateFilter`.
@@ -200,8 +200,11 @@ export function buildDateFilter(
 
     get state() {
       const isLoading = getState().search.isLoading;
-      const response = dateFacetResponseSelector(getState(), facetId);
-      const range = response?.values.length ? response.values[0] : undefined;
+      const selectedRanges = dateFacetSelectedValuesSelector(
+        getState(),
+        facetId
+      );
+      const range = selectedRanges.length ? selectedRanges[0] : undefined;
 
       return {
         facetId,
