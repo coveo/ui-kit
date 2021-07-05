@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Host} from '@stencil/core';
+import {Component, h, State, Prop, Host, Watch} from '@stencil/core';
 import {
   NumericFilter,
   NumericFilterState,
@@ -26,6 +26,15 @@ export class FacetNumberInput {
   @Prop() public label!: string;
 
   connectedCallback() {
+    this.updateState();
+  }
+
+  @Watch('filterState')
+  private updateState() {
+    if (this.filterState.isLoading) {
+      return;
+    }
+
     this.start = this.filterState.range?.start;
     this.end = this.filterState.range?.end;
   }
