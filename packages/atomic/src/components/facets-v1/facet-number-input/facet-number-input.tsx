@@ -1,9 +1,5 @@
 import {Component, h, State, Prop, Host, Watch} from '@stencil/core';
-import {
-  NumericFilter,
-  NumericFilterState,
-  loadNumericFacetSetActions,
-} from '@coveo/headless';
+import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
 
 /**
@@ -20,12 +16,12 @@ export class FacetNumberInput {
   @State() private end?: number;
 
   @Prop() public bindings!: Bindings;
-  @Prop() public facetId!: string;
+  @Prop() public onApply?: () => void;
   @Prop() public filter!: NumericFilter;
   @Prop() public filterState!: NumericFilterState;
   @Prop() public label!: string;
 
-  connectedCallback() {
+  public connectedCallback() {
     this.updateState();
   }
 
@@ -39,12 +35,8 @@ export class FacetNumberInput {
     this.end = this.filterState.range?.end;
   }
 
-  private onApply() {
-    this.bindings.engine.dispatch(
-      loadNumericFacetSetActions(
-        this.bindings.engine
-      ).deselectAllNumericFacetValues(this.facetId)
-    );
+  private apply() {
+    this.onApply && this.onApply();
 
     try {
       this.filter.setRange({
@@ -107,7 +99,7 @@ export class FacetNumberInput {
           <button
             class={`${commonClasses} bg-background text-primary disabled:cursor-not-allowed disabled:bg-neutral disabled:text-neutral-dark flex-none`}
             aria-label={applyAria}
-            onClick={() => this.onApply()}
+            onClick={() => this.apply()}
             disabled={!this.applyEnabled}
           >
             {apply}

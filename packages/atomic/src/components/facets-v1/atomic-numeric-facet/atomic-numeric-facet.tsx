@@ -136,8 +136,12 @@ export class AtomicNumericFacet
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.manualRanges = this.buildManualRanges();
+    this.initializeFacet();
+    this.withInput && this.initializeFilter();
+  }
 
+  private initializeFacet() {
+    this.manualRanges = this.buildManualRanges();
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
@@ -145,26 +149,23 @@ export class AtomicNumericFacet
       sortCriteria: this.sortCriteria,
       rangeAlgorithm: this.rangeAlgorithm,
       currentValues: this.manualRanges,
-      generateAutomaticRanges: !this.manualRanges.length,
+      generateAutomaticRanges: this.withRanges && !this.manualRanges.length,
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
-
-    this.withInput && this.initializeFilter();
   }
 
   private initializeFilter() {
-    const filterId = `${this.facetId}_input`;
     this.filter = buildNumericFilter(this.bindings.engine, {
       options: {
-        facetId: filterId,
+        facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });
-    this.bindings.store.state.facets[filterId] = {
+    this.bindings.store.state.facets[this.filter.state.facetId] = {
       label: this.label,
     };
   }
@@ -236,7 +237,7 @@ export class AtomicNumericFacet
 
     return (
       <atomic-facet-number-input
-        facetId={this.facetId!}
+        onApply={() => this.facet.deselectAll()}
         bindings={this.bindings}
         label={this.label}
         filter={this.filter!}

@@ -134,10 +134,10 @@ export namespace Components {
     }
     interface AtomicFacetNumberInput {
         "bindings": Bindings;
-        "facetId": string;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
+        "onApply"?: () => void;
     }
     interface AtomicFacetV1 {
         /**
@@ -975,10 +975,10 @@ declare namespace LocalJSX {
     }
     interface AtomicFacetNumberInput {
         "bindings": Bindings;
-        "facetId": string;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
+        "onApply"?: () => void;
     }
     interface AtomicFacetV1 {
         /**
