@@ -199,7 +199,10 @@ export function buildNumericFilter(
     get state() {
       const isLoading = getState().search.isLoading;
       const response = numericFacetResponseSelector(getState(), facetId);
-      const range = response?.values.length ? response.values[0] : undefined;
+      const range =
+        response?.values.length && response.values[0].state !== 'idle'
+          ? response.values[0]
+          : undefined;
 
       return {
         facetId,

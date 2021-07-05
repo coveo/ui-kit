@@ -15,17 +15,20 @@ import {Bindings} from '../../../utils/initialization-utils';
   shadow: false,
 })
 export class FacetNumberInput {
-  private startRef!: HTMLInputElement;
-  private endRef!: HTMLInputElement;
-
   @State() private isRangeInvalid = false;
-  @State() private applyEnabled = false;
+  @State() private start?: number;
+  @State() private end?: number;
 
   @Prop() public bindings!: Bindings;
   @Prop() public facetId!: string;
   @Prop() public filter!: NumericFilter;
   @Prop() public filterState!: NumericFilterState;
   @Prop() public label!: string;
+
+  connectedCallback() {
+    this.start = this.filterState.range?.start;
+    this.end = this.filterState.range?.end;
+  }
 
   private onApply() {
     this.bindings.engine.dispatch(
@@ -36,8 +39,8 @@ export class FacetNumberInput {
 
     try {
       this.filter.setRange({
-        start: this.startRef.valueAsNumber,
-        end: this.endRef.valueAsNumber,
+        start: this.start!,
+        end: this.end!,
       });
       this.isRangeInvalid = false;
     } catch (error) {
@@ -46,12 +49,15 @@ export class FacetNumberInput {
     }
   }
 
-  private enableApply() {
-    const start = this.startRef.valueAsNumber;
-    const end = this.endRef.valueAsNumber;
-
-    this.applyEnabled =
-      !isNaN(start) && !isNaN(end) && start >= 0 && end >= start;
+  private get applyEnabled() {
+    return (
+      this.start !== undefined &&
+      this.end !== undefined &&
+      !isNaN(this.start) &&
+      !isNaN(this.end) &&
+      this.start >= 0 &&
+      this.end >= this.start
+    );
   }
 
   render() {
@@ -75,21 +81,23 @@ export class FacetNumberInput {
             placeholder={min}
             aria-label={minAria}
             type="number"
-            value={this.filterState.range?.start}
-            ref={(ref) => (this.startRef = ref!)}
-            onInput={() => this.enableApply()}
+            value={this.start}
+            onInput={(e) =>
+              (this.start = (e.target as HTMLInputElement).valueAsNumber)
+            }
           />
           <input
             class={inputClasses}
             placeholder={max}
             aria-label={maxAria}
             type="number"
-            value={this.filterState.range?.end}
-            ref={(ref) => (this.endRef = ref!)}
-            onInput={() => this.enableApply()}
+            value={this.end}
+            onInput={(e) =>
+              (this.end = (e.target as HTMLInputElement).valueAsNumber)
+            }
           />
           <button
-            class={`${commonClasses} bg-background text-primary disabled:bg-neutral disabled:text-neutral-dark flex-none`}
+            class={`${commonClasses} bg-background text-primary disabled:cursor-not-allowed disabled:bg-neutral disabled:text-neutral-dark flex-none`}
             aria-label={applyAria}
             onClick={() => this.onApply()}
             disabled={!this.applyEnabled}
