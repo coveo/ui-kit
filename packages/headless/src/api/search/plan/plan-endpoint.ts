@@ -1,4 +1,4 @@
-import {isTriggerRedirect} from '../trigger';
+import {isRedirectTrigger} from '../trigger';
 import {PlanResponseSuccess} from './plan-response';
 
 /**
@@ -28,7 +28,7 @@ export class ExecutionPlan {
    */
   public get redirectionUrl() {
     const redirects = this.response.preprocessingOutput.triggers.filter(
-      isTriggerRedirect
+      isRedirectTrigger
     );
     return redirects.length ? redirects[0].content : null;
   }

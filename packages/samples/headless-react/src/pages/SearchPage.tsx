@@ -48,6 +48,10 @@ import {StandaloneSearchBox} from '../components/standalone-search-box/standalon
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
+import {QueryTrigger} from '../components/triggers/query-trigger.class';
+import {QueryTrigger as QueryTriggerFn} from '../components/triggers/query-trigger.fn';
+import {NotifyTrigger} from '../components/triggers/notify-trigger.class';
+import {NotifyTrigger as NotifyTriggerFn} from '../components/triggers/notify-trigger.fn';
 import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
 import {SmartSnippet as SmartSnippetFn} from '../components/smart-snippet/smart-snippet.fn';
 import {SmartSnippetQuestionsList} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.class';
@@ -105,6 +109,10 @@ import {
   buildStandaloneSearchBox,
   RedirectionTrigger as HeadlessRedirectionTrigger,
   buildRedirectionTrigger,
+  QueryTrigger as HeadlessQueryTrigger,
+  buildQueryTrigger,
+  NotifyTrigger as HeadlessNotifyTrigger,
+  buildNotifyTrigger,
   SmartSnippet as HeadlessSmartSnippet,
   buildSmartSnippet,
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
@@ -166,6 +174,8 @@ export class SearchPage extends Component {
   private readonly relevanceInspector: HeadlessRelevanceInspector;
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
+  private readonly queryTrigger: HeadlessQueryTrigger;
+  private readonly notifyTrigger: HeadlessNotifyTrigger;
   private readonly smartSnippet: HeadlessSmartSnippet;
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
 
@@ -291,6 +301,10 @@ export class SearchPage extends Component {
     });
 
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
+
+    this.queryTrigger = buildQueryTrigger(this.engine);
+
+    this.notifyTrigger = buildNotifyTrigger(this.engine);
 
     this.smartSnippet = buildSmartSnippet(this.engine);
 
@@ -485,6 +499,14 @@ export class SearchPage extends Component {
             <RedirectionTriggerFn
               controller={this.redirectionTrigger}
             ></RedirectionTriggerFn>
+          </Section>
+          <Section title="query-trigger">
+            <QueryTrigger></QueryTrigger>
+            <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
+          </Section>
+          <Section title="notify-trigger">
+            <NotifyTrigger></NotifyTrigger>
+            <NotifyTriggerFn controller={this.notifyTrigger}></NotifyTriggerFn>
           </Section>
         </AppContext.Provider>
       </div>

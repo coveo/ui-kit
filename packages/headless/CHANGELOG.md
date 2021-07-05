@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.3...@coveo/headless@1.4.0) (2021-07-05)
+
+
+### Features
+
+* **headless:** Notify Triggers ([#926](https://github.com/coveo/ui-kit/issues/926)) ([cd48b14](https://github.com/coveo/ui-kit/commit/cd48b1420b1d30661e651c5406981f1c068765f6))
+
+
+
+
+
+## [1.3.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.2...@coveo/headless@1.3.3) (2021-07-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.3.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.1...@coveo/headless@1.3.2) (2021-07-02)
+
+
+### Bug Fixes
+
+* **headless:** fix Redirect Triggers ([#938](https://github.com/coveo/ui-kit/issues/938)) ([9163ef4](https://github.com/coveo/ui-kit/commit/9163ef41aa90053c58c5367ccfe81dad0ed7d9b7))
+
+
+
+
+
+## [1.3.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.0...@coveo/headless@1.3.1) (2021-07-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.2.0...@coveo/headless@1.3.0) (2021-06-30)
+
+
+### Features
+
+* **headless:** Query Triggers ([#918](https://github.com/coveo/ui-kit/issues/918)) ([81d0277](https://github.com/coveo/ui-kit/commit/81d027769a0cc5b3485dd57a53fd5fee3ba2c446))
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.1.0...@coveo/headless@1.2.0) (2021-06-25)
+
+
+### Features
+
+* **headless:** add headless-numeric-filter & headless-date-filter controllers ([#916](https://github.com/coveo/ui-kit/issues/916)) ([40f30f9](https://github.com/coveo/ui-kit/commit/40f30f9f7b63bc33390be60d0194631b69b1ab79))
+
+
+
+
+
 # [1.1.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.0.0...@coveo/headless@1.1.0) (2021-06-23)
 
 

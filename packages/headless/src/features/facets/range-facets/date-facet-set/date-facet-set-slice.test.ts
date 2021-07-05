@@ -5,6 +5,7 @@ import {
   updateDateFacetSortCriterion,
   deselectAllDateFacetValues,
   RegisterDateFacetActionCreatorPayload,
+  updateDateFacetValues,
 } from './date-facet-actions';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {change} from '../../../history/history-actions';
@@ -103,6 +104,14 @@ describe('date-facet-set slice', () => {
     );
 
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
+  });
+
+  it('#updateDateFacetValues calls #updateRangeValues', () => {
+    jest.spyOn(RangeFacetReducers, 'updateRangeValues');
+    const action = updateDateFacetValues({facetId: '1', values: []});
+    dateFacetSetReducer(state, action);
+
+    expect(RangeFacetReducers.updateRangeValues).toHaveBeenCalledTimes(1);
   });
 
   it('#deselectAllDateFacetValues calls #handleRangeFacetDeselectAll', () => {
