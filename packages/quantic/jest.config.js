@@ -12,4 +12,5 @@ module.exports = {
     ],
   ],
   // add any custom configurations here
+  modulePathIgnorePatterns: ['cypress'],
 };
