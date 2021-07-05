@@ -1,4 +1,13 @@
-import {Component, h, State, Prop, VNode, Element, Listen} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  VNode,
+  Element,
+  Listen,
+  Host,
+} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -326,15 +335,17 @@ export class AtomicNumericFacet
     }
 
     if (!this.withInput && !this.valuesToRender.length) {
-      return;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <FacetContainer>
-        {this.renderHeader()}
-        {this.renderNumberInput()}
-        {this.renderValues()}
-      </FacetContainer>
+      <Host class="atomic-with-values">
+        <FacetContainer>
+          {this.renderHeader()}
+          {this.renderNumberInput()}
+          {this.renderValues()}
+        </FacetContainer>
+      </Host>
     );
   }
 }

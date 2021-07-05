@@ -11,7 +11,7 @@ export class AtomicModal {
   render() {
     return (
       <div
-        class="fixed inset-0 bg-secondary w-full h-full z-10 p-8"
+        class="fixed inset-0 bg-primary w-full h-full z-10 p-8"
         onClick={() => this.handleClose()}
       >
         <div class="relative bg-white h-full max-w-5xl mx-auto">

@@ -25,6 +25,10 @@ export const FacetSelector = {
     FacetSelector.shadow(field, type).find('[part="show-less"]'),
   facetClearAllFilter: (field = facetField, type = facetComponent) =>
     FacetSelector.shadow(field, type).find('[part="clear-button"]'),
+  selectedCheckboxValue: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find(
+      '[part="value"] button[aria-checked="true"]'
+    ),
   facetValueAtIndex: (
     index: number,
     field = facetField,

@@ -14,11 +14,6 @@ module.exports = {
         'primary-light': 'var(--atomic-primary-light)',
         'primary-dark': 'var(--atomic-primary-dark)',
         'on-primary': 'var(--atomic-on-primary)',
-        // Secondary
-        secondary: 'var(--atomic-secondary)',
-        'secondary-light': 'var(--atomic-secondary-light)',
-        'secondary-dark': 'var(--atomic-secondary-dark)',
-        'on-secondary': 'var(--atomic-on-secondary)',
         // Neutral
         neutral: 'var(--atomic-neutral)',
         'neutral-light': 'var(--atomic-neutral-light)',
@@ -28,6 +23,7 @@ module.exports = {
         'on-background': 'var(--atomic-on-background)',
         success: 'var(--atomic-success)',
         error: 'var(--atomic-error)',
+        visited: 'var(--atomic-visited)',
       },
       borderRadius: {
         DEFAULT: 'var(--atomic-border-radius)',
