@@ -120,15 +120,6 @@ export const clearQuerySuggest = createAction(
     validatePayload(payload, idDefinition)
 );
 
-/**
- * Clears the list of query suggestions in a specific query suggest entity.
- * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- */
-export const clearQuerySuggestCompletions = createAction(
-  'querySuggest/clearSuggestions',
-  (payload: {id: string}) => validatePayload(payload, idDefinition)
-);
-
 export interface FetchQuerySuggestionsActionCreatorPayload {
   /**
    * The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).

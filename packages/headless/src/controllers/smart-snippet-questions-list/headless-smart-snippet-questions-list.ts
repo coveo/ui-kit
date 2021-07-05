@@ -29,10 +29,14 @@ export interface SmartSnippetQuestionsList extends Controller {
   state: SmartSnippetQuestionsListState;
   /**
    * Expand the specified snippet suggestion.
+   *
+   * @param identifier - The identifier of a document used to create the smart snippet.
    */
   expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
    * Collapse the specified snippet suggestion.
+   *
+   * @param identifier - The identifier of a document used to create the smart snippet.
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
 }
@@ -47,6 +51,9 @@ export interface SmartSnippetQuestionsListState {
   questions: SmartSnippetRelatedQuestion[];
 }
 
+/**
+ * The related questions for a given smart snippet.
+ */
 export interface SmartSnippetRelatedQuestion {
   /**
    * The question related to the smart snippet.

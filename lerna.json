@@ -4,8 +4,8 @@
   ],
   "command": {
     "version": {
-      "message": "[Version Bump]: publish %s\nlerna.json\nCHANGELOG.md\n**/CHANGELOG.md"
+      "message": "[Version Bump]: ui-kit publish\nlerna.json\nCHANGELOG.md\n**/CHANGELOG.md"
     }
   },
-  "version": "0.28.1"
+  "version": "independent"
 }

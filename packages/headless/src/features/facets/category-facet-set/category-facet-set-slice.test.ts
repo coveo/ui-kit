@@ -557,7 +557,6 @@ describe('category facet slice', () => {
       const action = selectCategoryFacetSearchResult({
         facetId: 'notExistant',
         value,
-        retrieveCount,
       });
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();

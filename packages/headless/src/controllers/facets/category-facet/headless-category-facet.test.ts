@@ -6,7 +6,7 @@ import {
 import {
   buildMockSearchAppEngine,
   createMockState,
-  MockEngine,
+  MockSearchEngine,
 } from '../../../test';
 import {
   registerCategoryFacet,
@@ -42,7 +42,7 @@ describe('category facet', () => {
   const facetId = '1';
   let options: CategoryFacetOptions;
   let state: SearchAppState;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let categoryFacet: CategoryFacet;
 
   function initCategoryFacet() {

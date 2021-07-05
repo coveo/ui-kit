@@ -14,7 +14,6 @@ import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import {debug, pipeline, search, searchHub} from '../reducers';
 import {StateFromReducersMapObject} from 'redux';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
@@ -27,26 +26,20 @@ import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {SearchAppState} from '../../state/search-app-state';
-import {SearchThunkExtraArguments} from '../headless-engine';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 
 export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
-type SearchEngineState<AvailableSection> = StateFromReducersMapObject<
-  SearchEngineReducers
-> &
-  Partial<SearchAppState> &
-  AvailableSection;
+type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
+  Partial<SearchAppState>;
 
 /**
  * The engine for powering search experiences.
  */
-export interface SearchEngine<AvailableSection = {}>
-  extends CoreEngine<
-    SearchEngineState<AvailableSection>,
-    SearchThunkExtraArguments
-  > {
+export interface SearchEngine<State extends object = {}>
+  extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
   executeFirstSearch(): void;
 }
 
@@ -54,7 +47,7 @@ export interface SearchEngine<AvailableSection = {}>
  * The search engine options.
  */
 export interface SearchEngineOptions
-  extends ExternalEngineOptions<SearchEngineState<{}>> {
+  extends ExternalEngineOptions<SearchEngineState> {
   /**
    * The search engine configuration options.
    */
@@ -71,15 +64,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
 
-  const ref = {
-    renewAccessToken: () => Promise.resolve(''),
-  };
-
-  const searchAPIClient = createSearchAPIClient(
-    options.configuration,
-    logger,
-    ref
-  );
+  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
@@ -92,7 +77,6 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-  ref.renewAccessToken = engine.renewAccessToken;
 
   const {search} = options.configuration;
 
@@ -134,15 +118,12 @@ function validateConfiguration(
 
 function createSearchAPIClient(
   configuration: SearchEngineConfiguration,
-  logger: Logger,
-  ref: {renewAccessToken: () => Promise<string>}
+  logger: Logger
 ) {
   const {search} = configuration;
   return new SearchAPIClient({
     logger,
-    renewAccessToken: () => ref.renewAccessToken(),
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware:
       search?.preprocessSearchResponseMiddleware ||
       NoopPostprocessSearchResponseMiddleware,

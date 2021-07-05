@@ -1,5 +1,4 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
 import {partitionIntoParentsAndValues} from '../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {getDebugInitialState} from '../../features/debug/debug-state';
@@ -15,6 +14,7 @@ import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {SearchParameters};
 
@@ -66,7 +66,7 @@ export interface SearchParameterManagerState {
  * @returns A `SearchParameterManager` controller instance.
  */
 export function buildSearchParameterManager(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: SearchParameterManagerProps
 ): SearchParameterManager {
   const {dispatch} = engine;

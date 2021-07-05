@@ -1,6 +1,6 @@
 import {Schema} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
 import {search, configuration, folding} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   foldingOptionsSchemaDefinition,
   loadCollection,
@@ -119,7 +119,7 @@ export interface FoldedResultListState extends SearchStatusState {
  * @returns A `FoldedResultList` controller instance.
  */
 export function buildFoldedResultList(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: FoldedResultListProps = {}
 ): FoldedResultList {
   if (!loadFoldingReducer(engine)) {
@@ -179,8 +179,10 @@ export function buildFoldedResultList(
 }
 
 function loadFoldingReducer(
-  engine: Engine<object>
-): engine is Engine<SearchSection & ConfigurationSection & FoldingSection> {
+  engine: SearchEngine
+): engine is SearchEngine<
+  SearchSection & ConfigurationSection & FoldingSection
+> {
   engine.addReducers({search, configuration, folding});
   return true;
 }

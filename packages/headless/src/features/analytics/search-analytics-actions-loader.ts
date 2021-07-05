@@ -1,6 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
-import {Engine} from '../../app/headless-engine';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
 import {logInterfaceChange, logInterfaceLoad} from './analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
@@ -46,6 +45,16 @@ import {
   LogQuerySuggestionClickActionCreatorPayload,
 } from '../query-suggest/query-suggest-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
+import {
+  logCollapseSmartSnippet,
+  logExpandSmartSnippet,
+  logDislikeSmartSnippet,
+  logLikeSmartSnippet,
+  logCollapseSmartSnippetSuggestion,
+  logExpandSmartSnippetSuggestion,
+} from '../question-answering/question-answering-analytics-actions';
+import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -56,6 +65,7 @@ export {
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
+  QuestionAnsweringDocumentIdActionCreatorPayload,
 };
 
 /**
@@ -391,6 +401,90 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when a smart snipped is collapsed.
+   *
+   * @returns A dispatchable action.
+   */
+  logCollapseSmartSnippet(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a smart snipped is expanded.
+   *
+   * @returns A dispatchable action.
+   */
+  logExpandSmartSnippet(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user provides negative feedback for a given smart snippet answer.
+   *
+   * @returns A dispatchable action.
+   */
+  logDislikeSmartSnippet(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   *
+   * @returns A dispatchable action.
+   */
+  logLikeSmartSnippet(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a query suggestion is selected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logExpandSmartSnippetSuggestion(
+    payload: QuestionAnsweringDocumentIdActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a smart snippet suggestion, or related question, is collapsed.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logCollapseSmartSnippetSuggestion(
+    payload: QuestionAnsweringDocumentIdActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -400,7 +494,7 @@ export interface SearchAnalyticsActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadSearchAnalyticsActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): SearchAnalyticsActionCreators {
   engine.addReducers({});
 
@@ -428,5 +522,11 @@ export function loadSearchAnalyticsActions(
     logSearchboxSubmit,
     logQuerySuggestionClick,
     logResultsSort,
+    logDislikeSmartSnippet,
+    logLikeSmartSnippet,
+    logExpandSmartSnippet,
+    logCollapseSmartSnippet,
+    logExpandSmartSnippetSuggestion,
+    logCollapseSmartSnippetSuggestion,
   };
 }

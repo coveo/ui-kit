@@ -26,6 +26,7 @@ import {
   VersionSection,
   HistorySection,
   FoldingSection,
+  TriggerSection,
   QuestionAnsweringSection,
 } from './state-sections';
 
@@ -58,4 +59,5 @@ export type SearchAppState = SearchParametersState &
   VersionSection &
   HistorySection &
   FoldingSection &
+  TriggerSection &
   QuestionAnsweringSection;

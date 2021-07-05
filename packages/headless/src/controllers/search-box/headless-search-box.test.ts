@@ -7,7 +7,6 @@ import {
 import {
   registerQuerySuggest,
   clearQuerySuggest,
-  clearQuerySuggestCompletions,
   fetchQuerySuggestions,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
@@ -19,7 +18,10 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -35,7 +37,7 @@ describe('headless searchBox', () => {
   const id = 'search-box-123';
   let state: SearchAppState;
 
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let searchBox: SearchBox;
   let props: SearchBoxProps;
 
@@ -180,12 +182,6 @@ describe('headless searchBox', () => {
     should dispatch a clearQuerySuggest action`, () => {
     searchBox.clear();
     expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
-  });
-
-  it(`when calling hideSuggestions
-    should dispatch a clearQuerySuggestCompletions action`, () => {
-    searchBox.hideSuggestions();
-    expect(engine.actions).toContainEqual(clearQuerySuggestCompletions({id}));
   });
 
   describe('#showSuggestions', () => {
