@@ -6,7 +6,10 @@
     <p class="slds-text-heading_small slds-m-top_medium">
       Results<span class="bold">{range}</span>
       <span class="bold">{total}</span>
-      <span class="bold">{forQuery}</span>{duration}
+      <template if:true={query}>
+        <span> for </span>
+        <span class="bold">{query}</span>{duration}
+      </template>
     </p>
   </template>
 </template>

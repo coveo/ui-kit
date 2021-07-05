@@ -11,7 +11,7 @@ import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
 import {Deferred} from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
-  const testOptions = {
+  const testConfig = {
     organizationId: 'testOrganization',
     accessToken: 'bogus-token-xxxxx-xxxxx',
     search: {
@@ -20,12 +20,14 @@ describe('c/quanticHeadlessLoader', () => {
     }
   };
 
-  let resolvedTestOptions;
+  let resolvedtestConfig;
   let mockedConsoleError;
   let initialize;
   let testId = 'search-page-1';
 
   let testElement;
+
+  let mockEngineConstructor;
 
   const createComponentEntryWithInitStatus = (isInitialized) => ({
     element: document.createElement('div'),
@@ -43,11 +45,12 @@ describe('c/quanticHeadlessLoader', () => {
     jest.useFakeTimers();
     mockedConsoleError = jest.fn();
     initialize = jest.fn();
+    mockEngineConstructor = jest.fn().mockReturnValue(CoveoHeadlessStub.buildSearchEngine());
     console.error = mockedConsoleError;
     global.CoveoHeadless = CoveoHeadlessStub;
     testElement = document.createElement('div');
-    resolvedTestOptions = new Deferred();
-    resolvedTestOptions.resolve(testOptions);
+    resolvedtestConfig = new Deferred();
+    resolvedtestConfig.resolve(testConfig);
   });
 
   afterEach(() => {
@@ -73,10 +76,10 @@ describe('c/quanticHeadlessLoader', () => {
 
   describe('setEngineConfiguration', () => {
     describe('when coveoHeadless is undefined', () => {
-      it('should define coveoHeadless and set options', async () => {
-        setEngineConfiguration(testOptions, testId, testElement);
+      it('should define coveoHeadless and set configuration', async () => {
+        setEngineConfiguration(testConfig, mockEngineConstructor, testId, testElement);
 
-        expect(await window.coveoHeadless[testId].options.promise).toBe(testOptions);
+        expect(await window.coveoHeadless[testId].configuration.promise).toBe(testConfig);
       });
     });
 
@@ -85,16 +88,16 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {};
       });
 
-      it('should set options', async () => {
-        setEngineConfiguration(testOptions, testId, testElement);
+      it('should set configuration', async () => {
+        setEngineConfiguration(testConfig, mockEngineConstructor, testId, testElement);
 
-        expect(await window.coveoHeadless[testId].options.promise).toBe(testOptions);
+        expect(await window.coveoHeadless[testId].configuration.promise).toBe(testConfig);
       });
 
-      describe('when a options is already preset', () => {
+      describe('when a configuration is already preset', () => {
         beforeEach(() => {
           window.coveoHeadless[testId] = {
-            options: resolvedTestOptions
+            configuration: resolvedtestConfig
           }
         });
 
@@ -105,7 +108,7 @@ describe('c/quanticHeadlessLoader', () => {
           }  
           let caughtError;
           try {
-            setEngineConfiguration(newConfig, testId, testElement);
+            setEngineConfiguration(newConfig, mockEngineConstructor, testId, testElement);
           } catch(error) {
             caughtError = error.message;
           }
@@ -178,7 +181,7 @@ describe('c/quanticHeadlessLoader', () => {
           [testId]: {
             components: [],
             engine: Promise.resolve(CoveoHeadlessStub.buildSearchEngine()),
-            config: new Deferred()
+            configuration: new Deferred()
           }
         }
       });
@@ -246,12 +249,12 @@ describe('c/quanticHeadlessLoader', () => {
   });
 
   describe('getHeadlessEngine', () => {
-    describe('when the engine is undefined with a set options', () => {      
+    describe('when the engine is undefined with a set configuration', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            options: resolvedTestOptions,
+            configuration: resolvedtestConfig,
           }
         }
       });
@@ -263,7 +266,7 @@ describe('c/quanticHeadlessLoader', () => {
       });
     });
 
-    describe('when the engine is undefined without a set options', () => {      
+    describe('when the engine is undefined without a set configuration', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
@@ -315,7 +318,7 @@ describe('c/quanticHeadlessLoader', () => {
               element: testElement,
               initialized: false,
             }],
-            options: resolvedTestOptions,
+            configuration: resolvedtestConfig,
           }
         }
       });
@@ -332,8 +335,8 @@ describe('c/quanticHeadlessLoader', () => {
       describe('when initializing the engine fails', () => {
         const errorMessage = 'simulating failure';
         beforeEach(() => {
-          window.coveoHeadless[testId].options = new Deferred();
-          window.coveoHeadless[testId].options.reject(errorMessage);
+          window.coveoHeadless[testId].configuration = new Deferred();
+          window.coveoHeadless[testId].configuration.reject(errorMessage);
         });
         
         it ('should throw an error', async () => {
@@ -361,7 +364,7 @@ describe('c/quanticHeadlessLoader', () => {
               element: testElement,
               initialized: false
             }],
-            options: resolvedTestOptions,
+            configuration: resolvedtestConfig,
             engine: Promise.resolve(definedEngine),
           }
         }

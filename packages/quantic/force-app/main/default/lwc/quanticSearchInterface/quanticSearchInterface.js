@@ -1,4 +1,4 @@
-import {LightningElement, api, wire} from 'lwc';
+import {LightningElement, api} from 'lwc';
 import {setEngineConfiguration, setInitializedCallback} from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -17,33 +17,27 @@ export default class QuanticSearchInterface extends LightningElement {
   @api engineId;
 
   /** @type {import("coveo").HeadlessOptions} */
-  fullConfig;
+  engineConfiguration;
 
-  @wire(getHeadlessConfiguration)
-  wiredConfig({ error, data }) {
-    if (data) {
-      this.fullConfig = {
-        configuration: {
-          ...JSON.parse(data),
-          search: {
-            searchHub: this.searchHub,
-            pipeline: this.pipeline
+  connectedCallback() {
+    getHeadlessConfiguration().then((data) => {
+      if (data) {
+        this.engineConfiguration = {
+          configuration: {
+            ...JSON.parse(data),
+            search: {
+              searchHub: this.searchHub,
+              pipeline: this.pipeline
+            }
           }
-        },
-        reducers: CoveoHeadless.searchAppReducers
-      };
-      setEngineConfiguration(this.fullConfig, this.engineId, this);
-      setInitializedCallback(this.performInitialQuery, this.engineId);
-    } else if (error) {
-      console.error(error.message);
-    }
+        };
+        setEngineConfiguration(this.engineConfiguration, CoveoHeadless.buildSearchEngine, this.engineId, this);
+        setInitializedCallback(this.performInitialQuery, this.engineId);
+      }
+    });
   }
 
-  performInitialQuery = async (engine) => {
-    engine.dispatch(
-      CoveoHeadless.SearchActions.executeSearch(
-        CoveoHeadless.AnalyticsActions.logInterfaceLoad()
-      )
-    );
+  performInitialQuery = (engine) => {
+    engine.executeFirstSearch()
   }
 }
