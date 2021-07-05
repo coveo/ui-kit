@@ -64,7 +64,6 @@ export class FacetNumberInput {
       this.end !== undefined &&
       !isNaN(this.start) &&
       !isNaN(this.end) &&
-      this.start >= 0 &&
       this.end >= this.start
     );
   }
@@ -87,7 +86,6 @@ export class FacetNumberInput {
         <div class="inline-flex">
           <input
             class={inputClasses}
-            min={0}
             placeholder={min}
             aria-label={minAria}
             type="number"
@@ -98,7 +96,6 @@ export class FacetNumberInput {
           />
           <input
             class={inputClasses}
-            min={0}
             placeholder={max}
             aria-label={maxAria}
             type="number"
