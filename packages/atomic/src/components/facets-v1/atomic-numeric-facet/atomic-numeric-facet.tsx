@@ -24,6 +24,7 @@ import {
   buildNumericFilter,
   NumericFilterState,
   NumericFilter,
+  loadNumericFacetSetActions,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -227,17 +228,15 @@ export class AtomicNumericFacet
   }
 
   private renderNumberInput() {
-    if (this.isCollapsed) {
-      return;
-    }
-
-    if (!this.withInput) {
-      return;
-    }
-
     return (
       <atomic-facet-number-input
-        onApply={() => this.facet.deselectAll()}
+        onApply={() =>
+          this.bindings.engine.dispatch(
+            loadNumericFacetSetActions(
+              this.bindings.engine
+            ).deselectAllNumericFacetValues(this.facetId!)
+          )
+        }
         bindings={this.bindings}
         label={this.label}
         filter={this.filter!}
@@ -301,20 +300,20 @@ export class AtomicNumericFacet
   }
 
   private renderValues() {
-    if (this.isCollapsed) {
-      return;
-    }
-
-    if (!this.withRanges) {
-      return;
-    }
-
     if (this.filterState?.range) {
       return;
     }
 
+    const values = this.facetState.values.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
+    );
+
+    if (!values.length) {
+      return;
+    }
+
     return this.renderValuesContainer(
-      this.valuesToRender.map((value) =>
+      values.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
             ? this.facet.toggleSingleSelect(value)
@@ -324,14 +323,10 @@ export class AtomicNumericFacet
     );
   }
 
-  private get valuesToRender() {
-    return this.facetState.values.filter(
-      (value) => value.numberOfResults || value.state !== 'idle'
+  private get shouldRender() {
+    return (
+      this.withInput || (this.withRanges && this.facetState.hasActiveValues)
     );
-  }
-
-  private get hasValues() {
-    return this.withInput || (this.withRanges && !!this.valuesToRender.length);
   }
 
   public render() {
@@ -347,7 +342,7 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.hasValues) {
+    if (!this.shouldRender) {
       return <Host class="atomic-without-values"></Host>;
     }
 
@@ -355,8 +350,10 @@ export class AtomicNumericFacet
       <Host class="atomic-with-values">
         <FacetContainer>
           {this.renderHeader()}
-          {this.renderNumberInput()}
-          {this.renderValues()}
+          {!this.isCollapsed && [
+            this.withInput && this.renderNumberInput(),
+            this.withRanges && this.renderValues(),
+          ]}
         </FacetContainer>
       </Host>
     );
