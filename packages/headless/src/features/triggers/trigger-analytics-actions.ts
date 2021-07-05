@@ -3,7 +3,7 @@ import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 /**
  * Log trigger query
  */
-export const logQueryTrigger = makeAnalyticsAction(
+export const logTriggerQuery = makeAnalyticsAction(
   'analytics/trigger/query',
   AnalyticsType.Search,
   (client, state) => {
