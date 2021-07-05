@@ -18,5 +18,5 @@ export interface TriggerState {
 export const getTriggerInitialState: () => TriggerState = () => ({
   redirectTo: '',
   query: '',
-  execute: {name: '', params: {} as Array<object>},
+  execute: {name: '', params: []},
 });
