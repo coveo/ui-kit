@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.4.1...@coveo/headless@1.5.0) (2021-07-06)
+
+
+### Features
+
+* **atomic:** add numeric facet custom input ([#941](https://github.com/coveo/ui-kit/issues/941)) ([b1f2ecd](https://github.com/coveo/ui-kit/commit/b1f2ecd0b2d660d888bc2688ba6ca6760f773e74))
+
+
+
+
+
 ## [1.4.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.4.0...@coveo/headless@1.4.1) (2021-07-06)
 
 

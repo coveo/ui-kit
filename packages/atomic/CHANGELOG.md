@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.35.6...@coveo/atomic@0.36.0) (2021-07-06)
+
+
+### Features
+
+* **atomic:** add numeric facet custom input ([#941](https://github.com/coveo/ui-kit/issues/941)) ([b1f2ecd](https://github.com/coveo/ui-kit/commit/b1f2ecd0b2d660d888bc2688ba6ca6760f773e74))
+
+
+
+
+
 ## [0.35.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.35.5...@coveo/atomic@0.35.6) (2021-07-06)
 
 **Note:** Version bump only for package @coveo/atomic
