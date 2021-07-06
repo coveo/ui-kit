@@ -7,9 +7,9 @@
                         <li key={breadcrumb.facetId} class="slds-list_horizontal align-baseline">
                             <span class="nowrap">{breadcrumb.field} : </span>
                             <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
-                                <template for:each={breadcrumb.values} for:item="facetValue">
-                                    <li key={facetValue.value.value} class="coveo-breadcrumb-value-line nowrap">
-                                        <a onclick={facetValue.deselect} class="text-hover-underline">{facetValue.value.value} X</a>
+                                <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                                    <li key={breadcrumbValue.value.value} class="coveo-breadcrumb-value-line nowrap">
+                                        <a onclick={breadcrumbValue.deselect} class="text-hover-underline">{breadcrumbValue.value.value} X</a>
                                     </li>
                                 </template>
                                 <template if:true={breadcrumb.showMoreButton}>
