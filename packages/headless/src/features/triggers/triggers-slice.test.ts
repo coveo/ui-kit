@@ -143,7 +143,7 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.execute).toEqual({
-      name: '',
+      functionName: '',
       params: [],
     });
   });
@@ -152,7 +152,7 @@ describe('trigger slice', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockExecuteTrigger({
-        content: {name: 'function', params: ['a1']},
+        content: {functionName: 'function', params: ['a1']},
       }),
     ];
     const response = buildMockSearchResponse({
@@ -170,7 +170,7 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.execute).toEqual({
-      name: 'function',
+      functionName: 'function',
       params: ['a1'],
     });
   });

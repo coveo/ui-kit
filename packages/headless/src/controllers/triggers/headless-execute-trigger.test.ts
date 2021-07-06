@@ -69,7 +69,10 @@ describe('ExecuteTrigger', () => {
       engine = buildMockSearchAppEngine();
       initExecuteTrigger();
       executeTrigger.subscribe(listener);
-      engine.state.triggers.execute = {name: 'function', params: ['hi']};
+      engine.state.triggers.execute = {
+        functionName: 'function',
+        params: ['hi'],
+      };
 
       const [firstListener] = registeredListeners();
       firstListener();
@@ -79,23 +82,23 @@ describe('ExecuteTrigger', () => {
       expect(listener).toHaveBeenCalledTimes(1);
     });
 
-    it('it dispatches #executeSearch and #logTriggerExecute', () => {
+    it('it dispatches #logTriggerExecute', () => {
       expect(getLogTriggerExecuteAction()).toBeTruthy();
     });
 
     it('#state should be updated', () => {
-      expect(executeTrigger.state.name).toEqual('function');
+      expect(executeTrigger.state.functionName).toEqual('function');
       expect(executeTrigger.state.params).toEqual(['hi']);
     });
   });
 
-  describe('when the #engine.state.triggers.excute.name is updated with an empty string', () => {
+  describe('when the #engine.state.triggers.excute.functionName is updated with an empty string', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initExecuteTrigger();
       executeTrigger.subscribe(listener);
-      engine.state.triggers.execute.name = '';
+      engine.state.triggers.execute.functionName = '';
 
       const [firstListener] = registeredListeners();
       firstListener();

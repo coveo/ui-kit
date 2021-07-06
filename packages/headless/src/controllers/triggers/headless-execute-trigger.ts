@@ -22,7 +22,7 @@ export interface ExecuteTriggerState {
   /**
    * The name of the function to be executed.
    */
-  name: string;
+  functionName: string;
 
   /**
    * The parameters of the function to be executed.
@@ -31,7 +31,9 @@ export interface ExecuteTriggerState {
 }
 
 /**
- * Creates a `ExecuteTrigger` controller instance.
+ * Creates a `ExecuteTrigger` controller instance. An execute trigger is configured in the Administration console,
+ * and used to execute a function in the browser when a certain condition is met.
+
  *
  * @param engine - The headless engine.
  * @returns A `RedirectionTrigger` controller instance.
@@ -46,7 +48,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
 
   const getState = () => engine.state;
 
-  let previousName = getState().triggers.execute.name;
+  let previousName = getState().triggers.execute.functionName;
   let previousParams = getState().triggers.execute.params;
 
   return {
@@ -55,13 +57,13 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
     subscribe(listener: () => void) {
       const strictListener = () => {
         const hasChanged =
-          previousName !== this.state.name ||
+          previousName !== this.state.functionName ||
           previousParams !== this.state.params;
 
-        previousName = this.state.name;
+        previousName = this.state.functionName;
         previousParams = this.state.params;
 
-        if (hasChanged && this.state.name) {
+        if (hasChanged && this.state.functionName) {
           listener();
           //const funct: keyof typeof window = this.state.name;
           //window[funct](this.state.params);
@@ -75,7 +77,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
 
     get state() {
       return {
-        name: getState().triggers.execute.name,
+        functionName: getState().triggers.execute.functionName,
         params: getState().triggers.execute.params,
       };
     },
