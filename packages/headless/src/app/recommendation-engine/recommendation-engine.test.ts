@@ -38,4 +38,20 @@ describe('buildRecommendationEngine', () => {
     engine.dispatch(setSearchHub('newHub'));
     expect(engine.state.searchHub).not.toBe(initialSearchHub);
   });
+
+  it("it's possible to configure the pipeline", () => {
+    const pipeline = 'newPipe';
+    options.configuration.pipeline = pipeline;
+    initEngine();
+
+    expect(engine.state.pipeline).toBe(pipeline);
+  });
+
+  it("it's possible to configure the searchHub", () => {
+    const searchHub = 'newHub';
+    options.configuration.searchHub = searchHub;
+    initEngine();
+
+    expect(engine.state.searchHub).toBe(searchHub);
+  });
 });

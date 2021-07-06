@@ -4,7 +4,7 @@ import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {Combobox, ComboboxStrings} from '../../../utils/combobox';
 import {Facet, CategoryFacet, CategoryFacetSearchResult} from '@coveo/headless';
 import {randomID} from '../../../utils/utils';
-import {sanitize} from '../../../utils/xss-utils';
+import escape from 'escape-html';
 import {regexEncode} from '../../../utils/string-utils';
 
 type FacetSearchResult = CategoryFacetSearchResult;
@@ -48,14 +48,14 @@ export class FacetSearch {
   }
 
   public static highlightSearchResult(resultValue: string, query: string) {
-    const sanitizedResult = sanitize(resultValue);
+    const sanitizedResult = escape(resultValue);
     if (query.trim() === '') {
       return sanitizedResult;
     }
 
     const search = regexEncode(query);
     const regex = new RegExp(`(${search})`, 'i');
-    return sanitize(resultValue).replace(
+    return escape(resultValue).replace(
       regex,
       '<span class="font-normal">$1</span>'
     );

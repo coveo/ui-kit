@@ -490,11 +490,11 @@
   },
   "moreMatchesFor": {
     "en": "More matches for {{query}}",
-    "fr": "Plus de correspondances pour {{query}}"
+    "fr": "Plus de résultats pour {{query}}"
   },
   "noMatchesFoundFor": {
     "en": "No matches found for {{query}}",
-    "fr": "Aucune correspondance trouvée pour {{query}}"
+    "fr": "Aucun résultat pour {{query}}"
   },
   "cancelLastAction": {
     "en": "Cancel last action",
@@ -919,6 +919,34 @@
     "en": "{{- start}} to {{- end}}",
     "fr": "{{- start}} à {{- end}}"
   },
+  "min": {
+    "en": "Min",
+    "fr": "Min"
+  },
+  "max": {
+    "en": "Max",
+    "fr": "Max"
+  },
+  "apply": {
+    "en": "Apply",
+    "fr": "Filtrer"
+  },
+  "numberInputMinimum": {
+    "en": "Enter a minimum number value for the {{label}} facet",
+    "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
+  },
+  "numberInputMaximum": {
+    "en": "Enter a maximum number value for the {{label}} facet",
+    "fr": "Entrez une valeur numérique maximale pour la facette {{label}}"
+  },
+  "numberInputApply": {
+    "en": "Apply custom number values for the {{label}} facet",
+    "fr": "Appliquer les filtres manuels pour la facette {{label}}"
+  },
+  "rangeIsInvalid": {
+    "en": "The selected range is not valid",
+    "fr": "La plage sélectionnée n'est pas valide"
+  },
   "in": {
     "en": "in",
     "fr": "dans"
@@ -930,5 +958,13 @@
   "previewResult": {
     "en": "Preview the result",
     "fr": "Prévisualiser le résultat"
+  },
+  "organizationIsPaused": {
+    "en": "Your Coveo organization is paused due to inactivity and search is currently unavailable.",
+    "fr": "Votre organisation Coveo est en pause pour cause d'inactivité et la recherche est présentement non disponible."
+  },
+  "organizationWillResume": {
+    "en": "Your organization is resuming and will be available shortly.",
+    "fr": "Votre organisation redeviendra active et sera bientôt disponible."
   }
 }

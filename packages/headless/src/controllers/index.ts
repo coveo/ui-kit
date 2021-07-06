@@ -85,6 +85,26 @@ export {
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
 export {
+  buildNumericFilter,
+  NumericFilter,
+  NumericFilterOptions,
+  NumericFilterProps,
+  NumericFilterRange,
+  NumericFilterState,
+  NumericFilterInitialState,
+} from './facets/range-facet/numeric-facet/headless-numeric-filter';
+
+export {
+  buildDateFilter,
+  DateFilter,
+  DateFilterOptions,
+  DateFilterProps,
+  DateFilterRange,
+  DateFilterState,
+  DateFilterInitialState,
+} from './facets/range-facet/date-facet/headless-date-filter';
+
+export {
   HistoryManager,
   HistoryManagerState,
   buildHistoryManager,
@@ -238,6 +258,18 @@ export {
   RedirectionTriggerState,
   buildRedirectionTrigger,
 } from './triggers/headless-redirection-trigger';
+
+export {
+  QueryTrigger,
+  QueryTriggerState,
+  buildQueryTrigger,
+} from './triggers/headless-query-trigger';
+
+export {
+  NotifyTrigger,
+  NotifyTriggerState,
+  buildNotifyTrigger,
+} from './triggers/headless-notify-trigger';
 
 export {
   SmartSnippet,

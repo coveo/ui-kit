@@ -1,6 +1,6 @@
 import {TriggerQuery} from '../../src/api/search/trigger';
 
-export function buildMockTriggerQuery(
+export function buildMockQueryTrigger(
   config: Partial<TriggerQuery> = {}
 ): TriggerQuery {
   return {

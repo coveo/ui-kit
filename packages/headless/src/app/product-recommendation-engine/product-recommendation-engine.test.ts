@@ -33,4 +33,12 @@ describe('buildProductRecommendationEngine', () => {
     engine.dispatch(setSearchHub('newHub'));
     expect(engine.state.searchHub).not.toBe(initialSearchHub);
   });
+
+  it("it's possible to configure the searchHub", () => {
+    const searchHub = 'newHub';
+    options.configuration.searchHub = searchHub;
+    initEngine();
+
+    expect(engine.state.searchHub).toBe(searchHub);
+  });
 });

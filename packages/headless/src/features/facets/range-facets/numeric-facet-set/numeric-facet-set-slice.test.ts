@@ -8,6 +8,7 @@ import {
   updateNumericFacetSortCriterion,
   deselectAllNumericFacetValues,
   RegisterNumericFacetActionCreatorPayload,
+  updateNumericFacetValues,
 } from './numeric-facet-actions';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {change} from '../../../history/history-actions';
@@ -116,6 +117,14 @@ describe('numeric-facet-set slice', () => {
     expect(
       RangeFacetReducers.handleRangeFacetDeselectAll
     ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#updateNumericFacetValues calls #updateRangeValues', () => {
+    jest.spyOn(RangeFacetReducers, 'updateRangeValues');
+    const action = updateNumericFacetValues({facetId: '1', values: []});
+    numericFacetSetReducer(state, action);
+
+    expect(RangeFacetReducers.updateRangeValues).toHaveBeenCalledTimes(1);
   });
 
   it('dispatching #deselectAllFacets calls #handleRangeFacetDeselectAll for every numeric facet', () => {
