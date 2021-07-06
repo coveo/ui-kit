@@ -27,7 +27,7 @@ export interface ExecuteTriggerState {
   /**
    * The parameters of the function to be executed.
    */
-  params: {}[];
+  params: [string | number | boolean];
 }
 
 /**

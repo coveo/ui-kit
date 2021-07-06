@@ -12,11 +12,11 @@ export interface TriggerState {
   /**
    * The javascript function to be executed after receiving an execute trigger.
    */
-  execute: {functionName: string; params: {}[]};
+  execute: {functionName: string; params: [string | number | boolean]};
 }
 
 export const getTriggerInitialState: () => TriggerState = () => ({
   redirectTo: '',
   query: '',
-  execute: {functionName: '', params: []},
+  execute: {functionName: '', params: ['']},
 });

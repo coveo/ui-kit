@@ -28,6 +28,6 @@ export const triggerReducer = createReducer(
       );
       state.execute = executeTriggers.length
         ? executeTriggers[0].content
-        : {functionName: '', params: []};
+        : {functionName: '', params: ['']};
     })
 );

@@ -47,7 +47,7 @@ export function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
  */
 export interface TriggerExecute {
   type: 'execute';
-  content: {functionName: string; params: {}[]};
+  content: {functionName: string; params: [string | number | boolean]};
 }
 
 export function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
