@@ -39,43 +39,23 @@ export class AtomicResultListPlaceholder implements InitializableComponent {
   public render() {
     const placeholders = [];
     for (let i = 0; i < this.resultPerPageState.numberOfResults; i++) {
-      const opacity = `${getRandomArbitrary(0.3, 1)}`;
+      const opacity = `${getRandomArbitrary(0.25, 1)}`;
       placeholders.push(
-        <div part="result" class="flex h-40 mb-14 animate-pulse">
-          <div
-            class="h-full rounded-lg w-40 mr-7 bg-neutral"
-            style={{opacity}}
-          ></div>
+        <div
+          part="result"
+          class="flex h-40 mb-14 animate-pulse"
+          style={{opacity}}
+        >
+          <div class="h-full rounded-lg w-40 mr-7 bg-neutral"></div>
           <div class="flex-grow">
-            <div
-              class="w-4/6 h-8	rounded bg-neutral mb-6"
-              style={{opacity}}
-            ></div>
-            <div
-              class="w-full h-5	rounded bg-neutral mb-2"
-              style={{opacity}}
-            ></div>
-            <div
-              class="w-11/12 h-5	rounded bg-neutral mb-6"
-              style={{opacity}}
-            ></div>
+            <div class="w-4/6 h-8	rounded bg-neutral mb-6"></div>
+            <div class="w-full h-5	rounded bg-neutral mb-2"></div>
+            <div class="w-11/12 h-5	rounded bg-neutral mb-6"></div>
             <div class="h-5 flex">
-              <div
-                class="bg-neutral w-1/5 mr-2 h-full rounded"
-                style={{opacity}}
-              ></div>
-              <div
-                class="bg-neutral w-1/5 mr-2 h-full rounded"
-                style={{opacity}}
-              ></div>
-              <div
-                class="bg-neutral w-1/5 mr-2 h-full rounded"
-                style={{opacity}}
-              ></div>
-              <div
-                class="bg-neutral w-1/5 mr-2 h-full rounded"
-                style={{opacity}}
-              ></div>
+              <div class="bg-neutral w-1/5 mr-2 h-full rounded"></div>
+              <div class="bg-neutral w-1/5 mr-2 h-full rounded"></div>
+              <div class="bg-neutral w-1/5 mr-2 h-full rounded"></div>
+              <div class="bg-neutral w-1/5 mr-2 h-full rounded"></div>
             </div>
           </div>
         </div>
