@@ -1,5 +1,5 @@
 import {LightningElement, api} from 'lwc';
-import {getHeadlessEngine} from 'c/quanticHeadlessLoader';
+import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
 
 export default class QuanticResultLink extends LightningElement {
   /** @type {import("coveo").Result} */
@@ -11,7 +11,7 @@ export default class QuanticResultLink extends LightningElement {
   engine;
 
   connectedCallback() {
-    getHeadlessEngine(this.engineId).then((engine) => {
+    getHeadlessEnginePromise(this.engineId).then((engine) => {
       this.initialize(engine);
     }).catch((error) => {
       console.error(error.message);

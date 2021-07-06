@@ -4,7 +4,7 @@ import {
   setEngineOptions,
   registerComponentForInit,
   setComponentInitialized,
-  getHeadlessEngine,
+  getHeadlessEnginePromise,
   initializeWithHeadless
 } from '../quanticHeadlessLoader';
 import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
@@ -250,20 +250,21 @@ describe('c/quanticHeadlessLoader', () => {
     });
   });
 
-  describe('getHeadlessEngine', () => {
+  describe('getHeadlessEnginePromise', () => {
     describe('when the engine is undefined with a set options', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
             options: resolvedtestConfig,
-            engineConstructor: mockEngineConstructor
+            engineConstructor: mockEngineConstructor,
+            bindings: {}
           }
         }
       });
 
       it('should init the engine return a promise that resolves to that instance', async () => {
-        const engine = await getHeadlessEngine(testId);
+        const engine = await getHeadlessEnginePromise(testId);
 
         expect(engine).toBeTruthy();
       });
@@ -281,7 +282,7 @@ describe('c/quanticHeadlessLoader', () => {
       it('should init the engine return a promise that resolves to that instance', async () => {
         let caughtError;
         try {
-          await getHeadlessEngine(testId);
+          await getHeadlessEnginePromise(testId);
         } catch(error) {
           caughtError = error.message;
         }
@@ -299,14 +300,15 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            engine: Promise.resolve(definedEngine),
-            engineConstructor: mockEngineConstructor
+            enginePromise: Promise.resolve(definedEngine),
+            engineConstructor: mockEngineConstructor,
+            bindings: {},
           }
         }
       });
 
       it('should return a promise that resolves to an instance of the engine', async () => {
-        const engine = await getHeadlessEngine(testId);
+        const engine = await getHeadlessEnginePromise(testId);
 
         expect(engine).toEqual(definedEngine);
       });
@@ -324,13 +326,14 @@ describe('c/quanticHeadlessLoader', () => {
             }],
             engineConstructor: mockEngineConstructor,
             options: resolvedtestConfig,
+            bindings: {},
           }
         }
       });
 
       it('should init the engine and initialize ', async () => {
         await initializeWithHeadless(testElement, testId, initialize);
-        const engine = await window.coveoHeadless[testId].engine;
+        const engine = await window.coveoHeadless[testId].enginePromise;
 
         expect(engine).toBeTruthy();
         expect(initialize).toHaveBeenCalled();
@@ -348,7 +351,7 @@ describe('c/quanticHeadlessLoader', () => {
           let caughtError;
           initializeWithHeadless(testElement, testId, initialize);
           try {
-            await window.coveoHeadless[testId].engine;
+            await window.coveoHeadless[testId].enginePromise;
           } catch(error) {
             caughtError = error.message;
           }
@@ -370,15 +373,16 @@ describe('c/quanticHeadlessLoader', () => {
               initialized: false
             }],
             options: resolvedtestConfig,
-            engine: Promise.resolve(definedEngine),
-            engineConstructor: mockEngineConstructor
+            enginePromise: Promise.resolve(definedEngine),
+            engineConstructor: mockEngineConstructor,
+            bindings: {},
           }
         }
       });
 
       it('should initialize the component using the defined engine', async () => {
         await initializeWithHeadless(testElement, testId, initialize);
-        const engine = await window.coveoHeadless[testId].engine;
+        const engine = await window.coveoHeadless[testId].enginePromise;
 
         expect(engine).toEqual(definedEngine);
         expect(initialize).toHaveBeenCalled();

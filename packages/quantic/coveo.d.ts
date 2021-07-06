@@ -3,6 +3,14 @@ import * as HeadlessTypes from './force-app/main/default/staticresources/coveohe
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 import {LightningElement} from 'lwc';
 import {Deferred} from 'utils';
+import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine';
+
+interface Bindings {
+  engine?: HeadlessTypes<CoreEngine>;
+  i18n?: unknown;
+  store?: Record<String, unknown>;
+}
+
 declare global {
   const CoveoHeadless: typeof HeadlessTypes;
   interface Window {
@@ -13,11 +21,12 @@ declare global {
           initialized: boolean;
         }[];
         options: Deferred<HeadlessTypes.ExternalEngineOptions>;
-        engine: Promise<HeadlessTypes.CoreEngine>;
+        enginePromise: Promise<HeadlessTypes.CoreEngine>;
         engineConstructor?: (
           options: HeadlessTypes.ExternalEngineOptions
         ) => HeadlessTypes.CoreEngine;
         initializedCallback?: Function;
+        bindings: Bindings;
       };
     };
   }

@@ -1,8 +1,8 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
+import { loadScript } from 'lightning/platformResourceLoader';
 // @ts-ignore
-import {Debouncer, Deferred} from 'c/quanticUtils';
+import { Debouncer, Deferred } from 'c/quanticUtils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
@@ -32,7 +32,7 @@ const setInitializedCallback = (callback, engineId) => {
  * Cancels the delayed search query.
  * @param {string} engineId The id of the engine.
  */
- const cancelInitializedCallback = (engineId) => {
+const cancelInitializedCallback = (engineId) => {
   if (debouncers[engineId]) {
     debouncers[engineId].clearTimeout();
     delete debouncers[engineId];
@@ -44,7 +44,7 @@ const setInitializedCallback = (callback, engineId) => {
  * @param {string} engineId The id of the engine. 
  */
 const executeInitializedCallback = async (engineId) => {
-  window.coveoHeadless[engineId].initializedCallback(await window.coveoHeadless[engineId].engine);
+  window.coveoHeadless[engineId].initializedCallback(await window.coveoHeadless[engineId].enginePromise);
 };
 
 /**
@@ -78,21 +78,19 @@ const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engin
  * @param {string} engineId The id of the engine.
  */
 const instantiateWindowEngineObject = (element, engineId) => {
+  const newObject = {
+    components: [],
+    enginePromise: undefined,
+    options: new Deferred(),
+    bindings: {},
+  };
   if (!window.coveoHeadless) {
     loadDependencies(element);
     window.coveoHeadless = {
-      [engineId]: {
-        components: [],
-        engine: undefined,
-        options: new Deferred()
-      }
+      [engineId]: newObject
     }
-  } else if(!window.coveoHeadless[engineId]) {
-    window.coveoHeadless[engineId] = {
-      components: [],
-      engine: undefined,
-      options: new Deferred()
-    }
+  } else if (!window.coveoHeadless[engineId]) {
+    window.coveoHeadless[engineId] = newObject;
   }
 }
 
@@ -111,7 +109,7 @@ async function initEngine(engineId) {
       throw new Error('Engine options have not been set.');
     }
     const options = await window.coveoHeadless[engineId].options.promise;
-    return window.coveoHeadless[engineId].engineConstructor(options)
+    return window.coveoHeadless[engineId].engineConstructor(options);
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
@@ -176,11 +174,24 @@ function setComponentInitialized(element, engineId) {
  * Returns headless engine promise.
  * @param {string} engineId The id of the engine.
  */
-async function getHeadlessEngine(engineId) {
-  if (!window.coveoHeadless[engineId].engine) {
-    window.coveoHeadless[engineId].engine = initEngine(engineId);
+function getHeadlessEnginePromise(engineId) {
+  if (!window.coveoHeadless[engineId].enginePromise) {
+    window.coveoHeadless[engineId].enginePromise = initEngine(engineId).then((engine) => {
+      window.coveoHeadless[engineId].bindings.engine = engine
+      return engine;
+    });
   }
-  return window.coveoHeadless[engineId].engine;
+  return window.coveoHeadless[engineId].enginePromise;
+}
+
+/**
+ * Returns bindings object for specified engineId.
+ * @param {string} engineId The id of the engine.
+ */
+function getHeadlessBindings(engineId) {
+  return {
+    engine: window.coveoHeadless[engineId].bindings,
+  }
 }
 
 /**
@@ -194,7 +205,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
     return;
   }
   try {
-    initialize(await getHeadlessEngine(engineId));
+    initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
   } catch (error) {
     console.error('Fatal error: unable to initialize component', error);
@@ -206,6 +217,7 @@ export {
   setEngineOptions,
   registerComponentForInit,
   setComponentInitialized,
-  getHeadlessEngine,
+  getHeadlessEnginePromise,
+  getHeadlessBindings,
   initializeWithHeadless,
 }
