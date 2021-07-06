@@ -1,5 +1,5 @@
 import {LightningElement, api} from 'lwc';
-import {setEngineConfiguration, setInitializedCallback} from 'c/quanticHeadlessLoader';
+import {setEngineOptions, setInitializedCallback} from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 
@@ -16,13 +16,13 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {string} */
   @api engineId;
 
-  /** @type {import("coveo").HeadlessOptions} */
-  engineConfiguration;
+  /** @type {import("coveo").SearchEngineOptions} */
+  engineOptions;
 
   connectedCallback() {
     getHeadlessConfiguration().then((data) => {
       if (data) {
-        this.engineConfiguration = {
+        this.engineOptions = {
           configuration: {
             ...JSON.parse(data),
             search: {
@@ -31,7 +31,7 @@ export default class QuanticSearchInterface extends LightningElement {
             }
           }
         };
-        setEngineConfiguration(this.engineConfiguration, CoveoHeadless.buildSearchEngine, this.engineId, this);
+        setEngineOptions(this.engineOptions, CoveoHeadless.buildSearchEngine, this.engineId, this);
         setInitializedCallback(this.performInitialQuery, this.engineId);
       }
     });

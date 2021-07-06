@@ -12,11 +12,11 @@ declare global {
           element: LightningElement;
           initialized: boolean;
         }[];
-        configuration: Deferred<EngineConfiguration>;
-        engineConstructor: (
+        options: Deferred<HeadlessTypes.ExternalEngineOptions>;
+        engine: Promise<HeadlessTypes.CoreEngine>;
+        engineConstructor?: (
           options: HeadlessTypes.ExternalEngineOptions
         ) => HeadlessTypes.CoreEngine;
-        engine: Promise<HeadlessTypes.CoreEngine>;
         initializedCallback?: Function;
       };
     };

@@ -84,14 +84,14 @@ const instantiateWindowEngineObject = (element, engineId) => {
       [engineId]: {
         components: [],
         engine: undefined,
-        configuration: new Deferred()
+        options: new Deferred()
       }
     }
   } else if(!window.coveoHeadless[engineId]) {
     window.coveoHeadless[engineId] = {
       components: [],
       engine: undefined,
-      configuration: new Deferred()
+      options: new Deferred()
     }
   }
 }
@@ -107,11 +107,11 @@ async function initEngine(engineId) {
     }
     await Promise.all(dependencyPromises);
 
-    if (!window.coveoHeadless[engineId].configuration) {
-      throw new Error('Engine configuration has not been set.');
+    if (!window.coveoHeadless[engineId].options) {
+      throw new Error('Engine options have not been set.');
     }
-    const configuration = await window.coveoHeadless[engineId].configuration.promise;
-    return window.coveoHeadless[engineId].engineConstructor(configuration)
+    const options = await window.coveoHeadless[engineId].options.promise;
+    return window.coveoHeadless[engineId].engineConstructor(options)
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
@@ -119,19 +119,19 @@ async function initEngine(engineId) {
 
 /**
  * 
- * @param {import("coveo").HeadlessOptions} configuration The Headless configuration options for the specified engine ID.
+ * @param options The Headless options for the specified engine ID.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
  */
-function setEngineConfiguration(configuration, engineConstructor, engineId, element) {
-  if (window.coveoHeadless && window.coveoHeadless[engineId] && window.coveoHeadless[engineId].configuration.isResolved) {
-    console.warn(`overwriting configuration for engine: ${engineId}`);
+function setEngineOptions(options, engineConstructor, engineId, element) {
+  if (window.coveoHeadless && window.coveoHeadless[engineId] && window.coveoHeadless[engineId].options.isResolved) {
+    console.warn(`overwriting options for engine: ${engineId}`);
   }
   if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
     instantiateWindowEngineObject(element, engineId)
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
-  window.coveoHeadless[engineId].configuration.resolve(configuration);
+  window.coveoHeadless[engineId].options.resolve(options);
 }
 
 /**
@@ -203,7 +203,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
 
 export {
   setInitializedCallback,
-  setEngineConfiguration,
+  setEngineOptions,
   registerComponentForInit,
   setComponentInitialized,
   getHeadlessEngine,
