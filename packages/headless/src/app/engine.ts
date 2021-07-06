@@ -53,7 +53,7 @@ export interface CoreEngine<
    * @param listener A callback to be invoked on every dispatch.
    * @returns A function to remove this change listener.
    */
-  subscribe: (listener: () => void) => Unsubscribe;
+  subscribe(listener: () => void): Unsubscribe;
   /**
    * The complete headless state tree.
    */
@@ -68,6 +68,8 @@ export interface CoreEngine<
   logger: Logger;
   /**
    * Adds the specified reducers to the store.
+   *
+   * @param reducers - An object containing the reducers to attach to the engine.
    */
   addReducers(reducers: ReducersMapObject): void;
   /**
@@ -110,6 +112,8 @@ export interface ExternalEngineOptions<State extends object> {
    * List of additional middlewares.
    * A middleware is a higher-order function that composes a dispatch function to return a new dispatch function.
    * It is useful for logging actions, performing side effects like routing, or turning an asynchronous API call into a series of synchronous actions.
+   *
+   * @example
    * ```
    * type MiddlewareAPI = { dispatch: Dispatch, getState: () => State }
    * type Middleware = (api: MiddlewareAPI) => (next: Dispatch) => Dispatch

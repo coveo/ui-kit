@@ -1,5 +1,6 @@
 import {ActionLoaderConfiguration} from '../src/headless-export-resolvers/action-loader-resolver';
 import {ControllerConfiguration} from '../src/headless-export-resolvers/controller-resolver';
+import {EngineConfiguration} from '../src/headless-export-resolvers/engine-resolver';
 
 const controllers: ControllerConfiguration[] = [
   {
@@ -368,4 +369,8 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
 ];
 
-export const searchConfiguration = {controllers, actionLoaders};
+const engine: EngineConfiguration = {
+  initializer: 'buildSearchEngine',
+};
+
+export const searchUseCase = {controllers, actionLoaders, engine};

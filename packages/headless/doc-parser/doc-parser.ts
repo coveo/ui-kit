@@ -8,24 +8,31 @@ import {
   Controller,
   resolveController,
 } from './src/headless-export-resolvers/controller-resolver';
-import {searchConfiguration} from './use-cases/search';
+import {
+  Engine,
+  resolveEngine,
+} from './src/headless-export-resolvers/engine-resolver';
+import {searchUseCase} from './use-cases/search';
 
-interface UseCase {
+interface ResolvedUseCase {
   controllers: Controller[];
   actionLoaders: ActionLoader[];
+  engine: Engine;
 }
 
 const apiModel = new ApiModel();
 const apiPackage = apiModel.loadPackage('temp/headless.api.json');
 const entryPoint = apiPackage.entryPoints[0];
 
-const controllers = searchConfiguration.controllers.map((controller) =>
+const controllers = searchUseCase.controllers.map((controller) =>
   resolveController(entryPoint, controller)
 );
-const actionLoaders = searchConfiguration.actionLoaders.map((loader) =>
+const actionLoaders = searchUseCase.actionLoaders.map((loader) =>
   resolveActionLoader(entryPoint, loader)
 );
 
-const result: UseCase = {controllers, actionLoaders};
+const engine = resolveEngine(entryPoint, searchUseCase.engine);
 
-writeFileSync('dist/parsed_doc.json', JSON.stringify(result, null, 2));
+const resolved: ResolvedUseCase = {controllers, actionLoaders, engine};
+
+writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
