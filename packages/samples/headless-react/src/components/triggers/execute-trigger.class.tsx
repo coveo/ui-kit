@@ -16,30 +16,26 @@ export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {
 
   componentDidMount() {
     this.controller = buildExecuteTrigger(this.context.engine!);
-    this.updateState();
-    this.unsubscribe = this.controller.subscribe(() => this.updateState());
+    this.unsubscribe = this.controller.subscribe(() => this.executeFunction());
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  private updateState() {
-    this.setState(this.controller.state);
-  }
+  private executeFunction = () => {
+    const {functionName, params} = this.controller.state;
+
+    if (functionName === 'log') {
+      this.log(params);
+    }
+  };
+
+  private log = (params: [string | number | boolean]) => {
+    console.log('params: ', params);
+  };
 
   render() {
-    if (!this.state) {
-      return null;
-    }
-    if (this.state.name) {
-      return (
-        <div>
-          The executed function is {this.state.name + ' '}
-          with params: {this.state.params}
-        </div>
-      );
-    }
     return null;
   }
 }

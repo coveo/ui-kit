@@ -27,7 +27,10 @@ export const triggerReducer = createReducer(
         isExecuteTrigger
       );
       state.execute = executeTriggers.length
-        ? executeTriggers[0].content
+        ? {
+            functionName: executeTriggers[0].content.name,
+            params: executeTriggers[0].content.params,
+          }
         : {functionName: '', params: ['']};
     })
 );

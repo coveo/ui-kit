@@ -65,9 +65,6 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
 
         if (hasChanged && this.state.functionName) {
           listener();
-          //const funct: keyof typeof window = this.state.name;
-          //window[funct](this.state.params);
-          //window[this.state.name as keyof window](this.state.params);
           dispatch(logTriggerExecute());
         }
       };

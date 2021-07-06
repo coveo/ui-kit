@@ -50,7 +50,7 @@ import {RedirectionTrigger} from '../components/triggers/redirection-trigger.cla
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {QueryTrigger} from '../components/triggers/query-trigger.class';
 import {ExecuteTrigger} from '../components/triggers/execute-trigger.class';
-import {ExecuteTrigger as ExecuteTriggerFn} from '../components/triggers/execute-trigger.fn';
+import {bindExecuteTrigger} from '../components/triggers/execute-trigger';
 import {QueryTrigger as QueryTriggerFn} from '../components/triggers/query-trigger.fn';
 import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
 import {SmartSnippet as SmartSnippetFn} from '../components/smart-snippet/smart-snippet.fn';
@@ -111,8 +111,6 @@ import {
   buildRedirectionTrigger,
   QueryTrigger as HeadlessQueryTrigger,
   buildQueryTrigger,
-  ExecuteTrigger as HeadlessExecuteTrigger,
-  buildExecuteTrigger,
   SmartSnippet as HeadlessSmartSnippet,
   buildSmartSnippet,
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
@@ -175,11 +173,12 @@ export class SearchPage extends Component {
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
   private readonly queryTrigger: HeadlessQueryTrigger;
-  private readonly executeTrigger: HeadlessExecuteTrigger;
   private readonly smartSnippet: HeadlessSmartSnippet;
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
 
   private unsubscribeUrlManager!: Unsubscribe;
+
+  private unsubscribeExecuteTrigger!: Unsubscribe;
 
   constructor(props: {}) {
     super(props);
@@ -304,8 +303,6 @@ export class SearchPage extends Component {
 
     this.queryTrigger = buildQueryTrigger(this.engine);
 
-    this.executeTrigger = buildExecuteTrigger(this.engine);
-
     this.smartSnippet = buildSmartSnippet(this.engine);
 
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
@@ -322,6 +319,8 @@ export class SearchPage extends Component {
     // not be your case.
     this.unsubscribeUrlManager = bindUrlManager(this.engine);
 
+    this.unsubscribeExecuteTrigger = bindExecuteTrigger(this.engine);
+
     // A search should not be executed until the search parameters are restored.
     this.executeInitialSearch();
 
@@ -330,6 +329,7 @@ export class SearchPage extends Component {
 
   componentWillUnmount() {
     this.unsubscribeUrlManager();
+    this.unsubscribeExecuteTrigger();
   }
 
   private executeInitialSearch() {
@@ -506,9 +506,6 @@ export class SearchPage extends Component {
           </Section>
           <Section title="execute-trigger">
             <ExecuteTrigger></ExecuteTrigger>
-            <ExecuteTriggerFn
-              controller={this.executeTrigger}
-            ></ExecuteTriggerFn>
           </Section>
         </AppContext.Provider>
       </div>

@@ -152,7 +152,7 @@ describe('trigger slice', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockExecuteTrigger({
-        content: {functionName: 'function', params: ['a1']},
+        content: {name: 'function', params: ['a1']},
       }),
     ];
     const response = buildMockSearchResponse({
