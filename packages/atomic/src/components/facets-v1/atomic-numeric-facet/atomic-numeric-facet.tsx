@@ -21,6 +21,10 @@ import {
   NumericFacetValue,
   buildNumericRange,
   NumericRangeRequest,
+  buildNumericFilter,
+  NumericFilterState,
+  NumericFilter,
+  loadNumericFacetSetActions,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -74,6 +78,7 @@ export class AtomicNumericFacet
     BaseFacet<NumericFacet, NumericFacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
+  public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
   private manualRanges: NumericRangeWithLabel[] = [];
@@ -82,6 +87,9 @@ export class AtomicNumericFacet
   @BindStateToController('facet')
   @State()
   public facetState!: NumericFacetState;
+  @BindStateToController('filter')
+  @State()
+  public filterState?: NumericFilterState;
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
@@ -109,6 +117,10 @@ export class AtomicNumericFacet
    */
   @Prop() public withInput = false;
   /**
+   * Whether this facet should contain a defined list of values.
+   */
+  @Prop() public withRanges = true;
+  /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
    */
@@ -125,8 +137,12 @@ export class AtomicNumericFacet
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.manualRanges = this.buildManualRanges();
+    this.initializeFacet();
+    this.withInput && this.initializeFilter();
+  }
 
+  private initializeFacet() {
+    this.manualRanges = this.buildManualRanges();
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
@@ -134,11 +150,23 @@ export class AtomicNumericFacet
       sortCriteria: this.sortCriteria,
       rangeAlgorithm: this.rangeAlgorithm,
       currentValues: this.manualRanges,
-      generateAutomaticRanges: !this.manualRanges.length,
+      generateAutomaticRanges: this.withRanges && !this.manualRanges.length,
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {
+      label: this.label,
+    };
+  }
+
+  private initializeFilter() {
+    this.filter = buildNumericFilter(this.bindings.engine, {
+      options: {
+        facetId: `${this.facetId}_input`,
+        field: this.field,
+      },
+    });
+    this.bindings.store.state.facets[this.filter.state.facetId] = {
       label: this.label,
     };
   }
@@ -172,6 +200,10 @@ export class AtomicNumericFacet
   }
 
   private get numberOfSelectedValues() {
+    if (this.filterState?.range) {
+      return 1;
+    }
+
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
   }
@@ -181,11 +213,35 @@ export class AtomicNumericFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          if (this.filterState?.range) {
+            this.filter?.clear();
+            return;
+          }
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
       ></FacetHeader>
+    );
+  }
+
+  private renderNumberInput() {
+    return (
+      <atomic-facet-number-input
+        onApply={() =>
+          this.bindings.engine.dispatch(
+            loadNumericFacetSetActions(
+              this.bindings.engine
+            ).deselectAllNumericFacetValues(this.facetId!)
+          )
+        }
+        bindings={this.bindings}
+        label={this.label}
+        filter={this.filter!}
+        filterState={this.filterState!}
+      ></atomic-facet-number-input>
     );
   }
 
@@ -244,8 +300,20 @@ export class AtomicNumericFacet
   }
 
   private renderValues() {
+    if (this.filterState?.range) {
+      return;
+    }
+
+    const values = this.facetState.values.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
+    );
+
+    if (!values.length) {
+      return;
+    }
+
     return this.renderValuesContainer(
-      this.valuesToRender.map((value) =>
+      values.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
             ? this.facet.toggleSingleSelect(value)
@@ -255,9 +323,9 @@ export class AtomicNumericFacet
     );
   }
 
-  private get valuesToRender() {
-    return this.facetState.values.filter(
-      (value) => value.numberOfResults || value.state !== 'idle'
+  private get shouldRender() {
+    return (
+      this.withInput || (this.withRanges && this.facetState.hasActiveValues)
     );
   }
 
@@ -274,7 +342,7 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.valuesToRender.length) {
+    if (!this.shouldRender) {
       return <Host class="atomic-without-values"></Host>;
     }
 
@@ -282,7 +350,10 @@ export class AtomicNumericFacet
       <Host class="atomic-with-values">
         <FacetContainer>
           {this.renderHeader()}
-          {!this.isCollapsed && this.renderValues()}
+          {!this.isCollapsed && [
+            this.withInput && this.renderNumberInput(),
+            this.withRanges && this.renderValues(),
+          ]}
         </FacetContainer>
       </Host>
     );

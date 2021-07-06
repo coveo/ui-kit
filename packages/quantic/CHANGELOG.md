@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.9...@coveo/quantic@0.32.10) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.8...@coveo/quantic@0.32.9) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.7...@coveo/quantic@0.32.8) (2021-07-05)
+
+
+### Bug Fixes
+
+* **quantic:** jest unit tests ([#942](https://github.com/coveo/ui-kit/issues/942)) ([1ec27f4](https://github.com/coveo/ui-kit/commit/1ec27f4fac2abc0c80ba786eca608c6bc2dc52dd))
+
+
+
+
+
+## [0.32.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.6...@coveo/quantic@0.32.7) (2021-07-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.5...@coveo/quantic@0.32.6) (2021-07-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.4...@coveo/quantic@0.32.5) (2021-07-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [0.32.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.3...@coveo/quantic@0.32.4) (2021-07-02)
 
 **Note:** Version bump only for package @coveo/quantic

@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.4.1...@coveo/headless@1.5.0) (2021-07-06)
+
+
+### Features
+
+* **atomic:** add numeric facet custom input ([#941](https://github.com/coveo/ui-kit/issues/941)) ([b1f2ecd](https://github.com/coveo/ui-kit/commit/b1f2ecd0b2d660d888bc2688ba6ca6760f773e74))
+
+
+
+
+
+## [1.4.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.4.0...@coveo/headless@1.4.1) (2021-07-06)
+
+
+### Bug Fixes
+
+* **headless:** update searchHub/pipeline from configuration for recommendation engines ([#931](https://github.com/coveo/ui-kit/issues/931)) ([ba3a37d](https://github.com/coveo/ui-kit/commit/ba3a37d8ccb23b20611734987559b29a9525d9e5))
+
+
+
+
+
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.3...@coveo/headless@1.4.0) (2021-07-05)
+
+
+### Features
+
+* **headless:** Notify Triggers ([#926](https://github.com/coveo/ui-kit/issues/926)) ([cd48b14](https://github.com/coveo/ui-kit/commit/cd48b1420b1d30661e651c5406981f1c068765f6))
+
+
+
+
+
+## [1.3.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.2...@coveo/headless@1.3.3) (2021-07-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.3.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.1...@coveo/headless@1.3.2) (2021-07-02)
+
+
+### Bug Fixes
+
+* **headless:** fix Redirect Triggers ([#938](https://github.com/coveo/ui-kit/issues/938)) ([9163ef4](https://github.com/coveo/ui-kit/commit/9163ef41aa90053c58c5367ccfe81dad0ed7d9b7))
+
+
+
+
+
 ## [1.3.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.0...@coveo/headless@1.3.1) (2021-07-02)
 
 **Note:** Version bump only for package @coveo/headless

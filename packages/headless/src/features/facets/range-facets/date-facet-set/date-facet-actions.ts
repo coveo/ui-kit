@@ -199,7 +199,7 @@ export const updateDateFacetValues = createAction(
   'dateFacet/updateFacetValues',
   (payload: UpdateDateFacetValuesActionCreatorPayload) => {
     try {
-      validatePayload(payload, {
+      validatePayloadAndThrow(payload, {
         facetId: facetIdDefinition,
         values: new ArrayValue({
           each: new RecordValue({values: dateFacetValueDefinition}),

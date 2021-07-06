@@ -16,6 +16,10 @@ export interface TriggerNotify {
   content: string;
 }
 
+export function isNotifyTrigger(trigger: Trigger): trigger is TriggerNotify {
+  return trigger.type === 'notify';
+}
+
 /**
  * Redirect the user to another url
  */

@@ -13,10 +13,16 @@ export interface TriggerState {
    * The javascript function to be executed after receiving an execute trigger.
    */
   execute: {functionName: string; params: [string | number | boolean]};
+
+  /**
+   * The notification to display to the user after receiving a notification trigger.
+   */
+  notification: string;
 }
 
 export const getTriggerInitialState: () => TriggerState = () => ({
   redirectTo: '',
   query: '',
   execute: {functionName: '', params: ['']},
+  notification: '',
 });

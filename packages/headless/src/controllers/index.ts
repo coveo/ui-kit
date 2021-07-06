@@ -272,6 +272,12 @@ export {
 } from './triggers/headless-execute-trigger';
 
 export {
+  NotifyTrigger,
+  NotifyTriggerState,
+  buildNotifyTrigger,
+} from './triggers/headless-notify-trigger';
+
+export {
   SmartSnippet,
   SmartSnippetState,
   buildSmartSnippet,

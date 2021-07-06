@@ -5,6 +5,7 @@ import {
   isRedirectTrigger,
   isQueryTrigger,
   isExecuteTrigger,
+  isNotifyTrigger,
 } from './../../api/search/trigger';
 
 export const triggerReducer = createReducer(
@@ -32,5 +33,11 @@ export const triggerReducer = createReducer(
             params: executeTriggers[0].content.params,
           }
         : {functionName: '', params: ['']};
+      const notifyTriggers = action.payload.response.triggers.filter(
+        isNotifyTrigger
+      );
+      state.notification = notifyTriggers.length
+        ? notifyTriggers[0].content
+        : '';
     })
 );
