@@ -49,4 +49,32 @@ describe('buildSearchEngine', () => {
     engine.dispatch(enableDebug());
     expect(engine.state.debug).toBe(true);
   });
+
+  describe('when passing a search configuration', () => {
+    const pipeline = 'newPipe';
+    const searchHub = 'newHub';
+    const locale = 'fr';
+
+    beforeEach(() => {
+      options.configuration.search = {
+        pipeline,
+        searchHub,
+        locale,
+      };
+
+      initEngine();
+    });
+
+    it('sets the pipeline correctly', () => {
+      expect(engine.state.pipeline).toBe(pipeline);
+    });
+
+    it('sets the searchHub correctly', () => {
+      expect(engine.state.searchHub).toBe(searchHub);
+    });
+
+    it('sets the searchHub correctly', () => {
+      expect(engine.state.configuration.search.locale).toBe(locale);
+    });
+  });
 });

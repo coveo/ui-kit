@@ -21,7 +21,6 @@ import {
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 
 describe('date filter', () => {
@@ -126,13 +125,29 @@ describe('date filter', () => {
       );
       expect(action).toBeTruthy();
     });
+
+    it('should return true when range is valid', () => {
+      const value = buildMockDateFacetValue(
+        buildDateRange({start: 1616592691000, end: 1616592691000})
+      );
+      expect(dateFacet.setRange(value)).toBe(true);
+    });
+
+    it('should return false when range start value is greater than range end value', () => {
+      const value = buildMockDateFacetValue(
+        buildDateRange({start: 1616679091000, end: 1616592691000})
+      );
+      expect(dateFacet.setRange(value)).toBe(false);
+    });
   });
 
   describe('#clear', () => {
     beforeEach(() => dateFacet.clear());
 
-    it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    it('dispatches #updateDateFacetValues with the facet id and an empty array', () => {
+      expect(engine.actions).toContainEqual(
+        updateDateFacetValues({facetId, values: []})
+      );
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
@@ -150,13 +165,22 @@ describe('date filter', () => {
     });
   });
 
-  it('exposes a #state getter property to retrieve the values', () => {
-    const value = buildMockDateFacetValue();
+  it('the state #range property should return the range if it is selected', () => {
+    const value = buildMockDateFacetValue({state: 'selected'});
     state.search.response.facets = [
       buildMockDateFacetResponse({facetId, values: [value]}),
     ];
 
     expect(dateFacet.state.range).toEqual(value);
+  });
+
+  it('the state #range property should not return the range if it is not selected', () => {
+    const value = buildMockDateFacetValue({state: 'idle'});
+    state.search.response.facets = [
+      buildMockDateFacetResponse({facetId, values: [value]}),
+    ];
+
+    expect(dateFacet.state.range).toBeUndefined();
   });
 
   it('#state.facetId exposes the facet id', () => {

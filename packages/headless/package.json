@@ -9,7 +9,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "files": [
     "dist/",
     "recommendation/",

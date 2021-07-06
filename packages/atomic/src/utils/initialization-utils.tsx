@@ -186,10 +186,7 @@ export function BindStateToController(
       }
 
       if (!this[controllerProperty]) {
-        return console.error(
-          `ControllerState: The controller property "${controllerProperty}" is not defined`,
-          component
-        );
+        return;
       }
 
       if (

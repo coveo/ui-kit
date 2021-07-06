@@ -130,18 +130,6 @@ describe('BindStateToController decorator', () => {
     );
   });
 
-  it(`when the "controller" property is not defined
-  it should log a error to the console`, () => {
-    component.initialize = () => {};
-    BindStateToController('controller')(component, 'controllerState');
-    component.initialize!();
-
-    expect(console.error).toHaveBeenCalledWith(
-      'ControllerState: The controller property "controller" is not defined',
-      component
-    );
-  });
-
   describe('when controller is initialized', () => {
     let controller: Controller;
     beforeEach(() => {
