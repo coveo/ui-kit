@@ -3,19 +3,19 @@ import {highlightSearchResult} from './facet-search-utils';
 describe('#highlightSearchResult', () => {
   it('should highlight the first instance of the query ', () => {
     expect(highlightSearchResult('test', 't')).toBe(
-      '<span class="font-bold">t</span>est'
+      '<span part="search-highlight" class="font-bold">t</span>est'
     );
   });
 
   it('should match multiple characters', () => {
     expect(highlightSearchResult('test', 'te')).toBe(
-      '<span class="font-bold">te</span>st'
+      '<span part="search-highlight" class="font-bold">te</span>st'
     );
   });
 
   it('should be case insensitive', () => {
     expect(highlightSearchResult('Test', 'tE')).toBe(
-      '<span class="font-bold">Te</span>st'
+      '<span part="search-highlight" class="font-bold">Te</span>st'
     );
   });
 
@@ -23,7 +23,7 @@ describe('#highlightSearchResult', () => {
     expect(
       highlightSearchResult('<script>console.log("hmm")<script>', 'con')
     ).toBe(
-      '&lt;script&gt;<span class="font-bold">con</span>sole.log(&quot;hmm&quot;)&lt;script&gt;'
+      '&lt;script&gt;<span part="search-highlight" class="font-bold">con</span>sole.log(&quot;hmm&quot;)&lt;script&gt;'
     );
   });
 });

@@ -40,13 +40,10 @@ export function shouldDisplaySearchResults(facetSearchState: FacetSearchState) {
   return !isLoading;
 }
 
-export function highlightSearchResult(
-  resultValue: string,
-  searchQuery?: string
-) {
+export function highlightSearchResult(resultValue: string, searchQuery = '') {
   const sanitizedResult = escape(resultValue);
 
-  if (!searchQuery || searchQuery.trim() === '') {
+  if (searchQuery.trim() === '') {
     return sanitizedResult;
   }
 
