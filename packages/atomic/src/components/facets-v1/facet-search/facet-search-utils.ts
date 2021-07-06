@@ -1,4 +1,6 @@
 import {FacetSearchState} from '@coveo/headless';
+import escape from 'escape-html';
+import {regexEncode} from '../../../utils/string-utils';
 
 /**
  * Meant to be used inside the `componentShouldUpdate` lifecycle method.
@@ -36,4 +38,21 @@ export function shouldDisplaySearchResults(facetSearchState: FacetSearchState) {
   }
 
   return !isLoading;
+}
+
+export function highlightSearchResult(
+  resultValue: string,
+  searchQuery?: string
+) {
+  const sanitizedResult = escape(resultValue);
+
+  if (!searchQuery || searchQuery.trim() === '') {
+    return sanitizedResult;
+  }
+
+  const regex = new RegExp(`(${regexEncode(searchQuery)})`, 'i');
+  return escape(resultValue).replace(
+    regex,
+    '<span class="font-bold">$1</span>'
+  );
 }

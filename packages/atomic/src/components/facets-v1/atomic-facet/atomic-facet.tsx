@@ -203,6 +203,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
           ></FacetValueCheckbox>
         );
       case 'link':
@@ -213,6 +214,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
           ></FacetValueLink>
         );
       case 'box':
@@ -223,6 +225,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
           ></FacetValueBox>
         );
     }
