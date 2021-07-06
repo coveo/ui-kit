@@ -126,11 +126,18 @@ describe('date filter', () => {
       expect(action).toBeTruthy();
     });
 
-    it('should throw when range start value is greater than range end value', () => {
+    it('should return true when range is valid', () => {
+      const value = buildMockDateFacetValue(
+        buildDateRange({start: 1616592691000, end: 1616592691000})
+      );
+      expect(dateFacet.setRange(value)).toBe(true);
+    });
+
+    it('should return false when range start value is greater than range end value', () => {
       const value = buildMockDateFacetValue(
         buildDateRange({start: 1616679091000, end: 1616592691000})
       );
-      expect(() => dateFacet.setRange(value)).toThrow();
+      expect(dateFacet.setRange(value)).toBe(false);
     });
   });
 

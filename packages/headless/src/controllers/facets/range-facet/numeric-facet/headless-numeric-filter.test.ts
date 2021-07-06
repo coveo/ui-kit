@@ -129,9 +129,14 @@ describe('numeric filter', () => {
       expect(action).toBeTruthy();
     });
 
-    it('should throw when range start value is greater than range end value', () => {
+    it('should return true when range is valid', () => {
+      const value = buildMockNumericFacetValue({start: 5, end: 10});
+      expect(numericFacet.setRange(value)).toBe(true);
+    });
+
+    it('should return false when range start value is greater than range end value', () => {
       const value = buildMockNumericFacetValue({start: 10, end: 5});
-      expect(() => numericFacet.setRange(value)).toThrow();
+      expect(numericFacet.setRange(value)).toBe(false);
     });
   });
 

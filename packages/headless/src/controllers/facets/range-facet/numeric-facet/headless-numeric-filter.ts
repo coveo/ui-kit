@@ -119,9 +119,8 @@ export interface NumericFilter extends Controller {
   /**
    * Updates the selected range.
    *
-   * Throws an error if the range is invalid.
-   *
    * @param range - The numeric range.
+   * @returns Whether the range is valid.
    */
   setRange(range: NumericFilterRange): void;
 
@@ -181,7 +180,7 @@ export function buildNumericFilter(
       });
 
       if (updateFacetValuesAction.error) {
-        throw updateFacetValuesAction.error;
+        return false;
       }
 
       dispatch(updateFacetValuesAction);
@@ -194,6 +193,7 @@ export function buildNumericFilter(
           })
         )
       );
+      return true;
     },
 
     get state() {

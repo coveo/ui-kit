@@ -121,9 +121,8 @@ export interface DateFilter extends Controller {
    *
    * You can use the `buildDateRange` utility method in order to format the range values correctly.
    *
-   * Throws an error if the range is invalid.
-   *
    * @param range - The date range.
+   * @returns Whether the range is valid.
    */
   setRange(range: DateFilterRange): void;
 
@@ -183,7 +182,7 @@ export function buildDateFilter(
       });
 
       if (updateFacetValuesAction.error) {
-        throw updateFacetValuesAction.error;
+        return false;
       }
 
       dispatch(updateFacetValuesAction);
@@ -196,6 +195,7 @@ export function buildDateFilter(
           })
         )
       );
+      return true;
     },
 
     get state() {
