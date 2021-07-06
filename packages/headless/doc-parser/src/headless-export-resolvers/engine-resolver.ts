@@ -1,22 +1,22 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
 import {FuncEntity, ObjEntity} from '../entity';
-import {resolveInitializer} from './initializer-resolver';
 import {extractTypesFromConfiguration} from './configuration-type-extractor';
+import {resolveEngineInitializer} from './initializer-resolver';
 
-export interface ActionLoaderConfiguration {
+export interface EngineConfiguration {
   initializer: string;
 }
 
-export interface ActionLoader {
+export interface Engine {
   initializer: FuncEntity;
   extractedTypes: ObjEntity[];
 }
 
-export function resolveActionLoader(
+export function resolveEngine(
   entry: ApiEntryPoint,
-  config: ActionLoaderConfiguration
-): ActionLoader {
-  const initializer = resolveInitializer(entry, config.initializer);
+  config: EngineConfiguration
+): Engine {
+  const initializer = resolveEngineInitializer(entry, config.initializer);
   const extractedTypes = extractTypesFromConfiguration(initializer, []);
   return {initializer, extractedTypes};
 }
