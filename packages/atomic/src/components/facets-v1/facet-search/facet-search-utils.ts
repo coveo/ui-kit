@@ -53,6 +53,6 @@ export function highlightSearchResult(
   const regex = new RegExp(`(${regexEncode(searchQuery)})`, 'i');
   return escape(resultValue).replace(
     regex,
-    '<span class="font-bold">$1</span>'
+    '<span part="search-highlight" class="font-bold">$1</span>'
   );
 }
