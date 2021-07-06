@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import {sanitize} from '../../../utils/xss-utils';
+import escape from 'escape-html';
 
 interface FacetSearchMatchesProps {
   i18n: i18n;
@@ -15,7 +15,7 @@ function matchesFound(
   i18n: i18n
 ) {
   return i18n.t(key, {
-    query: `<span class="font-bold italic text-on-background" part="matches-query">${sanitize(
+    query: `<span class="font-bold italic text-on-background" part="matches-query">${escape(
       query
     )}</span>`,
     interpolation: {escapeValue: false},
