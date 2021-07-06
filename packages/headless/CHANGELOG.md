@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.4.0...@coveo/headless@1.4.1) (2021-07-06)
+
+
+### Bug Fixes
+
+* **headless:** update searchHub/pipeline from configuration for recommendation engines ([#931](https://github.com/coveo/ui-kit/issues/931)) ([ba3a37d](https://github.com/coveo/ui-kit/commit/ba3a37d8ccb23b20611734987559b29a9525d9e5))
+
+
+
+
+
 # [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.3.3...@coveo/headless@1.4.0) (2021-07-05)
 
 
