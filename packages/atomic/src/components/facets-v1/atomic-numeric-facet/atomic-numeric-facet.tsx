@@ -304,16 +304,8 @@ export class AtomicNumericFacet
       return;
     }
 
-    const values = this.facetState.values.filter(
-      (value) => value.numberOfResults || value.state !== 'idle'
-    );
-
-    if (!values.length) {
-      return;
-    }
-
     return this.renderValuesContainer(
-      values.map((value) =>
+      this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
             ? this.facet.toggleSingleSelect(value)
@@ -323,10 +315,14 @@ export class AtomicNumericFacet
     );
   }
 
-  private get shouldRender() {
-    return (
-      this.withInput || (this.withRanges && this.facetState.hasActiveValues)
+  private get valuesToRender() {
+    return this.facetState.values.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
     );
+  }
+
+  private get shouldRender() {
+    return this.withInput || (this.withRanges && this.valuesToRender.length);
   }
 
   public render() {
