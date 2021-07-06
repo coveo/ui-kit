@@ -20,7 +20,7 @@ async function updateNpmTag(packageName, version) {
     return;
   }
   
-  console.log(`updating ${packageName}@${version} to ${tag}`);
+  console.log(`updating ${packageName}@${version} to ${tag}.`);
   await exec(`npm dist-tag add ${packageName}@${version} ${tag}`)
 }
 
