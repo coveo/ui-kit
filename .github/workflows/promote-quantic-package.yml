@@ -31,5 +31,8 @@ jobs:
   - run: sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
     shell: bash
   # Promote package version in the Dev Hub org
-  - run: sfdx force:package:version:promote -p XXXXXXXXXXXXX
+  - run: sfdx force:package:version:promote -p $PACKAGE_ID
+    shell: bash
+  # Retrieve package details in the Dev Hub org
+  - run: sfdx force:package:version:report -p $PACKAGE_ID
     shell: bash
