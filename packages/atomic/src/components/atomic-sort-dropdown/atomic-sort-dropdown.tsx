@@ -148,7 +148,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-6 my-2 w-44 bg-neutral-light animate-pulse"
+          class="rounded h-6 my-2 w-44 bg-neutral animate-pulse"
         ></div>
       );
     }
