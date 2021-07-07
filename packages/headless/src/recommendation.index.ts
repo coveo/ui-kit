@@ -11,6 +11,7 @@ export {
 // Actions
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/advanced-search-queries/advanced-search-queries-actions-loader';
+export * from './features/context/context-actions-loader';
 export * from './features/fields/fields-actions-loader';
 export * from './features/pipeline/pipeline-actions-loader';
 export * from './features/search-hub/search-hub-actions-loader';
