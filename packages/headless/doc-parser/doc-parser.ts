@@ -12,6 +12,7 @@ import {
   Engine,
   resolveEngine,
 } from './src/headless-export-resolvers/engine-resolver';
+import {productRecommendationUseCase} from './use-cases/product-recommendation';
 import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
 import {UseCaseConfiguration} from './use-cases/use-case-configuration';
@@ -39,6 +40,11 @@ const useCases: UseCase[] = [
     name: 'recommendation',
     entryFile: 'temp/recommendation.api.json',
     config: recommendationUseCase,
+  },
+  {
+    name: 'product-recommendation',
+    entryFile: 'temp/product-recommendation.api.json',
+    config: productRecommendationUseCase,
   },
 ];
 
