@@ -18,4 +18,5 @@ export interface FacetValueProps {
   numberOfResults: number;
   isSelected: boolean;
   onClick(): void;
+  searchQuery?: string;
 }

@@ -49,6 +49,7 @@ import {BaseFacet} from '../facet-common';
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
+ * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
@@ -203,6 +204,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
           ></FacetValueCheckbox>
         );
       case 'link':
@@ -213,6 +215,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
           ></FacetValueLink>
         );
       case 'box':
@@ -223,6 +226,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
           ></FacetValueBox>
         );
     }
