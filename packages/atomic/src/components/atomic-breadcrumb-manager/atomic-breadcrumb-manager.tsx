@@ -4,7 +4,6 @@ import {
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
-  BindStateToI18n,
   I18nState,
 } from '../../utils/initialization-utils';
 import {
@@ -14,8 +13,9 @@ import {
   CategoryFacetBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
+  NumericFacetValue,
+  DateFacetValue,
 } from '@coveo/headless';
-import {RangeFacetValue} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/definitions/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
 import dayjs from 'dayjs';
@@ -53,9 +53,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
    */
   @Prop() public categoryDivider = '/';
 
-  @BindStateToI18n()
-  @State()
-  public strings: I18nState = {
+  // TODO: refactor
+  private strings: I18nState = {
     breadcrumb: (variables) =>
       this.bindings.i18n.t('removeFilterOn', variables),
     clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
@@ -67,10 +66,6 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
-  }
-
-  private getFormat(id: string) {
-    return this.bindings.store.state.facets[id].formatting;
   }
 
   private getBreadcrumbValue(
@@ -97,12 +92,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     );
   }
 
-  private getBreadcrumbWrapper(
-    facetId: string,
-    field: string,
-    children: VNode[]
-  ) {
-    const label = this.bindings.store.state.facets[facetId].label || field;
+  private getBreadcrumbContainer(label: string, children: VNode[]) {
     return (
       <li class="mb-1 flex">
         <span
@@ -133,61 +123,91 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       )
     );
 
-    return this.getBreadcrumbWrapper(
-      breadcrumb.facetId,
-      breadcrumb.field,
-      <ul part="breadcrumbs" class="flex flex-wrap">
-        {[...renderedBreadcrumbs, moreButton]}
-      </ul>
-    );
+    return [...renderedBreadcrumbs, moreButton];
   }
 
   private get facetBreadcrumbs() {
     return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
-      return this.getBreadcrumbValues(breadcrumb);
+      const facetStore = this.bindings.store.get('facets')[breadcrumb.facetId];
+      const label = facetStore ? facetStore.label : breadcrumb.field;
+
+      return this.getBreadcrumbContainer(
+        label,
+        this.getBreadcrumbValues(breadcrumb)
+      );
     });
   }
 
-  private formatRangeBreadcrumb(
-    breadcrumb: Breadcrumb<RangeFacetValue>,
-    formatValue: (value: RangeFacetValue) => string
+  private formatRangeBreadcrumb<
+    ValueType extends NumericFacetValue | DateFacetValue
+  >(
+    breadcrumb: Breadcrumb<ValueType>,
+    formatValue: (value: ValueType) => string
   ): Breadcrumb<BaseFacetValue & {value: string}> {
     return {
       ...breadcrumb,
-      values: breadcrumb.values.map((value) => ({
-        deselect: value.deselect,
+      values: breadcrumb.values.map((breadcrumbValue) => ({
+        deselect: breadcrumbValue.deselect,
         value: {
-          ...value.value,
-          value: formatValue(value.value),
+          ...breadcrumbValue.value,
+          value: formatValue(breadcrumbValue.value),
         },
       })),
     };
   }
 
+  private defaultNumericBreadcrumbFormat({start, end}: NumericFacetValue) {
+    const {language} = this.bindings.i18n;
+    return this.strings.to({
+      start: start.toLocaleString(language),
+      end: end.toLocaleString(language),
+    });
+  }
+
   private get numericFacetBreadcrumbs() {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
-      (breadcrumb) =>
-        this.getBreadcrumbValues(
-          this.formatRangeBreadcrumb(breadcrumb, (value) => {
-            const {language} = this.bindings.i18n;
-            const start = value.start.toLocaleString(language);
-            const end = value.end.toLocaleString(language);
-            return this.strings.to({start, end});
-          })
-        )
+      (breadcrumb) => {
+        const facetStore = this.bindings.store.get('numericFacets')[
+          breadcrumb.facetId
+        ];
+        const label = facetStore ? facetStore.label : breadcrumb.field;
+        const format = facetStore
+          ? facetStore.format
+          : this.defaultNumericBreadcrumbFormat;
+
+        return this.getBreadcrumbContainer(
+          label,
+          this.getBreadcrumbValues(
+            this.formatRangeBreadcrumb(breadcrumb, format)
+          )
+        );
+      }
     );
+  }
+
+  private defaultDateBreadcrumbFormat({start, end}: DateFacetValue) {
+    return this.strings.to({
+      start: dayjs(start),
+      end: dayjs(end),
+    });
   }
 
   private get dateFacetBreadcrumbs() {
     return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const dateFormat = this.getFormat(breadcrumb.facetId);
-        return this.getBreadcrumbValues(
-          this.formatRangeBreadcrumb(breadcrumb, (value) => {
-            const start = dayjs(value.start).format(dateFormat);
-            const end = dayjs(value.end).format(dateFormat);
-            return this.strings.to({start, end});
-          })
+        const facetStore = this.bindings.store.get('dateFacets')[
+          breadcrumb.facetId
+        ];
+        const label = facetStore ? facetStore.label : breadcrumb.field;
+        const format = facetStore
+          ? facetStore.format
+          : this.defaultDateBreadcrumbFormat;
+
+        return this.getBreadcrumbContainer(
+          label,
+          this.getBreadcrumbValues(
+            this.formatRangeBreadcrumb(breadcrumb, format)
+          )
         );
       }
     );
@@ -221,11 +241,14 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private get categoryFacetBreadcrumbs() {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const breadcrumbsValue = this.getCategoryBreadrumbValue(breadcrumb);
-        return this.getBreadcrumbWrapper(
-          breadcrumb.facetId,
-          breadcrumb.field,
-          breadcrumbsValue
+        const facetStore = this.bindings.store.get('categoryFacets')[
+          breadcrumb.facetId
+        ];
+        const label = facetStore ? facetStore.label : breadcrumb.field;
+
+        return this.getBreadcrumbContainer(
+          label,
+          this.getCategoryBreadrumbValue(breadcrumb)
         );
       }
     );
