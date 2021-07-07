@@ -1,14 +1,14 @@
 const {promisify} = require('util');
-const {} = require('path');
+const {readdirSync} = require('fs')
 const exec = promisify(require('child_process').exec);
 
-const configFiles = [
-  'search.json',
-  'recommendation.json'
-]
+const dir = './config/api-extractor';
 
 async function main() {
-  const jobs = configFiles.map(file => exec(`api-extractor run -l -c ./config/api-extractor/${file}`))
+  const paths = readdirSync(dir).filter(file => file !== 'base.json').map(file => `${dir}/${file}`);
+  console.log('extracting documentation using', paths);
+  
+  const jobs = paths.map(path => exec(`api-extractor run -l -c ${path}`))
   await Promise.all(jobs);
 }
 
