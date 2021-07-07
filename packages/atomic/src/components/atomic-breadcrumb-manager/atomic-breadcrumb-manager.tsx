@@ -102,12 +102,14 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         >
           {label}:
         </span>
-        {children}
+        <ul part="breadcrumbs" class="flex flex-wrap">
+          {children}
+        </ul>
       </li>
     );
   }
 
-  private getBreadcrumbValueWrapper(children: VNode[]) {
+  private getBreadcrumbValueContainer(children: VNode[]) {
     return <li class="mr-3">{children}</li>;
   }
 
@@ -118,7 +120,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) =>
-      this.getBreadcrumbValueWrapper(
+      this.getBreadcrumbValueContainer(
         this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)
       )
     );
@@ -267,8 +269,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private showFacetCollapsedBreadcrumbs(field: string) {
-    this.collapsedBreadcrumbsState.push(field);
-    this.collapsedBreadcrumbsState = [...this.collapsedBreadcrumbsState];
+    this.collapsedBreadcrumbsState = [...this.collapsedBreadcrumbsState, field];
   }
 
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
@@ -302,7 +303,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
-    return this.getBreadcrumbValueWrapper(
+    return this.getBreadcrumbValueContainer(
       <button
         part="breadcrumb"
         aria-label={this.strings.showNMoreFilters({
