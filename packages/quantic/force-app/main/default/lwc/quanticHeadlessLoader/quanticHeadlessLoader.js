@@ -124,6 +124,7 @@ async function initEngine(engineId) {
 function setEngineOptions(options, engineConstructor, engineId, element) {
   if (window.coveoHeadless && window.coveoHeadless[engineId] && window.coveoHeadless[engineId].options.isResolved) {
     console.warn(`overwriting options for engine: ${engineId}`);
+    return;
   }
   if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
     instantiateWindowEngineObject(element, engineId)
