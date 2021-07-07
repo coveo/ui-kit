@@ -1,0 +1,8 @@
+{
+  "extends": "./base.json",
+  "mainEntryPointFilePath": "<projectFolder>/temp/index.d.ts",
+  "docModel": {
+    "enabled": true,
+    "apiJsonFilePath": "<projectFolder>/temp/index.api.json"
+  }
+}
