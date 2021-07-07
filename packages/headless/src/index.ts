@@ -84,3 +84,4 @@ export {buildSearchParameterSerializer} from './features/search-parameters/searc
 export * as HighlightUtils from './utils/highlight';
 export {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';
+export {BaseFacetValue} from './features/facets/facet-api/response';
