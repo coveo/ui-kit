@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.37.0...@coveo/atomic@0.38.0) (2021-07-07)
+
+
+### Features
+
+* **atomic:** add facet search highlights  ([#945](https://github.com/coveo/ui-kit/issues/945)) ([009b16e](https://github.com/coveo/ui-kit/commit/009b16e7126c4c02977a30e49020fcf66caff974))
+
+
+
+
+
 # [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.36.1...@coveo/atomic@0.37.0) (2021-07-07)
 
 
