@@ -4,7 +4,6 @@ import {
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
-  I18nState,
 } from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
@@ -37,6 +36,16 @@ import dayjs from 'dayjs';
 export class AtomicBreadcrumbManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
+  private strings = {
+    breadcrumb: (label: string) =>
+      this.bindings.i18n.t('removeFilterOn', {value: label}),
+    clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
+    nMore: (value: number) => this.bindings.i18n.t('nMore', {value}),
+    showNMoreFilters: (value: number) =>
+      this.bindings.i18n.t('showNMoreFilters', {value}),
+    to: (start: string, end: string) =>
+      this.bindings.i18n.t('to', {start, end}),
+  };
 
   @BindStateToController('breadcrumbManager')
   @State()
@@ -53,17 +62,6 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
    */
   @Prop() public categoryDivider = '/';
 
-  // TODO: refactor
-  private strings: I18nState = {
-    breadcrumb: (variables) =>
-      this.bindings.i18n.t('removeFilterOn', variables),
-    clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
-    nMore: (variables) => this.bindings.i18n.t('nMore', variables),
-    showNMoreFilters: (variables) =>
-      this.bindings.i18n.t('showNMoreFilters', variables),
-    to: (variables) => this.bindings.i18n.t('to', variables),
-  };
-
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
@@ -76,7 +74,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       <button
         part="breadcrumb"
         class="inline-grid grid-flow-col text-neutral-dark hover:text-primary-light"
-        aria-label={this.strings.breadcrumb({value})}
+        aria-label={this.strings.breadcrumb(value)}
         title={value}
         onClick={() =>
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
@@ -160,10 +158,10 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
 
   private defaultNumericBreadcrumbFormat({start, end}: NumericFacetValue) {
     const {language} = this.bindings.i18n;
-    return this.strings.to({
-      start: start.toLocaleString(language),
-      end: end.toLocaleString(language),
-    });
+    return this.strings.to(
+      start.toLocaleString(language),
+      end.toLocaleString(language)
+    );
   }
 
   private get numericFacetBreadcrumbs() {
@@ -188,10 +186,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private defaultDateBreadcrumbFormat({start, end}: DateFacetValue) {
-    return this.strings.to({
-      start: dayjs(start),
-      end: dayjs(end),
-    });
+    const defaultFormat = 'DD/MM/YYYY';
+    return this.strings.to(
+      dayjs(start).format(defaultFormat),
+      dayjs(end).format(defaultFormat)
+    );
   }
 
   private get dateFacetBreadcrumbs() {
@@ -306,12 +305,10 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return this.getBreadcrumbValueContainer(
       <button
         part="breadcrumb"
-        aria-label={this.strings.showNMoreFilters({
-          value: collapsedBreadcrumbNumber,
-        })}
+        aria-label={this.strings.showNMoreFilters(collapsedBreadcrumbNumber)}
         onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
       >
-        {this.strings.nMore({value: collapsedBreadcrumbNumber})}
+        {this.strings.nMore(collapsedBreadcrumbNumber)}
       </button>
     );
   }
