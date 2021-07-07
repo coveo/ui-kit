@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.36.1...@coveo/atomic@0.37.0) (2021-07-07)
+
+
+### Bug Fixes
+
+* **atomic:** fix atomic-numeric-facet-v1 render condition ([#949](https://github.com/coveo/ui-kit/issues/949)) ([251ca40](https://github.com/coveo/ui-kit/commit/251ca40ced276af98f8987e6ed949c4730ca0384))
+
+
+### Features
+
+* **atomic:** rework placeholders style ([#948](https://github.com/coveo/ui-kit/issues/948)) ([e60182a](https://github.com/coveo/ui-kit/commit/e60182abb08bf71fe0f96c8850e9d39ac419d361))
+
+
+
+
+
 ## [0.36.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.36.0...@coveo/atomic@0.36.1) (2021-07-06)
 
 **Note:** Version bump only for package @coveo/atomic
