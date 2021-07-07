@@ -15,9 +15,10 @@
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
     "bump:version": "node ./scripts/deploy/bump-version.js",
-    "npm:publish": "lerna run --no-bail npm:publish",
-    "npm:publish:alpha": "npm run npm:publish -- -- -- --tag alpha",
-    "npm:publish:beta": "npm run npm:publish -- -- -- --tag beta",
+    "npm:publish:alpha": "lerna run --no-bail npm:publish -- -- --tag alpha",
+    "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
+    "npm:tag:beta": "npm run npm:tag -- beta",
+    "npm:tag:latest": "npm run npm:tag -- latest",
     "notify:docs": "node ./scripts/notify-docs/published-headless.js",
     "doc:generate": "lerna run doc:generate"
   },
