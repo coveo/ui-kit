@@ -151,7 +151,7 @@ export function assertDisplaySearchClearButton(display: boolean) {
 }
 
 export function assertHighlightsResults(query: string) {
-  it(`should highlight the resuts with the query "${query}"`, () => {
+  it(`should highlight the results with the query "${query}"`, () => {
     FacetSelectors.valueHighlight().each((element) => {
       const text = element.text().toLowerCase();
       expect(text).to.eq(query.toLowerCase());
