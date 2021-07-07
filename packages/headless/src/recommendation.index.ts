@@ -1,5 +1,13 @@
 export {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
+export {
+  RecommendationEngine,
+  RecommendationEngineOptions,
+  RecommendationEngineConfiguration,
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
+} from './app/recommendation-engine/recommendation-engine';
+
 export {CoreEngine, ExternalEngineOptions} from './app/engine';
 export {
   EngineConfiguration,
@@ -8,14 +16,6 @@ export {
 } from './app/engine-configuration';
 export {LoggerOptions} from './app/logger';
 export {LogLevel} from './app/logger';
-
-export {
-  RecommendationEngine,
-  RecommendationEngineOptions,
-  RecommendationEngineConfiguration,
-  buildRecommendationEngine,
-  getSampleRecommendationEngineConfiguration,
-} from './app/recommendation-engine/recommendation-engine';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';
