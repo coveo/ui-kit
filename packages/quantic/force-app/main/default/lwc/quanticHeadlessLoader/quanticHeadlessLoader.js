@@ -100,14 +100,17 @@ const instantiateWindowEngineObject = (element, engineId) => {
  */
 async function initEngine(engineId) {
   try {
+    if(window.coveoHeadless[engineId].bindings.engine) {
+      throw new Error(`Engine already instantiated for engine ID: ${engineId}`);
+    }
+    if (!window.coveoHeadless[engineId].options) {
+      throw new Error('Engine options have not been set.');
+    }
     if (dependencyPromises.length === 0) {
       throw new Error('Dependencies were never requested.');
     }
     await Promise.all(dependencyPromises);
 
-    if (!window.coveoHeadless[engineId].options) {
-      throw new Error('Engine options have not been set.');
-    }
     const options = await window.coveoHeadless[engineId].options.promise;
     return window.coveoHeadless[engineId].engineConstructor(options);
   } catch (error) {
@@ -116,14 +119,14 @@ async function initEngine(engineId) {
 }
 
 /**
- * 
+ * Sets the options passed to engine constructor for given engine ID.
  * @param options The Headless options for the specified engine ID.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
  */
 function setEngineOptions(options, engineConstructor, engineId, element) {
   if (window.coveoHeadless && window.coveoHeadless[engineId] && window.coveoHeadless[engineId].options.isResolved) {
-    console.warn(`overwriting options for engine: ${engineId}`);
+    console.warn(`Attempted to overwrite engine options for engine ID: ${engineId}`);
     return;
   }
   if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
