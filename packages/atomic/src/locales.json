@@ -951,6 +951,10 @@
     "en": "in",
     "fr": "dans"
   },
+  "timeframe": {
+    "en": "Timeframe",
+    "fr": "Plage de temps"
+  },
   "under": {
     "en": "{{child}} under {{parent}}",
     "fr": "{{child}} sous {{parent}}"
