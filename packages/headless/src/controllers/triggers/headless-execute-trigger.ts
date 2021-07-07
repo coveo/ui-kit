@@ -4,6 +4,7 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {ExecuteTriggerParams} from '../../api/search/trigger';
 
 /**
  * The `ExecuteTrigger` controller handles execute trigger actions.
@@ -27,13 +28,13 @@ export interface ExecuteTriggerState {
   /**
    * The parameters of the function to be executed.
    */
-  params: [string | number | boolean];
+  params: ExecuteTriggerParams;
 }
 
 /**
  * Creates a `ExecuteTrigger` controller instance. An execute trigger is configured in the Administration console,
  * and used to execute a function in the browser when a certain condition is met.
-
+ *
  *
  * @param engine - The headless engine.
  * @returns A `RedirectionTrigger` controller instance.

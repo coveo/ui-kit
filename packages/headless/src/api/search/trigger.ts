@@ -51,8 +51,13 @@ export function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
  */
 export interface TriggerExecute {
   type: 'execute';
-  content: {name: string; params: [string | number | boolean]};
+  content: {name: string; params: ExecuteTriggerParams};
 }
+
+/**
+ * The type of the parameters for a Trigger Execute object.
+ */
+export type ExecuteTriggerParams = [string | number | boolean];
 
 export function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
   return trigger.type === 'execute';
