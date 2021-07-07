@@ -32,7 +32,7 @@ export const triggerReducer = createReducer(
             functionName: executeTriggers[0].content.name,
             params: executeTriggers[0].content.params,
           }
-        : {functionName: '', params: ['']};
+        : {functionName: '', params: []};
       const notifyTriggers = action.payload.response.triggers.filter(
         isNotifyTrigger
       );

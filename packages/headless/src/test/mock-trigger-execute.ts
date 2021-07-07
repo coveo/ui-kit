@@ -5,7 +5,7 @@ export function buildMockExecuteTrigger(
 ): TriggerExecute {
   return {
     type: 'execute',
-    content: {name: '', params: ['']},
+    content: {name: '', params: []},
     ...config,
   };
 }

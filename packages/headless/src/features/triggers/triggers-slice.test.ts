@@ -144,7 +144,7 @@ describe('trigger slice', () => {
 
     expect(finalState.execute).toEqual({
       functionName: '',
-      params: [''],
+      params: [],
     });
   });
 
