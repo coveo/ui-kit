@@ -271,6 +271,8 @@ export {
   buildExecuteTrigger,
 } from './triggers/headless-execute-trigger';
 
+export {ExecuteTriggerParams} from './../api/search/trigger';
+
 export {
   NotifyTrigger,
   NotifyTriggerState,

@@ -1,4 +1,8 @@
-import {buildExecuteTrigger, SearchEngine} from '@coveo/headless';
+import {
+  buildExecuteTrigger,
+  SearchEngine,
+  ExecuteTriggerParams,
+} from '@coveo/headless';
 
 /**
  * This sample create a headless execute trigger controller instance
@@ -18,7 +22,7 @@ export function bindExecuteTrigger(engine: SearchEngine) {
     }
   };
 
-  const log = (params: [string | number | boolean]) => {
+  const log = (params: ExecuteTriggerParams) => {
     console.log('params: ', params);
   };
 

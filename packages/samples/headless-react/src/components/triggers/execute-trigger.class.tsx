@@ -3,6 +3,7 @@ import {
   buildExecuteTrigger,
   ExecuteTrigger as HeadlessExecuteTrigger,
   ExecuteTriggerState,
+  ExecuteTriggerParams,
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
@@ -31,7 +32,7 @@ export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {
     }
   };
 
-  private log = (params: [string | number | boolean]) => {
+  private log = (params: ExecuteTriggerParams) => {
     console.log('params: ', params);
   };
 
