@@ -1,4 +1,13 @@
-export {Unsubscribe} from '@reduxjs/toolkit';
+export {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+
+export {CoreEngine, ExternalEngineOptions} from './app/engine';
+export {
+  EngineConfiguration,
+  AnalyticsConfiguration,
+  AnalyticsRuntimeEnvironment,
+} from './app/engine-configuration';
+export {LoggerOptions} from './app/logger';
+export {LogLevel} from './app/logger';
 
 export {
   RecommendationEngine,
@@ -21,6 +30,11 @@ export * from './features/recommendation/recommendation-click-analytics-actions-
 
 // Controllers
 export {
+  Controller,
+  buildController,
+} from './controllers/controller/headless-controller';
+
+export {
   RecommendationListOptions,
   RecommendationListProps,
   RecommendationListState,
@@ -36,4 +50,7 @@ export {
   buildContext,
 } from './controllers/context/headless-context';
 
+// Miscellaneous
 export {Result} from './api/search/search/result';
+export {HighlightKeyword} from './utils/highlight';
+export {Raw} from './api/search/search/raw';
