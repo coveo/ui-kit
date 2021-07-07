@@ -55,7 +55,7 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get total() {
-    return ` of ${this.state.total.toString()}`;
+    return this.state.total.toString();
   }
 
   get duration() {
