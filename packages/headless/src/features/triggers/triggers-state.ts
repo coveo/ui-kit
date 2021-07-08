@@ -12,7 +12,7 @@ export interface TriggerState {
   query: string;
 
   /**
-   * The javascript function to be executed after receiving an execute trigger.
+   * The JavaScript function to be executed after receiving an execute trigger.
    */
   execute: {functionName: string; params: ExecuteTriggerParams};
 
