@@ -329,7 +329,11 @@ export class AtomicNumericFacet
   }
 
   private get shouldRenderInput() {
-    return this.withInput;
+    if (!this.withInput) {
+      return false;
+    }
+
+    return this.searchStatusState.hasResults || !!this.filterState?.range;
   }
 
   public render() {
