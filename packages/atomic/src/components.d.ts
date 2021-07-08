@@ -276,7 +276,7 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The number of values to request for this facet, when there are no manual ranges.
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues": number;
         /**
@@ -291,10 +291,6 @@ export namespace Components {
           * Whether this facet should contain an input allowing users to set custom ranges.
          */
         "withInput": boolean;
-        /**
-          * Whether this facet should contain a defined list of values.
-         */
-        "withRanges": boolean;
     }
     interface AtomicNumericRange {
         /**
@@ -1117,7 +1113,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of values to request for this facet, when there are no manual ranges.
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues"?: number;
         /**
@@ -1132,10 +1128,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an input allowing users to set custom ranges.
          */
         "withInput"?: boolean;
-        /**
-          * Whether this facet should contain a defined list of values.
-         */
-        "withRanges"?: boolean;
     }
     interface AtomicNumericRange {
         /**

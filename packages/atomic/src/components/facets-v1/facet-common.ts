@@ -2,8 +2,8 @@ import {SearchStatus, SearchStatusState} from '@coveo/headless';
 import {i18n} from 'i18next';
 
 export interface BaseFacet<Facet, FacetState> {
-  facet: Facet;
-  facetState: FacetState;
+  facet?: Facet;
+  facetState?: FacetState;
   searchStatus: SearchStatus;
   searchStatusState: SearchStatusState;
   error: Error;
