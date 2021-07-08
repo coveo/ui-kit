@@ -27,7 +27,7 @@ import {BaseFacet} from '../facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-rating-facet` displays a facet of the results for the current query based as ratings.
+ * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -152,7 +152,7 @@ export class AtomicRatingFacet
   }
 
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
-    const displayValue = 'add stars later'; //TODO
+    const displayValue = 'stars'; //TODO: add stars
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
@@ -219,6 +219,10 @@ export class AtomicRatingFacet
           numberOfValues={this.numberOfValues}
         ></FacetPlaceholder>
       );
+    }
+
+    if (!this.facetState.values.length) {
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
