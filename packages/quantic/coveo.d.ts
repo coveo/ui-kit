@@ -22,9 +22,7 @@ declare global {
         }[];
         options: Deferred<HeadlessTypes.ExternalEngineOptions>;
         enginePromise: Promise<HeadlessTypes.CoreEngine>;
-        engineConstructor?: (
-          options: HeadlessTypes.ExternalEngineOptions
-        ) => HeadlessTypes.CoreEngine;
+        engineConstructor?: string;
         initializedCallback?: Function;
         bindings: Bindings;
       };

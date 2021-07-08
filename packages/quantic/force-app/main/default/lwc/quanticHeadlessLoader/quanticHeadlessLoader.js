@@ -9,6 +9,10 @@ let debouncers = {};
 
 let dependencyPromises = [];
 
+const EngineConstructors = {
+  SearchEngineConstructor: 'buildSearchEngine'
+}
+
 /**
  * Initiates dependency loading promises.
  * @param element The Lightning element to use to load dependencies.
@@ -100,7 +104,7 @@ const instantiateWindowEngineObject = (element, engineId) => {
  */
 async function initEngine(engineId) {
   try {
-    if(window.coveoHeadless[engineId].bindings.engine) {
+    if (window.coveoHeadless[engineId].bindings.engine) {
       throw new Error(`Engine already instantiated for engine ID: ${engineId}`);
     }
     if (!window.coveoHeadless[engineId].options) {
@@ -112,7 +116,7 @@ async function initEngine(engineId) {
     await Promise.all(dependencyPromises);
 
     const options = await window.coveoHeadless[engineId].options.promise;
-    return window.coveoHeadless[engineId].engineConstructor(options);
+    return CoveoHeadless[window.coveoHeadless[engineId].engineConstructor](options);
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
@@ -121,6 +125,7 @@ async function initEngine(engineId) {
 /**
  * Sets the options passed to engine constructor for given engine ID.
  * @param options The Headless options for the specified engine ID.
+ * @param {string} engineConstructor The name of the constructor function.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
  */
@@ -217,6 +222,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
 }
 
 export {
+  EngineConstructors,
   setInitializedCallback,
   setEngineOptions,
   registerComponentForInit,

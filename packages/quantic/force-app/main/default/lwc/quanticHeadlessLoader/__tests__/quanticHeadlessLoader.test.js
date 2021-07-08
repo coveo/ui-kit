@@ -31,6 +31,7 @@ describe('c/quanticHeadlessLoader', () => {
   let testElement;
 
   let mockEngineConstructor;
+  let constructorSpy;
 
   const createComponentEntryWithInitStatus = (isInitialized) => ({
     element: document.createElement('div'),
@@ -47,7 +48,8 @@ describe('c/quanticHeadlessLoader', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     initialize = jest.fn();
-    mockEngineConstructor = jest.fn().mockReturnValue(CoveoHeadlessStub.buildSearchEngine());
+    mockEngineConstructor = 'buildSearchEngine'
+    constructorSpy = jest.spyOn(CoveoHeadlessStub, 'buildSearchEngine');
     mockedConsoleWarn = jest.fn();
     mockedConsoleError = jest.fn();
     console.warn = mockedConsoleWarn;
@@ -266,7 +268,7 @@ describe('c/quanticHeadlessLoader', () => {
 
       it('should init the engine and return a promise', async () => {
         const engine = await getHeadlessEnginePromise(testId);
-        expect(mockEngineConstructor).toBeCalled();
+        expect(constructorSpy).toBeCalled();
         expect(engine).toBeTruthy();
       });
     });
