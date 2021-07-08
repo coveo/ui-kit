@@ -11,7 +11,7 @@ import {ExecuteTriggerParams} from '../../api/search/trigger';
  */
 export interface ExecuteTrigger extends Controller {
   /**
-   * the state of the `ExecuteTrigger` controller.
+   * The state of the `ExecuteTrigger` controller.
    */
   state: ExecuteTriggerState;
 }
