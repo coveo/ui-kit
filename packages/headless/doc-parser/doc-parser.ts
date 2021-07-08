@@ -25,7 +25,7 @@ interface UseCase {
 interface ResolvedUseCase {
   name: string;
   controllers: Controller[];
-  actionLoaders: ActionLoader[];
+  actions: ActionLoader[];
   engine: Engine;
 }
 
@@ -51,13 +51,13 @@ function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const controllers = config.controllers.map((controller) =>
     resolveController(entryPoint, controller)
   );
-  const actionLoaders = config.actionLoaders.map((loader) =>
+  const actions = config.actionLoaders.map((loader) =>
     resolveActionLoader(entryPoint, loader)
   );
 
   const engine = resolveEngine(entryPoint, config.engine);
 
-  return {name, controllers, actionLoaders, engine};
+  return {name, controllers, actions, engine};
 }
 
 const resolved = useCases.map(resolveUseCase);
