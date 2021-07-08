@@ -42,6 +42,7 @@ import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../formats/format-common';
+import {NumberInputType} from '../facet-number-input/number-input-type';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -115,8 +116,9 @@ export class AtomicNumericFacet
   @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain an input allowing users to set custom ranges.
+   * The depending on the field, the input can either allow decimal values or only integers.
    */
-  @Prop() public withInput = false;
+  @Prop() public withInput?: NumberInputType;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
@@ -229,6 +231,7 @@ export class AtomicNumericFacet
   private renderNumberInput() {
     return (
       <atomic-facet-number-input
+        type={this.withInput!}
         onApply={() =>
           this.facetId &&
           this.bindings.engine.dispatch(

@@ -1,6 +1,7 @@
 import {Component, h, State, Prop, Host, Watch} from '@stencil/core';
 import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
+import {NumberInputType} from './number-input-type';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -12,10 +13,11 @@ import {Bindings} from '../../../utils/initialization-utils';
 })
 export class FacetNumberInput {
   @State() private isRangeInvalid = false;
-  @State() private start?: number;
-  @State() private end?: number;
+  @State() private start = '';
+  @State() private end = '';
 
   @Prop() public bindings!: Bindings;
+  @Prop() public type!: NumberInputType;
   @Prop() public onApply?: () => void;
   @Prop() public filter!: NumericFilter;
   @Prop() public filterState!: NumericFilterState;
@@ -31,8 +33,8 @@ export class FacetNumberInput {
       return;
     }
 
-    this.start = this.filterState.range?.start;
-    this.end = this.filterState.range?.end;
+    this.start = this.filterState.range?.start.toString() || '';
+    this.end = this.filterState.range?.end.toString() || '';
   }
 
   private apply() {
@@ -40,8 +42,8 @@ export class FacetNumberInput {
 
     try {
       this.filter.setRange({
-        start: this.start!,
-        end: this.end!,
+        start: parseFloat(this.start),
+        end: parseFloat(this.end),
       });
       this.isRangeInvalid = false;
     } catch (error) {
@@ -51,13 +53,17 @@ export class FacetNumberInput {
   }
 
   private get applyEnabled() {
-    return (
-      this.start !== undefined &&
-      this.end !== undefined &&
-      !isNaN(this.start) &&
-      !isNaN(this.end) &&
-      this.end >= this.start
-    );
+    const start = parseFloat(this.start);
+    const end = parseFloat(this.end);
+    return !isNaN(start) && !isNaN(end) && end >= start;
+  }
+
+  private validateInput(value: string) {
+    if (this.type === 'decimal') {
+      return value.replace(/(?!^-)[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    }
+
+    return value.replace(/(?!^-)[^0-9]/g, '');
   }
 
   render() {
@@ -80,21 +86,21 @@ export class FacetNumberInput {
             class={inputClasses}
             placeholder={min}
             aria-label={minAria}
-            type="number"
             value={this.start}
-            onInput={(e) =>
-              (this.start = (e.target as HTMLInputElement).valueAsNumber)
-            }
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              target.value = this.start = this.validateInput(target.value);
+            }}
           />
           <input
             class={inputClasses}
             placeholder={max}
             aria-label={maxAria}
-            type="number"
             value={this.end}
-            onInput={(e) =>
-              (this.end = (e.target as HTMLInputElement).valueAsNumber)
-            }
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              target.value = this.end = this.validateInput(target.value);
+            }}
           />
           <button
             class={`${commonClasses} bg-background text-primary disabled:cursor-not-allowed disabled:bg-neutral disabled:text-neutral-dark flex-none`}

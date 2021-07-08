@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
+import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -138,6 +139,7 @@ export namespace Components {
         "filterState": NumericFilterState;
         "label": string;
         "onApply"?: () => void;
+        "type": NumberInputType;
     }
     interface AtomicFacetV1 {
         /**
@@ -288,9 +290,9 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges.
+          * Whether this facet should contain an input allowing users to set custom ranges. The depending on the field, the input can either allow decimal values or only integers.
          */
-        "withInput": boolean;
+        "withInput"?: NumberInputType;
     }
     interface AtomicNumericRange {
         /**
@@ -975,6 +977,7 @@ declare namespace LocalJSX {
         "filterState": NumericFilterState;
         "label": string;
         "onApply"?: () => void;
+        "type": NumberInputType;
     }
     interface AtomicFacetV1 {
         /**
@@ -1125,9 +1128,9 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges.
+          * Whether this facet should contain an input allowing users to set custom ranges. The depending on the field, the input can either allow decimal values or only integers.
          */
-        "withInput"?: boolean;
+        "withInput"?: NumberInputType;
     }
     interface AtomicNumericRange {
         /**
