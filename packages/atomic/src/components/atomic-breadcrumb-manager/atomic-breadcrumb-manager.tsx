@@ -14,9 +14,9 @@ import {
   BreadcrumbValue,
   NumericFacetValue,
   DateFacetValue,
-  BaseFacetValue,
 } from '@coveo/headless';
 import mainclear from '../../images/main-clear.svg';
+import {BaseFacetValue} from '../../../../headless/dist/definitions/features/facets/facet-api/response';
 
 type BreadcrumbFacet = Breadcrumb<BaseFacetValue & {value: string}>;
 type BaseBreadcrumbValue = BreadcrumbValue<BaseFacetValue>;
