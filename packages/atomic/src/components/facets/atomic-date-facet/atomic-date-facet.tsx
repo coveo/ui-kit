@@ -120,9 +120,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.dateFacets[this.facetId] = {
       label: this.label,
-      formatting: this.dateFormat,
+      format: (value) => this.formatValue(value),
     };
   }
 
@@ -135,11 +135,15 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     });
   }
 
+  private formatValue(facetValue: DateFacetValue) {
+    const start = dayjs(facetValue.start).format(this.dateFormat);
+    const end = dayjs(facetValue.end).format(this.dateFormat);
+    return this.strings.to({start, end});
+  }
+
   private buildListItem(item: DateFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-    const start = dayjs(item.start).format(this.dateFormat);
-    const end = dayjs(item.end).format(this.dateFormat);
-    const value = this.strings.to({start, end});
+    const value = this.formatValue(item);
     return (
       <FacetValue
         label={value}
