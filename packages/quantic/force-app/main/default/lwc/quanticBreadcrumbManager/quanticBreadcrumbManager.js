@@ -8,7 +8,7 @@ import {
   initializeWithHeadless
 } from 'c/quanticHeadlessLoader';
 
-export default class QuanticBreadcrumb extends LightningElement {
+export default class QuanticBreadcrumbManager extends LightningElement {
   /** @type {import("coveo").BreadcrumbManager} */
   breadcrumbManager;
   /** @type {() => void} */
@@ -87,7 +87,6 @@ export default class QuanticBreadcrumb extends LightningElement {
   }
 
   formatCategoryBreadcrumbValue(breadcrumb) {
-    console.log(JSON.stringify(breadcrumb));
     if (breadcrumb.path.length <= 3) {
       return breadcrumb.path.map((breadcrumbValue) => breadcrumbValue.value);
     }
@@ -149,12 +148,12 @@ export default class QuanticBreadcrumb extends LightningElement {
   }
 
   get facetBreadcrumbValues() {
-    let facetBreadcrumbsToDisplay = this.facetBreadcrumbs || [];
+    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs || [];
     return facetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get numericFacetBreadcrumbsValues() {
-    let numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
+    const numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
     return numericFacetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
@@ -171,7 +170,7 @@ export default class QuanticBreadcrumb extends LightningElement {
   }
 
   get dateFacetBreadcrumbsValues() {
-    let dateFacetBreadcrumbsToDisplay = this.dateFacetBreadcrumbs.map(breadcrumb => this.formatDateRangeBreadcrumbValue(breadcrumb)) || [];
+    const dateFacetBreadcrumbsToDisplay = this.dateFacetBreadcrumbs.map(breadcrumb => this.formatDateRangeBreadcrumbValue(breadcrumb)) || [];
     return dateFacetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 }

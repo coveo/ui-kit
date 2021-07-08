@@ -1,12 +1,12 @@
-.align-baseline {
+.breadcrumb-manager__line {
     align-items: baseline;
 }
 
-.text-hover-underline:hover {
+.breadcrumb-manager__value:hover {
     text-decoration: underline;
 }
 
-.slds-grid div.no-gutters {
+.slds-grid div.breadcrumb-manager__column {
     padding: 0;
 }
 
