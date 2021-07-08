@@ -12,27 +12,54 @@ import {
   Engine,
   resolveEngine,
 } from './src/headless-export-resolvers/engine-resolver';
+import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
+import {UseCaseConfiguration} from './use-cases/use-case-configuration';
+
+interface UseCase {
+  name: string;
+  entryFile: string;
+  config: UseCaseConfiguration;
+}
 
 interface ResolvedUseCase {
+  name: string;
   controllers: Controller[];
   actionLoaders: ActionLoader[];
   engine: Engine;
 }
 
-const apiModel = new ApiModel();
-const apiPackage = apiModel.loadPackage('temp/headless.api.json');
-const entryPoint = apiPackage.entryPoints[0];
+const useCases: UseCase[] = [
+  {
+    name: 'search',
+    entryFile: 'temp/index.api.json',
+    config: searchUseCase,
+  },
+  {
+    name: 'recommendation',
+    entryFile: 'temp/recommendation.api.json',
+    config: recommendationUseCase,
+  },
+];
 
-const controllers = searchUseCase.controllers.map((controller) =>
-  resolveController(entryPoint, controller)
-);
-const actionLoaders = searchUseCase.actionLoaders.map((loader) =>
-  resolveActionLoader(entryPoint, loader)
-);
+function resolveUseCase(useCase: UseCase): ResolvedUseCase {
+  const {name, entryFile, config} = useCase;
+  const apiModel = new ApiModel();
+  const apiPackage = apiModel.loadPackage(entryFile);
+  const entryPoint = apiPackage.entryPoints[0];
 
-const engine = resolveEngine(entryPoint, searchUseCase.engine);
+  const controllers = config.controllers.map((controller) =>
+    resolveController(entryPoint, controller)
+  );
+  const actionLoaders = config.actionLoaders.map((loader) =>
+    resolveActionLoader(entryPoint, loader)
+  );
 
-const resolved: ResolvedUseCase = {controllers, actionLoaders, engine};
+  const engine = resolveEngine(entryPoint, config.engine);
+
+  return {name, controllers, actionLoaders, engine};
+}
+
+const resolved = useCases.map(resolveUseCase);
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(resolved, null, 2));
