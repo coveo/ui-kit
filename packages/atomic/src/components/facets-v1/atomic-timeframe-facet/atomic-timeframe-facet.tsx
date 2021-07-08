@@ -65,7 +65,7 @@ export class AtomicTimeframeFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'timeframe';
+  @Prop() public label = 'noLabel';
   /**
    * The field whose values you want to display in the facet.
    */
