@@ -167,7 +167,7 @@ export class AtomicCategoryFacet
       this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.categoryFacets[this.facetId] = {
       label: this.label,
     };
   }
