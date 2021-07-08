@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 
 /**
- * This sample create a headless execute trigger controller instance
+ * This sample creates an instance of the headless execute trigger controller
  * and shows how to utilize the controller with the user defined functions.
  *
  * @param engine - a headless search engine instance
