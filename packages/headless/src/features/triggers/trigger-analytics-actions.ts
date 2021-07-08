@@ -55,11 +55,7 @@ export const logTriggerExecute = makeAnalyticsAction(
   (client, state) => {
     if (state.triggers?.execute) {
       return client.logTriggerExecute({
-        executed:
-          'function name: ' +
-          state.triggers.execute.functionName +
-          ' params: ' +
-          state.triggers.execute.params,
+        executed: state.triggers.execute.functionName,
       });
     }
     return;
