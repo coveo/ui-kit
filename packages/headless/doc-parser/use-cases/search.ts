@@ -289,6 +289,50 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildQueryTrigger',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/triggers/query-trigger.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/triggers/query-trigger.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildExecuteTrigger',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/triggers/execute-trigger.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/triggers/execute-trigger.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildNotifyTrigger',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/triggers/notify-trigger.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/triggers/notify-trigger.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRedirectionTrigger',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/triggers/redirection-trigger.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/triggers/redirection-trigger.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
