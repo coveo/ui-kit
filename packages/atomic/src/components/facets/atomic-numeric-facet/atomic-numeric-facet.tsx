@@ -122,9 +122,17 @@ export class AtomicNumericFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.numericFacets[this.facetId] = {
       label: this.label,
+      format: (value) => this.formatValue(value),
     };
+  }
+
+  private formatValue(facetValue: NumericFacetValue) {
+    const {language} = this.bindings.i18n;
+    const start = facetValue.start.toLocaleString(language);
+    const end = facetValue.end.toLocaleString(language);
+    return this.strings.to({start, end});
   }
 
   private get values() {
@@ -138,10 +146,7 @@ export class AtomicNumericFacet
 
   private buildListItem(item: NumericFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-    const {language} = this.bindings.i18n;
-    const start = item.start.toLocaleString(language);
-    const end = item.end.toLocaleString(language);
-    const value = this.strings.to({start, end});
+    const value = this.formatValue(item);
 
     return (
       <FacetValue

@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
-  "mainEntryPointFilePath": "<projectFolder>/temp/headless.d.ts",
+  "mainEntryPointFilePath": "",
   "bundledPackages": [ "redux", "@reduxjs/toolkit" ],
   "apiReport": {
     "enabled": false
   },
   "docModel": {
     "enabled": true,
-    "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>.api.json"
+    "apiJsonFilePath": ""
   },
   "dtsRollup": {
     "enabled": false
