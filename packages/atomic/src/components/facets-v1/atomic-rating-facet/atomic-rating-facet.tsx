@@ -4,13 +4,10 @@ import {
   buildNumericFacet,
   NumericFacetState,
   NumericFacetOptions,
-  RangeFacetSortCriterion,
   SearchStatus,
   SearchStatusState,
   buildSearchStatus,
   NumericFacetValue,
-  NumericFilterState,
-  NumericFilter,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -32,7 +29,7 @@ import {BaseFacet} from '../facet-common';
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  *
- * @part label-button - The button that displays the label and allows to expand/collapse the facet.
+ * @part label-button - The button that displays the label and toggles to expand or collapse the facet.
  * @part label-button-icon - The label button icon.
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
@@ -46,9 +43,6 @@ import {BaseFacet} from '../facet-common';
  * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  *
- * @part show-more - The show more results button.
- * @part show-less - The show less results button.
- * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @Component({
   tag: 'atomic-rating-facet',
@@ -61,15 +55,11 @@ export class AtomicRatingFacet
     BaseFacet<NumericFacet, NumericFacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
-  public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
 
   @BindStateToController('facet')
   @State()
   public facetState!: NumericFacetState;
-  @BindStateToController('filter')
-  @State()
-  public filterState?: NumericFilterState;
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
@@ -83,20 +73,15 @@ export class AtomicRatingFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'rating';
+  @Prop() public label = 'noLabel';
   /**
    * The field whose values you want to display in the facet.
    */
   @Prop() public field!: string;
   /**
-   * The number of values to request for this facet, when there are no manual ranges.
+   * The number of stars to request for this facet.
    */
-  @Prop() public numberOfValues = 5;
-  /**
-   * The sort criterion to apply to the returned facet values.
-   * Possible values are 'ascending' and 'descending'.
-   */
-  @Prop() public sortCriteria: RangeFacetSortCriterion = 'ascending';
+  @Prop() public numberOfStars = 5;
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
@@ -112,8 +97,8 @@ export class AtomicRatingFacet
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
+      numberOfValues: this.numberOfStars,
+      sortCriteria: 'descending',
       generateAutomaticRanges: false,
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
@@ -124,10 +109,6 @@ export class AtomicRatingFacet
   }
 
   private get numberOfSelectedValues() {
-    if (this.filterState?.range) {
-      return 1;
-    }
-
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
   }
@@ -137,13 +118,7 @@ export class AtomicRatingFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => {
-          if (this.filterState?.range) {
-            this.filter?.clear();
-            return;
-          }
-          this.facet.deselectAll();
-        }}
+        onClearFilters={() => this.facet.deselectAll()}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
@@ -187,10 +162,6 @@ export class AtomicRatingFacet
   }
 
   private renderValues() {
-    if (this.filterState?.range) {
-      return;
-    }
-
     return this.renderValuesContainer(
       this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
@@ -216,7 +187,7 @@ export class AtomicRatingFacet
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <FacetPlaceholder
-          numberOfValues={this.numberOfValues}
+          numberOfValues={this.numberOfStars}
         ></FacetPlaceholder>
       );
     }
