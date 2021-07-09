@@ -32,6 +32,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Install NPM dependencies
         run: npm i -g sfdx-cli
+      - name: Create jwt key file
+        run: echo "$SFDX_AUTH_JWT_KEY" > server.key
       - name: Connect to DevHub organization
         run: sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
       - name: Create package version in the Dev Hub org
