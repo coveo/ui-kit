@@ -14,7 +14,7 @@ on:
         description: 'Whether or not the package created should be promoted.'
         required: true
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '30 17 * * *'
 
 defaults:
   run:
