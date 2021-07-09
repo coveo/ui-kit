@@ -966,5 +966,9 @@
   "organizationWillResume": {
     "en": "Your organization is resuming and will be available shortly.",
     "fr": "Votre organisation redeviendra active et sera bientôt disponible."
+  },
+  "rating": {
+    "en": "Rating",
+    "fr": "Notation"
   }
 }
