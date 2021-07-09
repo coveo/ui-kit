@@ -157,8 +157,9 @@ export class AtomicNumericFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.numericFacets[this.facetId] = {
       label: this.label,
+      format: (facetValue) => this.formatFacetValue(facetValue),
     };
   }
 
@@ -169,9 +170,9 @@ export class AtomicNumericFacet
         field: this.field,
       },
     });
-    this.bindings.store.state.facets[this.filter.state.facetId] = {
-      label: this.label,
-    };
+    this.bindings.store.state.numericFacets[
+      this.filter.state.facetId
+    ] = this.bindings.store.state.numericFacets[this.facetId!];
   }
 
   @Listen('atomic/numberFormat')
@@ -191,7 +192,7 @@ export class AtomicNumericFacet
       );
   }
 
-  private format(value: number) {
+  private formatValue(value: number) {
     try {
       return this.formatter(value, this.bindings.i18n.languages);
     } catch (error) {
@@ -265,16 +266,20 @@ export class AtomicNumericFacet
     );
   }
 
-  private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
+  private formatFacetValue(facetValue: NumericFacetValue) {
     const manualRangeLabel = this.manualRanges.find((range) =>
       this.areRangesEqual(range, facetValue)
     )?.label;
-    const displayValue = manualRangeLabel
+    return manualRangeLabel
       ? this.bindings.i18n.t(manualRangeLabel)
       : this.bindings.i18n.t('to', {
-          start: this.format(facetValue.start),
-          end: this.format(facetValue.end),
+          start: this.formatValue(facetValue.start),
+          end: this.formatValue(facetValue.end),
         });
+  }
+
+  private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
+    const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':

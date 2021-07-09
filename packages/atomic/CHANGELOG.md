@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.39.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.2...@coveo/atomic@0.39.3) (2021-07-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.39.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.1...@coveo/atomic@0.39.2) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.39.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.0...@coveo/atomic@0.39.1) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.39.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.38.1...@coveo/atomic@0.39.0) (2021-07-08)
+
+
+### Features
+
+* **atomic:** add facet format method to Atomic store ([#952](https://github.com/coveo/ui-kit/issues/952)) ([6a295ac](https://github.com/coveo/ui-kit/commit/6a295acf57007c0cfc90e6b63fb96bdda9b1357c))
+
+
+
+
+
+## [0.38.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.38.0...@coveo/atomic@0.38.1) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.37.0...@coveo/atomic@0.38.0) (2021-07-07)
 
 

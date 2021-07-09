@@ -15,7 +15,7 @@ export interface ClickAnalyticsActionCreators {
   /**
    * The event to log when a recommendation is selected.
    *
-   * @param result - The selected recommendation.
+   * @param recommendation - The selected recommendation.
    * @returns A dispatchable action.
    */
   logRecommendationOpen(

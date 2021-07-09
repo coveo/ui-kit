@@ -1,17 +1,32 @@
-import {SearchEngine} from '@coveo/headless';
+import {SearchEngine, NumericFacetValue, DateFacetValue} from '@coveo/headless';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {i18n, TOptions} from 'i18next';
 import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
 
-export type FacetState = {
+interface FacetLabel {
   label: string;
-  formatting?: string;
-};
+}
+
+interface FacetValueFormat<ValueType> {
+  format(facetValue: ValueType): string;
+}
+
+type FacetStore<F extends FacetLabel> = Record<string, F>;
 
 export type AtomicStore = {
-  facets: Record<string, FacetState>;
+  facets: FacetStore<FacetLabel>;
+  numericFacets: FacetStore<FacetLabel & FacetValueFormat<NumericFacetValue>>;
+  dateFacets: FacetStore<FacetLabel & FacetValueFormat<DateFacetValue>>;
+  categoryFacets: FacetStore<FacetLabel>;
 };
+
+export const initialStore: () => AtomicStore = () => ({
+  facets: {},
+  numericFacets: {},
+  dateFacets: {},
+  categoryFacets: {},
+});
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
