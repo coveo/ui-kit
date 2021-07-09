@@ -200,6 +200,7 @@ const dev = [
 const typeDefinitions = [
   buildTypeDefinitionConfiguration('index.d.ts'),
   buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
+  buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
 ];
 
 function buildTypeDefinitionConfiguration(entryFileName) {
