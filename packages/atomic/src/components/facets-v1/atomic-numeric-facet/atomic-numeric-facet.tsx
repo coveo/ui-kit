@@ -68,8 +68,8 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  *
- * @part input-start - The start input of the custom range.
- * @part input-end - The end input of the custom range.
+ * @part input-start - The input for the start value of the custom range.
+ * @part input-end - The input for the end value of the custom range.
  * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
@@ -120,7 +120,7 @@ export class AtomicNumericFacet
   @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain an input allowing users to set custom ranges.
-   * The depending on the field, the input can either allow decimal values or only integers.
+   * Depending on the field, the input can allow either decimal or integer values.
    */
   @Prop() public withInput?: NumberInputType;
   /**

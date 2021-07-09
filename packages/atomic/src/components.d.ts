@@ -289,7 +289,7 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges. The depending on the field, the input can either allow decimal values or only integers.
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
     }
@@ -1152,7 +1152,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges. The depending on the field, the input can either allow decimal values or only integers.
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
     }
