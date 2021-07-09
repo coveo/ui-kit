@@ -138,7 +138,6 @@ export namespace Components {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onApply"?: () => void;
         "type": NumberInputType;
     }
     interface AtomicFacetV1 {
@@ -976,7 +975,7 @@ declare namespace LocalJSX {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onApply"?: () => void;
+        "onAtomic/numberInputApply"?: (event: CustomEvent<any>) => void;
         "type": NumberInputType;
     }
     interface AtomicFacetV1 {

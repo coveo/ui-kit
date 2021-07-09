@@ -67,6 +67,10 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
+ *
+ * @part input-start - The start input of the custom range.
+ * @part input-end - The end input of the custom range.
+ * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
   tag: 'atomic-numeric-facet-v1', // TODO: remove v1 when old facets are removed
@@ -177,6 +181,16 @@ export class AtomicNumericFacet
     this.formatter = event.detail;
   }
 
+  @Listen('atomic/numberInputApply')
+  public applyNumberInput() {
+    this.facetId &&
+      this.bindings.engine.dispatch(
+        loadNumericFacetSetActions(
+          this.bindings.engine
+        ).deselectAllNumericFacetValues(this.facetId)
+      );
+  }
+
   private format(value: number) {
     try {
       return this.formatter(value, this.bindings.i18n.languages);
@@ -232,14 +246,6 @@ export class AtomicNumericFacet
     return (
       <atomic-facet-number-input
         type={this.withInput!}
-        onApply={() =>
-          this.facetId &&
-          this.bindings.engine.dispatch(
-            loadNumericFacetSetActions(
-              this.bindings.engine
-            ).deselectAllNumericFacetValues(this.facetId)
-          )
-        }
         bindings={this.bindings}
         label={this.label}
         filter={this.filter!}
