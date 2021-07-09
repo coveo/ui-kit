@@ -60,5 +60,7 @@ jobs:
         if: steps.check_sha.outputs.cache-hit != 'true'
         run: '${GITHUB_WORKSPACE}/.github/get_creation_report.sh output'
       - name: 'Promote the created version if desired'
-        if: '${{ github.event.inputs.shouldPromote && steps.check_sha.outputs.cache-it != 'true' }}'
+        if: |
+          '${{ github.event.inputs.shouldPromote }}' && 
+          steps.check_sha.outputs.cache-hit != 'true'
         run: sfdx force:package:version:promote -p $"$(cat create_package_result.json | jq '.result.SubscriberPackageVersionId' -r)" -v $SFDX_AUTH_JWT_USERNAME --json > promote_package_result.json
