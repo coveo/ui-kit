@@ -103,14 +103,23 @@ export class AtomicRatingFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.numericFacets[this.facetId] = {
       label: this.label,
+      format: (facetValue) => this.formatFacetValue(facetValue),
     };
   }
 
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
+  }
+
+  private formatFacetValue(facetValue: NumericFacetValue) {
+    //TODO: add stars here
+    return this.bindings.i18n.t('to', {
+      start: facetValue.start,
+      end: facetValue.end,
+    });
   }
 
   private renderHeader() {
@@ -127,7 +136,7 @@ export class AtomicRatingFacet
   }
 
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
-    const displayValue = 'stars'; //TODO: add stars
+    const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
