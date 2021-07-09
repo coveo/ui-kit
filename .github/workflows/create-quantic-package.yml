@@ -13,6 +13,8 @@ on:
       shouldPromote:
         description: 'Whether or not the package created should be promoted.'
         required: true
+  schedule:
+    - cron: '0 0 * * 0'
 
 defaults:
   run:
@@ -32,16 +34,31 @@ jobs:
         uses: actions/checkout@v2
       - name: Install NPM dependencies
         run: npm i -g sfdx-cli
+      - name: Create cache file
+        run: |
+          mkdir check-SHA
+          echo ${{ github.sha }} > github-sha.txt
+      - name: Check SHA
+        id: check_sha
+        uses: actions/cache@v1
+        with:
+          path: check-SHA
+          key: check-SHA-${{ github.sha }}
       - name: Create jwt key file
+        if: steps.check_sha.outputs.cache-hit != 'true'
         run: echo "$SFDX_AUTH_JWT_KEY" > server.key
       - name: Connect to DevHub organization
+        if: steps.check_sha.outputs.cache-hit != 'true'
         run: sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
       - name: Create package version in the Dev Hub org
+        if: steps.check_sha.outputs.cache-hit != 'true'
         run: output=$(sfdx force:package:version:create -p $PACKAGE_ID -x)
       - name: set permissions on next script
+        if: steps.check_sha.outputs.cache-hit != 'true'
         run: chmod +x "${GITHUB_WORKSPACE}/.github/get_creation_report.sh"
       - name: Try to get report until previous command is a Success
+        if: steps.check_sha.outputs.cache-hit != 'true'
         run: '${GITHUB_WORKSPACE}/.github/get_creation_report.sh output'
       - name: 'Promote the created version if desired'
-        if: '${{ github.event.inputs.shouldPromote }}'
+        if: '${{ github.event.inputs.shouldPromote && steps.check_sha.outputs.cache-it != 'true' }}'
         run: sfdx force:package:version:promote -p $"$(cat create_package_result.json | jq '.result.SubscriberPackageVersionId' -r)" -v $SFDX_AUTH_JWT_USERNAME --json > promote_package_result.json
