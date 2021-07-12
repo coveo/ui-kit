@@ -10,14 +10,15 @@
     padding: 0;
 }
 
-.coveo-breadcrumb-value-line {
+.breadcrumb-manager__value-line-item {
     line-height: 0.7;
-}
-
-.nowrap {
     white-space: nowrap;
 }
 
-.breadcrumb-more-button:hover {
+.breadcrumb-manager__field-name {
+    white-space: nowrap;
+}
+
+.breadcrumb-manager__more-button:hover {
     color: var(--color-text-action-label);
 }
