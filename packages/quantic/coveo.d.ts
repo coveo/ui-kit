@@ -7,7 +7,6 @@ import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless
 
 interface Bindings {
   engine?: HeadlessTypes<CoreEngine>;
-  i18n?: unknown;
   store?: Record<String, unknown>;
 }
 
@@ -21,10 +20,12 @@ declare global {
           initialized: boolean;
         }[];
         options: Deferred<HeadlessTypes.ExternalEngineOptions>;
-        enginePromise: Promise<HeadlessTypes.CoreEngine>;
-        engineConstructor?: string;
-        initializedCallback?: Function;
         bindings: Bindings;
+        enginePromise: Promise;
+        engineConstructor?: (
+          options: HeadlessTypes.ExternalEngineOptions
+        ) => unknown;
+        initializedCallback?: Function;
       };
     };
   }

@@ -1,26 +1,24 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
-import { loadScript } from 'lightning/platformResourceLoader';
+import {loadScript} from 'lightning/platformResourceLoader';
 // @ts-ignore
-import { Debouncer, Deferred } from 'c/quanticUtils';
+import {Debouncer, Deferred} from 'c/quanticUtils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
-
 let dependencyPromises = [];
-
-const EngineConstructors = {
-  SearchEngineConstructor: 'buildSearchEngine'
-}
 
 /**
  * Initiates dependency loading promises.
  * @param element The Lightning element to use to load dependencies.
  */
-const loadDependencies = (element) => {
-  dependencyPromises = [
-    loadScript(element, HeadlessPath + '/browser/headless.js'),
-  ]
+const loadDependencies = async (element) => {
+  if (!dependencyPromises.length) {
+    dependencyPromises = [
+      loadScript(element, HeadlessPath + '/browser/headless.js'),
+    ];
+  }
+  await Promise.all(dependencyPromises);
 }
 
 /**
@@ -81,7 +79,7 @@ const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engin
  * @param element The Lightning element to use to load dependencies.
  * @param {string} engineId The id of the engine.
  */
-const instantiateWindowEngineObject = (element, engineId) => {
+const createWindowEngineObject = (element, engineId) => {
   const newObject = {
     components: [],
     enginePromise: undefined,
@@ -89,7 +87,6 @@ const instantiateWindowEngineObject = (element, engineId) => {
     bindings: {},
   };
   if (!window.coveoHeadless) {
-    loadDependencies(element);
     window.coveoHeadless = {
       [engineId]: newObject
     }
@@ -110,13 +107,9 @@ async function initEngine(engineId) {
     if (!window.coveoHeadless[engineId].options) {
       throw new Error('Engine options have not been set.');
     }
-    if (dependencyPromises.length === 0) {
-      throw new Error('Dependencies were never requested.');
-    }
-    await Promise.all(dependencyPromises);
 
     const options = await window.coveoHeadless[engineId].options.promise;
-    return CoveoHeadless[window.coveoHeadless[engineId].engineConstructor](options);
+    return window.coveoHeadless[engineId].engineConstructor(options);
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
@@ -125,7 +118,7 @@ async function initEngine(engineId) {
 /**
  * Sets the options passed to engine constructor for given engine ID.
  * @param options The Headless options for the specified engine ID.
- * @param {string} engineConstructor The name of the constructor function.
+ * @param {(options: unknown) => unknown} engineConstructor The name of the constructor function.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
  */
@@ -135,7 +128,7 @@ function setEngineOptions(options, engineConstructor, engineId, element) {
     return;
   }
   if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
-    instantiateWindowEngineObject(element, engineId)
+    createWindowEngineObject(element, engineId)
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
   window.coveoHeadless[engineId].options.resolve(options);
@@ -149,7 +142,7 @@ function setEngineOptions(options, engineConstructor, engineId, element) {
 function registerComponentForInit(element, engineId) {
   cancelInitializedCallback(engineId);
 
-  instantiateWindowEngineObject(element, engineId);
+  createWindowEngineObject(element, engineId);
 
   if (!getRegisteredComponent(element, engineId)) {
     window.coveoHeadless[engineId].components.push({
@@ -198,9 +191,7 @@ function getHeadlessEnginePromise(engineId) {
  * @param {string} engineId The id of the engine.
  */
 function getHeadlessBindings(engineId) {
-  return {
-    engine: window.coveoHeadless[engineId].bindings,
-  }
+  return window.coveoHeadless[engineId].bindings;
 }
 
 /**
@@ -222,7 +213,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
 }
 
 export {
-  EngineConstructors,
+  loadDependencies,
   setInitializedCallback,
   setEngineOptions,
   registerComponentForInit,
