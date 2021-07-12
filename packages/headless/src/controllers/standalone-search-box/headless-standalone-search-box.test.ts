@@ -12,9 +12,17 @@ import {
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
-import {registerQuerySetQuery} from '../../features/query-set/query-set-actions';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../features/query-set/query-set-actions';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {configuration, query, redirection} from '../../app/reducers';
+import {
+  configuration,
+  query,
+  redirection,
+  querySuggest,
+} from '../../app/reducers';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -51,6 +59,7 @@ describe('headless standalone searchBox', () => {
       redirection,
       configuration,
       query,
+      querySuggest,
     });
   });
 
@@ -84,6 +93,32 @@ describe('headless standalone searchBox', () => {
       })),
       redirectTo: state.redirection.redirectTo,
       isLoading: false,
+      analytics: {
+        cause: '',
+        metadata: null,
+      },
+    });
+  });
+
+  describe('#updateText', () => {
+    const query = 'a';
+
+    beforeEach(() => {
+      searchBox.updateText(query);
+    });
+
+    it('sets the analytics cause to "searchFromLink"', () => {
+      searchBox.updateText('');
+
+      expect(searchBox.state.analytics).toEqual({
+        cause: 'searchFromLink',
+        metadata: null,
+      });
+    });
+
+    it('dispatches #updateQuerySetQuery', () => {
+      const action = updateQuerySetQuery({id, query});
+      expect(engine.actions).toContainEqual(action);
     });
   });
 
@@ -95,6 +130,20 @@ describe('headless standalone searchBox', () => {
       expect(engine.actions).toContainEqual(
         selectQuerySuggestion({id, expression})
       );
+    });
+
+    it('sets #state.analytics to the correct data', () => {
+      searchBox.selectSuggestion('a');
+
+      expect(searchBox.state.analytics).toEqual({
+        cause: 'omniboxFromLink',
+        metadata: {
+          partialQueries: [],
+          partialQuery: undefined,
+          suggestionRanking: -1,
+          suggestions: [],
+        },
+      });
     });
 
     it('calls #submit', () => {

@@ -26,7 +26,7 @@ export const logQuerySuggestionClick = (
     }
   )();
 
-function buildOmniboxSuggestionMetadata(
+export function buildOmniboxSuggestionMetadata(
   state: Partial<SearchAppState>,
   payload: LogQuerySuggestionClickActionCreatorPayload
 ): OmniboxSuggestionsMetadata {
@@ -35,7 +35,7 @@ function buildOmniboxSuggestionMetadata(
 
   if (!querySuggest) {
     throw new Error(
-      `Unable to log querySuggest click to analytics because no querysuggest with id "${id}" was found.`
+      `Unable to determine the query suggest analytics metadata to send because no query suggest with id "${id}" was found. Please check the sent #id.`
     );
   }
 
