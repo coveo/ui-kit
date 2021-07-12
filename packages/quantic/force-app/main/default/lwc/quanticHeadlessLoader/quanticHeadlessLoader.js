@@ -118,7 +118,7 @@ async function initEngine(engineId) {
 /**
  * Sets the options passed to engine constructor for given engine ID.
  * @param options The Headless options for the specified engine ID.
- * @param {(options: unknown) => unknown} engineConstructor The name of the constructor function.
+ * @param {(options: unknown) => unknown} engineConstructor Th engine constructor.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
  */
