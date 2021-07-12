@@ -13,6 +13,7 @@ import {
   partialDocumentInformation,
   validateResultPayload,
 } from './analytics-utils';
+import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -154,3 +155,22 @@ export const logInterfaceChange = makeAnalyticsAction(
         getAdvancedSearchQueriesInitialState().cq,
     })
 );
+
+/**
+ * Logs an interface load event.
+ */
+export const logSearchFromLink = makeAnalyticsAction(
+  'analytics/interface/searchFromLink',
+  AnalyticsType.Search,
+  (client) => client.logInterfaceLoad()
+);
+
+/**
+ * Logs an interface load event.
+ */
+export const logOmniboxFromLink = (metadata: OmniboxSuggestionsMetadata) =>
+  makeAnalyticsAction(
+    'analytics/interface/omniboxFromLink',
+    AnalyticsType.Search,
+    (client) => client.logOmniboxFromLink(metadata)
+  )();
