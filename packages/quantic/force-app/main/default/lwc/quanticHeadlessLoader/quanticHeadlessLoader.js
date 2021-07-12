@@ -79,8 +79,8 @@ const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engin
  * @param element The Lightning element to use to load dependencies.
  * @param {string} engineId The id of the engine.
  */
-const createWindowEngineObject = (element, engineId) => {
-  const newObject = {
+const instantiateWindowEngineObject = (element, engineId) => {
+  const newWindowEngineObject = {
     components: [],
     enginePromise: undefined,
     options: new Deferred(),
@@ -88,10 +88,10 @@ const createWindowEngineObject = (element, engineId) => {
   };
   if (!window.coveoHeadless) {
     window.coveoHeadless = {
-      [engineId]: newObject
+      [engineId]: newWindowEngineObject
     }
   } else if (!window.coveoHeadless[engineId]) {
-    window.coveoHeadless[engineId] = newObject;
+    window.coveoHeadless[engineId] = newWindowEngineObject;
   }
 }
 
@@ -128,7 +128,7 @@ function setEngineOptions(options, engineConstructor, engineId, element) {
     return;
   }
   if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
-    createWindowEngineObject(element, engineId)
+    instantiateWindowEngineObject(element, engineId)
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
   window.coveoHeadless[engineId].options.resolve(options);
@@ -142,7 +142,7 @@ function setEngineOptions(options, engineConstructor, engineId, element) {
 function registerComponentForInit(element, engineId) {
   cancelInitializedCallback(engineId);
 
-  createWindowEngineObject(element, engineId);
+  instantiateWindowEngineObject(element, engineId);
 
   if (!getRegisteredComponent(element, engineId)) {
     window.coveoHeadless[engineId].components.push({
