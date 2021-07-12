@@ -8,6 +8,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   NumericFacetValue,
+  NumericRangeRequest,
+  buildNumericRange,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -99,6 +101,7 @@ export class AtomicRatingFacet
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfStars,
+      currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
     };
@@ -115,8 +118,23 @@ export class AtomicRatingFacet
       .length;
   }
 
+  private generateCurrentValues() {
+    const currentValues: NumericRangeRequest[] = [];
+    for (let i = 0; i < this.numberOfStars; i++) {
+      currentValues.push(
+        buildNumericRange({
+          start: i,
+          end: i + 1,
+          endInclusive: true,
+        })
+      );
+    }
+    return currentValues;
+  }
+
   private formatFacetValue(facetValue: NumericFacetValue) {
-    //TODO: add stars here
+    //TODO: add stars here but display value is a string
+    //maybe better to pass svg as children/ Vnode
     return this.bindings.i18n.t('to', {
       start: facetValue.start,
       end: facetValue.end,
