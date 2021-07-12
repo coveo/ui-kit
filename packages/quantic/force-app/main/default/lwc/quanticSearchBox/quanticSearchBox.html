@@ -1,6 +1,6 @@
 <template>
   <div class="slds-form-element">
-    <div class="slds-form-element__control">
+    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right">
       <div class="slds-combobox_container">
         <div
           class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
@@ -8,7 +8,8 @@
           aria-haspopup="listbox"
           role="combobox"
         >
-          <div class="slds-combobox__form-element" role="none">
+          <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default " icon-name="utility:search" size="x-small" title=""></lightning-icon>
             <input
               id="combobox-id"
               class="slds-input slds-combobox__input"
@@ -22,6 +23,9 @@
               autocomplete="off"
               role="textbox"
             />
+            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" title="Clear">
+              <lightning-icon class="slds-button__icon slds-icon-text-light" icon-name="utility:clear" size="x-small"></lightning-icon>
+            </button>
           </div>
           <template if:true={state.suggestions.length}>
             <div
