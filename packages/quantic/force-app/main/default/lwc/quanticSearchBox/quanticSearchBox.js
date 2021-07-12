@@ -169,6 +169,10 @@ export default class QuanticSearchBox extends LightningElement {
     this.hideSuggestions();
   }
 
+  onClearInput(){
+    this.input.value = "";
+  }
+
   preventDefault(event) {
     event.preventDefault();
   }
