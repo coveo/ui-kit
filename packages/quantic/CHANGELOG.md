@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.15...@coveo/quantic@0.33.0) (2021-07-12)
+
+
+### Features
+
+* **quantic:** detach headlessLoader from search context ([#697](https://github.com/coveo/ui-kit/issues/697)) ([4a50c0d](https://github.com/coveo/ui-kit/commit/4a50c0dfae0f115da4a14fa5e2b8399c210e6efb))
+
+
+
+
+
 ## [0.32.15](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.14...@coveo/quantic@0.32.15) (2021-07-09)
 
 **Note:** Version bump only for package @coveo/quantic
