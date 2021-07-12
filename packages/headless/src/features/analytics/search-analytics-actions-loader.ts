@@ -1,7 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
-import {logInterfaceChange, logInterfaceLoad} from './analytics-actions';
+import {
+  logInterfaceChange,
+  logInterfaceLoad,
+  logSearchFromLink,
+  logOmniboxFromLink,
+} from './analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
@@ -55,6 +60,7 @@ import {
 } from '../question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -89,6 +95,34 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logInterfaceLoad(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a search interface loads for the first time, for a user who performed a search using a standalone search box.
+   *
+   * @returns A dispatchable action.
+   */
+  logSearchFromLink(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a search interface loads for the first time, for a user who selected a query suggestion from a standalone search box.
+   *
+   * @returns A dispatchable action.
+   */
+  logOmniboxFromLink(
+    metadata: OmniboxSuggestionsMetadata
+  ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -501,6 +535,8 @@ export function loadSearchAnalyticsActions(
   return {
     logClearBreadcrumbs,
     logInterfaceLoad,
+    logSearchFromLink,
+    logOmniboxFromLink,
     logInterfaceChange,
     logDidYouMeanClick,
     logCategoryFacetBreadcrumb,
