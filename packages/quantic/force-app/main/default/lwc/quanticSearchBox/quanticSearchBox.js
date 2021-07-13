@@ -34,7 +34,7 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {number} */
   numberOfSuggestions = 5;
   /** @type {boolean} */
-  hasSearchButton = true;
+  hasSearchButton = false;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -173,6 +173,13 @@ export default class QuanticSearchBox extends LightningElement {
       this.selectionIndex = 0;
     }
     this.setHighlighted();
+  }
+
+  onSearch(){
+    console.log("Here");
+    console.log(this.suggestions);
+    this.searchBox.submit();
+    this.input.blur();
   }
 
   /**
