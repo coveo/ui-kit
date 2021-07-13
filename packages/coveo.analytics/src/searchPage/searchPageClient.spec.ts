@@ -218,6 +218,11 @@ describe('SearchPageClient', () => {
         expectMatchPayload(SearchPageEvents.omniboxFromLink, meta);
     });
 
+    it('should send proper payload for #logSearchFromLink', async () => {
+        await client.logSearchFromLink();
+        expectMatchPayload(SearchPageEvents.searchFromLink);
+    });
+
     it('should send proper payload for #logTriggerNotify', async () => {
         const meta = {
             notification: 'foo',

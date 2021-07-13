@@ -58,6 +58,10 @@ export enum SearchPageEvents {
      */
     omniboxFromLink = 'omniboxFromLink',
     /**
+     * Identifies the search event that gets logged when the search page loads with a query, such as when a user clicks a link pointing to a search results page with a query or enters a query in a standalone search box that points to a search page.
+     */
+    searchFromLink = 'searchFromLink',
+    /**
      * Identifies the custom event that gets logged when a user action triggers a notification set in the effective query pipeline on the search page.
      */
     triggerNotify = 'notify',

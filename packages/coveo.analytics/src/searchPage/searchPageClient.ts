@@ -133,6 +133,10 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.omniboxFromLink, formatOmniboxMetadata(meta));
     }
 
+    public logSearchFromLink() {
+        return this.logSearchEvent(SearchPageEvents.searchFromLink);
+    }
+
     public logTriggerNotify(meta: TriggerNotifyMetadata) {
         return this.logCustomEvent(SearchPageEvents.triggerNotify, meta);
     }
