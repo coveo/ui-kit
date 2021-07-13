@@ -159,7 +159,7 @@ export const logInterfaceChange = makeAnalyticsAction(
 export const logSearchFromLink = makeAnalyticsAction(
   'analytics/interface/searchFromLink',
   AnalyticsType.Search,
-  (client) => client.logInterfaceLoad()
+  (client) => client.logSearchFromLink()
 );
 
 export const logOmniboxFromLink = (metadata: OmniboxSuggestionMetadata) =>

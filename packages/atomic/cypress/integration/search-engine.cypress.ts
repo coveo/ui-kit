@@ -32,7 +32,7 @@ describe('search engine tests', () => {
 
     cy.wait(RouteAlias.analytics).then(({request}) => {
       const analyticsBody = request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
+      expect(analyticsBody).to.have.property('actionCause', 'searchFromLink');
     });
   });
 });
