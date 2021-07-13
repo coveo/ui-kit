@@ -346,7 +346,11 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The number of stars to request for this facet.
+          * The maximum value of the field. This value is used to normalize the field values with the number of stars. Default is 5.
+         */
+        "maxValue": number;
+        /**
+          * The number of stars to request for this facet. Default is 5.
          */
         "numberOfStars": number;
     }
@@ -1242,7 +1246,11 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of stars to request for this facet.
+          * The maximum value of the field. This value is used to normalize the field values with the number of stars. Default is 5.
+         */
+        "maxValue"?: number;
+        /**
+          * The number of stars to request for this facet. Default is 5.
          */
         "numberOfStars"?: number;
     }
