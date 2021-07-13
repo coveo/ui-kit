@@ -4,7 +4,6 @@ import {
   State,
   Prop,
   Host,
-  Watch,
   Event,
   EventEmitter,
 } from '@stencil/core';
@@ -21,8 +20,10 @@ import {NumberInputType} from './number-input-type';
   shadow: false,
 })
 export class FacetNumberInput {
-  @State() private start = '';
-  @State() private end = '';
+  @State() private start?: number;
+  @State() private end?: number;
+  private startRef!: HTMLInputElement;
+  private endRef!: HTMLInputElement;
 
   @Prop() public bindings!: Bindings;
   @Prop() public type!: NumberInputType;
@@ -36,118 +37,80 @@ export class FacetNumberInput {
   private applyInput!: EventEmitter;
 
   public connectedCallback() {
-    this.updateState();
-  }
-
-  @Watch('filterState')
-  private updateState() {
-    if (this.filterState.isLoading) {
-      return;
-    }
-
-    this.start = this.filterState.range?.start.toString() || '';
-    this.end = this.filterState.range?.end.toString() || '';
+    this.start = this.filterState.range?.start;
+    this.end = this.filterState.range?.end;
   }
 
   private apply() {
+    if (!this.startRef.validity.valid || !this.endRef.validity.valid) {
+      return;
+    }
+
     this.applyInput.emit();
     this.filter.setRange({
-      start: parseFloat(this.start),
-      end: parseFloat(this.end),
+      start: this.start!,
+      end: this.end!,
     });
-  }
-
-  private validateInput(value: string) {
-    if (this.type === 'decimal') {
-      return value.replace(/(?!^-)[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-    }
-
-    return value.replace(/(?!^-)[^0-9]/g, '');
-  }
-
-  private get inputErrorMessage() {
-    if (this.start === '') {
-      return this.bindings.i18n.t('inputValueMissing', {
-        value: this.bindings.i18n.t('min'),
-      });
-    }
-
-    if (this.end === '') {
-      return this.bindings.i18n.t('inputValueMissing', {
-        value: this.bindings.i18n.t('max'),
-      });
-    }
-
-    const start = parseFloat(this.start);
-    if (isNaN(start)) {
-      return this.bindings.i18n.t('inputValueInvalid', {
-        value: this.bindings.i18n.t('min'),
-      });
-    }
-
-    const end = parseFloat(this.end);
-    if (isNaN(end)) {
-      return this.bindings.i18n.t('inputValueInvalid', {
-        value: this.bindings.i18n.t('max'),
-      });
-    }
-
-    if (end < start) {
-      return this.bindings.i18n.t('maxValueTooLow');
-    }
-
-    return null;
   }
 
   render() {
     const label = this.bindings.i18n.t(this.label);
-    const min = this.bindings.i18n.t('min');
+    const minPlaceholder = this.bindings.i18n.t('min');
     const minAria = this.bindings.i18n.t('numberInputMinimum', {label});
-    const max = this.bindings.i18n.t('max');
+    const maxPlaceholder = this.bindings.i18n.t('max');
     const maxAria = this.bindings.i18n.t('numberInputMaximum', {label});
     const apply = this.bindings.i18n.t('apply');
-    const applyTitle = this.inputErrorMessage
-      ? this.inputErrorMessage
-      : this.bindings.i18n.t('numberInputApply', {label});
+    const applyAria = this.bindings.i18n.t('numberInputApply', {label});
 
     const commonClasses = 'text-base rounded p-2.5 border border-neutral-light';
     const inputClasses = `${commonClasses} placeholder-neutral-dark min-w-0 mr-1`;
 
+    const step = this.type === 'integer' ? '1' : 'any';
+
     return (
       <Host class="flex flex-col mt-4">
-        <div class="inline-flex">
+        <form class="inline-flex">
           <input
             part="input-start"
+            type="number"
+            step={step}
+            ref={(ref) => (this.startRef = ref!)}
             class={inputClasses}
-            placeholder={min}
+            placeholder={minPlaceholder}
             aria-label={minAria}
-            value={this.start}
-            onInput={(e) => {
-              const target = e.target as HTMLInputElement;
-              target.value = this.start = this.validateInput(target.value);
-            }}
+            required
+            min={Number.MIN_SAFE_INTEGER}
+            max={this.end}
+            value={this.filterState.range?.start}
+            onInput={(e) =>
+              (this.start = (e.target as HTMLInputElement).valueAsNumber)
+            }
           />
           <input
             part="input-end"
+            type="number"
+            step={step}
+            ref={(ref) => (this.endRef = ref!)}
             class={inputClasses}
-            placeholder={max}
+            placeholder={maxPlaceholder}
             aria-label={maxAria}
-            value={this.end}
-            onInput={(e) => {
-              const target = e.target as HTMLInputElement;
-              target.value = this.end = this.validateInput(target.value);
-            }}
+            required
+            min={this.start}
+            max={Number.MAX_SAFE_INTEGER}
+            value={this.filterState.range?.end}
+            onInput={(e) =>
+              (this.end = (e.target as HTMLInputElement).valueAsNumber)
+            }
           />
           <button
             part="input-apply-button"
-            class={`${commonClasses} bg-background text-primary disabled:cursor-not-allowed disabled:bg-neutral disabled:text-neutral-dark flex-none`}
-            title={applyTitle}
+            class={`${commonClasses} bg-background text-primary flex-none`}
+            aria-label={applyAria}
             onClick={() => this.apply()}
-            disabled={!!this.inputErrorMessage}
           >
             {apply}
           </button>
-        </div>
+        </form>
       </Host>
     );
   }

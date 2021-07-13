@@ -932,28 +932,16 @@
     "fr": "Filtrer"
   },
   "numberInputMinimum": {
-    "en": "Enter a minimum value for the {{label}} facet",
-    "fr": "Entrez une valeur minimale pour la facette {{label}}"
+    "en": "Enter a minimum numeric value for the {{label}} facet",
+    "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
   },
   "numberInputMaximum": {
-    "en": "Enter a maximum value for the {{label}} facet",
-    "fr": "Entrez une valeur maximale pour la facette {{label}}"
+    "en": "Enter a maximum numeric value for the {{label}} facet",
+    "fr": "Entrez une valeur numérique maximale pour la facette {{label}}"
   },
   "numberInputApply": {
     "en": "Apply custom number values for the {{label}} facet",
     "fr": "Appliquer les filtres manuels pour la facette {{label}}"
-  },
-  "inputValueMissing": {
-    "en": "The input value for {{value}} is missing",
-    "fr": "La valeur d'entrée pour {{value}} est manquante"
-  },
-  "inputValueInvalid": {
-    "en": "The input value for {{value}} is not valid",
-    "fr": "La valeur d'entrée pour {{value}} n'est pas valide"
-  },
-  "maxValueTooLow": {
-    "en": "The maximum value has to exceed or be equal to the minimum value",
-    "fr": "La valeur maximale doit être supérieure ou égale à la valeur minimale"
   },
   "in": {
     "en": "in",
