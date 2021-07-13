@@ -31,6 +31,8 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {string} */
   @api placeholder = 'Search...';
 
+  /** @type {number} */
+  numberOfSuggestions = 5;
   /** @type {boolean} */
   hasSearchButton = true;
   /** @type {import("coveo").SearchBox} */
@@ -66,7 +68,21 @@ export default class QuanticSearchBox extends LightningElement {
    */
   @api
   initialize(engine) {
-    this.searchBox = CoveoHeadless.buildSearchBox(engine);
+    this.searchBox = CoveoHeadless.buildSearchBox(engine, {
+      options: {
+        numberOfSuggestions: this.numberOfSuggestions,
+        highlightOptions: {
+          notMatchDelimiters: {
+            open: '<span class="font-bold">',
+            close: '</span>',
+          },
+          correctionDelimiters: {
+            open: '<span class="font-normal">',
+            close: '</span>',
+          },
+        },
+      },
+    });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   }
 
@@ -87,7 +103,6 @@ export default class QuanticSearchBox extends LightningElement {
     if (!this.clearButton) {
       this.clearButton = this.template.querySelector('.slds-button__icon');
       this.clearButton.hidden = true;
-      console.log(this.clearButton);
     }
   }
 
@@ -101,8 +116,13 @@ export default class QuanticSearchBox extends LightningElement {
     this.state = this.searchBox.state;
   }
 
+  getSuggestionsFromState() {
+    return this.state.suggestions;
+  }
+
   showSuggestions() {
-    const options = this.getSuggestionElements();
+    this.updateState();
+    const options = this.getSuggestionsFromState();
     console.log(options);
 
     this.combobox.classList.add('slds-is-open');
