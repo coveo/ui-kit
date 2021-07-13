@@ -10,7 +10,7 @@
         >
           <template if:true={hasSearchButton}>
             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
-              <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default " icon-name="utility:search" size="x-small" title=""></lightning-icon>
+              <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left " icon-name="utility:search" size="x-small" title=""></lightning-icon>
               <input
                 id="combobox-id"
                 class="slds-input slds-combobox__input"
@@ -25,14 +25,14 @@
                 role="textbox"
               />
               <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
-                <lightning-icon class="slds-button__icon slds-icon-text-light slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
+                <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
               </button>
             </div>
           </template>
-          <!-- <template if:false={hasSearchButton}>
+          <template if:false={hasSearchButton}>
             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon" role="none">
               <input
-                id="combobox-id"
+                id="combobox-with-button-id"
                 class="slds-input slds-combobox__input"
                 placeholder={placeholder}
                 type="search"
@@ -46,14 +46,14 @@
               />
               <span>
                 <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
-                  <lightning-icon class="slds-button__icon slds-icon-text-light slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
+                  <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
                 </button>
               </span>
               <span class="slds-form-element__addon" id="fixed-text-addon-post">
                 <lightning-button-icon icon-name="utility:search" variant="brand"></lightning-button-icon>
               </span>
             </div>
-          </template> -->
+          </template>
           <template if:true={state.suggestions.length}>
             <div
               id="listbox-id"
