@@ -22,7 +22,7 @@ export default class QuanticSearchBox extends LightningElement {
   get suggestions() {
     return this.state.suggestions.map((s, index) => ({
       key: index,
-      value: s.rawValue,
+      value: s.highlightedValue,
     }));
   }
 
@@ -73,12 +73,8 @@ export default class QuanticSearchBox extends LightningElement {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
           notMatchDelimiters: {
-            open: '<span class="font-bold">',
-            close: '</span>',
-          },
-          correctionDelimiters: {
-            open: '<span class="font-normal">',
-            close: '</span>',
+            open: '<b>',
+            close: '</b>',
           },
         },
       },
@@ -116,15 +112,7 @@ export default class QuanticSearchBox extends LightningElement {
     this.state = this.searchBox.state;
   }
 
-  getSuggestionsFromState() {
-    return this.state.suggestions;
-  }
-
   showSuggestions() {
-    this.updateState();
-    const options = this.getSuggestionsFromState();
-    console.log(options);
-
     this.combobox.classList.add('slds-is-open');
     this.combobox.setAttribute('aria-expanded', true);
   }
