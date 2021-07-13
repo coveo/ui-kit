@@ -42,6 +42,7 @@ import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../formats/format-common';
+import {NumberInputType} from '../facet-number-input/number-input-type';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -66,6 +67,10 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
+ *
+ * @part input-start - The input for the start value of the custom range.
+ * @part input-end - The input for the end value of the custom range.
+ * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
   tag: 'atomic-numeric-facet-v1', // TODO: remove v1 when old facets are removed
@@ -77,7 +82,7 @@ export class AtomicNumericFacet
     InitializableComponent,
     BaseFacet<NumericFacet, NumericFacetState> {
   @InitializeBindings() public bindings!: Bindings;
-  public facet!: NumericFacet;
+  public facet?: NumericFacet;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -86,7 +91,7 @@ export class AtomicNumericFacet
 
   @BindStateToController('facet')
   @State()
-  public facetState!: NumericFacetState;
+  public facetState?: NumericFacetState;
   @BindStateToController('filter')
   @State()
   public filterState?: NumericFilterState;
@@ -110,16 +115,14 @@ export class AtomicNumericFacet
   @Prop() public field!: string;
   /**
    * The number of values to request for this facet, when there are no manual ranges.
+   * If the number of values is 0, no ranges will be displayed.
    */
   @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain an input allowing users to set custom ranges.
+   * Depending on the field, the input can allow either decimal or integer values.
    */
-  @Prop() public withInput = false;
-  /**
-   * Whether this facet should contain a defined list of values.
-   */
-  @Prop() public withRanges = true;
+  @Prop() public withInput?: NumberInputType;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
@@ -137,7 +140,7 @@ export class AtomicNumericFacet
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.initializeFacet();
+    this.numberOfValues && this.initializeFacet();
     this.withInput && this.initializeFilter();
   }
 
@@ -150,25 +153,26 @@ export class AtomicNumericFacet
       sortCriteria: this.sortCriteria,
       rangeAlgorithm: this.rangeAlgorithm,
       currentValues: this.manualRanges,
-      generateAutomaticRanges: this.withRanges && !this.manualRanges.length,
+      generateAutomaticRanges: !this.manualRanges.length,
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.numericFacets[this.facetId] = {
       label: this.label,
+      format: (facetValue) => this.formatFacetValue(facetValue),
     };
   }
 
   private initializeFilter() {
     this.filter = buildNumericFilter(this.bindings.engine, {
       options: {
-        facetId: `${this.facetId}_input`,
+        facetId: this.facetId ? `${this.facetId}_input` : undefined,
         field: this.field,
       },
     });
-    this.bindings.store.state.facets[this.filter.state.facetId] = {
-      label: this.label,
-    };
+    this.bindings.store.state.numericFacets[
+      this.filter.state.facetId
+    ] = this.bindings.store.state.numericFacets[this.facetId!];
   }
 
   @Listen('atomic/numberFormat')
@@ -178,7 +182,17 @@ export class AtomicNumericFacet
     this.formatter = event.detail;
   }
 
-  private format(value: number) {
+  @Listen('atomic/numberInputApply')
+  public applyNumberInput() {
+    this.facetId &&
+      this.bindings.engine.dispatch(
+        loadNumericFacetSetActions(
+          this.bindings.engine
+        ).deselectAllNumericFacetValues(this.facetId)
+      );
+  }
+
+  private formatValue(value: number) {
     try {
       return this.formatter(value, this.bindings.i18n.languages);
     } catch (error) {
@@ -204,8 +218,10 @@ export class AtomicNumericFacet
       return 1;
     }
 
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
+    return (
+      this.facetState?.values.filter(({state}) => state === 'selected')
+        .length || 0
+    );
   }
 
   private renderHeader() {
@@ -218,7 +234,7 @@ export class AtomicNumericFacet
             this.filter?.clear();
             return;
           }
-          this.facet.deselectAll();
+          this.facet?.deselectAll();
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
@@ -230,13 +246,7 @@ export class AtomicNumericFacet
   private renderNumberInput() {
     return (
       <atomic-facet-number-input
-        onApply={() =>
-          this.bindings.engine.dispatch(
-            loadNumericFacetSetActions(
-              this.bindings.engine
-            ).deselectAllNumericFacetValues(this.facetId!)
-          )
-        }
+        type={this.withInput!}
         bindings={this.bindings}
         label={this.label}
         filter={this.filter!}
@@ -256,16 +266,20 @@ export class AtomicNumericFacet
     );
   }
 
-  private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
+  private formatFacetValue(facetValue: NumericFacetValue) {
     const manualRangeLabel = this.manualRanges.find((range) =>
       this.areRangesEqual(range, facetValue)
     )?.label;
-    const displayValue = manualRangeLabel
+    return manualRangeLabel
       ? this.bindings.i18n.t(manualRangeLabel)
       : this.bindings.i18n.t('to', {
-          start: this.format(facetValue.start),
-          end: this.format(facetValue.end),
+          start: this.formatValue(facetValue.start),
+          end: this.formatValue(facetValue.end),
         });
+  }
+
+  private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
+    const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
@@ -300,33 +314,40 @@ export class AtomicNumericFacet
   }
 
   private renderValues() {
-    if (this.filterState?.range) {
-      return;
-    }
-
-    const values = this.facetState.values.filter(
-      (value) => value.numberOfResults || value.state !== 'idle'
-    );
-
-    if (!values.length) {
-      return;
-    }
-
     return this.renderValuesContainer(
-      values.map((value) =>
+      this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
-            ? this.facet.toggleSingleSelect(value)
-            : this.facet.toggleSelect(value)
+            ? this.facet!.toggleSingleSelect(value)
+            : this.facet!.toggleSelect(value)
         )
       )
     );
   }
 
-  private get shouldRender() {
+  private get valuesToRender() {
     return (
-      this.withInput || (this.withRanges && this.facetState.hasActiveValues)
+      this.facetState?.values.filter(
+        (value) => value.numberOfResults || value.state !== 'idle'
+      ) || []
     );
+  }
+
+  private get shouldRenderFacet() {
+    return this.shouldRenderInput || this.shouldRenderValues;
+  }
+
+  private get shouldRenderValues() {
+    const hasInputRange = !!this.filterState?.range;
+    return !hasInputRange && !!this.valuesToRender.length;
+  }
+
+  private get shouldRenderInput() {
+    if (!this.withInput) {
+      return false;
+    }
+
+    return this.searchStatusState.hasResults || !!this.filterState?.range;
   }
 
   public render() {
@@ -342,7 +363,7 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.shouldRender) {
+    if (!this.shouldRenderFacet) {
       return <Host class="atomic-without-values"></Host>;
     }
 
@@ -351,8 +372,8 @@ export class AtomicNumericFacet
         <FacetContainer>
           {this.renderHeader()}
           {!this.isCollapsed && [
-            this.withInput && this.renderNumberInput(),
-            this.withRanges && this.renderValues(),
+            this.shouldRenderInput && this.renderNumberInput(),
+            this.shouldRenderValues && this.renderValues(),
           ]}
         </FacetContainer>
       </Host>

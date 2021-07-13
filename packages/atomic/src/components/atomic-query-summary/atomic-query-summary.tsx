@@ -109,7 +109,7 @@ export class AtomicQuerySummary implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden="true"
-          class="h-6 my-2 w-60 bg-neutral-light animate-pulse"
+          class="h-6 my-2 w-60 bg-neutral rounded animate-pulse"
         ></div>
       );
     }

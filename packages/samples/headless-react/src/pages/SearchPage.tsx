@@ -49,6 +49,8 @@ import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standa
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {QueryTrigger} from '../components/triggers/query-trigger.class';
+import {ExecuteTrigger} from '../components/triggers/execute-trigger.class';
+import {bindExecuteTrigger} from '../components/triggers/execute-trigger';
 import {QueryTrigger as QueryTriggerFn} from '../components/triggers/query-trigger.fn';
 import {NotifyTrigger} from '../components/triggers/notify-trigger.class';
 import {NotifyTrigger as NotifyTriggerFn} from '../components/triggers/notify-trigger.fn';
@@ -180,6 +182,8 @@ export class SearchPage extends Component {
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
 
   private unsubscribeUrlManager!: Unsubscribe;
+
+  private unsubscribeExecuteTrigger!: Unsubscribe;
 
   constructor(props: {}) {
     super(props);
@@ -322,6 +326,8 @@ export class SearchPage extends Component {
     // not be your case.
     this.unsubscribeUrlManager = bindUrlManager(this.engine);
 
+    this.unsubscribeExecuteTrigger = bindExecuteTrigger(this.engine);
+
     // A search should not be executed until the search parameters are restored.
     this.executeInitialSearch();
 
@@ -330,6 +336,7 @@ export class SearchPage extends Component {
 
   componentWillUnmount() {
     this.unsubscribeUrlManager();
+    this.unsubscribeExecuteTrigger();
   }
 
   private executeInitialSearch() {
@@ -503,6 +510,9 @@ export class SearchPage extends Component {
           <Section title="query-trigger">
             <QueryTrigger></QueryTrigger>
             <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
+          </Section>
+          <Section title="execute-trigger">
+            <ExecuteTrigger></ExecuteTrigger>
           </Section>
           <Section title="notify-trigger">
             <NotifyTrigger></NotifyTrigger>

@@ -19,6 +19,7 @@ import {StateFromReducersMapObject} from 'redux';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 import {
   SearchEngineConfiguration,
+  SearchConfigurationOptions,
   searchEngineConfigurationSchema,
   getSampleSearchEngineConfiguration,
 } from './search-engine-configuration';
@@ -28,7 +29,11 @@ import {firstSearchExecutedSelector} from '../../features/search/search-selector
 import {SearchAppState} from '../../state/search-app-state';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 
-export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
+export {
+  SearchEngineConfiguration,
+  SearchConfigurationOptions,
+  getSampleSearchEngineConfiguration,
+};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
@@ -40,6 +45,9 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
  */
 export interface SearchEngine<State extends object = {}>
   extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
+  /**
+   * Executes the first search.
+   */
   executeFirstSearch(): void;
 }
 

@@ -23,6 +23,7 @@ import {
   AtomicStore,
   Bindings,
   InitializeEvent,
+  initialStore,
 } from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
@@ -47,7 +48,7 @@ export class AtomicSearchInterface {
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
-  private store = createStore<AtomicStore>({facets: {}});
+  private store = createStore<AtomicStore>(initialStore());
 
   @Element() private host!: HTMLDivElement;
 

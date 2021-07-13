@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
+import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -137,7 +138,7 @@ export namespace Components {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onApply"?: () => void;
+        "type": NumberInputType;
     }
     interface AtomicFacetV1 {
         /**
@@ -276,7 +277,7 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The number of values to request for this facet, when there are no manual ranges.
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues": number;
         /**
@@ -288,13 +289,9 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges.
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
-        "withInput": boolean;
-        /**
-          * Whether this facet should contain a defined list of values.
-         */
-        "withRanges": boolean;
+        "withInput"?: NumberInputType;
     }
     interface AtomicNumericRange {
         /**
@@ -543,6 +540,24 @@ export namespace Components {
           * The string key value.
          */
         "value": string;
+    }
+    interface AtomicTimeframeFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+         */
+        "withDatePicker": boolean;
     }
 }
 declare global {
@@ -804,6 +819,12 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
+    interface HTMLAtomicTimeframeFacetElement extends Components.AtomicTimeframeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicTimeframeFacetElement: {
+        prototype: HTMLAtomicTimeframeFacetElement;
+        new (): HTMLAtomicTimeframeFacetElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
@@ -848,6 +869,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-text": HTMLAtomicTextElement;
+        "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
 declare namespace LocalJSX {
@@ -978,7 +1000,8 @@ declare namespace LocalJSX {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onApply"?: () => void;
+        "onAtomic/numberInputApply"?: (event: CustomEvent<any>) => void;
+        "type": NumberInputType;
     }
     interface AtomicFacetV1 {
         /**
@@ -1117,7 +1140,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of values to request for this facet, when there are no manual ranges.
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues"?: number;
         /**
@@ -1129,13 +1152,9 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges.
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
-        "withInput"?: boolean;
-        /**
-          * Whether this facet should contain a defined list of values.
-         */
-        "withRanges"?: boolean;
+        "withInput"?: NumberInputType;
     }
     interface AtomicNumericRange {
         /**
@@ -1374,6 +1393,24 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
+    interface AtomicTimeframeFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field"?: string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+         */
+        "withDatePicker"?: boolean;
+    }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
@@ -1418,6 +1455,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-text": AtomicText;
+        "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
 export { LocalJSX as JSX };
@@ -1467,6 +1505,7 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
+            "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
         }
     }
 }

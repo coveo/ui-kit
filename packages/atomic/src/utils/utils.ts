@@ -25,6 +25,10 @@ export function randomID(prepend?: string, length = 5) {
   );
 }
 
+export function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
+
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }

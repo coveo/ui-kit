@@ -129,6 +129,7 @@ describe('Facet v1 Test Suites', () => {
           FacetAssertions.assertMoreMatchesFoundContainsQuery(query);
           FacetAssertions.assertDisplayShowMoreButton(false);
           FacetAssertions.assertDisplaySearchClearButton(true);
+          FacetAssertions.assertHighlightsResults(query);
         });
 
         describe('verify analytics', () => {
@@ -330,6 +331,7 @@ describe('Facet v1 Test Suites', () => {
           FacetAssertions.assertAccessibility();
           FacetAssertions.assertNumberOfIdleLinkValues(defaultNumberOfValues);
           FacetAssertions.assertNumberOfSelectedLinkValues(0);
+          FacetAssertions.assertHighlightsResults(query);
         });
 
         describe('verify analytics', () => {
@@ -467,6 +469,7 @@ describe('Facet v1 Test Suites', () => {
           FacetAssertions.assertAccessibility();
           FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
           FacetAssertions.assertNumberOfSelectedBoxValues(0);
+          FacetAssertions.assertHighlightsResults(query);
         });
 
         describe('verify analytics', () => {

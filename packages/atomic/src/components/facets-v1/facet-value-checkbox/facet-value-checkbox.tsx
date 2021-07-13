@@ -1,6 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {randomID} from '../../../utils/utils';
 import {FacetValueProps} from '../facet-common';
+import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
 export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   props
@@ -36,9 +37,11 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
           title={props.displayValue}
           part="value-label"
           class="value-label ellipsed"
-        >
-          {props.displayValue}
-        </span>
+          innerHTML={highlightSearchResult(
+            props.displayValue,
+            props.searchQuery
+          )}
+        ></span>
         <span
           part="value-count"
           class="ml-1.5 text-neutral-dark with-parentheses"
