@@ -23,8 +23,8 @@
               autocomplete="off"
               role="textbox"
             />
-            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={onClearInput} title="Clear">
-              <lightning-icon class="slds-button__icon slds-icon-text-light" icon-name="utility:clear" size="x-small"></lightning-icon>
+            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
+              <lightning-icon class="slds-button__icon slds-icon-text-light slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
             </button>
           </div>
           <template if:true={state.suggestions.length}>

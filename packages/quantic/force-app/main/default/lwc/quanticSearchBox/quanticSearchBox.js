@@ -25,6 +25,8 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {string} */
   @api placeholder = 'Search';
 
+  /** @type {boolean} */
+  hasSearchButton = true;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -35,6 +37,8 @@ export default class QuanticSearchBox extends LightningElement {
   input;
   /** @type {import("lwc").HTMLElementTheGoodPart} */
   combobox;
+  /** @type {HTMLButtonElement} */
+  clearButton;
 
   /** @type {() => void} */
   resetSelectionIndex = () => {this.selectionIndex = -1};
@@ -68,6 +72,11 @@ export default class QuanticSearchBox extends LightningElement {
       // @ts-ignore
       this.combobox = this.template.querySelector('.slds-combobox');
     }
+    if (!this.clearButton){
+      this.clearButton = this.template.querySelector('.slds-button__icon');
+      this.clearButton.hidden = true;
+      console.log(this.clearButton);
+    }
   }
 
   disconnectedCallback() {
@@ -81,6 +90,9 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   showSuggestions() {
+    const options = this.getSuggestionElements();
+    console.log(options);
+    
     this.combobox.classList.add('slds-is-open');
     this.combobox.setAttribute("aria-expanded", true);
   }
@@ -161,15 +173,19 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
+    this.clearButton.classList.remove('slds-hidden');
+    this.clearButton.classList.add('slds-visible');
     this.searchBox.showSuggestions();
     this.showSuggestions();
   }
 
   onBlur() {
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
     this.hideSuggestions();
   }
 
-  onClearInput(){
+  clearInput(){
     this.input.value = "";
   }
 
