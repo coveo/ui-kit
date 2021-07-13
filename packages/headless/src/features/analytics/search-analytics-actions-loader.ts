@@ -48,6 +48,7 @@ import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   logQuerySuggestionClick,
   LogQuerySuggestionClickActionCreatorPayload,
+  OmniboxSuggestionMetadata,
 } from '../query-suggest/query-suggest-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 import {
@@ -60,7 +61,6 @@ import {
 } from '../question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -118,10 +118,11 @@ export interface SearchAnalyticsActionCreators {
   /**
    * The event to log when a search interface loads for the first time, for a user who selected a query suggestion from a standalone search box.
    *
+   * @param metadata - The metadata of the clicked query suggestion that triggered the redirect.
    * @returns A dispatchable action.
    */
   logOmniboxFromLink(
-    metadata: OmniboxSuggestionsMetadata
+    metadata: OmniboxSuggestionMetadata
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;

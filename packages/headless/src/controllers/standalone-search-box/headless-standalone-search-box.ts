@@ -1,4 +1,3 @@
-import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 import {
   configuration,
   query,
@@ -7,7 +6,10 @@ import {
 } from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {buildOmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {
+  buildOmniboxSuggestionMetadata,
+  OmniboxSuggestionMetadata,
+} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {
@@ -76,7 +78,7 @@ interface SearchFromLinkData {
 
 interface OmniboxFromLinkData {
   cause: 'omniboxFromLink';
-  metadata: OmniboxSuggestionsMetadata;
+  metadata: OmniboxSuggestionMetadata;
 }
 
 type StandaloneSearchBoxAnalyticsData =

@@ -26,10 +26,12 @@ export const logQuerySuggestionClick = (
     }
   )();
 
+export type OmniboxSuggestionMetadata = OmniboxSuggestionsMetadata;
+
 export function buildOmniboxSuggestionMetadata(
   state: Partial<SearchAppState>,
   payload: LogQuerySuggestionClickActionCreatorPayload
-): OmniboxSuggestionsMetadata {
+): OmniboxSuggestionMetadata {
   const {id, suggestion} = payload;
   const querySuggest = state.querySuggest && state.querySuggest[id];
 
