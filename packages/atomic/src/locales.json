@@ -932,16 +932,16 @@
     "fr": "Filtrer"
   },
   "numberInputMinimum": {
-    "en": "Enter a minimum numeric value for the {{label}} facet",
+    "en": "Enter a minimum numerical value for the {{label}} facet",
     "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
   },
   "numberInputMaximum": {
-    "en": "Enter a maximum numeric value for the {{label}} facet",
+    "en": "Enter a maximum numerical value for the {{label}} facet",
     "fr": "Entrez une valeur numérique maximale pour la facette {{label}}"
   },
   "numberInputApply": {
-    "en": "Apply custom number values for the {{label}} facet",
-    "fr": "Appliquer les filtres manuels pour la facette {{label}}"
+    "en": "Apply custom numerical values for the {{label}} facet",
+    "fr": "Appliquer les filtres numériques manuels pour la facette {{label}}"
   },
   "in": {
     "en": "in",
