@@ -1,6 +1,6 @@
 {
     "name": "coveo.analytics",
-    "version": "2.18.28",
+    "version": "2.18.29",
     "description": "📈 Coveo analytics client (node and browser compatible) ",
     "main": "dist/library.js",
     "module": "dist/library.es.js",
