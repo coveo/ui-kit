@@ -1,7 +1,11 @@
 {
   "name": "@coveo/bueno",
   "private": false,
-  "homepage": "https://github.com/coveo/ui-kit/tree/master/packages/bueno",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coveo/ui-kit.git",
+    "directory": "packages/bueno"
+  },
   "main": "./dist/bueno.js",
   "module": "./dist/bueno.esm.js",
   "browser": {
@@ -14,6 +18,7 @@
   "files": [
     "dist/"
   ],
+
   "scripts": {
     "start": "rollup -c -w",
     "build": "npm run clean && npm run build:prod",
