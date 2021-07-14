@@ -8,6 +8,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   NumericFacetValue,
+  NumericRangeRequest,
+  buildNumericRange,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -84,6 +86,10 @@ export class AtomicRatingFacet
    */
   @Prop() public numberOfStars = 5;
   /**
+   * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+   */
+  @Prop() public maxValueInIndex = 5;
+  /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
@@ -99,6 +105,7 @@ export class AtomicRatingFacet
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfStars,
+      currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
     };
@@ -115,8 +122,25 @@ export class AtomicRatingFacet
       .length;
   }
 
+  private generateCurrentValues() {
+    const scaleFactor = this.maxValueInIndex / this.numberOfStars;
+    const currentValues: NumericRangeRequest[] = [];
+    for (let i = 0; i < this.numberOfStars; i++) {
+      currentValues.push(
+        buildNumericRange({
+          start: Math.round(i * scaleFactor * 100) / 100,
+          end: Math.round((i + 1) * scaleFactor * 100) / 100,
+          endInclusive: true,
+        })
+      );
+    }
+    return currentValues;
+  }
+
+  //remove this function later
   private formatFacetValue(facetValue: NumericFacetValue) {
-    //TODO: add stars here
+    //TODO: add stars here but display value is a string
+    //maybe better to pass svg as children/ Vnode
     return this.bindings.i18n.t('to', {
       start: facetValue.start,
       end: facetValue.end,
