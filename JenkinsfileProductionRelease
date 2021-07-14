@@ -2,10 +2,7 @@ node('linux && docker') {
   checkout scm
 
   withDockerContainer(image: 'node:14', args: '-u=root') {
-    stage('Checkout') {
-      sh "git checkout ${params.COMMIT_HASH}"
-    }
-
+    
     stage('Npm publish') {
       withCredentials([
       string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
