@@ -34,7 +34,7 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {number} */
   numberOfSuggestions = 5;
   /** @type {boolean} */
-  hasSearchButton = true;
+  hasSearchButton = false;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -102,8 +102,8 @@ export default class QuanticSearchBox extends LightningElement {
       this.clearButton = this.template.querySelector('.slds-button__icon');
       this.clearButton.hidden = true;
     }
-    if (this.hasSearchButton && !this.closeButton){
-      this.closeButton = this.template.querySelector('#search-button');
+    if (!this.hasSearchButton && !this.closeButton){
+      this.closeButton = this.template.querySelector('.slds-button__icon');
     }
   }
 
@@ -181,6 +181,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onSearch(){
+    this.searchBox.updateText(this.input.value);
     this.searchBox.submit();
     this.input.blur();
   }
@@ -222,6 +223,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   clearInput() {
     this.input.value = '';
+    this.searchBox.updateText(this.input.value);
   }
 
   preventDefault(event) {
