@@ -1,0 +1,24 @@
+.breadcrumb-manager__line {
+    align-items: baseline;
+}
+
+.breadcrumb-manager__value:hover {
+    text-decoration: underline;
+}
+
+.slds-grid div.breadcrumb-manager__column {
+    padding: 0;
+}
+
+.breadcrumb-manager__value-line-item {
+    line-height: 0.7;
+    white-space: nowrap;
+}
+
+.breadcrumb-manager__field-name {
+    white-space: nowrap;
+}
+
+.breadcrumb-manager__more-button:hover {
+    color: var(--color-text-action-label);
+}

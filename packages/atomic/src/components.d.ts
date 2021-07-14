@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
+import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -137,7 +138,7 @@ export namespace Components {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onApply"?: () => void;
+        "type": NumberInputType;
     }
     interface AtomicFacetV1 {
         /**
@@ -276,7 +277,7 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The number of values to request for this facet, when there are no manual ranges.
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues": number;
         /**
@@ -288,13 +289,9 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges.
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
-        "withInput": boolean;
-        /**
-          * Whether this facet should contain a defined list of values.
-         */
-        "withRanges": boolean;
+        "withInput"?: NumberInputType;
     }
     interface AtomicNumericRange {
         /**
@@ -1003,7 +1000,8 @@ declare namespace LocalJSX {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onApply"?: () => void;
+        "onAtomic/numberInputApply"?: (event: CustomEvent<any>) => void;
+        "type": NumberInputType;
     }
     interface AtomicFacetV1 {
         /**
@@ -1142,7 +1140,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of values to request for this facet, when there are no manual ranges.
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues"?: number;
         /**
@@ -1154,13 +1152,9 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an input allowing users to set custom ranges.
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
-        "withInput"?: boolean;
-        /**
-          * Whether this facet should contain a defined list of values.
-         */
-        "withRanges"?: boolean;
+        "withInput"?: NumberInputType;
     }
     interface AtomicNumericRange {
         /**
