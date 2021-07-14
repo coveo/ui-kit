@@ -10,7 +10,6 @@ import {Component, h, Prop, State} from '@stencil/core';
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializeBindings,
 } from '../../utils/initialization-utils';
 
@@ -38,14 +37,13 @@ export class AtomicNoResults {
   @BindStateToController('history')
   @State()
   private historyState!: HistoryManagerState;
-  @BindStateToI18n()
-  @State()
   private strings = {
-    cancelLastAction: () => this.bindings.i18n.t('cancelLastAction'),
-    searchTips: () => this.bindings.i18n.t('searchTips'),
-    checkSpelling: () => this.bindings.i18n.t('checkSpelling'),
-    tryUsingFewerKeywords: () => this.bindings.i18n.t('tryUsingFewerKeywords'),
-    selectFewerFilters: () => this.bindings.i18n.t('selectFewerFilters'),
+    cancelLastAction: () => this.bindings.i18n.t('cancel-last-action'),
+    searchTips: () => this.bindings.i18n.t('search-tips'),
+    checkSpelling: () => this.bindings.i18n.t('check-spelling'),
+    tryUsingFewerKeywords: () =>
+      this.bindings.i18n.t('try-using-fewer-keywords'),
+    selectFewerFilters: () => this.bindings.i18n.t('select-fewer-filters'),
   };
   @State() public error!: Error;
 

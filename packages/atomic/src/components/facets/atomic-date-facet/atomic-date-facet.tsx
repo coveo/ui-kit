@@ -15,7 +15,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   I18nState,
   InitializableComponent,
   InitializeBindings,
@@ -62,11 +61,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   @State()
   private searchStatusState!: SearchStatusState;
 
-  @BindStateToI18n()
-  @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    facetValue: (variables) => this.bindings.i18n.t('facet-value', variables),
     to: (variables) => this.bindings.i18n.t('to', variables),
   };
 

@@ -56,11 +56,11 @@ export class FacetNumberInput {
   render() {
     const label = this.bindings.i18n.t(this.label);
     const minPlaceholder = this.bindings.i18n.t('min');
-    const minAria = this.bindings.i18n.t('numberInputMinimum', {label});
+    const minAria = this.bindings.i18n.t('number-input-minimum', {label});
     const maxPlaceholder = this.bindings.i18n.t('max');
-    const maxAria = this.bindings.i18n.t('numberInputMaximum', {label});
+    const maxAria = this.bindings.i18n.t('number-input-maximum', {label});
     const apply = this.bindings.i18n.t('apply');
-    const applyAria = this.bindings.i18n.t('numberInputApply', {label});
+    const applyAria = this.bindings.i18n.t('number-input-apply', {label});
 
     const commonClasses = 'text-base rounded p-2.5 border border-neutral-light';
     const inputClasses = `${commonClasses} placeholder-neutral-dark min-w-0 mr-1`;

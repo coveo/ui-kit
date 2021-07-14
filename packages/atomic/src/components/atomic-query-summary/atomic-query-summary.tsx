@@ -35,7 +35,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   @State()
   private querySummaryState!: QuerySummaryState;
   private strings = {
-    inSeconds: (count: number) => this.bindings.i18n.t('inSeconds', {count}),
+    inSeconds: (count: number) => this.bindings.i18n.t('in-seconds', {count}),
   };
   @State() public error!: Error;
 
@@ -65,11 +65,11 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('noResultsFor', {
+      ? this.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
           query: this.wrapHighlight(escape(this.querySummaryState.query)),
         })
-      : this.bindings.i18n.t('noResults');
+      : this.bindings.i18n.t('no-results');
     return <span part="no-results" innerHTML={content}></span>;
   }
 
@@ -93,8 +93,11 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private renderHasResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('showingResultsOfWithQuery', this.resultOfOptions)
-      : this.bindings.i18n.t('showingResultsOf', this.resultOfOptions);
+      ? this.bindings.i18n.t(
+          'showing-results-of-with-query',
+          this.resultOfOptions
+        )
+      : this.bindings.i18n.t('showing-results-of', this.resultOfOptions);
 
     return <span part="results" innerHTML={content}></span>;
   }

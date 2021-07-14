@@ -3,7 +3,6 @@ import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
@@ -32,22 +31,20 @@ export class AtomicQueryError implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public queryError!: QueryError;
 
-  @BindStateToI18n()
-  @State()
   private strings = {
     disconnectedTitle: () => this.bindings.i18n.t('disconnected'),
-    disconnectedDesc: () => this.bindings.i18n.t('checkYourConnection'),
-    noEndpointsTitle: () => this.bindings.i18n.t('noEndpoints'),
-    noEndpointsDesc: () => this.bindings.i18n.t('addSources'),
-    invalidTokenTitle: () => this.bindings.i18n.t('cannotAccess'),
-    invalidTokenDesc: () => this.bindings.i18n.t('invalidToken'),
-    genericErrorTitle: () => this.bindings.i18n.t('somethingWentWrong'),
-    genericErrorDesc: () => this.bindings.i18n.t('ifProblemPersists'),
-    helpLink: () => this.bindings.i18n.t('coveoOnlineHelp'),
-    moreInfo: () => this.bindings.i18n.t('moreInfo'),
-    organizationIsPaused: () => this.bindings.i18n.t('organizationIsPaused'),
+    disconnectedDesc: () => this.bindings.i18n.t('check-your-connection'),
+    noEndpointsTitle: () => this.bindings.i18n.t('no-endpoints'),
+    noEndpointsDesc: () => this.bindings.i18n.t('add-sources'),
+    invalidTokenTitle: () => this.bindings.i18n.t('cannot-access'),
+    invalidTokenDesc: () => this.bindings.i18n.t('invalid-token'),
+    genericErrorTitle: () => this.bindings.i18n.t('something-went-wrong'),
+    genericErrorDesc: () => this.bindings.i18n.t('if-problem-persists'),
+    helpLink: () => this.bindings.i18n.t('coveo-online-help'),
+    moreInfo: () => this.bindings.i18n.t('more-info'),
+    organizationIsPaused: () => this.bindings.i18n.t('organization-is-paused'),
     organizationWillResume: () =>
-      this.bindings.i18n.t('organizationWillResume'),
+      this.bindings.i18n.t('organization-will-resume'),
   };
   @BindStateToController('queryError')
   @State()
