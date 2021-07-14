@@ -34,7 +34,7 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {number} */
   numberOfSuggestions = 5;
   /** @type {boolean} */
-  hasSearchButton = false;
+  hasSearchButton = true;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -47,6 +47,8 @@ export default class QuanticSearchBox extends LightningElement {
   combobox;
   /** @type {HTMLButtonElement} */
   clearButton;
+  /** @type {HTMLElement} */
+  closeButton
 
   /** @type {() => void} */
   resetSelectionIndex = () => {
@@ -99,6 +101,9 @@ export default class QuanticSearchBox extends LightningElement {
     if (!this.clearButton) {
       this.clearButton = this.template.querySelector('.slds-button__icon');
       this.clearButton.hidden = true;
+    }
+    if (this.hasSearchButton && !this.closeButton){
+      this.closeButton = this.template.querySelector('#search-button');
     }
   }
 
@@ -176,8 +181,6 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onSearch(){
-    console.log("Here");
-    console.log(this.suggestions);
     this.searchBox.submit();
     this.input.blur();
   }
@@ -200,8 +203,13 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
-    this.clearButton.classList.remove('slds-hidden');
-    this.clearButton.classList.add('slds-visible');
+    if(!this.hasSearchButton){
+      this.closeButton.classList.remove('slds-hidden');
+      this.closeButton.classList.add('slds-visible');
+    } else {
+      this.clearButton.classList.remove('slds-hidden');
+      this.clearButton.classList.add('slds-visible');
+    }
     this.searchBox.showSuggestions();
     this.showSuggestions();
   }
@@ -221,11 +229,11 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   /**
-   * @param {KeyboardEvent & {target: {textContent : string}}} event
+   * @param {KeyboardEvent} event
    */
   handleSuggestionSelection(event) {
-    const textValue = event.target.textContent;
-
+    console.log(event.target.innerText);
+    const textValue = event.target.innerText;
     this.updateSearchboxText(textValue);
     this.searchBox.submit();
     this.input.blur();
