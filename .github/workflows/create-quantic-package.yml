@@ -51,16 +51,13 @@ jobs:
       - name: Connect to DevHub organization
         if: steps.check_sha.outputs.cache-hit != 'true'
         run: sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
-      - name: Create package version in the Dev Hub org
+      - name: Create package version
         if: steps.check_sha.outputs.cache-hit != 'true'
-        run: output=$(sfdx force:package:version:create -p $PACKAGE_ID -x)
-      - name: set permissions on next script
-        if: steps.check_sha.outputs.cache-hit != 'true'
-        run: chmod +x "${GITHUB_WORKSPACE}/.github/get_creation_report.sh"
-      - name: Try to get report until previous command is a Success
-        if: steps.check_sha.outputs.cache-hit != 'true'
-        run: '${GITHUB_WORKSPACE}/.github/get_creation_report.sh output'
-      - name: 'Promote the created version if desired'
+        run: |
+          output=$(sfdx force:package:version:create -p $PACKAGE_ID -x)
+          chmod +x "${GITHUB_WORKSPACE}/.github/get_creation_report.sh"
+          '${GITHUB_WORKSPACE}/.github/get_creation_report.sh output'
+      - name: Promote the created version
         if: |
           '${{ github.event.inputs.shouldPromote }}' && 
           steps.check_sha.outputs.cache-hit != 'true'
