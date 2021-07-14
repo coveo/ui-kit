@@ -18,7 +18,6 @@
   "files": [
     "dist/"
   ],
-
   "scripts": {
     "start": "rollup -c -w",
     "build": "npm run clean && npm run build:prod",
