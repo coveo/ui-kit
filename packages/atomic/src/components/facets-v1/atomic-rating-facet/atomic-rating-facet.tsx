@@ -108,13 +108,13 @@ export class AtomicRatingFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of stars to request for this facet. Default is 5.
+   * The number of stars to request for this facet.
    */
   @Prop() public numberOfStars = 5;
   /**
-   * The maximum value of the field. This value is used to normalize the field values with the number of stars. Default is 5.
+   * The maximum value of the field. This value is used to normalize the field values with the number of stars.
    */
-  @Prop() public maxValue = 5;
+  @Prop() public maxValueInIndex = 5;
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
@@ -149,13 +149,13 @@ export class AtomicRatingFacet
   }
 
   private generateCurrentValues() {
-    const scaleFactor = this.maxValue / this.numberOfStars;
+    const scaleFactor = this.maxValueInIndex / this.numberOfStars;
     const currentValues: NumericRangeRequest[] = [];
     for (let i = 0; i < this.numberOfStars; i++) {
       currentValues.push(
         buildNumericRange({
-          start: i * scaleFactor,
-          end: (i + 1) * scaleFactor,
+          start: Math.round(i * scaleFactor * 100) / 100,
+          end: Math.round((i + 1) * scaleFactor * 100) / 100,
           endInclusive: true,
         })
       );

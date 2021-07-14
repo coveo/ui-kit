@@ -2,11 +2,16 @@
 import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 import {LightningElement} from 'lwc';
+import {Deferred} from 'utils';
+import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine';
+
+interface Bindings {
+  engine?: HeadlessTypes<CoreEngine>;
+  store?: Record<String, unknown>;
+}
 
 declare global {
-  // eslint-disable-next-line no-undef
   const CoveoHeadless: typeof HeadlessTypes;
-
   interface Window {
     coveoHeadless: {
       [engineId: string]: {
@@ -14,8 +19,13 @@ declare global {
           element: LightningElement;
           initialized: boolean;
         }[];
-        config: Deferred<HeadlessTypes.SearchEngineConfiguration>;
-        engine: Promise<HeadlessTypes.SearchEngine>;
+        options: Deferred<HeadlessTypes.ExternalEngineOptions>;
+        bindings: Bindings;
+        enginePromise: Promise;
+        engineConstructor?: (
+          options: HeadlessTypes.ExternalEngineOptions
+        ) => unknown;
+        initializedCallback?: Function;
       };
     };
   }

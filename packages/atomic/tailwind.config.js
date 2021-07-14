@@ -48,9 +48,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['visited', 'disabled'],
-      backgroundColor: ['disabled'],
-      cursor: ['disabled'],
+      textColor: ['visited'],
     },
   },
   plugins: [],

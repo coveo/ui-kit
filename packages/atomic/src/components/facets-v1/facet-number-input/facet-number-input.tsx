@@ -1,6 +1,15 @@
-import {Component, h, State, Prop, Host, Watch} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Host,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
+import {NumberInputType} from './number-input-type';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -11,103 +20,97 @@ import {Bindings} from '../../../utils/initialization-utils';
   shadow: false,
 })
 export class FacetNumberInput {
-  @State() private isRangeInvalid = false;
   @State() private start?: number;
   @State() private end?: number;
+  private startRef!: HTMLInputElement;
+  private endRef!: HTMLInputElement;
 
   @Prop() public bindings!: Bindings;
-  @Prop() public onApply?: () => void;
+  @Prop() public type!: NumberInputType;
   @Prop() public filter!: NumericFilter;
   @Prop() public filterState!: NumericFilterState;
   @Prop() public label!: string;
 
+  @Event({
+    eventName: 'atomic/numberInputApply',
+  })
+  private applyInput!: EventEmitter;
+
   public connectedCallback() {
-    this.updateState();
-  }
-
-  @Watch('filterState')
-  private updateState() {
-    if (this.filterState.isLoading) {
-      return;
-    }
-
     this.start = this.filterState.range?.start;
     this.end = this.filterState.range?.end;
   }
 
   private apply() {
-    this.onApply && this.onApply();
-
-    try {
-      this.filter.setRange({
-        start: this.start!,
-        end: this.end!,
-      });
-      this.isRangeInvalid = false;
-    } catch (error) {
-      this.bindings.engine.logger.error(error);
-      this.isRangeInvalid = true;
+    if (!this.startRef.validity.valid || !this.endRef.validity.valid) {
+      return;
     }
-  }
 
-  private get applyEnabled() {
-    return (
-      this.start !== undefined &&
-      this.end !== undefined &&
-      !isNaN(this.start) &&
-      !isNaN(this.end) &&
-      this.end >= this.start
-    );
+    this.applyInput.emit();
+    this.filter.setRange({
+      start: this.start!,
+      end: this.end!,
+    });
   }
 
   render() {
     const label = this.bindings.i18n.t(this.label);
+    const minPlaceholder = this.bindings.i18n.t('min');
+    const minAria = this.bindings.i18n.t('numberInputMinimum', {label});
+    const maxPlaceholder = this.bindings.i18n.t('max');
+    const maxAria = this.bindings.i18n.t('numberInputMaximum', {label});
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('numberInputApply', {label});
-    const min = this.bindings.i18n.t('min');
-    const minAria = this.bindings.i18n.t('numberInputMinimum', {label});
-    const max = this.bindings.i18n.t('max');
-    const maxAria = this.bindings.i18n.t('numberInputMaximum', {label});
-    const rangeIsInvalid = this.bindings.i18n.t('rangeIsInvalid');
 
     const commonClasses = 'text-base rounded p-2.5 border border-neutral-light';
     const inputClasses = `${commonClasses} placeholder-neutral-dark min-w-0 mr-1`;
 
+    const step = this.type === 'integer' ? '1' : 'any';
+
     return (
       <Host class="flex flex-col mt-4">
-        <div class="inline-flex">
+        <form class="inline-flex">
           <input
-            class={inputClasses}
-            placeholder={min}
-            aria-label={minAria}
+            part="input-start"
             type="number"
-            value={this.start}
+            step={step}
+            ref={(ref) => (this.startRef = ref!)}
+            class={inputClasses}
+            placeholder={minPlaceholder}
+            aria-label={minAria}
+            required
+            min={Number.MIN_SAFE_INTEGER}
+            max={this.end}
+            value={this.filterState.range?.start}
             onInput={(e) =>
               (this.start = (e.target as HTMLInputElement).valueAsNumber)
             }
           />
           <input
-            class={inputClasses}
-            placeholder={max}
-            aria-label={maxAria}
+            part="input-end"
             type="number"
-            value={this.end}
+            step={step}
+            ref={(ref) => (this.endRef = ref!)}
+            class={inputClasses}
+            placeholder={maxPlaceholder}
+            aria-label={maxAria}
+            required
+            min={this.start}
+            max={Number.MAX_SAFE_INTEGER}
+            value={this.filterState.range?.end}
             onInput={(e) =>
               (this.end = (e.target as HTMLInputElement).valueAsNumber)
             }
           />
           <button
-            class={`${commonClasses} bg-background text-primary disabled:cursor-not-allowed disabled:bg-neutral disabled:text-neutral-dark flex-none`}
+            part="input-apply-button"
+            class={`${commonClasses} bg-background text-primary flex-none`}
             aria-label={applyAria}
             onClick={() => this.apply()}
-            disabled={!this.applyEnabled}
           >
             {apply}
           </button>
-        </div>
-        {this.isRangeInvalid && (
-          <div class="text-error mt-1 text-xs">{rangeIsInvalid}</div>
-        )}
+        </form>
       </Host>
     );
   }
