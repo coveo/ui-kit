@@ -30,11 +30,11 @@ export default class QuanticSearchBox extends LightningElement {
   @api engineId;
   /** @type {string} */
   @api placeholder = 'Search...';
+   /** @type {boolean} */
+   @api withoutSubmitButton = false;
 
   /** @type {number} */
   numberOfSuggestions = 5;
-  /** @type {boolean} */
-  hasSearchButton = false;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -102,7 +102,7 @@ export default class QuanticSearchBox extends LightningElement {
       this.clearButton = this.template.querySelector('.slds-button__icon');
       this.clearButton.hidden = true;
     }
-    if (!this.hasSearchButton && !this.closeButton){
+    if (!this.withoutSubmitButton && !this.closeButton){
       this.closeButton = this.template.querySelector('.slds-button__icon');
     }
   }
@@ -204,7 +204,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
-    if(!this.hasSearchButton){
+    if(!this.withoutSubmitButton){
       this.closeButton.classList.remove('slds-hidden');
       this.closeButton.classList.add('slds-visible');
     } else {
