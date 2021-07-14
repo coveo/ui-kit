@@ -1,0 +1,78 @@
+<template>
+    <template if:true={hasBreadcrumbs}>
+        <div class="slds-grid slds-var-m-vertical_x-small">
+            <div class="slds-col slds-col_bump-right breadcrumb-manager__column">
+                <ul>
+                    <template for:each={facetBreadcrumbValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+                            <span class="breadcrumb-manager__field-name">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                                <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                                    <li key={breadcrumbValue.value.value} class="breadcrumb-manager__value-line-item">
+                                        <a onclick={breadcrumbValue.deselect} class="breadcrumb-manager__value">{breadcrumbValue.value.value} X</a>
+                                    </li>
+                                </template>
+                                <template if:true={breadcrumb.showMoreButton}>
+                                    <li class="breadcrumb-manager__value-line-item">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </li>
+                    </template>
+                    <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+                            <span class="breadcrumb-manager__field-name">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                                <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                                    <li key={breadcrumbValue.value} class="breadcrumb-manager__value-line-item">
+                                        <a onclick={breadcrumbValue.deselect} class="breadcrumb-manager__value">{breadcrumbValue.value} X</a>
+                                    </li>
+                                </template>
+                                <template if:true={breadcrumb.showMoreButton}>
+                                    <li class="breadcrumb-manager__value-line-item">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </li>
+                    </template>
+                    <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+                            <span class="breadcrumb-manager__field-name">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                                <li class="breadcrumb-manager__value-line-item">
+                                    <a onclick={breadcrumb.deselect} class="breadcrumb-manager__value">{breadcrumb.value} X</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </template>
+                    <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
+                        <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+                            <span class="breadcrumb-manager__field-name">{breadcrumb.field} : </span>
+                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                                <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                                    <li key={breadcrumbValue.value} class="breadcrumb-manager__value-line-item">
+                                        <a onclick={breadcrumbValue.deselect} class="breadcrumb-manager__value">{breadcrumbValue.value} X</a>
+                                    </li>
+                                </template>
+                                <template if:true={breadcrumb.showMoreButton}>
+                                    <li class="breadcrumb-manager__value-line-item">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="slds-col breadcrumb-manager__column">
+                <ul class="slds-list_horizontal slds-has-block-links_space">
+                    <li class="breadcrumb-manager__value-line-item">
+                        <a onclick={deselectAll}>Clear All Filters</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
+</template>

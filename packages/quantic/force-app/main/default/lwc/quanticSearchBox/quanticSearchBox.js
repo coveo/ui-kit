@@ -130,13 +130,16 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   setHighlighted() {
-    const options = this.getSuggestionElements();
-    const option = options[this.selectionIndex];
+    const suggestions = this.getSuggestionElements();
+    if (!suggestions.length) {
+      return;
+    }
+    const suggestion = suggestions[this.selectionIndex];
 
     this.resetHighlighted();
-    option.setAttribute('aria-selected', 'true');
-    option.classList.add('slds-has-focus');
-    this.input.value = option.textContent;
+    suggestion.setAttribute('aria-selected', 'true');
+    suggestion.classList.add('slds-has-focus');
+    this.input.value = suggestion.textContent;
   }
 
   resetHighlighted() {

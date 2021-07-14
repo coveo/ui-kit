@@ -179,7 +179,11 @@
         <atomic-facet-v1 field="author" label="Authors"></atomic-facet-v1>
         <atomic-facet-v1 field="objecttype" label="Type" display-values-as="link"></atomic-facet-v1>
         <atomic-facet-v1 field="year" label="Year" display-values-as="box"></atomic-facet-v1>
-        <atomic-numeric-facet-v1 field="ytviewcount" label="Youtube Views" with-input></atomic-numeric-facet-v1>
+        <atomic-numeric-facet-v1
+          field="ytviewcount"
+          label="Youtube Views"
+          with-input="integer"
+        ></atomic-numeric-facet-v1>
         <atomic-numeric-facet-v1 field="ytlikecount" label="Youtube Likes" display-values-as="link">
           <atomic-numeric-range start="0" end="1000" label="Unpopular"></atomic-numeric-range>
           <atomic-numeric-range start="1000" end="8000" label="Well liked"></atomic-numeric-range>
@@ -187,6 +191,8 @@
           <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
         </atomic-numeric-facet-v1>
         <atomic-timeframe-facet></atomic-timeframe-facet>
+        <atomic-rating-facet field="snrating" label="Rating" number-of-stars="5" max-value-in-index="5">
+        </atomic-rating-facet>
       </atomic-facet-manager>
       <div class="results-container">
         <atomic-breadcrumb-manager></atomic-breadcrumb-manager>

@@ -12,6 +12,9 @@
             "c/quanticDateFacet": [
                 "quanticDateFacet/quanticDateFacet.js"
             ],
+            "c/quanticHeadlessLoader": [
+                "quanticHeadlessLoader/quanticHeadlessLoader.js"
+            ],
             "c/quanticDateFacetValue": [
                 "quanticDateFacetValue/quanticDateFacetValue.js"
             ],

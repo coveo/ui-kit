@@ -11,6 +11,7 @@
     border-bottom-right-radius: 0rem;
     border-top-right-radius: 0rem;
     border-right-width: 0px;
+    position: relative;
  
 }
 
@@ -21,4 +22,5 @@
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     background-color: #1372ec;
+    position: relative;
 }

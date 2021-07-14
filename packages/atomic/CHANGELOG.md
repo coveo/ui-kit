@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.41.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.2...@coveo/atomic@0.41.0) (2021-07-14)
+
+
+### Features
+
+* **atomic:** atomic rating facet max value prop ([#963](https://github.com/coveo/ui-kit/issues/963)) ([62ddf43](https://github.com/coveo/ui-kit/commit/62ddf436654a7f2cc65e62f7fdc84b17c6a52b2d))
+
+
+
+
+
+## [0.40.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.1...@coveo/atomic@0.40.2) (2021-07-13)
+
+
+### Bug Fixes
+
+* **atomic:** various numeric facet v1 fixes & improvements ([#958](https://github.com/coveo/ui-kit/issues/958)) ([8fb78a2](https://github.com/coveo/ui-kit/commit/8fb78a21f6d9197aa694981c67295ba7f942b8e2))
+
+
+
+
+
+## [0.40.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.0...@coveo/atomic@0.40.1) (2021-07-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.40.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.3...@coveo/atomic@0.40.0) (2021-07-09)
 
 
