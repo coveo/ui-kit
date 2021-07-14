@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.42.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.41.0...@coveo/atomic@0.42.0) (2021-07-14)
+
+
+### Features
+
+* **headless:** improve standalone search box experience ([#962](https://github.com/coveo/ui-kit/issues/962)) ([e7c6d22](https://github.com/coveo/ui-kit/commit/e7c6d22d779cdde02d122f05e497de4d6c4ccfea))
+
+
+
+
+
 # [0.41.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.2...@coveo/atomic@0.41.0) (2021-07-14)
 
 
