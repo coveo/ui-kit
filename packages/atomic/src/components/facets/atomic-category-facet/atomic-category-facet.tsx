@@ -114,7 +114,7 @@ export class AtomicCategoryFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The character that separates values of a multi-value field.
    */

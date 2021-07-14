@@ -82,7 +82,7 @@ export class AtomicNumericFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    */

@@ -80,7 +80,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
    */

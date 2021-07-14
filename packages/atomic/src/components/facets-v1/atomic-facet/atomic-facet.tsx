@@ -91,7 +91,7 @@ export class AtomicFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
