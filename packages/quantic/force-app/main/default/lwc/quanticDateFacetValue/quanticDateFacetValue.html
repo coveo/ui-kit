@@ -1,11 +1,11 @@
 <template>
-  <li class="slds-var-m-around_small slds-grid" onclick={facetValueClick}>
+  <li class="slds-var-m-around_small slds-grid">
     <div class="slds-col_bump-right">
       <template if:true={isChecked}>
-        <input type="checkbox" checked/>
+        <input type="checkbox" onchange={onSelect} checked/>
       </template>
       <template if:false={isChecked}>
-        <input type="checkbox"/>
+        <input type="checkbox" onchange={onSelect}/>
       </template>
       <span class="slds-var-m-horizontal_medium nowrap slds-text-link_reset">{start} - {end}</span>
     </div>
