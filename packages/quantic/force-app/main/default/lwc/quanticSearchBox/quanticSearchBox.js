@@ -232,7 +232,6 @@ export default class QuanticSearchBox extends LightningElement {
    * @param {KeyboardEvent} event
    */
   handleSuggestionSelection(event) {
-    console.log(event.target.innerText);
     const textValue = event.target.innerText;
     this.updateSearchboxText(textValue);
     this.searchBox.submit();
