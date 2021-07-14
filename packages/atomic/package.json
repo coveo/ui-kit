@@ -2,6 +2,7 @@
   "name": "@coveo/atomic",
   "version": "0.41.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
+  "homepage": "https://github.com/coveo/ui-kit/tree/master/packages/atomic",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",

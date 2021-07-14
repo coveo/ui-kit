@@ -1,6 +1,7 @@
 {
   "name": "@coveo/headless",
   "private": false,
+  "homePage": "https://github.com/coveo/ui-kit/tree/master/packages/headless",
   "main": "./dist/headless.js",
   "module": "./dist/headless.esm.js",
   "browser": {

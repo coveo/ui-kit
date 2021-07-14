@@ -1,6 +1,7 @@
 {
   "name": "@coveo/bueno",
   "private": false,
+  "homepage": "https://github.com/coveo/ui-kit/tree/master/packages/bueno",
   "main": "./dist/bueno.js",
   "module": "./dist/bueno.esm.js",
   "browser": {
