@@ -33,11 +33,11 @@
             </div>
           </template>
           <template if:false={withoutSubmitButton}>
-            <div class="search-box-container">
-              <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon input-wrapper" role="none">
+            <div class="searchbox-container">
+              <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon" role="none">
                 <input
                   id="combobox-with-button-id"
-                  class="slds-input slds-combobox__input input-wrapper"
+                  class="slds-input slds-combobox__input searchbox_input"
                   placeholder={placeholder}
                   type="search"
                   onkeyup={onKeyup}
