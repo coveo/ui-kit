@@ -20,7 +20,7 @@ import {
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
-import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
+import {FacetValueCheckboxRating} from '../facet-value-checkbox-rating/facet-value-checkbox-rating';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {BaseFacet} from '../facet-common';
 
@@ -207,7 +207,7 @@ export class AtomicRatingFacet
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <FacetValueCheckbox
+          <FacetValueCheckboxRating
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
@@ -215,7 +215,7 @@ export class AtomicRatingFacet
             onClick={onClick}
           >
             {this.generateIconDisplay(facetValue)}
-          </FacetValueCheckbox>
+          </FacetValueCheckboxRating>
         );
       case 'link':
         return (
