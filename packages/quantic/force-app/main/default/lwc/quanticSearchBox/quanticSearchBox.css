@@ -1,4 +1,4 @@
-.searchbox-container{
+.searchbox__container{
     display: flex;
     position: relative;
     border-color: #e5e8e8;
@@ -8,7 +8,7 @@
     background: #FFFFFF;
 }
 
-.searchbox_input {
+.searchbox__input {
     display: flex;
     border-top-left-radius: 0.25rem;
     border-bottom-left-radius: 0.25rem;
@@ -19,7 +19,7 @@
 
 }
 
-.search-button{
+.searchbox__submit-button{
     padding: 0px;
     margin: 0px;
     border-width: 0px;
