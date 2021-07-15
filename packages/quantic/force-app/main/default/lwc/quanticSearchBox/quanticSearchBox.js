@@ -52,13 +52,11 @@ export default class QuanticSearchBox extends LightningElement {
     this.selectionIndex = -1;
   };
   /** @type {() => boolean} */
-  // @ts-ignore
   areSuggestionsShown = () =>
     this.template
       .querySelector('.slds-combobox')
       .classList.contains('slds-is-open');
-  /** @type {() => HTMLElement[]} */
-  // @ts-ignore
+  /** @type {() => NodeListOf<HTMLElement>} */
   getSuggestionElements = () =>
     this.template.querySelectorAll('.slds-listbox__option');
 
@@ -88,11 +86,9 @@ export default class QuanticSearchBox extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
     if (!this.input) {
-      // @ts-ignore
       this.input = this.template.querySelector('input');
     }
     if (!this.combobox) {
-      // @ts-ignore
       this.combobox = this.template.querySelector('.slds-combobox');
     }
     if (this.withoutSubmitButton && !this.clearButton) {
@@ -136,7 +132,7 @@ export default class QuanticSearchBox extends LightningElement {
     this.resetHighlighted();
     suggestion.setAttribute('aria-selected', 'true');
     suggestion.classList.add('slds-has-focus');
-    this.input.value = suggestion.textContent;
+    this.input.value = suggestion.innerText;
   }
 
   resetHighlighted() {
@@ -235,9 +231,6 @@ export default class QuanticSearchBox extends LightningElement {
     event.preventDefault();
   }
 
-  /**
-   * @param {KeyboardEvent} event
-   */
   handleSuggestionSelection(event) {
     const textValue = event.target.innerText;
     this.updateSearchboxText(textValue);
