@@ -9,28 +9,31 @@
           role="combobox"
         >
           <template if:true={withoutSubmitButton}>
-            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
-              <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left " icon-name="utility:search" size="x-small" title=""></lightning-icon>
-              <input
-                id="combobox-id"
-                class="slds-input slds-combobox__input"
-                placeholder={placeholder}
-                type="search"
-                onkeyup={onKeyup}
-                onfocus={onFocus}
-                onblur={onBlur}
-                aria-autocomplete="list"
-                aria-controls="listbox-id"
-                autocomplete="off"
-                role="textbox"
-                aria-labelledby="fixed-text-label"
-              />
-              <span>
-                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
-                  <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
-                </button>
-              </span>
+            <div class="searchbox-container">
+              <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left " icon-name="utility:search" size="x-small" title=""></lightning-icon>
+                <input
+                  id="combobox-id"
+                  class="slds-input slds-combobox__input"
+                  placeholder={placeholder}
+                  type="search"
+                  onkeyup={onKeyup}
+                  onfocus={onFocus}
+                  onblur={onBlur}
+                  aria-autocomplete="list"
+                  aria-controls="listbox-id"
+                  autocomplete="off"
+                  role="textbox"
+                  aria-labelledby="fixed-text-label"
+                />
+                <span>
+                  <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
+                    <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
+                  </button>
+                </span>
+              </div>
             </div>
+            
           </template>
           <template if:false={withoutSubmitButton}>
             <div class="searchbox-container">
