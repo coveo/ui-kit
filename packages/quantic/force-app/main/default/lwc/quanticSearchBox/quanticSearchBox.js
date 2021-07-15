@@ -45,8 +45,6 @@ export default class QuanticSearchBox extends LightningElement {
   combobox;
   /** @type {HTMLButtonElement} */
   clearButton;
-  /** @type {HTMLElement} */
-  closeButton
   /** @type {() => void} */
   resetSelectionIndex = () => {
     this.selectionIndex = -1;
@@ -91,12 +89,8 @@ export default class QuanticSearchBox extends LightningElement {
     if (!this.combobox) {
       this.combobox = this.template.querySelector('.slds-combobox');
     }
-    if (this.withoutSubmitButton && !this.clearButton) {
+    if (!this.clearButton) {
       this.clearButton = this.template.querySelector('.slds-button__icon');
-      this.clearButton.hidden = true;
-    }
-    if (!this.withoutSubmitButton && !this.closeButton){
-      this.closeButton = this.template.querySelector('.slds-button__icon');
     }
   }
 
@@ -200,25 +194,15 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
-    if(!this.withoutSubmitButton){
-      this.closeButton.classList.remove('slds-hidden');
-      this.closeButton.classList.add('slds-visible');
-    } else {
-      this.clearButton.classList.remove('slds-hidden');
-      this.clearButton.classList.add('slds-visible');
-    }
+    this.clearButton.classList.remove('slds-hidden');
+    this.clearButton.classList.add('slds-visible');
     this.searchBox.showSuggestions();
     this.showSuggestions();
   }
 
   onBlur() {
-    if (!this.withoutSubmitButton){
-      this.closeButton.classList.remove('slds-visible');
-      this.closeButton.classList.add('slds-hidden');
-    }else{
-      this.clearButton.classList.remove('slds-visible');
-      this.clearButton.classList.add('slds-hidden');
-    }
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
     this.hideSuggestions();
   }
 
