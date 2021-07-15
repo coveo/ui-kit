@@ -3,7 +3,7 @@ import {CurrentValues, Type} from '../../../facet-api/request';
 import {FacetValueState} from '../../../facet-api/value';
 import {RelativeDate, relativeDateDefinition} from '../relative-date';
 import {requiredNonEmptyString} from '../../../../../utils/validate-payload';
-import {BooleanValue, RecordValue} from '../../../../../../../bueno/dist';
+import {BooleanValue, RecordValue} from '@coveo/bueno';
 
 /**
  * The options defining a value to display in a `DateFacet`.
