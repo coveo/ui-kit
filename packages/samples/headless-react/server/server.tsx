@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 
 import express from 'express';
+import escape from 'escape-html';
 import ReactDOMServer from 'react-dom/server';
 
 import App from '../src/App';
@@ -31,7 +32,7 @@ app.get('/', async (req, res) => {
       return res.status(500).send('Internal error');
     }
 
-    const state = JSON.stringify(engine.state);
+    const state = escape(JSON.stringify(engine.state));
     const page = data
       .replace('<div id="root"></div>', `<div id="root">${app}</div>`)
       .replace(
