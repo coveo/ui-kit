@@ -101,7 +101,7 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toEqual(mockValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -167,7 +167,7 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets date facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toEqual(mockValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -223,7 +223,7 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets numeric facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toEqual(mockValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {

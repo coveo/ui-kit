@@ -59,11 +59,13 @@ export function assignRelativeDates<
         responseValue.endInclusive === endInclusive
     );
 
+    const relativeDateObj = relativeDateValueMatch
+      ? {relativeDate: relativeDateValueMatch.relativeDate}
+      : {};
+
     return {
       ...responseValue,
-      relativeDate: relativeDateValueMatch
-        ? relativeDateValueMatch.relativeDate
-        : undefined,
+      ...relativeDateObj,
     };
   });
 }
