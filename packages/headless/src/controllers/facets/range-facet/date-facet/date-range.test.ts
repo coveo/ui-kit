@@ -1,5 +1,6 @@
+import {isSearchApiDate} from '../../../../features/facets/range-facets/date-facet-set/date-format';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {buildDateRange, isSearchApiDate} from './date-range';
+import {buildDateRange} from './date-range';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {
