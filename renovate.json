@@ -13,5 +13,8 @@
   "lockFileMaintenance": {
     "enabled": false
   },
-  "commitMessageSuffix": "J:KIT-282"
+  "commitMessageSuffix": "J:KIT-282",
+  "vulnerabilityAlerts": {
+    "enabled": false
+  }
 }
