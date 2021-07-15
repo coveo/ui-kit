@@ -2,6 +2,10 @@
     display: flex;
     position: relative;
     border-color: #e5e8e8;
+    height: 32px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background: #FFFFFF;
 }
 
 .searchbox_input {
