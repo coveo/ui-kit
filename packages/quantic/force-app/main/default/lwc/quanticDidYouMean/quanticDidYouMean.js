@@ -15,6 +15,16 @@ export default class QuanticDidYouMean extends LightningElement {
      */
     @track wasAutomaticallyCorrected;
 
+    /**
+     * @type {string}
+     */
+    @track originalQuery;
+
+    /**
+     * @type {string}
+     */
+    @track correctedQuery;
+
     /** @type {import("coveo").DidYouMean} */
     didYouMean;
     
@@ -50,21 +60,11 @@ export default class QuanticDidYouMean extends LightningElement {
     updateState() {
         this.hasQueryCorrection = this.didYouMean.state.hasQueryCorrection;
         this.wasAutomaticallyCorrected = this.didYouMean.state.wasAutomaticallyCorrected;
+        this.originalQuery = this.didYouMean.state.originalQuery;
+        this.correctedQuery = this.didYouMean.state.queryCorrection.correctedQuery;
     }
 
     applyCorrection() {
         this.didYouMean.applyCorrection();
-    }
-
-    get noResults() {
-        return this.didYouMean.state.originalQuery;
-    }
-
-    get queryAutoCorrectedTo() {
-        return this.didYouMean.state.wasCorrectedTo;
-    }
-
-    get correctedQuery() {
-        return this.didYouMean.state.queryCorrection.correctedQuery;
     }
 }
