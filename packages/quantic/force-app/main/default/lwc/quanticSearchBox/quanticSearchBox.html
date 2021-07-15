@@ -31,9 +31,9 @@
                 </button>
               </div>
               <template if:false={withoutSubmitButton}>
-                <div class="slds-form-element__addon searchbox__submit-button" id="fixed-text-addon-post">
-                  <lightning-button-icon icon-name="utility:search" variant="brand" onclick={onSubmit}></lightning-button-icon>
-                </div>
+                <button onclick={onSubmit} class="slds-form-element__addon searchbox__submit-button" id="fixed-text-addon-post">
+                  <lightning-icon class="searchbox__submit-button-icon" variant="inverse" icon-name="utility:search" onclick={onSubmit} size="x-small"></lightning-icon>
+                </button>
               </template>
             </div>
 
