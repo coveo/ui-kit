@@ -30,14 +30,10 @@ export interface RelativeDate {
   period: RelativeDatePeriod;
   /**
    * The unit of time.
-   *
-   * If the defined `period` is `now`, this value is optional.
    */
   unit: RelativeDateUnit;
   /**
    * The amount of the `unit` of time.
-   *
-   * If the defined `period` is `now`, this value is optional.
    */
   amount: number;
   /**

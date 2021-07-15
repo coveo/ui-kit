@@ -112,7 +112,11 @@ export function onRangeFacetRequestFulfilled<
 >(
   state: Record<string, T>,
   facets: U[],
-  convert: (values: U['values']) => T['currentValues']
+  convert: (values: U['values']) => T['currentValues'],
+  assign = (
+    _requestValues: T['currentValues'],
+    responseValues: T['currentValues']
+  ) => responseValues
 ) {
   facets.forEach((facetResponse) => {
     const id = facetResponse.facetId;
@@ -122,8 +126,10 @@ export function onRangeFacetRequestFulfilled<
       return;
     }
 
-    const values = convert(facetResponse.values);
-    facetRequest.currentValues = values;
+    facetRequest.currentValues = assign(
+      facetRequest.currentValues,
+      convert(facetResponse.values)
+    );
     facetRequest.preventAutoSelect = false;
   });
 }

@@ -25,13 +25,6 @@ export interface RelativeDateRangeOptions {
    * @defaultValue `idle`
    */
   state?: FacetValueState;
-
-  /**
-   * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-   *
-   * @defaultValue `false`
-   */
-  useLocalTime?: boolean;
 }
 
 /**

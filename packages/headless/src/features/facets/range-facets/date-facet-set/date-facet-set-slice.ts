@@ -24,6 +24,7 @@ import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helper
 import {getDateFacetSetInitialState} from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
+import {assignRelativeDates} from './date-facet-selectors';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),
@@ -70,7 +71,8 @@ export const dateFacetSetReducer = createReducer(
         onRangeFacetRequestFulfilled<DateFacetRequest, DateFacetResponse>(
           state,
           facets,
-          convertToRangeRequests
+          convertToRangeRequests,
+          assignRelativeDates
         );
       });
   }

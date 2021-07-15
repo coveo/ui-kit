@@ -37,6 +37,7 @@ import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {assignRelativeDates} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 
 export {
   DateFacetOptions,
@@ -165,11 +166,13 @@ export function buildDateFacet(
   validateDateFacetOptions(engine, options);
   dispatch(registerDateFacet(options));
 
+  const getRequest = () => engine.state.dateFacetSet[facetId];
+
   const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
     engine,
     {
       facetId,
-      getRequest: () => engine.state.dateFacetSet[facetId],
+      getRequest,
     }
   );
 
@@ -191,7 +194,13 @@ export function buildDateFacet(
     },
 
     get state() {
-      return rangeFacet.state;
+      return {
+        ...rangeFacet.state,
+        values: assignRelativeDates(
+          getRequest().currentValues,
+          rangeFacet.state.values
+        ),
+      };
     },
   };
 }
