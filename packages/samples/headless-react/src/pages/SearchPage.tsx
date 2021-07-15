@@ -1,4 +1,3 @@
-import './SearchPage.css';
 import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext} from '../context/engine';
@@ -109,6 +108,8 @@ import {
   buildRelevanceInspector,
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
+  SearchAppState,
+  loadSearchAnalyticsActions,
   RedirectionTrigger as HeadlessRedirectionTrigger,
   buildRedirectionTrigger,
   QueryTrigger as HeadlessQueryTrigger,
@@ -131,6 +132,14 @@ import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
 
+declare global {
+  interface Window {
+    HEADLESS_STATE?: SearchAppState;
+  }
+}
+
+const isServerSideRendered = !!global.window?.HEADLESS_STATE;
+
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
 
 const criteria: [string, SortCriterion][] = [
@@ -144,8 +153,12 @@ const initialCriterion = criteria[0][1];
 
 const resultsPerPageOptions = [10, 25, 50, 100];
 
+export interface SearchPageProps {
+  engine?: SearchEngine;
+}
+
 export class SearchPage extends Component {
-  private readonly engine: SearchEngine;
+  private engine!: SearchEngine;
   private readonly recommendationEngine: RecommendationEngine;
 
   private readonly recommendationList: HeadlessRecommendationList;
@@ -185,12 +198,10 @@ export class SearchPage extends Component {
 
   private unsubscribeExecuteTrigger!: Unsubscribe;
 
-  constructor(props: {}) {
+  constructor(props: SearchPageProps) {
     super(props);
 
-    this.engine = buildSearchEngine({
-      configuration: getSampleSearchEngineConfiguration(),
-    });
+    this.initEngine(props);
 
     this.recommendationEngine = buildRecommendationEngine({
       configuration: getSampleRecommendationEngineConfiguration(),
@@ -240,10 +251,13 @@ export class SearchPage extends Component {
     this.facetManager = buildFacetManager(this.engine);
 
     this.geographyFacet = buildCategoryFacet(this.engine, {
-      options: {field: 'geographicalhierarchy'},
+      options: {
+        field: 'geographicalhierarchy',
+        facetId: 'geographicalhierarchy-2',
+      },
     });
     this.objectTypeFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype'},
+      options: {field: 'objecttype', facetId: 'objecttype-2'},
     });
 
     this.fileSizeAutomaticNumericFacet = buildNumericFacet(this.engine, {
@@ -317,6 +331,18 @@ export class SearchPage extends Component {
     );
   }
 
+  initEngine(props: SearchPageProps) {
+    if (props.engine) {
+      this.engine = props.engine;
+      return;
+    }
+
+    this.engine = buildSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
+      preloadedState: window.HEADLESS_STATE,
+    });
+  }
+
   componentDidMount() {
     // Search parameters, defined in the url's hash, are restored once `UrlManager` is registered.
     // Beware not to restore search parameters until all components are registered,
@@ -340,6 +366,12 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
+    if (isServerSideRendered) {
+      const {logInterfaceLoad} = loadSearchAnalyticsActions(this.engine);
+      this.engine.dispatch(logInterfaceLoad());
+      return;
+    }
+
     this.engine.executeFirstSearch();
   }
 
