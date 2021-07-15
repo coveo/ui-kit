@@ -8,21 +8,57 @@
           aria-haspopup="listbox"
           role="combobox"
         >
-          <div class="slds-combobox__form-element" role="none">
-            <input
-              id="combobox-id"
-              class="slds-input slds-combobox__input"
-              placeholder={placeholder}
-              type="search"
-              onkeyup={onKeyup}
-              onfocus={onFocus}
-              onblur={onBlur}
-              aria-autocomplete="list"
-              aria-controls="listbox-id"
-              autocomplete="off"
-              role="textbox"
-            />
-          </div>
+          <template if:true={withoutSubmitButton}>
+            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right slds-input-has-fixed-addon" role="none">
+              <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left " icon-name="utility:search" size="x-small" title=""></lightning-icon>
+              <input
+                id="combobox-id"
+                class="slds-input slds-combobox__input"
+                placeholder={placeholder}
+                type="search"
+                onkeyup={onKeyup}
+                onfocus={onFocus}
+                onblur={onBlur}
+                aria-autocomplete="list"
+                aria-controls="listbox-id"
+                autocomplete="off"
+                role="textbox"
+                aria-labelledby="fixed-text-label fixed-text-addon-post"
+              />
+              <span>
+                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
+                  <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:clear" size="x-small"></lightning-icon>
+                </button>
+              </span>
+            </div>
+          </template>
+          <template if:false={withoutSubmitButton}>
+            <div class="searchbox-container">
+              <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon" role="none">
+                <input
+                  id="combobox-with-button-id"
+                  class="slds-input slds-combobox__input searchbox_input"
+                  placeholder={placeholder}
+                  type="search"
+                  onkeyup={onKeyup}
+                  onfocus={onFocus}
+                  onblur={onBlur}
+                  aria-autocomplete="list"
+                  aria-controls="listbox-id"
+                  autocomplete="off"
+                  role="textbox"
+                  aria-labelledby="fixed-text-label fixed-text-addon-pre"
+                />
+                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
+                  <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:close" size="xx-small"></lightning-icon>
+                </button>
+              </div>
+              <div class="slds-form-element__addon search-button" id="fixed-text-addon-post">
+                <lightning-button-icon icon-name="utility:search" variant="brand" onclick={onSearch}></lightning-button-icon>
+              </div>
+            </div>
+            
+          </template>
           <template if:true={state.suggestions.length}>
             <div
               id="listbox-id"
@@ -40,7 +76,7 @@
                     <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                       <span class="slds-media__figure slds-listbox__option-icon"></span>
                       <span class="slds-media__body">
-                        <span class="slds-truncate" title={suggestion.value}>{suggestion.value}</span>
+                        <lightning-formatted-rich-text class="slds-truncate" value={suggestion.value}></lightning-formatted-rich-text>
                       </span>
                     </div>
                   </li>
