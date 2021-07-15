@@ -1,4 +1,4 @@
-import {Component, Element, h, Prop, State} from '@stencil/core';
+import {Component, Element, h, Prop, State, Host} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -14,7 +14,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   I18nState,
   InitializableComponent,
   InitializeBindings,
@@ -63,11 +62,10 @@ export class AtomicNumericFacet
   private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
-  @BindStateToI18n()
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    facetValue: (variables) => this.bindings.i18n.t('facet-value', variables),
     to: (variables) => this.bindings.i18n.t('to', variables),
   };
 
@@ -84,7 +82,7 @@ export class AtomicNumericFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    */
@@ -122,9 +120,17 @@ export class AtomicNumericFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.numericFacets[this.facetId] = {
       label: this.label,
+      format: (value) => this.formatValue(value),
     };
+  }
+
+  private formatValue(facetValue: NumericFacetValue) {
+    const {language} = this.bindings.i18n;
+    const start = facetValue.start.toLocaleString(language);
+    const end = facetValue.end.toLocaleString(language);
+    return this.strings.to({start, end});
   }
 
   private get values() {
@@ -138,10 +144,7 @@ export class AtomicNumericFacet
 
   private buildListItem(item: NumericFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-    const {language} = this.bindings.i18n;
-    const start = item.start.toLocaleString(language);
-    const end = item.end.toLocaleString(language);
-    const value = this.strings.to({start, end});
+    const value = this.formatValue(item);
 
     return (
       <FacetValue
@@ -182,18 +185,20 @@ export class AtomicNumericFacet
     }
 
     if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <BaseFacet
-        controller={new BaseFacetController(this)}
-        label={this.strings[this.label]()}
-        hasActiveValues={this.facetState.hasActiveValues}
-        clearAll={() => this.facet.deselectAll()}
-      >
-        <ul>{this.values}</ul>
-      </BaseFacet>
+      <Host class="atomic-with-values">
+        <BaseFacet
+          controller={new BaseFacetController(this)}
+          label={this.strings[this.label]()}
+          hasActiveValues={this.facetState.hasActiveValues}
+          clearAll={() => this.facet.deselectAll()}
+        >
+          <ul>{this.values}</ul>
+        </BaseFacet>
+      </Host>
     );
   }
 }

@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/headless-engine';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
 import {
   AnalyticsType,
   AsyncThunkAnalyticsOptions,
@@ -15,7 +15,7 @@ export interface ClickAnalyticsActionCreators {
   /**
    * The event to log when a recommendation is selected.
    *
-   * @param result - The selected recommendation.
+   * @param recommendation - The selected recommendation.
    * @returns A dispatchable action.
    */
   logRecommendationOpen(
@@ -36,7 +36,7 @@ export interface ClickAnalyticsActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadClickAnalyticsActions(
-  engine: Engine<object>
+  engine: RecommendationEngine
 ): ClickAnalyticsActionCreators {
   engine.addReducers({});
 

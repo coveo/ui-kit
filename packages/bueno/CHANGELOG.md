@@ -3,6 +3,260 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.32.0 (2021-07-15)
+
+
+
+# 0.31.0 (2021-06-21)
+
+
+
+# 0.30.0 (2021-06-21)
+
+
+
+# 0.29.0 (2021-06-21)
+
+
+
+# 0.28.0 (2021-06-18)
+
+
+
+# 0.27.0 (2021-06-17)
+
+
+
+# 0.26.0 (2021-06-17)
+
+
+
+# 0.25.0 (2021-06-17)
+
+
+
+# 0.24.0 (2021-06-17)
+
+
+
+# 0.23.0 (2021-06-10)
+
+
+
+# 0.22.0 (2021-06-09)
+
+
+
+# 0.21.0 (2021-06-09)
+
+
+
+# 0.20.0 (2021-06-08)
+
+
+
+# 0.19.0 (2021-06-08)
+
+
+
+# 0.18.0 (2021-06-08)
+
+
+
+# 0.17.0 (2021-06-07)
+
+
+
+# 0.16.0 (2021-06-02)
+
+
+
+# 0.15.0 (2021-05-31)
+
+
+
+# 0.14.0 (2021-05-19)
+
+
+
+# 0.14.0-alpha.3 (2021-05-13)
+
+
+
+# 0.13.0 (2021-05-07)
+
+
+
+# 0.13.0-alpha.5 (2021-05-05)
+
+
+
+# 0.12.0 (2021-04-29)
+
+
+
+# 0.12.0-alpha.0 (2021-04-29)
+
+
+
+# 0.11.0 (2021-04-29)
+
+
+
+# 0.11.0-alpha.8 (2021-04-21)
+
+
+
+# 0.8.0 (2021-03-17)
+
+
+
+# 0.8.0-alpha.10 (2021-03-11)
+
+
+### Features
+
+* **quantic:** add salesforce server tokens generation. ([#573](https://github.com/coveo/ui-kit/issues/573)) ([c3506ab](https://github.com/coveo/ui-kit/commit/c3506abe18a5f7a1a3c6153521bb18b11b2afd7a))
+
+
+
+# 0.7.0 (2021-03-08)
+
+
+
+# 0.7.0-alpha.35 (2021-03-08)
+
+
+
+# 0.7.0-alpha.25 (2021-03-01)
+
+
+
+# 0.7.0-alpha.12 (2021-02-22)
+
+
+
+# 0.6.0 (2021-02-16)
+
+
+
+# 0.6.0-alpha.8 (2021-02-16)
+
+
+### Bug Fixes
+
+* **atomic,bueno:** validate isNaN for NumberValue (bueno) and remove some reflected props (atomic) ([#505](https://github.com/coveo/ui-kit/issues/505)) ([ea0c153](https://github.com/coveo/ui-kit/commit/ea0c153995afac1915ec2f75299348092201e7f9))
+
+
+
+# 0.2.0 (2021-01-15)
+
+
+
+# 0.2.0-alpha.7 (2021-01-07)
+
+
+
+# 0.1.0 (2020-12-18)
+
+
+
+# 0.1.0-alpha.93 (2020-12-10)
+
+
+### Features
+
+* **headless:** add #f url parameter ([#326](https://github.com/coveo/ui-kit/issues/326)) ([239af65](https://github.com/coveo/ui-kit/commit/239af658f60d678f25400cbb0d27dc1d63064a3a))
+
+
+
+# 0.1.0-alpha.91 (2020-12-09)
+
+
+
+# 0.1.0-alpha.90 (2020-12-09)
+
+
+
+# 0.1.0-alpha.81 (2020-12-07)
+
+
+### Bug Fixes
+
+* **headless:** throw an error from Bueno when facet id is invalid ([#314](https://github.com/coveo/ui-kit/issues/314)) ([6deacb2](https://github.com/coveo/ui-kit/commit/6deacb2e48c8ad08115e716d1cfebe47c3b41ea1))
+
+
+
+# 0.1.0-alpha.63 (2020-11-26)
+
+
+
+# 0.1.0-alpha.50 (2020-11-13)
+
+
+
+# 0.1.0-alpha.49 (2020-11-12)
+
+
+
+# 0.1.0-alpha.47 (2020-11-11)
+
+
+### Features
+
+* **bueno:** add constrainTo option to StringValue ([8f56ff1](https://github.com/coveo/ui-kit/commit/8f56ff1f3330ac258840bff5d9b3fc24710ebf1c))
+
+
+
+# 0.1.0-alpha.45 (2020-11-11)
+
+
+### Features
+
+* **bueno:** added ValueConfig to RecordValue ([9829eca](https://github.com/coveo/ui-kit/commit/9829ecae1d2f7be5ff06d62273025744b6470687))
+
+
+
+# 0.1.0-alpha.39 (2020-11-09)
+
+
+### Features
+
+* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://github.com/coveo/ui-kit/commit/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
+
+
+
+# 0.1.0-alpha.38 (2020-11-06)
+
+
+### Features
+
+* **bueno:** allow  RecordValue<string, ArrayValue> ([de086b0](https://github.com/coveo/ui-kit/commit/de086b07f4f984885510843c969dedec8921f7e9))
+
+
+
+# 0.1.0-alpha.35 (2020-11-04)
+
+
+
+# 0.1.0-alpha.32 (2020-11-03)
+
+
+
+# 0.1.0-alpha.26 (2020-10-29)
+
+
+
+# 0.1.0-alpha.24 (2020-10-28)
+
+
+
+# 0.1.0-alpha.5 (2020-10-16)
+
+
+
+
+
 # [0.31.0](https://github.com/coveo/ui-kit/compare/v0.30.0...v0.31.0) (2021-06-21)
 
 **Note:** Version bump only for package @coveo/bueno

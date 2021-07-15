@@ -1,9 +1,9 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {SearchSection} from '../../state/state-sections';
 import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The `SearchStatus` controller provides information on the status of the search.
@@ -43,7 +43,7 @@ export interface SearchStatusState {
  * @param engine - The headless engine.
  * @returns A `SearchStatus` controller instance.
  * */
-export function buildSearchStatus(engine: Engine<object>): SearchStatus {
+export function buildSearchStatus(engine: SearchEngine): SearchStatus {
   if (!loadSearchStateReducers(engine)) {
     throw loadReducerError;
   }
@@ -68,8 +68,8 @@ export function buildSearchStatus(engine: Engine<object>): SearchStatus {
 }
 
 function loadSearchStateReducers(
-  engine: Engine<object>
-): engine is Engine<SearchSection> {
+  engine: SearchEngine
+): engine is SearchEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

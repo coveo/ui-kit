@@ -1,4 +1,7 @@
-import {MockEngine, buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../test/mock-engine';
 import {createMockState} from '../../../test/mock-state';
 import {executeSearch} from '../../../features/search/search-actions';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
@@ -18,7 +21,7 @@ import {SearchAppState} from '../../../state/search-app-state';
 describe('range facet', () => {
   const facetId = '1';
   let state: SearchAppState;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let props: RangeFacetProps<NumericFacetRequest>;
   let rangeFacet: RangeFacet;
 

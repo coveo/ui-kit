@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Event, EventEmitter} from '@stencil/core';
 import {
   Pager,
   PagerState,
@@ -10,7 +10,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
@@ -42,15 +41,18 @@ export class AtomicPager implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  @BindStateToI18n()
-  @State()
   private strings = {
     pagination: () => this.bindings.i18n.t('pagination'),
     previous: () => this.bindings.i18n.t('previous'),
     next: () => this.bindings.i18n.t('next'),
-    pageNumber: (page: number) => this.bindings.i18n.t('pageNumber', {page}),
+    pageNumber: (page: number) => this.bindings.i18n.t('page-number', {page}),
   };
   @State() error!: Error;
+
+  @Event({
+    eventName: 'atomic/scrollToTop',
+  })
+  private scrollToTopEvent!: EventEmitter;
 
   /**
    * Specifies how many page buttons to display in the pager.
@@ -62,6 +64,10 @@ export class AtomicPager implements InitializableComponent {
     this.pager = buildPager(this.bindings.engine, {
       options: {numberOfPages: this.numberOfPages},
     });
+  }
+
+  private scrollToTop() {
+    this.scrollToTopEvent.emit();
   }
 
   private buildButton(options: {
@@ -82,7 +88,10 @@ export class AtomicPager implements InitializableComponent {
           }`}
           disabled={options.disabled}
           aria-label={options.ariaLabel}
-          onClick={options.callback}
+          onClick={() => {
+            options.callback();
+            this.scrollToTop();
+          }}
         >
           <span class="fill-current" innerHTML={options.icon}></span>
         </button>
@@ -134,6 +143,7 @@ export class AtomicPager implements InitializableComponent {
           aria-label={this.strings.pageNumber(page)}
           onClick={() => {
             this.pager.selectPage(page);
+            this.scrollToTop();
           }}
         >
           {page.toLocaleString(this.bindings.i18n.language)}

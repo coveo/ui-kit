@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, Host} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -14,7 +14,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -77,18 +76,16 @@ export class AtomicFacet
   private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
-  @BindStateToI18n()
-  @State()
   public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     searchBox: () =>
-      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
+      this.bindings.i18n.t('facet-search', {label: this.strings[this.label]()}),
     placeholder: () => this.bindings.i18n.t('search'),
-    querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
-    showMore: () => this.bindings.i18n.t('showMore'),
-    showLess: () => this.bindings.i18n.t('showLess'),
-    noValuesFound: () => this.bindings.i18n.t('noValuesFound'),
-    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    querySuggestionList: () => this.bindings.i18n.t('query-suggestion-list'),
+    showMore: () => this.bindings.i18n.t('show-more'),
+    showLess: () => this.bindings.i18n.t('show-less'),
+    noValuesFound: () => this.bindings.i18n.t('no-values-found'),
+    facetValue: (variables) => this.bindings.i18n.t('facet-value', variables),
   };
 
   @State() public isExpanded = false;
@@ -104,7 +101,7 @@ export class AtomicFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The character that separates values of a multi-value field.
    */
@@ -240,25 +237,27 @@ export class AtomicFacet
     }
 
     if (this.facetState.values.length === 0) {
-      return;
+      return <Host class="atomic-without-values"></Host>;
     }
 
     return (
-      <BaseFacet
-        controller={new BaseFacetController(this)}
-        label={this.strings[this.label]()}
-        hasActiveValues={this.facetState.hasActiveValues}
-        clearAll={() => this.facet.deselectAll()}
-      >
-        {this.facetState.canShowMoreValues && this.facetSearch?.render()}
-        <div class="mt-1">
-          <ul>{this.values}</ul>
-          <div class="flex flex-col items-start space-y-1">
-            {this.showLessButton}
-            {this.showMoreButton}
+      <Host class="atomic-with-values">
+        <BaseFacet
+          controller={new BaseFacetController(this)}
+          label={this.strings[this.label]()}
+          hasActiveValues={this.facetState.hasActiveValues}
+          clearAll={() => this.facet.deselectAll()}
+        >
+          {this.facetState.canShowMoreValues && this.facetSearch?.render()}
+          <div class="mt-1">
+            <ul>{this.values}</ul>
+            <div class="flex flex-col items-start space-y-1">
+              {this.showLessButton}
+              {this.showMoreButton}
+            </div>
           </div>
-        </div>
-      </BaseFacet>
+        </BaseFacet>
+      </Host>
     );
   }
 }

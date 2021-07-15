@@ -13,12 +13,12 @@ export const FacetHeader: FunctionalComponent<{
   onClearFilters(): void;
 }> = (props) => {
   const label = props.i18n.t(props.label);
-  const expandFacet = props.i18n.t('expandFacet', {label});
-  const collapseFacet = props.i18n.t('collapseFacet', {label});
-  const clearFilters = props.i18n.t('clearFilters', {
+  const expandFacet = props.i18n.t('expand-facet', {label});
+  const collapseFacet = props.i18n.t('collapse-facet', {label});
+  const clearFilters = props.i18n.t('clear-filters', {
     count: props.numberOfSelectedValues,
   });
-  const clearFiltersForFacet = props.i18n.t('clearFiltersForFacet', {
+  const clearFiltersForFacet = props.i18n.t('clear-filters-for-facet', {
     count: props.numberOfSelectedValues,
     label,
   });
@@ -41,13 +41,13 @@ export const FacetHeader: FunctionalComponent<{
     props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
-        class="flex w-full p-1 text-secondary hover:text-secondary-light text-sm"
+        class="flex items-baseline w-full p-1 text-sm link"
         title={clearFiltersForFacet}
         onClick={() => props.onClearFilters()}
       >
         <span
           part="clear-button-icon"
-          class="fill-current w-2 h-2 self-center mr-1"
+          class="fill-current w-2 h-2 mr-1"
           innerHTML={CloseIcon}
         ></span>
         <span>{clearFilters}</span>

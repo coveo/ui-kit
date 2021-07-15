@@ -178,6 +178,41 @@ export const toggleSelectDateFacetValue = createAction(
     })
 );
 
+export interface UpdateDateFacetValuesActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The date facet values.
+   */
+  values: DateFacetValue[];
+}
+
+/**
+ * Updates date facet values.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param values (DateFacetValue[]) The date facet values.
+ */
+export const updateDateFacetValues = createAction(
+  'dateFacet/updateFacetValues',
+  (payload: UpdateDateFacetValuesActionCreatorPayload) => {
+    try {
+      validatePayloadAndThrow(payload, {
+        facetId: facetIdDefinition,
+        values: new ArrayValue({
+          each: new RecordValue({values: dateFacetValueDefinition}),
+        }),
+      });
+      validateManualDateRanges({currentValues: payload.values});
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error)};
+    }
+  }
+);
+
 export interface UpdateDateFacetSortCriterionActionCreatorPayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

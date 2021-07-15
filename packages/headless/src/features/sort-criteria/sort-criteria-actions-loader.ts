@@ -1,11 +1,11 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
 import {sortCriteria} from '../../app/reducers';
 import {
   registerSortCriterion,
   updateSortCriterion,
 } from './sort-criteria-actions';
 import {SortCriterion} from './criteria';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The sort criteria action creators.
@@ -39,7 +39,7 @@ export interface SortCriteriaActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadSortCriteriaActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): SortCriteriaActionCreators {
   engine.addReducers({sortCriteria});
 

@@ -49,7 +49,7 @@ describe('Search Interface Component', () => {
     });
 
     it('should support changing a translation value without overriding other strings', () => {
-      setTranslation('fr', 'showingResultsOf_plural', 'patate');
+      setTranslation('fr', 'showing-results-of_plural', 'patate');
       setLanguage('fr');
 
       cy.get('atomic-query-summary')

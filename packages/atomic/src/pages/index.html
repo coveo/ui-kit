@@ -31,7 +31,6 @@
         grid-template-rows: 22px 50px 22px 1fr;
         column-gap: 20px;
         display: grid;
-        margin: 0 auto;
       }
 
       .header {
@@ -122,16 +121,13 @@
           flex-wrap: wrap;
         }
 
+        atomic-facet-manager > .atomic-with-values {
+          margin: 0 10px 0 0;
+        }
+
         .results-container {
           grid-row: 5 / auto;
           margin-top: 0;
-        }
-
-        atomic-facet,
-        atomic-numeric-facet,
-        atomic-date-facet,
-        atomic-category-facet {
-          margin: 0 10px 0 0;
         }
 
         atomic-search-box {

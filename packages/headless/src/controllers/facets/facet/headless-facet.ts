@@ -2,7 +2,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {Engine} from '../../../app/headless-engine';
 import {
   registerFacet,
   deselectAllFacetValues,
@@ -49,6 +48,7 @@ import {
   search,
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 
 export {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -238,7 +238,7 @@ export interface FacetValue {
   state: FacetValueState;
 
   /**
-   * The number of results having the facet value.
+   * The number of results that have the facet value.
    * */
   numberOfResults: number;
 
@@ -255,7 +255,7 @@ export interface FacetValue {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
+export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -394,8 +394,8 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
 }
 
 function loadFacetReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
 > {
   engine.addReducers({facetSet, configuration, facetSearchSet, search});

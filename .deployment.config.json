@@ -49,13 +49,10 @@
       "id": "deploy-headless-minor-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[MINORVERSION]",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_MINOR_VERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/headless/v$[MINORVERSION]"
         }
       }
     },
@@ -63,13 +60,10 @@
       "id": "deploy-headless-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[MAJORVERSION]",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/headless/v$[MAJORVERSION]"
         }
       }
     },
@@ -77,13 +71,10 @@
       "id": "deploy-atomic-minor-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[MINORVERSION]",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[MINORVERSION]"
         }
       }
     },
@@ -91,13 +82,10 @@
       "id": "deploy-atomic-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[MAJORVERSION]",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[MAJORVERSION]"
         }
       }
     },
@@ -118,9 +106,6 @@
         "job_name": "ui-kit-production-release",
         "prd": {
           "disabled": false
-        },
-        "extra_parameters": {
-          "COMMIT_HASH": "$[COMMIT_HASH]"
         }
       }
     }

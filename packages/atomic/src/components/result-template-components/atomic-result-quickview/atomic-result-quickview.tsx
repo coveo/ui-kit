@@ -32,9 +32,8 @@ export class AtomicResultQuickview implements InitializableComponent {
   @State()
   private quickviewState!: QuickviewState;
 
-  @State()
   private strings = {
-    previewResult: () => this.bindings.i18n.t('previewResult'),
+    previewResult: () => this.bindings.i18n.t('preview-result'),
   };
 
   @State() private isModalOpen = false;
@@ -91,7 +90,7 @@ export class AtomicResultQuickview implements InitializableComponent {
 
     const button = (
       <button
-        class="block w-full text-secondary"
+        class="block w-full text-primary"
         aria-label={this.strings.previewResult()}
         onClick={() => this.openModal()}
       >

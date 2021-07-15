@@ -1,5 +1,4 @@
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {PreprocessRequestMiddleware} from '../../api/platform-client';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
@@ -43,11 +42,6 @@ export interface SearchConfigurationOptions {
    *  Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
    */
   locale?: string;
-  /**
-   * Allows for augmenting a request (search, facet-search, query-suggest, etc.) before it is sent.
-   * @deprecated Use `preprocessRequest` instead.
-   */
-  preprocessRequestMiddleware?: PreprocessRequestMiddleware;
   /**
    * Allows for augmenting a search response before the state is updated.
    */

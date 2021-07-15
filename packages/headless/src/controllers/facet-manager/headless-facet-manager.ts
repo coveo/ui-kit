@@ -1,5 +1,5 @@
-import {Engine} from '../../app/headless-engine';
 import {facetOptions, search} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {SearchSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {sortFacets} from '../../utils/facet-utils';
@@ -50,7 +50,7 @@ export interface FacetManagerState {
  *
  * @param engine - The headless engine.
  */
-export function buildFacetManager(engine: Engine<object>): FacetManager {
+export function buildFacetManager(engine: SearchEngine): FacetManager {
   if (!loadFacetManagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -75,8 +75,8 @@ export function buildFacetManager(engine: Engine<object>): FacetManager {
 }
 
 function loadFacetManagerReducers(
-  engine: Engine<object>
-): engine is Engine<SearchSection> {
+  engine: SearchEngine
+): engine is SearchEngine<SearchSection> {
   engine.addReducers({search, facetOptions});
   return true;
 }

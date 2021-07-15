@@ -4,7 +4,6 @@ import {ResultContext} from '../result-template-decorators';
 import {parseXML} from '../../../utils/utils';
 import {
   Bindings,
-  BindStateToI18n,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
@@ -30,10 +29,8 @@ export class AtomicResultPrintableUri {
   @ResultContext() private result!: Result;
 
   @State() listExpanded = false;
-  @BindStateToI18n()
-  @State()
   private strings = {
-    collapsedUriParts: () => this.bindings.i18n.t('collapsedUriParts'),
+    collapsedUriParts: () => this.bindings.i18n.t('collapsed-uri-parts'),
   };
   @State() error!: Error;
 

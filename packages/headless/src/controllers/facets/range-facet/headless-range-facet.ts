@@ -1,4 +1,3 @@
-import {Engine} from '../../../app/headless-engine';
 import {buildController} from '../../controller/headless-controller';
 import {
   RangeFacetResponse,
@@ -19,6 +18,7 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -31,7 +31,7 @@ export function buildRangeFacet<
   T extends RangeFacetRequest,
   R extends RangeFacetResponse
 >(
-  engine: Engine<ConfigurationSection & SearchSection>,
+  engine: SearchEngine<ConfigurationSection & SearchSection>,
   props: RangeFacetProps<T>
 ) {
   type RangeFacetValue = R['values'][0];

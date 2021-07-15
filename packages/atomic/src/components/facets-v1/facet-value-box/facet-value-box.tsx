@@ -1,9 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {FacetValueProps} from '../facet-common';
+import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
 export const FacetValueBox: FunctionalComponent<FacetValueProps> = (props) => {
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
-  const ariaLabel = props.i18n.t('facetValue', {
+  const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
   });
@@ -13,7 +14,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (props) => {
       <button
         part="value-box"
         onClick={() => props.onClick()}
-        class={`value-box w-full flex flex-col rounded text-on-background hover:border-primary-light focus:border-primary-light focus:outline-none py-2 px-1 ${
+        class={`value-box box-border w-full h-full justify-center flex flex-col rounded text-on-background hover:border-primary-light focus:border-primary-light focus:outline-none py-2 px-1 ${
           props.isSelected ? 'border-primary border-2' : 'border border-neutral'
         }`}
         aria-pressed={props.isSelected.toString()}
@@ -25,12 +26,15 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (props) => {
           class={`value-label ellipsed w-full ${
             props.isSelected ? 'font-bold' : ''
           }`}
-        >
-          {props.displayValue}
-        </span>
+          innerHTML={highlightSearchResult(
+            props.displayValue,
+            props.searchQuery
+          )}
+        ></span>
         <span
+          title={count}
           part="value-count"
-          class="text-neutral-dark with-parentheses w-full text-sm mt-1"
+          class="text-neutral-dark ellipsed with-parentheses w-full text-sm mt-1"
         >
           {count}
         </span>

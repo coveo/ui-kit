@@ -13,7 +13,7 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 
 describe('analytics', () => {
   const logger = pino({level: 'silent'});
@@ -160,7 +160,7 @@ describe('analytics', () => {
         const state: StateNeededByAnalyticsProvider = {
           configuration: {
             ...getConfigurationInitialState(),
-            analytics: buildMockAnalyticsConfiguration({originLevel2}),
+            analytics: buildMockAnalyticsState({originLevel2}),
           },
         };
 

@@ -1,6 +1,6 @@
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/headless-engine';
 import {configuration, resultPreview} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
@@ -68,7 +68,7 @@ export interface QuickviewState {
  * @returns A `Quickview` controller instance.
  */
 export function buildQuickview(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: QuickviewProps
 ): Quickview {
   if (!loadQuickviewReducers(engine)) {
@@ -107,8 +107,8 @@ export function buildQuickview(
 }
 
 function loadQuickviewReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection & ResultPreviewSection> {
+  engine: SearchEngine
+): engine is SearchEngine<ConfigurationSection & ResultPreviewSection> {
   engine.addReducers({configuration, resultPreview});
   return true;
 }

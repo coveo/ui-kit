@@ -16,6 +16,10 @@ export interface TriggerNotify {
   content: string;
 }
 
+export function isNotifyTrigger(trigger: Trigger): trigger is TriggerNotify {
+  return trigger.type === 'notify';
+}
+
 /**
  * Redirect the user to another url
  */
@@ -24,7 +28,7 @@ export interface TriggerRedirect {
   content: string;
 }
 
-export function isTriggerRedirect(
+export function isRedirectTrigger(
   trigger: Trigger
 ): trigger is TriggerRedirect {
   return trigger.type === 'redirect';
@@ -38,10 +42,23 @@ export interface TriggerQuery {
   content: string;
 }
 
+export function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
+  return trigger.type === 'query';
+}
+
 /**
  * Execute a javascript function present in the page.
  */
 export interface TriggerExecute {
   type: 'execute';
-  content: {name: string; params: {}[]};
+  content: {name: string; params: ExecuteTriggerParams};
+}
+
+/**
+ * The type of the parameters for a Trigger Execute object.
+ */
+export type ExecuteTriggerParams = (string | number | boolean)[];
+
+export function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
+  return trigger.type === 'execute';
 }

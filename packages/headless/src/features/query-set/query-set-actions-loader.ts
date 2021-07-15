@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
 import {querySet} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   registerQuerySetQuery,
   RegisterQuerySetQueryActionCreatorPayload,
@@ -45,7 +45,7 @@ export interface QuerySetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadQuerySetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): QuerySetActionCreators {
   engine.addReducers({querySet});
 

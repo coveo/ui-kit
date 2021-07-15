@@ -1,8 +1,7 @@
 node('linux && docker') {
   checkout scm
-  def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
   def tag = sh(script: "git tag --contains", returnStdout: true).trim()
-  def isBump = tag ==~ /^v[0-9].*$/
+  def isBump = !!tag
   def isMaster = env.BRANCH_NAME == 'master'
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
@@ -92,10 +91,19 @@ node('linux && docker') {
       }
 
       stage('Deployment pipeline upload') {
-        lerna = readJSON file: 'lerna.json'
-        version = lerna.version
-        (minor, major) = (version =~ /^([^\.]*)\.[^\.]*/)[0]
-        sh "deployment-package package create --with-deploy --version ${version} --resolve COMMIT_HASH=${commitHash} --resolve MINORVERSION=${minor} --resolve MAJORVERSION=${major} || true"
+        headless = readJSON file: 'packages/headless/package.json'
+        atomic = readJSON file: 'packages/atomic/package.json'
+        semanticVersionRegex = /^([^\.]*)\.[^\.]*/
+
+        (headlessMinor, headlessMajor) = (headless.version =~ semanticVersionRegex)[0]
+        (atomicMinor, atomicMajor) = (atomic.version =~ semanticVersionRegex)[0]
+        
+        sh "deployment-package package create --with-deploy \
+        --resolve HEADLESS_MINOR_VERSION=${headlessMinor} \
+        --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
+        --resolve ATOMIC_MINOR_VERSION=${atomicMinor} \
+        --resolve ATOMIC_MAJOR_VERSION=${atomicMajor} \
+        || true"
       }
     }
   }

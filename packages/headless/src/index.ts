@@ -8,31 +8,27 @@ export {
 } from '@reduxjs/toolkit';
 
 // Main App
-export {productRecommendationsAppReducers} from './app/frequently-bought-together-app-reducers';
-export {
-  HeadlessOptions,
-  HeadlessConfigurationOptions,
-  HeadlessEngine,
-  Engine,
-} from './app/headless-engine';
-
 export {
   SearchEngine,
   SearchEngineOptions,
   SearchEngineConfiguration,
+  SearchConfigurationOptions,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from './app/search-engine/search-engine';
 
+export {CoreEngine, ExternalEngineOptions} from './app/engine';
+export {
+  EngineConfiguration,
+  AnalyticsConfiguration,
+  AnalyticsRuntimeEnvironment,
+} from './app/engine-configuration';
+export {LoggerOptions} from './app/logger';
+
 export {LogLevel} from './app/logger';
 
-export {searchAppReducers} from './app/search-app-reducers';
-export {recommendationAppReducers} from './app/recommendation-app-reducers';
-
 // State
-export {ProductRecommendationsAppState} from './state/product-recommendations-app-state';
 export {SearchParametersState, SearchAppState} from './state/search-app-state';
-export {RecommendationAppState} from './state/recommendation-app-state';
 
 // Controllers
 export * from './controllers/index';

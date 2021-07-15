@@ -16,16 +16,16 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   props
 ) => {
   const label = props.i18n.t(props.label);
-  const showMore = props.i18n.t('showMore');
-  const showMoreFacetValues = props.i18n.t('showMoreFacetValues', {
+  const showMore = props.i18n.t('show-more');
+  const showMoreFacetValues = props.i18n.t('show-more-facet-values', {
     label,
   });
-  const showLess = props.i18n.t('showLess');
-  const showLessFacetValues = props.i18n.t('showLessFacetValues', {
+  const showLess = props.i18n.t('show-less');
+  const showLessFacetValues = props.i18n.t('show-less-facet-values', {
     label,
   });
   const btnClasses =
-    'w-full flex items-center text-left py-2 text-secondary text-sm hover:text-secondary-light focus:text-secondary-light mt-2';
+    'w-full flex items-baseline text-left py-2 text-sm mt-2 link';
   const iconClasses = 'fill-current w-2 h-2 mr-1';
   return [
     props.canShowLessValues && (

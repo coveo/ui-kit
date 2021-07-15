@@ -23,6 +23,7 @@ import {
   AtomicStore,
   Bindings,
   InitializeEvent,
+  initialStore,
 } from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
@@ -47,7 +48,7 @@ export class AtomicSearchInterface {
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
-  private store = createStore<AtomicStore>({facets: {}});
+  private store = createStore<AtomicStore>(initialStore());
 
   @Element() private host!: HTMLDivElement;
 
@@ -87,6 +88,11 @@ export class AtomicSearchInterface {
    * Whether the state should be reflected in the URL parameters.
    */
   @Prop() public reflectStateInUrl = true;
+
+  /**
+   * The CSS selector for the container where the interface will scroll back to.
+   */
+  @Prop() public scrollContainer = 'atomic-search-interface';
 
   public constructor() {
     setCoveoGlobal();
@@ -149,6 +155,19 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.push(event);
+  }
+
+  @Listen('atomic/scrollToTop')
+  public scrollToTop() {
+    const scrollContainerElement = document.querySelector(this.scrollContainer);
+    if (!scrollContainerElement) {
+      this.bindings.engine.logger.warn(
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+      );
+      return;
+    }
+
+    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
   /**
