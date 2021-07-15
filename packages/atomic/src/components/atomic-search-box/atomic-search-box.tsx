@@ -3,7 +3,6 @@ import {SearchBox, SearchBoxState, buildSearchBox} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
@@ -30,13 +29,11 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 export class AtomicSearchBox {
   @InitializeBindings() public bindings!: Bindings;
 
-  @BindStateToI18n()
-  @State()
   public strings: ComboboxStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     search: () => this.bindings.i18n.t('search'),
-    searchBox: () => this.bindings.i18n.t('searchBox'),
-    querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
+    searchBox: () => this.bindings.i18n.t('search-box'),
+    querySuggestionList: () => this.bindings.i18n.t('query-suggestion-list'),
   };
   /**
    * The maximum number of suggestions to display.

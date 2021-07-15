@@ -32,9 +32,8 @@ export class AtomicResultQuickview implements InitializableComponent {
   @State()
   private quickviewState!: QuickviewState;
 
-  @State()
   private strings = {
-    previewResult: () => this.bindings.i18n.t('previewResult'),
+    previewResult: () => this.bindings.i18n.t('preview-result'),
   };
 
   @State() private isModalOpen = false;
