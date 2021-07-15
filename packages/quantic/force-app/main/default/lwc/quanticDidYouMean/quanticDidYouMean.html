@@ -1,8 +1,8 @@
 <template>
     <template if:true={hasQueryCorrection}>
         <template if:true={wasAutomaticallyCorrected}>
-            <p class="text-on-background mb-1">{noResults}</p>
-            <p class="text-on-background">{queryAutoCorrectedTo}</p>
+            <p class="text-on-background mb-1">No results for <b>{noResults}</b></p>
+            <p class="text-on-background">Query was automatically corrected to <b>{queryAutoCorrectedTo}</b></p>
         </template>
         <template if:false={wasAutomaticallyCorrected}>
             <lightning-button 
