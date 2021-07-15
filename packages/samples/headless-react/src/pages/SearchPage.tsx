@@ -2,8 +2,6 @@ import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext} from '../context/engine';
 
-import {RecommendationList} from '../components/recommendation-list/recommendation-list.class';
-import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
 import {Tab} from '../components/tab/tab.class';
 import {Tab as TabFn} from '../components/tab/tab.fn';
 import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
@@ -121,13 +119,6 @@ import {
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
   buildSmartSnippetQuestionsList,
 } from '@coveo/headless';
-import {
-  RecommendationEngine,
-  buildRecommendationEngine,
-  getSampleRecommendationEngineConfiguration,
-  buildRecommendationList,
-  RecommendationList as HeadlessRecommendationList,
-} from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -159,9 +150,7 @@ export interface SearchPageProps {
 
 export class SearchPage extends Component {
   private engine!: SearchEngine;
-  private readonly recommendationEngine: RecommendationEngine;
 
-  private readonly recommendationList: HeadlessRecommendationList;
   private readonly tabs: {
     all: HeadlessTab;
     messages: HeadlessTab;
@@ -202,14 +191,6 @@ export class SearchPage extends Component {
     super(props);
 
     this.initEngine(props);
-
-    this.recommendationEngine = buildRecommendationEngine({
-      configuration: getSampleRecommendationEngineConfiguration(),
-    });
-
-    this.recommendationList = buildRecommendationList(
-      this.recommendationEngine
-    );
 
     this.tabs = {
       all: buildTab(this.engine, {
@@ -382,14 +363,6 @@ export class SearchPage extends Component {
   render() {
     return (
       <div>
-        <AppContext.Provider
-          value={{recommendationEngine: this.recommendationEngine}}
-        >
-          <Section title="recommendation-list">
-            <RecommendationList />
-            <RecommendationListFn controller={this.recommendationList} />
-          </Section>
-        </AppContext.Provider>
         <AppContext.Provider value={{engine: this.engine}}>
           <Section title="tabs">
             <nav>
