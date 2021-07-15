@@ -14,7 +14,7 @@ export const FacetValueCheckboxRating: FunctionalComponent<FacetValueProps> = (
   });
 
   return (
-    <li key={id} class="flex items-center">
+    <li key={props.displayValue} class="flex items-center">
       <button
         id={id}
         role="checkbox"
@@ -38,7 +38,7 @@ export const FacetValueCheckboxRating: FunctionalComponent<FacetValueProps> = (
         </div>
         <span
           part="value-count"
-          class="ml-1.5 text-neutral-dark with-parentheses align-middle"
+          class="ml-1.5 text-neutral-dark with-parentheses"
         >
           {count}
         </span>
