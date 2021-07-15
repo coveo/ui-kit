@@ -2,36 +2,21 @@ import { api, LightningElement, track } from 'lwc';
 import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
 
 export default class QuanticDidYouMean extends LightningElement {
-    @track state = {};
     /** @type {()=> void} */
     unsubscribe;
-    /**
-     * @type {Boolean}
-     */
+    /** @type {Boolean}*/
     @track hasQueryCorrection;
-
-    /**
-     * @type {Boolean}
-     */
+    /** @type {Boolean}*/
     @track wasAutomaticallyCorrected;
-
-    /**
-     * @type {string}
-     */
+    /** @type {string}*/
     @track originalQuery;
-
-    /**
-     * @type {string}
-     */
+    /** @type {string}*/
     @track correctedQuery;
+    /** @type {string}*/
+    @api engineId;
 
     /** @type {import("coveo").DidYouMean} */
     didYouMean;
-    
-    /**
-     * @type {string}
-     */
-    @api engineId;
 
     connectedCallback() {
         registerComponentForInit(this, this.engineId);
@@ -48,7 +33,6 @@ export default class QuanticDidYouMean extends LightningElement {
     initialize(engine) {
         this.didYouMean = CoveoHeadless.buildDidYouMean(engine);
         this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
-        
     }
 
     disconnectedCallback() {
