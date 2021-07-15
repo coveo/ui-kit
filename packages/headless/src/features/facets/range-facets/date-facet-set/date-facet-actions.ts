@@ -21,9 +21,13 @@ import {
 } from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
-import {DateRangeRequest} from './interfaces/request';
+import {
+  DateRangeRequest,
+  dateRangeRequestDefinition,
+} from './interfaces/request';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {validateRelativeDate} from './relative-date';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -96,13 +100,6 @@ export interface RegisterDateFacetActionCreatorPayload {
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
-const dateRangeRequestDefinition = {
-  start: requiredNonEmptyString,
-  end: requiredNonEmptyString,
-  endInclusive: new BooleanValue({required: true}),
-  state: requiredNonEmptyString,
-};
-
 const dateFacetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
@@ -126,6 +123,10 @@ export function validateManualDateRanges(
   }
 
   options.currentValues.forEach((value) => {
+    if (value.relativeDate) {
+      return validateRelativeDate(value.relativeDate);
+    }
+
     const {start, end} = buildDateRange(value);
     if (dayjs(start).isAfter(dayjs(end))) {
       throw new Error(

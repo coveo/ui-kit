@@ -1,13 +1,8 @@
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
-  ArrayValue,
-  BooleanValue,
-  RecordValue,
-  Schema,
-  SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
-import {facetValueStates} from '../../../../features/facets/facet-api/value';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+  DateRangeRequest,
+  dateRangeRequestDefinition,
+} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {
   rangeFacetRangeAlgorithm,
   RangeFacetRangeAlgorithm,
@@ -102,13 +97,6 @@ export interface DateFacetOptions {
    */
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
-
-const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
-  start: new StringValue(),
-  end: new StringValue(),
-  endInclusive: new BooleanValue(),
-  state: new StringValue({constrainTo: facetValueStates}),
-};
 
 export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
   facetId,

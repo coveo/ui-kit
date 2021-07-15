@@ -1,5 +1,6 @@
 import {BaseFacetResponse} from '../../../facet-api/response';
 import {FacetValueState} from '../../../facet-api/value';
+import {RelativeDate} from '../relative-date';
 
 export interface DateFacetValue {
   /**
@@ -26,6 +27,11 @@ export interface DateFacetValue {
    * The state of the facet value, indicating whether it is filtering results (`selected`) or not (`idle`).
    */
   state: FacetValueState;
+
+  /**
+   * When defined, the start & end values will adapt to the current time.
+   */
+  relativeDate?: RelativeDate;
 }
 
 export type DateFacetResponse = BaseFacetResponse<DateFacetValue>;

@@ -1,6 +1,9 @@
 import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
 import {CurrentValues, Type} from '../../../facet-api/request';
 import {FacetValueState} from '../../../facet-api/value';
+import {RelativeDate, relativeDateDefinition} from '../relative-date';
+import {requiredNonEmptyString} from '../../../../../utils/validate-payload';
+import {BooleanValue, RecordValue} from '../../../../../../../bueno/dist';
 
 /**
  * The options defining a value to display in a `DateFacet`.
@@ -25,7 +28,23 @@ export interface DateRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+
+  /**
+   * When defined, the start & end values will adapt to the current time.
+   */
+  relativeDate?: RelativeDate;
 }
+
+export const dateRangeRequestDefinition = {
+  start: requiredNonEmptyString,
+  end: requiredNonEmptyString,
+  endInclusive: new BooleanValue({required: true}),
+  state: requiredNonEmptyString,
+  relativeDate: new RecordValue({
+    options: {required: false},
+    values: relativeDateDefinition,
+  }),
+};
 
 export interface DateFacetRequest
   extends BaseRangeFacetRequest,

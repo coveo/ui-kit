@@ -27,6 +27,10 @@ import {
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
+import {
+  RelativeDateRangeOptions,
+  buildRelativeDateRange,
+} from './relative-date-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
@@ -40,6 +44,8 @@ export {
   DateRangeOptions,
   DateRangeRequest,
   buildDateRange,
+  RelativeDateRangeOptions,
+  buildRelativeDateRange,
 };
 
 export interface DateFacetProps {

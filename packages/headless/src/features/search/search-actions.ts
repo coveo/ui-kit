@@ -45,6 +45,8 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
+import {DateFacetRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
+import {getBoundsFromRelativeDate} from '../facets/range-facets/date-facet-set/relative-date';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -344,7 +346,7 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
   return [
     ...getFacetRequests(state.facetSet),
     ...getFacetRequests(state.numericFacetSet),
-    ...getFacetRequests(state.dateFacetSet),
+    ...formatDateFacetRequests(getFacetRequests(state.dateFacetSet)),
     ...getCategoryFacetRequests(state.categoryFacetSet),
   ];
 }
@@ -357,6 +359,19 @@ function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {
   return Object.keys(requests).map((id) => requests[id]);
+}
+
+function formatDateFacetRequests(requests: DateFacetRequest[]) {
+  requests.forEach(
+    (request) =>
+      (request.currentValues = request.currentValues.map((value) => {
+        if (value.relativeDate) {
+          return {...value, ...getBoundsFromRelativeDate(value.relativeDate)};
+        }
+        return value;
+      }))
+  );
+  return requests;
 }
 
 const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {

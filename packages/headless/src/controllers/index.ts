@@ -63,9 +63,11 @@ export {
 
 export {
   DateRangeOptions,
+  RelativeDateRangeOptions,
   DateRangeRequest,
   DateRangeInput,
   buildDateRange,
+  buildRelativeDateRange,
   DateFacetOptions,
   DateFacetProps,
   DateFacetState,

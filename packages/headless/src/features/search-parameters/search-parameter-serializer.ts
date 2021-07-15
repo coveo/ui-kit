@@ -1,4 +1,4 @@
-import {isSearchApiDate} from '../../controllers/facets/range-facet/date-facet/date-range';
+import {isSearchApiDate} from '../facets/range-facets/date-facet-set/date-format';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
