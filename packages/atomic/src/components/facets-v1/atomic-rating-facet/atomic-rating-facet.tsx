@@ -21,7 +21,7 @@ import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-fac
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckboxRating} from '../facet-value-checkbox-rating/facet-value-checkbox-rating';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetValueLinkRating} from '../facet-value-link-rating/facet-value-link-rating';
 import {BaseFacet} from '../facet-common';
 
 /**
@@ -69,7 +69,6 @@ export class AtomicRatingFacet
   @State() public error!: Error;
   @State() public isCollapsed = false;
 
-  //make prop in the future so devs can pass in their own svg
   private iconActive = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -163,9 +162,6 @@ export class AtomicRatingFacet
     return currentValues;
   }
 
-  //TODO: rework this depending on which approach is taken
-  //new functional components or
-  //rework existing FacetValueCheckbox/Link components
   private generateIconDisplay(facetValue: NumericFacetValue) {
     const iconDisplay: VNode[] = [];
     for (let i = 0; i < this.numberOfStars; i++) {
@@ -178,10 +174,7 @@ export class AtomicRatingFacet
     return iconDisplay;
   }
 
-  //remove this function later
   private formatFacetValue(facetValue: NumericFacetValue) {
-    //TODO: add stars here but display value is a string
-    //maybe better to pass svg as children/ Vnode
     return this.bindings.i18n.t('to', {
       start: facetValue.start,
       end: facetValue.end,
@@ -219,7 +212,7 @@ export class AtomicRatingFacet
         );
       case 'link':
         return (
-          <FacetValueLink
+          <FacetValueLinkRating
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
@@ -227,7 +220,7 @@ export class AtomicRatingFacet
             onClick={onClick}
           >
             {this.generateIconDisplay(facetValue)}
-          </FacetValueLink>
+          </FacetValueLinkRating>
         );
     }
   }
