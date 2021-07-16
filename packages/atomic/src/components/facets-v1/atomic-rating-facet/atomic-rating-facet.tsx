@@ -20,8 +20,9 @@ import {
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
-import {FacetValueCheckboxRating} from '../facet-value-checkbox-rating/facet-value-checkbox-rating';
-import {FacetValueLinkRating} from '../facet-value-link-rating/facet-value-link-rating';
+import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
+import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetValueLabelRating} from '../facet-value-label-rating/facet-value-label-rating';
 import {BaseFacet} from '../facet-common';
 
 /**
@@ -203,27 +204,31 @@ export class AtomicRatingFacet
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <FacetValueCheckboxRating
+          <FacetValueCheckbox
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            {this.generateIconDisplay(facetValue)}
-          </FacetValueCheckboxRating>
+            <FacetValueLabelRating
+              icons={this.generateIconDisplay(facetValue)}
+            ></FacetValueLabelRating>
+          </FacetValueCheckbox>
         );
       case 'link':
         return (
-          <FacetValueLinkRating
+          <FacetValueLink
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            {this.generateIconDisplay(facetValue)}
-          </FacetValueLinkRating>
+            <FacetValueLabelRating
+              icons={this.generateIconDisplay(facetValue)}
+            ></FacetValueLabelRating>
+          </FacetValueLink>
         );
     }
   }
