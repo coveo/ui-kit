@@ -1,4 +1,5 @@
 import {SearchStatus, SearchStatusState} from '@coveo/headless';
+import {VNode} from '@stencil/core';
 import {i18n} from 'i18next';
 
 export interface BaseFacet<Facet, FacetState> {
@@ -21,8 +22,12 @@ export interface FacetValueProps {
   searchQuery?: string;
 }
 
-export interface FacetLabelProps {
+export interface FacetValueLabelHighlightProps {
   displayValue: string;
   searchQuery?: string;
   isSelected: boolean;
+}
+
+export interface FacetValueLabelRatingProps {
+  icons: VNode[];
 }

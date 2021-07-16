@@ -1,8 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {FacetLabelProps} from '../facet-common';
+import {FacetValueLabelHighlightProps} from '../facet-common';
 import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
-export const FacetValueLabelHighlight: FunctionalComponent<FacetLabelProps> = (
+export const FacetValueLabelHighlight: FunctionalComponent<FacetValueLabelHighlightProps> = (
   props
 ) => {
   return (
