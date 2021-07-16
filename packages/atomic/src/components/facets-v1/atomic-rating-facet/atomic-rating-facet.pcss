@@ -4,17 +4,17 @@
 @import '../facet-value-link/facet-value-link.pcss';
 
 /**
- * @prop --atomic-rating-facet-star-active-color: Color of the star icon when active.
+ * @prop --atomic-rating-facet-icon-active-color: Color of the icon when active.
  */
-.star-active {
-  fill: #f4c315;
+.icon-active {
+  fill: var(--atomic-rating-facet-icon-active-color, #f4c315);
 }
 
 /**
- * @prop --atomic-rating-facet-star-inactive-color: Color of the star icon when inactive.
+ * @prop --atomic-rating-facet-icon-inactive-color: Color of the icon when inactive.
  */
-.star-inactive {
-  fill: #e5e8e8;
+.icon-inactive {
+  fill: var(--atomic-rating-facet-icon-inactive-color, #e5e8e8);
 }
 
 /*TODO: add hover effects*/
