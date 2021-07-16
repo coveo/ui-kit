@@ -68,9 +68,9 @@ function formatRelativeDate(relativeDate: RelativeDate) {
 
   switch (period) {
     case 'past':
-      return formatDateForSearchApi(date.subtract(amount!, unit as QUnitType));
+      return formatDateForSearchApi(date.subtract(amount, unit as QUnitType));
     case 'future':
-      return formatDateForSearchApi(date.add(amount!, unit as QUnitType));
+      return formatDateForSearchApi(date.add(amount, unit as QUnitType));
   }
 }
 
