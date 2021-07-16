@@ -2,14 +2,14 @@
     <template if:true={hasQueryCorrection}>
         <template if:true={wasAutomaticallyCorrected}>
             <div class="slds-var-m-vertical_x-small">
-                <p class="text-on-background mb-1">No results for <b>{originalQuery}</b></p>
-                <p class="text-on-background">Query was automatically corrected to <b>{correctedQuery}</b></p>
+                <p class="mb-1">No results for <span class="slds-text-title_bold">{originalQuery}</span></p>
+                <p>Query was automatically corrected to <span class="slds-text-title_bold">{correctedQuery}</span></p>
             </div>
         </template>
         <template if:false={wasAutomaticallyCorrected}>
             <div class="slds-var-m-vertical_x-small">
-                <span>Did you mean: </span> 
-                <button class="slds-button" onclick={applyCorrection}><b>{correctedQuery}</b></button>
+                <span>Did you mean </span> 
+                <button class="slds-button" onclick={applyCorrection}><span class="slds-text-title_bold">{correctedQuery}</span></button>
             </div> 
         </template>
     </template>
