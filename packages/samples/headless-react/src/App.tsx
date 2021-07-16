@@ -21,7 +21,7 @@ function App(props: SearchPageProps) {
             disabled={state.currentPage === 'search'}
             onClick={() => setState({currentPage: 'search'})}
           >
-            <Link to="/search">Search</Link>
+            <Link to="/">Search</Link>
           </button>
           <button
             disabled={state.currentPage === 'recommendation'}
@@ -37,14 +37,14 @@ function App(props: SearchPageProps) {
           </button>
         </nav>
         <Switch>
-          <Route path="/search">
-            <SearchPage {...props} />
-          </Route>
           <Route path="/recommendation">
             <RecommendationPage />
           </Route>
           <Route path="/about">
             <AboutPage />
+          </Route>
+          <Route path="/">
+            <SearchPage {...props} />
           </Route>
         </Switch>
       </main>
