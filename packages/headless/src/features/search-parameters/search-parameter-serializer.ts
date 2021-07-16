@@ -196,14 +196,8 @@ function isRelativeDateFormat(date: string) {
   return relativeDateFormatRegexp.test(date);
 }
 
-function parseRelativeDateFormat(date: string): RelativeDate {
-  const matches = date.match(relativeDateFormatRegexp);
-  if (!matches || matches.length !== 4) {
-    throw new Error(
-      'Relative date format is invalid, please use [period][amount][unit]'
-    );
-  }
-
+function parseRelativeDateFormat(date: string) {
+  const matches = date.match(relativeDateFormatRegexp)!;
   return {
     period: matches[1] as RelativeDatePeriod,
     amount: parseInt(matches[2]),
