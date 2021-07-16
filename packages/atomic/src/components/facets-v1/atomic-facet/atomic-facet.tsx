@@ -240,7 +240,13 @@ export class AtomicFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
-          ></FacetValueBox>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueBox>
         );
     }
   }
