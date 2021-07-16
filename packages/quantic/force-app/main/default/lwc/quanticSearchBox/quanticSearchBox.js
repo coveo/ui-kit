@@ -28,9 +28,9 @@ export default class QuanticSearchBox extends LightningElement {
   @api engineId;
   /** @type {string} */
   @api placeholder = 'Search...';
-   /** @type {boolean} */
-   @api withoutSubmitButton = false;
-   /** @type {number} */
+  /** @type {boolean} */
+  @api withoutSubmitButton = false;
+  /** @type {number} */
   @api numberOfSuggestions = 5;
 
 
