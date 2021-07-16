@@ -51,7 +51,7 @@ jobs:
         run: |
           sfdx force:package:version:create --package $PACKAGE_ID --wait 30 -x --json >> package-version-result.json
           cat package-version-result.json
-          PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId\ -r)"
+          PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId' -r)"
           echo "$PACKAGE_VERSION_ID" > PACKAGE_VERSION_ID.txt
           echo $PACKAGE_VERSION_ID
           if [ $PACKAGE_VERSION_ID == "null" ]; then echo "Null Package ID" exit 1; fi
