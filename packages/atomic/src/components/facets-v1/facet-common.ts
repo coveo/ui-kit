@@ -20,3 +20,9 @@ export interface FacetValueProps {
   onClick(): void;
   searchQuery?: string;
 }
+
+export interface FacetLabelProps {
+  displayValue: string;
+  searchQuery?: string;
+  isSelected: boolean;
+}
