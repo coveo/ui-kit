@@ -29,13 +29,13 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {string} */
   @api placeholder = 'Search...';
    /** @type {boolean} */
-   withoutSubmitButton = false;
+   @api withoutSubmitButton = false;
+   /** @type {number} */
+  @api numberOfSuggestions = 5;
 
 
   /** @type {string} */
   searchBoxContainerClass;
-  /** @type {number} */
-  numberOfSuggestions = 5;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
