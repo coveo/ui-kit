@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {SearchPage} from './pages/SearchPage';
+import {SearchPage, SearchPageProps} from './pages/SearchPage';
 import {AboutPage} from './pages/AboutPage';
 
 export type Page = 'search' | 'about';
@@ -8,7 +8,7 @@ export interface AppState {
   currentPage: Page;
 }
 
-function App() {
+function App(props: SearchPageProps) {
   const [state, setState] = useState<AppState>({currentPage: 'search'});
 
   return (
@@ -27,7 +27,11 @@ function App() {
           About
         </button>
       </nav>
-      {state.currentPage === 'search' ? <SearchPage /> : <AboutPage />}
+      {state.currentPage === 'search' ? (
+        <SearchPage {...props} />
+      ) : (
+        <AboutPage />
+      )}
     </main>
   );
 }

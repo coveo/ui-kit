@@ -12,7 +12,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   I18nState,
   InitializableComponent,
   InitializeBindings,
@@ -53,8 +52,8 @@ export class AtomicSortDropdown implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  @BindStateToI18n() @State() private strings: I18nState = {
-    sortBy: () => this.bindings.i18n.t('sortBy'),
+  private strings: I18nState = {
+    sortBy: () => this.bindings.i18n.t('sort-by'),
   };
   @State() public error!: Error;
 

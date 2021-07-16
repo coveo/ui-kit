@@ -3,7 +3,6 @@ import {DidYouMean, DidYouMeanState, buildDidYouMean} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
@@ -30,11 +29,9 @@ export class AtomicDidYouMean implements InitializableComponent {
   @State()
   private didYouMeanState!: DidYouMeanState;
   @State() public error!: Error;
-  @BindStateToI18n()
-  @State()
   private strings = {
     withQuery: (
-      key: 'noResultsFor' | 'queryAutoCorrectedTo' | 'didYouMean',
+      key: 'no-results-for' | 'query-auto-corrected-to' | 'did-you-mean',
       query: string
     ) =>
       this.bindings.i18n.t(key, {
@@ -53,11 +50,11 @@ export class AtomicDidYouMean implements InitializableComponent {
 
   private renderAutomaticallyCorrected() {
     const noResults = this.strings.withQuery(
-      'noResultsFor',
+      'no-results-for',
       this.didYouMeanState.originalQuery
     );
     const queryAutoCorrectedTo = this.strings.withQuery(
-      'queryAutoCorrectedTo',
+      'query-auto-corrected-to',
       this.didYouMeanState.wasCorrectedTo
     );
     return [
@@ -76,7 +73,7 @@ export class AtomicDidYouMean implements InitializableComponent {
 
   private renderCorrection() {
     const didYouMean = this.strings.withQuery(
-      'didYouMean',
+      'did-you-mean',
       this.didYouMeanState.queryCorrection.correctedQuery
     );
     return (

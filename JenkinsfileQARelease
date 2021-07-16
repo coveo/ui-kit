@@ -2,14 +2,7 @@ node('linux && docker') {
   checkout scm
 
   withDockerContainer(image: 'node:14', args: '-u=root') {
-    stage('Setup') {
-      sh 'npm run setup'
-    }
-
-    stage('Build') {
-      sh 'npm run build'
-    }
-
+    
     stage('Npm publish') {
       withCredentials([
       string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {

@@ -1,9 +1,14 @@
 <template>
-  <li class="slds-m-around_small slds-grid">
+  <li class="slds-var-m-around_small slds-grid">
     <div class="slds-col_bump-right">
-      <input type="checkbox" onchange={onSelect} />
-      <span class="slds-m-horizontal_medium nowrap">{item.start} - {item.end}</span>
+      <template if:true={isChecked}>
+        <input type="checkbox" onchange={onSelect} checked/>
+      </template>
+      <template if:false={isChecked}>
+        <input type="checkbox" onchange={onSelect}/>
+      </template>
+      <span class="slds-var-m-horizontal_medium nowrap">{item.start} - {item.end}</span>
     </div>
-    <div class="slds-m-horizontal_small">({item.numberOfResults})</div>
+    <div class="slds-var-m-horizontal_small">({item.numberOfResults})</div>
   </li>
 </template>

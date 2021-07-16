@@ -12,7 +12,6 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-  BindStateToI18n,
 } from '../../utils/initialization-utils';
 
 /**
@@ -40,12 +39,10 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  @BindStateToI18n()
-  @State()
   private strings = {
-    resultsPerPage: () => this.bindings.i18n.t('resultsPerPage'),
+    resultsPerPage: () => this.bindings.i18n.t('results-per-page'),
     displayResultsPerPage: (results: number) =>
-      this.bindings.i18n.t('displayResultsPerPage', {results}),
+      this.bindings.i18n.t('display-results-per-page', {results}),
   };
   @State() public error!: Error;
 
