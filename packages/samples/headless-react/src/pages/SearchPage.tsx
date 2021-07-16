@@ -41,8 +41,6 @@ import {HistoryManager} from '../components/history-manager/history-manager.clas
 import {HistoryManager as HistoryManagerFn} from '../components/history-manager/history-manager.fn';
 import {RelevanceInspector} from '../components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
-import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
-import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {QueryTrigger} from '../components/triggers/query-trigger.class';
@@ -104,8 +102,6 @@ import {
   buildHistoryManager,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
-  StandaloneSearchBox as HeadlessStandaloneSearchBox,
-  buildStandaloneSearchBox,
   SearchAppState,
   loadSearchAnalyticsActions,
   RedirectionTrigger as HeadlessRedirectionTrigger,
@@ -176,7 +172,6 @@ export class SearchPage extends Component {
   private readonly pager: HeadlessPager;
   private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
-  private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
   private readonly queryTrigger: HeadlessQueryTrigger;
   private readonly notifyTrigger: HeadlessNotifyTrigger;
@@ -294,10 +289,6 @@ export class SearchPage extends Component {
     this.historyManager = buildHistoryManager(this.engine);
 
     this.relevanceInspector = buildRelevanceInspector(this.engine);
-
-    this.standaloneSearchBox = buildStandaloneSearchBox(this.engine, {
-      options: {redirectionUrl: 'https://mywebsite.com/search'},
-    });
 
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
 
@@ -501,10 +492,6 @@ export class SearchPage extends Component {
           <Section title="relevance-inspector">
             <RelevanceInspector />
             <RelevanceInspectorFn controller={this.relevanceInspector} />
-          </Section>
-          <Section title="standalone-search-box">
-            <StandaloneSearchBox />
-            <StandaloneSearchBoxFn controller={this.standaloneSearchBox} />
           </Section>
           <Section title="redirection-trigger">
             <RedirectionTrigger></RedirectionTrigger>

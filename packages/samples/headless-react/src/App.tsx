@@ -1,14 +1,8 @@
-import {useState} from 'react';
 import {SearchPage, SearchPageProps} from './pages/SearchPage';
 import {AboutPage} from './pages/AboutPage';
 import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
 import {RecommendationPage} from './pages/RecommendationPage';
-
-export type Page = 'search' | 'recommendation' | 'about';
-
-export interface AppState {
-  currentPage: Page;
-}
+import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
@@ -28,6 +22,11 @@ function App(props: SearchPageProps) {
             </NavLink>
           </button>
           <button>
+            <NavLink to="/standalone-search-box" activeStyle={activeNavLink}>
+              Standalone Search Box
+            </NavLink>
+          </button>
+          <button>
             <NavLink to="/about" activeStyle={activeNavLink}>
               About
             </NavLink>
@@ -36,6 +35,9 @@ function App(props: SearchPageProps) {
         <Switch>
           <Route path="/recommendation">
             <RecommendationPage />
+          </Route>
+          <Route path="/standalone-search-box">
+            <StandaloneSearchBoxPage />
           </Route>
           <Route path="/about">
             <AboutPage />
