@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {SearchPage, SearchPageProps} from './pages/SearchPage';
 import {AboutPage} from './pages/AboutPage';
-import {BrowserRouter, Link, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
 import {RecommendationPage} from './pages/RecommendationPage';
 
 export type Page = 'search' | 'recommendation' | 'about';
@@ -11,29 +11,26 @@ export interface AppState {
 }
 
 function App(props: SearchPageProps) {
-  const [state, setState] = useState<AppState>({currentPage: 'search'});
+  const activeNavLink: React.CSSProperties = {color: 'red'};
 
   return (
     <BrowserRouter>
       <main className="App">
         <nav>
-          <button
-            disabled={state.currentPage === 'search'}
-            onClick={() => setState({currentPage: 'search'})}
-          >
-            <Link to="/">Search</Link>
+          <button>
+            <NavLink exact to="/" activeStyle={activeNavLink}>
+              Search
+            </NavLink>
           </button>
-          <button
-            disabled={state.currentPage === 'recommendation'}
-            onClick={() => setState({currentPage: 'recommendation'})}
-          >
-            <Link to="/recommendation">Recommendation</Link>
+          <button>
+            <NavLink to="/recommendation" activeStyle={activeNavLink}>
+              Recommendation
+            </NavLink>
           </button>
-          <button
-            disabled={state.currentPage === 'about'}
-            onClick={() => setState({currentPage: 'about'})}
-          >
-            <Link to="/about">About</Link>
+          <button>
+            <NavLink to="/about" activeStyle={activeNavLink}>
+              About
+            </NavLink>
           </button>
         </nav>
         <Switch>
