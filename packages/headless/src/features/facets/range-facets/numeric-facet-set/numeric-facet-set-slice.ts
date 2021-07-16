@@ -40,14 +40,30 @@ export const numericFacetSetReducer = createReducer(
       )
       .addCase(restoreSearchParameters, (state, action) => {
         const nf = action.payload.nf || {};
-        handleRangeFacetSearchParameterRestoration(state, nf);
+        const facetIds = Object.keys(state);
+
+        facetIds.forEach((id) => {
+          const request = state[id];
+          const paramsValues = nf[id] || [];
+
+          request.currentValues = handleRangeFacetSearchParameterRestoration(
+            request.currentValues,
+            paramsValues,
+            findRange
+          );
+          request.numberOfValues = Math.max(
+            request.currentValues.length,
+            request.numberOfValues
+          );
+        });
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue<NumericFacetRequest, NumericFacetValue>(
           state,
           facetId,
-          selection
+          selection,
+          findRange
         );
       })
       .addCase(updateNumericFacetValues, (state, action) => {
@@ -98,4 +114,9 @@ function convertToRangeRequests(
     const {numberOfResults, ...rest} = value;
     return rest;
   });
+}
+
+function findRange(values: NumericRangeRequest[], value: NumericRangeRequest) {
+  const {start, end} = value;
+  return values.find((range) => range.start === start && range.end === end);
 }

@@ -6,6 +6,8 @@ import {
 } from './interfaces/range-facet';
 import {RangeFacetOptionalParameters} from './interfaces/options';
 
+type FindRange<T> = (currentValues: T[], paramValue: T) => T | undefined;
+
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   filterFacetCount: true,
   injectionDepth: 1000,
@@ -46,14 +48,19 @@ export function updateRangeValues<T extends RangeFacetRequest>(
 export function toggleSelectRangeValue<
   T extends RangeFacetRequest,
   U extends RangeFacetValue
->(state: Record<string, T>, facetId: string, selection: U) {
+>(
+  state: Record<string, T>,
+  facetId: string,
+  selection: U,
+  find: FindRange<T['currentValues'][0]>
+) {
   const request = state[facetId];
 
   if (!request) {
     return;
   }
 
-  const value = findRange(request.currentValues, selection);
+  const value = find(request.currentValues, selection);
 
   if (!value) {
     return;
@@ -81,29 +88,18 @@ export function handleRangeFacetDeselectAll<T extends RangeFacetRequest>(
 }
 
 export function handleRangeFacetSearchParameterRestoration<
-  T extends RangeFacetRequest
->(state: Record<string, T>, rangeFacets: Record<string, T['currentValues']>) {
-  Object.entries(state).forEach(([facetId, request]) => {
-    type Range = T['currentValues'][0];
-    const rangesToSelect: Range[] = rangeFacets[facetId] || [];
+  T extends RangeValueRequest
+>(currentValues: T[], paramValues: T[], find: FindRange<T>): T[] {
+  const missingRanges = paramValues.filter(
+    (value) => !find(currentValues, value)
+  );
 
-    request.currentValues.forEach((range: Range) => {
-      const found = !!findRange(rangesToSelect, range);
-      range.state = found ? 'selected' : 'idle';
-      return range;
-    });
-
-    const missingRanges = rangesToSelect.filter(
-      (range) => !findRange(request.currentValues, range)
-    );
-    const currentValues: Range[] = request.currentValues;
-    currentValues.push(...missingRanges);
-
-    request.numberOfValues = Math.max(
-      request.numberOfValues,
-      currentValues.length
-    );
+  currentValues.forEach((value) => {
+    const found = !!find(paramValues, value);
+    value.state = found ? 'selected' : 'idle';
   });
+
+  return [...currentValues, ...missingRanges];
 }
 
 export function onRangeFacetRequestFulfilled<
@@ -132,11 +128,6 @@ export function onRangeFacetRequestFulfilled<
     );
     facetRequest.preventAutoSelect = false;
   });
-}
-
-function findRange(values: RangeValueRequest[], value: RangeValueRequest) {
-  const {start, end} = value;
-  return values.find((range) => range.start === start && range.end === end);
 }
 
 function calculateNumberOfValues(request: RangeFacetRequest) {

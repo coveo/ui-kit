@@ -8,7 +8,7 @@ dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
 const periodsObj = {past: 1, future: 1};
-const relativeDatePeriods = Object.keys(periodsObj);
+export const relativeDatePeriods = Object.keys(periodsObj);
 export type RelativeDatePeriod = keyof typeof periodsObj;
 
 const unitsObj = {
@@ -20,7 +20,7 @@ const unitsObj = {
   quarter: 1,
   year: 1,
 };
-const relativeDateUnits = Object.keys(unitsObj);
+export const relativeDateUnits = Object.keys(unitsObj);
 export type RelativeDateUnit = keyof typeof unitsObj;
 
 export interface RelativeDate {

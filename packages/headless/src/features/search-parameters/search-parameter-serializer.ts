@@ -1,6 +1,15 @@
-import {isSearchApiDate} from '../facets/range-facets/date-facet-set/date-format';
-import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
+import {
+  buildRelativeDateRange,
+  DateRangeRequest,
+} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+import {
+  RelativeDate,
+  RelativeDatePeriod,
+  relativeDatePeriods,
+  RelativeDateUnit,
+  relativeDateUnits,
+} from '../facets/range-facets/date-facet-set/relative-date';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
 
@@ -30,8 +39,14 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'df') {
+  if (key === 'nf') {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
+  }
+
+  if (key === 'df') {
+    return isRangeFacetObject<DateRangeRequest>(val)
+      ? serializeDateFacets(key, val)
+      : '';
   }
 
   return `${key}${equal}${val}`;
@@ -46,9 +61,9 @@ function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-function isRangeFacetObject(
+function isRangeFacetObject<R extends RangeValueRequest = RangeValueRequest>(
   obj: unknown
-): obj is Record<string, RangeValueRequest[]> {
+): obj is Record<string, R[]> {
   if (!isObject(obj)) {
     return false;
   }
@@ -80,18 +95,31 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
     .join(delimiter);
 }
 
-function serializeRangeFacets(
+function serializeRangeFacets<R extends RangeValueRequest = RangeValueRequest>(
   key: string,
-  facets: Record<string, RangeValueRequest[]>
+  facets: Record<string, R[]>,
+  buildRangeValue = ({start, end}: R) => `${start}${rangeDelimiter}${end}`
 ) {
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
-      const value = ranges
-        .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
-        .join(',');
+      const value = ranges.map(buildRangeValue).join(',');
       return `${key}[${facetId}]${equal}${value}`;
     })
     .join(delimiter);
+}
+
+function serializeDateFacets(
+  key: string,
+  facets: Record<string, DateRangeRequest[]>
+) {
+  return serializeRangeFacets<DateRangeRequest>(
+    key,
+    facets,
+    ({start, end, relativeDate}) =>
+      relativeDate
+        ? `${relativeDate.period}${relativeDate.amount}${relativeDate.unit}`
+        : `${start}${rangeDelimiter}${end}`
+  );
 }
 
 function deserialize(fragment: string): SearchParameters {
@@ -158,13 +186,46 @@ function buildNumericRanges(ranges: string[]) {
     .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
 }
 
-function buildDateRanges(ranges: string[]) {
-  return ranges
-    .map((str) => str.split(rangeDelimiter))
-    .filter((range) => range.length === 2 && range.every(isSearchApiDate))
-    .map(([start, end]) =>
-      buildDateRange({start, end, useLocalTime: true, state: 'selected'})
+const relativeDateFormatRegexp = new RegExp(
+  // Matches `past1month`, `future5year`, etc.
+  `^(${relativeDatePeriods.join('|')})(\\d+)(${relativeDateUnits.join('|')})$`,
+  'i'
+);
+
+function isRelativeDateFormat(date: string) {
+  return relativeDateFormatRegexp.test(date);
+}
+
+function parseRelativeDateFormat(date: string): RelativeDate {
+  const matches = date.match(relativeDateFormatRegexp);
+  if (!matches || matches.length !== 4) {
+    throw new Error(
+      'Relative date format is invalid, please use [period][amount][unit]'
     );
+  }
+
+  return {
+    period: matches[1] as RelativeDatePeriod,
+    amount: parseInt(matches[2]),
+    unit: matches[3] as RelativeDateUnit,
+  };
+}
+
+function buildDateRanges(ranges: string[]) {
+  const relativeRanges = ranges.filter(isRelativeDateFormat).map((range) =>
+    buildRelativeDateRange({
+      relativeDate: parseRelativeDateFormat(range),
+      state: 'selected',
+    })
+  );
+
+  const absoluteRanges = ranges
+    .filter((range) => !isRelativeDateFormat(range))
+    .map((str) => str.split(rangeDelimiter).map(parseFloat))
+    .filter((range) => range.length === 2 && range.every(Number.isFinite))
+    .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
+
+  return [...relativeRanges, ...absoluteRanges];
 }
 
 function isValidPair<K extends keyof SearchParameters>(

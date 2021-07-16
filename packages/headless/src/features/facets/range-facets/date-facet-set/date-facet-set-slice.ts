@@ -17,8 +17,8 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
-  handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
+  handleRangeFacetSearchParameterRestoration,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getDateFacetSetInitialState} from './date-facet-set-state';
@@ -41,14 +41,30 @@ export const dateFacetSetReducer = createReducer(
       )
       .addCase(restoreSearchParameters, (state, action) => {
         const df = action.payload.df || {};
-        handleRangeFacetSearchParameterRestoration(state, df);
+        const facetIds = Object.keys(state);
+
+        facetIds.forEach((id) => {
+          const request = state[id];
+          const paramsValues = df[id] || [];
+
+          request.currentValues = handleRangeFacetSearchParameterRestoration(
+            request.currentValues,
+            paramsValues,
+            findRange
+          );
+          request.numberOfValues = Math.max(
+            request.currentValues.length,
+            request.numberOfValues
+          );
+        });
       })
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
           state,
           facetId,
-          selection
+          selection,
+          findRange
         );
       })
       .addCase(updateDateFacetValues, (state, action) => {
@@ -95,4 +111,18 @@ function convertToRangeRequests(values: DateFacetValue[]): DateRangeRequest[] {
     const {numberOfResults, ...rest} = value;
     return rest;
   });
+}
+
+function findRange(values: DateRangeRequest[], value: DateRangeRequest) {
+  const {start, end, relativeDate} = value;
+  if (relativeDate) {
+    return values.find(
+      (range) =>
+        range.relativeDate &&
+        range.relativeDate.period === relativeDate.period &&
+        range.relativeDate.unit === relativeDate.unit &&
+        range.relativeDate.amount === relativeDate.amount
+    );
+  }
+  return values.find((range) => range.start === start && range.end === end);
 }
