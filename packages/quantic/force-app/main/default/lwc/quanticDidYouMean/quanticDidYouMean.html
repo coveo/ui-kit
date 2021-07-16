@@ -7,11 +7,10 @@
             </div>
         </template>
         <template if:false={wasAutomaticallyCorrected}>
-            <lightning-button 
-                class="text-primary"
-                label={correctedQuery}
-                onclick={applyCorrection}>
-            </lightning-button>
+            <div class="slds-var-m-vertical_x-small">
+                <span>Did you mean: </span> 
+                <button class="slds-button" onclick={applyCorrection}><b>{correctedQuery}</b></button>
+            </div> 
         </template>
     </template>
 </template>
