@@ -1,8 +1,9 @@
-.slds-combobox-container {
-    padding-top: 10px;
-}
-
 .slds-combobox__input:hover {
     color: #005FB2;
 }
+
+.combobox__blue-icon {
+    color: #005FB2;
+}
+
 

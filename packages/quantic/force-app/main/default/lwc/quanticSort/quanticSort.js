@@ -20,6 +20,10 @@ export default class QuanticSort extends LightningElement {
   /** @type {HTMLElement} */
   oldestOption;
   /** @type {HTMLElement} */
+  checkIcon;
+  /** @type {HTMLElement} */
+  sortIcon;
+  /** @type {HTMLElement} */
   selectedOption;
   /** @type {string} */
   sortMethod;
@@ -42,11 +46,19 @@ export default class QuanticSort extends LightningElement {
     if(!this.oldestOption){
       this.oldestOption = this.template.querySelectorAll('.slds-listbox__option')[2];
     }
+    if(!this.sortIcon){
+      this.sortIcon = this.template.querySelectorAll('.combobox__icon-container')[0];
+    }
+    if(!this.checkIcon){
+      this.checkIcon = this.template.querySelectorAll('.combobox__icon-container')[1];
+    }
     if(!this.selectedOption){
-      this.selectedOption = null;
+      this.selectedOption = this.relevancyOption;
+      this.selectedOption.classList.add('slds-is-selected');
+      this.relevancyOption.children[0].children[0].classList.remove('slds-hidden');
     }
     if(!this.sortMethod){
-      this.sortMethod = '';
+      this.sortMethod = 'Sort By';
     }
   }
 
@@ -67,13 +79,14 @@ export default class QuanticSort extends LightningElement {
    * @param {MouseEvent} event
    */
   handleSelection(event){
+    event.preventDefault();
     const selected = event.target.innerText;
-    if(this.selectedOption){
-      this.selectedOption.classList.remove('slds-is-selected');
-      this.newestOption.children[0].children[0].classList.add('slds-hidden');
-      this.relevancyOption.children[0].children[0].classList.add('slds-hidden');
-      this.oldestOption.children[0].children[0].classList.add('slds-hidden');
-    }
+    
+    this.selectedOption.classList.remove('slds-is-selected');
+    this.newestOption.children[0].children[0].classList.add('slds-hidden');
+    this.relevancyOption.children[0].children[0].classList.add('slds-hidden');
+    this.oldestOption.children[0].children[0].classList.add('slds-hidden');
+    
     switch(selected){
       case 'Relevancy':
         this.sortMethod = 'Relevancy';
@@ -86,6 +99,7 @@ export default class QuanticSort extends LightningElement {
         this.sort.sortBy(this.dateDescending);
         break;
       case 'Oldest':
+        this.sortMethod = 'Oldest';
         this.selectedOption = this.oldestOption;
         this.sort.sortBy(this.dateAscending);
         break;
@@ -94,13 +108,24 @@ export default class QuanticSort extends LightningElement {
     }
     this.selectedOption.classList.add('slds-is-selected');
     this.selectedOption.children[0].children[0].classList.remove('slds-hidden');
+    this.closeListbox();
   }
-  
+
   onMouseOver(){
-    this.combobox.classList.add('slds-is-open');
+    this.checkIcon.classList.add('combobox__blue-icon', 'slds-current-color');
+    this.sortIcon.classList.add('combobox__blue-icon', 'slds-current-color');
   }
 
   onMouseOut(){
+    this.checkIcon.classList.remove('combobox__blue-icon', 'slds-current-color');
+    this.sortIcon.classList.remove('combobox__blue-icon', 'slds-current-color');
+  }
+
+  openListbox(){
+    this.combobox.classList.add('slds-is-open');
+  }
+
+  closeListbox(){
     this.combobox.classList.remove('slds-is-open');
   }
 
