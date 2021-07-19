@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import {DateRangeApiRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {formatDateForSearchApi} from '../../../../features/facets/range-facets/date-facet-set/date-format';
+import {formatDateForSearchApi} from '../../../../api/date-format';
 
 dayjs.extend(utc);
 

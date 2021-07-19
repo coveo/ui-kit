@@ -45,4 +45,4 @@ export {
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
-} from './facets/range-facets/relative-date-set/relative-date';
+} from './relative-date-set/relative-date';

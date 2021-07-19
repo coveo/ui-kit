@@ -31,7 +31,7 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {RelativeDate} from '../../../../features/facets/range-facets/relative-date-set/relative-date';
+import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
 
 /**
  * The options defining a value to display in a `DateFacet`.

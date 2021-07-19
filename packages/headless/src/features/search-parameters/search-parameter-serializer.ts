@@ -1,6 +1,6 @@
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
-import {isSearchApiDate} from '../facets/range-facets/date-facet-set/date-format';
+import {isSearchApiDate} from '../../api/date-format';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
 

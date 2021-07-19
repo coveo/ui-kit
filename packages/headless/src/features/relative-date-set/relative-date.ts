@@ -1,6 +1,6 @@
 import dayjs, {QUnitType} from 'dayjs';
 import {BooleanValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {formatDateForSearchApi} from '../date-facet-set/date-format';
+import {formatDateForSearchApi} from '../../api/date-format';
 import utc from 'dayjs/plugin/utc';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 
@@ -53,7 +53,7 @@ export interface RelativeDate {
   useLocalTime?: boolean;
 }
 
-const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
+export const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   const isNow = period === 'now';
   return {
     amount: new NumberValue({required: !isNow, min: 1}),

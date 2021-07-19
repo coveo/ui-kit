@@ -26,6 +26,7 @@ import {HistoryState} from '../features/history/history-state';
 import {FoldingState} from '../features/folding/folding-state';
 import {TriggerState} from '../features/triggers/triggers-state';
 import {QuestionAnsweringState} from '../features/question-answering/question-answering-state';
+import {RelativeDateSetState} from '../features/relative-date-set/relative-date-set-state';
 
 export interface QuerySection {
   /**
@@ -53,6 +54,13 @@ export interface DateFacetSection {
    * The set of date facets.
    */
   dateFacetSet: DateFacetSetState;
+}
+
+export interface RelativeDateSection {
+  /**
+   * The set of relative dates.
+   */
+  relativeDateSet: RelativeDateSetState;
 }
 
 export interface NumericFacetSection {

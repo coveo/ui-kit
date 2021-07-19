@@ -29,7 +29,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {FacetValueState} from '../../facet/headless-facet';
-import {RelativeDate} from '../../../../features/facets/range-facets/relative-date-set/relative-date';
+import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
 
 export {
   DateFacetOptions,
