@@ -6,8 +6,10 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {facetValueStates} from '../../../../features/facets/facet-api/value';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {
+  FacetValueState,
+  facetValueStates,
+} from '../../../../features/facets/facet-api/value';
 import {
   rangeFacetRangeAlgorithm,
   RangeFacetRangeAlgorithm,
@@ -28,8 +30,35 @@ import {
   DateFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {validateManualDateRanges} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {RelativeDate} from '../../../../features/facets/range-facets/relative-date-set/relative-date';
+
+/**
+ * The options defining a value to display in a `DateFacet`.
+ */
+export interface DateRangeRequest {
+  /**
+   * The start value of the range.
+   * Either an absolute date, formatted as `YYYY/MM/DD@HH:mm:ss`, or a `RelativeDate` object.
+   */
+  start: string | RelativeDate;
+
+  /**
+   * The end value of the range.
+   * Either an absolute date, formatted as `YYYY/MM/DD@HH:mm:ss`, or a `RelativeDate` object.
+   */
+  end: string | RelativeDate;
+
+  /**
+   * Whether to include the `end` value in the range.
+   */
+  endInclusive: boolean;
+
+  /**
+   * The current facet value state.
+   */
+  state: FacetValueState;
+}
 
 export interface DateFacetOptions {
   /**
@@ -129,5 +158,6 @@ export function validateDateFacetOptions(
   options: DateFacetOptions
 ) {
   validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
-  validateManualDateRanges(options);
+  // TODO: add range validation
+  // validateManualDateRanges(options);
 }

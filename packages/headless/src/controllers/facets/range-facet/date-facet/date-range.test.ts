@@ -1,4 +1,4 @@
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {DateRangeApiRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {buildDateRange} from './date-range';
 
 describe('date range', () => {
@@ -9,7 +9,7 @@ describe('date range', () => {
         end: 752922625000,
       });
 
-      const expectedValues: DateRangeRequest = {
+      const expectedValues: DateRangeApiRequest = {
         start: '1992/11/10@09:10:25',
         end: '1993/11/10@09:10:25',
         endInclusive: false,
@@ -25,7 +25,7 @@ describe('date range', () => {
         end: new Date(752922625000),
       });
 
-      const expectedValues: DateRangeRequest = {
+      const expectedValues: DateRangeApiRequest = {
         start: '1992/11/10@09:10:25',
         end: '1993/11/10@09:10:25',
         endInclusive: false,
@@ -41,7 +41,7 @@ describe('date range', () => {
         end: new Date(752922625000).toISOString(),
       });
 
-      const expectedValues: DateRangeRequest = {
+      const expectedValues: DateRangeApiRequest = {
         start: '1992/11/10@09:10:25',
         end: '1993/11/10@09:10:25',
         endInclusive: false,
@@ -69,7 +69,7 @@ describe('date range', () => {
         useLocalTime: true,
       });
 
-      const expectedValues: DateRangeRequest = {
+      const expectedValues: DateRangeApiRequest = {
         start: '1992/11/10@09:10:25',
         end: '1993/11/10@09:10:25',
         endInclusive: false,

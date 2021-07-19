@@ -1,7 +1,4 @@
-import {
-  DateFacetRequest,
-  DateRangeRequest,
-} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {DateFacetRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {
   DateFacetResponse,
   DateFacetValue,
@@ -24,6 +21,7 @@ import {executeToggleDateFacetSelect} from '../../../../features/facets/range-fa
 import {
   DateFacetOptions,
   validateDateFacetOptions,
+  DateRangeRequest,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
@@ -151,13 +149,16 @@ export function buildDateFacet(
 
   const facetId = determineFacetId(engine, props.options);
   const options: RegisterDateFacetActionCreatorPayload = {
-    currentValues: [],
     ...props.options,
+    // TODO: transform current values
+    currentValues: [],
     facetId,
   };
 
   validateDateFacetOptions(engine, options);
-  dispatch(registerDateFacet(options));
+
+  // TODO: register RelativeDate slice
+  dispatch(registerDateFacet({...options}));
 
   const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
     engine,

@@ -1,4 +1,4 @@
-import {DateFacetRequest, DateRangeRequest} from './interfaces/request';
+import {DateFacetRequest, DateRangeApiRequest} from './interfaces/request';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   registerDateFacet,
@@ -88,7 +88,9 @@ function buildDateFacetRequest(
   };
 }
 
-function convertToRangeRequests(values: DateFacetValue[]): DateRangeRequest[] {
+function convertToRangeRequests(
+  values: DateFacetValue[]
+): DateRangeApiRequest[] {
   return values.map((value) => {
     const {numberOfResults, ...rest} = value;
     return rest;

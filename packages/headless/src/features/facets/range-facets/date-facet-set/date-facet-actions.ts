@@ -21,7 +21,7 @@ import {
 } from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
-import {DateRangeRequest} from './interfaces/request';
+import {DateRangeApiRequest} from './interfaces/request';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 
@@ -51,7 +51,7 @@ export interface RegisterDateFacetActionCreatorPayload {
    *
    * @defaultValue `[]`
    */
-  currentValues?: DateRangeRequest[];
+  currentValues?: DateRangeApiRequest[];
 
   /**
    * Whether to exclude folded result parents when estimating the result count for each facet value.

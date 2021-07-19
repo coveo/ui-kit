@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {DateRangeApiRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {formatDateForSearchApi} from '../../../../features/facets/range-facets/date-facet-set/date-format';
 
@@ -52,7 +52,7 @@ export interface DateRangeOptions {
  * @param config - The options with which to create a `DateRangeRequest`.
  * @returns A new `DateRangeRequest`.
  */
-export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
+export function buildDateRange(config: DateRangeOptions): DateRangeApiRequest {
   const start = buildDate(config.start, config);
   const end = buildDate(config.end, config);
   const endInclusive = config.endInclusive ?? false;
