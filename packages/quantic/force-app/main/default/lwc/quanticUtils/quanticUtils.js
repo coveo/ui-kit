@@ -50,3 +50,24 @@ export class Debouncer {
     });
   }
 }
+
+export class I18nService{
+
+  static getTextWithDecorator(text, startTag, endTag) {
+    return `${startTag}${text}${endTag}`;
+  }
+
+  static getTextBold(text) {
+    return I18nService.getTextWithDecorator(text, '<b>', '</b>');
+  }
+
+  static getLabelNameWithCount(labelName, count) {
+    return count > 1 ? `${labelName}_plural` : labelName;
+  }
+  
+  static format(stringToFormat, ...formattingArguments) {
+    if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
+    return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
+      (formattingArguments[index] === undefined ? '' : `${formattingArguments[index]}`));
+  }
+}

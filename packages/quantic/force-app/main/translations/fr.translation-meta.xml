@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Résultat {{0}} de {{1}}</label>
+        <name>quantic_ShowingResultsOf</name>
+    </customLabels>
+    <customLabels>
+        <label>Résultats {{0}} de {{1}}</label>
+        <name>quantic_ShowingResultsOf_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Résultat {{0}} de {{1}} pour {{2}}</label>
+        <name>quantic_ShowingResultsOfWithQuery</name>
+    </customLabels>
+    <customLabels>
+        <label>Résultats {{0}} de {{1}} pour {{2}}</label>
+        <name>quantic_ShowingResultsOfWithQuery_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>en {{0}} seconde</label>
+        <name>quantic_InSeconds</name>
+    </customLabels>
+    <customLabels>
+        <label>en {{0}} secondes</label>
+        <name>quantic_InSeconds_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun résultat</label>
+        <name>quantic_NoResults</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun résultat pour {{0}}</label>
+        <name>quantic_NoResultsFor</name>
+    </customLabels>
+</Translations>
