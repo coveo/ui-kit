@@ -11,6 +11,18 @@ export default class QuanticSort extends LightningElement {
   sort;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {HTMLElement} */
+  combobox;
+  /** @type {HTMLElement} */
+  relevancyOption;
+  /** @type {HTMLElement} */
+  newestOption;
+  /** @type {HTMLElement} */
+  oldestOption;
+  /** @type {HTMLElement} */
+  selectedOption;
+  /** @type {string} */
+  sortMethod;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -18,6 +30,24 @@ export default class QuanticSort extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    if(!this.combobox){
+      this.combobox = this.template.querySelector('.slds-dropdown-trigger_click');
+    }
+    if(!this.relevancyOption){
+      this.relevancyOption = this.template.querySelectorAll('.slds-listbox__option')[0];
+    }
+    if(!this.newestOption){
+      this.newestOption = this.template.querySelectorAll('.slds-listbox__option')[1];
+    }
+    if(!this.oldestOption){
+      this.oldestOption = this.template.querySelectorAll('.slds-listbox__option')[2];
+    }
+    if(!this.selectedOption){
+      this.selectedOption = null;
+    }
+    if(!this.sortMethod){
+      this.sortMethod = '';
+    }
   }
 
   /**
@@ -37,7 +67,9 @@ export default class QuanticSort extends LightningElement {
    * @param {CustomEvent<{value: string}>} e
    */
   handleChange(e) {
+    
     const selected = e.detail.value;
+    console.log(selected);
 
     switch (selected) {
       case 'relevancy':
@@ -55,6 +87,48 @@ export default class QuanticSort extends LightningElement {
       default:
         break;
     }
+  }
+
+  /**
+   * @param {MouseEvent} event
+   */
+  handleSelection(event){
+    const selected = event.target.innerText;
+    console.log(this.newestOption.children[0]);
+    if(this.selectedOption){
+      this.selectedOption.classList.remove('slds-is-selected');
+      this.newestOption.children[0].children[0].classList.add('slds-hidden');
+      this.relevancyOption.children[0].children[0].classList.add('slds-hidden');
+      this.oldestOption.children[0].children[0].classList.add('slds-hidden');
+    }
+    switch(selected){
+      case 'Relevancy':
+        this.sortMethod = 'Relevancy';
+        this.selectedOption = this.relevancyOption;
+        this.sort.sortBy(this.relevance);
+        break;
+      case 'Newest':
+        this.sortMethod = 'Newest';
+        this.selectedOption = this.newestOption;
+        this.sort.sortBy(this.dateDescending);
+        break;
+      case 'Oldest':
+        this.selectedOption = this.oldestOption;
+        this.sort.sortBy(this.dateAscending);
+        break;
+      default:
+        break;
+    }
+    this.selectedOption.classList.add('slds-is-selected');
+    this.selectedOption.children[0].children[0].classList.remove('slds-hidden');
+  }
+  
+  onMouseOver(){
+    this.combobox.classList.add('slds-is-open');
+  }
+
+  onMouseOut(){
+    this.combobox.classList.remove('slds-is-open');
   }
 
   get relevance() {

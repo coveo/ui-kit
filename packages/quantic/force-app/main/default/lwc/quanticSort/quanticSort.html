@@ -1,4 +1,69 @@
 <template>
+  <div class="slds-form-element">
+    <div class="slds-form-element__control">
+      <div class="slds-combobox-container">
+        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" onmouseover={onMouseOver} onmouseout={onMouseOut} aria-expanded="true" aria-haspopup="listbox" role="combobox">
+          <div id="combobox-wrapper" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+            <lightning-icon class="check-icon slds-icon slds-input__icon slds-input__icon_left" icon-name="utility:filter" size="x-small" title=""></lightning-icon>
+            <input 
+              onchange={handleChange}
+              type="text"
+              class="slds-input slds-combobox__input" 
+              id="combobox-id" 
+              autocomplete="off" 
+              placeholder="Sort By"
+              aria-controls="listbox-id" 
+              role="textbox"
+              value={sortMethod}
+              />
+            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_right" icon-name="utility:down" size="x-small" title=""></lightning-icon>
+          </div>
+          <div id="listbox-id" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+              
+              <li role="presentation" class="slds-listbox__item" onclick={handleSelection}>
+                <div id="relevancy-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                  <span class="slds-media__figure slds-listbox__option-icon">
+                    <lightning-icon class="slds-current-color slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
+                  </span>
+                  <span class="slds-media__body">
+                    <span class="slds-truncate" title="Relevancy">Relevancy</span>
+                  </span>
+                </div>
+              </li>
+              
+              <li role="presentation" class="slds-listbox__item" onclick={handleSelection}>
+                <div id="newest-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                  <span class="slds-media__figure slds-listbox__option-icon">
+                    <lightning-icon class="slds-current-color slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
+                  </span>
+                  <span class="slds-media__body">
+                    <span class="slds-truncate" title="Newest">Newest</span>
+                  </span>
+                </div>
+              </li>
+              <li role="presentation" class="slds-listbox__item" onclick={handleSelection}>
+                <div id="oldest-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                  <span class="slds-media__figure slds-listbox__option-icon">
+                    <lightning-icon class="slds-current-color slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
+                  </span>
+                  <span class="slds-media__body">
+                    <span class="slds-truncate" title="Oldest">Oldest</span>
+                  </span>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+
+<!-- <template>
   <lightning-combobox name="sort" value={value} placeholder="Sort by" options={options} onchange={handleChange}>
   </lightning-combobox>
-</template>
+</template> -->
