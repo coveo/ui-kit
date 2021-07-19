@@ -40,4 +40,36 @@
         <label>{{0}} de plus...</label>
         <name>quantic_NMore</name>
     </customLabels>
+    <customLabels>
+        <label>Précédent</label>
+        <name>quantic_Previous</name>
+    </customLabels>
+    <customLabels>
+        <label>Suivant</label>
+        <name>quantic_Next</name>
+    </customLabels>Recherche
+    <customLabels>
+        <label>Recherche</label>
+        <name>quantic_Search</name>
+    </customLabels>
+    <customLabels>
+        <label>La requête a été corrigée automatiquement à {{0}}</label>
+        <name>quantic_QueryCorrectedTo</name>
+    </customLabels>
+    <customLabels>
+        <label>Trier par</label>
+        <name>quantic_SortBy</name>
+    </customLabels>
+    <customLabels>
+        <label>Pertinence</label>
+        <name>quantic_Relevancy</name>
+    </customLabels>
+    <customLabels>
+        <label>Plus récents</label>
+        <name>quantic_Newest</name>
+    </customLabels>
+    <customLabels>
+        <label>Plus anciens</label>
+        <name>quantic_Oldest</name>
+    </customLabels>
 </Translations>

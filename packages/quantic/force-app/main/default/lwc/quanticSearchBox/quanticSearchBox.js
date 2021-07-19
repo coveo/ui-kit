@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
-// @ts-ignore
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
+
+import search from '@salesforce/label/c.quantic_Search';
 
 const ENTER = 13;
 const ARROWUP = 38;
@@ -23,7 +24,7 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {string} */
   @api engineId;
   /** @type {string} */
-  @api placeholder = 'Search';
+  @api placeholder = search;
 
   /** @type {import("coveo").SearchBox} */
   searchBox;

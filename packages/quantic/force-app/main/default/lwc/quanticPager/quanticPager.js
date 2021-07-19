@@ -1,6 +1,9 @@
 import {LightningElement, api, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
 
+import next from '@salesforce/label/c.quantic_Next';
+import previous from '@salesforce/label/c.quantic_Previous';
+
 export default class QuanticPager extends LightningElement {
   /** @type {number[]} */
   @track currentPages = [];
@@ -16,6 +19,11 @@ export default class QuanticPager extends LightningElement {
   currentPage = 1;
   /** @type {string} */
   @api engineId;
+
+  label = {
+    next,
+    previous
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);

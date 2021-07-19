@@ -70,4 +70,67 @@
         <protected>false</protected>
         <shortDescription>Clear All Filters</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_Previous</fullName>
+        <value>Previous</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Previous</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Next</fullName>
+        <value>Next</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Search</fullName>
+        <value>Search</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Search</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DidYouMean</fullName>
+        <value>Did you mean</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Did you mean</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_QueryCorrectedTo</fullName>
+        <value>Query was automatically corrected to {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Query was automatically corrected to potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_SortBy</fullName>
+        <value>Sort by</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Sort by</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Relevancy</fullName>
+        <value>Relevancy</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relevancy</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Newest</fullName>
+        <value>Newest</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Newest</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Oldest</fullName>
+        <value>Oldest</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Oldest</shortDescription>
+    </labels>
 </CustomLabels>
