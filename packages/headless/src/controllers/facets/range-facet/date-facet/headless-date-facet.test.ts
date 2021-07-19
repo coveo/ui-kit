@@ -21,7 +21,12 @@ import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-respo
 import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  search,
+  relativeDateSet,
+} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 
 describe('date facet', () => {
@@ -63,6 +68,7 @@ describe('date facet', () => {
       dateFacetSet,
       configuration,
       search,
+      relativeDateSet,
     });
   });
 
@@ -78,8 +84,11 @@ describe('date facet', () => {
   });
 
   it('registers a date facet with the passed options', () => {
-    // TODO: transform values
-    const action = registerDateFacet({facetId, currentValues: [], ...options});
+    const action = registerDateFacet({
+      facetId,
+      ...options,
+      currentValues: undefined,
+    });
     expect(engine.actions).toContainEqual(action);
   });
 
