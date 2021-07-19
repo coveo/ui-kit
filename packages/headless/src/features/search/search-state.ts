@@ -53,6 +53,7 @@ export function getSearchInitialState(): SearchState {
       totalCountFiltered: 0,
       facets: [],
       queryCorrections: [],
+      triggers: [],
       questionAnswer: emptyQuestionAnswer(),
     },
     duration: 0,

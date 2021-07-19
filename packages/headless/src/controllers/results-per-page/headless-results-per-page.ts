@@ -1,6 +1,6 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
 import {configuration, pagination} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
@@ -75,7 +75,7 @@ export interface ResultsPerPageState {
  * @returns A `ResultsPerPage` controller instance.
  */
 export function buildResultsPerPage(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {
   if (!loadResultsPerPageReducers(engine)) {
@@ -120,8 +120,8 @@ export function buildResultsPerPage(
 }
 
 function loadResultsPerPageReducers(
-  engine: Engine<object>
-): engine is Engine<PaginationSection & ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<PaginationSection & ConfigurationSection> {
   engine.addReducers({pagination, configuration});
   return true;
 }

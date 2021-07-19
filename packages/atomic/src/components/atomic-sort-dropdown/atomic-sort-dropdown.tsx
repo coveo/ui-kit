@@ -123,7 +123,7 @@ export class AtomicSortDropdown implements InitializableComponent {
       <div class="relative">
         <select
           id={this.id}
-          class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-neutral py-3 pl-4 pr-24"
+          class="flex-grow appearance-none rounded bg-background text-primary font-bold border border-neutral py-3 pl-4 pr-24"
           part="select"
           aria-label={this.strings.sortBy()}
           onChange={(option) => this.select(option)}

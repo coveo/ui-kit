@@ -1,5 +1,4 @@
 import pino from 'pino';
-import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {
   SearchAPIClient,
@@ -15,10 +14,8 @@ export function buildMockSearchAPIClient(
   options?: Partial<SearchAPIClientOptions>
 ) {
   return new SearchAPIClient({
-    renewAccessToken: async () => '',
     logger: pino({level: 'silent'}),
     preprocessRequest: NoopPreprocessRequest,
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
     postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
     postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,

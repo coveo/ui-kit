@@ -28,6 +28,21 @@ export function registerRangeFacet<T extends RangeFacetRequest>(
   state[facetId] = {...request, numberOfValues};
 }
 
+export function updateRangeValues<T extends RangeFacetRequest>(
+  state: Record<string, T>,
+  facetId: string,
+  values: T['currentValues']
+) {
+  const request = state[facetId];
+
+  if (!request) {
+    return;
+  }
+
+  request.currentValues = values;
+  request.numberOfValues = calculateNumberOfValues(request);
+}
+
 export function toggleSelectRangeValue<
   T extends RangeFacetRequest,
   U extends RangeFacetValue

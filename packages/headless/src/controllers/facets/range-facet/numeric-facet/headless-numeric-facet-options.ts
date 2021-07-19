@@ -24,13 +24,13 @@ import {
   numberOfValues,
 } from '../../_common/facet-option-definitions';
 import {validateOptions} from '../../../../utils/validate-payload';
-import {Engine} from '../../../../app/headless-engine';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {validateManualNumericRanges} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 
 /**
  * The options defining a `NumericFacet`.
@@ -131,7 +131,9 @@ export const numericFacetOptionsSchema = new Schema<
 });
 
 export function validateNumericFacetOptions(
-  engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
+  engine: SearchEngine<
+    NumericFacetSection & ConfigurationSection & SearchSection
+  >,
   options: NumericFacetOptions
 ) {
   validateOptions(

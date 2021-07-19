@@ -24,21 +24,10 @@ const categoryFacetSearchResultDefinition = {
  * category facet search result */
 export const selectCategoryFacetSearchResult = createAction(
   'categoryFacet/selectSearchResult',
-  (payload: {
-    facetId: string;
-    value: CategoryFacetSearchResult;
-    /**
-     * @deprecated
-     */
-    retrieveCount?: number;
-  }) =>
+  (payload: {facetId: string; value: CategoryFacetSearchResult}) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       value: new RecordValue({values: categoryFacetSearchResultDefinition}),
-      retrieveCount: new NumberValue({
-        min: 1,
-        required: false,
-      }),
     })
 );
 
