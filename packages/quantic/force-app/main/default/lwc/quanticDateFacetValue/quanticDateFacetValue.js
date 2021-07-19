@@ -4,6 +4,8 @@ import LOCALE from '@salesforce/i18n/locale';
 export default class QuanticDateFacetValue extends LightningElement {
   /** @type {import("coveo").DateFacetValue} */
   @api item;
+  /** @type {boolean} */
+  @api isChecked;
 
   /** @type {string} */
   @api start;
