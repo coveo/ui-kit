@@ -7,6 +7,10 @@ import {
   registerComponentForInit,
   initializeWithHeadless
 } from 'c/quanticHeadlessLoader';
+import {I18nService} from 'c/quanticUtils';
+
+import nMore from '@salesforce/label/c.quantic_NMore';
+import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 
 export default class QuanticBreadcrumbManager extends LightningElement {
   /** @type {import("coveo").BreadcrumbManager} */
@@ -34,6 +38,11 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   @api categoryDivider = '/';
   /** @type {Number} */
   @api collapseThreshold = 5;
+
+  label = {
+    nMore,
+    clearAllFilters
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -129,7 +138,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
       ...breadcrumb,
       values: breadcrumb.values.slice(0, this.collapseThreshold),
       showMoreButton: true,
-      showMoreButtonText: `${breadcrumb.values.length - this.collapseThreshold} more...`,
+      showMoreButtonText: I18nService.format(this.label.nMore, breadcrumb.values.length - this.collapseThreshold),
       expandButtonClick: () => {
         this.expandedBreadcrumbFieldsState = [...this.expandedBreadcrumbFieldsState, breadcrumb.field];
       }

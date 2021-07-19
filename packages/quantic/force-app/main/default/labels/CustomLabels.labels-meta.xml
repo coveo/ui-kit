@@ -50,10 +50,24 @@
         <shortDescription>No Results</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_NoResultsFor</fullName>
-      <value>No Results for {{0}}</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>No Results for potato</shortDescription>
-  </labels>
+        <fullName>quantic_NoResultsFor</fullName>
+        <value>No Results for {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Results for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NMore</fullName>
+        <value>{{0}} more...</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: 3 more...</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ClearAllFilters</fullName>
+        <value>Clear All Filters</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear All Filters</shortDescription>
+    </labels>
 </CustomLabels>

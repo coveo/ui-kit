@@ -32,4 +32,12 @@
         <label>Aucun résultat pour {{0}}</label>
         <name>quantic_NoResultsFor</name>
     </customLabels>
+    <customLabels>
+        <label>Enlever tous les filtres</label>
+        <name>quantic_ClearAllFilters</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} de plus...</label>
+        <name>quantic_NMore</name>
+    </customLabels>
 </Translations>
