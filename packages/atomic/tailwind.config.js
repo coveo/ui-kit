@@ -37,6 +37,9 @@ module.exports = {
         sm: 'var(--atomic-text-sm)',
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
+      },
+      screens: {
+        mobile: {max: '639px'},
       }
     },
     backgroundColor: (theme) => ({

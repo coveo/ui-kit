@@ -56,6 +56,16 @@ export class AtomicResult {
 
   private unbindLogDocumentOpen = () => {};
 
+  private isFirstResult() {
+    const {results} = this.engine.state.search;
+    return results[0].uniqueId === this.result.uniqueId;
+  }
+
+  private isLastResult() {
+    const {results} = this.engine.state.search;
+    return results[results.length - 1].uniqueId === this.result.uniqueId;
+  }
+
   private getDisplayClass() {
     switch (this.display) {
       case 'grid':
@@ -94,6 +104,21 @@ export class AtomicResult {
     }
   }
 
+  private getClasses() {
+    const classes = [
+      this.getDisplayClass(),
+      this.getDensityClass(),
+      this.getImageClass(),
+    ];
+    if (this.isFirstResult()) {
+      classes.push('first');
+    }
+    if (this.isLastResult()) {
+      classes.push('last');
+    }
+    return classes;
+  }
+
   public componentDidRender() {
     this.unbindLogDocumentOpen = bindLogDocumentOpenOnResult(
       this.engine,
@@ -109,7 +134,7 @@ export class AtomicResult {
   public render() {
     return (
       <div
-        class={`result-root ${this.getDisplayClass()} ${this.getDensityClass()} ${this.getImageClass()}`}
+        class={`result-root ${this.getClasses().join(' ')}`}
         innerHTML={this.content}
       ></div>
     );
