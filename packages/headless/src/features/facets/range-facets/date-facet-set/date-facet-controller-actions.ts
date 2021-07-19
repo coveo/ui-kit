@@ -1,5 +1,4 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {DateFacetApiValue} from './interfaces/response';
 import {AsyncThunkSearchOptions} from '../../../../api/search/search-api-client';
 import {
   ConfigurationSection,

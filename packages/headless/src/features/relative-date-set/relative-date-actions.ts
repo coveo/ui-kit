@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {RecordValue} from '../../../../bueno/dist';
+import {RecordValue} from '@coveo/bueno';
 import {
   requiredNonEmptyString,
   serializeSchemaValidationError,

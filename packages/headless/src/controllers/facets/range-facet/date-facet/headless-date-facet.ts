@@ -11,6 +11,7 @@ import {
 import {
   ConfigurationSection,
   DateFacetSection,
+  RelativeDateSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
@@ -24,12 +25,21 @@ import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  search,
+  relativeDateSet,
+} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {FacetValueState} from '../../facet/headless-facet';
-import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
+import {
+  formatRelativeDate,
+  RelativeDate,
+} from '../../../../features/relative-date-set/relative-date';
+import {registerRelativeDate} from '../../../../features/relative-date-set/relative-date-actions';
 
 export {
   DateFacetOptions,
@@ -184,16 +194,38 @@ export function buildDateFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
+
+  const convertDateValue = (value: string | RelativeDate) => {
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    const formattedDate = formatRelativeDate(value);
+    dispatch(
+      registerRelativeDate({
+        id: facetId,
+        absoluteDate: formattedDate,
+        relativeDate: value,
+      })
+    );
+    return formattedDate;
+  };
+  const convertDateRange = (range: DateRangeRequest) => ({
+    ...range,
+    start: convertDateValue(range.start),
+    end: convertDateValue(range.end),
+  });
+
   const options: RegisterDateFacetActionCreatorPayload = {
-    // TODO: transform current values
-    currentValues: [],
     ...props.options,
+    currentValues: props.options.currentValues
+      ? props.options.currentValues.map(convertDateRange)
+      : undefined,
     facetId,
   };
 
   validateDateFacetOptions(engine, options);
 
-  // TODO: register RelativeDate slice
   dispatch(registerDateFacet({...options}));
 
   const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
@@ -230,8 +262,8 @@ export function buildDateFacet(
 function loadDateFacetReducers(
   engine: SearchEngine
 ): engine is SearchEngine<
-  ConfigurationSection & SearchSection & DateFacetSection
+  ConfigurationSection & SearchSection & DateFacetSection & RelativeDateSection
 > {
-  engine.addReducers({configuration, search, dateFacetSet});
+  engine.addReducers({configuration, search, dateFacetSet, relativeDateSet});
   return true;
 }

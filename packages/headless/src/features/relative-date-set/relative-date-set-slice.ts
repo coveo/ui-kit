@@ -7,16 +7,12 @@ export const relativeDateSetReducer = createReducer(
   (builder) => {
     builder.addCase(registerRelativeDate, (state, {payload}) => {
       const {id, relativeDate, absoluteDate} = payload;
-      if (id in state) {
+      if (!state[id]) {
+        state[id] = {};
         return;
       }
 
-      const set = state[id];
-      if (absoluteDate in set) {
-        return;
-      }
-
-      set[absoluteDate] = relativeDate;
+      state[id][absoluteDate] = relativeDate;
     });
   }
 );

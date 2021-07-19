@@ -32,6 +32,11 @@ import {
 } from '../../../../state/state-sections';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
+import {
+  RegisterDateFacetActionCreatorPayload,
+  validateManualDateRanges,
+} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {DateRangeApiRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 
 /**
  * The options defining a value to display in a `DateFacet`.
@@ -132,7 +137,7 @@ export interface DateFacetOptions {
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
-const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
+const dateRangeRequestDefinition: SchemaDefinition<DateRangeApiRequest> = {
   start: new StringValue(),
   end: new StringValue(),
   endInclusive: new BooleanValue(),
@@ -155,9 +160,8 @@ export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
 
 export function validateDateFacetOptions(
   engine: SearchEngine<ConfigurationSection & SearchSection & DateFacetSection>,
-  options: DateFacetOptions
+  options: RegisterDateFacetActionCreatorPayload
 ) {
   validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
-  // TODO: add range validation
-  // validateManualDateRanges(options);
+  validateManualDateRanges(options);
 }

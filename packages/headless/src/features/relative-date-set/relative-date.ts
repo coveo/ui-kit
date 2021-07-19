@@ -86,6 +86,6 @@ export function formatRelativeDate(relativeDate: RelativeDate) {
     case 'future':
       return formatDateForSearchApi(date.add(amount!, unit as QUnitType));
     case 'now':
-      return date;
+      return formatDateForSearchApi(date);
   }
 }
