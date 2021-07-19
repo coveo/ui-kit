@@ -31,7 +31,9 @@
                 key={options.key} 
                 role="presentation" 
                 class="slds-listbox__item" 
-                onmousedown={handleSelection}>
+                onmousedown={handleSelection}
+                aria-checked="false"
+                aria-selected="false">
                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                   <span class="slds-media__figure slds-listbox__option-icon">
                     <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small"></lightning-icon>

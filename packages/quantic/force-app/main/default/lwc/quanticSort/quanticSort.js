@@ -56,6 +56,8 @@ export default class QuanticSort extends LightningElement {
       this.selectedOption = this.relevancyOption;
       this.selectedOption.classList.add('slds-is-selected');
       this.relevancyOption.children[0].children[0].classList.remove('slds-hidden');
+      this.relevancyOption.setAttribute("aria-checked", "true");
+      this.relevancyOption.setAttribute("aria-selected", "true");
     }
     if(!this.sortMethod){
       this.sortMethod = 'Sort By';
@@ -83,6 +85,8 @@ export default class QuanticSort extends LightningElement {
     const selected = event.target.innerText;
     
     this.selectedOption.classList.remove('slds-is-selected');
+    this.selectedOption.setAttribute("aria-checked", "false");
+    this.selectedOption.setAttribute("aria-selected", "false");
     this.newestOption.children[0].children[0].classList.add('slds-hidden');
     this.relevancyOption.children[0].children[0].classList.add('slds-hidden');
     this.oldestOption.children[0].children[0].classList.add('slds-hidden');
@@ -107,6 +111,8 @@ export default class QuanticSort extends LightningElement {
         break;
     }
     this.selectedOption.classList.add('slds-is-selected');
+    this.selectedOption.setAttribute("aria-checked", "true");
+    this.selectedOption.setAttribute("aria-selected", "true");
     this.selectedOption.children[0].children[0].classList.remove('slds-hidden');
     this.closeListbox();
   }
