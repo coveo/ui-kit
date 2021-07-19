@@ -71,6 +71,7 @@ export {
   DateFacetState,
   DateFacet,
   buildDateFacet,
+  DateFacetValue,
 } from './facets/range-facet/date-facet/headless-date-facet';
 
 export {

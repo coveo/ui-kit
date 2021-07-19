@@ -7,7 +7,7 @@ import {
   NumericRangeRequest,
 } from '../../numeric-facet-set/interfaces/request';
 import {
-  DateFacetValue,
+  DateFacetApiValue,
   DateFacetResponse,
 } from '../../date-facet-set/interfaces/response';
 import {
@@ -22,5 +22,5 @@ export type RangeValueRequest = DateRangeApiRequest | NumericRangeRequest;
 export type RangeFacetRegistrationOptions =
   | RegisterDateFacetActionCreatorPayload
   | RegisterNumericFacetActionCreatorPayload;
-export type RangeFacetValue = DateFacetValue | NumericFacetValue;
+export type RangeFacetValue = DateFacetApiValue | NumericFacetValue;
 export type RangeFacetResponse = DateFacetResponse | NumericFacetResponse;

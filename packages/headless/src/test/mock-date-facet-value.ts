@@ -1,8 +1,8 @@
-import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
+import {DateFacetApiValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
 
 export function buildMockDateFacetValue(
-  config: Partial<DateFacetValue> = {}
-): DateFacetValue {
+  config: Partial<DateFacetApiValue> = {}
+): DateFacetApiValue {
   return {
     start: '0',
     end: '10',

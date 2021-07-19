@@ -3,6 +3,7 @@ import {
   buildDateFacet,
   DateFacetOptions,
   buildDateRange,
+  DateFacetValue,
 } from './headless-date-facet';
 import {
   MockSearchEngine,
@@ -22,7 +23,6 @@ import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
 describe('date facet', () => {
   const facetId = '1';

@@ -1,8 +1,5 @@
 import {DateFacetRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {
-  DateFacetResponse,
-  DateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {DateFacetResponse} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {
   RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
@@ -31,6 +28,8 @@ import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {FacetValueState} from '../../facet/headless-facet';
+import {RelativeDate} from '../../../../features/facets/range-facets/relative-date-set/relative-date';
 
 export {
   DateFacetOptions,
@@ -98,6 +97,43 @@ export interface DateFacet extends Controller {
   state: DateFacetState;
 }
 
+export interface DateFacetValue {
+  /**
+   * The number of results that have the facet value.
+   */
+  numberOfResults: number;
+
+  /**
+   * The starting value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss`.
+   */
+  start: string;
+
+  /**
+   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss`.
+   */
+  end: string;
+
+  /**
+   * The dynamic relative date.
+   */
+  relativeStart?: RelativeDate;
+
+  /**
+   * The dynamic relative date.
+   */
+  relativeEnd?: RelativeDate;
+
+  /**
+   * Whether or not the end value is included in the range.
+   */
+  endInclusive: boolean;
+
+  /**
+   * The state of the facet value, indicating whether it is filtering results (`selected`) or not (`idle`).
+   */
+  state: FacetValueState;
+}
+
 /**
  * A scoped and simplified part of the headless state that is relevant to the `DateFacet` controller.
  */
@@ -149,9 +185,9 @@ export function buildDateFacet(
 
   const facetId = determineFacetId(engine, props.options);
   const options: RegisterDateFacetActionCreatorPayload = {
-    ...props.options,
     // TODO: transform current values
     currentValues: [],
+    ...props.options,
     facetId,
   };
 

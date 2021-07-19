@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {createAction} from '@reduxjs/toolkit';
-import {DateFacetValue} from './interfaces/response';
+import {DateFacetApiValue} from './interfaces/response';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -161,7 +161,7 @@ export interface ToggleSelectDateFacetValueActionCreatorPayload {
   /**
    * The target date facet value.
    */
-  selection: DateFacetValue;
+  selection: DateFacetApiValue;
 }
 
 /**
@@ -187,7 +187,7 @@ export interface UpdateDateFacetValuesActionCreatorPayload {
   /**
    * The date facet values.
    */
-  values: DateFacetValue[];
+  values: DateFacetApiValue[];
 }
 
 /**

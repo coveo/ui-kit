@@ -16,7 +16,7 @@ import {
 } from '../generic/interfaces/generic-facet-response';
 import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
 import {DateFacetRequest} from '../range-facets/date-facet-set/interfaces/request';
-import {DateFacetValue} from '../range-facets/date-facet-set/interfaces/response';
+import {DateFacetApiValue} from '../range-facets/date-facet-set/interfaces/response';
 import {NumericFacetRequest} from '../range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../range-facets/numeric-facet-set/interfaces/response';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
@@ -124,7 +124,7 @@ export const buildFacetStateMetadata = (
           facetType === 'specific'
             ? mapFacetDisplayValueToAnalytics(facetValue as FacetValue)
             : mapRangeDisplayFacetValueToAnalytics(
-                facetValue as NumericFacetValue | DateFacetValue
+                facetValue as NumericFacetValue | DateFacetApiValue
               );
 
         facetState.push({
@@ -152,7 +152,7 @@ const mapFacetValueToAnalytics = (
 };
 
 const mapRangeDisplayFacetValueToAnalytics = (
-  facetValue: DateFacetValue | NumericFacetValue
+  facetValue: DateFacetApiValue | NumericFacetValue
 ) => {
   return {
     displayValue: `${facetValue.start}..${facetValue.end}`,

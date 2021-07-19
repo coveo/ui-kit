@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {DateFacetValue} from './interfaces/response';
+import {DateFacetApiValue} from './interfaces/response';
 import {AsyncThunkSearchOptions} from '../../../../api/search/search-api-client';
 import {
   ConfigurationSection,
@@ -10,6 +10,7 @@ import {toggleSelectDateFacetValue} from './date-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {DateFacetValue} from '../../../../controllers';
 
 const definition = {
   facetId: facetIdDefinition,

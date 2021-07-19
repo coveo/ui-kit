@@ -10,7 +10,7 @@ import {
 } from './date-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {DateFacetResponse, DateFacetValue} from './interfaces/response';
+import {DateFacetResponse, DateFacetApiValue} from './interfaces/response';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -44,7 +44,7 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
-        toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
+        toggleSelectRangeValue<DateFacetRequest, DateFacetApiValue>(
           state,
           facetId,
           selection
@@ -89,7 +89,7 @@ function buildDateFacetRequest(
 }
 
 function convertToRangeRequests(
-  values: DateFacetValue[]
+  values: DateFacetApiValue[]
 ): DateRangeApiRequest[] {
   return values.map((value) => {
     const {numberOfResults, ...rest} = value;

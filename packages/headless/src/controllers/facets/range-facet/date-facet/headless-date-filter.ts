@@ -11,7 +11,6 @@ import {
 } from '../../../controller/headless-controller';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -25,6 +24,7 @@ import {
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {validateDateFacetOptions} from './headless-date-facet-options';
 import {dateFacetSelectedValuesSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {DateFacetValue} from './headless-date-facet';
 
 /**
  * The options defining a `DateFilter`.

@@ -5,7 +5,7 @@ import {
 } from '../../../analytics/analytics-utils';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
-import {DateFacetValue} from './interfaces/response';
+import {DateFacetApiValue} from './interfaces/response';
 
 export interface LogDateFacetBreadcrumbActionCreatorPayload {
   /**
@@ -16,7 +16,7 @@ export interface LogDateFacetBreadcrumbActionCreatorPayload {
   /**
    * The date facet value deselected using the breadcrumb.
    */
-  selection: DateFacetValue;
+  selection: DateFacetApiValue;
 }
 
 /**

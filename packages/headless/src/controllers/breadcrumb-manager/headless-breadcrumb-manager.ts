@@ -3,7 +3,6 @@ import {BaseFacetValue} from '../../features/facets/facet-api/response';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {facetResponseSelectedValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
 import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
 import {numericFacetSelectedValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
@@ -41,6 +40,7 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {DateFacetValue} from '../facets/range-facet/date-facet/headless-date-facet';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.

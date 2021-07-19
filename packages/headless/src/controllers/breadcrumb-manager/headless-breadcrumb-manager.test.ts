@@ -28,7 +28,6 @@ import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {getSearchInitialState} from '../../features/search/search-state';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {
@@ -46,6 +45,7 @@ import {
   dateFacetSet,
   categoryFacetSet,
 } from '../../app/reducers';
+import {DateFacetValue} from '../facets/range-facet/date-facet/headless-date-facet';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
