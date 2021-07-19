@@ -77,6 +77,9 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   updateState() {
+    if(this.state.value !== this.searchBox.state.value) {
+      this.updateSearchboxText(this.searchBox.state.value);
+    }
     this.state = this.searchBox.state;
   }
 
