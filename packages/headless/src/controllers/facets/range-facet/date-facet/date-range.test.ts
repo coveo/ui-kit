@@ -1,5 +1,5 @@
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {buildDateRange, isSearchApiDate} from './date-range';
+import {buildDateRange} from './date-range';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {
@@ -76,16 +76,6 @@ describe('date range', () => {
         state: 'idle',
       };
       expect(dateRange).toEqual(expectedValues);
-    });
-  });
-
-  describe('#isSearchApiDate', () => {
-    it('when the string matches the search api format, it returns true', () => {
-      expect(isSearchApiDate('2010/01/01@05:00:00')).toBe(true);
-    });
-
-    it('when the string does not match the search api format, it returns false', () => {
-      expect(isSearchApiDate('10/01/01@05:00:00')).toBe(false);
     });
   });
 });

@@ -40,3 +40,9 @@ export namespace ResultTemplatesHelpers {
   export const fieldMustMatch = fieldMustMatchAlias;
   export const fieldMustNotMatch = fieldMustNotMatchAlias;
 }
+
+export {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './facets/range-facets/relative-date-set/relative-date';
