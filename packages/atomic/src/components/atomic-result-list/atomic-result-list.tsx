@@ -6,7 +6,6 @@ import {
   buildResultList,
   buildResultTemplatesManager,
 } from '@coveo/headless';
-import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
 import {
   Bindings,
@@ -131,11 +130,7 @@ export class AtomicResultList implements InitializableComponent {
         display={this.display}
         density={this.density}
         image={this.image}
-        // TODO: decide to get rid of Mustache or not
-        content={Mustache.render(
-          this.resultTemplatesManager.selectTemplate(result) || '',
-          result
-        )}
+        content={this.resultTemplatesManager.selectTemplate(result) || ''}
       ></atomic-result>
     ));
   }

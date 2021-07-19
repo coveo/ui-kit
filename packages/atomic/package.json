@@ -35,7 +35,6 @@
     "dayjs": "^1.10.4",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
-    "mustache": "^4.0.1",
     "stencil-inline-svg": "^1.0.1",
     "tailwindcss": "^2.2.2"
   },
