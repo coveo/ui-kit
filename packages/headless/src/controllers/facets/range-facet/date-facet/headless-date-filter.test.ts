@@ -1,4 +1,9 @@
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  search,
+  relativeDateSet,
+} from '../../../../app/reducers';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
@@ -64,6 +69,7 @@ describe('date filter', () => {
       dateFacetSet,
       configuration,
       search,
+      relativeDateSet,
     });
   });
 

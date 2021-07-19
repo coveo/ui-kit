@@ -13,6 +13,7 @@ import {
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
+  RelativeDateSection,
   SearchSection,
 } from '../../state/state-sections';
 import {BaseFacetRequest} from '../../features/facets/facet-api/request';
@@ -37,6 +38,7 @@ import {
   numericFacetSet,
   dateFacetSet,
   categoryFacetSet,
+  relativeDateSet,
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
@@ -188,7 +190,10 @@ export function buildBreadcrumbManager(
     facetValuesSelector:
       | ((state: SearchSection & FacetSection, facetId: string) => T[])
       | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
-      | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
+      | ((
+          state: SearchSection & DateFacetSection & RelativeDateSection,
+          facetId: string
+        ) => T[])
   ) => {
     return Object.keys(facetSet)
       .map((facetId) => {
@@ -319,7 +324,8 @@ function loadBreadcrumbManagerReducers(
     FacetSection &
     NumericFacetSection &
     DateFacetSection &
-    CategoryFacetSection
+    CategoryFacetSection &
+    RelativeDateSection
 > {
   engine.addReducers({
     configuration,
@@ -328,6 +334,7 @@ function loadBreadcrumbManagerReducers(
     numericFacetSet,
     dateFacetSet,
     categoryFacetSet,
+    relativeDateSet,
   });
 
   return true;

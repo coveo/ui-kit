@@ -40,6 +40,7 @@ import {
   RelativeDate,
 } from '../../../../features/relative-date-set/relative-date';
 import {registerRelativeDate} from '../../../../features/relative-date-set/relative-date-actions';
+import {dateFacetValuesSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 
 export {
   DateFacetOptions,
@@ -192,6 +193,7 @@ export function buildDateFacet(
   assertRangeFacetOptions(props.options, 'buildDateFacet');
 
   const dispatch = engine.dispatch;
+  const getState = () => engine.state;
 
   const facetId = determineFacetId(engine, props.options);
 
@@ -254,7 +256,10 @@ export function buildDateFacet(
     },
 
     get state() {
-      return rangeFacet.state;
+      return {
+        ...rangeFacet.state,
+        values: dateFacetValuesSelector(getState(), facetId),
+      };
     },
   };
 }

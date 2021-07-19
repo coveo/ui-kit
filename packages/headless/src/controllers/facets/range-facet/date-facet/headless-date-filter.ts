@@ -2,6 +2,7 @@ import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   ConfigurationSection,
   DateFacetSection,
+  RelativeDateSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
@@ -9,7 +10,12 @@ import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  search,
+  relativeDateSet,
+} from '../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
@@ -218,8 +224,8 @@ export function buildDateFilter(
 function loadDateFilterReducer(
   engine: SearchEngine
 ): engine is SearchEngine<
-  DateFacetSection & ConfigurationSection & SearchSection
+  DateFacetSection & ConfigurationSection & SearchSection & RelativeDateSection
 > {
-  engine.addReducers({dateFacetSet, configuration, search});
+  engine.addReducers({dateFacetSet, configuration, search, relativeDateSet});
   return true;
 }

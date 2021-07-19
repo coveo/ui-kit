@@ -44,6 +44,7 @@ import {
   numericFacetSet,
   dateFacetSet,
   categoryFacetSet,
+  relativeDateSet,
 } from '../../app/reducers';
 import {DateFacetValue} from '../facets/range-facet/date-facet/headless-date-facet';
 
@@ -71,6 +72,7 @@ describe('headless breadcrumb manager', () => {
       numericFacetSet,
       dateFacetSet,
       categoryFacetSet,
+      relativeDateSet,
     });
   });
 
