@@ -335,7 +335,7 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * Specifies the layout type for displaying results.
+          * How results should be displayed.
          */
         "display": ResultDisplayLayout;
         /**
