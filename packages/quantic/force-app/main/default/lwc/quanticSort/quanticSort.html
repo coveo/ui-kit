@@ -8,13 +8,14 @@
             <input 
               onchange={handleChange}
               type="text"
-              class="slds-input slds-combobox__input" 
+              class="slds-input slds-combobox__input slds-combobox__input-value" 
               id="combobox-id" 
               autocomplete="off" 
               placeholder="Sort By"
               aria-controls="listbox-id" 
               role="textbox"
               value={sortMethod}
+              readonly
               />
             <lightning-icon class="slds-icon slds-input__icon slds-input__icon_right" icon-name="utility:down" size="x-small" title=""></lightning-icon>
           </div>
@@ -24,7 +25,7 @@
               <li role="presentation" class="slds-listbox__item" onclick={handleSelection}>
                 <div id="relevancy-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                   <span class="slds-media__figure slds-listbox__option-icon">
-                    <lightning-icon class="slds-current-color slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
+                    <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
                   </span>
                   <span class="slds-media__body">
                     <span class="slds-truncate" title="Relevancy">Relevancy</span>
@@ -35,7 +36,7 @@
               <li role="presentation" class="slds-listbox__item" onclick={handleSelection}>
                 <div id="newest-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                   <span class="slds-media__figure slds-listbox__option-icon">
-                    <lightning-icon class="slds-current-color slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
+                    <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
                   </span>
                   <span class="slds-media__body">
                     <span class="slds-truncate" title="Newest">Newest</span>
@@ -45,7 +46,7 @@
               <li role="presentation" class="slds-listbox__item" onclick={handleSelection}>
                 <div id="oldest-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                   <span class="slds-media__figure slds-listbox__option-icon">
-                    <lightning-icon class="slds-current-color slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
+                    <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small" variant="brand"></lightning-icon>
                   </span>
                   <span class="slds-media__body">
                     <span class="slds-truncate" title="Oldest">Oldest</span>

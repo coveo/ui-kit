@@ -64,37 +64,10 @@ export default class QuanticSort extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<{value: string}>} e
-   */
-  handleChange(e) {
-    
-    const selected = e.detail.value;
-    console.log(selected);
-
-    switch (selected) {
-      case 'relevancy':
-        this.sort.sortBy(this.relevance);
-        break;
-
-      case 'newest':
-        this.sort.sortBy(this.dateDescending);
-        break;
-
-      case 'oldest':
-        this.sort.sortBy(this.dateAscending);
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  /**
    * @param {MouseEvent} event
    */
   handleSelection(event){
     const selected = event.target.innerText;
-    console.log(this.newestOption.children[0]);
     if(this.selectedOption){
       this.selectedOption.classList.remove('slds-is-selected');
       this.newestOption.children[0].children[0].classList.add('slds-hidden');
