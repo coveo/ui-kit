@@ -39,7 +39,7 @@ export default class QuanticDidYouMean extends LightningElement {
         if (this.unsubscribe) {
           this.unsubscribe();
         }
-      }
+    }
 
     updateState() {
         this.hasQueryCorrection = this.didYouMean.state.hasQueryCorrection;
