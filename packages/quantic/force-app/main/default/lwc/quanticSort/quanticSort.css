@@ -1,9 +1,4 @@
-.slds-combobox__input:hover {
+.slds-combobox__input:hover, .combobox__blue-icon {
     color: #005FB2;
 }
-
-.combobox__blue-icon {
-    color: #005FB2;
-}
-
 
