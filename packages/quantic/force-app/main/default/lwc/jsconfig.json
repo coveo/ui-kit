@@ -30,6 +30,9 @@
             "c/quanticPager": [
                 "quanticPager/quanticPager.js"
             ],
+            "c/quanticQueryError": [
+                "quanticQueryError/quanticQueryError.js"
+            ],
             "c/quanticResult": [
                 "quanticResult/quanticResult.js"
             ],
