@@ -37,6 +37,26 @@
         <name>quantic_ClearAllFilters</name>
     </customLabels>
     <customLabels>
+        <label>Effacer</label>
+        <name>quantic_Clear</name>
+    </customLabels>
+    <customLabels>
+        <label>Voir plus de résultats</label>
+        <name>quantic_ShowMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Voir moins de résultats</label>
+        <name>quantic_ShowLess</name>
+    </customLabels>
+    <customLabels>
+        <label>Afficher plus de valeurs pour la facette {{0}}</label>
+        <name>quantic_ShowMoreFacetValues</name>
+    </customLabels>
+    <customLabels>
+        <label>Afficher moins de valeurs pour la facette {{label}}</label>
+        <name>quantic_ShowLessFacetValues</name>
+    </customLabels>
+    <customLabels>
         <label>{{0}} de plus...</label>
         <name>quantic_NMore</name>
     </customLabels>

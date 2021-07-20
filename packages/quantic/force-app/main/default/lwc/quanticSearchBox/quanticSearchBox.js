@@ -24,7 +24,7 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {string} */
   @api engineId;
   /** @type {string} */
-  @api placeholder = search;
+  @api placeholder = `${search}...`;
 
   /** @type {import("coveo").SearchBox} */
   searchBox;

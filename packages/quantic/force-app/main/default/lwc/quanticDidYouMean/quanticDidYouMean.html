@@ -10,7 +10,7 @@
         </template>
         <template if:false={wasAutomaticallyCorrected}>
             <div class="slds-var-m-vertical_x-small">
-                <span>{label.didYouMean} </span> 
+                <span>{labels.didYouMean} </span> 
                 <button class="slds-button" onclick={applyCorrection}><span class="slds-text-title_bold">{correctedQuery}</span></button>
             </div> 
         </template>

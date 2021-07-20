@@ -23,7 +23,7 @@ export default class QuanticDidYouMean extends LightningElement {
   /** @type {import("coveo").DidYouMean} */
   didYouMean;
 
-  label = {
+  labels = {
     didYouMean,
     noResultsFor,
     queryCorrectedTo,
@@ -64,10 +64,10 @@ export default class QuanticDidYouMean extends LightningElement {
   }
 
   get noResultsLabel() {
-    return I18nService.format(this.label.noResultsFor, I18nService.getTextBold(this.originalQuery));
+    return I18nService.format(this.labels.noResultsFor, I18nService.getTextBold(this.originalQuery));
   }
 
   get correctedQueryLabel() {
-    return I18nService.format(this.label.queryCorrectedTo, I18nService.getTextBold(this.correctedQuery));
+    return I18nService.format(this.labels.queryCorrectedTo, I18nService.getTextBold(this.correctedQuery));
   }
 }

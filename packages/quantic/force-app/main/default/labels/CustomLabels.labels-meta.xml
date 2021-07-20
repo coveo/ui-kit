@@ -57,6 +57,41 @@
         <shortDescription>No Results for potato</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_Clear</fullName>
+        <value>Clear</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowMore</fullName>
+        <value>Show more</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show more</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowLess</fullName>
+        <value>Show less</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show less</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowMoreFacetValues</fullName>
+        <value>Show more values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show more values for the potato facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowLessFacetValues</fullName>
+        <value>Show less values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show less values for the potato facet</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NMore</fullName>
         <value>{{0}} more...</value>
         <language>en_US</language>

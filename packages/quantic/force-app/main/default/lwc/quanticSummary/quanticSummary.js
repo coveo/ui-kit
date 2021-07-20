@@ -22,7 +22,7 @@ export default class QuanticSummary extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  label = {
+  labels = {
     noResults,
     noResultsFor,
     showingResultsOf,
@@ -81,14 +81,14 @@ export default class QuanticSummary extends LightningElement {
 
   get noResultsLabel() {
     return I18nService.format(
-        this.hasQuery ? this.label.noResultsFor : this.label.noResults,
+        this.hasQuery ? this.labels.noResultsFor : this.labels.noResults,
         I18nService.getTextBold(this.query));
   }
 
   get duration() {
     if (this.state.hasDuration) {
       const duration = this.state.durationInSeconds;
-      return ` ${I18nService.format(this.label.inSeconds_plural, duration)}`;
+      return ` ${I18nService.format(this.labels.inSeconds_plural, duration)}`;
     }
     return '';
   }
@@ -98,7 +98,7 @@ export default class QuanticSummary extends LightningElement {
       ? I18nService.getLabelNameWithCount('showingResultsOfWithQuery', this.state.lastResult)
       : I18nService.getLabelNameWithCount('showingResultsOf', this.state.lastResult);
     return `${I18nService.format(
-      this.label[labelName],
+      this.labels[labelName],
       I18nService.getTextBold(this.range),
       I18nService.getTextBold(this.total),
       I18nService.getTextBold(this.query))} ${this.duration}`;

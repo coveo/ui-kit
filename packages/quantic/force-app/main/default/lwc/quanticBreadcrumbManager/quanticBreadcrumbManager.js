@@ -39,7 +39,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   /** @type {Number} */
   @api collapseThreshold = 5;
 
-  label = {
+  labels = {
     nMore,
     clearAllFilters
   }
@@ -138,7 +138,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
       ...breadcrumb,
       values: breadcrumb.values.slice(0, this.collapseThreshold),
       showMoreButton: true,
-      showMoreButtonText: I18nService.format(this.label.nMore, breadcrumb.values.length - this.collapseThreshold),
+      showMoreButtonText: I18nService.format(this.labels.nMore, breadcrumb.values.length - this.collapseThreshold),
       expandButtonClick: () => {
         this.expandedBreadcrumbFieldsState = [...this.expandedBreadcrumbFieldsState, breadcrumb.field];
       }

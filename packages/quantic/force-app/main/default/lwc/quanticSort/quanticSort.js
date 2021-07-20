@@ -17,7 +17,7 @@ export default class QuanticSort extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  label = {
+  labels = {
     sortBy,
     relevancy,
     newest,
@@ -87,9 +87,9 @@ export default class QuanticSort extends LightningElement {
 
   get options() {
     return [
-      {label: this.label.relevancy, value: 'relevancy'},
-      {label: this.label.newest, value: 'newest'},
-      {label: this.label.oldest, value: 'oldest'},
+      {label: this.labels.relevancy, value: 'relevancy'},
+      {label: this.labels.newest, value: 'newest'},
+      {label: this.labels.oldest, value: 'oldest'},
     ];
   }
 

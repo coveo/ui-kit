@@ -20,7 +20,7 @@ export default class QuanticPager extends LightningElement {
   /** @type {string} */
   @api engineId;
 
-  label = {
+  labels = {
     next,
     previous
   }
