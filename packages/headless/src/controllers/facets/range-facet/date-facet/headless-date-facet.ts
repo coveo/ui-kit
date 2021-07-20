@@ -222,13 +222,13 @@ export function buildDateFacet(
     ...props.options,
     currentValues: props.options.currentValues
       ? props.options.currentValues.map(convertDateRange)
-      : undefined,
+      : [],
     facetId,
   };
 
   validateDateFacetOptions(engine, options);
 
-  dispatch(registerDateFacet({...options}));
+  dispatch(registerDateFacet(options));
 
   const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
     engine,
