@@ -4,8 +4,8 @@
      
       <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" onmouseover={onMouseOver} onmouseout={onMouseOut} aria-expanded="true" aria-haspopup="listbox" role="combobox">
         <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
-          <span class="combobox__icon-container">
-            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left" icon-name="utility:filter" size="x-small" title="Filter icon"></lightning-icon>
+          <span class="combobox__sort-icon-container">
+            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left" icon-name="utility:sort" size="x-small" title="Filter icon"></lightning-icon>
           </span>
           <input 
             type="text"
@@ -19,7 +19,7 @@
             onclick={openListbox} 
             onblur={closeListbox}
             />
-            <span class="combobox__icon-container">
+            <span class="combobox__check-icon-container">
               <lightning-icon class="slds-icon slds-input__icon slds-input__icon_right" icon-name="utility:down" size="x-small" title="Down icon"></lightning-icon>
             </span>
         </div>
