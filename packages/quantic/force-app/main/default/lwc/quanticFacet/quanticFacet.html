@@ -3,14 +3,14 @@
     <lightning-card title={label}>
       <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
         <template for:each={values} for:item="v">
-          <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v}></c-quantic-facet-value>
+          <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} data-cy={v.value}></c-quantic-facet-value>
         </template>
       </ul>
 
       <lightning-button-group>
         <template if:true={canShowMore}>
           <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
-            class="slds-m-left_x-small" onclick={showMore}></lightning-button>
+            class="slds-m-left_x-small" onclick={showMore} data-cy="more"></lightning-button>
         </template>
         <template if:true={canShowLess}>
           <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"

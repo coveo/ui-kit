@@ -34,3 +34,7 @@ force-app/main/default/staticresources/coveoheadless
 # Test Coverage & Report
 coverage
 reports
+
+# Cypress artefacts
+cypress/screenshots/*
+cypress/videos/*
