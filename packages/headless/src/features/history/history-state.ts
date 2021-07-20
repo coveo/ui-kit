@@ -12,6 +12,7 @@ import {getPaginationInitialState} from '../pagination/pagination-state';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {getQuerySetInitialState} from '../query-set/query-set-state';
 import {getQueryInitialState} from '../query/query-state';
+import {getRelativeDateSetInitialState} from '../relative-date-set/relative-date-set-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
 
@@ -42,5 +43,6 @@ export function extractHistory(state: Partial<HistoryState>): HistoryState {
     facetOptions: state.facetOptions || getFacetOptionsInitialState(),
     facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
     debug: state.debug ?? getDebugInitialState(),
+    relativeDateSet: state.relativeDateSet ?? getRelativeDateSetInitialState(),
   };
 }

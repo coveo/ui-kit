@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
+import {DateRangeRequest} from '../../controllers';
 import {validatePayload} from '../../utils/validate-payload';
-import {DateRangeApiRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
 import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
 import {searchParametersDefinition} from './search-parameter-schema';
 
@@ -31,7 +31,7 @@ export interface SearchParameters {
   /**
    * A record of the date facets, where the key is the facet id, and value is an array containing the date ranges to request.
    */
-  df?: Record<string, DateRangeApiRequest[]>;
+  df?: Record<string, DateRangeRequest[]>;
 
   /**
    * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/searching-with-coveo/search-prefixes-and-operators) in the query.

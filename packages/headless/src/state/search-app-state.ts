@@ -33,6 +33,7 @@ import {
 
 export type SearchParametersState = FacetSection &
   DateFacetSection &
+  RelativeDateSection &
   NumericFacetSection &
   CategoryFacetSection &
   FacetOptionsSection &
@@ -61,5 +62,4 @@ export type SearchAppState = SearchParametersState &
   HistorySection &
   FoldingSection &
   TriggerSection &
-  QuestionAnsweringSection &
-  RelativeDateSection;
+  QuestionAnsweringSection;
