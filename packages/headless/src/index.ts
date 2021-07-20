@@ -12,9 +12,18 @@ export {
   SearchEngine,
   SearchEngineOptions,
   SearchEngineConfiguration,
+  SearchConfigurationOptions,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from './app/search-engine/search-engine';
+
+export {CoreEngine, ExternalEngineOptions} from './app/engine';
+export {
+  EngineConfiguration,
+  AnalyticsConfiguration,
+  AnalyticsRuntimeEnvironment,
+} from './app/engine-configuration';
+export {LoggerOptions} from './app/logger';
 
 export {LogLevel} from './app/logger';
 

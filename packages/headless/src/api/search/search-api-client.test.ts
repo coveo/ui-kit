@@ -31,7 +31,7 @@ import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {Response} from 'cross-fetch';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {SearchResponseSuccess} from './search/search-response';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {QuestionsAnswers} from './search/question-answering';
@@ -369,7 +369,7 @@ describe('search api client', () => {
       should call PlatformClient.call with the right options`, () => {
         const originLevel2 = 'tab';
         const originLevel3 = 'referrer';
-        const analytics = buildMockAnalyticsConfiguration({
+        const analytics = buildMockAnalyticsState({
           originLevel2,
           originLevel3,
         });

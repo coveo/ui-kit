@@ -48,40 +48,47 @@ export interface EngineConfiguration {
   /**
    * Allows configuring options related to analytics.
    */
-  analytics?: {
-    /**
-     * Specifies if usage analytics tracking should be enabled.
-     *
-     * By default, all analytics events will be logged.
-     */
-    enabled?: boolean;
-    /**
-     * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
-     *
-     * When logging a Search usage analytics event, originLevel2 should always be set to the same value as the corresponding tab (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
-     *
-     * This value is optional, and will automatically try to resolve itself from the tab search parameter.
-     */
-    originLevel2?: string;
-    /**
-     * Origin level 3 is a usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request.
-     *
-     * When logging a Search usage analytics event, originLevel3 should always be set to the same value as the corresponding referrer Search API query parameter so usage analytics reports and dashboards are coherent.
-     *
-     * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
-     */
-    originLevel3?: string;
-    /**
-     * analyticsClientMiddleware allows to hook into an analytics event payload before it is sent to the Coveo platform.
-     */
-    analyticsClientMiddleware?: AnalyticsClientSendEventHook;
-    /**
-     * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
-     * See https://github.com/coveo/coveo.analytics.js for more info.
-     */
-    runtimeEnvironment?: IRuntimeEnvironment;
-  };
+  analytics?: AnalyticsConfiguration;
 }
+
+/**
+ * The analytics configuration options.
+ */
+export interface AnalyticsConfiguration {
+  /**
+   * Specifies if usage analytics tracking should be enabled.
+   *
+   * By default, all analytics events will be logged.
+   */
+  enabled?: boolean;
+  /**
+   * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
+   *
+   * When logging a Search usage analytics event, originLevel2 should always be set to the same value as the corresponding tab (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+   *
+   * This value is optional, and will automatically try to resolve itself from the tab search parameter.
+   */
+  originLevel2?: string;
+  /**
+   * Origin level 3 is a usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request.
+   *
+   * When logging a Search usage analytics event, originLevel3 should always be set to the same value as the corresponding referrer Search API query parameter so usage analytics reports and dashboards are coherent.
+   *
+   * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
+   */
+  originLevel3?: string;
+  /**
+   * analyticsClientMiddleware allows to hook into an analytics event payload before it is sent to the Coveo platform.
+   */
+  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  /**
+   * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
+   * See https://github.com/coveo/coveo.analytics.js for more info.
+   */
+  runtimeEnvironment?: AnalyticsRuntimeEnvironment;
+}
+
+export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
 export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
   organizationId: requiredNonEmptyString,

@@ -1,9 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {FacetValueProps} from '../facet-common';
+import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
 export const FacetValueBox: FunctionalComponent<FacetValueProps> = (props) => {
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
-  const ariaLabel = props.i18n.t('facetValue', {
+  const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
   });
@@ -25,9 +26,11 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (props) => {
           class={`value-label ellipsed w-full ${
             props.isSelected ? 'font-bold' : ''
           }`}
-        >
-          {props.displayValue}
-        </span>
+          innerHTML={highlightSearchResult(
+            props.displayValue,
+            props.searchQuery
+          )}
+        ></span>
         <span
           title={count}
           part="value-count"

@@ -3,7 +3,6 @@ import {
   InitializableComponent,
   Bindings,
   InitializeBindings,
-  BindStateToI18n,
 } from '../../utils/initialization-utils';
 
 /**
@@ -16,7 +15,7 @@ import {
 export class AtomicText implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
 
-  @BindStateToI18n() @State() private strings = {
+  private strings = {
     value: () =>
       this.bindings.i18n.t(this.value, {
         count: this.count,

@@ -10,7 +10,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {sanitize} from '../../utils/xss-utils';
+import escape from 'escape-html';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -35,7 +35,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   @State()
   private querySummaryState!: QuerySummaryState;
   private strings = {
-    inSeconds: (count: number) => this.bindings.i18n.t('inSeconds', {count}),
+    inSeconds: (count: number) => this.bindings.i18n.t('in-seconds', {count}),
   };
   @State() public error!: Error;
 
@@ -65,11 +65,11 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('noResultsFor', {
+      ? this.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
-          query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
+          query: this.wrapHighlight(escape(this.querySummaryState.query)),
         })
-      : this.bindings.i18n.t('noResults');
+      : this.bindings.i18n.t('no-results');
     return <span part="no-results" innerHTML={content}></span>;
   }
 
@@ -87,14 +87,17 @@ export class AtomicQuerySummary implements InitializableComponent {
       total: this.wrapHighlight(
         this.querySummaryState.total.toLocaleString(locales)
       ),
-      query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
+      query: this.wrapHighlight(escape(this.querySummaryState.query)),
     };
   }
 
   private renderHasResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('showingResultsOfWithQuery', this.resultOfOptions)
-      : this.bindings.i18n.t('showingResultsOf', this.resultOfOptions);
+      ? this.bindings.i18n.t(
+          'showing-results-of-with-query',
+          this.resultOfOptions
+        )
+      : this.bindings.i18n.t('showing-results-of', this.resultOfOptions);
 
     return <span part="results" innerHTML={content}></span>;
   }
@@ -109,7 +112,7 @@ export class AtomicQuerySummary implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden="true"
-          class="h-6 my-2 w-60 bg-neutral-light animate-pulse"
+          class="h-6 my-2 w-60 bg-neutral rounded animate-pulse"
         ></div>
       );
     }

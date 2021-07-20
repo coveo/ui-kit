@@ -12,7 +12,6 @@ import {
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -25,7 +24,7 @@ import {
   updateDateFacetValues,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {validateDateFacetOptions} from './headless-date-facet-options';
-import {dateFacetResponseSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {dateFacetSelectedValuesSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 
 /**
  * The options defining a `DateFilter`.
@@ -123,6 +122,7 @@ export interface DateFilter extends Controller {
    * You can use the `buildDateRange` utility method in order to format the range values correctly.
    *
    * @param range - The date range.
+   * @returns Whether the range is valid.
    */
   setRange(range: DateFilterRange): void;
 
@@ -159,7 +159,12 @@ export function buildDateFilter(
   return {
     ...controller,
     clear: () => {
-      dispatch(deselectAllFacetValues(facetId));
+      dispatch(
+        updateDateFacetValues({
+          facetId,
+          values: [],
+        })
+      );
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
@@ -171,12 +176,16 @@ export function buildDateFilter(
         endInclusive: true,
       };
 
-      dispatch(
-        updateDateFacetValues({
-          facetId,
-          values: [facetValue],
-        })
-      );
+      const updateFacetValuesAction = updateDateFacetValues({
+        facetId,
+        values: [facetValue],
+      });
+
+      if (updateFacetValuesAction.error) {
+        return false;
+      }
+
+      dispatch(updateFacetValuesAction);
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(
         executeSearch(
@@ -186,12 +195,16 @@ export function buildDateFilter(
           })
         )
       );
+      return true;
     },
 
     get state() {
       const isLoading = getState().search.isLoading;
-      const response = dateFacetResponseSelector(getState(), facetId);
-      const range = response?.values.length ? response.values[0] : undefined;
+      const selectedRanges = dateFacetSelectedValuesSelector(
+        getState(),
+        facetId
+      );
+      const range = selectedRanges.length ? selectedRanges[0] : undefined;
 
       return {
         facetId,

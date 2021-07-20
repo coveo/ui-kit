@@ -1,7 +1,8 @@
 {
   "ignorePatterns": ["node_modules", "veracode"],
   "env": {
-    "jest": true
+    "jest": true,
+    "es6": true
   },
   "extends": ["prettier"],
   "parserOptions": {

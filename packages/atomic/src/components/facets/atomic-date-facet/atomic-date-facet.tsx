@@ -15,7 +15,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   I18nState,
   InitializableComponent,
   InitializeBindings,
@@ -62,11 +61,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   @State()
   private searchStatusState!: SearchStatusState;
 
-  @BindStateToI18n()
-  @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    facetValue: (variables) => this.bindings.i18n.t('facet-value', variables),
     to: (variables) => this.bindings.i18n.t('to', variables),
   };
 
@@ -83,7 +80,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
    */
@@ -120,9 +117,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.dateFacets[this.facetId] = {
       label: this.label,
-      formatting: this.dateFormat,
+      format: (value) => this.formatValue(value),
     };
   }
 
@@ -135,11 +132,15 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     });
   }
 
+  private formatValue(facetValue: DateFacetValue) {
+    const start = dayjs(facetValue.start).format(this.dateFormat);
+    const end = dayjs(facetValue.end).format(this.dateFormat);
+    return this.strings.to({start, end});
+  }
+
   private buildListItem(item: DateFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-    const start = dayjs(item.start).format(this.dateFormat);
-    const end = dayjs(item.end).format(this.dateFormat);
-    const value = this.strings.to({start, end});
+    const value = this.formatValue(item);
     return (
       <FacetValue
         label={value}
