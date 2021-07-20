@@ -38,13 +38,13 @@ export default class QuanticSort extends LightningElement {
       this.combobox = this.template.querySelector('.slds-dropdown-trigger_click');
     }
     if(!this.relevancyOption){
-      this.relevancyOption = this.template.querySelectorAll('.slds-listbox__option')[0];
+      this.relevancyOption = this.template.querySelector('.sort__option_relevancy');
     }
     if(!this.newestOption){
-      this.newestOption = this.template.querySelectorAll('.slds-listbox__option')[1];
+      this.newestOption = this.template.querySelector('.sort__option_newest');
     }
     if(!this.oldestOption){
-      this.oldestOption = this.template.querySelectorAll('.slds-listbox__option')[2];
+      this.oldestOption = this.template.querySelector('.sort__option_oldest');
     }
     if(!this.sortIcon){
       this.sortIcon = this.template.querySelector('.combobox__sort-icon-container');
