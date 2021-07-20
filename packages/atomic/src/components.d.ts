@@ -343,13 +343,13 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex": number;
         /**
-          * The number of stars to request for this facet.
+          * The number of intervals to split the index for this facet.
          */
-        "numberOfStars": number;
+        "numberOfIntervals": number;
     }
     interface AtomicRelevanceInspector {
         /**
@@ -1240,13 +1240,13 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex"?: number;
         /**
-          * The number of stars to request for this facet.
+          * The number of intervals to split the index for this facet.
          */
-        "numberOfStars"?: number;
+        "numberOfIntervals"?: number;
     }
     interface AtomicRelevanceInspector {
         /**

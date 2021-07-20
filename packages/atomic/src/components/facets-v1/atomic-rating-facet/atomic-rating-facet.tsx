@@ -83,11 +83,11 @@ export class AtomicRatingFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of stars to request for this facet.
+   * The number of intervals to split the index for this facet.
    */
-  @Prop() public numberOfStars = 5;
+  @Prop() public numberOfIntervals = 5;
   /**
-   * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+   * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
   @Prop() public maxValueInIndex = 5;
   /**
@@ -105,7 +105,7 @@ export class AtomicRatingFacet
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      numberOfValues: this.numberOfStars,
+      numberOfValues: this.numberOfIntervals,
       currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
@@ -119,7 +119,7 @@ export class AtomicRatingFacet
   }
 
   private get scaleFactor() {
-    return this.maxValueInIndex / this.numberOfStars;
+    return this.maxValueInIndex / this.numberOfIntervals;
   }
 
   private get numberOfSelectedValues() {
@@ -129,7 +129,7 @@ export class AtomicRatingFacet
 
   private generateCurrentValues() {
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i < this.numberOfStars; i++) {
+    for (let i = 0; i < this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,
@@ -232,7 +232,7 @@ export class AtomicRatingFacet
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <FacetPlaceholder
-          numberOfValues={this.numberOfStars}
+          numberOfValues={this.numberOfIntervals}
         ></FacetPlaceholder>
       );
     }
