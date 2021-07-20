@@ -115,7 +115,7 @@ export const partialDocumentInformation = (
   state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
   const resultIndex =
-    state.search?.response.results.findIndex(
+    state.search?.results.findIndex(
       ({uniqueId}) => result.uniqueId === uniqueId
     ) || 0;
 
