@@ -1,78 +1,11 @@
 <template>
-  <div class="slds-form-element">
-    <div class="slds-form-element__control">
-      <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" onmouseover={onMouseOver} onmouseout={onMouseOut} aria-expanded="true" aria-haspopup="listbox" role="combobox">
-        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
-          <span class="combobox__sort-icon-container">
-            <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left" icon-name="utility:sort" size="x-small" title="Filter icon"></lightning-icon>
-          </span>
-          <input 
-            type="text"
-            class="slds-input slds-combobox__input slds-combobox__input-value" 
-            id="combobox-id" 
-            autocomplete="off" 
-            aria-controls="listbox-id" 
-            role="textbox"
-            value={sortMethod}
-            readonly
-            onclick={openListbox} 
-            onblur={closeListbox}
-            />
-            <span class="combobox__check-icon-container">
-              <lightning-icon class="slds-icon slds-input__icon slds-input__icon_right" icon-name="utility:down" size="x-small" title="Down icon"></lightning-icon>
-            </span>
-        </div>
-        <div id="listbox-id" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
-          <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-            <li 
-              role="presentation" 
-              class="slds-listbox__item" 
-              onmousedown={handleSelection} 
-              aria-checked="false" 
-              aria-selected="false">
-              <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small sort__option_relevancy" role="option">
-                <span class="slds-media__figure slds-listbox__option-icon">
-                  <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small"></lightning-icon>
-                </span>
-                <span class="slds-media__body">
-                  <span class="slds-truncate" title="Relevancy">Relevancy</span>
-                </span>
-              </div>
-            </li>
-            <li 
-              role="presentation" 
-              class="slds-listbox__item" 
-              onmousedown={handleSelection} 
-              aria-checked="false" 
-              aria-selected="false">
-              <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small sort__option_newest" role="option">
-                <span class="slds-media__figure slds-listbox__option-icon">
-                  <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small"></lightning-icon>
-                </span>
-                <span class="slds-media__body">
-                  <span class="slds-truncate" title="Newest">Newest</span>
-                </span>
-              </div>
-            </li>
-            <li 
-            role="presentation" 
-            class="slds-listbox__item" 
-            onmousedown={handleSelection} 
-            aria-checked="false" 
-            aria-selected="false">
-            <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small sort__option_oldest" role="option">
-              <span class="slds-media__figure slds-listbox__option-icon">
-                <lightning-icon class="slds-media__figure slds-listbox__opion-icon slds-hidden" icon-name="utility:check" size="x-small"></lightning-icon>
-              </span>
-              <span class="slds-media__body">
-                <span class="slds-truncate" title="Oldest">Oldest</span>
-              </span>
-            </div>
-          </li>
-          </ul>
-        </div>
-      </div>
-      
-    </div>
+  <div class="combobox-wrapper">
+    <lightning-layout-item class="combobox__sort-label" padding="horizontal-small">
+      <lightning-formatted-text value="Sort by"></lightning-formatted-text>
+    </lightning-layout-item>
+    <lightning-layout-item>
+      <lightning-combobox name="sort" value={value} variant="label-hidden" label="Sort by" placeholder="Relevancy" options={options} onchange={handleChange}>
+      </lightning-combobox>
+    </lightning-layout-item>
   </div>
 </template>

@@ -1,4 +1,10 @@
-.slds-combobox__input:hover, .combobox__blue-icon {
-    color: #005FB2;
+.combobox-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 
+.combobox__sort-label {
+    color: #3e3e3c;
+    padding-top: 6px;
+}
