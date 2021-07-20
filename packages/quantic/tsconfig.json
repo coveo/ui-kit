@@ -1,5 +1,4 @@
 {
-    "extends": "../../tsconfig.json",
     "compilerOptions": {
         "experimentalDecorators": true,
         "skipLibCheck": true,
@@ -9,6 +8,7 @@
         "baseUrl": "force-app/main/default/lwc",
         "target": "es2016",
         "module": "ESNext",
+        "lib": ["es2016", "dom"],
         "paths": {
             "c/quanticDateFacet": [
                 "quanticDateFacet/quanticDateFacet.js"
