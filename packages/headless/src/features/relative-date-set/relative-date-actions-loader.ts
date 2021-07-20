@@ -29,7 +29,7 @@ export interface RelativeDateSetActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function laodRelativeDateSetActions(
+export function loadRelativeDateSetActions(
   engine: SearchEngine
 ): RelativeDateSetActionCreators {
   engine.addReducers({relativeDateSet});
