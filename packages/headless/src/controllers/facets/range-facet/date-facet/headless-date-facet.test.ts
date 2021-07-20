@@ -87,7 +87,7 @@ describe('date facet', () => {
     const action = registerDateFacet({
       facetId,
       ...options,
-      currentValues: undefined,
+      currentValues: [],
     });
     expect(engine.actions).toContainEqual(action);
   });
