@@ -24,6 +24,7 @@ import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
 import {BaseFacet} from '../facet-common';
+import Star from '../../../images/star.svg';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -95,6 +96,10 @@ export class AtomicRatingFacet
    * Possible values are 'checkbox' and 'link'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  /**
+   * The icon used to display the rating.
+   */
+  @Prop() public icon = Star;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -177,6 +182,7 @@ export class AtomicRatingFacet
             <FacetValueIconRating
               numberOfTotalIcons={this.maxValueInIndex}
               numberOfActiveIcons={facetValue.end}
+              icon={this.icon}
             ></FacetValueIconRating>
           </FacetValueCheckbox>
         );
@@ -192,6 +198,7 @@ export class AtomicRatingFacet
             <FacetValueIconRating
               numberOfTotalIcons={this.maxValueInIndex}
               numberOfActiveIcons={facetValue.end}
+              icon={this.icon}
             ></FacetValueIconRating>
           </FacetValueLink>
         );

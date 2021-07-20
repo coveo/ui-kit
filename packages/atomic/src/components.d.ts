@@ -339,6 +339,10 @@ export namespace Components {
          */
         "field": string;
         /**
+          * The icon used to display the rating.
+         */
+        "icon": string;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -1235,6 +1239,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * The icon used to display the rating.
+         */
+        "icon"?: string;
         /**
           * The non-localized label for the facet.
          */

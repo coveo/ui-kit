@@ -30,4 +30,5 @@ export interface FacetValueLabelHighlightProps {
 export interface FacetValueIconRatingProps {
   numberOfTotalIcons: number;
   numberOfActiveIcons: number;
+  icon: string;
 }

@@ -1,19 +1,18 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {FacetValueIconRatingProps} from '../facet-common';
-import FullStar from '../../../images/fully-filled-star.svg';
-
-const createIconFilled = (active: boolean) => {
-  return (
-    <div
-      innerHTML={FullStar}
-      class={active ? 'icon-active' : 'icon-inactive'}
-    ></div>
-  );
-};
 
 export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps> = (
   props
 ) => {
+  const createIconFilled = (active: boolean) => {
+    return (
+      <div
+        innerHTML={props.icon}
+        class={active ? 'icon-active' : 'icon-inactive'}
+      ></div>
+    );
+  };
+
   const generateIconDisplay = () => {
     const emptyIconDisplay: VNode[] = [];
     const filledIconDisplay: VNode[] = [];
