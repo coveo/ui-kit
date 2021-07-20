@@ -13,6 +13,6 @@
     "prepublishOnly": "exit 1"
   },
   "devDependencies": {
-    "serve": "^11.2.0"
+    "serve": "11.3.2"
   }
 }
