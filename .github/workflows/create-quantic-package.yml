@@ -10,7 +10,7 @@ env:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 17 * * *'
+    - cron: '0 22 * * *'
 
 defaults:
   run:
