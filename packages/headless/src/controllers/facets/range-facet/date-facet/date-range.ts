@@ -3,6 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -47,10 +48,6 @@ export interface DateRangeOptions {
   useLocalTime?: boolean;
 }
 
-export function isSearchApiDate(date: string) {
-  return formatForSearchApi(dayjs(date)) === date;
-}
-
 /**
  * Creates a `DateRangeRequest`.
  *
@@ -85,10 +82,5 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   }
 
   const adjusted = useLocalTime ? date : date.utc();
-  return formatForSearchApi(adjusted);
-}
-
-function formatForSearchApi(date: dayjs.Dayjs) {
-  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-  return date.format(DATE_FORMAT);
+  return formatDateForSearchApi(adjusted);
 }

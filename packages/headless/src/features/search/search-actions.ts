@@ -89,6 +89,7 @@ const fetchFromAPI = async (
   state: StateNeededByExecuteSearch,
   request: SearchRequest
 ) => {
+  // TODO: Build & map facet relative facet values here
   const startedAt = new Date().getTime();
   const response = await client.search(request);
   const duration = new Date().getTime() - startedAt;
