@@ -10,7 +10,7 @@ import {
   StateNeededByLoadCollection,
 } from './folding-actions';
 
-export {RegisterFoldingActionCreatorPayload, LoadCollectionFulfilledReturn};
+export {RegisterFoldingActionCreatorPayload};
 
 /**
  * The folding action creators.
