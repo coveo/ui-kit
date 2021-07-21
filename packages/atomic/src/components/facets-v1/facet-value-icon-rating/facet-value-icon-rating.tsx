@@ -25,7 +25,6 @@ export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps
         (props.numberOfActiveIcons / props.numberOfTotalIcons) *
         100
       ).toString() + '%';
-    console.log(limitString);
     return (
       <div class="relative left-0 top-0" part="value-label">
         <div class="relative left-0 top-0 z-0 flex items-center gap-0.5 pt-0.5 pb-0.5">
