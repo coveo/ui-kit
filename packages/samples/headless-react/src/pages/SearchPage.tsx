@@ -2,8 +2,6 @@ import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext} from '../context/engine';
 
-import {RecommendationList} from '../components/recommendation-list/recommendation-list.class';
-import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
 import {Tab} from '../components/tab/tab.class';
 import {Tab as TabFn} from '../components/tab/tab.fn';
 import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
@@ -43,8 +41,6 @@ import {HistoryManager} from '../components/history-manager/history-manager.clas
 import {HistoryManager as HistoryManagerFn} from '../components/history-manager/history-manager.fn';
 import {RelevanceInspector} from '../components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
-import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
-import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {QueryTrigger} from '../components/triggers/query-trigger.class';
@@ -106,8 +102,6 @@ import {
   buildHistoryManager,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
-  StandaloneSearchBox as HeadlessStandaloneSearchBox,
-  buildStandaloneSearchBox,
   SearchAppState,
   loadSearchAnalyticsActions,
   RedirectionTrigger as HeadlessRedirectionTrigger,
@@ -121,13 +115,6 @@ import {
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
   buildSmartSnippetQuestionsList,
 } from '@coveo/headless';
-import {
-  RecommendationEngine,
-  buildRecommendationEngine,
-  getSampleRecommendationEngineConfiguration,
-  buildRecommendationList,
-  RecommendationList as HeadlessRecommendationList,
-} from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -159,9 +146,7 @@ export interface SearchPageProps {
 
 export class SearchPage extends Component {
   private engine!: SearchEngine;
-  private readonly recommendationEngine: RecommendationEngine;
 
-  private readonly recommendationList: HeadlessRecommendationList;
   private readonly tabs: {
     all: HeadlessTab;
     messages: HeadlessTab;
@@ -187,7 +172,6 @@ export class SearchPage extends Component {
   private readonly pager: HeadlessPager;
   private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
-  private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
   private readonly queryTrigger: HeadlessQueryTrigger;
   private readonly notifyTrigger: HeadlessNotifyTrigger;
@@ -202,14 +186,6 @@ export class SearchPage extends Component {
     super(props);
 
     this.initEngine(props);
-
-    this.recommendationEngine = buildRecommendationEngine({
-      configuration: getSampleRecommendationEngineConfiguration(),
-    });
-
-    this.recommendationList = buildRecommendationList(
-      this.recommendationEngine
-    );
 
     this.tabs = {
       all: buildTab(this.engine, {
@@ -314,10 +290,6 @@ export class SearchPage extends Component {
 
     this.relevanceInspector = buildRelevanceInspector(this.engine);
 
-    this.standaloneSearchBox = buildStandaloneSearchBox(this.engine, {
-      options: {redirectionUrl: 'https://mywebsite.com/search'},
-    });
-
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
 
     this.queryTrigger = buildQueryTrigger(this.engine);
@@ -382,14 +354,6 @@ export class SearchPage extends Component {
   render() {
     return (
       <div>
-        <AppContext.Provider
-          value={{recommendationEngine: this.recommendationEngine}}
-        >
-          <Section title="recommendation-list">
-            <RecommendationList />
-            <RecommendationListFn controller={this.recommendationList} />
-          </Section>
-        </AppContext.Provider>
         <AppContext.Provider value={{engine: this.engine}}>
           <Section title="tabs">
             <nav>
@@ -528,10 +492,6 @@ export class SearchPage extends Component {
           <Section title="relevance-inspector">
             <RelevanceInspector />
             <RelevanceInspectorFn controller={this.relevanceInspector} />
-          </Section>
-          <Section title="standalone-search-box">
-            <StandaloneSearchBox />
-            <StandaloneSearchBoxFn controller={this.standaloneSearchBox} />
           </Section>
           <Section title="redirection-trigger">
             <RedirectionTrigger></RedirectionTrigger>
