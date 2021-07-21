@@ -7,6 +7,7 @@ import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
 import {
   formatRelativeDate,
   isRelativeDate,
+  isRelativeDateFormat,
   RelativeDate,
 } from '../../../../api/search/date/relative-date';
 
@@ -79,6 +80,10 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   if (isRelativeDate(rawDate)) {
     const localTime = useLocalTime ? {useLocalTime: true} : {};
     return formatRelativeDate({...localTime, ...rawDate});
+  }
+
+  if (typeof rawDate === 'string' && isRelativeDateFormat(rawDate)) {
+    return rawDate;
   }
 
   const date = dayjs(rawDate, dateFormat);

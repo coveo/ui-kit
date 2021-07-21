@@ -1,4 +1,5 @@
 import {isSearchApiDate} from '../../api/search/date/date-format';
+import {isRelativeDateFormat} from '../../api/search/date/relative-date';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
@@ -161,7 +162,13 @@ function buildNumericRanges(ranges: string[]) {
 function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => str.split(rangeDelimiter))
-    .filter((range) => range.length === 2 && range.every(isSearchApiDate))
+    .filter(
+      (range) =>
+        range.length === 2 &&
+        range.every(
+          (value) => isSearchApiDate(value) || isRelativeDateFormat(value)
+        )
+    )
     .map(([start, end]) =>
       buildDateRange({start, end, useLocalTime: true, state: 'selected'})
     );

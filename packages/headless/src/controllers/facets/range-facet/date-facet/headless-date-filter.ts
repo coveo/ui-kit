@@ -69,12 +69,12 @@ export interface DateFilterInitialState {
 
 export interface DateFilterRange {
   /**
-   * The start value of the range, formatted as `YYYY/MM/DD@HH:mm:ss`.
+   * The start value of the range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format TODO: describe...
    */
   start: string;
 
   /**
-   * The end value of the range, formatted as `YYYY/MM/DD@HH:mm:ss`.
+   * The end value of the range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format TODO: describe...
    */
   end: string;
 }
