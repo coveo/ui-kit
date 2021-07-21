@@ -4,11 +4,17 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
+import {
+  formatRelativeDate,
+  isRelativeDate,
+  RelativeDate,
+} from '../../../../api/search/date/relative-date';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-export type DateRangeInput = string | number | Date;
+type AbsoluteDate = string | number | Date;
+export type DateRangeInput = AbsoluteDate | RelativeDate;
 
 export interface DateRangeOptions {
   /**
@@ -70,6 +76,11 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
+  if (isRelativeDate(rawDate)) {
+    const localTime = useLocalTime ? {useLocalTime: true} : {};
+    return formatRelativeDate({...localTime, ...rawDate});
+  }
+
   const date = dayjs(rawDate, dateFormat);
 
   if (!date.isValid()) {
