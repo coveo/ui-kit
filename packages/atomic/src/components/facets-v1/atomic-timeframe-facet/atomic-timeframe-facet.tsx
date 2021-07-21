@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   SearchStatus,
   SearchStatusState,
@@ -8,6 +8,9 @@ import {
   buildDateFacet,
   DateFacetOptions,
   DateFacetValue,
+  DateRangeRequest,
+  buildDateRange,
+  parseRelativeDate,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -20,6 +23,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {BaseFacet} from '../facet-common';
+import {defaultTimeframes, Timeframe} from '../atomic-timeframe/timeframe';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -48,6 +52,7 @@ export class AtomicTimeframeFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: DateFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -80,14 +85,42 @@ export class AtomicTimeframeFacet
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      currentValues: [], // TODO: parse ranges
+      currentValues: this.currentValues,
       generateAutomaticRanges: false,
+      sortCriteria: 'descending',
     };
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.dateFacets[this.facetId] = {
       label: this.label,
+      format: (value) => this.formatFacetValue(value),
     };
+  }
+
+  private getManualTimeframes(): Timeframe[] {
+    return Array.from(this.host.querySelectorAll('atomic-timeframe')).map(
+      ({label, amount, unit, period, useLocalTime}) => ({
+        label,
+        amount,
+        unit,
+        period,
+        useLocalTime,
+      })
+    );
+  }
+
+  private get currentValues(): DateRangeRequest[] {
+    const manualTimeframes = this.getManualTimeframes();
+    const timeframes = manualTimeframes.length
+      ? manualTimeframes
+      : defaultTimeframes();
+
+    return timeframes.map(({period, amount, unit, useLocalTime}) =>
+      buildDateRange({
+        start: {period, unit, amount, useLocalTime},
+        end: {period: 'now', useLocalTime},
+      })
+    );
   }
 
   private get numberOfSelectedValues() {
@@ -108,10 +141,37 @@ export class AtomicTimeframeFacet
     );
   }
 
+  private formatFacetValue(facetValue: DateFacetValue) {
+    try {
+      const relativeDate = parseRelativeDate(facetValue.start);
+      const timeframe = this.getManualTimeframes().find(
+        (timeframe) =>
+          timeframe.period === relativeDate.period &&
+          timeframe.unit === relativeDate.unit &&
+          timeframe.amount === relativeDate.amount
+      );
+
+      if (timeframe?.label) {
+        return this.bindings.i18n.t(timeframe.label);
+      }
+      return this.bindings.i18n.t(
+        `${relativeDate.period}-${relativeDate.unit}`,
+        {
+          count: relativeDate.amount,
+        }
+      );
+    } catch (error) {
+      return this.bindings.i18n.t('to', {
+        start: facetValue.start,
+        end: facetValue.end,
+      });
+    }
+  }
+
   private renderValue(facetValue: DateFacetValue) {
     return (
       <FacetValueLink
-        displayValue={`${facetValue.start} - ${facetValue.end}`} // TODO: format display value
+        displayValue={this.formatFacetValue(facetValue)}
         numberOfResults={facetValue.numberOfResults}
         isSelected={facetValue.state === 'selected'}
         i18n={this.bindings.i18n}
@@ -148,7 +208,7 @@ export class AtomicTimeframeFacet
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <FacetPlaceholder
-          numberOfValues={6} // TODO: use number of ranges
+          numberOfValues={this.currentValues.length}
         ></FacetPlaceholder>
       );
     }

@@ -943,6 +943,55 @@
     "en": "Apply custom numerical values for the {{label}} facet",
     "fr": "Appliquer les filtres numériques manuels pour la facette {{label}}"
   },
+
+  "past-hour": {
+    "en": "Past hour",
+    "fr": "Heure passée"
+  },
+  "past-hour_plural": {
+    "en": "Past {{count}} hours",
+    "fr": "{{count}} heures passées"
+  },
+  "past-day": {
+    "en": "Past day",
+    "fr": "Jour passé"
+  },
+  "past-day_plural": {
+    "en": "Past {{count}} days",
+    "fr": "{{count}} jours passés"
+  },
+  "past-week": {
+    "en": "Past week",
+    "fr": "Semaine passée"
+  },
+  "past-week_plural": {
+    "en": "Past {{count}} weeks",
+    "fr": "{{count}} semaines passées"
+  },
+  "past-month": {
+    "en": "Past month",
+    "fr": "Mois passé"
+  },
+  "past-month_plural": {
+    "en": "Past {{count}} months",
+    "fr": "{{count}} mois passés"
+  },
+  "past-quarter": {
+    "en": "Past quarter",
+    "fr": "Trimestre passé"
+  },
+  "past-quarter_plural": {
+    "en": "Past {{count}} quarters",
+    "fr": "{{count}} trimestre passés"
+  },
+  "past-year": {
+    "en": "Past year",
+    "fr": "Année passée"
+  },
+  "past-year_plural": {
+    "en": "Past {{count}} years",
+    "fr": "{{count}} années passées"
+  },
   "in": {
     "en": "in",
     "fr": "dans"

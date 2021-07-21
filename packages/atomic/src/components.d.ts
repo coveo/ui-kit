@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDatePeriod, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
@@ -567,6 +567,28 @@ export namespace Components {
          */
         "value": string;
     }
+    interface AtomicTimeframe {
+        /**
+          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+         */
+        "amount": number;
+        /**
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
+        /**
+          * The relative period of time.
+         */
+        "period": RelativeDatePeriod;
+        /**
+          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
+         */
+        "unit": RelativeDateUnit;
+        /**
+          * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
+         */
+        "useLocalTime": boolean;
+    }
     interface AtomicTimeframeFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -851,6 +873,12 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
+    interface HTMLAtomicTimeframeElement extends Components.AtomicTimeframe, HTMLStencilElement {
+    }
+    var HTMLAtomicTimeframeElement: {
+        prototype: HTMLAtomicTimeframeElement;
+        new (): HTMLAtomicTimeframeElement;
+    };
     interface HTMLAtomicTimeframeFacetElement extends Components.AtomicTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicTimeframeFacetElement: {
@@ -902,6 +930,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-text": HTMLAtomicTextElement;
+        "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -1452,6 +1481,28 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
+    interface AtomicTimeframe {
+        /**
+          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+         */
+        "amount": number;
+        /**
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
+        /**
+          * The relative period of time.
+         */
+        "period"?: RelativeDatePeriod;
+        /**
+          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
+         */
+        "unit": RelativeDateUnit;
+        /**
+          * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
+         */
+        "useLocalTime"?: boolean;
+    }
     interface AtomicTimeframeFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -1515,6 +1566,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-text": AtomicText;
+        "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -1566,6 +1618,7 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
+            "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
         }
     }
