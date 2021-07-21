@@ -28,8 +28,6 @@ jobs:
           node-version: 14.x
       - name: Check Out Repository
         uses: actions/checkout@v2
-      - name: Install NPM dependencies
-        run: npm i -g sfdx-cli
       - name: Create cache file
         run: |
           mkdir check-SHA
@@ -40,6 +38,12 @@ jobs:
         with:
           path: check-SHA
           key: check-SHA-${{ github.sha }}
+      - name: Install NPM dependencies
+        run: |
+          npm i -g sfdx-cli
+          npm i
+      - name: Build dependencies
+        run: npm run build
       - name: Create jwt key file
         if: steps.check_sha.outputs.cache-hit != 'true'
         run: echo "$SFDX_AUTH_JWT_KEY" > server.key
