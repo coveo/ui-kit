@@ -7,6 +7,9 @@ import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
+/**
+ * The period to which to can set the date relative to.
+ */
 export type RelativeDatePeriod = 'past' | 'now' | 'future';
 const validRelativeDatePeriods: RelativeDatePeriod[] = [
   'past',
@@ -14,6 +17,9 @@ const validRelativeDatePeriods: RelativeDatePeriod[] = [
   'future',
 ];
 
+/**
+ * The unit to which to can set the date relative to.
+ */
 export type RelativeDateUnit =
   | 'minute'
   | 'hour'
@@ -32,6 +38,9 @@ const validRelativeDateUnits: RelativeDateUnit[] = [
   'year',
 ];
 
+/**
+ * Allows to define a date relative to the current moment.
+ */
 export interface RelativeDate {
   /**
    * The relative period of time.
@@ -135,6 +144,12 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
   return date && typeof date === 'object' && 'period' in date ? true : false;
 }
 
+/**
+ * Allows to parse a formatted relative date string value.
+ * Throws an error is the format is invalid.
+ * @param date The string formatted ... TODO: define format here ([period][amount][unit])
+ * @returns The parse `RelativeDate` object.
+ */
 export function parseRelativeDate(date: string): RelativeDate {
   if (!isRelativeDateFormat) {
     throw new Error(
