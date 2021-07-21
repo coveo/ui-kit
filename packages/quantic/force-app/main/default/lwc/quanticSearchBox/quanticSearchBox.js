@@ -41,7 +41,7 @@ export default class QuanticSearchBox extends LightningElement {
   selectionIndex = -1;
   /** @type {HTMLInputElement} */
   input;
-  /** @type {import("lwc").HTMLElementTheGoodPart} */
+  /** @type {HTMLElement} */
   combobox;
   /** @type {HTMLButtonElement} */
   clearButton;
@@ -112,12 +112,12 @@ export default class QuanticSearchBox extends LightningElement {
 
   showSuggestions() {
     this.combobox.classList.add('slds-is-open');
-    this.combobox.setAttribute('aria-expanded', true);
+    this.combobox.setAttribute('aria-expanded', 'true');
   }
 
   hideSuggestions() {
     this.combobox.classList.remove('slds-is-open');
-    this.combobox.setAttribute('aria-expanded', false);
+    this.combobox.setAttribute('aria-expanded', 'false');
     this.resetHighlighted();
     this.resetSelectionIndex();
   }
