@@ -19,12 +19,12 @@ export type DateRangeInput = AbsoluteDate | RelativeDate;
 
 export interface DateRangeOptions {
   /**
-   * The start value of the range.
+   * The start value of the range. Can either be an absolute or relative range.
    */
   start: DateRangeInput;
 
   /**
-   * The end value of the range.
+   * The end value of the range. Can either be an absolute or relative range.
    */
   end: DateRangeInput;
 
