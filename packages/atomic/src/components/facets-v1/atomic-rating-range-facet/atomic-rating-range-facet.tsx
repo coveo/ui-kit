@@ -131,7 +131,7 @@ export class AtomicRatingRangeFacet
     for (let i = 0; i < this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
-          start: Math.round(i * this.scaleFactor * 100) / 100,
+          start: Math.round((i + 1) * this.scaleFactor * 100) / 100,
           end: Math.round(this.maxValueInIndex * 100) / 100,
           endInclusive: true,
         })
@@ -173,12 +173,15 @@ export class AtomicRatingRangeFacet
       >
         <FacetValueIconRating
           numberOfTotalIcons={this.maxValueInIndex}
-          numberOfActiveIcons={facetValue.end}
+          numberOfActiveIcons={facetValue.start}
           icon={this.icon}
         ></FacetValueIconRating>
-        <div
-          innerHTML={facetValue.end === this.maxValueInIndex ? 'only' : '& up'}
-        ></div>
+        <span
+          class="ml-1 flex items-center group-hover:underline"
+          innerHTML={
+            facetValue.start === this.maxValueInIndex ? 'only' : '& up'
+          }
+        ></span>
       </FacetValueLink>
     );
   }

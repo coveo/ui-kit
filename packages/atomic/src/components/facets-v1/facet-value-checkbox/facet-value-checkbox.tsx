@@ -31,7 +31,7 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
       <label
         htmlFor={id}
         part="value-checkbox-label"
-        class="w-full flex items-baseline pl-2 py-2.5 text-on-background cursor-pointer ellipsed"
+        class="w-full flex items-center pl-2 py-2.5 text-on-background cursor-pointer ellipsed"
       >
         {children}
         <span
