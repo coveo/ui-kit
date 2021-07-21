@@ -28,11 +28,14 @@ export default class QuanticSearchBox extends LightningElement {
   @api engineId;
   /** @type {string} */
   @api placeholder = 'Search...';
-   /** @type {boolean} */
-   @api withoutSubmitButton = false;
-
+  /** @type {boolean} */
+  @api withoutSubmitButton = false;
   /** @type {number} */
-  numberOfSuggestions = 5;
+  @api numberOfSuggestions = 5;
+
+
+  /** @type {string} */
+  searchBoxContainerClass;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -45,8 +48,6 @@ export default class QuanticSearchBox extends LightningElement {
   combobox;
   /** @type {HTMLButtonElement} */
   clearButton;
-  /** @type {HTMLElement} */
-  closeButton
   /** @type {() => void} */
   resetSelectionIndex = () => {
     this.selectionIndex = -1;
@@ -91,13 +92,10 @@ export default class QuanticSearchBox extends LightningElement {
     if (!this.combobox) {
       this.combobox = this.template.querySelector('.slds-combobox');
     }
-    if (this.withoutSubmitButton && !this.clearButton) {
+    if (!this.clearButton) {
       this.clearButton = this.template.querySelector('.slds-button__icon');
-      this.clearButton.hidden = true;
     }
-    if (!this.withoutSubmitButton && !this.closeButton){
-      this.closeButton = this.template.querySelector('.slds-button__icon');
-    }
+    this.setSearchBoxContainerClass();
   }
 
   disconnectedCallback() {
@@ -108,6 +106,17 @@ export default class QuanticSearchBox extends LightningElement {
 
   updateState() {
     this.state = this.searchBox.state;
+  }
+
+  setSearchBoxContainerClass() {
+    if(this.withoutSubmitButton){
+      this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right";
+      this.input.setAttribute("aria-labelledby", "fixed-text-label")
+    } else{
+      this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon";
+      this.input.setAttribute("aria-labelledby", "fixed-text-label fixed-text-addon-post");
+    }
+      
   }
 
   showSuggestions() {
@@ -200,25 +209,15 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
-    if(!this.withoutSubmitButton){
-      this.closeButton.classList.remove('slds-hidden');
-      this.closeButton.classList.add('slds-visible');
-    } else {
-      this.clearButton.classList.remove('slds-hidden');
-      this.clearButton.classList.add('slds-visible');
-    }
+    this.clearButton.classList.remove('slds-hidden');
+    this.clearButton.classList.add('slds-visible');
     this.searchBox.showSuggestions();
     this.showSuggestions();
   }
 
   onBlur() {
-    if (!this.withoutSubmitButton){
-      this.closeButton.classList.remove('slds-visible');
-      this.closeButton.classList.add('slds-hidden');
-    }else{
-      this.clearButton.classList.remove('slds-visible');
-      this.clearButton.classList.add('slds-hidden');
-    }
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
     this.hideSuggestions();
   }
 
