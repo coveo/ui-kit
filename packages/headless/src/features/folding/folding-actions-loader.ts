@@ -27,9 +27,9 @@ export interface FoldingActionCreators {
   ): PayloadAction<RegisterFoldingActionCreatorPayload>;
 
   /**
-   * Loads the results belonging to a collection.
+   * Loads the results of a collection.
    *
-   * @param collectionId - The collection id to return results for.
+   * @param collectionId - The collection id to load results for.
    * @returns A dispatchable action.
    */
   loadCollection(
