@@ -66,6 +66,9 @@
             "c/quanticNumberButton": [
                 "quanticNumberButton/quanticNumberButton.js"
             ],
+            "c/quanticSvg": [
+                "quanticSvg/quanticSvg.js"
+            ],
             "c/quanticUtils": [
                 "quanticUtils/quanticUtils.js"
             ],

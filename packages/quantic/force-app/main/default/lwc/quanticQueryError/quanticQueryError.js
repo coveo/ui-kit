@@ -102,7 +102,7 @@ export default class QuanticQueryError extends LightningElement {
     }
   }
 
-  clickShowMoreInfo() {
+  onClick() {
     this.showMoreInfo = !this.showMoreInfo;
   }
 }

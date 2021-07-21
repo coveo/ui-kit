@@ -1,8 +1,19 @@
-.h3_heading {
-    font-size: 1.25rem;
-    font-weight: 700;
+.pre_class {
+    width: 700px;
+    height: 175px;
+    top: 20px;
+    bottom: 20px;
+    text-align: left;
+    background: #FFFFFF;
+    color: #706E6B;
+    font-family: Arial;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 20px;
+    border: 1px solid #DDDBDA;
+    box-sizing: border-box;
+    border-radius: 4px;
 }
-.image{
-    height: 400px;
-    width: 600px;
-}
+
+
