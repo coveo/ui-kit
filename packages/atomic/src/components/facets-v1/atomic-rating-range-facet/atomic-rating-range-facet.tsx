@@ -177,7 +177,12 @@ export class AtomicRatingRangeFacet
           icon={this.icon}
         ></FacetValueIconRating>
         <span
-          class="ml-1 flex items-center group-hover:underline"
+          class="ml-1 flex items-center group-hover:underline group-hover:text-primary"
+          style={
+            facetValue.start === this.maxValueInIndex
+              ? {fontWeight: 'bold'}
+              : {}
+          }
           innerHTML={
             facetValue.start === this.maxValueInIndex ? 'only' : '& up'
           }
