@@ -11,7 +11,6 @@ import {
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   dateFacetRegistrationOptionsSchema,
-  RegisterDateFacetActionCreatorPayload,
   validateManualDateRanges,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
@@ -90,7 +89,7 @@ export interface DateFacetOptions {
 
 export function validateDateFacetOptions(
   engine: SearchEngine<ConfigurationSection & SearchSection & DateFacetSection>,
-  options: RegisterDateFacetActionCreatorPayload
+  options: DateFacetOptions
 ) {
   validateOptions(
     engine,

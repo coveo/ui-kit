@@ -8,7 +8,7 @@ dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
 export type RelativeDatePeriod = 'past' | 'now' | 'future';
-const validRelativeDatePeriods: RelativeDatePeriod[] = [
+export const validRelativeDatePeriods: RelativeDatePeriod[] = [
   'past',
   'now',
   'future',
@@ -22,7 +22,7 @@ export type RelativeDateUnit =
   | 'month'
   | 'quarter'
   | 'year';
-const validRelativeDateUnits: RelativeDateUnit[] = [
+export const validRelativeDateUnits: RelativeDateUnit[] = [
   'minute',
   'hour',
   'day',

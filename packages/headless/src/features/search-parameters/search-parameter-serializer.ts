@@ -8,7 +8,15 @@ import {
 } from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {isSearchApiDate} from '../../api/date-format';
 import {SearchParameters} from './search-parameter-actions';
-import {RelativeDate} from '../relative-date-set/relative-date';
+import {
+  formatDate,
+  RelativeDate,
+  RelativeDateMap,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+  validRelativeDatePeriods,
+  validRelativeDateUnits,
+} from '../relative-date-set/relative-date';
 
 const delimiter = '&';
 const equal = '=';
@@ -208,14 +216,60 @@ function buildNumericRanges(ranges: string[]) {
     .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
 }
 
+const relativeDateFormatRegexp = new RegExp(
+  // Matches `past1month`, `future5year`, etc.
+  `^(${validRelativeDatePeriods.join('|')})(\\d+)(${validRelativeDateUnits.join(
+    '|'
+  )})$`,
+  'i'
+);
+
+function isRelativeDateFormat(date: string) {
+  if (date.toLowerCase() === 'now') {
+    return true;
+  }
+
+  return relativeDateFormatRegexp.test(date);
+}
+
+function parseRelativeDateFormat(date: string): RelativeDateMap {
+  let relativeDate: RelativeDate;
+  if (date.toLowerCase() === 'now') {
+    relativeDate = {
+      period: 'now',
+    };
+  } else {
+    const matches = date.match(relativeDateFormatRegexp)!;
+    relativeDate = {
+      period: matches[1] as RelativeDatePeriod,
+      amount: parseInt(matches[2]),
+      unit: matches[3] as RelativeDateUnit,
+    };
+  }
+
+  return {...relativeDate, value: formatDate(relativeDate)};
+}
+
 function buildDateRanges(ranges: string[]) {
-  // TODO: parse relative ranges from string
   return ranges
     .map((str) => str.split(rangeDelimiter))
-    .filter((range) => range.length === 2 && range.every(isSearchApiDate))
-    .map(([start, end]) =>
-      buildDateRange({start, end, useLocalTime: true, state: 'selected'})
-    );
+    .filter(
+      (range) =>
+        range.length === 2 &&
+        range.every(
+          (value) => isRelativeDateFormat(value) || isSearchApiDate(value)
+        )
+    )
+    .map(([start, end]) => {
+      return buildDateRange({
+        start: isRelativeDateFormat(start)
+          ? parseRelativeDateFormat(start)
+          : start,
+        end: isRelativeDateFormat(end) ? parseRelativeDateFormat(end) : end,
+        useLocalTime: true,
+        state: 'selected',
+      });
+    });
 }
 
 function isValidPair<K extends keyof SearchParameters>(
