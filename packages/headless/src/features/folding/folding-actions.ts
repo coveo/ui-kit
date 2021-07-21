@@ -56,10 +56,12 @@ export const registerFolding = createAction(
     validatePayload(payload, foldingOptionsSchemaDefinition)
 );
 
+export type StateNeededByLoadCollection = ConfigurationSection & FoldingSection;
+
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
   CollectionId,
-  AsyncThunkSearchOptions<ConfigurationSection & FoldingSection>
+  AsyncThunkSearchOptions<StateNeededByLoadCollection>
 >(
   'folding/loadCollection',
   async (

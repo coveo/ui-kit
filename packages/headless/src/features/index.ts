@@ -11,6 +11,7 @@ export * from './did-you-mean/did-you-mean-actions-loader';
 export * from './fields/fields-actions-loader';
 export * from './history/history-actions-loader';
 export * from './facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
+export * from './folding/folding-actions-loader';
 export * from './pagination/pagination-actions-loader';
 export * from './pipeline/pipeline-actions-loader';
 export * from './query/query-actions-loader';
