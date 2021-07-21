@@ -1,11 +1,14 @@
-import {DateFacetRequest, DateRangeApiRequest} from './interfaces/request';
+import {
+  DateFacetRequest,
+  DateRangeApiRequest,
+  DateRangeMappedRequest,
+} from './interfaces/request';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
   deselectAllDateFacetValues,
   updateDateFacetSortCriterion,
-  RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from './date-facet-actions';
 import {change} from '../../../history/history-actions';
@@ -23,9 +26,17 @@ import {
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getDateFacetSetInitialState} from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
-import {formatDate} from '../../../relative-date-set/relative-date';
-import {DateRangeRequest} from '../../../../controllers';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
+
+function extractRelativeDateValues(
+  ranges: DateRangeMappedRequest[]
+): DateRangeApiRequest[] {
+  return ranges.map((range) => ({
+    ...range,
+    start: typeof range.start === 'string' ? range.start : range.start.value,
+    end: typeof range.end === 'string' ? range.end : range.end.value,
+  }));
+}
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),
@@ -33,7 +44,13 @@ export const dateFacetSetReducer = createReducer(
     builder
       .addCase(registerDateFacet, (state, action) => {
         const {payload} = action;
-        const request = buildDateFacetRequest(payload);
+        const request: DateFacetRequest = {
+          ...defaultRangeFacetOptions,
+          preventAutoSelect: false,
+          type: 'dateRange',
+          ...payload,
+          currentValues: extractRelativeDateValues(payload.currentValues),
+        };
         registerRangeFacet<DateFacetRequest>(state, request);
       })
       .addCase(
@@ -70,7 +87,7 @@ export const dateFacetSetReducer = createReducer(
         updateRangeValues<DateFacetRequest>(
           state,
           facetId,
-          mapCurrentValues(values)
+          extractRelativeDateValues(values)
         );
       })
       .addCase(deselectAllDateFacetValues, (state, action) => {
@@ -94,30 +111,6 @@ export const dateFacetSetReducer = createReducer(
       });
   }
 );
-
-function buildDateFacetRequest(
-  config: RegisterDateFacetActionCreatorPayload
-): DateFacetRequest {
-  return {
-    ...defaultRangeFacetOptions,
-    preventAutoSelect: false,
-    type: 'dateRange',
-    ...config,
-    currentValues: config.currentValues
-      ? mapCurrentValues(config.currentValues)
-      : [],
-  };
-}
-
-function mapCurrentValues(
-  currentValues: DateRangeRequest[]
-): DateRangeApiRequest[] {
-  return currentValues.map((value) => ({
-    ...value,
-    start: formatDate(value.start),
-    end: formatDate(value.end),
-  }));
-}
 
 function convertToRangeRequests(
   values: DateFacetApiValue[]

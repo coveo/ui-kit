@@ -7,7 +7,6 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {DateFacetValue} from '../../../../controllers';
-import {compareRelativeDateValues} from '../../../relative-date-set/relative-date';
 
 function isDateFacetResponse(
   state: SearchSection & DateFacetSection,
@@ -41,12 +40,10 @@ export const dateFacetValuesSelector = (
   if (relativeDates) {
     return facetResponse.values.map((facetValue) => ({
       ...facetValue,
-      relativeStart: relativeDates.find(({value}) =>
-        compareRelativeDateValues(facetValue.start, value)
+      relativeStart: relativeDates.find(
+        ({value}) => facetValue.start === value
       ),
-      relativeEnd: relativeDates.find(({value}) =>
-        compareRelativeDateValues(facetValue.end, value)
-      ),
+      relativeEnd: relativeDates.find(({value}) => facetValue.end === value),
     }));
   }
 

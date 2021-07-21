@@ -53,6 +53,10 @@ export interface RelativeDate {
   useLocalTime?: boolean;
 }
 
+export interface RelativeDateMap extends RelativeDate {
+  value: string;
+}
+
 export const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   const isNow = period === 'now';
   return {
@@ -100,9 +104,4 @@ export function formatDate(date: RelativeDate | string) {
     return date;
   }
   return formatRelativeDate(date);
-}
-
-export function compareRelativeDateValues(date1: string, date2: string) {
-  // Prevents JS millisecond delay issue
-  return Math.abs(dayjs(date1).diff(date2, 'minute', true)) < 1;
 }

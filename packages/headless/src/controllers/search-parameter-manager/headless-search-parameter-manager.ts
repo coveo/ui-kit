@@ -15,7 +15,6 @@ import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {compareRelativeDateValues} from '../../features/relative-date-set/relative-date';
 
 export {SearchParameters};
 
@@ -245,13 +244,11 @@ function getDateFacets(state: Partial<SearchParametersState>) {
           return {
             ...facetValue,
             start:
-              relativeDates.find(({value}) =>
-                compareRelativeDateValues(facetValue.start, value)
-              ) || facetValue.start,
+              relativeDates.find(({value}) => facetValue.start === value) ||
+              facetValue.start,
             end:
-              relativeDates.find(({value}) =>
-                compareRelativeDateValues(facetValue.end, value)
-              ) || facetValue.end,
+              relativeDates.find(({value}) => facetValue.end === value) ||
+              facetValue.end,
           };
         }
       );

@@ -1,14 +1,13 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {DateRangeRequest} from '../../controllers';
 import {
   registerDateFacet,
   updateDateFacetValues,
 } from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {DateRangeMappedRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {formatDate, RelativeDate} from './relative-date';
+import {RelativeDateMap} from './relative-date';
 import {
   getRelativeDateSetInitialState,
-  RelativeDateMap,
   RelativeDateSetState,
 } from './relative-date-set-state';
 
@@ -34,7 +33,7 @@ export const relativeDateSetReducer = createReducer(
 function handleUpdateFacetValues(
   state: RelativeDateSetState,
   facetId: string,
-  values?: DateRangeRequest[]
+  values?: DateRangeMappedRequest[]
 ) {
   if (!values) {
     return;
@@ -51,7 +50,7 @@ function handleUpdateFacetValues(
 }
 
 function addIfRelative(
-  value: string | RelativeDate | RelativeDateMap,
+  value: string | RelativeDateMap,
   maps: RelativeDateMap[]
 ) {
   if (typeof value === 'string') {
@@ -71,6 +70,6 @@ function addIfRelative(
 
   maps.push({
     ...value,
-    value: 'value' in value ? value.value : formatDate(value),
+    value: value.value,
   });
 }

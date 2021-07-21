@@ -36,6 +36,7 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../../../controllers/facets/_common/facet-option-definitions';
+import {DateRangeMappedRequest} from './interfaces/request';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -161,6 +162,22 @@ export function validateManualDateRanges(
   });
 }
 
+function formatRelativeDateValues(
+  currentValues: DateRangeRequest[] = []
+): DateRangeMappedRequest[] {
+  return currentValues.map((value) => ({
+    ...value,
+    start:
+      typeof value.start === 'string'
+        ? value.start
+        : {...value.start, value: formatDate(value.start)},
+    end:
+      typeof value.end === 'string'
+        ? value.end
+        : {...value.end, value: formatDate(value.end)},
+  }));
+}
+
 /**
  * Registers a date facet.
  * @param (RegisterDateFacetActionCreatorPayload) The options to register the facet with.
@@ -168,12 +185,23 @@ export function validateManualDateRanges(
 export const registerDateFacet = createAction(
   'dateFacet/register',
   (payload: RegisterDateFacetActionCreatorPayload) => {
+    const enhancedPayload = {
+      ...payload,
+      currentValues: formatRelativeDateValues(payload.currentValues),
+    };
+
     try {
       validatePayloadAndThrow(payload, dateFacetRegistrationOptionsDefinition);
       validateManualDateRanges(payload);
-      return {payload, error: null};
+      return {
+        payload: enhancedPayload,
+        error: null,
+      };
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {
+        payload: enhancedPayload,
+        error: serializeSchemaValidationError(error),
+      };
     }
   }
 );
@@ -224,6 +252,10 @@ export interface UpdateDateFacetValuesActionCreatorPayload {
 export const updateDateFacetValues = createAction(
   'dateFacet/updateFacetValues',
   (payload: UpdateDateFacetValuesActionCreatorPayload) => {
+    const enhancedPayload = {
+      ...payload,
+      values: formatRelativeDateValues(payload.values),
+    };
     try {
       validatePayloadAndThrow(payload, {
         facetId: facetIdDefinition,
@@ -232,9 +264,12 @@ export const updateDateFacetValues = createAction(
         }),
       });
       validateManualDateRanges({currentValues: payload.values});
-      return {payload, error: null};
+      return {payload: enhancedPayload, error: null};
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {
+        payload: enhancedPayload,
+        error: serializeSchemaValidationError(error),
+      };
     }
   }
 );
