@@ -1,4 +1,4 @@
-import {DateFacetResponse, DateFacetApiValue} from './interfaces/response';
+import {DateFacetResponse} from './interfaces/response';
 import {baseFacetResponseSelector} from '../../facet-set/facet-set-selectors';
 import {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response';
 import {
@@ -7,6 +7,7 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {DateFacetValue} from '../../../../controllers';
+import {compareRelativeDateValues} from '../../../relative-date-set/relative-date';
 
 function isDateFacetResponse(
   state: SearchSection & DateFacetSection,
@@ -38,10 +39,14 @@ export const dateFacetValuesSelector = (
 
   const relativeDates = state.relativeDateSet[facetId];
   if (relativeDates) {
-    return facetResponse.values.map((value) => ({
-      ...value,
-      relativeStart: relativeDates[value.start],
-      relativeEnd: relativeDates[value.end],
+    return facetResponse.values.map((facetValue) => ({
+      ...facetValue,
+      relativeStart: relativeDates.find(({value}) =>
+        compareRelativeDateValues(facetValue.start, value)
+      ),
+      relativeEnd: relativeDates.find(({value}) =>
+        compareRelativeDateValues(facetValue.end, value)
+      ),
     }));
   }
 
@@ -51,7 +56,7 @@ export const dateFacetValuesSelector = (
 export const dateFacetSelectedValuesSelector = (
   state: SearchSection & DateFacetSection & RelativeDateSection,
   facetId: string
-): DateFacetApiValue[] => {
+): DateFacetValue[] => {
   return dateFacetValuesSelector(state, facetId).filter(
     (value) => value.state === 'selected'
   );

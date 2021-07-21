@@ -17,12 +17,14 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
-  handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
+  handleRangeFacetSearchParameterRestoration,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getDateFacetSetInitialState} from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
+import {formatDate} from '../../../relative-date-set/relative-date';
+import {DateRangeRequest} from '../../../../controllers';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 
 export const dateFacetSetReducer = createReducer(
@@ -40,7 +42,20 @@ export const dateFacetSetReducer = createReducer(
       )
       .addCase(restoreSearchParameters, (state, action) => {
         const df = action.payload.df || {};
-        handleRangeFacetSearchParameterRestoration(state, df);
+        const facets: Record<string, DateRangeApiRequest[]> = {};
+        Object.entries(df).forEach(([facetId, ranges]) => {
+          facets[facetId] = ranges.map((value) => {
+            return {
+              ...value,
+              start:
+                typeof value.start === 'string'
+                  ? value.start
+                  : value.start.value,
+              end: typeof value.end === 'string' ? value.end : value.end.value,
+            };
+          });
+        });
+        handleRangeFacetSearchParameterRestoration(state, facets);
       })
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -52,7 +67,11 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(updateDateFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
-        updateRangeValues<DateFacetRequest>(state, facetId, values);
+        updateRangeValues<DateFacetRequest>(
+          state,
+          facetId,
+          mapCurrentValues(values)
+        );
       })
       .addCase(deselectAllDateFacetValues, (state, action) => {
         handleRangeFacetDeselectAll<DateFacetRequest>(state, action.payload);
@@ -81,11 +100,23 @@ function buildDateFacetRequest(
 ): DateFacetRequest {
   return {
     ...defaultRangeFacetOptions,
-    currentValues: [],
     preventAutoSelect: false,
     type: 'dateRange',
     ...config,
+    currentValues: config.currentValues
+      ? mapCurrentValues(config.currentValues)
+      : [],
   };
+}
+
+function mapCurrentValues(
+  currentValues: DateRangeRequest[]
+): DateRangeApiRequest[] {
+  return currentValues.map((value) => ({
+    ...value,
+    start: formatDate(value.start),
+    end: formatDate(value.end),
+  }));
 }
 
 function convertToRangeRequests(

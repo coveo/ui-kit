@@ -1,6 +1,6 @@
 import dayjs, {QUnitType} from 'dayjs';
 import {BooleanValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {formatDateForSearchApi} from '../../api/date-format';
+import {formatDateForSearchApi, isSearchApiDate} from '../../api/date-format';
 import utc from 'dayjs/plugin/utc';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 
@@ -75,7 +75,7 @@ function validateRelativeDate(relativeDate: RelativeDate) {
   );
 }
 
-export function formatRelativeDate(relativeDate: RelativeDate) {
+function formatRelativeDate(relativeDate: RelativeDate) {
   validateRelativeDate(relativeDate);
   const {period, amount, unit, useLocalTime} = relativeDate;
   const date = useLocalTime ? dayjs() : dayjs().utc();
@@ -88,4 +88,21 @@ export function formatRelativeDate(relativeDate: RelativeDate) {
     case 'now':
       return formatDateForSearchApi(date);
   }
+}
+
+export function formatDate(date: RelativeDate | string) {
+  if (typeof date === 'string') {
+    if (!isSearchApiDate(date)) {
+      throw new Error(
+        'The format of the absoluteDate should follow the format YYYY/MM/DD@HH:mm:ss.'
+      );
+    }
+    return date;
+  }
+  return formatRelativeDate(date);
+}
+
+export function compareRelativeDateValues(date1: string, date2: string) {
+  // Prevents JS millisecond delay issue
+  return Math.abs(dayjs(date1).diff(date2, 'minute', true)) < 1;
 }

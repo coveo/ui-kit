@@ -17,13 +17,15 @@ import {
   DateFilterInitialState,
   DateFilterOptions,
 } from './headless-date-filter';
-import {buildDateRange} from './date-range';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {
   registerDateFacet,
   updateDateFacetValues,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  buildMockApiDate,
+  buildMockDateFacetValue,
+} from '../../../../test/mock-date-facet-value';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
@@ -57,7 +59,10 @@ describe('date filter', () => {
 
   it('#initDateFacet throws an error when an manual range is invalid', () => {
     initialState = {
-      range: buildDateRange({start: 1616679091000, end: 1616592691000}),
+      range: {
+        start: buildMockApiDate(1616679091000),
+        end: buildMockApiDate(1616592691000),
+      },
     };
     expect(() => initDateFilter()).toThrow(
       'The start value is greater than the end value for the date range 2021/03/25@13:31:31 to 2021/03/24@13:31:31'
@@ -114,7 +119,6 @@ describe('date filter', () => {
           {
             ...value,
             state: 'selected',
-            numberOfResults: 0,
             endInclusive: true,
           },
         ],
@@ -133,16 +137,18 @@ describe('date filter', () => {
     });
 
     it('should return true when range is valid', () => {
-      const value = buildMockDateFacetValue(
-        buildDateRange({start: 1616592691000, end: 1616592691000})
-      );
+      const value = buildMockDateFacetValue({
+        start: buildMockApiDate(1616592691000),
+        end: buildMockApiDate(1616592691000),
+      });
       expect(dateFacet.setRange(value)).toBe(true);
     });
 
     it('should return false when range start value is greater than range end value', () => {
-      const value = buildMockDateFacetValue(
-        buildDateRange({start: 1616679091000, end: 1616592691000})
-      );
+      const value = buildMockDateFacetValue({
+        start: buildMockApiDate(1616679091000),
+        end: buildMockApiDate(1616592691000),
+      });
       expect(dateFacet.setRange(value)).toBe(false);
     });
   });

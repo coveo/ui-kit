@@ -8,11 +8,11 @@ import {
   serializeSchemaValidationError,
 } from '../../../../utils/validate-payload';
 import {
-  NumberValue,
   BooleanValue,
   RecordValue,
   Value,
   ArrayValue,
+  Schema,
 } from '@coveo/bueno';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
@@ -21,9 +21,21 @@ import {
 } from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
-import {DateRangeApiRequest} from './interfaces/request';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {DateRangeRequest} from '../../../../controllers';
+import {
+  formatDate,
+  RelativeDate,
+} from '../../../relative-date-set/relative-date';
+import {
+  field,
+  facetId,
+  generateAutomaticRanges,
+  filterFacetCount,
+  injectionDepth,
+  numberOfValues,
+} from '../../../../controllers/facets/_common/facet-option-definitions';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -51,7 +63,7 @@ export interface RegisterDateFacetActionCreatorPayload {
    *
    * @defaultValue `[]`
    */
-  currentValues?: DateRangeApiRequest[];
+  currentValues?: DateRangeRequest[];
 
   /**
    * Whether to exclude folded result parents when estimating the result count for each facet value.
@@ -97,26 +109,38 @@ export interface RegisterDateFacetActionCreatorPayload {
 }
 
 const dateRangeRequestDefinition = {
-  start: requiredNonEmptyString,
-  end: requiredNonEmptyString,
+  start: new Value<RelativeDate | string>({required: false}),
+  end: new Value<RelativeDate | string>({required: false}),
   endInclusive: new BooleanValue({required: true}),
   state: requiredNonEmptyString,
 };
 
 const dateFacetRegistrationOptionsDefinition = {
-  facetId: facetIdDefinition,
-  field: requiredNonEmptyString,
+  facetId,
+  field,
+  generateAutomaticRanges,
+  filterFacetCount,
+  injectionDepth,
+  numberOfValues,
   currentValues: new ArrayValue({
     required: false,
     each: new RecordValue({values: dateRangeRequestDefinition}),
   }),
-  generateAutomaticRanges: new BooleanValue({required: true}) as never,
-  filterFacetCount: new BooleanValue({required: false}),
-  injectionDepth: new NumberValue({required: false, min: 0}),
-  numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
   rangeAlgorithm: new Value<RangeFacetRangeAlgorithm>({required: false}),
 };
+
+export const dateFacetRegistrationOptionsSchema = new Schema<
+  Required<RegisterDateFacetActionCreatorPayload>
+>(dateFacetRegistrationOptionsDefinition);
+
+function serializeDateRangeValue(value: RelativeDate | string) {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  return JSON.stringify(value);
+}
 
 export function validateManualDateRanges(
   options: Pick<RegisterDateFacetActionCreatorPayload, 'currentValues'>
@@ -127,9 +151,11 @@ export function validateManualDateRanges(
 
   options.currentValues.forEach((value) => {
     const {start, end} = buildDateRange(value);
-    if (dayjs(start).isAfter(dayjs(end))) {
+    if (dayjs(formatDate(start)).isAfter(dayjs(formatDate(end)))) {
       throw new Error(
-        `The start value is greater than the end value for the date range ${value.start} to ${value.end}`
+        `The start value is greater than the end value for the date range ${serializeDateRangeValue(
+          value.start
+        )} to ${serializeDateRangeValue(value.end)}`
       );
     }
   });
@@ -187,7 +213,7 @@ export interface UpdateDateFacetValuesActionCreatorPayload {
   /**
    * The date facet values.
    */
-  values: DateFacetApiValue[];
+  values: DateRangeRequest[];
 }
 
 /**

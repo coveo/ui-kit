@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import {DateRangeApiRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {formatDateForSearchApi} from '../../../../api/date-format';
+import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
+import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 
 dayjs.extend(utc);
 
-export type DateRangeInput = string | number | Date;
+export type DateRangeInput = string | number | Date | RelativeDate;
 
 export interface DateRangeOptions {
   /**
@@ -46,15 +47,27 @@ export interface DateRangeOptions {
   useLocalTime?: boolean;
 }
 
+function isRelativeDate(rawDate: DateRangeInput): rawDate is RelativeDate {
+  return (
+    typeof rawDate !== 'number' &&
+    typeof rawDate !== 'string' &&
+    !(rawDate instanceof Date)
+  );
+}
+
 /**
  * Creates a `DateRangeRequest`.
  *
  * @param config - The options with which to create a `DateRangeRequest`.
  * @returns A new `DateRangeRequest`.
  */
-export function buildDateRange(config: DateRangeOptions): DateRangeApiRequest {
-  const start = buildDate(config.start, config);
-  const end = buildDate(config.end, config);
+export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
+  const start = isRelativeDate(config.start)
+    ? config.start
+    : buildDate(config.start, config);
+  const end = isRelativeDate(config.end)
+    ? config.end
+    : buildDate(config.end, config);
   const endInclusive = config.endInclusive ?? false;
   const state = config.state ?? 'idle';
 
@@ -66,7 +79,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeApiRequest {
   };
 }
 
-function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
+function buildDate(rawDate: string | number | Date, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
   const date = dayjs(rawDate, dateFormat);
 

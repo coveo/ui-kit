@@ -74,7 +74,7 @@ describe('date-facet-set slice', () => {
     expect(finalState).toEqual(dateFacetSet);
   });
 
-  it('#restoreSearchParameters restores the #nf payload correctly', () => {
+  it('#restoreSearchParameters restores the #df payload correctly', () => {
     const spy = jest.spyOn(
       RangeFacetReducers,
       'handleRangeFacetSearchParameterRestoration'
@@ -83,7 +83,10 @@ describe('date-facet-set slice', () => {
     const facetId = '1';
     state[facetId] = buildMockDateFacetRequest();
 
-    const value = buildMockDateFacetValue();
+    const value = buildMockDateFacetValue({
+      start: '2021/01/01@00:00:00',
+      end: '2021/01/02@00:00:00',
+    });
     const df = {[facetId]: [value]};
 
     const action = restoreSearchParameters({df});

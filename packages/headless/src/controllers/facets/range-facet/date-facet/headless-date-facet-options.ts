@@ -1,29 +1,7 @@
 import {
-  ArrayValue,
-  BooleanValue,
-  RecordValue,
-  Schema,
-  SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
-import {
-  FacetValueState,
-  facetValueStates,
-} from '../../../../features/facets/facet-api/value';
-import {
-  rangeFacetRangeAlgorithm,
   RangeFacetRangeAlgorithm,
-  rangeFacetSortCriteria,
   RangeFacetSortCriterion,
 } from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {
-  field,
-  facetId,
-  generateAutomaticRanges,
-  filterFacetCount,
-  injectionDepth,
-  numberOfValues,
-} from '../../_common/facet-option-definitions';
 import {validateOptions} from '../../../../utils/validate-payload';
 import {
   ConfigurationSection,
@@ -31,39 +9,12 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
 import {
+  dateFacetRegistrationOptionsSchema,
   RegisterDateFacetActionCreatorPayload,
   validateManualDateRanges,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {DateRangeApiRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-
-/**
- * The options defining a value to display in a `DateFacet`.
- */
-export interface DateRangeRequest {
-  /**
-   * The start value of the range.
-   * Either an absolute date, formatted as `YYYY/MM/DD@HH:mm:ss`, or a `RelativeDate` object.
-   */
-  start: string | RelativeDate;
-
-  /**
-   * The end value of the range.
-   * Either an absolute date, formatted as `YYYY/MM/DD@HH:mm:ss`, or a `RelativeDate` object.
-   */
-  end: string | RelativeDate;
-
-  /**
-   * Whether to include the `end` value in the range.
-   */
-  endInclusive: boolean;
-
-  /**
-   * The current facet value state.
-   */
-  state: FacetValueState;
-}
+import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 
 export interface DateFacetOptions {
   /**
@@ -137,31 +88,15 @@ export interface DateFacetOptions {
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
-const dateRangeRequestDefinition: SchemaDefinition<DateRangeApiRequest> = {
-  start: new StringValue(),
-  end: new StringValue(),
-  endInclusive: new BooleanValue(),
-  state: new StringValue({constrainTo: facetValueStates}),
-};
-
-export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
-  facetId,
-  field,
-  generateAutomaticRanges,
-  filterFacetCount,
-  injectionDepth,
-  numberOfValues,
-  currentValues: new ArrayValue({
-    each: new RecordValue({values: dateRangeRequestDefinition}),
-  }),
-  sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
-  rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
-});
-
 export function validateDateFacetOptions(
   engine: SearchEngine<ConfigurationSection & SearchSection & DateFacetSection>,
   options: RegisterDateFacetActionCreatorPayload
 ) {
-  validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
+  validateOptions(
+    engine,
+    dateFacetRegistrationOptionsSchema,
+    options,
+    'buildDateFacet'
+  );
   validateManualDateRanges(options);
 }

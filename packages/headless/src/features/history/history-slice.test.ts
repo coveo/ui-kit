@@ -93,6 +93,7 @@ describe('history slice', () => {
       searchHub: 'my-search-hub',
       facetOrder: [],
       debug: false,
+      relativeDateSet: {},
     };
 
     expect(addSnapshot(expectedSnapshot).present).toEqual(expectedSnapshot);

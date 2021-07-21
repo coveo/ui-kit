@@ -367,9 +367,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadDateFacetSetActions',
   },
   {
-    initializer: 'loadRelativeDateSetActions',
-  },
-  {
     initializer: 'loadNumericFacetSetActions',
   },
   {

@@ -1,8 +1,14 @@
-import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
-import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+import {
+  buildDateRange,
+  DateRangeRequest,
+} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
+import {
+  buildNumericRange,
+  NumericRangeRequest,
+} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {isSearchApiDate} from '../../api/date-format';
-import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
+import {RelativeDate} from '../relative-date-set/relative-date';
 
 const delimiter = '&';
 const equal = '=';
@@ -30,8 +36,16 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf' || key === 'df') {
-    return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
+  if (key === 'nf') {
+    return isRangeFacetObject<NumericRangeRequest>(val)
+      ? serializeNumericFacets(key, val)
+      : '';
+  }
+
+  if (key === 'df') {
+    return isRangeFacetObject<DateRangeRequest>(val)
+      ? serializeDateFacets(key, val)
+      : '';
   }
 
   return `${key}${equal}${val}`;
@@ -46,9 +60,9 @@ function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-function isRangeFacetObject(
+function isRangeFacetObject<R extends NumericRangeRequest | DateRangeRequest>(
   obj: unknown
-): obj is Record<string, RangeValueRequest[]> {
+): obj is Record<string, R[]> {
   if (!isObject(obj)) {
     return false;
   }
@@ -80,18 +94,54 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
     .join(delimiter);
 }
 
-function serializeRangeFacets(
+function serializeRangeFacets<R extends NumericRangeRequest | DateRangeRequest>(
   key: string,
-  facets: Record<string, RangeValueRequest[]>
+  facets: Record<string, R[]>,
+  buildRangeValue: (range: R) => string
 ) {
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
-      const value = ranges
-        .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
-        .join(',');
+      const value = ranges.map(buildRangeValue).join(',');
       return `${key}[${facetId}]${equal}${value}`;
     })
     .join(delimiter);
+}
+
+function serializeNumericFacets(
+  key: string,
+  facets: Record<string, NumericRangeRequest[]>
+) {
+  return serializeRangeFacets(
+    key,
+    facets,
+    ({start, end}) => `${start}${rangeDelimiter}${end}`
+  );
+}
+
+function serializeDateFacetValue(value: string | RelativeDate) {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (value.period === 'now') {
+    return value.period;
+  }
+
+  return `${value.period}${value.amount}${value.unit}`;
+}
+
+function serializeDateFacets(
+  key: string,
+  facets: Record<string, DateRangeRequest[]>
+) {
+  return serializeRangeFacets(
+    key,
+    facets,
+    ({start, end}) =>
+      `${serializeDateFacetValue(
+        start
+      )}${rangeDelimiter}${serializeDateFacetValue(end)}`
+  );
 }
 
 function deserialize(fragment: string): SearchParameters {
@@ -159,6 +209,7 @@ function buildNumericRanges(ranges: string[]) {
 }
 
 function buildDateRanges(ranges: string[]) {
+  // TODO: parse relative ranges from string
   return ranges
     .map((str) => str.split(rangeDelimiter))
     .filter((range) => range.length === 2 && range.every(isSearchApiDate))

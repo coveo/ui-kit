@@ -1,4 +1,7 @@
-import {DateFacetRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {
+  DateFacetRequest,
+  DateRangeRequest,
+} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetResponse} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {
   RegisterDateFacetActionCreatorPayload,
@@ -15,11 +18,9 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
-
 import {
   DateFacetOptions,
   validateDateFacetOptions,
-  DateRangeRequest,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
@@ -35,11 +36,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {FacetValueState} from '../../facet/headless-facet';
-import {
-  formatRelativeDate,
-  RelativeDate,
-} from '../../../../features/relative-date-set/relative-date';
-import {registerRelativeDate} from '../../../../features/relative-date-set/relative-date-actions';
+import {RelativeDate} from '../../../../features/relative-date-set/relative-date';
 import {dateFacetValuesSelector} from '../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 
 export {
@@ -197,32 +194,9 @@ export function buildDateFacet(
 
   const facetId = determineFacetId(engine, props.options);
 
-  const convertDateValue = (value: string | RelativeDate) => {
-    if (typeof value === 'string') {
-      return value;
-    }
-
-    const formattedDate = formatRelativeDate(value);
-    dispatch(
-      registerRelativeDate({
-        id: facetId,
-        absoluteDate: formattedDate,
-        relativeDate: value,
-      })
-    );
-    return formattedDate;
-  };
-  const convertDateRange = (range: DateRangeRequest) => ({
-    ...range,
-    start: convertDateValue(range.start),
-    end: convertDateValue(range.end),
-  });
-
   const options: RegisterDateFacetActionCreatorPayload = {
+    currentValues: [],
     ...props.options,
-    currentValues: props.options.currentValues
-      ? props.options.currentValues.map(convertDateRange)
-      : [],
     facetId,
   };
 

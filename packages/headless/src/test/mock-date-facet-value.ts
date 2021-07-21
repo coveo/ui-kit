@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import {formatDateForSearchApi} from '../api/date-format';
 import {DateFacetApiValue} from '../features/facets/range-facets/date-facet-set/interfaces/response';
 
 export function buildMockDateFacetValue(
@@ -11,4 +13,8 @@ export function buildMockDateFacetValue(
     state: 'idle',
     ...config,
   };
+}
+
+export function buildMockApiDate(date: string | number | Date) {
+  return formatDateForSearchApi(dayjs(date).utc());
 }

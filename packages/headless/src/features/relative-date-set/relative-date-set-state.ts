@@ -1,6 +1,9 @@
 import {RelativeDate} from './relative-date';
 
-export type RelativeDateSetState = Record<string, Record<string, RelativeDate>>;
+export interface RelativeDateMap extends RelativeDate {
+  value: string;
+}
+export type RelativeDateSetState = Record<string, RelativeDateMap[]>;
 
 export function getRelativeDateSetInitialState(): RelativeDateSetState {
   return {};
