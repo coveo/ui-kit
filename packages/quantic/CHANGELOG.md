@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.35.0...@coveo/quantic@0.36.0) (2021-07-20)
+
+
+### Features
+
+* **quantic:** SFINT-3956 Quantic didYouMean component ([#969](https://github.com/coveo/ui-kit/issues/969)) ([2012c71](https://github.com/coveo/ui-kit/commit/2012c712c7a202a33a7850d577ca4e91fe5bafaa))
+
+
+
+
+
 # [0.35.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.2...@coveo/quantic@0.35.0) (2021-07-15)
 
 
