@@ -38,6 +38,16 @@ jobs:
         with:
           path: check-SHA
           key: check-SHA-${{ github.sha }}
+      - name: Cancel current workflow run if no changes made
+        if: steps.check_sha.outputs.cache-hit == 'true'
+        uses: actions/github-script@v4
+        with:
+          script: |
+            github.actions.cancelWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            })
       - name: Install NPM dependencies
         run: |
           npm i -g sfdx-cli
@@ -45,13 +55,10 @@ jobs:
       - name: Build dependencies
         run: npm run build
       - name: Create jwt key file
-        if: steps.check_sha.outputs.cache-hit != 'true'
         run: echo "$SFDX_AUTH_JWT_KEY" > server.key
       - name: Connect to DevHub organization
-        if: steps.check_sha.outputs.cache-hit != 'true'
         run: sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
       - name: Create package version
-        if: steps.check_sha.outputs.cache-hit != 'true'
         run: |
           sfdx force:package:version:create --package $PACKAGE_ID --wait 30 -x --json >> package-version-result.json
           cat package-version-result.json
