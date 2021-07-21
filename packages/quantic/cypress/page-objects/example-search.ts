@@ -15,6 +15,10 @@ export const setupAliases = () =>
     .as('sort')
     .get('c-quantic-pager')
     .as('pager')
+    .then(setupFacetTypeAliases);
+
+const setupFacetTypeAliases = () =>
+  cy
     .get('c-quantic-facet[data-cy="type"]')
     .as('facet-type')
     .get('@facet-type')
