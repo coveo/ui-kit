@@ -116,7 +116,6 @@ export default class QuanticSearchBox extends LightningElement {
       this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon";
       this.input.setAttribute("aria-labelledby", "fixed-text-label fixed-text-addon-post");
     }
-      
   }
 
   showSuggestions() {
