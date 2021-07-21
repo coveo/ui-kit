@@ -228,6 +228,7 @@ export default class QuanticSearchBox extends LightningElement {
   clearInput() {
     this.input.value = '';
     this.searchBox.updateText(this.input.value);
+    this.input.focus();
   }
 
   preventDefault(event) {
