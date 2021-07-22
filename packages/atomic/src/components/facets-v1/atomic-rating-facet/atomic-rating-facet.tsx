@@ -40,13 +40,12 @@ import Star from '../../../images/star.svg';
  * @part clear-button-icon - The clear button icon.
  *
  * @part values - The facet values container.
- * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
+ * @part value-rating - The facet value rating, common for all displays.
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
- * @part value-box - The facet value when display is 'box'.
  *
  */
 @Component({
@@ -90,7 +89,7 @@ export class AtomicRatingFacet
   /**
    * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
-  @Prop() public maxValueInIndex = 5;
+  @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
