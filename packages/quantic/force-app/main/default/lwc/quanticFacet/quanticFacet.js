@@ -22,8 +22,6 @@ export default class QuanticFacet extends LightningElement {
   /** @type {string} */
   @api engineId;
 
-  /** @type {import("coveo").SearchBox} */
-  searchbox;
   /** @type {import("coveo").Facet}} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
@@ -36,20 +34,25 @@ export default class QuanticFacet extends LightningElement {
   facetIcon = "utility:dash";
   /** @type {HTMLInputElement} */
   input;
-  /** @type {HTMLButtonElement} */
-  clearButton;
+  /** @type {number} */
+  numberOfValues = 8;
+  /** @type  {import("coveo").FacetSortCriterion}*/
+  sortCriterion = 'score';
+  /** @type {string} */
+  facetId;
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
   @api
   initialize(engine) {
-    this.facet = CoveoHeadless.buildFacet(engine, {
-      options: {
-        field: this.field,
-      },
-    });
-    this.searchbox = CoveoHeadless.buildSearchBox(engine);
+    const options = {
+      field: this.field,
+      sortCriteria: this.sortCriterion,
+      facetSearch: {numberOfValues: this.numberOfValues},
+    }
+    this.facet = CoveoHeadless.buildFacet(engine, {options});
+    this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 
@@ -61,10 +64,7 @@ export default class QuanticFacet extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
     // this.withSearch = this.state.values.length > 15;
     if (!this.input){
-      this.input = this.template.querySelector('input');
-    }
-    if (!this.clearButton){
-      this.clearButton = this.template.querySelector('.facet-search__clear-button');
+      this.input = this.template.querySelector('.facet__search-input');
     }
   }
 
@@ -107,15 +107,15 @@ export default class QuanticFacet extends LightningElement {
     return this.state.hasActiveValues;
   }
 
+  get facetSearchResults(){
+    return this.facet.state.facetSearch.values;
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
-  }
-
-  clearSelections(){
-    this.facet.deselectAll();
   }
 
   showMore() {
@@ -131,19 +131,10 @@ export default class QuanticFacet extends LightningElement {
     this.isBodyVisible = !this.isBodyVisible;
   }
 
-  onSearchFocus() {
-    this.clearButton.classList.remove('slds-hidden');
-    this.clearButton.classList.add('slds-visible');
-  }
-
-  onSearchBlur() {
-    this.clearButton.classList.remove('slds-visible');
-    this.clearButton.classList.add('slds-hidden');
-  }
-
-  clearInput(){
-    this.input.value = '';
-    this.searchbox.updateText(this.input.value);
+  handleKeyUp(){
+    this.facet.facetSearch.updateText(this.input.value);
+    this.facet.facetSearch.search();
+    console.log(this.facet.state.facetSearch.values);
   }
 
 }

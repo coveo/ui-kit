@@ -9,25 +9,8 @@
       <template if:true={isBodyVisible}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
           <template if:true={withSearch}>
-            <div class="slds-form-element">
-              <div class="slds-form-element__control">
-                <div class="slds-input-has-icon slds-input-has-icon_left-right slds-align_absolute-center searchbox__container" role="none">
-                  <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left" icon-name="utility:search" size="x-small"></lightning-icon>
-                  <input
-                    class="slds-input slds-p-horizontal_medium slds-p-bottom_small"
-                    type="text"
-                    label="facet-search"
-                    placeholder="Search"
-                    role="textbox"
-                    autocomplete="off"
-                    onfocus={onSearchFocus}
-                    onblur={onSearchBlur}
-                  />
-                  <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right facet-search__button-box" onclick={clearInput} title="clear">
-                    <lightning-icon class="slds-button__icon slds-hidden facet-search__clear-button" icon-name="utility:close" size="x-small"></lightning-icon>
-                  </button>
-                </div>
-              </div>
+            <div onkeyup={handleKeyUp} class="facet-input__wrapper slds-align_absolute-center">
+              <lightning-input class="facet__search-input" name="Search" type="search" label="facet-input" variant="label-hidden" placeholder="Search"></lightning-input>
             </div>
           </template>
           <template if:true={isAnyChecked}>
