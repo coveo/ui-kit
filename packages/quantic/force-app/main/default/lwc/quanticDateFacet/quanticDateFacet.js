@@ -18,6 +18,12 @@ export default class QuanticDateFacet extends LightningElement {
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {boolean} */
+  isBodyVisible = true;
+  /** @type {string} */
+  facetIconName = "utility:dash";
+  /** @type {boolean} */
+  withSearch;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -63,10 +69,23 @@ export default class QuanticDateFacet extends LightningElement {
     return this.values.length !== 0;
   }
 
+  get isAnyChecked(){
+    return this.state.hasActiveValues;
+  }
+
   /**
    * @param {CustomEvent<import("coveo").DateFacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
+  }
+
+  clearSelections(){
+    this.facet.deselectAll();
+  }
+
+  toggleFacetVisibility(){
+    this.facetIconName = this.isBodyVisible ? "utility:add" : "utility:dash";
+    this.isBodyVisible = !this.isBodyVisible;
   }
 }

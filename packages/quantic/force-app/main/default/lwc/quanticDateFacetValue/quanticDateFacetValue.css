@@ -3,3 +3,7 @@ li {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.facet__number-of-results {
+  color: gray;
+}

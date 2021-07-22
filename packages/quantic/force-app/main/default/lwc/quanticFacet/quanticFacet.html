@@ -1,22 +1,37 @@
 <template>
   <template if:true={hasValues}>
     <lightning-card title={label}>
-      <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
-        <template for:each={values} for:item="v">
-          <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
-        </template>
-      </ul>
+      <button class="slds-button slds-button_icon slds-p-bottom_small facet__buttons" slot="actions" onclick={toggleFacetVisibility}>
+        <lightning-icon class="slds-button__icon" icon-name={facetIcon} size="x-small"></lightning-icon>
+      </button>
+      
 
-      <lightning-button-group>
-        <template if:true={canShowMore}>
-          <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
-            class="slds-m-left_x-small" onclick={showMore}></lightning-button>
-        </template>
-        <template if:true={canShowLess}>
-          <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
-            class="slds-m-left_x-small" onclick={showLess}></lightning-button>
-        </template>
-      </lightning-button-group>
+      <template if:true={isBodyVisible}>
+        <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
+          <template if:true={isAnyChecked}>
+            <button class="slds-button slds-button_icon slds-p-horizontal_large facet__buttons" value="clear" onclick={clearSelections}>
+              <lightning-formatted-text class="slds-p-right_x-small" value="Clear"></lightning-formatted-text>
+              <lightning-icon class="slds-button__icon slds-current-color" icon-name="utility:close" size="xx-small"></lightning-icon>
+            </button>
+          </template>
+          <template for:each={values} for:item="v">
+            <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
+          </template>
+        </ul>
+  
+        <lightning-button-group>
+          <template if:true={canShowMore}>
+            <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
+              class="slds-m-left_x-small" onclick={showMore}></lightning-button>
+          </template>
+          <template if:true={canShowLess}>
+            <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
+              class="slds-m-left_x-small" onclick={showLess}></lightning-button>
+          </template>
+        </lightning-button-group>
+      </template>
+      
+
     </lightning-card>
   </template>
 </template>

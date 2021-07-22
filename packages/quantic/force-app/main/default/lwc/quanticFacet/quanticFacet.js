@@ -26,6 +26,12 @@ export default class QuanticFacet extends LightningElement {
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {boolean} */
+  isBodyVisible = true;
+  /** @type {string} */
+  facetIcon = "utility:dash"
+  /** @type {boolean} */
+  withSearch;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -33,6 +39,7 @@ export default class QuanticFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    this.withSearch = this.state.values.length > 15;
   }
 
   /**
@@ -83,11 +90,19 @@ export default class QuanticFacet extends LightningElement {
     return this.values.length !== 0;
   }
 
+  get isAnyChecked(){
+    return this.state.hasActiveValues;
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
+  }
+
+  clearSelections(){
+    this.facet.deselectAll();
   }
 
   showMore() {
@@ -97,4 +112,10 @@ export default class QuanticFacet extends LightningElement {
   showLess() {
     this.facet.showLessValues();
   }
+
+  toggleFacetVisibility(){
+    this.facetIcon = this.isBodyVisible ? "utility:add" : "utility:dash";
+    this.isBodyVisible = !this.isBodyVisible;
+  }
+
 }

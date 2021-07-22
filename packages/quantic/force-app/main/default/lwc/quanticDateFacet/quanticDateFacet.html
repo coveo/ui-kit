@@ -1,11 +1,23 @@
 <template>
   <template if:true={hasValues}>
     <lightning-card title={label}>
-      <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
-        <template for:each={values} for:item="v">
-          <c-quantic-date-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked}></c-quantic-date-facet-value>
-        </template>
-      </ul>
+      <button class="slds-button slds-button_icon slds-p-bottom_small facet__buttons" slot="actions" onclick={toggleFacetVisibility}>
+        <lightning-icon class="slds-button__icon" icon-name={facetIconName} size="x-small"></lightning-icon>
+      </button>
+
+      <template if:true={isBodyVisible}>
+        <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
+          <template if:true={isAnyChecked}>
+            <button class="slds-button slds-button_icon slds-p-horizontal_large facet__buttons" value="clear" onclick={clearSelections}>
+              <lightning-formatted-text class="slds-p-right_x-small" value="Clear"></lightning-formatted-text>
+              <lightning-icon class="slds-button__icon slds-current-color" icon-name="utility:close" size="xx-small"></lightning-icon>
+            </button>
+          </template>
+          <template for:each={values} for:item="v">
+            <c-quantic-date-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked}></c-quantic-date-facet-value>
+          </template>
+        </ul>
+      </template>
     </lightning-card>
   </template>
 </template>

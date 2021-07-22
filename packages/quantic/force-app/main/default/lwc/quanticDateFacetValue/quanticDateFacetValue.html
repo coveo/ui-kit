@@ -1,14 +1,21 @@
 <template>
-  <li class="slds-var-m-around_small slds-grid">
-    <div class="slds-col_bump-right">
-      <template if:true={isChecked}>
-        <input type="checkbox" onchange={onSelect} checked/>
-      </template>
-      <template if:false={isChecked}>
-        <input type="checkbox" onchange={onSelect}/>
-      </template>
-      <span class="slds-var-m-horizontal_medium nowrap">{start} - {end}</span>
-    </div>
-    <div class="slds-var-m-horizontal_small">({item.numberOfResults})</div>
-  </li>
+  <template if:true={isChecked}>
+    <li class="slds-var-m-around_small slds-grid">
+      <div class="slds-col">
+        <input type="checkbox" checked onchange={onSelect} />
+        <span class="slds-var-m-horizontal_small nowrap"><b>{start} - {end}</b></span>
+        <span class="nowrap slds-text-body_small facet__number-of-results"><b>({item.numberOfResults})</b></span>
+      </div>  
+    </li>
+  </template>
+
+  <template if:false={isChecked}>
+    <li class="slds-var-m-around_small slds-grid">
+      <div class="slds-col">
+        <input type="checkbox" onchange={onSelect} />
+        <span class="slds-var-m-horizontal_small nowrap">{start} - {end}</span>
+        <span class="nowrap slds-text-body_small facet__number-of-results">({item.numberOfResults})</span>
+      </div>
+    </li>
+  </template>
 </template>
