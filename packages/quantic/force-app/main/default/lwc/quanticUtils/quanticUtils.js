@@ -62,7 +62,7 @@ export class I18nService{
   }
 
   static getLabelNameWithCount(labelName, count) {
-    return count > 1 ? `${labelName}_plural` : labelName;
+    return Math.abs(count) === 1 ? labelName : `${labelName}_plural`;
   }
   
   static format(stringToFormat, ...formattingArguments) {
