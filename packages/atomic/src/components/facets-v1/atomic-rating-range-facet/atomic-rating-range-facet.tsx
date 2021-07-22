@@ -160,6 +160,18 @@ export class AtomicRatingRangeFacet
     );
   }
 
+  private renderLabelText(facetValue: NumericFacetValue) {
+    return (
+      <span class="ml-1 flex items-center group-hover:underline group-hover:text-primary">
+        {facetValue.start === this.maxValueInIndex ? (
+          <span class="font-bold">only</span>
+        ) : (
+          '& up'
+        )}
+      </span>
+    );
+  }
+
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
@@ -176,17 +188,7 @@ export class AtomicRatingRangeFacet
           numberOfActiveIcons={facetValue.start}
           icon={this.icon}
         ></FacetValueIconRating>
-        <span
-          class="ml-1 flex items-center group-hover:underline group-hover:text-primary"
-          style={
-            facetValue.start === this.maxValueInIndex
-              ? {fontWeight: 'bold'}
-              : {}
-          }
-          innerHTML={
-            facetValue.start === this.maxValueInIndex ? 'only' : '& up'
-          }
-        ></span>
+        {this.renderLabelText(facetValue)}
       </FacetValueLink>
     );
   }
