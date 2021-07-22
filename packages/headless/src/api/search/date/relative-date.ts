@@ -8,7 +8,7 @@ dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
 /**
- * The period to which to can set the date relative to.
+ * The period to set the date relative to.
  */
 export type RelativeDatePeriod = 'past' | 'now' | 'future';
 const validRelativeDatePeriods: RelativeDatePeriod[] = [
@@ -18,7 +18,7 @@ const validRelativeDatePeriods: RelativeDatePeriod[] = [
 ];
 
 /**
- * The unit to which to can set the date relative to.
+ * The unit of time in which the date is set relative to.
  */
 export type RelativeDateUnit =
   | 'minute'
@@ -39,7 +39,7 @@ const validRelativeDateUnits: RelativeDateUnit[] = [
 ];
 
 /**
- * Allows to define a date relative to the current moment.
+ * Defines a date relative to the current moment.
  */
 export interface RelativeDate {
   /**
@@ -47,15 +47,15 @@ export interface RelativeDate {
    */
   period: RelativeDatePeriod;
   /**
-   * The unit of time. When `period` is `now`, does not have to be defined.
+   * The unit of time in which the date is set relative to. When `period` is set as `now`, the `unit` does not have to be defined.
    */
   unit?: RelativeDateUnit;
   /**
-   * The amount of the `unit` of time. When `period` is `now`, does not have to be defined.
+   * The amount of the `unit` of time. When `period` is set as `now`, the `amount` does not have to be defined.
    */
   amount?: number;
   /**
-   * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
+   * If `true`, the date and time will be returned based on local settings . If `false`, the date will be adjusted to _Coordinated Universal Time_ (UTC).
    *
    * @defaultValue `false`
    */
@@ -145,8 +145,8 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
 }
 
 /**
- * Allows to parse a formatted relative date string value.
- * Throws an error is the format is invalid.
+ * Parses a formatted relative date string value.
+ * Throws an error if the format is invalid.
  * @param date The string formatted ... TODO: define format here ([period][amount][unit])
  * @returns The parse `RelativeDate` object.
  */
