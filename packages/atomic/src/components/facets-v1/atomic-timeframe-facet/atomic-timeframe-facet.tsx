@@ -1,4 +1,13 @@
-import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  VNode,
+  Host,
+  Element,
+  Listen,
+} from '@stencil/core';
 import {
   SearchStatus,
   SearchStatusState,
@@ -14,6 +23,7 @@ import {
   DateFilter,
   DateFilterState,
   buildDateFilter,
+  loadDateFacetSetActions,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -148,6 +158,16 @@ export class AtomicTimeframeFacet
     );
   }
 
+  @Listen('atomic/dateInputApply')
+  public applyDateInput() {
+    this.facetId &&
+      this.bindings.engine.dispatch(
+        loadDateFacetSetActions(
+          this.bindings.engine
+        ).deselectAllDateFacetValues(this.facetId)
+      );
+  }
+
   private get numberOfSelectedValues() {
     if (this.filterState?.range) {
       return 1;
@@ -179,7 +199,14 @@ export class AtomicTimeframeFacet
   }
 
   private renderDateInput() {
-    return 'dateinput';
+    return (
+      <atomic-facet-date-input
+        bindings={this.bindings}
+        label={this.label}
+        filter={this.filter!}
+        filterState={this.filterState!}
+      ></atomic-facet-date-input>
+    );
   }
 
   private formatFacetValue(facetValue: DateFacetValue) {

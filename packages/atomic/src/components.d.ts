@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDatePeriod, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDatePeriod, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
@@ -130,6 +130,12 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+    }
+    interface AtomicFacetDateInput {
+        "bindings": Bindings;
+        "filter": DateFilter;
+        "filterState": DateFilterState;
+        "label": string;
     }
     interface AtomicFacetManager {
     }
@@ -651,6 +657,12 @@ declare global {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
     };
+    interface HTMLAtomicFacetDateInputElement extends Components.AtomicFacetDateInput, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetDateInputElement: {
+        prototype: HTMLAtomicFacetDateInputElement;
+        new (): HTMLAtomicFacetDateInputElement;
+    };
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
     var HTMLAtomicFacetManagerElement: {
@@ -893,6 +905,7 @@ declare global {
         "atomic-date-range": HTMLAtomicDateRangeElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
+        "atomic-facet-date-input": HTMLAtomicFacetDateInputElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-facet-v1": HTMLAtomicFacetV1Element;
@@ -1054,6 +1067,13 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+    }
+    interface AtomicFacetDateInput {
+        "bindings": Bindings;
+        "filter": DateFilter;
+        "filterState": DateFilterState;
+        "label": string;
+        "onAtomic/dateInputApply"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
     }
@@ -1529,6 +1549,7 @@ declare namespace LocalJSX {
         "atomic-date-range": AtomicDateRange;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
+        "atomic-facet-date-input": AtomicFacetDateInput;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-facet-v1": AtomicFacetV1;
@@ -1581,6 +1602,7 @@ declare module "@stencil/core" {
             "atomic-date-range": LocalJSX.AtomicDateRange & JSXBase.HTMLAttributes<HTMLAtomicDateRangeElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
+            "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;

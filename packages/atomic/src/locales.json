@@ -943,7 +943,26 @@
     "en": "Apply custom numerical values for the {{label}} facet",
     "fr": "Appliquer les filtres numériques manuels pour la facette {{label}}"
   },
-
+  "start": {
+    "en": "Start",
+    "fr": "Début"
+  },
+  "end": {
+    "en": "End",
+    "fr": "Fin"
+  },
+  "date-input-start": {
+    "en": "Enter a start date for the {{label}} facet",
+    "fr": "Entrez une date de début pour la facette {{label}}"
+  },
+  "date-input-end": {
+    "en": "Enter an end date for the {{label}} facet",
+    "fr": "Entrez une date de fin pour la facette {{label}}"
+  },
+  "date-input-apply": {
+    "en": "Apply custom start and end dates for the {{label}} facet",
+    "fr": "Appliquer les dates de début et de fin manuelles pour la facette {{label}}"
+  },
   "past-hour": {
     "en": "Past hour",
     "fr": "Heure passée"
