@@ -22,25 +22,22 @@ export default class QuanticFacet extends LightningElement {
   /** @type {string} */
   @api engineId;
 
+  /** @type {import("coveo").SearchBox} */
+  searchbox;
   /** @type {import("coveo").Facet}} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
   isBodyVisible = true;
-  /** @type {string} */
-  facetIcon = "utility:dash"
   /** @type {boolean} */
-  withSearch;
-
-  connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-  }
-
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
-    this.withSearch = this.state.values.length > 15;
-  }
+  withSearch = true;
+  /** @type {string} */
+  facetIcon = "utility:dash";
+  /** @type {HTMLInputElement} */
+  input;
+  /** @type {HTMLButtonElement} */
+  clearButton;
 
   /**
    * @param {import("coveo").SearchEngine} engine
@@ -52,7 +49,23 @@ export default class QuanticFacet extends LightningElement {
         field: this.field,
       },
     });
+    this.searchbox = CoveoHeadless.buildSearchBox(engine);
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+  }
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    // this.withSearch = this.state.values.length > 15;
+    if (!this.input){
+      this.input = this.template.querySelector('input');
+    }
+    if (!this.clearButton){
+      this.clearButton = this.template.querySelector('.facet-search__clear-button');
+    }
   }
 
   disconnectedCallback() {
@@ -116,6 +129,21 @@ export default class QuanticFacet extends LightningElement {
   toggleFacetVisibility(){
     this.facetIcon = this.isBodyVisible ? "utility:add" : "utility:dash";
     this.isBodyVisible = !this.isBodyVisible;
+  }
+
+  onSearchFocus() {
+    this.clearButton.classList.remove('slds-hidden');
+    this.clearButton.classList.add('slds-visible');
+  }
+
+  onSearchBlur() {
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
+  }
+
+  clearInput(){
+    this.input.value = '';
+    this.searchbox.updateText(this.input.value);
   }
 
 }

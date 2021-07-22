@@ -1,3 +1,7 @@
-.facet__buttons {
+.facet__buttons, .facet-search__button-box {
     box-shadow: none;
+}
+
+.searchbox__container {
+    width: 80%;
 }
