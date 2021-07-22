@@ -433,7 +433,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         NumericFacetAssertions.assertURLHash(field, `${min}..${max}`);
       });
 
-      describe('verify analytic', () => {
+      describe.skip('verify analytic', () => {
         before(setupNumericValidRange);
         NumericFacetAssertions.assertLogNumericFacetInputSubmit(
           field,
