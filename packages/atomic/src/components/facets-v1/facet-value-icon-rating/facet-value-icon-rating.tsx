@@ -4,7 +4,7 @@ import {FacetValueIconRatingProps} from '../facet-common';
 export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps> = (
   props
 ) => {
-  const createIconFilled = (active: boolean) => {
+  const renderIcon = (active: boolean) => {
     return (
       <div
         innerHTML={props.icon}
@@ -17,10 +17,10 @@ export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps
     const emptyIconDisplay: VNode[] = [];
     const filledIconDisplay: VNode[] = [];
     for (let i = 0; i < props.numberOfTotalIcons; i++) {
-      emptyIconDisplay.push(createIconFilled(false));
-      filledIconDisplay.push(createIconFilled(true));
+      emptyIconDisplay.push(renderIcon(false));
+      filledIconDisplay.push(renderIcon(true));
     }
-    const limitString =
+    const width =
       (
         (props.numberOfActiveIcons / props.numberOfTotalIcons) *
         100
@@ -31,9 +31,8 @@ export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps
           {emptyIconDisplay}
         </div>
         <div
-          id="filledIcons"
           class="absolute left-0 top-0 z-10 flex items-center gap-0.5 pt-0.5 pb-0.5 overflow-hidden"
-          style={{width: limitString}}
+          style={{width}}
         >
           {filledIconDisplay}
         </div>
