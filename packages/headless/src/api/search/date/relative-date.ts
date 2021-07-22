@@ -103,25 +103,19 @@ export function formatRelativeDate(relativeDate: RelativeDate) {
 }
 
 export function formatRelativeDateForSearchApi(date: string) {
-  try {
-    const relativeDate = parseRelativeDate(date);
-    const {period, amount, unit, useLocalTime} = relativeDate;
-    const dayjsDate = useLocalTime ? dayjs() : dayjs().utc();
+  const relativeDate = parseRelativeDate(date);
+  const {period, amount, unit, useLocalTime} = relativeDate;
+  const dayjsDate = useLocalTime ? dayjs() : dayjs().utc();
 
-    switch (period) {
-      case 'past':
-        return formatDateForSearchApi(
-          dayjsDate.subtract(amount!, unit as QUnitType)
-        );
-      case 'future':
-        return formatDateForSearchApi(
-          dayjsDate.add(amount!, unit as QUnitType)
-        );
-      case 'now':
-        return formatDateForSearchApi(dayjsDate);
-    }
-  } catch (error) {
-    return formatDateForSearchApi(dayjs());
+  switch (period) {
+    case 'past':
+      return formatDateForSearchApi(
+        dayjsDate.subtract(amount!, unit as QUnitType)
+      );
+    case 'future':
+      return formatDateForSearchApi(dayjsDate.add(amount!, unit as QUnitType));
+    case 'now':
+      return formatDateForSearchApi(dayjsDate);
   }
 }
 
