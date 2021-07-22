@@ -1485,7 +1485,7 @@ declare namespace LocalJSX {
         /**
           * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
          */
-        "amount": number;
+        "amount"?: number;
         /**
           * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
          */

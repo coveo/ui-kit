@@ -29,7 +29,7 @@ export class AtomicTimeframe implements Timeframe {
    *
    * E.g., 10 days, 1 year, etc.
    */
-  @Prop() public amount!: number;
+  @Prop() public amount = 1;
 
   /**
    * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
