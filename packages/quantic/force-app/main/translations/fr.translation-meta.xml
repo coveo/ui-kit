@@ -9,6 +9,10 @@
         <name>quantic_ShowingResultsOf_plural</name>
     </customLabels>
     <customLabels>
+        <label>Résultat {{0}} de {{1}}</label>
+        <name>quantic_ShowingResultsOf_zero</name>
+    </customLabels>
+    <customLabels>
         <label>Résultat {{0}} de {{1}} pour {{2}}</label>
         <name>quantic_ShowingResultsOfWithQuery</name>
     </customLabels>
@@ -17,12 +21,20 @@
         <name>quantic_ShowingResultsOfWithQuery_plural</name>
     </customLabels>
     <customLabels>
+        <label>Résultat {{0}} de {{1}} pour {{2}}</label>
+        <name>quantic_ShowingResultsOfWithQuery_zero</name>
+    </customLabels>
+    <customLabels>
         <label>en {{0}} seconde</label>
         <name>quantic_InSeconds</name>
     </customLabels>
     <customLabels>
         <label>en {{0}} secondes</label>
         <name>quantic_InSeconds_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>en {{0}} seconde</label>
+        <name>quantic_InSeconds_zero</name>
     </customLabels>
     <customLabels>
         <label>Aucun résultat</label>

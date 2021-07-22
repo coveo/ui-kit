@@ -15,6 +15,13 @@
         <shortDescription>ex: Results 0-10 of 123,456</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_ShowingResultsOf_zero</fullName>
+        <value>Results {{0}} of {{1}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: Results 0-0 of 123,456</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_ShowingResultsOfWithQuery</fullName>
         <value>Result {{0}} of {{1}} for {{2}}</value>
         <language>en_US</language>
@@ -29,6 +36,13 @@
         <shortDescription>ex: Results 0-10 of 123,456 for potato</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_ShowingResultsOfWithQuery_zero</fullName>
+        <value>Results {{0}} of {{1}} for {{2}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: Results 0-0 of 123,456 for potato</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_InSeconds</fullName>
         <value>in {{0}} second</value>
         <language>en_US</language>
@@ -41,6 +55,13 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>ex: in 2.3 seconds</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InSeconds_zero</fullName>
+        <value>in {{0}} seconds</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: in 0 seconds</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_NoResults</fullName>

@@ -17,6 +17,7 @@ describe('c/quanticUtils', () => {
     describe('getLabelNameWithCount', () => {
       const testLabelName = 'thisLabelName';
       const testLabelNamePlural = `${testLabelName}_plural`;
+      const testLabelNameZero = `${testLabelName}_zero`;
       
       it('should return plural variant if count not equal to 1', () => {
         expect(I18nService.getLabelNameWithCount(testLabelName, 99)).toBe(testLabelNamePlural);
@@ -26,8 +27,8 @@ describe('c/quanticUtils', () => {
         expect(I18nService.getLabelNameWithCount(testLabelName, 0.5)).toBe(testLabelNamePlural);
       });
 
-      it('should return plural variant if count is 0', () => {
-        expect(I18nService.getLabelNameWithCount(testLabelName, 0)).toBe(testLabelNamePlural);
+      it('should return zero variant if count is 0', () => {
+        expect(I18nService.getLabelNameWithCount(testLabelName, 0)).toBe(testLabelNameZero);
       });
 
       it('should return singular variant if count is equal to 1', () => {
