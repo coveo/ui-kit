@@ -7,12 +7,12 @@ describe('c/quanticUtils', () => {
       const startTag = '<test-start-tag>';
       const endTag = '<test-end-tag>';
       expect(I18nService.getTextWithDecorator(text, startTag, endTag)).toBe(`${startTag}${text}${endTag}`);
-    })
+    });
 
     it('getTextBold should return text wrapped in bold tags', () => {
       const text = 'sample text';
       expect(I18nService.getTextBold(text)).toBe(`<b>${text}</b>`);
-    })
+    });
 
     describe('getLabelNameWithCount', () => {
       const testLabelName = 'thisLabelName';
@@ -63,5 +63,5 @@ describe('c/quanticUtils', () => {
         expect(I18nService.format(testString, test, buddy)).toBe('this is a test string, buddy.');
       });
     });
-  })
+  });
 });
