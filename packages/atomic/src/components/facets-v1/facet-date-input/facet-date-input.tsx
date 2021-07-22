@@ -73,6 +73,7 @@ export class FacetDateInput {
     return (
       <form class="grid gap-2 grid-cols-min-1fr mt-4" onSubmit={() => false}>
         <label
+          part="input-label"
           class={labelClasses}
           htmlFor={`${this.filterState.facetId}_start`}
         >
@@ -92,7 +93,11 @@ export class FacetDateInput {
             (this.start = (e.target as HTMLInputElement).valueAsDate!)
           }
         />
-        <label class={labelClasses} htmlFor={`${this.filterState.facetId}_end`}>
+        <label
+          part="input-label"
+          class={labelClasses}
+          htmlFor={`${this.filterState.facetId}_end`}
+        >
           {endLabel}:
         </label>
         <input

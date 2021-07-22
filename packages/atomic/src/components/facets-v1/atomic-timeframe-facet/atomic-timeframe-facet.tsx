@@ -57,6 +57,7 @@ import {Timeframe} from '../atomic-timeframe/timeframe';
  *
  * @part input-start - The input for the start value of the custom range.
  * @part input-end - The input for the end value of the custom range.
+ * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
