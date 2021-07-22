@@ -412,7 +412,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
 
     describe('when submitting an valid range', () => {
-      before(() => {
+      function setupNumericValidRange() {
         new TestFixture()
           .with(
             addNumericFacet({
@@ -426,8 +426,21 @@ describe('Numeric Facet V1 Test Suites', () => {
         inputMinValue(min);
         inputMaxValue(max);
         clickApplyButton();
+      }
+
+      describe('verify rendering', () => {
+        before(setupNumericValidRange);
+        NumericFacetAssertions.assertURLHash(field, `${min}..${max}`);
       });
-      NumericFacetAssertions.assertURLHash(field, `${min}..${max}`);
+
+      describe('verify analytic', () => {
+        before(setupNumericValidRange);
+        NumericFacetAssertions.assertLogNumericFacetInputSubmit(
+          field,
+          min,
+          max
+        );
+      });
     });
 
     describe('with a selected path in the URL', () => {

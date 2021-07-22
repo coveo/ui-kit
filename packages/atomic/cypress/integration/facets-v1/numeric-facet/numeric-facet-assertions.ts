@@ -48,6 +48,26 @@ function formatDefaultNumericFacetValue(value: string) {
   return `${start}..${end}`;
 }
 
+export function assertLogNumericFacetInputSubmit(
+  field: string,
+  min: number,
+  max: number
+) {
+  it('should log the facet select results to UA ', () => {
+    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
+      const analyticsBody = intercept.request.body;
+      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+      expect(analyticsBody.customData).to.have.property('facetField', field);
+      expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
+      expect(analyticsBody.facetState[0]).to.have.property('field', field);
+      expect(analyticsBody.customData).to.have.property(
+        'facetValue',
+        `${min}..${max}`
+      );
+    });
+  });
+}
+
 export function assertLogNumericFacetSelect(field: string, index: number) {
   it('should log the facet select results to UA ', () => {
     cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
