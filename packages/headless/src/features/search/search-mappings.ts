@@ -21,7 +21,7 @@ function formatStartFacetValue(value: string) {
 }
 
 function formatEndFacetValue(value: string) {
-  return `start${value}`;
+  return `end${value}`;
 }
 
 interface SearchMappings {

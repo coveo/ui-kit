@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDatePeriod, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
@@ -583,9 +583,9 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The relative period of time.
+          * The relative period of time to now.
          */
-        "period": RelativeDatePeriod;
+        "period": 'past' | 'future';
         /**
           * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
          */
@@ -1511,9 +1511,9 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The relative period of time.
+          * The relative period of time to now.
          */
-        "period"?: RelativeDatePeriod;
+        "period"?: 'past' | 'future';
         /**
           * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
          */

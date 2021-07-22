@@ -1,5 +1,5 @@
 import {Component, Prop} from '@stencil/core';
-import {RelativeDatePeriod, RelativeDateUnit} from '@coveo/headless';
+import {RelativeDateUnit} from '@coveo/headless';
 import {Timeframe} from './timeframe';
 
 /**
@@ -13,9 +13,9 @@ import {Timeframe} from './timeframe';
 })
 export class AtomicTimeframe implements Timeframe {
   /**
-   * The relative period of time.
+   * The relative period of time to now.
    */
-  @Prop() public period: RelativeDatePeriod = 'past';
+  @Prop() public period: 'past' | 'future' = 'past';
 
   /**
    * The unit used to define:
