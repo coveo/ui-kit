@@ -15,6 +15,9 @@
             "c/quanticHeadlessLoader": [
                 "quanticHeadlessLoader/quanticHeadlessLoader.js"
             ],
+            "c/quanticNoResults": [
+                "quanticNoResults/quanticNoResults.js"
+            ],
             "c/quanticDateFacetValue": [
                 "quanticDateFacetValue/quanticDateFacetValue.js"
             ],
@@ -65,6 +68,9 @@
             ],
             "c/quanticNumberButton": [
                 "quanticNumberButton/quanticNumberButton.js"
+            ],
+            "c/quanticSvg": [
+                "quanticSvg/quanticSvg.js"
             ],
             "c/quanticUtils": [
                 "quanticUtils/quanticUtils.js"

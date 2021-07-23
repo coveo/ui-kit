@@ -1,0 +1,20 @@
+<template>
+    <template if:false={hasResults}>
+        <div class="slds-grid slds-wrap">
+            <div class=" slds-col slds-size_12-of-12 slds-var-m-vertical_x-large slds-illustration slds-illustration_small">
+                <c-quantic-svg name="NoResults"></c-quantic-svg>
+            </div>
+            <div class="slds-col slds-size_12-of-12">
+                <h3 class="slds-text-heading_small slds-text-align_center slds-var-m-around_small">We couldn’t find anything for <span class="slds-text-title_bold">"{query}"</span></h3>
+                <p class="slds-text-body_small slds-text-align_center">You may want to try using different keywords, or checking for spelling mistakes.</p>
+            </div>
+            <template if:true={enableCancelLastAction}>
+                <template if:true={hasHistory}>
+                    <div class="slds-m-vertical_x-large slds-align_absolute-center">
+                        <lightning-button variant="brand" label="Undo Last action" class="slds-m-around_x-small" onclick={onClick}></lightning-button>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </template> 
+</template>
