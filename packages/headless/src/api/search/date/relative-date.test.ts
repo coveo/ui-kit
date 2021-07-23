@@ -1,18 +1,18 @@
 import {isSearchApiDate} from './date-format';
 import {
-  parseRelativeDate,
+  deserializeRelativeDate,
   RelativeDate,
-  formatRelativeDate,
+  serializeRelativeDate,
   isRelativeDate,
   RelativeDatePeriod,
   isRelativeDateFormat,
   formatRelativeDateForSearchApi,
 } from './relative-date';
 
-describe('#parseRelativeDate', () => {
+describe('#deserializeRelativeDate', () => {
   it('parses "now"', () => {
     const expected: RelativeDate = {period: 'now'};
-    expect(parseRelativeDate('now')).toEqual(expected);
+    expect(deserializeRelativeDate('now')).toEqual(expected);
   });
 
   it('parses "next-100-quarter"', () => {
@@ -21,24 +21,24 @@ describe('#parseRelativeDate', () => {
       amount: 100,
       unit: 'quarter',
     };
-    expect(parseRelativeDate('next-100-quarter')).toEqual(expected);
+    expect(deserializeRelativeDate('next-100-quarter')).toEqual(expected);
   });
 });
 
-describe('#formatRelativeDate', () => {
+describe('#serializeRelativeDate', () => {
   it('when putting a bad format, should throw', () => {
     expect(() =>
-      formatRelativeDate({period: 'nononono' as RelativeDatePeriod})
+      serializeRelativeDate({period: 'nononono' as RelativeDatePeriod})
     ).toThrow();
   });
 
   it('formats to "now"', () => {
-    expect(formatRelativeDate({period: 'now'})).toEqual('now');
+    expect(serializeRelativeDate({period: 'now'})).toEqual('now');
   });
 
   it('formats to "next-100-quarter"', () => {
     expect(
-      formatRelativeDate({
+      serializeRelativeDate({
         period: 'next',
         amount: 100,
         unit: 'quarter',

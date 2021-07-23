@@ -77,7 +77,7 @@ function validateRelativeDate(relativeDate: RelativeDate) {
  * Formats a `RelativeDate` object to a parsable string value.
  * @param relativeDate The `RelativeDate` object.
  */
-export function formatRelativeDate(relativeDate: RelativeDate) {
+export function serializeRelativeDate(relativeDate: RelativeDate) {
   validateRelativeDate(relativeDate);
   const {period, amount, unit} = relativeDate;
 
@@ -91,7 +91,7 @@ export function formatRelativeDate(relativeDate: RelativeDate) {
 }
 
 export function formatRelativeDateForSearchApi(date: string) {
-  const relativeDate = parseRelativeDate(date);
+  const relativeDate = deserializeRelativeDate(date);
   const {period, amount, unit} = relativeDate;
   switch (period) {
     case 'past':
@@ -136,12 +136,12 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
 }
 
 /**
- * Parses a formatted relative date string value.
+ * Deserializes relative date string value into a `RelativeDate` object.
  * Throws an error if the format is invalid.
  * @param date The string formatted ... TODO: define format here ([period][amount][unit])
  * @returns The parse `RelativeDate` object.
  */
-export function parseRelativeDate(date: string): RelativeDate {
+export function deserializeRelativeDate(date: string): RelativeDate {
   if (!isRelativeDateFormat) {
     throw new Error(
       `The value "${date}" is not respecting the relative date format "period-amount-unit"`
