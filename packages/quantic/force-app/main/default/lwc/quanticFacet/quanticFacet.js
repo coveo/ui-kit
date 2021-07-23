@@ -83,7 +83,8 @@ export default class QuanticFacet extends LightningElement {
   get values() {
     return this.state.values.map(v => ({
       ...v,
-      checked: v.state === 'selected'
+      checked: v.state === 'selected',
+      highlightedResult: v.value,
     })) || [];
   }
 
@@ -110,12 +111,13 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get facetSearchResults(){
-    const results = this.facet.state.facetSearch.values
+    const results = this.facet.state.facetSearch.values;
     return results.map(result => ({
       value: result.displayValue,
       state: 'idle',
       numberOfResults: result.count,
       checked: false,
+      highlightedResult: this.highlightResult(result.displayValue, this.input.value),
     }));
   }
   /**
@@ -136,7 +138,6 @@ export default class QuanticFacet extends LightningElement {
 
   clearSelections(){
     this.facet.deselectAll();
-    console.log(this.input.value);
   }
 
   toggleFacetVisibility(){
@@ -151,6 +152,15 @@ export default class QuanticFacet extends LightningElement {
     console.log(this.facetSearchResults);
   }
 
+  highlightResult(result, query){
+    if(!query || query.trim() === ''){
+      return result;
+    }
+    const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
+    return result.replace(regex, '<b>$1</b>');
+  }
 
-
+  regexEncode(value){
+    return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
+  }
 }

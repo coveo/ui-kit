@@ -13,7 +13,9 @@
     <li class="slds-var-m-around_small slds-grid">
       <div class="slds-col">
         <input type="checkbox" onchange={onSelect} />
-        <span class="slds-var-m-horizontal_small nowrap">{item.value}</span>
+        <span class="slds-var-m-horizontal_small nowrap">
+          <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
+        </span>
         <span class="nowrap slds-text-body_small facet__number-of-results">({item.numberOfResults})</span>
       </div>
     </li>
