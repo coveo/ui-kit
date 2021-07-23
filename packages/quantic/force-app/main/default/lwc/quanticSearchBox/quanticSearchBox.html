@@ -8,21 +8,35 @@
           aria-haspopup="listbox"
           role="combobox"
         >
-          <div class="slds-combobox__form-element" role="none">
-            <input
-              id="combobox-id"
-              class="slds-input slds-combobox__input"
-              placeholder={placeholder}
-              type="search"
-              onkeyup={onKeyup}
-              onfocus={onFocus}
-              onblur={onBlur}
-              aria-autocomplete="list"
-              aria-controls="listbox-id"
-              autocomplete="off"
-              role="textbox"
-            />
-          </div>
+            <div class="searchbox__container">
+              <div class={searchBoxContainerClass} role="none">
+                <template if:true={withoutSubmitButton}>
+                  <lightning-icon class="slds-icon slds-input__icon slds-input__icon_left " icon-name="utility:search" size="x-small" title=""></lightning-icon>
+                </template>
+                <input
+                  id="combobox-with-button-id"
+                  class="slds-input slds-combobox__input searchbox__input"
+                  placeholder={placeholder}
+                  type="search"
+                  onkeyup={onKeyup}
+                  onfocus={onFocus}
+                  onblur={onBlur}
+                  aria-autocomplete="list"
+                  aria-controls="listbox-id"
+                  autocomplete="off"
+                  role="textbox"
+                />
+                <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={clearInput} title="Clear">
+                  <lightning-icon class="slds-button__icon slds-hidden" icon-name="utility:close" size="x-small"></lightning-icon>
+                </button>
+              </div>
+              <template if:false={withoutSubmitButton}>
+                <button onclick={onSubmit} class="slds-form-element__addon searchbox__submit-button" id="fixed-text-addon-post">
+                  <lightning-icon class="searchbox__submit-button-icon" variant="inverse" icon-name="utility:search" onclick={onSubmit} size="x-small"></lightning-icon>
+                </button>
+              </template>
+            </div>
+
           <template if:true={state.suggestions.length}>
             <div
               id="listbox-id"
@@ -40,7 +54,7 @@
                     <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                       <span class="slds-media__figure slds-listbox__option-icon"></span>
                       <span class="slds-media__body">
-                        <span class="slds-truncate" title={suggestion.value}>{suggestion.value}</span>
+                        <lightning-formatted-rich-text class="slds-truncate" value={suggestion.value}></lightning-formatted-rich-text>
                       </span>
                     </div>
                   </li>

@@ -15,7 +15,7 @@ export class AtomicTimeframe implements Timeframe {
   /**
    * The relative period of time to now.
    */
-  @Prop() public period: 'past' | 'future' = 'past';
+  @Prop() public period: 'past' | 'next' = 'past';
 
   /**
    * The unit used to define:
@@ -30,11 +30,6 @@ export class AtomicTimeframe implements Timeframe {
    * E.g., 10 days, 1 year, etc.
    */
   @Prop() public amount = 1;
-
-  /**
-   * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-   */
-  @Prop() public useLocalTime = true;
 
   /**
    * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.

@@ -345,17 +345,21 @@ export namespace Components {
          */
         "field": string;
         /**
+          * The icon used to display the rating.
+         */
+        "icon": string;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
         /**
-          * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex": number;
         /**
-          * The number of stars to request for this facet.
+          * The number of intervals to split the index for this facet.
          */
-        "numberOfStars": number;
+        "numberOfIntervals": number;
     }
     interface AtomicRelevanceInspector {
         /**
@@ -585,15 +589,11 @@ export namespace Components {
         /**
           * The relative period of time to now.
          */
-        "period": 'past' | 'future';
+        "period": 'past' | 'next';
         /**
           * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
          */
         "unit": RelativeDateUnit;
-        /**
-          * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-         */
-        "useLocalTime": boolean;
     }
     interface AtomicTimeframeFacet {
         /**
@@ -1285,17 +1285,21 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * The icon used to display the rating.
+         */
+        "icon"?: string;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
         /**
-          * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex"?: number;
         /**
-          * The number of stars to request for this facet.
+          * The number of intervals to split the index for this facet.
          */
-        "numberOfStars"?: number;
+        "numberOfIntervals"?: number;
     }
     interface AtomicRelevanceInspector {
         /**
@@ -1513,15 +1517,11 @@ declare namespace LocalJSX {
         /**
           * The relative period of time to now.
          */
-        "period"?: 'past' | 'future';
+        "period"?: 'past' | 'next';
         /**
           * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
          */
         "unit": RelativeDateUnit;
-        /**
-          * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-         */
-        "useLocalTime"?: boolean;
     }
     interface AtomicTimeframeFacet {
         /**

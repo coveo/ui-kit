@@ -140,21 +140,20 @@ export class AtomicTimeframeFacet
 
   private getManualTimeframes(): Timeframe[] {
     return Array.from(this.host.querySelectorAll('atomic-timeframe')).map(
-      ({label, amount, unit, period, useLocalTime}) => ({
+      ({label, amount, unit, period}) => ({
         label,
         amount,
         unit,
         period,
-        useLocalTime,
       })
     );
   }
 
   private get currentValues(): DateRangeRequest[] {
-    return this.manualTimeframes.map(({period, amount, unit, useLocalTime}) =>
+    return this.manualTimeframes.map(({period, amount, unit}) =>
       buildDateRange({
-        start: {period, unit, amount, useLocalTime},
-        end: {period: 'now', useLocalTime},
+        start: {period, unit, amount},
+        end: {period: 'now'},
       })
     );
   }

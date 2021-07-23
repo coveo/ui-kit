@@ -2,3 +2,17 @@
 @import '../facet-common.pcss';
 @import '../facet-value-checkbox/facet-value-checkbox.pcss';
 @import '../facet-value-link/facet-value-link.pcss';
+
+/**
+ * @prop --atomic-rating-facet-icon-active-color: Color of the icon when active.
+ */
+.icon-active {
+  fill: var(--atomic-rating-facet-icon-active-color, #f4c315);
+}
+
+/**
+ * @prop --atomic-rating-facet-icon-inactive-color: Color of the icon when inactive.
+ */
+.icon-inactive {
+  fill: var(--atomic-rating-facet-icon-inactive-color, var(--atomic-neutral));
+}

@@ -97,5 +97,5 @@ export {
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
-  parseRelativeDate,
+  deserializeRelativeDate,
 } from './api/search/date/relative-date';
