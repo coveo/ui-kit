@@ -135,7 +135,7 @@ export function isRelativeDateFormat(date: string) {
 }
 
 export function isRelativeDate(date: unknown): date is RelativeDate {
-  return date && typeof date === 'object' && 'period' in date ? true : false;
+  return !!date && typeof date === 'object' && 'period' in date!;
 }
 
 /**
