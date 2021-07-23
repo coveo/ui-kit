@@ -1,21 +1,15 @@
-jest.mock('coveo.analytics');
-import {CoveoSearchPageClient} from 'coveo.analytics';
-import {PartialDocumentInformation} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
   SearchEngine,
   buildSearchEngine,
 } from '../app/search-engine/search-engine';
 import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine-configuration';
 import {
-  buildPager,
   CategoryFacet,
   Facet,
-  Pager,
   ResultList,
   SearchBox,
   Sort,
 } from '../controllers';
-import {logClickEvent} from '../features/analytics/analytics-actions';
 import {
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
@@ -32,11 +26,13 @@ import {
   FacetValue,
 } from '../index';
 
+const sleep = (seconds: number) =>
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
 const configuration = getSampleSearchEngineConfiguration();
 let engine: SearchEngine;
 let searchBox: SearchBox;
 let resultList: ResultList;
-let pager: Pager;
 let facet: Facet;
 let categoryFacet: CategoryFacet;
 let sort: Sort;
@@ -51,53 +47,11 @@ function initEngine() {
 function initControllers() {
   searchBox = buildSearchBox(engine);
   resultList = buildResultList(engine);
-  pager = buildPager(engine);
   facet = buildFacet(engine, {options: {field: 'author'}});
   categoryFacet = buildCategoryFacet(engine, {
     options: {field: 'geographicalhierarchy'},
   });
   sort = buildSort(engine);
-}
-
-function waitForChange<S, V extends number | string>(
-  controller: {state: S; subscribe: (listener: () => void) => () => void},
-  getValue: (state: S) => V
-): Promise<void> {
-  const oldValue = getValue(controller.state);
-  return new Promise((resolve) => {
-    const unsubscribe = controller.subscribe(() => {
-      const newValue = getValue(controller.state);
-      if (oldValue !== newValue) {
-        unsubscribe();
-        resolve();
-      }
-    });
-  });
-}
-
-const waitForNewResults = () =>
-  waitForChange(resultList, ({searchUid}) => searchUid);
-
-function getLatestAnalyticsClient() {
-  const clients = (CoveoSearchPageClient as jest.MockedClass<
-    typeof CoveoSearchPageClient
-  >).mock.instances;
-  return clients[clients.length - 1] as jest.Mocked<CoveoSearchPageClient>;
-}
-
-function getLatestPartialDocumentInformation() {
-  const client = getLatestAnalyticsClient();
-  const logClickEventSpy = client.logClickEvent as jest.MockedFunction<
-    typeof client.logClickEvent
-  >;
-  return logClickEventSpy.mock.calls[
-    logClickEventSpy.mock.calls.length - 1
-  ][1] as PartialDocumentInformation;
-}
-
-function clickLastResult() {
-  const result = resultList.state.results[resultList.state.results.length - 1];
-  engine.dispatch(logClickEvent({evt: 'documentOpen', result}));
 }
 
 describe('search app', () => {
@@ -106,7 +60,7 @@ describe('search app', () => {
     initControllers();
 
     engine.executeFirstSearch();
-    await waitForNewResults();
+    await sleep(2);
   });
 
   it('displays 10 results in the result list', () => {
@@ -132,14 +86,14 @@ describe('search app', () => {
       searchBox.updateText('TED');
       searchBox.submit();
 
-      await waitForNewResults();
+      await sleep(2);
     });
 
     afterAll(async () => {
       searchBox.updateText('');
       searchBox.submit();
 
-      await waitForNewResults();
+      await sleep(2);
     });
 
     it('updates the result list', () => {
@@ -158,12 +112,12 @@ describe('search app', () => {
       initialResults = resultList.state.results;
       sort.sortBy(buildDateSortCriterion(SortOrder.Descending));
 
-      await waitForNewResults();
+      await sleep(2);
     });
 
     afterAll(async () => {
       sort.sortBy(buildRelevanceSortCriterion());
-      await waitForNewResults();
+      await sleep(2);
     });
 
     it('updates the results', () => {
@@ -182,12 +136,12 @@ describe('search app', () => {
       const [firstFacetValue] = facet.state.values;
       facet.toggleSelect(firstFacetValue);
 
-      await waitForNewResults();
+      await sleep(2);
     });
 
     afterAll(async () => {
       facet.deselectAll();
-      await waitForNewResults();
+      await sleep(2);
     });
 
     it('updates the category facet values', () => {
@@ -199,23 +153,6 @@ describe('search app', () => {
     it('updates the results', () => {
       expect(resultList.state.results).not.toEqual(initialResults);
     });
-  });
-
-  it('sends the correct documentPosition', async (done) => {
-    clickLastResult();
-    expect(getLatestPartialDocumentInformation().documentPosition).toEqual(10);
-
-    pager.nextPage();
-    await waitForNewResults();
-    clickLastResult();
-    expect(getLatestPartialDocumentInformation().documentPosition).toEqual(20);
-
-    resultList.fetchMoreResults();
-    await waitForNewResults();
-    clickLastResult();
-    expect(getLatestPartialDocumentInformation().documentPosition).toEqual(30);
-
-    done();
   });
 });
 
@@ -232,7 +169,7 @@ describe('search app with expired token and #renewAccessToken configured to retu
     initControllers();
 
     engine.executeFirstSearch();
-    await waitForNewResults();
+    await sleep(2);
   });
 
   it('sets the valid token in state', () => {
