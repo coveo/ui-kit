@@ -162,11 +162,14 @@ export class AtomicRatingRangeFacet
 
   private renderLabelText(facetValue: NumericFacetValue) {
     return (
-      <span class="ml-1 flex items-center group-hover:underline group-hover:text-primary">
+      <span
+        part="value-label"
+        class="ml-1 flex items-center group-hover:underline group-hover:text-primary"
+      >
         {facetValue.start === this.maxValueInIndex ? (
-          <span class="font-bold">only</span>
+          <span class="font-bold">{this.bindings.i18n.t('only')}</span>
         ) : (
-          '& up'
+          this.bindings.i18n.t('& up')
         )}
       </span>
     );

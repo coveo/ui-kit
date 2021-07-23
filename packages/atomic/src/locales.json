@@ -966,5 +966,13 @@
   "rating": {
     "en": "Rating",
     "fr": "Notation"
+  },
+  "& up": {
+    "en": "& up",
+    "fr": "& plus"
+  },
+  "only": {
+    "en": "only",
+    "fr": "seulement"
   }
 }
