@@ -37,9 +37,11 @@ export default class QuanticFacet extends LightningElement {
   /** @type {number} */
   numberOfValues = 8;
   /** @type  {import("coveo").FacetSortCriterion}*/
-  sortCriterion = 'score';
+  sortCriterion = 'automatic';
   /** @type {string} */
   facetId;
+  /** @type {boolean} */
+  isFacetSearchActive = false;
 
   /**
    * @param {import("coveo").SearchEngine} engine
@@ -108,13 +110,19 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get facetSearchResults(){
-    return this.facet.state.facetSearch.values;
+    const results = this.facet.state.facetSearch.values
+    return results.map(result => ({
+      value: result.displayValue,
+      state: 'idle',
+      numberOfResults: result.count,
+      checked: false,
+    }));
   }
-
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
   onSelect(evt) {
+    console.log(evt.detail);
     this.facet.toggleSelect(evt.detail);
   }
 
@@ -126,15 +134,23 @@ export default class QuanticFacet extends LightningElement {
     this.facet.showLessValues();
   }
 
+  clearSelections(){
+    this.facet.deselectAll();
+    console.log(this.input.value);
+  }
+
   toggleFacetVisibility(){
     this.facetIcon = this.isBodyVisible ? "utility:add" : "utility:dash";
     this.isBodyVisible = !this.isBodyVisible;
   }
 
   handleKeyUp(){
+    this.isFacetSearchActive = this.input.value !== '';
     this.facet.facetSearch.updateText(this.input.value);
     this.facet.facetSearch.search();
-    console.log(this.facet.state.facetSearch.values);
+    console.log(this.facetSearchResults);
   }
+
+
 
 }

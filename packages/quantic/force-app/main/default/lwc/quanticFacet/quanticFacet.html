@@ -19,8 +19,17 @@
               <lightning-icon class="slds-button__icon slds-current-color" icon-name="utility:close" size="xx-small"></lightning-icon>
             </button>
           </template>
-          <template for:each={values} for:item="v">
-            <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
+
+          <template if:false={isFacetSearchActive}>
+            <template for:each={values} for:item="v">
+              <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
+            </template>
+          </template>
+
+          <template if:true={isFacetSearchActive}>
+            <template for:each={facetSearchResults} for:item="result">
+              <c-quantic-facet-value onselectvalue={onSelect} key={result.value} item={result} is-checked={result.checked}></c-quantic-facet-value>
+            </template>
           </template>
         </ul>
   
