@@ -71,13 +71,6 @@ export function clickApplyButton() {
   NumericFacetSelectors.applyButton().click({force: true});
 }
 
-export function applyInputRange(min: number, max: number) {
-  inputMinValue(min);
-  inputMaxValue(max);
-  cy.wait(1000);
-  clickApplyButton();
-}
-
 export function invokeSubmitButton() {
   NumericFacetSelectors.rangeInput().invoke('submit', (e: Event) => {
     // do not actually submit the form

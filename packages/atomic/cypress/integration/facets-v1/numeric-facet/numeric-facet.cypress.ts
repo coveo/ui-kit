@@ -2,7 +2,6 @@ import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   addNumericFacet,
   addNumericFacetWithRange,
-  applyInputRange,
   clickApplyButton,
   defaultNumberOfValues,
   field,
@@ -406,7 +405,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
         NumericFacetAssertions.assertDisplayInputWarning(
           2,
-          `Value must be less than or equal to ${max}.`
+          `Value must be less than or equal to ${min}.`
         );
       });
     });
