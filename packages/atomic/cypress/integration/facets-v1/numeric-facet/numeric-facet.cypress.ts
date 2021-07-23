@@ -157,14 +157,28 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
       });
 
-      describe('with custom #withInput to true', () => {
-        function setupAutomaticRangesWithCheckboxValuesAndInputRange() {
+      describe('with custom #withInput to integer', () => {
+        function setupAutomaticRangesWithCheckboxValuesAndInputRange(
+          inputType: string
+        ) {
           new TestFixture()
-            .with(addNumericFacet({field, label, 'with-input': 'true'}))
+            .with(addNumericFacet({field, label, 'with-input': inputType}))
             .init();
         }
-        before(setupAutomaticRangesWithCheckboxValuesAndInputRange);
-        NumericFacetAssertions.assertDisplayRangeInput(true);
+
+        describe('when #withInput is integer', () => {
+          before(() => {
+            setupAutomaticRangesWithCheckboxValuesAndInputRange('integer');
+          });
+          NumericFacetAssertions.assertDisplayRangeInput(true);
+        });
+
+        describe('when #withInput is decimal', () => {
+          before(() => {
+            setupAutomaticRangesWithCheckboxValuesAndInputRange('decimal');
+          });
+          NumericFacetAssertions.assertDisplayRangeInput(true);
+        });
       });
     });
 
@@ -267,7 +281,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
   });
 
-  describe('with custom ranges generate', () => {
+  describe('with custom ranges', () => {
     const numberOfCustomRanges = numericRanges.length;
     function setupCustomRangesWithCheckboxValues() {
       new TestFixture()
@@ -335,13 +349,15 @@ describe('Numeric Facet V1 Test Suites', () => {
   describe('with custom #withInput only', () => {
     const min = 0;
     const max = 100000;
-    function setupRangesWithInputOnly() {
+    const minDecimal = 1.5;
+    const maxDecimal = 10000.5;
+    function setupRangesWithInputOnly(inputType = 'integer') {
       new TestFixture()
         .with(
           addNumericFacet({
             field,
             label,
-            'with-input': 'true',
+            'with-input': inputType,
             'number-of-values': 0,
           })
         )
@@ -349,7 +365,9 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupRangesWithInputOnly);
+      before(() => {
+        setupRangesWithInputOnly();
+      });
       NumericFacetAssertions.assertDisplayRangeInput(true);
       NumericFacetAssertions.assertDisplayApplyButton(true);
       CommonFacetAssertions.assertDisplayValues(NumericFacetSelectors, false);
@@ -377,8 +395,8 @@ describe('Numeric Facet V1 Test Suites', () => {
 
       describe('when min input is empty', () => {
         before(() => {
-          setupRangesWithInputOnly();
-          inputMaxValue(max);
+          setupRangesWithInputOnly('decimal');
+          inputMaxValue(maxDecimal);
           invokeSubmitButton();
           clickApplyButton();
         });
@@ -411,34 +429,67 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
 
     describe('when submitting an valid range', () => {
-      function setupNumericValidRange() {
+      function setupNumericValidRange(
+        inputType = 'integer',
+        start = min,
+        end = max
+      ) {
         new TestFixture()
           .with(
             addNumericFacet({
               field,
               label,
-              'with-input': 'true',
+              'with-input': inputType,
               'number-of-values': 0,
             })
           )
           .init();
-        inputMinValue(min);
-        inputMaxValue(max);
+        inputMinValue(start);
+        inputMaxValue(end);
         clickApplyButton();
       }
 
-      describe('verify rendering', () => {
-        before(setupNumericValidRange);
-        NumericFacetAssertions.assertURLHash(field, `${min}..${max}`);
+      describe('with #inputDefault is "integer"', () => {
+        describe('verify rendering', () => {
+          before(() => {
+            setupNumericValidRange();
+          });
+          NumericFacetAssertions.assertURLHash(field, `${min}..${max}`);
+        });
+
+        describe.skip('verify analytic', () => {
+          before(() => {
+            setupNumericValidRange();
+          });
+          NumericFacetAssertions.assertLogNumericFacetInputSubmit(
+            field,
+            min,
+            max
+          );
+        });
       });
 
-      describe.skip('verify analytic', () => {
-        before(setupNumericValidRange);
-        NumericFacetAssertions.assertLogNumericFacetInputSubmit(
-          field,
-          min,
-          max
-        );
+      describe('with #inputDefault is "decimal"', () => {
+        describe('verify rendering', () => {
+          before(() => {
+            setupNumericValidRange('decimal', minDecimal, maxDecimal);
+          });
+          NumericFacetAssertions.assertURLHash(
+            field,
+            `${minDecimal}..${maxDecimal}`
+          );
+        });
+
+        describe.skip('verify analytic', () => {
+          before(() => {
+            setupNumericValidRange();
+          });
+          NumericFacetAssertions.assertLogNumericFacetInputSubmit(
+            field,
+            minDecimal,
+            maxDecimal
+          );
+        });
       });
     });
 
@@ -463,6 +514,13 @@ describe('Numeric Facet V1 Test Suites', () => {
       NumericFacetAssertions.assertMinInputValue(min);
       NumericFacetAssertions.assertMaxInputValue(max);
       CommonFacetAssertions.assertDisplayValues(NumericFacetSelectors, false);
+    });
+
+    describe.skip('with invalid #withInput', () => {
+      before(() => {
+        setupRangesWithInputOnly('test');
+      });
+      NumericFacetAssertions.assertDisplayRangeInput(false);
     });
   });
 

@@ -97,7 +97,7 @@ export function assertValueSortedByDescending() {
         .concat()
         .map((value: string) => value.replaceAll(',', ''));
 
-      const sortDescendingValue = originalValues.sort(
+      const sortDescendingValue = [...originalValues].sort(
         (a, b) => b.split(' to ')[1] - a.split(' to ')[1]
       );
       expect(originalValues).to.eql(sortDescendingValue);

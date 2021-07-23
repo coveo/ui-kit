@@ -1,15 +1,18 @@
-import {FacetsSelector} from './facet-common-assertions';
+import {
+  FacetWithCheckboxSelector,
+  FacetWithLinkSelector,
+} from './facet-common-assertions';
 
 export function selectIdleCheckboxValueAt(
-  FacetsSelector: FacetsSelector,
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   index: number
 ) {
-  FacetsSelector.idleCheckboxValue().eq(index).click();
+  FacetWithCheckboxSelector.idleCheckboxValue().eq(index).click();
 }
 
 export function selectIdleLinkValueAt(
-  FacetsSelector: FacetsSelector,
+  FacetWithLinkSelector: FacetWithLinkSelector,
   index: number
 ) {
-  FacetsSelector.idleLinkValue().eq(index).click();
+  FacetWithLinkSelector.idleLinkValue().eq(index).click();
 }

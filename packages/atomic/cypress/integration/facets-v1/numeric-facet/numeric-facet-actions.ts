@@ -19,11 +19,11 @@ export const numericRanges: NumericRange[] = [
     end: 100000,
   },
   {
-    start: 100001,
+    start: 100000,
     end: 1000000,
   },
   {
-    start: 1000001,
+    start: 1000000,
     end: 10000000,
   },
 ];
