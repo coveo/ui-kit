@@ -1,1 +1,66 @@
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
+table {
+  border-spacing: 0;
+
+  th,
+  td {
+    font-family: var(--atomic-font-family);
+    border: 1px solid var(--atomic-neutral);
+    font-size: 0.75rem;
+    line-height: 1rem;
+
+    &:not(:first-child) {
+      border-left: none;
+    }
+  }
+
+  th {
+    background-color: var(--atomic-neutral-light);
+    border-bottom: none;
+    font-weight: bold;
+    color: black;
+
+    &:first-child {
+      border-top-left-radius: 1rem;
+    }
+
+    &:last-child {
+      border-top-right-radius: 1rem;
+    }
+  }
+
+  td {
+    color: var(--atomic-neutral-dark);
+    border-top: none;
+  }
+}
+
+.list-root.density-comfortable {
+  th {
+    padding: 1rem 2rem;
+  }
+
+  td {
+    padding: 2rem;
+  }
+}
+
+.list-root.density-normal {
+  th {
+    padding: 1rem 1.5rem;
+  }
+
+  td {
+    padding: 1.5rem;
+  }
+}
+
+.list-root.density-compact {
+  th {
+    padding: 1rem;
+  }
+
+  td {
+    padding: 1rem;
+  }
+}

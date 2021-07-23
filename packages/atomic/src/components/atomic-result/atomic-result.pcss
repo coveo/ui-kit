@@ -186,6 +186,19 @@
   }
 }
 
+/* == Display styles == */
+.result-root.display-table {
+  :host & {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  atomic-result-section-bottom-metadata {
+    display: none;
+  }
+}
+
 /* == Density styles == */
 .result-root.density-comfortable {
   margin: 0 1rem;
@@ -279,8 +292,8 @@
   }
 
   atomic-result-section-title {
-    font-size: 1.5rem;
-    line-height: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
 
     @screen mobile {
       font-size: 1.125rem;
@@ -364,6 +377,10 @@
 }
 
 /* == Common styles == */
+atomic-table-element {
+  display: none;
+}
+
 atomic-result-section-visual {
   grid-area: visual;
 }
