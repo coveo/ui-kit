@@ -54,7 +54,6 @@ export default class QuanticFacet extends LightningElement {
       facetSearch: {numberOfValues: this.numberOfValues},
     }
     this.facet = CoveoHeadless.buildFacet(engine, {options});
-    this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 
@@ -128,6 +127,10 @@ export default class QuanticFacet extends LightningElement {
       highlightedResult: this.highlightResult(result.displayValue, this.input.value),
     }));
   }
+
+  get isSearchComplete(){
+    return !this.facet.state.isLoading;
+  }
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
@@ -156,8 +159,8 @@ export default class QuanticFacet extends LightningElement {
 
   handleKeyUp(){
     this.isFacetSearchActive = this.input.value !== '';
+    console.log(this.input.value);
     this.facet.facetSearch.updateText(this.input.value);
-    this.updateState();
     this.facet.facetSearch.search();
     console.log(this.facetSearchResults);
   }
