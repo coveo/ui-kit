@@ -8,7 +8,7 @@ import {Result} from '@coveo/headless';
   tag: 'atomic-table-cell',
   shadow: true,
 })
-export class AtomicResultSectionTitle {
+export class AtomicTableCell {
   /**
    * The result item.
    */
