@@ -77,7 +77,7 @@ export class AtomicRatingRangeFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
@@ -89,7 +89,7 @@ export class AtomicRatingRangeFacet
   /**
    * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
-  @Prop() public maxValueInIndex = 5;
+  @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
    * The icon used to display the rating.
    */
