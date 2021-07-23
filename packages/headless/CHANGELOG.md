@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.4...@coveo/headless@1.8.0) (2021-07-23)
+
+
+### Features
+
+* **headless:** export action loaders ([#986](https://github.com/coveo/ui-kit/issues/986)) ([b0d5ba0](https://github.com/coveo/ui-kit/commit/b0d5ba08e1f9a569dbde8dc1d5aadea95ddb47ca))
+
+
+
+
+
 ## [1.7.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.3...@coveo/headless@1.7.4) (2021-07-23)
 
 
