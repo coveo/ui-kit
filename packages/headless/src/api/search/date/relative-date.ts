@@ -1,5 +1,5 @@
 import dayjs, {QUnitType} from 'dayjs';
-import {BooleanValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {formatDateForSearchApi} from './date-format';
 import utc from 'dayjs/plugin/utc';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
@@ -10,12 +10,8 @@ dayjs.extend(quarterOfYear);
 /**
  * The period to set the date relative to.
  */
-export type RelativeDatePeriod = 'past' | 'now' | 'future';
-const validRelativeDatePeriods: RelativeDatePeriod[] = [
-  'past',
-  'now',
-  'future',
-];
+export type RelativeDatePeriod = 'past' | 'now' | 'next';
+const validRelativeDatePeriods = ['past', 'now', 'next'];
 
 /**
  * The unit of time in which the date is set relative to.
@@ -28,7 +24,7 @@ export type RelativeDateUnit =
   | 'month'
   | 'quarter'
   | 'year';
-const validRelativeDateUnits: RelativeDateUnit[] = [
+const validRelativeDateUnits = [
   'minute',
   'hour',
   'day',
@@ -54,12 +50,6 @@ export interface RelativeDate {
    * The amount of the `unit` of time. When `period` is set as `now`, the `amount` does not have to be defined.
    */
   amount?: number;
-  /**
-   * If `true`, the date and time will be returned based on local settings . If `false`, the date will be adjusted to _Coordinated Universal Time_ (UTC).
-   *
-   * @defaultValue `false`
-   */
-  useLocalTime?: boolean;
 }
 
 const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
@@ -74,7 +64,6 @@ const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
       required: true,
       constrainTo: validRelativeDatePeriods,
     }),
-    useLocalTime: new BooleanValue(),
   };
 };
 
@@ -90,48 +79,56 @@ function validateRelativeDate(relativeDate: RelativeDate) {
  */
 export function formatRelativeDate(relativeDate: RelativeDate) {
   validateRelativeDate(relativeDate);
-  const {period, amount, unit, useLocalTime} = relativeDate;
-  const utc = useLocalTime ? '' : 'utc';
+  const {period, amount, unit} = relativeDate;
 
   switch (period) {
     case 'past':
-    case 'future':
-      return `${period}${amount}${unit}${utc}`;
+    case 'next':
+      return `${period}-${amount}-${unit}`;
     case 'now':
-      return `${period}${utc}`;
+      return period;
   }
 }
 
 export function formatRelativeDateForSearchApi(date: string) {
   const relativeDate = parseRelativeDate(date);
-  const {period, amount, unit, useLocalTime} = relativeDate;
-  const dayjsDate = useLocalTime ? dayjs() : dayjs().utc();
-
+  const {period, amount, unit} = relativeDate;
   switch (period) {
     case 'past':
       return formatDateForSearchApi(
-        dayjsDate.subtract(amount!, unit as QUnitType)
+        dayjs().subtract(amount!, unit as QUnitType)
       );
-    case 'future':
-      return formatDateForSearchApi(dayjsDate.add(amount!, unit as QUnitType));
+    case 'next':
+      return formatDateForSearchApi(dayjs().add(amount!, unit as QUnitType));
     case 'now':
-      return formatDateForSearchApi(dayjsDate);
+      return formatDateForSearchApi(dayjs());
   }
 }
 
-const relativeDateFormatRegexp = new RegExp(
-  `^((?<period>past|future)(?<amount>\\d+)(?<unit>${validRelativeDateUnits.join(
-    '|'
-  )})|(?<now>now))(?<utc>utc)?$`,
-  'i'
-);
+function splitDate(date: string) {
+  return date.toLocaleLowerCase().split('-');
+}
 
 export function isRelativeDateFormat(date: string) {
-  if (date.toLowerCase() === 'now') {
+  const [period, amount, unit] = splitDate(date);
+  if (period === 'now') {
     return true;
   }
 
-  return relativeDateFormatRegexp.test(date);
+  if (!validRelativeDatePeriods.includes(period)) {
+    return false;
+  }
+
+  if (!validRelativeDateUnits.includes(unit)) {
+    return false;
+  }
+
+  const intAmount = parseInt(amount);
+  if (isNaN(intAmount) || intAmount <= 0) {
+    return false;
+  }
+
+  return true;
 }
 
 export function isRelativeDate(date: unknown): date is RelativeDate {
@@ -147,15 +144,21 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
 export function parseRelativeDate(date: string): RelativeDate {
   if (!isRelativeDateFormat) {
     throw new Error(
-      `The value "${date}" is not respecting the relative date format "[period][amount][unit]"`
+      `The value "${date}" is not respecting the relative date format "period-amount-unit"`
     );
   }
 
-  const groups = date.toLowerCase().match(relativeDateFormatRegexp)!['groups']!;
+  const [period, amount, unit] = splitDate(date);
+
+  if (period === 'now') {
+    return {
+      period: 'now',
+    };
+  }
+
   return {
-    period: (groups['now'] || groups['period']) as RelativeDatePeriod,
-    amount: groups['amount'] ? parseInt(groups['amount']) : undefined,
-    unit: groups['unit'] ? (groups['unit'] as RelativeDateUnit) : undefined,
-    useLocalTime: !groups['utc'],
+    period: period as RelativeDatePeriod,
+    amount: amount ? parseInt(amount) : undefined,
+    unit: unit ? (unit as RelativeDateUnit) : undefined,
   };
 }

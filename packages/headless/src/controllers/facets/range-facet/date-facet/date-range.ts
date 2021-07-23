@@ -78,8 +78,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
   if (isRelativeDate(rawDate)) {
-    const localTime = useLocalTime ? {useLocalTime: true} : {};
-    return formatRelativeDate({...localTime, ...rawDate});
+    return formatRelativeDate(rawDate);
   }
 
   if (typeof rawDate === 'string' && isRelativeDateFormat(rawDate)) {
