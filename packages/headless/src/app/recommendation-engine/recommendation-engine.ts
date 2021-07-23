@@ -23,6 +23,9 @@ import {
 } from '../../api/search/search-api-client-middleware';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
+import {setPipeline} from '../../features/pipeline/pipeline-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export {
   RecommendationEngineConfiguration,
@@ -86,6 +89,16 @@ export function buildRecommendationEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
+
+  const {pipeline, searchHub} = options.configuration;
+
+  if (!isNullOrUndefined(pipeline)) {
+    engine.dispatch(setPipeline(pipeline));
+  }
+
+  if (!isNullOrUndefined(searchHub)) {
+    engine.dispatch(setSearchHub(searchHub));
+  }
 
   return {
     ...engine,

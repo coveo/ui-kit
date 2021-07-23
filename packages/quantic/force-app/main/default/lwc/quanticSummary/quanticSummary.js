@@ -46,8 +46,8 @@ export default class QuanticSummary extends LightningElement {
     return this.state.hasQuery;
   }
 
-  get forQuery() {
-    return this.state.hasQuery ? ` for ${this.state.query}` : '';
+  get query() {
+    return this.state.hasQuery ? `${this.state.query}` : '';
   }
 
   get range() {
@@ -55,7 +55,7 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get total() {
-    return ` of ${this.state.total.toString()}`;
+    return this.state.total.toString();
   }
 
   get duration() {

@@ -1,7 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
-import {logInterfaceChange, logInterfaceLoad} from './analytics-actions';
+import {
+  logInterfaceChange,
+  logInterfaceLoad,
+  logSearchFromLink,
+  logOmniboxFromLink,
+} from './analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
@@ -43,6 +48,7 @@ import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   logQuerySuggestionClick,
   LogQuerySuggestionClickActionCreatorPayload,
+  OmniboxSuggestionMetadata,
 } from '../query-suggest/query-suggest-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 import {
@@ -89,6 +95,35 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logInterfaceLoad(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a search interface loads for the first time, for a user who performed a search using a standalone search box.
+   *
+   * @returns A dispatchable action.
+   */
+  logSearchFromLink(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a search interface loads for the first time, for a user who selected a query suggestion from a standalone search box.
+   *
+   * @param metadata - The metadata of the clicked query suggestion that triggered the redirect.
+   * @returns A dispatchable action.
+   */
+  logOmniboxFromLink(
+    metadata: OmniboxSuggestionMetadata
+  ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -501,6 +536,8 @@ export function loadSearchAnalyticsActions(
   return {
     logClearBreadcrumbs,
     logInterfaceLoad,
+    logSearchFromLink,
+    logOmniboxFromLink,
     logInterfaceChange,
     logDidYouMeanClick,
     logCategoryFacetBreadcrumb,

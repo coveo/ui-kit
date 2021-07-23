@@ -16,7 +16,7 @@ export interface ControllerConfiguration {
   utils?: string[];
 }
 
-interface Controller {
+export interface Controller {
   initializer: FuncEntity;
   extractedTypes: ObjEntity[];
   utils: FuncEntity[];

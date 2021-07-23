@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import {sanitize} from '../../../utils/xss-utils';
+import escape from 'escape-html';
 
 interface FacetSearchMatchesProps {
   i18n: i18n;
@@ -10,12 +10,12 @@ interface FacetSearchMatchesProps {
 }
 
 function matchesFound(
-  key: 'moreMatchesFor' | 'noMatchesFoundFor',
+  key: 'more-matches-for' | 'no-matches-found-for',
   query: string,
   i18n: i18n
 ) {
   return i18n.t(key, {
-    query: `<span class="font-bold italic text-on-background" part="matches-query">${sanitize(
+    query: `<span class="font-bold italic text-on-background" part="matches-query">${escape(
       query
     )}</span>`,
     interpolation: {escapeValue: false},
@@ -30,7 +30,11 @@ export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = 
       <div
         part="no-matches"
         class="ellipsed p-3 bg-neutral-light text-neutral-dark text-sm"
-        innerHTML={matchesFound('noMatchesFoundFor', props.query, props.i18n)}
+        innerHTML={matchesFound(
+          'no-matches-found-for',
+          props.query,
+          props.i18n
+        )}
       ></div>
     );
   }
@@ -40,7 +44,7 @@ export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = 
       <div
         part="more-matches"
         class="ellipsed mt-3 text-neutral-dark text-sm"
-        innerHTML={matchesFound('moreMatchesFor', props.query, props.i18n)}
+        innerHTML={matchesFound('more-matches-for', props.query, props.i18n)}
       ></div>
     );
   }

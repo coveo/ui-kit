@@ -44,3 +44,10 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Server-Side Rendering (SSR)
+
+To start the application in SSR mode:
+
+1. Build the app and server using: `npm run ssr:build`
+2. Start the server: `npm run ssr:start`.

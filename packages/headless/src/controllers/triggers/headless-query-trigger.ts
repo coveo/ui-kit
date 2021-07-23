@@ -8,7 +8,7 @@ import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
 } from '../../features/query/query-actions';
-import {logQueryTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {logTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
 
 /**
  * The `QueryTrigger` controller handles query triggers.
@@ -74,7 +74,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           };
           dispatch(updateQuery(updateQueryPayload));
           listener();
-          dispatch(executeSearch(logQueryTrigger()));
+          dispatch(executeSearch(logTriggerQuery()));
         }
       };
       strictListener();

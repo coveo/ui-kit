@@ -2,8 +2,8 @@ import {SearchStatus, SearchStatusState} from '@coveo/headless';
 import {i18n} from 'i18next';
 
 export interface BaseFacet<Facet, FacetState> {
-  facet: Facet;
-  facetState: FacetState;
+  facet?: Facet;
+  facetState?: FacetState;
   searchStatus: SearchStatus;
   searchStatusState: SearchStatusState;
   error: Error;
@@ -18,4 +18,17 @@ export interface FacetValueProps {
   numberOfResults: number;
   isSelected: boolean;
   onClick(): void;
+  searchQuery?: string;
+}
+
+export interface FacetValueLabelHighlightProps {
+  displayValue: string;
+  searchQuery?: string;
+  isSelected: boolean;
+}
+
+export interface FacetValueIconRatingProps {
+  numberOfTotalIcons: number;
+  numberOfActiveIcons: number;
+  icon: string;
 }

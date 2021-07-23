@@ -30,6 +30,7 @@ import {
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -49,6 +50,7 @@ import {BaseFacet} from '../facet-common';
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
+ * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
@@ -90,7 +92,7 @@ export class AtomicFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
@@ -203,7 +205,14 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueCheckbox>
+            searchQuery={this.facetState.facetSearch.query}
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueCheckbox>
         );
       case 'link':
         return (
@@ -213,7 +222,14 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueLink>
+            searchQuery={this.facetState.facetSearch.query}
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueLink>
         );
       case 'box':
         return (
@@ -223,7 +239,14 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueBox>
+            searchQuery={this.facetState.facetSearch.query}
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueBox>
         );
     }
   }

@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "extends": [":semanticPrefixFixDepsChoreOthers"],
+  "schedule": ["before 2am"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "groupName": "all dependencies",
+      "groupSlug": "all"
+    }
+  ],
+  "rangeStrategy": "auto",
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "commitMessageSuffix": "J:KIT-282",
+  "vulnerabilityAlerts": {
+    "enabled": false
+  }
+}

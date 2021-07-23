@@ -1,0 +1,16 @@
+<template>
+    <template if:true={hasQueryCorrection}>
+        <template if:true={wasAutomaticallyCorrected}>
+            <div class="slds-var-m-vertical_x-small">
+                <p class="mb-1">No results for <span class="slds-text-title_bold">{originalQuery}</span></p>
+                <p>Query was automatically corrected to <span class="slds-text-title_bold">{correctedQuery}</span></p>
+            </div>
+        </template>
+        <template if:false={wasAutomaticallyCorrected}>
+            <div class="slds-var-m-vertical_x-small">
+                <span>Did you mean </span> 
+                <button class="slds-button" onclick={applyCorrection}><span class="slds-text-title_bold">{correctedQuery}</span></button>
+            </div> 
+        </template>
+    </template>
+</template>
