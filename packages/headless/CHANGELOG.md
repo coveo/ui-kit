@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.3...@coveo/headless@1.7.4) (2021-07-23)
+
+
+### Bug Fixes
+
+* **headless:** fixed logClickEvent's documentPosition after fetchMoreResults ([#982](https://github.com/coveo/ui-kit/issues/982)) ([dc15c94](https://github.com/coveo/ui-kit/commit/dc15c94b4182021f989f559e21d4ecad7e60ab4b))
+
+
+
+
+
 ## [1.7.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.2...@coveo/headless@1.7.3) (2021-07-21)
 
 **Note:** Version bump only for package @coveo/headless
