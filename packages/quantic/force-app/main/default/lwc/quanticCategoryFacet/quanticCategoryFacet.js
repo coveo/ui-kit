@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
-import {I18nService} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 
 import clear from '@salesforce/label/c.quantic_Clear';
 import showMore from '@salesforce/label/c.quantic_ShowMore';
@@ -96,11 +96,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get showMoreFacetValuesLabel() {
-    return I18nService.format(this.labels.showMoreFacetValues, this.label)
+    return I18nUtils.format(this.labels.showMoreFacetValues, this.label)
   }
 
   get showLessFacetValuesLabel() {
-    return I18nService.format(this.labels.showLessFacetValues, this.label)
+    return I18nUtils.format(this.labels.showLessFacetValues, this.label)
   }
 
   /**

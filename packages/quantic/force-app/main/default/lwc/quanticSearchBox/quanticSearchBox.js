@@ -26,10 +26,15 @@ export default class QuanticSearchBox extends LightningElement {
       value: s.highlightedValue,
     }));
   }
+
+  labels = {
+    search
+  }
+  
   /** @type {string} */
   @api engineId;
   /** @type {string} */
-  @api placeholder = `${search}...`;
+  @api placeholder = `${this.labels.search}...`;
   /** @type {boolean} */
   @api withoutSubmitButton = false;
   /** @type {number} */
@@ -42,6 +47,7 @@ export default class QuanticSearchBox extends LightningElement {
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+
   /** @type {number} */
   selectionIndex = -1;
   /** @type {HTMLInputElement} */

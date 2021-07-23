@@ -7,7 +7,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless
 } from 'c/quanticHeadlessLoader';
-import {I18nService} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
@@ -138,7 +138,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
       ...breadcrumb,
       values: breadcrumb.values.slice(0, this.collapseThreshold),
       showMoreButton: true,
-      showMoreButtonText: I18nService.format(this.labels.nMore, breadcrumb.values.length - this.collapseThreshold),
+      showMoreButtonText: I18nUtils.format(this.labels.nMore, breadcrumb.values.length - this.collapseThreshold),
       expandButtonClick: () => {
         this.expandedBreadcrumbFieldsState = [...this.expandedBreadcrumbFieldsState, breadcrumb.field];
       }

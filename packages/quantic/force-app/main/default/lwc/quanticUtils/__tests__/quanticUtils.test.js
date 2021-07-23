@@ -1,4 +1,4 @@
-import {I18nService} from "c/quanticUtils";
+import {I18nUtils} from "c/quanticUtils";
 
 describe('c/quanticUtils', () => {
   describe('I18nService', () => {
@@ -6,12 +6,12 @@ describe('c/quanticUtils', () => {
       const text = 'sample text';
       const startTag = '<test-start-tag>';
       const endTag = '<test-end-tag>';
-      expect(I18nService.getTextWithDecorator(text, startTag, endTag)).toBe(`${startTag}${text}${endTag}`);
+      expect(I18nUtils.getTextWithDecorator(text, startTag, endTag)).toBe(`${startTag}${text}${endTag}`);
     });
 
     it('getTextBold should return text wrapped in bold tags', () => {
       const text = 'sample text';
-      expect(I18nService.getTextBold(text)).toBe(`<b>${text}</b>`);
+      expect(I18nUtils.getTextBold(text)).toBe(`<b>${text}</b>`);
     });
 
     describe('getLabelNameWithCount', () => {
@@ -20,23 +20,23 @@ describe('c/quanticUtils', () => {
       const testLabelNameZero = `${testLabelName}_zero`;
       
       it('should return plural variant if count not equal to 1', () => {
-        expect(I18nService.getLabelNameWithCount(testLabelName, 99)).toBe(testLabelNamePlural);
+        expect(I18nUtils.getLabelNameWithCount(testLabelName, 99)).toBe(testLabelNamePlural);
       });
 
       it('should return plural variant if count is fraction of 1', () => {
-        expect(I18nService.getLabelNameWithCount(testLabelName, 0.5)).toBe(testLabelNamePlural);
+        expect(I18nUtils.getLabelNameWithCount(testLabelName, 0.5)).toBe(testLabelNamePlural);
       });
 
       it('should return zero variant if count is 0', () => {
-        expect(I18nService.getLabelNameWithCount(testLabelName, 0)).toBe(testLabelNameZero);
+        expect(I18nUtils.getLabelNameWithCount(testLabelName, 0)).toBe(testLabelNameZero);
       });
 
       it('should return singular variant if count is equal to 1', () => {
-        expect(I18nService.getLabelNameWithCount(testLabelName, 1)).toBe(testLabelName);
+        expect(I18nUtils.getLabelNameWithCount(testLabelName, 1)).toBe(testLabelName);
       });
 
       it('should return singular variant if count is equal to -1', () => {
-        expect(I18nService.getLabelNameWithCount(testLabelName, -1)).toBe(testLabelName);
+        expect(I18nUtils.getLabelNameWithCount(testLabelName, -1)).toBe(testLabelName);
       });
     });
 
@@ -44,7 +44,7 @@ describe('c/quanticUtils', () => {
       it('should throw an error if the given string is not a string', () => {
         let caughtError;
         try {
-          I18nService.format(undefined);
+          I18nUtils.format(undefined);
         } catch (error) {
           caughtError = error;
         }
@@ -53,14 +53,14 @@ describe('c/quanticUtils', () => {
 
       it('should return the given string if no formatting arguments are given', () => {
         const testString = 'this is a test string';
-        expect(I18nService.format(testString)).toBe(testString);
+        expect(I18nUtils.format(testString)).toBe(testString);
       });
 
       it('should return the given string with formatting arguments inserted in order', () => {
         const testString = 'this is a {{0}} string, {{1}}.';
         const test = 'test';
         const buddy = 'buddy';
-        expect(I18nService.format(testString, test, buddy)).toBe('this is a test string, buddy.');
+        expect(I18nUtils.format(testString, test, buddy)).toBe('this is a test string, buddy.');
       });
     });
   });

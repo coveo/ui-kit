@@ -1,6 +1,7 @@
 import {LightningElement, track, api} from 'lwc';
+
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
-import {I18nService} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 
 import noResults from '@salesforce/label/c.quantic_NoResults';
 import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
@@ -80,28 +81,28 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get noResultsLabel() {
-    return I18nService.format(
+    return I18nUtils.format(
         this.hasQuery ? this.labels.noResultsFor : this.labels.noResults,
-        I18nService.getTextBold(this.query));
+        I18nUtils.getTextBold(this.query));
   }
 
   get duration() {
     if (this.state.hasDuration) {
       const duration = this.state.durationInSeconds;
-      const label = I18nService.getLabelNameWithCount('inSeconds', duration);
-      return ` ${I18nService.format(label, duration)}`;
+      const labelName = I18nUtils.getLabelNameWithCount('inSeconds', duration);
+      return ` ${I18nUtils.format(this.labels[labelName], duration)}`;
     }
     return '';
   }
 
   get summaryLabel() {
     const labelName = this.hasQuery
-      ? I18nService.getLabelNameWithCount('showingResultsOfWithQuery', this.state.lastResult)
-      : I18nService.getLabelNameWithCount('showingResultsOf', this.state.lastResult);
-    return `${I18nService.format(
+      ? I18nUtils.getLabelNameWithCount('showingResultsOfWithQuery', this.state.lastResult)
+      : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state.lastResult);
+    return `${I18nUtils.format(
       this.labels[labelName],
-      I18nService.getTextBold(this.range),
-      I18nService.getTextBold(this.total),
-      I18nService.getTextBold(this.query))} ${this.duration}`;
+      I18nUtils.getTextBold(this.range),
+      I18nUtils.getTextBold(this.total),
+      I18nUtils.getTextBold(this.query))} ${this.duration}`;
   }
 }

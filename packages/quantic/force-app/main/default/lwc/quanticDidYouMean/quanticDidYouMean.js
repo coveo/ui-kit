@@ -1,6 +1,6 @@
 import { api, LightningElement, track } from 'lwc';
 import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
-import {I18nService} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 
 import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
 import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
@@ -64,10 +64,10 @@ export default class QuanticDidYouMean extends LightningElement {
   }
 
   get noResultsLabel() {
-    return I18nService.format(this.labels.noResultsFor, I18nService.getTextBold(this.originalQuery));
+    return I18nUtils.format(this.labels.noResultsFor, I18nUtils.getTextBold(this.originalQuery));
   }
 
   get correctedQueryLabel() {
-    return I18nService.format(this.labels.queryCorrectedTo, I18nService.getTextBold(this.correctedQuery));
+    return I18nUtils.format(this.labels.queryCorrectedTo, I18nUtils.getTextBold(this.correctedQuery));
   }
 }

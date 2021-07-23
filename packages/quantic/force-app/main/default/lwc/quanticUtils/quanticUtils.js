@@ -1,3 +1,5 @@
+import LOCALE from '@salesforce/i18n/locale';
+
 export class Debouncer {
   _timeout;
 
@@ -51,23 +53,27 @@ export class Debouncer {
   }
 }
 
-export class I18nService{
+export class I18nUtils{
+  static isPluralInLocale = {
+    "en-US": (count) => count !== 0 && Math.abs(count) !== 1,
+    "fr-CA": (count) => Math.abs(count) >= 2
+  }
 
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
   }
 
   static getTextBold(text) {
-    return I18nService.getTextWithDecorator(text, '<b>', '</b>');
+    return I18nUtils.getTextWithDecorator(text, '<b>', '</b>');
   }
 
   static getLabelNameWithCount(labelName, count) {
     if (count === 0) {
       return `${labelName}_zero`;
-    } else if (Math.abs(count) === 1) {
-      return labelName;
+    } else if (I18nUtils.isPluralInLocale[LOCALE](count)) {
+      return `${labelName}_plural`;
     } 
-    return `${labelName}_plural`;
+    return labelName;
   }
   
   static format(stringToFormat, ...formattingArguments) {
