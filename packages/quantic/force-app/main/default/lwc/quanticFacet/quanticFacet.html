@@ -9,7 +9,7 @@
       <template if:true={isBodyVisible}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
           <template if:true={withSearch}>
-            <div onkeyup={handleKeyUp} class="facet-input__wrapper slds-align_absolute-center">
+            <div onchange={handleKeyUp} class="facet-input__wrapper slds-align_absolute-center">
               <lightning-input class="facet__search-input" name="Search" type="search" label="facet-input" variant="label-hidden" placeholder="Search"></lightning-input>
             </div>
           </template>
