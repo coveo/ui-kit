@@ -140,49 +140,58 @@ export class AtomicResultList implements InitializableComponent {
     );
   }
 
+  private buildListResults() {
+    return this.resultListState.results.map((result) =>
+      this.buildResult(result)
+    );
+  }
+
+  private buildTableResults() {
+    const fieldColumns = Array.from(
+      parseHTML(
+        this.getTemplate(this.resultListState.results[0])
+      ).querySelectorAll('atomic-table-element')
+    );
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            {fieldColumns.map((column) => (
+              <th>{column.getAttribute('label')}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {this.resultListState.results.map((result) => (
+            <tr>
+              <td>{this.buildResult(result)}</td>
+              {fieldColumns.map((column) => (
+                <td>
+                  <atomic-table-cell
+                    result={result}
+                    content={column.innerHTML}
+                  ></atomic-table-cell>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
   private get results() {
     if (!this.resultListState.results.length) {
       return [];
     }
 
     if (this.display === 'table') {
-      const fieldColumns = Array.from(
-        parseHTML(
-          this.getTemplate(this.resultListState.results[0])
-        ).querySelectorAll('atomic-table-element')
-      );
-
-      return (
-        <table>
-          <thead>
-            <tr>
-              <th>Description</th>
-              {fieldColumns.map((column) => (
-                <th>{column.getAttribute('label')}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {this.resultListState.results.map((result) => (
-              <tr>
-                <td>{this.buildResult(result)}</td>
-                {fieldColumns.map((column) => (
-                  <td>
-                    <atomic-table-cell
-                      result={result}
-                      content={column.innerHTML}
-                    ></atomic-table-cell>
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
+      return this.buildTableResults();
     }
-    return this.resultListState.results.map((result) =>
-      this.buildResult(result)
-    );
+
+    return this.buildListResults();
   }
 
   private getDisplayClass() {
