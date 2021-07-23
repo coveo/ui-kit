@@ -86,11 +86,11 @@ npm run cypress:test
 
 ## Utilities
 
-### The InitializeBindings, BindStateToController & BindStateToI18n decorators
+### The InitializeBindings & BindStateToController decorators
 
 The `InitializeBindings` is an utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `bindings` property directly.
 
-_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using either the `BindStateToController` or the `BindStateToI18n` decorator.
+_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using either the `BindStateToController`decorator.
 
 Here is a complete example using all these decorators:
 
@@ -107,16 +107,6 @@ export class AtomicComponent {
   @BindStateToController('controller')
   @State()
   private controllerState!: ControllerState;
-
-  // Will automically update the strings on initialization and when the locale changes
-  @BindStateToI18n()
-  @State()
-  private strings = {
-    value: () =>
-      this.bindings.i18n.t('value', {
-        /* options */
-      }),
-  };
 
   // Method called after bindings are defined, where controllers should be initialized
   public initialize() {

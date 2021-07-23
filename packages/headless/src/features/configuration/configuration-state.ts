@@ -32,10 +32,10 @@ export interface ConfigurationState {
   /**
    * The global headless engine Usage Analytics API configuration.
    */
-  analytics: AnalyticsConfiguration;
+  analytics: AnalyticsState;
 }
 
-export interface AnalyticsConfiguration {
+export interface AnalyticsState {
   /**
    * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
    */

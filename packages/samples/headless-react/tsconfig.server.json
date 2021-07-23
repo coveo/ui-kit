@@ -1,0 +1,19 @@
+{
+  "include": ["server"],
+  "compilerOptions": {
+    "outDir": "build/server",
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "lib": ["es6", "dom"],
+    "target": "es6",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true
+  }
+}

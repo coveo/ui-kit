@@ -19,6 +19,7 @@ import {StateFromReducersMapObject} from 'redux';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 import {
   SearchEngineConfiguration,
+  SearchConfigurationOptions,
   searchEngineConfigurationSchema,
   getSampleSearchEngineConfiguration,
 } from './search-engine-configuration';
@@ -27,8 +28,13 @@ import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {SearchAppState} from '../../state/search-app-state';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 
-export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
+export {
+  SearchEngineConfiguration,
+  SearchConfigurationOptions,
+  getSampleSearchEngineConfiguration,
+};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
@@ -40,7 +46,12 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
  */
 export interface SearchEngine<State extends object = {}>
   extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
-  executeFirstSearch(): void;
+  /**
+   * Executes the first search.
+   *
+   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
+   */
+  executeFirstSearch(analyticsEvent?: SearchAction): void;
 }
 
 /**
@@ -91,14 +102,14 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       return engine.state;
     },
 
-    executeFirstSearch() {
+    executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
       const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
 
       if (firstSearchExecuted) {
         return;
       }
 
-      const action = executeSearch(logInterfaceLoad());
+      const action = executeSearch(analyticsEvent);
       engine.dispatch(action);
     },
   };

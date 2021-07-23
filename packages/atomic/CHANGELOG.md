@@ -3,6 +3,206 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.43.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.42.4...@coveo/atomic@0.43.0) (2021-07-23)
+
+
+### Features
+
+* **atomic:** atomic rating facet star display ([#972](https://github.com/coveo/ui-kit/issues/972)) ([719034a](https://github.com/coveo/ui-kit/commit/719034a9225713916a7318012be8d5703ad8e7c8))
+
+
+
+
+
+## [0.42.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.42.3...@coveo/atomic@0.42.4) (2021-07-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.42.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.42.2...@coveo/atomic@0.42.3) (2021-07-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.42.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.42.1...@coveo/atomic@0.42.2) (2021-07-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.42.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.42.0...@coveo/atomic@0.42.1) (2021-07-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.42.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.41.0...@coveo/atomic@0.42.0) (2021-07-14)
+
+
+### Features
+
+* **headless:** improve standalone search box experience ([#962](https://github.com/coveo/ui-kit/issues/962)) ([e7c6d22](https://github.com/coveo/ui-kit/commit/e7c6d22d779cdde02d122f05e497de4d6c4ccfea))
+
+
+
+
+
+# [0.41.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.2...@coveo/atomic@0.41.0) (2021-07-14)
+
+
+### Features
+
+* **atomic:** atomic rating facet max value prop ([#963](https://github.com/coveo/ui-kit/issues/963)) ([62ddf43](https://github.com/coveo/ui-kit/commit/62ddf436654a7f2cc65e62f7fdc84b17c6a52b2d))
+
+
+
+
+
+## [0.40.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.1...@coveo/atomic@0.40.2) (2021-07-13)
+
+
+### Bug Fixes
+
+* **atomic:** various numeric facet v1 fixes & improvements ([#958](https://github.com/coveo/ui-kit/issues/958)) ([8fb78a2](https://github.com/coveo/ui-kit/commit/8fb78a21f6d9197aa694981c67295ba7f942b8e2))
+
+
+
+
+
+## [0.40.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.40.0...@coveo/atomic@0.40.1) (2021-07-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.40.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.3...@coveo/atomic@0.40.0) (2021-07-09)
+
+
+### Features
+
+* **atomic:** skeleton for Atomic-Rating-Facet ([#957](https://github.com/coveo/ui-kit/issues/957)) ([0639e63](https://github.com/coveo/ui-kit/commit/0639e632c9d2169ad1a6b88761bd2b5c47fde8d2))
+
+
+
+
+
+## [0.39.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.2...@coveo/atomic@0.39.3) (2021-07-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.39.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.1...@coveo/atomic@0.39.2) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.39.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.39.0...@coveo/atomic@0.39.1) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.39.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.38.1...@coveo/atomic@0.39.0) (2021-07-08)
+
+
+### Features
+
+* **atomic:** add facet format method to Atomic store ([#952](https://github.com/coveo/ui-kit/issues/952)) ([6a295ac](https://github.com/coveo/ui-kit/commit/6a295acf57007c0cfc90e6b63fb96bdda9b1357c))
+
+
+
+
+
+## [0.38.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.38.0...@coveo/atomic@0.38.1) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.37.0...@coveo/atomic@0.38.0) (2021-07-07)
+
+
+### Features
+
+* **atomic:** add facet search highlights  ([#945](https://github.com/coveo/ui-kit/issues/945)) ([009b16e](https://github.com/coveo/ui-kit/commit/009b16e7126c4c02977a30e49020fcf66caff974))
+
+
+
+
+
+# [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.36.1...@coveo/atomic@0.37.0) (2021-07-07)
+
+
+### Bug Fixes
+
+* **atomic:** fix atomic-numeric-facet-v1 render condition ([#949](https://github.com/coveo/ui-kit/issues/949)) ([251ca40](https://github.com/coveo/ui-kit/commit/251ca40ced276af98f8987e6ed949c4730ca0384))
+
+
+### Features
+
+* **atomic:** rework placeholders style ([#948](https://github.com/coveo/ui-kit/issues/948)) ([e60182a](https://github.com/coveo/ui-kit/commit/e60182abb08bf71fe0f96c8850e9d39ac419d361))
+
+
+
+
+
+## [0.36.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.36.0...@coveo/atomic@0.36.1) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.35.6...@coveo/atomic@0.36.0) (2021-07-06)
+
+
+### Features
+
+* **atomic:** add numeric facet custom input ([#941](https://github.com/coveo/ui-kit/issues/941)) ([b1f2ecd](https://github.com/coveo/ui-kit/commit/b1f2ecd0b2d660d888bc2688ba6ca6760f773e74))
+
+
+
+
+
+## [0.35.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.35.5...@coveo/atomic@0.35.6) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.35.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.35.4...@coveo/atomic@0.35.5) (2021-07-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [0.35.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.35.3...@coveo/atomic@0.35.4) (2021-07-02)
 
 **Note:** Version bump only for package @coveo/atomic

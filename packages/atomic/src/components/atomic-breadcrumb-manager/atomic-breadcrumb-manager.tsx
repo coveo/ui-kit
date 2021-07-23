@@ -4,8 +4,6 @@ import {
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
-  BindStateToI18n,
-  I18nState,
 } from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
@@ -14,11 +12,15 @@ import {
   CategoryFacetBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
+  NumericFacetValue,
+  DateFacetValue,
 } from '@coveo/headless';
-import {RangeFacetValue} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
-import {BaseFacetValue} from '@coveo/headless/dist/definitions/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
-import dayjs from 'dayjs';
+import {BaseFacetValue} from '../../../../headless/dist/definitions/features/facets/facet-api/response';
+
+type BreadcrumbFacet = Breadcrumb<BaseFacetValue & {value: string}>;
+type BaseBreadcrumbValue = BreadcrumbValue<BaseFacetValue>;
+type AnyBreadcrumbValue = BaseBreadcrumbValue | CategoryFacetBreadcrumb;
 
 /**
  * The `atomic-breadcrumb-manager` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -37,6 +39,16 @@ import dayjs from 'dayjs';
 export class AtomicBreadcrumbManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
+  private strings = {
+    breadcrumb: (label: string) =>
+      this.bindings.i18n.t('remove-filter-on', {value: label}),
+    clearAllFilters: () => this.bindings.i18n.t('clear-all-filters'),
+    nMore: (value: number) => this.bindings.i18n.t('n-more', {value}),
+    showNMoreFilters: (value: number) =>
+      this.bindings.i18n.t('show-n-more-filters', {value}),
+    to: (start: string, end: string) =>
+      this.bindings.i18n.t('to', {start, end}),
+  };
 
   @BindStateToController('breadcrumbManager')
   @State()
@@ -53,35 +65,19 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
    */
   @Prop() public categoryDivider = '/';
 
-  @BindStateToI18n()
-  @State()
-  public strings: I18nState = {
-    breadcrumb: (variables) =>
-      this.bindings.i18n.t('removeFilterOn', variables),
-    clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
-    nMore: (variables) => this.bindings.i18n.t('nMore', variables),
-    showNMoreFilters: (variables) =>
-      this.bindings.i18n.t('showNMoreFilters', variables),
-    to: (variables) => this.bindings.i18n.t('to', variables),
-  };
-
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
 
-  private getFormat(id: string) {
-    return this.bindings.store.state.facets[id].formatting;
-  }
-
   private getBreadcrumbValue(
     value: string,
-    breadcrumbValue: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
+    breadcrumbValue: AnyBreadcrumbValue
   ) {
     return (
       <button
         part="breadcrumb"
         class="inline-grid grid-flow-col text-neutral-dark hover:text-primary-light"
-        aria-label={this.strings.breadcrumb({value})}
+        aria-label={this.strings.breadcrumb(value)}
         title={value}
         onClick={() =>
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
@@ -97,12 +93,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     );
   }
 
-  private getBreadcrumbWrapper(
-    facetId: string,
-    field: string,
-    children: VNode[]
-  ) {
-    const label = this.bindings.store.state.facets[facetId].label || field;
+  private getBreadcrumbContainer(label: string, children: VNode[]) {
     return (
       <li class="mb-1 flex">
         <span
@@ -112,53 +103,53 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         >
           {label}:
         </span>
-        {children}
+        <ul part="breadcrumbs" class="flex flex-wrap">
+          {children}
+        </ul>
       </li>
     );
   }
 
-  private getBreadcrumbValueWrapper(children: VNode[]) {
+  private getBreadcrumbValueContainer(children: VNode[]) {
     return <li class="mr-3">{children}</li>;
   }
 
-  private getBreadcrumbValues(
-    breadcrumb: Breadcrumb<BaseFacetValue & {value: string}>
-  ) {
+  private getBreadcrumbValues(breadcrumb: BreadcrumbFacet) {
     const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) =>
-      this.getBreadcrumbValueWrapper(
+      this.getBreadcrumbValueContainer(
         this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)
       )
     );
 
-    return this.getBreadcrumbWrapper(
-      breadcrumb.facetId,
-      breadcrumb.field,
-      <ul part="breadcrumbs" class="flex flex-wrap">
-        {[...renderedBreadcrumbs, moreButton]}
-      </ul>
-    );
+    return [...renderedBreadcrumbs, moreButton];
   }
 
   private get facetBreadcrumbs() {
     return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
-      return this.getBreadcrumbValues(breadcrumb);
+      const {label} = this.bindings.store.get('facets')[breadcrumb.facetId];
+      return this.getBreadcrumbContainer(
+        label,
+        this.getBreadcrumbValues(breadcrumb)
+      );
     });
   }
 
-  private formatRangeBreadcrumb(
-    breadcrumb: Breadcrumb<RangeFacetValue>,
-    formatValue: (value: RangeFacetValue) => string
-  ): Breadcrumb<BaseFacetValue & {value: string}> {
+  private formatRangeBreadcrumb<
+    ValueType extends NumericFacetValue | DateFacetValue
+  >(
+    breadcrumb: Breadcrumb<ValueType>,
+    formatValue: (value: ValueType) => string
+  ): BreadcrumbFacet {
     return {
       ...breadcrumb,
-      values: breadcrumb.values.map((value) => ({
-        deselect: value.deselect,
+      values: breadcrumb.values.map((breadcrumbValue) => ({
+        deselect: breadcrumbValue.deselect,
         value: {
-          ...value.value,
-          value: formatValue(value.value),
+          ...breadcrumbValue.value,
+          value: formatValue(breadcrumbValue.value),
         },
       })),
     };
@@ -166,28 +157,31 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
 
   private get numericFacetBreadcrumbs() {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
-      (breadcrumb) =>
-        this.getBreadcrumbValues(
-          this.formatRangeBreadcrumb(breadcrumb, (value) => {
-            const {language} = this.bindings.i18n;
-            const start = value.start.toLocaleString(language);
-            const end = value.end.toLocaleString(language);
-            return this.strings.to({start, end});
-          })
-        )
+      (breadcrumb) => {
+        const {format, label} = this.bindings.store.get('numericFacets')[
+          breadcrumb.facetId
+        ];
+        return this.getBreadcrumbContainer(
+          label,
+          this.getBreadcrumbValues(
+            this.formatRangeBreadcrumb(breadcrumb, format)
+          )
+        );
+      }
     );
   }
 
   private get dateFacetBreadcrumbs() {
     return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const dateFormat = this.getFormat(breadcrumb.facetId);
-        return this.getBreadcrumbValues(
-          this.formatRangeBreadcrumb(breadcrumb, (value) => {
-            const start = dayjs(value.start).format(dateFormat);
-            const end = dayjs(value.end).format(dateFormat);
-            return this.strings.to({start, end});
-          })
+        const {format, label} = this.bindings.store.get('dateFacets')[
+          breadcrumb.facetId
+        ];
+        return this.getBreadcrumbContainer(
+          label,
+          this.getBreadcrumbValues(
+            this.formatRangeBreadcrumb(breadcrumb, format)
+          )
         );
       }
     );
@@ -221,11 +215,13 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private get categoryFacetBreadcrumbs() {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const breadcrumbsValue = this.getCategoryBreadrumbValue(breadcrumb);
-        return this.getBreadcrumbWrapper(
-          breadcrumb.facetId,
-          breadcrumb.field,
-          breadcrumbsValue
+        const {label} = this.bindings.store.get('categoryFacets')[
+          breadcrumb.facetId
+        ];
+
+        return this.getBreadcrumbContainer(
+          label,
+          this.getCategoryBreadrumbValue(breadcrumb)
         );
       }
     );
@@ -244,8 +240,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private showFacetCollapsedBreadcrumbs(field: string) {
-    this.collapsedBreadcrumbsState.push(field);
-    this.collapsedBreadcrumbsState = [...this.collapsedBreadcrumbsState];
+    this.collapsedBreadcrumbsState = [...this.collapsedBreadcrumbsState, field];
   }
 
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
@@ -279,15 +274,13 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
-    return this.getBreadcrumbValueWrapper(
+    return this.getBreadcrumbValueContainer(
       <button
         part="breadcrumb"
-        aria-label={this.strings.showNMoreFilters({
-          value: collapsedBreadcrumbNumber,
-        })}
+        aria-label={this.strings.showNMoreFilters(collapsedBreadcrumbNumber)}
         onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
       >
-        {this.strings.nMore({value: collapsedBreadcrumbNumber})}
+        {this.strings.nMore(collapsedBreadcrumbNumber)}
       </button>
     );
   }

@@ -1,34 +1,53 @@
-import {useState} from 'react';
-import {SearchPage} from './pages/SearchPage';
+import {SearchPage, SearchPageProps} from './pages/SearchPage';
 import {AboutPage} from './pages/AboutPage';
+import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
+import {RecommendationPage} from './pages/RecommendationPage';
+import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 
-export type Page = 'search' | 'about';
-
-export interface AppState {
-  currentPage: Page;
-}
-
-function App() {
-  const [state, setState] = useState<AppState>({currentPage: 'search'});
+function App(props: SearchPageProps) {
+  const activeNavLink: React.CSSProperties = {color: 'red'};
 
   return (
-    <main className="App">
-      <nav>
-        <button
-          disabled={state.currentPage === 'search'}
-          onClick={() => setState({currentPage: 'search'})}
-        >
-          Search
-        </button>
-        <button
-          disabled={state.currentPage === 'about'}
-          onClick={() => setState({currentPage: 'about'})}
-        >
-          About
-        </button>
-      </nav>
-      {state.currentPage === 'search' ? <SearchPage /> : <AboutPage />}
-    </main>
+    <BrowserRouter>
+      <main className="App">
+        <nav>
+          <button>
+            <NavLink exact to="/" activeStyle={activeNavLink}>
+              Search
+            </NavLink>
+          </button>
+          <button>
+            <NavLink to="/recommendation" activeStyle={activeNavLink}>
+              Recommendation
+            </NavLink>
+          </button>
+          <button>
+            <NavLink to="/standalone-search-box" activeStyle={activeNavLink}>
+              Standalone Search Box
+            </NavLink>
+          </button>
+          <button>
+            <NavLink to="/about" activeStyle={activeNavLink}>
+              About
+            </NavLink>
+          </button>
+        </nav>
+        <Switch>
+          <Route path="/recommendation">
+            <RecommendationPage />
+          </Route>
+          <Route path="/standalone-search-box">
+            <StandaloneSearchBoxPage />
+          </Route>
+          <Route path="/about">
+            <AboutPage />
+          </Route>
+          <Route path="/">
+            <SearchPage {...props} />
+          </Route>
+        </Switch>
+      </main>
+    </BrowserRouter>
   );
 }
 

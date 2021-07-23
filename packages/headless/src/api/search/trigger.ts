@@ -16,6 +16,10 @@ export interface TriggerNotify {
   content: string;
 }
 
+export function isNotifyTrigger(trigger: Trigger): trigger is TriggerNotify {
+  return trigger.type === 'notify';
+}
+
 /**
  * Redirect the user to another url
  */
@@ -47,5 +51,14 @@ export function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
  */
 export interface TriggerExecute {
   type: 'execute';
-  content: {name: string; params: {}[]};
+  content: {name: string; params: ExecuteTriggerParams};
+}
+
+/**
+ * The type of the parameters for a Trigger Execute object.
+ */
+export type ExecuteTriggerParams = (string | number | boolean)[];
+
+export function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
+  return trigger.type === 'execute';
 }

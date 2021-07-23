@@ -1,5 +1,12 @@
-import {LightningElement, track, api} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  LightningElement,
+  track,
+  api
+} from 'lwc';
+import {
+  registerComponentForInit,
+  initializeWithHeadless
+} from 'c/quanticHeadlessLoader';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
@@ -52,7 +59,10 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values || [];
+    return this.state.values.map(v => ({
+      ...v,
+      checked: v.state === 'selected'
+    })) || [];
   }
 
   get canShowMore() {

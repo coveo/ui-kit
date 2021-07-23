@@ -3,11 +3,12 @@ import {randomID} from '../../../utils/utils';
 import {FacetValueProps} from '../facet-common';
 
 export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
-  props
+  props,
+  children
 ) => {
   const id = randomID('facet-value-');
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
-  const ariaLabel = props.i18n.t('facetValue', {
+  const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
   });
@@ -30,15 +31,9 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
       <label
         htmlFor={id}
         part="value-checkbox-label"
-        class="w-full flex items-baseline pl-2 py-2.5 text-on-background cursor-pointer ellipsed"
+        class="w-full flex items-center pl-2 py-2.5 text-on-background cursor-pointer ellipsed"
       >
-        <span
-          title={props.displayValue}
-          part="value-label"
-          class="value-label ellipsed"
-        >
-          {props.displayValue}
-        </span>
+        {children}
         <span
           part="value-count"
           class="ml-1.5 text-neutral-dark with-parentheses"

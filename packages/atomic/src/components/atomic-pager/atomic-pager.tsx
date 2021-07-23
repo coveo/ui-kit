@@ -10,7 +10,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
@@ -42,13 +41,11 @@ export class AtomicPager implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  @BindStateToI18n()
-  @State()
   private strings = {
     pagination: () => this.bindings.i18n.t('pagination'),
     previous: () => this.bindings.i18n.t('previous'),
     next: () => this.bindings.i18n.t('next'),
-    pageNumber: (page: number) => this.bindings.i18n.t('pageNumber', {page}),
+    pageNumber: (page: number) => this.bindings.i18n.t('page-number', {page}),
   };
   @State() error!: Error;
 
