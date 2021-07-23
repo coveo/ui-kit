@@ -9,7 +9,7 @@
         <name>quantic_ShowingResultsOf_plural</name>
     </customLabels>
     <customLabels>
-        <label>Résultat {{0}} de {{1}}</label>
+        <label>Aucun résultat</label>
         <name>quantic_ShowingResultsOf_zero</name>
     </customLabels>
     <customLabels>
@@ -21,7 +21,7 @@
         <name>quantic_ShowingResultsOfWithQuery_plural</name>
     </customLabels>
     <customLabels>
-        <label>Résultat {{0}} de {{1}} pour {{2}}</label>
+        <label>Aucun résultat pour {{2}}</label>
         <name>quantic_ShowingResultsOfWithQuery_zero</name>
     </customLabels>
     <customLabels>

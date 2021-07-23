@@ -88,7 +88,8 @@ export default class QuanticSummary extends LightningElement {
   get duration() {
     if (this.state.hasDuration) {
       const duration = this.state.durationInSeconds;
-      return ` ${I18nService.format(this.labels.inSeconds_plural, duration)}`;
+      const label = I18nService.getLabelNameWithCount('inSeconds', duration);
+      return ` ${I18nService.format(label, duration)}`;
     }
     return '';
   }

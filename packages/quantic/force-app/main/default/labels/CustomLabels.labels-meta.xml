@@ -16,10 +16,10 @@
     </labels>
     <labels>
         <fullName>quantic_ShowingResultsOf_zero</fullName>
-        <value>Results {{0}} of {{1}}</value>
+        <value>No results</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>ex: Results 0-0 of 123,456</shortDescription>
+        <shortDescription>No Results</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_ShowingResultsOfWithQuery</fullName>
@@ -37,10 +37,10 @@
     </labels>
     <labels>
         <fullName>quantic_ShowingResultsOfWithQuery_zero</fullName>
-        <value>Results {{0}} of {{1}} for {{2}}</value>
+        <value>No results for {{2}}</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>ex: Results 0-0 of 123,456 for potato</shortDescription>
+        <shortDescription>ex: No results for potato</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_InSeconds</fullName>
