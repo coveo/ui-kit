@@ -165,9 +165,14 @@ export class AtomicRatingRangeFacet
       <span
         part="value-label"
         class="ml-1 flex items-center truncate group-hover:underline group-hover:text-primary"
+        style={
+          facetValue.state === 'selected'
+            ? {['font-weight']: 'bold'}
+            : {['font-weight']: 'normal'}
+        }
       >
         {facetValue.start === this.maxValueInIndex ? (
-          <span class="font-bold">{this.bindings.i18n.t('only')}</span>
+          <span>{this.bindings.i18n.t('only')}</span>
         ) : (
           this.bindings.i18n.t('& up')
         )}
