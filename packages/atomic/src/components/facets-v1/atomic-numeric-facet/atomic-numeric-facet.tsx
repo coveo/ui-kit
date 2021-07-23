@@ -43,6 +43,7 @@ import {
   NumberFormatter,
 } from '../../formats/format-common';
 import {NumberInputType} from '../facet-number-input/number-input-type';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -290,7 +291,12 @@ export class AtomicNumericFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueCheckbox>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+            ></FacetValueLabelHighlight>
+          </FacetValueCheckbox>
         );
       case 'link':
         return (
@@ -300,7 +306,12 @@ export class AtomicNumericFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueLink>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+            ></FacetValueLabelHighlight>
+          </FacetValueLink>
         );
     }
   }

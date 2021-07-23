@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.36.0...@coveo/quantic@0.37.0) (2021-07-21)
+
+
+### Features
+
+* **quantic:** update search bar look ([#970](https://github.com/coveo/ui-kit/issues/970)) ([c049cb3](https://github.com/coveo/ui-kit/commit/c049cb3cdbc7c9cfd6423d02390291653e011cdf))
+
+
+
+
+
 # [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.35.0...@coveo/quantic@0.36.0) (2021-07-20)
 
 
