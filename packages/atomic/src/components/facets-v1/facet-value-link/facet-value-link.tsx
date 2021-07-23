@@ -1,8 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {FacetValueProps} from '../facet-common';
-import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
-export const FacetValueLink: FunctionalComponent<FacetValueProps> = (props) => {
+export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
+  props,
+  children
+) => {
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
@@ -18,15 +20,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (props) => {
         aria-pressed={props.isSelected.toString()}
         aria-label={ariaLabel}
       >
-        <span
-          title={props.displayValue}
-          part="value-label"
-          class={`value-label ellipsed ${props.isSelected ? 'font-bold' : ''}`}
-          innerHTML={highlightSearchResult(
-            props.displayValue,
-            props.searchQuery
-          )}
-        ></span>
+        {children}
         <span
           part="value-count"
           class="ml-1.5 text-neutral-dark with-parentheses"

@@ -1,85 +1,49 @@
 import {isSearchApiDate} from './date-format';
 import {
-  parseRelativeDate,
+  deserializeRelativeDate,
   RelativeDate,
-  formatRelativeDate,
+  serializeRelativeDate,
   isRelativeDate,
   RelativeDatePeriod,
   isRelativeDateFormat,
   formatRelativeDateForSearchApi,
 } from './relative-date';
 
-describe('#parseRelativeDate', () => {
+describe('#deserializeRelativeDate', () => {
   it('parses "now"', () => {
-    const expected: RelativeDate = {period: 'now', useLocalTime: true};
-    expect(parseRelativeDate('now')).toEqual(expected);
+    const expected: RelativeDate = {period: 'now'};
+    expect(deserializeRelativeDate('now')).toEqual(expected);
   });
 
-  it('parses "nowutc"', () => {
-    const expected: RelativeDate = {period: 'now', useLocalTime: false};
-    expect(parseRelativeDate('nowutc')).toEqual(expected);
-  });
-
-  it('parses "future100quarter"', () => {
+  it('parses "next-100-quarter"', () => {
     const expected: RelativeDate = {
-      period: 'future',
-      useLocalTime: true,
+      period: 'next',
       amount: 100,
       unit: 'quarter',
     };
-    expect(parseRelativeDate('future100quarter')).toEqual(expected);
-  });
-
-  it('parses "past3Weekutc"', () => {
-    const expected: RelativeDate = {
-      period: 'past',
-      useLocalTime: false,
-      amount: 3,
-      unit: 'week',
-    };
-    expect(parseRelativeDate('past3Weekutc')).toEqual(expected);
+    expect(deserializeRelativeDate('next-100-quarter')).toEqual(expected);
   });
 });
 
-describe('#formatRelativeDate', () => {
+describe('#serializeRelativeDate', () => {
   it('when putting a bad format, should throw', () => {
     expect(() =>
-      formatRelativeDate({period: 'nononono' as RelativeDatePeriod})
+      serializeRelativeDate({period: 'nononono' as RelativeDatePeriod})
     ).toThrow();
   });
 
   it('formats to "now"', () => {
-    expect(formatRelativeDate({period: 'now', useLocalTime: true})).toEqual(
-      'now'
-    );
+    expect(serializeRelativeDate({period: 'now'})).toEqual('now');
   });
 
-  it('formats to "nowutc"', () => {
-    expect(formatRelativeDate({period: 'now', useLocalTime: false})).toEqual(
-      'nowutc'
-    );
-  });
-
-  it('formats to "future100quarter"', () => {
+  it('formats to "next-100-quarter"', () => {
     expect(
-      formatRelativeDate({
-        period: 'future',
-        useLocalTime: true,
+      serializeRelativeDate({
+        period: 'next',
         amount: 100,
         unit: 'quarter',
       })
-    ).toEqual('future100quarter');
-  });
-
-  it('formats to "past3weekutc"', () => {
-    expect(
-      formatRelativeDate({
-        period: 'past',
-        useLocalTime: false,
-        amount: 3,
-        unit: 'week',
-      })
-    ).toEqual('past3weekutc');
+    ).toEqual('next-100-quarter');
   });
 });
 
@@ -105,14 +69,23 @@ describe('#isRelativeDate', () => {
 describe('#formatRelativeDateForSearchApi', () => {
   it('returns an valid API date value', () =>
     expect(
-      isSearchApiDate(formatRelativeDateForSearchApi('future100quarter'))
+      isSearchApiDate(formatRelativeDateForSearchApi('next-100-quarter'))
     ).toBe(true));
 });
 
 describe('#isRelativeDateFormat', () => {
   it('returns true on a valid format', () =>
-    expect(isRelativeDateFormat('future100quarter')).toBe(true));
+    expect(isRelativeDateFormat('next-100-quarter')).toBe(true));
 
-  it('returns false on a valid format', () =>
+  it('returns false on a incomplete format', () =>
+    expect(isRelativeDateFormat('next-100')).toBe(false));
+
+  it('returns false on a wrong period', () =>
+    expect(isRelativeDateFormat('previous-2-day')).toBe(false));
+
+  it('returns false on a wrong unit', () =>
+    expect(isRelativeDateFormat('past-2-dog')).toBe(false));
+
+  it('returns false on an invalid format', () =>
     expect(isRelativeDateFormat('2018/01/01@00:00:00')).toBe(false));
 });
