@@ -579,15 +579,11 @@ export namespace Components {
         /**
           * The relative period of time to now.
          */
-        "period": 'past' | 'future';
+        "period": 'past' | 'next';
         /**
           * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
          */
         "unit": RelativeDateUnit;
-        /**
-          * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-         */
-        "useLocalTime": boolean;
     }
     interface AtomicTimeframeFacet {
         /**
@@ -1493,15 +1489,11 @@ declare namespace LocalJSX {
         /**
           * The relative period of time to now.
          */
-        "period"?: 'past' | 'future';
+        "period"?: 'past' | 'next';
         /**
           * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
          */
         "unit": RelativeDateUnit;
-        /**
-          * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-         */
-        "useLocalTime"?: boolean;
     }
     interface AtomicTimeframeFacet {
         /**

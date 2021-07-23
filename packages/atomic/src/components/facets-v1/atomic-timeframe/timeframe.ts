@@ -5,10 +5,10 @@ export interface Timeframe extends RelativeDate {
 }
 
 export const defaultTimeframes: () => Timeframe[] = () => [
-  {unit: 'hour', amount: 1, period: 'past', useLocalTime: true},
-  {unit: 'day', amount: 1, period: 'past', useLocalTime: true},
-  {unit: 'week', amount: 1, period: 'past', useLocalTime: true},
-  {unit: 'month', amount: 1, period: 'past', useLocalTime: true},
-  {unit: 'quarter', amount: 1, period: 'past', useLocalTime: true},
-  {unit: 'year', amount: 1, period: 'past', useLocalTime: true},
+  {unit: 'hour', amount: 1, period: 'past'},
+  {unit: 'day', amount: 1, period: 'past'},
+  {unit: 'week', amount: 1, period: 'past'},
+  {unit: 'month', amount: 1, period: 'past'},
+  {unit: 'quarter', amount: 1, period: 'past'},
+  {unit: 'year', amount: 1, period: 'past'},
 ];
