@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.2...@coveo/headless@1.7.3) (2021-07-21)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.1...@coveo/headless@1.7.2) (2021-07-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.0...@coveo/headless@1.7.1) (2021-07-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.6.3...@coveo/headless@1.7.0) (2021-07-14)
+
+
+### Features
+
+* **headless:** improve standalone search box experience ([#962](https://github.com/coveo/ui-kit/issues/962)) ([e7c6d22](https://github.com/coveo/ui-kit/commit/e7c6d22d779cdde02d122f05e497de4d6c4ccfea))
+
+
+
+
+
 ## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.6.2...@coveo/headless@1.6.3) (2021-07-13)
 
 **Note:** Version bump only for package @coveo/headless

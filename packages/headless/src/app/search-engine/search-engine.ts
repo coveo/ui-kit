@@ -28,6 +28,7 @@ import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {SearchAppState} from '../../state/search-app-state';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 
 export {
   SearchEngineConfiguration,
@@ -47,8 +48,10 @@ export interface SearchEngine<State extends object = {}>
   extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
   /**
    * Executes the first search.
+   *
+   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
    */
-  executeFirstSearch(): void;
+  executeFirstSearch(analyticsEvent?: SearchAction): void;
 }
 
 /**
@@ -99,14 +102,14 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       return engine.state;
     },
 
-    executeFirstSearch() {
+    executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
       const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
 
       if (firstSearchExecuted) {
         return;
       }
 
-      const action = executeSearch(logInterfaceLoad());
+      const action = executeSearch(analyticsEvent);
       engine.dispatch(action);
     },
   };

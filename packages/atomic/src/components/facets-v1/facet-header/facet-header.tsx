@@ -13,12 +13,12 @@ export const FacetHeader: FunctionalComponent<{
   onClearFilters(): void;
 }> = (props) => {
   const label = props.i18n.t(props.label);
-  const expandFacet = props.i18n.t('expandFacet', {label});
-  const collapseFacet = props.i18n.t('collapseFacet', {label});
-  const clearFilters = props.i18n.t('clearFilters', {
+  const expandFacet = props.i18n.t('expand-facet', {label});
+  const collapseFacet = props.i18n.t('collapse-facet', {label});
+  const clearFilters = props.i18n.t('clear-filters', {
     count: props.numberOfSelectedValues,
   });
-  const clearFiltersForFacet = props.i18n.t('clearFiltersForFacet', {
+  const clearFiltersForFacet = props.i18n.t('clear-filters-for-facet', {
     count: props.numberOfSelectedValues,
     label,
   });

@@ -16,12 +16,12 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   props
 ) => {
   const label = props.i18n.t(props.label);
-  const showMore = props.i18n.t('showMore');
-  const showMoreFacetValues = props.i18n.t('showMoreFacetValues', {
+  const showMore = props.i18n.t('show-more');
+  const showMoreFacetValues = props.i18n.t('show-more-facet-values', {
     label,
   });
-  const showLess = props.i18n.t('showLess');
-  const showLessFacetValues = props.i18n.t('showLessFacetValues', {
+  const showLess = props.i18n.t('show-less');
+  const showLessFacetValues = props.i18n.t('show-less-facet-values', {
     label,
   });
   const btnClasses =

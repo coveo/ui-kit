@@ -6,7 +6,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
   children
 ) => {
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
-  const ariaLabel = props.i18n.t('facetValue', {
+  const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
   });

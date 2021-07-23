@@ -18,6 +18,9 @@
             "c/quanticDateFacetValue": [
                 "quanticDateFacetValue/quanticDateFacetValue.js"
             ],
+            "c/quanticDidYouMean": [
+                "quanticDidYouMean/quanticDidYouMean.js"
+            ],
             "c/quanticCategoryFacet": [
                 "quanticCategoryFacet/quanticCategoryFacet.js"
             ],

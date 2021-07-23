@@ -41,11 +41,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   private strings = {
     breadcrumb: (label: string) =>
-      this.bindings.i18n.t('removeFilterOn', {value: label}),
-    clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
-    nMore: (value: number) => this.bindings.i18n.t('nMore', {value}),
+      this.bindings.i18n.t('remove-filter-on', {value: label}),
+    clearAllFilters: () => this.bindings.i18n.t('clear-all-filters'),
+    nMore: (value: number) => this.bindings.i18n.t('n-more', {value}),
     showNMoreFilters: (value: number) =>
-      this.bindings.i18n.t('showNMoreFilters', {value}),
+      this.bindings.i18n.t('show-n-more-filters', {value}),
     to: (start: string, end: string) =>
       this.bindings.i18n.t('to', {start, end}),
   };

@@ -14,7 +14,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -87,19 +86,17 @@ export class AtomicCategoryFacet
 
   private facetSearch?: FacetSearch;
 
-  @BindStateToI18n()
-  @State()
   public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
     searchBox: () =>
-      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
-    querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
-    showMore: () => this.bindings.i18n.t('showMore'),
-    showLess: () => this.bindings.i18n.t('showLess'),
-    noValuesFound: () => this.bindings.i18n.t('noValuesFound'),
-    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
-    allCategories: () => this.bindings.i18n.t('allCategories'),
+      this.bindings.i18n.t('facet-search', {label: this.strings[this.label]()}),
+    querySuggestionList: () => this.bindings.i18n.t('query-suggestion-list'),
+    showMore: () => this.bindings.i18n.t('show-more'),
+    showLess: () => this.bindings.i18n.t('show-less'),
+    noValuesFound: () => this.bindings.i18n.t('no-values-found'),
+    facetValue: (variables) => this.bindings.i18n.t('facet-value', variables),
+    allCategories: () => this.bindings.i18n.t('all-categories'),
     pathPrefix: () => this.bindings.i18n.t('in'),
     under: (variables) => this.bindings.i18n.t('under', variables),
   };
@@ -117,7 +114,7 @@ export class AtomicCategoryFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'noLabel';
+  @Prop() public label = 'no-label';
   /**
    * The character that separates values of a multi-value field.
    */

@@ -77,7 +77,7 @@ export interface InitializableComponent extends ComponentInterface {
  * Once a component is bound, the `initialize` method is called, if defined.
  *
  * In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`.
- * This is possible by using either the `BindStateToController` or the `BindStateToI18n` decorator.
+ * This is possible by using the `BindStateToController` decorator.
  *
  * For more information and examples, view the "Utilities" section of the readme.
  */
@@ -229,12 +229,3 @@ export function BindStateToController(
 }
 
 export type I18nState = Record<string, (variables?: TOptions) => string>;
-
-/**
- * TODO: remove this method once no component calls it
- * @deprecated This binding method is not needed anymore and should be removed.
- */
-export function BindStateToI18n() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return (_component: InitializableComponent, _stateProperty: string) => {};
-}

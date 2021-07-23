@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.36.0...@coveo/quantic@0.37.0) (2021-07-21)
+
+
+### Features
+
+* **quantic:** update search bar look ([#970](https://github.com/coveo/ui-kit/issues/970)) ([c049cb3](https://github.com/coveo/ui-kit/commit/c049cb3cdbc7c9cfd6423d02390291653e011cdf))
+
+
+
+
+
+# [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.35.0...@coveo/quantic@0.36.0) (2021-07-20)
+
+
+### Features
+
+* **quantic:** SFINT-3956 Quantic didYouMean component ([#969](https://github.com/coveo/ui-kit/issues/969)) ([2012c71](https://github.com/coveo/ui-kit/commit/2012c712c7a202a33a7850d577ca4e91fe5bafaa))
+
+
+
+
+
+# [0.35.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.2...@coveo/quantic@0.35.0) (2021-07-15)
+
+
+### Features
+
+* **quantic:** fix-facets-selected-state ([#964](https://github.com/coveo/ui-kit/issues/964)) ([8012578](https://github.com/coveo/ui-kit/commit/8012578ae105bbd0c2384e8947d80c4c2e29e057))
+
+
+
+
+
+## [0.34.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.1...@coveo/quantic@0.34.2) (2021-07-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.34.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.0...@coveo/quantic@0.34.1) (2021-07-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.34.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.33.1...@coveo/quantic@0.34.0) (2021-07-13)
 
 

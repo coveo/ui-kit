@@ -47,7 +47,7 @@ export class AtomicResultValue {
         ) : (
           <atomic-result-text
             field="title"
-            default="noTitle"
+            default="no-title"
           ></atomic-result-text>
         )}
       </a>
