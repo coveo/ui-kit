@@ -132,8 +132,9 @@ export default class QuanticFacet extends LightningElement {
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
   onSelect(evt) {
-    console.log(evt.detail);
     this.facet.toggleSelect(evt.detail);
+    this.clearInput();
+    this.isFacetSearchActive = false;
   }
 
   showMore() {
@@ -156,8 +157,13 @@ export default class QuanticFacet extends LightningElement {
   handleKeyUp(){
     this.isFacetSearchActive = this.input.value !== '';
     this.facet.facetSearch.updateText(this.input.value);
+    this.updateState();
     this.facet.facetSearch.search();
-    console.log(this.hasSearchResults);
+    console.log(this.facetSearchResults);
+  }
+
+  clearInput(){
+    this.input.value = '';
   }
 
   highlightResult(result, query){
