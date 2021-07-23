@@ -5,6 +5,8 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 
+import search from '@salesforce/label/c.quantic_Search';
+
 const ENTER = 13;
 const ARROWUP = 38;
 const ARROWDOWN = 40;
@@ -24,10 +26,15 @@ export default class QuanticSearchBox extends LightningElement {
       value: s.highlightedValue,
     }));
   }
+
+  labels = {
+    search
+  }
+  
   /** @type {string} */
   @api engineId;
   /** @type {string} */
-  @api placeholder = 'Search...';
+  @api placeholder = `${this.labels.search}...`;
   /** @type {boolean} */
   @api withoutSubmitButton = false;
   /** @type {number} */
@@ -40,6 +47,7 @@ export default class QuanticSearchBox extends LightningElement {
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+
   /** @type {number} */
   selectionIndex = -1;
   /** @type {HTMLInputElement} */
@@ -226,6 +234,7 @@ export default class QuanticSearchBox extends LightningElement {
   clearInput() {
     this.input.value = '';
     this.searchBox.updateText(this.input.value);
+    this.input.focus();
   }
 
   preventDefault(event) {

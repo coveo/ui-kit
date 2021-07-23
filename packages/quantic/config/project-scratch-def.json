@@ -1,5 +1,11 @@
 {
   "orgName": "quantic local",
   "edition": "Developer",
-  "features": []
+  "features": [],
+  "settings": {
+    "languageSettings": {
+      "enableTranslationWorkbench":  true,
+      "enableEndUserLanguages": true
+    }
+  }
 }
