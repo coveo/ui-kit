@@ -88,6 +88,10 @@ export default class QuanticFacet extends LightningElement {
     })) || [];
   }
 
+  get query(){
+    return this.input.value;
+  }
+
   get canShowMore() {
     if (!this.facet) {
       return false;
@@ -108,6 +112,10 @@ export default class QuanticFacet extends LightningElement {
 
   get isAnyChecked(){
     return this.state.hasActiveValues;
+  }
+
+  get hasSearchResults(){
+    return this.facet.state.facetSearch.values.length !== 0;
   }
 
   get facetSearchResults(){
@@ -149,7 +157,7 @@ export default class QuanticFacet extends LightningElement {
     this.isFacetSearchActive = this.input.value !== '';
     this.facet.facetSearch.updateText(this.input.value);
     this.facet.facetSearch.search();
-    console.log(this.facetSearchResults);
+    console.log(this.hasSearchResults);
   }
 
   highlightResult(result, query){

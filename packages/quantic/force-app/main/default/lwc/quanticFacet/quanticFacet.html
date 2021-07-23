@@ -27,8 +27,15 @@
           </template>
 
           <template if:true={isFacetSearchActive}>
-            <template for:each={facetSearchResults} for:item="result">
-              <c-quantic-facet-value onselectvalue={onSelect} key={result.value} item={result} is-checked={result.checked}></c-quantic-facet-value>
+            <template if:true={hasSearchResults}>
+              <template for:each={facetSearchResults} for:item="result">
+                <c-quantic-facet-value onselectvalue={onSelect} key={result.value} item={result} is-checked={result.checked}></c-quantic-facet-value>
+              </template>
+            </template>
+            <template if:false={hasSearchResults}>
+              <li class="slds-var-m-around_small slds-grid">
+                <span class="slds-align_absolute-center slds-p-vertical_medium slds-p-horizontal_xx-large facet-value__no-match">No matches found for "{query}"</span>
+              </li>
             </template>
           </template>
         </ul>

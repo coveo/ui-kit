@@ -5,3 +5,8 @@
 .facet-input__wrapper {
     width: 100%;
 }
+
+.facet-value__no-match {
+   color: #8E959D;
+   background-color: #F6F7F9;
+}
