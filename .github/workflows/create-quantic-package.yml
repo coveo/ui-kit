@@ -1,4 +1,4 @@
-name: Create Quantic Package Workflow
+name: Create Quantic Package
 
 env:
   SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
