@@ -1034,5 +1034,13 @@
   "rating": {
     "en": "Rating",
     "fr": "Notation"
+  },
+  "and-up": {
+    "en": "& up",
+    "fr": "& plus"
+  },
+  "only": {
+    "en": "only",
+    "fr": "seulement"
   }
 }
