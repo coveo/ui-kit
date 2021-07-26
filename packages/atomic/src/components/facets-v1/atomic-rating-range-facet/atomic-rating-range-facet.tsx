@@ -20,7 +20,6 @@ import {
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
-import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
 import {BaseFacet} from '../facet-common';
@@ -40,20 +39,19 @@ import Star from '../../../images/star.svg';
  * @part clear-button-icon - The clear button icon.
  *
  * @part values - The facet values container.
+ * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
- * @part value-rating - The facet value rating, common for all displays.
  *
- * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
+ * @part value-box - The facet value when display is 'box'.
  *
  */
 @Component({
-  tag: 'atomic-rating-facet',
-  styleUrl: 'atomic-rating-facet.pcss',
+  tag: 'atomic-rating-range-facet',
+  styleUrl: 'atomic-rating-range-facet.pcss',
   shadow: true,
 })
-export class AtomicRatingFacet
+export class AtomicRatingRangeFacet
   implements
     InitializableComponent,
     BaseFacet<NumericFacet, NumericFacetState> {
@@ -90,11 +88,6 @@ export class AtomicRatingFacet
    * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
-  /**
-   * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
-   * Possible values are 'checkbox' and 'link'.
-   */
-  @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
   /**
    * The icon used to display the rating.
    */
@@ -136,8 +129,8 @@ export class AtomicRatingFacet
     for (let i = 0; i < this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
-          start: Math.round(i * this.scaleFactor * 100) / 100,
-          end: Math.round((i + 1) * this.scaleFactor * 100) / 100,
+          start: Math.round((i + 1) * this.scaleFactor * 100) / 100,
+          end: Math.round(this.maxValueInIndex * 100) / 100,
           endInclusive: true,
         })
       );
@@ -165,43 +158,46 @@ export class AtomicRatingFacet
     );
   }
 
+  private renderLabelText(facetValue: NumericFacetValue) {
+    const textClasses =
+      'ml-1 flex items-center truncate group-hover:underline group-hover:text-primary';
+    return (
+      <span
+        part="value-label"
+        class={
+          facetValue.state === 'selected'
+            ? textClasses + ' font-bold'
+            : textClasses
+        }
+      >
+        {facetValue.start === this.maxValueInIndex ? (
+          <span>{this.bindings.i18n.t('only')}</span>
+        ) : (
+          this.bindings.i18n.t('& up')
+        )}
+      </span>
+    );
+  }
+
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
-    switch (this.displayValuesAs) {
-      case 'checkbox':
-        return (
-          <FacetValueCheckbox
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-          >
-            <FacetValueIconRating
-              numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.end}
-              icon={this.icon}
-            ></FacetValueIconRating>
-          </FacetValueCheckbox>
-        );
-      case 'link':
-        return (
-          <FacetValueLink
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-          >
-            <FacetValueIconRating
-              numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.end}
-              icon={this.icon}
-            ></FacetValueIconRating>
-          </FacetValueLink>
-        );
-    }
+    return (
+      <FacetValueLink
+        displayValue={displayValue}
+        numberOfResults={facetValue.numberOfResults}
+        isSelected={isSelected}
+        i18n={this.bindings.i18n}
+        onClick={onClick}
+      >
+        <FacetValueIconRating
+          numberOfTotalIcons={this.maxValueInIndex}
+          numberOfActiveIcons={facetValue.start}
+          icon={this.icon}
+        ></FacetValueIconRating>
+        {this.renderLabelText(facetValue)}
+      </FacetValueLink>
+    );
   }
 
   private renderValuesContainer(children: VNode[]) {
@@ -215,11 +211,7 @@ export class AtomicRatingFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.valuesToRender.map((value) =>
-        this.renderValue(value, () =>
-          this.displayValuesAs === 'link'
-            ? this.facet.toggleSingleSelect(value)
-            : this.facet.toggleSelect(value)
-        )
+        this.renderValue(value, () => this.facet.toggleSingleSelect(value))
       )
     );
   }

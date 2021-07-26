@@ -1,4 +1,11 @@
 <template>
-  <lightning-combobox name="sort" value={value} placeholder={labels.sortBy} options={options} onchange={handleChange}>
-  </lightning-combobox>
+  <div class="sort__container">
+    <lightning-layout-item class="sort__header" padding="horizontal-small">
+      <lightning-formatted-text value={labels.sortBy}></lightning-formatted-text>
+    </lightning-layout-item>
+    <lightning-layout-item>
+      <lightning-combobox name="sort" value={value} variant="label-hidden" label={labels.sortBy} placeholder={labels.relevancy} options={options} onchange={handleChange}>
+      </lightning-combobox>
+    </lightning-layout-item>
+  </div>
 </template>

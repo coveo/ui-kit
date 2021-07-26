@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
 import { i18n } from "i18next";
@@ -130,6 +130,12 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+    }
+    interface AtomicFacetDateInput {
+        "bindings": Bindings;
+        "filter": DateFilter;
+        "filterState": DateFilterState;
+        "label": string;
     }
     interface AtomicFacetManager {
     }
@@ -330,6 +336,32 @@ export namespace Components {
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
         "displayValuesAs": 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The icon used to display the rating.
+         */
+        "icon": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The number of intervals to split the index for this facet.
+         */
+        "numberOfIntervals": number;
+    }
+    interface AtomicRatingRangeFacet {
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -571,6 +603,24 @@ export namespace Components {
          */
         "value": string;
     }
+    interface AtomicTimeframe {
+        /**
+          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+         */
+        "amount": number;
+        /**
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
+        /**
+          * The relative period of time to now.
+         */
+        "period": 'past' | 'next';
+        /**
+          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
+         */
+        "unit": RelativeDateUnit;
+    }
     interface AtomicTimeframeFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -632,6 +682,12 @@ declare global {
     var HTMLAtomicFacetElement: {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
+    };
+    interface HTMLAtomicFacetDateInputElement extends Components.AtomicFacetDateInput, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetDateInputElement: {
+        prototype: HTMLAtomicFacetDateInputElement;
+        new (): HTMLAtomicFacetDateInputElement;
     };
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -734,6 +790,12 @@ declare global {
     var HTMLAtomicRatingFacetElement: {
         prototype: HTMLAtomicRatingFacetElement;
         new (): HTMLAtomicRatingFacetElement;
+    };
+    interface HTMLAtomicRatingRangeFacetElement extends Components.AtomicRatingRangeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicRatingRangeFacetElement: {
+        prototype: HTMLAtomicRatingRangeFacetElement;
+        new (): HTMLAtomicRatingRangeFacetElement;
     };
     interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
     }
@@ -855,6 +917,12 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
+    interface HTMLAtomicTimeframeElement extends Components.AtomicTimeframe, HTMLStencilElement {
+    }
+    var HTMLAtomicTimeframeElement: {
+        prototype: HTMLAtomicTimeframeElement;
+        new (): HTMLAtomicTimeframeElement;
+    };
     interface HTMLAtomicTimeframeFacetElement extends Components.AtomicTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicTimeframeFacetElement: {
@@ -869,6 +937,7 @@ declare global {
         "atomic-date-range": HTMLAtomicDateRangeElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
+        "atomic-facet-date-input": HTMLAtomicFacetDateInputElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-facet-v1": HTMLAtomicFacetV1Element;
@@ -886,6 +955,7 @@ declare global {
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
+        "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
@@ -906,6 +976,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-text": HTMLAtomicTextElement;
+        "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -1029,6 +1100,13 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+    }
+    interface AtomicFacetDateInput {
+        "bindings": Bindings;
+        "filter": DateFilter;
+        "filterState": DateFilterState;
+        "label": string;
+        "onAtomic/dateInputApply"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
     }
@@ -1231,6 +1309,32 @@ declare namespace LocalJSX {
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
         "displayValuesAs"?: 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The icon used to display the rating.
+         */
+        "icon"?: string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The number of intervals to split the index for this facet.
+         */
+        "numberOfIntervals"?: number;
+    }
+    interface AtomicRatingRangeFacet {
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -1460,6 +1564,24 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
+    interface AtomicTimeframe {
+        /**
+          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+         */
+        "amount"?: number;
+        /**
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
+        /**
+          * The relative period of time to now.
+         */
+        "period"?: 'past' | 'next';
+        /**
+          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
+         */
+        "unit": RelativeDateUnit;
+    }
     interface AtomicTimeframeFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -1486,6 +1608,7 @@ declare namespace LocalJSX {
         "atomic-date-range": AtomicDateRange;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
+        "atomic-facet-date-input": AtomicFacetDateInput;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-facet-v1": AtomicFacetV1;
@@ -1503,6 +1626,7 @@ declare namespace LocalJSX {
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
+        "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
@@ -1523,6 +1647,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-text": AtomicText;
+        "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -1537,6 +1662,7 @@ declare module "@stencil/core" {
             "atomic-date-range": LocalJSX.AtomicDateRange & JSXBase.HTMLAttributes<HTMLAtomicDateRangeElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
+            "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;
@@ -1554,6 +1680,7 @@ declare module "@stencil/core" {
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
+            "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
@@ -1574,6 +1701,7 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
+            "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
         }
     }

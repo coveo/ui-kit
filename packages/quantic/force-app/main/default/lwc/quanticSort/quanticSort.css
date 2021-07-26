@@ -1,0 +1,10 @@
+.sort__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.sort__header {
+    color: #3e3e3c;
+    padding: 6px 6px 0px 0px;
+}
