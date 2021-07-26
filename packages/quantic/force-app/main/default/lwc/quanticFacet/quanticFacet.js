@@ -119,7 +119,7 @@ export default class QuanticFacet extends LightningElement {
   get facetSearchResults(){
     const results = this.facet.state.facetSearch.values;
     return results.map(result => ({
-      value: result.displayValue,
+      value: result.rawValue,
       state: 'idle',
       numberOfResults: result.count,
       checked: false,
@@ -134,7 +134,17 @@ export default class QuanticFacet extends LightningElement {
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
   onSelect(evt) {
-    this.facet.toggleSelect(evt.detail);
+    const specificSearchResult = {
+      displayValue: evt.detail.value,
+      rawValue: evt.detail.value,
+      count: evt.detail.numberOfResults,
+    
+    }
+    if(this.isFacetSearchActive){
+      this.facet.facetSearch.select(specificSearchResult);
+    }else{
+      this.facet.toggleSelect(evt.detail);
+    }
     this.clearInput();
     this.isFacetSearchActive = false;
   }
@@ -158,12 +168,15 @@ export default class QuanticFacet extends LightningElement {
   }
 
   handleKeyUp(){
-    this.isFacetSearchActive = this.input.value !== '';
-    console.log(this.input);
-    console.log(this.input.value);
-    this.facet.facetSearch.updateText(this.input.value);
-    this.facet.facetSearch.search();
-    console.log(this.facetSearchResults);
+    if(this.isSearchComplete){
+      this.isFacetSearchActive = this.input.value !== '';
+      console.log(this.input.value);
+      this.facet.facetSearch.updateText(this.input.value);
+      this.facet.facetSearch.search();
+      console.log(this.facetSearchResults);
+    } else{
+      console.log('still searching...')
+    }
   }
 
   clearInput(){
