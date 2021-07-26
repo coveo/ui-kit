@@ -42,8 +42,6 @@ import Star from '../../../images/star.svg';
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  *
- * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  *
@@ -161,14 +159,15 @@ export class AtomicRatingRangeFacet
   }
 
   private renderLabelText(facetValue: NumericFacetValue) {
+    const textClasses =
+      'ml-1 flex items-center truncate group-hover:underline group-hover:text-primary';
     return (
       <span
         part="value-label"
-        class="ml-1 flex items-center truncate group-hover:underline group-hover:text-primary"
-        style={
+        class={
           facetValue.state === 'selected'
-            ? {['font-weight']: 'bold'}
-            : {['font-weight']: 'normal'}
+            ? textClasses + ' font-bold'
+            : textClasses
         }
       >
         {facetValue.start === this.maxValueInIndex ? (
