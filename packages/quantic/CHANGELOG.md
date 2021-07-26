@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.39.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.38.0...@coveo/quantic@0.39.0) (2021-07-26)
+
+
+### Features
+
+* **quantic:** create-and-promote-quantic-package-with-github-actions ([#959](https://github.com/coveo/ui-kit/issues/959)) ([2d20100](https://github.com/coveo/ui-kit/commit/2d2010063aee99a22e9706cc21ef877eff5539fe))
+
+
+
+
+
 # [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.37.1...@coveo/quantic@0.38.0) (2021-07-23)
 
 
