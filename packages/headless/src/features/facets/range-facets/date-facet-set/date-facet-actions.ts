@@ -24,6 +24,10 @@ import {buildDateRange} from '../../../../controllers/facets/range-facet/date-fa
 import {DateRangeRequest} from './interfaces/request';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {
+  formatRelativeDateForSearchApi,
+  isRelativeDateFormat,
+} from '../../../../api/search/date/relative-date';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -118,6 +122,12 @@ const dateFacetRegistrationOptionsDefinition = {
   rangeAlgorithm: new Value<RangeFacetRangeAlgorithm>({required: false}),
 };
 
+function getAbsoluteDate(date: string) {
+  return isRelativeDateFormat(date)
+    ? formatRelativeDateForSearchApi(date)
+    : date;
+}
+
 export function validateManualDateRanges(
   options: Pick<RegisterDateFacetActionCreatorPayload, 'currentValues'>
 ) {
@@ -127,7 +137,7 @@ export function validateManualDateRanges(
 
   options.currentValues.forEach((value) => {
     const {start, end} = buildDateRange(value);
-    if (dayjs(start).isAfter(dayjs(end))) {
+    if (dayjs(getAbsoluteDate(start)).isAfter(dayjs(getAbsoluteDate(end)))) {
       throw new Error(
         `The start value is greater than the end value for the date range ${value.start} to ${value.end}`
       );

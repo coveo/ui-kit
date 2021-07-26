@@ -3,12 +3,12 @@ import {FacetValueState} from '../../facet/headless-facet';
 
 export interface NumericRangeOptions {
   /**
-   * The start value of the range.
+   * The starting value of the numeric range.
    */
   start: number;
 
   /**
-   * The end value of the range.
+   * The ending value of the numeric range.
    */
   end: number;
 
