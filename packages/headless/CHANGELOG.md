@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.8.0...@coveo/headless@1.9.0) (2021-07-26)
+
+
+### Features
+
+* **headless:** support relative dates in date facet ([#987](https://github.com/coveo/ui-kit/issues/987)) ([b4d8ad8](https://github.com/coveo/ui-kit/commit/b4d8ad8ffdb554930f15c350f25d4a49d77915d6))
+
+
+
+
+
 # [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.7.4...@coveo/headless@1.8.0) (2021-07-23)
 
 

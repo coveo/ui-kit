@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.44.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.43.2...@coveo/atomic@0.44.0) (2021-07-26)
+
+
+### Features
+
+* **atomic:** add relative ranges & date picker to Timeframe Facet ([#989](https://github.com/coveo/ui-kit/issues/989)) ([57ba7c2](https://github.com/coveo/ui-kit/commit/57ba7c26700863cad0220080a22bc69121c63a26))
+
+
+
+
+
 ## [0.43.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.43.1...@coveo/atomic@0.43.2) (2021-07-23)
 
 **Note:** Version bump only for package @coveo/atomic
