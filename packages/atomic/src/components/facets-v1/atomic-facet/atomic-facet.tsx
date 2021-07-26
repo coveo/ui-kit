@@ -30,6 +30,7 @@ import {
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -205,7 +206,13 @@ export class AtomicFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
-          ></FacetValueCheckbox>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueCheckbox>
         );
       case 'link':
         return (
@@ -216,7 +223,13 @@ export class AtomicFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
-          ></FacetValueLink>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueLink>
         );
       case 'box':
         return (
@@ -227,7 +240,13 @@ export class AtomicFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
-          ></FacetValueBox>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueBox>
         );
     }
   }

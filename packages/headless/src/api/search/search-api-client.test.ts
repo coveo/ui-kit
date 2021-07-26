@@ -24,7 +24,6 @@ import {getProductRecommendationsInitialState} from '../../features/product-reco
 import pino from 'pino';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
-import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
@@ -47,6 +46,25 @@ describe('search api client', () => {
       logger,
       ...options,
     });
+
+    mockPlatformResponse(() => buildMockSearchEndpointResponse());
+  }
+
+  function mockPlatformResponse(buildResponse: () => Response, times = 1) {
+    const mock = jest.fn();
+    let count = times;
+
+    while (count > 0) {
+      mock.mockReturnValueOnce(buildResponse());
+      count--;
+    }
+
+    PlatformClient.call = mock;
+  }
+
+  function buildMockSearchEndpointResponse() {
+    const body = JSON.stringify(buildMockSearchResponse());
+    return new Response(body);
   }
 
   beforeEach(() => {
@@ -58,18 +76,7 @@ describe('search api client', () => {
   });
 
   describe('middleware', () => {
-    function mockPlatformCall(returnValue: Response) {
-      const mockPlatformCall = jest.fn();
-
-      mockPlatformCall.mockReturnValue(returnValue);
-      PlatformClient.call = mockPlatformCall;
-    }
     it('should preprocess search responses if appropriate middleware is provided', async () => {
-      const body = JSON.stringify(buildMockSearchResponse());
-      const response = new Response(body);
-
-      mockPlatformCall(response);
-
       const newId = 'notInitialID';
       buildSearchAPIClient({
         postprocessSearchResponseMiddleware: (response) => {
@@ -95,11 +102,6 @@ describe('search api client', () => {
           test: buildMockQuerySuggest(),
         },
       });
-
-      const body = JSON.stringify(buildMockQuerySuggestCompletion());
-      const response = new Response(body);
-
-      mockPlatformCall(response);
 
       const completions = [
         buildMockQuerySuggestCompletion({expression: 'hello world'}),
@@ -131,11 +133,6 @@ describe('search api client', () => {
           test: buildMockFacetRequest(),
         },
       });
-
-      const body = JSON.stringify(buildMockFacetSearchResponse());
-      const response = new Response(body);
-
-      mockPlatformCall(response);
 
       buildSearchAPIClient({
         postprocessFacetSearchResponseMiddleware: (response) => {
@@ -199,6 +196,7 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.search multiple times
     should abort the previous pending requests`, () => {
+      mockPlatformResponse(() => buildMockSearchEndpointResponse(), 3);
       const req = buildSearchRequest(state);
       searchAPIClient.search(req);
       searchAPIClient.search(req);
@@ -364,104 +362,101 @@ describe('search api client', () => {
           },
         });
       });
+    });
 
-      it(`when calling SearchAPIClient.recommendations
+    it(`when calling SearchAPIClient.recommendations
       should call PlatformClient.call with the right options`, () => {
-        const originLevel2 = 'tab';
-        const originLevel3 = 'referrer';
-        const analytics = buildMockAnalyticsState({
-          originLevel2,
-          originLevel3,
-        });
-
-        const recommendationState = createMockRecommendationState();
-        recommendationState.configuration.analytics = analytics;
-
-        const req = buildRecommendationRequest(recommendationState);
-
-        searchAPIClient.recommendations(req);
-
-        const expectedRequest: PlatformClientCallOptions = {
-          accessToken: recommendationState.configuration.accessToken,
-          method: 'POST',
-          contentType: 'application/json',
-          url: `${
-            recommendationState.configuration.search.apiBaseUrl
-          }?${getOrganizationIdQueryParam(req)}`,
-          logger,
-          requestParams: {
-            recommendation: recommendationState.recommendation.id,
-            aq: recommendationState.advancedSearchQueries.aq,
-            cq: recommendationState.advancedSearchQueries.cq,
-            fieldsToInclude: recommendationState.fields.fieldsToInclude,
-            context: recommendationState.context.contextValues,
-            pipeline: recommendationState.pipeline,
-            searchHub: recommendationState.searchHub,
-            actionsHistory: expect.any(Array),
-            tab: originLevel2,
-            referrer: originLevel3,
-          },
-          preprocessRequest: NoopPreprocessRequest,
-        };
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
-
-        expect(request).toMatchObject(expectedRequest);
+      const originLevel2 = 'tab';
+      const originLevel3 = 'referrer';
+      const analytics = buildMockAnalyticsState({
+        originLevel2,
+        originLevel3,
       });
 
-      it(`when calling SearchAPIClient.productRecommendations
+      const recommendationState = createMockRecommendationState();
+      recommendationState.configuration.analytics = analytics;
+
+      const req = buildRecommendationRequest(recommendationState);
+
+      searchAPIClient.recommendations(req);
+
+      const expectedRequest: PlatformClientCallOptions = {
+        accessToken: recommendationState.configuration.accessToken,
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${
+          recommendationState.configuration.search.apiBaseUrl
+        }?${getOrganizationIdQueryParam(req)}`,
+        logger,
+        requestParams: {
+          recommendation: recommendationState.recommendation.id,
+          aq: recommendationState.advancedSearchQueries.aq,
+          cq: recommendationState.advancedSearchQueries.cq,
+          fieldsToInclude: recommendationState.fields.fieldsToInclude,
+          context: recommendationState.context.contextValues,
+          pipeline: recommendationState.pipeline,
+          searchHub: recommendationState.searchHub,
+          actionsHistory: expect.any(Array),
+          tab: originLevel2,
+          referrer: originLevel3,
+        },
+        preprocessRequest: NoopPreprocessRequest,
+      };
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+
+      expect(request).toMatchObject(expectedRequest);
+    });
+
+    it(`when calling SearchAPIClient.productRecommendations
       should call PlatformClient.call with the right options`, () => {
-        const productRecommendationsState = buildMockProductRecommendationsState(
-          {
-            productRecommendations: {
-              ...getProductRecommendationsInitialState(),
-              skus: ['one'],
-              maxNumberOfRecommendations: 10,
-              filter: {
-                brand: 'somebrand',
-                category: 'somecategory',
-              },
-            },
-          }
-        );
-        const req = buildProductRecommendationsRequest(
-          productRecommendationsState
-        );
-
-        searchAPIClient.productRecommendations(req);
-        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
-
-        const expectedRequest: PlatformClientCallOptions = {
-          accessToken: productRecommendationsState.configuration.accessToken,
-          method: 'POST',
-          contentType: 'application/json',
-          url: `${
-            productRecommendationsState.configuration.search.apiBaseUrl
-          }?${getOrganizationIdQueryParam(req)}`,
-          logger,
-          requestParams: {
-            recommendation:
-              productRecommendationsState.productRecommendations.id,
-            context: productRecommendationsState.context.contextValues,
-            searchHub: productRecommendationsState.searchHub,
-            actionsHistory: expect.any(Array),
-            visitorId: expect.any(String),
-            numberOfResults:
-              productRecommendationsState.productRecommendations
-                .maxNumberOfRecommendations,
-            mlParameters: {
-              itemIds: productRecommendationsState.productRecommendations.skus,
-              brandFilter:
-                productRecommendationsState.productRecommendations.filter.brand,
-              categoryFilter:
-                productRecommendationsState.productRecommendations.filter
-                  .category,
-            },
+      const productRecommendationsState = buildMockProductRecommendationsState({
+        productRecommendations: {
+          ...getProductRecommendationsInitialState(),
+          skus: ['one'],
+          maxNumberOfRecommendations: 10,
+          filter: {
+            brand: 'somebrand',
+            category: 'somecategory',
           },
-          preprocessRequest: NoopPreprocessRequest,
-        };
-
-        expect(request).toMatchObject(expectedRequest);
+        },
       });
+      const req = buildProductRecommendationsRequest(
+        productRecommendationsState
+      );
+
+      searchAPIClient.productRecommendations(req);
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+
+      const expectedRequest: PlatformClientCallOptions = {
+        accessToken: productRecommendationsState.configuration.accessToken,
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${
+          productRecommendationsState.configuration.search.apiBaseUrl
+        }?${getOrganizationIdQueryParam(req)}`,
+        logger,
+        requestParams: {
+          recommendation: productRecommendationsState.productRecommendations.id,
+          context: productRecommendationsState.context.contextValues,
+          searchHub: productRecommendationsState.searchHub,
+          actionsHistory: expect.any(Array),
+          visitorId: expect.any(String),
+          numberOfResults:
+            productRecommendationsState.productRecommendations
+              .maxNumberOfRecommendations,
+          mlParameters: {
+            itemIds: productRecommendationsState.productRecommendations.skus,
+            brandFilter:
+              productRecommendationsState.productRecommendations.filter.brand,
+            categoryFilter:
+              productRecommendationsState.productRecommendations.filter
+                .category,
+          },
+        },
+        preprocessRequest: NoopPreprocessRequest,
+      };
+
+      expect(request).toMatchObject(expectedRequest);
     });
 
     describe('SearchAPIClient.html', () => {

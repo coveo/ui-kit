@@ -1,3 +1,5 @@
+import LOCALE from '@salesforce/i18n/locale';
+
 export class Debouncer {
   _timeout;
 
@@ -48,5 +50,35 @@ export class Debouncer {
       }
       this.reject = reject;
     });
+  }
+}
+
+export class I18nUtils{
+  static isPluralInLocale = {
+    "en-US": (count) => count !== 0 && Math.abs(count) !== 1,
+    "fr-CA": (count) => Math.abs(count) >= 2
+  }
+
+  static getTextWithDecorator(text, startTag, endTag) {
+    return `${startTag}${text}${endTag}`;
+  }
+
+  static getTextBold(text) {
+    return I18nUtils.getTextWithDecorator(text, '<b>', '</b>');
+  }
+
+  static getLabelNameWithCount(labelName, count) {
+    if (count === 0) {
+      return `${labelName}_zero`;
+    } else if (I18nUtils.isPluralInLocale[LOCALE](count)) {
+      return `${labelName}_plural`;
+    } 
+    return labelName;
+  }
+  
+  static format(stringToFormat, ...formattingArguments) {
+    if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
+    return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
+      (formattingArguments[index] === undefined ? '' : `${formattingArguments[index]}`));
   }
 }

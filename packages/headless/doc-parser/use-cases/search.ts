@@ -370,6 +370,12 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadNumericFacetSetActions',
   },
   {
+    initializer: 'loadFacetOptionsActions',
+  },
+  {
+    initializer: 'loadFoldingActions',
+  },
+  {
     initializer: 'loadFieldActions',
   },
   {
@@ -389,6 +395,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadQuerySuggestActions',
+  },
+  {
+    initializer: 'loadQuestionAnsweringActions',
   },
   {
     initializer: 'loadRedirectionActions',

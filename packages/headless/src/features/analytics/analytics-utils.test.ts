@@ -61,10 +61,31 @@ describe('analytics-utils', () => {
     it('when the result is found in state, the documentPosition is the index + 1', () => {
       const result = buildMockResult({uniqueId: '1'});
       const state = createMockState();
-      state.search.response.results = [result];
+      state.search.results = state.search.response.results = [result];
 
       const {documentPosition} = partialDocumentInformation(result, state);
       expect(documentPosition).toBe(1);
+    });
+
+    it('when the result is on a different page, the documentPosition is incremented', () => {
+      const result = buildMockResult({uniqueId: '1'});
+      const state = createMockState();
+      state.search.results = state.search.response.results = [result];
+      state.pagination.firstResult = 15;
+
+      const {documentPosition} = partialDocumentInformation(result, state);
+      expect(documentPosition).toBe(16);
+    });
+
+    it('when the result was fetched by fetchMoreResults, the documentPosition is incremented', () => {
+      const oldResult = buildMockResult({uniqueId: '1'});
+      const newResult = buildMockResult({uniqueId: '2'});
+      const state = createMockState();
+      state.search.response.results = [newResult];
+      state.search.results = [oldResult, newResult];
+
+      const {documentPosition} = partialDocumentInformation(newResult, state);
+      expect(documentPosition).toBe(2);
     });
   });
 
