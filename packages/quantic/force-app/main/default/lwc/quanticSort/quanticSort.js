@@ -9,8 +9,18 @@ export default class QuanticSort extends LightningElement {
 
   /** @type {import("coveo").Sort} */
   sort;
-  /** @type {import("coveo").Unsubscribe} */
-  unsubscribe;
+  /** @type {import("coveo").SearchStatus} */
+  searchStatus;
+
+  /** @type {() => void} */
+  unsubscribeSort;
+  /** @type {() => void} */
+  unsubscribeSearchStatus;
+
+  /**
+   * @type {boolean}
+   */
+  @track hasResults
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -26,11 +36,23 @@ export default class QuanticSort extends LightningElement {
   @api
   initialize(engine) {
     this.sort = CoveoHeadless.buildSort(engine);
-    this.unsubscribe = this.sort.subscribe(() => this.updateState());
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
+  }
+
+  disconnectedCallback() {
+    if (this.unsubscribeSearchStatus) {
+      this.unsubscribeSearchStatus();
+    }
+    if(this.unsubscribeSort) {
+        this.unsubscribeSort();
+    }
   }
 
   updateState() {
     this.state = this.sort.state;
+    this.hasResults = this.searchStatus.state.hasResults;
   }
 
   /**
