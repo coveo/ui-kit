@@ -1,0 +1,27 @@
+<template>
+
+    <div class="slds-text-heading_large">Quantic Facet Examples</div>
+
+    <div class="slds-text-longform slds-m-top_large">
+        The Quantic Facet allows to... Complete with a comprehensive description of the component.
+    </div>
+
+    <div class="slds-grid slds-gutters slds-m-top_large">
+        <div class="slds-col slds-size_1-of-3">
+            <lightning-card title="Configuration">
+                <div class="slds-card__body_inner">
+                    <c-configurator-quantic-facet label={label} onfieldchange={handleFieldChange} onlabelchange={handleLabelChange}></c-configurator-quantic-facet>            
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_2-of-3">
+            <lightning-card title="Preview">
+                <div class="slds-card__body_inner">
+                    <c-quantic-search-interface engine-id={engineId}>
+                        <c-quantic-facet field="objecttype" label={label} engine-id={engineId}></c-quantic-facet>
+                    </c-quantic-search-interface>
+                </div>
+            </lightning-card>
+        </div>
+    </div>
+</template>

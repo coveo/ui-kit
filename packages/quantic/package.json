@@ -17,7 +17,7 @@
     "fix": "npm run lint:fix",
     "copy:staticresources": "node copy-static-resources.js",
     "build": "npm run copy:staticresources",
-    "start": "npx rimraf .localdevserver && npm run copy:staticresources && sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start",
+    "start": "npx rimraf .localdevserver && npm run copy:staticresources && sfdx force:source:deploy -p force-app/main,force-app/examples && sfdx force:lightning:lwc:start",
     "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
