@@ -104,7 +104,8 @@ pipeline {
           def tgfResolveParameter = [
             "PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION=${env.PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION}",
             "PACKAGE_JSON_MAJOR_MINOR_VERSION=${env.PACKAGE_JSON_MAJOR_MINOR_VERSION}",
-            "PACKAGE_JSON_MAJOR_VERSION=${env.PACKAGE_JSON_MAJOR_VERSION}"
+            "PACKAGE_JSON_MAJOR_VERSION=${env.PACKAGE_JSON_MAJOR_VERSION}",
+            "TF_VAR_package_json_major_version=${env.PACKAGE_JSON_MAJOR_VERSION}"
           ]
           deploymentPackage.command(command: 'package create', parameters: [
             resolve: tgfResolveParameter,
