@@ -126,8 +126,8 @@ export class AtomicResultList implements InitializableComponent {
     return this.resultTemplatesManager.selectTemplate(result) || '';
   }
 
-  private buildResult(result: Result) {
-    return (
+  private buildListResults() {
+    return this.resultListState.results.map((result) => (
       <atomic-result
         key={`${result.raw.permanentid}${this.resultListState.searchUid}`}
         result={result}
@@ -137,13 +137,7 @@ export class AtomicResultList implements InitializableComponent {
         image={this.image}
         content={this.getTemplate(result)}
       ></atomic-result>
-    );
-  }
-
-  private buildListResults() {
-    return this.resultListState.results.map((result) =>
-      this.buildResult(result)
-    );
+    ));
   }
 
   private buildTableResults() {
@@ -157,16 +151,18 @@ export class AtomicResultList implements InitializableComponent {
       <table>
         <thead>
           <tr>
-            <th>Description</th>
             {fieldColumns.map((column) => (
-              <th>{column.getAttribute('label')}</th>
+              <th>
+                <atomic-text
+                  value={column.getAttribute('label')!}
+                ></atomic-text>
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {this.resultListState.results.map((result) => (
             <tr>
-              <td>{this.buildResult(result)}</td>
               {fieldColumns.map((column) => (
                 <td>
                   <atomic-table-cell

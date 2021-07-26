@@ -605,6 +605,9 @@ export namespace Components {
         "result": Result;
     }
     interface AtomicTableElement {
+        /**
+          * The label to display in the header of this column.
+         */
         "label": string;
     }
     interface AtomicText {
@@ -1608,6 +1611,9 @@ declare namespace LocalJSX {
         "result": Result;
     }
     interface AtomicTableElement {
+        /**
+          * The label to display in the header of this column.
+         */
         "label": string;
     }
     interface AtomicText {
