@@ -63,7 +63,6 @@ export default class QuanticFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
-    // this.withSearch = this.state.values.length > 15;
     if (!this.input){
       this.input = this.template.querySelector('.facet__search-input');
     }
@@ -149,6 +148,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   clearSelections(){
+    this.updateState();
     this.facet.deselectAll();
   }
 
@@ -159,6 +159,7 @@ export default class QuanticFacet extends LightningElement {
 
   handleKeyUp(){
     this.isFacetSearchActive = this.input.value !== '';
+    console.log(this.input);
     console.log(this.input.value);
     this.facet.facetSearch.updateText(this.input.value);
     this.facet.facetSearch.search();
@@ -167,6 +168,7 @@ export default class QuanticFacet extends LightningElement {
 
   clearInput(){
     this.input.value = '';
+    this.updateState();
   }
 
   highlightResult(result, query){
