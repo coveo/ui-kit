@@ -53,7 +53,10 @@ jobs:
           npm i -g sfdx-cli
           npm i
       - name: Build Quantic project
-        run: npm run build
+        run: |
+          npm run setup
+          cd packages/quantic
+          npm run build
       - name: Create jwt key file
         run: echo "$SFDX_AUTH_JWT_KEY" > server.key
       - name: Connect to DevHub organization
