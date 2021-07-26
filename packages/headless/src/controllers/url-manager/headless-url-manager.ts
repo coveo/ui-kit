@@ -108,12 +108,9 @@ export function buildUrlManager(
 
     synchronize(fragment: string) {
       const newFragment = decodeFragment(fragment);
-      if (areFragmentsEquivalent(previousFragment, newFragment)) {
-        return;
-      }
       previousFragment = newFragment;
 
-      const parameters = deserializeFragment(fragment);
+      const parameters = deserializeFragment(newFragment);
       searchParameterManager.synchronize(parameters);
     },
   };

@@ -18,6 +18,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
 
 export {SearchParameters};
 
@@ -94,11 +95,13 @@ export function buildSearchParameterManager(
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const oldParams = enrichParameters(
-        engine,
-        getActiveSearchParameters(engine)
-      );
+      const activeParams = getActiveSearchParameters(engine);
+      const oldParams = enrichParameters(engine, activeParams);
       const newParams = enrichParameters(engine, parameters);
+
+      if (deepEqualAnyOrder(oldParams, newParams)) {
+        return;
+      }
 
       dispatch(restoreSearchParameters(newParams));
       dispatch(executeSearch(logParametersChange(oldParams, newParams)));
