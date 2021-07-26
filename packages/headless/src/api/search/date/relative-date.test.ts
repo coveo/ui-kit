@@ -23,6 +23,10 @@ describe('#deserializeRelativeDate', () => {
     };
     expect(deserializeRelativeDate('next-100-quarter')).toEqual(expected);
   });
+
+  it('throws when invalid"', () => {
+    expect(() => deserializeRelativeDate('2018/01/01@00:00:00')).toThrow();
+  });
 });
 
 describe('#serializeRelativeDate', () => {
