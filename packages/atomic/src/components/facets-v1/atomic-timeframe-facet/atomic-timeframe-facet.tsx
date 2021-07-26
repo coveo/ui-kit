@@ -37,6 +37,8 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {BaseFacet} from '../facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import dayjs from 'dayjs';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -230,21 +232,28 @@ export class AtomicTimeframeFacet
       );
     } catch (error) {
       return this.bindings.i18n.t('to', {
-        start: facetValue.start,
-        end: facetValue.end,
+        start: dayjs(facetValue.start).format('YYYY-MM-DD'),
+        end: dayjs(facetValue.end).format('YYYY-MM-DD'),
       });
     }
   }
 
   private renderValue(facetValue: DateFacetValue) {
+    const displayValue = this.formatFacetValue(facetValue);
+    const isSelected = facetValue.state === 'selected';
     return (
       <FacetValueLink
-        displayValue={this.formatFacetValue(facetValue)}
+        displayValue={displayValue}
+        isSelected={isSelected}
         numberOfResults={facetValue.numberOfResults}
-        isSelected={facetValue.state === 'selected'}
         i18n={this.bindings.i18n}
         onClick={() => this.facet!.toggleSingleSelect(facetValue)}
-      ></FacetValueLink>
+      >
+        <FacetValueLabelHighlight
+          displayValue={displayValue}
+          isSelected={isSelected}
+        ></FacetValueLabelHighlight>
+      </FacetValueLink>
     );
   }
 
