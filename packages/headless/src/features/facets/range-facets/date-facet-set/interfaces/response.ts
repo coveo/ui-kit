@@ -8,12 +8,12 @@ export interface DateFacetValue {
   numberOfResults: number;
 
   /**
-   * The starting value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format TODO: describe...
+   * The starting value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format "period-amount-unit"
    */
   start: string;
 
   /**
-   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format TODO: describe...
+   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format "period-amount-unit"
    */
   end: string;
 
