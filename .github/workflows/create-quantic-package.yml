@@ -1,4 +1,4 @@
-name: Create Quantic Package Workflow
+name: Create Quantic Package
 
 env:
   SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
@@ -57,11 +57,13 @@ jobs:
           npm run setup
           cd packages/quantic
           npm run build
-      - name: Create jwt key file
-        run: echo "$SFDX_AUTH_JWT_KEY" > server.key
       - name: Connect to DevHub organization
-        run: sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
+        working-directory: ./packages/quantic
+        run: |
+          echo $SFDX_AUTH_JWT_KEY > server.key
+          sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
       - name: Create package version
+        working-directory: ./packages/quantic
         run: |
           sfdx force:package:version:create --package $PACKAGE_ID --wait 30 -x --json >> package-version-result.json
           cat package-version-result.json
