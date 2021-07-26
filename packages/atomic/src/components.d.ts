@@ -594,6 +594,22 @@ export namespace Components {
          */
         "expression": string;
     }
+    interface AtomicTableCell {
+        /**
+          * The result content to display.
+         */
+        "content": string;
+        /**
+          * The result item.
+         */
+        "result": Result;
+    }
+    interface AtomicTableElement {
+        /**
+          * The label to display in the header of this column.
+         */
+        "label": string;
+    }
     interface AtomicText {
         /**
           * The count value used for plurals.
@@ -930,6 +946,18 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    interface HTMLAtomicTableCellElement extends Components.AtomicTableCell, HTMLStencilElement {
+    }
+    var HTMLAtomicTableCellElement: {
+        prototype: HTMLAtomicTableCellElement;
+        new (): HTMLAtomicTableCellElement;
+    };
+    interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
+    }
+    var HTMLAtomicTableElementElement: {
+        prototype: HTMLAtomicTableElementElement;
+        new (): HTMLAtomicTableElementElement;
+    };
     interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
     }
     var HTMLAtomicTextElement: {
@@ -994,6 +1022,8 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-table-cell": HTMLAtomicTableCellElement;
+        "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
@@ -1570,6 +1600,22 @@ declare namespace LocalJSX {
          */
         "expression": string;
     }
+    interface AtomicTableCell {
+        /**
+          * The result content to display.
+         */
+        "content": string;
+        /**
+          * The result item.
+         */
+        "result": Result;
+    }
+    interface AtomicTableElement {
+        /**
+          * The label to display in the header of this column.
+         */
+        "label": string;
+    }
     interface AtomicText {
         /**
           * The count value used for plurals.
@@ -1650,6 +1696,8 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-table-cell": AtomicTableCell;
+        "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
@@ -1709,6 +1757,8 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-table-cell": LocalJSX.AtomicTableCell & JSXBase.HTMLAttributes<HTMLAtomicTableCellElement>;
+            "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
         }
