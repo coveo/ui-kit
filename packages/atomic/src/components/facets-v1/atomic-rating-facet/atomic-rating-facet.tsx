@@ -50,7 +50,7 @@ import Star from '../../../images/star.svg';
  */
 @Component({
   tag: 'atomic-rating-facet',
-  styleUrl: 'atomic-rating-facet-common.pcss',
+  styleUrl: 'atomic-rating-facet.pcss',
   shadow: true,
 })
 export class AtomicRatingFacet
