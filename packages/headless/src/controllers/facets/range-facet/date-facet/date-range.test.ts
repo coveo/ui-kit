@@ -73,7 +73,7 @@ describe('date range', () => {
       expect(dateRange).toEqual(expectedValues);
     });
 
-    it('generates the correct value for an relative date string', () => {
+    it('generates the correct value for a relative date string', () => {
       const start = serializeRelativeDate({
         period: 'past',
         amount: 2,
