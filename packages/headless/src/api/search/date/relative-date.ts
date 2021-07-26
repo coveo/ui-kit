@@ -138,11 +138,11 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
 /**
  * Deserializes relative date string value into a `RelativeDate` object.
  * Throws an error if the format is invalid.
- * @param date The string formatted ... TODO: define format here ([period][amount][unit])
+ * @param date The string serialized with the format "period-amount-unit"
  * @returns The parse `RelativeDate` object.
  */
 export function deserializeRelativeDate(date: string): RelativeDate {
-  if (!isRelativeDateFormat) {
+  if (!isRelativeDateFormat(date)) {
     throw new Error(
       `The value "${date}" is not respecting the relative date format "period-amount-unit"`
     );
