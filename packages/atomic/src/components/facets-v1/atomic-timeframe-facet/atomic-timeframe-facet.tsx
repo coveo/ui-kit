@@ -10,7 +10,7 @@ import {
   DateFacetValue,
   DateRangeRequest,
   buildDateRange,
-  parseRelativeDate,
+  deserializeRelativeDate,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -142,7 +142,7 @@ export class AtomicTimeframeFacet
 
   private formatFacetValue(facetValue: DateFacetValue) {
     try {
-      const relativeDate = parseRelativeDate(facetValue.start);
+      const relativeDate = deserializeRelativeDate(facetValue.start);
       const timeframe = this.getManualTimeframes().find(
         (timeframe) =>
           timeframe.period === relativeDate.period &&
