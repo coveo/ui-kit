@@ -1,5 +1,6 @@
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
+import {executeSearch} from '../../features/search/search-actions';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
@@ -325,17 +326,25 @@ describe('search parameter manager', () => {
     expect(unavailableKeys).toEqual([]);
   });
 
-  it('calling #synchronize with partial search parameters dispatches #restoreSearchParameters with non-specified parameters set to their initial values', () => {
+  describe('#synchronize', () => {
     const params = {q: 'a'};
-    manager.synchronize(params);
 
-    const initialParameters = initialSearchParameterSelector(engine.state);
-
-    const action = restoreSearchParameters({
-      ...initialParameters,
-      ...params,
+    beforeEach(() => {
+      manager.synchronize(params);
     });
 
-    expect(engine.actions).toContainEqual(action);
+    it('given partial search parameters, it dispatches #restoreSearchParameters with non-specified parameters set to their initial values', () => {
+      const initialParameters = initialSearchParameterSelector(engine.state);
+      const action = restoreSearchParameters({
+        ...initialParameters,
+        ...params,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('executes a search', () => {
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
   });
 });

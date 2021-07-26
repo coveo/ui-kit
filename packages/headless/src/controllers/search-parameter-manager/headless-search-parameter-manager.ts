@@ -16,6 +16,8 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
+import {executeSearch} from '../../features/search/search-actions';
+import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 
 export {SearchParameters};
 
@@ -47,9 +49,9 @@ const initialStateSchema = new Schema<
  * */
 export interface SearchParameterManager extends Controller {
   /**
-   * Updates the search parameters in state with the passed parameters. Unspecified keys are reset to their initial values.
+   * Updates the search parameters in state with the passed parameters and executes a search. Unspecified keys are reset to their initial values.
    *
-   * @param parameters - The search parameters
+   * @param parameters - The search parameters to synchronize.
    */
   synchronize(parameters: SearchParameters): void;
 
@@ -79,7 +81,6 @@ export function buildSearchParameterManager(
 ): SearchParameterManager {
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const getState = () => engine.state;
 
   validateInitialState(
     engine,
@@ -93,33 +94,48 @@ export function buildSearchParameterManager(
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const enrichedParams: Required<SearchParameters> = {
-        ...initialSearchParameterSelector(engine.state),
-        ...parameters,
-      };
+      const oldParams = enrichParameters(
+        engine,
+        getActiveSearchParameters(engine)
+      );
+      const newParams = enrichParameters(engine, parameters);
 
-      dispatch(restoreSearchParameters(enrichedParams));
+      dispatch(restoreSearchParameters(newParams));
+      dispatch(executeSearch(logParametersChange(oldParams, newParams)));
     },
 
     get state() {
-      const state = getState();
-      const parameters: SearchParameters = {
-        ...getQ(state),
-        ...getEnableQuerySyntax(state),
-        ...getAq(state),
-        ...getCq(state),
-        ...getFirstResult(state),
-        ...getNumberOfResults(state),
-        ...getSortCriteria(state),
-        ...getFacets(state),
-        ...getCategoryFacets(state),
-        ...getNumericFacets(state),
-        ...getDateFacets(state),
-        ...getDebug(state),
-      };
-
+      const parameters = getActiveSearchParameters(engine);
       return {parameters};
     },
+  };
+}
+
+function enrichParameters(
+  engine: SearchEngine,
+  parameters: SearchParameters
+): Required<SearchParameters> {
+  return {
+    ...initialSearchParameterSelector(engine.state),
+    ...parameters,
+  };
+}
+
+function getActiveSearchParameters(engine: SearchEngine): SearchParameters {
+  const state = engine.state;
+  return {
+    ...getQ(state),
+    ...getEnableQuerySyntax(state),
+    ...getAq(state),
+    ...getCq(state),
+    ...getFirstResult(state),
+    ...getNumberOfResults(state),
+    ...getSortCriteria(state),
+    ...getFacets(state),
+    ...getCategoryFacets(state),
+    ...getNumericFacets(state),
+    ...getDateFacets(state),
+    ...getDebug(state),
   };
 }
 
