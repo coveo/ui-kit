@@ -1,17 +1,13 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
-import {executeSearch} from '../../features/search/search-actions';
 import {ConfigurationSection} from '../../state/state-sections';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer';
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
 import {configuration} from '../../app/reducers';
-import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {loadReducerError} from '../../utils/errors';
 import {deepEqualAnyOrder} from '../../utils/compare-utils';
-import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface UrlManagerProps {
@@ -79,13 +75,7 @@ export function buildUrlManager(
     'buildUrlManager'
   );
 
-  const completeParameters = (fragment: string) => ({
-    ...initialSearchParameterSelector(engine.state),
-    ...deserializeFragment(fragment),
-  });
-
   const controller = buildController(engine);
-  const {dispatch} = engine;
   let previousFragment = decodeFragment(props.initialState.fragment);
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
@@ -121,17 +111,10 @@ export function buildUrlManager(
       if (areFragmentsEquivalent(previousFragment, newFragment)) {
         return;
       }
-
-      const completePreviousParameters = completeParameters(previousFragment);
-      const completeNewParameters = completeParameters(newFragment);
       previousFragment = newFragment;
 
-      dispatch(restoreSearchParameters(completeNewParameters));
-      dispatch(
-        executeSearch(
-          logParametersChange(completePreviousParameters, completeNewParameters)
-        )
-      );
+      const parameters = deserializeFragment(fragment);
+      searchParameterManager.synchronize(parameters);
     },
   };
 }
