@@ -3,6 +3,190 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.39.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.38.0...@coveo/quantic@0.39.0) (2021-07-26)
+
+
+### Features
+
+* **quantic:** create-and-promote-quantic-package-with-github-actions ([#959](https://github.com/coveo/ui-kit/issues/959)) ([2d20100](https://github.com/coveo/ui-kit/commit/2d2010063aee99a22e9706cc21ef877eff5539fe))
+
+
+
+
+
+# [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.37.1...@coveo/quantic@0.38.0) (2021-07-23)
+
+
+### Features
+
+* **quantic:** added localization for component labels ([#985](https://github.com/coveo/ui-kit/issues/985)) ([f9d1e04](https://github.com/coveo/ui-kit/commit/f9d1e04207485aaf79e50666227ef379ffa49dca))
+
+
+
+
+
+## [0.37.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.37.0...@coveo/quantic@0.37.1) (2021-07-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.36.0...@coveo/quantic@0.37.0) (2021-07-21)
+
+
+### Features
+
+* **quantic:** update search bar look ([#970](https://github.com/coveo/ui-kit/issues/970)) ([c049cb3](https://github.com/coveo/ui-kit/commit/c049cb3cdbc7c9cfd6423d02390291653e011cdf))
+
+
+
+
+
+# [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.35.0...@coveo/quantic@0.36.0) (2021-07-20)
+
+
+### Features
+
+* **quantic:** SFINT-3956 Quantic didYouMean component ([#969](https://github.com/coveo/ui-kit/issues/969)) ([2012c71](https://github.com/coveo/ui-kit/commit/2012c712c7a202a33a7850d577ca4e91fe5bafaa))
+
+
+
+
+
+# [0.35.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.2...@coveo/quantic@0.35.0) (2021-07-15)
+
+
+### Features
+
+* **quantic:** fix-facets-selected-state ([#964](https://github.com/coveo/ui-kit/issues/964)) ([8012578](https://github.com/coveo/ui-kit/commit/8012578ae105bbd0c2384e8947d80c4c2e29e057))
+
+
+
+
+
+## [0.34.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.1...@coveo/quantic@0.34.2) (2021-07-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.34.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.34.0...@coveo/quantic@0.34.1) (2021-07-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.34.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.33.1...@coveo/quantic@0.34.0) (2021-07-13)
+
+
+### Features
+
+* **quantic:** SFINT-3828 Quantic breadcrumb component ([#947](https://github.com/coveo/ui-kit/issues/947)) ([8b89600](https://github.com/coveo/ui-kit/commit/8b896005fe36cf7b441b80c4e774599e8f276b67))
+
+
+
+
+
+## [0.33.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.33.0...@coveo/quantic@0.33.1) (2021-07-13)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.33.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.15...@coveo/quantic@0.33.0) (2021-07-12)
+
+
+### Features
+
+* **quantic:** detach headlessLoader from search context ([#697](https://github.com/coveo/ui-kit/issues/697)) ([4a50c0d](https://github.com/coveo/ui-kit/commit/4a50c0dfae0f115da4a14fa5e2b8399c210e6efb))
+
+
+
+
+
+## [0.32.15](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.14...@coveo/quantic@0.32.15) (2021-07-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.14](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.13...@coveo/quantic@0.32.14) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.12...@coveo/quantic@0.32.13) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.12](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.11...@coveo/quantic@0.32.12) (2021-07-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.10...@coveo/quantic@0.32.11) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.9...@coveo/quantic@0.32.10) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.8...@coveo/quantic@0.32.9) (2021-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.32.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.7...@coveo/quantic@0.32.8) (2021-07-05)
+
+
+### Bug Fixes
+
+* **quantic:** jest unit tests ([#942](https://github.com/coveo/ui-kit/issues/942)) ([1ec27f4](https://github.com/coveo/ui-kit/commit/1ec27f4fac2abc0c80ba786eca608c6bc2dc52dd))
+
+
+
+
+
+## [0.32.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.6...@coveo/quantic@0.32.7) (2021-07-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [0.32.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.32.5...@coveo/quantic@0.32.6) (2021-07-02)
 
 **Note:** Version bump only for package @coveo/quantic

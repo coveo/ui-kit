@@ -3,18 +3,18 @@
     <lightning-card title={label}>
       <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
         <template for:each={values} for:item="v">
-          <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v}></c-quantic-facet-value>
+          <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
         </template>
       </ul>
 
       <lightning-button-group>
         <template if:true={canShowMore}>
-          <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
-            class="slds-m-left_x-small" onclick={showMore}></lightning-button>
+          <lightning-button variant="base" label={labels.showMore} title={labels.showMore} icon-name="utility:arrowdown"
+            class="slds-m-left_x-small" onclick={showMore} aria-label={showMoreFacetValuesLabel}></lightning-button>
         </template>
         <template if:true={canShowLess}>
-          <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
-            class="slds-m-left_x-small" onclick={showLess}></lightning-button>
+          <lightning-button variant="base" label={labels.showLess} title={labels.showLess} icon-name="utility:arrowup"
+            class="slds-m-left_x-small" onclick={showLess} aria-label={showLessFacetValuesLabel}></lightning-button>
         </template>
       </lightning-button-group>
     </lightning-card>

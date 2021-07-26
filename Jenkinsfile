@@ -1,6 +1,5 @@
 node('linux && docker') {
   checkout scm
-  def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
   def tag = sh(script: "git tag --contains", returnStdout: true).trim()
   def isBump = !!tag
   def isMaster = env.BRANCH_NAME == 'master'
@@ -100,7 +99,6 @@ node('linux && docker') {
         (atomicMinor, atomicMajor) = (atomic.version =~ semanticVersionRegex)[0]
         
         sh "deployment-package package create --with-deploy \
-        --resolve COMMIT_HASH=${commitHash} \
         --resolve HEADLESS_MINOR_VERSION=${headlessMinor} \
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
         --resolve ATOMIC_MINOR_VERSION=${atomicMinor} \

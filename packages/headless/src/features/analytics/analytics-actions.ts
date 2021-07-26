@@ -13,6 +13,7 @@ import {
   partialDocumentInformation,
   validateResultPayload,
 } from './analytics-utils';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -154,3 +155,16 @@ export const logInterfaceChange = makeAnalyticsAction(
         getAdvancedSearchQueriesInitialState().cq,
     })
 );
+
+export const logSearchFromLink = makeAnalyticsAction(
+  'analytics/interface/searchFromLink',
+  AnalyticsType.Search,
+  (client) => client.logSearchFromLink()
+);
+
+export const logOmniboxFromLink = (metadata: OmniboxSuggestionMetadata) =>
+  makeAnalyticsAction(
+    'analytics/interface/omniboxFromLink',
+    AnalyticsType.Search,
+    (client) => client.logOmniboxFromLink(metadata)
+  )();

@@ -53,9 +53,6 @@
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/headless/v$[HEADLESS_MINOR_VERSION]"
         }
       }
     },
@@ -67,9 +64,6 @@
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]"
         }
       }
     },
@@ -81,9 +75,6 @@
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]"
         }
       }
     },
@@ -95,9 +86,6 @@
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]"
         }
       }
     },
@@ -118,9 +106,6 @@
         "job_name": "ui-kit-production-release",
         "prd": {
           "disabled": false
-        },
-        "extra_parameters": {
-          "COMMIT_HASH": "$[COMMIT_HASH]"
         }
       }
     }

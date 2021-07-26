@@ -111,7 +111,7 @@ describe('Breadcrumb Manager Test Suites', () => {
     });
   });
 
-  describe('Custom properties test ()', () => {
+  describe('Custom properties tests', () => {
     beforeEach(() => {
       setupComponents('collapse-threshold=3 category-divider=";"');
       createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);

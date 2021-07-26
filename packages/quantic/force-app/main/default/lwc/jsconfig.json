@@ -12,8 +12,14 @@
             "c/quanticDateFacet": [
                 "quanticDateFacet/quanticDateFacet.js"
             ],
+            "c/quanticHeadlessLoader": [
+                "quanticHeadlessLoader/quanticHeadlessLoader.js"
+            ],
             "c/quanticDateFacetValue": [
                 "quanticDateFacetValue/quanticDateFacetValue.js"
+            ],
+            "c/quanticDidYouMean": [
+                "quanticDidYouMean/quanticDidYouMean.js"
             ],
             "c/quanticCategoryFacet": [
                 "quanticCategoryFacet/quanticCategoryFacet.js"

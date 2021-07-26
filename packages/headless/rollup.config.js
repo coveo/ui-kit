@@ -197,12 +197,20 @@ const dev = [
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
 // can consume. When the api-extractor limitation is resolved, this step will not be necessary.
 // [https://github.com/microsoft/rushstack/issues/1050]
-const typeDefinitions = {
-  input: "./dist/definitions/index.d.ts",
-  output: [{file: "temp/headless.d.ts", format: "es"}],
-  plugins: [dts()]
+const typeDefinitions = [
+  buildTypeDefinitionConfiguration('index.d.ts'),
+  buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
+  buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
+];
+
+function buildTypeDefinitionConfiguration(entryFileName) {
+  return {
+    input: `./dist/definitions/${entryFileName}`,
+    output: [{file: `temp/${entryFileName}`, format: "es"}],
+    plugins: [dts()]
+  }
 }
 
-const config = isProduction ? [...nodejs, typeDefinitions, ...browser] : dev;
+const config = isProduction ? [...nodejs, ...typeDefinitions, ...browser] : dev;
 
 export default config;

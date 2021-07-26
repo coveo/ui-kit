@@ -34,7 +34,7 @@
   ],
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "50.0",
+  "sourceApiVersion": "52.0",
   "packageAliases": {
     "CoveoForSalesforce@4.12.0.0": "04t1P000000Y08cQAC",
     "Quantic": "0Ho6g000000k9g8CAA"

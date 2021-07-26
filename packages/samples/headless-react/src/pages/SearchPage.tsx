@@ -1,10 +1,7 @@
-import './SearchPage.css';
 import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext} from '../context/engine';
 
-import {RecommendationList} from '../components/recommendation-list/recommendation-list.class';
-import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
 import {Tab} from '../components/tab/tab.class';
 import {Tab as TabFn} from '../components/tab/tab.fn';
 import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
@@ -44,12 +41,14 @@ import {HistoryManager} from '../components/history-manager/history-manager.clas
 import {HistoryManager as HistoryManagerFn} from '../components/history-manager/history-manager.fn';
 import {RelevanceInspector} from '../components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
-import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
-import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
 import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {QueryTrigger} from '../components/triggers/query-trigger.class';
+import {ExecuteTrigger} from '../components/triggers/execute-trigger.class';
+import {bindExecuteTrigger} from '../components/triggers/execute-trigger';
 import {QueryTrigger as QueryTriggerFn} from '../components/triggers/query-trigger.fn';
+import {NotifyTrigger} from '../components/triggers/notify-trigger.class';
+import {NotifyTrigger as NotifyTriggerFn} from '../components/triggers/notify-trigger.fn';
 import {SmartSnippet} from '../components/smart-snippet/smart-snippet.class';
 import {SmartSnippet as SmartSnippetFn} from '../components/smart-snippet/smart-snippet.fn';
 import {SmartSnippetQuestionsList} from '../components/smart-snippet-questions-list/smart-snippet-questions-list.class';
@@ -103,27 +102,30 @@ import {
   buildHistoryManager,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
-  StandaloneSearchBox as HeadlessStandaloneSearchBox,
-  buildStandaloneSearchBox,
+  SearchAppState,
+  loadSearchAnalyticsActions,
   RedirectionTrigger as HeadlessRedirectionTrigger,
   buildRedirectionTrigger,
   QueryTrigger as HeadlessQueryTrigger,
   buildQueryTrigger,
+  NotifyTrigger as HeadlessNotifyTrigger,
+  buildNotifyTrigger,
   SmartSnippet as HeadlessSmartSnippet,
   buildSmartSnippet,
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
   buildSmartSnippetQuestionsList,
 } from '@coveo/headless';
-import {
-  RecommendationEngine,
-  buildRecommendationEngine,
-  getSampleRecommendationEngineConfiguration,
-  buildRecommendationList,
-  RecommendationList as HeadlessRecommendationList,
-} from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
+
+declare global {
+  interface Window {
+    HEADLESS_STATE?: SearchAppState;
+  }
+}
+
+const isServerSideRendered = !!global.window?.HEADLESS_STATE;
 
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
 
@@ -138,11 +140,13 @@ const initialCriterion = criteria[0][1];
 
 const resultsPerPageOptions = [10, 25, 50, 100];
 
-export class SearchPage extends Component {
-  private readonly engine: SearchEngine;
-  private readonly recommendationEngine: RecommendationEngine;
+export interface SearchPageProps {
+  engine?: SearchEngine;
+}
 
-  private readonly recommendationList: HeadlessRecommendationList;
+export class SearchPage extends Component {
+  private engine!: SearchEngine;
+
   private readonly tabs: {
     all: HeadlessTab;
     messages: HeadlessTab;
@@ -168,28 +172,20 @@ export class SearchPage extends Component {
   private readonly pager: HeadlessPager;
   private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
-  private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
   private readonly redirectionTrigger: HeadlessRedirectionTrigger;
   private readonly queryTrigger: HeadlessQueryTrigger;
+  private readonly notifyTrigger: HeadlessNotifyTrigger;
   private readonly smartSnippet: HeadlessSmartSnippet;
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
-  constructor(props: {}) {
+  private unsubscribeExecuteTrigger!: Unsubscribe;
+
+  constructor(props: SearchPageProps) {
     super(props);
 
-    this.engine = buildSearchEngine({
-      configuration: getSampleSearchEngineConfiguration(),
-    });
-
-    this.recommendationEngine = buildRecommendationEngine({
-      configuration: getSampleRecommendationEngineConfiguration(),
-    });
-
-    this.recommendationList = buildRecommendationList(
-      this.recommendationEngine
-    );
+    this.initEngine(props);
 
     this.tabs = {
       all: buildTab(this.engine, {
@@ -231,10 +227,13 @@ export class SearchPage extends Component {
     this.facetManager = buildFacetManager(this.engine);
 
     this.geographyFacet = buildCategoryFacet(this.engine, {
-      options: {field: 'geographicalhierarchy'},
+      options: {
+        field: 'geographicalhierarchy',
+        facetId: 'geographicalhierarchy-2',
+      },
     });
     this.objectTypeFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype'},
+      options: {field: 'objecttype', facetId: 'objecttype-2'},
     });
 
     this.fileSizeAutomaticNumericFacet = buildNumericFacet(this.engine, {
@@ -291,18 +290,29 @@ export class SearchPage extends Component {
 
     this.relevanceInspector = buildRelevanceInspector(this.engine);
 
-    this.standaloneSearchBox = buildStandaloneSearchBox(this.engine, {
-      options: {redirectionUrl: 'https://mywebsite.com/search'},
-    });
-
     this.redirectionTrigger = buildRedirectionTrigger(this.engine);
 
     this.queryTrigger = buildQueryTrigger(this.engine);
+
+    this.notifyTrigger = buildNotifyTrigger(this.engine);
+
     this.smartSnippet = buildSmartSnippet(this.engine);
 
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.engine
     );
+  }
+
+  initEngine(props: SearchPageProps) {
+    if (props.engine) {
+      this.engine = props.engine;
+      return;
+    }
+
+    this.engine = buildSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
+      preloadedState: window.HEADLESS_STATE,
+    });
   }
 
   componentDidMount() {
@@ -314,6 +324,8 @@ export class SearchPage extends Component {
     // not be your case.
     this.unsubscribeUrlManager = bindUrlManager(this.engine);
 
+    this.unsubscribeExecuteTrigger = bindExecuteTrigger(this.engine);
+
     // A search should not be executed until the search parameters are restored.
     this.executeInitialSearch();
 
@@ -322,9 +334,16 @@ export class SearchPage extends Component {
 
   componentWillUnmount() {
     this.unsubscribeUrlManager();
+    this.unsubscribeExecuteTrigger();
   }
 
   private executeInitialSearch() {
+    if (isServerSideRendered) {
+      const {logInterfaceLoad} = loadSearchAnalyticsActions(this.engine);
+      this.engine.dispatch(logInterfaceLoad());
+      return;
+    }
+
     this.engine.executeFirstSearch();
   }
 
@@ -335,14 +354,6 @@ export class SearchPage extends Component {
   render() {
     return (
       <div>
-        <AppContext.Provider
-          value={{recommendationEngine: this.recommendationEngine}}
-        >
-          <Section title="recommendation-list">
-            <RecommendationList />
-            <RecommendationListFn controller={this.recommendationList} />
-          </Section>
-        </AppContext.Provider>
         <AppContext.Provider value={{engine: this.engine}}>
           <Section title="tabs">
             <nav>
@@ -482,10 +493,6 @@ export class SearchPage extends Component {
             <RelevanceInspector />
             <RelevanceInspectorFn controller={this.relevanceInspector} />
           </Section>
-          <Section title="standalone-search-box">
-            <StandaloneSearchBox />
-            <StandaloneSearchBoxFn controller={this.standaloneSearchBox} />
-          </Section>
           <Section title="redirection-trigger">
             <RedirectionTrigger></RedirectionTrigger>
             <RedirectionTriggerFn
@@ -495,6 +502,13 @@ export class SearchPage extends Component {
           <Section title="query-trigger">
             <QueryTrigger></QueryTrigger>
             <QueryTriggerFn controller={this.queryTrigger}></QueryTriggerFn>
+          </Section>
+          <Section title="execute-trigger">
+            <ExecuteTrigger></ExecuteTrigger>
+          </Section>
+          <Section title="notify-trigger">
+            <NotifyTrigger></NotifyTrigger>
+            <NotifyTriggerFn controller={this.notifyTrigger}></NotifyTriggerFn>
           </Section>
         </AppContext.Provider>
       </div>

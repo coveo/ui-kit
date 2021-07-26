@@ -12,7 +12,6 @@ import {
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -25,7 +24,7 @@ import {
   updateNumericFacetValues,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {validateNumericFacetOptions} from './headless-numeric-facet-options';
-import {numericFacetResponseSelector} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
+import {numericFacetSelectedValuesSelector} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 
 /**
  * The options defining a `NumericFilter`.
@@ -121,6 +120,7 @@ export interface NumericFilter extends Controller {
    * Updates the selected range.
    *
    * @param range - The numeric range.
+   * @returns Whether the range is valid.
    */
   setRange(range: NumericFilterRange): void;
 
@@ -157,7 +157,12 @@ export function buildNumericFilter(
   return {
     ...controller,
     clear: () => {
-      dispatch(deselectAllFacetValues(facetId));
+      dispatch(
+        updateNumericFacetValues({
+          facetId,
+          values: [],
+        })
+      );
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
@@ -169,12 +174,16 @@ export function buildNumericFilter(
         endInclusive: true,
       };
 
-      dispatch(
-        updateNumericFacetValues({
-          facetId,
-          values: [facetValue],
-        })
-      );
+      const updateFacetValuesAction = updateNumericFacetValues({
+        facetId,
+        values: [facetValue],
+      });
+
+      if (updateFacetValuesAction.error) {
+        return false;
+      }
+
+      dispatch(updateFacetValuesAction);
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(
         executeSearch(
@@ -184,12 +193,16 @@ export function buildNumericFilter(
           })
         )
       );
+      return true;
     },
 
     get state() {
       const isLoading = getState().search.isLoading;
-      const response = numericFacetResponseSelector(getState(), facetId);
-      const range = response?.values.length ? response.values[0] : undefined;
+      const selectedRanges = numericFacetSelectedValuesSelector(
+        getState(),
+        facetId
+      );
+      const range = selectedRanges.length ? selectedRanges[0] : undefined;
 
       return {
         facetId,

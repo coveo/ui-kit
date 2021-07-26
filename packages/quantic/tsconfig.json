@@ -64,7 +64,7 @@
                 "quanticHeadlessLoader/quanticHeadlessLoader.js"
             ],
             "c/quanticUtils": [
-              "quanticUtils/quanticUtils.js"
+                "quanticUtils/quanticUtils.js"
             ],
         }
     },

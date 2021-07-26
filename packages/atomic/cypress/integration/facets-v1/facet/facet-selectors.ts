@@ -31,6 +31,10 @@ export const FacetSelectors = {
   noMatches: () => FacetSelectors.shadow().find('[part="no-matches"]'),
   valueLabel: () => FacetSelectors.shadow().find('[part="value-label"]'),
   valueCount: () => FacetSelectors.shadow().find('[part="value-count"]'),
+  valueHighlight: () =>
+    FacetSelectors.shadow().find(
+      '[part="value-label"] [part="search-highlight"]'
+    ),
   facetValueLabelAtIndex: (index: number) =>
     FacetSelectors.valueLabel().eq(index),
 };

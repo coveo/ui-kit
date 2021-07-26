@@ -53,7 +53,10 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values || [];
+    return this.state.values.map(v => ({
+      ...v,
+      checked: v.state === 'selected'
+    })) || [];
   }
 
   get hasValues() {
