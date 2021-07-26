@@ -57,8 +57,8 @@ import dayjs from 'dayjs';
  * @part value-count - The facet value count, common for all displays.
  * @part value-link - The facet value when display is 'link'.
  *
- * @part input-start - The input for the start value of the custom range.
- * @part input-end - The input for the end value of the custom range.
+ * @part input-start - The input for the starting value of the custom date range.
+ * @part input-end - The input for the ending value of the custom date range.
  * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
  */
