@@ -31,6 +31,7 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {Schema, StringValue} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -119,7 +120,18 @@ export class AtomicFacet
   @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({
+        constrainTo: ['checkbox', 'link', 'box'],
+      }),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+    });
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       facetId: this.facetId,
