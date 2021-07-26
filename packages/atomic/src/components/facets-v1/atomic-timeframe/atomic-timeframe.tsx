@@ -29,7 +29,7 @@ export class AtomicTimeframe implements Timeframe {
    *
    * E.g., 10 days, 1 year, etc.
    */
-  @Prop() public amount!: number;
+  @Prop() public amount = 1;
 
   /**
    * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
