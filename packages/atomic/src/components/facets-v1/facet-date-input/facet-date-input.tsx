@@ -71,7 +71,14 @@ export class FacetDateInput {
     const labelClasses = 'text-neutral-dark self-center';
 
     return (
-      <form class="grid gap-2 grid-cols-min-1fr mt-4" onSubmit={() => false}>
+      <form
+        class="grid gap-2 grid-cols-min-1fr mt-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.apply();
+          return false;
+        }}
+      >
         <label
           part="input-label"
           class={labelClasses}
@@ -115,10 +122,10 @@ export class FacetDateInput {
           }
         />
         <button
+          type="submit"
           part="input-apply-button"
           class={`${commonClasses} col-span-2 bg-background text-primary`}
           aria-label={applyAria}
-          onClick={() => this.apply()}
         >
           {apply}
         </button>

@@ -60,7 +60,14 @@ export class FacetNumberInput {
     const step = this.type === 'integer' ? '1' : 'any';
 
     return (
-      <form class="flex flex-row mt-4" onSubmit={() => false}>
+      <form
+        class="flex flex-row mt-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.apply();
+          return false;
+        }}
+      >
         <input
           part="input-start"
           type="number"
@@ -94,10 +101,10 @@ export class FacetNumberInput {
           }
         />
         <button
+          type="submit"
           part="input-apply-button"
           class={`${commonClasses} bg-background text-primary flex-none`}
           aria-label={applyAria}
-          onClick={() => this.apply()}
         >
           {apply}
         </button>
