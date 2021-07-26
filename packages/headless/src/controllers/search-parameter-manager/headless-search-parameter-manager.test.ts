@@ -1,4 +1,5 @@
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
@@ -322,5 +323,19 @@ describe('search parameter manager', () => {
     const unavailableKeys = allKeys.filter((key) => !(key in stateParams));
 
     expect(unavailableKeys).toEqual([]);
+  });
+
+  it('calling #synchronize with partial search parameters dispatches #restoreSearchParameters with non-specified parameters set to their initial values', () => {
+    const params = {q: 'a'};
+    manager.synchronize(params);
+
+    const initialParameters = initialSearchParameterSelector(engine.state);
+
+    const action = restoreSearchParameters({
+      ...initialParameters,
+      ...params,
+    });
+
+    expect(engine.actions).toContainEqual(action);
   });
 });

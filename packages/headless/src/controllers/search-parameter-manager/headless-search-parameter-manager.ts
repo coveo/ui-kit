@@ -15,6 +15,7 @@ import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 
 export {SearchParameters};
 
@@ -45,6 +46,13 @@ const initialStateSchema = new Schema<
  * The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.
  * */
 export interface SearchParameterManager extends Controller {
+  /**
+   * Updates the search parameters in state with the passed parameters. Unspecified keys are reset to their initial values.
+   *
+   * @param parameters - The search parameters
+   */
+  synchronize(parameters: SearchParameters): void;
+
   /**
    * The state relevant to the `SearchParameterManager` controller.
    * */
@@ -83,6 +91,15 @@ export function buildSearchParameterManager(
 
   return {
     ...controller,
+
+    synchronize(parameters: SearchParameters) {
+      const enrichedParams: Required<SearchParameters> = {
+        ...initialSearchParameterSelector(engine.state),
+        ...parameters,
+      };
+
+      dispatch(restoreSearchParameters(enrichedParams));
+    },
 
     get state() {
       const state = getState();
