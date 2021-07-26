@@ -232,7 +232,14 @@
                   margin-right: 0.25rem;
                 }
               </style>
-              <atomic-result-section-visual><atomic-result-icon></atomic-result-icon></atomic-result-section-visual>
+              <atomic-result-section-visual>
+                <atomic-size-condition maximum-width-inclusive="3rem">
+                  <atomic-result-icon></atomic-result-icon>
+                </atomic-size-condition>
+                <atomic-size-condition minimum-width-exclusive="3rem">
+                  <img src="https://picsum.photos/350" class="block w-full h-full" />
+                </atomic-size-condition>
+              </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
                   <span class="badge"> Salesforce </span>

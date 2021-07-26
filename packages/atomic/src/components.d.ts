@@ -582,6 +582,16 @@ export namespace Components {
          */
         "searchHub": string;
     }
+    interface AtomicSizeCondition {
+        "maximumHeightExclusive"?: string;
+        "maximumHeightInclusive"?: string;
+        "maximumWidthExclusive"?: string;
+        "maximumWidthInclusive"?: string;
+        "minimumHeightExclusive"?: string;
+        "minimumHeightInclusive"?: string;
+        "minimumWidthExclusive"?: string;
+        "minimumWidthInclusive"?: string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -918,6 +928,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSizeConditionElement extends Components.AtomicSizeCondition, HTMLStencilElement {
+    }
+    var HTMLAtomicSizeConditionElement: {
+        prototype: HTMLAtomicSizeConditionElement;
+        new (): HTMLAtomicSizeConditionElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -992,6 +1008,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-size-condition": HTMLAtomicSizeConditionElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-text": HTMLAtomicTextElement;
@@ -1558,6 +1575,16 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
     }
+    interface AtomicSizeCondition {
+        "maximumHeightExclusive"?: string;
+        "maximumHeightInclusive"?: string;
+        "maximumWidthExclusive"?: string;
+        "maximumWidthInclusive"?: string;
+        "minimumHeightExclusive"?: string;
+        "minimumHeightInclusive"?: string;
+        "minimumWidthExclusive"?: string;
+        "minimumWidthInclusive"?: string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -1648,6 +1675,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-size-condition": AtomicSizeCondition;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-text": AtomicText;
@@ -1707,6 +1735,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-size-condition": LocalJSX.AtomicSizeCondition & JSXBase.HTMLAttributes<HTMLAtomicSizeConditionElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
