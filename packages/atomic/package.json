@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.42.4",
+  "version": "0.43.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.1",
-    "@coveo/headless": "^1.7.3",
+    "@coveo/headless": "^1.8.0",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "escape-html": "^1.0.3",

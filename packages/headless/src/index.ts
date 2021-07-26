@@ -93,3 +93,9 @@ export {buildSearchParameterSerializer} from './features/search-parameters/searc
 export * as HighlightUtils from './utils/highlight';
 export {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';
+export {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+  deserializeRelativeDate,
+} from './api/search/date/relative-date';
