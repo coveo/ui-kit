@@ -1,3 +1,7 @@
+import {
+  RelativeDate,
+  serializeRelativeDate,
+} from '../../../../api/search/date/relative-date';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {buildDateRange} from './date-range';
 
@@ -44,6 +48,46 @@ describe('date range', () => {
       const expectedValues: DateRangeRequest = {
         start: '1992/11/10@09:10:25',
         end: '1993/11/10@09:10:25',
+        endInclusive: false,
+        state: 'idle',
+      };
+
+      expect(dateRange).toEqual(expectedValues);
+    });
+
+    it('generates the correct value for an relative date object', () => {
+      const start: RelativeDate = {period: 'past', amount: 2, unit: 'week'};
+      const end: RelativeDate = {period: 'now'};
+      const dateRange = buildDateRange({
+        start,
+        end,
+      });
+
+      const expectedValues: DateRangeRequest = {
+        start: serializeRelativeDate(start),
+        end: serializeRelativeDate(end),
+        endInclusive: false,
+        state: 'idle',
+      };
+
+      expect(dateRange).toEqual(expectedValues);
+    });
+
+    it('generates the correct value for an relative date string', () => {
+      const start = serializeRelativeDate({
+        period: 'past',
+        amount: 2,
+        unit: 'week',
+      });
+      const end = serializeRelativeDate({period: 'now'});
+      const dateRange = buildDateRange({
+        start,
+        end,
+      });
+
+      const expectedValues: DateRangeRequest = {
+        start,
+        end,
         endInclusive: false,
         state: 'idle',
       };

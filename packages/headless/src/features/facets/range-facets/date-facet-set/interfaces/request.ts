@@ -8,12 +8,12 @@ import {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request
  */
 export interface DateRangeRequest {
   /**
-   * The start value of the range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format TODO: describe...
+   * The start value of the range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format "period-amount-unit"
    */
   start: string;
 
   /**
-   * The end value of the range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format TODO: describe...
+   * The end value of the range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format "period-amount-unit"
    */
   end: string;
 
