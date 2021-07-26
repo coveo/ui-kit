@@ -243,7 +243,7 @@ export class AtomicRatingFacet
       );
     }
 
-    if (!this.facetState.values.length) {
+    if (!this.valuesToRender.length) {
       return <Host class="atomic-without-values"></Host>;
     }
 
