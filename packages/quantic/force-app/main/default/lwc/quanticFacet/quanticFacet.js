@@ -170,12 +170,8 @@ export default class QuanticFacet extends LightningElement {
   handleKeyUp(){
     if(this.isSearchComplete){
       this.isFacetSearchActive = this.input.value !== '';
-      console.log(this.input.value);
       this.facet.facetSearch.updateText(this.input.value);
       this.facet.facetSearch.search();
-      console.log(this.facetSearchResults);
-    } else{
-      console.log('still searching...')
     }
   }
 
