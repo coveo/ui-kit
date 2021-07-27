@@ -44,6 +44,7 @@ import {
 } from '../../formats/format-common';
 import {NumberInputType} from '../facet-number-input/number-input-type';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {Schema, StringValue} from '@coveo/bueno';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -139,7 +140,18 @@ export class AtomicNumericFacet
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
 
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+      withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+      withInput: this.withInput,
+    });
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.numberOfValues && this.initializeFacet();
     this.withInput && this.initializeFilter();
