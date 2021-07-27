@@ -1,24 +1,27 @@
 import {Component, ContextType} from 'react';
 import {
   buildDateFacet,
-  DateFacet as HeadlessDateFacet,
+  DateFacet,
   DateFacetOptions,
   DateFacetState,
   DateFacetValue,
   Unsubscribe,
+  deserializeRelativeDate,
 } from '@coveo/headless';
-import {parseDate} from './date-utils';
 import {AppContext} from '../../context/engine';
 
-interface DateFacetProps extends DateFacetOptions {
+interface RelativeDateFacetProps extends DateFacetOptions {
   facetId: string;
 }
 
-export class DateFacet extends Component<DateFacetProps, DateFacetState> {
+export class RelativeDateFacet extends Component<
+  RelativeDateFacetProps,
+  DateFacetState
+> {
   static contextType = AppContext;
   context!: ContextType<typeof AppContext>;
 
-  private controller!: HeadlessDateFacet;
+  private controller!: DateFacet;
   private unsubscribe: Unsubscribe = () => {};
 
   componentDidMount() {
@@ -42,8 +45,11 @@ export class DateFacet extends Component<DateFacetProps, DateFacetState> {
     return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
   }
 
-  private format(dateStr: string) {
-    return parseDate(dateStr).format('MMMM D YYYY');
+  private format(value: string) {
+    const relativeDate = deserializeRelativeDate(value);
+    return relativeDate.period === 'now'
+      ? relativeDate.period
+      : `${relativeDate.period} ${relativeDate.amount} ${relativeDate.unit}`;
   }
 
   render() {

@@ -1,12 +1,17 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {DateFacet as HeadlessDateFacet, DateFacetValue} from '@coveo/headless';
-import {parseDate} from './date-utils';
+import {
+  DateFacet,
+  DateFacetValue,
+  deserializeRelativeDate,
+} from '@coveo/headless';
 
-interface DateFacetProps {
-  controller: HeadlessDateFacet;
+interface RelativeDateFacetProps {
+  controller: DateFacet;
 }
 
-export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
+export const RelativeDateFacet: FunctionComponent<RelativeDateFacetProps> = (
+  props
+) => {
   const {controller} = props;
   const [state, setState] = useState(controller.state);
 
@@ -16,8 +21,11 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
     return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
   }
 
-  function format(dateStr: string) {
-    return parseDate(dateStr).format('MMMM D YYYY');
+  function format(value: string) {
+    const relativeDate = deserializeRelativeDate(value);
+    return relativeDate.period === 'now'
+      ? relativeDate.period
+      : `${relativeDate.period} ${relativeDate.amount} ${relativeDate.unit}`;
   }
 
   if (
@@ -35,7 +43,7 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
           <input
             type="checkbox"
             checked={controller.isValueSelected(value)}
-            onChange={() => controller.toggleSelect(value)}
+            onChange={() => controller.toggleSingleSelect(value)}
             disabled={state.isLoading}
           />
           {format(value.start)} to {format(value.end)}{' '}
@@ -56,18 +64,26 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
  *   options: {
  *     field: 'created',
  *     generateAutomaticRanges: false,
- *     currentValues: [ // Must be specified when `generateAutomaticRanges` is false.
+ *     currentValues: [
  *       buildDateRange({
- *         start: new Date(2015, 1),
- *         end: new Date(2018, 1),
+ *         start: {period: 'past', unit: 'day', amount: 1},
+ *         end: {period: 'now'},
  *       }),
  *       buildDateRange({
- *         start: new Date(2018, 1),
- *         end: new Date(2020, 1),
+ *         start: {period: 'past', unit: 'week', amount: 1},
+ *         end: {period: 'now'},
  *       }),
  *       buildDateRange({
- *         start: new Date(2020, 1),
- *         end: new Date(2021, 1),
+ *         start: {period: 'past', unit: 'month', amount: 1},
+ *         end: {period: 'now'},
+ *       }),
+ *       buildDateRange({
+ *         start: {period: 'past', unit: 'quarter', amount: 1},
+ *         end: {period: 'now'},
+ *       }),
+ *       buildDateRange({
+ *         start: {period: 'past', unit: 'year', amount: 1},
+ *         end: {period: 'now'},
  *       }),
  *     ],
  *   },

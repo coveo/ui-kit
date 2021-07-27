@@ -19,7 +19,11 @@ export const NumericFacet: FunctionComponent<NumericFacetProps> = (props) => {
     return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
   }
 
-  if (!state.values.length) {
+  if (
+    !state.values.filter(
+      (value) => value.state !== 'idle' || value.numberOfResults > 0
+    ).length
+  ) {
     return <div>No facet values</div>;
   }
 
