@@ -36,3 +36,7 @@
     background-color: #0070D2;
 }
 
+.searchbox__clear-button {
+    box-shadow: none;
+}
+
