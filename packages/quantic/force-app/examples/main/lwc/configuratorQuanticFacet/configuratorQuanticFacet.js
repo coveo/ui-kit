@@ -13,7 +13,7 @@ export default class ConfiguratorQuanticFacet extends LightningElement {
         this.label = evt.target.value;
     }
 
-    handleTryItNow(evt) {
+    handleTryItNow() {
         this.configured = true;
         this.dispatchEvent(new CustomEvent('tryitnow', {
             detail: {
@@ -23,7 +23,7 @@ export default class ConfiguratorQuanticFacet extends LightningElement {
         }));
     }
 
-    handleReset(evt) {
+    handleReset() {
         window.location.reload();
     }
 }
