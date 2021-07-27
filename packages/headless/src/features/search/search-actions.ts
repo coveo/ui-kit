@@ -45,6 +45,7 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
+import {mapSearchRequest, mapSearchResponse} from './search-mappings';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -87,10 +88,11 @@ export interface ExecuteSearchThunkReturn {
 const fetchFromAPI = async (
   client: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  request: SearchRequest
+  searchRequest: SearchRequest
 ) => {
   const startedAt = new Date().getTime();
-  const response = await client.search(request);
+  const {request, mappings} = mapSearchRequest(searchRequest);
+  const response = mapSearchResponse(await client.search(request), mappings);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {response, duration, queryExecuted, requestExecuted: request};

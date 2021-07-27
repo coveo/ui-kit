@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.40.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.39.0...@coveo/quantic@0.40.0) (2021-07-26)
+
+
+### Features
+
+* **quantic:** update sortBy look ([#976](https://github.com/coveo/ui-kit/issues/976)) ([9c4f310](https://github.com/coveo/ui-kit/commit/9c4f310bc8f24603c3ce07984ec96ca3dc963566))
+
+
+
+
+
+# [0.39.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.38.0...@coveo/quantic@0.39.0) (2021-07-26)
+
+
+### Features
+
+* **quantic:** create-and-promote-quantic-package-with-github-actions ([#959](https://github.com/coveo/ui-kit/issues/959)) ([2d20100](https://github.com/coveo/ui-kit/commit/2d2010063aee99a22e9706cc21ef877eff5539fe))
+
+
+
+
+
+# [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.37.1...@coveo/quantic@0.38.0) (2021-07-23)
+
+
+### Features
+
+* **quantic:** added localization for component labels ([#985](https://github.com/coveo/ui-kit/issues/985)) ([f9d1e04](https://github.com/coveo/ui-kit/commit/f9d1e04207485aaf79e50666227ef379ffa49dca))
+
+
+
+
+
+## [0.37.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.37.0...@coveo/quantic@0.37.1) (2021-07-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.36.0...@coveo/quantic@0.37.0) (2021-07-21)
+
+
+### Features
+
+* **quantic:** update search bar look ([#970](https://github.com/coveo/ui-kit/issues/970)) ([c049cb3](https://github.com/coveo/ui-kit/commit/c049cb3cdbc7c9cfd6423d02390291653e011cdf))
+
+
+
+
+
 # [0.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.35.0...@coveo/quantic@0.36.0) (2021-07-20)
 
 

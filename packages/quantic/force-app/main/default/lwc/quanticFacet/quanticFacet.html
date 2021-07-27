@@ -9,12 +9,12 @@
 
       <lightning-button-group>
         <template if:true={canShowMore}>
-          <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
-            class="slds-m-left_x-small" onclick={showMore} data-cy="more"></lightning-button>
+          <lightning-button variant="base" label={labels.showMore} title={labels.showMore} icon-name="utility:arrowdown"
+            class="slds-m-left_x-small" onclick={showMore} aria-label={showMoreFacetValuesLabel} data-cy="more"></lightning-button>
         </template>
         <template if:true={canShowLess}>
-          <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
-            class="slds-m-left_x-small" onclick={showLess} data-cy="less"></lightning-button>
+          <lightning-button variant="base" label={labels.showLess} title={labels.showLess} icon-name="utility:arrowup"
+            class="slds-m-left_x-small" onclick={showLess} aria-label={showLessFacetValuesLabel} data-cy="less"></lightning-button>
         </template>
       </lightning-button-group>
     </lightning-card>

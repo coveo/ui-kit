@@ -1,17 +1,12 @@
 <template>
   <template if:false={hasResults}>
-    <p class="slds-box slds-theme_alert-texture slds-m-top_medium">No results<span class="bold">{forQuery}</span></p>
+    <p class="slds-box slds-theme_alert-texture slds-m-top_medium">
+      <lightning-formatted-rich-text value={noResultsLabel}></lightning-formatted-rich-text>
+    </p>
   </template>
   <template if:true={hasResults}>
-    <p class="slds-text-heading_small slds-m-top_medium">
-      Results<span class="bold">{range}</span>
-      <span> of </span>
-      <span class="bold">{total}</span>
-      <template if:true={query}>
-        <span> for </span>
-        <span class="bold">{query}</span>
-      </template>
-      {duration}
+    <p class="slds-text-color_weak">
+      <lightning-formatted-rich-text value={summaryLabel}></lightning-formatted-rich-text>
     </p>
   </template>
 </template>
