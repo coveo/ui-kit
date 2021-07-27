@@ -23,6 +23,7 @@ describe('configuration slice', () => {
     search: {
       apiBaseUrl: `${url}/rest/search/v2`,
       locale: 'en-US',
+      timezone: 'Africa/Johannesburg',
     },
     analytics: {
       enabled: true,
@@ -131,6 +132,7 @@ describe('configuration slice', () => {
         search: {
           apiBaseUrl: 'http://test.com/search',
           locale: 'fr-CA',
+          timezone: 'Africa/Johannesburg',
         },
       };
 
@@ -140,6 +142,7 @@ describe('configuration slice', () => {
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
             locale: 'fr-CA',
+            timezone: 'Africa/Johannesburg',
           })
         )
       ).toEqual(expectedState);
@@ -150,6 +153,7 @@ describe('configuration slice', () => {
         search: {
           apiBaseUrl: 'http://test.com/search',
           locale: 'fr-CA',
+          timezone: 'Africa/Johannesburg',
         },
       };
 
@@ -159,6 +163,7 @@ describe('configuration slice', () => {
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
             locale: 'fr-CA',
+            timezone: 'Africa/Johannesburg',
           })
         )
       ).toEqual(expectedState);

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
 import {
   RelativeDate,
   serializeRelativeDate,
@@ -7,52 +9,37 @@ import {buildDateRange} from './date-range';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {
-    it('generates the correct value for a numeric input', () => {
+    function validateAbsoluteRange(
+      start: string | number | Date,
+      end: string | number | Date
+    ) {
       const dateRange = buildDateRange({
-        start: 721386625000,
-        end: 752922625000,
+        start,
+        end,
       });
 
       const expectedValues: DateRangeRequest = {
-        start: '1992/11/10@09:10:25',
-        end: '1993/11/10@09:10:25',
+        start: formatDateForSearchApi(dayjs(start)),
+        end: formatDateForSearchApi(dayjs(end)),
         endInclusive: false,
         state: 'idle',
       };
 
       expect(dateRange).toEqual(expectedValues);
+    }
+    it('generates the correct value for a numeric input', () => {
+      validateAbsoluteRange(721386625000, 752922625000);
     });
 
     it('generates the correct value for a js date input', () => {
-      const dateRange = buildDateRange({
-        start: new Date(721386625000),
-        end: new Date(752922625000),
-      });
-
-      const expectedValues: DateRangeRequest = {
-        start: '1992/11/10@09:10:25',
-        end: '1993/11/10@09:10:25',
-        endInclusive: false,
-        state: 'idle',
-      };
-
-      expect(dateRange).toEqual(expectedValues);
+      validateAbsoluteRange(new Date(721386625000), new Date(752922625000));
     });
 
     it('generates the correct value for an iso 8601 string input', () => {
-      const dateRange = buildDateRange({
-        start: new Date(721386625000).toISOString(),
-        end: new Date(752922625000).toISOString(),
-      });
-
-      const expectedValues: DateRangeRequest = {
-        start: '1992/11/10@09:10:25',
-        end: '1993/11/10@09:10:25',
-        endInclusive: false,
-        state: 'idle',
-      };
-
-      expect(dateRange).toEqual(expectedValues);
+      validateAbsoluteRange(
+        new Date(721386625000).toISOString(),
+        new Date(752922625000).toISOString()
+      );
     });
 
     it('generates the correct value for an relative date object', () => {
