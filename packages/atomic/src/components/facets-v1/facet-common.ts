@@ -21,6 +21,16 @@ export interface FacetValueProps {
   searchQuery?: string;
 }
 
+export interface FacetColorValueProps {
+  i18n: i18n;
+  displayValue: string;
+  partValue: string;
+  numberOfResults: number;
+  isSelected: boolean;
+  onClick(): void;
+  searchQuery?: string;
+}
+
 export interface FacetValueLabelHighlightProps {
   displayValue: string;
   searchQuery?: string;
