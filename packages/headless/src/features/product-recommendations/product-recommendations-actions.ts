@@ -13,6 +13,7 @@ import {
 import {
   validatePayload,
   requiredNonEmptyString,
+  nonEmptyString,
 } from '../../utils/validate-payload';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
@@ -65,7 +66,7 @@ export const setProductRecommendationsSkus = createAction(
       skus: new ArrayValue({
         required: true,
         min: 1,
-        each: new StringValue({emptyAllowed: false}),
+        each: nonEmptyString,
       }),
     })
 );
@@ -113,7 +114,7 @@ export const setProductRecommendationsAdditionalFields = createAction(
     validatePayload(payload, {
       additionalFields: new ArrayValue({
         required: true,
-        each: new StringValue({emptyAllowed: false}),
+        each: nonEmptyString,
       }),
     })
 );

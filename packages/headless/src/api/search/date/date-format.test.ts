@@ -1,8 +1,5 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import {isSearchApiDate, formatDateForSearchApi} from './date-format';
-
-dayjs.extend(utc);
 
 describe('#isSearchApiDate', () => {
   it('when the string matches the search api format, it returns true', () => {
@@ -15,7 +12,7 @@ describe('#isSearchApiDate', () => {
 });
 
 it('formatDateForSearchApi returns the correct format', () => {
-  expect(formatDateForSearchApi(dayjs(818035920000).utc())).toBe(
-    '1995/12/04@00:12:00'
+  expect(formatDateForSearchApi(dayjs(818035920000))).toBe(
+    '1995/12/03@19:12:00'
   );
 });

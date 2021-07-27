@@ -1,18 +1,15 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
+import {
+  nonEmptyString,
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {StringValue, BooleanValue, Value} from '@coveo/bueno';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 
-export const localeValidation = new StringValue({
-  emptyAllowed: false,
-  required: false,
-});
+const originSchemaOnConfigUpdate = () => nonEmptyString;
 
-const originSchemaOnConfigUpdate = () =>
-  new StringValue({emptyAllowed: false, required: false});
-
-const originSchemaOnUpdate = () =>
-  new StringValue({emptyAllowed: false, required: true});
+const originSchemaOnUpdate = () => requiredNonEmptyString;
 
 export interface UpdateBasicConfigurationActionCreatorPayload {
   /**
@@ -41,8 +38,8 @@ export const updateBasicConfiguration = createAction(
   'configuration/updateBasicConfiguration',
   (payload: UpdateBasicConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
-      accessToken: new StringValue({emptyAllowed: false}),
-      organizationId: new StringValue({emptyAllowed: false}),
+      accessToken: nonEmptyString,
+      organizationId: nonEmptyString,
       platformUrl: new StringValue({url: true, emptyAllowed: false}),
     })
 );
@@ -67,6 +64,11 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
    * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    */
   locale?: string;
+
+  /**
+   * The timezone of the current user. Must comply with the tz database: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+   */
+  timezone?: string;
 }
 
 /**
@@ -75,15 +77,17 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
  * @param pipeline (string) The name of the query pipeline to use for the query (e.g., `External Search`).
  * @param searchHub (string) The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates (e.g., `ExternalSearch`).
  * @param locale (string) The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+ * @param timezone (string) The timezone of the current user. Must comply with the tz database: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
  */
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
   (payload: UpdateSearchConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
-      pipeline: new StringValue({emptyAllowed: false}),
-      searchHub: new StringValue({emptyAllowed: false}),
-      locale: localeValidation,
+      pipeline: nonEmptyString,
+      searchHub: nonEmptyString,
+      timezone: nonEmptyString,
+      locale: nonEmptyString,
     })
 );
 

@@ -1,4 +1,5 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
+import {nonEmptyString} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
@@ -24,7 +25,7 @@ export const productRecommendationEngineConfigurationSchema = new Schema<
   ProductRecommendationEngineConfiguration
 >({
   ...engineConfigurationDefinitions,
-  searchHub: new StringValue({required: false, emptyAllowed: false}),
+  searchHub: nonEmptyString,
 });
 
 /**

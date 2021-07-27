@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
@@ -12,7 +11,6 @@ import {
 } from '../../../../api/search/date/relative-date';
 import {isUndefined} from '@coveo/bueno';
 
-dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 type AbsoluteDate = string | number | Date;

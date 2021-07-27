@@ -280,6 +280,7 @@ export const buildSearchRequest = (state: StateNeededByExecuteSearch) => {
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,
     referrer: state.configuration.analytics.originLevel3,
+    timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

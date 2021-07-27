@@ -1,10 +1,10 @@
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {RecordValue, Schema} from '@coveo/bueno';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {localeValidation} from '../../features/configuration/configuration-actions';
+import {nonEmptyString} from '../../utils/validate-payload';
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
@@ -65,15 +65,9 @@ export const searchEngineConfigurationSchema = new Schema<
       required: false,
     },
     values: {
-      pipeline: new StringValue({
-        required: false,
-        emptyAllowed: false,
-      }),
-      searchHub: new StringValue({
-        required: false,
-        emptyAllowed: false,
-      }),
-      locale: localeValidation,
+      pipeline: nonEmptyString,
+      searchHub: nonEmptyString,
+      locale: nonEmptyString,
     },
   }),
 });

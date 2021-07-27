@@ -1,5 +1,6 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
+import {RecordValue} from '@coveo/bueno';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
 
 /**
  * Identifies the document from which the answer originate.
@@ -12,11 +13,8 @@ export const documentIdentifierPayloadDefinition = () =>
     values: {
       documentId: new RecordValue({
         values: {
-          contentIdKey: new StringValue({required: true, emptyAllowed: false}),
-          contentIdValue: new StringValue({
-            required: true,
-            emptyAllowed: false,
-          }),
+          contentIdKey: requiredNonEmptyString,
+          contentIdValue: requiredNonEmptyString,
         },
       }),
     },

@@ -73,7 +73,7 @@ export const loadCollection = createAsyncThunk<
       configuration: {
         accessToken,
         organizationId,
-        search: {apiBaseUrl},
+        search: {apiBaseUrl, timezone},
       },
     } = getState();
 
@@ -85,6 +85,7 @@ export const loadCollection = createAsyncThunk<
       url: apiBaseUrl,
       aq: `@${fields.collection} = ${collectionId}`,
       numberOfResults: 100,
+      timezone,
     });
 
     if (isErrorResponse(response)) {

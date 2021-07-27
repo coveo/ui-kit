@@ -85,6 +85,10 @@ export interface ActionsHistoryParam {
   actionsHistory: history.HistoryElement[];
 }
 
+export interface TimezoneParam {
+  timezone: string;
+}
+
 export const baseSearchRequest = (
   req: BaseParam,
   method: HttpMethods,
