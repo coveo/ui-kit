@@ -22,7 +22,7 @@ export class AtomicResultBadge {
   @Prop() public text?: string;
 
   /**
-   * Specifies the icon to display from the list of available icons.
+   * Specifies the icon to display, either from the list of available icons or a direct link.
    */
   @Prop() public icon?: string;
 
