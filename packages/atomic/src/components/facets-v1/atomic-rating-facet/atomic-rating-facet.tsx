@@ -22,7 +22,9 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
 import {BaseFacet} from '../facet-common';
+import Star from '../../../images/star.svg';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -38,13 +40,12 @@ import {BaseFacet} from '../facet-common';
  * @part clear-button-icon - The clear button icon.
  *
  * @part values - The facet values container.
- * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
+ * @part value-rating - The facet value rating, common for all displays.
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
- * @part value-box - The facet value when display is 'box'.
  *
  */
 @Component({
@@ -82,18 +83,22 @@ export class AtomicRatingFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of stars to request for this facet.
+   * The number of intervals to split the index for this facet.
    */
-  @Prop() public numberOfStars = 5;
+  @Prop() public numberOfIntervals = 5;
   /**
-   * The maximum value of the field. This value is used to normalize the field values with the number of stars.
+   * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
-  @Prop() public maxValueInIndex = 5;
+  @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  /**
+   * The icon used to display the rating.
+   */
+  @Prop() public icon = Star;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -104,7 +109,7 @@ export class AtomicRatingFacet
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      numberOfValues: this.numberOfStars,
+      numberOfValues: this.numberOfIntervals,
       currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
@@ -117,19 +122,22 @@ export class AtomicRatingFacet
     };
   }
 
+  private get scaleFactor() {
+    return this.maxValueInIndex / this.numberOfIntervals;
+  }
+
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
   }
 
   private generateCurrentValues() {
-    const scaleFactor = this.maxValueInIndex / this.numberOfStars;
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i < this.numberOfStars; i++) {
+    for (let i = 0; i < this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
-          start: Math.round(i * scaleFactor * 100) / 100,
-          end: Math.round((i + 1) * scaleFactor * 100) / 100,
+          start: Math.round(i * this.scaleFactor * 100) / 100,
+          end: Math.round((i + 1) * this.scaleFactor * 100) / 100,
           endInclusive: true,
         })
       );
@@ -137,10 +145,7 @@ export class AtomicRatingFacet
     return currentValues;
   }
 
-  //remove this function later
   private formatFacetValue(facetValue: NumericFacetValue) {
-    //TODO: add stars here but display value is a string
-    //maybe better to pass svg as children/ Vnode
     return this.bindings.i18n.t('to', {
       start: facetValue.start,
       end: facetValue.end,
@@ -172,7 +177,13 @@ export class AtomicRatingFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueCheckbox>
+          >
+            <FacetValueIconRating
+              numberOfTotalIcons={this.maxValueInIndex}
+              numberOfActiveIcons={facetValue.end}
+              icon={this.icon}
+            ></FacetValueIconRating>
+          </FacetValueCheckbox>
         );
       case 'link':
         return (
@@ -182,7 +193,13 @@ export class AtomicRatingFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueLink>
+          >
+            <FacetValueIconRating
+              numberOfTotalIcons={this.maxValueInIndex}
+              numberOfActiveIcons={facetValue.end}
+              icon={this.icon}
+            ></FacetValueIconRating>
+          </FacetValueLink>
         );
     }
   }
@@ -221,12 +238,12 @@ export class AtomicRatingFacet
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <FacetPlaceholder
-          numberOfValues={this.numberOfStars}
+          numberOfValues={this.numberOfIntervals}
         ></FacetPlaceholder>
       );
     }
 
-    if (!this.facetState.values.length) {
+    if (!this.valuesToRender.length) {
       return <Host class="atomic-without-values"></Host>;
     }
 

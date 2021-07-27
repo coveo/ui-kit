@@ -43,6 +43,7 @@ import {
   NumberFormatter,
 } from '../../formats/format-common';
 import {NumberInputType} from '../facet-number-input/number-input-type';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -68,8 +69,8 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  *
- * @part input-start - The input for the start value of the custom range.
- * @part input-end - The input for the end value of the custom range.
+ * @part input-start - The input for the starting value of the custom numeric range.
+ * @part input-end - The input for the ending value of the custom numeric range.
  * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
@@ -290,7 +291,12 @@ export class AtomicNumericFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueCheckbox>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+            ></FacetValueLabelHighlight>
+          </FacetValueCheckbox>
         );
       case 'link':
         return (
@@ -300,7 +306,12 @@ export class AtomicNumericFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
-          ></FacetValueLink>
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+            ></FacetValueLabelHighlight>
+          </FacetValueLink>
         );
     }
   }

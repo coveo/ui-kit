@@ -5,6 +5,10 @@
   "settings": {
     "communitiesSettings": {
       "enableNetworksEnabled": true
+    },
+    "languageSettings": {
+      "enableTranslationWorkbench":  true,
+      "enableEndUserLanguages": true
     }
   }
 }
