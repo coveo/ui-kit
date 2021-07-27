@@ -1,12 +1,4 @@
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Host,
-  Event,
-  EventEmitter,
-} from '@stencil/core';
+import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
 import {NumberInputType} from './number-input-type';
@@ -62,56 +54,61 @@ export class FacetNumberInput {
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
 
-    const commonClasses = 'text-base rounded p-2.5 border border-neutral-light';
+    const commonClasses = 'rounded p-2.5 border border-neutral';
     const inputClasses = `${commonClasses} placeholder-neutral-dark min-w-0 mr-1`;
 
     const step = this.type === 'integer' ? '1' : 'any';
 
     return (
-      <Host class="flex flex-col mt-4">
-        <form class="inline-flex">
-          <input
-            part="input-start"
-            type="number"
-            step={step}
-            ref={(ref) => (this.startRef = ref!)}
-            class={inputClasses}
-            placeholder={minPlaceholder}
-            aria-label={minAria}
-            required
-            min={Number.MIN_SAFE_INTEGER}
-            max={this.end}
-            value={this.filterState.range?.start}
-            onInput={(e) =>
-              (this.start = (e.target as HTMLInputElement).valueAsNumber)
-            }
-          />
-          <input
-            part="input-end"
-            type="number"
-            step={step}
-            ref={(ref) => (this.endRef = ref!)}
-            class={inputClasses}
-            placeholder={maxPlaceholder}
-            aria-label={maxAria}
-            required
-            min={this.start}
-            max={Number.MAX_SAFE_INTEGER}
-            value={this.filterState.range?.end}
-            onInput={(e) =>
-              (this.end = (e.target as HTMLInputElement).valueAsNumber)
-            }
-          />
-          <button
-            part="input-apply-button"
-            class={`${commonClasses} bg-background text-primary flex-none`}
-            aria-label={applyAria}
-            onClick={() => this.apply()}
-          >
-            {apply}
-          </button>
-        </form>
-      </Host>
+      <form
+        class="flex flex-row mt-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.apply();
+          return false;
+        }}
+      >
+        <input
+          part="input-start"
+          type="number"
+          step={step}
+          ref={(ref) => (this.startRef = ref!)}
+          class={inputClasses}
+          placeholder={minPlaceholder}
+          aria-label={minAria}
+          required
+          min={Number.MIN_SAFE_INTEGER}
+          max={this.end}
+          value={this.filterState.range?.start}
+          onInput={(e) =>
+            (this.start = (e.target as HTMLInputElement).valueAsNumber)
+          }
+        />
+        <input
+          part="input-end"
+          type="number"
+          step={step}
+          ref={(ref) => (this.endRef = ref!)}
+          class={inputClasses}
+          placeholder={maxPlaceholder}
+          aria-label={maxAria}
+          required
+          min={this.start}
+          max={Number.MAX_SAFE_INTEGER}
+          value={this.filterState.range?.end}
+          onInput={(e) =>
+            (this.end = (e.target as HTMLInputElement).valueAsNumber)
+          }
+        />
+        <button
+          type="submit"
+          part="input-apply-button"
+          class={`${commonClasses} bg-background text-primary flex-none`}
+          aria-label={applyAria}
+        >
+          {apply}
+        </button>
+      </form>
     );
   }
 }

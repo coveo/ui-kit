@@ -3,20 +3,28 @@ import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
+import {
+  serializeRelativeDate,
+  isRelativeDate,
+  isRelativeDateFormat,
+  RelativeDate,
+} from '../../../../api/search/date/relative-date';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-export type DateRangeInput = string | number | Date;
+type AbsoluteDate = string | number | Date;
+export type DateRangeInput = AbsoluteDate | RelativeDate;
 
 export interface DateRangeOptions {
   /**
-   * The start value of the range.
+   * The starting value for the date range. A date range can be either absolute or relative.
    */
   start: DateRangeInput;
 
   /**
-   * The end value of the range.
+   * The ending value for the date range. A date range can be either absolute or relative.
    */
   end: DateRangeInput;
 
@@ -47,10 +55,6 @@ export interface DateRangeOptions {
   useLocalTime?: boolean;
 }
 
-export function isSearchApiDate(date: string) {
-  return formatForSearchApi(dayjs(date)) === date;
-}
-
 /**
  * Creates a `DateRangeRequest`.
  *
@@ -73,6 +77,14 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
+  if (isRelativeDate(rawDate)) {
+    return serializeRelativeDate(rawDate);
+  }
+
+  if (typeof rawDate === 'string' && isRelativeDateFormat(rawDate)) {
+    return rawDate;
+  }
+
   const date = dayjs(rawDate, dateFormat);
 
   if (!date.isValid()) {
@@ -85,10 +97,5 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   }
 
   const adjusted = useLocalTime ? date : date.utc();
-  return formatForSearchApi(adjusted);
-}
-
-function formatForSearchApi(date: dayjs.Dayjs) {
-  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-  return date.format(DATE_FORMAT);
+  return formatDateForSearchApi(adjusted);
 }
