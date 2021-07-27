@@ -1,9 +1,11 @@
 import {setupAliases} from '../page-objects/example-search';
 
 describe('example-search-facets', () => {
+  const exampleSearchUrl = 'http://localhost:3333/preview/c/exampleSearch';
+
   describe('more link', () => {
     it('should show more facet values when clicking the more link', () => {
-      cy.visit('c/exampleSearch')
+      cy.visit(exampleSearchUrl)
         .then(setupAliases)
         .wait('@search')
         .get('@facet-type-values')
@@ -32,7 +34,7 @@ describe('example-search-facets', () => {
 
   describe('less link', () => {
     it('should show less facet values when clicking the less link', () => {
-      cy.visit('c/exampleSearch')
+      cy.visit(exampleSearchUrl)
         .then(setupAliases)
         .wait('@search')
         .get('@facet-type-more')

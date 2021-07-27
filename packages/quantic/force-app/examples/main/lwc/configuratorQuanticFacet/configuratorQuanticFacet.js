@@ -1,4 +1,4 @@
-import {api, LightningElement} from 'lwc';
+import {LightningElement} from 'lwc';
 
 export default class ConfiguratorQuanticFacet extends LightningElement {
     field = 'objecttype';

@@ -6,8 +6,10 @@ import {
 } from '../page-objects/example-search';
 
 describe('example-search', () => {
+  const exampleSearchUrl = 'http://localhost:3333/preview/c/exampleSearch';
+
   it('should load results automatically', () => {
-    cy.visit('c/exampleSearch')
+    cy.visit(exampleSearchUrl)
       .then(setupAliases)
       .wait('@search')
       .get('@searchbox')
@@ -22,7 +24,7 @@ describe('example-search', () => {
 
   describe('when clicking a facet', () => {
     it('should trigger query when clicking a facet', () => {
-      cy.visit('c/exampleSearch')
+      cy.visit(exampleSearchUrl)
         .then(setupAliases)
         .wait('@search')
         .get('@facet-type-item-checkbox')
@@ -33,7 +35,7 @@ describe('example-search', () => {
 
   describe('when typing a search query', () => {
     it('should trigger query when typing in searchbox', () => {
-      cy.visit('c/exampleSearch')
+      cy.visit(exampleSearchUrl)
         .then(setupAliases)
         .wait('@search')
         .then(() => searchFor('test'))
@@ -48,7 +50,7 @@ describe('example-search', () => {
 
   describe('when changing the sorting', () => {
     it('should trigger query when changing the sorting', () => {
-      cy.visit('c/exampleSearch')
+      cy.visit(exampleSearchUrl)
         .then(setupAliases)
         .wait('@search')
         .then(sortByDateDescending)
@@ -64,18 +66,18 @@ describe('example-search', () => {
 
   describe('when changing result page', () => {
     it('should request new result page when clicking a specific page in the pager', () => {
-      cy.visit('c/exampleSearch')
+      cy.visit(exampleSearchUrl)
         .then(setupAliases)
         .wait('@search')
         .get('@summary')
-        .should('contain.text', 'Results 1 - 10')
+        .should('contain.text', 'Results 1-10')
         .then(() => selectResultPage(2))
         .wait('@search')
         .then((interception) => {
           assert.equal(interception.request.body.firstResult, 10);
         })
         .get('@summary')
-        .should('contain.text', 'Results 11 - 20');
+        .should('contain.text', 'Results 11-20');
     });
   });
 });

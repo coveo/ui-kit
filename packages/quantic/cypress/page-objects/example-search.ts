@@ -9,7 +9,7 @@ export const setupAliases = () =>
     .as('result')
     .get('c-quantic-search-box input[type="search"]')
     .as('searchbox')
-    .get('c-quantic-summary > p')
+    .get('c-quantic-summary lightning-formatted-rich-text span')
     .as('summary')
     .get('c-quantic-sort')
     .as('sort')
