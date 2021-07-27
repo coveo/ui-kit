@@ -135,6 +135,14 @@ describe('FacetSearch', () => {
     expect(engine.actions).toContainEqual(clearFacetSearchAction);
   });
 
+  it('#updateCaptions dispatches #updateFacetSearch with the new captions', () => {
+    const captions = {hello: 'world'};
+    controller.updateCaptions({hello: 'world'});
+    expect(engine.actions).toContainEqual(
+      updateFacetSearch({facetId, captions})
+    );
+  });
+
   it('calling #state returns the response', () => {
     const facetSearchState = {
       ...buildMockFacetSearchResponse(),

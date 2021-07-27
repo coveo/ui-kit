@@ -1,11 +1,13 @@
+import {i18n} from 'i18next';
 import {buildTestUrl} from '../utils/setupComponent';
 
-type SearchInterface = HTMLElement & {
+export type SearchInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
     organizationId: string;
   }) => Promise<void>;
   executeFirstSearch: () => void;
+  i18n: i18n;
 };
 
 export type TestFeature = (e: TestFixture) => void | Promise<void>;

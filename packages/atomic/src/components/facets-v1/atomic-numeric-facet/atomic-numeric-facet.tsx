@@ -44,6 +44,7 @@ import {
 } from '../../formats/format-common';
 import {NumberInputType} from '../facet-number-input/number-input-type';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {getFieldValueCaption} from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
@@ -284,7 +285,11 @@ export class AtomicNumericFacet
       this.areRangesEqual(range, facetValue)
     )?.label;
     return manualRangeLabel
-      ? this.bindings.i18n.t(manualRangeLabel)
+      ? getFieldValueCaption(
+          this.facetId!,
+          manualRangeLabel,
+          this.bindings.i18n
+        )
       : this.bindings.i18n.t('to', {
           start: this.formatValue(facetValue.start),
           end: this.formatValue(facetValue.end),
