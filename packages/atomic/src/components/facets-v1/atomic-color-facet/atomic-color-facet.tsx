@@ -55,6 +55,7 @@ import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-val
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  *
+ * @part value-box - The facet value when display is 'box'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  *
  * @part show-more - The show more results button.

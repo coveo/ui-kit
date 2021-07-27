@@ -14,14 +14,18 @@ export const FacetValueBoxColor: FunctionalComponent<FacetColorValueProps> = (
   return (
     <li key={props.displayValue}>
       <button
-        part={`value-${props.partValue}`}
+        part="value-box"
         onClick={() => props.onClick()}
-        class={`value-box box-border w-full h-full flex flex-col items-center rounded text-on-background hover:border-primary-light focus:border-primary-light focus:outline-none py-2 px-1 ${
+        class={`value-box box-border w-full h-full flex flex-col items-center rounded text-on-background hover:border-primary-light focus:border-primary-light focus:outline-none py-2 px-1 overflow-hidden ${
           props.isSelected ? 'border-primary border-2' : 'border border-neutral'
         }`}
         aria-pressed={props.isSelected.toString()}
         aria-label={ariaLabel}
       >
+        <div
+          part={`value-${props.partValue}`}
+          class="w-full h-1/2 bg-neutral-dark m-2"
+        ></div>
         {children}
         <span
           title={count}
