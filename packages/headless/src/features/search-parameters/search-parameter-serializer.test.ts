@@ -75,12 +75,10 @@ describe('buildSearchParameterSerializer', () => {
 
       const df = {
         date: [
-          buildDateRange({start: date1, end: date2, useLocalTime: true}),
-          buildDateRange({start: date2, end: date3, useLocalTime: true}),
+          buildDateRange({start: date1, end: date2}),
+          buildDateRange({start: date2, end: date3}),
         ],
-        created: [
-          buildDateRange({start: date1, end: date2, useLocalTime: true}),
-        ],
+        created: [buildDateRange({start: date1, end: date2})],
       };
 
       const result = serialize({df});
@@ -233,13 +231,11 @@ describe('buildSearchParameterSerializer', () => {
             buildDateRange({
               start: date1,
               end: date2,
-              useLocalTime: true,
               state: 'selected',
             }),
             buildDateRange({
               start: date2,
               end: date3,
-              useLocalTime: true,
               state: 'selected',
             }),
           ],
@@ -256,7 +252,6 @@ describe('buildSearchParameterSerializer', () => {
       const expected = buildDateRange({
         start: date1,
         end: date2,
-        useLocalTime: true,
         state: 'selected',
       });
 

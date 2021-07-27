@@ -10,6 +10,7 @@ import {
   isRelativeDateFormat,
   RelativeDate,
 } from '../../../../api/search/date/relative-date';
+import {isUndefined} from '@coveo/bueno';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -50,7 +51,7 @@ export interface DateRangeOptions {
   /**
    * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
    *
-   * @defaultValue `false`
+   * @deprecated No adjusments to UTC are being made. Please use the `timezone` engine configuration option instead.
    */
   useLocalTime?: boolean;
 }
@@ -62,6 +63,12 @@ export interface DateRangeOptions {
  * @returns A new `DateRangeRequest`.
  */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
+  if (!isUndefined(config.useLocalTime)) {
+    console.warn(
+      'The "useLocalTime" option for "buildDateRange" is deprecated. Please use the "timezone" engine configuration option instead.'
+    );
+  }
+
   const start = buildDate(config.start, config);
   const end = buildDate(config.end, config);
   const endInclusive = config.endInclusive ?? false;
@@ -76,7 +83,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 }
 
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
-  const {dateFormat, useLocalTime} = options;
+  const {dateFormat} = options;
   if (isRelativeDate(rawDate)) {
     return serializeRelativeDate(rawDate);
   }
@@ -96,6 +103,5 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
     );
   }
 
-  const adjusted = useLocalTime ? date : date.utc();
-  return formatDateForSearchApi(adjusted);
+  return formatDateForSearchApi(date);
 }

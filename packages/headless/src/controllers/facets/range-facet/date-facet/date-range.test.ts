@@ -110,7 +110,6 @@ describe('date range', () => {
         start: '11-1992-10@09:10:25',
         end: '11-1993-10@09:10:25',
         dateFormat,
-        useLocalTime: true,
       });
 
       const expectedValues: DateRangeRequest = {
