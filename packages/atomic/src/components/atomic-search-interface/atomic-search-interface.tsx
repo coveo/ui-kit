@@ -65,6 +65,15 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public searchHub = 'default';
 
   /**
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets and result items.
+   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
+   *
+   * @example
+   * America/Montreal
+   */
+  @Prop({reflect: true}) public timezone?: string;
+
+  /**
    * The severity level of the messages to log in the console.
    */
   @Prop() public logLevel?: LogLevel;
@@ -223,6 +232,7 @@ export class AtomicSearchInterface {
             searchHub: this.searchHub,
             pipeline: this.pipeline,
             locale: this.language,
+            timezone: this.timezone,
           },
         },
         loggerOptions: {

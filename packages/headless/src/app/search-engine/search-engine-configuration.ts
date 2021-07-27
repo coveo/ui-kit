@@ -47,7 +47,7 @@ export interface SearchConfigurationOptions {
    * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
    *
    * @example
-   * America/New_York
+   * America/Montreal
    */
   timezone?: string;
   /**
