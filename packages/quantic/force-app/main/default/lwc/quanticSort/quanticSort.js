@@ -1,6 +1,11 @@
 import {LightningElement, track, api} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
 
+import sortBy from '@salesforce/label/c.quantic_SortBy';
+import relevancy from '@salesforce/label/c.quantic_Relevancy';
+import newest from '@salesforce/label/c.quantic_Newest';
+import oldest from '@salesforce/label/c.quantic_Oldest';
+
 export default class QuanticSort extends LightningElement {
   @track state = {};
 
@@ -21,6 +26,13 @@ export default class QuanticSort extends LightningElement {
    * @type {boolean}
    */
   @track hasResults
+
+  labels = {
+    sortBy,
+    relevancy,
+    newest,
+    oldest
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -97,9 +109,9 @@ export default class QuanticSort extends LightningElement {
 
   get options() {
     return [
-      {label: 'Relevancy', value: 'relevancy'},
-      {label: 'Newest', value: 'newest'},
-      {label: 'Oldest', value: 'oldest'},
+      {label: this.labels.relevancy, value: 'relevancy'},
+      {label: this.labels.newest, value: 'newest'},
+      {label: this.labels.oldest, value: 'oldest'},
     ];
   }
 
