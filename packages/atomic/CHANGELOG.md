@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.44.0...@coveo/atomic@0.45.0) (2021-07-26)
+
+
+### Features
+
+* **atomic:** rating Range Facet Component ([#988](https://github.com/coveo/ui-kit/issues/988)) ([7661c77](https://github.com/coveo/ui-kit/commit/7661c77071a59c2391ef0845d3c4720b5737036c))
+
+
+
+
+
 # [0.44.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.43.2...@coveo/atomic@0.44.0) (2021-07-26)
 
 
