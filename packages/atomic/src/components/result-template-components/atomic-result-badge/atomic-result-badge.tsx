@@ -29,14 +29,14 @@ export class AtomicResultBadge {
   /**
    * Specifies a color to use for the badge.
    *
-   * Defaults to light grey.
+   * Defaults to `neutral-light`.
    */
   @Prop() public color?: string;
 
   /**
    * Specifies a text color to use for the badge.
    *
-   * Defaults to dark grey.
+   * Defaults to `neutral-dark`.
    */
   @Prop() public textColor?: string;
 
