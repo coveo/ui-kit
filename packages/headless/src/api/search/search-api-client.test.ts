@@ -493,7 +493,9 @@ describe('search api client', () => {
       const response = new Response(body);
 
       PlatformClient.call = () => Promise.resolve(response);
-      const res = await searchAPIClient.search(buildSearchRequest(state));
+      const res = await searchAPIClient.search(
+        buildSearchRequest(state).request
+      );
       if (isErrorResponse(res)) {
         fail(
           'SearchAPIClient should not return an error when processing question answering'

@@ -55,7 +55,7 @@ describe('search request', () => {
     state.facetSet[1] = request;
 
     const {facets} = buildSearchRequest(state).request;
-    expect(facets).toContain(request);
+    expect(facets).toContainEqual(request);
   });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', () => {
@@ -63,7 +63,7 @@ describe('search request', () => {
     state.numericFacetSet[1] = request;
 
     const {facets} = buildSearchRequest(state).request;
-    expect(facets).toContain(request);
+    expect(facets).toContainEqual(request);
   });
 
   it('#searchRequest returns the facets in the state #dateFacetSet', () => {
@@ -71,7 +71,7 @@ describe('search request', () => {
     state.dateFacetSet[1] = request;
 
     const {facets} = buildSearchRequest(state).request;
-    expect(facets).toContain(request);
+    expect(facets).toContainEqual(request);
   });
 
   it('#searchRequestParams returns the facets in the #categoryFacetSet', () => {
