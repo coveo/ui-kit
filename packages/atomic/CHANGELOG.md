@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.45.0...@coveo/atomic@0.45.1) (2021-07-27)
+
+
+### Bug Fixes
+
+* **atomic:** add prop validation for Facets string literals ([#999](https://github.com/coveo/ui-kit/issues/999)) ([dd0fa63](https://github.com/coveo/ui-kit/commit/dd0fa63ed67812df90fd3e07578faa4c1e632054))
+
+
+
+
+
 # [0.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.44.0...@coveo/atomic@0.45.0) (2021-07-26)
 
 
