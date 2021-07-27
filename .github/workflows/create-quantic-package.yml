@@ -60,8 +60,8 @@ jobs:
       - name: Connect to DevHub organization
         working-directory: ./packages/quantic
         run: |
-          echo $SFDX_AUTH_JWT_KEY > server.key
-          sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
+          echo "$SFDX_AUTH_JWT_KEY" > server.key
+          sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile ./server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
