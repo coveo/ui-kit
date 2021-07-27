@@ -1,1 +1,11 @@
 @import '../facet-value-box/facet-value-box.pcss';
+
+/**
+ * @prop --atomic-facet-color-boxes-per-row: Number of facet values for the Color Facet to display per row, when the display is 'box'
+ * @prop --atomic-facet-color-boxes-gap: Gap value for facet values for the Color Facet , when the display is 'box'
+ */
+.box-color-container {
+  @apply grid;
+  grid-template-columns: repeat(var(--atomic-facet-color-boxes-per-row, 3), minmax(0, 1fr));
+  gap: var(--atomic-facet-color-boxes-gap, 0.5rem);
+}

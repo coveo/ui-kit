@@ -21,7 +21,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {FacetValueCheckboxColor} from '../facet-value-checkbox-color/facet-value-checkbox-color';
-import {FacetValueBox} from '../facet-value-box/facet-value-box';
+import {FacetValueBoxColor} from '../facet-value-box-color/facet-value-box-color';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
 import {
@@ -55,9 +55,7 @@ import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-val
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  *
- * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
- * @part value-box - The facet value when display is 'box'.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -122,7 +120,7 @@ export class AtomicColorFacet
     const options: FacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      numberOfValues: this.numberOfValues,
+      numberOfValues: this.displayValuesAs === 'box' ? 6 : 8,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
     };
@@ -215,8 +213,9 @@ export class AtomicColorFacet
         );
       case 'box':
         return (
-          <FacetValueBox
+          <FacetValueBoxColor
             displayValue={displayValue}
+            partValue={facetValue.value}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
@@ -228,14 +227,14 @@ export class AtomicColorFacet
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </FacetValueBox>
+          </FacetValueBoxColor>
         );
     }
   }
 
   private renderValuesContainer(children: VNode[]) {
     const classes = `mt-3 ${
-      this.displayValuesAs === 'box' ? 'box-container' : ''
+      this.displayValuesAs === 'box' ? 'box-color-container' : ''
     }`;
     return (
       <ul part="values" class={classes}>
