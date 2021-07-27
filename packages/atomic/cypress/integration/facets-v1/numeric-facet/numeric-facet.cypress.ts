@@ -121,7 +121,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             );
           });
 
-          describe('verfify analytics', () => {
+          describe('verify analytics', () => {
             before(setupSelectSecondCheckboxValue);
             NumericFacetAssertions.assertLogNumericFacetSelect(
               field,
@@ -569,7 +569,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             addNumericFacet({
               field,
               label,
-              'with-input': 'true',
+              'with-input': 'integer',
             })
           )
           .withHash(`nf[${field}_input]=${min}..${max}`)
@@ -585,11 +585,15 @@ describe('Numeric Facet V1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayValues(NumericFacetSelectors, false);
     });
 
-    describe.skip('with invalid #withInput', () => {
+    describe('with invalid #withInput', () => {
       before(() => {
-        setupRangesWithInputOnly('test');
+        setupRangesWithInputOnly('true');
       });
       NumericFacetAssertions.assertDisplayRangeInput(false);
+      CommonAssertions.assertContainsComponentError(
+        NumericFacetSelectors,
+        true
+      );
     });
   });
 
