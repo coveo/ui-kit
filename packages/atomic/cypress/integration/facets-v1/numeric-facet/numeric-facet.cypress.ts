@@ -515,7 +515,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           NumericFacetAssertions.assertURLHash(field, `${min}..${max}`);
         });
 
-        describe('verify analytic', () => {
+        describe('verify analytics', () => {
           before(() => {
             setupNumericValidRange();
           });
@@ -544,7 +544,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           );
         });
 
-        describe('verify analytic', () => {
+        describe('verify analytics', () => {
           before(() => {
             setupNumericValidRange(
               'decimal',
