@@ -1,16 +1,15 @@
-import {api, LightningElement} from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticFacet extends LightningElement {
     @api engineId = 'quantic-facet-engine';
 
-    field;
-    label = 'Type';
+    isConfigured = false;
+    @track config = {};
 
-    handleFieldChange(evt) {
-        this.field = evt.detail.value;
-    }
+    slotButtonClicked = false;
 
-    handleLabelChange(evt) {
-        this.label = evt.detail.value;
+    handleTryItNow(evt) {
+        this.config = evt.detail;
+        this.isConfigured = true;
     }
 }

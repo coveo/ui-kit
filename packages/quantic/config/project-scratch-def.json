@@ -1,5 +1,10 @@
 {
   "orgName": "quantic local",
   "edition": "Developer",
-  "features": ["Communities"]
+  "features": ["Communities"],
+  "settings": {
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    }
+  }
 }

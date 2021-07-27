@@ -9,7 +9,7 @@ describe('example-search-facets', () => {
         .get('@facet-type-values')
         .then((values) => {
           cy.get('@facet-type-more')
-            .click()
+            .lwcClick()
             .wait('@search')
             .then((interception) => {
               assert.isAtLeast(
@@ -36,12 +36,12 @@ describe('example-search-facets', () => {
         .then(setupAliases)
         .wait('@search')
         .get('@facet-type-more')
-        .click()
+        .lwcClick()
         .wait('@search')
         .get('@facet-type')
         .find('lightning-button[data-cy="less"]')
         .as('facet-type-less')
-        .click()
+        .lwcClick()
         .wait('@search')
         .then((interception) => {
           assert.equal(

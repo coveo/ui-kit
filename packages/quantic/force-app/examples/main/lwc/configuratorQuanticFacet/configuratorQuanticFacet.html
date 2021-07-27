@@ -1,4 +1,50 @@
 <template>
-    <lightning-input type="text" label="Field" value="objecttype" readonly></lightning-input>
-    <lightning-input type="text" label="Label" value={label} onchange={handleLabelChange}></lightning-input>
+    <div class="slds-grid slds-grid_vertical slds-gutters">
+        <div class="slds-col">
+            <span>The name of the field to display as a facet.</span>
+        </div>
+        <div class="slds-col">
+            <lightning-input
+                type="text"
+                label="Field"
+                value={field}
+                onchange={handleFieldChange}
+                readonly={configured}
+                data-cy="configurator-field"
+            ></lightning-input>
+        </div>
+
+        <div class="slds-col slds-var-m-top_large">
+            <span>The label to use as the facet title.</span>
+        </div>
+        <div class="slds-col">
+            <lightning-input
+                type="text"
+                label="Label"
+                value={label}
+                onchange={handleLabelChange}
+                readonly={configured}
+                data-cy="configurator-label"
+            ></lightning-input>
+        </div>
+
+        <div class="slds-col slds-var-m-top_large">
+            <lightning-button
+                variant="brand"
+                label="Try it now"
+                title="Try it now"
+                onclick={handleTryItNow}
+                disabled={configured}
+                data-cy="configurator-try"
+            ></lightning-button>
+
+            <lightning-button
+                label="Reset"
+                title="Reset"
+                onclick={handleReset}
+                data-cy="configurator-reset"
+                class="slds-var-m-left_medium">
+            </lightning-button>
+        </div>
+    </div>
 </template>

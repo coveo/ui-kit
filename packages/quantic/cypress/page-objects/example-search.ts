@@ -35,16 +35,16 @@ export const sortByDateDescending = () =>
   cy
     .get('@sort')
     .find('input[role="textbox"]')
-    .click()
+    .lwcClick()
     .get('@sort')
     .find('div[role="listbox"]')
     .find('lightning-base-combobox-item[role="option"]')
     .contains('Newest')
     .trigger('mouseover', {force: true})
-    .click();
+    .lwcClick();
 
 export const selectResultPage = (pageNumber: number) =>
-  cy.get('@pager').find('lightning-button').contains(pageNumber).click();
+  cy.get('@pager').find('lightning-button').contains(pageNumber).lwcClick();
 
 export const searchFor = (text: string) =>
   searchboxType(text)?.then(searchboxTypeEnter);

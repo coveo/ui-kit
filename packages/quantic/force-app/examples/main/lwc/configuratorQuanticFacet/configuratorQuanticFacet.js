@@ -1,21 +1,29 @@
 import {api, LightningElement} from 'lwc';
 
 export default class ConfiguratorQuanticFacet extends LightningElement {
-    @api label;
+    field = 'objecttype';
+    label = 'Type';
+    configured = false;
 
     handleFieldChange(evt) {
-        this.dispatchEvent(new CustomEvent('fieldchange', {
+        this.field = evt.target.value;
+    }
+
+    handleLabelChange(evt) {
+        this.label = evt.target.value;
+    }
+
+    handleTryItNow(evt) {
+        this.configured = true;
+        this.dispatchEvent(new CustomEvent('tryitnow', {
             detail: {
-                value: evt.target.value
+                field: this.field,
+                label: this.label
             }
         }));
     }
 
-    handleLabelChange(evt) {
-        this.dispatchEvent(new CustomEvent('labelchange', {
-            detail: {
-                value: evt.target.value
-            }
-        }));
+    handleReset(evt) {
+        window.location.reload();
     }
 }

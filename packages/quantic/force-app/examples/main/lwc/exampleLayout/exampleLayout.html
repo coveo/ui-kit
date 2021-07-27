@@ -1,0 +1,25 @@
+<template>
+    <div class="slds-text-heading_large">{title}</div>
+    <div class="slds-text-longform slds-var-m-top_large">{description}</div>
+
+    <div class="slds-grid slds-gutters slds-m-top_large">
+        <div class="slds-col slds-size_1-of-2">
+            <lightning-card title="Configuration">
+                <div class="slds-card__body_inner">
+                    <slot name="configuration">Configuration Slot</slot>
+                    
+                    
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+            <template if:true={showPreview}>
+                <lightning-card title="Preview">
+                    <div class="slds-card__body_inner">
+                        <slot name="preview">Preview Slot</slot>
+                    </div>
+                </lightning-card>
+            </template>
+        </div>
+    </div>
+</template>

@@ -26,7 +26,7 @@ describe('example-search', () => {
         .then(setupAliases)
         .wait('@search')
         .get('@facet-type-item-checkbox')
-        .check()
+        .lwcCheck()
         .wait('@search');
     });
   });

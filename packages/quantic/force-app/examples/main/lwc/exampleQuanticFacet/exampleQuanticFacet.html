@@ -1,27 +1,51 @@
 <template>
-
-    <div class="slds-text-heading_large">Quantic Facet Examples</div>
-
-    <div class="slds-text-longform slds-m-top_large">
+    <!-- <div class="slds-text-heading_large">Quantic Facet Example</div>
+    <div class="slds-text-longform slds-var-m-top_large">
         The Quantic Facet allows to... Complete with a comprehensive description of the component.
     </div>
 
     <div class="slds-grid slds-gutters slds-m-top_large">
-        <div class="slds-col slds-size_1-of-3">
+        <div class="slds-col slds-size_1-of-2">
             <lightning-card title="Configuration">
                 <div class="slds-card__body_inner">
-                    <c-configurator-quantic-facet label={label} onfieldchange={handleFieldChange} onlabelchange={handleLabelChange}></c-configurator-quantic-facet>            
+                    <c-configurator-quantic-facet
+                        ontryitnow={handleTryItNow}>
+                    </c-configurator-quantic-facet>
                 </div>
             </lightning-card>
         </div>
-        <div class="slds-col slds-size_2-of-3">
-            <lightning-card title="Preview">
-                <div class="slds-card__body_inner">
-                    <c-quantic-search-interface engine-id={engineId}>
-                        <c-quantic-facet field="objecttype" label={label} engine-id={engineId}></c-quantic-facet>
-                    </c-quantic-search-interface>
-                </div>
-            </lightning-card>
+        <div class="slds-col slds-size_1-of-2">
+            <template if:true={isConfigured}>
+                <lightning-card title="Preview">
+                    <div class="slds-card__body_inner">
+                        <c-quantic-search-interface engine-id={engineId}>
+                            <c-quantic-facet
+                                engine-id={engineId}
+                                field={config.field}
+                                label={config.label}>
+                            </c-quantic-facet>
+                        </c-quantic-search-interface>
+                    </div>
+                </lightning-card>
+            </template>
         </div>
-    </div>
+    </div> -->
+
+    <c-example-layout
+        title="Quantic Facet Example"
+        description="The Quantic Facet allows to... Complete with a comprehensive description of the component."
+        show-preview={isConfigured}>
+        
+        <c-configurator-quantic-facet slot="configuration"
+            ontryitnow={handleTryItNow}>
+        </c-configurator-quantic-facet>
+
+        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+            <c-quantic-facet
+                engine-id={engineId}
+                field={config.field}
+                label={config.label}>
+            </c-quantic-facet>
+        </c-quantic-search-interface>
+    </c-example-layout>
 </template>
