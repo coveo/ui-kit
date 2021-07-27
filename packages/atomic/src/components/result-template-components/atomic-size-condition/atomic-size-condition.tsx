@@ -70,14 +70,14 @@ export class AtomicSizeCondition {
     this.shouldRender = this.elementMeetsCriteria;
   }
 
-  public componentDidLoad() {
+  public connectedCallback() {
     this.resizeObserver = new ResizeObserver(
       () => (this.shouldRender = this.elementMeetsCriteria)
     );
     this.resizeObserver.observe(this.parent);
   }
 
-  public componentDidUnLoad() {
+  public disconnectedCallback() {
     this.resizeObserver.disconnect();
   }
 

@@ -583,13 +583,37 @@ export namespace Components {
         "searchHub": string;
     }
     interface AtomicSizeCondition {
+        /**
+          * The maximum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumHeightExclusive"?: string;
+        /**
+          * The maximum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumHeightInclusive"?: string;
+        /**
+          * The maximum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumWidthExclusive"?: string;
+        /**
+          * The maximum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumWidthInclusive"?: string;
+        /**
+          * The minimum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumHeightExclusive"?: string;
+        /**
+          * The minimum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumHeightInclusive"?: string;
+        /**
+          * The minimum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumWidthExclusive"?: string;
+        /**
+          * The minimum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumWidthInclusive"?: string;
     }
     interface AtomicSortDropdown {
@@ -1576,13 +1600,37 @@ declare namespace LocalJSX {
         "searchHub"?: string;
     }
     interface AtomicSizeCondition {
+        /**
+          * The maximum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumHeightExclusive"?: string;
+        /**
+          * The maximum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumHeightInclusive"?: string;
+        /**
+          * The maximum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumWidthExclusive"?: string;
+        /**
+          * The maximum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "maximumWidthInclusive"?: string;
+        /**
+          * The minimum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumHeightExclusive"?: string;
+        /**
+          * The minimum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumHeightInclusive"?: string;
+        /**
+          * The minimum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumWidthExclusive"?: string;
+        /**
+          * The minimum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
         "minimumWidthInclusive"?: string;
     }
     interface AtomicSortDropdown {
