@@ -16,7 +16,6 @@ import {
   validatePayload,
 } from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {mapSearchRequest} from '../../../search/search-mappings';
 
 /**
  * Executes a facet search (i.e., a search for facet values in a facet search box).
@@ -43,10 +42,7 @@ export const executeFacetSearch = createAsyncThunk<
         state as StateNeededForCategoryFacetSearch
       );
     }
-    const response = await searchAPIClient.facetSearch({
-      ...req,
-      searchContext: mapSearchRequest(req.searchContext).request,
-    });
+    const response = await searchAPIClient.facetSearch(req);
     dispatch(logFacetSearch(facetId));
 
     return {facetId, response};

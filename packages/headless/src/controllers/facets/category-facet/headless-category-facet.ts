@@ -170,8 +170,8 @@ export interface CategoryFacetSearch {
   clear(): void;
 
   /**
-   * Updates the facet values captions.
-   * @param captions A dictionary that maps index field values to facet value display names.
+   * Updates the facet value captions.
+   * @param captions - A dictionary that maps index field values to facet value display names.
    */
   updateCaptions(captions: Record<string, string>): void;
 }

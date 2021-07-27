@@ -17,35 +17,35 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #query', () => {
     state.query.q = 'hello';
-    const params = buildSearchRequest(state);
+    const params = buildSearchRequest(state).request;
 
     expect(params.q).toBe(state.query.q);
   });
 
   it('#searchRequest returns the state #enableQuerySyntax', () => {
     state.query.enableQuerySyntax = true;
-    const params = buildSearchRequest(state);
+    const params = buildSearchRequest(state).request;
 
     expect(params.enableQuerySyntax).toBe(state.query.enableQuerySyntax);
   });
 
   it('#searchRequest returns the state #sortCriteria', () => {
     state.sortCriteria = 'qre';
-    const params = buildSearchRequest(state);
+    const params = buildSearchRequest(state).request;
 
     expect(params.sortCriteria).toBe(state.sortCriteria);
   });
 
   it('#searchRequest returns the state #numberOfResults', () => {
     state.pagination.numberOfResults = 10;
-    const params = buildSearchRequest(state);
+    const params = buildSearchRequest(state).request;
 
     expect(params.numberOfResults).toBe(state.pagination.numberOfResults);
   });
 
   it('#searchRequest returns the state #firstResult', () => {
     state.pagination.firstResult = 10;
-    const params = buildSearchRequest(state);
+    const params = buildSearchRequest(state).request;
 
     expect(params.firstResult).toBe(state.pagination.firstResult);
   });
@@ -54,7 +54,7 @@ describe('search request', () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = request;
 
-    const {facets} = buildSearchRequest(state);
+    const {facets} = buildSearchRequest(state).request;
     expect(facets).toContain(request);
   });
 
@@ -62,7 +62,7 @@ describe('search request', () => {
     const request = buildMockNumericFacetRequest({field: 'objecttype'});
     state.numericFacetSet[1] = request;
 
-    const {facets} = buildSearchRequest(state);
+    const {facets} = buildSearchRequest(state).request;
     expect(facets).toContain(request);
   });
 
@@ -70,7 +70,7 @@ describe('search request', () => {
     const request = buildMockDateFacetRequest({field: 'objecttype'});
     state.dateFacetSet[1] = request;
 
-    const {facets} = buildSearchRequest(state);
+    const {facets} = buildSearchRequest(state).request;
     expect(facets).toContain(request);
   });
 
@@ -78,12 +78,12 @@ describe('search request', () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
     state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
-    const {facets} = buildSearchRequest(state);
+    const {facets} = buildSearchRequest(state).request;
     expect(facets).toContainEqual(request);
   });
 
   it('when no facets are configured, the #searchRequestParams does not contain a #facets key', () => {
-    const request = buildSearchRequest(state);
+    const request = buildSearchRequest(state).request;
     expect(request.facets).toBe(undefined);
   });
 
@@ -97,7 +97,7 @@ describe('search request', () => {
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
 
-    const {facets} = buildSearchRequest(state);
+    const {facets} = buildSearchRequest(state).request;
     expect(facets).toEqual([
       state.facetSet[facetId2],
       state.facetSet[facetId1],
@@ -114,7 +114,7 @@ describe('search request', () => {
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
 
-    const {facets} = buildSearchRequest(state);
+    const {facets} = buildSearchRequest(state).request;
     expect(facets).toEqual([
       state.facetSet[facetId2],
       state.facetSet[facetId1],
@@ -124,29 +124,29 @@ describe('search request', () => {
   it('#searchRequestParams returns the facetOptions in state', () => {
     state.facetOptions = buildMockFacetOptions({freezeFacetOrder: true});
 
-    const params = buildSearchRequest(state);
+    const params = buildSearchRequest(state).request;
     expect(params.facetOptions).toEqual(state.facetOptions);
   });
 
   it('should send visitorId if analytics is enable', () => {
     state.configuration.analytics.enabled = true;
-    expect(buildSearchRequest(state).visitorId).toBeDefined();
+    expect(buildSearchRequest(state).request.visitorId).toBeDefined();
   });
 
   it('should not send visitorId if analytics is disabled', () => {
     state.configuration.analytics.enabled = false;
-    expect(buildSearchRequest(state).visitorId).not.toBeDefined();
+    expect(buildSearchRequest(state).request.visitorId).not.toBeDefined();
   });
 
   it('#searchRequest.tab holds the #originLevel2', () => {
     const originLevel2 = 'youtube';
     state.configuration.analytics.originLevel2 = originLevel2;
-    expect(buildSearchRequest(state).tab).toBe(originLevel2);
+    expect(buildSearchRequest(state).request.tab).toBe(originLevel2);
   });
 
   it('#searchRequest.referrer holds the #originLevel3', () => {
     const originLevel3 = 'www.coveo.com';
     state.configuration.analytics.originLevel3 = originLevel3;
-    expect(buildSearchRequest(state).referrer).toBe(originLevel3);
+    expect(buildSearchRequest(state).request.referrer).toBe(originLevel3);
   });
 });

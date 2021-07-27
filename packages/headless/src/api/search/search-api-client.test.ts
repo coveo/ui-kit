@@ -89,7 +89,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = buildSearchRequest(state);
+      const req = buildSearchRequest(state).request;
       const res = await searchAPIClient.search(req);
       if (!isErrorResponse(res)) {
         expect(res.success.searchUid).toEqual(newId);
@@ -158,7 +158,7 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.search
     should call PlatformClient.call with the right options`, () => {
-      const req = buildSearchRequest(state);
+      const req = buildSearchRequest(state).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -197,7 +197,7 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.search multiple times
     should abort the previous pending requests`, () => {
       mockPlatformResponse(() => buildMockSearchEndpointResponse(), 3);
-      const req = buildSearchRequest(state);
+      const req = buildSearchRequest(state).request;
       searchAPIClient.search(req);
       searchAPIClient.search(req);
       searchAPIClient.search(req);
@@ -318,7 +318,7 @@ describe('search api client', () => {
             delimitingCharacter: facetState.delimitingCharacter,
             ignoreValues: [],
             searchContext: {
-              ...buildSearchRequest(state),
+              ...buildSearchRequest(state).request,
               visitorId: expect.any(String),
             },
           },
@@ -356,7 +356,7 @@ describe('search api client', () => {
             delimitingCharacter: categoryFacet.delimitingCharacter,
             ignorePaths: [],
             searchContext: {
-              ...buildSearchRequest(state),
+              ...buildSearchRequest(state).request,
               visitorId: expect.any(String),
             },
           },
