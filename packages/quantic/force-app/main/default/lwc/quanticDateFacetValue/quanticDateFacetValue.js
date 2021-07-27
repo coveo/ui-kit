@@ -1,4 +1,5 @@
 import {LightningElement, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class QuanticDateFacetValue extends LightningElement {
   /** @type {import("coveo").DateFacetValue} */
@@ -21,8 +22,8 @@ export default class QuanticDateFacetValue extends LightningElement {
 
   connectedCallback() {
     // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
-    this.start = new Date(this.item.start).toLocaleDateString();
+    this.start = new Intl.DateTimeFormat(LOCALE).format(new Date(this.item.start));
     // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
-    this.end = new Date(this.item.end).toLocaleDateString();
+    this.end = new Intl.DateTimeFormat(LOCALE).format(new Date(this.item.end));
   }
 }

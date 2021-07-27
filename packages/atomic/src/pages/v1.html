@@ -190,9 +190,17 @@
           <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
           <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
         </atomic-numeric-facet-v1>
-        <atomic-timeframe-facet></atomic-timeframe-facet>
-        <atomic-rating-facet field="snrating" label="Rating" number-of-stars="5" max-value-in-index="5">
-        </atomic-rating-facet>
+        <atomic-timeframe-facet label="Timeframe" with-date-picker>
+          <atomic-timeframe unit="hour"></atomic-timeframe>
+          <atomic-timeframe unit="day"></atomic-timeframe>
+          <atomic-timeframe unit="week"></atomic-timeframe>
+          <atomic-timeframe unit="month"></atomic-timeframe>
+          <atomic-timeframe unit="quarter"></atomic-timeframe>
+          <atomic-timeframe unit="year"></atomic-timeframe>
+        </atomic-timeframe-facet>
+        <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
+        <atomic-rating-range-facet field="snrating" label="Rating Range" number-of-intervals="5">
+        </atomic-rating-range-facet>
       </atomic-facet-manager>
       <div class="results-container">
         <atomic-breadcrumb-manager></atomic-breadcrumb-manager>

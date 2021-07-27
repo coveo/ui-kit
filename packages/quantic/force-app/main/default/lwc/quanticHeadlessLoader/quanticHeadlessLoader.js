@@ -19,6 +19,7 @@ const loadDependencies = async (element) => {
     ];
   }
   await Promise.all(dependencyPromises);
+  return CoveoHeadless;
 }
 
 /**
