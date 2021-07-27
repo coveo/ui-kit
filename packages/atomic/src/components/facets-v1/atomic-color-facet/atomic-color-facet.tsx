@@ -21,7 +21,6 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
@@ -31,15 +30,10 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../utils/field-utils';
-import {Schema, StringValue} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query.
+ * An `atomic-color-facet` displays a facet of the results for the current query as colors.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -63,7 +57,6 @@ import {Schema, StringValue} from '@coveo/bueno';
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
- * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  *
  * @part show-more - The show more results button.
@@ -71,11 +64,11 @@ import {Schema, StringValue} from '@coveo/bueno';
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @Component({
-  tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
-  styleUrl: 'atomic-facet.pcss',
+  tag: 'atomic-color-facet',
+  styleUrl: 'atomic-color-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet
+export class AtomicColorFacet
   implements InitializableComponent, BaseFacet<Facet, FacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
@@ -118,24 +111,13 @@ export class AtomicFacet
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
   /**
-   * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
-   * Possible values are 'checkbox', 'link', and 'box'.
+   * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection).
+   * Possible values are 'checkbox', and 'box'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
+  @Prop() public displayValuesAs: 'checkbox' | 'box' = 'box';
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
-  private validateProps() {
-    new Schema({
-      displayValuesAs: new StringValue({
-        constrainTo: ['checkbox', 'link', 'box'],
-      }),
-    }).validate({
-      displayValuesAs: this.displayValuesAs,
-    });
-  }
-
   public initialize() {
-    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -154,7 +136,7 @@ export class AtomicFacet
   public componentShouldUpdate(
     next: unknown,
     prev: unknown,
-    propName: keyof AtomicFacet
+    propName: keyof AtomicColorFacet
   ) {
     if (propName === 'facetState') {
       return shouldUpdateFacetSearchComponent(
@@ -201,9 +183,6 @@ export class AtomicFacet
             this.facet.facetSearch.clear();
             return;
           }
-          this.facet.facetSearch.updateCaptions(
-            getFieldCaptions(this.field, this.bindings.i18n)
-          );
           this.facet.facetSearch.updateText(value);
           this.facet.facetSearch.search();
         }}
@@ -213,11 +192,7 @@ export class AtomicFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
-    const displayValue = getFieldValueCaption(
-      this.facetId!,
-      facetValue.value,
-      this.bindings.i18n
-    );
+    const displayValue = this.bindings.i18n.t(facetValue.value);
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
@@ -236,23 +211,6 @@ export class AtomicFacet
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
           </FacetValueCheckbox>
-        );
-      case 'link':
-        return (
-          <FacetValueLink
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-            searchQuery={this.facetState.facetSearch.query}
-          >
-            <FacetValueLabelHighlight
-              displayValue={displayValue}
-              isSelected={isSelected}
-              searchQuery={this.facetState.facetSearch.query}
-            ></FacetValueLabelHighlight>
-          </FacetValueLink>
         );
       case 'box':
         return (
@@ -288,11 +246,7 @@ export class AtomicFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () =>
-          this.displayValuesAs === 'link'
-            ? this.facet.toggleSingleSelect(value)
-            : this.facet.toggleSelect(value)
-        )
+        this.renderValue(value, () => this.facet.toggleSelect(value))
       )
     );
   }
@@ -306,10 +260,7 @@ export class AtomicFacet
             numberOfResults: value.count,
             value: value.rawValue,
           },
-          () =>
-            this.displayValuesAs === 'link'
-              ? this.facet.facetSearch.singleSelect(value)
-              : this.facet.facetSearch.select(value)
+          () => this.facet.facetSearch.select(value)
         )
       )
     );

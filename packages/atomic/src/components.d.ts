@@ -59,6 +59,36 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
     }
+    interface AtomicColorFacet {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
+         */
+        "displayValuesAs": 'checkbox' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
+    }
     interface AtomicComponentError {
         "element": HTMLElement;
         "error": Error;
@@ -361,6 +391,32 @@ export namespace Components {
          */
         "numberOfIntervals": number;
     }
+    interface AtomicRatingRangeFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The icon used to display the rating.
+         */
+        "icon": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The number of intervals to split the index for this facet.
+         */
+        "numberOfIntervals": number;
+    }
     interface AtomicRelevanceInspector {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
@@ -627,6 +683,12 @@ declare global {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
     };
+    interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicColorFacetElement: {
+        prototype: HTMLAtomicColorFacetElement;
+        new (): HTMLAtomicColorFacetElement;
+    };
     interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
     }
     var HTMLAtomicComponentErrorElement: {
@@ -765,6 +827,12 @@ declare global {
         prototype: HTMLAtomicRatingFacetElement;
         new (): HTMLAtomicRatingFacetElement;
     };
+    interface HTMLAtomicRatingRangeFacetElement extends Components.AtomicRatingRangeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicRatingRangeFacetElement: {
+        prototype: HTMLAtomicRatingRangeFacetElement;
+        new (): HTMLAtomicRatingRangeFacetElement;
+    };
     interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
     }
     var HTMLAtomicRelevanceInspectorElement: {
@@ -900,6 +968,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-date-range": HTMLAtomicDateRangeElement;
@@ -923,6 +992,7 @@ declare global {
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
+        "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
@@ -995,6 +1065,36 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are `alphanumeric`, and `occurrences`.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
+    }
+    interface AtomicColorFacet {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
     }
     interface AtomicComponentError {
         "element": HTMLElement;
@@ -1301,6 +1401,32 @@ declare namespace LocalJSX {
          */
         "numberOfIntervals"?: number;
     }
+    interface AtomicRatingRangeFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The icon used to display the rating.
+         */
+        "icon"?: string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The number of intervals to split the index for this facet.
+         */
+        "numberOfIntervals"?: number;
+    }
     interface AtomicRelevanceInspector {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
@@ -1544,6 +1670,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
         "atomic-date-range": AtomicDateRange;
@@ -1567,6 +1694,7 @@ declare namespace LocalJSX {
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
+        "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
@@ -1597,6 +1725,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-breadcrumb-manager": LocalJSX.AtomicBreadcrumbManager & JSXBase.HTMLAttributes<HTMLAtomicBreadcrumbManagerElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-date-range": LocalJSX.AtomicDateRange & JSXBase.HTMLAttributes<HTMLAtomicDateRangeElement>;
@@ -1620,6 +1749,7 @@ declare module "@stencil/core" {
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
+            "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
