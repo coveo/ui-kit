@@ -87,7 +87,7 @@
             "id": "invalidate-cloudfront",
             "terraform": {
                 "disabled": true,
-                "source": "terraform",
+                "terragrunt_path": "",
                 "prd": {
                     "auto_approve": true,
                     "auto_approve_in_production": true,

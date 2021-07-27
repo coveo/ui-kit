@@ -24,3 +24,5 @@ Dockerfile
 
 # Deploy files
 terraform
+.terragrunt.*
+.tgf.config
