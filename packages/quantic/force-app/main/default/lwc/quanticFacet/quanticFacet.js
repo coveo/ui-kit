@@ -103,6 +103,13 @@ export default class QuanticFacet extends LightningElement {
     return this.input.value;
   }
 
+  get canShowMoreSearchResults() {
+    if(!this.facet){
+      return false;
+    }
+    return this.facet.state.facetSearch.moreValuesAvailable;
+  }
+
   get canShowMore() {
     if (!this.facet) {
       return false;
@@ -190,6 +197,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   handleKeyUp(){
+    console.log(this.canShowMoreSearchResults);
     if(this.isSearchComplete){
       this.isFacetSearchActive = this.input.value !== '';
       this.facet.facetSearch.updateText(this.input.value);

@@ -34,22 +34,31 @@
             </template>
             <template if:false={hasSearchResults}>
               <li class="slds-var-m-around_small slds-grid">
-                <span class="slds-align_absolute-center slds-p-vertical_medium slds-p-horizontal_xx-large facet-value__no-match">No matches found for "{query}"</span>
+                <span class="slds-align_absolute-center slds-p-vertical_small slds-m-bottom_medium slds-p-horizontal_xx-large facet-value__no-match">No matches found for "{query}"</span>
+              </li>
+            </template>
+            <template if:true={canShowMoreSearchResults}>
+              <li class="slds-p-left_large slds-p-bottom_medium">
+                <span class="facet-search__more-matches">More matches for "{query}"</span>
               </li>
             </template>
           </template>
         </ul>
-  
-        <lightning-button-group>
-          <template if:true={canShowMore}>
-            <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
-              class="slds-m-left_x-small" onclick={showMore}></lightning-button>
-          </template>
-          <template if:true={canShowLess}>
-            <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
-              class="slds-m-left_x-small" onclick={showLess}></lightning-button>
-          </template>
-        </lightning-button-group>
+        
+        <template if:false={isFacetSearchActive}>
+          <lightning-button-group>
+            <template if:true={canShowMore}>
+              <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
+                class="slds-m-left_x-small" onclick={showMore}></lightning-button>
+            </template>
+            <template if:true={canShowLess}>
+              <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
+                class="slds-m-left_x-small" onclick={showLess}></lightning-button>
+            </template>
+          </lightning-button-group>
+        </template>  
+
+
       </template>
       
 
