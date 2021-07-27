@@ -66,7 +66,7 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
   locale?: string;
 
   /**
-   * The timezone of the current user. Must comply with the tz database: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone of the user.
    */
   timezone?: string;
 }
@@ -77,7 +77,7 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
  * @param pipeline (string) The name of the query pipeline to use for the query (e.g., `External Search`).
  * @param searchHub (string) The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates (e.g., `ExternalSearch`).
  * @param locale (string) The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
- * @param timezone (string) The timezone of the current user. Must comply with the tz database: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+ * @param timezone (string) The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone of the user.
  */
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',

@@ -176,6 +176,7 @@ describe('search api client', () => {
           aq: '',
           debug: false,
           locale: state.configuration.search.locale,
+          timezone: state.configuration.search.timezone,
           numberOfResults: state.pagination.numberOfResults,
           sortCriteria: state.sortCriteria,
           firstResult: state.pagination.firstResult,
