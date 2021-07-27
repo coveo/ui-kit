@@ -389,6 +389,28 @@ export namespace Components {
          */
         "result": Result;
     }
+    interface AtomicResultBadge {
+        /**
+          * Specifies a color to use for the badge.  Defaults to light grey.
+         */
+        "color"?: string;
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Specifies the icon to display from the list of available icons.
+         */
+        "icon"?: string;
+        /**
+          * The text to display instead of the field.
+         */
+        "text"?: string;
+        /**
+          * Specifies a text color to use for the badge.  Defaults to dark grey.
+         */
+        "textColor"?: string;
+    }
     interface AtomicResultDate {
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -780,6 +802,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultBadgeElement extends Components.AtomicResultBadge, HTMLStencilElement {
+    }
+    var HTMLAtomicResultBadgeElement: {
+        prototype: HTMLAtomicResultBadgeElement;
+        new (): HTMLAtomicResultBadgeElement;
+    };
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
     var HTMLAtomicResultDateElement: {
@@ -969,6 +997,7 @@ declare global {
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
@@ -1377,6 +1406,28 @@ declare namespace LocalJSX {
          */
         "result": Result;
     }
+    interface AtomicResultBadge {
+        /**
+          * Specifies a color to use for the badge.  Defaults to light grey.
+         */
+        "color"?: string;
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Specifies the icon to display from the list of available icons.
+         */
+        "icon"?: string;
+        /**
+          * The text to display instead of the field.
+         */
+        "text"?: string;
+        /**
+          * Specifies a text color to use for the badge.  Defaults to dark grey.
+         */
+        "textColor"?: string;
+    }
     interface AtomicResultDate {
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -1625,6 +1676,7 @@ declare namespace LocalJSX {
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
+        "atomic-result-badge": AtomicResultBadge;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
@@ -1684,6 +1736,7 @@ declare module "@stencil/core" {
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;

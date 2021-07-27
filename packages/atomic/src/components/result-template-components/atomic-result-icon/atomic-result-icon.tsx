@@ -26,6 +26,8 @@ export class AtomicResultIcon {
    */
   @Prop() icon?: string;
 
+  private svg: string | null = null;
+
   private get defaultIcon() {
     const fileTypeValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
@@ -41,14 +43,27 @@ export class AtomicResultIcon {
     return objectType || fileType || 'custom';
   }
 
-  public render() {
-    const icon = this.icon || this.defaultIcon;
-    const iconPath = getAssetPath(`./assets/${icon}.svg`);
+  private get isCDNIcon() {
+    return !!this.icon?.match(/^https?:\/\//);
+  }
 
+  public async componentWillLoad() {
+    const icon = this.icon || this.defaultIcon;
+    const iconPath = this.isCDNIcon
+      ? icon
+      : getAssetPath(`./assets/${icon}.svg`);
+    const response = await fetch(iconPath);
+    this.svg =
+      response.status === 200 || response.status === 304
+        ? await response.text()
+        : null;
+  }
+
+  public render() {
     return (
       <Host
-        class={icon}
-        style={{'background-image': `url(${iconPath})`}}
+        class={!this.isCDNIcon ? this.icon || this.defaultIcon : ''}
+        innerHTML={this.svg}
       ></Host>
     );
   }
