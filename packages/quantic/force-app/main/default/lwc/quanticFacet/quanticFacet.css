@@ -9,6 +9,7 @@
 .facet-value__no-match {
    color: #8E959D;
    background-color: #F6F7F9;
+   font-size: 12px;
 }
 
 .facet-search__more-matches{
