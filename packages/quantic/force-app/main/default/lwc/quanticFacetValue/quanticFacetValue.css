@@ -7,3 +7,11 @@ li {
 .facet__number-of-results {
   color: gray;
 }
+
+.facet__checkbox{
+  vertical-align: sub;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #DDDBDA;
+  border-radius: 2px;
+}
