@@ -5,6 +5,7 @@ import {
   ResultTemplatesManager,
   buildResultList,
   buildResultTemplatesManager,
+  Result,
 } from '@coveo/headless';
 import defaultTemplate from '../../templates/default.html';
 import {
@@ -18,6 +19,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result';
+import {parseHTML} from '../../utils/utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -101,7 +103,6 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
-    // TODO: build more default templates
     this.resultTemplatesManager.registerTemplates({
       content: defaultTemplate,
       conditions: [],
@@ -121,7 +122,11 @@ export class AtomicResultList implements InitializableComponent {
       });
   }
 
-  private get results() {
+  private getTemplate(result: Result) {
+    return this.resultTemplatesManager.selectTemplate(result) || '';
+  }
+
+  private buildListResults() {
     return this.resultListState.results.map((result) => (
       <atomic-result
         key={`${result.raw.permanentid}${this.resultListState.searchUid}`}
@@ -130,9 +135,106 @@ export class AtomicResultList implements InitializableComponent {
         display={this.display}
         density={this.density}
         image={this.image}
-        content={this.resultTemplatesManager.selectTemplate(result) || ''}
+        content={this.getTemplate(result)}
       ></atomic-result>
     ));
+  }
+
+  private buildTableResults() {
+    const fieldColumns = Array.from(
+      parseHTML(
+        this.getTemplate(this.resultListState.results[0])
+      ).querySelectorAll('atomic-table-element')
+    );
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            {fieldColumns.map((column) => (
+              <th>
+                <atomic-text
+                  value={column.getAttribute('label')!}
+                ></atomic-text>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {this.resultListState.results.map((result) => (
+            <tr>
+              {fieldColumns.map((column) => (
+                <td>
+                  <atomic-table-cell
+                    result={result}
+                    content={column.innerHTML}
+                  ></atomic-table-cell>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
+  private get results() {
+    if (!this.resultListState.results.length) {
+      return [];
+    }
+
+    if (this.display === 'table') {
+      return this.buildTableResults();
+    }
+
+    return this.buildListResults();
+  }
+
+  private getDisplayClass() {
+    switch (this.display) {
+      case 'grid':
+        return 'display-grid';
+      case 'list':
+      default:
+        return 'display-list';
+      case 'table':
+        return 'display-table';
+    }
+  }
+
+  private getDensityClass() {
+    switch (this.density) {
+      case 'comfortable':
+        return 'density-comfortable';
+      case 'normal':
+      default:
+        return 'density-normal';
+      case 'compact':
+        return 'density-compact';
+    }
+  }
+
+  private getImageClass() {
+    switch (this.image) {
+      case 'large':
+        return 'image-large';
+      case 'small':
+        return 'image-small';
+      case 'icon':
+      default:
+        return 'image-icon';
+      case 'none':
+        return 'image-none';
+    }
+  }
+
+  private getClasses() {
+    const classes = [
+      this.getDisplayClass(),
+      this.getDensityClass(),
+      this.getImageClass(),
+    ];
+    return classes;
   }
 
   @Listen('scroll', {target: 'window'})
@@ -158,6 +260,11 @@ export class AtomicResultList implements InitializableComponent {
       return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
     }
 
-    return [this.templateHasError && <slot></slot>, this.results];
+    return (
+      <div class={`list-root ${this.getClasses().join(' ')}`}>
+        {this.templateHasError && <slot></slot>}
+        {this.results}
+      </div>
+    );
   }
 }

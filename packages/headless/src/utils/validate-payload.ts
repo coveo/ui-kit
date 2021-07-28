@@ -13,6 +13,11 @@ export const requiredNonEmptyString = new StringValue({
   emptyAllowed: false,
 });
 
+export const nonEmptyString = new StringValue({
+  required: false,
+  emptyAllowed: false,
+});
+
 export const requiredEmptyAllowedString = new StringValue({
   required: true,
   emptyAllowed: true,

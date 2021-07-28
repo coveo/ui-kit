@@ -176,6 +176,7 @@ export const buildQuerySuggestRequest = (
     count: s.querySuggest[id]!.count,
     q: s.querySuggest[id]!.q,
     locale: s.configuration.search.locale,
+    timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
       : [],

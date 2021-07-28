@@ -40,7 +40,10 @@ module.exports = {
       },
       screens: {
         mobile: {max: '639px'},
-      }
+      },
+      gridTemplateColumns: {
+        'min-1fr': 'min-content 1fr',
+      },
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),

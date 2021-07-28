@@ -53,7 +53,16 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildDateFacet',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/date-facet/date-facet.class.tsx',
+        'packages/samples/headless-react/src/components/relative-date-facet/relative-date-facet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/date-facet/date-facet.fn.tsx',
+        'packages/samples/headless-react/src/components/relative-date-facet/relative-date-facet.fn.tsx',
+      ],
+    },
     utils: ['buildDateRange'],
   },
   {
@@ -370,6 +379,12 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadNumericFacetSetActions',
   },
   {
+    initializer: 'loadFacetOptionsActions',
+  },
+  {
+    initializer: 'loadFoldingActions',
+  },
+  {
     initializer: 'loadFieldActions',
   },
   {
@@ -389,6 +404,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadQuerySuggestActions',
+  },
+  {
+    initializer: 'loadQuestionAnsweringActions',
   },
   {
     initializer: 'loadRedirectionActions',

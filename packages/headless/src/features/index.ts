@@ -6,10 +6,12 @@ export * from './configuration/search-configuration-actions-loader';
 export * from './context/context-actions-loader';
 export * from './debug/debug-actions-loader';
 export * from './facets/range-facets/date-facet-set/date-facet-actions-loader';
+export * from './facet-options/facet-options-actions-loader';
 export * from './did-you-mean/did-you-mean-actions-loader';
 export * from './fields/fields-actions-loader';
 export * from './history/history-actions-loader';
 export * from './facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
+export * from './folding/folding-actions-loader';
 export * from './pagination/pagination-actions-loader';
 export * from './pipeline/pipeline-actions-loader';
 export * from './query/query-actions-loader';
@@ -19,6 +21,7 @@ export * from './redirection/redirection-actions-loader';
 export * from './search/search-actions-loader';
 export * from './search-hub/search-hub-actions-loader';
 export * from './sort-criteria/sort-criteria-actions-loader';
+export * from './question-answering/question-answering-actions-loader';
 export * from './facets/generic/breadcrumb-actions-loader';
 
 export {
