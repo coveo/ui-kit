@@ -22,7 +22,10 @@
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
-    "test:typings": "tsc"
+    "test:typings": "tsc",
+    "cypress:test": "npx cypress run --browser chrome --headless",
+    "cypress:test:firefox": "npx cypress run --browser firefox --headless",
+    "cypress:open": "npx cypress open"
   },
   "dependencies": {
     "@coveo/headless": "^1.9.0"
