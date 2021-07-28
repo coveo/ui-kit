@@ -1,4 +1,8 @@
-import {BaseParam, ContextParam} from '../../platform-service-params';
+import {
+  BaseParam,
+  ContextParam,
+  LocaleParam,
+} from '../../platform-service-params';
 import {
   ActionsHistoryParam,
   AdvancedQueryParam,
@@ -9,6 +13,7 @@ import {
   ReferrerParam,
   SearchHubParam,
   TabParam,
+  TimezoneParam,
 } from '../search-api-params';
 
 export type RecommendationRequest = BaseParam &
@@ -21,4 +26,6 @@ export type RecommendationRequest = BaseParam &
   ConstantQueryParam &
   ActionsHistoryParam &
   TabParam &
-  ReferrerParam;
+  ReferrerParam &
+  LocaleParam &
+  TimezoneParam;

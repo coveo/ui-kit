@@ -211,6 +211,7 @@ export const buildProductRecommendationsRequest = (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     locale: s.configuration.search.locale,
+    timezone: s.configuration.search.timezone,
     ...(s.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

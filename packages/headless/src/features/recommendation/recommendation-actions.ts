@@ -96,6 +96,8 @@ export const buildRecommendationRequest = (
   recommendation: s.recommendation.id,
   tab: s.configuration.analytics.originLevel2,
   referrer: s.configuration.analytics.originLevel3,
+  timezone: s.configuration.search.timezone,
+  locale: s.configuration.search.locale,
   actionsHistory: s.configuration.analytics.enabled
     ? historyStore.getHistory()
     : [],
