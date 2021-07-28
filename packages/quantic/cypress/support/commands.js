@@ -24,14 +24,14 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('check', {prevSubject: 'element'}, (element) => {
+Cypress.Commands.add('lwcDevCheck', {prevSubject: 'element'}, (element) => {
     cy.wrap(element).trigger('change', {value: true, force: true});
 });
 
-Cypress.Commands.add('uncheck', {prevSubject: 'element'}, (element) => {
+Cypress.Commands.add('lwcDevUncheck', {prevSubject: 'element'}, (element) => {
     cy.wrap(element).trigger('change', {value: false, force: true});
 });
 
-Cypress.Commands.overwrite('click', (originalFn, element) => {
+Cypress.Commands.add('lwcDevClick', {prevSubject: 'element'}, (element) => {
     cy.wrap(element).trigger('click', { force: true });
 });
