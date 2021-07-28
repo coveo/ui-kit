@@ -12,7 +12,7 @@ export const FacetValueBoxColor: FunctionalComponent<FacetColorValueProps> = (
   });
 
   return (
-    <li key={props.displayValue} class="h-40">
+    <li key={props.displayValue} class="h-32">
       <button
         part="value-box"
         onClick={() => props.onClick()}
