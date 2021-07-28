@@ -38,6 +38,9 @@ export const configurationReducer = createReducer(
         if (action.payload.locale) {
           state.search.locale = action.payload.locale;
         }
+        if (action.payload.timezone) {
+          state.search.timezone = action.payload.timezone;
+        }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (action.payload.enabled !== undefined) {

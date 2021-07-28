@@ -71,6 +71,7 @@ export const buildPlanRequest = (state: RedirectionState): PlanRequest => {
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
     locale: state.configuration.search.locale,
+    timezone: state.configuration.search.timezone,
     q: state.query.q,
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),

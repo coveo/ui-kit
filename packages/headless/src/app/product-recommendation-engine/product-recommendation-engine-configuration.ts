@@ -1,4 +1,5 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
+import {nonEmptyString} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
@@ -18,13 +19,31 @@ export interface ProductRecommendationEngineConfiguration
    *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
    */
   searchHub?: string;
+  /**
+   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   *
+   * Notes:
+   *  Coveo Machine Learning models use this information to provide contextually relevant output.
+   *  Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
+   */
+  locale?: string;
+  /**
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
+   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
+   *
+   * @example
+   * America/Montreal
+   */
+  timezone?: string;
 }
 
 export const productRecommendationEngineConfigurationSchema = new Schema<
   ProductRecommendationEngineConfiguration
 >({
   ...engineConfigurationDefinitions,
-  searchHub: new StringValue({required: false, emptyAllowed: false}),
+  searchHub: nonEmptyString,
+  locale: nonEmptyString,
+  timezone: nonEmptyString,
 });
 
 /**

@@ -5,22 +5,19 @@ import {
   NumberValue,
   Schema,
   SchemaValidationError,
-  StringValue,
 } from '@coveo/bueno';
 import {registerFieldsToInclude} from '../fields/fields-actions';
 import {fields} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {FieldsSection} from '../../state/state-sections';
 import {CoreEngine} from '../../app/engine';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
 
 const prioritySchema = new Schema({
   priority: new NumberValue({required: false, default: 0, min: 0}),
   fields: new ArrayValue({
     required: false,
-    each: new StringValue({
-      required: true,
-      emptyAllowed: false,
-    }),
+    each: requiredNonEmptyString,
   }),
 });
 
