@@ -121,7 +121,7 @@ export class AtomicColorFacet
     const options: FacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      numberOfValues: this.displayValuesAs === 'box' ? 6 : 8,
+      numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
     };
