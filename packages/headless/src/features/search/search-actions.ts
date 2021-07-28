@@ -37,7 +37,6 @@ import {
   StateNeededByAnalyticsProvider,
 } from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
-import {SearchRequest} from '../../api/search/search/search-request';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {getQueryInitialState} from '../query/query-state';
 import {SearchAction} from '../analytics/analytics-utils';
@@ -45,6 +44,11 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
+import {
+  MappedSearchRequest,
+  mapSearchRequest,
+  mapSearchResponse,
+} from './search-mappings';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -87,10 +91,10 @@ export interface ExecuteSearchThunkReturn {
 const fetchFromAPI = async (
   client: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  request: SearchRequest
+  {request, mappings}: MappedSearchRequest
 ) => {
   const startedAt = new Date().getTime();
-  const response = await client.search(request);
+  const response = mapSearchResponse(await client.search(request), mappings);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {response, duration, queryExecuted, requestExecuted: request};
@@ -265,12 +269,10 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-export const buildSearchRequest = (
-  state: StateNeededByExecuteSearch
-): SearchRequest => {
+export const buildSearchRequest = (state: StateNeededByExecuteSearch) => {
   const facets = getFacets(state);
 
-  return {
+  return mapSearchRequest({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
@@ -321,19 +323,20 @@ export const buildSearchRequest = (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
-  };
+  });
 };
 
 const buildFetchMoreRequest = (
   state: StateNeededByExecuteSearch
-): SearchRequest => {
-  const request = buildSearchRequest(state);
-  return {
-    ...request,
+): MappedSearchRequest => {
+  const mappedRequest = buildSearchRequest(state);
+  mappedRequest.request = {
+    ...mappedRequest.request,
     firstResult:
       (state.pagination?.firstResult ?? 0) +
       (state.search?.results.length ?? 0),
   };
+  return mappedRequest;
 };
 
 function getFacets(state: StateNeededByExecuteSearch) {

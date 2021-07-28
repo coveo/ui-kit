@@ -70,7 +70,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
 
   it('sets the #searchContext to the search request params', () => {
     const facet = state.facetSet[id];
-    const request = {...buildSearchRequest(state), facets: [facet]};
+    const request = {...buildSearchRequest(state).request, facets: [facet]};
 
     expect(buildParams().searchContext).toEqual({
       ...request,

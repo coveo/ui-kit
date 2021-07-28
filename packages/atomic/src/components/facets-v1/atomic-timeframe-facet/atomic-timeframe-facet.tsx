@@ -1,4 +1,13 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  VNode,
+  Host,
+  Element,
+  Listen,
+} from '@stencil/core';
 import {
   SearchStatus,
   SearchStatusState,
@@ -8,6 +17,13 @@ import {
   buildDateFacet,
   DateFacetOptions,
   DateFacetValue,
+  DateRangeRequest,
+  buildDateRange,
+  DateFilter,
+  DateFilterState,
+  buildDateFilter,
+  loadDateFacetSetActions,
+  deserializeRelativeDate,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -20,6 +36,10 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {BaseFacet} from '../facet-common';
+import {Timeframe} from '../atomic-timeframe/timeframe';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import dayjs from 'dayjs';
+import {getFieldValueCaption} from '../../../utils/field-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -37,6 +57,11 @@ import {BaseFacet} from '../facet-common';
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  * @part value-link - The facet value when display is 'link'.
+ *
+ * @part input-start - The input for the starting value of the custom date range.
+ * @part input-end - The input for the ending value of the custom date range.
+ * @part input-label - The label for both the start and end input.
+ * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
   tag: 'atomic-timeframe-facet',
@@ -46,12 +71,18 @@ import {BaseFacet} from '../facet-common';
 export class AtomicTimeframeFacet
   implements InitializableComponent, BaseFacet<DateFacet, DateFacetState> {
   @InitializeBindings() public bindings!: Bindings;
-  public facet!: DateFacet;
+  public facet?: DateFacet;
+  public filter?: DateFilter;
   public searchStatus!: SearchStatus;
+  private manualTimeframes: Timeframe[] = [];
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
-  public facetState!: DateFacetState;
+  public facetState?: DateFacetState;
+  @BindStateToController('filter')
+  @State()
+  public filterState?: DateFilterState;
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
@@ -76,23 +107,79 @@ export class AtomicTimeframeFacet
   @Prop() public withDatePicker = false;
 
   public initialize() {
+    this.manualTimeframes = this.getManualTimeframes();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.manualTimeframes.length && this.initializeFacet();
+    this.withDatePicker && this.initializeFilter();
+  }
+
+  private initializeFacet() {
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      currentValues: [], // TODO: parse ranges
+      currentValues: this.currentValues,
       generateAutomaticRanges: false,
+      sortCriteria: 'descending',
     };
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.dateFacets[this.facetId] = {
       label: this.label,
+      format: (value) => this.formatFacetValue(value),
     };
   }
 
+  private initializeFilter() {
+    this.filter = buildDateFilter(this.bindings.engine, {
+      options: {
+        facetId: this.facetId ? `${this.facetId}_input` : undefined,
+        field: this.field,
+      },
+    });
+    this.bindings.store.state.dateFacets[
+      this.filter.state.facetId
+    ] = this.bindings.store.state.dateFacets[this.facetId!];
+  }
+
+  private getManualTimeframes(): Timeframe[] {
+    return Array.from(this.host.querySelectorAll('atomic-timeframe')).map(
+      ({label, amount, unit, period}) => ({
+        label,
+        amount,
+        unit,
+        period,
+      })
+    );
+  }
+
+  private get currentValues(): DateRangeRequest[] {
+    return this.manualTimeframes.map(({period, amount, unit}) =>
+      buildDateRange({
+        start: {period, unit, amount},
+        end: {period: 'now'},
+      })
+    );
+  }
+
+  @Listen('atomic/dateInputApply')
+  public applyDateInput() {
+    this.facetId &&
+      this.bindings.engine.dispatch(
+        loadDateFacetSetActions(
+          this.bindings.engine
+        ).deselectAllDateFacetValues(this.facetId)
+      );
+  }
+
   private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
+    if (this.filterState?.range) {
+      return 1;
+    }
+
+    return (
+      this.facetState?.values.filter(({state}) => state === 'selected')
+        .length || 0
+    );
   }
 
   private renderHeader() {
@@ -100,7 +187,13 @@ export class AtomicTimeframeFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          if (this.filterState?.range) {
+            this.filter?.clear();
+            return;
+          }
+          this.facet?.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
@@ -108,15 +201,64 @@ export class AtomicTimeframeFacet
     );
   }
 
+  private renderDateInput() {
+    return (
+      <atomic-facet-date-input
+        bindings={this.bindings}
+        label={this.label}
+        filter={this.filter!}
+        filterState={this.filterState!}
+      ></atomic-facet-date-input>
+    );
+  }
+
+  private formatFacetValue(facetValue: DateFacetValue) {
+    try {
+      const relativeDate = deserializeRelativeDate(facetValue.start);
+      const timeframe = this.getManualTimeframes().find(
+        (timeframe) =>
+          timeframe.period === relativeDate.period &&
+          timeframe.unit === relativeDate.unit &&
+          timeframe.amount === relativeDate.amount
+      );
+
+      if (timeframe?.label) {
+        return getFieldValueCaption(
+          this.facetId!,
+          timeframe.label,
+          this.bindings.i18n
+        );
+      }
+      return this.bindings.i18n.t(
+        `${relativeDate.period}-${relativeDate.unit}`,
+        {
+          count: relativeDate.amount,
+        }
+      );
+    } catch (error) {
+      return this.bindings.i18n.t('to', {
+        start: dayjs(facetValue.start).format('YYYY-MM-DD'),
+        end: dayjs(facetValue.end).format('YYYY-MM-DD'),
+      });
+    }
+  }
+
   private renderValue(facetValue: DateFacetValue) {
+    const displayValue = this.formatFacetValue(facetValue);
+    const isSelected = facetValue.state === 'selected';
     return (
       <FacetValueLink
-        displayValue={`${facetValue.start} - ${facetValue.end}`} // TODO: format display value
+        displayValue={displayValue}
+        isSelected={isSelected}
         numberOfResults={facetValue.numberOfResults}
-        isSelected={facetValue.state === 'selected'}
         i18n={this.bindings.i18n}
-        onClick={() => this.facet.toggleSingleSelect(facetValue)}
-      ></FacetValueLink>
+        onClick={() => this.facet!.toggleSingleSelect(facetValue)}
+      >
+        <FacetValueLabelHighlight
+          displayValue={displayValue}
+          isSelected={isSelected}
+        ></FacetValueLabelHighlight>
+      </FacetValueLink>
     );
   }
 
@@ -135,9 +277,28 @@ export class AtomicTimeframeFacet
   }
 
   private get valuesToRender() {
-    return this.facetState.values.filter(
-      (value) => value.numberOfResults || value.state !== 'idle'
+    return (
+      this.facetState?.values.filter(
+        (value) => value.numberOfResults || value.state !== 'idle'
+      ) || []
     );
+  }
+
+  private get shouldRenderFacet() {
+    return this.shouldRenderInput || this.shouldRenderValues;
+  }
+
+  private get shouldRenderValues() {
+    const hasInputRange = !!this.filterState?.range;
+    return !hasInputRange && !!this.valuesToRender.length;
+  }
+
+  private get shouldRenderInput() {
+    if (!this.withDatePicker) {
+      return false;
+    }
+
+    return this.searchStatusState.hasResults || !!this.filterState?.range;
   }
 
   public render() {
@@ -148,12 +309,12 @@ export class AtomicTimeframeFacet
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <FacetPlaceholder
-          numberOfValues={6} // TODO: use number of ranges
+          numberOfValues={this.currentValues.length}
         ></FacetPlaceholder>
       );
     }
 
-    if (!this.valuesToRender.length) {
+    if (!this.shouldRenderFacet) {
       return <Host class="atomic-without-values"></Host>;
     }
 
@@ -161,8 +322,10 @@ export class AtomicTimeframeFacet
       <Host class="atomic-with-values">
         <FacetContainer>
           {this.renderHeader()}
-          {!this.isCollapsed && this.renderValues()}
-          {/* TODO: add date picker */}
+          {!this.isCollapsed && [
+            this.shouldRenderInput && this.renderDateInput(),
+            this.shouldRenderValues && this.renderValues(),
+          ]}
         </FacetContainer>
       </Host>
     );

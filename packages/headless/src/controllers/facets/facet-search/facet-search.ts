@@ -82,6 +82,19 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
       dispatch(clearFacetSearch({facetId}));
     },
 
+    /**
+     * Updates the facet value captions.
+     * @param captions - A dictionary that maps index field values to facet value display names.
+     */
+    updateCaptions(captions: Record<string, string>) {
+      dispatch(
+        updateFacetSearch({
+          facetId,
+          captions,
+        })
+      );
+    },
+
     get state() {
       const {response, isLoading, options} = getFacetSearch();
       const {query} = options;

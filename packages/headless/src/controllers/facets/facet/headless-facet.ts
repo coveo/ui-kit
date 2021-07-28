@@ -191,6 +191,12 @@ export interface FacetSearch {
    * Resets the query and empties the values.
    * */
   clear(): void;
+
+  /**
+   * Updates the facet value captions.
+   * @param captions - A dictionary that maps index field values to facet value display names.
+   */
+  updateCaptions(captions: Record<string, string>): void;
 }
 
 export interface FacetSearchState {

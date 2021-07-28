@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>quantic_ShowingResultsOf</fullName>
+        <value>Result {{0}} of {{1}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: Result 0-10 of 123,456</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowingResultsOf_plural</fullName>
+        <value>Results {{0}} of {{1}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: Results 0-10 of 123,456</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowingResultsOf_zero</fullName>
+        <value>No results</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Results</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowingResultsOfWithQuery</fullName>
+        <value>Result {{0}} of {{1}} for {{2}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: Result 0-10 of 123,456 for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowingResultsOfWithQuery_plural</fullName>
+        <value>Results {{0}} of {{1}} for {{2}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: Results 0-10 of 123,456 for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowingResultsOfWithQuery_zero</fullName>
+        <value>No results for {{2}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: No results for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InSeconds</fullName>
+        <value>in {{0}} second</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: in 1 second</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InSeconds_plural</fullName>
+        <value>in {{0}} seconds</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: in 2.3 seconds</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InSeconds_zero</fullName>
+        <value>in {{0}} seconds</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: in 0 seconds</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResults</fullName>
+        <value>No Results</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Results</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsFor</fullName>
+        <value>No Results for {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Results for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Clear</fullName>
+        <value>Clear</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowMore</fullName>
+        <value>Show more</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show more</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowLess</fullName>
+        <value>Show less</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show less</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowMoreFacetValues</fullName>
+        <value>Show more values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show more values for the potato facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowLessFacetValues</fullName>
+        <value>Show less values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show less values for the potato facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NMore</fullName>
+        <value>{{0}} more...</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ex: 3 more...</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ClearAllFilters</fullName>
+        <value>Clear All Filters</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear All Filters</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Previous</fullName>
+        <value>Previous</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Previous</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Next</fullName>
+        <value>Next</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Search</fullName>
+        <value>Search</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Search</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DidYouMean</fullName>
+        <value>Did you mean</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Did you mean</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_QueryCorrectedTo</fullName>
+        <value>Query was automatically corrected to {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Query was automatically corrected to potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_SortBy</fullName>
+        <value>Sort by</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Sort by</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Relevancy</fullName>
+        <value>Relevancy</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Relevancy</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Newest</fullName>
+        <value>Newest</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Newest</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Oldest</fullName>
+        <value>Oldest</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Oldest</shortDescription>
+    </labels>
+</CustomLabels>

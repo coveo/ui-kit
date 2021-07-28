@@ -1,5 +1,9 @@
+import {
+  RelativeDate,
+  serializeRelativeDate,
+} from '../../../../api/search/date/relative-date';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {buildDateRange, isSearchApiDate} from './date-range';
+import {buildDateRange} from './date-range';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {
@@ -51,6 +55,46 @@ describe('date range', () => {
       expect(dateRange).toEqual(expectedValues);
     });
 
+    it('generates the correct value for an relative date object', () => {
+      const start: RelativeDate = {period: 'past', amount: 2, unit: 'week'};
+      const end: RelativeDate = {period: 'now'};
+      const dateRange = buildDateRange({
+        start,
+        end,
+      });
+
+      const expectedValues: DateRangeRequest = {
+        start: serializeRelativeDate(start),
+        end: serializeRelativeDate(end),
+        endInclusive: false,
+        state: 'idle',
+      };
+
+      expect(dateRange).toEqual(expectedValues);
+    });
+
+    it('generates the correct value for a relative date string', () => {
+      const start = serializeRelativeDate({
+        period: 'past',
+        amount: 2,
+        unit: 'week',
+      });
+      const end = serializeRelativeDate({period: 'now'});
+      const dateRange = buildDateRange({
+        start,
+        end,
+      });
+
+      const expectedValues: DateRangeRequest = {
+        start,
+        end,
+        endInclusive: false,
+        state: 'idle',
+      };
+
+      expect(dateRange).toEqual(expectedValues);
+    });
+
     it('throws if the date can not be parsed', () => {
       expect(() =>
         buildDateRange({
@@ -76,16 +120,6 @@ describe('date range', () => {
         state: 'idle',
       };
       expect(dateRange).toEqual(expectedValues);
-    });
-  });
-
-  describe('#isSearchApiDate', () => {
-    it('when the string matches the search api format, it returns true', () => {
-      expect(isSearchApiDate('2010/01/01@05:00:00')).toBe(true);
-    });
-
-    it('when the string does not match the search api format, it returns false', () => {
-      expect(isSearchApiDate('10/01/01@05:00:00')).toBe(false);
     });
   });
 });
