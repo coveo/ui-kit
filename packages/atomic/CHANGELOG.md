@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.46.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.45.1...@coveo/atomic@0.46.0) (2021-07-28)
+
+
+### Features
+
+* **atomic:** support Facet Value Captions ([#997](https://github.com/coveo/ui-kit/issues/997)) ([aa9bc6e](https://github.com/coveo/ui-kit/commit/aa9bc6eb71b71367c934b14f11e80cdc5777a754))
+
+
+
+
+
 ## [0.45.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.45.0...@coveo/atomic@0.45.1) (2021-07-27)
 
 

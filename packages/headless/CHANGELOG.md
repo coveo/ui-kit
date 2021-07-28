@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.9.0...@coveo/headless@1.10.0) (2021-07-28)
+
+
+### Features
+
+* **atomic:** support Facet Value Captions ([#997](https://github.com/coveo/ui-kit/issues/997)) ([aa9bc6e](https://github.com/coveo/ui-kit/commit/aa9bc6eb71b71367c934b14f11e80cdc5777a754))
+* **headless:** expose synchronize method on search parameter manager ([#1000](https://github.com/coveo/ui-kit/issues/1000)) ([a100a7f](https://github.com/coveo/ui-kit/commit/a100a7f32aad8af07c2b18d40a6a7efbe5fc9ec0))
+
+
+
+
+
 # [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.8.0...@coveo/headless@1.9.0) (2021-07-26)
 
 
