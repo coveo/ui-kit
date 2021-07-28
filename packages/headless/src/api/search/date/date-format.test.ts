@@ -12,7 +12,8 @@ describe('#isSearchApiDate', () => {
 });
 
 it('formatDateForSearchApi returns the correct format', () => {
-  expect(formatDateForSearchApi(dayjs(818035920000))).toBe(
-    '1995/12/03@19:12:00'
+  const date = 818035920000;
+  expect(formatDateForSearchApi(dayjs(date))).toBe(
+    dayjs(date).format('YYYY/MM/DD@HH:mm:ss')
   );
 });

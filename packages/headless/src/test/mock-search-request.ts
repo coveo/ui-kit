@@ -7,6 +7,7 @@ export function buildMockSearchRequest(config?: Partial<SearchRequest>) {
     organizationId: '',
     tab: '',
     referrer: '',
+    timezone: '',
     ...config,
   };
 }
