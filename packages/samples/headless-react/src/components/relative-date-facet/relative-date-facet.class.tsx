@@ -42,7 +42,7 @@ export class RelativeDateFacet extends Component<
   }
 
   private getKeyForRange(value: DateFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
+    return `[${value.start}..${value.end}]`;
   }
 
   private format(value: string) {
@@ -75,8 +75,7 @@ export class RelativeDateFacet extends Component<
               onChange={() => this.controller.toggleSelect(value)}
               disabled={this.state.isLoading}
             />
-            {this.format(value.start)} to {this.format(value.end)}{' '}
-            {value.endInclusive ? 'inclusively' : 'exclusively'} (
+            {this.format(value.start)} to {this.format(value.end)} (
             {value.numberOfResults}{' '}
             {value.numberOfResults === 1 ? 'result' : 'results'})
           </li>

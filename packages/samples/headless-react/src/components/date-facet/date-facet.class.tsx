@@ -39,7 +39,7 @@ export class DateFacet extends Component<DateFacetProps, DateFacetState> {
   }
 
   private getKeyForRange(value: DateFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
+    return `[${value.start}..${value.end}]`;
   }
 
   private format(dateStr: string) {
@@ -69,8 +69,7 @@ export class DateFacet extends Component<DateFacetProps, DateFacetState> {
               onChange={() => this.controller.toggleSelect(value)}
               disabled={this.state.isLoading}
             />
-            {this.format(value.start)} to {this.format(value.end)}{' '}
-            {value.endInclusive ? 'inclusively' : 'exclusively'} (
+            {this.format(value.start)} to {this.format(value.end)} (
             {value.numberOfResults}{' '}
             {value.numberOfResults === 1 ? 'result' : 'results'})
           </li>

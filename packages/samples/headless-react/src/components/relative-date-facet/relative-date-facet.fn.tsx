@@ -18,7 +18,7 @@ export const RelativeDateFacet: FunctionComponent<RelativeDateFacetProps> = (
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   function getKeyForRange(value: DateFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
+    return `[${value.start}..${value.end}]`;
   }
 
   function format(value: string) {
@@ -46,9 +46,7 @@ export const RelativeDateFacet: FunctionComponent<RelativeDateFacetProps> = (
             onChange={() => controller.toggleSingleSelect(value)}
             disabled={state.isLoading}
           />
-          {format(value.start)} to {format(value.end)}{' '}
-          {value.endInclusive ? 'inclusively' : 'exclusively'} (
-          {value.numberOfResults}{' '}
+          {format(value.start)} to {format(value.end)} ({value.numberOfResults}{' '}
           {value.numberOfResults === 1 ? 'result' : 'results'})
         </li>
       ))}
@@ -71,18 +69,6 @@ export const RelativeDateFacet: FunctionComponent<RelativeDateFacetProps> = (
  *       }),
  *       buildDateRange({
  *         start: {period: 'past', unit: 'week', amount: 1},
- *         end: {period: 'now'},
- *       }),
- *       buildDateRange({
- *         start: {period: 'past', unit: 'month', amount: 1},
- *         end: {period: 'now'},
- *       }),
- *       buildDateRange({
- *         start: {period: 'past', unit: 'quarter', amount: 1},
- *         end: {period: 'now'},
- *       }),
- *       buildDateRange({
- *         start: {period: 'past', unit: 'year', amount: 1},
  *         end: {period: 'now'},
  *       }),
  *     ],

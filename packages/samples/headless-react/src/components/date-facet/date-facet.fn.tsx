@@ -13,7 +13,7 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   function getKeyForRange(value: DateFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
+    return `[${value.start}..${value.end}]`;
   }
 
   function format(dateStr: string) {
@@ -38,9 +38,7 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
             onChange={() => controller.toggleSelect(value)}
             disabled={state.isLoading}
           />
-          {format(value.start)} to {format(value.end)}{' '}
-          {value.endInclusive ? 'inclusively' : 'exclusively'} (
-          {value.numberOfResults}{' '}
+          {format(value.start)} to {format(value.end)} ({value.numberOfResults}{' '}
           {value.numberOfResults === 1 ? 'result' : 'results'})
         </li>
       ))}
