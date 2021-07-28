@@ -22,6 +22,7 @@ import {
   SearchHubParam,
   SortCriteriaParam,
   TabParam,
+  TimezoneParam,
 } from '../search-api-params';
 
 export type SearchRequest = BaseParam &
@@ -44,4 +45,5 @@ export type SearchRequest = BaseParam &
   LocaleParam &
   FoldingParam &
   TabParam &
-  ReferrerParam;
+  ReferrerParam &
+  TimezoneParam;

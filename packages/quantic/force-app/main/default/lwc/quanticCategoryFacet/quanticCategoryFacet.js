@@ -1,5 +1,12 @@
 import {api, LightningElement, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
+
+import clear from '@salesforce/label/c.quantic_Clear';
+import showMore from '@salesforce/label/c.quantic_ShowMore';
+import showLess from '@salesforce/label/c.quantic_ShowLess';
+import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
+import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
 
 export default class QuanticCategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -19,6 +26,14 @@ export default class QuanticCategoryFacet extends LightningElement {
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+
+  labels = {
+    clear,
+    showMore,
+    showLess,
+    showMoreFacetValues,
+    showLessFacetValues,
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -78,6 +93,14 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get hasParentsOrValues() {
     return this.hasParents || this.hasValues;
+  }
+
+  get showMoreFacetValuesLabel() {
+    return I18nUtils.format(this.labels.showMoreFacetValues, this.label)
+  }
+
+  get showLessFacetValuesLabel() {
+    return I18nUtils.format(this.labels.showLessFacetValues, this.label)
   }
 
   /**

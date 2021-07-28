@@ -1,18 +1,19 @@
 import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
 import {CurrentValues, Type} from '../../../facet-api/request';
 import {FacetValueState} from '../../../facet-api/value';
+import {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request';
 
 /**
  * The options defining a value to display in a `DateFacet`.
  */
 export interface DateRangeRequest {
   /**
-   * The start value of the range, formatted as `YYYY/MM/DD@HH:mm:ss`.
+   * The starting value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format "period-amount-unit"
    */
   start: string;
 
   /**
-   * The end value of the range, formatted as `YYYY/MM/DD@HH:mm:ss`.
+   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the Relative date format "period-amount-unit"
    */
   end: string;
 
@@ -25,6 +26,12 @@ export interface DateRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+}
+
+export function isDateFacetRequest(
+  request: AnyFacetRequest
+): request is DateFacetRequest {
+  return request.type === 'dateRange';
 }
 
 export interface DateFacetRequest

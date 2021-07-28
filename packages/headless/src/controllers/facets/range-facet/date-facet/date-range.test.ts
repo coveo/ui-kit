@@ -1,33 +1,58 @@
+import dayjs from 'dayjs';
+import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
+import {
+  RelativeDate,
+  serializeRelativeDate,
+} from '../../../../api/search/date/relative-date';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {buildDateRange, isSearchApiDate} from './date-range';
+import {buildDateRange} from './date-range';
 
 describe('date range', () => {
   describe('#buildDateRange', () => {
-    it('generates the correct value for a numeric input', () => {
+    function validateAbsoluteRange(
+      start: string | number | Date,
+      end: string | number | Date
+    ) {
       const dateRange = buildDateRange({
-        start: 721386625000,
-        end: 752922625000,
+        start,
+        end,
       });
 
       const expectedValues: DateRangeRequest = {
-        start: '1992/11/10@09:10:25',
-        end: '1993/11/10@09:10:25',
+        start: formatDateForSearchApi(dayjs(start)),
+        end: formatDateForSearchApi(dayjs(end)),
         endInclusive: false,
         state: 'idle',
       };
 
       expect(dateRange).toEqual(expectedValues);
+    }
+    it('generates the correct value for a numeric input', () => {
+      validateAbsoluteRange(721386625000, 752922625000);
     });
 
     it('generates the correct value for a js date input', () => {
+      validateAbsoluteRange(new Date(721386625000), new Date(752922625000));
+    });
+
+    it('generates the correct value for an iso 8601 string input', () => {
+      validateAbsoluteRange(
+        new Date(721386625000).toISOString(),
+        new Date(752922625000).toISOString()
+      );
+    });
+
+    it('generates the correct value for an relative date object', () => {
+      const start: RelativeDate = {period: 'past', amount: 2, unit: 'week'};
+      const end: RelativeDate = {period: 'now'};
       const dateRange = buildDateRange({
-        start: new Date(721386625000),
-        end: new Date(752922625000),
+        start,
+        end,
       });
 
       const expectedValues: DateRangeRequest = {
-        start: '1992/11/10@09:10:25',
-        end: '1993/11/10@09:10:25',
+        start: serializeRelativeDate(start),
+        end: serializeRelativeDate(end),
         endInclusive: false,
         state: 'idle',
       };
@@ -35,15 +60,21 @@ describe('date range', () => {
       expect(dateRange).toEqual(expectedValues);
     });
 
-    it('generates the correct value for an iso 8601 string input', () => {
+    it('generates the correct value for a relative date string', () => {
+      const start = serializeRelativeDate({
+        period: 'past',
+        amount: 2,
+        unit: 'week',
+      });
+      const end = serializeRelativeDate({period: 'now'});
       const dateRange = buildDateRange({
-        start: new Date(721386625000).toISOString(),
-        end: new Date(752922625000).toISOString(),
+        start,
+        end,
       });
 
       const expectedValues: DateRangeRequest = {
-        start: '1992/11/10@09:10:25',
-        end: '1993/11/10@09:10:25',
+        start,
+        end,
         endInclusive: false,
         state: 'idle',
       };
@@ -66,7 +97,6 @@ describe('date range', () => {
         start: '11-1992-10@09:10:25',
         end: '11-1993-10@09:10:25',
         dateFormat,
-        useLocalTime: true,
       });
 
       const expectedValues: DateRangeRequest = {
@@ -76,16 +106,6 @@ describe('date range', () => {
         state: 'idle',
       };
       expect(dateRange).toEqual(expectedValues);
-    });
-  });
-
-  describe('#isSearchApiDate', () => {
-    it('when the string matches the search api format, it returns true', () => {
-      expect(isSearchApiDate('2010/01/01@05:00:00')).toBe(true);
-    });
-
-    it('when the string does not match the search api format, it returns false', () => {
-      expect(isSearchApiDate('10/01/01@05:00:00')).toBe(false);
     });
   });
 });
