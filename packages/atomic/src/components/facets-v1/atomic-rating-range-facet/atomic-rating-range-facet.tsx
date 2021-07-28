@@ -126,10 +126,10 @@ export class AtomicRatingRangeFacet
 
   private generateCurrentValues() {
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i < this.numberOfIntervals; i++) {
+    for (let i = 0; i <= this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
-          start: Math.round((i + 1) * this.scaleFactor * 100) / 100,
+          start: Math.round(i * this.scaleFactor * 100) / 100,
           end: Math.round(this.maxValueInIndex * 100) / 100,
           endInclusive: true,
         })
@@ -159,16 +159,12 @@ export class AtomicRatingRangeFacet
   }
 
   private renderLabelText(facetValue: NumericFacetValue) {
-    const textClasses =
-      'ml-1 flex items-center truncate group-hover:underline group-hover:text-primary';
     return (
       <span
         part="value-label"
-        class={
-          facetValue.state === 'selected'
-            ? textClasses + ' font-bold'
-            : textClasses
-        }
+        class={`ml-1 flex items-center truncate group-hover:underline group-hover:text-primary ${
+          facetValue.state === 'selected' ? 'font-bold' : ''
+        }`}
       >
         {facetValue.start === this.maxValueInIndex ? (
           <span>{this.bindings.i18n.t('only')}</span>
