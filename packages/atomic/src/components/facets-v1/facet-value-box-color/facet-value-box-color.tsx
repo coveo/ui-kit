@@ -24,13 +24,13 @@ export const FacetValueBoxColor: FunctionalComponent<FacetColorValueProps> = (
       >
         <div
           part={`value-${props.partValue}`}
-          class="w-full h-1/2 bg-neutral-dark mx-4 mt-1 mb-4 rounded-md"
+          class="w-full h-1/2 bg-neutral-dark mx-4 mt-1 mb-3 rounded-md"
         ></div>
         {children}
         <span
           title={count}
           part="value-count"
-          class="text-neutral-dark ellipsed with-parentheses w-full text-sm my-2"
+          class="text-neutral-dark ellipsed with-parentheses w-full text-sm my-1"
         >
           {count}
         </span>
