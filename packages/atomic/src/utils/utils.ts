@@ -35,6 +35,10 @@ export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }
 
+export function parseHTML(string: string) {
+  return new window.DOMParser().parseFromString(string, 'text/html');
+}
+
 export function containsVisualElement(node: Node) {
   for (let i = 0; i < node.childNodes.length; i++) {
     const child = node.childNodes.item(i);
