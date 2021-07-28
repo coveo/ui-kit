@@ -3,11 +3,17 @@ import {
   ContextParam,
   LocaleParam,
 } from '../../platform-service-params';
-import {PipelineParam, QueryParam, SearchHubParam} from '../search-api-params';
+import {
+  PipelineParam,
+  QueryParam,
+  SearchHubParam,
+  TimezoneParam,
+} from '../search-api-params';
 
 export type PlanRequest = BaseParam &
   SearchHubParam &
   ContextParam &
   QueryParam &
   PipelineParam &
-  LocaleParam;
+  LocaleParam &
+  TimezoneParam;

@@ -23,13 +23,24 @@
         searchInterface.executeFirstSearch();
 
         // Add/modify a translation
-        // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
+        // searchInterface.i18n.addResourceBundle('en', 'translation', {
+        //   search: 'Make me feel lucky!'
+        // });
+
         // Change the language of the interface dynamically
         // searchInterface.language = 'fr';
+
         // Interact with the engine
         // searchInterface.engine.dispatch(...);
-        // Get all strings for a language/namespace
+
+        // Get all translated strings for a language/namespace
         // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
+
+        // Add field value captions, using caption-[field]
+        // searchInterface.i18n.addResourceBundle('en', 'caption-author', {
+        //   'BBC News': 'The BBC',
+        //   amoreau: 'Alexandre Moreau',
+        // });
       })();
     </script>
     <style>
@@ -210,7 +221,7 @@
           <atomic-query-summary></atomic-query-summary>
           <atomic-sort-dropdown>
             <atomic-sort-expression caption="relevance" expression="relevancy"></atomic-sort-expression>
-            <atomic-sort-expression caption="mostRecent" expression="date descending"></atomic-sort-expression>
+            <atomic-sort-expression caption="most-recent" expression="date descending"></atomic-sort-expression>
           </atomic-sort-dropdown>
         </div>
         <atomic-no-results></atomic-no-results>

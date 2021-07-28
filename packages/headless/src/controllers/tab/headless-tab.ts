@@ -9,8 +9,10 @@ import {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
 } from '../../state/state-sections';
-import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
+import {BooleanValue, Schema} from '@coveo/bueno';
 import {
+  requiredEmptyAllowedString,
+  requiredNonEmptyString,
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
@@ -45,8 +47,8 @@ export interface TabInitialState {
 }
 
 const optionsSchema = new Schema<Required<TabOptions>>({
-  expression: new StringValue({required: true, emptyAllowed: true}),
-  id: new StringValue({required: true, emptyAllowed: false}),
+  expression: requiredEmptyAllowedString,
+  id: requiredNonEmptyString,
 });
 
 const initialStateSchema = new Schema({
