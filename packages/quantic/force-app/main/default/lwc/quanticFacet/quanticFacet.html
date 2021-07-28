@@ -4,8 +4,7 @@
       <button class="slds-button slds-button_icon slds-p-bottom_small facet__buttons" slot="actions" onclick={toggleFacetVisibility}>
         <lightning-icon class="slds-button__icon" icon-name={facetIcon} size="x-small"></lightning-icon>
       </button>
-      
-
+  
       <template if:true={isBodyVisible}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
           <template if:true={canShowMore}>
@@ -57,11 +56,8 @@
             </template>
           </lightning-button-group>
         </template>  
-
-
+        
       </template>
-      
-
     </lightning-card>
   </template>
 </template>
