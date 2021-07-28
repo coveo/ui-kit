@@ -453,25 +453,17 @@ export namespace Components {
     }
     interface AtomicResultBadge {
         /**
-          * Specifies a color to use for the badge.  Defaults to light grey.
-         */
-        "color"?: string;
-        /**
           * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field"?: string;
         /**
-          * Specifies the icon to display from the list of available icons.
+          * Specifies the icon to display, either from the list of available icons or a direct link.
          */
         "icon"?: string;
         /**
           * The text to display instead of the field.
          */
-        "text"?: string;
-        /**
-          * Specifies a text color to use for the badge.  Defaults to dark grey.
-         */
-        "textColor"?: string;
+        "label"?: string;
     }
     interface AtomicResultDate {
         /**
@@ -485,7 +477,7 @@ export namespace Components {
     }
     interface AtomicResultIcon {
         /**
-          * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+          * Specifies the icon to display, either from the list of available icons or a direct link.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
@@ -1655,25 +1647,17 @@ declare namespace LocalJSX {
     }
     interface AtomicResultBadge {
         /**
-          * Specifies a color to use for the badge.  Defaults to light grey.
-         */
-        "color"?: string;
-        /**
           * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field"?: string;
         /**
-          * Specifies the icon to display from the list of available icons.
+          * Specifies the icon to display, either from the list of available icons or a direct link.
          */
         "icon"?: string;
         /**
           * The text to display instead of the field.
          */
-        "text"?: string;
-        /**
-          * Specifies a text color to use for the badge.  Defaults to dark grey.
-         */
-        "textColor"?: string;
+        "label"?: string;
     }
     interface AtomicResultDate {
         /**
@@ -1687,7 +1671,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultIcon {
         /**
-          * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+          * Specifies the icon to display, either from the list of available icons or a direct link.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }

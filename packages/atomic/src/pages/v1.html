@@ -253,6 +253,11 @@
                   display: inline-block;
                   height: 100%;
                 }
+
+                .salesforce-badge::part(result-badge-element) {
+                  background-color: #44a1da;
+                  color: white;
+                }
               </style>
               <atomic-result-section-visual>
                 <atomic-size-condition maximum-width-inclusive="3rem">
@@ -264,7 +269,7 @@
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
-                  <atomic-result-badge text="Salesforce" color="#44a1da" text-color="white"></atomic-result-badge>
+                  <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
                 </atomic-field-condition>
                 <atomic-result-badge
                   field="language"
