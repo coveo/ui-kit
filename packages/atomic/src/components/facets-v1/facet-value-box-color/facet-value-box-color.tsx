@@ -30,7 +30,7 @@ export const FacetValueBoxColor: FunctionalComponent<FacetColorValueProps> = (
         <span
           title={count}
           part="value-count"
-          class="text-neutral-dark ellipsed with-parentheses w-full text-sm my-1"
+          class="text-neutral-dark ellipsed with-parentheses w-full text-sm my-0.5"
         >
           {count}
         </span>
