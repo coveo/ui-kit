@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.10.0...@coveo/headless@1.11.0) (2021-07-28)
+
+
+### Features
+
+* **headless:** add timezone to engines config, deprecate useLocalTime for buildDateRange ([#1006](https://github.com/coveo/ui-kit/issues/1006)) ([abe64be](https://github.com/coveo/ui-kit/commit/abe64be498600e0d722aef6d1a2c34a8fc171f98))
+
+
+
+
+
 # [1.10.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.9.0...@coveo/headless@1.10.0) (2021-07-28)
 
 
