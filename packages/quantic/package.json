@@ -23,7 +23,6 @@
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
     "test:typings": "tsc",
-    "cypress:test": "npx cypress run --browser chrome --headless",
     "cypress:open": "npx cypress open"
   },
   "dependencies": {
