@@ -1,39 +1,32 @@
 import {Component, ContextType} from 'react';
 import {
-  buildNumericFacet,
-  NumericFacet as HeadlessNumericFacet,
-  NumericFacetOptions,
-  NumericFacetState,
-  NumericFacetValue,
+  buildDateFacet,
+  DateFacet,
+  DateFacetOptions,
+  DateFacetState,
+  DateFacetValue,
   Unsubscribe,
+  deserializeRelativeDate,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
 
-interface NumericFacetProps extends NumericFacetOptions {
-  format: (n: number) => string;
+interface RelativeDateFacetProps extends DateFacetOptions {
   facetId: string;
 }
 
-export class NumericFacet extends Component<
-  NumericFacetProps,
-  NumericFacetState
+export class RelativeDateFacet extends Component<
+  RelativeDateFacetProps,
+  DateFacetState
 > {
   static contextType = AppContext;
   context!: ContextType<typeof AppContext>;
 
-  private controller!: HeadlessNumericFacet;
+  private controller!: DateFacet;
   private unsubscribe: Unsubscribe = () => {};
 
   componentDidMount() {
-    this.controller = buildNumericFacet(this.context.engine!, {
-      options: {
-        field: this.props.field,
-        facetId: this.props.facetId,
-        generateAutomaticRanges: this.props.generateAutomaticRanges,
-        ...(this.props.currentValues && {
-          currentValues: this.props.currentValues,
-        }),
-      },
+    this.controller = buildDateFacet(this.context.engine!, {
+      options: this.props,
     });
     this.updateState();
 
@@ -48,8 +41,15 @@ export class NumericFacet extends Component<
     this.setState(this.controller.state);
   }
 
-  private getKeyForRange(value: NumericFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
+  private getKeyForRange(value: DateFacetValue) {
+    return `[${value.start}..${value.end}]`;
+  }
+
+  private format(value: string) {
+    const relativeDate = deserializeRelativeDate(value);
+    return relativeDate.period === 'now'
+      ? relativeDate.period
+      : `${relativeDate.period} ${relativeDate.amount} ${relativeDate.unit}`;
   }
 
   render() {
@@ -65,8 +65,6 @@ export class NumericFacet extends Component<
       return <div>No facet values</div>;
     }
 
-    const {format} = this.props;
-
     return (
       <ul>
         {this.state.values.map((value) => (
@@ -77,8 +75,7 @@ export class NumericFacet extends Component<
               onChange={() => this.controller.toggleSelect(value)}
               disabled={this.state.isLoading}
             />
-            {format(value.start)} to {format(value.end)}{' '}
-            {value.endInclusive ? 'inclusively' : 'exclusively'} (
+            {this.format(value.start)} to {this.format(value.end)} (
             {value.numberOfResults}{' '}
             {value.numberOfResults === 1 ? 'result' : 'results'})
           </li>
