@@ -6,7 +6,7 @@ import {
 } from '../page-objects/example-search';
 
 describe('example-search', () => {
-  const exampleSearchUrl = 'http://localhost:3333/preview/c/exampleSearch';
+  const exampleSearchUrl = 'http://localhost:3334/preview/c/exampleSearch';
 
   it('should load results automatically', () => {
     cy.visit(exampleSearchUrl)
