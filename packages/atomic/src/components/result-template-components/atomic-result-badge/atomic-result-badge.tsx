@@ -39,7 +39,7 @@ export class AtomicResultBadge {
     );
   }
 
-  private renderLabel() {
+  private renderText() {
     return (
       <span part="result-badge-label">
         {this.field ? (
@@ -58,7 +58,7 @@ export class AtomicResultBadge {
         class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full mr-3"
       >
         {this.icon && this.renderIcon()}
-        {(this.field || this.label) && this.renderLabel()}
+        {(this.field || this.label) && this.renderText()}
       </div>
     );
   }
