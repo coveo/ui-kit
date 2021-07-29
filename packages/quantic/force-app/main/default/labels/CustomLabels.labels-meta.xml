@@ -189,4 +189,32 @@
         <protected>false</protected>
         <shortDescription>Oldest</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_NoResultsTitle</fullName>
+        <value>We couldn’t find anything for {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>We couldn’t find anything for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsWithoutFilters</fullName>
+        <value>You may want to try using different keywords, or checking for spelling mistakes.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You may want to try using different keywords, or checking for spelling mistakes.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsWithFilters</fullName>
+        <value>You may want to try using different keywords, checking for spelling mistakes or select fewer filters.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Check for spelling mistakes or select fewer filters.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_UndoLastAction</fullName>
+        <value>Undo Last action</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Undo Last action</shortDescription>
+    </labels>
 </CustomLabels>

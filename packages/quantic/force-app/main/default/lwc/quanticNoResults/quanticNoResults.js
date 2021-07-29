@@ -1,5 +1,11 @@
 import { api, LightningElement, track } from 'lwc';
 import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
+import { I18nUtils } from 'c/quanticUtils';
+
+import noResultsTitle from '@salesforce/label/c.quantic_NoResultsTitle';
+import noResultsWithFilters from '@salesforce/label/c.quantic_NoResultsWithFilters';
+import noResultsWithoutFilters from '@salesforce/label/c.quantic_NoResultsWithoutFilters';
+import undoLastAction from '@salesforce/label/c.quantic_UndoLastAction';
 
 export default class QuanticNoResults extends LightningElement {
     /** @type {string}*/
@@ -13,6 +19,13 @@ export default class QuanticNoResults extends LightningElement {
 
     /** @type {import("coveo").QuerySummary} */
     querySummary;
+
+    labels = {
+        noResultsTitle,
+        noResultsWithFilters,
+        noResultsWithoutFilters,
+        undoLastAction
+    }
 
     /** @type {() => void} */
     unsubscribeSearchStatus;
@@ -83,7 +96,11 @@ export default class QuanticNoResults extends LightningElement {
         this.query = this.querySummary.state.hasQuery ? this.querySummary.state.query : "";
     }
 
-    onClick() {
+    onUndoLastActionClick() {
         this.historyManager.back();
+    }
+
+    get noResultsTitleLabel() {
+        return I18nUtils.format(this.labels.noResultsTitle, I18nUtils.getTextBold(this.query));
     }
 }
