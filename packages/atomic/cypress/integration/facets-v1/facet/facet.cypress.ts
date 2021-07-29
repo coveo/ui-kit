@@ -1,4 +1,4 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
+import {SearchInterface, TestFixture} from '../../../fixtures/test-fixture';
 import {FacetSelectors} from './facet-selectors';
 import {
   addFacet,
@@ -633,6 +633,27 @@ describe('Facet v1 Test Suites', () => {
     });
 
     FacetAssertions.assertValuesSortedByOccurences();
+  });
+
+  describe('when defining a value caption', () => {
+    const caption = 'nicecaption';
+    before(() => {
+      const fixture = new TestFixture().with(addFacet({field, label})).init();
+      cy.get(`@${fixture.elementAliases.SearchInterface}`).then(($si) => {
+        const searchInterfaceComponent = $si.get()[0] as SearchInterface;
+
+        searchInterfaceComponent.i18n.addResource(
+          'en',
+          `caption-${field}`,
+          'BBC News',
+          caption
+        );
+      });
+
+      typeFacetSearchQuery(caption);
+    });
+
+    FacetAssertions.assertFirstValueContains(caption);
   });
 
   describe('with #withSearch to false', () => {

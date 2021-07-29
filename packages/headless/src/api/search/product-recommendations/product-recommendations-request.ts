@@ -11,6 +11,7 @@ import {
   MachineLearningParam,
   RecommendationParam,
   SearchHubParam,
+  TimezoneParam,
 } from '../search-api-params';
 
 export type ProductRecommendationsRequest = BaseParam &
@@ -22,4 +23,5 @@ export type ProductRecommendationsRequest = BaseParam &
   SearchHubParam &
   ActionsHistoryParam &
   VisitorIDParam &
-  LocaleParam;
+  LocaleParam &
+  TimezoneParam;

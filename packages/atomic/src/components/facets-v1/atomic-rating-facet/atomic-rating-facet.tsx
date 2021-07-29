@@ -25,6 +25,7 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
+import {Schema, StringValue} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -100,7 +101,16 @@ export class AtomicRatingFacet
    */
   @Prop() public icon = Star;
 
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+    });
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
   }

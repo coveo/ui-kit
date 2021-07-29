@@ -169,9 +169,7 @@ function buildDateRanges(ranges: string[]) {
           (value) => isSearchApiDate(value) || isRelativeDateFormat(value)
         )
     )
-    .map(([start, end]) =>
-      buildDateRange({start, end, useLocalTime: true, state: 'selected'})
-    );
+    .map(([start, end]) => buildDateRange({start, end, state: 'selected'}));
 }
 
 function isValidPair<K extends keyof SearchParameters>(

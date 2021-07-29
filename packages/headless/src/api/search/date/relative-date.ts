@@ -1,10 +1,8 @@
 import dayjs, {QUnitType} from 'dayjs';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {formatDateForSearchApi} from './date-format';
-import utc from 'dayjs/plugin/utc';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 
-dayjs.extend(utc);
 dayjs.extend(quarterOfYear);
 
 /**

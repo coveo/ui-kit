@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.47.1...@coveo/atomic@0.47.2) (2021-07-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.47.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.47.0...@coveo/atomic@0.47.1) (2021-07-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.47.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.46.0...@coveo/atomic@0.47.0) (2021-07-28)
+
+
+### Features
+
+* **headless:** add timezone to engines config, deprecate useLocalTime for buildDateRange ([#1006](https://github.com/coveo/ui-kit/issues/1006)) ([abe64be](https://github.com/coveo/ui-kit/commit/abe64be498600e0d722aef6d1a2c34a8fc171f98))
+
+
+
+
+
+# [0.46.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.45.1...@coveo/atomic@0.46.0) (2021-07-28)
+
+
+### Features
+
+* **atomic:** support Facet Value Captions ([#997](https://github.com/coveo/ui-kit/issues/997)) ([aa9bc6e](https://github.com/coveo/ui-kit/commit/aa9bc6eb71b71367c934b14f11e80cdc5777a754))
+
+
+
+
+
+## [0.45.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.45.0...@coveo/atomic@0.45.1) (2021-07-27)
+
+
+### Bug Fixes
+
+* **atomic:** add prop validation for Facets string literals ([#999](https://github.com/coveo/ui-kit/issues/999)) ([dd0fa63](https://github.com/coveo/ui-kit/commit/dd0fa63ed67812df90fd3e07578faa4c1e632054))
+
+
+
+
+
 # [0.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.44.0...@coveo/atomic@0.45.0) (2021-07-26)
 
 

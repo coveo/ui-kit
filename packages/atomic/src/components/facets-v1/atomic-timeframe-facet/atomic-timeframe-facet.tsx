@@ -39,6 +39,7 @@ import {BaseFacet} from '../facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
+import {getFieldValueCaption} from '../../../utils/field-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -222,7 +223,11 @@ export class AtomicTimeframeFacet
       );
 
       if (timeframe?.label) {
-        return this.bindings.i18n.t(timeframe.label);
+        return getFieldValueCaption(
+          this.facetId!,
+          timeframe.label,
+          this.bindings.i18n
+        );
       }
       return this.bindings.i18n.t(
         `${relativeDate.period}-${relativeDate.unit}`,
