@@ -21,7 +21,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
-import {ColorFacetBox} from '../color-facet-box/color-facet-box';
+import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
 import {
@@ -214,21 +214,24 @@ export class AtomicColorFacet
         );
       case 'box':
         return (
-          <ColorFacetBox
+          <FacetValueBox
             displayValue={displayValue}
-            partValue={facetValue.value}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
           >
+            <div
+              part={`value-${facetValue.value}`}
+              class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
+            ></div>
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </ColorFacetBox>
+          </FacetValueBox>
         );
     }
   }
