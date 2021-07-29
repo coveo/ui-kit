@@ -14,7 +14,10 @@ export const ColorFacetCheckbox: FunctionalComponent<ColorFacetValueProps> = (
   });
 
   return (
-    <li key={props.displayValue} class="flex items-center">
+    <li
+      key={props.displayValue}
+      class="flex items-center color-checkbox-list-item"
+    >
       <div
         class={props.isSelected ? 'border-2 border-primary-light rounded' : ''}
       >
