@@ -29,28 +29,36 @@ export class AtomicResultBadge {
    */
   @Prop() public icon?: string;
 
-  private get badge() {
+  private renderIcon() {
+    return (
+      <atomic-result-icon
+        part="result-badge-icon"
+        icon={this.icon}
+        class="w-3 h-3 fill-current"
+      ></atomic-result-icon>
+    );
+  }
+
+  private renderLabel() {
+    return (
+      <span part="result-badge-label">
+        {this.field ? (
+          <atomic-result-text field={this.field}></atomic-result-text>
+        ) : (
+          this.label
+        )}
+      </span>
+    );
+  }
+
+  private renderBadge() {
     return (
       <div
         part="result-badge-element"
         class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full mr-3"
       >
-        {this.icon && (
-          <atomic-result-icon
-            part="result-badge-icon"
-            icon={this.icon}
-            class="w-3 h-3 fill-current"
-          ></atomic-result-icon>
-        )}
-        {(this.field || this.label) && (
-          <span part="result-badge-label">
-            {this.field ? (
-              <atomic-result-text field={this.field}></atomic-result-text>
-            ) : (
-              this.label
-            )}
-          </span>
-        )}
+        {this.icon && this.renderIcon()}
+        {(this.field || this.label) && this.renderLabel()}
       </div>
     );
   }
@@ -61,10 +69,10 @@ export class AtomicResultBadge {
         ifDefined={this.field}
         class="flex place-items-center h-full"
       >
-        {this.badge}
+        {this.renderBadge()}
       </atomic-field-condition>
     ) : (
-      this.badge
+      this.renderBadge()
     );
   }
 }
