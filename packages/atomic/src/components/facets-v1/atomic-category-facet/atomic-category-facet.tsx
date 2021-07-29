@@ -182,9 +182,7 @@ export class AtomicCategoryFacet
   }
 
   private renderSearchInput() {
-    const shouldDisplaySearch =
-      this.withSearch && this.facetState.canShowMoreValues;
-    if (!shouldDisplaySearch) {
+    if (!this.withSearch) {
       return;
     }
 
