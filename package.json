@@ -19,7 +19,7 @@
     "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
     "npm:tag:beta": "npm run npm:tag -- beta",
     "npm:tag:latest": "npm run npm:tag -- latest",
-    "notify:docs": "node ./scripts/notify-docs/published-headless-atomic.js",
+    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
     "doc:generate": "lerna run doc:generate",
     "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\""
   },
