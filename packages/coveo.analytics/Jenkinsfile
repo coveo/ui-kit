@@ -14,6 +14,10 @@ pipeline {
     label 'build && docker && linux'
   }
 
+  parameters {
+    booleanParam(defaultValue: false, description: 'Forces the deploy, even if the last commit is a version bump', name: 'FORCE_DEPLOY')
+  }
+
   environment {
     NPM_TOKEN = credentials("coveo-analytics-js-npm-deployment-token")
     GIT = credentials('github-coveobot')
@@ -30,6 +34,7 @@ pipeline {
 
   stages {
     stage('Skip') {
+      when { expression { params.FORCE_DEPLOY == false } }
       steps {
         script {
           commitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
