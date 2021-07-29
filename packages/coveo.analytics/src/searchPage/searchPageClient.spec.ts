@@ -59,6 +59,7 @@ describe('SearchPageClient', () => {
         getOriginLevel3: () => 'origin-level-3',
         getLanguage: () => 'en',
         getFacetState: () => fakeFacetState,
+        getIsAnonymous: () => false,
     };
 
     beforeEach(() => {

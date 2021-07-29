@@ -35,6 +35,7 @@ export interface SearchPageClientProvider {
     getOriginLevel2: () => string;
     getOriginLevel3: () => string;
     getLanguage: () => string;
+    getIsAnonymous: () => boolean;
     getFacetState?: () => FacetStateMetadata[];
 }
 
@@ -338,6 +339,7 @@ export class CoveoSearchPageClient {
             customData,
             language: this.provider.getLanguage(),
             facetState: this.provider.getFacetState ? this.provider.getFacetState() : [],
+            anonymous: this.provider.getIsAnonymous(),
         };
     }
 
