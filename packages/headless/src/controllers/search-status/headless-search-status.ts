@@ -56,11 +56,12 @@ export function buildSearchStatus(engine: SearchEngine): SearchStatus {
 
     get state() {
       const state = getState();
+      const hasError = state.search.error !== null;
 
       return {
-        hasError: state.search.error !== null,
+        hasError,
         isLoading: state.search.isLoading,
-        hasResults: !!state.search.results.length,
+        hasResults: !hasError && !!state.search.results.length,
         firstSearchExecuted: firstSearchExecutedSelector(state),
       };
     },
