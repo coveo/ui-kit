@@ -8,7 +8,13 @@ function handleRejectedSearch(
   state: SearchState,
   action: ReturnType<SearchAction['rejected']>
 ) {
-  state.error = action.payload ? action.payload : null;
+  const hasError = action.payload ? action.payload : null;
+  if (hasError) {
+    state.response = getSearchInitialState().response;
+    state.results = [];
+  }
+
+  state.error = hasError;
   state.isLoading = false;
 }
 
@@ -30,8 +36,12 @@ function handlePendingSearch(state: SearchState) {
 export const searchReducer = createReducer(
   getSearchInitialState(),
   (builder) => {
-    builder.addCase(executeSearch.rejected, handleRejectedSearch);
-    builder.addCase(fetchMoreResults.rejected, handleRejectedSearch);
+    builder.addCase(executeSearch.rejected, (state, action) =>
+      handleRejectedSearch(state, action)
+    );
+    builder.addCase(fetchMoreResults.rejected, (state, action) =>
+      handleRejectedSearch(state, action)
+    );
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
       state.results = action.payload.response.results;

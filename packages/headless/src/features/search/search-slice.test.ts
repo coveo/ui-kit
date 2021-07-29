@@ -15,6 +15,7 @@ import {Result} from '../../api/search/search/result';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {Response} from 'cross-fetch';
+import {buildMockSearchState} from '../../test/mock-search-state';
 
 jest.mock('../../api/platform-client');
 
@@ -117,26 +118,65 @@ describe('search-slice', () => {
     });
   });
 
-  it('when a executeSearch rejected is received, set the error', () => {
-    const err = {
-      message: 'message',
-      statusCode: 500,
-      type: 'type',
-    };
-    const action = {type: 'search/executeSearch/rejected', payload: err};
-    const finalState = searchReducer(state, action);
-    expect(finalState.error).toEqual(err);
-  });
+  describe('handles rejected searches correctly', () => {
+    const results = [buildMockResult()];
+    const initialMockState = () =>
+      buildMockSearchState({
+        results,
+        response: buildMockSearchResponse({results}),
+      });
 
-  it('when a fetchMoreResults rejected is received, set the error', () => {
-    const err = {
-      message: 'message',
-      statusCode: 500,
-      type: 'type',
-    };
-    const action = {type: 'search/fetchMoreResults/rejected', payload: err};
-    const finalState = searchReducer(state, action);
-    expect(finalState.error).toEqual(err);
+    beforeEach(() => (state = initialMockState()));
+
+    it('when a executeSearch rejected is received with an error', () => {
+      const err = {
+        message: 'message',
+        statusCode: 500,
+        type: 'type',
+      };
+      const action = {type: 'search/executeSearch/rejected', payload: err};
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(getSearchInitialState().response);
+      expect(finalState.results).toEqual([]);
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(err);
+    });
+
+    it('when a fetchMoreResults rejected is received with an error', () => {
+      const err = {
+        message: 'message',
+        statusCode: 500,
+        type: 'type',
+      };
+      const action = {type: 'search/fetchMoreResults/rejected', payload: err};
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(getSearchInitialState().response);
+      expect(finalState.results).toEqual([]);
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(err);
+    });
+
+    it('when a executeSearch rejected is received without an error', () => {
+      const action = {type: 'search/executeSearch/rejected', payload: null};
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(initialMockState().response);
+      expect(finalState.results).toEqual(initialMockState().results);
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(null);
+    });
+
+    it('when a fetchMoreResults rejected is received without an error', () => {
+      const action = {type: 'search/fetchMoreResults/rejected', payload: null};
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(initialMockState().response);
+      expect(finalState.results).toEqual(initialMockState().results);
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(null);
+    });
   });
 
   it('when a executeSearch fulfilled is received, set the error to null', () => {
