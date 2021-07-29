@@ -2,8 +2,8 @@ import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/sear
 import {
   validatePayload,
   requiredNonEmptyString,
+  nonEmptyString,
 } from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {Result} from '../../api/search/search/result';
 import {
@@ -43,7 +43,7 @@ export interface CustomEventPayload {
 const validateEvent = (p: {evt: string; type?: string}) =>
   validatePayload(p, {
     evt: requiredNonEmptyString,
-    type: new StringValue({required: false, emptyAllowed: false}),
+    type: nonEmptyString,
   });
 
 export interface LogSearchEventActionCreatorPayload {

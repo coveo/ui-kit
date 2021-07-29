@@ -1,10 +1,10 @@
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {RecordValue, Schema} from '@coveo/bueno';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {localeValidation} from '../../features/configuration/configuration-actions';
+import {nonEmptyString} from '../../utils/validate-payload';
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
@@ -43,6 +43,14 @@ export interface SearchConfigurationOptions {
    */
   locale?: string;
   /**
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
+   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
+   *
+   * @example
+   * America/Montreal
+   */
+  timezone?: string;
+  /**
    * Allows for augmenting a search response before the state is updated.
    */
   preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
@@ -65,15 +73,10 @@ export const searchEngineConfigurationSchema = new Schema<
       required: false,
     },
     values: {
-      pipeline: new StringValue({
-        required: false,
-        emptyAllowed: false,
-      }),
-      searchHub: new StringValue({
-        required: false,
-        emptyAllowed: false,
-      }),
-      locale: localeValidation,
+      pipeline: nonEmptyString,
+      searchHub: nonEmptyString,
+      locale: nonEmptyString,
+      timezone: nonEmptyString,
     },
   }),
 });

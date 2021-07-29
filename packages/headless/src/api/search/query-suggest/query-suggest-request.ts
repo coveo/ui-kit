@@ -8,6 +8,7 @@ import {
   PipelineParam,
   QueryParam,
   SearchHubParam,
+  TimezoneParam,
 } from '../search-api-params';
 
 export type QuerySuggestRequest = BaseParam &
@@ -16,6 +17,7 @@ export type QuerySuggestRequest = BaseParam &
   PipelineParam &
   SearchHubParam &
   LocaleParam &
+  TimezoneParam &
   ActionsHistoryParam & {
     count: number;
   };

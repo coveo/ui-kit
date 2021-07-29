@@ -5,7 +5,7 @@ export const setupAliases = () =>
       'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples'
     )
     .as('search')
-    .get('c-quantic-result')
+    .get('c-quantic-result', {timeout: 30000}) // Takes some time to load when server is cold
     .as('result')
     .get('c-quantic-search-box input[type="search"]')
     .as('searchbox')
@@ -35,16 +35,16 @@ export const sortByDateDescending = () =>
   cy
     .get('@sort')
     .find('input[role="textbox"]')
-    .lwcClick()
+    .lwcDevClick()
     .get('@sort')
     .find('div[role="listbox"]')
     .find('lightning-base-combobox-item[role="option"]')
     .contains('Newest')
     .trigger('mouseover', {force: true})
-    .lwcClick();
+    .lwcDevClick();
 
 export const selectResultPage = (pageNumber: number) =>
-  cy.get('@pager').find('lightning-button').contains(pageNumber).lwcClick();
+  cy.get('@pager').find('lightning-button').contains(pageNumber).lwcDevClick();
 
 export const searchFor = (text: string) =>
   searchboxType(text)?.then(searchboxTypeEnter);
