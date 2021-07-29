@@ -89,6 +89,10 @@ export class AtomicRatingRangeFacet
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
+   * The minimum value of the field.
+   */
+  @Prop() public minValueInIndex = 1;
+  /**
    * The icon used to display the rating.
    */
   @Prop() public icon = Star;
@@ -126,7 +130,7 @@ export class AtomicRatingRangeFacet
 
   private generateCurrentValues() {
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i <= this.numberOfIntervals; i++) {
+    for (let i = this.minValueInIndex; i <= this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,

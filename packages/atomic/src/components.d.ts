@@ -387,6 +387,10 @@ export namespace Components {
          */
         "maxValueInIndex": number;
         /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex": number;
+        /**
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals": number;
@@ -412,6 +416,10 @@ export namespace Components {
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex": number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex": number;
         /**
           * The number of intervals to split the index for this facet.
          */
@@ -1397,6 +1405,10 @@ declare namespace LocalJSX {
          */
         "maxValueInIndex"?: number;
         /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex"?: number;
+        /**
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals"?: number;
@@ -1422,6 +1434,10 @@ declare namespace LocalJSX {
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex"?: number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex"?: number;
         /**
           * The number of intervals to split the index for this facet.
          */
