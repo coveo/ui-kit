@@ -57,15 +57,15 @@ Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
 - All the tests will need to be under folder `cypress/integration`
 
 
-1. Start the local development server by running:
+First, start the local development server by running:
 
        npm run start
 
-1. To open cypress in browser mode, run:
+To open cypress in browser mode, run:
 
        npm run cypress:open
 
-2. To run all cypress tests in headless mode, run:
+To run all cypress tests in headless mode, run:
 
        npm run cypress:test
 
