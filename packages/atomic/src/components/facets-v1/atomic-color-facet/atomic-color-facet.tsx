@@ -21,7 +21,6 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {FacetValueCheckboxColor} from '../facet-value-checkbox-color/facet-value-checkbox-color';
-import {FacetValueBoxColor} from '../facet-value-box-color/facet-value-box-color';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
 import {
@@ -30,6 +29,7 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueBox} from '../facet-value-box/facet-value-box';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -214,21 +214,24 @@ export class AtomicColorFacet
         );
       case 'box':
         return (
-          <FacetValueBoxColor
+          <FacetValueBox
             displayValue={displayValue}
-            partValue={facetValue.value}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
           >
+            <div
+              part={`value-${facetValue.value}`}
+              class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
+            ></div>
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </FacetValueBoxColor>
+          </FacetValueBox>
         );
     }
   }
