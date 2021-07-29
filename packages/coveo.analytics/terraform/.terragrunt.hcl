@@ -1,3 +1,3 @@
-inputs = {
-    project = "coveo.analytics.js"
+include {
+  path = find_in_parent_folders()
 }
