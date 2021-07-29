@@ -46,7 +46,7 @@ export default class QuanticNoResults extends LightningElement {
     /**
      * @type {boolean}
      */
-    @track hasResults;
+    @track showNoResultsPanel;
 
     /**
      * @type {number}
@@ -100,7 +100,7 @@ export default class QuanticNoResults extends LightningElement {
         }
     }
     updateState() {
-        this.hasResults = !this.searchStatus.state.firstSearchExecuted ||this.searchStatus.state.isLoading || this.searchStatus.state.hasResults;
+        this.showNoResultsPanel = !this.searchStatus.state.firstSearchExecuted ||this.searchStatus.state.isLoading || this.searchStatus.state.hasResults;
         this.hasHistory = this.historyManager.state.past.length;
         this.query = this.querySummary.state.hasQuery ? this.querySummary.state.query : "";
         this.hasBreadcrumbs = this.breadcrumbManager.state.hasBreadcrumbs;
