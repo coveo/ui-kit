@@ -1,22 +1,29 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
+import {
+  serializeRelativeDate,
+  isRelativeDate,
+  isRelativeDateFormat,
+  RelativeDate,
+} from '../../../../api/search/date/relative-date';
+import {isUndefined} from '@coveo/bueno';
 
-dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-export type DateRangeInput = string | number | Date;
+type AbsoluteDate = string | number | Date;
+export type DateRangeInput = AbsoluteDate | RelativeDate;
 
 export interface DateRangeOptions {
   /**
-   * The start value of the range.
+   * The starting value for the date range. A date range can be either absolute or relative.
    */
   start: DateRangeInput;
 
   /**
-   * The end value of the range.
+   * The ending value for the date range. A date range can be either absolute or relative.
    */
   end: DateRangeInput;
 
@@ -42,13 +49,9 @@ export interface DateRangeOptions {
   /**
    * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
    *
-   * @defaultValue `false`
+   * @deprecated No adjusments to UTC are being made. Please use the `timezone` engine configuration option instead.
    */
   useLocalTime?: boolean;
-}
-
-export function isSearchApiDate(date: string) {
-  return formatForSearchApi(dayjs(date)) === date;
 }
 
 /**
@@ -58,6 +61,12 @@ export function isSearchApiDate(date: string) {
  * @returns A new `DateRangeRequest`.
  */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
+  if (!isUndefined(config.useLocalTime)) {
+    console.warn(
+      'The "useLocalTime" option for "buildDateRange" is deprecated. Please use the "timezone" engine configuration option instead.'
+    );
+  }
+
   const start = buildDate(config.start, config);
   const end = buildDate(config.end, config);
   const endInclusive = config.endInclusive ?? false;
@@ -72,7 +81,15 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 }
 
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
-  const {dateFormat, useLocalTime} = options;
+  const {dateFormat} = options;
+  if (isRelativeDate(rawDate)) {
+    return serializeRelativeDate(rawDate);
+  }
+
+  if (typeof rawDate === 'string' && isRelativeDateFormat(rawDate)) {
+    return rawDate;
+  }
+
   const date = dayjs(rawDate, dateFormat);
 
   if (!date.isValid()) {
@@ -84,11 +101,5 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
     );
   }
 
-  const adjusted = useLocalTime ? date : date.utc();
-  return formatForSearchApi(adjusted);
-}
-
-function formatForSearchApi(date: dayjs.Dayjs) {
-  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-  return date.format(DATE_FORMAT);
+  return formatDateForSearchApi(date);
 }

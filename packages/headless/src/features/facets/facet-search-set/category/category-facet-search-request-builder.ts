@@ -12,7 +12,7 @@ export const buildCategoryFacetSearchRequest = (
 
   const {captions, query, numberOfValues} = options;
   const {field, delimitingCharacter, basePath} = categoryFacet;
-  const searchContext = buildSearchRequest(state);
+  const searchContext = buildSearchRequest(state).request;
   const path = getPathToSelectedCategoryFacetItem(categoryFacet);
   const ignorePaths = path.length ? [path] : [];
   const newQuery = `*${query}*`;

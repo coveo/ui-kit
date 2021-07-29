@@ -28,6 +28,9 @@ ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 
+# (Precaution) jwt key file
+server.key
+
 # Static resources copied from node_modules
 force-app/main/default/staticresources/coveoheadless
 

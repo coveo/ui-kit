@@ -20,7 +20,7 @@ export default class QuanticSearchInterface extends LightningElement {
   engineOptions;
 
   connectedCallback() {
-    loadDependencies(this).then(
+    loadDependencies(this).then((CoveoHeadless) => {
       getHeadlessConfiguration().then((data) => {
         if (data) {
           this.engineOptions = {
@@ -36,7 +36,7 @@ export default class QuanticSearchInterface extends LightningElement {
           setInitializedCallback(this.performInitialQuery, this.engineId);
         }
       })
-    );
+    });
   }
 
   performInitialQuery = (engine) => {

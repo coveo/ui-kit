@@ -56,10 +56,12 @@ export const registerFolding = createAction(
     validatePayload(payload, foldingOptionsSchemaDefinition)
 );
 
+export type StateNeededByLoadCollection = ConfigurationSection & FoldingSection;
+
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
   CollectionId,
-  AsyncThunkSearchOptions<ConfigurationSection & FoldingSection>
+  AsyncThunkSearchOptions<StateNeededByLoadCollection>
 >(
   'folding/loadCollection',
   async (
@@ -71,7 +73,7 @@ export const loadCollection = createAsyncThunk<
       configuration: {
         accessToken,
         organizationId,
-        search: {apiBaseUrl},
+        search: {apiBaseUrl, timezone},
       },
     } = getState();
 
@@ -83,6 +85,7 @@ export const loadCollection = createAsyncThunk<
       url: apiBaseUrl,
       aq: `@${fields.collection} = ${collectionId}`,
       numberOfResults: 100,
+      timezone,
     });
 
     if (isErrorResponse(response)) {

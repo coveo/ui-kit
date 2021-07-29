@@ -37,7 +37,10 @@ module.exports = {
         sm: 'var(--atomic-text-sm)',
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
-      }
+      },
+      gridTemplateColumns: {
+        'min-1fr': 'min-content 1fr',
+      },
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),
