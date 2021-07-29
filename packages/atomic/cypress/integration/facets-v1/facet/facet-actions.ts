@@ -8,14 +8,6 @@ export const field = 'author';
 export const addFacet = (props: TagProps = {}) => (env: TestFixture) =>
   addTag(env, 'atomic-facet-v1', props);
 
-export function selectIdleCheckboxValueAt(index: number) {
-  FacetSelectors.idleCheckboxValue().eq(index).click();
-}
-
-export function selectIdleLinkValueAt(index: number) {
-  FacetSelectors.idleLinkValue().eq(index).click();
-}
-
 export function selectIdleBoxValueAt(index: number) {
   FacetSelectors.idleBoxValue().eq(index).click();
 }
