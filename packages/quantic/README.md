@@ -65,10 +65,6 @@ To open cypress in browser mode, run:
 
        npm run cypress:open
 
-To run all cypress tests in headless mode, run:
-
-       npm run cypress:test
-
 
 ## Use Quantic From Source
 
