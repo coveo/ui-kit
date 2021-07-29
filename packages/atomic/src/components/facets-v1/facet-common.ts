@@ -21,7 +21,7 @@ export interface FacetValueProps {
   searchQuery?: string;
 }
 
-export interface FacetColorValueProps {
+export interface ColorFacetValueProps {
   i18n: i18n;
   displayValue: string;
   partValue: string;

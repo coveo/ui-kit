@@ -20,8 +20,8 @@ import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-fac
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
-import {FacetValueCheckboxColor} from '../facet-value-checkbox-color/facet-value-checkbox-color';
-import {FacetValueBoxColor} from '../facet-value-box-color/facet-value-box-color';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
+import {ColorFacetBox} from '../color-facet-box/color-facet-box';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
 import {
@@ -196,7 +196,7 @@ export class AtomicColorFacet
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <FacetValueCheckboxColor
+          <ColorFacetCheckbox
             displayValue={displayValue}
             partValue={facetValue.value}
             numberOfResults={facetValue.numberOfResults}
@@ -210,11 +210,11 @@ export class AtomicColorFacet
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </FacetValueCheckboxColor>
+          </ColorFacetCheckbox>
         );
       case 'box':
         return (
-          <FacetValueBoxColor
+          <ColorFacetBox
             displayValue={displayValue}
             partValue={facetValue.value}
             numberOfResults={facetValue.numberOfResults}
@@ -228,7 +228,7 @@ export class AtomicColorFacet
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </FacetValueBoxColor>
+          </ColorFacetBox>
         );
     }
   }
