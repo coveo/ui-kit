@@ -20,6 +20,9 @@ export default class QuanticNoResults extends LightningElement {
     /** @type {import("coveo").QuerySummary} */
     querySummary;
 
+    /** @type {import("coveo").BreadcrumbManager} */
+    breadcrumbManager;
+
     labels = {
         noResultsTitle,
         noResultsWithFilters,
@@ -33,15 +36,12 @@ export default class QuanticNoResults extends LightningElement {
     unsubscribeHistoryManager;
     /** @type {() => void} */
     unsubscribeQuerySummary;
+    /** @type {() => void} */
+    unsubscribeBreadcrumbsManager;
     /**
      * @type {boolean}
      */
-    @api enableCancelLastAction
-
-    /**
-     * @type {boolean}
-     */
-    @api enableSearchTips
+    @api disableCancelLastAction
 
     /**
      * @type {boolean}
@@ -57,6 +57,10 @@ export default class QuanticNoResults extends LightningElement {
      * @type {string}
      */
     @track query;
+    /**
+     * @type {boolean}
+     */
+    @track hasBreadcrumbs
 
     connectedCallback() {
         registerComponentForInit(this, this.engineId);
@@ -74,9 +78,11 @@ export default class QuanticNoResults extends LightningElement {
         this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
         this.historyManager = CoveoHeadless.buildHistoryManager(engine);
         this.querySummary = CoveoHeadless.buildQuerySummary(engine);
+        this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
         this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
         this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
         this.unsubscribeQuerySummary = this.querySummary.subscribe(() => this.updateState());
+        this.unsubscribeBreadcrumbsManager = this.breadcrumbManager.subscribe(() => this.updateState());
     }
 
     disconnectedCallback() {
@@ -89,11 +95,15 @@ export default class QuanticNoResults extends LightningElement {
         if(this.unsubscribeQuerySummary) {
             this.unsubscribeQuerySummary();
         }
+        if(this.unsubscribeBreadcrumbsManager) {
+            this.unsubscribeBreadcrumbsManager();
+        }
     }
     updateState() {
         this.hasResults = !this.searchStatus.state.firstSearchExecuted ||this.searchStatus.state.isLoading || this.searchStatus.state.hasResults;
         this.hasHistory = this.historyManager.state.past.length;
         this.query = this.querySummary.state.hasQuery ? this.querySummary.state.query : "";
+        this.hasBreadcrumbs = this.breadcrumbManager.state.hasBreadcrumbs;
     }
 
     onUndoLastActionClick() {

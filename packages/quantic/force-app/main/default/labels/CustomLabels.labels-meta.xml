@@ -212,9 +212,9 @@
     </labels>
     <labels>
         <fullName>quantic_UndoLastAction</fullName>
-        <value>Undo Last action</value>
+        <value>Undo last action</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Undo Last action</shortDescription>
+        <shortDescription>Undo last action</shortDescription>
     </labels>
 </CustomLabels>
