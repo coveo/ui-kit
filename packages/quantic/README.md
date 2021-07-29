@@ -50,6 +50,15 @@ Start the server.
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3333/.
 
+## Deploying the Quantic examples community
+
+Example components are available as a Salesforce community allowing you to play with Quantic components.
+
+1. To deploy the community in the `LWC` scratch org, run:
+
+        sfdx force:mdapi:deploy -d ./quantic-examples-community -w 10
+
+2. Open the `LWC` scratch org and publish the `Quantic Examples` community.
 ## Run Cypress for Quantic components
 
 Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
