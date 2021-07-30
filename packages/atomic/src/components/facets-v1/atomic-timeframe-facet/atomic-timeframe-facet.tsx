@@ -224,7 +224,7 @@ export class AtomicTimeframeFacet
 
       if (timeframe?.label) {
         return getFieldValueCaption(
-          this.facetId!,
+          this.field,
           timeframe.label,
           this.bindings.i18n
         );
