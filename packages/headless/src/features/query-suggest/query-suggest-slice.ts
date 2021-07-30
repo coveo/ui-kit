@@ -70,10 +70,15 @@ export const querySuggestReducer = createReducer(
         }
       })
       .addCase(clearQuerySuggest, (state, action) => {
-        const {id} = action.payload;
-        state[id]!.q = '';
-        state[id]!.completions = [];
-        state[id]!.partialQueries = [];
+        const querySuggest = state[action.payload.id];
+
+        if (!querySuggest) {
+          return;
+        }
+
+        querySuggest.q = '';
+        querySuggest.completions = [];
+        querySuggest.partialQueries = [];
       })
       .addCase(selectQuerySuggestion, (state, action) => {
         const {id, expression} = action.payload;

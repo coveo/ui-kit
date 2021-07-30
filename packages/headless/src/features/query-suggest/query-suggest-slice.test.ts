@@ -71,20 +71,28 @@ describe('querySuggest slice', () => {
     });
   });
 
-  it('should handle clearQuerySuggest on existing state', () => {
-    const expectedState = addToDefaultState({
-      completions: [],
-      q: '',
-      partialQueries: [],
+  describe('clearQuerySuggest', () => {
+    it('when the id is valid, it clears the query, completions and partialQueries', () => {
+      state[id] = buildMockQuerySuggest({
+        completions: getCompletions(),
+        q: 'some query',
+        partialQueries: ['s', 'so', 'som', 'some'],
+      });
+
+      const expectedState = buildMockQuerySuggest({
+        completions: [],
+        q: '',
+        partialQueries: [],
+      });
+
+      const finalState = querySuggestReducer(state, clearQuerySuggest({id}));
+      expect(finalState[id]).toEqual(expectedState);
     });
-    const existingState = addToDefaultState({
-      completions: getCompletions(),
-      q: 'some query',
-      partialQueries: ['s', 'so', 'som', 'some'],
+
+    it('when the id is invalid, it does not throw', () => {
+      const action = clearQuerySuggest({id: 'invalid id'});
+      expect(() => querySuggestReducer(state, action)).not.toThrow();
     });
-    expect(querySuggestReducer(existingState, clearQuerySuggest({id}))).toEqual(
-      expectedState
-    );
   });
 
   it(`when a query in the querySet is updated,
