@@ -17,7 +17,7 @@ export const querySuggestReducer = createReducer(
   (builder) =>
     builder
       .addCase(registerQuerySuggest, (state, action) => {
-        state[action.payload.id] = buildQuerySuggestState(action.payload);
+        state[action.payload.id] = buildQuerySuggest(action.payload);
       })
       .addCase(unregisterQuerySuggest, (state, action) => {
         delete state[action.payload.id];
@@ -59,7 +59,7 @@ export const querySuggestReducer = createReducer(
       })
 );
 
-function buildQuerySuggestState(
+function buildQuerySuggest(
   config: Partial<QuerySuggestState>
 ): QuerySuggestState {
   return {
@@ -70,6 +70,7 @@ function buildQuerySuggestState(
     currentRequestId: '',
     error: null,
     partialQueries: [],
+    isLoading: false,
     ...config,
   };
 }
