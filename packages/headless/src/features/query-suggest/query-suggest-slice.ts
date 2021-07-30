@@ -33,16 +33,23 @@ export const querySuggestReducer = createReducer(
         querySuggest.isLoading = true;
       })
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
-        const id = action.meta.arg.id;
-        if (action.meta.requestId === state[id]?.currentRequestId) {
-          const {q} = state[id]!;
-          if (q) {
-            state[id]!.partialQueries.push(
-              q.replace(/;/, encodeURIComponent(';'))
-            );
-          }
-          state[id]!.completions = action.payload.completions;
+        const querySuggest = state[action.meta.arg.id];
+
+        if (
+          !querySuggest ||
+          action.meta.requestId !== querySuggest.currentRequestId
+        ) {
+          return;
         }
+
+        const {q} = querySuggest;
+        if (q) {
+          querySuggest.partialQueries.push(
+            q.replace(/;/, encodeURIComponent(';'))
+          );
+        }
+        querySuggest.completions = action.payload.completions;
+        querySuggest.isLoading = false;
       })
       .addCase(fetchQuerySuggestions.rejected, (state, action) => {
         const querySuggest = state[action.meta.arg.id];
