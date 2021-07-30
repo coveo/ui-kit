@@ -8,13 +8,13 @@ function handleRejectedSearch(
   state: SearchState,
   action: ReturnType<SearchAction['rejected']>
 ) {
-  const hasError = action.payload ? action.payload : null;
-  if (hasError) {
+  const error = action.payload ?? null;
+  if (error) {
     state.response = getSearchInitialState().response;
     state.results = [];
   }
 
-  state.error = hasError;
+  state.error = error;
   state.isLoading = false;
 }
 
