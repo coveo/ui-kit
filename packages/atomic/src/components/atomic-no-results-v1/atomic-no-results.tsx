@@ -58,15 +58,19 @@ export class AtomicNoResults {
   }
 
   private renderLupa() {
-    return <div innerHTML={Lupa} class=""></div>;
+    return <div innerHTML={Lupa} class="my-6"></div>;
   }
 
   private renderNoResultsMessage() {
-    return <div>{this.strings.noResults() + ' '}</div>;
+    return <div class="my-2 text-2xl">{this.strings.noResults() + ' '}</div>;
   }
 
   private renderSearchTips() {
-    return <div>{this.strings.searchTips()}</div>;
+    return (
+      <div class="my-2 text-lg text-neutral-dark">
+        {this.strings.searchTips()}
+      </div>
+    );
   }
 
   private renderCancel() {
@@ -77,7 +81,7 @@ export class AtomicNoResults {
     return (
       <button
         part="cancel-button"
-        class="text-neutral-light hover:underline font-bold bg-primary px-2.5 py-3"
+        class="text-neutral-light hover:underline font-bold bg-primary px-2.5 py-3 rounded-md my-2"
         onClick={() => this.history.back()}
       >
         {this.strings.cancelLastAction()}
@@ -95,7 +99,7 @@ export class AtomicNoResults {
     }
 
     return [
-      <div class="flex flex-col items-center justify-items-center h-full w-full text-on-background">
+      <div class="flex flex-col items-center h-full w-full text-on-background">
         {this.renderLupa()}
         {this.renderNoResultsMessage()}
         {this.renderSearchTips()}
