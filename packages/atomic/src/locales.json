@@ -483,6 +483,14 @@
     "zh-cn": "没有找到与 {{query}} 相关的结果",
     "zh-tw": "沒有找到與 {{query}} 相關的結果"
   },
+  "no-results-for-v1": {
+    "en": "We couldn't find anything for {{query}}",
+    "fr": "Nous n'avons rien trouvé pour {{query}}"
+  },
+  "search-tips-v1": {
+    "en": "You may want to try using different keywords, or checking for spelling mistakes.",
+    "fr": "Essayez différents mots-clés ou vérifiez l'orthographe de vos mots-clés."
+  },
   "no-results": {
     "en": "No results",
     "fr": "Aucun résultat",
