@@ -18,7 +18,8 @@
   "unpkg": "dist/atomic/atomic.esm.js",
   "files": [
     "dist/",
-    "loader/"
+    "loader/",
+    "docs/"
   ],
   "scripts": {
     "build": "npm run build:locales && stencil build && npm run build:utils",
