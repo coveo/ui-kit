@@ -23,7 +23,14 @@ export const querySuggestReducer = createReducer(
         delete state[action.payload.id];
       })
       .addCase(fetchQuerySuggestions.pending, (state, action) => {
-        state[action.meta.arg.id]!.currentRequestId = action.meta.requestId;
+        const querySuggest = state[action.meta.arg.id];
+
+        if (!querySuggest) {
+          return;
+        }
+
+        querySuggest.currentRequestId = action.meta.requestId;
+        querySuggest.isLoading = true;
       })
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
         const id = action.meta.arg.id;
@@ -38,7 +45,14 @@ export const querySuggestReducer = createReducer(
         }
       })
       .addCase(fetchQuerySuggestions.rejected, (state, action) => {
-        state[action.payload!.id]!.error = action.payload!;
+        const querySuggest = state[action.meta.arg.id];
+
+        if (!querySuggest) {
+          return;
+        }
+
+        querySuggest.error = action.payload || null;
+        querySuggest.isLoading = false;
       })
       .addCase(updateQuerySetQuery, (state, action) => {
         const {id, query} = action.payload;
