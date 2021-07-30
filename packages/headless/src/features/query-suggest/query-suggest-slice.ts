@@ -77,7 +77,13 @@ export const querySuggestReducer = createReducer(
       })
       .addCase(selectQuerySuggestion, (state, action) => {
         const {id, expression} = action.payload;
-        state[id]!.q = expression;
+        const querySuggest = state[id];
+
+        if (!querySuggest) {
+          return;
+        }
+
+        querySuggest.q = expression;
       })
 );
 

@@ -56,23 +56,19 @@ describe('querySuggest slice', () => {
     ).toEqual(expectedState);
   });
 
-  it('should handle selectQuerySuggestion on existing state', () => {
-    const expectedState = addToDefaultState({
-      completions: getCompletions(),
-      q: 'some expression',
+  describe('selectQuerySuggestion', () => {
+    it('when the id is valid, it updates the query to the passed expression', () => {
+      state[id]!.q = 'some previous query';
+      const action = selectQuerySuggestion({id, expression: 'some expression'});
+      const finalState = querySuggestReducer(state, action);
+
+      expect(finalState[id]?.q).toBe('some expression');
     });
 
-    const existingState = addToDefaultState({
-      completions: getCompletions(),
-      q: 'some previous query',
+    it('when the id is invalid, it does not throw', () => {
+      const action = selectQuerySuggestion({id: 'invalid id', expression: ''});
+      expect(() => querySuggestReducer(state, action)).not.toThrow();
     });
-
-    expect(
-      querySuggestReducer(
-        existingState,
-        selectQuerySuggestion({id, expression: 'some expression'})
-      )
-    ).toEqual(expectedState);
   });
 
   it('should handle clearQuerySuggest on existing state', () => {
