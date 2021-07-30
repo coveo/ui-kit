@@ -30,6 +30,10 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../utils/field-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -182,6 +186,9 @@ export class AtomicColorFacet
             this.facet.facetSearch.clear();
             return;
           }
+          this.facet.facetSearch.updateCaptions(
+            getFieldCaptions(this.field, this.bindings.i18n)
+          );
           this.facet.facetSearch.updateText(value);
           this.facet.facetSearch.search();
         }}
@@ -191,14 +198,18 @@ export class AtomicColorFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
-    const displayValue = this.bindings.i18n.t(facetValue.value);
+    const displayValue = getFieldValueCaption(
+      this.facetId!,
+      facetValue.value,
+      this.bindings.i18n
+    );
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
           <ColorFacetCheckbox
             displayValue={displayValue}
-            partValue={facetValue.value}
+            partValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
@@ -223,7 +234,7 @@ export class AtomicColorFacet
             searchQuery={this.facetState.facetSearch.query}
           >
             <div
-              part={`value-${facetValue.value}`}
+              part={`value-${displayValue}`}
               class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
             ></div>
             <FacetValueLabelHighlight
