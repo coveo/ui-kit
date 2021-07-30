@@ -217,10 +217,10 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderViewAll() {
-    const viewAll = this.bindings.i18n.t('all-categories');
+  private renderAllCategories() {
+    const allCategories = this.bindings.i18n.t('all-categories');
     return (
-      <li key={viewAll}>
+      <li key={allCategories}>
         <button
           part="all-categories-button"
           class="parent-button"
@@ -232,7 +232,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          {viewAll}
+          {allCategories}
         </button>
       </li>
     );
@@ -279,7 +279,7 @@ export class AtomicCategoryFacet
 
     return (
       <ul part="parents" class="mt-3">
-        {this.renderViewAll()}
+        {this.renderAllCategories()}
         {nonActiveParents.map((parent) => this.renderParent(parent))}
         <li part="active-parent" class="parent-active">
           {getFieldValueCaption(
