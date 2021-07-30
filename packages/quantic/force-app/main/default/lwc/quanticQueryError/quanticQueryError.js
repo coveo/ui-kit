@@ -1,5 +1,13 @@
 import { LightningElement, api, track } from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
+
+import coveoOnlineHelpLink from '@salesforce/label/c.quantic_CoveoOnlineHelpLink';
+import moreInformation from '@salesforce/label/c.quantic_MoreInformation';
+import checkForMore from '@salesforce/label/c.quantic_CheckForMore';
+import community from '@salesforce/label/c.quantic_Community';
+import contactCoveoSupportTeam from '@salesforce/label/c.quantic_ContactCoveoSupportTeam';
+import goBack from '@salesforce/label/c.quantic_GoBack';
 
 let disconnectedException = 'Disconnected';
 let noEndpointsException = 'NoEndpointsException';
@@ -29,6 +37,15 @@ export default class QuanticQueryError extends LightningElement {
   @track error
 
   showMoreInfo = false;
+
+  labels = {
+    coveoOnlineHelpLink,
+    moreInformation,
+    checkForMore,
+    community,
+    contactCoveoSupportTeam,
+    goBack
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -102,7 +119,11 @@ export default class QuanticQueryError extends LightningElement {
     }
   }
 
-  onClick() {
+  handleShowMoreInfoClick() {
     this.showMoreInfo = !this.showMoreInfo;
+  }
+
+  get checkForMoreLabel() {
+    return I18nUtils.format(this.labels.checkForMore, I18nUtils.getTextWithDecorator(this.labels.community, '<a href="https://connect.coveo.com/s/discussions">', '</a>'), I18nUtils.getTextWithDecorator(this.labels.contactCoveoSupportTeam,'<a href="https://connect.coveo.com/s/article/5382">', '</a>'));
   }
 }

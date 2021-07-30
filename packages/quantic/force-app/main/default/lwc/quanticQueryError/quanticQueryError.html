@@ -1,30 +1,36 @@
 <template>
     <template if:true={hasError}>
-        <div class="slds-grid slds-wrap">
-            <div class="slds-col slds-size_12-of-12">
+        <div class="slds-grid slds-grid_vertical">
+            <div class="slds-col slds-size_1-of-1">
                 <h3 class="slds-text-heading_medium slds-text-color_error slds-text-align_center slds-text-title_bold slds-var-m-around_small">{errorTitle}</h3>
                 <p class="slds-text-align_center">{description}</p>
             </div>
             <template if:true={link}>
-                <div class="slds-col slds-size_12-of-12">
-                  <a class="slds-m-vertical_x-small slds-align_absolute-center" href={link}>Coveo Online Help</a>  
+                <div class="slds-col slds-size_1-of-1">
+                    <a class="slds-m-vertical_x-small slds-align_absolute-center" href={link} target="_blank">
+                        <lightning-formatted-rich-text value={labels.coveoOnlineHelpLink}></lightning-formatted-rich-text>
+                    </a>  
                 </div>
             </template>
             <template if:false={link}>
                 <template if:false={showMoreInfo}>
-                    <div class="slds-m-vertical_x-large slds-align_absolute-center">
-                        <lightning-button variant="brand" label="More Information"  class="slds-m-around_x-small" onclick={onClick}></lightning-button>
+                    <div class="slds-col slds-m-vertical_x-large slds-align_absolute-center">
+                        <lightning-button variant="brand" label={labels.moreInformation} class="slds-m-around_x-small" onclick={handleShowMoreInfoClick}></lightning-button>
                     </div>
                 </template>
             </template>
             <template if:true={showMoreInfo}>
-                <div class="slds-col slds-size_12-of-12 slds-align_absolute-center slds-m-top_medium">
-                   <pre class="pre_class">
-                    <code>{error}</code>
-                </pre> 
+                <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_medium">
+                    <pre class="slds-text-font_monospace">
+                        <code>{error}</code>
+                    </pre> 
                 </div>
-                <div class="slds-align_absolute-center slds-var-m-vertical_large"><span>Check the <a href="https://connect.coveo.com/s/discussions">community</a> for similar errors or <a href="https://connect.coveo.com/s/article/5382">contact Coveo Support team</a> for more information.</span></div>
-                <div class="slds-col slds-size_12-of-12 slds-align_absolute-center slds-var-m-vertical_x-large"><lightning-button variant="brand" label="Go back" icon-name="utility:back" class="slds-m-left_x-small" onclick={onClick}></lightning-button></div>
+                <div class="slds-align_absolute-center slds-var-m-vertical_large">
+                    <lightning-formatted-rich-text value={checkForMoreLabel}></lightning-formatted-rich-text>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-align_absolute-center slds-var-m-vertical_x-large">
+                    <lightning-button variant="brand" label={labels.goBack} icon-name="utility:back" class="slds-m-left_x-small" onclick={handleShowMoreInfoClick}></lightning-button>
+                </div>
             </template>
             <template if:false={showMoreInfo}>
                 <div class=" slds-col slds-size_12-of-12 slds-var-m-vertical_x-large slds-illustration slds-illustration_small">
