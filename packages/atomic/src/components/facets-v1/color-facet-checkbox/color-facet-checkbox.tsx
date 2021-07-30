@@ -19,7 +19,11 @@ export const ColorFacetCheckbox: FunctionalComponent<ColorFacetValueProps> = (
       class="flex items-center color-checkbox-list-item"
     >
       <div
-        class={props.isSelected ? 'border-2 border-primary-light rounded' : ''}
+        class={
+          props.isSelected
+            ? 'border-2 border-primary-light rounded relative right-0.5'
+            : ''
+        }
       >
         <button
           id={id}
