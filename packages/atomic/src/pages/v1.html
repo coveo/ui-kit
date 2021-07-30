@@ -41,6 +41,10 @@
         //   'BBC News': 'The BBC',
         //   amoreau: 'Alexandre Moreau',
         // });
+
+        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
+          '.html': 'html',
+        });
       })();
     </script>
     <style>
@@ -118,6 +122,48 @@
 
       atomic-breadcrumb-manager {
         margin: 10px 0;
+      }
+
+      atomic-color-facet::part(value-dynamicscrmitem) {
+        background-image: url('/build/assets/mail.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-lithiumuser) {
+        background-image: url('/build/assets/folder.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-YouTubeVideo) {
+        background-image: url('build/assets/video.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-lithiummessage) {
+        background-image: url('build/assets/kb.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-lithiumthread) {
+        background-image: url('build/assets/salesforce-standard-post.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-html) {
+        background-image: url('build/assets/webpage.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
       }
 
       @media only screen and (max-width: 1023px) {
@@ -214,7 +260,12 @@
         <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
         <atomic-rating-range-facet field="snrating" label="Rating Range" number-of-intervals="5">
         </atomic-rating-range-facet>
-        <atomic-color-facet field="filetype" label="Colors"></atomic-color-facet>
+        <atomic-color-facet
+          field="filetype"
+          label="Files"
+          number-of-values="6"
+          sort-criteria="occurrences"
+        ></atomic-color-facet>
       </atomic-facet-manager>
       <div class="results-container">
         <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
