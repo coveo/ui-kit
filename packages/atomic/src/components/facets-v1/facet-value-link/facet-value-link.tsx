@@ -16,7 +16,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
       <button
         part="value-link"
         onClick={() => props.onClick()}
-        class="value-link w-full flex items-center py-2.5 text-on-background ellipsed focus:outline-none group"
+        class="value-link w-full flex items-center py-2.5 text-on-background ellipsed focus:outline-none"
         aria-pressed={props.isSelected.toString()}
         aria-label={ariaLabel}
       >

@@ -10,7 +10,7 @@ export const FacetHeader: FunctionalComponent<{
   numberOfSelectedValues: number;
   isCollapsed: boolean;
   onToggleCollapse(): void;
-  onClearFilters(): void;
+  onClearFilters?(): void;
 }> = (props) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});
@@ -38,12 +38,12 @@ export const FacetHeader: FunctionalComponent<{
         innerHTML={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
       ></span>
     </button>,
-    props.numberOfSelectedValues > 0 && (
+    props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
         class="flex items-baseline w-full p-1 text-sm link"
         title={clearFiltersForFacet}
-        onClick={() => props.onClearFilters()}
+        onClick={() => props.onClearFilters!()}
       >
         <span
           part="clear-button-icon"
