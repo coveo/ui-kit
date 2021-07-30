@@ -95,25 +95,27 @@ describe('querySuggest slice', () => {
     });
   });
 
-  it(`when a query in the querySet is updated,
-  does not update the query suggest query if the id is missing`, () => {
-    const unknownId = '1';
-    const query = 'query';
+  describe('updateQuerySetQuery', () => {
+    it(`when a query in the querySet is updated,
+    does not update the query suggest query if the id is missing`, () => {
+      const unknownId = '1';
+      const query = 'query';
 
-    const action = updateQuerySetQuery({id: unknownId, query});
-    const finalState = querySuggestReducer(addToDefaultState({}), action);
+      const action = updateQuerySetQuery({id: unknownId, query});
+      const finalState = querySuggestReducer(addToDefaultState({}), action);
 
-    expect(finalState[unknownId]).toBe(undefined);
-  });
+      expect(finalState[unknownId]).toBe(undefined);
+    });
 
-  it(`when a query in the querySet is updated,
-  it updates the query suggest query if the id exists`, () => {
-    const query = 'query';
+    it(`when a query in the querySet is updated,
+    it updates the query suggest query if the id exists`, () => {
+      const query = 'query';
 
-    const action = updateQuerySetQuery({id, query});
-    const finalState = querySuggestReducer(addToDefaultState({}), action);
+      const action = updateQuerySetQuery({id, query});
+      const finalState = querySuggestReducer(addToDefaultState({}), action);
 
-    expect(finalState[id]?.q).toBe(query);
+      expect(finalState[id]?.q).toBe(query);
+    });
   });
 
   describe('fetchQuerySuggestions', () => {
