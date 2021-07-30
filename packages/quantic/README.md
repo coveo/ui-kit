@@ -50,20 +50,24 @@ Start the server.
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3333/.
 
-## Run Cypress for Quantic components
+## Run Cypress for Quantic Components
 
 Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
 
 - All the tests will need to be under folder `cypress/integration`
 
 
-First, start the local development server by running:
+To start the local development server, run:
 
-       npm run start
+```bash
+npm run start
+```
 
-To open cypress in browser mode, run:
+To open Cypress in browser mode, run:
 
-       npm run cypress:open
+```bash
+npm run cypress:open
+```
 
 
 ## Use Quantic From Source
