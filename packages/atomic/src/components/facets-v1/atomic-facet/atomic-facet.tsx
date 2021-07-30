@@ -31,6 +31,10 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 
 /**
@@ -197,6 +201,9 @@ export class AtomicFacet
             this.facet.facetSearch.clear();
             return;
           }
+          this.facet.facetSearch.updateCaptions(
+            getFieldCaptions(this.field, this.bindings.i18n)
+          );
           this.facet.facetSearch.updateText(value);
           this.facet.facetSearch.search();
         }}
@@ -206,7 +213,11 @@ export class AtomicFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
-    const displayValue = this.bindings.i18n.t(facetValue.value);
+    const displayValue = getFieldValueCaption(
+      this.facetId!,
+      facetValue.value,
+      this.bindings.i18n
+    );
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':

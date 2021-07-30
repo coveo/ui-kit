@@ -70,7 +70,14 @@ function mapFacetRequest(
   return facetRequest;
 }
 
-export function mapSearchRequest(searchRequest: SearchRequest) {
+export interface MappedSearchRequest {
+  request: SearchRequest;
+  mappings: SearchMappings;
+}
+
+export function mapSearchRequest(
+  searchRequest: SearchRequest
+): MappedSearchRequest {
   const mappings = initialSearchMappings();
   const request: SearchRequest = {
     ...searchRequest,

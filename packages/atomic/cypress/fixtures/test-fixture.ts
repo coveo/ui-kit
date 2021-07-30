@@ -1,11 +1,13 @@
+import {i18n} from 'i18next';
 import {buildTestUrl} from '../utils/setupComponent';
 
-type SearchInterface = HTMLElement & {
+export type SearchInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
     organizationId: string;
   }) => Promise<void>;
   executeFirstSearch: () => void;
+  i18n: i18n;
 };
 
 export type TestFeature = (e: TestFixture) => void | Promise<void>;
@@ -118,9 +120,14 @@ export class TestFixture {
 }
 
 export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
+  const e = generateComponentHTML(tag, props);
+  env.withElement(e);
+};
+
+export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(props)) {
     e.setAttribute(k, v.toString());
   }
-  env.withElement(e);
+  return e;
 };

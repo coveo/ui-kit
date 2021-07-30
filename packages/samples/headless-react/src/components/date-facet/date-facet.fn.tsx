@@ -13,14 +13,18 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   function getKeyForRange(value: DateFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
+    return `[${value.start}..${value.end}]`;
   }
 
   function format(dateStr: string) {
     return parseDate(dateStr).format('MMMM D YYYY');
   }
 
-  if (!state.values.length) {
+  if (
+    !state.values.filter(
+      (value) => value.state !== 'idle' || value.numberOfResults > 0
+    ).length
+  ) {
     return <div>No facet values</div>;
   }
 
@@ -34,9 +38,7 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
             onChange={() => controller.toggleSelect(value)}
             disabled={state.isLoading}
           />
-          {format(value.start)} to {format(value.end)}{' '}
-          {value.endInclusive ? 'inclusively' : 'exclusively'} (
-          {value.numberOfResults}{' '}
+          {format(value.start)} to {format(value.end)} ({value.numberOfResults}{' '}
           {value.numberOfResults === 1 ? 'result' : 'results'})
         </li>
       ))}
