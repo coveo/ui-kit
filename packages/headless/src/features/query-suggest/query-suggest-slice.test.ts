@@ -8,7 +8,7 @@ import {
 } from './query-suggest-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
-import {QuerySuggestSet, QuerySuggestState} from './query-suggest-state';
+import {QuerySuggestSet} from './query-suggest-state';
 import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
 
 describe('querySuggest slice', () => {
@@ -29,13 +29,6 @@ describe('querySuggest slice', () => {
     return completions;
   }
 
-  function addToDefaultState(
-    querySuggest: Partial<QuerySuggestState>
-  ): QuerySuggestSet {
-    const qs = buildMockQuerySuggest({id, ...querySuggest});
-    return {[id]: qs};
-  }
-
   beforeEach(() => {
     state = {
       [id]: buildMockQuerySuggest(),
@@ -47,13 +40,11 @@ describe('querySuggest slice', () => {
   });
 
   it('should handle registerQuerySuggest on initial state', () => {
-    const expectedState = addToDefaultState({q: 'test', count: 10});
-    expect(
-      querySuggestReducer(
-        undefined,
-        registerQuerySuggest({id, q: 'test', count: 10})
-      )
-    ).toEqual(expectedState);
+    const expectedState = buildMockQuerySuggest({id, q: 'test', count: 10});
+    const action = registerQuerySuggest({id, q: 'test', count: 10});
+    const finalState = querySuggestReducer(undefined, action);
+
+    expect(finalState[id]).toEqual(expectedState);
   });
 
   describe('selectQuerySuggestion', () => {
@@ -99,10 +90,8 @@ describe('querySuggest slice', () => {
     it(`when a query in the querySet is updated,
     does not update the query suggest query if the id is missing`, () => {
       const unknownId = '1';
-      const query = 'query';
-
-      const action = updateQuerySetQuery({id: unknownId, query});
-      const finalState = querySuggestReducer(addToDefaultState({}), action);
+      const action = updateQuerySetQuery({id: unknownId, query: 'query'});
+      const finalState = querySuggestReducer(state, action);
 
       expect(finalState[unknownId]).toBe(undefined);
     });
@@ -112,7 +101,7 @@ describe('querySuggest slice', () => {
       const query = 'query';
 
       const action = updateQuerySetQuery({id, query});
-      const finalState = querySuggestReducer(addToDefaultState({}), action);
+      const finalState = querySuggestReducer(state, action);
 
       expect(finalState[id]?.q).toBe(query);
     });
