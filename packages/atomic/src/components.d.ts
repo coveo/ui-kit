@@ -59,6 +59,44 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
     }
+    interface AtomicCategoryFacetV1 {
+        /**
+          * The base path shared by all values for the facet, separated by commas.
+         */
+        "basePath"?: string;
+        /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter": string;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath": boolean;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'. TODO: add automatic (occurences when not expanded, alphanumeric when expanded)
+         */
+        "sortCriteria": CategoryFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
+    }
     interface AtomicColorFacet {
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
@@ -387,6 +425,10 @@ export namespace Components {
          */
         "maxValueInIndex": number;
         /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex": number;
+        /**
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals": number;
@@ -412,6 +454,10 @@ export namespace Components {
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex": number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex": number;
         /**
           * The number of intervals to split the index for this facet.
          */
@@ -687,6 +733,12 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
+    };
+    interface HTMLAtomicCategoryFacetV1Element extends Components.AtomicCategoryFacetV1, HTMLStencilElement {
+    }
+    var HTMLAtomicCategoryFacetV1Element: {
+        prototype: HTMLAtomicCategoryFacetV1Element;
+        new (): HTMLAtomicCategoryFacetV1Element;
     };
     interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
     }
@@ -973,6 +1025,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-category-facet-v1": HTMLAtomicCategoryFacetV1Element;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
@@ -1070,6 +1123,44 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are `alphanumeric`, and `occurrences`.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
+    }
+    interface AtomicCategoryFacetV1 {
+        /**
+          * The base path shared by all values for the facet, separated by commas.
+         */
+        "basePath"?: string;
+        /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath"?: boolean;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'. TODO: add automatic (occurences when not expanded, alphanumeric when expanded)
+         */
+        "sortCriteria"?: CategoryFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
     }
     interface AtomicColorFacet {
         /**
@@ -1402,6 +1493,10 @@ declare namespace LocalJSX {
          */
         "maxValueInIndex"?: number;
         /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex"?: number;
+        /**
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals"?: number;
@@ -1427,6 +1522,10 @@ declare namespace LocalJSX {
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex"?: number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex"?: number;
         /**
           * The number of intervals to split the index for this facet.
          */
@@ -1680,6 +1779,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-category-facet-v1": AtomicCategoryFacetV1;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
@@ -1735,6 +1835,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-breadcrumb-manager": LocalJSX.AtomicBreadcrumbManager & JSXBase.HTMLAttributes<HTMLAtomicBreadcrumbManagerElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-category-facet-v1": LocalJSX.AtomicCategoryFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetV1Element>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
