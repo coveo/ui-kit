@@ -67,6 +67,6 @@ jobs:
         run: |
           sfdx force:package:version:create --package $PACKAGE_ID --installationkeybypass --wait 30 --json &> package-version-result.json
           cat package-version-result.json
-          export PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId' -r)"
+          PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId' -r)"
           if [ $PACKAGE_VERSION_ID == "null" ]; then echo "Null Package ID"; exit 1; fi
           echo $PACKAGE_VERSION_ID
