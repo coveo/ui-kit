@@ -34,12 +34,4 @@ export interface QuerySuggestState {
 
 export type QuerySuggestSet = Record<string, QuerySuggestState | undefined>;
 
-export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
-  id: '',
-  completions: [],
-  count: 5,
-  q: '',
-  currentRequestId: '',
-  error: null,
-  partialQueries: [],
-});
+export const getQuerySuggestSetInitialState: () => QuerySuggestSet = () => ({});

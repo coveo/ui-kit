@@ -8,19 +8,16 @@ import {
 } from './query-suggest-actions';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {
-  getQuerySuggestInitialState,
-  QuerySuggestSet,
+  getQuerySuggestSetInitialState,
+  QuerySuggestState,
 } from './query-suggest-state';
 
 export const querySuggestReducer = createReducer(
-  {} as QuerySuggestSet,
+  getQuerySuggestSetInitialState(),
   (builder) =>
     builder
       .addCase(registerQuerySuggest, (state, action) => {
-        state[action.payload.id] = {
-          ...getQuerySuggestInitialState(),
-          ...action.payload,
-        };
+        state[action.payload.id] = buildQuerySuggestState(action.payload);
       })
       .addCase(unregisterQuerySuggest, (state, action) => {
         delete state[action.payload.id];
@@ -61,3 +58,18 @@ export const querySuggestReducer = createReducer(
         state[id]!.q = expression;
       })
 );
+
+function buildQuerySuggestState(
+  config: Partial<QuerySuggestState>
+): QuerySuggestState {
+  return {
+    id: '',
+    completions: [],
+    count: 5,
+    q: '',
+    currentRequestId: '',
+    error: null,
+    partialQueries: [],
+    ...config,
+  };
+}
