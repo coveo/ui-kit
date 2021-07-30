@@ -1,6 +1,6 @@
 import {SearchAPIErrorWithStatusCode} from '../api/search/search-api-error-response';
 
-export function buildMockSearchApiErrorWithStateCode(
+export function buildMockSearchApiErrorWithStatusCode(
   config: Partial<SearchAPIErrorWithStatusCode> = {}
 ): SearchAPIErrorWithStatusCode {
   return {

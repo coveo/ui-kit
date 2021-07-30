@@ -9,7 +9,7 @@ import {
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {QuerySuggestSet, QuerySuggestState} from './query-suggest-state';
-import {buildMockSearchApiErrorWithStateCode} from '../../test/mock-search-api-error-with-state-code';
+import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
 
 describe('querySuggest slice', () => {
   let state: QuerySuggestSet;
@@ -178,6 +178,21 @@ describe('querySuggest slice', () => {
         expect(finalState[id]?.isLoading).toBe(false);
       });
 
+      it(`when fetchQuerySuggestions.fulfilled has the right request id,
+      it sets the error to null`, () => {
+        state[id] = buildMockQuerySuggest({
+          error: buildMockSearchApiErrorWithStatusCode(),
+          currentRequestId: 'the_right_id',
+        });
+
+        const finalState = querySuggestReducer(
+          state,
+          fetchQuerySuggestionsFulfilledAction
+        );
+
+        expect(finalState[id]?.error).toBe(null);
+      });
+
       it(`when fetchQuerySuggestions.fulfilled has the wrong request id
       should not update the completions`, () => {
         state[id]!.currentRequestId = 'the_wrong_id';
@@ -226,7 +241,7 @@ describe('querySuggest slice', () => {
 
       it('sets the error to the payload error', () => {
         const action = fetchQuerySuggestions.rejected(null, 'hello', {id});
-        action.payload = buildMockSearchApiErrorWithStateCode();
+        action.payload = buildMockSearchApiErrorWithStatusCode();
 
         const finalState = querySuggestReducer(state, action);
         expect(finalState[id]?.error).toEqual(action.payload);

@@ -50,6 +50,7 @@ export const querySuggestReducer = createReducer(
         }
         querySuggest.completions = action.payload.completions;
         querySuggest.isLoading = false;
+        querySuggest.error = null;
       })
       .addCase(fetchQuerySuggestions.rejected, (state, action) => {
         const querySuggest = state[action.meta.arg.id];
