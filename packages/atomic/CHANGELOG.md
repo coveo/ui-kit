@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.49.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.48.1...@coveo/atomic@0.49.0) (2021-07-30)
+
+
+### Features
+
+* **atomic:** add category facet v1 skeleton ([#1023](https://github.com/coveo/ui-kit/issues/1023)) ([34b3d31](https://github.com/coveo/ui-kit/commit/34b3d3156b5194161498480e3e9f936e980db29b))
+
+
+
+
+
 ## [0.48.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.48.0...@coveo/atomic@0.48.1) (2021-07-29)
 
 **Note:** Version bump only for package @coveo/atomic
