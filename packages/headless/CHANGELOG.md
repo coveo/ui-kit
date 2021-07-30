@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.11.3...@coveo/headless@1.11.4) (2021-07-30)
+
+
+### Bug Fixes
+
+* **headless:** clear response/results when search contains an error ([#1024](https://github.com/coveo/ui-kit/issues/1024)) ([33af76e](https://github.com/coveo/ui-kit/commit/33af76ef510ede565279098d35f9e92ee2f4c9c1))
+
+
+
+
+
+## [1.11.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.11.2...@coveo/headless@1.11.3) (2021-07-29)
+
+
+### Bug Fixes
+
+* **headless:** set hasResults to false when hasError is true ([#1014](https://github.com/coveo/ui-kit/issues/1014)) ([d4a8254](https://github.com/coveo/ui-kit/commit/d4a8254f16e1aa6d2f84915e09bba9f4db622059))
+
+
+
+
+
 ## [1.11.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.11.1...@coveo/headless@1.11.2) (2021-07-28)
 
 **Note:** Version bump only for package @coveo/headless

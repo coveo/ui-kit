@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.50.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.49.1...@coveo/atomic@0.50.0) (2021-07-30)
+
+
+### Features
+
+* **atomic:** add Category Facet values  ([#1028](https://github.com/coveo/ui-kit/issues/1028)) ([e58b644](https://github.com/coveo/ui-kit/commit/e58b64416a85d66bf5256bc4e7577acb1dd74218))
+
+
+
+
+
+## [0.49.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.49.0...@coveo/atomic@0.49.1) (2021-07-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.49.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.48.1...@coveo/atomic@0.49.0) (2021-07-30)
+
+
+### Features
+
+* **atomic:** add category facet v1 skeleton ([#1023](https://github.com/coveo/ui-kit/issues/1023)) ([34b3d31](https://github.com/coveo/ui-kit/commit/34b3d3156b5194161498480e3e9f936e980db29b))
+
+
+
+
+
+## [0.48.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.48.0...@coveo/atomic@0.48.1) (2021-07-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.48.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.47.3...@coveo/atomic@0.48.0) (2021-07-29)
+
+
+### Bug Fixes
+
+* **atomic:** rating and rating range facet ranges end not inclusive ([#1010](https://github.com/coveo/ui-kit/issues/1010)) ([477251b](https://github.com/coveo/ui-kit/commit/477251b2dee716c55e2188a2116cc10603c3125d))
+
+
+### Features
+
+* **atomic:** added localization to atomic-result-text ([#1025](https://github.com/coveo/ui-kit/issues/1025)) ([1622dff](https://github.com/coveo/ui-kit/commit/1622dffbd3ef5939f58861c7a0512193c8c4efb6))
+
+
+
+
+
+## [0.47.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.47.2...@coveo/atomic@0.47.3) (2021-07-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [0.47.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.47.1...@coveo/atomic@0.47.2) (2021-07-28)
 
 **Note:** Version bump only for package @coveo/atomic
