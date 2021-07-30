@@ -89,7 +89,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = buildSearchRequest(state);
+      const req = buildSearchRequest(state).request;
       const res = await searchAPIClient.search(req);
       if (!isErrorResponse(res)) {
         expect(res.success.searchUid).toEqual(newId);
@@ -158,7 +158,7 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.search
     should call PlatformClient.call with the right options`, () => {
-      const req = buildSearchRequest(state);
+      const req = buildSearchRequest(state).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -176,6 +176,7 @@ describe('search api client', () => {
           aq: '',
           debug: false,
           locale: state.configuration.search.locale,
+          timezone: state.configuration.search.timezone,
           numberOfResults: state.pagination.numberOfResults,
           sortCriteria: state.sortCriteria,
           firstResult: state.pagination.firstResult,
@@ -197,7 +198,7 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.search multiple times
     should abort the previous pending requests`, () => {
       mockPlatformResponse(() => buildMockSearchEndpointResponse(), 3);
-      const req = buildSearchRequest(state);
+      const req = buildSearchRequest(state).request;
       searchAPIClient.search(req);
       searchAPIClient.search(req);
       searchAPIClient.search(req);
@@ -228,6 +229,8 @@ describe('search api client', () => {
           context: state.context.contextValues,
           pipeline: state.pipeline,
           searchHub: state.searchHub,
+          timezone: state.configuration.search.timezone,
+          locale: state.configuration.search.locale,
         },
         preprocessRequest: NoopPreprocessRequest,
       };
@@ -259,6 +262,8 @@ describe('search api client', () => {
           context: state.context.contextValues,
           pipeline: state.pipeline,
           searchHub: state.searchHub,
+          timezone: state.configuration.search.timezone,
+          locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
         },
         preprocessRequest: NoopPreprocessRequest,
@@ -318,7 +323,7 @@ describe('search api client', () => {
             delimitingCharacter: facetState.delimitingCharacter,
             ignoreValues: [],
             searchContext: {
-              ...buildSearchRequest(state),
+              ...buildSearchRequest(state).request,
               visitorId: expect.any(String),
             },
           },
@@ -356,7 +361,7 @@ describe('search api client', () => {
             delimitingCharacter: categoryFacet.delimitingCharacter,
             ignorePaths: [],
             searchContext: {
-              ...buildSearchRequest(state),
+              ...buildSearchRequest(state).request,
               visitorId: expect.any(String),
             },
           },
@@ -396,6 +401,8 @@ describe('search api client', () => {
           context: recommendationState.context.contextValues,
           pipeline: recommendationState.pipeline,
           searchHub: recommendationState.searchHub,
+          timezone: state.configuration.search.timezone,
+          locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
           tab: originLevel2,
           referrer: originLevel3,
@@ -439,6 +446,8 @@ describe('search api client', () => {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,
           searchHub: productRecommendationsState.searchHub,
+          timezone: state.configuration.search.timezone,
+          locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
           visitorId: expect.any(String),
           numberOfResults:
@@ -493,7 +502,9 @@ describe('search api client', () => {
       const response = new Response(body);
 
       PlatformClient.call = () => Promise.resolve(response);
-      const res = await searchAPIClient.search(buildSearchRequest(state));
+      const res = await searchAPIClient.search(
+        buildSearchRequest(state).request
+      );
       if (isErrorResponse(res)) {
         fail(
           'SearchAPIClient should not return an error when processing question answering'

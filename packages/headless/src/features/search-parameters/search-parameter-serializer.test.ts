@@ -1,3 +1,4 @@
+import {serializeRelativeDate} from '../../api/search/date/relative-date';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
@@ -66,16 +67,18 @@ describe('buildSearchParameterSerializer', () => {
     it('serializes the #df parameter correctly', () => {
       const date1 = '2010/01/01@05:00:00';
       const date2 = '2011/01/01@05:00:00';
-      const date3 = '2012/01/01@05:00:00';
+      const date3 = serializeRelativeDate({
+        period: 'next',
+        amount: 2,
+        unit: 'week',
+      });
 
       const df = {
         date: [
-          buildDateRange({start: date1, end: date2, useLocalTime: true}),
-          buildDateRange({start: date2, end: date3, useLocalTime: true}),
+          buildDateRange({start: date1, end: date2}),
+          buildDateRange({start: date2, end: date3}),
         ],
-        created: [
-          buildDateRange({start: date1, end: date2, useLocalTime: true}),
-        ],
+        created: [buildDateRange({start: date1, end: date2})],
       };
 
       const result = serialize({df});
@@ -211,7 +214,11 @@ describe('buildSearchParameterSerializer', () => {
     it('deserializes a date facet with multiple selections', () => {
       const date1 = '2010/01/01@05:00:00';
       const date2 = '2011/01/01@05:00:00';
-      const date3 = '2012/01/01@05:00:00';
+      const date3 = serializeRelativeDate({
+        period: 'next',
+        amount: 2,
+        unit: 'week',
+      });
 
       const rangeA = `${date1}..${date2}`;
       const rangeB = `${date2}..${date3}`;
@@ -224,13 +231,11 @@ describe('buildSearchParameterSerializer', () => {
             buildDateRange({
               start: date1,
               end: date2,
-              useLocalTime: true,
               state: 'selected',
             }),
             buildDateRange({
               start: date2,
               end: date3,
-              useLocalTime: true,
               state: 'selected',
             }),
           ],
@@ -247,7 +252,6 @@ describe('buildSearchParameterSerializer', () => {
       const expected = buildDateRange({
         start: date1,
         end: date2,
-        useLocalTime: true,
         state: 'selected',
       });
 

@@ -54,12 +54,14 @@ describe('buildSearchEngine', () => {
     const pipeline = 'newPipe';
     const searchHub = 'newHub';
     const locale = 'fr';
+    const timezone = 'Africa/Johannesburg';
 
     beforeEach(() => {
       options.configuration.search = {
         pipeline,
         searchHub,
         locale,
+        timezone,
       };
 
       initEngine();
@@ -75,6 +77,10 @@ describe('buildSearchEngine', () => {
 
     it('sets the searchHub correctly', () => {
       expect(engine.state.configuration.search.locale).toBe(locale);
+    });
+
+    it('sets the timezone correctly', () => {
+      expect(engine.state.configuration.search.timezone).toBe(timezone);
     });
   });
 });
