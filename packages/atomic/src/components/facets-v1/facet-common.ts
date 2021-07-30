@@ -21,12 +21,6 @@ export interface FacetValueProps {
   searchQuery?: string;
 }
 
-export interface FacetValueLabelHighlightProps {
-  displayValue: string;
-  searchQuery?: string;
-  isSelected: boolean;
-}
-
 export interface FacetValueIconRatingProps {
   numberOfTotalIcons: number;
   numberOfActiveIcons: number;
