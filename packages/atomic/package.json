@@ -59,7 +59,7 @@
     "@types/escape-html": "1.0.1",
     "@types/jest": "26.0.19",
     "@types/mustache": "4.1.0",
-    "@types/postcss-import": "12.0.0",
+    "@types/postcss-import": "12.0.1",
     "@types/puppeteer": "5.4.3",
     "autoprefixer": "10.2.6",
     "axe-core": "4.1.1",
