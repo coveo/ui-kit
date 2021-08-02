@@ -14,6 +14,6 @@ export class AtomicResultSectionTitleMetadata {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {
-    this.host.style.display = containsVisualElement(this.host) ? '' : 'none';
+    this.host.classList.toggle('empty', !containsVisualElement(this.host));
   }
 }

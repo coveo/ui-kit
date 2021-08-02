@@ -1,68 +1,98 @@
+@import './atomic-result-list-dividers.pcss';
+@import './atomic-result-list-cards.pcss';
+
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
 atomic-result-list {
-  table {
-    border-spacing: 0;
+  .list-root.display-list {
+    display: flex;
+    flex-direction: column;
 
-    th,
-    td {
-      font-family: var(--atomic-font-family);
-      border: 1px solid var(--atomic-neutral);
-      font-size: 0.75rem;
-      line-height: 1rem;
-
-      &:not(:first-child) {
-        border-left: none;
-      }
+    atomic-result {
+      width: auto;
     }
 
-    th {
-      background-color: var(--atomic-neutral-light);
-      border-bottom: none;
-      font-weight: bold;
-      color: black;
-
-      &:first-child {
-        border-top-left-radius: 1rem;
-      }
-
-      &:last-child {
-        border-top-right-radius: 1rem;
-      }
+    @screen desktop {
+      @apply atomic-list-with-dividers;
     }
 
-    td {
-      color: var(--atomic-neutral-dark);
-      border-top: none;
+    @screen mobile {
+      &.image-large {
+        @apply atomic-list-with-dividers;
+      }
+
+      &.image-small,
+      &.image-icon,
+      &.image-none {
+        @apply atomic-list-with-cards;
+      }
     }
   }
 
-  .list-root.density-comfortable {
-    th {
-      padding: 1rem 2rem;
+  .list-root.display-table {
+    table {
+      border-spacing: 0;
+
+      th,
+      td {
+        font-family: var(--atomic-font-family);
+        border: 1px solid var(--atomic-neutral);
+        font-size: 0.75rem;
+        line-height: 1rem;
+
+        &:not(:first-child) {
+          border-left: none;
+        }
+      }
+
+      th {
+        background-color: var(--atomic-neutral-light);
+        border-bottom: none;
+        font-weight: bold;
+        color: black;
+
+        &:first-child {
+          border-top-left-radius: 1rem;
+        }
+
+        &:last-child {
+          border-top-right-radius: 1rem;
+        }
+      }
+
+      td {
+        color: var(--atomic-neutral-dark);
+        border-top: none;
+      }
     }
 
-    td {
-      padding: 2rem;
-    }
-  }
+    &.density-comfortable {
+      th {
+        padding: 1rem 2rem;
+      }
 
-  .list-root.density-normal {
-    th {
-      padding: 1rem 1.5rem;
-    }
-
-    td {
-      padding: 1.5rem;
-    }
-  }
-
-  .list-root.density-compact {
-    th {
-      padding: 1rem;
+      td {
+        padding: 2rem;
+      }
     }
 
-    td {
-      padding: 1rem;
+    &.density-normal {
+      th {
+        padding: 1rem 1.5rem;
+      }
+
+      td {
+        padding: 1.5rem;
+      }
+    }
+
+    &.density-compact {
+      th {
+        padding: 1rem;
+      }
+
+      td {
+        padding: 1rem;
+      }
     }
   }
 }
