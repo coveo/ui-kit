@@ -209,7 +209,7 @@ export default class QuanticSearchBox extends LightningElement {
    * @param {KeyboardEvent & {target: {value : string}}} event
    */
   onKeyup(event) {
-    if (this.input.value == '') {
+    if (this.input.value === '') {
       this.clearButton.classList.remove('slds-visible');
       this.clearButton.classList.add('slds-hidden');
     } else {
