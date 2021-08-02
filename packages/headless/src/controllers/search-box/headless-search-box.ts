@@ -111,7 +111,7 @@ export interface SearchBoxState {
   isLoading: boolean;
 
   /**
-   * Determins if a query suggest request is in progress.
+   * Determines if a query suggest request is in progress.
    */
   isLoadingSuggestions: boolean;
 }
