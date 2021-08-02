@@ -209,7 +209,6 @@ export class AtomicColorFacet
         return (
           <ColorFacetCheckbox
             displayValue={displayValue}
-            partValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}

@@ -1,8 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {randomID} from '../../../utils/utils';
-import {ColorFacetValueProps} from '../facet-common';
+import {FacetValueProps} from '../facet-common';
 
-export const ColorFacetCheckbox: FunctionalComponent<ColorFacetValueProps> = (
+export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
   props,
   children
 ) => {
@@ -28,7 +28,7 @@ export const ColorFacetCheckbox: FunctionalComponent<ColorFacetValueProps> = (
         <button
           id={id}
           role="checkbox"
-          part={`value-${props.partValue}`}
+          part={`value-${props.displayValue}`}
           onClick={() => props.onClick()}
           aria-checked={props.isSelected.toString()}
           class="value-checkbox m-0.5 flex justify-center rounded focus:outline-none focus:border-primary-light bg-neutral-dark"
