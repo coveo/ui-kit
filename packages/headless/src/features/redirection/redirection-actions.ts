@@ -48,7 +48,6 @@ export const checkForRedirection = createAsyncThunk<
     validatePayload(payload, {
       defaultRedirectionUrl: new StringValue({
         emptyAllowed: false,
-        url: true,
       }),
     });
     const response = await searchAPIClient.plan(buildPlanRequest(getState()));
