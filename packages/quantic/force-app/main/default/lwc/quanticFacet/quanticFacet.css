@@ -1,18 +1,18 @@
-.facet__buttons, .facet-search__button-box {
+.facet__collapse {
     box-shadow: none;
 }
 
-.facet-input__wrapper {
+.facet__searchbox {
     width: 100%;
 }
 
-.facet-value__no-match {
+.facet__search-results_no-match {
    color: #8E959D;
    background-color: #F6F7F9;
    font-size: 12px;
 }
 
-.facet-search__more-matches{
+.facet__search-results_more-matches{
     color: #8E959D;
     font-size: 12px;
 }

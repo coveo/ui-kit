@@ -1,19 +1,19 @@
 <template>
   <template if:true={hasValues}>
     <lightning-card title={label}>
-      <button class="slds-button slds-button_icon slds-p-bottom_small facet__buttons" slot="actions" onclick={toggleFacetVisibility}>
+      <button class="slds-button slds-button_icon slds-p-bottom_small facet__collapse" slot="actions" onclick={toggleFacetVisibility}>
         <lightning-icon class="slds-button__icon" icon-name={facetIcon} size="x-small"></lightning-icon>
       </button>
   
       <template if:false={isCollapsed}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
           <template if:true={canShowMore}>
-            <div onchange={handleKeyUp} class="facet-input__wrapper">
-              <lightning-input class="facet__search-input slds-var-m-horizontal_large slds-p-bottom_x-small" name="Search" type="search" label="facet-input" variant="label-hidden" placeholder="Search"></lightning-input>
+            <div onchange={handleKeyUp} class="facet__searchbox">
+              <lightning-input class="facet__searchbox-input slds-var-m-horizontal_large slds-p-bottom_x-small" name="Search" type="search" label="facet-input" variant="label-hidden" placeholder="Search"></lightning-input>
             </div>
           </template>
           <template if:true={isAnyChecked}>
-            <button class="slds-button slds-button_icon slds-p-horizontal_large facet__buttons" value="clear" onclick={clearSelections}>
+            <button class="slds-button slds-button_icon slds-p-horizontal_large facet__collapse" value="clear" onclick={clearSelections}>
               <lightning-formatted-text class="slds-p-right_x-small" value="Clear"></lightning-formatted-text>
               <lightning-icon class="slds-button__icon slds-current-color" icon-name="utility:close" size="xx-small"></lightning-icon>
             </button>
@@ -33,12 +33,12 @@
             </template>
             <template if:false={hasSearchResults}>
               <li class="slds-var-m-around_small slds-grid">
-                <span class="slds-align_absolute-center slds-p-vertical_small slds-m-bottom_medium slds-p-horizontal_xx-large facet-value__no-match">No matches found for "{query}"</span>
+                <span class="slds-align_absolute-center slds-p-vertical_small slds-m-bottom_medium slds-p-horizontal_xx-large facet__search-results_no-match">No matches found for "{query}"</span>
               </li>
             </template>
             <template if:true={canShowMoreSearchResults}>
               <li class="slds-p-left_large slds-p-bottom_medium">
-                <span class="facet-search__more-matches">More matches for "{query}"</span>
+                <span class="facet__search-results_more-matches">More matches for "{query}"</span>
               </li>
             </template>
           </template>

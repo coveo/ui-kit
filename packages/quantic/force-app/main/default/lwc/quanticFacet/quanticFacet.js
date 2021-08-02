@@ -69,7 +69,7 @@ export default class QuanticFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
-    this.input = this.template.querySelector('.facet__search-input');
+    this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
   disconnectedCallback() {
