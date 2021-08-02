@@ -3,8 +3,8 @@
     <li class="slds-var-m-around_small slds-grid">
       <div class="slds-col">
         <input type="checkbox" checked onchange={onSelect} />
-        <span class="slds-var-m-horizontal_small nowrap"><b>{start} - {end}</b></span>
-        <span class="nowrap slds-text-body_small facet__number-of-results"><b>({item.numberOfResults})</b></span>
+        <span class="slds-var-m-horizontal_small nowrap facet__value_selected">{start} - {end}</span>
+        <span class="nowrap slds-text-body_small facet__number-of-results facet__value_selected">({item.numberOfResults})</span>
       </div>  
     </li>
   </template>

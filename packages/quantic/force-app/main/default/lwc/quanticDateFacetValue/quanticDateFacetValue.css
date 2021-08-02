@@ -7,3 +7,7 @@ li {
 .facet__number-of-results {
   color: gray;
 }
+
+.facet__value_selected{
+  font-weight: bold;
+}
