@@ -477,7 +477,7 @@ export namespace Components {
     }
     interface AtomicResultIcon {
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
@@ -1671,7 +1671,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultIcon {
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }

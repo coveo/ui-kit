@@ -20,7 +20,7 @@ export class AtomicResultIcon {
   @Element() host!: HTMLElement;
 
   /**
-   * Specifies the icon to display, either from the list of available icons or a direct link.
+   * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
    *
    * By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
    */
