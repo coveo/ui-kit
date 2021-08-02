@@ -204,6 +204,9 @@ export class AtomicColorFacet
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
+    const partValue = displayValue
+      .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
+      ?.toString();
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
@@ -233,7 +236,7 @@ export class AtomicColorFacet
             searchQuery={this.facetState.facetSearch.query}
           >
             <div
-              part={`value-${displayValue}`}
+              part={`value-${partValue}`}
               class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
             ></div>
             <FacetValueLabelHighlight

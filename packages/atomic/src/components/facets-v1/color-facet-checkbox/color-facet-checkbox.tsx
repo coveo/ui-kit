@@ -12,6 +12,9 @@ export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
     value: props.displayValue,
     count: props.numberOfResults,
   });
+  const partValue = props.displayValue
+    .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
+    ?.toString();
 
   return (
     <li
@@ -28,7 +31,7 @@ export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
         <button
           id={id}
           role="checkbox"
-          part={`value-${props.displayValue}`}
+          part={`value-${partValue}`}
           onClick={() => props.onClick()}
           aria-checked={props.isSelected.toString()}
           class="value-checkbox m-0.5 flex justify-center rounded focus:outline-none focus:border-primary-light bg-neutral-dark"
