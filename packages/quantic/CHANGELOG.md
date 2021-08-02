@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.42.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.41.1...@coveo/quantic@0.42.0) (2021-08-02)
+
+
+### Features
+
+* **quantic:** added url manager to searchinterface ([#1017](https://github.com/coveo/ui-kit/issues/1017)) ([a9f5497](https://github.com/coveo/ui-kit/commit/a9f54975efc81305ac52bf93f4db7486ac838c31))
+
+
+
+
+
 ## [0.41.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.41.0...@coveo/quantic@0.41.1) (2021-07-30)
 
 **Note:** Version bump only for package @coveo/quantic
