@@ -23,7 +23,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@react-native-async-storage/async-storage": "^1.13.3",
+        "@react-native-async-storage/async-storage": "^1.15.4",
         "cross-fetch": "^3.1.4"
     },
     "devDependencies": {
