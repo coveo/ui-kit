@@ -85,6 +85,11 @@ describe('headless standalone searchBox', () => {
     );
   });
 
+  it('when the redirectionUrl is a relative url, it does not throw', () => {
+    options.redirectionUrl = '/search-page';
+    expect(() => initController()).not.toThrow();
+  });
+
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],
