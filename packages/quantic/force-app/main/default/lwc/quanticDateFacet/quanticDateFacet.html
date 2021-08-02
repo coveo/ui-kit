@@ -5,7 +5,7 @@
         <lightning-icon class="slds-button__icon" icon-name={facetIconName} size="x-small"></lightning-icon>
       </button>
 
-      <template if:true={isBodyVisible}>
+      <template if:false={isCollapsed}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
           <template if:true={isAnyChecked}>
             <button class="slds-button slds-button_icon slds-p-horizontal_large facet__buttons" value="clear" onclick={clearSelections}>

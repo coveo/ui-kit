@@ -1,5 +1,8 @@
 import {LightningElement, track, api} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 
 export default class QuanticDateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
@@ -19,9 +22,9 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
-  isBodyVisible = true;
+  isCollapsed = false;
   /** @type {string} */
-  facetIconName = "utility:dash";
+  facetIconName = 'utility:dash';
   /** @type {boolean} */
   withSearch;
 
@@ -48,7 +51,6 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   disconnectedCallback() {
-
     if (this.unsubscribe) {
       this.unsubscribe();
     }
@@ -59,17 +61,19 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values.map(v => ({
-      ...v,
-      checked: v.state === 'selected'
-    })) || [];
+    return (
+      this.state.values.map((v) => ({
+        ...v,
+        checked: v.state === 'selected',
+      })) || []
+    );
   }
 
   get hasValues() {
     return this.values.length !== 0;
   }
 
-  get isAnyChecked(){
+  get isAnyChecked() {
     return this.state.hasActiveValues;
   }
 
@@ -80,12 +84,12 @@ export default class QuanticDateFacet extends LightningElement {
     this.facet.toggleSelect(evt.detail);
   }
 
-  clearSelections(){
+  clearSelections() {
     this.facet.deselectAll();
   }
 
-  toggleFacetVisibility(){
-    this.facetIconName = this.isBodyVisible ? "utility:add" : "utility:dash";
-    this.isBodyVisible = !this.isBodyVisible;
+  toggleFacetVisibility() {
+    this.facetIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.isCollapsed = !this.isCollapsed;
   }
 }

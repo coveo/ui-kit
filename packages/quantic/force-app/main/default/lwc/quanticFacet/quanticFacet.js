@@ -1,11 +1,7 @@
-import {
-  LightningElement,
-  track,
-  api
-} from 'lwc';
+import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
-  initializeWithHeadless
+  initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 
@@ -33,9 +29,9 @@ export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
-  isBodyVisible = true;
+  isCollapsed = false;
   /** @type {string} */
-  facetIcon = "utility:dash";
+  facetIcon = 'utility:dash';
   /** @type {HTMLInputElement} */
   input;
   /** @type {number} */
@@ -50,8 +46,8 @@ export default class QuanticFacet extends LightningElement {
     showLess,
     showMoreFacetValues,
     showLessFacetValues,
-  }
-  
+  };
+
   /**
    * @param {import("coveo").SearchEngine} engine
    */
@@ -61,7 +57,7 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriterion,
       facetSearch: {numberOfValues: this.numberOfValues},
-    }
+    };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -87,19 +83,21 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values.map(v => ({
-      ...v,
-      checked: v.state === 'selected',
-      highlightedResult: v.value,
-    })) || [];
+    return (
+      this.state.values.map((v) => ({
+        ...v,
+        checked: v.state === 'selected',
+        highlightedResult: v.value,
+      })) || []
+    );
   }
 
-  get query(){
+  get query() {
     return this.input.value;
   }
 
   get canShowMoreSearchResults() {
-    if(!this.facet){
+    if (!this.facet) {
       return false;
     }
     return this.facet.state.facetSearch.moreValuesAvailable;
@@ -123,35 +121,38 @@ export default class QuanticFacet extends LightningElement {
     return this.values.length !== 0;
   }
 
-  get isAnyChecked(){
+  get isAnyChecked() {
     return this.state.hasActiveValues;
   }
 
-  get hasSearchResults(){
+  get hasSearchResults() {
     return this.facet.state.facetSearch.values.length !== 0;
   }
 
-  get facetSearchResults(){
+  get facetSearchResults() {
     const results = this.facet.state.facetSearch.values;
-    return results.map(result => ({
+    return results.map((result) => ({
       value: result.rawValue,
       state: 'idle',
       numberOfResults: result.count,
       checked: false,
-      highlightedResult: this.highlightResult(result.displayValue, this.input.value),
+      highlightedResult: this.highlightResult(
+        result.displayValue,
+        this.input.value
+      ),
     }));
   }
 
-  get isSearchComplete(){
+  get isSearchComplete() {
     return !this.facet.state.isLoading;
   }
-  
+
   get showMoreFacetValuesLabel() {
-    return I18nUtils.format(this.labels.showMoreFacetValues, this.label)
+    return I18nUtils.format(this.labels.showMoreFacetValues, this.label);
   }
 
   get showLessFacetValuesLabel() {
-    return I18nUtils.format(this.labels.showLessFacetValues, this.label)
+    return I18nUtils.format(this.labels.showLessFacetValues, this.label);
   }
 
   /**
@@ -162,11 +163,10 @@ export default class QuanticFacet extends LightningElement {
       displayValue: evt.detail.value,
       rawValue: evt.detail.value,
       count: evt.detail.numberOfResults,
-    
-    }
-    if(this.isFacetSearchActive){
+    };
+    if (this.isFacetSearchActive) {
       this.facet.facetSearch.select(specificSearchResult);
-    }else{
+    } else {
       this.facet.toggleSelect(evt.detail);
     }
     this.clearInput();
@@ -181,39 +181,39 @@ export default class QuanticFacet extends LightningElement {
     this.facet.showLessValues();
   }
 
-  clearSelections(){
+  clearSelections() {
     this.facet.deselectAll();
     this.clearInput();
   }
 
-  toggleFacetVisibility(){
-    this.facetIcon = this.isBodyVisible ? "utility:add" : "utility:dash";
-    this.isBodyVisible = !this.isBodyVisible;
+  toggleFacetVisibility() {
+    this.facetIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.isCollapsed = !this.isCollapsed;
   }
 
-  handleKeyUp(){
+  handleKeyUp() {
     console.log(this.canShowMore);
-    if(this.isSearchComplete){
+    if (this.isSearchComplete) {
       this.isFacetSearchActive = this.input.value !== '';
       this.facet.facetSearch.updateText(this.input.value);
       this.facet.facetSearch.search();
     }
   }
 
-  clearInput(){
+  clearInput() {
     this.input.value = '';
     this.updateState();
   }
 
-  highlightResult(result, query){
-    if(!query || query.trim() === ''){
+  highlightResult(result, query) {
+    if (!query || query.trim() === '') {
       return result;
     }
     const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
     return result.replace(regex, '<b>$1</b>');
   }
 
-  regexEncode(value){
+  regexEncode(value) {
     return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
   }
 }
