@@ -4,7 +4,7 @@ import {Component, Prop, h} from '@stencil/core';
  * The `atomic-result-badge` element renders a badge containing a field.
  * @part result-badge-element - The badge element with the background color and text color.
  * @part result-badge-icon - The optional icon displayed in the badge element.
- * @part result-badge-label - The label optionally shown in the badge element.
+ * @part result-badge-label - The optional icon displayed in the badge element.
  */
 @Component({
   tag: 'atomic-result-badge',
