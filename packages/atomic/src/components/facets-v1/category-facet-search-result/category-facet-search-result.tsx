@@ -1,14 +1,13 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
+import {CategoryFacetSearchResult as HeadlessCategoryFacetSearchResult} from '@coveo/headless';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
 interface CategoryFacetSearchResultProps {
-  path: string[];
+  result: HeadlessCategoryFacetSearchResult;
   i18n: i18n;
   field: string;
-  displayValue: string;
-  numberOfResults: number;
   onClick(): void;
   searchQuery: string;
 }
@@ -17,21 +16,23 @@ const SEPARATOR = '/';
 const ELLIPSIS = '...';
 const PATH_MAX_LENGTH = 3;
 
-export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchResultProps> = (
-  props
-) => {
-  const count = props.numberOfResults.toLocaleString(props.i18n.language);
-  const inLabel = props.i18n.t('in');
-  const allCategories = props.i18n.t('all-categories');
-  const localizedPath = props.path.length
-    ? props.path.map((value) =>
-        getFieldValueCaption(props.field, value, props.i18n)
-      )
+export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchResultProps> = ({
+  result,
+  field,
+  i18n,
+  onClick,
+  searchQuery,
+}) => {
+  const count = result.count.toLocaleString(i18n.language);
+  const inLabel = i18n.t('in');
+  const allCategories = i18n.t('all-categories');
+  const localizedPath = result.path.length
+    ? result.path.map((value) => getFieldValueCaption(field, value, i18n))
     : [allCategories];
-  const ariaLabel = props.i18n.t('under', {
-    child: props.i18n.t('facet-value', {
-      numberOfResults: props.numberOfResults,
-      value: props.displayValue,
+  const ariaLabel = i18n.t('under', {
+    child: i18n.t('facet-value', {
+      numberOfResults: result.count,
+      value: result.displayValue,
     }),
     parent: localizedPath.join(', '),
   });
@@ -62,18 +63,18 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
   }
 
   return (
-    <li key={props.displayValue}>
+    <li key={result.displayValue}>
       <button
         part="search-result"
-        onClick={() => props.onClick()}
+        onClick={() => onClick()}
         class="search-result w-full flex flex-col py-2.5 text-on-background ellipsed focus:outline-none"
         aria-label={ariaLabel}
       >
         <div class="w-full flex">
           <FacetValueLabelHighlight
-            displayValue={props.displayValue}
+            displayValue={result.displayValue}
             isSelected={false}
-            searchQuery={props.searchQuery}
+            searchQuery={searchQuery}
           ></FacetValueLabelHighlight>
           <span
             part="value-count"

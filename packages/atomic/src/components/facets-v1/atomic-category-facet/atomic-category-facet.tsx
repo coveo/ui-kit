@@ -335,12 +335,10 @@ export class AtomicCategoryFacet
       <ul part="search-results" class="mt-3">
         {this.facetState.facetSearch.values.map((value) => (
           <CategoryFacetSearchResult
-            displayValue={value.displayValue}
+            result={value}
             field={this.field}
             i18n={this.bindings.i18n}
             searchQuery={this.facetState.facetSearch.query}
-            numberOfResults={value.count}
-            path={value.path}
             onClick={() => this.facet.facetSearch.select(value)}
           ></CategoryFacetSearchResult>
         ))}

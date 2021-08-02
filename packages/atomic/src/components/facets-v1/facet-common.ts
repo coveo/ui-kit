@@ -20,9 +20,3 @@ export interface FacetValueProps {
   onClick(): void;
   searchQuery?: string;
 }
-
-export interface FacetValueIconRatingProps {
-  numberOfTotalIcons: number;
-  numberOfActiveIcons: number;
-  icon: string;
-}
