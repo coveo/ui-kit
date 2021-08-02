@@ -229,18 +229,6 @@
           <atomic-result-template>
             <template>
               <style>
-                .badge {
-                  display: inline-flex;
-                  place-items: center;
-                  height: 100%;
-                  padding: 0 0.75rem;
-                  background-color: var(--atomic-neutral-light);
-                  color: var(--atomic-neutral-dark);
-                  font-size: 0.75rem;
-                  line-height: 1rem;
-                  border-radius: 9999px;
-                }
-
                 .field {
                   white-space: nowrap;
                   margin-right: 0.5rem;
@@ -256,6 +244,20 @@
                   width: 100%;
                   height: 100%;
                 }
+
+                atomic-result-section-badges {
+                  display: flex;
+                }
+
+                atomic-result-section-badges > atomic-field-condition {
+                  display: inline-block;
+                  height: 100%;
+                }
+
+                .salesforce-badge::part(result-badge-element) {
+                  background-color: #44a1da;
+                  color: white;
+                }
               </style>
               <atomic-result-section-visual>
                 <atomic-size-condition maximum-width-inclusive="3rem">
@@ -267,8 +269,12 @@
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
-                  <span class="badge"> Salesforce </span>
+                  <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
                 </atomic-field-condition>
+                <atomic-result-badge
+                  field="language"
+                  icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
+                ></atomic-result-badge>
               </atomic-result-section-badges>
               <atomic-result-section-actions
                 ><atomic-result-quickview></atomic-result-quickview
