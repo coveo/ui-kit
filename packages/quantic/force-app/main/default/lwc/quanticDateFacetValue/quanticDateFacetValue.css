@@ -11,3 +11,11 @@ li {
 .facet__value_selected{
   font-weight: bold;
 }
+
+.facet__checkbox{
+  vertical-align: sub;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #DDDBDA;
+  border-radius: 2px;
+}
