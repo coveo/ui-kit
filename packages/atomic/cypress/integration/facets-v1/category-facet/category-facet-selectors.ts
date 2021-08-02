@@ -19,14 +19,7 @@ export const CategoryFacetSelectors = {
   valueLabel: () =>
     CategoryFacetSelectors.shadow().find('[part="value-label"]'),
   values: () => CategoryFacetSelectors.shadow().find('[part="values"]'),
-  selectedLinkValue: () =>
-    CategoryFacetSelectors.shadow().find(
-      '[part="value-link"][aria-pressed="true"]'
-    ),
-  idleLinkValue: () =>
-    CategoryFacetSelectors.shadow().find(
-      '[part="value-link"][aria-pressed="false"]'
-    ),
+  childValue: () => CategoryFacetSelectors.shadow().find('[part="value-link"]'),
   valueCount: () =>
     CategoryFacetSelectors.shadow().find('[part="value-count"]'),
   parentValue: () =>
@@ -37,4 +30,19 @@ export const CategoryFacetSelectors = {
     CategoryFacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () =>
     CategoryFacetSelectors.shadow().find('[part="show-less"]'),
+  searchInput: () =>
+    CategoryFacetSelectors.shadow().find('[part="search-input"]'),
+  searchClearButton: () =>
+    CategoryFacetSelectors.shadow().find('[part="search-clear-button"]'),
+  searchResults: () =>
+    CategoryFacetSelectors.shadow().find('[part="search-results"]'),
+  searchResult: () =>
+    CategoryFacetSelectors.shadow().find('[part="search-result"]'),
+  searchResultPath: () =>
+    CategoryFacetSelectors.shadow().find('[part="search-result-path"]'),
+  moreMatches: () =>
+    CategoryFacetSelectors.shadow().find('[part="more-matches"]'),
+  noMatches: () => CategoryFacetSelectors.shadow().find('[part="no-matches"]'),
+  valueHighlight: () =>
+    CategoryFacetSelectors.shadow().find('[part="search-highlight"]'),
 };

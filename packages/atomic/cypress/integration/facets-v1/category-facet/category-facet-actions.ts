@@ -9,7 +9,6 @@ export const canadaHierarchy = [
 ];
 export const canadaHierarchyIndex = [0, 1, 0, 4];
 export const togoHierarchy = ['Africa', 'Togo', 'Lome'];
-export const quebecHierarchy = ['North America', 'Canada', 'Quebec', 'Quebec'];
 export const hierarchicalField = 'geographicalhierarchy';
 export const defaultNumberOfValues = 5;
 
@@ -34,5 +33,9 @@ export const addCategoryFacet = (
 };
 
 export function selectChildValueAt(index: number) {
-  CategoryFacetSelectors.idleLinkValue().eq(index).click();
+  CategoryFacetSelectors.childValue().eq(index).click();
+}
+
+export function selectSearchResultAt(index: number) {
+  CategoryFacetSelectors.searchResult().eq(index).click();
 }

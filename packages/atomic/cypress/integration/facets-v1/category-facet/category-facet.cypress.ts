@@ -3,7 +3,6 @@ import {
   categoryFacetComponent,
 } from './category-facet-selectors';
 import * as CategoryFacetAssertions from './category-facet-assertions';
-import * as CategoryFacetSearchAssertions from './category-facet-search-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import {
@@ -13,8 +12,11 @@ import {
   defaultNumberOfValues,
   togoHierarchy,
   addCategoryFacet,
+  hierarchicalField,
+  selectSearchResultAt,
 } from './category-facet-actions';
 import {TestFixture} from '../../../fixtures/test-fixture';
+import {typeFacetSearchQuery} from '../facet-common-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -39,7 +41,7 @@ describe('Category Facet Test Suites', () => {
       CategoryFacetAssertions.assertNumberOfParentValues(0);
       CategoryFacetAssertions.assertDisplayShowMoreButton(true);
       CategoryFacetAssertions.assertDisplayShowLessButton(false);
-      CategoryFacetSearchAssertions.assertDisplaySearch(false);
+      CategoryFacetAssertions.assertDisplaySearchInput(false);
       CommonFacetAssertions.assertDisplayClearButton(
         CategoryFacetSelectors,
         false
@@ -384,5 +386,154 @@ describe('Category Facet Test Suites', () => {
     });
 
     CommonFacetAssertions.assertDisplayFacet(CategoryFacetSelectors, false);
+  });
+
+  describe('with "with-search" set to "true"', () => {
+    function setupWithFacetSearch() {
+      new TestFixture().with(addCategoryFacet({'with-search': 'true'})).init();
+    }
+
+    describe('verify rendering', () => {
+      before(() => {
+        setupWithFacetSearch();
+      });
+
+      CategoryFacetAssertions.assertDisplaySearchInput(true);
+    });
+
+    describe('when searching for a value that returns many results', () => {
+      const query = 'mal';
+      function setupSearchFor() {
+        setupWithFacetSearch();
+        typeFacetSearchQuery(CategoryFacetSelectors, query);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSearchFor);
+
+        CommonAssertions.assertAccessibility(categoryFacetComponent);
+        CategoryFacetAssertions.assertNumberOfFacetSearchResults(
+          defaultNumberOfValues
+        );
+        CommonFacetAssertions.assertDisplayMoreMatchesFound(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertDisplayNoMatchesFound(
+          CategoryFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertMoreMatchesFoundContainsQuery(
+          CategoryFacetSelectors,
+          query
+        );
+        CategoryFacetAssertions.assertDisplayShowMoreButton(false);
+        CommonFacetAssertions.assertDisplaySearchClearButton(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertHighlightsResults(
+          CategoryFacetSelectors,
+          query
+        );
+      });
+
+      describe('verify analytics', () => {
+        before(setupSearchFor);
+
+        CommonFacetAssertions.assertLogFacetSearch(hierarchicalField);
+      });
+
+      describe('when selecting a search result', () => {
+        function setupSelectSearchResult() {
+          setupSearchFor();
+          selectSearchResultAt(2);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSelectSearchResult);
+
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayClearButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
+          CategoryFacetAssertions.assertNumberOfChildValues(1);
+          CategoryFacetAssertions.assertNumberOfParentValues(2);
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+        });
+      });
+
+      describe('when clearing the facet search results', () => {
+        function setupClearFacetSearchResults() {
+          setupSearchFor();
+          CategoryFacetSelectors.searchClearButton().click();
+        }
+
+        describe('verify rendering', () => {
+          before(setupClearFacetSearchResults);
+
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+        });
+      });
+    });
+
+    describe('when searching for a value that returns no results', () => {
+      const query = 'nonono';
+      function setupSearchForNoValues() {
+        setupWithFacetSearch();
+        typeFacetSearchQuery(CategoryFacetSelectors, query);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSearchForNoValues);
+
+        CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
+        CommonFacetAssertions.assertDisplayMoreMatchesFound(
+          CategoryFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayNoMatchesFound(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertNoMatchesFoundContainsQuery(
+          CategoryFacetSelectors,
+          query
+        );
+        CommonFacetAssertions.assertDisplaySearchClearButton(
+          CategoryFacetSelectors,
+          true
+        );
+      });
+    });
   });
 });

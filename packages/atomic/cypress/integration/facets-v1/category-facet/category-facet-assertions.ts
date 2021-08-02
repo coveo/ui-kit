@@ -9,14 +9,17 @@ import {
   BreadcrumbSelectors,
 } from './category-facet-selectors';
 import {hierarchicalField} from './category-facet-actions';
-import {assertNumberOfIdleLinkValues} from '../facet-common-assertions';
-
-function should(should: boolean) {
-  return should ? 'should' : 'should not';
-}
+import {should} from '../../common-assertions';
 
 export function assertNumberOfChildValues(value: number) {
-  assertNumberOfIdleLinkValues(CategoryFacetSelectors, value);
+  it(`should display ${value} number of idle link values`, () => {
+    if (value > 0) {
+      CategoryFacetSelectors.childValue().its('length').should('eq', value);
+      return;
+    }
+
+    CategoryFacetSelectors.childValue().should('not.exist');
+  });
 }
 
 export function assertNumberOfParentValues(value: number) {
@@ -181,7 +184,7 @@ export function assertValuesSortedAlphanumerically() {
 
 export function assertFirstChildContains(value: string) {
   it(`first child value should contain ${value}`, () => {
-    CategoryFacetSelectors.idleLinkValue().first().contains(value);
+    CategoryFacetSelectors.childValue().first().contains(value);
   });
 }
 
@@ -190,5 +193,24 @@ export function assertNumberOfSearchResults(numberOfResults: number) {
     cy.get(ResultListSelectors.component)
       .find(ResultListSelectors.result)
       .should('have.length', numberOfResults);
+  });
+}
+
+export function assertDisplaySearchInput(display: boolean) {
+  it(`${should(display)} display a the facet search input`, () => {
+    CategoryFacetSelectors.searchInput().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertNumberOfFacetSearchResults(value: number) {
+  it(`should display ${value} number of facet search results`, () => {
+    if (value > 0) {
+      CategoryFacetSelectors.searchResult().its('length').should('eq', value);
+      return;
+    }
+
+    CategoryFacetSelectors.searchResult().should('not.exist');
   });
 }
