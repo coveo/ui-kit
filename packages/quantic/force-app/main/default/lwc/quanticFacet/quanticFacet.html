@@ -7,13 +7,13 @@
   
       <template if:false={isCollapsed}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
-          <template if:true={canShowMore}>
+          <template if:false={canShowMore}>
             <div onchange={handleKeyUp} class="facet__searchbox">
               <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-p-bottom_x-small" name="Search" type="search" label="facet-input" variant="label-hidden" placeholder="Search"></lightning-input>
             </div>
           </template>
           <template if:true={isAnyChecked}>
-            <button class="slds-button slds-button_icon slds-p-horizontal_large facet__collapse" value="clear" onclick={clearSelections}>
+            <button class="slds-button slds-button_icon slds-p-horizontal_small facet__collapse" value="clear" onclick={clearSelections}>
               <lightning-formatted-text class="slds-p-right_x-small" value="Clear"></lightning-formatted-text>
               <lightning-icon class="slds-button__icon slds-current-color" icon-name="utility:close" size="xx-small"></lightning-icon>
             </button>
@@ -37,7 +37,7 @@
               </li>
             </template>
             <template if:true={canShowMoreSearchResults}>
-              <li class="slds-p-left_large slds-p-bottom_medium">
+              <li class="slds-p-left_small slds-p-bottom_medium">
                 <span class="facet__search-results_more-matches">More matches for "{query}"</span>
               </li>
             </template>
