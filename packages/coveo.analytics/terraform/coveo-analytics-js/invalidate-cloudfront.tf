@@ -1,4 +1,4 @@
-variable "package_json_major_version" {
+variable "package_version" {
   description = "Defines the major version that has just been deployed"
 }
 
@@ -8,7 +8,7 @@ data "aws_ssm_parameter" "svc_coveoanalyticsjs_secret" {
 
 resource "null_resource" "invalidate-cloudfront" {
   provisioner "local-exec" {
-    command = "aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths \"/coveo.analytics.js/${var.package_json_major_version}/*\""
+    command = "aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths \"/coveo.analytics.js/${var.package_version}/*\""
 
     environment = {
       CLOUDFRONT_DISTRIBUTION_ID="E2VWLFSCSD1GLA"

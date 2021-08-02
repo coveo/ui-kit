@@ -113,6 +113,7 @@ pipeline {
             "TF_VAR_package_json_major_version=${env.PACKAGE_JSON_MAJOR_VERSION}"
           ]
           deploymentPackage.command(command: 'package create', parameters: [
+            version: env.PACKAGE_JSON_MAJOR_VERSION,
             resolve: tgfResolveParameter,
             withDeploy: IS_MASTER,
             dryRun: !IS_MASTER

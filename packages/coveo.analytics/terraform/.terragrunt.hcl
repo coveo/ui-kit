@@ -1,3 +1,3 @@
 inputs = {
-  project = "coveo.analytics.js"
+  project = "coveo-analytics-js"
 }
