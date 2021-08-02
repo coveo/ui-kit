@@ -32,7 +32,7 @@ import {
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options';
 
-export {StandaloneSearchBoxOptions};
+export {StandaloneSearchBoxOptions, StandaloneSearchBoxAnalytics};
 
 export interface StandaloneSearchBoxProps {
   options: StandaloneSearchBoxOptions;
@@ -58,7 +58,7 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
    * The analytics data to send when performing the first query on the search page the user is redirected to.
    */
-  analytics: StandaloneSearchBoxAnalyticsData;
+  analytics: StandaloneSearchBoxAnalytics;
 
   /**
    * The Url to redirect to.
@@ -81,7 +81,7 @@ interface OmniboxFromLinkData {
   metadata: OmniboxSuggestionMetadata;
 }
 
-type StandaloneSearchBoxAnalyticsData =
+type StandaloneSearchBoxAnalytics =
   | InitialData
   | SearchFromLinkData
   | OmniboxFromLinkData;
@@ -121,7 +121,7 @@ export function buildStandaloneSearchBox(
 
   const searchBox = buildSearchBox(engine, {options});
 
-  let analytics: StandaloneSearchBoxAnalyticsData = {
+  let analytics: StandaloneSearchBoxAnalytics = {
     cause: '',
     metadata: null,
   };

@@ -116,11 +116,14 @@ import {
   buildSmartSnippet,
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
   buildSmartSnippetQuestionsList,
+  loadQueryActions,
+  StandaloneSearchBoxAnalytics,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
 import {relativeDateRanges} from '../components/relative-date-facet/relative-date-utils';
+import {standaloneSearchBoxStorageKey} from '../components/standalone-search-box/standalone-search-box-storage-key';
 
 declare global {
   interface Window {
@@ -357,7 +360,37 @@ export class SearchPage extends Component {
       return;
     }
 
+    const data = localStorage.getItem(standaloneSearchBoxStorageKey);
+
+    if (data) {
+      this.executeFirstSearchAfterStandaloneSearchBoxRedirect(data);
+      return;
+    }
+
     this.engine.executeFirstSearch();
+  }
+
+  private executeFirstSearchAfterStandaloneSearchBoxRedirect(data: string) {
+    localStorage.removeItem(standaloneSearchBoxStorageKey);
+    const parsed: {
+      value: string;
+      analytics: StandaloneSearchBoxAnalytics;
+    } = JSON.parse(data);
+    const {value, analytics} = parsed;
+    const {cause, metadata} = analytics;
+
+    const {updateQuery} = loadQueryActions(this.engine);
+    const {logOmniboxFromLink, logSearchFromLink} = loadSearchAnalyticsActions(
+      this.engine
+    );
+
+    const event =
+      metadata && cause === 'omniboxFromLink'
+        ? logOmniboxFromLink(metadata)
+        : logSearchFromLink();
+
+    this.engine.dispatch(updateQuery({q: value}));
+    this.engine.executeFirstSearch(event);
   }
 
   private updateAnalyticsContext() {
