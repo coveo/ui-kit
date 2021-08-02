@@ -3,31 +3,6 @@
 
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
 atomic-result-list {
-  .list-root.display-list {
-    display: flex;
-    flex-direction: column;
-
-    atomic-result {
-      width: auto;
-    }
-
-    @screen desktop {
-      @apply atomic-list-with-dividers;
-    }
-
-    @screen mobile {
-      &.image-large {
-        @apply atomic-list-with-dividers;
-      }
-
-      &.image-small,
-      &.image-icon,
-      &.image-none {
-        @apply atomic-list-with-cards;
-      }
-    }
-  }
-
   .list-root.display-table {
     table {
       border-spacing: 0;
@@ -92,6 +67,31 @@ atomic-result-list {
 
       td {
         padding: 1rem;
+      }
+    }
+  }
+
+  .list-root.display-list {
+    display: flex;
+    flex-direction: column;
+
+    atomic-result {
+      width: auto;
+    }
+
+    @screen desktop {
+      @apply atomic-list-with-dividers;
+    }
+
+    @screen mobile {
+      &.image-large {
+        @apply atomic-list-with-dividers;
+      }
+
+      &.image-small,
+      &.image-icon,
+      &.image-none {
+        @apply atomic-list-with-cards;
       }
     }
   }
