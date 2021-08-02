@@ -13,7 +13,7 @@ resource "null_resource" "invalidate-cloudfront" {
     environment = {
       CLOUDFRONT_DISTRIBUTION_ID="E2VWLFSCSD1GLA"
       AWS_ACCESS_KEY_ID="AKIAYKDJLZITZZKEN7WY"
-      AWS_SECRET_ACCESS_KEY=data.aws_ssm_parameter.svc_coveoanalyticsjs_secret
+      AWS_SECRET_ACCESS_KEY=data.aws_ssm_parameter.svc_coveoanalyticsjs_secret.value
     }
   }
 }
