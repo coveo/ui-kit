@@ -98,6 +98,7 @@ describe('headless standalone searchBox', () => {
       })),
       redirectTo: state.redirection.redirectTo,
       isLoading: false,
+      isLoadingSuggestions: false,
       analytics: {
         cause: '',
         metadata: null,
