@@ -6,21 +6,31 @@ export const BreadcrumbSelectors = {
     BreadcrumbSelectors.shadow().find('[part="breadcrumb"]'),
 };
 
-export const categoryFacetComponent = 'atomic-category-facet';
+export const categoryFacetComponent = 'atomic-category-facet-v1';
 export const CategoryFacetSelectors = {
   shadow: () => cy.get(categoryFacetComponent).shadow(),
   wrapper: () => CategoryFacetSelectors.shadow().find('[part="facet"]'),
-  label: () => CategoryFacetSelectors.shadow().find('[part="label"]'),
+  labelButton: () =>
+    CategoryFacetSelectors.shadow().find('[part="label-button"]'),
   placeholder: () =>
     CategoryFacetSelectors.shadow().find('[part="placeholder"]'),
   clearButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="clear-button"]'),
+    CategoryFacetSelectors.shadow().find('[part="all-categories-button"]'),
   valueLabel: () =>
     CategoryFacetSelectors.shadow().find('[part="value-label"]'),
+  values: () => CategoryFacetSelectors.shadow().find('[part="values"]'),
+  selectedLinkValue: () =>
+    CategoryFacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="true"]'
+    ),
+  idleLinkValue: () =>
+    CategoryFacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="false"]'
+    ),
   valueCount: () =>
     CategoryFacetSelectors.shadow().find('[part="value-count"]'),
-  childValue: () => CategoryFacetSelectors.shadow().find('[part="child"]'),
-  parentValue: () => CategoryFacetSelectors.shadow().find('[part="parent"]'),
+  parentValue: () =>
+    CategoryFacetSelectors.shadow().find('[part="parent-button"]'),
   activeParentValue: () =>
     CategoryFacetSelectors.shadow().find('[part="active-parent"]'),
   showMoreButton: () =>

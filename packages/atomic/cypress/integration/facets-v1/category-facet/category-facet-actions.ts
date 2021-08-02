@@ -27,12 +27,12 @@ export const addCategoryFacet = (
   addTag(env, 'atomic-category-facet-v1', {
     field: hierarchicalField,
     label: 'Atlas',
-    numberOfValues: defaultNumberOfValues,
+    'number-of-values': defaultNumberOfValues,
     ...props,
   });
   withResultList && addTag(env, 'atomic-result-list', {});
 };
 
 export function selectChildValueAt(index: number) {
-  CategoryFacetSelectors.childValue().eq(index).click();
+  CategoryFacetSelectors.idleLinkValue().eq(index).click();
 }
