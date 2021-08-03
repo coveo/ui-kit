@@ -214,7 +214,7 @@ export class AtomicFacet
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
     const displayValue = getFieldValueCaption(
-      this.facetId!,
+      this.field,
       facetValue.value,
       this.bindings.i18n
     );

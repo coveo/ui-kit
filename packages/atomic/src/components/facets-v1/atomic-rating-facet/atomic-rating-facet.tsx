@@ -92,6 +92,10 @@ export class AtomicRatingFacet
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
+   * The minimum value of the field.
+   */
+  @Prop() public minValueInIndex = 1;
+  /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
@@ -143,12 +147,12 @@ export class AtomicRatingFacet
 
   private generateCurrentValues() {
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i < this.numberOfIntervals; i++) {
+    for (let i = this.minValueInIndex; i <= this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,
           end: Math.round((i + 1) * this.scaleFactor * 100) / 100,
-          endInclusive: true,
+          endInclusive: false,
         })
       );
     }
@@ -190,7 +194,7 @@ export class AtomicRatingFacet
           >
             <FacetValueIconRating
               numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.end}
+              numberOfActiveIcons={facetValue.start}
               icon={this.icon}
             ></FacetValueIconRating>
           </FacetValueCheckbox>
@@ -206,7 +210,7 @@ export class AtomicRatingFacet
           >
             <FacetValueIconRating
               numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.end}
+              numberOfActiveIcons={facetValue.start}
               icon={this.icon}
             ></FacetValueIconRating>
           </FacetValueLink>

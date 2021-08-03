@@ -3,8 +3,8 @@ name: Create Quantic Package
 env:
   SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
   SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com
-  SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY_DEV }}
-  SFDX_AUTH_JWT_CLIENT_ID: ${{ secrets.SFDX_ATH_JWT_CLIENT_ID }}
+  SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
   PACKAGE_ID: 0Ho6g000000k9g8CAA
 
 on:
@@ -61,12 +61,11 @@ jobs:
         working-directory: ./packages/quantic
         run: |
           echo "$SFDX_AUTH_JWT_KEY" > server.key
-          sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_JWT_CLIENT_ID --jwtkeyfile ./server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
+          sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
-          sfdx force:package:version:create --package $PACKAGE_ID --wait 30 -x --json >> package-version-result.json
+          sfdx force:package:version:create --package $PACKAGE_ID --installationkeybypass --wait 30 --json > package-version-result.json
           cat package-version-result.json
           PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId' -r)"
-          if [ $PACKAGE_VERSION_ID == "null" ]; then echo "Null Package ID"; exit 1; fi
           echo $PACKAGE_VERSION_ID

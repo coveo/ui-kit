@@ -41,6 +41,10 @@
         //   'BBC News': 'The BBC',
         //   amoreau: 'Alexandre Moreau',
         // });
+
+        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
+          '.html': 'html',
+        });
       })();
     </script>
     <style>
@@ -120,6 +124,48 @@
         margin: 10px 0;
       }
 
+      atomic-color-facet::part(value-dynamicscrmitem) {
+        background-image: url('/build/assets/mail.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-lithiumuser) {
+        background-image: url('/build/assets/folder.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-YouTubeVideo) {
+        background-image: url('build/assets/video.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-lithiummessage) {
+        background-image: url('build/assets/kb.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-lithiumthread) {
+        background-image: url('build/assets/salesforce-standard-post.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      atomic-color-facet::part(value-html) {
+        background-image: url('build/assets/webpage.svg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
       @media only screen and (max-width: 1023px) {
         atomic-search-interface {
           grid-template-rows: 16px 50px 16px auto 1fr;
@@ -187,6 +233,8 @@
       <div class="header"></div>
       <atomic-search-box></atomic-search-box>
       <atomic-facet-manager>
+        <atomic-category-facet-v1 field="geographicalhierarchy" label="World Atlas" with-search>
+        </atomic-category-facet-v1>
         <atomic-facet-v1 field="author" label="Authors"></atomic-facet-v1>
         <atomic-facet-v1 field="objecttype" label="Type" display-values-as="link"></atomic-facet-v1>
         <atomic-facet-v1 field="year" label="Year" display-values-as="box"></atomic-facet-v1>
@@ -212,6 +260,12 @@
         <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
         <atomic-rating-range-facet field="snrating" label="Rating Range" number-of-intervals="5">
         </atomic-rating-range-facet>
+        <atomic-color-facet
+          field="filetype"
+          label="Files"
+          number-of-values="6"
+          sort-criteria="occurrences"
+        ></atomic-color-facet>
       </atomic-facet-manager>
       <div class="results-container">
         <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
