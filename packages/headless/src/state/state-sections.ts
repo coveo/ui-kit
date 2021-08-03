@@ -26,6 +26,7 @@ import {HistoryState} from '../features/history/history-state';
 import {FoldingState} from '../features/folding/folding-state';
 import {TriggerState} from '../features/triggers/triggers-state';
 import {QuestionAnsweringState} from '../features/question-answering/question-answering-state';
+import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 
 export interface QuerySection {
   /**
@@ -160,6 +161,13 @@ export interface RedirectionSection {
    * The URL redirection triggered by the preprocessed query.
    */
   redirection: RedirectionState;
+}
+
+export interface StandaloneSearchBoxSection {
+  /**
+   * The set of standalone search boxes.
+   */
+  standaloneSearchBoxSet: StandaloneSearchBoxSetState;
 }
 
 export interface QuerySuggestionSection {

@@ -29,6 +29,7 @@ import {resultPreviewReducer} from '../features/result-preview/result-preview-sl
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {searchReducer} from '../features/search/search-slice';
 import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice';
+import {standaloneSearchBoxSetReducer} from '../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
 
@@ -61,6 +62,7 @@ export const resultPreview = resultPreviewReducer;
 export const version = versionReducer;
 export const triggers = triggerReducer;
 export const questionAnswering = questionAnsweringReducer;
+export const standaloneSearchBoxSet = standaloneSearchBoxSetReducer;
 
 export const history = undoable({
   actionTypes: {
