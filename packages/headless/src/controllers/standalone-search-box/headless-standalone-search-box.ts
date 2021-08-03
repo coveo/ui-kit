@@ -1,17 +1,20 @@
 import {
   configuration,
   query,
-  redirection,
   querySuggest,
+  standaloneSearchBoxSet,
 } from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {
-  buildOmniboxSuggestionMetadata,
-  OmniboxSuggestionMetadata,
-} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {buildOmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {updateQuery} from '../../features/query/query-actions';
-import {checkForRedirection} from '../../features/redirection/redirection-actions';
+import {
+  fetchRedirectUrl,
+  registerStandaloneSearchBox,
+  updateAnalyticsToOmniboxFromLink,
+  updateAnalyticsToSearchFromLink,
+} from '../../features/standalone-search-box-set/standalone-search-box-actions';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {
   ConfigurationSection,
   QuerySection,
@@ -66,26 +69,6 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
   redirectTo: string | null;
 }
 
-interface InitialData {
-  cause: '';
-  metadata: null;
-}
-
-interface SearchFromLinkData {
-  cause: 'searchFromLink';
-  metadata: null;
-}
-
-interface OmniboxFromLinkData {
-  cause: 'omniboxFromLink';
-  metadata: OmniboxSuggestionMetadata;
-}
-
-type StandaloneSearchBoxAnalytics =
-  | InitialData
-  | SearchFromLinkData
-  | OmniboxFromLinkData;
-
 /**
  * Creates a `StandaloneSearchBox` instance.
  *
@@ -120,8 +103,11 @@ export function buildStandaloneSearchBox(
   );
 
   const searchBox = buildSearchBox(engine, {options});
+  dispatch(
+    registerStandaloneSearchBox({id, redirectionUrl: options.redirectionUrl})
+  );
 
-  let analytics: StandaloneSearchBoxAnalytics = {
+  const analytics: StandaloneSearchBoxAnalytics = {
     cause: '',
     metadata: null,
   };
@@ -130,13 +116,19 @@ export function buildStandaloneSearchBox(
     ...searchBox,
 
     updateText(value: string) {
-      analytics = buildSearchFromLinkData();
       searchBox.updateText(value);
+      dispatch(updateAnalyticsToSearchFromLink({id}));
     },
 
     selectSuggestion(value: string) {
-      analytics = buildOmniboxFromLinkData(getState(), id, value);
+      const metadata = buildOmniboxSuggestionMetadata(getState(), {
+        id,
+        suggestion: value,
+      });
+
       dispatch(selectQuerySuggestion({id, expression: value}));
+      dispatch(updateAnalyticsToOmniboxFromLink({id, metadata}));
+
       this.submit();
     },
 
@@ -147,9 +139,7 @@ export function buildStandaloneSearchBox(
           enableQuerySyntax: options.enableQuerySyntax,
         })
       );
-      dispatch(
-        checkForRedirection({defaultRedirectionUrl: options.redirectionUrl})
-      );
+      dispatch(fetchRedirectUrl({id}));
     },
 
     get state() {
@@ -171,24 +161,11 @@ function loadStandaloneSearchBoxReducers(
     QuerySection &
     QuerySuggestionSection
 > {
-  engine.addReducers({redirection, configuration, query, querySuggest});
+  engine.addReducers({
+    standaloneSearchBoxSet,
+    configuration,
+    query,
+    querySuggest,
+  });
   return true;
-}
-
-function buildSearchFromLinkData(): SearchFromLinkData {
-  return {
-    cause: 'searchFromLink',
-    metadata: null,
-  };
-}
-
-function buildOmniboxFromLinkData(
-  state: QuerySuggestionSection,
-  id: string,
-  suggestion: string
-): OmniboxFromLinkData {
-  return {
-    cause: 'omniboxFromLink',
-    metadata: buildOmniboxSuggestionMetadata(state, {id, suggestion}),
-  };
 }

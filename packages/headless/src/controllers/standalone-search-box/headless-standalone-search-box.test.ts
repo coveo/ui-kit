@@ -3,7 +3,6 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxOptions,
 } from './headless-standalone-search-box';
-import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {createMockState} from '../../test/mock-state';
 import {updateQuery} from '../../features/query/query-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -20,9 +19,15 @@ import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-
 import {
   configuration,
   query,
-  redirection,
+  standaloneSearchBoxSet,
   querySuggest,
 } from '../../app/reducers';
+import {
+  fetchRedirectUrl,
+  registerStandaloneSearchBox,
+  updateAnalyticsToOmniboxFromLink,
+  updateAnalyticsToSearchFromLink,
+} from '../../features/standalone-search-box-set/standalone-search-box-actions';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -56,11 +61,19 @@ describe('headless standalone searchBox', () => {
 
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      redirection,
+      standaloneSearchBoxSet,
       configuration,
       query,
       querySuggest,
     });
+  });
+
+  it('dispatches #registerStandaloneSearchBox with the correct options', () => {
+    const action = registerStandaloneSearchBox({
+      id,
+      redirectionUrl: options.redirectionUrl,
+    });
+    expect(engine.actions).toContainEqual(action);
   });
 
   it('when no id is passed, it creates an id prefixed with standalone_search_box', () => {
@@ -113,13 +126,9 @@ describe('headless standalone searchBox', () => {
       searchBox.updateText(query);
     });
 
-    it('sets the analytics cause to "searchFromLink"', () => {
-      searchBox.updateText('');
-
-      expect(searchBox.state.analytics).toEqual({
-        cause: 'searchFromLink',
-        metadata: null,
-      });
+    it('dispatches an action to update analytics to searchFromLink', () => {
+      const action = updateAnalyticsToSearchFromLink({id});
+      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateQuerySetQuery', () => {
@@ -138,18 +147,18 @@ describe('headless standalone searchBox', () => {
       );
     });
 
-    it('sets #state.analytics to the correct data', () => {
-      searchBox.selectSuggestion('a');
+    it('dispatchs an action to update analytics to omniboxFromLink', () => {
+      const metadata = {
+        partialQueries: [],
+        partialQuery: '',
+        suggestionRanking: -1,
+        suggestions: [],
+      };
 
-      expect(searchBox.state.analytics).toEqual({
-        cause: 'omniboxFromLink',
-        metadata: {
-          partialQueries: [],
-          partialQuery: undefined,
-          suggestionRanking: -1,
-          suggestions: [],
-        },
-      });
+      const action = updateAnalyticsToOmniboxFromLink({id, metadata});
+
+      searchBox.selectSuggestion('a');
+      expect(engine.actions).toContainEqual(action);
     });
 
     it('calls #submit', () => {
@@ -170,11 +179,11 @@ describe('headless standalone searchBox', () => {
       );
     });
 
-    it('should dispatch a checkForRedirection action', () => {
+    it('should dispatch a fetchRedirectUrl action', () => {
       searchBox.submit();
 
       const action = engine.actions.find(
-        (a) => a.type === checkForRedirection.pending.type
+        (a) => a.type === fetchRedirectUrl.pending.type
       );
       expect(action).toBeTruthy();
     });

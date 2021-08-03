@@ -7,10 +7,15 @@ export type StandaloneSearchBoxSetState = Record<
 
 export type StandaloneSearchBoxEntry = {
   defaultRedirectionUrl: string;
-  analytics: InitialData | SearchFromLinkData | OmniboxFromLinkData;
+  analytics: StandaloneSearchBoxAnalytics;
   redirectTo: string;
   isLoading: boolean;
 };
+
+export type StandaloneSearchBoxAnalytics =
+  | InitialData
+  | SearchFromLinkData
+  | OmniboxFromLinkData;
 
 interface InitialData {
   cause: '';
