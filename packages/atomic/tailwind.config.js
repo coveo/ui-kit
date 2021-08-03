@@ -51,7 +51,8 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['visited'],
+      textColor: ['visited', 'group-focus'],
+      backgroundColor: ['group-focus'],
     },
   },
   plugins: [],
