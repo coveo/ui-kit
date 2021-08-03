@@ -3,7 +3,7 @@ import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
 } from './standalone-search-box-actions';
-import {standaloneSearchBoxReducer} from './standalone-search-box-set-slice';
+import {standaloneSearchBoxSetReducer} from './standalone-search-box-set-slice';
 import {StandaloneSearchBoxSetState} from './standalone-search-box-set-state';
 
 describe('standalone search box slice', () => {
@@ -17,7 +17,7 @@ describe('standalone search box slice', () => {
   });
 
   it('initializes the state to an empty object', () => {
-    const finalState = standaloneSearchBoxReducer(undefined, {type: ''});
+    const finalState = standaloneSearchBoxSetReducer(undefined, {type: ''});
     expect(finalState).toEqual({});
   });
 
@@ -26,7 +26,7 @@ describe('standalone search box slice', () => {
       const id = 'new id';
       const redirectionUrl = 'url';
       const action = registerStandaloneSearchBox({id, redirectionUrl});
-      const finalState = standaloneSearchBoxReducer(state, action);
+      const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(finalState[id]).toEqual(
         buildMockStandaloneSearchBoxEntry({
@@ -37,7 +37,7 @@ describe('standalone search box slice', () => {
 
     it('when the id exists, it does not register the payload', () => {
       const action = registerStandaloneSearchBox({id, redirectionUrl: 'url'});
-      const finalState = standaloneSearchBoxReducer(state, action);
+      const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(state[id]).toEqual(finalState[id]);
     });
@@ -46,14 +46,14 @@ describe('standalone search box slice', () => {
   describe('#fetchRedirectUrl.pending', () => {
     it('when the id exists, it sets isLoading to true', () => {
       const action = fetchRedirectUrl.pending('', {id});
-      const finalState = standaloneSearchBoxReducer(state, action);
+      const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(finalState[id]!.isLoading).toBe(true);
     });
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.pending('', {id: 'invalid'});
-      expect(() => standaloneSearchBoxReducer(state, action)).not.toThrow();
+      expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 
@@ -62,14 +62,14 @@ describe('standalone search box slice', () => {
       state[id]!.isLoading = true;
 
       const action = fetchRedirectUrl.rejected(null, '', {id});
-      const finalState = standaloneSearchBoxReducer(state, action);
+      const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(finalState[id]!.isLoading).toBe(false);
     });
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.rejected(null, '', {id: 'invalid'});
-      expect(() => standaloneSearchBoxReducer(state, action)).not.toThrow();
+      expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 
@@ -78,7 +78,7 @@ describe('standalone search box slice', () => {
     it sets #redirectTo to the payload value`, () => {
       const url = '/search-page';
       const action = fetchRedirectUrl.fulfilled(url, '', {id});
-      const finalState = standaloneSearchBoxReducer(state, action);
+      const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(finalState[id]!.redirectTo).toBe(url);
     });
@@ -91,14 +91,14 @@ describe('standalone search box slice', () => {
       });
 
       const action = fetchRedirectUrl.fulfilled('', '', {id});
-      const finalState = standaloneSearchBoxReducer(state, action);
+      const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(finalState[id]!.redirectTo).toBe(url);
     });
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.fulfilled('', '', {id: 'invalid url'});
-      expect(() => standaloneSearchBoxReducer(state, action)).not.toThrow();
+      expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 });

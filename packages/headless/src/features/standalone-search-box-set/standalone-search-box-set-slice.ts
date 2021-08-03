@@ -8,7 +8,7 @@ import {
   StandaloneSearchBoxEntry,
 } from './standalone-search-box-set-state';
 
-export const standaloneSearchBoxReducer = createReducer(
+export const standaloneSearchBoxSetReducer = createReducer(
   getStandaloneSearchBoxInitialState(),
   (builder) =>
     builder
