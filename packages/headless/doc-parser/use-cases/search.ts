@@ -409,9 +409,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadQuestionAnsweringActions',
   },
   {
-    initializer: 'loadRedirectionActions',
-  },
-  {
     initializer: 'loadSearchHubActions',
   },
   {

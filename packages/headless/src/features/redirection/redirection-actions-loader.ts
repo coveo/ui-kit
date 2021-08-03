@@ -32,6 +32,8 @@ export interface RedirectionActionCreators {
 /**
  * Loads the `redirection` reducer and returns possible action creators.
  *
+ * @deprecated - Please use `loadStandaloneSearchBoxSetActions` instead.
+ *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */

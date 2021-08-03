@@ -19,7 +19,7 @@ import {
   ConfigurationSection,
   QuerySection,
   QuerySuggestionSection,
-  RedirectionSection,
+  StandaloneSearchBoxSection,
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {randomID} from '../../utils/utils';
@@ -139,7 +139,7 @@ export function buildStandaloneSearchBox(
 
     get state() {
       const state = getState();
-      const standaloneSearchBoxState = state.standaloneSearchBoxSet![id]!;
+      const standaloneSearchBoxState = state.standaloneSearchBoxSet[id]!;
       return {
         ...searchBox.state,
         isLoading: standaloneSearchBoxState.isLoading,
@@ -153,7 +153,7 @@ export function buildStandaloneSearchBox(
 function loadStandaloneSearchBoxReducers(
   engine: SearchEngine
 ): engine is SearchEngine<
-  RedirectionSection &
+  StandaloneSearchBoxSection &
     ConfigurationSection &
     QuerySection &
     QuerySuggestionSection
