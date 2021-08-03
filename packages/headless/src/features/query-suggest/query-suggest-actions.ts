@@ -138,9 +138,7 @@ export interface FetchQuerySuggestionsThunkReturn
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
   FetchQuerySuggestionsActionCreatorPayload,
-  AsyncThunkSearchOptions<StateNeededByQuerySuggest> & {
-    rejectValue: FetchQuerySuggestionsActionCreatorPayload;
-  }
+  AsyncThunkSearchOptions<StateNeededByQuerySuggest>
 >(
   'querySuggest/fetch',
 
@@ -155,7 +153,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     );
 
     if (isErrorResponse(response)) {
-      return rejectWithValue({id, ...response.error});
+      return rejectWithValue(response.error);
     }
 
     return {

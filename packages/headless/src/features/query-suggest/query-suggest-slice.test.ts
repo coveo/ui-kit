@@ -8,9 +8,11 @@ import {
 } from './query-suggest-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
-import {QuerySuggestSet, QuerySuggestState} from './query-suggest-state';
+import {QuerySuggestSet} from './query-suggest-state';
+import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
 
 describe('querySuggest slice', () => {
+  let state: QuerySuggestSet;
   const id = 'searchBox_1234';
 
   function getCompletions() {
@@ -27,102 +29,103 @@ describe('querySuggest slice', () => {
     return completions;
   }
 
-  function addToDefaultState(
-    querySuggest: Partial<QuerySuggestState>
-  ): QuerySuggestSet {
-    const qs = buildMockQuerySuggest({id, ...querySuggest});
-    return {[id]: qs};
-  }
+  beforeEach(() => {
+    state = {
+      [id]: buildMockQuerySuggest(),
+    };
+  });
 
   it('should have initial state', () => {
     expect(querySuggestReducer(undefined, {type: 'randomAction'})).toEqual({});
   });
 
   it('should handle registerQuerySuggest on initial state', () => {
-    const expectedState = addToDefaultState({q: 'test', count: 10});
-    expect(
-      querySuggestReducer(
-        undefined,
-        registerQuerySuggest({id, q: 'test', count: 10})
-      )
-    ).toEqual(expectedState);
+    const expectedState = buildMockQuerySuggest({id, q: 'test', count: 10});
+    const action = registerQuerySuggest({id, q: 'test', count: 10});
+    const finalState = querySuggestReducer(undefined, action);
+
+    expect(finalState[id]).toEqual(expectedState);
   });
 
-  it('should handle selectQuerySuggestion on existing state', () => {
-    const expectedState = addToDefaultState({
-      completions: getCompletions(),
-      q: 'some expression',
+  describe('selectQuerySuggestion', () => {
+    it('when the id is valid, it updates the query to the passed expression', () => {
+      state[id]!.q = 'some previous query';
+      const action = selectQuerySuggestion({id, expression: 'some expression'});
+      const finalState = querySuggestReducer(state, action);
+
+      expect(finalState[id]?.q).toBe('some expression');
     });
 
-    const existingState = addToDefaultState({
-      completions: getCompletions(),
-      q: 'some previous query',
+    it('when the id is invalid, it does not throw', () => {
+      const action = selectQuerySuggestion({id: 'invalid id', expression: ''});
+      expect(() => querySuggestReducer(state, action)).not.toThrow();
     });
-
-    expect(
-      querySuggestReducer(
-        existingState,
-        selectQuerySuggestion({id, expression: 'some expression'})
-      )
-    ).toEqual(expectedState);
   });
 
-  it('should handle clearQuerySuggest on existing state', () => {
-    const expectedState = addToDefaultState({
-      completions: [],
-      q: '',
-      partialQueries: [],
+  describe('clearQuerySuggest', () => {
+    it('when the id is valid, it clears the query, completions and partialQueries', () => {
+      state[id] = buildMockQuerySuggest({
+        completions: getCompletions(),
+        q: 'some query',
+        partialQueries: ['s', 'so', 'som', 'some'],
+      });
+
+      const expectedState = buildMockQuerySuggest({
+        completions: [],
+        q: '',
+        partialQueries: [],
+      });
+
+      const finalState = querySuggestReducer(state, clearQuerySuggest({id}));
+      expect(finalState[id]).toEqual(expectedState);
     });
-    const existingState = addToDefaultState({
-      completions: getCompletions(),
-      q: 'some query',
-      partialQueries: ['s', 'so', 'som', 'some'],
+
+    it('when the id is invalid, it does not throw', () => {
+      const action = clearQuerySuggest({id: 'invalid id'});
+      expect(() => querySuggestReducer(state, action)).not.toThrow();
     });
-    expect(querySuggestReducer(existingState, clearQuerySuggest({id}))).toEqual(
-      expectedState
-    );
   });
 
-  it(`when a query in the querySet is updated,
-  does not update the query suggest query if the id is missing`, () => {
-    const unknownId = '1';
-    const query = 'query';
+  describe('updateQuerySetQuery', () => {
+    it(`when a query in the querySet is updated,
+    does not update the query suggest query if the id is missing`, () => {
+      const unknownId = '1';
+      const action = updateQuerySetQuery({id: unknownId, query: 'query'});
+      const finalState = querySuggestReducer(state, action);
 
-    const action = updateQuerySetQuery({id: unknownId, query});
-    const finalState = querySuggestReducer(addToDefaultState({}), action);
+      expect(finalState[unknownId]).toBe(undefined);
+    });
 
-    expect(finalState[unknownId]).toBe(undefined);
-  });
+    it(`when a query in the querySet is updated,
+    it updates the query suggest query if the id exists`, () => {
+      const query = 'query';
 
-  it(`when a query in the querySet is updated,
-  it updates the query suggest query if the id exists`, () => {
-    const query = 'query';
+      const action = updateQuerySetQuery({id, query});
+      const finalState = querySuggestReducer(state, action);
 
-    const action = updateQuerySetQuery({id, query});
-    const finalState = querySuggestReducer(addToDefaultState({}), action);
-
-    expect(finalState[id]?.q).toBe(query);
+      expect(finalState[id]?.q).toBe(query);
+    });
   });
 
   describe('fetchQuerySuggestions', () => {
     describe('fetchQuerySuggestions.pending', () => {
-      const expectedState = addToDefaultState({
-        currentRequestId: 'the_right_id',
+      it('sets the currentRequestId to the the payload value', () => {
+        const requestId = 'the_right_id';
+        const action = fetchQuerySuggestions.pending(requestId, {id});
+        const finalState = querySuggestReducer(state, action);
+
+        expect(finalState[id]?.currentRequestId).toBe(requestId);
       });
 
-      const fetchQuerySuggestionsPendingAction = fetchQuerySuggestions.pending(
-        'the_right_id',
-        {id}
-      );
+      it('sets isLoading to true', () => {
+        const action = fetchQuerySuggestions.pending('', {id});
+        const finalState = querySuggestReducer(state, action);
+        expect(finalState[id]?.isLoading).toBe(true);
+      });
 
-      it('should handle fetchQuerySuggestions.pending on existing state', () => {
-        const existingState = addToDefaultState({
-          currentRequestId: 'the_wrong_id',
-        });
-
-        expect(
-          querySuggestReducer(existingState, fetchQuerySuggestionsPendingAction)
-        ).toEqual(expectedState);
+      it('when dispatching an id that is not registered, it does not throw', () => {
+        const action = fetchQuerySuggestions.pending('', {id: 'invalid id'});
+        expect(() => querySuggestReducer(state, action)).not.toThrow();
       });
     });
     describe('fetchQuerySuggestions.fulfilled', () => {
@@ -134,46 +137,75 @@ describe('querySuggest slice', () => {
       );
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
-      it(`when fetchQuerySuggestions.fulfilled has the right request id
-      should update the completions`, () => {
-        const expectedState = addToDefaultState({
-          currentRequestId: 'the_right_id',
-          completions,
+      it('when fetchQuerySuggestions has an invalid id, it does not throw', () => {
+        const id = 'invalid id';
+        const action = fetchQuerySuggestions.fulfilled({completions, id}, '', {
+          id,
         });
 
-        const existingState = addToDefaultState({
+        expect(() => querySuggestReducer(state, action)).not.toThrow();
+      });
+
+      it(`when fetchQuerySuggestions.fulfilled has the right request id
+      should update the completions`, () => {
+        state[id]!.currentRequestId = 'the_right_id';
+
+        const finalState = querySuggestReducer(
+          state,
+          fetchQuerySuggestionsFulfilledAction
+        );
+
+        expect(finalState[id]?.completions).toEqual(completions);
+      });
+
+      it(`when fetchQuerySuggestions.fulfilled has the right request id,
+      it sets isLoading to false`, () => {
+        state[id] = buildMockQuerySuggest({
+          currentRequestId: 'the_right_id',
+          isLoading: true,
+        });
+
+        const finalState = querySuggestReducer(
+          state,
+          fetchQuerySuggestionsFulfilledAction
+        );
+
+        expect(finalState[id]?.isLoading).toBe(false);
+      });
+
+      it(`when fetchQuerySuggestions.fulfilled has the right request id,
+      it sets the error to null`, () => {
+        state[id] = buildMockQuerySuggest({
+          error: buildMockSearchApiErrorWithStatusCode(),
           currentRequestId: 'the_right_id',
         });
-        expect(
-          querySuggestReducer(
-            existingState,
-            fetchQuerySuggestionsFulfilledAction
-          )
-        ).toMatchObject(expectedState);
+
+        const finalState = querySuggestReducer(
+          state,
+          fetchQuerySuggestionsFulfilledAction
+        );
+
+        expect(finalState[id]?.error).toBe(null);
       });
 
       it(`when fetchQuerySuggestions.fulfilled has the wrong request id
       should not update the completions`, () => {
-        const existingState = addToDefaultState({
-          currentRequestId: 'the_wrong_id',
-        });
+        state[id]!.currentRequestId = 'the_wrong_id';
 
         expect(
-          querySuggestReducer(
-            existingState,
-            fetchQuerySuggestionsFulfilledAction
-          )
-        ).toMatchObject(existingState);
+          querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction)
+        ).toMatchObject(state);
       });
 
       it('should add the executed query to the list of partialQueries', () => {
         const q = 'test';
-        const existingState = addToDefaultState({
+        state[id] = buildMockQuerySuggest({
           q,
           currentRequestId: 'the_right_id',
         });
+
         const nextState = querySuggestReducer(
-          existingState,
+          state,
           fetchQuerySuggestionsFulfilledAction
         );
         expect(nextState[id]?.partialQueries).toEqual([q]);
@@ -181,15 +213,40 @@ describe('querySuggest slice', () => {
 
       it('should encode `;` characters in the list of partialQueries', () => {
         const q = ';';
-        const existingState = addToDefaultState({
+        state[id] = buildMockQuerySuggest({
           q,
           currentRequestId: 'the_right_id',
         });
+
         const nextState = querySuggestReducer(
-          existingState,
+          state,
           fetchQuerySuggestionsFulfilledAction
         );
         expect(nextState[id]?.partialQueries).toEqual([encodeURIComponent(q)]);
+      });
+    });
+    describe('fetchQuerySuggestions.rejected', () => {
+      it('sets isLoading to false', () => {
+        state[id]!.isLoading = true;
+
+        const action = fetchQuerySuggestions.rejected(null, '', {id});
+        const finalState = querySuggestReducer(state, action);
+        expect(finalState[id]?.isLoading).toBe(false);
+      });
+
+      it('sets the error to the payload error', () => {
+        const action = fetchQuerySuggestions.rejected(null, 'hello', {id});
+        action.payload = buildMockSearchApiErrorWithStatusCode();
+
+        const finalState = querySuggestReducer(state, action);
+        expect(finalState[id]?.error).toEqual(action.payload);
+      });
+
+      it('when dispatching an id that does not exist, it does not throw', () => {
+        const action = fetchQuerySuggestions.rejected(null, 'hello', {
+          id: 'invalid id',
+        });
+        expect(() => querySuggestReducer(state, action)).not.toThrow();
       });
     });
   });
