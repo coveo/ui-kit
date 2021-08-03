@@ -451,6 +451,20 @@ export namespace Components {
          */
         "result": Result;
     }
+    interface AtomicResultBadge {
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Specifies the icon to display, either from the list of available icons or a direct link.
+         */
+        "icon"?: string;
+        /**
+          * The text to display instead of the field.
+         */
+        "label"?: string;
+    }
     interface AtomicResultDate {
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -463,7 +477,7 @@ export namespace Components {
     }
     interface AtomicResultIcon {
         /**
-          * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
@@ -933,6 +947,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultBadgeElement extends Components.AtomicResultBadge, HTMLStencilElement {
+    }
+    var HTMLAtomicResultBadgeElement: {
+        prototype: HTMLAtomicResultBadgeElement;
+        new (): HTMLAtomicResultBadgeElement;
+    };
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
     var HTMLAtomicResultDateElement: {
@@ -1149,6 +1169,7 @@ declare global {
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
@@ -1624,6 +1645,20 @@ declare namespace LocalJSX {
          */
         "result": Result;
     }
+    interface AtomicResultBadge {
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Specifies the icon to display, either from the list of available icons or a direct link.
+         */
+        "icon"?: string;
+        /**
+          * The text to display instead of the field.
+         */
+        "label"?: string;
+    }
     interface AtomicResultDate {
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -1636,7 +1671,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultIcon {
         /**
-          * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
@@ -1948,6 +1983,7 @@ declare namespace LocalJSX {
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
+        "atomic-result-badge": AtomicResultBadge;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
@@ -2014,6 +2050,7 @@ declare module "@stencil/core" {
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;

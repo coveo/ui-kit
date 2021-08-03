@@ -20,11 +20,13 @@ export class AtomicResultIcon {
   @Element() host!: HTMLElement;
 
   /**
-   * Specifies the icon to display from the list of available icons.
+   * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
    *
    * By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
    */
   @Prop() icon?: string;
+
+  private svg: string | null = null;
 
   private get defaultIcon() {
     const fileTypeValue = ResultTemplatesHelpers.getResultProperty(
@@ -41,14 +43,25 @@ export class AtomicResultIcon {
     return objectType || fileType || 'custom';
   }
 
-  public render() {
-    const icon = this.icon || this.defaultIcon;
-    const iconPath = getAssetPath(`./assets/${icon}.svg`);
+  private get isPath() {
+    return !!this.icon?.match(/^(https?:\/\/|\.\/|\.\.\/)/);
+  }
 
+  public async componentWillLoad() {
+    const icon = this.icon || this.defaultIcon;
+    const iconPath = this.isPath ? icon : getAssetPath(`./assets/${icon}.svg`);
+    const response = await fetch(iconPath);
+    this.svg =
+      response.status === 200 || response.status === 304
+        ? await response.text()
+        : null;
+  }
+
+  public render() {
     return (
       <Host
-        class={icon}
-        style={{'background-image': `url(${iconPath})`}}
+        class={!this.isPath ? this.icon || this.defaultIcon : ''}
+        innerHTML={this.svg}
       ></Host>
     );
   }
