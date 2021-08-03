@@ -107,11 +107,6 @@ export function buildStandaloneSearchBox(
     registerStandaloneSearchBox({id, redirectionUrl: options.redirectionUrl})
   );
 
-  const analytics: StandaloneSearchBoxAnalytics = {
-    cause: '',
-    metadata: null,
-  };
-
   return {
     ...searchBox,
 
@@ -144,10 +139,12 @@ export function buildStandaloneSearchBox(
 
     get state() {
       const state = getState();
+      const standaloneSearchBoxState = state.standaloneSearchBoxSet![id]!;
       return {
         ...searchBox.state,
-        redirectTo: state.redirection.redirectTo,
-        analytics,
+        isLoading: standaloneSearchBoxState.isLoading,
+        redirectTo: standaloneSearchBoxState.redirectTo,
+        analytics: standaloneSearchBoxState.analytics,
       };
     },
   };

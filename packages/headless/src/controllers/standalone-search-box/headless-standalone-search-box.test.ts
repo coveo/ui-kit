@@ -28,6 +28,9 @@ import {
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
 } from '../../features/standalone-search-box-set/standalone-search-box-actions';
+import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
+import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -49,9 +52,9 @@ describe('headless standalone searchBox', () => {
 
   function initState() {
     state = createMockState();
-    state.redirection.redirectTo = 'coveo.com';
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
+    state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry();
   }
 
   function initController() {
@@ -109,7 +112,7 @@ describe('headless standalone searchBox', () => {
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
       })),
-      redirectTo: state.redirection.redirectTo,
+      redirectTo: '',
       isLoading: false,
       isLoadingSuggestions: false,
       analytics: {
@@ -117,6 +120,34 @@ describe('headless standalone searchBox', () => {
         metadata: null,
       },
     });
+  });
+
+  it('#state.isLoading uses the value in the standalone search-box reducer', () => {
+    engine.state.standaloneSearchBoxSet[
+      id
+    ] = buildMockStandaloneSearchBoxEntry({isLoading: true});
+    expect(searchBox.state.isLoading).toBe(true);
+  });
+
+  it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
+    const redirectTo = '/search-page';
+    engine.state.standaloneSearchBoxSet[
+      id
+    ] = buildMockStandaloneSearchBoxEntry({redirectTo});
+    expect(searchBox.state.redirectTo).toBe(redirectTo);
+  });
+
+  it('#state.analytics uses the value inside the standalone search-box reducer', () => {
+    const metadata = buildMockOmniboxSuggestionMetadata();
+    const analytics: StandaloneSearchBoxAnalytics = {
+      cause: 'omniboxFromLink',
+      metadata,
+    };
+    engine.state.standaloneSearchBoxSet[
+      id
+    ] = buildMockStandaloneSearchBoxEntry({analytics});
+
+    expect(searchBox.state.analytics).toEqual(analytics);
   });
 
   describe('#updateText', () => {
