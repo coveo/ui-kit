@@ -14,7 +14,7 @@
       margin: 1.5rem 0;
     }
 
-    @screen mobile {
+    @screen mobile-only {
       padding: 1.75rem 1rem;
 
       atomic-result::before {
@@ -30,7 +30,7 @@
       margin: 1rem 0;
     }
 
-    @screen mobile {
+    @screen mobile-only {
       padding: 1.5rem 1rem;
 
       atomic-result::before {
@@ -45,9 +45,6 @@
       content: ' ';
       height: 1px;
       background-color: var(--atomic-neutral);
-
-      @screen mobile {
-      }
     }
 
     &:first-child::before {

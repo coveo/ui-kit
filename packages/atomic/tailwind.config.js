@@ -39,8 +39,8 @@ module.exports = {
         lg: 'var(--atomic-text-lg)',
       },
       screens: {
-        desktop: {min: '640px'},
-        mobile: {max: '639px'},
+        'desktop-only': {min: '768px'},
+        'mobile-only': {max: '767px'},
       },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
