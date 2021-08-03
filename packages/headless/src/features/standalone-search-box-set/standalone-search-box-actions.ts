@@ -106,25 +106,19 @@ export const fetchRedirectUrl = createAsyncThunk<
     const {redirectionUrl} = new ExecutionPlan(response.success);
 
     if (redirectionUrl) {
-      dispatch(logRedirect());
+      dispatch(logRedirect(redirectionUrl));
     }
 
     return redirectionUrl || '';
   }
 );
 
-export const logRedirect = makeAnalyticsAction(
-  'analytics/standaloneSearchBox/redirect',
-  AnalyticsType.Search,
-  (client, state) => {
-    if (state.redirection?.redirectTo) {
-      return client.logTriggerRedirect({
-        redirectedTo: state.redirection.redirectTo,
-      });
-    }
-    return;
-  }
-);
+const logRedirect = (url: string) =>
+  makeAnalyticsAction(
+    'analytics/standaloneSearchBox/redirect',
+    AnalyticsType.Custom,
+    (client) => client.logTriggerRedirect({redirectedTo: url})
+  )();
 
 export const buildPlanRequest = (
   state: StateNeededForRedirect
