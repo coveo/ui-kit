@@ -18,6 +18,7 @@ import Lupa from '../../images/lupa-frame.svg';
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
  *
  * @part cancel-button - The "Cancel last action" button.
+ * @part highlight - The highlighted query.
  */
 @Component({
   tag: 'atomic-no-results-v1', //TODO remove v1
@@ -39,7 +40,7 @@ export class AtomicNoResults {
     noResults: () => {
       this.bindings.i18n.t('no-results-for-v1', {
         interpolation: {escapeValue: false},
-        query: 'QUERY', //TODO add query
+        query: this.wrapHighlight(escape('query')), //TODO get query
       });
     },
     searchTips: () => this.bindings.i18n.t('search-tips-v1'),
@@ -57,12 +58,19 @@ export class AtomicNoResults {
     this.history = buildHistoryManager(this.bindings.engine);
   }
 
+  private wrapHighlight(content: string) {
+    return `<span class="font-bold" part="highlight">${content}</span>`;
+  }
+
   private renderLupa() {
     return <div innerHTML={Lupa} class="my-6"></div>;
   }
 
   private renderNoResultsMessage() {
-    return <div class="my-2 text-2xl">{this.strings.noResults() + ' '}</div>;
+    return (
+      //classified as undefined
+      <div class="my-2 text-2xl">{this.strings.noResults() + ''}</div>
+    );
   }
 
   private renderSearchTips() {
