@@ -32,6 +32,6 @@ interface OmniboxFromLinkData {
   metadata: OmniboxSuggestionMetadata;
 }
 
-export function getStandaloneSearchBoxInitialState(): StandaloneSearchBoxSetState {
+export function getStandaloneSearchBoxSetInitialState(): StandaloneSearchBoxSetState {
   return {};
 }

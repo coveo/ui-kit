@@ -6,12 +6,12 @@ import {
   updateAnalyticsToSearchFromLink,
 } from './standalone-search-box-set-actions';
 import {
-  getStandaloneSearchBoxInitialState,
+  getStandaloneSearchBoxSetInitialState,
   StandaloneSearchBoxEntry,
 } from './standalone-search-box-set-state';
 
 export const standaloneSearchBoxSetReducer = createReducer(
-  getStandaloneSearchBoxInitialState(),
+  getStandaloneSearchBoxSetInitialState(),
   (builder) =>
     builder
       .addCase(registerStandaloneSearchBox, (state, action) => {
