@@ -31,7 +31,7 @@ export const FacetHeader: FunctionalComponent<{
       onClick={() => props.onToggleCollapse()}
       aria-expanded={(!props.isCollapsed).toString()}
     >
-      <span class="ellipsed">{label}</span>
+      <span class="truncate">{label}</span>
       <span
         part="label-button-icon"
         class="fill-current w-3 h-2 self-center flex-shrink-0 ml-4"

@@ -48,14 +48,14 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
 
   function renderPath(path: string[]) {
     if (!path.length) {
-      return <span class="ellipsed">{`${inLabel} ${allCategories}`}</span>;
+      return <span class="truncate">{`${inLabel} ${allCategories}`}</span>;
     }
 
     return [
       <span class="mr-0.5">{inLabel}</span>,
       ellipsedPath(path).map((value, index) => [
         index > 0 && <span class="mx-0.5">{SEPARATOR}</span>,
-        <span class={value === ELLIPSIS ? '' : 'ellipsed flex-1 max-w-max'}>
+        <span class={value === ELLIPSIS ? '' : 'truncate flex-1 max-w-max'}>
           {value}
         </span>,
       ]),
@@ -67,7 +67,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
       <button
         part="search-result"
         onClick={() => onClick()}
-        class="search-result w-full flex flex-col py-2.5 text-on-background ellipsed focus:outline-none"
+        class="search-result w-full flex flex-col py-2.5 text-on-background truncate focus:outline-none"
         aria-label={ariaLabel}
       >
         <div class="w-full flex">

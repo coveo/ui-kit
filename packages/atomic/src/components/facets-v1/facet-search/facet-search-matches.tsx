@@ -29,7 +29,7 @@ export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = 
     return (
       <div
         part="no-matches"
-        class="ellipsed p-3 bg-neutral-light text-neutral-dark text-sm"
+        class="truncate p-3 bg-neutral-light text-neutral-dark text-sm"
         innerHTML={matchesFound(
           'no-matches-found-for',
           props.query,
@@ -43,7 +43,7 @@ export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = 
     return (
       <div
         part="more-matches"
-        class="ellipsed mt-3 text-neutral-dark text-sm"
+        class="truncate mt-3 text-neutral-dark text-sm"
         innerHTML={matchesFound('more-matches-for', props.query, props.i18n)}
       ></div>
     );
