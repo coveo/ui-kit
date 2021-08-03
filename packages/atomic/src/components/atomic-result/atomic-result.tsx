@@ -56,16 +56,6 @@ export class AtomicResult {
 
   private unbindLogDocumentOpen = () => {};
 
-  private isFirstResult() {
-    const {results} = this.engine.state.search;
-    return results[0].uniqueId === this.result.uniqueId;
-  }
-
-  private isLastResult() {
-    const {results} = this.engine.state.search;
-    return results[results.length - 1].uniqueId === this.result.uniqueId;
-  }
-
   private getDisplayClass() {
     switch (this.display) {
       case 'grid':
@@ -110,12 +100,6 @@ export class AtomicResult {
       this.getDensityClass(),
       this.getImageClass(),
     ];
-    if (this.isFirstResult()) {
-      classes.push('first');
-    }
-    if (this.isLastResult()) {
-      classes.push('last');
-    }
     return classes;
   }
 
