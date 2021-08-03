@@ -27,7 +27,7 @@ import {
   registerStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-} from '../../features/standalone-search-box-set/standalone-search-box-actions';
+} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
 import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
 import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';

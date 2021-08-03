@@ -4,7 +4,7 @@ import {
   registerStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-} from './standalone-search-box-actions';
+} from './standalone-search-box-set-actions';
 import {
   getStandaloneSearchBoxInitialState,
   StandaloneSearchBoxEntry,

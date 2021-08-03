@@ -13,7 +13,7 @@ import {
   registerStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-} from '../../features/standalone-search-box-set/standalone-search-box-actions';
+} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {
   ConfigurationSection,

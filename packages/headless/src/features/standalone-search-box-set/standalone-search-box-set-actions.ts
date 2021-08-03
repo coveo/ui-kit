@@ -20,7 +20,7 @@ import {
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
-interface RegisterStandaloneSearchBoxActionCreatorPayload {
+export interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**
    * The standalone search box id.
    */
@@ -41,7 +41,7 @@ export const registerStandaloneSearchBox = createAction(
     })
 );
 
-interface UpdateAnalyticsToSearchFromLinkActionCreatorPayload {
+export interface UpdateAnalyticsToSearchFromLinkActionCreatorPayload {
   /**
    * The standalone search box id.
    */
@@ -54,7 +54,7 @@ export const updateAnalyticsToSearchFromLink = createAction(
     validatePayload(payload, {id: requiredNonEmptyString})
 );
 
-interface UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload {
+export interface UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload {
   /**
    * The standalone search box id.
    */
@@ -70,11 +70,11 @@ export const updateAnalyticsToOmniboxFromLink = createAction<
   UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload
 >('standaloneSearchBox/updateAnalyticsToOmniboxFromLink');
 
-type StateNeededForRedirect = ConfigurationSection &
+export type StateNeededForRedirect = ConfigurationSection &
   QuerySection &
   Partial<ContextSection & SearchHubSection & PipelineSection>;
 
-interface FetchRedirectActionCreatorPayload {
+export interface FetchRedirectUrlActionCreatorPayload {
   /**
    * The standalone search box id.
    */
@@ -83,7 +83,7 @@ interface FetchRedirectActionCreatorPayload {
 
 export const fetchRedirectUrl = createAsyncThunk<
   string,
-  FetchRedirectActionCreatorPayload,
+  FetchRedirectUrlActionCreatorPayload,
   AsyncThunkSearchOptions<StateNeededForRedirect>
 >(
   'standaloneSearchBox/fetchRedirect',

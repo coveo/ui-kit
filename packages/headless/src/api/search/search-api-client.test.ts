@@ -33,7 +33,7 @@ import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {SearchResponseSuccess} from './search/search-response';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {QuestionsAnswers} from './search/question-answering';
-import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-actions';
+import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
 
 jest.mock('../platform-client');
 describe('search api client', () => {

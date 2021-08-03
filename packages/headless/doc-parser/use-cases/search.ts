@@ -429,6 +429,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadGenericAnalyticsActions',
   },
+  {
+    initializer: 'loadStandaloneSearchBoxSetActions',
+  },
 ];
 
 const engine: EngineConfiguration = {

@@ -13,7 +13,7 @@ import {
   QuerySection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {buildPlanRequest} from '../standalone-search-box-set/standalone-search-box-actions';
+import {buildPlanRequest} from '../standalone-search-box-set/standalone-search-box-set-actions';
 
 export type RedirectionState = ConfigurationSection &
   QuerySection &
