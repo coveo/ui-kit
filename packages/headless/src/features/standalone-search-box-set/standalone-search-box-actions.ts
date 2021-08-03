@@ -18,6 +18,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**
@@ -39,6 +40,35 @@ export const registerStandaloneSearchBox = createAction(
       redirectionUrl: requiredNonEmptyString,
     })
 );
+
+interface UpdateAnalyticsToSearchFromLinkActionCreatorPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+}
+
+export const updateAnalyticsToSearchFromLink = createAction(
+  'standaloneSearchBox/updateAnalyticsToSearchFromLink',
+  (payload: UpdateAnalyticsToSearchFromLinkActionCreatorPayload) =>
+    validatePayload(payload, {id: requiredNonEmptyString})
+);
+
+interface UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+
+  /**
+   * The metadata of the suggestion selected from the standalone search box.
+   */
+  metadata: OmniboxSuggestionMetadata;
+}
+
+export const updateAnalyticsToOmniboxFromLink = createAction<
+  UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload
+>('standaloneSearchBox/updateAnalyticsToOmniboxFromLink');
 
 type StateNeededForRedirect = ConfigurationSection &
   QuerySection &

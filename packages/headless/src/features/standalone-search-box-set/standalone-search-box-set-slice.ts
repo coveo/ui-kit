@@ -2,6 +2,8 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
+  updateAnalyticsToOmniboxFromLink,
+  updateAnalyticsToSearchFromLink,
 } from './standalone-search-box-actions';
 import {
   getStandaloneSearchBoxInitialState,
@@ -48,6 +50,25 @@ export const standaloneSearchBoxSetReducer = createReducer(
         }
 
         searchBox.isLoading = false;
+      })
+      .addCase(updateAnalyticsToSearchFromLink, (state, action) => {
+        const searchBox = state[action.payload.id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.analytics.cause = 'searchFromLink';
+      })
+      .addCase(updateAnalyticsToOmniboxFromLink, (state, action) => {
+        const searchBox = state[action.payload.id];
+
+        if (!searchBox) {
+          return;
+        }
+
+        searchBox.analytics.cause = 'omniboxFromLink';
+        searchBox.analytics.metadata = action.payload.metadata;
       })
 );
 

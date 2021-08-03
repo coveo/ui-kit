@@ -1,7 +1,10 @@
+import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
 import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
+  updateAnalyticsToOmniboxFromLink,
+  updateAnalyticsToSearchFromLink,
 } from './standalone-search-box-actions';
 import {standaloneSearchBoxSetReducer} from './standalone-search-box-set-slice';
 import {StandaloneSearchBoxSetState} from './standalone-search-box-set-state';
@@ -98,6 +101,40 @@ describe('standalone search box slice', () => {
 
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.fulfilled('', '', {id: 'invalid url'});
+      expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('#updateAnalyticsToSearchFromLink', () => {
+    it('when the id exists, it sets the analytics cause to searchFromLink', () => {
+      const action = updateAnalyticsToSearchFromLink({id});
+      const finalState = standaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState[id]!.analytics.cause).toBe('searchFromLink');
+    });
+
+    it('when the id does not exist, it does not throw', () => {
+      const action = updateAnalyticsToSearchFromLink({id: 'invalid id'});
+      expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('#updateAnalyticsToOmniboxFromLink', () => {
+    it('when the id exists, it sets the analytics cause to omniboxFromLink and stores the payload metadata', () => {
+      const metadata = buildMockOmniboxSuggestionMetadata();
+      const action = updateAnalyticsToOmniboxFromLink({id, metadata});
+      const finalState = standaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState[id]!.analytics.cause).toBe('omniboxFromLink');
+      expect(finalState[id]!.analytics.metadata).toEqual(metadata);
+    });
+
+    it('when the id does not exist, it does not throw', () => {
+      const metadata = buildMockOmniboxSuggestionMetadata();
+      const action = updateAnalyticsToOmniboxFromLink({
+        id: 'invalid id',
+        metadata,
+      });
       expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
