@@ -125,7 +125,7 @@ export class FacetDateInput {
         <button
           type="submit"
           part="input-apply-button"
-          class={`${commonClasses} col-span-2 text-primary hover:text-primary-light`}
+          class={`${commonClasses} col-span-2 text-primary hover:text-primary`}
           aria-label={applyAria}
         >
           {apply}

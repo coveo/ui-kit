@@ -104,7 +104,7 @@ export class FacetNumberInput {
         <button
           type="submit"
           part="input-apply-button"
-          class={`${commonClasses} text-primary hover:text-primary-light flex-none`}
+          class={`${commonClasses} text-primary hover:text-primary flex-none`}
           aria-label={applyAria}
         >
           {apply}
