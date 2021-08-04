@@ -2,16 +2,14 @@
 @import '../facet-common.pcss';
 @import '../facet-search/facet-search.pcss';
 @import '../facet-show-more-less/facet-show-more-less.pcss';
-@import '../facet-value-link/facet-value-link.pcss';
-@import '../category-facet-search-result/category-facet-search-result.pcss';
 
 .parent-button,
 .parent-active {
-  @apply w-full py-2.5 text-left text-on-background pl-6;
+  @apply w-full py-2.5 pr-2 pl-7 text-left text-on-background;
 }
 
 .parent-button {
-  @apply relative flex items-center focus:outline-none hover:text-primary-light hover:underline focus:text-primary-light focus:underline;
+  @apply relative flex items-center focus:outline-none hover:text-primary hover:bg-neutral-light focus:text-primary focus:bg-neutral-light;
 }
 
 .parent-active {
@@ -19,5 +17,5 @@
 }
 
 .back-arrow {
-  @apply fill-current h-5 w-5 absolute left-0;
+  @apply fill-current h-5 w-5 absolute left-1;
 }

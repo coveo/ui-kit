@@ -234,7 +234,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          <span class="ellipsed">{allCategories}</span>
+          <span class="truncate">{allCategories}</span>
         </button>
       </li>
     );
@@ -265,7 +265,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          <span class="ellipsed">{displayValue}</span>
+          <span class="truncate">{displayValue}</span>
         </button>
       </li>
     );
