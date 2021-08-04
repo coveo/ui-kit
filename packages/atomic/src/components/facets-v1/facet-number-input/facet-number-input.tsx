@@ -61,7 +61,7 @@ export class FacetNumberInput {
 
     return (
       <form
-        class="flex flex-row mt-4"
+        class="flex flex-row mt-4 px-2"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();

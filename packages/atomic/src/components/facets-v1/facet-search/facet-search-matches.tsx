@@ -27,25 +27,29 @@ export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = 
 ) => {
   if (!props.numberOfMatches) {
     return (
-      <div
-        part="no-matches"
-        class="truncate p-3 bg-neutral-light text-neutral-dark text-sm"
-        innerHTML={matchesFound(
-          'no-matches-found-for',
-          props.query,
-          props.i18n
-        )}
-      ></div>
+      <div class="px-2">
+        <div
+          part="no-matches"
+          class="truncate p-3 bg-neutral-light text-neutral-dark text-sm rounded"
+          innerHTML={matchesFound(
+            'no-matches-found-for',
+            props.query,
+            props.i18n
+          )}
+        ></div>
+      </div>
     );
   }
 
   if (props.hasMoreMatches) {
     return (
-      <div
-        part="more-matches"
-        class="truncate mt-3 text-neutral-dark text-sm"
-        innerHTML={matchesFound('more-matches-for', props.query, props.i18n)}
-      ></div>
+      <div class="px-2">
+        <div
+          part="more-matches"
+          class="truncate mt-3 text-neutral-dark text-sm"
+          innerHTML={matchesFound('more-matches-for', props.query, props.i18n)}
+        ></div>
+      </div>
     );
   }
 };

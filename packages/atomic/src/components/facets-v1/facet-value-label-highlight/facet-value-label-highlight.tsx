@@ -14,7 +14,7 @@ export const FacetValueLabelHighlight: FunctionalComponent<FacetValueLabelHighli
     <span
       title={props.displayValue}
       part="value-label"
-      class={`value-label w-full truncate group-hover:text-primary-light group-focus:text-primary-light ${
+      class={`value-label truncate group-hover:text-primary-light group-focus:text-primary-light ${
         props.isSelected ? 'font-bold' : ''
       }`}
       innerHTML={highlightSearchResult(props.displayValue, props.searchQuery)}

@@ -67,7 +67,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
       <button
         part="search-result"
         onClick={() => onClick()}
-        class="search-result w-full flex flex-col py-2.5 text-on-background truncate focus:outline-none"
+        class="search-result w-full flex flex-col px-2 py-2.5 text-on-background truncate focus:outline-none group rounded focus:bg-neutral-light hover:bg-neutral-light"
         aria-label={ariaLabel}
       >
         <div class="w-full flex">
@@ -82,7 +82,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
         </div>
         <div
           part="search-result-path"
-          class="search-result-path flex text-neutral-dark mt-1"
+          class="flex text-neutral-dark mt-1 group-focus:text-primary-light group-hover:text-primary-light"
         >
           {renderPath(localizedPath)}
         </div>
