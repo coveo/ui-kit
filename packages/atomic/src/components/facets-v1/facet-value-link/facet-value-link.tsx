@@ -21,10 +21,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
         aria-label={ariaLabel}
       >
         {children}
-        <span
-          part="value-count"
-          class="ml-1.5 text-neutral-dark with-parentheses"
-        >
+        <span part="value-count" class="value-count">
           {count}
         </span>
       </button>

@@ -76,10 +76,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
             isSelected={false}
             searchQuery={searchQuery}
           ></FacetValueLabelHighlight>
-          <span
-            part="value-count"
-            class="ml-1.5 text-neutral-dark with-parentheses"
-          >
+          <span part="value-count" class="value-count">
             {count}
           </span>
         </div>

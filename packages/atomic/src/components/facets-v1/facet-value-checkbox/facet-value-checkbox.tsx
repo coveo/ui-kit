@@ -21,23 +21,16 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
         part="value-checkbox"
         onClick={() => props.onClick()}
         aria-checked={props.isSelected.toString()}
-        class={`value-checkbox absolute flex justify-center rounded focus:outline-none focus:border-primary-light ${
+        class={`value-checkbox ${
           props.isSelected
             ? 'selected bg-primary'
             : 'border border-neutral-dark'
         }`}
         aria-label={ariaLabel}
       ></button>
-      <label
-        htmlFor={id}
-        part="value-checkbox-label"
-        class="w-full flex items-center pl-6 py-2.5 text-on-background cursor-pointer truncate hover:bg-neutral-light group"
-      >
+      <label htmlFor={id} part="value-checkbox-label">
         {children}
-        <span
-          part="value-count"
-          class="ml-1.5 text-neutral-dark with-parentheses"
-        >
+        <span part="value-count" class="value-count">
           {count}
         </span>
       </label>
