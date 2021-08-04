@@ -41,6 +41,7 @@ export const standaloneSearchBoxSetReducer = createReducer(
         }
 
         searchBox.redirectTo = url ? url : searchBox.defaultRedirectionUrl;
+        searchBox.isLoading = false;
       })
       .addCase(fetchRedirectUrl.rejected, (state, action) => {
         const searchBox = state[action.meta.arg.id];

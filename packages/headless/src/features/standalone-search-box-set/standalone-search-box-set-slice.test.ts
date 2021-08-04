@@ -99,6 +99,15 @@ describe('standalone search box slice', () => {
       expect(finalState[id]!.redirectTo).toBe(url);
     });
 
+    it('sets #isLoading to false', () => {
+      state[id] = buildMockStandaloneSearchBoxEntry({isLoading: true});
+
+      const action = fetchRedirectUrl.fulfilled('', '', {id});
+      const finalState = standaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState[id]!.isLoading).toBe(false);
+    });
+
     it('when the id does not exist, it does not throw', () => {
       const action = fetchRedirectUrl.fulfilled('', '', {id: 'invalid url'});
       expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
