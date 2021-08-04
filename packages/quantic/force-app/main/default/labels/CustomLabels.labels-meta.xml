@@ -198,7 +198,7 @@
     </labels>
     <labels>
         <fullName>quantic_MoreInformation</fullName>
-        <value>More Information</value>
+        <value>More information</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>More Information</shortDescription>
@@ -230,5 +230,103 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Go back</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DisconnectedException</fullName>
+        <value>Disconnected</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Disconnected</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DisconnectedTitle</fullName>
+        <value>Could not connect.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Could not connect.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DisconnectedDesc</fullName>
+        <value>Your query couldn't be sent. Verify your internet connection.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your query couldn't be sent. Verify your internet connection.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoEndpointsException</fullName>
+        <value>NoEndpointsException</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NoEndpointsException</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoEndpointsTitle</fullName>
+        <value>The Coveo Organization has no registered endpoints.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The Coveo Organization has no registered endpoints.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoEndpointsDesc</fullName>
+        <value>You will need to add sources in your index, or wait for the created sources to finish indexing.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Add sources in your index, or wait for the created sources to finish indexing.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InvalidTokenException</fullName>
+        <value>InvalidTokenException</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>InvalidTokenException</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InvalidTokenTitle</fullName>
+        <value>The Coveo Organization cannot be accessed.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The Coveo Organization cannot be accessed.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InvalidTokenDesc</fullName>
+        <value>The token is invalid.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The token is invalid.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_OrganizationIsPausedException</fullName>
+        <value>OrganizationIsPausedException</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>OrganizationIsPausedException</shortDescription>
+    </labels>
+     <labels>
+        <fullName>quantic_OrganizationIsPausedTitle</fullName>
+        <value>Your organization is resuming and will be available shortly.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your organization is resuming and will be available shortly.</shortDescription>
+    </labels>
+     <labels>
+        <fullName>quantic_OrganizationIsPausedDesc</fullName>
+        <value>Your Coveo organization is paused due to inactivity and search is currently unavailable.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your Coveo organization is paused.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_GenericErrorTitle</fullName>
+        <value>Something went wrong.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Something went wrong.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_GenericErrorDesc</fullName>
+        <value>If the problem persists contact the administrator.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>If the problem persists contact the administrator.</shortDescription>
     </labels>
 </CustomLabels>

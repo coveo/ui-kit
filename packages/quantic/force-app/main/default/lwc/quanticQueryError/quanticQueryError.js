@@ -8,11 +8,20 @@ import checkForMore from '@salesforce/label/c.quantic_CheckForMore';
 import community from '@salesforce/label/c.quantic_Community';
 import contactCoveoSupportTeam from '@salesforce/label/c.quantic_ContactCoveoSupportTeam';
 import goBack from '@salesforce/label/c.quantic_GoBack';
-
-let disconnectedException = 'Disconnected';
-let noEndpointsException = 'NoEndpointsException';
-let invalidTokenException = 'InvalidTokenException';
-let organizationIsPausedException = 'OrganizationIsPausedException';
+import disconnectedException from '@salesforce/label/c.quantic_DisconnectedException';
+import noEndpointsException from '@salesforce/label/c.quantic_NoEndpointsException';
+import invalidTokenException from '@salesforce/label/c.quantic_InvalidTokenException';
+import organizationIsPausedException from '@salesforce/label/c.quantic_OrganizationIsPausedException';
+import disconnectedTitle from '@salesforce/label/c.quantic_DisconnectedTitle';
+import noEndpointsTitle from '@salesforce/label/c.quantic_NoEndpointsTitle';
+import invalidTokenTitle from '@salesforce/label/c.quantic_InvalidTokenTitle';
+import organizationIsPausedTitle from '@salesforce/label/c.quantic_OrganizationIsPausedtitle';
+import genericErrorTitle from '@salesforce/label/c.quantic_GenericErrorTitle';
+import disconnectedDesc from '@salesforce/label/c.quantic_DisconnectedDesc';
+import noEndpointsDesc from '@salesforce/label/c.quantic_NoEndpointsDesc';
+import invalidTokenDesc from '@salesforce/label/c.quantic_InvalidTokenDesc';
+import organizationIsPausedDesc from '@salesforce/label/c.quantic_OrganizationIsPausedDesc';
+import genericErrorDesc from '@salesforce/label/c.quantic_GenericErrorDesc';
 
 export default class QuanticQueryError extends LightningElement {
   /** @type {string} */
@@ -79,30 +88,30 @@ export default class QuanticQueryError extends LightningElement {
   get errorTitle() {
     switch (this.type) {
       case disconnectedException:
-        return "Could not connect.";
+        return disconnectedTitle;
       case noEndpointsException:
-        return "The Coveo Organization has no registered endpoints.";
+        return noEndpointsTitle;
       case invalidTokenException:
-        return "The Coveo Organization cannot be accessed.";
+        return invalidTokenTitle;
       case organizationIsPausedException:
-        return "Your organization is resuming and will be available shortly.";
+        return organizationIsPausedTitle;
       default:
-        return "Something went wrong.";
+        return genericErrorTitle;
     }
   }
 
   get description() {
     switch (this.type) {
       case disconnectedException:
-        return "Your query couldn't be sent. Verify your internet connection.";
+        return disconnectedDesc;
       case noEndpointsException:
-        return "You will need to add sources in your index, or wait for the created sources to finish indexing.";
+        return noEndpointsDesc;
       case invalidTokenException:
-        return "The token is invalid.";
+        return invalidTokenDesc;
       case organizationIsPausedException:
-        return "Your organization is resuming and will be available shortly.";
+        return organizationIsPausedDesc;
       default:
-        return "If the problem persists contact the administrator.";
+        return genericErrorDesc;
     }
   }
 

@@ -1,12 +1,7 @@
-.slds-text-font_monospace {
-    width: 700px;
-    height: 175px;
-    top: 20px;
-    bottom: 20px;
+.slds-error__box {
     text-align: left;
     background: #FFFFFF;
     color: #706E6B;
-    font-family: Arial;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
@@ -14,6 +9,12 @@
     border: 1px solid #DDDBDA;
     box-sizing: border-box;
     border-radius: 4px;
+}
+
+.toolbar__background {
+    background-color: #fff;
+    border-top: 0;
+    width: 40rem;
 }
 
 

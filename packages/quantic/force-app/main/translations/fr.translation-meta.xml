@@ -104,4 +104,12 @@
         <label>Plus anciens</label>
         <name>quantic_Oldest</name>
     </customLabels>
+    <customLabels>
+        <label>Impossible de se connecter.</label>
+        <name>quantic_DisconnectedTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet.</label>
+        <name>quantic_DisconnectedDesc</name>
+    </customLabels>
 </Translations>
