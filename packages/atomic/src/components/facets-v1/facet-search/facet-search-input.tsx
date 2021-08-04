@@ -25,7 +25,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
       <div class="relative h-10">
         <input
           part="search-input"
-          class="w-full h-full border border-neutral rounded px-9 placeholder-neutral-dark text-sm hover:border-primary-light focus:border-primary focus:outline-none group"
+          class="w-full h-full border border-neutral bg-background rounded px-9 placeholder-neutral-dark text-sm hover:border-primary-light focus:border-primary focus:outline-none group"
           type="text"
           placeholder={search}
           aria-label={facetSearch}
