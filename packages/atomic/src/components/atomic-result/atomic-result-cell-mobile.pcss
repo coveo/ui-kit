@@ -1,4 +1,4 @@
-.cell-result-desktop {
+.cell-result-mobile {
   grid-template-areas:
     'badges'
     'visual'
@@ -13,21 +13,8 @@
 
   /* == Density styles == */
   &.density-comfortable {
-    &.image-large,
-    &.image-small {
-      atomic-result-section-visual {
-        margin: 0 auto 2rem auto;
-      }
-    }
-
-    &.image-icon {
-      atomic-result-section-badges {
-        margin-bottom: 2rem;
-      }
-    }
-
     atomic-result-section-visual {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     atomic-result-section-badges {
@@ -40,14 +27,14 @@
     atomic-result-section-actions {
       font-size: 0.875rem;
       line-height: 1.25rem;
-      margin-top: 2.25rem;
-      height: 2.5rem;
+      margin-top: 1.25rem;
+      height: 2rem;
     }
 
     atomic-result-section-title {
-      font-size: 1.5rem;
-      line-height: 2rem;
-      height: 4rem;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      height: 3rem;
     }
 
     atomic-result-section-title-metadata {
@@ -62,34 +49,21 @@
     }
 
     atomic-result-section-excerpt {
-      font-size: 1rem;
-      line-height: 1.5rem;
-      margin-top: 2.25rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      margin-top: 1.25rem;
     }
 
     atomic-result-section-bottom-metadata {
       font-size: 0.75rem;
       line-height: 1rem;
-      margin-top: 2.25rem;
+      margin-top: 1.25rem;
     }
   }
 
   &.density-normal {
-    &.image-large,
-    &.image-small {
-      atomic-result-section-visual {
-        margin: 0 auto 1.5rem auto;
-      }
-    }
-
-    &.image-icon {
-      atomic-result-section-badges {
-        margin-bottom: 1.5rem;
-      }
-    }
-
     atomic-result-section-visual {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     atomic-result-section-badges {
@@ -100,14 +74,14 @@
     }
 
     atomic-result-section-actions {
-      font-size: 0.75rem;
-      line-height: 1rem;
-      margin-top: 1.75rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      margin-top: 1rem;
       height: 2rem;
     }
 
     atomic-result-section-title {
-      font-size: 1.125rem;
+      font-size: 1rem;
       line-height: 1.5rem;
       height: 3rem;
     }
@@ -126,30 +100,17 @@
     atomic-result-section-excerpt {
       font-size: 0.875rem;
       line-height: 1.25rem;
-      margin-top: 1.75rem;
+      margin-top: 1rem;
     }
 
     atomic-result-section-bottom-metadata {
       font-size: 0.75rem;
       line-height: 1rem;
-      margin-top: 1.75rem;
+      margin-top: 1rem;
     }
   }
 
   &.density-compact {
-    &.image-large,
-    &.image-small {
-      atomic-result-section-visual {
-        margin: 0 auto 1rem auto;
-      }
-    }
-
-    &.image-icon {
-      atomic-result-section-badges {
-        margin-bottom: 1rem;
-      }
-    }
-
     atomic-result-section-visual {
       margin-bottom: 0.5rem;
     }
@@ -162,14 +123,14 @@
     }
 
     atomic-result-section-actions {
-      font-size: 0.75rem;
-      line-height: 1rem;
-      margin-top: 1.25rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      margin-top: 0.75rem;
       height: 2rem;
     }
 
     atomic-result-section-title {
-      font-size: 1.125rem;
+      font-size: 1rem;
       line-height: 1.5rem;
       height: 3rem;
     }
@@ -188,32 +149,21 @@
     atomic-result-section-excerpt {
       font-size: 0.875rem;
       line-height: 1.25rem;
-      margin-top: 1.25rem;
+      margin-top: 0.75rem;
     }
 
     atomic-result-section-bottom-metadata {
       font-size: 0.75rem;
       line-height: 1rem;
-      margin-top: 1.25rem;
+      margin-top: 0.75rem;
     }
   }
 
   /* == Image styles == */
-  &.image-large {
-    atomic-result-section-visual {
-      width: 20.625rem;
-      height: 20.625rem;
-    }
-
-    atomic-result-section-badges {
-      margin-bottom: 1rem;
-    }
-  }
-
   &.image-small {
     atomic-result-section-visual {
-      width: 15.5rem;
-      height: 15.5rem;
+      width: 9.5rem;
+      height: 9.5rem;
     }
   }
 
@@ -231,6 +181,11 @@
   }
 
   /* == Common styles == */
+  atomic-result-section-badges,
+  atomic-result-section-actions {
+    overflow-x: auto;
+  }
+
   atomic-result-section-badges.empty {
     display: block;
   }
