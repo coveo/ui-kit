@@ -40,6 +40,9 @@ export interface RedirectionActionCreators {
 export function loadRedirectionActions(
   engine: SearchEngine
 ): RedirectionActionCreators {
+  engine.logger.warn(
+    'The "loadRedirectionActions" function is deprecated. Please use "loadStandaloneSearchBoxSetActions" instead.'
+  );
   engine.addReducers({redirection});
 
   return {checkForRedirection};
