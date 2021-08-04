@@ -31,6 +31,11 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../utils/field-utils';
+import {Schema, StringValue} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -119,7 +124,18 @@ export class AtomicFacet
   @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({
+        constrainTo: ['checkbox', 'link', 'box'],
+      }),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+    });
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -185,6 +201,9 @@ export class AtomicFacet
             this.facet.facetSearch.clear();
             return;
           }
+          this.facet.facetSearch.updateCaptions(
+            getFieldCaptions(this.field, this.bindings.i18n)
+          );
           this.facet.facetSearch.updateText(value);
           this.facet.facetSearch.search();
         }}
@@ -194,7 +213,11 @@ export class AtomicFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
-    const displayValue = this.bindings.i18n.t(facetValue.value);
+    const displayValue = getFieldValueCaption(
+      this.field,
+      facetValue.value,
+      this.bindings.i18n
+    );
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':

@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.42.1...@coveo/quantic@0.42.2) (2021-08-03)
+
+
+### Bug Fixes
+
+* **quantic:** add default checked sort criterion and fix label wrap in quanticSort ([#1030](https://github.com/coveo/ui-kit/issues/1030)) ([1be19fc](https://github.com/coveo/ui-kit/commit/1be19fcfe4db052af204bfb7679826a46cb133f5))
+
+
+
+
+
+## [0.42.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.42.0...@coveo/quantic@0.42.1) (2021-08-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.42.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.41.1...@coveo/quantic@0.42.0) (2021-08-02)
+
+
+### Features
+
+* **quantic:** added url manager to searchinterface ([#1017](https://github.com/coveo/ui-kit/issues/1017)) ([a9f5497](https://github.com/coveo/ui-kit/commit/a9f54975efc81305ac52bf93f4db7486ac838c31))
+
+
+
+
+
+## [0.41.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.41.0...@coveo/quantic@0.41.1) (2021-07-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.41.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.40.4...@coveo/quantic@0.41.0) (2021-07-29)
+
+
+### Features
+
+* **quantic:** Update quantic-pager , quantic-results-per-page and quantic-sort ([#1008](https://github.com/coveo/ui-kit/issues/1008)) ([f86d5ad](https://github.com/coveo/ui-kit/commit/f86d5ad3f70a18c4bbc72279910f5e1c43838fe9))
+
+
+
+
+
+## [0.40.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.40.3...@coveo/quantic@0.40.4) (2021-07-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.40.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.40.2...@coveo/quantic@0.40.3) (2021-07-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.40.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.40.1...@coveo/quantic@0.40.2) (2021-07-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.40.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.40.0...@coveo/quantic@0.40.1) (2021-07-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.40.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.39.0...@coveo/quantic@0.40.0) (2021-07-26)
 
 
