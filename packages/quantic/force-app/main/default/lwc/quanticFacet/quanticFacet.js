@@ -9,6 +9,10 @@ import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
 import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
 import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
+import clear from '@salesforce/label/c.quantic_Clear';
+import search from '@salesforce/label/c.quantic_Search';
+import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
+import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
@@ -46,6 +50,10 @@ export default class QuanticFacet extends LightningElement {
     showLess,
     showMoreFacetValues,
     showLessFacetValues,
+    clear,
+    search,
+    moreMatchesFor,
+    noMatchesFor,
   };
 
   /**
@@ -155,6 +163,14 @@ export default class QuanticFacet extends LightningElement {
     return I18nUtils.format(this.labels.showLessFacetValues, this.label);
   }
 
+  get moreMatchesForLabel() {
+    return I18nUtils.format(this.labels.moreMatchesFor, this.query);
+  }
+
+  get noMatchesForLabel() {
+    return I18nUtils.format(this.labels.noMatchesFor, this.query);
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
@@ -192,7 +208,6 @@ export default class QuanticFacet extends LightningElement {
   }
 
   handleKeyUp() {
-    console.log(this.canShowMore);
     if (this.isSearchComplete) {
       this.isFacetSearchActive = this.input.value !== '';
       this.facet.facetSearch.updateText(this.input.value);

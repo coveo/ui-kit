@@ -3,6 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 export default class QuanticDateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
@@ -27,6 +28,10 @@ export default class QuanticDateFacet extends LightningElement {
   facetIconName = 'utility:dash';
   /** @type {boolean} */
   withSearch;
+
+  labels = {
+    clear,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
