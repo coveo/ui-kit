@@ -5,6 +5,9 @@ import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
+  QuerySummary,
+  QuerySummaryState,
+  buildQuerySummary,
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
 import {
@@ -29,6 +32,7 @@ export class AtomicNoResults {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
   public history!: HistoryManager;
+  public querySummary!: QuerySummary;
 
   @BindStateToController('searchStatus')
   @State()
@@ -36,13 +40,10 @@ export class AtomicNoResults {
   @BindStateToController('history')
   @State()
   private historyState!: HistoryManagerState;
+  @BindStateToController('querySummary')
+  @State()
+  private querySummaryState!: QuerySummaryState;
   private strings = {
-    noResults: () => {
-      this.bindings.i18n.t('no-results-for-v1', {
-        interpolation: {escapeValue: false},
-        query: this.wrapHighlight(escape('query')), //TODO get query
-      });
-    },
     searchTips: () => this.bindings.i18n.t('search-tips-v1'),
     cancelLastAction: () => this.bindings.i18n.t('cancel-last-action'),
   };
@@ -56,21 +57,25 @@ export class AtomicNoResults {
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.history = buildHistoryManager(this.bindings.engine);
+    this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
   private wrapHighlight(content: string) {
-    return `<span class="font-bold" part="highlight">${content}</span>`;
+    return `<span class="font-bold" part="highlight">"${content}"</span>`;
   }
 
   private renderLupa() {
     return <div innerHTML={Lupa} class="my-6"></div>;
   }
 
-  private renderNoResultsMessage() {
-    return (
-      //classified as undefined
-      <div class="my-2 text-2xl">{this.strings.noResults() + ''}</div>
-    );
+  private renderNoResults() {
+    const content = this.querySummaryState.hasQuery
+      ? this.bindings.i18n.t('no-results-for', {
+          interpolation: {escapeValue: false},
+          query: this.wrapHighlight(escape(this.querySummaryState.query)),
+        })
+      : this.bindings.i18n.t('no-results');
+    return <div class="my-2 text-2xl" innerHTML={content}></div>;
   }
 
   private renderSearchTips() {
@@ -109,7 +114,7 @@ export class AtomicNoResults {
     return [
       <div class="flex flex-col items-center h-full w-full text-on-background">
         {this.renderLupa()}
-        {this.renderNoResultsMessage()}
+        {this.renderNoResults()}
         {this.renderSearchTips()}
         {this.enableCancelLastAction && this.renderCancel()}
       </div>,
