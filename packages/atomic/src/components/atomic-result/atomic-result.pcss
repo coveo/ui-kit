@@ -1,27 +1,5 @@
 @import 'tailwindcss/base';
-@import './atomic-result-common.pcss';
-@import './atomic-result-row-desktop.pcss';
-@import './atomic-result-row-mobile.pcss';
-@import './atomic-result-cell-desktop.pcss';
 
 :host {
   @apply font-sans font-normal;
-}
-
-.result-root {
-  @apply common-result;
-
-  &.display-list {
-    @screen desktop-only {
-      @apply row-result-desktop;
-    }
-    @screen mobile-only {
-      @apply row-result-mobile;
-    }
-  }
-  &.display-grid {
-    @screen desktop-only {
-      @apply cell-result-desktop;
-    }
-  }
 }

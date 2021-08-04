@@ -115,8 +115,8 @@
         margin-left: 15px;
       }
 
-      atomic-result-list {
-        display: block;
+      /* TODO: Remove v1 suffix */
+      atomic-result-list-v1 {
         margin-top: 10px;
       }
 
@@ -279,7 +279,7 @@
           </atomic-sort-dropdown>
         </div>
         <atomic-no-results></atomic-no-results>
-        <atomic-result-list>
+        <atomic-result-list-v1>
           <atomic-result-template>
             <template>
               <style>
@@ -314,21 +314,21 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-size-condition maximum-width-inclusive="3rem">
-                  <atomic-result-icon></atomic-result-icon>
-                </atomic-size-condition>
-                <atomic-size-condition minimum-width-exclusive="3rem">
+                <atomic-size-condition-v1 maximum-width-inclusive="3rem">
+                  <atomic-result-icon-v1></atomic-result-icon-v1>
+                </atomic-size-condition-v1>
+                <atomic-size-condition-v1 minimum-width-exclusive="3rem">
                   <img src="https://picsum.photos/350" class="thumbnail" />
-                </atomic-size-condition>
+                </atomic-size-condition-v1>
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
-                  <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
+                  <atomic-result-badge-v1 label="Salesforce" class="salesforce-badge"></atomic-result-badge-v1>
                 </atomic-field-condition>
-                <atomic-result-badge
+                <atomic-result-badge-v1
                   field="language"
                   icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
-                ></atomic-result-badge>
+                ></atomic-result-badge-v1>
               </atomic-result-section-badges>
               <atomic-result-section-actions
                 ><atomic-result-quickview></atomic-result-quickview
@@ -366,25 +366,25 @@
                   <atomic-result-date></atomic-result-date>
                 </span>
               </atomic-result-section-bottom-metadata>
-              <atomic-table-element label="Description">
+              <atomic-table-element-v1 label="Description">
                 <atomic-result-link field="title"></atomic-result-link>
                 <atomic-result-text field="excerpt"></atomic-result-text>
-              </atomic-table-element>
-              <atomic-table-element label="author">
+              </atomic-table-element-v1>
+              <atomic-table-element-v1 label="author">
                 <atomic-result-text field="author"></atomic-result-text>
-              </atomic-table-element>
-              <atomic-table-element label="source">
+              </atomic-table-element-v1>
+              <atomic-table-element-v1 label="source">
                 <atomic-result-text field="source"></atomic-result-text>
-              </atomic-table-element>
-              <atomic-table-element label="language">
+              </atomic-table-element-v1>
+              <atomic-table-element-v1 label="language">
                 <atomic-result-text field="language"></atomic-result-text>
-              </atomic-table-element>
-              <atomic-table-element label="file-type">
+              </atomic-table-element-v1>
+              <atomic-table-element-v1 label="file-type">
                 <atomic-result-text field="filetype"></atomic-result-text>
-              </atomic-table-element>
+              </atomic-table-element-v1>
             </template>
           </atomic-result-template>
-        </atomic-result-list>
+        </atomic-result-list-v1>
         <div class="footer-item side-by-side-container">
           <atomic-pager></atomic-pager>
           <atomic-results-per-page></atomic-results-per-page>
