@@ -72,13 +72,17 @@ export class AtomicNoResults {
 
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('no-results-for', {
+      ? this.bindings.i18n.t('no-results-for-v1', {
           interpolation: {escapeValue: false},
           query: this.wrapHighlight(escape(this.querySummaryState.query)),
         })
       : this.bindings.i18n.t('no-results');
     return (
-      <div class="my-2 text-2xl" part="no-results" innerHTML={content}></div>
+      <div
+        class="my-2 text-2xl font-medium"
+        part="no-results"
+        innerHTML={content}
+      ></div>
     );
   }
 
@@ -98,7 +102,7 @@ export class AtomicNoResults {
     return (
       <button
         part="cancel-button"
-        class="text-neutral-light hover:underline font-bold bg-primary px-2.5 py-3 rounded-md my-2"
+        class="text-neutral-light hover:underline font-bold bg-primary px-2.5 py-3 rounded-md my-3"
         onClick={() => this.history.back()}
       >
         {this.strings.cancelLastAction()}
