@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.52.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.51.1...@coveo/atomic@0.52.0) (2021-08-04)
+
+
+### Features
+
+* **atomic:** rework hover & focus effects on facet elements ([#1052](https://github.com/coveo/ui-kit/issues/1052)) ([cd4a549](https://github.com/coveo/ui-kit/commit/cd4a549eb694d4f994501dfd7c773bda0d07108e))
+
+
+
+
+
 ## [0.51.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.51.0...@coveo/atomic@0.51.1) (2021-08-04)
 
 **Note:** Version bump only for package @coveo/atomic
