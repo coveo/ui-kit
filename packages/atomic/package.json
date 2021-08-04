@@ -78,7 +78,7 @@
     "rollup-plugin-typescript2": "0.30.0"
   },
   "//TODO:": {
-    "mustache": "remove dependency along with type"
+    "mustache": "remove dependency along with type in v1"
   },
   "license": "Apache-2.0"
 }
