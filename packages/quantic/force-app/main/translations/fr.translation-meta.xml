@@ -104,4 +104,20 @@
         <label>Plus anciens</label>
         <name>quantic_Oldest</name>
     </customLabels>
+    <customLabels>
+        <label>Nous n'avons rien trouvé pour {{0}}</label>
+        <name>quantic_NoResultsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous pouvez essayer d'utiliser différents mots-clés ou de vérifier les fautes d'orthographe.</label>
+        <name>quantic_NoResultsWithoutFilters</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous pouvez essayer d'utiliser différents mots-clés, vérifier les fautes d'orthographe ou sélectionner moins de filtres.</label>
+        <name>quantic_NoResultsWithFilters</name>
+    </customLabels>
+    <customLabels>
+        <label>Annuler la dernière action</label>
+        <name>quantic_UndoLastAction</name>
+    </customLabels>
 </Translations>
