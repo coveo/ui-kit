@@ -54,7 +54,8 @@ export class FacetNumberInput {
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
 
-    const commonClasses = 'rounded p-2.5 border border-neutral';
+    const commonClasses =
+      'rounded p-2.5 border border-neutral hover:border-primary-light focus:border-primary focus:outline-none';
     const inputClasses = `${commonClasses} placeholder-neutral-dark min-w-0 mr-1`;
 
     const step = this.type === 'integer' ? '1' : 'any';
@@ -103,7 +104,7 @@ export class FacetNumberInput {
         <button
           type="submit"
           part="input-apply-button"
-          class={`${commonClasses} bg-background text-primary flex-none`}
+          class={`${commonClasses} bg-background text-primary  hover:text-primary-light flex-none`}
           aria-label={applyAria}
         >
           {apply}
