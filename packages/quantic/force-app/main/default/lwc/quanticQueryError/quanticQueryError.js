@@ -132,6 +132,17 @@ export default class QuanticQueryError extends LightningElement {
     this.showMoreInfo = !this.showMoreInfo;
   }
 
+  async handleCopyToClipboard() {
+    const text = this.template.querySelector('code').innerHTML;
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (err) {
+        console.err('Copy to clipboard failed.', text, err);
+      }
+    } 
+  }
+
   get checkForMoreLabel() {
     return I18nUtils.format(this.labels.checkForMore, I18nUtils.getTextWithDecorator(this.labels.community, '<a href="https://connect.coveo.com/s/discussions">', '</a>'), I18nUtils.getTextWithDecorator(this.labels.contactCoveoSupportTeam,'<a href="https://connect.coveo.com/s/article/5382">', '</a>'));
   }
