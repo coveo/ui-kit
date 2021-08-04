@@ -1,5 +1,10 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
-import {FacetValueIconRatingProps} from '../facet-common';
+
+interface FacetValueIconRatingProps {
+  numberOfTotalIcons: number;
+  numberOfActiveIcons: number;
+  icon: string;
+}
 
 export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps> = (
   props

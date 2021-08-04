@@ -65,7 +65,11 @@ jobs:
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
+<<<<<<< HEAD
           sfdx force:package:version:create --package $PACKAGE_ID --installationkeybypass --wait 30 --json | tee package-version-result.json
+=======
+          sfdx force:package:version:create --package $PACKAGE_ID --installationkeybypass --wait 30 --json > package-version-result.json
+>>>>>>> master
           cat package-version-result.json
           PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId' -r)"
           echo $PACKAGE_VERSION_ID

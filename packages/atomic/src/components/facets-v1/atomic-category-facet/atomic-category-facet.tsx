@@ -8,7 +8,6 @@ import {
   SearchStatus,
   SearchStatusState,
   buildSearchStatus,
-  CategoryFacetSearchResult,
   CategoryFacetValue,
 } from '@coveo/headless';
 import {
@@ -35,6 +34,7 @@ import {
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
+import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -53,6 +53,8 @@ import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.s
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
  * @part search-results - The search results container.
+ * @part search-result - The search result value.
+ * @part search-result-path - The search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part parents - The parent values container.
@@ -232,7 +234,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          {allCategories}
+          <span class="ellipsed">{allCategories}</span>
         </button>
       </li>
     );
@@ -263,7 +265,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          {displayValue}
+          <span class="ellipsed">{displayValue}</span>
         </button>
       </li>
     );
@@ -328,22 +330,18 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderSearchResult(facetValue: CategoryFacetSearchResult) {
-    // TODO: render search result
-    return (
-      <li>
-        <div>{facetValue.displayValue}</div>
-        <div>{facetValue.path.join('/')}</div>
-      </li>
-    );
-  }
-
   private renderSearchResults() {
     return (
       <ul part="search-results" class="mt-3">
-        {this.facetState.facetSearch.values.map((value) =>
-          this.renderSearchResult(value)
-        )}
+        {this.facetState.facetSearch.values.map((value) => (
+          <CategoryFacetSearchResult
+            result={value}
+            field={this.field}
+            i18n={this.bindings.i18n}
+            searchQuery={this.facetState.facetSearch.query}
+            onClick={() => this.facet.facetSearch.select(value)}
+          ></CategoryFacetSearchResult>
+        ))}
       </ul>
     );
   }
