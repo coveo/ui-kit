@@ -14,7 +14,7 @@ export default class QuanticSvg extends LightningElement {
     switch (this.name) {
       case "pageNotFound":
         return pageNotFound;
-      case "NoResults":
+      case "noResults":
         return noResults;
       default:
         return _default;
