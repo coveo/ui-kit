@@ -1,3 +1,4 @@
+const plugin = require('tailwindcss/plugin');
 const isDevWatch = process.argv.indexOf('--dev') > -1;
 
 module.exports = {
@@ -14,6 +15,7 @@ module.exports = {
         'primary-light': 'var(--atomic-primary-light)',
         'primary-dark': 'var(--atomic-primary-dark)',
         'on-primary': 'var(--atomic-on-primary)',
+        'ring-primary': 'var(--atomic-ring-primary)',
         // Neutral
         neutral: 'var(--atomic-neutral)',
         'neutral-light': 'var(--atomic-neutral-light)',
@@ -55,5 +57,16 @@ module.exports = {
       backgroundColor: ['group-focus'],
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({addUtilities, theme}) {
+      addUtilities(
+        {
+          '.outline-color-primary-light': {
+            outlineColor: theme('colors.primary-light'),
+          },
+        },
+        {variants: ['focus']}
+      );
+    }),
+  ],
 };
