@@ -1,5 +1,8 @@
 import {LightningElement, track, api} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 
 import sortBy from '@salesforce/label/c.quantic_SortBy';
 import relevancy from '@salesforce/label/c.quantic_Relevancy';
@@ -25,14 +28,14 @@ export default class QuanticSort extends LightningElement {
   /**
    * @type {boolean}
    */
-  @track hasResults
+  @track hasResults;
 
   labels = {
     sortBy,
     relevancy,
     newest,
-    oldest
-  }
+    oldest,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -50,15 +53,17 @@ export default class QuanticSort extends LightningElement {
     this.sort = CoveoHeadless.buildSort(engine);
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
   }
 
   disconnectedCallback() {
     if (this.unsubscribeSearchStatus) {
       this.unsubscribeSearchStatus();
     }
-    if(this.unsubscribeSort) {
-        this.unsubscribeSort();
+    if (this.unsubscribeSort) {
+      this.unsubscribeSort();
     }
   }
 
@@ -96,15 +101,22 @@ export default class QuanticSort extends LightningElement {
   }
 
   get dateDescending() {
-    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Descending)
+    return CoveoHeadless.buildDateSortCriterion(
+      CoveoHeadless.SortOrder.Descending
+    );
   }
-  
+
   get dateAscending() {
-    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Ascending)
+    return CoveoHeadless.buildDateSortCriterion(
+      CoveoHeadless.SortOrder.Ascending
+    );
   }
 
   get largest() {
-    return CoveoHeadless.buildFieldSortCriterion('size', CoveoHeadless.SortOrder.Descending)
+    return CoveoHeadless.buildFieldSortCriterion(
+      'size',
+      CoveoHeadless.SortOrder.Descending
+    );
   }
 
   get options() {
@@ -116,7 +128,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    if (!this.sort) {
+    if (!this.sort || !this.state.sortCriteria.expression) {
       return 'relevancy';
     }
     return this.state.sortCriteria.expression;

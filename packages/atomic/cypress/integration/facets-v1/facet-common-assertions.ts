@@ -20,6 +20,14 @@ export interface FacetWithLinkSelector extends ComponentSelector {
   idleLinkValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
+export interface FacetWithSearchSelector extends ComponentSelector {
+  searchInput: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  searchClearButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  moreMatches: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  noMatches: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  valueHighlight: () => Cypress.Chainable<JQuery<HTMLElement>>;
+}
+
 export function assertLabelContains(
   BaseFacetSelector: BaseFacetSelector,
   label: string
@@ -146,5 +154,97 @@ export function assertFirstValueContains(
 ) {
   it(`first child value should contain ${value}`, () => {
     BaseFacetSelector.valueLabel().first().contains(value);
+  });
+}
+
+export function assertDisplaySearchInput(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  display: boolean
+) {
+  it(`${should(display)} display the facet search input`, () => {
+    FacetWithSearchSelector.searchInput().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertDisplaySearchClearButton(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  display: boolean
+) {
+  it(`${should(display)} display the facet search clear button`, () => {
+    FacetWithSearchSelector.searchClearButton().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertHighlightsResults(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  query: string
+) {
+  it(`should highlight the results with the query "${query}"`, () => {
+    FacetWithSearchSelector.valueHighlight().each((element) => {
+      const text = element.text().toLowerCase();
+      expect(text).to.eq(query.toLowerCase());
+    });
+  });
+}
+
+export function assertSearchInputEmpty(
+  FacetWithSearchSelector: FacetWithSearchSelector
+) {
+  it('the search input should be empty', () => {
+    FacetWithSearchSelector.searchInput().invoke('val').should('be.empty');
+  });
+}
+
+export function assertDisplayMoreMatchesFound(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  display: boolean
+) {
+  it(`${should(display)} display the "More matches for" label`, () => {
+    FacetWithSearchSelector.moreMatches().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertDisplayNoMatchesFound(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  display: boolean
+) {
+  it(`${should(display)} display the "No matches found for" label`, () => {
+    FacetWithSearchSelector.noMatches().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertMoreMatchesFoundContainsQuery(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  query: string
+) {
+  it(`"More matches for" label should have the query ${query}`, () => {
+    FacetWithSearchSelector.moreMatches().contains(query);
+  });
+}
+
+export function assertNoMatchesFoundContainsQuery(
+  FacetWithSearchSelector: FacetWithSearchSelector,
+  query: string
+) {
+  it(`"No matches found for" label should have the query ${query}`, () => {
+    FacetWithSearchSelector.noMatches().contains(query);
+  });
+}
+
+export function assertLogFacetSearch(field: string) {
+  it('should log the facet search to UA', () => {
+    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
+      const analyticsBody = intercept.request.body;
+      expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
+      expect(analyticsBody.customData).to.have.property('facetField', field);
+    });
   });
 }

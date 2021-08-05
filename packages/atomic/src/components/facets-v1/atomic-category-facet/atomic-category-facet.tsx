@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, Host} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -8,7 +8,6 @@ import {
   SearchStatus,
   SearchStatusState,
   buildSearchStatus,
-  CategoryFacetSearchResult,
   CategoryFacetValue,
 } from '@coveo/headless';
 import {
@@ -32,6 +31,10 @@ import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../utils/field-utils';
+import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
+import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -42,8 +45,6 @@ import {
  *
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
  * @part label-button-icon - The label button icon.
- * @part clear-button - The button that resets the actively selected facet values.
- * @part clear-button-icon - The clear button icon.
  *
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
@@ -51,13 +52,21 @@ import {
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
+ * @part search-results - The search results container.
+ * @part search-result - The search result value.
+ * @part search-result-path - The search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
- * @part values - The facet values container.
+ * @part parents - The parent values container.
+ * @part all-categories-button - The "View all" button displayed first along the parents.
+ * @part parent-button - The clickable parent button.
+ * @part active-parent - The non-clickable active parent.
+ * @part back-arrow - The back arrow displayed before the clickable parents.
+ *
+ * @part values - The facet values child container.
+ * @part value-link - The child facet value.
  * @part value-label - The facet value label.
  * @part value-count - The facet value count.
- * @part value-path - The facet value path.
- * TODO: add more value parts
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -143,7 +152,7 @@ export class AtomicCategoryFacet
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    this.bindings.store.state.categoryFacets[this.facetId] = {
       label: this.label,
     };
   }
@@ -163,6 +172,10 @@ export class AtomicCategoryFacet
     return true;
   }
 
+  private get hasParents() {
+    return !!this.facetState.parents.length;
+  }
+
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
@@ -173,7 +186,6 @@ export class AtomicCategoryFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
@@ -207,47 +219,130 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderValue(facetValue: CategoryFacetValue) {
+  private renderAllCategories() {
+    const allCategories = this.bindings.i18n.t('all-categories');
+    return (
+      <li key={allCategories}>
+        <button
+          part="all-categories-button"
+          class="parent-button"
+          onClick={() => this.facet.deselectAll()}
+        >
+          <div
+            aria-hidden="true"
+            innerHTML={LeftArrow}
+            part="back-arrow"
+            class="back-arrow"
+          />
+          <span class="truncate">{allCategories}</span>
+        </button>
+      </li>
+    );
+  }
+
+  private renderParent(facetValue: CategoryFacetValue) {
     const displayValue = getFieldValueCaption(
-      this.facetId!,
+      this.field,
       facetValue.value,
       this.bindings.i18n
     );
+    const ariaLabel = this.bindings.i18n.t('facet-value', {
+      value: displayValue,
+      count: facetValue.numberOfResults,
+    });
+
     return (
-      <li>
-        <div>{displayValue}</div>
+      <li key={displayValue}>
+        <button
+          part="parent-button"
+          class="parent-button"
+          onClick={() => this.facet.toggleSelect(facetValue)}
+          aria-label={ariaLabel}
+        >
+          <div
+            aria-hidden="true"
+            innerHTML={LeftArrow}
+            part="back-arrow"
+            class="back-arrow"
+          />
+          <span class="truncate">{displayValue}</span>
+        </button>
       </li>
     );
   }
 
-  private renderSearchResult(facetValue: CategoryFacetSearchResult) {
-    return (
-      <li>
-        <div>{facetValue.displayValue}</div>
-        <div>{facetValue.path.join('/')}</div>
-      </li>
-    );
-  }
+  private renderParents() {
+    if (!this.hasParents) {
+      return;
+    }
 
-  private renderValuesContainer(children: VNode[]) {
+    const nonActiveParents = this.facetState.parents.slice(0, -1);
+    const activeParent = this.facetState.parents.slice(-1)[0];
+
     return (
-      <ul part="values" class="mt-3">
-        {children}
+      <ul part="parents" class="mt-3">
+        {this.renderAllCategories()}
+        {nonActiveParents.map((parent) => this.renderParent(parent))}
+        <li part="active-parent" class="parent-active">
+          {getFieldValueCaption(
+            this.field,
+            activeParent.value,
+            this.bindings.i18n
+          )}
+        </li>
       </ul>
     );
   }
 
+  private renderValue(facetValue: CategoryFacetValue) {
+    const displayValue = getFieldValueCaption(
+      this.field,
+      facetValue.value,
+      this.bindings.i18n
+    );
+    const isSelected = facetValue.state === 'selected';
+    return (
+      <FacetValueLink
+        displayValue={displayValue}
+        numberOfResults={facetValue.numberOfResults}
+        isSelected={isSelected}
+        i18n={this.bindings.i18n}
+        onClick={() => this.facet.toggleSelect(facetValue)}
+        searchQuery={this.facetState.facetSearch.query}
+      >
+        <FacetValueLabelHighlight
+          displayValue={displayValue}
+          isSelected={isSelected}
+        ></FacetValueLabelHighlight>
+      </FacetValueLink>
+    );
+  }
+
   private renderValues() {
-    return this.renderValuesContainer(
-      this.facetState.values.map((value) => this.renderValue(value))
+    if (!this.facetState.values.length) {
+      return;
+    }
+
+    return (
+      <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
+        {this.facetState.values.map((value) => this.renderValue(value))}
+      </ul>
     );
   }
 
   private renderSearchResults() {
-    return this.renderValuesContainer(
-      this.facetState.facetSearch.values.map((value) =>
-        this.renderSearchResult(value)
-      )
+    return (
+      <ul part="search-results" class="mt-3">
+        {this.facetState.facetSearch.values.map((value) => (
+          <CategoryFacetSearchResult
+            result={value}
+            field={this.field}
+            i18n={this.bindings.i18n}
+            searchQuery={this.facetState.facetSearch.query}
+            onClick={() => this.facet.facetSearch.select(value)}
+          ></CategoryFacetSearchResult>
+        ))}
+      </ul>
     );
   }
 
@@ -264,18 +359,20 @@ export class AtomicCategoryFacet
 
   private renderShowMoreLess() {
     return (
-      <FacetShowMoreLess
-        label={this.label}
-        i18n={this.bindings.i18n}
-        onShowMore={() => {
-          this.facet.showMoreValues();
-        }}
-        onShowLess={() => {
-          this.facet.showLessValues();
-        }}
-        canShowLessValues={this.facetState.canShowLessValues}
-        canShowMoreValues={this.facetState.canShowMoreValues}
-      ></FacetShowMoreLess>
+      <div class={this.hasParents ? 'pl-9' : ''}>
+        <FacetShowMoreLess
+          label={this.label}
+          i18n={this.bindings.i18n}
+          onShowMore={() => {
+            this.facet.showMoreValues();
+          }}
+          onShowLess={() => {
+            this.facet.showLessValues();
+          }}
+          canShowLessValues={this.facetState.canShowLessValues}
+          canShowMoreValues={this.facetState.canShowMoreValues}
+        ></FacetShowMoreLess>
+      </div>
     );
   }
 
@@ -292,7 +389,7 @@ export class AtomicCategoryFacet
       );
     }
 
-    if (!this.facetState.values.length) {
+    if (!this.facetState.values.length && !this.facetState.parents.length) {
       return <Host class="atomic-without-values"></Host>;
     }
 
@@ -304,7 +401,11 @@ export class AtomicCategoryFacet
             this.renderSearchInput(),
             shouldDisplaySearchResults(this.facetState.facetSearch)
               ? [this.renderSearchResults(), this.renderMatches()]
-              : [this.renderValues(), this.renderShowMoreLess()],
+              : [
+                  this.renderParents(),
+                  this.renderValues(),
+                  this.renderShowMoreLess(),
+                ],
           ]}
         </FacetContainer>
       </Host>

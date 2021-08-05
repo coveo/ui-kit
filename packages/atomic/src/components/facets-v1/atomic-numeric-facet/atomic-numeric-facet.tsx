@@ -285,11 +285,7 @@ export class AtomicNumericFacet
       this.areRangesEqual(range, facetValue)
     )?.label;
     return manualRangeLabel
-      ? getFieldValueCaption(
-          this.facetId!,
-          manualRangeLabel,
-          this.bindings.i18n
-        )
+      ? getFieldValueCaption(this.field, manualRangeLabel, this.bindings.i18n)
       : this.bindings.i18n.t('to', {
           start: this.formatValue(facetValue.start),
           end: this.formatValue(facetValue.end),

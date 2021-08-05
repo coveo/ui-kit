@@ -166,7 +166,7 @@ export class AtomicRatingRangeFacet
     return (
       <span
         part="value-label"
-        class={`ml-1 flex items-center truncate group-hover:underline group-hover:text-primary ${
+        class={`ml-1 flex items-center truncate group-focus:text-primary group-hover:text-primary ${
           facetValue.state === 'selected' ? 'font-bold' : ''
         }`}
       >

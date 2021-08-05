@@ -1,3 +1,5 @@
+import {NODE_TYPES} from '@stencil/core/mock-doc';
+
 /**
  * Returns a function that can be executed only once
  */
@@ -31,4 +33,21 @@ export function getRandomArbitrary(min: number, max: number) {
 
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
+}
+
+export function parseHTML(string: string) {
+  return new window.DOMParser().parseFromString(string, 'text/html');
+}
+
+export function containsVisualElement(node: Node) {
+  for (let i = 0; i < node.childNodes.length; i++) {
+    const child = node.childNodes.item(i);
+    if (
+      child.nodeType === NODE_TYPES.ELEMENT_NODE ||
+      (child.nodeType === NODE_TYPES.TEXT_NODE && child.textContent?.trim())
+    ) {
+      return true;
+    }
+  }
+  return false;
 }

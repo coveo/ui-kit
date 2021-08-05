@@ -13,11 +13,20 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {string} */
   @api pipeline = 'default';
 
+  /** @type {boolean} */
+  @api disableStateInUrl = false;
+
   /** @type {string} */
   @api engineId;
 
   /** @type {import("coveo").SearchEngineOptions} */
   engineOptions;
+
+  /** @type {import("coveo").UrlManager} */
+  urlManager;
+
+  /** @type {import("coveo").Unsubscribe} */
+  unsubscribeUrlManager;
 
   connectedCallback() {
     loadDependencies(this).then((CoveoHeadless) => {
@@ -33,13 +42,44 @@ export default class QuanticSearchInterface extends LightningElement {
             }
           };
           setEngineOptions(this.engineOptions, CoveoHeadless.buildSearchEngine, this.engineId, this);
-          setInitializedCallback(this.performInitialQuery, this.engineId);
+          setInitializedCallback(this.initialize, this.engineId);
         }
-      })
+      });
     });
   }
 
-  performInitialQuery = (engine) => {
-    engine.executeFirstSearch()
+  disconnectedCallback() {
+    if (this.unsubscribeUrlManager) {
+      this.unsubscribeUrlManager();
+    }
+  }
+ 
+  initialize = (engine) => {
+    if (!this.disableStateInUrl) {
+      this.initUrlManager(engine);
+    }
+    engine.executeFirstSearch();
+  }
+
+  get fragment() {
+    return window.location.hash.slice(1);
+  }
+
+  initUrlManager(engine) {
+    this.urlManager = CoveoHeadless.buildUrlManager(engine, {initialState: {fragment: this.fragment}});
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() => this.updateHash());
+    window.addEventListener('hashchange', this.onHashChange);
+  }
+
+  updateHash() {
+    window.history.pushState(
+      null,
+      document.title,
+      `#${this.urlManager.state.fragment}`
+    );
+  }
+
+  onHashChange() {
+    this.urlManager.synchronize(this.fragment);
   }
 }
