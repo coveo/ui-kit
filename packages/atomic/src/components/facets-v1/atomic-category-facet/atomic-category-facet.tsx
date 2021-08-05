@@ -71,6 +71,8 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-category-facet-v1', // TODO: remove v1 when old facets are removed
