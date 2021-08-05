@@ -66,3 +66,6 @@ jobs:
         working-directory: ./packages/quantic
         run: |
           sfdx force:package:version:create --package $PACKAGE_ID --installationkeybypass --wait 30
+          cat package-version-result.json
+          PACKAGE_VERSION_ID="$(cat package-version-result.json | jq '.result.SubscriberPackageVersionId' -r)"
+          echo $PACKAGE_VERSION_ID
