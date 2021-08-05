@@ -61,7 +61,7 @@ module.exports = {
     plugin(function ({addUtilities, theme}) {
       addUtilities(
         {
-          '.outline-color-primary-light': {
+          '.outline-color': {
             outlineColor: theme('colors.primary-light'),
           },
         },
