@@ -45,10 +45,6 @@ export class AtomicNoResults {
   @BindStateToController('querySummary')
   @State()
   private querySummaryState!: QuerySummaryState;
-  private strings = {
-    searchTips: () => this.bindings.i18n.t('search-tips-v1'),
-    cancelLastAction: () => this.bindings.i18n.t('cancel-last-action'),
-  };
   @State() public error!: Error;
 
   /**
@@ -89,7 +85,7 @@ export class AtomicNoResults {
   private renderSearchTips() {
     return (
       <div class="my-2 text-lg text-neutral-dark" part="search-tips">
-        {this.strings.searchTips()}
+        {this.bindings.i18n.t('search-tips-v1')}
       </div>
     );
   }
@@ -105,7 +101,7 @@ export class AtomicNoResults {
         class="text-neutral-light hover:underline font-bold bg-primary px-2.5 py-3 rounded-md my-3"
         onClick={() => this.history.back()}
       >
-        {this.strings.cancelLastAction()}
+        {this.bindings.i18n.t('cancel-last-action')}
       </button>
     );
   }
