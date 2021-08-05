@@ -27,4 +27,16 @@
   .quotations::after {
     content: '"';
   }
+
+  .input-primary {
+    @apply border border-neutral bg-background rounded  hover:border-primary-light focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring-primary;
+  }
+
+  .btn-primary {
+    @apply rounded border bg-primary hover:bg-primary-light focus:bg-primary-light focus:outline-none text-on-primary;
+  }
+
+  .btn-outline-primary {
+    @apply rounded border border-neutral bg-background hover:border-primary-light focus:border-primary focus:outline-none text-primary hover:text-primary-light;
+  }
 }
