@@ -12,7 +12,8 @@ import {fileTypeIcons} from './file-type-icons';
   tag: 'atomic-result-icon-v1',
   styleUrl: 'atomic-result-icon.pcss',
   shadow: false,
-  assetsDirs: ['assets'],
+  // TODO: Replace path with 'assets' in v1.
+  assetsDirs: ['../../result-template-components/atomic-result-icon/assets'],
 })
 export class AtomicResultIcon {
   @ResultContext() private result!: Result;
