@@ -105,11 +105,67 @@
         <name>quantic_Oldest</name>
     </customLabels>
     <customLabels>
+        <label>Aide en ligne Coveo</label>
+        <name>quantic_CoveoOnlineHelpLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Plus d'information</label>
+        <name>quantic_MoreInformation</name>
+    </customLabels>
+    <customLabels>
+        <label>Vérifiez la {{0}} pour des erreurs similaires ou {{1}} pour plus d'informations.</label>
+        <name>quantic_CheckForMore</name>
+    </customLabels>
+    <customLabels>
+        <label>communauté</label>
+        <name>quantic_Community</name>
+    </customLabels>
+    <customLabels>
+        <label>contacter l'équipe du support Coveo</label>
+        <name>quantic_ContactCoveoSupportTeam</name>
+    </customLabels>
+    <customLabels>
+        <label>Retourner</label>
+        <name>quantic_GoBack</name>
+    </customLabels>
+    <customLabels>
         <label>Impossible de se connecter.</label>
         <name>quantic_DisconnectedTitle</name>
     </customLabels>
     <customLabels>
         <label>Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet.</label>
         <name>quantic_DisconnectedDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>L'organisation Coveo n'a pas de point de terminaison unique.</label>
+        <name>quantic_NoEndpointsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous devrez ajouter des sources à votre index, ou attendre la fin de l'indexation des sources créées.</label>
+        <name>quantic_NoEndpointsDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>L'organisation Coveo est inaccessible.</label>
+        <name>quantic_InvalidTokenTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Le jeton d'identification est invalide.</label>
+        <name>quantic_InvalidTokenDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Votre organisation redeviendra active et sera bientôt disponible.</label>
+        <name>quantic_OrganizationIsPausedTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Votre organisation Coveo est en pause pour cause d'inactivité et la recherche est présentement non disponible.</label>
+        <name>quantic_OrganizationIsPausedDesc</name>
+    </customLabels>
+    <customLabels>
+        <label>Une erreur s'est produite.</label>
+        <name>quantic_GenericErrorTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Si le problème persiste, contactez l'administrateur.</label>
+        <name>quantic_GenericErrorDesc</name>
     </customLabels>
 </Translations>
