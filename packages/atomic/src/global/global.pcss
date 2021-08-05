@@ -34,4 +34,17 @@
   .btn-outline-primary {
     @apply rounded border border-neutral bg-background hover:border-primary-light focus:border-primary focus:outline-none text-primary hover:text-primary-light;
   }
+
+  .ripple {
+    @apply absolute pointer-events-none rounded-full;
+    transform: scale(0);
+    animation: ripple 700ms linear;
+  }
+
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
 }

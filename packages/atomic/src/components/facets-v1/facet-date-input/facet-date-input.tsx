@@ -2,6 +2,7 @@ import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {DateFilter, DateFilterState, buildDateRange} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
 import dayjs from 'dayjs';
+import {createRipple} from '../../../utils/ripple';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.
@@ -125,6 +126,7 @@ export class FacetDateInput {
           part="input-apply-button"
           class="btn-outline-primary p-2.5 col-span-2"
           aria-label={applyAria}
+          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
           {apply}
         </button>
