@@ -2,6 +2,9 @@ node('linux && docker') {
   checkout scm
 
   withDockerContainer(image: 'node:14', args: '-u=root') {
+    stage('Setup') {
+      sh 'npm run setup'
+    }
     
     stage('Npm publish') {
       withCredentials([

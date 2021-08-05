@@ -83,7 +83,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
         }
       >
-        <span class="ellipsed">{value}</span>
+        <span class="truncate">{value}</span>
         <div
           role="button"
           class="w-2.5 ml-1.5 flex-shrink-0 self-center"

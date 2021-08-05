@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {randomID} from '../../../utils/utils';
 import {FacetValueProps} from '../facet-common';
 
-export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
+export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
   props,
   children
 ) => {
@@ -12,20 +12,19 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
     value: props.displayValue,
     count: props.numberOfResults,
   });
+  const partValue = props.displayValue
+    .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
+    ?.toString();
 
   return (
     <li key={props.displayValue} class="relative flex items-center">
       <button
         id={id}
         role="checkbox"
-        part="value-checkbox"
+        part={`value-${partValue}`}
         onClick={() => props.onClick()}
         aria-checked={props.isSelected.toString()}
-        class={`value-checkbox ${
-          props.isSelected
-            ? 'selected bg-primary'
-            : 'border border-neutral-dark'
-        }`}
+        class={`value-checkbox ${props.isSelected ? 'ring-primary' : ''}`}
         aria-label={ariaLabel}
       ></button>
       <label htmlFor={id} part="value-checkbox-label">
