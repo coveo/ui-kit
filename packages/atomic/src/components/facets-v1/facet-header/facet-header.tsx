@@ -32,11 +32,11 @@ export const FacetHeader: FunctionalComponent<{
       aria-expanded={(!props.isCollapsed).toString()}
     >
       <span class="truncate">{label}</span>
-      <span
+      <atomic-icon
         part="label-button-icon"
-        class="fill-current w-3 h-2 self-center flex-shrink-0 ml-4"
-        innerHTML={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
-      ></span>
+        class="w-3 self-center flex-shrink-0 ml-4"
+        icon={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
+      ></atomic-icon>
     </button>,
     props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <button
@@ -45,11 +45,11 @@ export const FacetHeader: FunctionalComponent<{
         title={clearFiltersForFacet}
         onClick={() => props.onClearFilters!()}
       >
-        <span
+        <atomic-icon
           part="clear-button-icon"
-          class="fill-current w-2 h-2 mr-1"
-          innerHTML={CloseIcon}
-        ></span>
+          class="w-2 h-2 mr-1"
+          icon={CloseIcon}
+        ></atomic-icon>
         <span>{clearFilters}</span>
       </button>
     ),

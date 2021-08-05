@@ -228,12 +228,12 @@ export class AtomicCategoryFacet
           class="parent-button"
           onClick={() => this.facet.deselectAll()}
         >
-          <div
+          <atomic-icon
             aria-hidden="true"
-            innerHTML={LeftArrow}
+            icon={LeftArrow}
             part="back-arrow"
             class="back-arrow"
-          />
+          ></atomic-icon>
           <span class="truncate">{allCategories}</span>
         </button>
       </li>
@@ -259,12 +259,12 @@ export class AtomicCategoryFacet
           onClick={() => this.facet.toggleSelect(facetValue)}
           aria-label={ariaLabel}
         >
-          <div
+          <atomic-icon
             aria-hidden="true"
-            innerHTML={LeftArrow}
+            icon={LeftArrow}
             part="back-arrow"
             class="back-arrow"
-          />
+          ></atomic-icon>
           <span class="truncate">{displayValue}</span>
         </button>
       </li>

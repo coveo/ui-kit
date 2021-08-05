@@ -26,7 +26,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   });
   const btnClasses =
     'flex items-baseline text-left p-2 text-sm mt-2 text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color';
-  const iconClasses = 'fill-current w-2 h-2 mr-1';
+  const iconClasses = 'w-2 h-2 mr-1';
   return [
     props.canShowLessValues && (
       <button
@@ -35,11 +35,11 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         aria-label={showLessFacetValues}
         onClick={() => props.onShowLess()}
       >
-        <div
+        <atomic-icon
           part="show-more-less-icon"
           class={iconClasses}
-          innerHTML={MinusIcon}
-        ></div>
+          icon={MinusIcon}
+        ></atomic-icon>
         {showLess}
       </button>
     ),
@@ -50,11 +50,11 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         aria-label={showMoreFacetValues}
         onClick={() => props.onShowMore()}
       >
-        <div
+        <atomic-icon
           part="show-more-less-icon"
           class={iconClasses}
-          innerHTML={PlusIcon}
-        ></div>
+          icon={PlusIcon}
+        ></atomic-icon>
         {showMore}
       </button>
     ),

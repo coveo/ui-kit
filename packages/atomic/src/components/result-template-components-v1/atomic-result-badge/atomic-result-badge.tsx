@@ -31,11 +31,11 @@ export class AtomicResultBadge {
 
   private renderIcon() {
     return (
-      <atomic-result-icon-v1
+      <atomic-icon
         part="result-badge-icon"
-        icon={this.icon}
+        icon={this.icon!}
         class="w-3 h-3 fill-current"
-      ></atomic-result-icon-v1>
+      ></atomic-icon>
     );
   }
 
