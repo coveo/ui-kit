@@ -313,6 +313,12 @@ export namespace Components {
          */
         "enableSearchTips": boolean;
     }
+    interface AtomicNoResultsV1 {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction": boolean;
+    }
     interface AtomicNumericFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -965,6 +971,12 @@ declare global {
         prototype: HTMLAtomicNoResultsElement;
         new (): HTMLAtomicNoResultsElement;
     };
+    interface HTMLAtomicNoResultsV1Element extends Components.AtomicNoResultsV1, HTMLStencilElement {
+    }
+    var HTMLAtomicNoResultsV1Element: {
+        prototype: HTMLAtomicNoResultsV1Element;
+        new (): HTMLAtomicNoResultsV1Element;
+    };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicNumericFacetElement: {
@@ -1256,6 +1268,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
+        "atomic-no-results-v1": HTMLAtomicNoResultsV1Element;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-facet-v1": HTMLAtomicNumericFacetV1Element;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -1605,6 +1618,12 @@ declare namespace LocalJSX {
           * Whether to display a list of search tips to the user.
          */
         "enableSearchTips"?: boolean;
+    }
+    interface AtomicNoResultsV1 {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction"?: boolean;
     }
     interface AtomicNumericFacet {
         /**
@@ -2146,6 +2165,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
+        "atomic-no-results-v1": AtomicNoResultsV1;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-facet-v1": AtomicNumericFacetV1;
         "atomic-numeric-range": AtomicNumericRange;
@@ -2217,6 +2237,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
+            "atomic-no-results-v1": LocalJSX.AtomicNoResultsV1 & JSXBase.HTMLAttributes<HTMLAtomicNoResultsV1Element>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-facet-v1": LocalJSX.AtomicNumericFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetV1Element>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
