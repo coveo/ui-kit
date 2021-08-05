@@ -15,7 +15,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import Lupa from '../../images/lupa-frame.svg';
+import MagnifyingGlass from '../../images/magnifying-glass.svg';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -59,16 +59,16 @@ export class AtomicNoResults {
   }
 
   private wrapHighlight(content: string) {
-    return `<span class="font-bold" part="highlight">"${content}"</span>`;
+    return `<span class="font-bold quotations" part="highlight">${content}</span>`;
   }
 
-  private renderLupa() {
-    return <div innerHTML={Lupa} class="my-6"></div>;
+  private renderMagnifyingGlass() {
+    return <div innerHTML={MagnifyingGlass} class="my-6"></div>;
   }
 
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('no-results-for-v1', {
+      ? this.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
           query: this.wrapHighlight(escape(this.querySummaryState.query)),
         })
@@ -117,7 +117,7 @@ export class AtomicNoResults {
 
     return [
       <div class="flex flex-col items-center h-full w-full text-on-background">
-        {this.renderLupa()}
+        {this.renderMagnifyingGlass()}
         {this.renderNoResults()}
         {this.renderSearchTips()}
         {this.enableCancelLastAction && this.renderCancel()}
