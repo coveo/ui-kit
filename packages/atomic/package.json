@@ -44,6 +44,7 @@
     "escape-html": "^1.0.3",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
+    "mustache": "^4.0.1",
     "stencil-inline-svg": "^1.0.1",
     "tailwindcss": "^2.2.2"
   },
@@ -75,6 +76,9 @@
     "rollup": "2.39.0",
     "rollup-plugin-html": "0.2.1",
     "rollup-plugin-typescript2": "0.30.0"
+  },
+  "//TODO:": {
+    "mustache": "remove dependency along with type in v1"
   },
   "license": "Apache-2.0"
 }

@@ -1,6 +1,6 @@
 import {Component, Element, h, getAssetPath, Host, Prop} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
 
@@ -9,10 +9,11 @@ import {fileTypeIcons} from './file-type-icons';
  * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
  */
 @Component({
-  tag: 'atomic-result-icon',
+  tag: 'atomic-result-icon-v1',
   styleUrl: 'atomic-result-icon.pcss',
   shadow: false,
-  assetsDirs: ['assets'],
+  // TODO: Replace path with 'assets' in v1.
+  assetsDirs: ['../../result-template-components/atomic-result-icon/assets'],
 })
 export class AtomicResultIcon {
   @ResultContext() private result!: Result;
@@ -20,11 +21,13 @@ export class AtomicResultIcon {
   @Element() host!: HTMLElement;
 
   /**
-   * Specifies the icon to display from the list of available icons.
+   * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
    *
    * By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
    */
   @Prop() icon?: string;
+
+  private svg: string | null = null;
 
   private get defaultIcon() {
     const fileTypeValue = ResultTemplatesHelpers.getResultProperty(
@@ -41,14 +44,25 @@ export class AtomicResultIcon {
     return objectType || fileType || 'custom';
   }
 
-  public render() {
-    const icon = this.icon || this.defaultIcon;
-    const iconPath = getAssetPath(`./assets/${icon}.svg`);
+  private get isPath() {
+    return !!this.icon?.match(/^(https?:\/\/|\.\/|\.\.\/)/);
+  }
 
+  public async componentWillLoad() {
+    const icon = this.icon || this.defaultIcon;
+    const iconPath = this.isPath ? icon : getAssetPath(`./assets/${icon}.svg`);
+    const response = await fetch(iconPath);
+    this.svg =
+      response.status === 200 || response.status === 304
+        ? await response.text()
+        : null;
+  }
+
+  public render() {
     return (
       <Host
-        class={icon}
-        style={{'background-image': `url(${iconPath})`}}
+        class={!this.isPath ? this.icon || this.defaultIcon : ''}
+        innerHTML={this.svg}
       ></Host>
     );
   }

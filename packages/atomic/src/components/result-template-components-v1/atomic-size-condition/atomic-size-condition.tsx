@@ -6,7 +6,7 @@ type Criterion = (width: number, height: number) => boolean;
  * Displays children only if their parent meets the defined size constraints.
  */
 @Component({
-  tag: 'atomic-size-condition',
+  tag: 'atomic-size-condition-v1',
   styleUrl: 'atomic-size-condition.pcss',
   shadow: false,
 })
