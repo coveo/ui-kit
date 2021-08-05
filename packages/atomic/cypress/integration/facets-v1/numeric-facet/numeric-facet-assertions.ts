@@ -129,3 +129,122 @@ function getEvenRangeValue(value: string) {
   const end = Number(value.split(' to ')[1].replaceAll(',', ''));
   return end - start;
 }
+
+export function assertCurrencyFormat() {
+  it('should display correct currency format CA$', () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        expect(e.split(' to ')[0]).contains('CA$');
+        expect(e.split(' to ')[1]).contains('CA$');
+        expect(e.split(' to ')[0].split('$')[0]).eq('CA');
+      });
+    });
+  });
+}
+
+export function assertUnitFormatKgLong() {
+  it('should display correct unit format "kilograms"', () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        expect(e.split(' to ')[0]).contains('kilograms');
+        expect(e.split(' to ')[1]).contains('kilograms');
+        expect(e.split(' to ')[0].split(' ')[1]).eq('kilograms');
+      });
+    });
+  });
+}
+
+export function assertUnitFormatHourNarrow() {
+  it('should display correct unit format "kg"', () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        expect(e.split(' to ')[0]).contains('kg');
+        expect(e.split(' to ')[1]).contains('kg');
+        expect(e.split(' to ')[0].slice(-2)).eq('kg');
+      });
+    });
+  });
+}
+
+export function assertFormatNumberMinimumIntegerDigits(digit: number) {
+  it(`should display the minimum ${digit} number of integer digits`, () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        expect(countCharactor(e.split(' to ')[0])).least(digit);
+        expect(countCharactor(e.split(' to ')[1])).least(digit);
+      });
+    });
+  });
+}
+
+export function assertFormatNumberMinimumMaxFractionDigits(
+  min: number,
+  max: number
+) {
+  it(`should display the minimum ${min} number and max ${max} of fraction digits`, () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const start = e.split(' to ')[0].replaceAll(',', '');
+        const end = e.split(' to ')[1].replaceAll(',', '');
+        expect(start).to.eq(
+          convertToNumberWithMaxMinFractionDigit(Number(start), min, max)
+        );
+        expect(end).to.eq(
+          convertToNumberWithMaxMinFractionDigit(Number(end), min, max)
+        );
+      });
+    });
+  });
+}
+
+export function assertFormatNumberMinimumMaxSignificantDigits(
+  min: number,
+  max: number
+) {
+  it(`should display the minimum ${min} number and max ${max} of significant digits`, () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const start = e.split(' to ')[0].replaceAll(',', '');
+        const end = e.split(' to ')[1].replaceAll(',', '');
+        expect(start).to.eq(
+          convertToNumberWithMaxMinSignificantDigit(Number(start), min, max)
+        );
+        expect(end).to.eq(
+          convertToNumberWithMaxMinSignificantDigit(Number(end), min, max)
+        );
+      });
+    });
+  });
+}
+
+function countCharactor(e: string) {
+  return e.replaceAll(',', '').length;
+}
+
+function convertToNumberWithMaxMinFractionDigit(
+  num: number,
+  min: number,
+  max: number
+) {
+  return num.toLocaleString(undefined, {
+    minimumFractionDigits: min,
+    maximumFractionDigits: max,
+  });
+}
+
+function convertToNumberWithMaxMinSignificantDigit(
+  num: number,
+  min: number,
+  max: number
+) {
+  return num.toLocaleString(undefined, {
+    minimumSignificantDigits: min,
+    maximumSignificantDigits: max,
+  });
+}

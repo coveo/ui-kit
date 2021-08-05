@@ -1,6 +1,5 @@
 import {
   TestFixture,
-  addTag,
   TagProps,
   generateComponentHTML,
 } from '../../../fixtures/test-fixture';
@@ -28,14 +27,30 @@ export const numericRanges: NumericRange[] = [
   },
 ];
 
-export const addNumericFacet = (props: TagProps = {}) => (env: TestFixture) =>
-  addTag(env, 'atomic-numeric-facet-v1', props);
+export const addNumericFacet = (
+  props: TagProps = {},
+  formatTag?: string,
+  formatTagProps?: TagProps
+) => (env: TestFixture) => {
+  const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+  if (formatTag && formatTagProps) {
+    const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+    e.append(formatTagHTML);
+  }
+  env.withElement(e);
+};
 
 export const addNumericFacetWithRange = (
   props: TagProps = {},
-  ranges: NumericRange[]
+  ranges: NumericRange[],
+  formatTag?: string,
+  formatTagProps?: TagProps
 ) => (env: TestFixture) => {
   const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+  if (formatTag && formatTagProps) {
+    const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+    e.append(formatTagHTML);
+  }
   ranges.forEach((r: NumericRange) => {
     const rangeHTML = generateComponentHTML('atomic-numeric-range', {
       start: `${r.start}`,
