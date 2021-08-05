@@ -104,11 +104,11 @@ export class FacetNumberInput {
         <button
           type="submit"
           part="input-apply-button"
-          class="btn-outline-primary p-2.5 flex-none"
+          class="btn-outline-primary p-2.5 flex-none truncate"
           aria-label={applyAria}
           onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
-          {apply}
+          <span class="truncate">{apply}</span>
         </button>
       </form>
     );

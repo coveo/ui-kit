@@ -124,11 +124,11 @@ export class FacetDateInput {
         <button
           type="submit"
           part="input-apply-button"
-          class="btn-outline-primary p-2.5 col-span-2"
+          class="btn-outline-primary p-2.5 col-span-2 truncate"
           aria-label={applyAria}
           onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
-          {apply}
+          <span>{apply}</span>
         </button>
       </form>
     );
