@@ -98,7 +98,7 @@ export class AtomicNoResults {
     return (
       <button
         part="cancel-button"
-        class="text-neutral-light hover:underline font-bold bg-primary px-2.5 py-3 rounded-md my-3"
+        class="text-neutral-light font-bold bg-primary px-2.5 py-3 rounded-md my-3 hover:bg-primary-light focus:ring-4 focus:outline-none"
         onClick={() => this.history.back()}
       >
         {this.bindings.i18n.t('cancel-last-action')}
