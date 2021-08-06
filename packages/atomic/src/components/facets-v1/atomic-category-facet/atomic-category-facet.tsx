@@ -60,7 +60,7 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
  * @part parents - The parent values container.
  * @part all-categories-button - The "View all" button displayed first along the parents.
  * @part parent-button - The clickable parent button.
- * @part active-parent - The non-clickable acitve parent.
+ * @part active-parent - The non-clickable active parent.
  * @part back-arrow - The back arrow displayed before the clickable parents.
  *
  * @part values - The facet values child container.
@@ -234,7 +234,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          <span class="ellipsed">{allCategories}</span>
+          <span class="truncate">{allCategories}</span>
         </button>
       </li>
     );
@@ -265,7 +265,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          <span class="ellipsed">{displayValue}</span>
+          <span class="truncate">{displayValue}</span>
         </button>
       </li>
     );

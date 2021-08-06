@@ -18,17 +18,17 @@ const relativeStart = serializeRelativeDate({
 const relativeEnd = serializeRelativeDate({
   period: 'now',
 });
-const absoluteStart = formatRelativeDateForSearchApi(relativeStart);
-const absoluteEnd = formatRelativeDateForSearchApi(relativeEnd);
+const getAbsoluteStart = () => formatRelativeDateForSearchApi(relativeStart);
+const getAbsoluteEnd = () => formatRelativeDateForSearchApi(relativeEnd);
 
-const expectedMappings = {
+const getExpectedMappings = () => ({
   dateFacetValueMap: {
     [facetId]: {
-      [`start${absoluteStart}`]: relativeStart,
-      [`end${absoluteEnd}`]: relativeEnd,
+      [`start${getAbsoluteStart()}`]: relativeStart,
+      [`end${getAbsoluteEnd()}`]: relativeEnd,
     },
   },
-};
+});
 
 describe('#mapSearchRequest', () => {
   it('should return the full request along with mappings', () => {
@@ -62,8 +62,8 @@ describe('#mapSearchRequest', () => {
           facetId,
           currentValues: [
             {
-              start: absoluteStart,
-              end: absoluteEnd,
+              start: getAbsoluteStart(),
+              end: getAbsoluteEnd(),
               state: 'idle',
               endInclusive: false,
             },
@@ -73,7 +73,7 @@ describe('#mapSearchRequest', () => {
     });
 
     const {request, mappings} = mapSearchRequest(unmappedRequest);
-    expect(mappings).toEqual(expectedMappings);
+    expect(mappings).toEqual(getExpectedMappings());
     expect(request).toEqual(mappedRequest);
   });
 });
@@ -98,15 +98,15 @@ describe('#mapSearchResponse', () => {
                 facetId,
                 values: [
                   buildMockDateFacetValue({
-                    start: absoluteStart,
-                    end: absoluteEnd,
+                    start: getAbsoluteStart(),
+                    end: getAbsoluteEnd(),
                   }),
                 ],
               }),
             ],
           }),
         },
-        expectedMappings
+        getExpectedMappings()
       )
     ).toEqual({
       success: buildMockSearchResponse({

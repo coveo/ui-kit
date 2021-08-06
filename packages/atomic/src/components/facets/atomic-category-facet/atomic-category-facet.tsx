@@ -189,7 +189,7 @@ export class AtomicCategoryFacet
         onClick={() => this.facet.toggleSelect(parent)}
       >
         <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
-        <span class="ellipsed">{parent.value}</span>
+        <span class="truncate">{parent.value}</span>
       </button>
     );
   }
@@ -197,7 +197,7 @@ export class AtomicCategoryFacet
   private buildActiveParent(parent: CategoryFacetValue) {
     return (
       <div part="active-parent" class="value-button font-bold ml-6">
-        <span part="value-label" class="ellipsed">
+        <span part="value-label" class="truncate">
           {parent.value}
         </span>
         <span part="value-count" class="value-count">
@@ -220,7 +220,7 @@ export class AtomicCategoryFacet
           onClick={() => this.facet.toggleSelect(item)}
           aria-label={this.strings.facetValue(item)}
         >
-          <span part="value-label" class="ellipsed">
+          <span part="value-label" class="truncate">
             {item.value}
           </span>
           <span part="value-count" class="value-count">
@@ -307,7 +307,7 @@ export class AtomicCategoryFacet
   private renderPath(path: string[]) {
     if (!path.length) {
       return (
-        <span class="ellipsed">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+        <span class="truncate">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
       );
     }
 
@@ -315,7 +315,7 @@ export class AtomicCategoryFacet
       <span class="mr-1">{this.strings.pathPrefix()}</span>,
       this.ellipsedPath(path).map((part, index) => [
         index > 0 && <span>{SEPARATOR}</span>,
-        <span class={part === ELLIPSIS ? '' : 'ellipsed flex-1 max-w-max'}>
+        <span class={part === ELLIPSIS ? '' : 'truncate flex-1 max-w-max'}>
           {part}
         </span>,
       ]),
@@ -327,7 +327,7 @@ export class AtomicCategoryFacet
       <div class="flex items-baseline" aria-hidden="true">
         <span
           part="value-label"
-          class="ellipsed font-bold"
+          class="truncate font-bold"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetState.facetSearch.query
