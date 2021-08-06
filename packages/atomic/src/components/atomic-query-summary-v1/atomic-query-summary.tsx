@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
 import {
   QuerySummary,
   QuerySummaryState,
