@@ -9,8 +9,11 @@ import {
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {
   getQuerySuggestSetInitialState,
+  QuerySuggestSet,
   QuerySuggestState,
 } from './query-suggest-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {executeSearch} from '../search/search-actions';
 
 export const querySuggestReducer = createReducer(
   getQuerySuggestSetInitialState(),
@@ -66,7 +69,7 @@ export const querySuggestReducer = createReducer(
         const {id, query} = action.payload;
 
         if (id in state) {
-          state[id]!.q = query;
+          updateQuerySuggestQuery(state[id]!, query);
         }
       })
       .addCase(clearQuerySuggest, (state, action) => {
@@ -76,7 +79,6 @@ export const querySuggestReducer = createReducer(
           return;
         }
 
-        querySuggest.q = '';
         querySuggest.completions = [];
         querySuggest.partialQueries = [];
       })
@@ -90,7 +92,26 @@ export const querySuggestReducer = createReducer(
 
         querySuggest.q = expression;
       })
+      .addCase(restoreSearchParameters, (state, action) => {
+        updateAllQuerySuggestSetQuery(state, action.payload.q ?? '');
+      })
+      .addCase(executeSearch.fulfilled, (state, action) => {
+        const {queryExecuted} = action.payload;
+        updateAllQuerySuggestSetQuery(state, queryExecuted);
+      })
 );
+
+function updateQuerySuggestQuery(state: QuerySuggestState, query: string) {
+  state.q = query;
+  state.completions = [];
+  state.partialQueries = [];
+}
+
+function updateAllQuerySuggestSetQuery(state: QuerySuggestSet, query: string) {
+  Object.keys(state).forEach((id) =>
+    updateQuerySuggestQuery(state[id]!, query)
+  );
+}
 
 function buildQuerySuggest(
   config: Partial<QuerySuggestState>
