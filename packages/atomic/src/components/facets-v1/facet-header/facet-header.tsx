@@ -26,12 +26,12 @@ export const FacetHeader: FunctionalComponent<{
   return [
     <button
       part="label-button"
-      class="flex justify-between w-full py-1 text-on-background text-lg hover:text-primary"
+      class="flex justify-between w-full py-1 px-2 text-on-background text-lg hover:text-primary focus:text-primary focus:outline-color"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
       aria-expanded={(!props.isCollapsed).toString()}
     >
-      <span class="ellipsed">{label}</span>
+      <span class="truncate">{label}</span>
       <span
         part="label-button-icon"
         class="fill-current w-3 h-2 self-center flex-shrink-0 ml-4"
@@ -41,7 +41,7 @@ export const FacetHeader: FunctionalComponent<{
     props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
-        class="flex items-baseline w-full p-1 text-sm link"
+        class="flex items-baseline p-2 text-sm text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color"
         title={clearFiltersForFacet}
         onClick={() => props.onClearFilters!()}
       >

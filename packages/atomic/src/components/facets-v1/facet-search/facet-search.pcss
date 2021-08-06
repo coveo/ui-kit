@@ -2,12 +2,8 @@ input[type='text']:focus ~ .search-icon {
   @apply text-primary;
 }
 
-/**
- * @prop --atomic-facet-search-ring-color: Color of the input's outline ring
- */
-input[type='text']:focus ~ .input-ring {
-  --tw-ring-color: var(--atomic-facet-search-ring-color, var(--atomic-primary));
-  @apply ring-2;
+input[type='text']:hover ~ .search-icon {
+  @apply text-primary-light;
 }
 
 /**
