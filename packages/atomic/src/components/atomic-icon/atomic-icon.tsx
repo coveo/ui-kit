@@ -1,6 +1,11 @@
-import {Component, Element, h, Host, Prop} from '@stencil/core';
+import {Component, Element, h, Host, Prop, State} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
+import {
+  InitializableComponent,
+  InitializeBindings,
+  Bindings,
+} from '../../utils/initialization-utils';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -13,7 +18,8 @@ import {sanitize} from 'dompurify';
   shadow: false,
   assetsDirs: ['assets'],
 })
-export class AtomicIcon {
+export class AtomicIcon implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   @Element() host!: HTMLElement;
 
   /**
@@ -25,13 +31,23 @@ export class AtomicIcon {
    */
   @Prop() icon!: string;
 
+  @State() public error!: Error;
+
   private svg: string | null = null;
 
   private async fetchIcon(url: string) {
-    const response = await fetch(url);
-    return response.status === 200 || response.status === 304
-      ? await response.text()
-      : null;
+    try {
+      const response = await fetch(url);
+      if (response.status !== 200 && response.status !== 304) {
+        throw new Error(
+          `Could not fetch icon from ${url}, got status code ${response.status} (${response.statusText}).`
+        );
+      }
+      return await response.text();
+    } catch (e) {
+      this.error = e;
+      return null;
+    }
   }
 
   public async componentWillRender() {
