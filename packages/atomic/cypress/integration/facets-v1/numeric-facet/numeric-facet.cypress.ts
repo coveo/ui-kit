@@ -397,7 +397,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         );
       });
 
-      describe('verify analytics', () => {
+      describe.skip('verify analytics', () => {
         before(setupSelectCheckboxValue);
         NumericFacetAssertions.assertLogNumericFacetSelect(
           field,
