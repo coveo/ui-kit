@@ -159,7 +159,7 @@ export interface CategoryFacetSearchSection {
 export interface RedirectionSection {
   /**
    * The URL redirection triggered by the preprocessed query.
-   * @deprecated - Please use `standaloneSearchBoxSet` instead.
+   * @deprecated - The `redirection` property will be removed in the future. Please use `standaloneSearchBoxSet` instead.
    */
   redirection: RedirectionState;
 }

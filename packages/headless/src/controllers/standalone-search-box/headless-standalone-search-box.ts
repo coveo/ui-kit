@@ -3,6 +3,7 @@ import {
   query,
   querySuggest,
   standaloneSearchBoxSet,
+  redirection,
 } from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
@@ -163,6 +164,7 @@ function loadStandaloneSearchBoxReducers(
     configuration,
     query,
     querySuggest,
+    redirection,
   });
   return true;
 }

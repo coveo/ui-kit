@@ -49,6 +49,9 @@ export const categoryFacetSearchSet = categoryFacetSearchSetReducer;
 export const query = queryReducer;
 export const advancedSearchQueries = advancedSearchQueriesReducer;
 export const querySet = querySetReducer;
+/**
+ * @deprecated - The `redirection` functionality is now handled by the `standaloneSearchBoxSet`.
+ */
 export const redirection = redirectionReducer;
 export const querySuggest = querySuggestReducer;
 export const sortCriteria = sortCriteriaReducer;

@@ -21,6 +21,7 @@ import {
   query,
   standaloneSearchBoxSet,
   querySuggest,
+  redirection,
 } from '../../app/reducers';
 import {
   fetchRedirectUrl,
@@ -68,6 +69,7 @@ describe('headless standalone searchBox', () => {
       configuration,
       query,
       querySuggest,
+      redirection,
     });
   });
 
