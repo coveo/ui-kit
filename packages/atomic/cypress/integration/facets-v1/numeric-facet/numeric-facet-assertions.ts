@@ -135,9 +135,10 @@ export function assertCurrencyFormat() {
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
-        expect(e.split(' to ')[0]).contains('CA$');
-        expect(e.split(' to ')[1]).contains('CA$');
-        expect(e.split(' to ')[0].split('$')[0]).eq('CA');
+        const [start, end] = e.split(' to ');
+        expect(start).contains('CA$');
+        expect(end).contains('CA$');
+        expect(start.split('$')[0]).eq('CA');
       });
     });
   });
@@ -148,22 +149,24 @@ export function assertUnitFormatKgLong() {
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
-        expect(e.split(' to ')[0]).contains('kilograms');
-        expect(e.split(' to ')[1]).contains('kilograms');
-        expect(e.split(' to ')[0].split(' ')[1]).eq('kilograms');
+        const [start, end] = e.split(' to ');
+        expect(start).contains('kilograms');
+        expect(end).contains('kilograms');
+        expect(start.split(' ')[1]).eq('kilograms');
       });
     });
   });
 }
 
-export function assertUnitFormatHourNarrow() {
+export function assertUnitFormatKgNarrow() {
   it('should display correct unit format "kg"', () => {
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
-        expect(e.split(' to ')[0]).contains('kg');
-        expect(e.split(' to ')[1]).contains('kg');
-        expect(e.split(' to ')[0].slice(-2)).eq('kg');
+        const [start, end] = e.split(' to ');
+        expect(start).contains('kg');
+        expect(end).contains('kg');
+        expect(start.slice(-2)).eq('kg');
       });
     });
   });
@@ -174,8 +177,9 @@ export function assertFormatNumberMinimumIntegerDigits(digit: number) {
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
-        expect(countCharactor(e.split(' to ')[0])).least(digit);
-        expect(countCharactor(e.split(' to ')[1])).least(digit);
+        const [start, end] = e.split(' to ');
+        expect(countCharactor(start)).least(digit);
+        expect(countCharactor(end)).least(digit);
       });
     });
   });
@@ -189,8 +193,8 @@ export function assertFormatNumberMinimumMaxFractionDigits(
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
-        const start = e.split(' to ')[0].replaceAll(',', '');
-        const end = e.split(' to ')[1].replaceAll(',', '');
+        const [start, end] = e.replaceAll(',', '').split(' to ');
+
         expect(start).to.eq(
           convertToNumberWithMaxMinFractionDigit(Number(start), min, max)
         );
@@ -210,8 +214,7 @@ export function assertFormatNumberMinimumMaxSignificantDigits(
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
-        const start = e.split(' to ')[0].replaceAll(',', '');
-        const end = e.split(' to ')[1].replaceAll(',', '');
+        const [start, end] = e.replaceAll(',', '').split(' to ');
         expect(start).to.eq(
           convertToNumberWithMaxMinSignificantDigit(Number(start), min, max)
         );

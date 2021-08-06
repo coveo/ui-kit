@@ -891,7 +891,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           });
           CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
           CommonAssertions.assertAccessibility(numericFacetComponent);
-          NumericFacetAssertions.assertUnitFormatHourNarrow();
+          NumericFacetAssertions.assertUnitFormatKgNarrow();
         });
       });
 
