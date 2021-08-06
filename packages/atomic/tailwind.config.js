@@ -40,6 +40,10 @@ module.exports = {
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
       },
+      screens: {
+        'desktop-only': {min: '768px'},
+        'mobile-only': {max: '767px'},
+      },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
       },
