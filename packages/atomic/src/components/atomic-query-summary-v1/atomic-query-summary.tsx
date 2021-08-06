@@ -36,11 +36,6 @@ export class AtomicQuerySummary implements InitializableComponent {
   private querySummaryState!: QuerySummaryState;
   @State() public error!: Error;
 
-  /**
-   * Whether to display the pagination of the last query execution.
-   */
-  @Prop() enablePagination = true;
-
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
