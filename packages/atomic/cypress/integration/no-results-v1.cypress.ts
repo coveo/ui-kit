@@ -23,6 +23,15 @@ describe('No Results Test Suites', () => {
     cy.get('atomic-no-results-v1').should('be.visible');
   });
 
+  it('text content should match when there are no results', () => {
+    cy.visit(buildTestUrl('q=dsmndkndjnj'));
+    injectComponent(component() + searchBox);
+    cy.wait(wait);
+    cy.get('atomic-no-results-v1')
+      .find('.quotations')
+      .should('contain.text', 'dsmndkndjnj');
+  });
+
   it('cancel button should not be visible when there is no history', () => {
     cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
     injectComponent(component());
