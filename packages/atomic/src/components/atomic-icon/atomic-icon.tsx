@@ -1,5 +1,6 @@
 import {Component, Element, h, Host, Prop} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
+import {sanitize} from 'dompurify';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -39,6 +40,11 @@ export class AtomicIcon {
   }
 
   public render() {
-    return <Host innerHTML={this.svg}></Host>;
+    const sanitizedSvg = this.svg
+      ? sanitize(this.svg, {
+          USE_PROFILES: {svg: true, svgFilters: true},
+        })
+      : null;
+    return <Host innerHTML={sanitizedSvg}></Host>;
   }
 }
