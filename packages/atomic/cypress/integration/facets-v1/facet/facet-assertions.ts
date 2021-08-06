@@ -44,59 +44,6 @@ export function assertDisplayShowLessButton(display: boolean) {
   });
 }
 
-export function assertDisplaySearchInput(display: boolean) {
-  it(`${should(display)} display the facet search input`, () => {
-    FacetSelectors.searchInput().should(display ? 'be.visible' : 'not.exist');
-  });
-}
-
-export function assertDisplaySearchClearButton(display: boolean) {
-  it(`${should(display)} display the facet search clear button`, () => {
-    FacetSelectors.searchClearButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
-export function assertHighlightsResults(query: string) {
-  it(`should highlight the results with the query "${query}"`, () => {
-    FacetSelectors.valueHighlight().each((element) => {
-      const text = element.text().toLowerCase();
-      expect(text).to.eq(query.toLowerCase());
-    });
-  });
-}
-
-export function assertSearchInputEmpty() {
-  it('the search input should be empty', () => {
-    FacetSelectors.searchInput().invoke('val').should('be.empty');
-  });
-}
-
-export function assertDisplayMoreMatchesFound(display: boolean) {
-  it(`${should(display)} display the "More matches for" label`, () => {
-    FacetSelectors.moreMatches().should(display ? 'be.visible' : 'not.exist');
-  });
-}
-
-export function assertDisplayNoMatchesFound(display: boolean) {
-  it(`${should(display)} display the "No matches found for" label`, () => {
-    FacetSelectors.noMatches().should(display ? 'be.visible' : 'not.exist');
-  });
-}
-
-export function assertMoreMatchesFoundContainsQuery(query: string) {
-  it(`"More matches for" label should have the query ${query}`, () => {
-    FacetSelectors.moreMatches().contains(query);
-  });
-}
-
-export function assertNoMatchesFoundContainsQuery(query: string) {
-  it(`"No matches found for" label should have the query ${query}`, () => {
-    FacetSelectors.noMatches().contains(query);
-  });
-}
-
 export function assertLogFacetSelect(field: string, index: number) {
   it('should log the facet select results to UA ', () => {
     cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
@@ -156,16 +103,6 @@ export function assertLogFacetShowLess(field: string) {
         'eventValue',
         'showLessFacetResults'
       );
-      expect(analyticsBody.customData).to.have.property('facetField', field);
-    });
-  });
-}
-
-export function assertLogFacetSearch(field: string) {
-  it('should log the facet search to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
       expect(analyticsBody.customData).to.have.property('facetField', field);
     });
   });

@@ -23,10 +23,10 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
       ></button>
       <label
         htmlFor={id}
-        class="w-full flex pl-3 text-on-background cursor-pointer ellipsed text-lg lg:text-base py-1.5"
+        class="w-full flex pl-3 text-on-background cursor-pointer truncate text-lg lg:text-base py-1.5"
         title={props.label}
       >
-        <span part="value-label" class="ellipsed">
+        <span part="value-label" class="truncate">
           {props.label}
         </span>
         <span part="value-count" class="value-count">
