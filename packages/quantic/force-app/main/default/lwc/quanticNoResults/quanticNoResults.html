@@ -17,12 +17,10 @@
                     </template>
                 </p>
             </div>
-            <template if:false={disableCancelLastAction}>
-                <template if:true={hasHistory}>
-                    <div class="slds-m-vertical_x-large slds-align_absolute-center">
-                        <lightning-button variant="brand" label={labels.undoLastAction} class="slds-m-around_x-small" onclick={onUndoLastActionClick}></lightning-button>
-                    </div>
-                </template>
+            <template if:true={showUndoButton}>
+                <div class="slds-m-vertical_x-large slds-align_absolute-center">
+                    <lightning-button variant="brand" label={labels.undoLastAction} class="slds-m-around_x-small" onclick={onUndoLastActionClick}></lightning-button>
+                </div>
             </template>
         </div>
     </template> 
