@@ -66,7 +66,7 @@ describe('Breadcrumb Manager Test Suites', () => {
       });
     });
 
-    it('should remove the breadcrumb when it is clicked', () => {
+    it.skip('should remove the breadcrumb when it is clicked', () => {
       cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbs).first().click();
