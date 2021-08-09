@@ -78,7 +78,7 @@ export default class QuanticNumericFacet extends LightningElement {
     return this.values.length !== 0;
   }
 
-  get isAnyChecked() {
+  get hasActiveValues() {
     return this.state.hasActiveValues;
   }
 

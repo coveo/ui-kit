@@ -12,7 +12,7 @@
               <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
             </div>
           </template>
-          <template if:true={isAnyChecked}>
+          <template if:true={hasActiveValues}>
             <button class="slds-button slds-button_icon slds-p-horizontal_small facet__collapse" value={labels.clear} onclick={clearSelections}>
               <lightning-formatted-text class="slds-p-right_x-small" value={labels.clear}></lightning-formatted-text>
               <lightning-icon class="slds-button__icon slds-current-color" icon-name="utility:close" size="xx-small"></lightning-icon>
