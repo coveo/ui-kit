@@ -31,7 +31,7 @@
     "test": "stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
     "generate": "stencil generate",
-    "cypress:test": "npx cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome",
+    "cypress:test": "npx cypress run --record --key 0be9519d-e2ca-40a6-8246-88a448447e68 --browser chrome --spec 'cypress/integration/facets-v1/numeric-facet/numeric-facet.cypress.ts'",
     "cypress:test:firefox": "npx cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser firefox",
     "cypress:open": "npx cypress open",
     "npm:publish": "npm publish --access public"
