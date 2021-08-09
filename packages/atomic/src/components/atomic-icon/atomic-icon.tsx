@@ -1,11 +1,6 @@
-import {Component, Element, h, Host, Prop, State} from '@stencil/core';
+import {Component, Element, getElement, h, Host, Prop} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
-import {
-  InitializableComponent,
-  InitializeBindings,
-  Bindings,
-} from '../../utils/initialization-utils';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -18,8 +13,7 @@ import {
   shadow: false,
   assetsDirs: ['assets'],
 })
-export class AtomicIcon implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicIcon {
   @Element() host!: HTMLElement;
 
   /**
@@ -31,8 +25,7 @@ export class AtomicIcon implements InitializableComponent {
    */
   @Prop() icon!: string;
 
-  @State() public error!: Error;
-
+  private error: Error | null = null;
   private svg: string | null = null;
 
   private async fetchIcon(url: string) {
@@ -43,6 +36,7 @@ export class AtomicIcon implements InitializableComponent {
           `Could not fetch icon from ${url}, got status code ${response.status} (${response.statusText}).`
         );
       }
+      this.error = null;
       return await response.text();
     } catch (e) {
       this.error = e;
@@ -50,17 +44,30 @@ export class AtomicIcon implements InitializableComponent {
     }
   }
 
-  public async componentWillRender() {
+  private async getIcon() {
     const url = parseAssetURL(this.icon);
-    this.svg = url ? await this.fetchIcon(url) : this.icon;
-  }
-
-  public render() {
-    const sanitizedSvg = this.svg
-      ? sanitize(this.svg, {
+    const svg = url ? await this.fetchIcon(url) : this.icon;
+    const sanitizedSvg = svg
+      ? sanitize(svg, {
           USE_PROFILES: {svg: true, svgFilters: true},
         })
       : null;
-    return <Host innerHTML={sanitizedSvg}></Host>;
+    return sanitizedSvg;
+  }
+
+  public async componentWillRender() {
+    this.svg = await this.getIcon();
+  }
+
+  public render() {
+    if (this.error) {
+      return (
+        <atomic-component-error
+          element={getElement(this)}
+          error={this.error}
+        ></atomic-component-error>
+      );
+    }
+    return <Host innerHTML={this.svg}></Host>;
   }
 }
