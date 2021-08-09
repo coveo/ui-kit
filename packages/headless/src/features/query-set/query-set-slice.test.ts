@@ -7,6 +7,7 @@ import {executeSearch} from '../search/search-actions';
 import {buildMockSearch} from '../../test/mock-search';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
 import {getHistoryInitialState} from '../history/history-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -98,6 +99,27 @@ describe('querySet slice', () => {
       state,
       executeSearch.fulfilled(searchState, '', logSearchboxSubmit())
     );
+    expect(nextState).toEqual(expectedQuerySet);
+  });
+
+  it('sets all queries to q on restoreSearchParameters, when defined', () => {
+    registerEmptyQueryWithId('foo');
+    registerEmptyQueryWithId('bar');
+
+    const expectedQuerySet = {foo: 'world', bar: 'world'};
+    const nextState = querySetReducer(
+      state,
+      restoreSearchParameters({q: 'world'})
+    );
+    expect(nextState).toEqual(expectedQuerySet);
+  });
+
+  it('sets all queries to an empty string on restoreSearchParameters, when not defined', () => {
+    registerEmptyQueryWithId('foo');
+    registerEmptyQueryWithId('bar');
+
+    const expectedQuerySet = {foo: '', bar: ''};
+    const nextState = querySetReducer(state, restoreSearchParameters({}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 
