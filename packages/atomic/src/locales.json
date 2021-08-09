@@ -459,8 +459,8 @@
     "zh-tw": "用時 {{count}} 秒"
   },
   "no-results-for": {
-    "en": "No results for {{query}}",
-    "fr": "Aucun résultat pour {{query}}",
+    "en": "We couldn't find anything for {{query}}",
+    "fr": "Nous n'avons rien trouvé pour {{query}}",
     "cs": "Pro dotaz {{query}} nebyly nalezeny žádné výsledky",
     "da": "Ingen resultater for {{query}}",
     "de": "Keine Ergebnisse für {{query}}",
@@ -482,6 +482,10 @@
     "tr": "{{query}} için sonuç yok",
     "zh-cn": "没有找到与 {{query}} 相关的结果",
     "zh-tw": "沒有找到與 {{query}} 相關的結果"
+  },
+  "search-tips-v1": {
+    "en": "You may want to try using different keywords, or checking for spelling mistakes.",
+    "fr": "Essayez différents mots-clés ou vérifiez l'orthographe de vos mots-clés."
   },
   "no-results": {
     "en": "No results",

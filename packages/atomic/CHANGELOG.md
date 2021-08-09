@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.54.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.53.0...@coveo/atomic@0.54.0) (2021-08-05)
+
+
+### Features
+
+* **atomic:** no results page ([#1048](https://github.com/coveo/ui-kit/issues/1048)) ([63801a2](https://github.com/coveo/ui-kit/commit/63801a2b76d5af659007089d412789d8e1023e38))
+
+
+
+
+
+# [0.53.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.52.0...@coveo/atomic@0.53.0) (2021-08-05)
+
+
+### Features
+
+* **atomic:** add outline color & ring color ([#1057](https://github.com/coveo/ui-kit/issues/1057)) ([738c3ba](https://github.com/coveo/ui-kit/commit/738c3ba81b2b38cee253dc8cbbf491aceb2bcb97))
+* **atomic:** atomic v1 templates ([#907](https://github.com/coveo/ui-kit/issues/907)) ([46ae282](https://github.com/coveo/ui-kit/commit/46ae28246d965f3dad42a3ef20fbb4347ae8b8cd))
+
+
+
+
+
+# [0.52.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.51.1...@coveo/atomic@0.52.0) (2021-08-04)
+
+
+### Features
+
+* **atomic:** rework hover & focus effects on facet elements ([#1052](https://github.com/coveo/ui-kit/issues/1052)) ([cd4a549](https://github.com/coveo/ui-kit/commit/cd4a549eb694d4f994501dfd7c773bda0d07108e))
+
+
+
+
+
+## [0.51.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.51.0...@coveo/atomic@0.51.1) (2021-08-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.51.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.50.2...@coveo/atomic@0.51.0) (2021-08-02)
+
+
+### Features
+
+* **atomic:** add Category Facet Search Results ([#1034](https://github.com/coveo/ui-kit/issues/1034)) ([ba684dd](https://github.com/coveo/ui-kit/commit/ba684dde67209c3bc4a91a4453659b81fed8ae2a))
+* **atomic:** atomic color facet new components ([#1003](https://github.com/coveo/ui-kit/issues/1003)) ([d080516](https://github.com/coveo/ui-kit/commit/d080516c14dd36e82b4f60c26e597ce66ea7529c))
+
+
+
+
+
+## [0.50.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.50.1...@coveo/atomic@0.50.2) (2021-08-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.50.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.50.0...@coveo/atomic@0.50.1) (2021-07-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.50.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.49.1...@coveo/atomic@0.50.0) (2021-07-30)
 
 

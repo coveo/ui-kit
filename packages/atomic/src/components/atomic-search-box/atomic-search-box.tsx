@@ -130,7 +130,7 @@ export class AtomicSearchBox {
       <button
         type="button"
         part="submit-button"
-        class={`submit-button h-full border-0 focus:outline-none bg-primary p-0 ${roundedClasses}`}
+        class={`submit-button h-full border-0 focus:outline-none focus:bg-primary-light hover:bg-primary-light bg-primary p-0 ${roundedClasses}`}
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
@@ -178,7 +178,7 @@ export class AtomicSearchBox {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'search-input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
+          'search-input bg-background mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
         }
         placeholder={this.placeholder}
         value={this.searchBoxState.value}
