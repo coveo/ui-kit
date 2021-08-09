@@ -15,15 +15,15 @@ export const field = 'ytviewcount';
 export const numericRanges: NumericRange[] = [
   {
     start: 0,
+    end: 1000,
+  },
+  {
+    start: 1000,
+    end: 10000,
+  },
+  {
+    start: 10000,
     end: 100000,
-  },
-  {
-    start: 100000,
-    end: 1000000,
-  },
-  {
-    start: 1000000,
-    end: 10000000,
   },
 ];
 
