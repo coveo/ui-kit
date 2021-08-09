@@ -407,8 +407,6 @@ export namespace Components {
          */
         "enableDuration": boolean;
     }
-    interface AtomicQuerySummaryV1 {
-    }
     interface AtomicRatingFacet {
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
@@ -1015,12 +1013,6 @@ declare global {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
     };
-    interface HTMLAtomicQuerySummaryV1Element extends Components.AtomicQuerySummaryV1, HTMLStencilElement {
-    }
-    var HTMLAtomicQuerySummaryV1Element: {
-        prototype: HTMLAtomicQuerySummaryV1Element;
-        new (): HTMLAtomicQuerySummaryV1Element;
-    };
     interface HTMLAtomicRatingFacetElement extends Components.AtomicRatingFacet, HTMLStencilElement {
     }
     var HTMLAtomicRatingFacetElement: {
@@ -1283,7 +1275,6 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
-        "atomic-query-summary-v1": HTMLAtomicQuerySummaryV1Element;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -1722,8 +1713,6 @@ declare namespace LocalJSX {
           * Whether to display the duration of the last query execution.
          */
         "enableDuration"?: boolean;
-    }
-    interface AtomicQuerySummaryV1 {
     }
     interface AtomicRatingFacet {
         /**
@@ -2183,7 +2172,6 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
-        "atomic-query-summary-v1": AtomicQuerySummaryV1;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -2256,7 +2244,6 @@ declare module "@stencil/core" {
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
-            "atomic-query-summary-v1": LocalJSX.AtomicQuerySummaryV1 & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryV1Element>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
