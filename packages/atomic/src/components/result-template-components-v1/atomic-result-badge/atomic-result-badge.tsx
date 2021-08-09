@@ -25,7 +25,11 @@ export class AtomicResultBadge {
   @Prop() public label?: string;
 
   /**
-   * Specifies the icon to display, either from the list of available icons or a direct link.
+   * Specifies the icon to display.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly
    */
   @Prop() public icon?: string;
 
