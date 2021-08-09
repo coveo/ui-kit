@@ -15,7 +15,7 @@ import organizationIsPausedException from '@salesforce/label/c.quantic_Organizat
 import disconnectedTitle from '@salesforce/label/c.quantic_DisconnectedTitle';
 import noEndpointsTitle from '@salesforce/label/c.quantic_NoEndpointsTitle';
 import invalidTokenTitle from '@salesforce/label/c.quantic_InvalidTokenTitle';
-import organizationIsPausedTitle from '@salesforce/label/c.quantic_OrganizationIsPausedtitle';
+import organizationIsPausedTitle from '@salesforce/label/c.quantic_OrganizationIsPausedTitle';
 import genericErrorTitle from '@salesforce/label/c.quantic_GenericErrorTitle';
 import disconnectedDesc from '@salesforce/label/c.quantic_DisconnectedDesc';
 import noEndpointsDesc from '@salesforce/label/c.quantic_NoEndpointsDesc';
