@@ -408,10 +408,6 @@ export namespace Components {
         "enableDuration": boolean;
     }
     interface AtomicQuerySummaryV1 {
-        /**
-          * Whether to display the pagination of the last query execution.
-         */
-        "enablePagination": boolean;
     }
     interface AtomicRatingFacet {
         /**
@@ -1728,10 +1724,6 @@ declare namespace LocalJSX {
         "enableDuration"?: boolean;
     }
     interface AtomicQuerySummaryV1 {
-        /**
-          * Whether to display the pagination of the last query execution.
-         */
-        "enablePagination"?: boolean;
     }
     interface AtomicRatingFacet {
         /**
