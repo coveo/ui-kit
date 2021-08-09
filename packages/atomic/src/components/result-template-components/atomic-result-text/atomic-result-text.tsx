@@ -2,6 +2,12 @@ import {Component, Prop, h, Element, Host, State} from '@stencil/core';
 import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import escape from 'escape-html';
+import {getFieldValueCaption} from '../../../utils/field-utils';
+import {
+  Bindings,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
@@ -11,12 +17,13 @@ import escape from 'escape-html';
   tag: 'atomic-result-text',
   shadow: false,
 })
-export class AtomicResultText {
+export class AtomicResultText implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
 
   @Element() private host!: HTMLElement;
 
-  @State() private error?: Error;
+  @State() public error!: Error;
 
   /**
    * The result field which the component should use.
@@ -90,7 +97,15 @@ export class AtomicResultText {
     }
 
     if (!resultValue && this.default) {
-      return <atomic-text value={this.default}></atomic-text>;
+      return (
+        <atomic-text
+          value={getFieldValueCaption(
+            this.field,
+            this.default,
+            this.bindings.i18n
+          )}
+        ></atomic-text>
+      );
     }
 
     const textValue = `${resultValue}`;
@@ -103,6 +118,6 @@ export class AtomicResultText {
       return this.renderWithHighlights(textValue, highlightsValue);
     }
 
-    return textValue;
+    return getFieldValueCaption(this.field, textValue, this.bindings.i18n);
   }
 }

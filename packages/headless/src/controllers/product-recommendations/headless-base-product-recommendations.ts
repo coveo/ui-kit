@@ -6,14 +6,12 @@ import {
   setProductRecommendationsAdditionalFields,
 } from '../../features/product-recommendations/product-recommendations-actions';
 import {buildController} from '../controller/headless-controller';
+import {ArrayValue, NumberValue, Schema, SchemaValues} from '@coveo/bueno';
 import {
-  ArrayValue,
-  NumberValue,
-  Schema,
-  SchemaValues,
-  StringValue,
-} from '@coveo/bueno';
-import {validateOptions} from '../../utils/validate-payload';
+  nonEmptyString,
+  requiredNonEmptyString,
+  validateOptions,
+} from '../../utils/validate-payload';
 import {configuration, productRecommendations} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
@@ -21,11 +19,11 @@ import {ProductRecommendationEngine} from '../../app/product-recommendation-engi
 export const baseProductRecommendationsOptionsSchema = {
   additionalFields: new ArrayValue<string>({
     required: false,
-    each: new StringValue({emptyAllowed: false}),
+    each: nonEmptyString,
   }),
   skus: new ArrayValue<string>({
     required: false,
-    each: new StringValue({emptyAllowed: false}),
+    each: nonEmptyString,
   }),
   maxNumberOfRecommendations: new NumberValue({
     required: false,
@@ -36,10 +34,7 @@ export const baseProductRecommendationsOptionsSchema = {
 };
 
 const optionsSchema = new Schema({
-  id: new StringValue({
-    required: true,
-    emptyAllowed: false,
-  }),
+  id: requiredNonEmptyString,
   ...baseProductRecommendationsOptionsSchema,
 });
 

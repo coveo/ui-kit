@@ -135,6 +135,7 @@ describe('headless searchBox', () => {
         rawValue: completion.expression,
       })),
       isLoading: false,
+      isLoadingSuggestions: false,
     });
   });
 
@@ -267,5 +268,11 @@ describe('headless searchBox', () => {
       searchBox.submit();
       expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
     });
+  });
+
+  it(`when querySuggest #isLoading state is true,
+  #state.isLoadingSuggestions is true`, () => {
+    state.querySuggest[id]!.isLoading = true;
+    expect(searchBox.state.isLoadingSuggestions).toBe(true);
   });
 });

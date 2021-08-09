@@ -54,4 +54,20 @@ describe('buildRecommendationEngine', () => {
 
     expect(engine.state.searchHub).toBe(searchHub);
   });
+
+  it("it's possible to configure the timezone", () => {
+    const timezone = 'Africa/Johannesburg';
+    options.configuration.timezone = timezone;
+    initEngine();
+
+    expect(engine.state.configuration.search.timezone).toBe(timezone);
+  });
+
+  it("it's possible to configure the locale", () => {
+    const locale = 'fr-CA';
+    options.configuration.locale = locale;
+    initEngine();
+
+    expect(engine.state.configuration.search.locale).toBe(locale);
+  });
 });

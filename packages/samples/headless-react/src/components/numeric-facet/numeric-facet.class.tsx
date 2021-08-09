@@ -57,7 +57,11 @@ export class NumericFacet extends Component<
       return null;
     }
 
-    if (!this.state.values.length) {
+    if (
+      !this.state.values.filter(
+        (value) => value.state !== 'idle' || value.numberOfResults > 0
+      ).length
+    ) {
       return <div>No facet values</div>;
     }
 

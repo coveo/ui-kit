@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "setup": "npm i && husky install && lerna bootstrap",
+    "setup": "npm i && husky install && lerna bootstrap && npm run lockLernaDependencies",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run build",
@@ -19,8 +19,9 @@
     "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
     "npm:tag:beta": "npm run npm:tag -- beta",
     "npm:tag:latest": "npm run npm:tag -- latest",
-    "notify:docs": "node ./scripts/notify-docs/published-headless.js",
-    "doc:generate": "lerna run doc:generate"
+    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
+    "doc:generate": "lerna run doc:generate",
+    "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\""
   },
   "devDependencies": {
     "@actions/github": "4.0.0",
@@ -40,7 +41,7 @@
     "gts": "3.1.0",
     "husky": "5.1.3",
     "lerna": "3.22.1",
-    "lint-staged": "10.0.8",
+    "lint-staged": "11.1.1",
     "prettier": "2.1.2",
     "rimraf": "3.0.2",
     "typescript": "4.1.2"

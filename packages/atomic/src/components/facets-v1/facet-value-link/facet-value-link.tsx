@@ -16,15 +16,12 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
       <button
         part="value-link"
         onClick={() => props.onClick()}
-        class="value-link w-full flex items-baseline py-2.5 text-on-background ellipsed focus:outline-none"
+        class="value-link w-full flex items-center px-2 py-2.5 text-left text-on-background truncate focus:outline-none group focus:bg-neutral-light hover:bg-neutral-light rounded"
         aria-pressed={props.isSelected.toString()}
         aria-label={ariaLabel}
       >
         {children}
-        <span
-          part="value-count"
-          class="ml-1.5 text-neutral-dark with-parentheses"
-        >
+        <span part="value-count" class="value-count">
           {count}
         </span>
       </button>
