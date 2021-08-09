@@ -27,7 +27,7 @@
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "node --max_old_space_size=4096 ./node_modules/@stencil/core/bin/stencil build",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
-    "start:prod": "npx -y serve www -l 3333",
+    "start:prod": "npx serve www -l 3333",
     "test": "stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
     "generate": "stencil generate",
