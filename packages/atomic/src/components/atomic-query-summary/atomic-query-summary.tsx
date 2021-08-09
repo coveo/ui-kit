@@ -42,6 +42,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   /**
    * Whether to display the duration of the last query execution.
    */
+  //TODO: set default to false
   @Prop() enableDuration = true;
 
   public initialize() {
@@ -63,6 +64,7 @@ export class AtomicQuerySummary implements InitializableComponent {
     return `<span class="font-bold" part="highlight">${content}</span>`;
   }
 
+  //TODO: remove renderNoResults method
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
       ? this.bindings.i18n.t('no-results-for', {
@@ -118,6 +120,7 @@ export class AtomicQuerySummary implements InitializableComponent {
     }
 
     return (
+      //TODO: remove renderNoResults method
       <div class="text-on-background" part="container">
         {this.querySummaryState.hasResults
           ? [this.renderHasResults(), this.renderDuration()]
