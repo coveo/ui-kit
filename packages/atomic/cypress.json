@@ -1,6 +1,6 @@
 {
   "baseUrl": "http://localhost:3333",
-  "projectId": "5ph2j4",
+  "projectId": "p9khvm",
   "integrationFolder": "cypress/integration",
   "testFiles": ["**/*.cypress.ts"],
   "experimentalFetchPolyfill": true,
