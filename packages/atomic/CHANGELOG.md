@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.54.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.53.0...@coveo/atomic@0.54.0) (2021-08-05)
+
+
+### Features
+
+* **atomic:** no results page ([#1048](https://github.com/coveo/ui-kit/issues/1048)) ([63801a2](https://github.com/coveo/ui-kit/commit/63801a2b76d5af659007089d412789d8e1023e38))
+
+
+
+
+
+# [0.53.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.52.0...@coveo/atomic@0.53.0) (2021-08-05)
+
+
+### Features
+
+* **atomic:** add outline color & ring color ([#1057](https://github.com/coveo/ui-kit/issues/1057)) ([738c3ba](https://github.com/coveo/ui-kit/commit/738c3ba81b2b38cee253dc8cbbf491aceb2bcb97))
+* **atomic:** atomic v1 templates ([#907](https://github.com/coveo/ui-kit/issues/907)) ([46ae282](https://github.com/coveo/ui-kit/commit/46ae28246d965f3dad42a3ef20fbb4347ae8b8cd))
+
+
+
+
+
 # [0.52.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.51.1...@coveo/atomic@0.52.0) (2021-08-04)
 
 

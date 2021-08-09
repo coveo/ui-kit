@@ -1,4 +1,4 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
+import {TagProps, TestFixture} from '../../../fixtures/test-fixture';
 import {
   addNumericFacet,
   addNumericFacetWithRange,
@@ -9,6 +9,7 @@ import {
   inputMinValue,
   invokeSubmitButton,
   label,
+  NumericRange,
   numericRanges,
 } from './numeric-facet-actions';
 import {
@@ -776,6 +777,282 @@ describe('Numeric Facet V1 Test Suites', () => {
         before(setupNumericWithEquiprobableRangeAlgorithm);
         CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
         CommonAssertions.assertAccessibility(numericFacetComponent);
+      });
+    });
+  });
+
+  describe('with custom unit format', () => {
+    const customField = 'snrating';
+    const customLabel = 'Rating';
+    const customRanges: NumericRange[] = [
+      {
+        start: 0,
+        end: 2.5,
+      },
+      {
+        start: 2.5,
+        end: 3.5,
+      },
+      {
+        start: 3.5,
+        end: 5.1,
+      },
+    ];
+
+    describe('with automatic numeric range with checkbox', () => {
+      function setupNumericFacetWithCustomFormat(
+        formatTag: string,
+        formatProp: TagProps
+      ) {
+        new TestFixture()
+          .with(
+            addNumericFacet(
+              {field: customField, label: customLabel},
+              formatTag,
+              formatProp
+            )
+          )
+          .init();
+      }
+
+      describe('with custom format currency CAD', () => {
+        function setupNumericCustomFormatCurrency() {
+          setupNumericFacetWithCustomFormat('atomic-format-currency', {
+            currency: 'CAD',
+          });
+        }
+
+        describe('verify rendering', () => {
+          before(setupNumericCustomFormatCurrency);
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          CommonAssertions.assertAccessibility(numericFacetComponent);
+          CommonAssertions.assertContainsComponentError(
+            NumericFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertLabelContains(
+            NumericFacetSelectors,
+            customLabel
+          );
+          CommonFacetAssertions.assertDisplayValues(
+            NumericFacetSelectors,
+            true
+          );
+          NumericFacetAssertions.assertCurrencyFormat();
+        });
+
+        describe('when select a value', () => {
+          const selectionIndex = 1;
+          function setupSelectCheckboxValue() {
+            setupNumericCustomFormatCurrency();
+            selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectCheckboxValue);
+            CommonAssertions.assertAccessibility(numericFacetComponent);
+            CommonFacetAssertions.assertDisplayClearButton(
+              NumericFacetSelectors,
+              true
+            );
+            CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
+              NumericFacetSelectors,
+              1
+            );
+          });
+        });
+      });
+
+      describe('with custom format unit Kilogram', () => {
+        describe('with custom unitDisplay "Long"', () => {
+          const formatUnitKgLong = {unit: 'kilogram', 'unit-display': 'long'};
+          before(() => {
+            setupNumericFacetWithCustomFormat(
+              'atomic-format-unit',
+              formatUnitKgLong
+            );
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          CommonAssertions.assertAccessibility(numericFacetComponent);
+          NumericFacetAssertions.assertUnitFormatKgLong();
+        });
+
+        describe('with custom unitDisplay "Narrow"', () => {
+          const formatUnitLiterNarrow = {
+            unit: 'kilogram',
+            'unit-display': 'narrow',
+          };
+          before(() => {
+            setupNumericFacetWithCustomFormat(
+              'atomic-format-unit',
+              formatUnitLiterNarrow
+            );
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          CommonAssertions.assertAccessibility(numericFacetComponent);
+          NumericFacetAssertions.assertUnitFormatKgNarrow();
+        });
+      });
+
+      describe('with custom format number', () => {
+        describe('with custom #minimumIntegerDigits', () => {
+          before(() => {
+            setupNumericFacetWithCustomFormat('atomic-format-number', {
+              'minimum-integer-digits': 5,
+            });
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          NumericFacetAssertions.assertFormatNumberMinimumIntegerDigits(5);
+        });
+
+        describe('with custom #minimumFractionDigits & #maximumFractionDigits', () => {
+          const min = 2;
+          const max = 4;
+          before(() => {
+            setupNumericFacetWithCustomFormat('atomic-format-number', {
+              'minimum-fraction-digits': min,
+              'maximum-fraction-digits': max,
+            });
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          NumericFacetAssertions.assertFormatNumberMinimumMaxFractionDigits(
+            min,
+            max
+          );
+        });
+
+        describe('with custom #minimumSignificantDigits & #maximumSignificantDigits', () => {
+          const min = 3;
+          const max = 5;
+          before(() => {
+            setupNumericFacetWithCustomFormat('atomic-format-number', {
+              'minimum-significant-digits': min,
+              'maximum-significant-digits': max,
+            });
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          NumericFacetAssertions.assertFormatNumberMinimumMaxSignificantDigits(
+            min,
+            max
+          );
+        });
+      });
+    });
+
+    describe('with custom numeric range with linkValue', () => {
+      const numberOfCustomRanges = customRanges.length;
+      function setupNumericFacetWithCustomRangeAndCustomFormat(
+        formatTag: string,
+        formatProp: TagProps
+      ) {
+        new TestFixture()
+          .with(
+            addNumericFacetWithRange(
+              {
+                field: customField,
+                label: customLabel,
+                'display-values-as': 'link',
+              },
+              customRanges,
+              formatTag,
+              formatProp
+            )
+          )
+          .init();
+      }
+
+      describe('with custom format currency CAD', () => {
+        function setupNumericCustomFormatCurrency() {
+          setupNumericFacetWithCustomRangeAndCustomFormat(
+            'atomic-format-currency',
+            {
+              currency: 'CAD',
+            }
+          );
+        }
+
+        describe('verify rendering', () => {
+          before(setupNumericCustomFormatCurrency);
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          CommonAssertions.assertAccessibility(numericFacetComponent);
+          CommonAssertions.assertContainsComponentError(
+            NumericFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertLabelContains(
+            NumericFacetSelectors,
+            customLabel
+          );
+          CommonFacetAssertions.assertDisplayValues(
+            NumericFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertNumberOfIdleLinkValues(
+            NumericFacetSelectors,
+            numberOfCustomRanges
+          );
+          NumericFacetAssertions.assertCurrencyFormat();
+        });
+
+        describe('when select a value', () => {
+          const selectionIndex = 1;
+          function setupSelectLinkValue() {
+            setupNumericCustomFormatCurrency();
+            selectIdleLinkValueAt(NumericFacetSelectors, selectionIndex);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectLinkValue);
+            CommonFacetAssertions.assertDisplayFacet(
+              NumericFacetSelectors,
+              true
+            );
+            CommonAssertions.assertAccessibility(numericFacetComponent);
+            CommonFacetAssertions.assertNumberOfSelectedLinkValues(
+              NumericFacetSelectors,
+              1
+            );
+            NumericFacetAssertions.assertCurrencyFormat();
+          });
+        });
+      });
+
+      describe('with custom format unit Kilogram', () => {
+        describe('with custom unitDisplay "Long"', () => {
+          const formatUnitKgLong = {unit: 'kilogram', 'unit-display': 'long'};
+          before(() => {
+            setupNumericFacetWithCustomRangeAndCustomFormat(
+              'atomic-format-unit',
+              formatUnitKgLong
+            );
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          CommonAssertions.assertAccessibility(numericFacetComponent);
+          NumericFacetAssertions.assertUnitFormatKgLong();
+        });
+      });
+
+      describe('with custom format number', () => {
+        describe('with custom #minimumFractionDigits & #maximumFractionDigits', () => {
+          const min = 2;
+          const max = 4;
+          before(() => {
+            setupNumericFacetWithCustomRangeAndCustomFormat(
+              'atomic-format-number',
+              {
+                'minimum-fraction-digits': min,
+                'maximum-fraction-digits': max,
+              }
+            );
+          });
+          CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
+          NumericFacetAssertions.assertFormatNumberMinimumMaxFractionDigits(
+            min,
+            max
+          );
+        });
       });
     });
   });

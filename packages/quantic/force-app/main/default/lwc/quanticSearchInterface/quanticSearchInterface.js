@@ -52,6 +52,7 @@ export default class QuanticSearchInterface extends LightningElement {
     if (this.unsubscribeUrlManager) {
       this.unsubscribeUrlManager();
     }
+    window.removeEventListener('hashchange', this.onHashChange);
   }
  
   initialize = (engine) => {
@@ -79,7 +80,7 @@ export default class QuanticSearchInterface extends LightningElement {
     );
   }
 
-  onHashChange() {
+  onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   }
 }

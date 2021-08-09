@@ -129,3 +129,125 @@ function getEvenRangeValue(value: string) {
   const end = Number(value.split(' to ')[1].replaceAll(',', ''));
   return end - start;
 }
+
+export function assertCurrencyFormat() {
+  it('should display correct currency format CA$', () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const [start, end] = e.split(' to ');
+        expect(start).contains('CA$');
+        expect(end).contains('CA$');
+        expect(start.split('$')[0]).eq('CA');
+      });
+    });
+  });
+}
+
+export function assertUnitFormatKgLong() {
+  it('should display correct unit format "kilograms"', () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const [start, end] = e.split(' to ');
+        expect(start).contains('kilograms');
+        expect(end).contains('kilograms');
+        expect(start.split(' ')[1]).eq('kilograms');
+      });
+    });
+  });
+}
+
+export function assertUnitFormatKgNarrow() {
+  it('should display correct unit format "kg"', () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const [start, end] = e.split(' to ');
+        expect(start).contains('kg');
+        expect(end).contains('kg');
+        expect(start.slice(-2)).eq('kg');
+      });
+    });
+  });
+}
+
+export function assertFormatNumberMinimumIntegerDigits(digit: number) {
+  it(`should display the minimum ${digit} number of integer digits`, () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const [start, end] = e.split(' to ');
+        expect(countCharactor(start)).least(digit);
+        expect(countCharactor(end)).least(digit);
+      });
+    });
+  });
+}
+
+export function assertFormatNumberMinimumMaxFractionDigits(
+  min: number,
+  max: number
+) {
+  it(`should display the minimum ${min} number and max ${max} of fraction digits`, () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const [start, end] = e.replaceAll(',', '').split(' to ');
+
+        expect(start).to.eq(
+          convertToNumberWithMaxMinFractionDigit(Number(start), min, max)
+        );
+        expect(end).to.eq(
+          convertToNumberWithMaxMinFractionDigit(Number(end), min, max)
+        );
+      });
+    });
+  });
+}
+
+export function assertFormatNumberMinimumMaxSignificantDigits(
+  min: number,
+  max: number
+) {
+  it(`should display the minimum ${min} number and max ${max} of significant digits`, () => {
+    NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      originalValues.forEach((e: string) => {
+        const [start, end] = e.replaceAll(',', '').split(' to ');
+        expect(start).to.eq(
+          convertToNumberWithMaxMinSignificantDigit(Number(start), min, max)
+        );
+        expect(end).to.eq(
+          convertToNumberWithMaxMinSignificantDigit(Number(end), min, max)
+        );
+      });
+    });
+  });
+}
+
+function countCharactor(e: string) {
+  return e.replaceAll(',', '').length;
+}
+
+function convertToNumberWithMaxMinFractionDigit(
+  num: number,
+  min: number,
+  max: number
+) {
+  return num.toLocaleString(undefined, {
+    minimumFractionDigits: min,
+    maximumFractionDigits: max,
+  });
+}
+
+function convertToNumberWithMaxMinSignificantDigit(
+  num: number,
+  min: number,
+  max: number
+) {
+  return num.toLocaleString(undefined, {
+    minimumSignificantDigits: min,
+    maximumSignificantDigits: max,
+  });
+}

@@ -66,9 +66,7 @@ export class FacetDateInput {
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('date-input-apply', {label});
 
-    const commonClasses =
-      'rounded border border-neutral p-2.5 bg-background hover:border-primary-light focus:border-primary focus:outline-none';
-    const inputClasses = `${commonClasses}`;
+    const inputClasses = 'input-primary p-2.5';
     const labelClasses = 'text-neutral-dark self-center';
 
     return (
@@ -125,7 +123,7 @@ export class FacetDateInput {
         <button
           type="submit"
           part="input-apply-button"
-          class={`${commonClasses} col-span-2 text-primary hover:text-primary`}
+          class="btn-outline-primary p-2.5 col-span-2"
           aria-label={applyAria}
         >
           {apply}
