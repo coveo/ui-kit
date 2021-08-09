@@ -101,11 +101,11 @@ export class AtomicRatingFacet
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
   /**
-   * The icon used to display the rating.
+   * The SVG icon to use to display the rating.
    *
-   * When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed.
-   * When the icon begins with assets://, it will be displayed from the list of available icons.
-   * Otherwise, the icon will be displayed directly as an SVG element.
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
    */
   @Prop() public icon = Star;
 

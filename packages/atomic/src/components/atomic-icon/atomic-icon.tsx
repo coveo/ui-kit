@@ -5,7 +5,7 @@ import {sanitize} from 'dompurify';
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
  *
- * This component can either display an icon from the list of available icons, a direct link or an SVG element.
+ * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
 @Component({
   tag: 'atomic-icon',
@@ -17,11 +17,11 @@ export class AtomicIcon {
   @Element() host!: HTMLElement;
 
   /**
-   * Specifies the icon to display.
+   * The SVG icon to display.
    *
-   * When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed.
-   * When the icon begins with assets://, it will be displayed from the list of available icons.
-   * Otherwise, the icon will be displayed directly as an SVG element.
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
    */
   @Prop() icon!: string;
 

@@ -302,7 +302,7 @@ export namespace Components {
     }
     interface AtomicIcon {
         /**
-          * Specifies the icon to display.  When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed. When the icon begins with assets://, it will be displayed from the list of available icons. Otherwise, the icon will be displayed directly as an SVG element.
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
     }
@@ -427,7 +427,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The icon used to display the rating.  When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed. When the icon begins with assets://, it will be displayed from the list of available icons. Otherwise, the icon will be displayed directly as an SVG element.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
         /**
@@ -457,7 +457,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The icon used to display the rating.  When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed. When the icon begins with assets://, it will be displayed from the list of available icons. Otherwise, the icon will be displayed directly as an SVG element.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
         /**
@@ -1617,7 +1617,7 @@ declare namespace LocalJSX {
     }
     interface AtomicIcon {
         /**
-          * Specifies the icon to display.  When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed. When the icon begins with assets://, it will be displayed from the list of available icons. Otherwise, the icon will be displayed directly as an SVG element.
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
     }
@@ -1743,7 +1743,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * The icon used to display the rating.  When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed. When the icon begins with assets://, it will be displayed from the list of available icons. Otherwise, the icon will be displayed directly as an SVG element.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
@@ -1773,7 +1773,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * The icon used to display the rating.  When the icon begins with http://, https://, ./ or ../, it will be fetched and displayed. When the icon begins with assets://, it will be displayed from the list of available icons. Otherwise, the icon will be displayed directly as an SVG element.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
