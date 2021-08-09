@@ -119,13 +119,15 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   setSearchBoxContainerClass() {
+    const withoutSubmitClass =
+      'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
+    const withSubmitClass =
+      'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
     if (this.withoutSubmitButton) {
-      this.searchBoxContainerClass =
-        'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
+      this.searchBoxContainerClass = withoutSubmitClass;
       this.input.setAttribute('aria-labelledby', 'fixed-text-label');
     } else {
-      this.searchBoxContainerClass =
-        'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
+      this.searchBoxContainerClass = withSubmitClass;
       this.input.setAttribute(
         'aria-labelledby',
         'fixed-text-label fixed-text-addon-post'
