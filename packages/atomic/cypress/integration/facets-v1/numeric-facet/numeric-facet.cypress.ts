@@ -343,7 +343,8 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
   });
 
-  describe('with custom ranges', () => {
+  // eslint-disable-next-line no-restricted-properties
+  describe.only('with custom ranges', () => {
     const numberOfCustomRanges = numericRanges.length;
     function setupCustomRangesWithCheckboxValues() {
       new TestFixture()
