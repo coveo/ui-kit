@@ -33,7 +33,7 @@ import {firstSearchExecutedSelector} from '../../features/search/search-selector
 import {SearchAppState} from '../../state/search-app-state';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {SearchAction} from '../../features/analytics/analytics-utils';
-import {StandaloneSearchBoxAnalytics} from '../../controllers';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 
 export {
   SearchEngineConfiguration,
