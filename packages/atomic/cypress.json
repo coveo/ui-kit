@@ -15,7 +15,7 @@
     "toConsole": true
   },
   "chromeWebSecurity": false,
-  "video": true,
+  "video": false,
   "requestTimeout": 10000,
   "watchForFileChanges": true
 }
