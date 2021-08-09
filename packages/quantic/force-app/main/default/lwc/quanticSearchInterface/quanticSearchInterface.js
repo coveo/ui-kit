@@ -52,7 +52,7 @@ export default class QuanticSearchInterface extends LightningElement {
     if (this.unsubscribeUrlManager) {
       this.unsubscribeUrlManager();
     }
-    window.removeEventListener('hashchange', this._onHashChange);
+    window.removeEventListener('hashchange', this.onHashChange);
   }
  
   initialize = (engine) => {
@@ -69,8 +69,7 @@ export default class QuanticSearchInterface extends LightningElement {
   initUrlManager(engine) {
     this.urlManager = CoveoHeadless.buildUrlManager(engine, {initialState: {fragment: this.fragment}});
     this.unsubscribeUrlManager = this.urlManager.subscribe(() => this.updateHash());
-    this._onHashChange = this.onHashChange.bind(this);
-    window.addEventListener('hashchange', this._onHashChange);
+    window.addEventListener('hashchange', this.onHashChange);
   }
 
   updateHash() {
@@ -81,7 +80,7 @@ export default class QuanticSearchInterface extends LightningElement {
     );
   }
 
-  onHashChange() {
+  onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   }
 }
