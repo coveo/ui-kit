@@ -6,26 +6,27 @@ interface RippleOptions {
   parent?: Element;
 }
 
-const RIPPLE_CLASS = 'ripple';
+const RIPPLE = 'ripple';
 
 function setPositionRelativeIfStatic(element: Element) {
   if (getComputedStyle(element).position === 'static') {
-    element.classList.add('relative');
+    element.classList.add('ripple-relative');
   }
 }
 
 export function createRipple(event: MouseEvent, options: RippleOptions) {
   const button = options.parent ?? (event.currentTarget as Element);
-  const existingRipple = button.getElementsByClassName(RIPPLE_CLASS)[0];
+  const existingRipple = button.getElementsByClassName(RIPPLE)[0];
   existingRipple && existingRipple.remove();
 
-  button.classList.add('overflow-hidden');
+  button.classList.add('ripple-parent');
   setPositionRelativeIfStatic(button);
   Array.from(button.children).forEach(setPositionRelativeIfStatic);
 
   const ripple = document.createElement('span');
-  ripple.classList.add(RIPPLE_CLASS, `bg-${options.color}`);
-  ripple.setAttribute('part', 'ripple');
+  ripple.classList.add(RIPPLE);
+  ripple.style.backgroundColor = `var(--atomic-${options.color})`;
+  ripple.setAttribute('part', RIPPLE);
 
   const diameter = Math.max(button.clientWidth, button.clientHeight);
   const radius = diameter / 2;
