@@ -13,22 +13,23 @@ describe('No Results Test Suites', () => {
 
   it('should not be visible when there are results', () => {
     setUpPage(component());
-    cy.get('atomic-no-results-v1').should('not.be.visible');
+    cy.get(tag).should('not.be.visible');
   });
 
   it('should be visible when there are no results', () => {
     cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
     injectComponent(component() + searchBox);
     cy.wait(wait);
-    cy.get('atomic-no-results-v1').should('be.visible');
+    cy.get(tag).should('be.visible');
   });
 
   it('text content should match when there are no results', () => {
     cy.visit(buildTestUrl('q=dsmndkndjnj'));
     injectComponent(component() + searchBox);
     cy.wait(wait);
-    cy.get('atomic-no-results-v1')
-      .find('.quotations')
+    cy.get(tag)
+      .shadow()
+      .find('div div[part="no-results"] .quotations')
       .should('contain.text', 'dsmndkndjnj');
   });
 
@@ -36,7 +37,7 @@ describe('No Results Test Suites', () => {
     cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
     injectComponent(component());
     cy.wait(wait);
-    cy.get('atomic-no-results-v1').shadow().get('button').should('not.exist');
+    cy.get(tag).shadow().get('button').should('not.exist');
   });
 
   function submitNoResultsSearch() {
@@ -51,13 +52,13 @@ describe('No Results Test Suites', () => {
 
   it('cancel button should be visible when there is history', () => {
     submitNoResultsSearch();
-    cy.get('atomic-no-results-v1').shadow().find('button').should('be.visible');
+    cy.get(tag).shadow().find('button').should('be.visible');
   });
 
   it('clicking on cancel should go back in history and hide the atomic-no-results component', () => {
     submitNoResultsSearch();
-    cy.get('atomic-no-results-v1').shadow().find('button').click();
+    cy.get(tag).shadow().find('button').click();
     cy.wait(wait);
-    cy.get('atomic-no-results-v1').should('not.be.visible');
+    cy.get(tag).should('not.be.visible');
   });
 });
