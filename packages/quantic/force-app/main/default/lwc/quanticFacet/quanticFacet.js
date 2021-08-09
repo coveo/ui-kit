@@ -105,10 +105,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get canShowMoreSearchResults() {
-    if (!this.facet) {
-      return false;
-    }
-    return this.facet.state.facetSearch.moreValuesAvailable;
+    return this.facet && this.facet.state.facetSearch.moreValuesAvailable;
   }
 
   get canShowMore() {
@@ -208,6 +205,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   handleKeyUp() {
+    console.log(this.facetSearchResults);
     if (this.isSearchComplete) {
       this.isFacetSearchActive = this.input.value !== '';
       this.facet.facetSearch.updateText(this.input.value);
