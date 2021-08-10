@@ -2,15 +2,22 @@ import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import pageNotFound from './pageNotFound.html';
 // @ts-ignore
+import noResults from './noResults.html';
+// @ts-ignore
 import _default from './default.html';
 
-export default class QuanticSvgLoader extends LightningElement {
+export default class QuanticSvg extends LightningElement {
   /** @type {string} */
   @api name;
 
   render() {
-      if(this.name === "pageNotFound")
+    switch (this.name) {
+      case "pageNotFound":
         return pageNotFound;
-    return _default;
+      case "noResults":
+        return noResults;
+      default:
+        return _default;
+    }   
   }
 }

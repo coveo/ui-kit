@@ -3,6 +3,7 @@ import ArrowTopIcon from 'coveo-styleguide/resources/icons/svg/arrow-top-rounded
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
+import {createRipple} from '../../../utils/ripple';
 
 export const FacetHeader: FunctionalComponent<{
   i18n: i18n;
@@ -28,6 +29,7 @@ export const FacetHeader: FunctionalComponent<{
       part="label-button"
       class="flex justify-between w-full py-1 px-2 text-on-background text-lg hover:text-primary focus:text-primary focus:outline-color"
       title={props.isCollapsed ? expandFacet : collapseFacet}
+      onMouseDown={(e) => createRipple(e, {color: 'neutral-light'})}
       onClick={() => props.onToggleCollapse()}
       aria-expanded={(!props.isCollapsed).toString()}
     >
@@ -41,8 +43,9 @@ export const FacetHeader: FunctionalComponent<{
     props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
-        class="flex items-baseline p-2 text-sm text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color"
+        class="flex items-baseline max-w-full p-2 text-sm text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color"
         title={clearFiltersForFacet}
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         onClick={() => props.onClearFilters!()}
       >
         <span

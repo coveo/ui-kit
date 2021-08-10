@@ -17,7 +17,13 @@ export const querySuggestReducer = createReducer(
   (builder) =>
     builder
       .addCase(registerQuerySuggest, (state, action) => {
-        state[action.payload.id] = buildQuerySuggest(action.payload);
+        const id = action.payload.id;
+
+        if (id in state) {
+          return;
+        }
+
+        state[id] = buildQuerySuggest(action.payload);
       })
       .addCase(unregisterQuerySuggest, (state, action) => {
         delete state[action.payload.id];

@@ -1,6 +1,5 @@
 import {
   buildSearchEngine,
-  buildStandaloneSearchBox,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
@@ -14,15 +13,11 @@ export function StandaloneSearchBoxPage() {
     configuration: getSampleSearchEngineConfiguration(),
   });
 
-  const searchBox = buildStandaloneSearchBox(engine, {
-    options: {redirectionUrl: 'https://mywebsite.com/search'},
-  });
-
   return (
     <AppContext.Provider value={{engine}}>
       <Section title="standalone-search-box">
         <StandaloneSearchBox />
-        <StandaloneSearchBoxFn controller={searchBox} />
+        <StandaloneSearchBoxFn id="ssb-1" redirectionUrl="/search-page" />
       </Section>
     </AppContext.Provider>
   );

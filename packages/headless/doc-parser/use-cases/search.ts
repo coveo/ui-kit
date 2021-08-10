@@ -409,9 +409,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadQuestionAnsweringActions',
   },
   {
-    initializer: 'loadRedirectionActions',
-  },
-  {
     initializer: 'loadSearchHubActions',
   },
   {
@@ -428,6 +425,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadGenericAnalyticsActions',
+  },
+  {
+    initializer: 'loadStandaloneSearchBoxSetActions',
   },
 ];
 

@@ -203,6 +203,7 @@ export {
 
 export {
   StandaloneSearchBoxOptions,
+  StandaloneSearchBoxAnalytics,
   StandaloneSearchBoxProps,
   StandaloneSearchBoxState,
   StandaloneSearchBox,
