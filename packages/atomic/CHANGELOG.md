@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.56.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.56.0...@coveo/atomic@0.56.1) (2021-08-10)
+
+
+### Bug Fixes
+
+* **atomic:** increase memory for building atomic ([#1064](https://github.com/coveo/ui-kit/issues/1064)) ([f820660](https://github.com/coveo/ui-kit/commit/f8206605097a1099b2d451041b5507c19657ba48))
+
+
+
+
+
 # [0.56.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.55.0...@coveo/atomic@0.56.0) (2021-08-10)
 
 
