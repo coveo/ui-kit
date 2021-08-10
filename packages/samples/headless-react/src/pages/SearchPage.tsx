@@ -377,20 +377,10 @@ export class SearchPage extends Component {
       analytics: StandaloneSearchBoxAnalytics;
     } = JSON.parse(data);
     const {value, analytics} = parsed;
-    const {cause, metadata} = analytics;
-
     const {updateQuery} = loadQueryActions(this.engine);
-    const {logOmniboxFromLink, logSearchFromLink} = loadSearchAnalyticsActions(
-      this.engine
-    );
-
-    const event =
-      metadata && cause === 'omniboxFromLink'
-        ? logOmniboxFromLink(metadata)
-        : logSearchFromLink();
 
     this.engine.dispatch(updateQuery({q: value}));
-    this.engine.executeFirstSearch(event);
+    this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
   private updateAnalyticsContext() {
