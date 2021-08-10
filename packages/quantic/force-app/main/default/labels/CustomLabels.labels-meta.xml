@@ -191,6 +191,13 @@
     </labels>
     <labels>
         <fullName>quantic_NoResultsTitle</fullName>
+        <value>No results</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No results</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsForTitle</fullName>
         <value>We couldn’t find anything for {{0}}</value>
         <language>en_US</language>
         <protected>false</protected>

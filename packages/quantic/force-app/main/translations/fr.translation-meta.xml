@@ -106,6 +106,10 @@
     </customLabels>
     <customLabels>
         <label>Nous n'avons rien trouvé pour {{0}}</label>
+        <name>quantic_NoResultsForTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Aucun résultat</label>
         <name>quantic_NoResultsTitle</name>
     </customLabels>
     <customLabels>
