@@ -76,7 +76,7 @@ export const querySuggestReducer = createReducer(
         const {id, query} = action.payload;
 
         if (id in state) {
-          state[id]!.q = query;
+          updateQuerySuggestQuery(state[id]!, query);
         }
       })
       .addCase(clearQuerySuggest, (state, action) => {
@@ -101,23 +101,26 @@ export const querySuggestReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         if (!isNullOrUndefined(action.payload.q)) {
-          restoreQuerySuggestSets(state, action.payload.q);
+          updateAllQuerySuggestSetQueries(state, action.payload.q);
         }
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {queryExecuted} = action.payload;
-        restoreQuerySuggestSets(state, queryExecuted);
+        updateAllQuerySuggestSetQueries(state, queryExecuted);
       })
 );
 
-function restoreQuerySuggest(state: QuerySuggestState, query: string) {
+function updateQuerySuggestQuery(state: QuerySuggestState, query: string) {
   state.q = query;
-  state.completions = [];
-  state.partialQueries = [];
 }
 
-function restoreQuerySuggestSets(state: QuerySuggestSet, query: string) {
-  Object.keys(state).forEach((id) => restoreQuerySuggest(state[id]!, query));
+function updateAllQuerySuggestSetQueries(
+  state: QuerySuggestSet,
+  query: string
+) {
+  Object.keys(state).forEach((id) =>
+    updateQuerySuggestQuery(state[id]!, query)
+  );
 }
 
 function buildQuerySuggest(

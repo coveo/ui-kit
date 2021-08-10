@@ -123,24 +123,17 @@ describe('querySuggest slice', () => {
       const finalState = querySuggestReducer(state, action);
 
       expect(finalState[anotherId]?.q).toBe(query);
-      expect(finalState[anotherId]?.completions).not.toEqual([]);
-      expect(finalState[anotherId]?.partialQueries).not.toEqual([]);
     });
   });
 
   describe('restoreSearchParameters', () => {
-    it('updates the state correctly when "q" is defined', () => {
+    it('updates the query correctly when "q" is defined', () => {
       const query = 'query';
       const action = restoreSearchParameters({q: query});
       const finalState = querySuggestReducer(state, action);
 
-      const expectedState = buildMockQuerySuggest({
-        q: query,
-        completions: [],
-        partialQueries: [],
-      });
-      expect(finalState[id]).toEqual(expectedState);
-      expect(finalState[anotherId]).toEqual(expectedState);
+      expect(finalState[id]?.q).toEqual(query);
+      expect(finalState[anotherId]?.q).toEqual(query);
     });
 
     it('does not update the state when "q" is not defined', () => {
@@ -152,7 +145,7 @@ describe('querySuggest slice', () => {
     });
   });
 
-  it('updates the state correctly on executeSearch.fulfilled', () => {
+  it('updates the query correctly on executeSearch.fulfilled', () => {
     const query = 'query';
     const searchState = buildMockSearch({queryExecuted: query});
     const action = executeSearch.fulfilled(
@@ -161,14 +154,8 @@ describe('querySuggest slice', () => {
       logSearchboxSubmit()
     );
     const finalState = querySuggestReducer(state, action);
-
-    const expectedState = buildMockQuerySuggest({
-      q: query,
-      completions: [],
-      partialQueries: [],
-    });
-    expect(finalState[id]).toEqual(expectedState);
-    expect(finalState[anotherId]).toEqual(expectedState);
+    expect(finalState[id]?.q).toEqual(query);
+    expect(finalState[anotherId]?.q).toEqual(query);
   });
 
   describe('fetchQuerySuggestions', () => {
