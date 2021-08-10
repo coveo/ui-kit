@@ -2,6 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
+import {createRipple} from '../../../utils/ripple';
 
 interface FacetSearchInputProps {
   label: string;
@@ -44,6 +45,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
             title={clear}
             part="search-clear-button"
             class="search-clear-button absolute border border-transparent inline-flex justify-center items-center right-0 w-9 h-full text-on-background rounded focus:text-primary hover:text-primary focus:outline-color"
+            onMouseDown={(e) => createRipple(e, {color: 'neutral-light'})}
             onClick={() => {
               props.onClear();
               inputRef!.focus();

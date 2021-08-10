@@ -35,6 +35,7 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
+import {createRipple} from '../../../utils/ripple';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -71,6 +72,8 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-category-facet-v1', // TODO: remove v1 when old facets are removed
@@ -227,6 +230,7 @@ export class AtomicCategoryFacet
           part="all-categories-button"
           class="parent-button"
           onClick={() => this.facet.deselectAll()}
+          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
           <atomic-icon
             aria-hidden="true"
@@ -257,6 +261,7 @@ export class AtomicCategoryFacet
           part="parent-button"
           class="parent-button"
           onClick={() => this.facet.toggleSelect(facetValue)}
+          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
           aria-label={ariaLabel}
         >
           <atomic-icon

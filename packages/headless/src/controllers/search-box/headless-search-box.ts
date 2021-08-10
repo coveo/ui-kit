@@ -156,8 +156,7 @@ export function buildSearchBox(
   };
 
   validateOptions(engine, searchBoxOptionsSchema, options, 'buildSearchBox');
-
-  dispatch(registerQuerySetQuery({id, query: ''}));
+  dispatch(registerQuerySetQuery({id, query: engine.state.query.q}));
   dispatch(
     registerQuerySuggest({
       id,

@@ -48,6 +48,8 @@ import {Schema, StringValue} from '@coveo/bueno';
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  *
+ * @part ripple - The ripple effect of the component's interactive elements.
+ *
  */
 @Component({
   tag: 'atomic-rating-facet',
