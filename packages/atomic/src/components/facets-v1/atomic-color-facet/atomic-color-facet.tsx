@@ -65,6 +65,8 @@ import {
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-color-facet',
