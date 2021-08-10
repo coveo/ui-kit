@@ -7,7 +7,6 @@ function getSvg(fileName: string) {
     `./src/components/atomic-icon/assets/${fileName}.svg`
   );
   return file;
-  // return new Promise((resolve) => file.then(resolve));
 }
 
 function shouldRenderIcon(icon: string) {
