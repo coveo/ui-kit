@@ -57,7 +57,9 @@ jobs:
           npm run setup
           cd packages/quantic
           npm run build
-          npm run copy:staticresources
+      - name: Copy static resources
+        working-directory: ./packages/quantic
+        run: npm run copy:staticresources
       - name: Connect to DevHub organization
         working-directory: ./packages/quantic
         run: |
