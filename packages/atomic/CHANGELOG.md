@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.56.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.55.0...@coveo/atomic@0.56.0) (2021-08-10)
+
+
+### Features
+
+* **atomic:** add ripple effect to clickable facet elements ([#1058](https://github.com/coveo/ui-kit/issues/1058)) ([1a2c0ee](https://github.com/coveo/ui-kit/commit/1a2c0ee071c131f17535551e77e3a8df349d65dc))
+
+
+
+
+
 # [0.55.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.54.1...@coveo/atomic@0.55.0) (2021-08-10)
 
 
