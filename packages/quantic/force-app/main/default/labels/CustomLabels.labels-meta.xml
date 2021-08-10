@@ -328,6 +328,8 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>If the problem persists contact the administrator.</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NoResultsTitle</fullName>
         <value>No results</value>
         <language>en_US</language>
