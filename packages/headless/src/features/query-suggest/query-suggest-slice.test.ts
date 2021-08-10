@@ -10,10 +10,16 @@ import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {QuerySuggestSet} from './query-suggest-state';
 import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
+import {executeSearch} from '../search/search-actions';
+import {buildMockSearch} from '../../test/mock-search';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
 
 describe('querySuggest slice', () => {
   let state: QuerySuggestSet;
   const id = 'searchBox_1234';
+  const anotherId = 'searchBox_6789';
 
   function getCompletions() {
     const completions: QuerySuggestCompletion[] = [];
@@ -32,6 +38,11 @@ describe('querySuggest slice', () => {
   beforeEach(() => {
     state = {
       [id]: buildMockQuerySuggest(),
+      [anotherId]: buildMockQuerySuggest({
+        q: 'nice',
+        completions: [buildMockQuerySuggestCompletion()],
+        partialQueries: ['n', 'i', 'c'],
+      }),
     };
   });
 
@@ -72,7 +83,7 @@ describe('querySuggest slice', () => {
   });
 
   describe('clearQuerySuggest', () => {
-    it('when the id is valid, it clears the query, completions and partialQueries', () => {
+    it('when the id is valid, it clears completions and partialQueries, but not the query', () => {
       state[id] = buildMockQuerySuggest({
         completions: getCompletions(),
         q: 'some query',
@@ -81,7 +92,7 @@ describe('querySuggest slice', () => {
 
       const expectedState = buildMockQuerySuggest({
         completions: [],
-        q: '',
+        q: 'some query',
         partialQueries: [],
       });
 
@@ -108,12 +119,43 @@ describe('querySuggest slice', () => {
     it(`when a query in the querySet is updated,
     it updates the query suggest query if the id exists`, () => {
       const query = 'query';
-
-      const action = updateQuerySetQuery({id, query});
+      const action = updateQuerySetQuery({id: anotherId, query});
       const finalState = querySuggestReducer(state, action);
 
-      expect(finalState[id]?.q).toBe(query);
+      expect(finalState[anotherId]?.q).toBe(query);
     });
+  });
+
+  describe('restoreSearchParameters', () => {
+    it('updates the query correctly when "q" is defined', () => {
+      const query = 'query';
+      const action = restoreSearchParameters({q: query});
+      const finalState = querySuggestReducer(state, action);
+
+      expect(finalState[id]?.q).toEqual(query);
+      expect(finalState[anotherId]?.q).toEqual(query);
+    });
+
+    it('does not update the state when "q" is not defined', () => {
+      const action = restoreSearchParameters({});
+      const finalState = querySuggestReducer(state, action);
+
+      expect(finalState[id]).toEqual(state[id]);
+      expect(finalState[anotherId]).toEqual(state[anotherId]);
+    });
+  });
+
+  it('updates the query correctly on executeSearch.fulfilled', () => {
+    const query = 'query';
+    const searchState = buildMockSearch({queryExecuted: query});
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = querySuggestReducer(state, action);
+    expect(finalState[id]?.q).toEqual(query);
+    expect(finalState[anotherId]?.q).toEqual(query);
   });
 
   describe('fetchQuerySuggestions', () => {
