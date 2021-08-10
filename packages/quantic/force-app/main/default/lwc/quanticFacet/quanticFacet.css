@@ -3,13 +3,13 @@
 }
 
 .facet__search-results_no-match {
-   color: #8E959D;
-   background-color: #F6F7F9;
+   color: var(--sds-c-color-gray-8, #8E959D);
+   background-color: var(--sds-c-color-gray-3, #F6F7F9);
    font-size: 12px;
 }
 
 .facet__search-results_more-matches{
-    color: #8E959D;
+    color: var(--sds-c-color-gray-8, #8E959D);
     font-size: 12px;
 }
 

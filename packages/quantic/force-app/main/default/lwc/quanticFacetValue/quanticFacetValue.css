@@ -5,7 +5,7 @@ li {
 }
 
 .facet__number-of-results {
-  color: gray;
+  color: var(--sds-c-color-gray-8, #8E959D);
   font-size: 11px;
   padding-top: 3px;
 }
