@@ -1,0 +1,27 @@
+<template>
+    <template if:true={showNoResultsPanel}>
+        <div class="slds-grid slds-grid_vertical">
+            <div class="slds-col slds-size_12-of-12 slds-var-m-vertical_x-large slds-illustration slds-illustration_small">
+                <c-quantic-svg name="noResults"></c-quantic-svg>
+            </div>
+            <div class="slds-col slds-size_12-of-12">
+                <h3 class="slds-text-heading_small slds-text-align_center slds-var-m-around_small">
+                    <lightning-formatted-rich-text value={noResultsTitleLabel}></lightning-formatted-rich-text>
+                </h3>
+                <p class="slds-text-body_small slds-text-align_center">
+                    <template if:true={hasBreadcrumbs}>
+                        <lightning-formatted-rich-text value={labels.noResultsWithFilters}></lightning-formatted-rich-text>
+                    </template>
+                    <template if:false={hasBreadcrumbs}>
+                        <lightning-formatted-rich-text value={labels.noResultsWithoutFilters}></lightning-formatted-rich-text>
+                    </template>
+                </p>
+            </div>
+            <template if:true={showUndoButton}>
+                <div class="slds-m-vertical_x-large slds-align_absolute-center">
+                    <lightning-button variant="brand" label={labels.undoLastAction} class="slds-m-around_x-small" onclick={onUndoLastActionClick}></lightning-button>
+                </div>
+            </template>
+        </div>
+    </template> 
+</template>
