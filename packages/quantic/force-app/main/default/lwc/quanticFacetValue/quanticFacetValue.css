@@ -6,16 +6,15 @@ li {
 
 .facet__number-of-results {
   color: gray;
-}
-
-.facet__checkbox{
-  vertical-align: sub;
-  width: 15px;
-  height: 15px;
-  border: 1px solid #DDDBDA;
-  border-radius: 2px;
+  font-size: 11px;
+  padding-top: 3px;
 }
 
 .facet__value_selected{
   font-weight: bold;
+}
+
+.facet__value-option {
+  display: flex;
+  flex-direction: row;
 }

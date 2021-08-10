@@ -1,9 +1,17 @@
 <template>
   <template if:true={isChecked}>
   <li class="slds-var-m-vertical_small slds-grid">
-      <div class="slds-col">
-        <input type="checkbox" class="facet__checkbox" checked onchange={onSelect} />
-        <span class="slds-var-m-horizontal_small slds-text-body_small facet__value_selected">{item.start} - {item.end}</span>
+      <div class="slds-col facet__value-option">
+        <lightning-input 
+        type="checkbox"
+        variant="label-hidden"
+        label="Facet value option"
+        name="facet value checkbox"
+        onchange={onSelect}
+        checked
+      >
+      </lightning-input>        
+      <span class="slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small facet__value_selected">{item.start} - {item.end}</span>
         <span class="nowrap slds-text-body_small facet__number-of-results facet__value_selected">({item.numberOfResults})</span>
       </div>
     </li>
@@ -11,9 +19,16 @@
 
   <template if:false={isChecked}>
     <li class="slds-var-m-vertical_small slds-grid">
-      <div class="slds-col">
-        <input type="checkbox" class="facet__checkbox" onchange={onSelect} />
-        <span class="slds-var-m-horizontal_small slds-text-body_small nowrap">{item.start} - {item.end}</span>
+      <div class="slds-col facet__value-option">
+        <lightning-input 
+        type="checkbox"
+        variant="label-hidden"
+        label="Facet value option"
+        name="facet value checkbox"
+        onchange={onSelect}
+      >
+      </lightning-input>  
+        <span class="slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap">{item.start} - {item.end}</span>
         <span class="nowrap slds-text-body_small facet__number-of-results">({item.numberOfResults})</span>
       </div>
     </li>
