@@ -4,6 +4,7 @@ variable "package_version" {
 
 data "aws_ssm_parameter" "svc_coveoanalyticsjs_secret" {
   name = "/${var.env}/coveoanalyticsjs/svcAccountSecret"
+  type = "SecureString"
 }
 
 resource "null_resource" "invalidate-cloudfront" {
@@ -14,6 +15,7 @@ resource "null_resource" "invalidate-cloudfront" {
       CLOUDFRONT_DISTRIBUTION_ID="E2VWLFSCSD1GLA"
       AWS_ACCESS_KEY_ID="AKIAYKDJLZITZZKEN7WY"
       AWS_SECRET_ACCESS_KEY=data.aws_ssm_parameter.svc_coveoanalyticsjs_secret.value
+      AWS_DEFAULT_REGION=var.region
     }
   }
 }
