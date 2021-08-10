@@ -5,7 +5,7 @@
   width: var(--atomic-facet-checkbox-size, 16px);
   height: var(--atomic-facet-checkbox-size, 16px);
 
-  @apply absolute left-2 flex justify-center rounded focus:outline-none focus:border-primary-light;
+  @apply absolute z-10 left-2 flex justify-center rounded focus:outline-none focus:border-primary-light;
 }
 
 .value-checkbox + label {
@@ -24,10 +24,12 @@
   margin-top: 15%;
 }
 
-.value-checkbox:focus + label {
+.value-checkbox:focus + label,
+.value-checkbox:hover + label {
   @apply bg-neutral-light;
 }
 
-.value-checkbox:focus + label .value-label {
+.value-checkbox:focus + label .value-label,
+.value-checkbox:hover + label .value-label {
   @apply text-primary;
 }
