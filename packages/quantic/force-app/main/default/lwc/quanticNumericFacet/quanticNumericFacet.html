@@ -1,9 +1,15 @@
 <template>
   <template if:true={hasValues}>
     <lightning-card title={label}>
-      <button class="slds-button slds-button_icon slds-p-bottom_small facet__collapse" slot="actions" onclick={toggleFacetVisibility}>
-        <lightning-icon class="slds-button__icon" icon-name={facetIconName} size="x-small"></lightning-icon>
-      </button>
+      <lightning-button-icon
+        class="slds-p-bottom_small facet__collapse"
+        slot="actions"
+        onclick={toggleFacetVisibility}
+        icon-name={facetIconName}
+        alternative-text="Collapse/show facet"
+        variant="bare"
+      >
+      </lightning-button-icon>
       <template if:false={isCollapsed}>
         <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
           <template if:true={hasActiveValues}>
