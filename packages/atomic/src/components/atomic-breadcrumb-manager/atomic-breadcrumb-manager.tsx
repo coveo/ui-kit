@@ -84,11 +84,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         }
       >
         <span class="truncate">{value}</span>
-        <div
+        <atomic-icon
           role="button"
           class="w-2.5 ml-1.5 flex-shrink-0 self-center"
-          innerHTML={mainclear}
-        />
+          icon={mainclear}
+        ></atomic-icon>
       </button>
     );
   }

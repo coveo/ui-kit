@@ -300,6 +300,12 @@ export namespace Components {
     }
     interface AtomicFrequentlyBoughtTogether {
     }
+    interface AtomicIcon {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon": string;
+    }
     interface AtomicModal {
         "handleClose": () => void;
     }
@@ -421,7 +427,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The icon used to display the rating.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
         /**
@@ -451,7 +457,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The icon used to display the rating.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
         /**
@@ -522,10 +528,6 @@ export namespace Components {
         "icon"?: string;
     }
     interface AtomicResultIconV1 {
-        /**
-          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
-         */
-        "icon"?: string;
     }
     interface AtomicResultImage {
         /**
@@ -959,6 +961,12 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    interface HTMLAtomicIconElement extends Components.AtomicIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicIconElement: {
+        prototype: HTMLAtomicIconElement;
+        new (): HTMLAtomicIconElement;
+    };
     interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
     }
     var HTMLAtomicModalElement: {
@@ -1266,6 +1274,7 @@ declare global {
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
+        "atomic-icon": HTMLAtomicIconElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-no-results-v1": HTMLAtomicNoResultsV1Element;
@@ -1606,6 +1615,12 @@ declare namespace LocalJSX {
     }
     interface AtomicFrequentlyBoughtTogether {
     }
+    interface AtomicIcon {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon": string;
+    }
     interface AtomicModal {
         "handleClose": () => void;
     }
@@ -1728,7 +1743,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * The icon used to display the rating.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
@@ -1758,7 +1773,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * The icon used to display the rating.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
@@ -1829,10 +1844,6 @@ declare namespace LocalJSX {
         "icon"?: string;
     }
     interface AtomicResultIconV1 {
-        /**
-          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
-         */
-        "icon"?: string;
     }
     interface AtomicResultImage {
         /**
@@ -2163,6 +2174,7 @@ declare namespace LocalJSX {
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
+        "atomic-icon": AtomicIcon;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-no-results-v1": AtomicNoResultsV1;
@@ -2235,6 +2247,7 @@ declare module "@stencil/core" {
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-no-results-v1": LocalJSX.AtomicNoResultsV1 & JSXBase.HTMLAttributes<HTMLAtomicNoResultsV1Element>;
