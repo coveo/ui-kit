@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
@@ -32,7 +33,9 @@ export const querySetReducer = createReducer(
         updateAllQuerySetQuery(state, queryExecuted);
       })
       .addCase(restoreSearchParameters, (state, action) => {
-        updateAllQuerySetQuery(state, action.payload.q ?? '');
+        if (!isNullOrUndefined(action.payload.q)) {
+          updateAllQuerySetQuery(state, action.payload.q);
+        }
       })
       .addCase(change.fulfilled, (state, action) => {
         if (!action.payload) {

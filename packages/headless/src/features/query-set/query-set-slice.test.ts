@@ -12,8 +12,8 @@ import {restoreSearchParameters} from '../search-parameters/search-parameter-act
 describe('querySet slice', () => {
   let state: QuerySetState;
 
-  function registerEmptyQueryWithId(id: string) {
-    const action = registerQuerySetQuery({id, query: ''});
+  function registerQueryWithId(id: string, query = '') {
+    const action = registerQuerySetQuery({id, query});
     state = querySetReducer(state, action);
   }
 
@@ -40,7 +40,7 @@ describe('querySet slice', () => {
     const id = '1';
     const query = 'query';
 
-    registerEmptyQueryWithId(id);
+    registerQueryWithId(id);
     const action = registerQuerySetQuery({id, query});
     const finalState = querySetReducer(state, action);
 
@@ -60,7 +60,7 @@ describe('querySet slice', () => {
     const id = '1';
     const query = 'query';
 
-    registerEmptyQueryWithId(id);
+    registerQueryWithId(id);
     const action = updateQuerySetQuery({id, query});
     const finalState = querySetReducer(state, action);
 
@@ -72,7 +72,7 @@ describe('querySet slice', () => {
     const id = '1';
     const query = 'query';
 
-    registerEmptyQueryWithId(id);
+    registerQueryWithId(id);
     const action = selectQuerySuggestion({id, expression: query});
     const finalState = querySetReducer(state, action);
 
@@ -90,8 +90,8 @@ describe('querySet slice', () => {
   });
 
   it('sets all queries to queryExecuted on executeSearch.fulfilled', () => {
-    registerEmptyQueryWithId('foo');
-    registerEmptyQueryWithId('bar');
+    registerQueryWithId('foo');
+    registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
     const searchState = buildMockSearch({queryExecuted: 'world'});
@@ -102,9 +102,9 @@ describe('querySet slice', () => {
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it('sets all queries to q on restoreSearchParameters, when defined', () => {
-    registerEmptyQueryWithId('foo');
-    registerEmptyQueryWithId('bar');
+  it('sets all queries to q on #restoreSearchParameters, when "q" defined', () => {
+    registerQueryWithId('foo');
+    registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
     const nextState = querySetReducer(
@@ -114,18 +114,18 @@ describe('querySet slice', () => {
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it('sets all queries to an empty string on restoreSearchParameters, when not defined', () => {
-    registerEmptyQueryWithId('foo');
-    registerEmptyQueryWithId('bar');
+  it('does not modify query on #restoreSearchParameters, when "q" not defined', () => {
+    registerQueryWithId('foo', 'foo');
+    registerQueryWithId('bar', 'bar');
 
-    const expectedQuerySet = {foo: '', bar: ''};
+    const expectedQuerySet = {foo: 'foo', bar: 'bar'};
     const nextState = querySetReducer(state, restoreSearchParameters({}));
     expect(nextState).toEqual(expectedQuerySet);
   });
 
   it('allows to restore a query set on history change', () => {
-    registerEmptyQueryWithId('foo');
-    registerEmptyQueryWithId('hello');
+    registerQueryWithId('foo');
+    registerQueryWithId('hello');
 
     const expectedQuerySet = {foo: 'bar', hello: 'world'};
     const historyChange = {

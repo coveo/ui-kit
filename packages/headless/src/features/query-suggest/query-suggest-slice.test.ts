@@ -119,16 +119,17 @@ describe('querySuggest slice', () => {
     it(`when a query in the querySet is updated,
     it updates the query suggest query if the id exists`, () => {
       const query = 'query';
-
-      const action = updateQuerySetQuery({id, query});
+      const action = updateQuerySetQuery({id: anotherId, query});
       const finalState = querySuggestReducer(state, action);
 
-      expect(finalState[id]?.q).toBe(query);
+      expect(finalState[anotherId]?.q).toBe(query);
+      expect(finalState[anotherId]?.completions).not.toEqual([]);
+      expect(finalState[anotherId]?.partialQueries).not.toEqual([]);
     });
   });
 
   describe('restoreSearchParameters', () => {
-    it('updates the state correctly when q is defined', () => {
+    it('updates the state correctly when "q" is defined', () => {
       const query = 'query';
       const action = restoreSearchParameters({q: query});
       const finalState = querySuggestReducer(state, action);
@@ -142,17 +143,12 @@ describe('querySuggest slice', () => {
       expect(finalState[anotherId]).toEqual(expectedState);
     });
 
-    it('updates the state correctly when q is not defined', () => {
+    it('does not update the state when "q" is not defined', () => {
       const action = restoreSearchParameters({});
       const finalState = querySuggestReducer(state, action);
 
-      const expectedState = buildMockQuerySuggest({
-        q: '',
-        completions: [],
-        partialQueries: [],
-      });
-      expect(finalState[id]).toEqual(expectedState);
-      expect(finalState[anotherId]).toEqual(expectedState);
+      expect(finalState[id]).toEqual(state[id]);
+      expect(finalState[anotherId]).toEqual(state[anotherId]);
     });
   });
 

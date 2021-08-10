@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   clearQuerySuggest,
@@ -75,7 +76,7 @@ export const querySuggestReducer = createReducer(
         const {id, query} = action.payload;
 
         if (id in state) {
-          updateQuerySuggestQuery(state[id]!, query);
+          state[id]!.q = query;
         }
       })
       .addCase(clearQuerySuggest, (state, action) => {
@@ -99,24 +100,24 @@ export const querySuggestReducer = createReducer(
         querySuggest.q = expression;
       })
       .addCase(restoreSearchParameters, (state, action) => {
-        updateAllQuerySuggestSetQuery(state, action.payload.q ?? '');
+        if (!isNullOrUndefined(action.payload.q)) {
+          restoreQuerySuggestSets(state, action.payload.q);
+        }
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {queryExecuted} = action.payload;
-        updateAllQuerySuggestSetQuery(state, queryExecuted);
+        restoreQuerySuggestSets(state, queryExecuted);
       })
 );
 
-function updateQuerySuggestQuery(state: QuerySuggestState, query: string) {
+function restoreQuerySuggest(state: QuerySuggestState, query: string) {
   state.q = query;
   state.completions = [];
   state.partialQueries = [];
 }
 
-function updateAllQuerySuggestSetQuery(state: QuerySuggestSet, query: string) {
-  Object.keys(state).forEach((id) =>
-    updateQuerySuggestQuery(state[id]!, query)
-  );
+function restoreQuerySuggestSets(state: QuerySuggestSet, query: string) {
+  Object.keys(state).forEach((id) => restoreQuerySuggest(state[id]!, query));
 }
 
 function buildQuerySuggest(
