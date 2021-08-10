@@ -63,7 +63,9 @@ export class AtomicQuerySummary implements InitializableComponent {
     return `<span class="font-bold" part="highlight">${content}</span>`;
   }
 
-  //TODO: remove renderNoResults method
+  /**
+   * @deprecated
+   */
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
       ? this.bindings.i18n.t('no-results-for', {
@@ -119,7 +121,6 @@ export class AtomicQuerySummary implements InitializableComponent {
     }
 
     return (
-      //TODO: remove renderNoResults method
       <div class="text-on-background" part="container">
         {this.querySummaryState.hasResults
           ? [this.renderHasResults(), this.renderDuration()]
