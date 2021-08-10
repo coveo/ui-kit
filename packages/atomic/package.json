@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.54.0",
+  "version": "0.56.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -37,8 +37,8 @@
     "npm:publish": "npm publish --access public"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.32.3",
-    "@coveo/headless": "^1.13.0",
+    "@coveo/bueno": "^0.32.4",
+    "@coveo/headless": "^1.14.0",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "escape-html": "^1.0.3",
@@ -65,7 +65,7 @@
     "autoprefixer": "10.2.6",
     "axe-core": "4.1.1",
     "cross-fetch": "3.1.4",
-    "cypress": "7.4.0",
+    "cypress": "^8.2.0",
     "cypress-axe": "0.12.2",
     "eslint-plugin-cypress": "2.11.2",
     "html-loader-jest": "0.2.1",

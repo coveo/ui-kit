@@ -3,7 +3,6 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxOptions,
 } from './headless-standalone-search-box';
-import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {createMockState} from '../../test/mock-state';
 import {updateQuery} from '../../features/query/query-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -20,9 +19,19 @@ import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-
 import {
   configuration,
   query,
-  redirection,
+  standaloneSearchBoxSet,
   querySuggest,
+  redirection,
 } from '../../app/reducers';
+import {
+  fetchRedirectUrl,
+  registerStandaloneSearchBox,
+  updateAnalyticsToOmniboxFromLink,
+  updateAnalyticsToSearchFromLink,
+} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
+import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
+import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -44,9 +53,9 @@ describe('headless standalone searchBox', () => {
 
   function initState() {
     state = createMockState();
-    state.redirection.redirectTo = 'coveo.com';
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
+    state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry();
   }
 
   function initController() {
@@ -56,11 +65,20 @@ describe('headless standalone searchBox', () => {
 
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      redirection,
+      standaloneSearchBoxSet,
       configuration,
       query,
       querySuggest,
+      redirection,
     });
+  });
+
+  it('dispatches #registerStandaloneSearchBox with the correct options', () => {
+    const action = registerStandaloneSearchBox({
+      id,
+      redirectionUrl: options.redirectionUrl,
+    });
+    expect(engine.actions).toContainEqual(action);
   });
 
   it('when no id is passed, it creates an id prefixed with standalone_search_box', () => {
@@ -85,13 +103,18 @@ describe('headless standalone searchBox', () => {
     );
   });
 
+  it('when the redirectionUrl is a relative url, it does not throw', () => {
+    options.redirectionUrl = '/search-page';
+    expect(() => initController()).not.toThrow();
+  });
+
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
       })),
-      redirectTo: state.redirection.redirectTo,
+      redirectTo: '',
       isLoading: false,
       isLoadingSuggestions: false,
       analytics: {
@@ -101,6 +124,34 @@ describe('headless standalone searchBox', () => {
     });
   });
 
+  it('#state.isLoading uses the value in the standalone search-box reducer', () => {
+    engine.state.standaloneSearchBoxSet[
+      id
+    ] = buildMockStandaloneSearchBoxEntry({isLoading: true});
+    expect(searchBox.state.isLoading).toBe(true);
+  });
+
+  it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
+    const redirectTo = '/search-page';
+    engine.state.standaloneSearchBoxSet[
+      id
+    ] = buildMockStandaloneSearchBoxEntry({redirectTo});
+    expect(searchBox.state.redirectTo).toBe(redirectTo);
+  });
+
+  it('#state.analytics uses the value inside the standalone search-box reducer', () => {
+    const metadata = buildMockOmniboxSuggestionMetadata();
+    const analytics: StandaloneSearchBoxAnalytics = {
+      cause: 'omniboxFromLink',
+      metadata,
+    };
+    engine.state.standaloneSearchBoxSet[
+      id
+    ] = buildMockStandaloneSearchBoxEntry({analytics});
+
+    expect(searchBox.state.analytics).toEqual(analytics);
+  });
+
   describe('#updateText', () => {
     const query = 'a';
 
@@ -108,13 +159,9 @@ describe('headless standalone searchBox', () => {
       searchBox.updateText(query);
     });
 
-    it('sets the analytics cause to "searchFromLink"', () => {
-      searchBox.updateText('');
-
-      expect(searchBox.state.analytics).toEqual({
-        cause: 'searchFromLink',
-        metadata: null,
-      });
+    it('dispatches an action to update analytics to searchFromLink', () => {
+      const action = updateAnalyticsToSearchFromLink({id});
+      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateQuerySetQuery', () => {
@@ -133,18 +180,18 @@ describe('headless standalone searchBox', () => {
       );
     });
 
-    it('sets #state.analytics to the correct data', () => {
-      searchBox.selectSuggestion('a');
+    it('dispatchs an action to update analytics to omniboxFromLink', () => {
+      const metadata = {
+        partialQueries: [],
+        partialQuery: '',
+        suggestionRanking: -1,
+        suggestions: [],
+      };
 
-      expect(searchBox.state.analytics).toEqual({
-        cause: 'omniboxFromLink',
-        metadata: {
-          partialQueries: [],
-          partialQuery: undefined,
-          suggestionRanking: -1,
-          suggestions: [],
-        },
-      });
+      const action = updateAnalyticsToOmniboxFromLink({id, metadata});
+
+      searchBox.selectSuggestion('a');
+      expect(engine.actions).toContainEqual(action);
     });
 
     it('calls #submit', () => {
@@ -165,11 +212,11 @@ describe('headless standalone searchBox', () => {
       );
     });
 
-    it('should dispatch a checkForRedirection action', () => {
+    it('should dispatch a fetchRedirectUrl action', () => {
       searchBox.submit();
 
       const action = engine.actions.find(
-        (a) => a.type === checkForRedirection.pending.type
+        (a) => a.type === fetchRedirectUrl.pending.type
       );
       expect(action).toBeTruthy();
     });
