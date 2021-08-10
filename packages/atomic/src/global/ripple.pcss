@@ -1,0 +1,22 @@
+.ripple {
+  position: absolute;
+  pointer-events: none;
+  transform: scale(0);
+  border-radius: 50%;
+  animation: ripple 700ms linear;
+}
+
+.ripple-relative {
+  position: relative;
+}
+
+.ripple-parent {
+  overflow: hidden;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}

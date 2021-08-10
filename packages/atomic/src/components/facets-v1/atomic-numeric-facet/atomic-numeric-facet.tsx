@@ -74,6 +74,8 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part input-start - The input for the starting value of the custom numeric range.
  * @part input-end - The input for the ending value of the custom numeric range.
  * @part input-apply-button - The apply button for the custom range.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-numeric-facet-v1', // TODO: remove v1 when old facets are removed
