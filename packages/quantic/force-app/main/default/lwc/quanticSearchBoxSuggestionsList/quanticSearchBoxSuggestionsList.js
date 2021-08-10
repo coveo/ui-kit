@@ -30,6 +30,13 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     }
   }
 
+  @api getCurrentSelectedValue() {
+    if(this.selectionIndex > -1) {
+      return this.suggestions[this.selectionIndex];
+    }
+    return undefined;
+  }
+
   @api resetSelection() {
     this.selectionIndex = -1;
   }

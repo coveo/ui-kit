@@ -11,7 +11,11 @@ const KEYS = {
   ENTER: 'Enter',
   ARROWUP: 'ArrowUp',
   ARROWDOWN: 'ArrowDown',
-}
+};
+
+const CLASS_WITH_SUBMIT = 'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
+const CLASS_WITHOUT_SUBMIT = 'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
+
 
 export default class QuanticSearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -44,9 +48,6 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {number} */
   @api numberOfSuggestions = 5;
 
-
-  /** @type {string} */
-  searchBoxContainerClass;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -92,7 +93,6 @@ export default class QuanticSearchBox extends LightningElement {
     if (!this.clearButton) {
       this.clearButton = this.template.querySelector('.slds-button__icon');
     }
-    this.setSearchBoxContainerClass();
   }
 
   disconnectedCallback() {
@@ -112,17 +112,28 @@ export default class QuanticSearchBox extends LightningElement {
     return this.template.querySelector('c-quantic-search-box-suggestions-list');
   }
 
-  setSearchBoxContainerClass() {
+  get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
-      this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right";
-      this.input.setAttribute("aria-labelledby", "fixed-text-label")
-    } else {
-      this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon";
-      this.input.setAttribute("aria-labelledby", "fixed-text-label fixed-text-addon-post");
+      if (this.input) {
+        this.input.setAttribute('aria-labelledby', 'fixed-text-label');
+      }
+      return CLASS_WITH_SUBMIT;
     }
+    if (this.input) {
+      this.input.setAttribute(
+        'aria-labelledby',
+        'fixed-text-label fixed-text-addon-post'
+      );
+    }
+    return CLASS_WITHOUT_SUBMIT;
+  }
+
+  get suggestionsOpen() {
+    return this.combobox.classList.contains('slds-is-open');
   }
 
   showSuggestions() {
+    this.searchBox.showSuggestions();
     this.combobox.classList.add('slds-is-open');
     this.combobox.setAttribute('aria-expanded', 'true');
   }
@@ -130,7 +141,7 @@ export default class QuanticSearchBox extends LightningElement {
   hideSuggestions() {
     this.combobox.classList.remove('slds-is-open');
     this.combobox.setAttribute('aria-expanded', 'false');
-    this.suggestionList.resetSelection();
+    this.suggestionList?.resetSelection();
   }
 
   handleHighlightChange(event) {
@@ -143,15 +154,17 @@ export default class QuanticSearchBox extends LightningElement {
    */
   updateSearchboxText(textValue) {
     this.input.value = textValue;
-    this.searchBox.updateText(textValue);
   }
 
   handleEnter() {
-    if(this.searchBox.state.value !== this.input.value) {
-      this.updateSearchboxText(this.input.value);
+    const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
+    if(this.suggestionsOpen && selectedSuggestion) {
+      this.searchBox.selectSuggestion(selectedSuggestion.rawValue);
+      this.input.blur();
+    } else {
+      this.searchBox.submit();
+      this.input.blur();
     }
-    this.searchBox.submit();
-    this.input.blur();
   }
 
   onSubmit() {
@@ -169,13 +182,13 @@ export default class QuanticSearchBox extends LightningElement {
         this.handleEnter();
         break;
       case KEYS.ARROWUP:
-        this.suggestionList.selectionUp();
+        this.suggestionList?.selectionUp();
         break;
       case KEYS.ARROWDOWN:
-        this.suggestionList.selectionDown();
+        this.suggestionList?.selectionDown();
         break;
       default:
-        this.suggestionList.resetSelection();
+        this.suggestionList?.resetSelection();
         this.searchBox.updateText(event.target.value);
     }
   }
@@ -183,7 +196,6 @@ export default class QuanticSearchBox extends LightningElement {
   onFocus() {
     this.clearButton.classList.remove('slds-hidden');
     this.clearButton.classList.add('slds-visible');
-    this.searchBox.showSuggestions();
     this.showSuggestions();
   }
 
@@ -201,8 +213,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   handleSuggestionSelection(event) {
     const textValue = event.detail;
-    this.updateSearchboxText(textValue);
-    this.searchBox.submit();
+    this.searchBox.selectSuggestion(textValue);
     this.input.blur();
   }
 }
