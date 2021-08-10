@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.58.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.57.0...@coveo/atomic@0.58.0) (2021-08-10)
+
+
+### Features
+
+* **atomic:** added atomic-icon component ([#1059](https://github.com/coveo/ui-kit/issues/1059)) ([81fae2c](https://github.com/coveo/ui-kit/commit/81fae2c73c71ef736f513cdd4d4090b4af2d368d))
+
+
+
+
+
 # [0.57.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.56.1...@coveo/atomic@0.57.0) (2021-08-10)
 
 
