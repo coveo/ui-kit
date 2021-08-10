@@ -47,6 +47,9 @@ module.exports = {
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
       },
+      zIndex: {
+        '1': '1',
+       }
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),

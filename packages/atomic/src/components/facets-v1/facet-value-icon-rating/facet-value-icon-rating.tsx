@@ -44,7 +44,7 @@ export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps
         {emptyIconDisplay()}
       </div>
       <div
-        class="absolute left-0 top-0 z-10 flex items-center gap-0.5 pt-0.5 pb-0.5 overflow-hidden"
+        class="absolute left-0 top-0 z-1 flex items-center gap-0.5 pt-0.5 pb-0.5 overflow-hidden"
         style={{width}}
       >
         {filledIconDisplay()}

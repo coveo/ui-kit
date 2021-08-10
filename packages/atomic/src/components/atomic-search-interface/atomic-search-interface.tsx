@@ -19,16 +19,12 @@ import {
   loadSearchConfigurationActions,
   SearchEngineConfiguration,
 } from '@coveo/headless';
-import {
-  AtomicStore,
-  Bindings,
-  InitializeEvent,
-  initialStore,
-} from '../../utils/initialization-utils';
+import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
+import {AtomicStore, initialStore} from '../../utils/store';
 
 export type InitializationOptions = Pick<
   SearchEngineConfiguration,
