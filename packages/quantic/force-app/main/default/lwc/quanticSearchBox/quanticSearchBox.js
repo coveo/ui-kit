@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 // @ts-ignore
 import {
   registerComponentForInit,
@@ -7,9 +7,11 @@ import {
 
 import search from '@salesforce/label/c.quantic_Search';
 
-const ENTER = 13;
-const ARROWUP = 38;
-const ARROWDOWN = 40;
+const KEYS = {
+  ENTER: 'Enter',
+  ARROWUP: 'ArrowUp',
+  ARROWDOWN: 'ArrowDown',
+}
 
 export default class QuanticSearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -19,10 +21,12 @@ export default class QuanticSearchBox extends LightningElement {
     suggestions: [],
     value: '',
   };
+  
   /** @type {any} */
   get suggestions() {
-    return this.state.suggestions.map((s, index) => ({
+    return this.searchBox.state.suggestions.map((s, index) => ({
       key: index,
+      rawValue: s.rawValue,
       value: s.highlightedValue,
     }));
   }
@@ -30,7 +34,7 @@ export default class QuanticSearchBox extends LightningElement {
   labels = {
     search
   }
-  
+
   /** @type {string} */
   @api engineId;
   /** @type {string} */
@@ -47,27 +51,12 @@ export default class QuanticSearchBox extends LightningElement {
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-
-  /** @type {number} */
-  selectionIndex = -1;
   /** @type {HTMLInputElement} */
   input;
   /** @type {HTMLElement} */
   combobox;
   /** @type {HTMLButtonElement} */
   clearButton;
-  /** @type {() => void} */
-  resetSelectionIndex = () => {
-    this.selectionIndex = -1;
-  };
-  /** @type {() => boolean} */
-  areSuggestionsShown = () =>
-    this.template
-      .querySelector('.slds-combobox')
-      .classList.contains('slds-is-open');
-  /** @type {() => NodeListOf<HTMLElement>} */
-  getSuggestionElements = () =>
-    this.template.querySelectorAll('.slds-listbox__option');
 
   /**
    * @param {import("coveo").SearchEngine} engine
@@ -113,17 +102,21 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   updateState() {
-    if(this.state.value !== this.searchBox.state.value) {
+    if (this.state.value !== this.searchBox.state.value) {
       this.updateSearchboxText(this.searchBox.state.value);
     }
     this.state = this.searchBox.state;
   }
 
+  get suggestionList() {
+    return this.template.querySelector('c-quantic-search-box-suggestions-list');
+  }
+
   setSearchBoxContainerClass() {
-    if(this.withoutSubmitButton){
+    if (this.withoutSubmitButton) {
       this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right";
       this.input.setAttribute("aria-labelledby", "fixed-text-label")
-    } else{
+    } else {
       this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon";
       this.input.setAttribute("aria-labelledby", "fixed-text-label fixed-text-addon-post");
     }
@@ -137,30 +130,12 @@ export default class QuanticSearchBox extends LightningElement {
   hideSuggestions() {
     this.combobox.classList.remove('slds-is-open');
     this.combobox.setAttribute('aria-expanded', 'false');
-    this.resetHighlighted();
-    this.resetSelectionIndex();
+    this.suggestionList.resetSelection();
   }
 
-  setHighlighted() {
-    const suggestions = this.getSuggestionElements();
-    if (!suggestions.length) {
-      return;
-    }
-    const suggestion = suggestions[this.selectionIndex];
-
-    this.resetHighlighted();
-    suggestion.setAttribute('aria-selected', 'true');
-    suggestion.classList.add('slds-has-focus');
-    this.input.value = suggestion.innerText;
-  }
-
-  resetHighlighted() {
-    const options = this.getSuggestionElements();
-
-    options.forEach((element) => {
-      element.setAttribute('aria-selected', 'false');
-      element.classList.remove('slds-has-focus');
-    });
+  handleHighlightChange(event) {
+    const suggestion = event.detail;
+    this.input.value = suggestion.rawValue;
   }
 
   /**
@@ -172,30 +147,14 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   handleEnter() {
-    if (this.selectionIndex >= 0) {
-      this.searchBox.updateText(this.input.value);
+    if(this.searchBox.state.value !== this.input.value) {
+      this.updateSearchboxText(this.input.value);
     }
     this.searchBox.submit();
     this.input.blur();
   }
 
-  handleArrowUp() {
-    this.selectionIndex--;
-    if (this.selectionIndex < 0) {
-      this.selectionIndex = this.suggestions.length - 1;
-    }
-    this.setHighlighted();
-  }
-
-  handleArrowDown() {
-    this.selectionIndex++;
-    if (this.selectionIndex > this.suggestions.length - 1) {
-      this.selectionIndex = 0;
-    }
-    this.setHighlighted();
-  }
-
-  onSubmit(){
+  onSubmit() {
     this.searchBox.updateText(this.input.value);
     this.searchBox.submit();
     this.input.blur();
@@ -205,16 +164,19 @@ export default class QuanticSearchBox extends LightningElement {
    * @param {KeyboardEvent & {target: {value : string}}} event
    */
   onKeyup(event) {
-    if (event.which === ENTER) {
-      this.handleEnter();
-    } else if (this.areSuggestionsShown() && event.which === ARROWUP) {
-      this.handleArrowUp();
-    } else if (this.areSuggestionsShown() && event.which === ARROWDOWN) {
-      this.handleArrowDown();
-    } else {
-      this.resetSelectionIndex();
-      this.resetHighlighted();
-      this.searchBox.updateText(event.target.value);
+    switch (event.key) {
+      case KEYS.ENTER:
+        this.handleEnter();
+        break;
+      case KEYS.ARROWUP:
+        this.suggestionList.selectionUp();
+        break;
+      case KEYS.ARROWDOWN:
+        this.suggestionList.selectionDown();
+        break;
+      default:
+        this.suggestionList.resetSelection();
+        this.searchBox.updateText(event.target.value);
     }
   }
 
@@ -237,12 +199,8 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.focus();
   }
 
-  preventDefault(event) {
-    event.preventDefault();
-  }
-
   handleSuggestionSelection(event) {
-    const textValue = event.target.innerText;
+    const textValue = event.detail;
     this.updateSearchboxText(textValue);
     this.searchBox.submit();
     this.input.blur();

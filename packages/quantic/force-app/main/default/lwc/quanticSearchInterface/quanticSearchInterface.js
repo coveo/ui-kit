@@ -54,6 +54,7 @@ export default class QuanticSearchInterface extends LightningElement {
     }
   }
  
+  /** @param {import("coveo").SearchEngine} engine */
   initialize = (engine) => {
     if (!this.disableStateInUrl) {
       this.initUrlManager(engine);
