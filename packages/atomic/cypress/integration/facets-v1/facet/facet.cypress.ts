@@ -6,11 +6,11 @@ import {
   label,
   defaultNumberOfValues,
   selectIdleBoxValueAt,
-  typeFacetSearchQuery,
 } from './facet-actions';
 import {
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
+  typeFacetSearchQuery,
 } from '../facet-common-actions';
 import * as FacetAssertions from './facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
@@ -42,7 +42,7 @@ describe('Facet v1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, false);
       FacetAssertions.assertDisplayShowMoreButton(true);
       FacetAssertions.assertDisplayShowLessButton(false);
-      FacetAssertions.assertDisplaySearchInput(true);
+      CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
     });
 
     describe('when selecting a value', () => {
@@ -138,7 +138,8 @@ describe('Facet v1 Test Suites', () => {
         const query = 'bbc';
         function setupSearchFor() {
           setupSelectCheckboxValue();
-          typeFacetSearchQuery(query);
+          cy.wait(TestFixture.interceptAliases.UA);
+          typeFacetSearchQuery(FacetSelectors, query);
         }
 
         describe('verify rendering', () => {
@@ -153,21 +154,33 @@ describe('Facet v1 Test Suites', () => {
             FacetSelectors,
             0
           );
-          FacetAssertions.assertDisplayMoreMatchesFound(true);
-          FacetAssertions.assertDisplayNoMatchesFound(false);
-          FacetAssertions.assertMoreMatchesFoundContainsQuery(query);
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            FacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            FacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertMoreMatchesFoundContainsQuery(
+            FacetSelectors,
+            query
+          );
           FacetAssertions.assertDisplayShowMoreButton(false);
-          FacetAssertions.assertDisplaySearchClearButton(true);
-          FacetAssertions.assertHighlightsResults(query);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            FacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertHighlightsResults(FacetSelectors, query);
         });
 
         describe('verify analytics', () => {
           before(setupSearchFor);
 
-          FacetAssertions.assertLogFacetSearch(field);
+          CommonFacetAssertions.assertLogFacetSearch(field);
         });
 
-        describe('when selecting for a search result', () => {
+        describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
@@ -186,11 +199,20 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               2
             );
-            FacetAssertions.assertDisplayMoreMatchesFound(false);
-            FacetAssertions.assertDisplayNoMatchesFound(false);
+            CommonFacetAssertions.assertDisplayMoreMatchesFound(
+              FacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertDisplayNoMatchesFound(
+              FacetSelectors,
+              false
+            );
             FacetAssertions.assertDisplayShowMoreButton(true);
-            FacetAssertions.assertSearchInputEmpty();
-            FacetAssertions.assertDisplaySearchClearButton(false);
+            CommonFacetAssertions.assertSearchInputEmpty(FacetSelectors);
+            CommonFacetAssertions.assertDisplaySearchClearButton(
+              FacetSelectors,
+              false
+            );
           });
 
           describe('verify analytics', () => {
@@ -217,11 +239,20 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               1
             );
-            FacetAssertions.assertDisplayMoreMatchesFound(false);
-            FacetAssertions.assertDisplayNoMatchesFound(false);
+            CommonFacetAssertions.assertDisplayMoreMatchesFound(
+              FacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertDisplayNoMatchesFound(
+              FacetSelectors,
+              false
+            );
             FacetAssertions.assertDisplayShowMoreButton(true);
-            FacetAssertions.assertSearchInputEmpty();
-            FacetAssertions.assertDisplaySearchClearButton(false);
+            CommonFacetAssertions.assertSearchInputEmpty(FacetSelectors);
+            CommonFacetAssertions.assertDisplaySearchClearButton(
+              FacetSelectors,
+              false
+            );
           });
         });
       });
@@ -230,7 +261,7 @@ describe('Facet v1 Test Suites', () => {
         const query = 'amoreau';
         function setupSearchForSingleValue() {
           setupSelectCheckboxValue();
-          typeFacetSearchQuery(query);
+          typeFacetSearchQuery(FacetSelectors, query);
         }
 
         describe('verify rendering', () => {
@@ -245,9 +276,18 @@ describe('Facet v1 Test Suites', () => {
             FacetSelectors,
             0
           );
-          FacetAssertions.assertDisplayMoreMatchesFound(false);
-          FacetAssertions.assertDisplayNoMatchesFound(false);
-          FacetAssertions.assertDisplaySearchClearButton(true);
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            FacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            FacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            FacetSelectors,
+            true
+          );
         });
       });
 
@@ -255,7 +295,7 @@ describe('Facet v1 Test Suites', () => {
         const query = 'nonono';
         function setupSearchForNoValues() {
           setupSelectCheckboxValue();
-          typeFacetSearchQuery(query);
+          typeFacetSearchQuery(FacetSelectors, query);
         }
 
         describe('verify rendering', () => {
@@ -270,10 +310,22 @@ describe('Facet v1 Test Suites', () => {
             FacetSelectors,
             0
           );
-          FacetAssertions.assertDisplayMoreMatchesFound(false);
-          FacetAssertions.assertDisplayNoMatchesFound(true);
-          FacetAssertions.assertNoMatchesFoundContainsQuery(query);
-          FacetAssertions.assertDisplaySearchClearButton(true);
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            FacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            FacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertNoMatchesFoundContainsQuery(
+            FacetSelectors,
+            query
+          );
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            FacetSelectors,
+            true
+          );
         });
       });
     });
@@ -297,7 +349,7 @@ describe('Facet v1 Test Suites', () => {
         defaultNumberOfValues
       );
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, false);
-      FacetAssertions.assertDisplaySearchInput(true);
+      CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
     });
 
     describe('when selecting a value', () => {
@@ -393,7 +445,8 @@ describe('Facet v1 Test Suites', () => {
         const query = 'bbc';
         function setupSearchFor() {
           setupSelectLinkValue();
-          typeFacetSearchQuery(query);
+          cy.wait(TestFixture.interceptAliases.UA);
+          typeFacetSearchQuery(FacetSelectors, query);
         }
 
         describe('verify rendering', () => {
@@ -408,16 +461,16 @@ describe('Facet v1 Test Suites', () => {
             FacetSelectors,
             0
           );
-          FacetAssertions.assertHighlightsResults(query);
+          CommonFacetAssertions.assertHighlightsResults(FacetSelectors, query);
         });
 
         describe('verify analytics', () => {
           before(setupSearchFor);
 
-          FacetAssertions.assertLogFacetSearch(field);
+          CommonFacetAssertions.assertLogFacetSearch(field);
         });
 
-        describe('when selecting for a search result', () => {
+        describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
@@ -436,7 +489,7 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               1
             );
-            FacetAssertions.assertSearchInputEmpty();
+            CommonFacetAssertions.assertSearchInputEmpty(FacetSelectors);
           });
 
           describe('verify analytics', () => {
@@ -463,7 +516,7 @@ describe('Facet v1 Test Suites', () => {
       FacetAssertions.assertNumberOfSelectedBoxValues(0);
       FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, false);
-      FacetAssertions.assertDisplaySearchInput(true);
+      CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
     });
 
     describe('when selecting a value', () => {
@@ -544,7 +597,8 @@ describe('Facet v1 Test Suites', () => {
         const query = 'bbc';
         function setupSearchFor() {
           setupSelectBoxValue();
-          typeFacetSearchQuery(query);
+          cy.wait(TestFixture.interceptAliases.UA);
+          typeFacetSearchQuery(FacetSelectors, query);
         }
 
         describe('verify rendering', () => {
@@ -553,16 +607,16 @@ describe('Facet v1 Test Suites', () => {
           CommonAssertions.assertAccessibility(facetComponent);
           FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
           FacetAssertions.assertNumberOfSelectedBoxValues(0);
-          FacetAssertions.assertHighlightsResults(query);
+          CommonFacetAssertions.assertHighlightsResults(FacetSelectors, query);
         });
 
         describe('verify analytics', () => {
           before(setupSearchFor);
 
-          FacetAssertions.assertLogFacetSearch(field);
+          CommonFacetAssertions.assertLogFacetSearch(field);
         });
 
-        describe('when selecting for a search result', () => {
+        describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
@@ -577,7 +631,7 @@ describe('Facet v1 Test Suites', () => {
               defaultNumberOfValues - 2
             );
             FacetAssertions.assertNumberOfSelectedBoxValues(2);
-            FacetAssertions.assertSearchInputEmpty();
+            CommonFacetAssertions.assertSearchInputEmpty(FacetSelectors);
           });
 
           describe('verify analytics', () => {
@@ -655,7 +709,7 @@ describe('Facet v1 Test Suites', () => {
     CommonAssertions.assertContainsComponentError(FacetSelectors, false);
     CommonFacetAssertions.assertDisplayFacet(FacetSelectors, true);
     CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
-    FacetAssertions.assertDisplaySearchInput(false);
+    CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, false);
     CommonFacetAssertions.assertDisplayValues(FacetSelectors, false);
     FacetAssertions.assertDisplayShowMoreButton(false);
     FacetAssertions.assertDisplayShowLessButton(false);
@@ -670,7 +724,7 @@ describe('Facet v1 Test Suites', () => {
       before(setupSelectLabelExpand);
 
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
-      FacetAssertions.assertDisplaySearchInput(true);
+      CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayValues(FacetSelectors, true);
       FacetAssertions.assertDisplayShowMoreButton(true);
     });
@@ -744,7 +798,7 @@ describe('Facet v1 Test Suites', () => {
         );
       });
 
-      typeFacetSearchQuery(caption);
+      typeFacetSearchQuery(FacetSelectors, caption);
     });
 
     CommonFacetAssertions.assertFirstValueContains(FacetSelectors, caption);
@@ -758,7 +812,7 @@ describe('Facet v1 Test Suites', () => {
     });
 
     CommonFacetAssertions.assertDisplayFacet(FacetSelectors, true);
-    FacetAssertions.assertDisplaySearchInput(false);
+    CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, false);
   });
 
   describe('when no search has yet been executed', () => {

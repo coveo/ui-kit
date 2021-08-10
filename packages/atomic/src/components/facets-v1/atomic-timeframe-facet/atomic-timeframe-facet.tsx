@@ -62,6 +62,8 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
  * @part input-end - The input for the ending value of the custom date range.
  * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-timeframe-facet',

@@ -35,6 +35,7 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
+import {createRipple} from '../../../utils/ripple';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -60,7 +61,7 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
  * @part parents - The parent values container.
  * @part all-categories-button - The "View all" button displayed first along the parents.
  * @part parent-button - The clickable parent button.
- * @part active-parent - The non-clickable acitve parent.
+ * @part active-parent - The non-clickable active parent.
  * @part back-arrow - The back arrow displayed before the clickable parents.
  *
  * @part values - The facet values child container.
@@ -71,6 +72,8 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-category-facet-v1', // TODO: remove v1 when old facets are removed
@@ -227,6 +230,7 @@ export class AtomicCategoryFacet
           part="all-categories-button"
           class="parent-button"
           onClick={() => this.facet.deselectAll()}
+          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
           <div
             aria-hidden="true"
@@ -234,7 +238,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          <span class="ellipsed">{allCategories}</span>
+          <span class="truncate">{allCategories}</span>
         </button>
       </li>
     );
@@ -257,6 +261,7 @@ export class AtomicCategoryFacet
           part="parent-button"
           class="parent-button"
           onClick={() => this.facet.toggleSelect(facetValue)}
+          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
           aria-label={ariaLabel}
         >
           <div
@@ -265,7 +270,7 @@ export class AtomicCategoryFacet
             part="back-arrow"
             class="back-arrow"
           />
-          <span class="ellipsed">{displayValue}</span>
+          <span class="truncate">{displayValue}</span>
         </button>
       </li>
     );

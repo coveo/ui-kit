@@ -1,6 +1,5 @@
 import {
   TestFixture,
-  addTag,
   TagProps,
   generateComponentHTML,
 } from '../../../fixtures/test-fixture';
@@ -16,26 +15,42 @@ export const field = 'ytviewcount';
 export const numericRanges: NumericRange[] = [
   {
     start: 0,
+    end: 1000,
+  },
+  {
+    start: 1000,
+    end: 10000,
+  },
+  {
+    start: 10000,
     end: 100000,
-  },
-  {
-    start: 100000,
-    end: 1000000,
-  },
-  {
-    start: 1000000,
-    end: 10000000,
   },
 ];
 
-export const addNumericFacet = (props: TagProps = {}) => (env: TestFixture) =>
-  addTag(env, 'atomic-numeric-facet-v1', props);
+export const addNumericFacet = (
+  props: TagProps = {},
+  formatTag?: string,
+  formatTagProps?: TagProps
+) => (env: TestFixture) => {
+  const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+  if (formatTag && formatTagProps) {
+    const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+    e.append(formatTagHTML);
+  }
+  env.withElement(e);
+};
 
 export const addNumericFacetWithRange = (
   props: TagProps = {},
-  ranges: NumericRange[]
+  ranges: NumericRange[],
+  formatTag?: string,
+  formatTagProps?: TagProps
 ) => (env: TestFixture) => {
   const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+  if (formatTag && formatTagProps) {
+    const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+    e.append(formatTagHTML);
+  }
   ranges.forEach((r: NumericRange) => {
     const rangeHTML = generateComponentHTML('atomic-numeric-range', {
       start: `${r.start}`,

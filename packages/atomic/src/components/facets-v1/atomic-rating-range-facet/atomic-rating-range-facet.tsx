@@ -45,6 +45,8 @@ import Star from '../../../images/star.svg';
  * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  *
+ * @part ripple - The ripple effect of the component's interactive elements.
+ *
  */
 @Component({
   tag: 'atomic-rating-range-facet',
@@ -166,7 +168,7 @@ export class AtomicRatingRangeFacet
     return (
       <span
         part="value-label"
-        class={`ml-1 flex items-center truncate group-hover:underline group-hover:text-primary ${
+        class={`ml-1 flex items-center truncate group-focus:text-primary group-hover:text-primary ${
           facetValue.state === 'selected' ? 'font-bold' : ''
         }`}
       >

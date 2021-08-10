@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result-v1/atomic-result";
+import { ResultDisplayDensity as ResultDisplayDensity1, ResultDisplayImageSize as ResultDisplayImageSize1, ResultDisplayLayout as ResultDisplayLayout1 } from "./components/atomic-result-v1/atomic-result";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -311,6 +313,12 @@ export namespace Components {
          */
         "enableSearchTips": boolean;
     }
+    interface AtomicNoResultsV1 {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction": boolean;
+    }
     interface AtomicNumericFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -483,6 +491,20 @@ export namespace Components {
          */
         "result": Result;
     }
+    interface AtomicResultBadgeV1 {
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Specifies the icon to display, either from the list of available icons or a direct link.
+         */
+        "icon"?: string;
+        /**
+          * The text to display instead of the field.
+         */
+        "label"?: string;
+    }
     interface AtomicResultDate {
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -496,6 +518,12 @@ export namespace Components {
     interface AtomicResultIcon {
         /**
           * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultIconV1 {
+        /**
+          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
@@ -518,6 +546,15 @@ export namespace Components {
         "fieldsToInclude": string;
     }
     interface AtomicResultListPlaceholder {
+    }
+    interface AtomicResultListV1 {
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
+        /**
+          * A list of fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
+        "image": ResultDisplayImageSize;
     }
     interface AtomicResultNumber {
         /**
@@ -567,6 +604,22 @@ export namespace Components {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+    }
     interface AtomicResultTemplate {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
@@ -590,6 +643,32 @@ export namespace Components {
           * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight": boolean;
+    }
+    interface AtomicResultV1 {
+        /**
+          * The result content to display.
+         */
+        "content": string;
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The headless search engine.
+         */
+        "engine": SearchEngine;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image": ResultDisplayImageSize;
+        /**
+          * The result item.
+         */
+        "result": Result;
     }
     interface AtomicResultsPerPage {
         /**
@@ -662,6 +741,40 @@ export namespace Components {
          */
         "timezone"?: string;
     }
+    interface AtomicSizeConditionV1 {
+        /**
+          * The maximum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumHeightExclusive"?: string;
+        /**
+          * The maximum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumHeightInclusive"?: string;
+        /**
+          * The maximum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumWidthExclusive"?: string;
+        /**
+          * The maximum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumWidthInclusive"?: string;
+        /**
+          * The minimum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumHeightExclusive"?: string;
+        /**
+          * The minimum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumHeightInclusive"?: string;
+        /**
+          * The minimum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumWidthExclusive"?: string;
+        /**
+          * The minimum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumWidthInclusive"?: string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -673,6 +786,22 @@ export namespace Components {
           * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
          */
         "expression": string;
+    }
+    interface AtomicTableCellV1 {
+        /**
+          * The result content to display.
+         */
+        "content": string;
+        /**
+          * The result item.
+         */
+        "result": Result;
+    }
+    interface AtomicTableElementV1 {
+        /**
+          * The label to display in the header of this column.
+         */
+        "label": string;
     }
     interface AtomicText {
         /**
@@ -842,6 +971,12 @@ declare global {
         prototype: HTMLAtomicNoResultsElement;
         new (): HTMLAtomicNoResultsElement;
     };
+    interface HTMLAtomicNoResultsV1Element extends Components.AtomicNoResultsV1, HTMLStencilElement {
+    }
+    var HTMLAtomicNoResultsV1Element: {
+        prototype: HTMLAtomicNoResultsV1Element;
+        new (): HTMLAtomicNoResultsV1Element;
+    };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicNumericFacetElement: {
@@ -902,6 +1037,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultBadgeV1Element extends Components.AtomicResultBadgeV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultBadgeV1Element: {
+        prototype: HTMLAtomicResultBadgeV1Element;
+        new (): HTMLAtomicResultBadgeV1Element;
+    };
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
     var HTMLAtomicResultDateElement: {
@@ -913,6 +1054,12 @@ declare global {
     var HTMLAtomicResultIconElement: {
         prototype: HTMLAtomicResultIconElement;
         new (): HTMLAtomicResultIconElement;
+    };
+    interface HTMLAtomicResultIconV1Element extends Components.AtomicResultIconV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconV1Element: {
+        prototype: HTMLAtomicResultIconV1Element;
+        new (): HTMLAtomicResultIconV1Element;
     };
     interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
     }
@@ -938,6 +1085,12 @@ declare global {
         prototype: HTMLAtomicResultListPlaceholderElement;
         new (): HTMLAtomicResultListPlaceholderElement;
     };
+    interface HTMLAtomicResultListV1Element extends Components.AtomicResultListV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultListV1Element: {
+        prototype: HTMLAtomicResultListV1Element;
+        new (): HTMLAtomicResultListV1Element;
+    };
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
     var HTMLAtomicResultNumberElement: {
@@ -962,6 +1115,54 @@ declare global {
         prototype: HTMLAtomicResultQuickviewElement;
         new (): HTMLAtomicResultQuickviewElement;
     };
+    interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionActionsElement: {
+        prototype: HTMLAtomicResultSectionActionsElement;
+        new (): HTMLAtomicResultSectionActionsElement;
+    };
+    interface HTMLAtomicResultSectionBadgesElement extends Components.AtomicResultSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBadgesElement: {
+        prototype: HTMLAtomicResultSectionBadgesElement;
+        new (): HTMLAtomicResultSectionBadgesElement;
+    };
+    interface HTMLAtomicResultSectionBottomMetadataElement extends Components.AtomicResultSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBottomMetadataElement: {
+        prototype: HTMLAtomicResultSectionBottomMetadataElement;
+        new (): HTMLAtomicResultSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionEmphasizedElement: {
+        prototype: HTMLAtomicResultSectionEmphasizedElement;
+        new (): HTMLAtomicResultSectionEmphasizedElement;
+    };
+    interface HTMLAtomicResultSectionExcerptElement extends Components.AtomicResultSectionExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionExcerptElement: {
+        prototype: HTMLAtomicResultSectionExcerptElement;
+        new (): HTMLAtomicResultSectionExcerptElement;
+    };
+    interface HTMLAtomicResultSectionTitleElement extends Components.AtomicResultSectionTitle, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleElement: {
+        prototype: HTMLAtomicResultSectionTitleElement;
+        new (): HTMLAtomicResultSectionTitleElement;
+    };
+    interface HTMLAtomicResultSectionTitleMetadataElement extends Components.AtomicResultSectionTitleMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleMetadataElement: {
+        prototype: HTMLAtomicResultSectionTitleMetadataElement;
+        new (): HTMLAtomicResultSectionTitleMetadataElement;
+    };
+    interface HTMLAtomicResultSectionVisualElement extends Components.AtomicResultSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionVisualElement: {
+        prototype: HTMLAtomicResultSectionVisualElement;
+        new (): HTMLAtomicResultSectionVisualElement;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
@@ -973,6 +1174,12 @@ declare global {
     var HTMLAtomicResultTextElement: {
         prototype: HTMLAtomicResultTextElement;
         new (): HTMLAtomicResultTextElement;
+    };
+    interface HTMLAtomicResultV1Element extends Components.AtomicResultV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultV1Element: {
+        prototype: HTMLAtomicResultV1Element;
+        new (): HTMLAtomicResultV1Element;
     };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
@@ -992,6 +1199,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSizeConditionV1Element extends Components.AtomicSizeConditionV1, HTMLStencilElement {
+    }
+    var HTMLAtomicSizeConditionV1Element: {
+        prototype: HTMLAtomicSizeConditionV1Element;
+        new (): HTMLAtomicSizeConditionV1Element;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1003,6 +1216,18 @@ declare global {
     var HTMLAtomicSortExpressionElement: {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
+    };
+    interface HTMLAtomicTableCellV1Element extends Components.AtomicTableCellV1, HTMLStencilElement {
+    }
+    var HTMLAtomicTableCellV1Element: {
+        prototype: HTMLAtomicTableCellV1Element;
+        new (): HTMLAtomicTableCellV1Element;
+    };
+    interface HTMLAtomicTableElementV1Element extends Components.AtomicTableElementV1, HTMLStencilElement {
+    }
+    var HTMLAtomicTableElementV1Element: {
+        prototype: HTMLAtomicTableElementV1Element;
+        new (): HTMLAtomicTableElementV1Element;
     };
     interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
     }
@@ -1043,6 +1268,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
+        "atomic-no-results-v1": HTMLAtomicNoResultsV1Element;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-facet-v1": HTMLAtomicNumericFacetV1Element;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -1053,23 +1279,38 @@ declare global {
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-badge-v1": HTMLAtomicResultBadgeV1Element;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
+        "atomic-result-icon-v1": HTMLAtomicResultIconV1Element;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
+        "atomic-result-list-v1": HTMLAtomicResultListV1Element;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
+        "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
+        "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
+        "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
+        "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
+        "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
+        "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
+        "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
+        "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
+        "atomic-result-v1": HTMLAtomicResultV1Element;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-size-condition-v1": HTMLAtomicSizeConditionV1Element;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-table-cell-v1": HTMLAtomicTableCellV1Element;
+        "atomic-table-element-v1": HTMLAtomicTableElementV1Element;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -1378,6 +1619,12 @@ declare namespace LocalJSX {
          */
         "enableSearchTips"?: boolean;
     }
+    interface AtomicNoResultsV1 {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction"?: boolean;
+    }
     interface AtomicNumericFacet {
         /**
           * Specifies a unique identifier for the facet.
@@ -1551,6 +1798,20 @@ declare namespace LocalJSX {
          */
         "result": Result;
     }
+    interface AtomicResultBadgeV1 {
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Specifies the icon to display, either from the list of available icons or a direct link.
+         */
+        "icon"?: string;
+        /**
+          * The text to display instead of the field.
+         */
+        "label"?: string;
+    }
     interface AtomicResultDate {
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -1564,6 +1825,12 @@ declare namespace LocalJSX {
     interface AtomicResultIcon {
         /**
           * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultIconV1 {
+        /**
+          * Specifies the icon to display, either from the list of available icons or a direct link. By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
@@ -1586,6 +1853,15 @@ declare namespace LocalJSX {
         "fieldsToInclude"?: string;
     }
     interface AtomicResultListPlaceholder {
+    }
+    interface AtomicResultListV1 {
+        "density"?: ResultDisplayDensity;
+        "display"?: ResultDisplayLayout;
+        /**
+          * A list of fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
+        "image"?: ResultDisplayImageSize;
     }
     interface AtomicResultNumber {
         /**
@@ -1635,6 +1911,22 @@ declare namespace LocalJSX {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+    }
     interface AtomicResultTemplate {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
@@ -1654,6 +1946,32 @@ declare namespace LocalJSX {
           * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight"?: boolean;
+    }
+    interface AtomicResultV1 {
+        /**
+          * The result content to display.
+         */
+        "content": string;
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The headless search engine.
+         */
+        "engine": SearchEngine;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image"?: ResultDisplayImageSize;
+        /**
+          * The result item.
+         */
+        "result": Result;
     }
     interface AtomicResultsPerPage {
         /**
@@ -1718,6 +2036,40 @@ declare namespace LocalJSX {
          */
         "timezone"?: string;
     }
+    interface AtomicSizeConditionV1 {
+        /**
+          * The maximum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumHeightExclusive"?: string;
+        /**
+          * The maximum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumHeightInclusive"?: string;
+        /**
+          * The maximum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumWidthExclusive"?: string;
+        /**
+          * The maximum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "maximumWidthInclusive"?: string;
+        /**
+          * The minimum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumHeightExclusive"?: string;
+        /**
+          * The minimum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumHeightInclusive"?: string;
+        /**
+          * The minimum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumWidthExclusive"?: string;
+        /**
+          * The minimum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
+         */
+        "minimumWidthInclusive"?: string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -1729,6 +2081,22 @@ declare namespace LocalJSX {
           * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
          */
         "expression": string;
+    }
+    interface AtomicTableCellV1 {
+        /**
+          * The result content to display.
+         */
+        "content": string;
+        /**
+          * The result item.
+         */
+        "result": Result;
+    }
+    interface AtomicTableElementV1 {
+        /**
+          * The label to display in the header of this column.
+         */
+        "label": string;
     }
     interface AtomicText {
         /**
@@ -1797,6 +2165,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
+        "atomic-no-results-v1": AtomicNoResultsV1;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-facet-v1": AtomicNumericFacetV1;
         "atomic-numeric-range": AtomicNumericRange;
@@ -1807,23 +2176,38 @@ declare namespace LocalJSX {
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
+        "atomic-result-badge-v1": AtomicResultBadgeV1;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-icon-v1": AtomicResultIconV1;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
+        "atomic-result-list-v1": AtomicResultListV1;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
+        "atomic-result-section-actions": AtomicResultSectionActions;
+        "atomic-result-section-badges": AtomicResultSectionBadges;
+        "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
+        "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
+        "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
+        "atomic-result-section-title": AtomicResultSectionTitle;
+        "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
+        "atomic-result-section-visual": AtomicResultSectionVisual;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
+        "atomic-result-v1": AtomicResultV1;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-size-condition-v1": AtomicSizeConditionV1;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-table-cell-v1": AtomicTableCellV1;
+        "atomic-table-element-v1": AtomicTableElementV1;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -1853,6 +2237,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
+            "atomic-no-results-v1": LocalJSX.AtomicNoResultsV1 & JSXBase.HTMLAttributes<HTMLAtomicNoResultsV1Element>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-facet-v1": LocalJSX.AtomicNumericFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetV1Element>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
@@ -1863,23 +2248,38 @@ declare module "@stencil/core" {
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-badge-v1": LocalJSX.AtomicResultBadgeV1 & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeV1Element>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
+            "atomic-result-icon-v1": LocalJSX.AtomicResultIconV1 & JSXBase.HTMLAttributes<HTMLAtomicResultIconV1Element>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
+            "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
+            "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
+            "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
+            "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
+            "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
+            "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
+            "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
+            "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
+            "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
+            "atomic-result-v1": LocalJSX.AtomicResultV1 & JSXBase.HTMLAttributes<HTMLAtomicResultV1Element>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-size-condition-v1": LocalJSX.AtomicSizeConditionV1 & JSXBase.HTMLAttributes<HTMLAtomicSizeConditionV1Element>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-table-cell-v1": LocalJSX.AtomicTableCellV1 & JSXBase.HTMLAttributes<HTMLAtomicTableCellV1Element>;
+            "atomic-table-element-v1": LocalJSX.AtomicTableElementV1 & JSXBase.HTMLAttributes<HTMLAtomicTableElementV1Element>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;

@@ -1,9 +1,4 @@
 <template>
-  <template if:false={hasResults}>
-    <p class="slds-box slds-theme_alert-texture slds-m-top_medium">
-      <lightning-formatted-rich-text value={noResultsLabel}></lightning-formatted-rich-text>
-    </p>
-  </template>
   <template if:true={hasResults}>
     <p class="slds-text-color_weak">
       <lightning-formatted-rich-text value={summaryLabel}></lightning-formatted-rich-text>

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/coveo/ui-kit/compare/headless-react@0.36.22...headless-react@0.37.0) (2021-08-10)
+
+
+### Features
+
+* **headless:** allow relative redirection urls, communicate state using localstorage  ([#1042](https://github.com/coveo/ui-kit/issues/1042)) ([9d8d0cb](https://github.com/coveo/ui-kit/commit/9d8d0cb922f0abf57b44bbe70e36202c168bffd3))
+
+
+
+
+
+## [0.36.22](https://github.com/coveo/ui-kit/compare/headless-react@0.36.21...headless-react@0.36.22) (2021-08-09)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.36.21](https://github.com/coveo/ui-kit/compare/headless-react@0.36.20...headless-react@0.36.21) (2021-08-05)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.36.20](https://github.com/coveo/ui-kit/compare/headless-react@0.36.19...headless-react@0.36.20) (2021-08-02)
 
 **Note:** Version bump only for package headless-react
