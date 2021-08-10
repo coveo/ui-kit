@@ -1,14 +1,16 @@
-import {useEffect, useState, FunctionComponent} from 'react';
-import {StandaloneSearchBox as HeadlessStandaloneSearchBox} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent, useContext} from 'react';
+import {
+  buildStandaloneSearchBox,
+  StandaloneSearchBoxOptions,
+} from '@coveo/headless';
+import {AppContext} from '../../context/engine';
+import {standaloneSearchBoxStorageKey} from './standalone-search-box-storage-key';
 
-interface StandaloneSearchBoxProps {
-  controller: HeadlessStandaloneSearchBox;
-}
-
-export const StandaloneSearchBox: FunctionComponent<StandaloneSearchBoxProps> = (
+export const StandaloneSearchBox: FunctionComponent<StandaloneSearchBoxOptions> = (
   props
 ) => {
-  const {controller} = props;
+  const {engine} = useContext(AppContext);
+  const controller = buildStandaloneSearchBox(engine!, {options: props});
   const [state, setState] = useState(controller.state);
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
@@ -22,7 +24,10 @@ export const StandaloneSearchBox: FunctionComponent<StandaloneSearchBoxProps> = 
   }
 
   if (state.redirectTo) {
-    window.location.href = state.redirectTo;
+    const {redirectTo, value, analytics} = state;
+    const data = JSON.stringify({value, analytics});
+    localStorage.setItem(standaloneSearchBoxStorageKey, data);
+    window.location.href = redirectTo;
     return null;
   }
 
@@ -51,10 +56,6 @@ export const StandaloneSearchBox: FunctionComponent<StandaloneSearchBoxProps> = 
 
 /**
  * ```tsx
- * const controller = buildStandaloneSearchBox(engine, {
- *   options: {redirectionUrl: 'https://mywebsite.com/search'},
- * });
- *
- * <StandaloneSearchBox controller={controller} />;
+ * <StandaloneSearchBox id="ssb-1" redirectionUrl="/search-page"/>;
  * ```
  */
