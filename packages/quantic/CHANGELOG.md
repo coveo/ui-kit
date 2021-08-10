@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.43.0...@coveo/quantic@0.43.1) (2021-08-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.43.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.42.3...@coveo/quantic@0.43.0) (2021-08-09)
+
+
+### Features
+
+* **quantic:** url sync event not working correctly due to missing binding ([#1068](https://github.com/coveo/ui-kit/issues/1068)) ([bbab918](https://github.com/coveo/ui-kit/commit/bbab918b424b5f26757c5308f3a5f483b933f21e))
+
+
+
+
+
 ## [0.42.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.42.2...@coveo/quantic@0.42.3) (2021-08-05)
 
 **Note:** Version bump only for package @coveo/quantic
