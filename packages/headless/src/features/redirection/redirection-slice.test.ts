@@ -51,9 +51,17 @@ describe('redirection slice', () => {
   });
 
   let engine: MockSearchEngine;
-  async function mockPlan(trigger?: Trigger) {
-    const apiClient = buildMockSearchAPIClient();
+  interface MockPlanConfiguration {
+    trigger?: Trigger;
+    defaultRedirectionUrl?: string;
+  }
+
+  async function mockPlan(config: MockPlanConfiguration = {}) {
+    const {defaultRedirectionUrl: url, trigger} = config;
+    const defaultRedirectionUrl = url || 'https://www.test.com';
     const triggers = trigger ? [trigger] : [];
+
+    const apiClient = buildMockSearchAPIClient();
     jest.spyOn(apiClient, 'plan').mockResolvedValue({
       success: {
         parsedInput: {basicExpression: '', largeExpression: ''},
@@ -64,7 +72,7 @@ describe('redirection slice', () => {
     engine = buildMockSearchAppEngine();
 
     const response = await checkForRedirection({
-      defaultRedirectionUrl: 'https://www.test.com',
+      defaultRedirectionUrl,
     })(engine.dispatch, () => createMockState(), {
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
@@ -86,6 +94,16 @@ describe('redirection slice', () => {
     done();
   });
 
+  it(`when the plan endpoint doesn't return a redirection trigger,
+  and the defaultRedirectionUrl is a relative url,
+  payload should contain the defaultRedirectionUrl`, async (done) => {
+    const defaultRedirectionUrl = '/search-page';
+    const response = await mockPlan({defaultRedirectionUrl});
+
+    expect(response.payload).toBe(defaultRedirectionUrl);
+    done();
+  });
+
   it(`when the plan endpoint doesn't return a redirection trigger
   should not dispatch a logRedirection action`, async (done) => {
     await mockPlan();
@@ -96,8 +114,10 @@ describe('redirection slice', () => {
   it(`when the plan endpoint returns a redirection trigger
   payload should contain the redirection trigger URL`, async (done) => {
     const response = await mockPlan({
-      type: 'redirect',
-      content: 'https://www.coveo.com',
+      trigger: {
+        type: 'redirect',
+        content: 'https://www.coveo.com',
+      },
     });
     expect(response.payload).toBe('https://www.coveo.com');
     expect(getlogRedirectionAction()).toBeTruthy();
@@ -107,8 +127,10 @@ describe('redirection slice', () => {
   it(`when the plan endpoint returns a redirection trigger
   should dispatch a logRedirection action`, async (done) => {
     const response = await mockPlan({
-      type: 'redirect',
-      content: 'https://www.coveo.com',
+      trigger: {
+        type: 'redirect',
+        content: 'https://www.coveo.com',
+      },
     });
     expect(response.payload).toBe('https://www.coveo.com');
     expect(getlogRedirectionAction()).toBeTruthy();
