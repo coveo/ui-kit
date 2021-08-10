@@ -224,7 +224,8 @@
         <protected>false</protected>
         <shortDescription>Undo last action</shortDescription>
     </labels>
-     <fullName>quantic_MoreMatchesFor</fullName>
+    <labels>
+        <fullName>quantic_MoreMatchesFor</fullName>
         <value>More matches for '{{0}}'</value>
         <language>en_US</language>
         <protected>false</protected>
