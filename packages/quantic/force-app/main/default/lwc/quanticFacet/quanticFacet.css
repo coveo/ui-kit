@@ -16,3 +16,12 @@
     color: #8E959D;
     font-size: 12px;
 }
+
+.facet__show {
+    display: flex;
+    flex-direction: column;
+}
+
+.facet__show_less, .facet__show_more {
+    font-size: 12px;
+}

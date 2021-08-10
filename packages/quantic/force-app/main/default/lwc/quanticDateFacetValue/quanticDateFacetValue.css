@@ -16,6 +16,6 @@ li {
   vertical-align: sub;
   width: 15px;
   height: 15px;
-  border: 1px solid #DDDBDA;
+  border: 1px solid var(--sds-button-neutral-color-border-active, #dddbda);
   border-radius: 2px;
 }
