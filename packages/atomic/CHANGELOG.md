@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.57.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.56.1...@coveo/atomic@0.57.0) (2021-08-10)
+
+
+### Features
+
+* **atomic:** query-summary-v1 ([#1060](https://github.com/coveo/ui-kit/issues/1060)) ([95e87ab](https://github.com/coveo/ui-kit/commit/95e87ab18e524c3c1ce2036be12c23290a412986))
+
+
+
+
+
 ## [0.56.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.56.0...@coveo/atomic@0.56.1) (2021-08-10)
 
 
