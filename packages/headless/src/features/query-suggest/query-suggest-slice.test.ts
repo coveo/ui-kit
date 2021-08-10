@@ -50,12 +50,21 @@ describe('querySuggest slice', () => {
     expect(querySuggestReducer(undefined, {type: 'randomAction'})).toEqual({});
   });
 
-  it('should handle registerQuerySuggest on initial state', () => {
-    const expectedState = buildMockQuerySuggest({id, q: 'test', count: 10});
-    const action = registerQuerySuggest({id, q: 'test', count: 10});
-    const finalState = querySuggestReducer(undefined, action);
+  describe('registerQuerySuggest', () => {
+    it('when the id does not exist, it adds an entry with the correct state', () => {
+      const expectedState = buildMockQuerySuggest({id, q: 'test', count: 10});
+      const action = registerQuerySuggest({id, q: 'test', count: 10});
+      const finalState = querySuggestReducer(undefined, action);
 
-    expect(finalState[id]).toEqual(expectedState);
+      expect(finalState[id]).toEqual(expectedState);
+    });
+
+    it('when the id exists, it does not modify the registered state', () => {
+      const action = registerQuerySuggest({id, q: 'test', count: 10});
+      const finalState = querySuggestReducer(state, action);
+
+      expect(state[id]).toEqual(finalState[id]);
+    });
   });
 
   describe('selectQuerySuggestion', () => {
