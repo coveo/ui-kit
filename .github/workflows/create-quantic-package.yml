@@ -49,14 +49,13 @@ jobs:
               run_id: context.runId
             })
       - name: Install NPM dependencies
+        working-directory: ./packages/quantic
         run: |
           npm i -g sfdx-cli
           npm i
       - name: Build Quantic project
-        run: |
-          npm run setup
-          cd packages/quantic
-          npm run build
+        working-directory: ./packages/quantic
+        run: npm run build
       - name: Copy static resources
         working-directory: ./packages/quantic
         run: npm run copy:staticresources
