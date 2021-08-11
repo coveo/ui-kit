@@ -74,15 +74,15 @@ export default class QuanticQueryError extends LightningElement {
   }
 
   get errorTitle() {
-    return ErrorMap.find(x => x.exception === this.type) ? ErrorMap.find(x => x.exception === this.type).title : genericError.title;
+    return ErrorMap[this.type]?.title || genericError.title;
   }
 
   get description() {
-    return ErrorMap.find(x => x.exception === this.type) ? ErrorMap.find(x => x.exception === this.type).description : genericError.description;
+    return ErrorMap[this.type]?.description || genericError.description;
   }
 
   get link() {
-    return ErrorMap.find(x => x.exception === this.type)?.link;
+    return ErrorMap[this.type]?.link;
   }
 
   handleShowMoreInfoClick() {
