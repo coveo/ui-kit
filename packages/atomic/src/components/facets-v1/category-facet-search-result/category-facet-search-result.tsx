@@ -84,7 +84,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
         </div>
         <div
           part="search-result-path"
-          class="flex text-neutral-dark mt-1 group-focus:text-primary group-hover:text-primary"
+          class="flex w-full text-neutral-dark mt-1 group-focus:text-primary group-hover:text-primary"
         >
           {renderPath(localizedPath)}
         </div>
