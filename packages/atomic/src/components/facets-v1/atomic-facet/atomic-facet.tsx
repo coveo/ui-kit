@@ -113,7 +113,7 @@ export class AtomicFacet
    * Whether this facet should contain a search box.
    * When "true", the search is only enabled when more facet values are available.
    */
-  @Prop() public withSearch = true;
+  @Prop() public withSearch = false;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
@@ -158,7 +158,7 @@ export class AtomicFacet
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
         (prev as FacetState).facetSearch

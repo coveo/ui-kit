@@ -143,7 +143,7 @@ export class AtomicColorFacet
     prev: unknown,
     propName: keyof AtomicColorFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
         (prev as FacetState).facetSearch

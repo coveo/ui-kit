@@ -165,7 +165,7 @@ export class AtomicCategoryFacet
     prev: unknown,
     propName: keyof AtomicCategoryFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as CategoryFacetState).facetSearch,
         (prev as CategoryFacetState).facetSearch
