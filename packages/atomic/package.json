@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.56.0",
+  "version": "0.58.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -25,7 +25,7 @@
     "build": "npm run build:locales && npm run build:stencil && npm run build:utils",
     "build:utils": "node --max-old-space-size=4096 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
-    "build:stencil": "node --max_old_space_size=4096 ./node_modules/@stencil/core/bin/stencil build",
+    "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
     "start:prod": "npx serve www -l 3333",
     "test": "stencil test --spec",
@@ -38,9 +38,10 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.4",
-    "@coveo/headless": "^1.14.0",
+    "@coveo/headless": "^1.14.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
+    "dompurify": "^2.3.0",
     "escape-html": "^1.0.3",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
@@ -57,6 +58,7 @@
     "@stencil/core": "2.6.0",
     "@stencil/postcss": "2.0.0",
     "@stencil/store": "1.4.1",
+    "@types/dompurify": "^2.2.3",
     "@types/escape-html": "1.0.1",
     "@types/jest": "26.0.19",
     "@types/mustache": "4.1.0",
