@@ -1,8 +1,14 @@
 import {Component, h, State} from '@stencil/core';
 import {
+  buildSearchStatus,
+  SearchStatusState,
+  SearchStatus,
+} from '@coveo/headless';
+import {
   InitializeBindings,
   Bindings,
   InitializableComponent,
+  BindStateToController,
 } from '../../utils/initialization-utils';
 import {createRipple} from '../../utils/ripple';
 
@@ -15,10 +21,37 @@ import {createRipple} from '../../utils/ripple';
   shadow: true,
 })
 export class AtomicRefineToggle implements InitializableComponent {
+  public searchStatus!: SearchStatus;
+
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
+
+  public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+  }
 
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="rounded w-28 h-8 my-2 bg-neutral animate-pulse"
+        ></div>
+      );
+    }
+
+    if (!this.searchStatusState.hasResults) {
+      return;
+    }
+
     return (
       <button
         class="btn-outline-primary p-3"
