@@ -330,6 +330,20 @@
         <shortDescription>If the problem persists contact the administrator.</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_CoveoDocsLink</fullName>
+        <value>https://docs.coveo.com/</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>https://docs.coveo.com/</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_OrganisationPausedLink</fullName>
+        <value>https://docs.coveo.com/l6af0467</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>https://docs.coveo.com/l6af0467</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NoResultsTitle</fullName>
         <value>No results</value>
         <language>en_US</language>
