@@ -15,7 +15,7 @@ const main = async () => {
       './force-app/main/default/staticresources/coveoheadless'
     );
   } catch (error) {
-    console.info('Error while copying.');
+    console.info(error);
   }
 
   console.info('Headless copied.');
