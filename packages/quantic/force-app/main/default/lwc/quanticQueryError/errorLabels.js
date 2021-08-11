@@ -17,28 +17,28 @@ import organisationPausedLink from '@salesforce/label/c.quantic_OrganisationPaus
 
 export const ErrorMap = [ 
     {
-        disconnectedException:  {
+        "disconnectedException":  {
             title: disconnectedTitle,
             description: disconnectedDesc,
             link: null
         }
     },
     {
-        noEndpointsException: {
+        "noEndpointsException": {
             title: noEndpointsTitle,
             description: noEndpointsDesc,
             link: coveoDocsLink
         }
     },
     {
-        invalidTokenException: {
+        "invalidTokenException": {
             title: invalidTokenTitle,
             description: invalidTokenDesc,
             link: coveoDocsLink  
         }
     },
     {
-        organizationIsPausedException : {
+        "organizationIsPausedException" : {
             title: organizationIsPausedTitle,
             description: organizationIsPausedDesc,
             link: organisationPausedLink 
