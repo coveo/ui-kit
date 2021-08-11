@@ -1,4 +1,3 @@
-import {buildTestUrl} from '../utils/setupComponent';
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {generateAliasForSearchBox} from './search-box-selectors';
@@ -6,25 +5,26 @@ import {generateAliasForSearchBox} from './search-box-selectors';
 describe('No Results Test Suites', () => {
   const tag = 'atomic-no-results-v1';
   const wait = 1000;
+  let env: TestFixture | null = null;
 
   beforeEach(() => {
-    new TestFixture()
+    env = new TestFixture()
       .with(addSearchBox())
-      .withElement(generateComponentHTML(tag))
-      .init();
+      .withElement(generateComponentHTML(tag));
   });
 
   it('should not be visible when there are results', () => {
+    env?.init();
     cy.get(tag).should('not.be.visible');
   });
 
   it('should be visible when there are no results', () => {
-    cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
+    env?.withHash('q=gahaiusdhgaiuewjfsf').init();
     cy.get(tag).should('be.visible');
   });
 
   it('text content should match when there are no results', () => {
-    cy.visit(buildTestUrl('q=dsmndkndjnj'));
+    env?.withHash('q=dsmndkndjnj').init();
     cy.get(tag)
       .shadow()
       .find('div div[part="no-results"] .quotations')
@@ -32,7 +32,7 @@ describe('No Results Test Suites', () => {
   });
 
   it('cancel button should not be visible when there is no history', () => {
-    cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
+    env?.withHash('q=gahaiusdhgaiuewjfsf').init();
     cy.get(tag).shadow().get('button').should('not.exist');
   });
 
@@ -46,11 +46,13 @@ describe('No Results Test Suites', () => {
   }
 
   it('cancel button should be visible when there is history', () => {
+    env?.init();
     submitNoResultsSearch();
     cy.get(tag).shadow().find('button').should('be.visible');
   });
 
   it('clicking on cancel should go back in history and hide the atomic-no-results component', () => {
+    env?.init();
     submitNoResultsSearch();
     cy.get(tag).shadow().find('button').click();
     cy.wait(wait);
