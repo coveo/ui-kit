@@ -42,7 +42,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   /**
    * Whether to display the duration of the last query execution.
    */
-  @Prop() enableDuration = true;
+  @Prop() enableDuration = true; //TODO: set default to false
 
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);
@@ -63,6 +63,9 @@ export class AtomicQuerySummary implements InitializableComponent {
     return `<span class="font-bold" part="highlight">${content}</span>`;
   }
 
+  /**
+   * @deprecated
+   */
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
       ? this.bindings.i18n.t('no-results-for', {

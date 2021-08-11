@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.59.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.0...@coveo/atomic@0.59.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix text overflow on Category Facet ([5f24fd9](https://github.com/coveo/ui-kit/commit/5f24fd968eb0349b92a2d5b7404460435f2fcbbd))
+
+
+
+
+
+# [0.59.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.58.0...@coveo/atomic@0.59.0) (2021-08-11)
+
+
+### Features
+
+* **atomic:** added atomic-result-fields-list component ([#1073](https://github.com/coveo/ui-kit/issues/1073)) ([af4759a](https://github.com/coveo/ui-kit/commit/af4759a565100706150a79324696a39ed1d3a4ed))
+
+
+
+
+
+# [0.58.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.57.0...@coveo/atomic@0.58.0) (2021-08-10)
+
+
+### Features
+
+* **atomic:** added atomic-icon component ([#1059](https://github.com/coveo/ui-kit/issues/1059)) ([81fae2c](https://github.com/coveo/ui-kit/commit/81fae2c73c71ef736f513cdd4d4090b4af2d368d))
+
+
+
+
+
+# [0.57.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.56.1...@coveo/atomic@0.57.0) (2021-08-10)
+
+
+### Features
+
+* **atomic:** query-summary-v1 ([#1060](https://github.com/coveo/ui-kit/issues/1060)) ([95e87ab](https://github.com/coveo/ui-kit/commit/95e87ab18e524c3c1ce2036be12c23290a412986))
+
+
+
+
+
 ## [0.56.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.56.0...@coveo/atomic@0.56.1) (2021-08-10)
 
 
