@@ -29,6 +29,7 @@ import {
   TriggerSection,
   QuestionAnsweringSection,
   StandaloneSearchBoxSection,
+  RecentQueriesSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -62,4 +63,5 @@ export type SearchAppState = SearchParametersState &
   HistorySection &
   FoldingSection &
   TriggerSection &
-  QuestionAnsweringSection;
+  QuestionAnsweringSection &
+  RecentQueriesSection;
