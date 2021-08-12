@@ -83,11 +83,11 @@ export class AtomicResultPrintableUri {
 
   private renderSeparator() {
     return (
-      <span
+      <atomic-icon
         part="result-printable-uri-list-separator"
         class="result-printable-uri-separator"
-        innerHTML={Arrow}
-      ></span>
+        icon={Arrow}
+      ></atomic-icon>
     );
   }
 

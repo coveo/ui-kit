@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.45.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.44.1...@coveo/quantic@0.45.0) (2021-08-11)
+
+
+### Features
+
+* **quantic:** create quantic package for salesforce using github actions ([#1072](https://github.com/coveo/ui-kit/issues/1072)) ([9144464](https://github.com/coveo/ui-kit/commit/91444648b7427575688cd3e08bb0e5761675b8db))
+
+
+
+
+
+## [0.44.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.44.0...@coveo/quantic@0.44.1) (2021-08-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.44.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.43.1...@coveo/quantic@0.44.0) (2021-08-10)
 
 
