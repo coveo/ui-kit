@@ -80,14 +80,27 @@ export class AtomicLoadMoreResults {
   }
 
   private renderProgressBar() {
-    return <div part="progress-bar"></div>;
+    const width =
+      (
+        (this.querySummaryState.lastResult / this.querySummaryState.total) *
+        100
+      ).toString() + '%';
+    return (
+      <div class="relative left-0 top-0 w-72 h-1.5 my-2" part="progress-bar">
+        <div class="relative left-0 top-0 z-0 flex py-0.5 bg-neutral rounded"></div>
+        <div
+          class="absolute left-0 top-0 z-10 flex py-0.5 overflow-hidden rounded bg-gradient-to-r from-blue-600 to-blue-400"
+          style={{width}}
+        ></div>
+      </div>
+    );
   }
 
   private renderLoadMoreResults() {
     return (
       <button
         part="load-more-results-button"
-        class="text-neutral-light font-bold bg-primary px-2.5 py-3 rounded-md my-3 hover:bg-primary-light focus:ring-4 focus:outline-none"
+        class="text-neutral-light font-bold bg-primary px-2.5 py-3 rounded-md my-2 hover:bg-primary-light focus:ring-4 focus:outline-none"
         onClick={() => console.log('load results')}
       >
         {this.bindings.i18n.t('load-more-results')}
@@ -101,7 +114,7 @@ export class AtomicLoadMoreResults {
     }
 
     return (
-      <div class="flex flex-col" part="container">
+      <div class="flex flex-col items-center" part="container">
         {this.renderShowingResults()}
         {this.renderProgressBar()}
         {this.renderLoadMoreResults()}
