@@ -259,6 +259,18 @@ describe('EC plugin', () => {
             });
         });
 
+        it('should convert known impression keys that are extended for Coveo into the measurement protocol format', () => {
+            ec.addImpression({name: '🧀', group: 'mahgroup'});
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({
+                ...defaultResult,
+                il1pi1nm: '🧀',
+                il1pi1group: 'mahgroup',
+            });
+        });
+
         it('should keep custom metadata in the impression', () => {
             ec.addImpression({name: '🧀', price: 5.99, custom: {verycustom: 'value'}});
 

@@ -24,11 +24,11 @@ export type CustomValues = {
     [key: string]: string | number | boolean;
 };
 
-export interface ProductCoveoExtensionProperties {
+export interface CoveoExtensionProperties {
     group?: string;
 }
 
-export interface ProductProperties extends ProductCoveoExtensionProperties {
+export interface ProductProperties extends CoveoExtensionProperties {
     id?: string;
     name?: string;
     brand?: string;
@@ -43,7 +43,7 @@ export interface ProductProperties extends ProductCoveoExtensionProperties {
 
 export type Product = RequireAtLeastOne<ProductProperties, 'id' | 'name'>;
 
-export interface ImpressionProperties {
+export interface ImpressionProperties extends CoveoExtensionProperties {
     id?: string;
     name?: string;
     list?: string;
