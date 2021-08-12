@@ -21,11 +21,6 @@ export class AtomicResultRating {
   @Prop() public field!: string;
 
   /**
-   * The text to display instead of the field.
-   */
-  @Prop() public label?: string;
-
-  /**
    * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
   @Prop() public maxValueInIndex = 5;
