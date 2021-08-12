@@ -23,9 +23,9 @@
         <template if:false={isChecked}>
           <input type="checkbox" onchange={onSelect}/>
         </template>
-        <span class="slds-var-m-horizontal_medium nowrap">{numericItem.start} - {numericItem.end}</span>
+        <span class="slds-var-m-horizontal_medium nowrap">{item.start} - {item.end}</span>
       </div>
-      <div class="slds-var-m-horizontal_small">({numericItem.numberOfResults})</div>
+      <div class="slds-var-m-horizontal_small">({item.numberOfResults})</div>
     </li>
   </template>
 
@@ -40,7 +40,7 @@
         </template>
         <span class="slds-var-m-horizontal_medium nowrap">{start} - {end}</span>
       </div>
-      <div class="slds-var-m-horizontal_small">({dateItem.numberOfResults})</div>
+      <div class="slds-var-m-horizontal_small">({item.numberOfResults})</div>
     </li>
   </template>
 </template>
