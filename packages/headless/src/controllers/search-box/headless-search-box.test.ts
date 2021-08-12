@@ -140,8 +140,9 @@ describe('headless searchBox', () => {
   });
 
   it('should dispatch a registerQuerySetQuery action at initialization', () => {
-    const action = registerQuerySetQuery({id, query: ''});
-    expect(engine.actions).toContainEqual(action);
+    expect(engine.actions).toContainEqual(
+      registerQuerySetQuery({id, query: state.query.q})
+    );
   });
 
   it('should dispatch a registerQuerySuggest action at initialization', () => {

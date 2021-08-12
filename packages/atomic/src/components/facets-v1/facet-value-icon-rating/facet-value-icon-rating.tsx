@@ -15,10 +15,10 @@ export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps
 
   const renderIcon = (active: boolean) => {
     return (
-      <div
-        innerHTML={props.icon}
-        class={active ? 'icon-active' : 'icon-inactive'}
-      ></div>
+      <atomic-icon
+        icon={props.icon}
+        class={'w-3 h-3 ' + (active ? 'icon-active' : 'icon-inactive')}
+      ></atomic-icon>
     );
   };
 

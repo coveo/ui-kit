@@ -232,12 +232,12 @@ export class AtomicCategoryFacet
           onClick={() => this.facet.deselectAll()}
           onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
-          <div
+          <atomic-icon
             aria-hidden="true"
-            innerHTML={LeftArrow}
+            icon={LeftArrow}
             part="back-arrow"
             class="back-arrow"
-          />
+          ></atomic-icon>
           <span class="truncate">{allCategories}</span>
         </button>
       </li>
@@ -264,12 +264,12 @@ export class AtomicCategoryFacet
           onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
           aria-label={ariaLabel}
         >
-          <div
+          <atomic-icon
             aria-hidden="true"
-            innerHTML={LeftArrow}
+            icon={LeftArrow}
             part="back-arrow"
             class="back-arrow"
-          />
+          ></atomic-icon>
           <span class="truncate">{displayValue}</span>
         </button>
       </li>

@@ -129,10 +129,10 @@ export class AtomicSortDropdown implements InitializableComponent {
         >
           {this.options.map((option) => this.buildOption(option))}
         </select>
-        <div
-          class="absolute pointer-events-none top-5 right-3 fill-current w-3"
-          innerHTML={Arrow}
-        ></div>
+        <atomic-icon
+          class="absolute pointer-events-none top-4 right-3 w-3"
+          icon={Arrow}
+        ></atomic-icon>
       </div>
     );
   }

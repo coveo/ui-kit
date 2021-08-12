@@ -94,10 +94,10 @@ export class AtomicResultQuickview implements InitializableComponent {
         aria-label={this.strings.previewResult()}
         onClick={() => this.openModal()}
       >
-        <span
-          class="block h-5 w-5 fill-current mx-auto my-2"
-          innerHTML={DetailsIcon}
-        ></span>
+        <atomic-icon
+          class="block h-5 w-5 mx-auto my-2"
+          icon={DetailsIcon}
+        ></atomic-icon>
       </button>
     );
 

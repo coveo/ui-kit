@@ -188,7 +188,7 @@ export class AtomicCategoryFacet
         class="value-button"
         onClick={() => this.facet.toggleSelect(parent)}
       >
-        <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
+        <atomic-icon icon={LeftArrow} class="facet-arrow mr-1.5"></atomic-icon>
         <span class="truncate">{parent.value}</span>
       </button>
     );
@@ -226,7 +226,10 @@ export class AtomicCategoryFacet
           <span part="value-count" class="value-count">
             {item.numberOfResults.toLocaleString(this.bindings.i18n.language)}
           </span>
-          <div innerHTML={RightArrow} class="facet-arrow ml-1.5" />
+          <atomic-icon
+            icon={RightArrow}
+            class="facet-arrow ml-1.5"
+          ></atomic-icon>
         </button>
       </li>
     );
@@ -243,7 +246,7 @@ export class AtomicCategoryFacet
         onClick={() => this.facet.deselectAll()}
         class="value-button"
       >
-        <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
+        <atomic-icon icon={LeftArrow} class="facet-arrow mr-1.5"></atomic-icon>
         {this.strings.allCategories()}
       </button>
     );

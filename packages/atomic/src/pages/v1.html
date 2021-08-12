@@ -292,8 +292,9 @@
             <template>
               <style>
                 .field {
+                  display: inline-flex;
                   white-space: nowrap;
-                  margin-right: 0.5rem;
+                  align-items: center;
                 }
 
                 .field-label {
@@ -349,30 +350,32 @@
                 ><atomic-result-text field="excerpt"></atomic-result-text
               ></atomic-result-section-excerpt>
               <atomic-result-section-bottom-metadata>
-                <atomic-field-condition class="field" if-defined="author">
-                  <atomic-text value="author" class="field-label"></atomic-text>
-                  <atomic-result-text field="author"></atomic-result-text>
-                </atomic-field-condition>
+                <atomic-result-fields-list-v1>
+                  <atomic-field-condition class="field" if-defined="author">
+                    <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+                    <atomic-result-text field="author"></atomic-result-text>
+                  </atomic-field-condition>
 
-                <atomic-field-condition class="field" if-defined="source">
-                  <atomic-text value="source" class="field-label"></atomic-text>
-                  <atomic-result-text field="source"></atomic-result-text>
-                </atomic-field-condition>
+                  <atomic-field-condition class="field" if-defined="source">
+                    <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
+                    <atomic-result-text field="source"></atomic-result-text>
+                  </atomic-field-condition>
 
-                <atomic-field-condition class="field" if-defined="language">
-                  <atomic-text value="language" class="field-label"></atomic-text>
-                  <atomic-result-text field="language"></atomic-result-text>
-                </atomic-field-condition>
+                  <atomic-field-condition class="field" if-defined="language">
+                    <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
+                    <atomic-result-text field="language"></atomic-result-text>
+                  </atomic-field-condition>
 
-                <atomic-field-condition class="field" if-defined="filetype">
-                  <atomic-text value="fileType" class="field-label"></atomic-text>
-                  <atomic-result-text field="filetype"></atomic-result-text>
-                </atomic-field-condition>
+                  <atomic-field-condition class="field" if-defined="filetype">
+                    <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
+                    <atomic-result-text field="filetype"></atomic-result-text>
+                  </atomic-field-condition>
 
-                <span class="field">
-                  <span class="field-label">Date</span>
-                  <atomic-result-date></atomic-result-date>
-                </span>
+                  <span class="field">
+                    <span class="field-label">Date:</span>
+                    <atomic-result-date></atomic-result-date>
+                  </span>
+                </atomic-result-fields-list-v1>
               </atomic-result-section-bottom-metadata>
               <atomic-table-element-v1 label="Description">
                 <atomic-result-link field="title"></atomic-result-link>
