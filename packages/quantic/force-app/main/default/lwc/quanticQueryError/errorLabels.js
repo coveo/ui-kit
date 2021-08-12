@@ -1,7 +1,3 @@
-import disconnectedException from '@salesforce/label/c.quantic_DisconnectedException';
-import noEndpointsException from '@salesforce/label/c.quantic_NoEndpointsException';
-import invalidTokenException from '@salesforce/label/c.quantic_InvalidTokenException';
-import organizationIsPausedException from '@salesforce/label/c.quantic_OrganizationIsPausedException';
 import disconnectedTitle from '@salesforce/label/c.quantic_DisconnectedTitle';
 import noEndpointsTitle from '@salesforce/label/c.quantic_NoEndpointsTitle';
 import invalidTokenTitle from '@salesforce/label/c.quantic_InvalidTokenTitle';

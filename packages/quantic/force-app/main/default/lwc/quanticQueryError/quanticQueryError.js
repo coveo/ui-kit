@@ -9,7 +9,7 @@ import community from '@salesforce/label/c.quantic_Community';
 import contactCoveoSupportTeam from '@salesforce/label/c.quantic_ContactCoveoSupportTeam';
 import goBack from '@salesforce/label/c.quantic_GoBack';
 
-import { ErrorMap, genericError } from './errorLabels.js'
+import { ErrorMap, genericError } from './errorLabels.js';
 
 export default class QuanticQueryError extends LightningElement {
   /** @type {string} */
