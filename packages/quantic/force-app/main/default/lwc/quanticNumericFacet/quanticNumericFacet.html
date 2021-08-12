@@ -3,7 +3,12 @@
     <lightning-card title={label}>
       <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
         <template for:each={values} for:item="v">
-          <c-quantic-numeric-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked}></c-quantic-numeric-facet-value>
+          <c-quantic-facet-value 
+            onselectvalue={onSelect} 
+            key={v.start} 
+            numeric-item={v}
+            facet-type="numeric" 
+            is-checked={v.checked}></c-quantic-facet-value>
         </template>
       </ul>
     </lightning-card>
