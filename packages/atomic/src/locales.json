@@ -230,6 +230,14 @@
     "en": "Display {{results}} results per page",
     "fr": "Afficher {{results}} résultats par page"
   },
+  "sort": {
+    "en": "Sort",
+    "fr": "Tri"
+  },
+  "filters": {
+    "en": "Filters",
+    "fr": "Filtres"
+  },
   "sort-by": {
     "en": "Sort by",
     "fr": "Trier par",
@@ -1028,8 +1036,8 @@
     "fr": "Prévisualiser le résultat"
   },
   "sort-and-filter": {
-    "en": "Sort & filter",
-    "fr": "Trier et filtrer"
+    "en": "Sort & Filter",
+    "fr": "Trier et Filtrer"
   },
   "view-results": {
     "en": "View results",

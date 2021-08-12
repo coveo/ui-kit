@@ -55,6 +55,7 @@ export class AtomicRefineToggle implements InitializableComponent {
     return (
       <button
         class="btn-outline-primary p-3"
+        onClick={() => this.bindings.store.set('refineEnabled', true)}
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
         <span>{this.bindings.i18n.t('sort-and-filter')}</span>

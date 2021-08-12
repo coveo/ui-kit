@@ -39,6 +39,8 @@ module.exports = {
         sm: 'var(--atomic-text-sm)',
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
+        xl: 'var(--atomic-text-xl)',
+        '2xl': 'var(--atomic-text-2xl)',
       },
       screens: {
         'desktop-only': {min: '768px'},

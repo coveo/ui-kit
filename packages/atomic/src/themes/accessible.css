@@ -32,6 +32,8 @@
   --atomic-text-base: 0.875rem; /* 14px */
   --atomic-text-sm: 0.75rem; /* 12px */
   --atomic-text-lg: 1rem; /* 16px */
+  --atomic-text-xl: 1.125rem; /* 18px */
+  --atomic-text-2xl: 1.5rem; /* 24px */
 
   /* Others */
   --atomic-icon-size: 30px;

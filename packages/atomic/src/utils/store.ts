@@ -15,6 +15,7 @@ export type AtomicStore = {
   numericFacets: FacetStore<FacetLabel & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetLabel & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetLabel>;
+  refineEnabled: boolean;
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -22,4 +23,5 @@ export const initialStore: () => AtomicStore = () => ({
   numericFacets: {},
   dateFacets: {},
   categoryFacets: {},
+  refineEnabled: false,
 });
