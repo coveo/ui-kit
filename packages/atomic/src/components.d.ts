@@ -503,7 +503,7 @@ export namespace Components {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -603,6 +603,12 @@ export namespace Components {
         "maxNumberOfParts": number;
     }
     interface AtomicResultQuickview {
+        /**
+          * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+         */
+        "maximumPreviewSize"?: number | undefined;
+    }
+    interface AtomicResultQuickviewV1 {
         /**
           * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
          */
@@ -1131,6 +1137,12 @@ declare global {
         prototype: HTMLAtomicResultQuickviewElement;
         new (): HTMLAtomicResultQuickviewElement;
     };
+    interface HTMLAtomicResultQuickviewV1Element extends Components.AtomicResultQuickviewV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultQuickviewV1Element: {
+        prototype: HTMLAtomicResultQuickviewV1Element;
+        new (): HTMLAtomicResultQuickviewV1Element;
+    };
     interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
     }
     var HTMLAtomicResultSectionActionsElement: {
@@ -1310,6 +1322,7 @@ declare global {
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
+        "atomic-result-quickview-v1": HTMLAtomicResultQuickviewV1Element;
         "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
         "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
         "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
@@ -1828,7 +1841,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -1928,6 +1941,12 @@ declare namespace LocalJSX {
         "maxNumberOfParts"?: number;
     }
     interface AtomicResultQuickview {
+        /**
+          * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+         */
+        "maximumPreviewSize"?: number | undefined;
+    }
+    interface AtomicResultQuickviewV1 {
         /**
           * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
          */
@@ -2213,6 +2232,7 @@ declare namespace LocalJSX {
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
+        "atomic-result-quickview-v1": AtomicResultQuickviewV1;
         "atomic-result-section-actions": AtomicResultSectionActions;
         "atomic-result-section-badges": AtomicResultSectionBadges;
         "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
@@ -2287,6 +2307,7 @@ declare module "@stencil/core" {
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
+            "atomic-result-quickview-v1": LocalJSX.AtomicResultQuickviewV1 & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewV1Element>;
             "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
             "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
             "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
