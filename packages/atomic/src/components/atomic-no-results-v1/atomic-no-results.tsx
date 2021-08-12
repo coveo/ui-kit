@@ -70,7 +70,7 @@ export class AtomicNoResults {
     const content = this.querySummaryState.hasQuery
       ? this.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
-          query: this.wrapHighlight(escape(this.querySummaryState.query)),
+          query: this.wrapHighlight(this.querySummaryState.query),
         })
       : this.bindings.i18n.t('no-results');
     return (
