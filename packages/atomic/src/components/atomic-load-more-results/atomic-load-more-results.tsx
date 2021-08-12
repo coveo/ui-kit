@@ -5,6 +5,8 @@ import {
   QuerySummary,
   QuerySummaryState,
   buildQuerySummary,
+  ResultList,
+  buildResultList,
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
 import {
@@ -31,6 +33,7 @@ export class AtomicLoadMoreResults {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
   public querySummary!: QuerySummary;
+  public resultList!: ResultList;
 
   @BindStateToController('searchStatus')
   @State()
@@ -43,6 +46,11 @@ export class AtomicLoadMoreResults {
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.resultList = buildResultList(this.bindings.engine, {
+      options: {
+        fieldsToInclude: [],
+      },
+    });
   }
 
   private wrapHighlight(content: string) {
@@ -101,7 +109,7 @@ export class AtomicLoadMoreResults {
       <button
         part="load-more-results-button"
         class="text-neutral-light font-bold bg-primary px-2.5 py-3 rounded-md my-2 hover:bg-primary-light focus:ring-4 focus:outline-none"
-        onClick={() => console.log('load results')}
+        onClick={() => this.resultList.fetchMoreResults()}
       >
         {this.bindings.i18n.t('load-more-results')}
       </button>
