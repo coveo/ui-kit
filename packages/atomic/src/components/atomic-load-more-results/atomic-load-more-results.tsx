@@ -6,6 +6,7 @@ import {
   QuerySummaryState,
   buildQuerySummary,
   ResultList,
+  ResultListState,
   buildResultList,
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
@@ -41,6 +42,9 @@ export class AtomicLoadMoreResults {
   @BindStateToController('querySummary')
   @State()
   private querySummaryState!: QuerySummaryState;
+  @BindStateToController('resultList')
+  @State()
+  private resultListState!: ResultListState;
   @State() public error!: Error;
 
   public initialize() {
@@ -125,7 +129,8 @@ export class AtomicLoadMoreResults {
       <div class="flex flex-col items-center" part="container">
         {this.renderShowingResults()}
         {this.renderProgressBar()}
-        {this.renderLoadMoreResults()}
+        {this.resultListState.moreResultsAvailable &&
+          this.renderLoadMoreResults()}
       </div>
     );
   }
