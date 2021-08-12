@@ -521,6 +521,8 @@ export namespace Components {
          */
         "format": string;
     }
+    interface AtomicResultFieldsListV1 {
+    }
     interface AtomicResultIcon {
         /**
           * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
@@ -1057,6 +1059,12 @@ declare global {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
     };
+    interface HTMLAtomicResultFieldsListV1Element extends Components.AtomicResultFieldsListV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultFieldsListV1Element: {
+        prototype: HTMLAtomicResultFieldsListV1Element;
+        new (): HTMLAtomicResultFieldsListV1Element;
+    };
     interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
     }
     var HTMLAtomicResultIconElement: {
@@ -1290,6 +1298,7 @@ declare global {
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge-v1": HTMLAtomicResultBadgeV1Element;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-fields-list-v1": HTMLAtomicResultFieldsListV1Element;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-icon-v1": HTMLAtomicResultIconV1Element;
         "atomic-result-image": HTMLAtomicResultImageElement;
@@ -1837,6 +1846,8 @@ declare namespace LocalJSX {
          */
         "format"?: string;
     }
+    interface AtomicResultFieldsListV1 {
+    }
     interface AtomicResultIcon {
         /**
           * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
@@ -2190,6 +2201,7 @@ declare namespace LocalJSX {
         "atomic-result": AtomicResult;
         "atomic-result-badge-v1": AtomicResultBadgeV1;
         "atomic-result-date": AtomicResultDate;
+        "atomic-result-fields-list-v1": AtomicResultFieldsListV1;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-icon-v1": AtomicResultIconV1;
         "atomic-result-image": AtomicResultImage;
@@ -2263,6 +2275,7 @@ declare module "@stencil/core" {
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-badge-v1": LocalJSX.AtomicResultBadgeV1 & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeV1Element>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-fields-list-v1": LocalJSX.AtomicResultFieldsListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListV1Element>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-icon-v1": LocalJSX.AtomicResultIconV1 & JSXBase.HTMLAttributes<HTMLAtomicResultIconV1Element>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
