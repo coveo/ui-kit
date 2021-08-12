@@ -618,10 +618,6 @@ export namespace Components {
          */
         "icon": string;
         /**
-          * The text to display instead of the field.
-         */
-        "label"?: string;
-        /**
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
         "maxValueInIndex": number;
@@ -1967,10 +1963,6 @@ declare namespace LocalJSX {
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
-        /**
-          * The text to display instead of the field.
-         */
-        "label"?: string;
         /**
           * The maximum value of the field. This value is also used as the number of icons to be displayed.
          */
