@@ -11,7 +11,7 @@ import genericErrorDesc from '@salesforce/label/c.quantic_GenericErrorDesc';
 import coveoDocsLink from '@salesforce/label/c.quantic_CoveoDocsLink';
 import organisationPausedLink from '@salesforce/label/c.quantic_OrganisationPausedLink';
 
-export const ErrorMap ={
+export const ErrorMap = {
     "DisconnectedException":  {
         title: disconnectedTitle,
         description: disconnectedDesc,
