@@ -1,19 +1,19 @@
 .slds-error__box {
     text-align: left;
     background: var(--lwc-colorBackgroundAlt, #FFFF);
-    color: var(--lwc-colorGray9, #706e6b);
+    color: var(--lwc-colorTextPlaceholder, #706e6b);
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 20px;
-    border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-colorGray5, #dddbda);
+    border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-colorBorder, #dddbda);
     box-sizing: border-box;
     border-radius: 4px;
 }
 
 .toolbar__background {
     background: var(--lwc-colorBackgroundAlt, #FFFF);
-    border-top: var(--lwc-spacingNone, 0);
+    border-top: 0;
     width: var(--lwc-sizeXLarge, 40rem);
 }
 
