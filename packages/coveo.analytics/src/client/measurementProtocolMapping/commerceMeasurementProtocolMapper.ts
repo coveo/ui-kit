@@ -24,6 +24,8 @@ const impressionKeysMapping: {[key in keyof BaseImpression]: string} = {
     variant: 'va',
     position: 'ps',
     price: 'pr',
+    // Below are keys that were extended for Coveo
+    group: 'group',
 };
 
 const productActionsKeysMapping: {[name: string]: string} = {
