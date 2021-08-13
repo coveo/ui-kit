@@ -22,7 +22,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
+import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
@@ -198,11 +198,11 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <FacetValueIconRating
+            <Rating
               numberOfTotalIcons={this.maxValueInIndex}
               numberOfActiveIcons={facetValue.start}
               icon={this.icon}
-            ></FacetValueIconRating>
+            ></Rating>
           </FacetValueCheckbox>
         );
       case 'link':
@@ -214,11 +214,11 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <FacetValueIconRating
+            <Rating
               numberOfTotalIcons={this.maxValueInIndex}
               numberOfActiveIcons={facetValue.start}
               icon={this.icon}
-            ></FacetValueIconRating>
+            ></Rating>
           </FacetValueLink>
         );
     }

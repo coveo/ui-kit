@@ -49,14 +49,13 @@ jobs:
               run_id: context.runId
             })
       - name: Install NPM dependencies
+        working-directory: ./packages/quantic
         run: |
           npm i -g sfdx-cli
           npm i
       - name: Build Quantic project
-        run: |
-          npm run setup
-          cd packages/quantic
-          npm run build
+        working-directory: ./packages/quantic
+        run: npm run build
       - name: Copy static resources
         working-directory: ./packages/quantic
         run: npm run copy:staticresources
@@ -65,6 +64,10 @@ jobs:
         run: |
           echo "$SFDX_AUTH_JWT_KEY" > server.key
           sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
+      - name: Remove translation files
+        run: |
+          cd packages/quantic/force-app/main/translations
+          rm *.translation-meta.xml
       - name: Create package version
         working-directory: ./packages/quantic
         run: |

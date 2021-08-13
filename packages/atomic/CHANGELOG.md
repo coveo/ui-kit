@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.2...@coveo/atomic@0.61.0) (2021-08-13)
+
+
+### Bug Fixes
+
+* **atomic:** made table refresh when sort or filters are changed ([#1082](https://github.com/coveo/ui-kit/issues/1082)) ([469a4b0](https://github.com/coveo/ui-kit/commit/469a4b0f138a313d3fd091dc2ad271502f074ad0))
+
+
+### Features
+
+* **atomic:** limited height of excerpt section ([#1089](https://github.com/coveo/ui-kit/issues/1089)) ([9280dc7](https://github.com/coveo/ui-kit/commit/9280dc7ed92479c179e0080312e4fb9d57bab831))
+
+
+
+
+
+## [0.60.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.1...@coveo/atomic@0.60.2) (2021-08-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.60.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.0...@coveo/atomic@0.60.1) (2021-08-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.60.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.2...@coveo/atomic@0.60.0) (2021-08-12)
+
+
+### Features
+
+* **atomic:** added padding to table result list ([#1083](https://github.com/coveo/ui-kit/issues/1083)) ([7e64b14](https://github.com/coveo/ui-kit/commit/7e64b14ddc3459ad1b0e0030416312e12a7771ca))
+
+
+
+
+
+## [0.59.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.1...@coveo/atomic@0.59.2) (2021-08-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.59.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.0...@coveo/atomic@0.59.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix text overflow on Category Facet ([5f24fd9](https://github.com/coveo/ui-kit/commit/5f24fd968eb0349b92a2d5b7404460435f2fcbbd))
+
+
+
+
+
+# [0.59.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.58.0...@coveo/atomic@0.59.0) (2021-08-11)
+
+
+### Features
+
+* **atomic:** added atomic-result-fields-list component ([#1073](https://github.com/coveo/ui-kit/issues/1073)) ([af4759a](https://github.com/coveo/ui-kit/commit/af4759a565100706150a79324696a39ed1d3a4ed))
+
+
+
+
+
 # [0.58.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.57.0...@coveo/atomic@0.58.0) (2021-08-10)
 
 
