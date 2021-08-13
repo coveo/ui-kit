@@ -37,6 +37,11 @@ export interface QuerySuggestSuccessResponse {
    * Contains an array of completions.
    */
   completions: QuerySuggestCompletion[];
+
+  /**
+   * The query suggest response id.
+   */
+  responseId: string;
 }
 
 export type QuerySuggest =

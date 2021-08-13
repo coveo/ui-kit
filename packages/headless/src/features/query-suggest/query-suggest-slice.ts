@@ -129,6 +129,7 @@ function buildQuerySuggest(
   return {
     id: '',
     completions: [],
+    responseId: '',
     count: 5,
     q: '',
     currentRequestId: '',
