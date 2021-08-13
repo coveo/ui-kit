@@ -17,6 +17,10 @@ export default class QuanticDateFacet extends LightningElement {
   @api label;
   /** @type {string} */
   @api engineId;
+  /** @type {number} */
+  numberOfValues = 8;
+  /** @type {import("coveo").RangeFacetRangeAlgorithm} */
+  @api rangeAlgorithm = 'even';
 
   /** @type {import("coveo").DateFacet} */
   facet;
