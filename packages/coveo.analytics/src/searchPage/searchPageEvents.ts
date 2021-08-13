@@ -202,7 +202,7 @@ export enum SearchPageEvents {
      */
     collapseSmartSnippetSuggestion = 'collapseSmartSnippetSuggestion',
     /**
-     * Identifies the custom event that gets logged when a recent queries list item gets clicked.
+     * Identifies the search event that gets logged when a recent queries list item gets clicked.
      */
     recentQueryClick = 'recentQueriesClick',
     /**
