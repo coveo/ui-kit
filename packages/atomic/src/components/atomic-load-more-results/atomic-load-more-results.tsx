@@ -18,9 +18,9 @@ import {
 import {createRipple} from '../../utils/ripple';
 
 /**
- * The `atomic-load-more-results` component allows the user to load more results if more results are available.
+ * The `atomic-load-more-results` component allows the user to load additional results if more are available.
  *
- * @part container - The container for the component.
+ * @part container - The container of the component.
  * @part showing-results - The summary displaying which results are shown and how many are available.
  * @part highlight - The highlighted number of results displayed and number of results available.
  * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of results available.
