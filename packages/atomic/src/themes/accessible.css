@@ -34,5 +34,8 @@
   --atomic-text-lg: 1rem; /* 16px */
 
   /* Others */
+  /* TODO: Remove from v1 */
   --atomic-icon-size: 30px;
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-xl: 1rem;
 }
