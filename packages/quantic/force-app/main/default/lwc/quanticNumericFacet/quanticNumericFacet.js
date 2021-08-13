@@ -17,14 +17,10 @@ export default class QuanticNumericFacet extends LightningElement {
   @api label;
   /** @type {string} */
   @api engineId;
-  /** @type {boolean} */
-  @api withSearch;
   /** @type {number} */
   @api numberOfValues = 8;
   /** @type {import("coveo").RangeFacetSortCriterion} */
   @api sortCriterion = 'ascending';
-  /** @type {import("coveo").RangeFacetRangeAlgorithm} */
-  @api rangeAlgorithm = 'equiprobable';
 
   /** @type {import("coveo").NumericFacet} */
   facet;
