@@ -18,19 +18,27 @@
     flex-direction: column;
 }
 
-.facet__show_less {
+.facet__show-less {
     font-size: 12px;
     outline: 0;
     background-color: white;
     width: 40%;
-    
     color: var(--sds-c-color-gray-8, #8E959D);
+    padding-left: 0px;
+    border: none;
 }
 
-.facet__show_more {
+.facet__show-more {
     font-size: 12px;
     outline: 0;
     background-color: white;
     width: 40%;
     color: #005FB2;
+    padding-left: 0px;
+    border: none;
+}
+
+.facet__show-more_text, .facet__show-less_text{
+    display: flex;
+    align-items: left;
 }

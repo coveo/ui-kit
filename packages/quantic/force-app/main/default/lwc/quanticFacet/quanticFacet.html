@@ -38,11 +38,15 @@
             <div class="facet__show">
               <template if:true={canShowLess}>
                 <button variant="base" label={labels.showLess}
-                  class="slds-m-left_x-small facet__show_less" onclick={showLess}>- {labels.showLess}</button>
+                  class="slds-m-left_x-small facet__show-less" onclick={showLess}>
+                  <span class="facet__show-less_text">- {labels.showLess}</span>
+                </button>
               </template>
               <template if:true={canShowMore}>
                 <button variant="base" label={labels.showMore}
-                  class="slds-m-left_x-small facet__show_more" onclick={showMore}>+ {labels.showMore}</button>
+                  class="slds-m-left_x-small facet__show-more" onclick={showMore}>
+                  <span class="facet__show-more_text">+ {labels.showMore}</span>
+                </button>
               </template>
             </div>
           </template>

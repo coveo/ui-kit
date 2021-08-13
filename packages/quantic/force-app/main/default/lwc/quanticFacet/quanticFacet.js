@@ -27,6 +27,12 @@ export default class QuanticFacet extends LightningElement {
   @api label;
   /** @type {string} */
   @api engineId;
+  /** @type {number} */
+  @api numberOfValues = 8;
+  /** @type  {import("coveo").FacetSortCriterion}*/
+  @api sortCriterion = 'automatic';
+  /** @type {boolean} */
+  @api withoutSearch = false;
 
   /** @type {import("coveo").Facet}} */
   facet;
@@ -38,10 +44,6 @@ export default class QuanticFacet extends LightningElement {
   facetIcon = 'utility:dash';
   /** @type {HTMLInputElement} */
   input;
-  /** @type {number} */
-  numberOfValues = 8;
-  /** @type  {import("coveo").FacetSortCriterion}*/
-  sortCriterion = 'automatic';
   /** @type {boolean} */
   isFacetSearchActive = false;
 
@@ -112,7 +114,7 @@ export default class QuanticFacet extends LightningElement {
     if (!this.facet) {
       return false;
     }
-    return this.state.canShowMoreValues;
+    return this.state.canShowMoreValues && !this.withoutSearch;
   }
 
   get canShowLess() {
