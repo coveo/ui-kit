@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.2...@coveo/atomic@0.61.0) (2021-08-13)
+
+
+### Bug Fixes
+
+* **atomic:** made table refresh when sort or filters are changed ([#1082](https://github.com/coveo/ui-kit/issues/1082)) ([469a4b0](https://github.com/coveo/ui-kit/commit/469a4b0f138a313d3fd091dc2ad271502f074ad0))
+
+
+### Features
+
+* **atomic:** limited height of excerpt section ([#1089](https://github.com/coveo/ui-kit/issues/1089)) ([9280dc7](https://github.com/coveo/ui-kit/commit/9280dc7ed92479c179e0080312e4fb9d57bab831))
+
+
+
+
+
 ## [0.60.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.1...@coveo/atomic@0.60.2) (2021-08-13)
 
 **Note:** Version bump only for package @coveo/atomic
