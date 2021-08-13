@@ -46,6 +46,7 @@ import {NumberInputType} from '../facet-number-input/number-input-type';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
+import {registerFacetToStore} from '../../../utils/store';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -104,7 +105,6 @@ export class AtomicNumericFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -142,6 +142,10 @@ export class AtomicNumericFacet
    * Possible values are 'checkbox' and 'link'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private validateProps() {
     new Schema({
@@ -173,10 +177,12 @@ export class AtomicNumericFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.numericFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'numericFacets', {
       label: this.label,
-      format: (facetValue) => this.formatFacetValue(facetValue),
-    };
+      facetId: this.facetId!,
+      element: this.host,
+      format: (value) => this.formatFacetValue(value),
+    });
   }
 
   private initializeFilter() {

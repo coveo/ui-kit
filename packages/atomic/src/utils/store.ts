@@ -1,6 +1,7 @@
 import {NumericFacetValue, DateFacetValue} from '@coveo/headless';
+import {ObservableMap} from '@stencil/store';
 
-interface FacetLabel {
+interface FacetInfo {
   label: string;
 }
 
@@ -8,13 +9,15 @@ interface FacetValueFormat<ValueType> {
   format(facetValue: ValueType): string;
 }
 
-type FacetStore<F extends FacetLabel> = Record<string, F>;
+type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
+type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export type AtomicStore = {
-  facets: FacetStore<FacetLabel>;
-  numericFacets: FacetStore<FacetLabel & FacetValueFormat<NumericFacetValue>>;
-  dateFacets: FacetStore<FacetLabel & FacetValueFormat<DateFacetValue>>;
-  categoryFacets: FacetStore<FacetLabel>;
+  facets: FacetStore<FacetInfo>;
+  numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
+  dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
+  categoryFacets: FacetStore<FacetInfo>;
+  facetElements: HTMLElement[];
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -22,5 +25,18 @@ export const initialStore: () => AtomicStore = () => ({
   numericFacets: {},
   dateFacets: {},
   categoryFacets: {},
-  refineEnabled: false,
+  facetElements: [],
 });
+
+export const registerFacetToStore = <T extends FacetType, U extends string>(
+  store: ObservableMap<AtomicStore>,
+  facetType: T,
+  data: AtomicStore[T][U] & {facetId: U; element: HTMLElement}
+) => {
+  if (store.state[facetType][data.facetId]) {
+    return;
+  }
+
+  store.state[facetType][data.facetId] = data;
+  store.state.facetElements.push(data.element);
+};

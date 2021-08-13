@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Host} from '@stencil/core';
+import {Component, h, Prop, State, Host, Element} from '@stencil/core';
 import {
   CategoryFacetState,
   CategoryFacet,
@@ -31,6 +31,7 @@ import {
   FacetSearchStrings,
 } from '../facet-search/facet-search';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+import {registerFacetToStore} from '../../../utils/store';
 
 const SEPARATOR = '/';
 const ELLIPSIS = '...';
@@ -75,6 +76,7 @@ export class AtomicCategoryFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -164,9 +166,11 @@ export class AtomicCategoryFacet
       this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.categoryFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'categoryFacets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   private get parents() {

@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {
   BreadcrumbManager,
   buildBreadcrumbManager,
@@ -25,6 +25,7 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   @InitializeBindings() public bindings!: Bindings;
+  @Element() public host!: HTMLElement;
 
   @BindStateToController('querySummary')
   @State()
@@ -35,15 +36,50 @@ export class AtomicRefineModal implements InitializableComponent {
   @State() public error!: Error;
 
   @Prop({reflect: true, mutable: true}) enabled!: boolean;
+  @Watch('enabled')
+  watchEnabled(enabled: boolean) {
+    const modalOpenedClass = 'atomic-modal-opened';
+
+    if (enabled) {
+      document.body.classList.add(modalOpenedClass);
+      this.duplicateFacetElements();
+      return;
+    }
+
+    document.body.classList.remove(modalOpenedClass);
+    this.flushFacetElements();
+  }
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
+  private duplicateFacetElements() {
+    const divSlot = document.createElement('div');
+    divSlot.setAttribute('slot', 'facets');
+    // TODO: order facets with facet manager
+    this.bindings.store.get('facetElements').forEach((facetElement) => {
+      const clone = facetElement.cloneNode(false) as HTMLElement;
+      clone.style.marginBottom =
+        'var(--atomic-refine-modal-facet-margin, 20px)';
+      clone.setAttribute('is-collapsed', 'true');
+      divSlot.append(clone);
+    });
+
+    this.host.append(divSlot);
+  }
+
+  private flushFacetElements() {
+    this.host.querySelector('div[slot="facets"]')?.remove();
+  }
+
   private renderHeader() {
     return (
-      <div class="w-full border-neutral border-b p-6 flex justify-between">
+      <div
+        part="header"
+        class="w-full border-neutral border-b p-6 flex justify-between"
+      >
         <span class="text-xl truncate">
           {this.bindings.i18n.t('sort-and-filter')}
         </span>
@@ -70,14 +106,18 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
+    if (!this.bindings.store.get('facetElements').length) {
+      return;
+    }
+
     return [
-      <div class="w-full flex justify-between mt-8">
+      <div class="w-full flex justify-between mt-8 mb-3">
         <span class="text-2xl font-bold truncate">
           {this.bindings.i18n.t('filters')}
         </span>
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <button
-            part="breadcrumb-clear-all"
+            part="filter-clear-all"
             class="truncate btn-no-outline-primary px-2 py-1"
             onClick={() => this.breadcrumbManager.deselectAll()}
             onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
@@ -86,14 +126,16 @@ export class AtomicRefineModal implements InitializableComponent {
           </button>
         )}
       </div>,
-      // TODO: add duplicated facet components
       <slot name="facets"></slot>,
     ];
   }
 
   private renderFooter() {
     return (
-      <div class="px-6 py-4 fixed w-full bottom-0 left-0 border-neutral border-t">
+      <div
+        part="footer"
+        class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg"
+      >
         <button
           class="btn-primary p-3 w-full flex text-lg justify-center"
           onClick={() => (this.enabled = false)}
@@ -120,10 +162,10 @@ export class AtomicRefineModal implements InitializableComponent {
     return (
       <div
         part="wrapper"
-        class="w-screen h-screen fixed bg-background text-on-background left-0 top-0 z-10"
+        class="w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10"
       >
         {this.renderHeader()}
-        <div class="px-6">
+        <div class="overflow-auto px-6 flex-grow">
           {this.renderSort()}
           {this.renderFilters()}
         </div>
