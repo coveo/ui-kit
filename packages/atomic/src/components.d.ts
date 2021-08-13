@@ -503,7 +503,7 @@ export namespace Components {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -559,6 +559,20 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         "image": ResultDisplayImageSize;
+    }
+    interface AtomicResultMultiTextV1 {
+        /**
+          * If present, will attempt to split the field into multiple values using wherever this character is encountered.
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are more values than the maximum that was set here, the last value displayed will be "# more...".
+         */
+        "maximumValues": number;
     }
     interface AtomicResultNumber {
         /**
@@ -1107,6 +1121,12 @@ declare global {
         prototype: HTMLAtomicResultListV1Element;
         new (): HTMLAtomicResultListV1Element;
     };
+    interface HTMLAtomicResultMultiTextV1Element extends Components.AtomicResultMultiTextV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultMultiTextV1Element: {
+        prototype: HTMLAtomicResultMultiTextV1Element;
+        new (): HTMLAtomicResultMultiTextV1Element;
+    };
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
     var HTMLAtomicResultNumberElement: {
@@ -1306,6 +1326,7 @@ declare global {
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
+        "atomic-result-multi-text-v1": HTMLAtomicResultMultiTextV1Element;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
@@ -1828,7 +1849,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -1884,6 +1905,20 @@ declare namespace LocalJSX {
          */
         "fieldsToInclude"?: string;
         "image"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultMultiTextV1 {
+        /**
+          * If present, will attempt to split the field into multiple values using wherever this character is encountered.
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are more values than the maximum that was set here, the last value displayed will be "# more...".
+         */
+        "maximumValues"?: number;
     }
     interface AtomicResultNumber {
         /**
@@ -2209,6 +2244,7 @@ declare namespace LocalJSX {
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-list-v1": AtomicResultListV1;
+        "atomic-result-multi-text-v1": AtomicResultMultiTextV1;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
@@ -2283,6 +2319,7 @@ declare module "@stencil/core" {
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
+            "atomic-result-multi-text-v1": LocalJSX.AtomicResultMultiTextV1 & JSXBase.HTMLAttributes<HTMLAtomicResultMultiTextV1Element>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;

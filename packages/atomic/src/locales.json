@@ -1046,5 +1046,9 @@
   "only": {
     "en": "only",
     "fr": "seulement"
+  },
+  "more-field-values": {
+    "en": "{{count}} more...",
+    "fr": "{{count}} autres..."
   }
 }
