@@ -69,10 +69,12 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values.map((v) => ({
-        ...v,
-        checked: v.state === 'selected',
-      })) || []
+      this.state.values.filter((value) => value.numberOfResults || value.state === 'selected').map((value) => {
+        return {
+          ...value,
+          checked: value.state === 'selected',
+        }
+      }) || []
     );
   }
 

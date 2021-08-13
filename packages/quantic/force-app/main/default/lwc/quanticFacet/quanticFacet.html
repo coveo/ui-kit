@@ -1,76 +1,78 @@
 <template>
   <template if:true={hasValues}>
-    <lightning-card title={label}>
-      <lightning-button-icon
-        class="slds-p-bottom_small"
-        slot="actions"
-        onclick={toggleFacetVisibility}
-        icon-name={facetIcon}
-        alternative-text="Collapse/show facet"
-        variant="bare"
-      >
-      </lightning-button-icon>
-  
-      <template if:false={isCollapsed}>
-        <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
-          <template if:true={canShowMore}>
-            <div onchange={handleKeyUp} class="facet__searchbox">
-              <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
-            </div>
-          </template>
-          <template if:true={hasActiveValues}>
-            <lightning-button 
-              class="slds-p-horizontal_small facet__collapse"
-              icon-name="utility:close" 
-              variant="base" 
-              value={labels.clear} 
-              onclick={clearSelections}
-              label={labels.clear}
-              icon-position="right"
-              >
-            </lightning-button>
-          </template>
+    <div class="facet">
+      <lightning-card title={label} class="niumpoirtquoi">
+        <lightning-button-icon
+          class="slds-p-bottom_small"
+          slot="actions"
+          onclick={toggleFacetVisibility}
+          icon-name={facetIcon}
+          alternative-text="Collapse/show facet"
+          variant="bare"
+        >
+        </lightning-button-icon>
+    
+        <template if:false={isCollapsed}>
+          <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
+            <template if:true={canShowMore}>
+              <div onchange={handleKeyUp} class="facet__searchbox">
+                <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
+              </div>
+            </template>
+            <template if:true={hasActiveValues}>
+              <lightning-button 
+                class="slds-p-horizontal_small facet__collapse"
+                icon-name="utility:close" 
+                variant="base" 
+                value={labels.clear} 
+                onclick={clearSelections}
+                label={labels.clear}
+                icon-position="right"
+                >
+              </lightning-button>
+            </template>
 
-          <template if:false={isFacetSearchActive}>
-            <template for:each={values} for:item="v">
-              <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
+            <template if:false={isFacetSearchActive}>
+              <template for:each={values} for:item="v">
+                <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
+              </template>
+              <div class="facet__show">
+                <template if:true={canShowLess}>
+                  <button variant="base" label={labels.showLess}
+                    class="slds-m-left_x-small facet__show-less" onclick={showLess}>
+                    <span class="facet__show-less_text">- {labels.showLess}</span>
+                  </button>
+                </template>
+                <template if:true={canShowMore}>
+                  <button variant="base" label={labels.showMore}
+                    class="slds-m-left_x-small facet__show-more" onclick={showMore}>
+                    <span class="facet__show-more_text">+ {labels.showMore}</span>
+                  </button>
+                </template>
+              </div>
             </template>
-            <div class="facet__show">
-              <template if:true={canShowLess}>
-                <button variant="base" label={labels.showLess}
-                  class="slds-m-left_x-small facet__show-less" onclick={showLess}>
-                  <span class="facet__show-less_text">- {labels.showLess}</span>
-                </button>
-              </template>
-              <template if:true={canShowMore}>
-                <button variant="base" label={labels.showMore}
-                  class="slds-m-left_x-small facet__show-more" onclick={showMore}>
-                  <span class="facet__show-more_text">+ {labels.showMore}</span>
-                </button>
-              </template>
-            </div>
-          </template>
 
-          <template if:true={isFacetSearchActive}>
-            <template if:true={hasSearchResults}>
-              <template for:each={facetSearchResults} for:item="result">
-                <c-quantic-facet-value onselectvalue={onSelect} key={result.value} item={result} is-checked={result.checked}></c-quantic-facet-value>
+            <template if:true={isFacetSearchActive}>
+              <template if:true={hasSearchResults}>
+                <template for:each={facetSearchResults} for:item="result">
+                  <c-quantic-facet-value onselectvalue={onSelect} key={result.value} item={result} is-checked={result.checked}></c-quantic-facet-value>
+                </template>
+              </template>
+              <template if:false={hasSearchResults}>
+                <li class="slds-var-m-around_small slds-grid">
+                  <span class="slds-align_absolute-center slds-p-vertical_small slds-m-bottom_medium slds-p-horizontal_xx-large facet__search-results_no-match">{noMatchesForLabel}</span>
+                </li>
+              </template>
+              <template if:true={canShowMoreSearchResults}>
+                <li class="slds-p-left_small slds-p-bottom_medium">
+                  <span class="facet__search-results_more-matches">{moreMatchesForLabel}</span>
+                </li>
               </template>
             </template>
-            <template if:false={hasSearchResults}>
-              <li class="slds-var-m-around_small slds-grid">
-                <span class="slds-align_absolute-center slds-p-vertical_small slds-m-bottom_medium slds-p-horizontal_xx-large facet__search-results_no-match">{noMatchesForLabel}</span>
-              </li>
-            </template>
-            <template if:true={canShowMoreSearchResults}>
-              <li class="slds-p-left_small slds-p-bottom_medium">
-                <span class="facet__search-results_more-matches">{moreMatchesForLabel}</span>
-              </li>
-            </template>
-          </template>
-        </ul>
-        
-      </template>
-    </lightning-card>
+          </ul>
+          
+        </template>
+      </lightning-card>
+    </div>
   </template>
 </template>
