@@ -39,7 +39,7 @@ describe('No Results Test Suites', () => {
   it('should not be vulnerable to XSS injections in the query parameter', () => {
     env
       ?.withHash(
-        `document.querySelector('${tag}').setAttribute('xss', 'true');`
+        `q=document.querySelector('${tag}').setAttribute('xss', 'true');`
       )
       .init();
     cy.get(tag).should('not.have.attr', 'xss');
