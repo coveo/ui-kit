@@ -36,12 +36,18 @@ describe('No Results Test Suites', () => {
     cy.get(tag).shadow().get('button').should('not.exist');
   });
 
-  it('should not be vulnerable to XSS injections in the query parameter', () => {
-    env
-      ?.withHash(
-        `q=document.querySelector('${tag}').setAttribute('xss', 'true');`
-      )
-      .init();
+  function submitXssQuery() {
+    generateAliasForSearchBox();
+    cy.get('@searchBoxFirstDiv')
+      .find('.search-input')
+      .type(`q=document.querySelector('${tag}').setAttribute('xss', 'true');`);
+    cy.get('@searchBoxFirstDiv').find('.submit-button').click();
+    cy.wait(wait);
+  }
+
+  it('should not be vulnerable to queries containing XSS injections', () => {
+    env?.init();
+    submitXssQuery();
     cy.get(tag).should('not.have.attr', 'xss');
   });
 
