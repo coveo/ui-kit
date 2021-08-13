@@ -99,7 +99,7 @@ export class AtomicLoadMoreResults {
       <div class="relative left-0 top-0 w-72 h-1.5 my-2" part="progress-bar">
         <div class="relative left-0 top-0 z-0 flex py-0.5 bg-neutral rounded"></div>
         <div
-          class="absolute left-0 top-0 z-10 flex py-0.5 overflow-hidden rounded bg-gradient-to-r from-blue-600 to-blue-400"
+          class="absolute left-0 top-0 z-10 flex py-0.5 overflow-hidden rounded bg-gradient-to-r more-results-progress-bar-primary more-results-progress-bar-secondary"
           style={{width}}
         ></div>
       </div>
