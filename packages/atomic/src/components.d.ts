@@ -586,6 +586,12 @@ export namespace Components {
          */
         "minimumSignificantDigits"?: number;
     }
+    interface AtomicResultNumberV1 {
+        /**
+          * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultPrice {
         /**
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
@@ -1127,6 +1133,12 @@ declare global {
         prototype: HTMLAtomicResultNumberElement;
         new (): HTMLAtomicResultNumberElement;
     };
+    interface HTMLAtomicResultNumberV1Element extends Components.AtomicResultNumberV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultNumberV1Element: {
+        prototype: HTMLAtomicResultNumberV1Element;
+        new (): HTMLAtomicResultNumberV1Element;
+    };
     interface HTMLAtomicResultPriceElement extends Components.AtomicResultPrice, HTMLStencilElement {
     }
     var HTMLAtomicResultPriceElement: {
@@ -1327,6 +1339,7 @@ declare global {
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
         "atomic-result-number": HTMLAtomicResultNumberElement;
+        "atomic-result-number-v1": HTMLAtomicResultNumberV1Element;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
@@ -1932,6 +1945,12 @@ declare namespace LocalJSX {
          */
         "minimumSignificantDigits"?: number;
     }
+    interface AtomicResultNumberV1 {
+        /**
+          * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultPrice {
         /**
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
@@ -2245,6 +2264,7 @@ declare namespace LocalJSX {
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-list-v1": AtomicResultListV1;
         "atomic-result-number": AtomicResultNumber;
+        "atomic-result-number-v1": AtomicResultNumberV1;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
@@ -2320,6 +2340,7 @@ declare module "@stencil/core" {
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
+            "atomic-result-number-v1": LocalJSX.AtomicResultNumberV1 & JSXBase.HTMLAttributes<HTMLAtomicResultNumberV1Element>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;

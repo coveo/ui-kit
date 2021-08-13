@@ -249,6 +249,9 @@
           <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
           <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
         </atomic-numeric-facet-v1>
+        <atomic-numeric-facet-v1 field="sncost" label="Cost">
+          <atomic-format-currency currency="CAD"></atomic-format-currency>
+        </atomic-numeric-facet-v1>
         <atomic-timeframe-facet label="Timeframe" with-date-picker>
           <atomic-timeframe unit="hour"></atomic-timeframe>
           <atomic-timeframe unit="day"></atomic-timeframe>
@@ -279,7 +282,7 @@
           </atomic-sort-dropdown>
         </div>
         <atomic-no-results-v1></atomic-no-results-v1>
-        <atomic-result-list-v1 fields-to-include="snrating">
+        <atomic-result-list-v1 fields-to-include="snrating,sncost">
           <atomic-result-template>
             <template>
               <style>
@@ -366,6 +369,13 @@
                   <atomic-field-condition class="field" if-defined="filetype">
                     <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
                     <atomic-result-text field="filetype"></atomic-result-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="sncost">
+                    <span class="field-label">Cost:</span>
+                    <atomic-result-number-v1 field="sncost">
+                      <atomic-format-currency currency="CAD"></atomic-format-currency>
+                    </atomic-result-number-v1>
                   </atomic-field-condition>
 
                   <span class="field">
