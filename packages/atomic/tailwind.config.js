@@ -44,8 +44,8 @@ module.exports = {
         '2xl': 'var(--atomic-text-2xl)',
       },
       screens: {
-        'desktop-only': {min: '768px'},
-        'mobile-only': {max: '767px'},
+        'desktop-only': {min: '1023px'},
+        'mobile-only': {max: '1024px'},
       },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
