@@ -24,7 +24,6 @@
     background-color: white;
     width: 40%;
     color: var(--sds-c-color-gray-8, #8E959D);
-    padding-left: 0px;
     border: none;
 }
 
@@ -34,7 +33,6 @@
     background-color: white;
     width: 40%;
     color: #005FB2;
-    padding-left: 0px;
     border: none;
 }
 
