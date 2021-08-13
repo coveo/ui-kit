@@ -1833,7 +1833,10 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * Specifies the icon to display.  
+          * - Use a value that starts with `http://`, `https://`, `./`, or `../` to fetch and display an icon from a given location. 
+          * - Use a value that starts with `assets://`, to display an icon from the Atomic package. 
+          * - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
