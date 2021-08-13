@@ -26,7 +26,7 @@
               </lightning-button>
             </template>
             <template for:each={values} for:item="v">
-              <c-quantic-date-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked}></c-quantic-date-facet-value>
+              <c-quantic-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked} variant="date"></c-quantic-facet-value>
             </template>
           </ul>
         </template>
