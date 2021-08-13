@@ -637,6 +637,20 @@ export namespace Components {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultRatingV1 {
+        /**
+          * The field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+    }
     interface AtomicResultSectionActions {
     }
     interface AtomicResultSectionBadges {
@@ -1176,6 +1190,12 @@ declare global {
         prototype: HTMLAtomicResultQuickviewElement;
         new (): HTMLAtomicResultQuickviewElement;
     };
+    interface HTMLAtomicResultRatingV1Element extends Components.AtomicResultRatingV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultRatingV1Element: {
+        prototype: HTMLAtomicResultRatingV1Element;
+        new (): HTMLAtomicResultRatingV1Element;
+    };
     interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
     }
     var HTMLAtomicResultSectionActionsElement: {
@@ -1357,6 +1377,7 @@ declare global {
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
+        "atomic-result-rating-v1": HTMLAtomicResultRatingV1Element;
         "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
         "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
         "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
@@ -2009,6 +2030,20 @@ declare namespace LocalJSX {
          */
         "maximumPreviewSize"?: number | undefined;
     }
+    interface AtomicResultRatingV1 {
+        /**
+          * The field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+    }
     interface AtomicResultSectionActions {
     }
     interface AtomicResultSectionBadges {
@@ -2295,6 +2330,7 @@ declare namespace LocalJSX {
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
+        "atomic-result-rating-v1": AtomicResultRatingV1;
         "atomic-result-section-actions": AtomicResultSectionActions;
         "atomic-result-section-badges": AtomicResultSectionBadges;
         "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
@@ -2371,6 +2407,7 @@ declare module "@stencil/core" {
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
+            "atomic-result-rating-v1": LocalJSX.AtomicResultRatingV1 & JSXBase.HTMLAttributes<HTMLAtomicResultRatingV1Element>;
             "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
             "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
             "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
