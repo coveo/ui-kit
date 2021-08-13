@@ -92,11 +92,9 @@ export class AtomicLoadMoreResults {
   }
 
   private renderProgressBar() {
-    const width =
-      (
-        (this.querySummaryState.lastResult / this.querySummaryState.total) *
-        100
-      ).toString() + '%';
+    const width = `${
+      (this.querySummaryState.lastResult / this.querySummaryState.total) * 100
+    }%`;
     return (
       <div class="relative left-0 top-0 w-72 h-1.5 my-2" part="progress-bar">
         <div class="relative left-0 top-0 z-0 flex py-0.5 bg-neutral rounded"></div>
