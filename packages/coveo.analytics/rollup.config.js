@@ -23,12 +23,20 @@ const tsPlugin = () =>
 
 const browserUMD = {
     input: './src/coveoua/browser.ts',
-    output: {
-        file: './dist/coveoua.js',
-        format: 'umd',
-        name: 'coveoua',
-        sourcemap: true,
-    },
+    output: [
+        {
+            file: './dist/coveoua.js',
+            format: 'umd',
+            name: 'coveoua',
+            sourcemap: true,
+        },
+        {
+            file: './dist/coveoua.browser.js',
+            format: 'iife',
+            name: 'coveoua',
+            sourcemap: true,
+        },
+    ],
     plugins: [
         browserFetch(),
         tsPlugin(),
