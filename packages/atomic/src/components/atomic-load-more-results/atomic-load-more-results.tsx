@@ -15,6 +15,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {createRipple} from '../../utils/ripple';
 
 /**
  * The `atomic-load-more-results` component allows the user to load more results if more results are available.
@@ -24,6 +25,8 @@ import {
  * @part highlight - The highlighted number of results displayed and number of results available.
  * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of results available.
  * @part load-more-results-button - The "Load more results" button.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-load-more-results',
@@ -112,6 +115,7 @@ export class AtomicLoadMoreResults {
         part="load-more-results-button"
         class="btn-primary text-neutral-light font-bold px-2.5 py-3 my-2 focus:ring-4"
         onClick={() => this.resultList.fetchMoreResults()}
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
         {this.bindings.i18n.t('load-more-results')}
       </button>
