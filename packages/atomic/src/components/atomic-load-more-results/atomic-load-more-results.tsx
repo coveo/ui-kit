@@ -110,7 +110,7 @@ export class AtomicLoadMoreResults {
     return (
       <button
         part="load-more-results-button"
-        class="text-neutral-light font-bold bg-primary px-2.5 py-3 rounded-md my-2 hover:bg-primary-light focus:ring-4 focus:outline-none"
+        class="btn-primary text-neutral-light font-bold px-2.5 py-3 my-2 focus:ring-4"
         onClick={() => this.resultList.fetchMoreResults()}
       >
         {this.bindings.i18n.t('load-more-results')}
