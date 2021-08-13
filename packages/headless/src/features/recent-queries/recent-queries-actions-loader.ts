@@ -1,5 +1,11 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {RegisterRecentQueriesCreatorPayload} from './recent-queries-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {recentQueries} from '../../app/reducers';
+import {
+  RegisterRecentQueriesCreatorPayload,
+  registerRecentQueries,
+  clearRecentQueries,
+} from './recent-queries-actions';
 
 /**
  * The RecentQueries action creators
@@ -17,4 +23,21 @@ export interface RecentQueriesActionCreators {
    * Clear the recent queries list.
    */
   clearRecentQueries(): PayloadAction;
+}
+
+/**
+ * Loads the `recentQueries` reducer and returns possible action creators.
+ *
+ * @param engine - The headless engine.
+ * @returns An object holding the action creators.
+ */
+export function loadRecentQueriesActions(
+  engine: SearchEngine
+): RecentQueriesActionCreators {
+  engine.addReducers({recentQueries});
+
+  return {
+    registerRecentQueries,
+    clearRecentQueries,
+  };
 }
