@@ -478,6 +478,7 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRefineModal {
+        "enabled": boolean;
     }
     interface AtomicRefineToggle {
     }
@@ -507,7 +508,7 @@ export namespace Components {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -1821,6 +1822,7 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRefineModal {
+        "enabled": boolean;
     }
     interface AtomicRefineToggle {
     }
@@ -1850,7 +1852,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**

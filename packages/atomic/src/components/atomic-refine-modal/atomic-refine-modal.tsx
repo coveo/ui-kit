@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Prop} from '@stencil/core';
 import {
   BreadcrumbManager,
   buildBreadcrumbManager,
@@ -34,6 +34,8 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManagerState!: BreadcrumbManagerState;
   @State() public error!: Error;
 
+  @Prop({reflect: true, mutable: true}) enabled!: boolean;
+
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
@@ -49,7 +51,7 @@ export class AtomicRefineModal implements InitializableComponent {
           part="clear-button-icon"
           class="fill-current w-5 h-5 hover:text-primary focus:text-primary focus:outline-color"
           innerHTML={CloseIcon}
-          onClick={() => this.bindings.store.set('refineEnabled', false)}
+          onClick={() => (this.enabled = false)}
         ></button>
       </div>
     );
@@ -94,7 +96,7 @@ export class AtomicRefineModal implements InitializableComponent {
       <div class="px-6 py-4 fixed w-full bottom-0 left-0 border-neutral border-t">
         <button
           class="btn-primary p-3 w-full flex text-lg justify-center"
-          onClick={() => this.bindings.store.set('refineEnabled', false)}
+          onClick={() => (this.enabled = false)}
           onMouseDown={(e) => createRipple(e, {color: 'primary'})}
         >
           <span class="truncate mr-1">
@@ -111,7 +113,7 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   public render() {
-    if (!this.bindings.store.get('refineEnabled')) {
+    if (!this.enabled) {
       return;
     }
 

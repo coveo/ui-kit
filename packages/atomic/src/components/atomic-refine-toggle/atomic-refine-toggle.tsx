@@ -22,6 +22,7 @@ import {createRipple} from '../../utils/ripple';
 })
 export class AtomicRefineToggle implements InitializableComponent {
   public searchStatus!: SearchStatus;
+  private modalRef?: HTMLAtomicRefineModalElement;
 
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
@@ -31,6 +32,14 @@ export class AtomicRefineToggle implements InitializableComponent {
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+  }
+
+  private enableModal() {
+    if (!this.modalRef) {
+      this.modalRef = document.createElement('atomic-refine-modal');
+      this.bindings.interfaceElement.prepend(this.modalRef);
+    }
+    this.modalRef.setAttribute('enabled', 'true');
   }
 
   public render() {
@@ -55,7 +64,7 @@ export class AtomicRefineToggle implements InitializableComponent {
     return (
       <button
         class="btn-outline-primary p-3"
-        onClick={() => this.bindings.store.set('refineEnabled', true)}
+        onClick={() => this.enableModal()}
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
         <span>{this.bindings.i18n.t('sort-and-filter')}</span>

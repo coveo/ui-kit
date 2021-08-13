@@ -21,6 +21,10 @@ export interface Bindings {
    * Global state for Atomic
    */
   store: ObservableMap<AtomicStore>;
+  /**
+   * A reference to the `AtomicSearchInterface` element.
+   */
+  interfaceElement: HTMLElement;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;

@@ -46,7 +46,7 @@ export class AtomicSearchInterface {
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
 
-  @Element() private host!: HTMLDivElement;
+  @Element() private host!: HTMLElement;
 
   @State() private error?: Error;
 
@@ -251,7 +251,12 @@ export class AtomicSearchInterface {
   }
 
   private get bindings(): Bindings {
-    return {engine: this.engine!, i18n: this.i18n, store: this.store};
+    return {
+      engine: this.engine!,
+      i18n: this.i18n,
+      store: this.store,
+      interfaceElement: this.host,
+    };
   }
 
   private initComponents() {
@@ -305,7 +310,7 @@ export class AtomicSearchInterface {
     return [
       this.engine && (
         <atomic-relevance-inspector
-          bindings={{engine: this.engine, i18n: this.i18n, store: this.store}}
+          bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),
       <slot></slot>,
