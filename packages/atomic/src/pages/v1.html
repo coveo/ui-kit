@@ -285,7 +285,7 @@
       </div>
       <div class="results">
         <atomic-did-you-mean></atomic-did-you-mean>
-        <atomic-result-list-v1>
+        <atomic-result-list-v1 fields-to-include="snrating">
           <atomic-result-template>
             <template>
               <style>
@@ -337,12 +337,17 @@
                   icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
                 ></atomic-result-badge-v1>
               </atomic-result-section-badges>
-              <atomic-result-section-actions
-                ><atomic-result-quickview></atomic-result-quickview
-              ></atomic-result-section-actions>
+              <atomic-result-section-actions>
+                <atomic-result-quickview></atomic-result-quickview>
+              </atomic-result-section-actions>
               <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
               <atomic-result-section-title-metadata>
-                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                <atomic-field-condition class="field" if-defined="snrating">
+                  <atomic-result-rating-v1 field="snrating"></atomic-result-rating-v1>
+                </atomic-field-condition>
+                <atomic-field-condition class="field" if-not-defined="snrating">
+                  <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                </atomic-field-condition>
               </atomic-result-section-title-metadata>
               <atomic-result-section-excerpt
                 ><atomic-result-text field="excerpt"></atomic-result-text
