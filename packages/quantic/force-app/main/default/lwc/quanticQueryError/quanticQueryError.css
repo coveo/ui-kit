@@ -6,7 +6,7 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 20px;
-    border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-colorBorder, #dddbda);
+    border: var(--lwc-borderWidthThin, thin) solid var(--lwc-colorBorder, #dddbda);
     box-sizing: border-box;
     border-radius: 4px;
 }

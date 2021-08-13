@@ -9,7 +9,7 @@ import community from '@salesforce/label/c.quantic_Community';
 import contactCoveoSupportTeam from '@salesforce/label/c.quantic_ContactCoveoSupportTeam';
 import goBack from '@salesforce/label/c.quantic_GoBack';
 
-import { ErrorMap, genericError } from './errorLabels.js';
+import { errorMap, genericError } from './errorLabels.js';
 
 export default class QuanticQueryError extends LightningElement {
   /** @type {string} */
@@ -62,9 +62,7 @@ export default class QuanticQueryError extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {
@@ -74,15 +72,15 @@ export default class QuanticQueryError extends LightningElement {
   }
 
   get errorTitle() {
-    return ErrorMap[this.type]?.title || genericError.title;
+    return errorMap[this.type]?.title || genericError.title;
   }
 
   get description() {
-    return ErrorMap[this.type]?.description || genericError.description;
+    return errorMap[this.type]?.description || genericError.description;
   }
 
   get link() {
-    return ErrorMap[this.type]?.link;
+    return errorMap[this.type]?.link;
   }
 
   handleShowMoreInfoClick() {
@@ -96,8 +94,22 @@ export default class QuanticQueryError extends LightningElement {
         await navigator.clipboard.writeText(text);
       } catch (err) {
         console.error('Copy to clipboard failed.', text, err);
+        this.copyToClipboardFallback(text);
       }
+    } else {
+      this.copyToClipboardFallback(text);
     } 
+  }
+  /**
+   * @param {string} text
+   */
+  copyToClipboardFallback(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 
   get checkForMoreLabel() {
