@@ -211,6 +211,13 @@ export default class QuanticSearchBox extends LightningElement {
    * @param {KeyboardEvent & {target: {value : string}}} event
    */
   onKeyup(event) {
+    if (this.input.value === '') {
+      this.clearButton.classList.remove('slds-visible');
+      this.clearButton.classList.add('slds-hidden');
+    } else {
+      this.clearButton.classList.remove('slds-hidden');
+      this.clearButton.classList.add('slds-visible');
+    }
     if (event.which === ENTER) {
       this.handleEnter();
     } else if (this.areSuggestionsShown() && event.which === ARROWUP) {
@@ -235,6 +242,8 @@ export default class QuanticSearchBox extends LightningElement {
 
   clearInput() {
     this.input.value = '';
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
     this.searchBox.updateText(this.input.value);
     this.input.focus();
   }

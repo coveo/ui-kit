@@ -6,7 +6,7 @@
           class="slds-p-bottom_small facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
-          icon-name={facetIconName}
+          icon-name={collapseIconName}
           alternative-text="Collapse/show facet"
           variant="bare"
         >
@@ -26,7 +26,7 @@
               </lightning-button>
             </template>
             <template for:each={values} for:item="v">
-              <c-quantic-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked} variant="date"></c-quantic-facet-value>
+              <c-quantic-date-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked}></c-quantic-date-facet-value>
             </template>
           </ul>
         </template>
