@@ -35,16 +35,16 @@
             <template for:each={values} for:item="v">
               <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
             </template>
-            <lightning-button-group class="facet__show">
+            <div class="facet__show">
               <template if:true={canShowLess}>
-                <lightning-button variant="base" label={labels.showLess} title={labels.showLess} icon-name="utility:dash"
-                  class="slds-m-left_x-small facet__show_less" onclick={showLess}></lightning-button>
+                <button variant="base" label={labels.showLess}
+                  class="slds-m-left_x-small facet__show_less" onclick={showLess}>- {labels.showLess}</button>
               </template>
               <template if:true={canShowMore}>
-                <lightning-button variant="base" label={labels.showMore} title={labels.showMore} icon-name="utility:add"
-                  class="slds-m-left_x-small facet__show_more" onclick={showMore}></lightning-button>
+                <button variant="base" label={labels.showMore}
+                  class="slds-m-left_x-small facet__show_more" onclick={showMore}>+ {labels.showMore}</button>
               </template>
-            </lightning-button-group>
+            </div>
           </template>
 
           <template if:true={isFacetSearchActive}>

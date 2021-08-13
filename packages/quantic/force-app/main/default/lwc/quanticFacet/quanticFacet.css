@@ -18,6 +18,19 @@
     flex-direction: column;
 }
 
-.facet__show_less, .facet__show_more {
+.facet__show_less {
     font-size: 12px;
+    outline: 0;
+    background-color: white;
+    width: 40%;
+    
+    color: var(--sds-c-color-gray-8, #8E959D);
+}
+
+.facet__show_more {
+    font-size: 12px;
+    outline: 0;
+    background-color: white;
+    width: 40%;
+    color: #005FB2;
 }
