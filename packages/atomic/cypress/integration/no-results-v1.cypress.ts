@@ -36,6 +36,15 @@ describe('No Results Test Suites', () => {
     cy.get(tag).shadow().get('button').should('not.exist');
   });
 
+  it('should not be vulnerable to XSS injections in the query parameter', () => {
+    env
+      ?.withHash(
+        `document.querySelector('${tag}').setAttribute('xss', 'true');`
+      )
+      .init();
+    cy.get(tag).should('not.have.attr', 'xss');
+  });
+
   function submitNoResultsSearch() {
     generateAliasForSearchBox();
     cy.get('@searchBoxFirstDiv')
