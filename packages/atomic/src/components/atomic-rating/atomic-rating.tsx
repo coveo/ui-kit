@@ -11,14 +11,14 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
   const width =
     ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() +
     '%';
-  const iconSize = props.iconSize ?? 0.75;
+  const iconSize = `${props.iconSize ?? 0.75}rem`;
 
   const renderIcon = (active: boolean) => {
     return (
       <atomic-icon
         icon={props.icon}
         class={active ? 'icon-active' : 'icon-inactive'}
-        style={{width: `${iconSize}rem`, height: `${iconSize}rem`}}
+        style={{width: iconSize, height: iconSize}}
       ></atomic-icon>
     );
   };
