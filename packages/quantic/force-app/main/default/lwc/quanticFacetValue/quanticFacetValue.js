@@ -31,7 +31,7 @@ export default class QuanticFacetValue extends LightningElement {
     }
   }
 
-  get isDefaultFacet() {
+  get isStandardFacet() {
     return this.variant === this.Variants.StandardFacet;
   }
 
@@ -43,7 +43,7 @@ export default class QuanticFacetValue extends LightningElement {
     return this.variant === this.Variants.DateFacet;
   }
 
-  getFormattedFacetValue() {
+  get formattedFacetValue() {
     if (this.isDateFacet) {
       return `${this.start} - ${this.end}`;
     } else if (this.isNumericFacet) {
