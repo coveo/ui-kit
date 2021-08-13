@@ -1,5 +1,9 @@
 import {LightningElement, track, api} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 export default class QuanticDateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
@@ -13,11 +17,21 @@ export default class QuanticDateFacet extends LightningElement {
   @api label;
   /** @type {string} */
   @api engineId;
+  /** @type {number} */
+  @api numberOfValues = 8;
 
   /** @type {import("coveo").DateFacet} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {boolean} */
+  isCollapsed = false;
+  /** @type {string} */
+  facetIconName = 'utility:dash';
+
+  labels = {
+    clear,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -52,14 +66,20 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values.map(v => ({
-      ...v,
-      checked: v.state === 'selected'
-    })) || [];
+    return (
+      this.state.values.map((v) => ({
+        ...v,
+        checked: v.state === 'selected',
+      })) || []
+    );
   }
 
   get hasValues() {
     return this.values.length !== 0;
+  }
+
+  get hasActiveValues() {
+    return this.state.hasActiveValues;
   }
 
   /**
@@ -67,5 +87,14 @@ export default class QuanticDateFacet extends LightningElement {
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
+  }
+
+  clearSelections() {
+    this.facet.deselectAll();
+  }
+
+  toggleFacetVisibility() {
+    this.facetIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.isCollapsed = !this.isCollapsed;
   }
 }
