@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.61.0...@coveo/atomic@0.62.0) (2021-08-13)
+
+
+### Features
+
+* **atomic:** added atomic-result-rating component ([#1080](https://github.com/coveo/ui-kit/issues/1080)) ([5d3332f](https://github.com/coveo/ui-kit/commit/5d3332fde519b223ad7b9fcfb20cfcb8b1edbf7b))
+* **atomic:** changed appearance of quickview button ([#1087](https://github.com/coveo/ui-kit/issues/1087)) ([94cde86](https://github.com/coveo/ui-kit/commit/94cde86194d6d159ef2fc9bbdb9dc0ef59c4b187))
+* **atomic:** gave opinionated style to visual section ([2b77bf6](https://github.com/coveo/ui-kit/commit/2b77bf6cc4cfca6cdad2186398a55e18cad895d2))
+
+
+
+
+
+# [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.2...@coveo/atomic@0.61.0) (2021-08-13)
+
+
+### Bug Fixes
+
+* **atomic:** made table refresh when sort or filters are changed ([#1082](https://github.com/coveo/ui-kit/issues/1082)) ([469a4b0](https://github.com/coveo/ui-kit/commit/469a4b0f138a313d3fd091dc2ad271502f074ad0))
+
+
+### Features
+
+* **atomic:** limited height of excerpt section ([#1089](https://github.com/coveo/ui-kit/issues/1089)) ([9280dc7](https://github.com/coveo/ui-kit/commit/9280dc7ed92479c179e0080312e4fb9d57bab831))
+
+
+
+
+
+## [0.60.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.1...@coveo/atomic@0.60.2) (2021-08-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.60.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.0...@coveo/atomic@0.60.1) (2021-08-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.60.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.2...@coveo/atomic@0.60.0) (2021-08-12)
+
+
+### Features
+
+* **atomic:** added padding to table result list ([#1083](https://github.com/coveo/ui-kit/issues/1083)) ([7e64b14](https://github.com/coveo/ui-kit/commit/7e64b14ddc3459ad1b0e0030416312e12a7771ca))
+
+
+
+
+
 ## [0.59.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.1...@coveo/atomic@0.59.2) (2021-08-12)
 
 **Note:** Version bump only for package @coveo/atomic
