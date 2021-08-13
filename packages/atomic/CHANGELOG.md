@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.60.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.1...@coveo/atomic@0.60.2) (2021-08-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.60.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.0...@coveo/atomic@0.60.1) (2021-08-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.60.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.2...@coveo/atomic@0.60.0) (2021-08-12)
+
+
+### Features
+
+* **atomic:** added padding to table result list ([#1083](https://github.com/coveo/ui-kit/issues/1083)) ([7e64b14](https://github.com/coveo/ui-kit/commit/7e64b14ddc3459ad1b0e0030416312e12a7771ca))
+
+
+
+
+
 ## [0.59.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.59.1...@coveo/atomic@0.59.2) (2021-08-12)
 
 **Note:** Version bump only for package @coveo/atomic
