@@ -6,41 +6,40 @@ export default class QuanticFacetValue extends LightningElement {
   /** @type {boolean} */
   @api isChecked;
   /** @type {string} */
-  @api variant = 'default';
-  /** @type {boolean} */
-  isDefaultFacet = false;
-  /** @type {boolean} */
-  isNumericFacet = false;
-  /** @type {boolean} */
-  isDateFacet = false;
-
+  @api variant;
   /** @type {string} */
   @api start;
   /** @type {string} */
   @api end;
 
+  Variants = {
+    NumericFacet: 'numeric',
+    DateFacet: 'date',
+  };
+
   connectedCallback() {
-    switch (this.variant) {
-      case 'numeric': {
-        this.isNumericFacet = true;
-        break;
-      }
-      case 'date': {
-        this.isDateFacet = true;
-        // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
-        this.start = new Intl.DateTimeFormat(LOCALE).format(
-          new Date(this.item.start)
-        );
-        // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
-        this.end = new Intl.DateTimeFormat(LOCALE).format(
-          new Date(this.item.end)
-        );
-        break;
-      }
-      default: {
-        this.isDefaultFacet = true;
-      }
+    if (this.isDateFacet) {
+      // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
+      this.start = new Intl.DateTimeFormat(LOCALE).format(
+        new Date(this.item.start)
+      );
+      // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
+      this.end = new Intl.DateTimeFormat(LOCALE).format(
+        new Date(this.item.end)
+      );
     }
+  }
+
+  get isDefaultFacet() {
+    return !this.variant;
+  }
+
+  get isNumericFacet() {
+    return this.variant === this.Variants.NumericFacet;
+  }
+
+  get isDateFacet() {
+    return this.variant === this.Variants.DateFacet;
   }
 
   /**
