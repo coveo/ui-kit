@@ -271,6 +271,22 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.collapseSmartSnippetSuggestion, {documentId});
     }
 
+    public logRecentQueryClick() {
+        return this.logSearchEvent(SearchPageEvents.recentQueryClick);
+    }
+
+    public logClearRecentQueries() {
+        return this.logCustomEvent(SearchPageEvents.clearRecentQueries);
+    }
+
+    public logRecentlyClickedDocumentClick(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.logCustomEvent(SearchPageEvents.recentlyClickedDocumentClick, {info, identifier});
+    }
+
+    public logClearRecentlyClickedDocuments() {
+        return this.logCustomEvent(SearchPageEvents.clearRecentlyClickedDocuments);
+    }
+
     public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
