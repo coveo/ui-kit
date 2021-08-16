@@ -43,11 +43,6 @@ export class AtomicResultMultiText implements InitializableComponent {
   @Prop() public field!: string;
 
   /**
-   * If present, will attempt to split the field into multiple values using wherever this character is encountered.
-   */
-  @Prop() public delimitingCharacter?: string;
-
-  /**
    * The maximum number of field values to display.
    * If there are more values than the maximum that was set here, the last value displayed will be "# more...".
    */
@@ -71,9 +66,7 @@ export class AtomicResultMultiText implements InitializableComponent {
       return [];
     }
 
-    return this.delimitingCharacter
-      ? value.split(this.delimitingCharacter)
-      : [value];
+    return [value];
   }
 
   private get facetSelectedValues() {

@@ -562,10 +562,6 @@ export namespace Components {
     }
     interface AtomicResultMultiValueText {
         /**
-          * If present, will attempt to split the field into multiple values using wherever this character is encountered.
-         */
-        "delimitingCharacter"?: string;
-        /**
           * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
@@ -1928,10 +1924,6 @@ declare namespace LocalJSX {
         "image"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
-        /**
-          * If present, will attempt to split the field into multiple values using wherever this character is encountered.
-         */
-        "delimitingCharacter"?: string;
         /**
           * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
