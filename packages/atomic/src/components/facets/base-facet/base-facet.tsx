@@ -39,10 +39,10 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
       onClick={() => props.controller.closeModal()}
       class="ml-2 lg:hidden"
     >
-      <div
-        class="h-5 w-5 text-on-background fill-current"
-        innerHTML={CloseIcon}
-      />
+      <atomic-icon
+        class="h-5 w-5 text-on-background"
+        icon={CloseIcon}
+      ></atomic-icon>
     </button>
   ) : null;
 

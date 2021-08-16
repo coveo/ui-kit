@@ -21,7 +21,7 @@ import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-fac
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
+import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 
@@ -95,7 +95,11 @@ export class AtomicRatingRangeFacet
    */
   @Prop() public minValueInIndex = 1;
   /**
-   * The icon used to display the rating.
+   * The SVG icon to use to display the rating.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
    */
   @Prop() public icon = Star;
 
@@ -192,11 +196,11 @@ export class AtomicRatingRangeFacet
         i18n={this.bindings.i18n}
         onClick={onClick}
       >
-        <FacetValueIconRating
+        <Rating
           numberOfTotalIcons={this.maxValueInIndex}
           numberOfActiveIcons={facetValue.start}
           icon={this.icon}
-        ></FacetValueIconRating>
+        ></Rating>
         {this.renderLabelText(facetValue)}
       </FacetValueLink>
     );

@@ -201,13 +201,13 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onBlur() {
-    this.clearButton.classList.remove('slds-visible');
-    this.clearButton.classList.add('slds-hidden');
     this.hideSuggestions();
   }
 
   clearInput() {
     this.input.value = '';
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
     this.searchBox.updateText(this.input.value);
     this.input.focus();
   }

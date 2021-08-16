@@ -1,4 +1,4 @@
-.row-result-desktop {
+@define-mixin row-result-desktop {
   &.image-large.density-compact atomic-result-section-visual {
     width: 10.25rem;
     height: 10.25rem;
@@ -26,13 +26,18 @@
     }
 
     atomic-result-section-excerpt {
+      margin-top: 1.75rem;
       font-size: 1rem;
       line-height: 1.5rem;
+      max-height: 4.5rem;
+      @mixin line-clamp 3;
     }
 
-    atomic-result-section-bottom-metadata,
-    atomic-result-section-excerpt {
-      margin-top: 1.75rem;
+    atomic-result-section-bottom-metadata {
+      margin-top: 1.25rem;
+      font-size: 0.75rem;
+      line-height: 2rem;
+      max-height: 4rem;
     }
   }
 
@@ -57,13 +62,18 @@
     }
 
     atomic-result-section-excerpt {
+      margin-top: 1.25rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
+      max-height: 2.5rem;
+      @mixin line-clamp 2;
     }
 
-    atomic-result-section-bottom-metadata,
-    atomic-result-section-excerpt {
-      margin-top: 1.25rem;
+    atomic-result-section-bottom-metadata {
+      margin-top: 0.875rem;
+      font-size: 0.75rem;
+      line-height: 1.75rem;
+      max-height: 3.5rem;
     }
   }
 
@@ -88,13 +98,18 @@
     }
 
     atomic-result-section-excerpt {
+      margin-top: 1rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
+      max-height: 1.25rem;
+      @mixin line-clamp 1;
     }
 
-    atomic-result-section-bottom-metadata,
-    atomic-result-section-excerpt {
-      margin-top: 1rem;
+    atomic-result-section-bottom-metadata {
+      margin-top: 0.6875rem;
+      font-size: 0.75rem;
+      line-height: 1.625rem;
+      max-height: 3.25rem;
     }
   }
 
@@ -192,10 +207,5 @@
     font-size: 1.5rem;
     line-height: 2rem;
     margin-top: 0.5rem;
-  }
-
-  atomic-result-section-bottom-metadata {
-    font-size: 0.75rem;
-    line-height: 1rem;
   }
 }

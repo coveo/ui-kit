@@ -1,24 +1,25 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
 
-interface FacetValueIconRatingProps {
+interface RatingProps {
   numberOfTotalIcons: number;
   numberOfActiveIcons: number;
   icon: string;
+  iconSize?: number;
 }
 
-export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps> = (
-  props
-) => {
+export const Rating: FunctionalComponent<RatingProps> = (props) => {
   const width =
     ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() +
     '%';
+  const iconSize = `${props.iconSize ?? 0.75}rem`;
 
   const renderIcon = (active: boolean) => {
     return (
-      <div
-        innerHTML={props.icon}
+      <atomic-icon
+        icon={props.icon}
         class={active ? 'icon-active' : 'icon-inactive'}
-      ></div>
+        style={{width: iconSize, height: iconSize}}
+      ></atomic-icon>
     );
   };
 
@@ -39,7 +40,7 @@ export const FacetValueIconRating: FunctionalComponent<FacetValueIconRatingProps
   };
 
   return (
-    <div class="relative left-0 top-0" part="value-rating">
+    <div class="inline-block relative left-0 top-0" part="value-rating">
       <div class="relative left-0 top-0 z-0 flex items-center gap-0.5 pt-0.5 pb-0.5">
         {emptyIconDisplay()}
       </div>
