@@ -40,3 +40,9 @@ export const registerFacetToStore = <T extends FacetType, U extends string>(
   store.state[facetType][data.facetId] = data;
   store.state.facetElements.push(data.element);
 };
+
+export const getFacetElements = (store: ObservableMap<AtomicStore>) => {
+  return store.state.facetElements.filter((element) =>
+    document.contains(element)
+  );
+};

@@ -6,6 +6,9 @@ import {
   buildQuerySummary,
   QuerySummary,
   QuerySummaryState,
+  FacetManager,
+  FacetManagerState,
+  buildFacetManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -15,6 +18,7 @@ import {
 } from '../../utils/initialization-utils';
 import {createRipple} from '../../utils/ripple';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import {getFacetElements} from '../../utils/store';
 
 @Component({
   tag: 'atomic-refine-modal',
@@ -24,6 +28,7 @@ import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
+  private facetManager!: FacetManager;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -33,6 +38,9 @@ export class AtomicRefineModal implements InitializableComponent {
   @BindStateToController('breadcrumbManager')
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
+  @BindStateToController('facetManager')
+  @State()
+  public facetManagerState!: FacetManagerState;
   @State() public error!: Error;
 
   @Prop({reflect: true, mutable: true}) enabled!: boolean;
@@ -53,13 +61,21 @@ export class AtomicRefineModal implements InitializableComponent {
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
   }
 
   private duplicateFacetElements() {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
-    // TODO: order facets with facet manager
-    this.bindings.store.get('facetElements').forEach((facetElement) => {
+
+    const facetElementsPayload = getFacetElements(
+      this.bindings.store
+    ).map((f) => ({facetId: f.getAttribute('facet-id')!, payload: f}));
+    const sortedFacetsElements = this.facetManager
+      .sort(facetElementsPayload)
+      .map((f) => f.payload);
+
+    sortedFacetsElements.forEach((facetElement) => {
       const clone = facetElement.cloneNode(false) as HTMLElement;
       clone.style.marginBottom =
         'var(--atomic-refine-modal-facet-margin, 20px)';
