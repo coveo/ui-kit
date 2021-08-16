@@ -23,7 +23,7 @@ const registerRecentQueriesPayloadDefinition = {
  * @param payload (RegisterRecentQueriesCreatorPayload) The initial state and options.
  */
 export const registerRecentQueries = createAction(
-  'recentQueries/registerNumberOfResults',
+  'recentQueries/registerRecentQueries',
   (payload: RegisterRecentQueriesCreatorPayload) =>
     validatePayload(payload, registerRecentQueriesPayloadDefinition)
 );
