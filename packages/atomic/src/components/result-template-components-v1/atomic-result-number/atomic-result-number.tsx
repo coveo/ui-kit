@@ -12,6 +12,8 @@ import {
 
 /**
  * The `atomic-result-number` component renders the value of a number result field.
+ *
+ * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
  */
 @Component({
   tag: 'atomic-result-number-v1',
