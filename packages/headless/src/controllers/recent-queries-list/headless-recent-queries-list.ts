@@ -20,16 +20,17 @@ export interface RecentQueriesListProps {
   /**
    * The initial state that should be applied to the `RecentQueriesList` controller.
    */
-  initialState: RecentQueriesListInitialState;
+  initialState?: RecentQueriesListInitialState;
   /**
    * The configuration options that should be applied to the `RecentQueriesList` controller.
    */
-  options: RecentQueriesListOptions;
+  options?: RecentQueriesListOptions;
 }
 
 export interface RecentQueriesListInitialState {
   /**
    * The list of recent queries
+   * @defaultValue `[]`
    */
   queries: string[];
 }
@@ -41,12 +42,13 @@ const initialStateSchema = new Schema<Required<RecentQueriesListInitialState>>({
 export interface RecentQueriesListOptions {
   /**
    * The maximum number of queries to retain in the list.
+   * @defaultValue `10`
    */
   maxQueries: number;
 }
 
 const optionsSchema = new Schema<Required<RecentQueriesListOptions>>({
-  maxQueries: new NumberValue({required: true, default: 10}),
+  maxQueries: new NumberValue({required: false}),
 });
 
 /**
@@ -91,6 +93,7 @@ export function validateRecentQueriesProps(
  * Creates a `RecentQueriesList` controller instance.
  *
  * @param engine - The headless engine.
+ * @param props - The configuration `RecentQueriesList` properties.
  * @returns A `RecentQueriesList` controller instance.
  * */
 export function buildRecentQueriesList(
@@ -106,8 +109,8 @@ export function buildRecentQueriesList(
   validateRecentQueriesProps(engine, props);
   dispatch(
     registerRecentQueries({
-      queries: props.initialState.queries,
-      maxQueries: props.options.maxQueries,
+      queries: props.initialState?.queries ?? [],
+      maxQueries: props.options?.maxQueries ?? 10,
     })
   );
 
@@ -124,7 +127,8 @@ export function buildRecentQueriesList(
     },
 
     clear() {
-      engine.dispatch(clearRecentQueries());
+      dispatch(logClearRecentQueries());
+      dispatch(clearRecentQueries());
     },
 
     executeRecentQuery(value: string) {
