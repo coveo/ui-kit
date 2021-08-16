@@ -168,8 +168,11 @@ export default class QuanticSearchBox extends LightningElement {
     }
   }
 
-  onSubmit() {
-    this.searchBox.updateText(this.input.value);
+  onSubmit(event) {
+    event.stopPropagation();
+    if(this.searchBox.state.value !== this.input.value) {
+      this.searchBox.updateText(this.input.value);
+    }
     this.searchBox.submit();
     this.input.blur();
   }
