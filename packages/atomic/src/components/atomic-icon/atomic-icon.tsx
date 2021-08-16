@@ -1,6 +1,5 @@
 import {Component, Element, getElement, h, Host, Prop} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
-import {sanitize} from 'dompurify';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -47,12 +46,7 @@ export class AtomicIcon {
   private async getIcon() {
     const url = parseAssetURL(this.icon);
     const svg = url ? await this.fetchIcon(url) : this.icon;
-    const sanitizedSvg = svg
-      ? sanitize(svg, {
-          USE_PROFILES: {svg: true, svgFilters: true},
-        })
-      : null;
-    return sanitizedSvg;
+    return svg;
   }
 
   public async componentWillRender() {

@@ -40,20 +40,4 @@ describe('Icon Test Suites', () => {
       shouldRenderIcon('mail');
     });
   });
-
-  it('should not be vulnerable to XSS injections in an SVG string', () => {
-    setupIcon(
-      `<img src="" onerror="document.querySelector('${IconSelectors.icon}').setAttribute('xss', 'true');"/>`
-    );
-    cy.get(IconSelectors.icon).should('not.have.attr', 'xss');
-  });
-
-  it('should not be vulnerable to XSS injections from a URL', () => {
-    const url = 'https://some-website-with-icons.com/my-icon.svg';
-    cy.intercept(url, {
-      body: `<img src="" onerror="document.querySelector('${IconSelectors.icon}').setAttribute('xss', 'true');"/>`,
-    });
-    setupIcon(url);
-    cy.get(IconSelectors.icon).should('not.have.attr', 'xss');
-  });
 });
