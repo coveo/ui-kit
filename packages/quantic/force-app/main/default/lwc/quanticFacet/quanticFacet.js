@@ -1,9 +1,9 @@
-import { LightningElement, track, api } from 'lwc';
+import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import { I18nUtils } from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 
 import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
@@ -66,9 +66,9 @@ export default class QuanticFacet extends LightningElement {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriterion,
-      facetSearch: { numberOfValues: this.numberOfValues },
+      facetSearch: {numberOfValues: this.numberOfValues},
     };
-    this.facet = CoveoHeadless.buildFacet(engine, { options });
+    this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
