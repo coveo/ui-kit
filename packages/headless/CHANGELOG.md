@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.14.0...@coveo/headless@1.14.1) (2021-08-10)
+
+
+### Bug Fixes
+
+* **headless:** various fixes for query suggest "q" param updates ([#1065](https://github.com/coveo/ui-kit/issues/1065)) ([e9b43f6](https://github.com/coveo/ui-kit/commit/e9b43f6d40ff4dfa47ae5b99ba0e31b803edc3aa))
+
+
+
+
+
+# [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.13.1...@coveo/headless@1.14.0) (2021-08-10)
+
+
+### Features
+
+* **headless:** allow relative redirection urls, communicate state using localstorage  ([#1042](https://github.com/coveo/ui-kit/issues/1042)) ([9d8d0cb](https://github.com/coveo/ui-kit/commit/9d8d0cb922f0abf57b44bbe70e36202c168bffd3))
+
+
+
+
+
+## [1.13.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.13.0...@coveo/headless@1.13.1) (2021-08-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.13.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.12.0...@coveo/headless@1.13.0) (2021-08-05)
+
+
+### Features
+
+* **atomic:** add outline color & ring color ([#1057](https://github.com/coveo/ui-kit/issues/1057)) ([738c3ba](https://github.com/coveo/ui-kit/commit/738c3ba81b2b38cee253dc8cbbf491aceb2bcb97))
+
+
+
+
+
+# [1.12.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.11.4...@coveo/headless@1.12.0) (2021-08-02)
+
+
+### Features
+
+* **headless:** add isLoadingSuggestions to search box ([#1032](https://github.com/coveo/ui-kit/issues/1032)) ([5c5c20b](https://github.com/coveo/ui-kit/commit/5c5c20b9a57b32647f3fd2c15461a7a4aeee4513))
+
+
+
+
+
+## [1.11.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.11.3...@coveo/headless@1.11.4) (2021-07-30)
+
+
+### Bug Fixes
+
+* **headless:** clear response/results when search contains an error ([#1024](https://github.com/coveo/ui-kit/issues/1024)) ([33af76e](https://github.com/coveo/ui-kit/commit/33af76ef510ede565279098d35f9e92ee2f4c9c1))
+
+
+
+
+
 ## [1.11.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.11.2...@coveo/headless@1.11.3) (2021-07-29)
 
 

@@ -44,7 +44,7 @@ describe('Query Summary Test Suites', () => {
       cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
       injectComponent(component() + searchBox);
       cy.wait(wait);
-      contentShouldMatch(/^No results for gahaiusdhgaiuewjfsf$/);
+      contentShouldMatch(/^We couldn't find anything for gahaiusdhgaiuewjfsf$/);
     });
 
     it('with no query yielding no results', () => {
@@ -58,7 +58,9 @@ describe('Query Summary Test Suites', () => {
       cy.visit(buildTestUrl('q=<script>alert("hello");</script>'));
       injectComponent(component() + searchBox);
       cy.wait(wait);
-      contentShouldMatch('No results for <script>alert("hello");</script>');
+      contentShouldMatch(
+        'We couldn\'t find anything for <script>alert("hello");</script>'
+      );
     });
   });
 

@@ -1,6 +1,8 @@
+const plugin = require('tailwindcss/plugin');
 const isDevWatch = process.argv.indexOf('--dev') > -1;
 
 module.exports = {
+  // mode: 'jit', TODO: Enable JIT mode when https://github.com/ionic-team/stencil-postcss/pull/35 is resolved
   purge: {
     content: ['./src/**/*.tsx', './src/**/*.css'],
     enabled: !isDevWatch,
@@ -14,6 +16,7 @@ module.exports = {
         'primary-light': 'var(--atomic-primary-light)',
         'primary-dark': 'var(--atomic-primary-dark)',
         'on-primary': 'var(--atomic-on-primary)',
+        'ring-primary': 'var(--atomic-ring-primary)',
         // Neutral
         neutral: 'var(--atomic-neutral)',
         'neutral-light': 'var(--atomic-neutral-light)',
@@ -38,6 +41,10 @@ module.exports = {
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
       },
+      screens: {
+        'desktop-only': {min: '768px'},
+        'mobile-only': {max: '767px'},
+      },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
       },
@@ -51,8 +58,20 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['visited'],
+      textColor: ['visited', 'group-focus'],
+      backgroundColor: ['group-focus'],
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({addUtilities, theme}) {
+      addUtilities(
+        {
+          '.outline-color': {
+            outlineColor: theme('colors.primary-light'),
+          },
+        },
+        {variants: ['focus']}
+      );
+    }),
+  ],
 };

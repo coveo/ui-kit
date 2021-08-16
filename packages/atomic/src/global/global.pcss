@@ -1,5 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/utilities';
+@import './ripple.pcss';
+@import './polyfills.pcss';
 
 :host {
   display: block;
@@ -9,10 +11,6 @@
 @layer utilities {
   .empty\:border-none:empty {
     border: none;
-  }
-
-  .ellipsed {
-    @apply whitespace-nowrap overflow-ellipsis overflow-hidden;
   }
 
   .with-parentheses::before {
@@ -25,5 +23,22 @@
 
   .link {
     @apply text-primary hover:text-primary-light hover:underline focus:text-primary-light focus:underline;
+  }
+
+  .quotations::before,
+  .quotations::after {
+    content: '"';
+  }
+
+  .input-primary {
+    @apply border border-neutral bg-background rounded  hover:border-primary-light focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring-primary;
+  }
+
+  .btn-primary {
+    @apply rounded border bg-primary hover:bg-primary-light focus:bg-primary-light focus:outline-none text-on-primary;
+  }
+
+  .btn-outline-primary {
+    @apply rounded border border-neutral bg-background hover:border-primary-light focus:border-primary focus:outline-none text-primary hover:text-primary-light;
   }
 }

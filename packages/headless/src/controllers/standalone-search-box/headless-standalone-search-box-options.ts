@@ -19,6 +19,5 @@ export const standaloneSearchBoxSchema = new Schema<
   redirectionUrl: new StringValue({
     required: true,
     emptyAllowed: false,
-    url: true,
   }),
 });

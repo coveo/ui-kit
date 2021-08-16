@@ -6,6 +6,7 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
+import {standaloneSearchBoxStorageKey} from './standalone-search-box-storage-key';
 
 export class StandaloneSearchBox extends Component<
   {},
@@ -19,7 +20,7 @@ export class StandaloneSearchBox extends Component<
 
   componentDidMount() {
     this.controller = buildStandaloneSearchBox(this.context.engine!, {
-      options: {redirectionUrl: 'https://mywebsite.com/search'},
+      options: {redirectionUrl: '/search-page'},
     });
     this.updateState();
 
@@ -31,10 +32,15 @@ export class StandaloneSearchBox extends Component<
   }
 
   componentDidUpdate() {
-    if (!this.state?.redirectTo) {
+    const {redirectTo, value, analytics} = this.state;
+
+    if (!redirectTo) {
       return;
     }
-    window.location.href = this.state.redirectTo;
+
+    const data = JSON.stringify({value, analytics});
+    localStorage.setItem(standaloneSearchBoxStorageKey, data);
+    window.location.href = redirectTo;
   }
 
   private updateState() {

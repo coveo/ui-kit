@@ -3,6 +3,7 @@ import ArrowTopIcon from 'coveo-styleguide/resources/icons/svg/arrow-top-rounded
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
+import {createRipple} from '../../../utils/ripple';
 
 export const FacetHeader: FunctionalComponent<{
   i18n: i18n;
@@ -10,7 +11,7 @@ export const FacetHeader: FunctionalComponent<{
   numberOfSelectedValues: number;
   isCollapsed: boolean;
   onToggleCollapse(): void;
-  onClearFilters(): void;
+  onClearFilters?(): void;
 }> = (props) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});
@@ -26,30 +27,32 @@ export const FacetHeader: FunctionalComponent<{
   return [
     <button
       part="label-button"
-      class="flex justify-between w-full py-1 text-on-background text-lg hover:text-primary"
+      class="flex justify-between w-full py-1 px-2 text-on-background text-lg hover:text-primary focus:text-primary focus:outline-color"
       title={props.isCollapsed ? expandFacet : collapseFacet}
+      onMouseDown={(e) => createRipple(e, {color: 'neutral-light'})}
       onClick={() => props.onToggleCollapse()}
       aria-expanded={(!props.isCollapsed).toString()}
     >
-      <span class="ellipsed">{label}</span>
-      <span
+      <span class="truncate">{label}</span>
+      <atomic-icon
         part="label-button-icon"
-        class="fill-current w-3 h-2 self-center flex-shrink-0 ml-4"
-        innerHTML={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
-      ></span>
+        class="w-3 self-center flex-shrink-0 ml-4"
+        icon={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
+      ></atomic-icon>
     </button>,
-    props.numberOfSelectedValues > 0 && (
+    props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
-        class="flex items-baseline w-full p-1 text-sm link"
+        class="flex items-baseline max-w-full p-2 text-sm text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color"
         title={clearFiltersForFacet}
-        onClick={() => props.onClearFilters()}
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
+        onClick={() => props.onClearFilters!()}
       >
-        <span
+        <atomic-icon
           part="clear-button-icon"
-          class="fill-current w-2 h-2 mr-1"
-          innerHTML={CloseIcon}
-        ></span>
+          class="w-2 h-2 mr-1"
+          icon={CloseIcon}
+        ></atomic-icon>
         <span>{clearFilters}</span>
       </button>
     ),

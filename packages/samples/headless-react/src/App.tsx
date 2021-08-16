@@ -42,6 +42,9 @@ function App(props: SearchPageProps) {
           <Route path="/about">
             <AboutPage />
           </Route>
+          <Route path="/search-page">
+            <SearchPage {...props} />
+          </Route>
           <Route path="/">
             <SearchPage {...props} />
           </Route>

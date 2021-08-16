@@ -4,9 +4,10 @@
   --atomic-primary-light: #399ffe;
   --atomic-primary-dark: #1a50ad;
   --atomic-on-primary: #ffffff;
+  --atomic-ring-primary: rgba(19, 114, 236, 0.5);
 
   /* Neutral colors */
-  --atomic-neutral-dark: #8e959d;
+  --atomic-neutral-dark: #626971;
   --atomic-neutral: #e5e8e8;
   --atomic-neutral-light: #f6f7f9;
 
@@ -33,5 +34,8 @@
   --atomic-text-lg: 1rem; /* 16px */
 
   /* Others */
+  /* TODO: Remove from v1 */
   --atomic-icon-size: 30px;
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-xl: 1rem;
 }

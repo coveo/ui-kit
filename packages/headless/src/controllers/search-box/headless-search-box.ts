@@ -109,6 +109,11 @@ export interface SearchBoxState {
    * Determines if a search is in progress.
    */
   isLoading: boolean;
+
+  /**
+   * Determines if a query suggest request is in progress.
+   */
+  isLoadingSuggestions: boolean;
 }
 
 export interface Suggestion {
@@ -151,8 +156,7 @@ export function buildSearchBox(
   };
 
   validateOptions(engine, searchBoxOptionsSchema, options, 'buildSearchBox');
-
-  dispatch(registerQuerySetQuery({id, query: ''}));
+  dispatch(registerQuerySetQuery({id, query: engine.state.query.q}));
   dispatch(
     registerQuerySuggest({
       id,
@@ -207,16 +211,20 @@ export function buildSearchBox(
 
     get state() {
       const state = getState();
-      const querySuggestState = state.querySuggest[options.id];
+      const querySuggest = state.querySuggest[options.id];
       const suggestions = getSuggestions(
-        querySuggestState,
+        querySuggest,
         options.highlightOptions
       );
+      const isLoadingSuggestions = querySuggest
+        ? querySuggest.isLoading
+        : false;
 
       return {
         value: getValue(),
         suggestions,
         isLoading: state.search.isLoading,
+        isLoadingSuggestions,
       };
     },
   };

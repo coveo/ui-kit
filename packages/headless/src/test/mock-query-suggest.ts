@@ -11,6 +11,7 @@ export function buildMockQuerySuggest(
     completions: [],
     error: null,
     partialQueries: [],
+    isLoading: false,
     ...config,
   };
 }

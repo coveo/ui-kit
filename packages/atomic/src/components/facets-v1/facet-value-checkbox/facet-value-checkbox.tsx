@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {createRipple} from '../../../utils/ripple';
 import {randomID} from '../../../utils/utils';
 import {FacetValueProps} from '../facet-common';
 
@@ -12,16 +13,20 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
     value: props.displayValue,
     count: props.numberOfResults,
   });
+  let labelRef: HTMLLabelElement;
 
   return (
-    <li key={props.displayValue} class="flex items-center">
+    <li key={props.displayValue} class="relative flex items-center">
       <button
         id={id}
         role="checkbox"
         part="value-checkbox"
         onClick={() => props.onClick()}
+        onMouseDown={(e) =>
+          createRipple(e, {color: 'neutral', parent: labelRef})
+        }
         aria-checked={props.isSelected.toString()}
-        class={`value-checkbox flex justify-center rounded focus:outline-none focus:border-primary-light ${
+        class={`value-checkbox ${
           props.isSelected
             ? 'selected bg-primary'
             : 'border border-neutral-dark'
@@ -29,15 +34,13 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
         aria-label={ariaLabel}
       ></button>
       <label
+        ref={(ref) => (labelRef = ref!)}
         htmlFor={id}
         part="value-checkbox-label"
-        class="w-full flex items-center pl-2 py-2.5 text-on-background cursor-pointer ellipsed"
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
         {children}
-        <span
-          part="value-count"
-          class="ml-1.5 text-neutral-dark with-parentheses"
-        >
+        <span part="value-count" class="value-count">
           {count}
         </span>
       </label>

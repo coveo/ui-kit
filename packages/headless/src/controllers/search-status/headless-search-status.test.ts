@@ -32,17 +32,6 @@ describe('SearchStatus', () => {
     expect(buildSearchStatus(engine).state.hasResults).toBe(true);
   });
 
-  it('returns right state "hasResults" when there is an error', () => {
-    engine.state.search.results = [buildMockResult()];
-    engine.state.search.error = {
-      message: 'unknown',
-      statusCode: 0,
-      type: 'unknown',
-    };
-
-    expect(buildSearchStatus(engine).state.hasResults).toBe(false);
-  });
-
   it('returns right state "firstSearchExecuted"', () => {
     expect(buildSearchStatus(engine).state.firstSearchExecuted).toBe(false);
 

@@ -2,6 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import PlusIcon from 'coveo-styleguide/resources/icons/svg/plus.svg';
 import MinusIcon from 'coveo-styleguide/resources/icons/svg/minus.svg';
+import {createRipple} from '../../../utils/ripple';
 
 interface FacetShowMoreProps {
   label: string;
@@ -25,8 +26,8 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
     label,
   });
   const btnClasses =
-    'w-full flex items-baseline text-left py-2 text-sm mt-2 link';
-  const iconClasses = 'fill-current w-2 h-2 mr-1';
+    'flex items-baseline text-left p-2 text-sm mt-2 max-w-full text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color';
+  const iconClasses = 'w-2 h-2 mr-1';
   return [
     props.canShowLessValues && (
       <button
@@ -34,13 +35,14 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         class={`show-less ${btnClasses}`}
         aria-label={showLessFacetValues}
         onClick={() => props.onShowLess()}
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
-        <div
+        <atomic-icon
           part="show-more-less-icon"
           class={iconClasses}
-          innerHTML={MinusIcon}
-        ></div>
-        {showLess}
+          icon={MinusIcon}
+        ></atomic-icon>
+        <span class="truncate">{showLess}</span>
       </button>
     ),
     props.canShowMoreValues && (
@@ -49,13 +51,14 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         class={`show-more ${btnClasses}`}
         aria-label={showMoreFacetValues}
         onClick={() => props.onShowMore()}
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
-        <div
+        <atomic-icon
           part="show-more-less-icon"
           class={iconClasses}
-          innerHTML={PlusIcon}
-        ></div>
-        {showMore}
+          icon={PlusIcon}
+        ></atomic-icon>
+        <span class="truncate">{showMore}</span>
       </button>
     ),
   ];

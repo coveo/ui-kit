@@ -13,7 +13,7 @@ import {
   QuerySection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {PlanRequest} from '../../api/search/plan/plan-request';
+import {buildPlanRequest} from '../standalone-search-box-set/standalone-search-box-set-actions';
 
 export type RedirectionState = ConfigurationSection &
   QuerySection &
@@ -48,7 +48,6 @@ export const checkForRedirection = createAsyncThunk<
     validatePayload(payload, {
       defaultRedirectionUrl: new StringValue({
         emptyAllowed: false,
-        url: true,
       }),
     });
     const response = await searchAPIClient.plan(buildPlanRequest(getState()));
@@ -64,17 +63,3 @@ export const checkForRedirection = createAsyncThunk<
     return planRedirection || payload.defaultRedirectionUrl;
   }
 );
-
-export const buildPlanRequest = (state: RedirectionState): PlanRequest => {
-  return {
-    accessToken: state.configuration.accessToken,
-    organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
-    locale: state.configuration.search.locale,
-    timezone: state.configuration.search.timezone,
-    q: state.query.q,
-    ...(state.context && {context: state.context.contextValues}),
-    ...(state.pipeline && {pipeline: state.pipeline}),
-    ...(state.searchHub && {searchHub: state.searchHub}),
-  };
-};
