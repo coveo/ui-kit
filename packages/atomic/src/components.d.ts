@@ -572,7 +572,7 @@ export namespace Components {
         /**
           * The maximum number of field values to display. If there are more values than the maximum that was set here, the last value displayed will be "# more...".
          */
-        "maximumValues": number;
+        "maxValuesToDisplay": number;
     }
     interface AtomicResultNumber {
         /**
@@ -1939,7 +1939,7 @@ declare namespace LocalJSX {
         /**
           * The maximum number of field values to display. If there are more values than the maximum that was set here, the last value displayed will be "# more...".
          */
-        "maximumValues"?: number;
+        "maxValuesToDisplay"?: number;
     }
     interface AtomicResultNumber {
         /**

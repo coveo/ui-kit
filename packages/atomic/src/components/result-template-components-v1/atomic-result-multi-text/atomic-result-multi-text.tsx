@@ -51,7 +51,7 @@ export class AtomicResultMultiText implements InitializableComponent {
    * The maximum number of field values to display.
    * If there are more values than the maximum that was set here, the last value displayed will be "# more...".
    */
-  @Prop() public maximumValues = 3;
+  @Prop() public maxValuesToDisplay = 3;
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -130,9 +130,9 @@ export class AtomicResultMultiText implements InitializableComponent {
 
   private renderListItems() {
     const sortedValues = this.getSortedValues();
-    const shouldDisplayLabel = sortedValues.length > this.maximumValues;
+    const shouldDisplayLabel = sortedValues.length > this.maxValuesToDisplay;
     const numberOfValuesToDisplay = shouldDisplayLabel
-      ? this.maximumValues - 1
+      ? this.maxValuesToDisplay - 1
       : sortedValues.length;
 
     const nodes: VNode[] = [];
