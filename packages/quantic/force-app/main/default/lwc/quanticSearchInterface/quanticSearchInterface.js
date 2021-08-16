@@ -55,7 +55,9 @@ export default class QuanticSearchInterface extends LightningElement {
     window.removeEventListener('hashchange', this.onHashChange);
   }
  
-  /** @param {import("coveo").SearchEngine} engine */
+  /**
+   * @param {import("coveo").SearchEngine} engine
+  */
   initialize = (engine) => {
     if (!this.disableStateInUrl) {
       this.initUrlManager(engine);
