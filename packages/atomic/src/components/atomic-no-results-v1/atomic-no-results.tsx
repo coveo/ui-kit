@@ -16,6 +16,7 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import MagnifyingGlass from '../../images/magnifying-glass.svg';
+import escape from 'escape-html';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -70,7 +71,7 @@ export class AtomicNoResults {
     const content = this.querySummaryState.hasQuery
       ? this.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
-          query: this.wrapHighlight(this.querySummaryState.query),
+          query: this.wrapHighlight(escape(this.querySummaryState.query)),
         })
       : this.bindings.i18n.t('no-results');
     return (
