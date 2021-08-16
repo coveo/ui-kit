@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.63.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.62.0...@coveo/atomic@0.63.0) (2021-08-16)
+
+
+### Features
+
+* **atomic:** atomic load more results ([#1077](https://github.com/coveo/ui-kit/issues/1077)) ([67b6bbc](https://github.com/coveo/ui-kit/commit/67b6bbcd58a0c9bbf1b42722e5793e2022837dd8))
+
+
+
+
+
 # [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.61.0...@coveo/atomic@0.62.0) (2021-08-13)
 
 
