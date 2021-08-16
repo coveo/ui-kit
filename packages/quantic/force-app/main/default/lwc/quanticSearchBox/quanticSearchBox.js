@@ -109,7 +109,11 @@ export default class QuanticSearchBox extends LightningElement {
     this.state = this.searchBox.state;
   }
 
+  /**
+   * @returns {import('c/quanticSearchBoxSuggestionsList').default}
+   */
   get suggestionList() {
+    // @ts-ignore
     return this.template.querySelector('c-quantic-search-box-suggestions-list');
   }
 
