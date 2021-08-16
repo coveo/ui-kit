@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.61.0...@coveo/atomic@0.62.0) (2021-08-13)
+
+
+### Features
+
+* **atomic:** added atomic-result-rating component ([#1080](https://github.com/coveo/ui-kit/issues/1080)) ([5d3332f](https://github.com/coveo/ui-kit/commit/5d3332fde519b223ad7b9fcfb20cfcb8b1edbf7b))
+* **atomic:** changed appearance of quickview button ([#1087](https://github.com/coveo/ui-kit/issues/1087)) ([94cde86](https://github.com/coveo/ui-kit/commit/94cde86194d6d159ef2fc9bbdb9dc0ef59c4b187))
+* **atomic:** gave opinionated style to visual section ([2b77bf6](https://github.com/coveo/ui-kit/commit/2b77bf6cc4cfca6cdad2186398a55e18cad895d2))
+
+
+
+
+
 # [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.60.2...@coveo/atomic@0.61.0) (2021-08-13)
 
 
