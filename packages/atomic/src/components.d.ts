@@ -83,6 +83,10 @@ export namespace Components {
          */
         "filterByBasePath": boolean;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -112,6 +116,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -229,6 +237,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -361,6 +373,10 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -431,6 +447,10 @@ export namespace Components {
          */
         "icon": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -460,6 +480,10 @@ export namespace Components {
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -863,6 +887,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1445,6 +1473,10 @@ declare namespace LocalJSX {
          */
         "filterByBasePath"?: boolean;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1474,6 +1506,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1593,6 +1629,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1725,6 +1765,10 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1796,6 +1840,10 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1825,6 +1873,10 @@ declare namespace LocalJSX {
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -2216,6 +2268,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field"?: string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */

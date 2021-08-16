@@ -32,14 +32,12 @@ export class AtomicRefineToggle implements InitializableComponent {
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.modalRef = document.createElement('atomic-refine-modal');
+    this.bindings.interfaceElement.prepend(this.modalRef);
   }
 
   private enableModal() {
-    if (!this.modalRef) {
-      this.modalRef = document.createElement('atomic-refine-modal');
-      this.bindings.interfaceElement.prepend(this.modalRef);
-    }
-    this.modalRef.setAttribute('enabled', 'true');
+    this.modalRef?.setAttribute('enabled', 'true');
   }
 
   public render() {
