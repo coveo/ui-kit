@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -26,6 +26,7 @@ import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -63,6 +64,7 @@ export class AtomicRatingFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -71,7 +73,6 @@ export class AtomicRatingFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -110,6 +111,10 @@ export class AtomicRatingFacet
    * - Use a stringified SVG to display it directly.
    */
   @Prop() public icon = Star;
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private validateProps() {
     new Schema({
@@ -136,10 +141,12 @@ export class AtomicRatingFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.numericFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'numericFacets', {
       label: this.label,
-      format: (facetValue) => this.formatFacetValue(facetValue),
-    };
+      facetId: this.facetId!,
+      element: this.host,
+      format: (value) => this.formatFacetValue(value),
+    });
   }
 
   private get scaleFactor() {

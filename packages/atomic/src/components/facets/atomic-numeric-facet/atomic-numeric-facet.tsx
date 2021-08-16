@@ -25,6 +25,7 @@ import {
   BaseFacetState,
 } from '../base-facet/base-facet';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * The `atomic-numeric-facet` component displays values as numeric ranges. In mobile browsers, this is rendered as a button which opens a facet modal.
@@ -120,10 +121,12 @@ export class AtomicNumericFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.numericFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'numericFacets', {
       label: this.label,
+      facetId: this.facetId!,
+      element: this.host,
       format: (value) => this.formatValue(value),
-    };
+    });
   }
 
   private formatValue(facetValue: NumericFacetValue) {
