@@ -6,13 +6,14 @@ export default class QuanticFacetValue extends LightningElement {
   /** @type {boolean} */
   @api isChecked;
   /** @type {string} */
-  @api variant;
+  @api variant = 'standard';
   /** @type {string} */
   @api start;
   /** @type {string} */
   @api end;
 
   Variants = {
+    StandardFacet: 'standard',
     NumericFacet: 'numeric',
     DateFacet: 'date',
   };
@@ -30,8 +31,8 @@ export default class QuanticFacetValue extends LightningElement {
     }
   }
 
-  get isDefaultFacet() {
-    return !this.variant;
+  get isStandardFacet() {
+    return this.variant === this.Variants.StandardFacet;
   }
 
   get isNumericFacet() {
@@ -40,6 +41,15 @@ export default class QuanticFacetValue extends LightningElement {
 
   get isDateFacet() {
     return this.variant === this.Variants.DateFacet;
+  }
+
+  get formattedFacetValue() {
+    if (this.isDateFacet) {
+      return `${this.start} - ${this.end}`;
+    } else if (this.isNumericFacet) {
+      return `${this.item.start} - ${this.item.end}`;
+    }
+    return this.item.value;
   }
 
   /**

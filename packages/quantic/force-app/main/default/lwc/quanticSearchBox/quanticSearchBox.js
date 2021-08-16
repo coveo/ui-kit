@@ -258,4 +258,8 @@ export default class QuanticSearchBox extends LightningElement {
     this.searchBox.submit();
     this.input.blur();
   }
+
+  get isQueryEmpty() {
+    return this.state.value === '';
+  }
 }
