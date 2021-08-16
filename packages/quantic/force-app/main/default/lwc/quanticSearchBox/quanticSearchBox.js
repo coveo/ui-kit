@@ -1,4 +1,4 @@
-import { LightningElement, api, track } from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import {
   registerComponentForInit,
@@ -13,9 +13,10 @@ const KEYS = {
   ARROWDOWN: 'ArrowDown',
 };
 
-const CLASS_WITH_SUBMIT = 'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
-const CLASS_WITHOUT_SUBMIT = 'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
-
+const CLASS_WITH_SUBMIT =
+  'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
+const CLASS_WITHOUT_SUBMIT =
+  'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
 
 export default class QuanticSearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -25,7 +26,7 @@ export default class QuanticSearchBox extends LightningElement {
     suggestions: [],
     value: '',
   };
-  
+
   /** @type {any} */
   get suggestions() {
     return this.searchBox.state.suggestions.map((s, index) => ({
@@ -36,8 +37,8 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   labels = {
-    search
-  }
+    search,
+  };
 
   /** @type {string} */
   @api engineId;
@@ -158,7 +159,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   handleEnter() {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
-    if(this.suggestionsOpen && selectedSuggestion) {
+    if (this.suggestionsOpen && selectedSuggestion) {
       this.searchBox.selectSuggestion(selectedSuggestion.rawValue);
       this.input.blur();
     } else {
