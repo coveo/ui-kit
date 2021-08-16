@@ -5,6 +5,8 @@
 /* TODO: Remove v1 suffix */
 atomic-result-list-v1 {
   .list-root.display-table {
+    padding: 2rem 0;
+
     table {
       border-spacing: 0;
 
@@ -82,18 +84,18 @@ atomic-result-list-v1 {
     }
 
     @screen desktop-only {
-      @apply atomic-list-with-dividers;
+      @mixin atomic-list-with-dividers;
     }
 
     @screen mobile-only {
       &.image-large {
-        @apply atomic-list-with-dividers;
+        @mixin atomic-list-with-dividers;
       }
 
       &.image-small,
       &.image-icon,
       &.image-none {
-        @apply atomic-list-with-cards;
+        @mixin atomic-list-with-cards;
       }
     }
   }
@@ -130,7 +132,7 @@ atomic-result-list-v1 {
     @screen mobile-only {
       padding: 2rem;
       &.image-large {
-        @apply atomic-list-with-dividers;
+        @mixin atomic-list-with-dividers;
         grid-template-columns: auto;
       }
       &.image-small {
@@ -143,7 +145,7 @@ atomic-result-list-v1 {
       &.image-small,
       &.image-icon,
       &.image-none {
-        @apply atomic-list-with-cards;
+        @mixin atomic-list-with-cards;
         grid-column-gap: 2.5rem;
         grid-row-gap: 2.5rem;
 

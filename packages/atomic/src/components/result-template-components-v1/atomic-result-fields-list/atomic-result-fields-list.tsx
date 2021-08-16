@@ -1,7 +1,7 @@
 import {Component, h, Element, Host} from '@stencil/core';
 
 /**
- * The `atomic-result-fields-list` element selectively renders its children to ensure they fit the parent element and adds dividers between them.
+ * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
  */
 @Component({
   tag: 'atomic-result-fields-list-v1',

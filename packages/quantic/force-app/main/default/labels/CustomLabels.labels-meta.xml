@@ -350,4 +350,18 @@
         <protected>false</protected>
         <shortDescription>Undo last action</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_MoreMatchesFor</fullName>
+        <value>More matches for '{{0}}'</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>More matches for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoMatchesFor</fullName>
+        <value>No matches found for '{{0}}'</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No matches found for potato</shortDescription>
+    </labels>
 </CustomLabels>

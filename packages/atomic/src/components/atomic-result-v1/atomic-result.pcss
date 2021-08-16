@@ -1,4 +1,4 @@
-@import 'tailwindcss/base';
+@import '../../global/global.pcss';
 @import './atomic-result-common.pcss';
 @import './atomic-result-row-desktop.pcss';
 @import './atomic-result-row-mobile.pcss';
@@ -10,33 +10,33 @@
 }
 
 .result-root {
-  @apply common-result;
+  @mixin common-result;
 
   &.display-list {
     @screen desktop-only {
-      @apply row-result-desktop;
+      @mixin row-result-desktop;
     }
     @screen mobile-only {
-      @apply row-result-mobile;
+      @mixin row-result-mobile;
     }
   }
   &.display-grid {
     &.image-large {
       @screen desktop-only {
-        @apply cell-result-desktop;
+        @mixin cell-result-desktop;
       }
       @screen mobile-only {
-        @apply row-result-mobile;
+        @mixin row-result-mobile;
       }
     }
     &.image-small,
     &.image-icon,
     &.image-none {
       @screen desktop-only {
-        @apply cell-result-desktop;
+        @mixin cell-result-desktop;
       }
       @screen mobile-only {
-        @apply cell-result-mobile;
+        @mixin cell-result-mobile;
       }
     }
   }

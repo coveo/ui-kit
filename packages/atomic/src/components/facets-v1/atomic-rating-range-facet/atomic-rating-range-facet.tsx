@@ -21,7 +21,7 @@ import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-fac
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
+import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 
@@ -196,11 +196,11 @@ export class AtomicRatingRangeFacet
         i18n={this.bindings.i18n}
         onClick={onClick}
       >
-        <FacetValueIconRating
+        <Rating
           numberOfTotalIcons={this.maxValueInIndex}
           numberOfActiveIcons={facetValue.start}
           icon={this.icon}
-        ></FacetValueIconRating>
+        ></Rating>
         {this.renderLabelText(facetValue)}
       </FacetValueLink>
     );
