@@ -115,10 +115,8 @@ export class AtomicResultMultiText implements InitializableComponent {
         role="separator"
         part="result-multi-text-separator"
         key={`${beforeValue}~${afterValue}`}
-        class={listItemClasses}
-      >
-        ,&nbsp;
-      </li>
+        class={`separator ${listItemClasses}`}
+      ></li>
     );
   }
 
