@@ -56,26 +56,17 @@ export class AtomicLoadMoreResults {
     return `<span class="font-bold text-on-background" part="highlight">${content}</span>`;
   }
 
-  private get showingResultsOptions() {
-    const locales = this.bindings.i18n.languages;
-    return {
+  private renderShowingResults() {
+    const locale = this.bindings.i18n.language;
+    const content = this.bindings.i18n.t('showing-results-of-load-more', {
       interpolation: {escapeValue: false},
       last: this.wrapHighlight(
-        this.querySummaryState.lastResult.toLocaleString(locales)
+        this.querySummaryState.lastResult.toLocaleString(locale)
       ),
       total: this.wrapHighlight(
-        this.querySummaryState.total.toLocaleString(locales)
+        this.querySummaryState.total.toLocaleString(locale)
       ),
-    };
-  }
-
-  private renderShowingResults() {
-    const content = this.querySummaryState.hasResults
-      ? this.bindings.i18n.t(
-          'showing-results-of-load-more',
-          this.showingResultsOptions
-        )
-      : '';
+    });
 
     return (
       <div
@@ -87,14 +78,16 @@ export class AtomicLoadMoreResults {
   }
 
   private renderProgressBar() {
-    const pourcentage =
+    const percentage =
       (this.querySummaryState.lastResult / this.querySummaryState.total) * 100;
-    const width = `${Math.ceil(pourcentage)}%`;
+    const width = `${Math.ceil(percentage)}%`;
     return (
-      <div class="relative left-0 top-0 w-72 h-1.5 my-2" part="progress-bar">
-        <div class="relative left-0 top-0 z-0 flex py-0.5 bg-neutral rounded"></div>
+      <div
+        part="progress-bar"
+        class="relative w-72 h-1 my-2 rounded bg-neutral"
+      >
         <div
-          class="absolute left-0 top-0 z-10 flex py-0.5 overflow-hidden rounded bg-gradient-to-r more-results-progress-bar-primary more-results-progress-bar-secondary"
+          class="progress-bar absolute h-full left-0 top-0 z-10 overflow-hidden rounded bg-gradient-to-r"
           style={{width}}
         ></div>
       </div>
@@ -115,7 +108,7 @@ export class AtomicLoadMoreResults {
   }
 
   public render() {
-    if (!this.resultListState.hasResults) {
+    if (!this.querySummaryState.hasResults) {
       return;
     }
 
