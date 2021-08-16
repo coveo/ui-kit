@@ -17,14 +17,14 @@ import {titleToKebab} from '../../../utils/utils';
 const listItemClasses = 'inline-block';
 
 /**
- * The `atomic-result-multi-text` component renders the values of a multi-value string result field.
+ * The `atomic-result-multi-value-text` component renders the values of a multi-value string result field.
  * @part result-multi-text-separator - The separator between two field values.
  * @part result-multi-text-value - A field value.
  * @slot result-multi-text-value-* - Allows the personalization of a particular field value based on its indexed name.
  */
 @Component({
-  tag: 'atomic-result-multi-text',
-  styleUrl: 'atomic-result-multi-text.pcss',
+  tag: 'atomic-result-multi-value-text',
+  styleUrl: 'atomic-result-multi-value-text.pcss',
   shadow: true,
 })
 export class AtomicResultMultiText implements InitializableComponent {

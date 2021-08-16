@@ -560,7 +560,7 @@ export namespace Components {
         "fieldsToInclude": string;
         "image": ResultDisplayImageSize;
     }
-    interface AtomicResultMultiText {
+    interface AtomicResultMultiValueText {
         /**
           * If present, will attempt to split the field into multiple values using wherever this character is encountered.
          */
@@ -1135,11 +1135,11 @@ declare global {
         prototype: HTMLAtomicResultListV1Element;
         new (): HTMLAtomicResultListV1Element;
     };
-    interface HTMLAtomicResultMultiTextElement extends Components.AtomicResultMultiText, HTMLStencilElement {
+    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
     }
-    var HTMLAtomicResultMultiTextElement: {
-        prototype: HTMLAtomicResultMultiTextElement;
-        new (): HTMLAtomicResultMultiTextElement;
+    var HTMLAtomicResultMultiValueTextElement: {
+        prototype: HTMLAtomicResultMultiValueTextElement;
+        new (): HTMLAtomicResultMultiValueTextElement;
     };
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
@@ -1346,7 +1346,7 @@ declare global {
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
-        "atomic-result-multi-text": HTMLAtomicResultMultiTextElement;
+        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
@@ -1927,7 +1927,7 @@ declare namespace LocalJSX {
         "fieldsToInclude"?: string;
         "image"?: ResultDisplayImageSize;
     }
-    interface AtomicResultMultiText {
+    interface AtomicResultMultiValueText {
         /**
           * If present, will attempt to split the field into multiple values using wherever this character is encountered.
          */
@@ -2279,7 +2279,7 @@ declare namespace LocalJSX {
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-list-v1": AtomicResultListV1;
-        "atomic-result-multi-text": AtomicResultMultiText;
+        "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
@@ -2355,7 +2355,7 @@ declare module "@stencil/core" {
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
-            "atomic-result-multi-text": LocalJSX.AtomicResultMultiText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiTextElement>;
+            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
