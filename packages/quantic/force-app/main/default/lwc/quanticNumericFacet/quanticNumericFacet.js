@@ -29,7 +29,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  facetIconName = 'utility:dash';
+  collapseIconName = 'utility:dash';
 
   labels = {
     clear,
@@ -69,10 +69,14 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values.map((v) => ({
-        ...v,
-        checked: v.state === 'selected',
-      })) || []
+      this.state.values
+        .filter((value) => value.numberOfResults || value.state === 'selected')
+        .map((value) => {
+          return {
+            ...value,
+            checked: value.state === 'selected',
+          };
+        }) || []
     );
   }
 
@@ -96,7 +100,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.facetIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 }

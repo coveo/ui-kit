@@ -1,4 +1,4 @@
-.common-result {
+@define-mixin common-result {
   display: grid;
   justify-items: stretch;
 
@@ -60,6 +60,20 @@
 
     &.empty {
       display: none;
+    }
+  }
+
+  &.image-large,
+  &.image-small {
+    atomic-result-section-visual {
+      background-color: var(--atomic-neutral);
+      border-radius: var(--atomic-border-radius-xl);
+    }
+  }
+
+  &.image-icon {
+    atomic-result-section-visual {
+      border-radius: var(--atomic-border-radius);
     }
   }
 }

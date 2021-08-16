@@ -1,3 +1,8 @@
+.facet {
+    width: 100%;
+    margin: 0 0 2em 0;
+}
+
 .facet__searchbox {
     width: 100%;
 }
@@ -22,7 +27,6 @@
     font-size: 12px;
     outline: 0;
     background-color: white;
-    width: 40%;
     color: var(--sds-c-color-gray-8, #8E959D);
     border: none;
     margin-bottom: 5px;
@@ -32,7 +36,6 @@
     font-size: 12px;
     outline: 0;
     background-color: white;
-    width: 40%;
     color: #005FB2;
     border: none;
     margin-bottom: 5px;

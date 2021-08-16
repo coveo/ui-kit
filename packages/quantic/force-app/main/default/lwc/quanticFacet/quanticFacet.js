@@ -1,9 +1,9 @@
-import {LightningElement, track, api} from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import { I18nUtils } from 'c/quanticUtils';
 
 import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
@@ -41,7 +41,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  facetIcon = 'utility:dash';
+  collapseIconName = 'utility:dash';
   /** @type {HTMLInputElement} */
   input;
   /** @type {boolean} */
@@ -66,9 +66,9 @@ export default class QuanticFacet extends LightningElement {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriterion,
-      facetSearch: {numberOfValues: this.numberOfValues},
+      facetSearch: { numberOfValues: this.numberOfValues },
     };
-    this.facet = CoveoHeadless.buildFacet(engine, {options});
+    this.facet = CoveoHeadless.buildFacet(engine, { options });
     this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
@@ -94,11 +94,13 @@ export default class QuanticFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values.map((v) => ({
-        ...v,
-        checked: v.state === 'selected',
-        highlightedResult: v.value,
-      })) || []
+      this.state.values
+        .filter((value) => value.numberOfResults || value.state === 'selected')
+        .map((v) => ({
+          ...v,
+          checked: v.state === 'selected',
+          highlightedResult: v.value,
+        })) || []
     );
   }
 
@@ -202,7 +204,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.facetIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 
