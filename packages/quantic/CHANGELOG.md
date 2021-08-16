@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.48.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.47.0...@coveo/quantic@0.48.0) (2021-08-16)
+
+
+### Features
+
+* **quantic:** add quantic-search-box-suggestions-list component ([#1071](https://github.com/coveo/ui-kit/issues/1071)) ([7179311](https://github.com/coveo/ui-kit/commit/717931144af95204d235fc471d285eb463fdd2bc))
+
+
+
+
+
 # [0.47.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.46.0...@coveo/quantic@0.47.0) (2021-08-16)
 
 
