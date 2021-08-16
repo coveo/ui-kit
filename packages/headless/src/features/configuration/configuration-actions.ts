@@ -117,7 +117,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    */
   runtimeEnvironment?: AnalyticsRuntimeEnvironment;
   /**
-   * Whether the interaction that caused the search interface to log the event was triggered by an anonymous user.
+   * Whether analytics events should be logged anonymously.
    * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
    */
   anonymous?: boolean;
