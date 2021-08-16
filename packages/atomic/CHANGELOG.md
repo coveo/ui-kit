@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.63.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.63.0...@coveo/atomic@0.63.1) (2021-08-16)
+
+
+### Bug Fixes
+
+* **atomic:** fix no results page query encoding characters ([#1088](https://github.com/coveo/ui-kit/issues/1088)) ([709605a](https://github.com/coveo/ui-kit/commit/709605a9a1a0edc2345b196df3ba7a56d222261d))
+
+
+
+
+
+# [0.63.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.62.0...@coveo/atomic@0.63.0) (2021-08-16)
+
+
+### Features
+
+* **atomic:** atomic load more results ([#1077](https://github.com/coveo/ui-kit/issues/1077)) ([67b6bbc](https://github.com/coveo/ui-kit/commit/67b6bbcd58a0c9bbf1b42722e5793e2022837dd8))
+
+
+
+
+
 # [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.61.0...@coveo/atomic@0.62.0) (2021-08-13)
 
 

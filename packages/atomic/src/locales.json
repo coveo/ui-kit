@@ -408,6 +408,14 @@
     "zh-cn": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
     "zh-tw": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}"
   },
+  "showing-results-of-load-more": {
+    "en": "Showing {{last}} of {{total}} results",
+    "fr": "Affichant {{last}} de {{total}} résultats"
+  },
+  "load-more-results": {
+    "en": "Load more results",
+    "fr": "Afficher plus de résultats"
+  },
   "in-seconds": {
     "en": "in {{count}} second",
     "fr": "en {{count}} seconde",

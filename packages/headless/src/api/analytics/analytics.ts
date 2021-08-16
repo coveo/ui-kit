@@ -99,6 +99,10 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));
   }
 
+  public getIsAnonymous() {
+    return this.state.configuration.analytics.anonymous;
+  }
+
   private mapResultsToAnalyticsDocument() {
     return this.state.search?.response.results.map((r) => ({
       documentUri: r.uri,
