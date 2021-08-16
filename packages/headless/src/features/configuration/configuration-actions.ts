@@ -189,20 +189,3 @@ export const setOriginLevel3 = createAction(
   (payload: SetOriginLevel3ActionCreatorPayload) =>
     validatePayload(payload, {originLevel3: originSchemaOnUpdate()})
 );
-
-export interface SetAnonymousActionCreatorPayload {
-  /**
-   * Whether the interactions that caused the search interface to log the event was triggered by an anonymous user.
-   * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
-   */
-  anonymous: boolean;
-}
-
-/**
- * Set anonymous parameter for analytics tracking.
- */
-export const setAnonymous = createAction(
-  'configuration/analytics/anonymous',
-  (payload: SetAnonymousActionCreatorPayload) =>
-    validatePayload(payload, {anonymous: new BooleanValue({required: true})})
-);

@@ -8,7 +8,6 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
-  setAnonymous,
 } from './configuration-actions';
 import {
   getConfigurationInitialState,
@@ -76,8 +75,5 @@ export const configurationReducer = createReducer(
       })
       .addCase(setOriginLevel3, (state, action) => {
         state.analytics.originLevel3 = action.payload.originLevel3;
-      })
-      .addCase(setAnonymous, (state, action) => {
-        state.analytics.anonymous = action.payload.anonymous;
       })
 );

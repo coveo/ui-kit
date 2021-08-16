@@ -7,7 +7,6 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel3,
   setOriginLevel2,
-  setAnonymous,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
 import {
@@ -211,14 +210,5 @@ describe('configuration slice', () => {
       configurationReducer(state, setOriginLevel3({originLevel3})).analytics
         .originLevel3
     ).toBe(originLevel3);
-  });
-
-  it('should handle #setAnonymous', () => {
-    const state = getConfigurationInitialState();
-    state.analytics.anonymous = true;
-    expect(
-      configurationReducer(state, setAnonymous({anonymous: false})).analytics
-        .anonymous
-    ).toBe(false);
   });
 });
