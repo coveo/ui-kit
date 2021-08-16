@@ -29,6 +29,7 @@ import {
 import {configuration, pagination} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {CoreEngine} from '../../app/engine';
 
 export interface PagerInitialState {
   /**
@@ -141,6 +142,34 @@ export function buildPager(
   engine: SearchEngine,
   props: PagerProps = {}
 ): Pager {
+  const {dispatch} = engine;
+  const pager = buildCorePager(engine, props);
+
+  return {
+    ...pager,
+
+    get state() {
+      return pager.state;
+    },
+
+    selectPage(page: number) {
+      pager.selectPage(page);
+      dispatch(executeSearch(logPageNumber()));
+    },
+
+    nextPage() {
+      pager.nextPage();
+      dispatch(executeSearch(logPageNext()));
+    },
+
+    previousPage() {
+      pager.previousPage();
+      dispatch(executeSearch(logPagePrevious()));
+    },
+  };
+}
+
+function buildCorePager(engine: CoreEngine, props: PagerProps = {}): Pager {
   if (!loadPagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -199,17 +228,14 @@ export function buildPager(
 
     selectPage(page: number) {
       dispatch(updatePage(page));
-      dispatch(executeSearch(logPageNumber()));
     },
 
     nextPage() {
       dispatch(nextPage());
-      dispatch(executeSearch(logPageNext()));
     },
 
     previousPage() {
       dispatch(previousPage());
-      dispatch(executeSearch(logPagePrevious()));
     },
 
     isCurrentPage(page: number) {
@@ -219,8 +245,8 @@ export function buildPager(
 }
 
 function loadPagerReducers(
-  engine: SearchEngine
-): engine is SearchEngine<PaginationSection & ConfigurationSection> {
+  engine: CoreEngine
+): engine is CoreEngine<PaginationSection & ConfigurationSection> {
   engine.addReducers({configuration, pagination});
   return true;
 }
