@@ -22,7 +22,7 @@
                 onclick={clearSelections}
                 label={labels.clear}
                 icon-position="right"
-                >
+              >
               </lightning-button>
             </template>
             <template for:each={values} for:item="v">
@@ -33,6 +33,7 @@
                 is-checked={v.checked}
                 variant="date"
               >
+              </c-quantic-facet-value>
             </template>
           </ul>
         </template>
