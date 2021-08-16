@@ -126,10 +126,14 @@ export class AtomicResultList implements InitializableComponent {
     return this.resultTemplatesManager.selectTemplate(result) || '';
   }
 
+  private getId(result: Result) {
+    return result.uniqueId + this.resultListState.searchUid;
+  }
+
   private buildListResults() {
     return this.resultListState.results.map((result) => (
       <atomic-result-v1
-        key={`${result.raw.permanentid}${this.resultListState.searchUid}`}
+        key={this.getId(result)}
         result={result}
         engine={this.bindings.engine}
         display={this.display}
@@ -162,9 +166,9 @@ export class AtomicResultList implements InitializableComponent {
         </thead>
         <tbody>
           {this.resultListState.results.map((result) => (
-            <tr>
+            <tr key={this.getId(result)}>
               {fieldColumns.map((column) => (
-                <td>
+                <td key={column.getAttribute('label')! + this.getId(result)}>
                   <atomic-table-cell-v1
                     result={result}
                     content={column.innerHTML}

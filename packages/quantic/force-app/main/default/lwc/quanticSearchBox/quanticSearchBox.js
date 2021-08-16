@@ -28,9 +28,9 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   labels = {
-    search
-  }
-  
+    search,
+  };
+
   /** @type {string} */
   @api engineId;
   /** @type {string} */
@@ -39,7 +39,6 @@ export default class QuanticSearchBox extends LightningElement {
   @api withoutSubmitButton = false;
   /** @type {number} */
   @api numberOfSuggestions = 5;
-
 
   /** @type {string} */
   searchBoxContainerClass;
@@ -113,19 +112,26 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   updateState() {
-    if(this.state.value !== this.searchBox.state.value) {
+    if (this.state.value !== this.searchBox.state.value) {
       this.updateSearchboxText(this.searchBox.state.value);
     }
     this.state = this.searchBox.state;
   }
 
   setSearchBoxContainerClass() {
-    if(this.withoutSubmitButton){
-      this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right";
-      this.input.setAttribute("aria-labelledby", "fixed-text-label")
-    } else{
-      this.searchBoxContainerClass = "slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon";
-      this.input.setAttribute("aria-labelledby", "fixed-text-label fixed-text-addon-post");
+    const withoutSubmitClass =
+      'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
+    const withSubmitClass =
+      'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
+    if (this.withoutSubmitButton) {
+      this.searchBoxContainerClass = withoutSubmitClass;
+      this.input.setAttribute('aria-labelledby', 'fixed-text-label');
+    } else {
+      this.searchBoxContainerClass = withSubmitClass;
+      this.input.setAttribute(
+        'aria-labelledby',
+        'fixed-text-label fixed-text-addon-post'
+      );
     }
   }
 
@@ -195,7 +201,7 @@ export default class QuanticSearchBox extends LightningElement {
     this.setHighlighted();
   }
 
-  onSubmit(){
+  onSubmit() {
     this.searchBox.updateText(this.input.value);
     this.searchBox.submit();
     this.input.blur();
@@ -205,6 +211,13 @@ export default class QuanticSearchBox extends LightningElement {
    * @param {KeyboardEvent & {target: {value : string}}} event
    */
   onKeyup(event) {
+    if (this.input.value === '') {
+      this.clearButton.classList.remove('slds-visible');
+      this.clearButton.classList.add('slds-hidden');
+    } else {
+      this.clearButton.classList.remove('slds-hidden');
+      this.clearButton.classList.add('slds-visible');
+    }
     if (event.which === ENTER) {
       this.handleEnter();
     } else if (this.areSuggestionsShown() && event.which === ARROWUP) {
@@ -219,20 +232,18 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
-    this.clearButton.classList.remove('slds-hidden');
-    this.clearButton.classList.add('slds-visible');
     this.searchBox.showSuggestions();
     this.showSuggestions();
   }
 
   onBlur() {
-    this.clearButton.classList.remove('slds-visible');
-    this.clearButton.classList.add('slds-hidden');
     this.hideSuggestions();
   }
 
   clearInput() {
     this.input.value = '';
+    this.clearButton.classList.remove('slds-visible');
+    this.clearButton.classList.add('slds-hidden');
     this.searchBox.updateText(this.input.value);
     this.input.focus();
   }
