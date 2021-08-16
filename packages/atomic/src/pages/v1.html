@@ -184,9 +184,6 @@
 
       .pagination {
         grid-area: pagination;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         margin: var(--spacing) 0;
       }
 
@@ -217,13 +214,6 @@
 
         .status {
           max-width: var(--search-box-width);
-        }
-      }
-
-      @media only screen and (max-width: 640px) {
-        .pagination {
-          flex-direction: column;
-          align-items: center;
         }
       }
 
@@ -409,8 +399,7 @@
         <atomic-no-results-v1></atomic-no-results-v1>
       </div>
       <div class="pagination">
-        <atomic-pager></atomic-pager>
-        <atomic-results-per-page></atomic-results-per-page>
+        <atomic-load-more-results></atomic-load-more-results>
       </div>
     </atomic-search-interface>
   </body>

@@ -36,6 +36,9 @@
             "c/quanticPager": [
                 "quanticPager/quanticPager.js"
             ],
+            "c/quanticQueryError": [
+                "quanticQueryError/quanticQueryError.js"
+            ],
             "c/quanticResult": [
                 "quanticResult/quanticResult.js"
             ],
@@ -62,6 +65,9 @@
             ],
             "c/quanticSearchBox": [
                 "quanticSearchBox/quanticSearchBox.js"
+            ],
+            "c/quanticSearchBoxSuggestionsList": [
+                "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
             ],
             "c/quanticSearchInterface": [
                 "quanticSearchInterface/quanticSearchInterface.js"
