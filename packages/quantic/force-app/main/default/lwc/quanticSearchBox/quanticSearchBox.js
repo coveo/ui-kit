@@ -119,17 +119,13 @@ export default class QuanticSearchBox extends LightningElement {
 
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
-      if (this.input) {
-        this.input.setAttribute('aria-labelledby', 'fixed-text-label');
-      }
+      this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
       return CLASS_WITH_SUBMIT;
     }
-    if (this.input) {
-      this.input.setAttribute(
-        'aria-labelledby',
-        'fixed-text-label fixed-text-addon-post'
-      );
-    }
+    this.input?.setAttribute(
+      'aria-labelledby',
+      'fixed-text-label fixed-text-addon-post'
+    );
     return CLASS_WITHOUT_SUBMIT;
   }
 
