@@ -120,10 +120,10 @@ export class AtomicResultMultiText implements InitializableComponent {
     );
   }
 
-  private renderMoreLabel(count: number) {
+  private renderMoreLabel(value: number) {
     return (
       <li key="more-field-values" class={listItemClasses}>
-        {this.bindings.i18n.t('more-field-values', {count})}
+        {this.bindings.i18n.t('n-more', {value})}
       </li>
     );
   }
