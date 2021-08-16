@@ -1,7 +1,4 @@
 import {
-  buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
   QuerySummary,
   QuerySummaryState,
   buildQuerySummary,
@@ -35,13 +32,9 @@ import {createRipple} from '../../utils/ripple';
 })
 export class AtomicLoadMoreResults {
   @InitializeBindings() public bindings!: Bindings;
-  public searchStatus!: SearchStatus;
   public querySummary!: QuerySummary;
   public resultList!: ResultList;
 
-  @BindStateToController('searchStatus')
-  @State()
-  private searchStatusState!: SearchStatusState;
   @BindStateToController('querySummary')
   @State()
   private querySummaryState!: QuerySummaryState;
@@ -51,7 +44,6 @@ export class AtomicLoadMoreResults {
   @State() public error!: Error;
 
   public initialize() {
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.resultList = buildResultList(this.bindings.engine, {
       options: {
@@ -95,9 +87,9 @@ export class AtomicLoadMoreResults {
   }
 
   private renderProgressBar() {
-    const width = `${
-      (this.querySummaryState.lastResult / this.querySummaryState.total) * 100
-    }%`;
+    const pourcentage =
+      (this.querySummaryState.lastResult / this.querySummaryState.total) * 100;
+    const width = `${Math.ceil(pourcentage)}%`;
     return (
       <div class="relative left-0 top-0 w-72 h-1.5 my-2" part="progress-bar">
         <div class="relative left-0 top-0 z-0 flex py-0.5 bg-neutral rounded"></div>
@@ -113,17 +105,17 @@ export class AtomicLoadMoreResults {
     return (
       <button
         part="load-more-results-button"
-        class="btn-primary text-neutral-light font-bold px-2.5 py-3 my-2 focus:ring-4"
+        class="btn-primary font-bold my-2 p-3"
         onClick={() => this.resultList.fetchMoreResults()}
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
-        {this.bindings.i18n.t('load-more-results')}
+        <span>{this.bindings.i18n.t('load-more-results')}</span>
       </button>
     );
   }
 
   public render() {
-    if (!this.searchStatusState.hasResults) {
+    if (!this.resultListState.hasResults) {
       return;
     }
 
