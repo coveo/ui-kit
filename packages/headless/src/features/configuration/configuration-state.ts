@@ -78,6 +78,11 @@ export interface AnalyticsState {
    * See https://github.com/coveo/coveo.analytics.js for more info
    */
   runtimeEnvironment?: IRuntimeEnvironment;
+  /**
+   * Whether the interaction that caused the search interface to log the event was triggered by an anonymous user.
+   * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
+   */
+  anonymous: boolean;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -97,5 +102,6 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     apiBaseUrl: `${platformUrl()}${analyticsAPIEndpoint}`,
     originLevel2: 'default',
     originLevel3: 'default',
+    anonymous: false,
   },
 });

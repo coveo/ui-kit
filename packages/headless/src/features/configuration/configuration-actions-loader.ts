@@ -13,6 +13,8 @@ import {
   updateBasicConfiguration,
   UpdateBasicConfigurationActionCreatorPayload,
   AnalyticsRuntimeEnvironment,
+  SetAnonymousActionCreatorPayload,
+  setAnonymous,
 } from './configuration-actions';
 
 export {
@@ -62,6 +64,15 @@ export interface ConfigurationActionCreators {
   ): PayloadAction<SetOriginLevel3ActionCreatorPayload>;
 
   /**
+   * Set anonymous for analytics tracking.
+   * @param payload - The action creator payload
+   * @returns A dispatchable action.
+   */
+  setAnonymous(
+    payload: SetAnonymousActionCreatorPayload
+  ): PayloadAction<SetAnonymousActionCreatorPayload>;
+
+  /**
    * Updates the analytics configuration.
    *
    * @param payload - The action creator payload.
@@ -100,5 +111,6 @@ export function loadConfigurationActions(
     setOriginLevel3,
     updateAnalyticsConfiguration,
     updateBasicConfiguration,
+    setAnonymous,
   };
 }
