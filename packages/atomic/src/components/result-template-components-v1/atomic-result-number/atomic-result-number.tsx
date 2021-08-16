@@ -59,9 +59,7 @@ export class AtomicResultNumber {
     try {
       return this.formatter(value, this.bindings.i18n.languages);
     } catch (error) {
-      this.error = new Error(
-        `atomic-result-number value "${value}" could not be formatted correctly.`
-      );
+      this.error = error;
       return value;
     }
   }
