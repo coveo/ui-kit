@@ -23,7 +23,7 @@ const listItemClasses = 'inline-block';
  * @slot result-multi-text-value-* - Allows the personalization of a particular field value based on its indexed name.
  */
 @Component({
-  tag: 'atomic-result-multi-text-v1',
+  tag: 'atomic-result-multi-text',
   styleUrl: 'atomic-result-multi-text.pcss',
   shadow: true,
 })
