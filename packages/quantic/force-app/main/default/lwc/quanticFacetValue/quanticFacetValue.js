@@ -7,28 +7,32 @@ export default class QuanticFacetValue extends LightningElement {
   @api isChecked;
   /** @type {string} */
   @api variant = 'standard';
-  /** @type {string} */
-  @api start;
-  /** @type {string} */
-  @api end;
+  /** @type {(any) => string} */
+  @api formattingFunction;
 
   Variants = {
     StandardFacet: 'standard',
     NumericFacet: 'numeric',
     DateFacet: 'date',
+    Custom: 'custom'
   };
 
-  connectedCallback() {
-    if (this.isDateFacet) {
-      // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
-      this.start = new Intl.DateTimeFormat(LOCALE).format(
-        new Date(this.item.start)
-      );
-      // eslint-disable-next-line  @lwc/lwc/no-api-reassignments
-      this.end = new Intl.DateTimeFormat(LOCALE).format(
-        new Date(this.item.end)
-      );
+  get startDate() {
+    if (!this.isDateFacet) {
+      return undefined;
     }
+    return new Intl.DateTimeFormat(LOCALE).format(
+      new Date(this.item.start)
+    );
+  }
+
+  get endDate() {
+    if (!this.isDateFacet) {
+      return undefined;
+    }
+    return new Intl.DateTimeFormat(LOCALE).format(
+      new Date(this.item.end)
+    );
   }
 
   get isStandardFacet() {
@@ -36,18 +40,26 @@ export default class QuanticFacetValue extends LightningElement {
   }
 
   get isNumericFacet() {
-    return this.variant === this.Variants.NumericFacet;
+    const isNumericItem = this.item.start !== undefined && this.item.end !== undefined;
+    return this.variant === this.Variants.NumericFacet && isNumericItem;
   }
 
   get isDateFacet() {
-    return this.variant === this.Variants.DateFacet;
+    const isDateItem = this.item.start !== undefined && this.item.end !== undefined;
+    return this.variant === this.Variants.DateFacet && isDateItem;
+  }
+
+  get isCustom() {
+    return this.variant === this.Variants.Custom && Boolean(this.formattingFunction);
   }
 
   get formattedFacetValue() {
     if (this.isDateFacet) {
-      return `${this.start} - ${this.end}`;
+      return `${this.startDate} - ${this.endDate}`;
     } else if (this.isNumericFacet) {
       return `${this.item.start} - ${this.item.end}`;
+    } else if (this.isCustom) {
+      return this.formattingFunction(this.item);
     }
     return this.item.value;
   }
