@@ -44,15 +44,15 @@ module.exports = {
         '2xl': 'var(--atomic-text-2xl)',
       },
       screens: {
-        'desktop-only': {min: '1023px'},
-        'mobile-only': {max: '1024px'},
+        'desktop-only': {min: '1024px'},
+        'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
       },
       zIndex: {
-        '1': '1',
-       }
+        1: '1',
+      },
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),
