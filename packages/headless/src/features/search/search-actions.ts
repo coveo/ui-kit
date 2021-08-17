@@ -235,10 +235,7 @@ const getStateAfterResponse: (
     ...getSearchInitialState(),
     duration,
     response,
-    results: response.results.map((result) => ({
-      ...result,
-      searchUid: response.searchUid,
-    })),
+    results: response.results,
   },
 });
 

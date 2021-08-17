@@ -34,6 +34,8 @@ import {SearchResponseSuccess} from './search/search-response';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {QuestionsAnswers} from './search/question-answering';
 import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
+import {buildMockResult} from '../../test';
+import {Result} from './search/result';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -494,25 +496,24 @@ describe('search api client', () => {
     });
   });
 
-  describe('SearchAPIClient.search question answering', () => {
-    const doMockPlatformResponseAndAssertSuccess = async (
-      mockResponse: SearchResponseSuccess
-    ) => {
-      const body = JSON.stringify(mockResponse);
-      const response = new Response(body);
+  const doMockPlatformResponseAndAssertSuccess = async (
+    mockResponse: SearchResponseSuccess,
+    method = () => searchAPIClient.search(buildSearchRequest(state).request)
+  ) => {
+    const body = JSON.stringify(mockResponse);
+    const response = new Response(body);
 
-      PlatformClient.call = () => Promise.resolve(response);
-      const res = await searchAPIClient.search(
-        buildSearchRequest(state).request
+    PlatformClient.call = () => Promise.resolve(response);
+    const res = await method();
+    if (isErrorResponse(res)) {
+      fail(
+        'SearchAPIClient should not return an error when processing question answering'
       );
-      if (isErrorResponse(res)) {
-        fail(
-          'SearchAPIClient should not return an error when processing question answering'
-        );
-      }
-      return res.success;
-    };
+    }
+    return res.success;
+  };
 
+  describe('SearchAPIClient.search question answering', () => {
     it('should shim the content of #questionAnswer if not available', async () => {
       const mockResponse = buildMockSearchResponse();
       delete (mockResponse as Partial<SearchResponseSuccess>).questionAnswer;
@@ -540,6 +541,49 @@ describe('search api client', () => {
       expect(res.questionAnswer.relatedQuestions.length).toEqual(
         emptyQuestionAnswer().relatedQuestions.length
       );
+    });
+  });
+
+  describe('assigning searchUid to results', () => {
+    let mockResponse: SearchResponseSuccess;
+
+    beforeEach(() => {
+      const searchUid = 'hello';
+      const mockResult = buildMockResult();
+      delete (mockResult.searchUid as Partial<Result>).searchUid;
+      mockResponse = buildMockSearchResponse({
+        searchUid,
+        results: [mockResult],
+      });
+    });
+
+    it('for search', async () => {
+      const res = await doMockPlatformResponseAndAssertSuccess(mockResponse);
+      expect(res.results[0].searchUid).toBe(res.searchUid);
+    });
+
+    it('for recommendations', async () => {
+      const res = await doMockPlatformResponseAndAssertSuccess(
+        mockResponse,
+        () =>
+          searchAPIClient.recommendations(
+            buildRecommendationRequest(createMockRecommendationState())
+          )
+      );
+      expect(res.results[0].searchUid).toBe(res.searchUid);
+    });
+
+    it('for recommendations', async () => {
+      const res = await doMockPlatformResponseAndAssertSuccess(
+        mockResponse,
+        () =>
+          searchAPIClient.productRecommendations(
+            buildProductRecommendationsRequest(
+              buildMockProductRecommendationsState()
+            )
+          )
+      );
+      expect(res.results[0].searchUid).toBe(res.searchUid);
     });
   });
 });

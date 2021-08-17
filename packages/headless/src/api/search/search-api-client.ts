@@ -137,7 +137,7 @@ export class SearchAPIClient {
     const payload = {response, body};
 
     if (isSuccessSearchResponse(body)) {
-      payload.body = shimResponse(body);
+      payload.body = shimSearchResponse(body);
       const processedResponse = await this.options.postprocessSearchResponseMiddleware(
         payload
       );
@@ -186,7 +186,7 @@ export class SearchAPIClient {
     const body = await response.json();
 
     if (isSuccessSearchResponse(body)) {
-      return {success: body};
+      return {success: assignSearchUid(body)};
     }
 
     return {
@@ -236,7 +236,7 @@ export class SearchAPIClient {
     const body = await response.json();
 
     if (isSuccessSearchResponse(body)) {
-      return {success: body};
+      return {success: assignSearchUid(body)};
     }
 
     return {
@@ -364,7 +364,11 @@ function pickNonBaseParams<Params extends BaseParam>(req: Params) {
   return nonBase;
 }
 
-function shimResponse(response: SearchResponseSuccess) {
+function shimSearchResponse(response: SearchResponseSuccess) {
+  return assignQuestionAnswer(assignSearchUid(response));
+}
+
+function assignQuestionAnswer(response: SearchResponseSuccess) {
   const empty = emptyQuestionAnswer();
   if (isNullOrUndefined(response.questionAnswer)) {
     response.questionAnswer = empty;
@@ -372,5 +376,14 @@ function shimResponse(response: SearchResponseSuccess) {
   }
 
   response.questionAnswer = {...empty, ...response.questionAnswer};
+  return response;
+}
+
+function assignSearchUid(response: SearchResponseSuccess) {
+  response.results = response.results.map((result) => ({
+    ...result,
+    searchUid: response.searchUid,
+  }));
+
   return response;
 }
