@@ -4,6 +4,7 @@ import {
     PartialDocumentInformation,
     CustomEventsTypes,
     SmartSnippetFeedbackReason,
+    OmniboxSuggestionsMetadata,
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -198,22 +199,24 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #omniboxAnalytics', async () => {
-        const meta = {
+        const meta: OmniboxSuggestionsMetadata = {
             partialQueries: 'a;b;c',
             partialQuery: 'abcd',
             suggestionRanking: 1,
             suggestions: 'q;w;e;r;t;y',
+            querySuggestResponseId: '1',
         };
         await client.logOmniboxAnalytics(meta);
         expectMatchPayload(SearchPageEvents.omniboxAnalytics, meta);
     });
 
     it('should send proper payload for #logOmniboxFromLink', async () => {
-        const meta = {
+        const meta: OmniboxSuggestionsMetadata = {
             partialQueries: 'a;b;c',
             partialQuery: 'abcd',
             suggestionRanking: 1,
             suggestions: 'q;w;e;r;t;y',
+            querySuggestResponseId: '1',
         };
         await client.logOmniboxFromLink(meta);
         expectMatchPayload(SearchPageEvents.omniboxFromLink, meta);

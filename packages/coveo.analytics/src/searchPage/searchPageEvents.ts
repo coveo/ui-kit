@@ -258,6 +258,7 @@ export interface OmniboxSuggestionsMetadata {
     partialQueries: string | string[];
     suggestions: string | string[];
     partialQuery: string;
+    querySuggestResponseId: string;
 }
 
 export interface DocumentIdentifier {
