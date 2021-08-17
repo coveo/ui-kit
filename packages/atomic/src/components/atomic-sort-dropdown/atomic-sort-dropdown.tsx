@@ -109,7 +109,7 @@ export class AtomicSortDropdown implements InitializableComponent {
   private renderLabel() {
     return (
       <label
-        class="m-2 font-bold text-sm with-colon"
+        class="m-2 font-bold text-sm with-colon cursor-pointer"
         part="label"
         htmlFor={this.id}
       >
@@ -123,7 +123,7 @@ export class AtomicSortDropdown implements InitializableComponent {
       <div class="relative">
         <select
           id={this.id}
-          class="h-10 flex-grow appearance-none rounded bg-background border border-neutral pl-3 pr-24"
+          class="h-10 flex-grow cursor-pointer appearance-none rounded bg-background border border-neutral pl-3 pr-24 focus:outline-none focus:border-primary-light focus:text-primary-light hover:border-primary-light hover:text-primary-light"
           part="select"
           aria-label={this.bindings.i18n.t('sort-by')}
           onChange={(option) => this.select(option)}
@@ -132,12 +132,9 @@ export class AtomicSortDropdown implements InitializableComponent {
         </select>
         <div
           part="select-separator"
-          class="w-10 absolute top-px bottom-px right-0 border-l border-neutral flex justify-center items-center"
+          class="w-10 absolute pointer-events-none top-px bottom-px right-0 border-l border-neutral flex justify-center items-center"
         >
-          <atomic-icon
-            class="pointer-events-none w-2.5"
-            icon={ArrowBottomIcon}
-          ></atomic-icon>
+          <atomic-icon class="w-2.5" icon={ArrowBottomIcon}></atomic-icon>
         </div>
       </div>
     );

@@ -9,6 +9,9 @@ import {
   FacetManager,
   FacetManagerState,
   buildFacetManager,
+  Sort,
+  buildSort,
+  SortState,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -18,14 +21,29 @@ import {
 } from '../../utils/initialization-utils';
 import {createRipple} from '../../utils/ripple';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
-import {getFacetElements} from '../../utils/store';
+import {getFacetElements, SortDropdownOption} from '../../utils/store';
+import SortIcon from '../../images/sort.svg';
 
+/**
+ * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
+ *
+ * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing furter customization.
+ *
+ * @part container - The container of the modal's content.
+ * @part header - The header of the modal, containing the title.
+ * @part close-button - The button in the header that closes the modal.
+ * @part section-title - The title for each sections.
+ * @part select - The `<select>` element of the drop-down list.
+ * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @part footer-button - The button in the footer that closes the modal.
+ */
 @Component({
   tag: 'atomic-refine-modal',
   styleUrl: 'atomic-refine-modal.pcss',
   shadow: true,
 })
 export class AtomicRefineModal implements InitializableComponent {
+  private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   private facetManager!: FacetManager;
@@ -41,6 +59,7 @@ export class AtomicRefineModal implements InitializableComponent {
   @BindStateToController('facetManager')
   @State()
   public facetManagerState!: FacetManagerState;
+  @State() @BindStateToController('sort') public sortState!: SortState;
   @State() public error!: Error;
 
   @Prop({reflect: true, mutable: true}) enabled!: boolean;
@@ -62,6 +81,7 @@ export class AtomicRefineModal implements InitializableComponent {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
+    this.sort = buildSort(this.bindings.engine);
   }
 
   private duplicateFacetElements() {
@@ -94,13 +114,11 @@ export class AtomicRefineModal implements InitializableComponent {
     return (
       <div
         part="header"
-        class="w-full border-neutral border-b p-6 flex justify-between"
+        class="w-full border-neutral border-b p-6 flex justify-between text-xl "
       >
-        <span class="text-xl truncate">
-          {this.bindings.i18n.t('sort-and-filter')}
-        </span>
+        <span class="truncate">{this.bindings.i18n.t('sort-and-filter')}</span>
         <button
-          part="clear-button-icon"
+          part="close-button"
           class="fill-current w-5 h-5 hover:text-primary focus:text-primary focus:outline-color"
           innerHTML={CloseIcon}
           onClick={() => (this.enabled = false)}
@@ -109,18 +127,49 @@ export class AtomicRefineModal implements InitializableComponent {
     );
   }
 
+  private get options() {
+    return this.bindings.store.state.sortOptions;
+  }
+
+  private select(e: Event) {
+    const select = e.composedPath()[0] as HTMLSelectElement;
+    const option = this.options.find(
+      (option) => option.expression === select.value
+    );
+    option && this.sort.sortBy(option.criteria);
+  }
+
+  private buildOption({expression, criteria, caption}: SortDropdownOption) {
+    return (
+      <option value={expression} selected={this.sort.isSortedBy(criteria)}>
+        {this.bindings.i18n.t(caption)}
+      </option>
+    );
+  }
+
   private renderSort() {
-    if (!this.bindings.store.state.sortOptions.length) {
+    if (!this.options.length) {
       return;
     }
 
-    return (
-      <div class="mt-8">
-        <div class="text-2xl font-bold truncate">
-          {this.bindings.i18n.t('sort')}
+    return [
+      <div part="section-title" class="text-2xl font-bold truncate mb-3 mt-8">
+        {this.bindings.i18n.t('sort')}
+      </div>,
+      <div class="relative">
+        <select
+          class="w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg bg-background border border-neutral px-6 py-5 focus:outline-none focus:border-primary-light focus:text-primary-light hover:border-primary-light hover:text-primary-light"
+          part="select"
+          aria-label={this.bindings.i18n.t('sort-by')}
+          onChange={(option) => this.select(option)}
+        >
+          {this.options.map((option) => this.buildOption(option))}
+        </select>
+        <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
+          <atomic-icon icon={SortIcon}></atomic-icon>
         </div>
-      </div>
-    );
+      </div>,
+    ];
   }
 
   private renderFilters() {
@@ -130,7 +179,7 @@ export class AtomicRefineModal implements InitializableComponent {
 
     return [
       <div class="w-full flex justify-between mt-8 mb-3">
-        <span class="text-2xl font-bold truncate">
+        <span part="section-title" class="text-2xl font-bold truncate">
           {this.bindings.i18n.t('filters')}
         </span>
         {this.breadcrumbManagerState.hasBreadcrumbs && (
@@ -150,11 +199,9 @@ export class AtomicRefineModal implements InitializableComponent {
 
   private renderFooter() {
     return (
-      <div
-        part="footer"
-        class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg"
-      >
+      <div class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg">
         <button
+          part="footer-button"
           class="btn-primary p-3 w-full flex text-lg justify-center"
           onClick={() => (this.enabled = false)}
           onMouseDown={(e) => createRipple(e, {color: 'primary'})}
@@ -179,7 +226,7 @@ export class AtomicRefineModal implements InitializableComponent {
 
     return (
       <div
-        part="wrapper"
+        part="container"
         class="w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10"
       >
         {this.renderHeader()}

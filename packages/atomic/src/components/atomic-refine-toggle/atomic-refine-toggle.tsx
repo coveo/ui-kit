@@ -14,6 +14,8 @@ import {createRipple} from '../../utils/ripple';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
+ *
+ * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
  */
 @Component({
   tag: 'atomic-refine-toggle',
