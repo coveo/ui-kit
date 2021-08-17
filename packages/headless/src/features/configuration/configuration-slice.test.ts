@@ -30,6 +30,7 @@ describe('configuration slice', () => {
       originLevel2: '2',
       originLevel3: '3',
       apiBaseUrl: `${url}/rest/ua`,
+      anonymous: false,
     },
   };
 
@@ -85,6 +86,7 @@ describe('configuration slice', () => {
           originLevel2: 'bar',
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
+          anonymous: true,
         },
       };
       expect(
@@ -95,6 +97,7 @@ describe('configuration slice', () => {
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
+            anonymous: true,
           })
         )
       ).toEqual(expectedState);
@@ -108,6 +111,7 @@ describe('configuration slice', () => {
           originLevel2: 'bar',
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
+          anonymous: true,
         },
       };
 
@@ -119,6 +123,7 @@ describe('configuration slice', () => {
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
+            anonymous: true,
           })
         )
       ).toEqual(expectedState);

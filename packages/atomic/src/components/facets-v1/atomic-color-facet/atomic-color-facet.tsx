@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -34,6 +34,7 @@ import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../utils/field-utils';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -78,6 +79,7 @@ export class AtomicColorFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -86,7 +88,6 @@ export class AtomicColorFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -120,6 +121,10 @@ export class AtomicColorFacet
    * Possible values are 'checkbox', and 'box'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'box' = 'box';
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
   public initialize() {
@@ -133,9 +138,11 @@ export class AtomicColorFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'facets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   public componentShouldUpdate(
@@ -143,7 +150,7 @@ export class AtomicColorFacet
     prev: unknown,
     propName: keyof AtomicColorFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
         (prev as FacetState).facetSearch

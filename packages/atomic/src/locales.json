@@ -230,6 +230,14 @@
     "en": "Display {{results}} results per page",
     "fr": "Afficher {{results}} résultats par page"
   },
+  "sort": {
+    "en": "Sort",
+    "fr": "Tri"
+  },
+  "filters": {
+    "en": "Filters",
+    "fr": "Filtres"
+  },
   "sort-by": {
     "en": "Sort by",
     "fr": "Trier par",
@@ -1034,6 +1042,14 @@
   "preview-result": {
     "en": "Preview the result",
     "fr": "Prévisualiser le résultat"
+  },
+  "sort-and-filter": {
+    "en": "Sort & Filter",
+    "fr": "Trier et Filtrer"
+  },
+  "view-results": {
+    "en": "View results",
+    "fr": "Visualiser les résultats"
   },
   "organization-is-paused": {
     "en": "Your Coveo organization is paused due to inactivity and search is currently unavailable.",

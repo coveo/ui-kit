@@ -83,6 +83,10 @@ export namespace Components {
          */
         "filterByBasePath": boolean;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -112,6 +116,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -229,6 +237,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -363,6 +375,10 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -433,6 +449,10 @@ export namespace Components {
          */
         "icon": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -463,6 +483,10 @@ export namespace Components {
          */
         "icon": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -478,6 +502,11 @@ export namespace Components {
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals": number;
+    }
+    interface AtomicRefineModal {
+        "enabled": boolean;
+    }
+    interface AtomicRefineToggle {
     }
     interface AtomicRelevanceInspector {
         /**
@@ -587,6 +616,12 @@ export namespace Components {
           * The minimum number of significant digits to use.
          */
         "minimumSignificantDigits"?: number;
+    }
+    interface AtomicResultNumberV1 {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+         */
+        "field": string;
     }
     interface AtomicResultPrice {
         /**
@@ -861,6 +896,10 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -1057,6 +1096,18 @@ declare global {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
     };
+    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicRefineModalElement: {
+        prototype: HTMLAtomicRefineModalElement;
+        new (): HTMLAtomicRefineModalElement;
+    };
+    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicRefineToggleElement: {
+        prototype: HTMLAtomicRefineToggleElement;
+        new (): HTMLAtomicRefineToggleElement;
+    };
     interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
     }
     var HTMLAtomicRelevanceInspectorElement: {
@@ -1134,6 +1185,12 @@ declare global {
     var HTMLAtomicResultNumberElement: {
         prototype: HTMLAtomicResultNumberElement;
         new (): HTMLAtomicResultNumberElement;
+    };
+    interface HTMLAtomicResultNumberV1Element extends Components.AtomicResultNumberV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultNumberV1Element: {
+        prototype: HTMLAtomicResultNumberV1Element;
+        new (): HTMLAtomicResultNumberV1Element;
     };
     interface HTMLAtomicResultPriceElement extends Components.AtomicResultPrice, HTMLStencilElement {
     }
@@ -1323,6 +1380,8 @@ declare global {
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-refine-modal": HTMLAtomicRefineModalElement;
+        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge-v1": HTMLAtomicResultBadgeV1Element;
@@ -1336,6 +1395,7 @@ declare global {
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
         "atomic-result-number": HTMLAtomicResultNumberElement;
+        "atomic-result-number-v1": HTMLAtomicResultNumberV1Element;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
@@ -1435,6 +1495,10 @@ declare namespace LocalJSX {
          */
         "filterByBasePath"?: boolean;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1464,6 +1528,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1583,6 +1651,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1717,6 +1789,10 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1788,6 +1864,10 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1818,6 +1898,10 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1833,6 +1917,11 @@ declare namespace LocalJSX {
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals"?: number;
+    }
+    interface AtomicRefineModal {
+        "enabled": boolean;
+    }
+    interface AtomicRefineToggle {
     }
     interface AtomicRelevanceInspector {
         /**
@@ -1942,6 +2031,12 @@ declare namespace LocalJSX {
           * The minimum number of significant digits to use.
          */
         "minimumSignificantDigits"?: number;
+    }
+    interface AtomicResultNumberV1 {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+         */
+        "field": string;
     }
     interface AtomicResultPrice {
         /**
@@ -2204,6 +2299,10 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -2244,6 +2343,8 @@ declare namespace LocalJSX {
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-refine-modal": AtomicRefineModal;
+        "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge-v1": AtomicResultBadgeV1;
@@ -2257,6 +2358,7 @@ declare namespace LocalJSX {
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-list-v1": AtomicResultListV1;
         "atomic-result-number": AtomicResultNumber;
+        "atomic-result-number-v1": AtomicResultNumberV1;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
@@ -2320,6 +2422,8 @@ declare module "@stencil/core" {
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
+            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-badge-v1": LocalJSX.AtomicResultBadgeV1 & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeV1Element>;
@@ -2333,6 +2437,7 @@ declare module "@stencil/core" {
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
+            "atomic-result-number-v1": LocalJSX.AtomicResultNumberV1 & JSXBase.HTMLAttributes<HTMLAtomicResultNumberV1Element>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;

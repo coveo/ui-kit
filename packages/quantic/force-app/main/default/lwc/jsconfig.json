@@ -66,6 +66,9 @@
             "c/quanticSearchBox": [
                 "quanticSearchBox/quanticSearchBox.js"
             ],
+            "c/quanticSearchBoxSuggestionsList": [
+                "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
+            ],
             "c/quanticSearchInterface": [
                 "quanticSearchInterface/quanticSearchInterface.js"
             ],
