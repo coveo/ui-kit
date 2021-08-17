@@ -107,7 +107,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get canShowMoreSearchResults() {
-    return this.facet && this.facet.state.facetSearch.moreValuesAvailable;
+    return this.facet?.state.facetSearch.moreValuesAvailable;
   }
 
   get canShowMore() {
