@@ -26,6 +26,7 @@ import {
   BaseFacetState,
 } from '../base-facet/base-facet';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * The `atomic-date-facet` component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.
@@ -117,10 +118,12 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.dateFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'dateFacets', {
       label: this.label,
+      facetId: this.facetId!,
+      element: this.host,
       format: (value) => this.formatValue(value),
-    };
+    });
   }
 
   private get values() {
