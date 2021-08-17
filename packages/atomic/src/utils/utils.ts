@@ -1,3 +1,4 @@
+import {getAssetPath} from '@stencil/core';
 import {NODE_TYPES} from '@stencil/core/mock-doc';
 
 /**
@@ -50,4 +51,21 @@ export function containsVisualElement(node: Node) {
     }
   }
   return false;
+}
+
+export function parseAssetURL(url: string) {
+  const [, protocol, remainder] = url.match(/^([a-z]+):\/\/(.*)$/) || [];
+  if (!protocol) {
+    if (url.startsWith('./') || url.startsWith('../')) {
+      return url;
+    }
+    return null;
+  }
+  if (protocol === 'http' || protocol === 'https') {
+    return url;
+  }
+  if (protocol === 'assets') {
+    return getAssetPath(`./assets/${remainder}.svg`);
+  }
+  return null;
 }

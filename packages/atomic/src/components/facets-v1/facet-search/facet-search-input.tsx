@@ -38,7 +38,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
           part="search-icon"
           class="search-icon pointer-events-none absolute inline-flex justify-center items-center left-0 w-9 h-full text-on-background"
         >
-          <div class="fill-current" innerHTML={SearchIcon}></div>
+          <atomic-icon class="w-3" icon={SearchIcon}></atomic-icon>
         </div>
         {props.query !== '' && (
           <button
@@ -51,7 +51,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
               inputRef!.focus();
             }}
           >
-            <div class="fill-current" innerHTML={CloseIcon}></div>
+            <atomic-icon class="w-2.5" icon={CloseIcon}></atomic-icon>
           </button>
         )}
       </div>

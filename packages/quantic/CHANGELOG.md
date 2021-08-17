@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.48.0...@coveo/quantic@0.48.1) (2021-08-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.48.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.47.0...@coveo/quantic@0.48.0) (2021-08-16)
+
+
+### Features
+
+* **quantic:** add quantic-search-box-suggestions-list component ([#1071](https://github.com/coveo/ui-kit/issues/1071)) ([7179311](https://github.com/coveo/ui-kit/commit/717931144af95204d235fc471d285eb463fdd2bc))
+
+
+
+
+
+# [0.47.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.46.0...@coveo/quantic@0.47.0) (2021-08-16)
+
+
+### Features
+
+* **quantic:** SFINT-3987 Quantic QueryError component ([#990](https://github.com/coveo/ui-kit/issues/990)) ([43e3db2](https://github.com/coveo/ui-kit/commit/43e3db2731e496c0479c4679c3f088da3fc8cd02))
+
+
+
+
+
+# [0.46.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.45.0...@coveo/quantic@0.46.0) (2021-08-13)
+
+
+### Features
+
+* **quantic:** update facets look and functionality ([#1011](https://github.com/coveo/ui-kit/issues/1011)) ([23efb05](https://github.com/coveo/ui-kit/commit/23efb0537cca1546e2e272c407ce6a14ea1a6722))
+
+
+
+
+
+# [0.45.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.44.1...@coveo/quantic@0.45.0) (2021-08-11)
+
+
+### Features
+
+* **quantic:** create quantic package for salesforce using github actions ([#1072](https://github.com/coveo/ui-kit/issues/1072)) ([9144464](https://github.com/coveo/ui-kit/commit/91444648b7427575688cd3e08bb0e5761675b8db))
+
+
+
+
+
+## [0.44.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.44.0...@coveo/quantic@0.44.1) (2021-08-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.44.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.43.1...@coveo/quantic@0.44.0) (2021-08-10)
 
 

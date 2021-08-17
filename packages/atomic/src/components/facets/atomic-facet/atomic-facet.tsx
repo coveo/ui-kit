@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Host} from '@stencil/core';
+import {Component, h, State, Prop, Host, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -29,6 +29,7 @@ import {
   FacetSearchStrings,
 } from '../facet-search/facet-search';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -67,6 +68,7 @@ export class AtomicFacet
   public facet!: Facet;
   public searchStatus!: SearchStatus;
   private facetSearch?: FacetSearch;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -134,9 +136,11 @@ export class AtomicFacet
       this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'facets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   private get values() {

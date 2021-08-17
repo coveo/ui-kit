@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -84,11 +84,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         }
       >
         <span class="truncate">{value}</span>
-        <div
+        <atomic-icon
           role="button"
           class="w-2.5 ml-1.5 flex-shrink-0 self-center"
-          innerHTML={mainclear}
-        />
+          icon={mainclear}
+        ></atomic-icon>
       </button>
     );
   }
@@ -296,18 +296,20 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
 
   public render() {
     if (!this.breadcrumbManager.state.hasBreadcrumbs) {
-      return;
+      return <Host class="atomic-without-values"></Host>;
     }
     return (
-      <div class="flex justify-between">
-        <ul class="flex flex-col">
-          {this.facetBreadcrumbs}
-          {this.numericFacetBreadcrumbs}
-          {this.dateFacetBreadcrumbs}
-          {this.categoryFacetBreadcrumbs}
-        </ul>
-        {this.getClearAllFiltersButton()}
-      </div>
+      <Host class="atomic-with-values">
+        <div class="flex justify-between">
+          <ul class="flex flex-col">
+            {this.facetBreadcrumbs}
+            {this.numericFacetBreadcrumbs}
+            {this.dateFacetBreadcrumbs}
+            {this.categoryFacetBreadcrumbs}
+          </ul>
+          {this.getClearAllFiltersButton()}
+        </div>
+      </Host>
     );
   }
 }

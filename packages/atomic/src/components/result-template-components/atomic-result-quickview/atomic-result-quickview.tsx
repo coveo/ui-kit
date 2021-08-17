@@ -5,7 +5,7 @@ import {
   QuickviewState,
   Quickview,
 } from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {
   Bindings,
   BindStateToController,
@@ -13,6 +13,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import DetailsIcon from 'coveo-styleguide/resources/icons/svg/details.svg';
+import {createRipple} from '../../../utils/ripple';
 
 /**
  * The `atomic-result-quickview` component renders a preview of the result.
@@ -20,7 +21,7 @@ import DetailsIcon from 'coveo-styleguide/resources/icons/svg/details.svg';
 @Component({
   tag: 'atomic-result-quickview',
   styleUrl: 'atomic-result-quickview.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResultQuickview implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -90,14 +91,12 @@ export class AtomicResultQuickview implements InitializableComponent {
 
     const button = (
       <button
-        class="block w-full text-primary"
+        class="btn-outline-primary grid h-full place-items-center"
         aria-label={this.strings.previewResult()}
         onClick={() => this.openModal()}
+        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
-        <span
-          class="block h-5 w-5 fill-current mx-auto my-2"
-          innerHTML={DetailsIcon}
-        ></span>
+        <atomic-icon class="w-4 h-4" icon={DetailsIcon}></atomic-icon>
       </button>
     );
 
