@@ -1,0 +1,22 @@
+.facet__show-less {
+  font-size: 12px;
+  outline: 0;
+  background-color: white;
+  color: var(--sds-c-color-gray-8, #8E959D);
+  border: none;
+  margin-bottom: 5px;
+}
+
+.facet__show-more {
+  font-size: 12px;
+  outline: 0;
+  background-color: white;
+  color: #005FB2;
+  border: none;
+  margin-bottom: 5px;
+}
+
+.facet__show-more_text, .facet__show-less_text{
+  display: flex;
+  align-items: left;
+}
