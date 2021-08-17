@@ -109,18 +109,22 @@ export class AtomicRefineModal implements InitializableComponent {
     );
   }
 
-  // private renderSort() {
-  //   return (
-  //     <div class="mt-8">
-  //       <div class="text-2xl font-bold truncate">
-  //         {this.bindings.i18n.t('sort')}
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  private renderSort() {
+    if (!this.bindings.store.state.sortOptions.length) {
+      return;
+    }
+
+    return (
+      <div class="mt-8">
+        <div class="text-2xl font-bold truncate">
+          {this.bindings.i18n.t('sort')}
+        </div>
+      </div>
+    );
+  }
 
   private renderFilters() {
-    if (!this.bindings.store.get('facetElements').length) {
+    if (!getFacetElements(this.bindings.store).length) {
       return;
     }
 
@@ -180,8 +184,7 @@ export class AtomicRefineModal implements InitializableComponent {
       >
         {this.renderHeader()}
         <div class="overflow-auto px-6 flex-grow">
-          {/* TODO: add sort */}
-          {/* {this.renderSort()} */}
+          {this.renderSort()}
           {this.renderFilters()}
         </div>
         {this.renderFooter()}
