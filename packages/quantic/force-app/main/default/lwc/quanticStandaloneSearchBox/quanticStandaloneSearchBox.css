@@ -36,3 +36,7 @@
     background-color: #0070D2;
 }
 
+.slds-input-has-icon .slds-input__icon.input__icon_cursor:not(button) {
+    pointer-events: auto;
+}
+

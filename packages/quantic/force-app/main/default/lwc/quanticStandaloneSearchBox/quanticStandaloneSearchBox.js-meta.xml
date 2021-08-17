@@ -11,7 +11,7 @@
             <property name="engineId" type="String" default="example-search" label="Enter Coveo Headless engine ID"/>
             <property name="numberOfSuggestions" type="Integer" default="5" label="Number of query suggestions to display"/>
             <property name="placeholder" type="String" default="search" label="SearchBox placeholder"/>
-            <property name="redirectUrl" type="String" default="global-search/%40uri" label="Search page redirect url"/>
+            <property name="redirectUrl" type="String" label="Search page redirect url"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

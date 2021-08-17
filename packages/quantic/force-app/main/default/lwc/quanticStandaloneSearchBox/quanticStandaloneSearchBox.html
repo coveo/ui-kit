@@ -1,5 +1,5 @@
 <template>
-  <c-quantic-search-interface engine-id={engineId}>
+  <c-quantic-search-interface engine-id={engineId} skip-first-search>
     <div class="slds-form-element">
       <div class="slds-form-element__control">
         <div class="slds-combobox_container">
@@ -36,27 +36,15 @@
                   <lightning-button-icon
                     onclick={clearInput}
                     icon-name="utility:close"
-                    icon-class="slds-hidden"
                     variant="bare"
-                    size="x-small"
+                    class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                    size="medium"
                     name="Clear"
-                    tooltip="Clear"
                     title="Clear"
                     aria-label="Clear"
                     alternative-text="Clear"
                   ></lightning-button-icon>
                 </template>
-                <!-- <button
-                  class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
-                  onclick={clearInput}
-                  title="Clear"
-                >
-                  <lightning-icon
-                    class="slds-button__icon slds-hidden"
-                    icon-name="utility:close"
-                    size="x-small"
-                  ></lightning-icon>
-                </button> -->
               </div>
               <template if:false={withoutSubmitButton}>
                 <button

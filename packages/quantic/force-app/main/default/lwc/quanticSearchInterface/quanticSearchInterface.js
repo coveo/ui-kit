@@ -1,9 +1,14 @@
 import {LightningElement, api} from 'lwc';
-import {loadDependencies, setEngineOptions, setInitializedCallback} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBindings,
+  loadDependencies,
+  setEngineOptions,
+  setInitializedCallback,
+} from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 // @ts-ignore
-import { STANDALONE_SEARCH_BOX_STORAGE_KEY } from 'c/quanticUtils';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 
 export default class QuanticSearchInterface extends LightningElement {
   /** @type {any} */
@@ -21,6 +26,9 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {string} */
   @api engineId;
 
+  /** @type {Boolean} */
+  @api skipFirstSearch;
+
   /** @type {import("coveo").SearchEngineOptions} */
   engineOptions;
 
@@ -32,21 +40,30 @@ export default class QuanticSearchInterface extends LightningElement {
 
   connectedCallback() {
     loadDependencies(this).then((CoveoHeadless) => {
-      getHeadlessConfiguration().then((data) => {
-        if (data) {
-          this.engineOptions = {
-            configuration: {
-              ...JSON.parse(data),
-              search: {
-                searchHub: this.searchHub,
-                pipeline: this.pipeline
-              }
-            }
-          };
-          setEngineOptions(this.engineOptions, CoveoHeadless.buildSearchEngine, this.engineId, this);
-          setInitializedCallback(this.initialize, this.engineId);
-        }
-      });
+      if (!getHeadlessBindings(this.engineId).engine) {
+        getHeadlessConfiguration().then((data) => {
+          if (data) {
+            this.engineOptions = {
+              configuration: {
+                ...JSON.parse(data),
+                search: {
+                  searchHub: this.searchHub,
+                  pipeline: this.pipeline,
+                },
+              },
+            };
+            setEngineOptions(
+              this.engineOptions,
+              CoveoHeadless.buildSearchEngine,
+              this.engineId,
+              this
+            );
+            setInitializedCallback(this.initialize, this.engineId);
+          }
+        });
+      } else {
+        setInitializedCallback(this.initialize, this.engineId);
+      }
     });
   }
 
@@ -56,32 +73,41 @@ export default class QuanticSearchInterface extends LightningElement {
     }
     window.removeEventListener('hashchange', this.onHashChange);
   }
- 
+
   /**
    * @param {import("coveo").SearchEngine} engine
-  */
+   */
   initialize = (engine) => {
+    console.log('quanticSearchInterface initialize');
     if (!this.disableStateInUrl) {
       this.initUrlManager(engine);
     }
-    
-    const data = window.localStorage.getItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-    if(data) {
-      window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-      const {analytics} = JSON.parse(data);
-      engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
-    } else {
-      engine.executeFirstSearch();
+
+    if (!this.skipFirstSearch) {
+      const data = window.localStorage.getItem(
+        STANDALONE_SEARCH_BOX_STORAGE_KEY
+      );
+      if (data) {
+        window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+        const {analytics} = JSON.parse(data);
+        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+      } else {
+        engine.executeFirstSearch();
+      }
     }
-  }
+  };
 
   get fragment() {
     return window.location.hash.slice(1);
   }
 
   initUrlManager(engine) {
-    this.urlManager = CoveoHeadless.buildUrlManager(engine, {initialState: {fragment: this.fragment}});
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() => this.updateHash());
+    this.urlManager = CoveoHeadless.buildUrlManager(engine, {
+      initialState: {fragment: this.fragment},
+    });
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
+      this.updateHash()
+    );
     window.addEventListener('hashchange', this.onHashChange);
   }
 
@@ -95,5 +121,5 @@ export default class QuanticSearchInterface extends LightningElement {
 
   onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
-  }
+  };
 }

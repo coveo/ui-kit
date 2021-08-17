@@ -25,7 +25,7 @@ const CLASS_WITH_SUBMIT =
 const CLASS_WITHOUT_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
 
-export default class QuanticStandaloneSearchBox extends NavigationMixin(
+export default class QuanticStandaloneSearchBox extends NavigationMixin (
   LightningElement
 ) {
   
@@ -48,6 +48,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   // Private props
   /** @type {import("coveo").StandaloneSearchBox} */
   standaloneSearchBox;
+  /** @type {import("coveo").SearchBox} */
+  searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
@@ -81,36 +83,11 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
-  /**
-   * @returns {HTMLInputElement}
-   */
-  get input() {
-    return this.template.querySelector('input');
-  }
-
-  /**
-   * @returns {HTMLElement}
-   */
-  get combobox() {
-    return this.template.querySelector('.slds-combobox');
-  }
-
-  /**
-   * @returns {import('c/quanticSearchBoxSuggestionsList').default}
-   */
-  get suggestionList() {
-    return this.template.querySelector('c-quantic-search-box-suggestions-list');
-  }
-
-  /**
-   * @returns {Boolean}
-   */
-  get isQueryEmpty() {
-    return !this.input?.value?.length;
-  }
-
-  get suggestionsOpen() {
-    return this.combobox?.classList.contains('slds-is-open');
+  get actualSearchBox() {
+    if(window.location.href.includes(this.redirectUrl)) {
+      return this.searchBox;
+    }
+    return this.standaloneSearchBox;
   }
 
   /**
@@ -118,6 +95,11 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   @api
   initialize(engine) {
+    this.searchBox = CoveoHeadless.buildSearchBox(engine, {
+      options: this.searchBoxOptions
+    });
+    this.unsubscribeSearchBox = this.searchBox.subscribe(() => this.updateSearchBoxState());
+
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
         ...this.searchBoxOptions,
@@ -125,7 +107,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       },
     });
     this.unsubscribe = this.standaloneSearchBox.subscribe(() =>
-      this.updateState()
+      this.updateStandaloneState()
     );
   }
 
@@ -135,7 +117,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     }
   }
 
-  updateState() {
+  updateStandaloneState() {
     if (this.state.value !== this.standaloneSearchBox.state.value) {
       this.input.value = this.standaloneSearchBox.state.value;
     }
@@ -155,6 +137,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       })
     );
     this.navigateToSearchPage();
+  }
+
+  updateSearchBoxState() {
+    if (this.state.value !== this.searchBox.state.value) {
+      this.input.value = this.searchBox.state.value;
+    }
+    this.state = this.searchBox.state;
   }
 
   /**
@@ -189,7 +178,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   showSuggestions() {
-    this.standaloneSearchBox.showSuggestions();
+    this.actualSearchBox.showSuggestions();
     this.combobox?.classList.add('slds-is-open');
     this.combobox?.setAttribute('aria-expanded', 'true');
   }
@@ -207,20 +196,20 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   handleEnter() {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
-      this.standaloneSearchBox.selectSuggestion(selectedSuggestion.rawValue);
+      this.actualSearchBox.selectSuggestion(selectedSuggestion.rawValue);
       this.input.blur();
     } else {
-      this.standaloneSearchBox.submit();
+      this.actualSearchBox.submit();
       this.input.blur();
     }
   }
 
   onSubmit(event) {
     event.stopPropagation();
-    if(this.standaloneSearchBox.state.value !== this.input.value) {
-      this.standaloneSearchBox.updateText(this.input.value);
+    if(this.actualSearchBox.state.value !== this.input.value) {
+      this.actualSearchBox.updateText(this.input.value);
     }
-    this.standaloneSearchBox.submit();
+    this.actualSearchBox.submit();
     this.input.blur();
   }
 
@@ -240,7 +229,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
         break;
       default:
         this.suggestionList?.resetSelection();
-        this.standaloneSearchBox.updateText(event.target.value);
+        this.actualSearchBox.updateText(event.target.value);
     }
   }
 
@@ -254,26 +243,57 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   clearInput() {
     this.input.value = '';
-    this.standaloneSearchBox.updateText(this.input.value);
+    this.actualSearchBox.updateText(this.input.value);
     this.input.focus();
   }
 
   handleSuggestionSelection(event) {
     const textValue = event.detail;
-    this.standaloneSearchBox.selectSuggestion(textValue);
+    this.actualSearchBox.selectSuggestion(textValue);
   }
 
   navigateToSearchPage() {
-    // console.log(`NavigateTo: ${this.state.redirectTo}`);
+    console.log(`NavigateTo: ${this.state.redirectTo}`);
     // Navigate to the search page
-    // this[NavigationMixin.Navigate](
-    //   {
-    //     type: 'standard__webPage',
-    //     attributes: {
-    //       url: `${this.redirectUrl}#q=${this.standaloneSearchBox.state.value}`,
-    //     },
-    //   }, false
-    // );
-    window.location.replace(`${this.redirectUrl}#q=${this.standaloneSearchBox.state.value}`);
+    this[NavigationMixin.Navigate](
+      {
+        type: 'standard__webPage',
+        attributes: {
+          url: `${this.redirectUrl}#q=${this.standaloneSearchBox.state.value}`,
+        },
+      }, false
+    );
+  }
+
+  /**
+   * @returns {HTMLInputElement}
+   */
+  get input() {
+    return this.template.querySelector('input');
+  }
+
+  /**
+   * @returns {HTMLElement}
+   */
+  get combobox() {
+    return this.template.querySelector('.slds-combobox');
+  }
+
+  /**
+   * @returns {import('c/quanticSearchBoxSuggestionsList').default}
+   */
+  get suggestionList() {
+    return this.template.querySelector('c-quantic-search-box-suggestions-list');
+  }
+
+  /**
+   * @returns {Boolean}
+   */
+  get isQueryEmpty() {
+    return !this.input?.value?.length;
+  }
+
+  get suggestionsOpen() {
+    return this.combobox?.classList.contains('slds-is-open');
   }
 }
