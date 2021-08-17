@@ -8,6 +8,7 @@ export function buildMockResult(config: Partial<Result> = {}): Result {
     printableUri: '',
     clickUri: '',
     uniqueId: '',
+    searchUid: '',
     excerpt: '',
     firstSentences: '',
     summary: null,

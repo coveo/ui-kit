@@ -172,4 +172,9 @@ export interface Result {
    * TopResult
    */
   rankingModifier?: string;
+
+  /**
+   * The associated `searchUid` of the response where the result was fetched.
+   */
+  searchUid: string;
 }
