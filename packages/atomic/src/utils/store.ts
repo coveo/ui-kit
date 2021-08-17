@@ -1,4 +1,8 @@
-import {NumericFacetValue, DateFacetValue} from '@coveo/headless';
+import {
+  NumericFacetValue,
+  DateFacetValue,
+  SortCriterion,
+} from '@coveo/headless';
 import {ObservableMap} from '@stencil/store';
 
 interface FacetInfo {
@@ -12,12 +16,19 @@ interface FacetValueFormat<ValueType> {
 type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
 type FacetStore<F extends FacetInfo> = Record<string, F>;
 
+export interface SortDropdownOption {
+  expression: string;
+  criteria: SortCriterion[];
+  caption: string;
+}
+
 export type AtomicStore = {
   facets: FacetStore<FacetInfo>;
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
   facetElements: HTMLElement[];
+  sortOptions: SortDropdownOption[];
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -26,6 +37,7 @@ export const initialStore: () => AtomicStore = () => ({
   dateFacets: {},
   categoryFacets: {},
   facetElements: [],
+  sortOptions: [],
 });
 
 export const registerFacetToStore = <T extends FacetType, U extends string>(
