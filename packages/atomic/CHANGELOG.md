@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.64.0...@coveo/atomic@0.65.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** added atomic-format-* support to atomic-result-number ([#1096](https://github.com/coveo/ui-kit/issues/1096)) ([b222565](https://github.com/coveo/ui-kit/commit/b22256574fa716b927f5fe29573c1e70c143c659))
+
+
+
+
+
 # [0.64.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.63.1...@coveo/atomic@0.64.0) (2021-08-17)
 
 
