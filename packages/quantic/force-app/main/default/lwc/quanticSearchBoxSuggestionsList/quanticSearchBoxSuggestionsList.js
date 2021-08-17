@@ -4,8 +4,15 @@ import {
   track
 } from 'lwc';
 
+/**
+ * @typedef Suggestion
+ * @property {number} key
+ * @property {string} value
+ * @property {string} rawValue
+ */
+
 export default class QuanticSearchBoxSuggestionsList extends LightningElement {
-  /** @type {{key: number, value: string, rawValue: string}[]} */
+  /** @type {Suggestion[]} */
   @api suggestions = [];
   /** @type {number} */
   @track selectionIndex = -1;
@@ -16,6 +23,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     }
   }
 
+  /**
+   * Move highlighted selection up.
+   */
   @api 
   selectionUp() {
     this.selectionIndex--;
@@ -24,6 +34,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     }
   }
 
+  /**
+   * Move highlighted selection down.
+   */
   @api 
   selectionDown() {
     this.selectionIndex++;
@@ -32,6 +45,10 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     }
   }
 
+  /**
+   * Return the currently selected suggestion.
+   * @returns {Suggestion}
+   */
   @api 
   getCurrentSelectedValue() {
     if(this.selectionIndex > -1) {
@@ -40,6 +57,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     return undefined;
   }
 
+  /**
+   * Reset the current selection.
+   */
   @api 
   resetSelection() {
     this.selectionIndex = -1;
