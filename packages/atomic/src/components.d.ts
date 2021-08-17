@@ -562,11 +562,11 @@ export namespace Components {
     }
     interface AtomicResultMultiValueText {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
         "field": string;
         /**
-          * The maximum number of field values to display. If there are more values than the maximum that was set here, the last value displayed will be "# more...".
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
          */
         "maxValuesToDisplay": number;
     }
@@ -1925,11 +1925,11 @@ declare namespace LocalJSX {
     }
     interface AtomicResultMultiValueText {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
         "field": string;
         /**
-          * The maximum number of field values to display. If there are more values than the maximum that was set here, the last value displayed will be "# more...".
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
          */
         "maxValuesToDisplay"?: number;
     }

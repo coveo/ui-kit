@@ -17,10 +17,10 @@ import {titleToKebab} from '../../../utils/utils';
 const listItemClasses = 'inline-block';
 
 /**
- * The `atomic-result-multi-value-text` component renders the values of a multi-value string result field.
- * @part result-multi-text-separator - The separator between two field values.
- * @part result-multi-text-value - A field value.
- * @slot result-multi-text-value-* - Allows the personalization of a particular field value based on its indexed name.
+ * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
+ * @part result-multi-value-text-separator - The separator to display between each of the field values.
+ * @part result-multi-value-text-value - A field value.
+ * @slot result-multi-value-text-value-* - Allows the personalization of a particular field value based on its indexed name.
  */
 @Component({
   tag: 'atomic-result-multi-value-text',
@@ -36,15 +36,15 @@ export class AtomicResultMultiText implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * The result field which the component should use.
-   * This will look in the Result object first, and then in the Result.raw object for the fields.
-   * It is important to include the necessary field in the ResultList component.
+   * The field that the component should use.
+   * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
+   * Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
    */
   @Prop() public field!: string;
 
   /**
    * The maximum number of field values to display.
-   * If there are more values than the maximum that was set here, the last value displayed will be "# more...".
+   * If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
    */
   @Prop() public maxValuesToDisplay = 3;
 
@@ -96,8 +96,14 @@ export class AtomicResultMultiText implements InitializableComponent {
     const label = getFieldValueCaption(this.field, value, this.bindings.i18n);
     const kebabValue = titleToKebab(value);
     return (
-      <li key={value} part="result-multi-text-value" class={listItemClasses}>
-        <slot name={`result-multi-text-value-${kebabValue}`}>{label}</slot>
+      <li
+        key={value}
+        part="result-multi-value-text-value"
+        class={listItemClasses}
+      >
+        <slot name={`result-multi-value-text-value-${kebabValue}`}>
+          {label}
+        </slot>
       </li>
     );
   }
@@ -106,7 +112,7 @@ export class AtomicResultMultiText implements InitializableComponent {
     return (
       <li
         role="separator"
-        part="result-multi-text-separator"
+        part="result-multi-value-text-separator"
         key={`${beforeValue}~${afterValue}`}
         class={`separator ${listItemClasses}`}
       ></li>
