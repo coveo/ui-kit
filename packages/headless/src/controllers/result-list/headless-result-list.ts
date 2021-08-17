@@ -71,6 +71,7 @@ export interface ResultListState extends SearchStatusState {
   results: Result[];
   /**
    * The unique identifier of the last executed search.
+   * @deprecated The searchUid identifier is now on the `Result` object as well.
    */
   searchUid: string;
   /**
