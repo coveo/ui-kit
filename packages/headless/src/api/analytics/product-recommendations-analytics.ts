@@ -61,6 +61,10 @@ export class ProductRecommendationAnalyticsProvider
     return this.state.configuration.analytics.originLevel3 || 'default';
   }
 
+  public getIsAnonymous() {
+    return this.state.configuration.analytics.anonymous;
+  }
+
   private mapResultsToAnalyticsDocument() {
     return [];
   }

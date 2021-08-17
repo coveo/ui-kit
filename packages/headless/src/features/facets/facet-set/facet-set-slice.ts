@@ -57,7 +57,7 @@ export const facetSetReducer = createReducer(
           const values = f[id] || [];
 
           request.currentValues = values.map(buildSelectedFacetValueRequest);
-          request.preventAutoSelect = true;
+          request.preventAutoSelect = values.length > 0;
           request.numberOfValues = Math.max(
             values.length,
             request.numberOfValues

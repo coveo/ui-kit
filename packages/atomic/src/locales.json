@@ -230,6 +230,14 @@
     "en": "Display {{results}} results per page",
     "fr": "Afficher {{results}} résultats par page"
   },
+  "sort": {
+    "en": "Sort",
+    "fr": "Tri"
+  },
+  "filters": {
+    "en": "Filters",
+    "fr": "Filtres"
+  },
   "sort-by": {
     "en": "Sort by",
     "fr": "Trier par",
@@ -407,6 +415,14 @@
     "tr": "{{query}} için {{total}} / {{first}}-{{last}} sonuç",
     "zh-cn": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
     "zh-tw": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}"
+  },
+  "showing-results-of-load-more": {
+    "en": "Showing {{last}} of {{total}} results",
+    "fr": "Affichant {{last}} de {{total}} résultats"
+  },
+  "load-more-results": {
+    "en": "Load more results",
+    "fr": "Afficher plus de résultats"
   },
   "in-seconds": {
     "en": "in {{count}} second",
@@ -1026,6 +1042,14 @@
   "preview-result": {
     "en": "Preview the result",
     "fr": "Prévisualiser le résultat"
+  },
+  "sort-and-filter": {
+    "en": "Sort & Filter",
+    "fr": "Trier et Filtrer"
+  },
+  "view-results": {
+    "en": "View results",
+    "fr": "Visualiser les résultats"
   },
   "organization-is-paused": {
     "en": "Your Coveo organization is paused due to inactivity and search is currently unavailable.",

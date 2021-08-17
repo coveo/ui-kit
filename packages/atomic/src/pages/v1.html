@@ -58,72 +58,8 @@
       /* atomic-result::part(result-link):hover {
         color: orange;
       } */
-    </style>
-    <style>
-      /* Example of generic layout styling  */
-      body {
-        margin: 0;
-      }
 
-      atomic-search-interface {
-        grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
-        grid-template-rows: 22px 50px 22px 1fr;
-        column-gap: 20px;
-        display: grid;
-        margin: 0 auto;
-      }
-
-      .header {
-        background-color: var(--atomic-neutral-light);
-        grid-column: 1 / span 4;
-        grid-row: 1 / span 3;
-      }
-
-      atomic-search-box {
-        grid-column: 3 / auto;
-        grid-row: 2 / auto;
-        max-width: 650px;
-      }
-
-      atomic-facet-manager {
-        grid-column: 2 / auto;
-        grid-row: 4 / auto;
-        margin-top: 15px;
-      }
-
-      atomic-facet-manager > * {
-        margin: 16px 0 0 0;
-      }
-
-      .results-container {
-        grid-column: 3 / auto;
-        grid-row: 4 / auto;
-        margin-top: 15px;
-      }
-
-      .side-by-side-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .footer-item {
-        margin: 30px 0;
-      }
-
-      atomic-sort-dropdown {
-        margin-left: 15px;
-      }
-
-      /* TODO: Remove v1 suffix */
-      atomic-result-list-v1 {
-        margin-top: 10px;
-      }
-
-      atomic-breadcrumb-manager {
-        margin: 10px 0;
-      }
-
+      /* Example on how to customize the color facet */
       atomic-color-facet::part(value-dynamicscrmitem) {
         background-image: url('/build/assets/mail.svg');
         background-position: center;
@@ -165,72 +101,132 @@
         background-size: cover;
         background-repeat: no-repeat;
       }
+    </style>
+    <style>
+      /* Example of generic layout styling, mobile-first  */
+      :root {
+        --spacing: 16px;
+        --search-box-width: 648px;
+      }
 
-      @media only screen and (max-width: 1023px) {
+      body {
+        margin: 0;
+      }
+
+      body.atomic-modal-opened {
+        overflow-y: hidden;
+      }
+
+      atomic-search-interface {
+        display: grid;
+        grid-template-columns: var(--spacing) 1fr var(--spacing);
+        grid-template-areas:
+          '. search      .'
+          '. status      .'
+          '. breadcrumbs .'
+          '. topbar      .'
+          '. results     .'
+          '. pagination  .'
+          '. .           .';
+      }
+
+      .header-bg {
+        background-color: var(--atomic-neutral-light);
+        grid-area: 1 / -1 / 1 / 1;
+      }
+
+      atomic-facet-manager {
+        display: none;
+      }
+
+      atomic-sort-dropdown {
+        display: none;
+      }
+
+      atomic-search-box {
+        grid-area: search;
+        margin: var(--spacing) 0;
+        max-width: var(--search-box-width);
+      }
+
+      .status {
+        grid-area: results;
+      }
+
+      atomic-facet-manager {
+        grid-area: facets;
+        margin-top: var(--spacing);
+      }
+
+      atomic-facet-manager > * {
+        margin-bottom: var(--spacing);
+      }
+
+      atomic-breadcrumb-manager {
+        grid-area: breadcrumbs;
+        margin-top: var(--spacing);
+        padding-bottom: var(--spacing);
+        border-bottom: 1px solid var(--atomic-neutral);
+      }
+
+      .topbar {
+        grid-area: topbar;
+        margin: var(--spacing) 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .results,
+      .result-status {
+        grid-area: results;
+      }
+
+      .pagination {
+        grid-area: pagination;
+        margin: var(--spacing) 0;
+      }
+
+      @media only screen and (min-width: 1024px) {
         atomic-search-interface {
-          grid-template-rows: 16px 50px 16px auto 1fr;
-          grid-template-columns: minmax(0, 100%);
+          column-gap: var(--spacing);
+          grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
+          grid-template-areas:
+            '. .      search      .'
+            '. facets breadcrumbs .'
+            '. facets topbar      .'
+            '. facets results     .'
+            '. facets pagination  .'
+            '. facets .           .';
         }
 
-        atomic-facet-manager,
-        .header,
-        atomic-search-box,
-        .results-container {
-          grid-column: 1 / auto;
-        }
-
-        atomic-breadcrumb-manager,
-        atomic-query-summary,
-        atomic-no-results,
-        atomic-did-you-mean,
-        atomic-query-error,
-        atomic-sort-dropdown,
         atomic-facet-manager {
-          padding: 0 15px;
+          display: block;
         }
 
-        atomic-atomic-breadcrumb-manager,
-        atomic-query-summary,
-        atomic-no-results,
-        atomic-query-error,
+        atomic-refine-toggle {
+          display: none;
+        }
+
         atomic-sort-dropdown {
-          margin-bottom: 10px;
+          display: block;
         }
 
-        atomic-facet-manager {
-          grid-row: 4 / auto;
-          display: flex;
-          flex-wrap: wrap;
-        }
-
-        atomic-facet-manager > * {
-          margin: 0 10px 0 0;
-        }
-
-        .results-container {
-          grid-row: 5 / auto;
-          margin-top: 0;
-        }
-
-        atomic-search-box {
-          justify-self: center;
-          min-width: 80%;
-          max-width: 80%;
+        .status {
+          max-width: var(--search-box-width);
         }
       }
 
-      @media only screen and (max-width: 640px) {
-        .side-by-side-container {
-          flex-direction: column;
-          align-items: flex-start;
-        }
+      /* V1 temp customization */
+      atomic-query-summary::part(no-results) {
+        display: none;
       }
     </style>
   </head>
 
   <body>
     <atomic-search-interface id="search">
-      <div class="header"></div>
+      <div class="header-bg"></div>
       <atomic-search-box></atomic-search-box>
       <atomic-facet-manager>
         <atomic-category-facet-v1 field="geographicalhierarchy" label="World Atlas" with-search>
@@ -249,6 +245,9 @@
           <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
           <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
         </atomic-numeric-facet-v1>
+        <atomic-numeric-facet-v1 field="sncost" label="Cost">
+          <atomic-format-currency currency="CAD"></atomic-format-currency>
+        </atomic-numeric-facet-v1>
         <atomic-timeframe-facet label="Timeframe" with-date-picker>
           <atomic-timeframe unit="hour"></atomic-timeframe>
           <atomic-timeframe unit="day"></atomic-timeframe>
@@ -258,7 +257,12 @@
           <atomic-timeframe unit="year"></atomic-timeframe>
         </atomic-timeframe-facet>
         <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
-        <atomic-rating-range-facet field="snrating" label="Rating Range" number-of-intervals="5">
+        <atomic-rating-range-facet
+          facet-id="snrating_range"
+          field="snrating"
+          label="Rating Range"
+          number-of-intervals="5"
+        >
         </atomic-rating-range-facet>
         <atomic-color-facet
           field="filetype"
@@ -267,19 +271,20 @@
           sort-criteria="occurrences"
         ></atomic-color-facet>
       </atomic-facet-manager>
-      <div class="results-container">
-        <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+      <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+      <div class="topbar">
+        <atomic-query-summary enable-duration="false"></atomic-query-summary>
+        <atomic-refine-toggle></atomic-refine-toggle>
+        <atomic-sort-dropdown>
+          <atomic-sort-expression caption="relevance" expression="relevancy"></atomic-sort-expression>
+          <atomic-sort-expression caption="most-recent" expression="date descending"></atomic-sort-expression>
+        </atomic-sort-dropdown>
+      </div>
+      <div class="results">
         <atomic-did-you-mean></atomic-did-you-mean>
         <atomic-query-error></atomic-query-error>
-        <div class="side-by-side-container">
-          <atomic-query-summary></atomic-query-summary>
-          <atomic-sort-dropdown>
-            <atomic-sort-expression caption="relevance" expression="relevancy"></atomic-sort-expression>
-            <atomic-sort-expression caption="most-recent" expression="date descending"></atomic-sort-expression>
-          </atomic-sort-dropdown>
-        </div>
         <atomic-no-results-v1></atomic-no-results-v1>
-        <atomic-result-list-v1 fields-to-include="snrating">
+        <atomic-result-list-v1 fields-to-include="snrating,sncost">
           <atomic-result-template>
             <template>
               <style>
@@ -368,6 +373,13 @@
                     <atomic-result-text field="filetype"></atomic-result-text>
                   </atomic-field-condition>
 
+                  <atomic-field-condition class="field" if-defined="sncost">
+                    <span class="field-label">Cost:</span>
+                    <atomic-result-number-v1 field="sncost">
+                      <atomic-format-currency currency="CAD"></atomic-format-currency>
+                    </atomic-result-number-v1>
+                  </atomic-field-condition>
+
                   <span class="field">
                     <span class="field-label">Date:</span>
                     <atomic-result-date></atomic-result-date>
@@ -393,10 +405,13 @@
             </template>
           </atomic-result-template>
         </atomic-result-list-v1>
-        <div class="footer-item side-by-side-container">
-          <atomic-pager></atomic-pager>
-          <atomic-results-per-page></atomic-results-per-page>
-        </div>
+      </div>
+      <div class="status">
+        <atomic-query-error></atomic-query-error>
+        <atomic-no-results-v1></atomic-no-results-v1>
+      </div>
+      <div class="pagination">
+        <atomic-load-more-results></atomic-load-more-results>
       </div>
     </atomic-search-interface>
   </body>

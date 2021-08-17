@@ -27,7 +27,7 @@ export const FacetHeader: FunctionalComponent<{
   return [
     <button
       part="label-button"
-      class="flex justify-between w-full py-1 px-2 text-on-background text-lg hover:text-primary focus:text-primary focus:outline-color"
+      class="flex font-bold justify-between w-full py-1 px-2 text-on-background text-lg hover:text-primary focus:text-primary focus:outline-color"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onMouseDown={(e) => createRipple(e, {color: 'neutral-light'})}
       onClick={() => props.onToggleCollapse()}

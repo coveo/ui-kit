@@ -500,16 +500,16 @@ describe('facet-set slice', () => {
       expect(finalState['author'].currentValues).toEqual([]);
     });
 
-    it('sets #preventAutoSelect to true on all facets', () => {
+    it('sets #preventAutoSelect to true on facets with at least one value selected', () => {
       const a = 'a';
       const b = 'b';
 
       state[a] = buildMockFacetRequest({preventAutoSelect: false});
       state[b] = buildMockFacetRequest({preventAutoSelect: false});
-      const f = {[b]: []};
+      const f = {[a]: [], [b]: ['foo', 'bar']};
 
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
-      expect(finalState[a].preventAutoSelect).toBe(true);
+      expect(finalState[a].preventAutoSelect).toBe(false);
       expect(finalState[b].preventAutoSelect).toBe(true);
     });
   });

@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   updateBasicConfiguration,
@@ -43,21 +44,24 @@ export const configurationReducer = createReducer(
         }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
-        if (action.payload.enabled !== undefined) {
+        if (!isNullOrUndefined(action.payload.enabled)) {
           state.analytics.enabled = action.payload.enabled;
         }
-        if (action.payload.originLevel2 !== undefined) {
+        if (!isNullOrUndefined(action.payload.originLevel2)) {
           state.analytics.originLevel2 = action.payload.originLevel2;
         }
-        if (action.payload.originLevel3 !== undefined) {
+        if (!isNullOrUndefined(action.payload.originLevel3)) {
           state.analytics.originLevel3 = action.payload.originLevel3;
         }
-        if (action.payload.apiBaseUrl !== undefined) {
+        if (!isNullOrUndefined(action.payload.apiBaseUrl)) {
           state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
         }
-        if (action.payload.runtimeEnvironment !== undefined) {
+        if (!isNullOrUndefined(action.payload.runtimeEnvironment)) {
           state.analytics.runtimeEnvironment =
             action.payload.runtimeEnvironment;
+        }
+        if (!isNullOrUndefined(action.payload.anonymous)) {
+          state.analytics.anonymous = action.payload.anonymous;
         }
       })
       .addCase(disableAnalytics, (state) => {
