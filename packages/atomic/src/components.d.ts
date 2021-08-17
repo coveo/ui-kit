@@ -588,7 +588,7 @@ export namespace Components {
     }
     interface AtomicResultNumberV1 {
         /**
-          * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
         "field": string;
     }
@@ -1947,7 +1947,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultNumberV1 {
         /**
-          * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
         "field": string;
     }
