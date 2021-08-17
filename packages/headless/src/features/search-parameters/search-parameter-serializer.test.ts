@@ -4,6 +4,19 @@ import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-fa
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {buildSearchParameterSerializer} from './search-parameter-serializer';
 
+const someSpecialCharactersThatNeedsEncoding = [
+  '&',
+  ',',
+  '=',
+  '[',
+  ']',
+  '#',
+  '?',
+  ' ',
+  '/',
+  '>',
+];
+
 describe('buildSearchParameterSerializer', () => {
   describe('#serialize', () => {
     const {serialize} = buildSearchParameterSerializer();
@@ -11,6 +24,13 @@ describe('buildSearchParameterSerializer', () => {
     it('serializes a record with a single key and string value', () => {
       const result = serialize({q: 'a'});
       expect(result).toBe('q=a');
+    });
+
+    it('serializes special characters in records', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((specialChar) => {
+        const result = serialize({q: `hello${specialChar}`});
+        expect(result).toBe(`q=hello${encodeURIComponent(specialChar)}`);
+      });
     });
 
     it('serializes a record with a multiple keys and string values', () => {
@@ -29,6 +49,16 @@ describe('buildSearchParameterSerializer', () => {
       const f = {author: ['a', 'b'], filetype: ['c', 'd']};
       const result = serialize({f});
       expect(result).toEqual('f[author]=a,b&f[filetype]=c,d');
+    });
+
+    it('serializes special characters in the #f parameter correctly', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((specialChar) => {
+        const f = {author: ['a', specialChar]};
+        const result = serialize({f});
+        expect(result).toEqual(
+          `f[author]=a,${encodeURIComponent(specialChar)}`
+        );
+      });
     });
 
     it('when the #f parameter contains invalid values, it does not include it', () => {
@@ -119,6 +149,13 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({q: 'a'});
     });
 
+    it('deserializes a string with a single key and string value with special characters', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((char) => {
+        const result = deserialize(`q=${encodeURIComponent(char)}`);
+        expect(result).toEqual({q: char});
+      });
+    });
+
     it('removes keys that are invalid', () => {
       const result = deserialize('invalid=b');
       expect(result).toEqual({});
@@ -132,6 +169,15 @@ describe('buildSearchParameterSerializer', () => {
     it('deserializes a string with multiple key-value pairs', () => {
       const result = deserialize('q=a&enableQuerySyntax=true');
       expect(result).toEqual({q: 'a', enableQuerySyntax: true});
+    });
+
+    it('deserializes a string with multiple key-value pairs with special characters', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((char) => {
+        const result = deserialize(
+          `q=${encodeURIComponent(char)}&enableQuerySyntax=true`
+        );
+        expect(result).toEqual({q: char, enableQuerySyntax: true});
+      });
     });
 
     it('deserializes a string where the value contains an equals sign (e.g. aq)', () => {
@@ -149,6 +195,20 @@ describe('buildSearchParameterSerializer', () => {
       });
     });
 
+    it('deserializes two facets correctly with special characters', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((char) => {
+        const result = deserialize(
+          `f[author]=${encodeURIComponent(char)},b&f[filetype]=c,d`
+        );
+        expect(result).toEqual({
+          f: {
+            author: [char, 'b'],
+            filetype: ['c', 'd'],
+          },
+        });
+      });
+    });
+
     it('deserializes two category facets correctly', () => {
       const result = deserialize('cf[author]=a,b&cf[filetype]=c,d');
       expect(result).toEqual({
@@ -156,6 +216,20 @@ describe('buildSearchParameterSerializer', () => {
           author: ['a', 'b'],
           filetype: ['c', 'd'],
         },
+      });
+    });
+
+    it('deserializes two category facets correctly with special characters', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((char) => {
+        const result = deserialize(
+          `cf[author]=${encodeURIComponent(char)},b&cf[filetype]=c,d`
+        );
+        expect(result).toEqual({
+          cf: {
+            author: [char, 'b'],
+            filetype: ['c', 'd'],
+          },
+        });
       });
     });
 

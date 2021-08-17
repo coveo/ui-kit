@@ -1,3 +1,4 @@
+import {isString} from '@coveo/bueno';
 import {isSearchApiDate} from '../../api/search/date/date-format';
 import {isRelativeDateFormat} from '../../api/search/date/relative-date';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
@@ -8,6 +9,8 @@ import {SearchParameters} from './search-parameter-actions';
 const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
+
+type unknownFacetObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -20,7 +23,7 @@ function serialize(obj: SearchParameters) {
     .join(delimiter);
 }
 
-function serializePair(pair: [string, unknown]) {
+function serializePair(pair: [string, string | number | boolean]) {
   const [key, val] = pair;
 
   if (!isValidKey(key)) {
@@ -35,7 +38,7 @@ function serializePair(pair: [string, unknown]) {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
-  return `${key}${equal}${val}`;
+  return `${key}${equal}${encodeURIComponent(val)}`;
 }
 
 function isFacetObject(obj: unknown): obj is Record<string, string[]> {
@@ -77,7 +80,12 @@ function allEntriesAreValid(
 
 function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
-    .map(([facetId, values]) => `${key}[${facetId}]${equal}${values.join(',')}`)
+    .map(
+      ([facetId, values]) =>
+        `${key}[${facetId}]${equal}${values
+          .map((value) => encodeURIComponent(value))
+          .join(',')}`
+    )
     .join(delimiter);
 }
 
@@ -224,8 +232,23 @@ function cast<K extends keyof SearchParameters>(
   }
 
   if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
-    return [key, JSON.parse(value)];
+    return [key, castUnknownFacetObject(value)];
   }
 
-  return pair;
+  return [key, decodeURIComponent(value)];
+}
+
+function castUnknownFacetObject(value: string) {
+  const jsonParsed = JSON.parse(value) as unknownFacetObject;
+  const ret = {} as unknownFacetObject;
+  Object.entries(jsonParsed).forEach((entry) => {
+    ret[entry[0]] = entry[1].map((e) => {
+      if (isString(e)) {
+        return decodeURIComponent(e);
+      }
+      return e;
+    });
+  });
+
+  return ret;
 }
