@@ -103,7 +103,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   updateState() {
     if (this.state.value !== this.searchBox.state.value) {
-      this.updateSearchboxText(this.searchBox.state.value);
+      this.input.value = this.searchBox.state.value;
     }
     this.state = this.searchBox.state;
   }
@@ -147,13 +147,6 @@ export default class QuanticSearchBox extends LightningElement {
   handleHighlightChange(event) {
     const suggestion = event.detail;
     this.input.value = suggestion.rawValue;
-  }
-
-  /**
-   * @param {string} textValue
-   */
-  updateSearchboxText(textValue) {
-    this.input.value = textValue;
   }
 
   handleEnter() {
