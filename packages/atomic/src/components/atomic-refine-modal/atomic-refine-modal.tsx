@@ -27,7 +27,7 @@ import SortIcon from '../../images/sort.svg';
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
  *
- * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing furter customization.
+ * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
  *
  * @part container - The container of the modal's content.
  * @part header - The header of the modal, containing the title.
