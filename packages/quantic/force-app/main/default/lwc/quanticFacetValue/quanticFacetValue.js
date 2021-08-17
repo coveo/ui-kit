@@ -50,7 +50,7 @@ export default class QuanticFacetValue extends LightningElement {
   }
 
   get isCustom() {
-    return this.variant === this.Variants.Custom && Boolean(this.formattingFunction);
+    return this.variant === this.Variants.Custom && this.formattingFunction instanceof Function;
   }
 
   get formattedFacetValue() {
