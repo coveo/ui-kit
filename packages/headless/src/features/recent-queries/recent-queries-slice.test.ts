@@ -63,4 +63,27 @@ fdescribe('recent-queries slice', () => {
       testQueries
     );
   });
+
+  it('should set new recent query on search fulfilled and kick out oldest query if queue is full', () => {
+    state.queries = ['1', '2', '3', '4', '5'];
+    state.maxQueries = 5;
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        queryExecuted: '6',
+        response: buildMockSearchResponse({
+          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+        }),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual([
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+    ]);
+  });
 });
