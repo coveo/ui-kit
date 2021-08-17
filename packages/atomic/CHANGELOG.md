@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.66.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.65.0...@coveo/atomic@0.66.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** style atomic-sort-dropdown for v1 & add a sort dropdown to the atomic-refine-modal ([#1102](https://github.com/coveo/ui-kit/issues/1102)) ([de7b1d4](https://github.com/coveo/ui-kit/commit/de7b1d4d57e92f92318b5f27e7ad09ead58f0e1a))
+
+
+
+
+
 # [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.64.0...@coveo/atomic@0.65.0) (2021-08-17)
 
 
