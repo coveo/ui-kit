@@ -32,7 +32,7 @@ import SortIcon from '../../images/sort.svg';
  * @part container - The container of the modal's content.
  * @part header - The header of the modal, containing the title.
  * @part close-button - The button in the header that closes the modal.
- * @part section-title - The title for each sections.
+ * @part section-title - The title for each section.
  * @part select - The `<select>` element of the drop-down list.
  * @part filter-clear-all - The button that resets all actively selected facet values.
  * @part footer-button - The button in the footer that closes the modal.
