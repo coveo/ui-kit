@@ -2,6 +2,8 @@ import {LightningElement, api} from 'lwc';
 import {loadDependencies, setEngineOptions, setInitializedCallback} from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+// @ts-ignore
+import { STANDALONE_SEARCH_BOX_STORAGE_KEY } from 'c/quanticUtils';
 
 export default class QuanticSearchInterface extends LightningElement {
   /** @type {any} */
@@ -62,7 +64,15 @@ export default class QuanticSearchInterface extends LightningElement {
     if (!this.disableStateInUrl) {
       this.initUrlManager(engine);
     }
-    engine.executeFirstSearch();
+    
+    const data = window.localStorage.getItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+    if(data) {
+      window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+      const {analytics} = JSON.parse(data);
+      engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+    } else {
+      engine.executeFirstSearch();
+    }
   }
 
   get fragment() {
