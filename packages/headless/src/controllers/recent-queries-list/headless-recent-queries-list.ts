@@ -15,6 +15,10 @@ import {
 import {ArrayValue, NumberValue, Schema} from '../../../../bueno/dist';
 import {executeSearch} from '../../features/search/search-actions';
 import {updateQuery} from '../../features/query/query-actions';
+import {
+  logClearRecentQueries,
+  logRecentQueryClick,
+} from '../../features/recent-queries/recent-queries-analytics-actions';
 
 export interface RecentQueriesListProps {
   /**
