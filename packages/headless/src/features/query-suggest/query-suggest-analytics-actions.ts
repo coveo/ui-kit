@@ -26,9 +26,7 @@ export const logQuerySuggestionClick = (
     }
   )();
 
-export type OmniboxSuggestionMetadata = OmniboxSuggestionsMetadata & {
-  querySuggestResponseId: string;
-};
+export type OmniboxSuggestionMetadata = OmniboxSuggestionsMetadata;
 
 export function buildOmniboxSuggestionMetadata(
   state: Partial<SearchAppState>,
