@@ -8,8 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets-v1/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result-v1/atomic-result";
-import { ResultDisplayDensity as ResultDisplayDensity1, ResultDisplayImageSize as ResultDisplayImageSize1, ResultDisplayLayout as ResultDisplayLayout1 } from "./components/atomic-result-v1/atomic-result";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result-v1/atomic-result-display-options";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -623,6 +622,20 @@ export namespace Components {
          */
         "field": string;
     }
+    interface AtomicResultPlaceholderV1 {
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image": ResultDisplayImageSize;
+    }
     interface AtomicResultPrice {
         /**
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
@@ -1192,6 +1205,12 @@ declare global {
         prototype: HTMLAtomicResultNumberV1Element;
         new (): HTMLAtomicResultNumberV1Element;
     };
+    interface HTMLAtomicResultPlaceholderV1Element extends Components.AtomicResultPlaceholderV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultPlaceholderV1Element: {
+        prototype: HTMLAtomicResultPlaceholderV1Element;
+        new (): HTMLAtomicResultPlaceholderV1Element;
+    };
     interface HTMLAtomicResultPriceElement extends Components.AtomicResultPrice, HTMLStencilElement {
     }
     var HTMLAtomicResultPriceElement: {
@@ -1396,6 +1415,7 @@ declare global {
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-number-v1": HTMLAtomicResultNumberV1Element;
+        "atomic-result-placeholder-v1": HTMLAtomicResultPlaceholderV1Element;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
@@ -2038,6 +2058,20 @@ declare namespace LocalJSX {
          */
         "field": string;
     }
+    interface AtomicResultPlaceholderV1 {
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image"?: ResultDisplayImageSize;
+    }
     interface AtomicResultPrice {
         /**
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
@@ -2359,6 +2393,7 @@ declare namespace LocalJSX {
         "atomic-result-list-v1": AtomicResultListV1;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-number-v1": AtomicResultNumberV1;
+        "atomic-result-placeholder-v1": AtomicResultPlaceholderV1;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
@@ -2438,6 +2473,7 @@ declare module "@stencil/core" {
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-number-v1": LocalJSX.AtomicResultNumberV1 & JSXBase.HTMLAttributes<HTMLAtomicResultNumberV1Element>;
+            "atomic-result-placeholder-v1": LocalJSX.AtomicResultPlaceholderV1 & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderV1Element>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
