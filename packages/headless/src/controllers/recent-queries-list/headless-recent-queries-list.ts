@@ -1,3 +1,4 @@
+import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
 import {buildController, Controller} from '../controller/headless-controller';
 import {search, recentQueries} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
@@ -12,7 +13,6 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {ArrayValue, NumberValue, Schema} from '../../../../bueno/dist';
 import {executeSearch} from '../../features/search/search-actions';
 import {updateQuery} from '../../features/query/query-actions';
 import {

@@ -12,7 +12,7 @@ import {
   RecentQueriesState,
 } from './recent-queries-state';
 
-fdescribe('recent-queries slice', () => {
+describe('recent-queries slice', () => {
   let state: RecentQueriesState;
 
   const testQuery = 'what is a query';
@@ -24,9 +24,10 @@ fdescribe('recent-queries slice', () => {
   });
 
   it('should have initial state', () => {
-    expect(recentQueriesReducer(undefined, {type: 'foo'})).toEqual(
-      'RecentQueries'
-    );
+    expect(recentQueriesReducer(undefined, {type: 'foo'})).toEqual({
+      maxQueries: 10,
+      queries: [],
+    });
   });
 
   it('#registerRecentQueries should set queries and maxQueries params in state', () => {
@@ -47,7 +48,7 @@ fdescribe('recent-queries slice', () => {
     expect(state.queries).toEqual([]);
   });
 
-  it('should set new recent query on search fulfilled', () => {
+  it('should set new recent query on search fulfilled if queue is empty', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: testQuery,
@@ -64,8 +65,29 @@ fdescribe('recent-queries slice', () => {
     );
   });
 
+  it('should set new recent query on search fulfilled if queue is empty', () => {
+    const otherTestQuery = 'bar';
+    state.queries = testQueries;
+    state.maxQueries = 10;
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        queryExecuted: otherTestQuery,
+        response: buildMockSearchResponse({
+          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+        }),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual([
+      otherTestQuery,
+      ...testQueries,
+    ]);
+  });
+
   it('should set new recent query on search fulfilled and kick out oldest query if queue is full', () => {
-    state.queries = ['1', '2', '3', '4', '5'];
+    state.queries = ['5', '4', '3', '2', '1'];
     state.maxQueries = 5;
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
@@ -79,11 +101,11 @@ fdescribe('recent-queries slice', () => {
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
-      '2',
-      '3',
-      '4',
-      '5',
       '6',
+      '5',
+      '4',
+      '3',
+      '2',
     ]);
   });
 });

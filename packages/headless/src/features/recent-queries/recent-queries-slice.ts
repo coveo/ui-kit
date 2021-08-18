@@ -18,9 +18,9 @@ export const recentQueriesReducer = createReducer(
         state.queries.length = 0;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.queries.push(action.payload.originalQuery);
+        state.queries.unshift(action.payload.queryExecuted);
         if (state.queries.length > state.maxQueries) {
-          state.queries.shift();
+          state.queries.pop();
         }
       });
   }
