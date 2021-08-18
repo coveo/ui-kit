@@ -279,12 +279,12 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.clearRecentQueries);
     }
 
-    public logRecentlyClickedDocumentClick(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.logCustomEvent(SearchPageEvents.recentlyClickedDocumentClick, {info, identifier});
+    public logRecentResultClick(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.logCustomEvent(SearchPageEvents.recentResultClick, {info, identifier});
     }
 
-    public logClearRecentlyClickedDocuments() {
-        return this.logCustomEvent(SearchPageEvents.clearRecentlyClickedDocuments);
+    public logClearRecentResults() {
+        return this.logCustomEvent(SearchPageEvents.clearRecentResults);
     }
 
     public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {

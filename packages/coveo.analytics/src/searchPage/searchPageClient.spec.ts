@@ -494,17 +494,17 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.clearRecentQueries);
     });
 
-    it('should send proper payload for #logRecentlyClickedDocumentClick', async () => {
-        await client.logRecentlyClickedDocumentClick(fakeDocInfo, fakeDocID);
-        expectMatchCustomEventPayload(SearchPageEvents.recentlyClickedDocumentClick, {
+    it('should send proper payload for #logRecentResultClick', async () => {
+        await client.logRecentResultClick(fakeDocInfo, fakeDocID);
+        expectMatchCustomEventPayload(SearchPageEvents.recentResultClick, {
             info: fakeDocInfo,
             identifier: fakeDocID,
         });
     });
 
-    it('should send proper payload for #logClearRecentlyClickedDocuments', async () => {
-        await client.logClearRecentlyClickedDocuments();
-        expectMatchCustomEventPayload(SearchPageEvents.clearRecentlyClickedDocuments);
+    it('should send proper payload for #logClearRecentResults', async () => {
+        await client.logClearRecentResults();
+        expectMatchCustomEventPayload(SearchPageEvents.clearRecentResults);
     });
 
     it('should send proper payload for #logCustomEventWithType', async () => {

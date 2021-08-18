@@ -210,13 +210,13 @@ export enum SearchPageEvents {
      */
     clearRecentQueries = 'clearRecentQueries',
     /**
-     * Identifies the custom event that gets logged when a recently clicked documents list item gets clicked.
+     * Identifies the custom event that gets logged when a recently clicked results list item gets clicked.
      */
-    recentlyClickedDocumentClick = 'recentlyClickedDocumentsClick',
+    recentResultClick = 'recentResultClick',
     /**
-     * Identifies the custom event that gets logged when a recently clicked documents list gets cleared.
+     * Identifies the custom event that gets logged when a recently clicked results list gets cleared.
      */
-    clearRecentlyClickedDocuments = 'clearRecentlyClickedDocuments',
+    clearRecentResults = 'clearRecentResults',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
@@ -247,8 +247,8 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.expandSmartSnippetSuggestion]: 'smartSnippetSuggestions',
     [SearchPageEvents.collapseSmartSnippetSuggestion]: 'smartSnippetSuggestions',
     [SearchPageEvents.clearRecentQueries]: 'recentQueries',
-    [SearchPageEvents.recentlyClickedDocumentClick]: 'recentlyClickedDocuments',
-    [SearchPageEvents.clearRecentlyClickedDocuments]: 'recentlyClickedDocuments',
+    [SearchPageEvents.recentResultClick]: 'recentlyClickedDocuments',
+    [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
 };
 
 export interface FacetMetadata {
