@@ -43,6 +43,10 @@ export default class QuanticCategoryFacet extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
+  disconnectedCallback() {
+    this.unsubscribe?.();
+  }
+
   /**
    * @param {import("coveo").SearchEngine} engine
    */

@@ -59,12 +59,8 @@ export default class QuanticSort extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribeSearchStatus) {
-      this.unsubscribeSearchStatus();
-    }
-    if (this.unsubscribeSort) {
-      this.unsubscribeSort();
-    }
+    this.unsubscribeSearchStatus?.();
+    this.unsubscribeSort?.();
   }
 
   updateState() {

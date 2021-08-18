@@ -83,9 +83,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {

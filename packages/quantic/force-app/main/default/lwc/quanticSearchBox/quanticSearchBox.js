@@ -97,9 +97,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {

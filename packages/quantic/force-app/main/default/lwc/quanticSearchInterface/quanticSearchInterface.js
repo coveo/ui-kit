@@ -49,9 +49,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribeUrlManager) {
-      this.unsubscribeUrlManager();
-    }
+    this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
   }
  
