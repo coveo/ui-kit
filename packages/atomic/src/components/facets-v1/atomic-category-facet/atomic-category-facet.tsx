@@ -234,7 +234,7 @@ export class AtomicCategoryFacet
     return (
       <li key={allCategories}>
         <Button
-          style="borderless-outline-primary"
+          style="borderless-outline-on-background"
           part="all-categories-button"
           class="parent-button"
           onClick={() => this.facet.deselectAll()}
@@ -265,7 +265,7 @@ export class AtomicCategoryFacet
     return (
       <li key={displayValue}>
         <Button
-          style="borderless-outline-primary"
+          style="borderless-outline-on-background"
           part="parent-button"
           class="parent-button"
           onClick={() => this.facet.toggleSelect(facetValue)}
