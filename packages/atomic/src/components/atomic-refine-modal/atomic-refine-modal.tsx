@@ -19,10 +19,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {createRipple} from '../../utils/ripple';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFacetElements, SortDropdownOption} from '../../utils/store';
 import SortIcon from '../../images/sort.svg';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -183,14 +183,13 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.bindings.i18n.t('filters')}
         </span>
         {this.breadcrumbManagerState.hasBreadcrumbs && (
-          <button
-            part="filter-clear-all"
-            class="truncate btn-no-outline-primary px-2 py-1"
+          <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
-            onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-          >
-            <span>{this.bindings.i18n.t('clear')}</span>
-          </button>
+            style="borderless-outline-primary"
+            text={this.bindings.i18n.t('clear')}
+            class="px-2 py-1"
+            part="filter-clear-all"
+          ></Button>
         )}
       </div>,
       <slot name="facets"></slot>,
@@ -200,11 +199,11 @@ export class AtomicRefineModal implements InitializableComponent {
   private renderFooter() {
     return (
       <div class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg">
-        <button
+        <Button
+          style="primary"
           part="footer-button"
-          class="btn-primary p-3 w-full flex text-lg justify-center"
+          class="p-3 w-full flex text-lg justify-center"
           onClick={() => (this.enabled = false)}
-          onMouseDown={(e) => createRipple(e, {color: 'primary'})}
         >
           <span class="truncate mr-1">
             {this.bindings.i18n.t('view-results')}
@@ -214,7 +213,7 @@ export class AtomicRefineModal implements InitializableComponent {
               this.bindings.i18n.language
             )}
           </span>
-        </button>
+        </Button>
       </div>
     );
   }

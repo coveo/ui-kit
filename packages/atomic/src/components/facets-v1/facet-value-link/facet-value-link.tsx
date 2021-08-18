@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {createRipple} from '../../../utils/ripple';
+import {Button} from '../../common/button';
 import {FacetValueProps} from '../facet-common';
 
 export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
@@ -14,19 +14,19 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
 
   return (
     <li key={props.displayValue}>
-      <button
+      <Button
+        style="borderless-outline-on-background"
         part="value-link"
         onClick={() => props.onClick()}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-        class="value-link w-full flex items-center px-2 py-2.5 text-left text-on-background truncate focus:outline-none group focus:bg-neutral-light hover:bg-neutral-light rounded"
-        aria-pressed={props.isSelected.toString()}
-        aria-label={ariaLabel}
+        class="w-full flex items-center px-2 py-2.5 text-left truncate focus:outline-none"
+        ariaPressed={props.isSelected.toString()}
+        ariaLabel={ariaLabel}
       >
         {children}
         <span part="value-count" class="value-count">
           {count}
         </span>
-      </button>
+      </Button>
     </li>
   );
 };

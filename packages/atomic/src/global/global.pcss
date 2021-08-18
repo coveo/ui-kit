@@ -40,18 +40,26 @@
   }
 
   .input-primary {
-    @apply border border-neutral bg-background rounded  hover:border-primary-light focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring-primary;
+    @apply border border-neutral bg-background rounded hover:border-primary-light focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring-primary;
   }
 
   .btn-primary {
-    @apply rounded border bg-primary hover:bg-primary-light focus:bg-primary-light focus:outline-none text-on-primary;
+    @apply rounded bg-primary text-on-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-ring-primary;
   }
 
   .btn-outline-primary {
-    @apply rounded border border-neutral bg-background hover:border-primary-light focus:border-primary focus:outline-none text-primary hover:text-primary-light;
+    @apply rounded border border-neutral bg-background text-primary hover:border-primary-light hover:text-primary-light focus:border-primary focus:text-primary focus:outline-none;
   }
 
-  .btn-no-outline-primary {
-    @apply rounded bg-background hover:bg-neutral-light focus:bg-neutral-light focus:outline-none text-primary hover:text-primary-light;
+  .btn-borderless-outline-primary {
+    @apply rounded bg-background text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color;
+  }
+
+  .btn-outline-on-background {
+    @apply rounded border border-neutral bg-background text-on-background hover:bg-neutral-light hover:text-primary hover:border-primary-light focus:border-primary focus:bg-neutral-light focus:text-primary;
+  }
+
+  .btn-borderless-outline-on-background {
+    @apply rounded bg-background text-on-background hover:bg-neutral-light focus:bg-neutral-light focus:outline-color focus:text-primary hover:text-primary;
   }
 }

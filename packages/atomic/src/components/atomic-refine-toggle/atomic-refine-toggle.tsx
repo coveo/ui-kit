@@ -10,7 +10,7 @@ import {
   InitializableComponent,
   BindStateToController,
 } from '../../utils/initialization-utils';
-import {createRipple} from '../../utils/ripple';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
@@ -62,13 +62,12 @@ export class AtomicRefineToggle implements InitializableComponent {
     }
 
     return (
-      <button
-        class="btn-outline-primary p-3"
+      <Button
+        style="outline-primary"
+        class="p-3"
         onClick={() => this.enableModal()}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-      >
-        <span>{this.bindings.i18n.t('sort-and-filter')}</span>
-      </button>
+        text={this.bindings.i18n.t('sort-and-filter')}
+      ></Button>
     );
   }
 }

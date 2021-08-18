@@ -3,7 +3,7 @@ import {i18n} from 'i18next';
 import {CategoryFacetSearchResult as HeadlessCategoryFacetSearchResult} from '@coveo/headless';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {createRipple} from '../../../utils/ripple';
+import {Button} from '../../common/button';
 
 interface CategoryFacetSearchResultProps {
   result: HeadlessCategoryFacetSearchResult;
@@ -65,11 +65,11 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
 
   return (
     <li key={result.displayValue}>
-      <button
+      <Button
+        style="borderless-outline-on-background"
         part="search-result"
         onClick={() => onClick()}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-        class="search-result w-full flex flex-col px-2 py-2.5 text-on-background truncate focus:outline-none group rounded focus:bg-neutral-light hover:bg-neutral-light"
+        class="w-full flex flex-col px-2 py-2.5 truncate group focus:outline-none"
         aria-label={ariaLabel}
       >
         <div class="w-full flex">
@@ -88,7 +88,7 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
         >
           {renderPath(localizedPath)}
         </div>
-      </button>
+      </Button>
     </li>
   );
 };
