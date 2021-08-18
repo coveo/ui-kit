@@ -59,23 +59,13 @@ export class AtomicResultPlaceholder {
           <div class={placeholderClasses}></div>
         </atomic-result-section-visual>
         <atomic-result-section-badges>
-          <div class={placeholderClasses} style={{width: '14rem'}}></div>
+          <div class={`badge ${placeholderClasses}`}></div>
         </atomic-result-section-badges>
         <atomic-result-section-actions>
-          <div class={placeholderClasses} style={{width: '10rem'}}></div>
+          <div class={`action ${placeholderClasses}`}></div>
         </atomic-result-section-actions>
         <atomic-result-section-title>
-          <div
-            class={placeholderClasses}
-            style={{
-              display: 'grid',
-              gridAutoFlow: 'column',
-              gridGap: '0.5rem',
-              height: 'var(--line-height)',
-              width: '30rem',
-              maxWidth: '100%',
-            }}
-          ></div>
+          <div class={`title ${placeholderClasses}`}></div>
         </atomic-result-section-title>
         <atomic-result-section-excerpt>
           {this.renderExcerptLine('100%')}
