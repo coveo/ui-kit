@@ -120,7 +120,7 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.bindings.i18n.t('sort-and-filter')}
         </span>
         <Button
-          style="transparent-outline-on-background"
+          style="text-transparent"
           class="p-6 grid place-items-center"
           part="close-button"
           onClick={() => (this.enabled = false)}
@@ -162,7 +162,7 @@ export class AtomicRefineModal implements InitializableComponent {
       </div>,
       <div class="relative">
         <select
-          class="w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg bg-background border border-neutral px-6 py-5 focus:outline-none focus:border-primary-light focus:text-primary-light hover:border-primary-light hover:text-primary-light"
+          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg px-6 py-5"
           part="select"
           aria-label={this.bindings.i18n.t('sort-by')}
           onChange={(option) => this.select(option)}
@@ -189,7 +189,7 @@ export class AtomicRefineModal implements InitializableComponent {
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
-            style="borderless-outline-primary"
+            style="text-primary"
             text={this.bindings.i18n.t('clear')}
             class="px-2 py-1"
             part="filter-clear-all"

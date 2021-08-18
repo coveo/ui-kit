@@ -26,7 +26,7 @@ export const FacetHeader: FunctionalComponent<{
 
   return [
     <Button
-      style="transparent-outline-on-background"
+      style="text-transparent"
       part="label-button"
       class="flex font-bold justify-between w-full py-1 px-2 text-lg"
       title={props.isCollapsed ? expandFacet : collapseFacet}
@@ -42,7 +42,7 @@ export const FacetHeader: FunctionalComponent<{
     </Button>,
     props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <Button
-        style="borderless-outline-primary"
+        style="text-primary"
         part="clear-button"
         class="flex items-baseline max-w-full p-2 text-sm"
         title={clearFiltersForFacet}

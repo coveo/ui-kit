@@ -66,10 +66,10 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
   return (
     <li key={result.displayValue}>
       <Button
-        style="borderless-outline-on-background"
+        style="text-neutral"
         part="search-result"
         onClick={() => onClick()}
-        class="w-full flex flex-col px-2 py-2.5 truncate group focus:outline-none"
+        class="w-full flex flex-col px-2 py-2.5 truncate group no-outline"
         aria-label={ariaLabel}
       >
         <div class="w-full flex">

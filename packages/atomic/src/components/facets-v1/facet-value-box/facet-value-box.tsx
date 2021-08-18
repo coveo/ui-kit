@@ -15,7 +15,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
   return (
     <li key={props.displayValue}>
       <Button
-        style="outline-on-background"
+        style="outline-bg-neutral"
         part="value-box"
         onClick={() => props.onClick()}
         class={`value-box box-border w-full h-full flex flex-col items-center p-2 group ${

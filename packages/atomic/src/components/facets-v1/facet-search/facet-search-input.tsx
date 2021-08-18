@@ -42,7 +42,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
         </div>
         {props.query !== '' && (
           <Button
-            style="transparent-outline-on-background"
+            style="text-transparent"
             title={clear}
             part="search-clear-button"
             class="search-clear-button absolute inline-flex justify-center items-center right-px w-9 top-px bottom-px"

@@ -15,10 +15,10 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
   return (
     <li key={props.displayValue}>
       <Button
-        style="borderless-outline-on-background"
+        style="text-neutral"
         part="value-link"
         onClick={() => props.onClick()}
-        class="w-full flex items-center px-2 py-2.5 text-left truncate focus:outline-none"
+        class="w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
       >

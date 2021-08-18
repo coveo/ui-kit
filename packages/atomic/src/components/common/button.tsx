@@ -5,10 +5,11 @@ interface ButtonProps {
   style:
     | 'primary'
     | 'outline-primary'
-    | 'borderless-outline-primary'
-    | 'outline-on-background'
-    | 'borderless-outline-on-background'
-    | 'transparent-outline-on-background';
+    | 'outline-neutral'
+    | 'outline-bg-neutral'
+    | 'text-primary'
+    | 'text-neutral'
+    | 'text-transparent';
   onClick?(): void;
   class?: string;
   text?: string;
@@ -22,9 +23,8 @@ interface ButtonProps {
 }
 
 export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
-  let className: string;
   let rippleColor: string;
-
+  let className: string;
   switch (props.style) {
     case 'primary':
       className = 'btn-primary';
@@ -34,20 +34,24 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
       className = 'btn-outline-primary';
       rippleColor = 'neutral';
       break;
-    case 'borderless-outline-primary':
-      className = 'btn-borderless-outline-primary';
+    case 'outline-neutral':
+      className = 'btn-outline-neutral';
       rippleColor = 'neutral';
       break;
-    case 'outline-on-background':
-      className = 'btn-outline-on-background';
+    case 'outline-bg-neutral':
+      className = 'btn-outline-bg-neutral';
       rippleColor = 'neutral';
       break;
-    case 'borderless-outline-on-background':
-      className = 'btn-borderless-outline-on-background';
+    case 'text-primary':
+      className = 'btn-text-primary';
       rippleColor = 'neutral';
       break;
-    case 'transparent-outline-on-background':
-      className = 'btn-transparent-outline-on-background';
+    case 'text-neutral':
+      className = 'btn-text-neutral';
+      rippleColor = 'neutral';
+      break;
+    case 'text-transparent':
+      className = 'btn-text-transparent';
       rippleColor = 'neutral-light';
       break;
   }
