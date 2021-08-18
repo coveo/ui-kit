@@ -2,6 +2,7 @@ const plugin = require('tailwindcss/plugin');
 const isDevWatch = process.argv.indexOf('--dev') > -1;
 
 module.exports = {
+  // mode: 'jit', TODO: Enable JIT mode when https://github.com/ionic-team/stencil-postcss/pull/35 is resolved
   purge: {
     content: ['./src/**/*.tsx', './src/**/*.css'],
     enabled: !isDevWatch,
@@ -39,13 +40,18 @@ module.exports = {
         sm: 'var(--atomic-text-sm)',
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
+        xl: 'var(--atomic-text-xl)',
+        '2xl': 'var(--atomic-text-2xl)',
       },
       screens: {
-        'desktop-only': {min: '768px'},
-        'mobile-only': {max: '767px'},
+        'desktop-only': {min: '1024px'},
+        'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
+      },
+      zIndex: {
+        1: '1',
       },
     },
     backgroundColor: (theme) => ({

@@ -83,6 +83,10 @@ export namespace Components {
          */
         "filterByBasePath": boolean;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -112,6 +116,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -230,6 +238,10 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -306,6 +318,8 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicLoadMoreResults {
+    }
     interface AtomicModal {
         "handleClose": () => void;
     }
@@ -360,6 +374,10 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -431,6 +449,10 @@ export namespace Components {
          */
         "icon": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -461,6 +483,10 @@ export namespace Components {
          */
         "icon": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -476,6 +502,11 @@ export namespace Components {
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals": number;
+    }
+    interface AtomicRefineModal {
+        "enabled": boolean;
+    }
+    interface AtomicRefineToggle {
     }
     interface AtomicRelevanceInspector {
         /**
@@ -503,7 +534,7 @@ export namespace Components {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -520,6 +551,8 @@ export namespace Components {
           * Available formats: https://day.js.org/docs/en/display/format
          */
         "format": string;
+    }
+    interface AtomicResultFieldsListV1 {
     }
     interface AtomicResultIcon {
         /**
@@ -584,6 +617,12 @@ export namespace Components {
          */
         "minimumSignificantDigits"?: number;
     }
+    interface AtomicResultNumberV1 {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+         */
+        "field": string;
+    }
     interface AtomicResultPrice {
         /**
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
@@ -605,6 +644,20 @@ export namespace Components {
           * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
          */
         "maximumPreviewSize"?: number | undefined;
+    }
+    interface AtomicResultRatingV1 {
+        /**
+          * The field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
     }
     interface AtomicResultSectionActions {
     }
@@ -843,6 +896,10 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -967,6 +1024,12 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
+    interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
+    }
+    var HTMLAtomicLoadMoreResultsElement: {
+        prototype: HTMLAtomicLoadMoreResultsElement;
+        new (): HTMLAtomicLoadMoreResultsElement;
+    };
     interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
     }
     var HTMLAtomicModalElement: {
@@ -1033,6 +1096,18 @@ declare global {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
     };
+    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicRefineModalElement: {
+        prototype: HTMLAtomicRefineModalElement;
+        new (): HTMLAtomicRefineModalElement;
+    };
+    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicRefineToggleElement: {
+        prototype: HTMLAtomicRefineToggleElement;
+        new (): HTMLAtomicRefineToggleElement;
+    };
     interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
     }
     var HTMLAtomicRelevanceInspectorElement: {
@@ -1056,6 +1131,12 @@ declare global {
     var HTMLAtomicResultDateElement: {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
+    };
+    interface HTMLAtomicResultFieldsListV1Element extends Components.AtomicResultFieldsListV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultFieldsListV1Element: {
+        prototype: HTMLAtomicResultFieldsListV1Element;
+        new (): HTMLAtomicResultFieldsListV1Element;
     };
     interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
     }
@@ -1105,6 +1186,12 @@ declare global {
         prototype: HTMLAtomicResultNumberElement;
         new (): HTMLAtomicResultNumberElement;
     };
+    interface HTMLAtomicResultNumberV1Element extends Components.AtomicResultNumberV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultNumberV1Element: {
+        prototype: HTMLAtomicResultNumberV1Element;
+        new (): HTMLAtomicResultNumberV1Element;
+    };
     interface HTMLAtomicResultPriceElement extends Components.AtomicResultPrice, HTMLStencilElement {
     }
     var HTMLAtomicResultPriceElement: {
@@ -1122,6 +1209,12 @@ declare global {
     var HTMLAtomicResultQuickviewElement: {
         prototype: HTMLAtomicResultQuickviewElement;
         new (): HTMLAtomicResultQuickviewElement;
+    };
+    interface HTMLAtomicResultRatingV1Element extends Components.AtomicResultRatingV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultRatingV1Element: {
+        prototype: HTMLAtomicResultRatingV1Element;
+        new (): HTMLAtomicResultRatingV1Element;
     };
     interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
     }
@@ -1275,6 +1368,7 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-no-results-v1": HTMLAtomicNoResultsV1Element;
@@ -1286,10 +1380,13 @@ declare global {
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-refine-modal": HTMLAtomicRefineModalElement;
+        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge-v1": HTMLAtomicResultBadgeV1Element;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-fields-list-v1": HTMLAtomicResultFieldsListV1Element;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-icon-v1": HTMLAtomicResultIconV1Element;
         "atomic-result-image": HTMLAtomicResultImageElement;
@@ -1298,9 +1395,11 @@ declare global {
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
         "atomic-result-number": HTMLAtomicResultNumberElement;
+        "atomic-result-number-v1": HTMLAtomicResultNumberV1Element;
         "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-quickview": HTMLAtomicResultQuickviewElement;
+        "atomic-result-rating-v1": HTMLAtomicResultRatingV1Element;
         "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
         "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
         "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
@@ -1396,6 +1495,10 @@ declare namespace LocalJSX {
          */
         "filterByBasePath"?: boolean;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1425,6 +1528,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1545,6 +1652,10 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1621,6 +1732,8 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
+    interface AtomicLoadMoreResults {
+    }
     interface AtomicModal {
         "handleClose": () => void;
     }
@@ -1675,6 +1788,10 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -1747,6 +1864,10 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1777,6 +1898,10 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -1792,6 +1917,11 @@ declare namespace LocalJSX {
           * The number of intervals to split the index for this facet.
          */
         "numberOfIntervals"?: number;
+    }
+    interface AtomicRefineModal {
+        "enabled": boolean;
+    }
+    interface AtomicRefineToggle {
     }
     interface AtomicRelevanceInspector {
         /**
@@ -1819,7 +1949,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * Specifies the icon to display, either from the list of available icons or a direct link.
+          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
@@ -1836,6 +1966,8 @@ declare namespace LocalJSX {
           * Available formats: https://day.js.org/docs/en/display/format
          */
         "format"?: string;
+    }
+    interface AtomicResultFieldsListV1 {
     }
     interface AtomicResultIcon {
         /**
@@ -1900,6 +2032,12 @@ declare namespace LocalJSX {
          */
         "minimumSignificantDigits"?: number;
     }
+    interface AtomicResultNumberV1 {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+         */
+        "field": string;
+    }
     interface AtomicResultPrice {
         /**
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
@@ -1921,6 +2059,20 @@ declare namespace LocalJSX {
           * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
          */
         "maximumPreviewSize"?: number | undefined;
+    }
+    interface AtomicResultRatingV1 {
+        /**
+          * The field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
     }
     interface AtomicResultSectionActions {
     }
@@ -2147,6 +2299,10 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -2175,6 +2331,7 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
+        "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-no-results-v1": AtomicNoResultsV1;
@@ -2186,10 +2343,13 @@ declare namespace LocalJSX {
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-refine-modal": AtomicRefineModal;
+        "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge-v1": AtomicResultBadgeV1;
         "atomic-result-date": AtomicResultDate;
+        "atomic-result-fields-list-v1": AtomicResultFieldsListV1;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-icon-v1": AtomicResultIconV1;
         "atomic-result-image": AtomicResultImage;
@@ -2198,9 +2358,11 @@ declare namespace LocalJSX {
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-list-v1": AtomicResultListV1;
         "atomic-result-number": AtomicResultNumber;
+        "atomic-result-number-v1": AtomicResultNumberV1;
         "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-quickview": AtomicResultQuickview;
+        "atomic-result-rating-v1": AtomicResultRatingV1;
         "atomic-result-section-actions": AtomicResultSectionActions;
         "atomic-result-section-badges": AtomicResultSectionBadges;
         "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
@@ -2248,6 +2410,7 @@ declare module "@stencil/core" {
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-no-results-v1": LocalJSX.AtomicNoResultsV1 & JSXBase.HTMLAttributes<HTMLAtomicNoResultsV1Element>;
@@ -2259,10 +2422,13 @@ declare module "@stencil/core" {
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
+            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-badge-v1": LocalJSX.AtomicResultBadgeV1 & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeV1Element>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-fields-list-v1": LocalJSX.AtomicResultFieldsListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListV1Element>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-icon-v1": LocalJSX.AtomicResultIconV1 & JSXBase.HTMLAttributes<HTMLAtomicResultIconV1Element>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
@@ -2271,9 +2437,11 @@ declare module "@stencil/core" {
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
+            "atomic-result-number-v1": LocalJSX.AtomicResultNumberV1 & JSXBase.HTMLAttributes<HTMLAtomicResultNumberV1Element>;
             "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-quickview": LocalJSX.AtomicResultQuickview & JSXBase.HTMLAttributes<HTMLAtomicResultQuickviewElement>;
+            "atomic-result-rating-v1": LocalJSX.AtomicResultRatingV1 & JSXBase.HTMLAttributes<HTMLAtomicResultRatingV1Element>;
             "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
             "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
             "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;

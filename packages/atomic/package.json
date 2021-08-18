@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.58.0",
+  "version": "0.66.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.4",
-    "@coveo/headless": "^1.14.1",
+    "@coveo/headless": "^1.16.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "dompurify": "^2.3.0",
@@ -74,6 +74,8 @@
     "jest": "26.6.3",
     "jest-cli": "26.6.3",
     "postcss-import": "14.0.2",
+    "postcss-mixins": "^8.1.0",
+    "postcss-nested": "5.0.3",
     "puppeteer": "9.1.1",
     "rollup": "2.39.0",
     "rollup-plugin-html": "0.2.1",

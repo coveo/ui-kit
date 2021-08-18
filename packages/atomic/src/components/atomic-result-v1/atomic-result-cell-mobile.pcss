@@ -1,4 +1,4 @@
-.cell-result-mobile {
+@define-mixin cell-result-mobile {
   grid-template-areas:
     'badges'
     'visual'
@@ -35,6 +35,7 @@
       font-size: 1rem;
       line-height: 1.5rem;
       height: 3rem;
+      @mixin line-clamp 2;
     }
 
     atomic-result-section-title-metadata {
@@ -52,12 +53,15 @@
       font-size: 0.875rem;
       line-height: 1.25rem;
       margin-top: 1.25rem;
+      max-height: 2.5rem;
+      @mixin line-clamp 2;
     }
 
     atomic-result-section-bottom-metadata {
       font-size: 0.75rem;
-      line-height: 1rem;
-      margin-top: 1.25rem;
+      line-height: 1.5rem;
+      margin-top: 1rem;
+      max-height: 3rem;
     }
   }
 
@@ -84,6 +88,7 @@
       font-size: 1rem;
       line-height: 1.5rem;
       height: 3rem;
+      @mixin line-clamp 2;
     }
 
     atomic-result-section-title-metadata {
@@ -101,12 +106,15 @@
       font-size: 0.875rem;
       line-height: 1.25rem;
       margin-top: 1rem;
+      max-height: 2.5rem;
+      @mixin line-clamp 2;
     }
 
     atomic-result-section-bottom-metadata {
       font-size: 0.75rem;
-      line-height: 1rem;
-      margin-top: 1rem;
+      line-height: 1.5rem;
+      margin-top: 0.75rem;
+      max-height: 3rem;
     }
   }
 
@@ -133,6 +141,7 @@
       font-size: 1rem;
       line-height: 1.5rem;
       height: 3rem;
+      @mixin line-clamp 2;
     }
 
     atomic-result-section-title-metadata {
@@ -150,12 +159,15 @@
       font-size: 0.875rem;
       line-height: 1.25rem;
       margin-top: 0.75rem;
+      max-height: 1.25rem;
+      @mixin line-clamp 1;
     }
 
     atomic-result-section-bottom-metadata {
       font-size: 0.75rem;
-      line-height: 1rem;
-      margin-top: 0.75rem;
+      line-height: 1.5rem;
+      margin-top: 0.5rem;
+      max-height: 3rem;
     }
   }
 

@@ -83,17 +83,19 @@ describe('querySuggest slice', () => {
   });
 
   describe('clearQuerySuggest', () => {
-    it('when the id is valid, it clears completions and partialQueries, but not the query', () => {
+    it('when the id is valid, it clears completions, responseId and partialQueries, but not the query', () => {
       state[id] = buildMockQuerySuggest({
         completions: getCompletions(),
         q: 'some query',
         partialQueries: ['s', 'so', 'som', 'some'],
+        responseId: 'response-uuid',
       });
 
       const expectedState = buildMockQuerySuggest({
         completions: [],
         q: 'some query',
         partialQueries: [],
+        responseId: '',
       });
 
       const finalState = querySuggestReducer(state, clearQuerySuggest({id}));
@@ -180,9 +182,10 @@ describe('querySuggest slice', () => {
       });
     });
     describe('fetchQuerySuggestions.fulfilled', () => {
+      const responseId = 'response-uuid';
       const completions = getCompletions();
       const fetchQuerySuggestionsFulfilledAction = fetchQuerySuggestions.fulfilled(
-        {completions, id},
+        {completions, id, responseId},
         '',
         {id}
       );
@@ -190,9 +193,13 @@ describe('querySuggest slice', () => {
 
       it('when fetchQuerySuggestions has an invalid id, it does not throw', () => {
         const id = 'invalid id';
-        const action = fetchQuerySuggestions.fulfilled({completions, id}, '', {
-          id,
-        });
+        const action = fetchQuerySuggestions.fulfilled(
+          {completions, id, responseId},
+          '',
+          {
+            id,
+          }
+        );
 
         expect(() => querySuggestReducer(state, action)).not.toThrow();
       });
@@ -222,6 +229,18 @@ describe('querySuggest slice', () => {
         );
 
         expect(finalState[id]?.isLoading).toBe(false);
+      });
+
+      it(`when fetchQuerySuggestions.fulfilled has the right request id,
+      it sets the responseId`, () => {
+        state[id]!.currentRequestId = 'the_right_id';
+
+        const finalState = querySuggestReducer(
+          state,
+          fetchQuerySuggestionsFulfilledAction
+        );
+
+        expect(finalState[id]?.responseId).toBe(responseId);
       });
 
       it(`when fetchQuerySuggestions.fulfilled has the right request id,

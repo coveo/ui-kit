@@ -64,6 +64,10 @@ jobs:
         run: |
           echo "$SFDX_AUTH_JWT_KEY" > server.key
           sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --setdefaultdevhubusername
+      - name: Remove translation files
+        run: |
+          cd packages/quantic/force-app/main/translations
+          rm *.translation-meta.xml
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
