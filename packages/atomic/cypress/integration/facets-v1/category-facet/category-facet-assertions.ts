@@ -39,22 +39,6 @@ export function assertNumberOfParentValues(value: number) {
   });
 }
 
-export function assertDisplayShowMoreButton(display: boolean) {
-  it(`${should(display)} display a "Show more" button`, () => {
-    CategoryFacetSelectors.showMoreButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
-export function assertDisplayShowLessButton(display: boolean) {
-  it(`${should(display)} display a "Show less" button`, () => {
-    CategoryFacetSelectors.showLessButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
 export function assertPathInBreadcrumb(path: string[]) {
   const ellipsedPath =
     path.length > 3 ? path.slice(0, 1).concat(['...'], path.slice(-2)) : path;
