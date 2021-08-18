@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.66.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.1...@coveo/atomic@0.66.2) (2021-08-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.66.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.0...@coveo/atomic@0.66.1) (2021-08-18)
+
+
+### Bug Fixes
+
+* **atomic:** made desktop and mobile [@screen](https://github.com/screen) directives mutually exclusive ([#1105](https://github.com/coveo/ui-kit/issues/1105)) ([b026e9b](https://github.com/coveo/ui-kit/commit/b026e9bc5bee0f53b3f215574f34149e3755b72d))
+
+
+
+
+
+# [0.66.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.65.0...@coveo/atomic@0.66.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** style atomic-sort-dropdown for v1 & add a sort dropdown to the atomic-refine-modal ([#1102](https://github.com/coveo/ui-kit/issues/1102)) ([de7b1d4](https://github.com/coveo/ui-kit/commit/de7b1d4d57e92f92318b5f27e7ad09ead58f0e1a))
+
+
+
+
+
 # [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.64.0...@coveo/atomic@0.65.0) (2021-08-17)
 
 

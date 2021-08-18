@@ -11,6 +11,10 @@ export interface QuerySuggestState {
    */
   completions: QuerySuggestCompletion[];
   /**
+   * The query suggest response id.
+   */
+  responseId: string;
+  /**
    * The partial basic query expression for which query suggestions were requested (e.g., `cov`).
    */
   q: string;

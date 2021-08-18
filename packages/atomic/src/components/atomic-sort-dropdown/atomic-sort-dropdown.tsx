@@ -3,7 +3,6 @@ import {
   Sort,
   buildSort,
   SortState,
-  SortCriterion,
   parseCriterionExpression,
   buildSearchStatus,
   SearchStatus,
@@ -12,27 +11,23 @@ import {
 import {
   Bindings,
   BindStateToController,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
-import Arrow from '../../images/arrow-down.svg';
-
+import {SortDropdownOption} from '../../utils/store';
+import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {Schema, StringValue} from '@coveo/bueno';
-
-interface SortDropdownOption {
-  expression: string;
-  criteria: SortCriterion[];
-  caption: string;
-}
 
 /**
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
  *
  * @part label - The "Sort by" label of the `<select>` element.
  * @part select - The `<select>` element of the drop-down list.
+ * @part select-separator - The element separating the select from the icon.
  * @part placeholder - The drop-down placeholder for while the search interface is initializing.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-sort-dropdown',
@@ -43,7 +38,6 @@ export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
   public searchStatus!: SearchStatus;
-  private options: SortDropdownOption[] = [];
   private id = randomID('atomic-sort-dropdown-');
 
   @Element() host!: HTMLElement;
@@ -52,9 +46,6 @@ export class AtomicSortDropdown implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  private strings: I18nState = {
-    sortBy: () => this.bindings.i18n.t('sort-by'),
-  };
   @State() public error!: Error;
 
   public initialize() {
@@ -62,7 +53,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine, {
       initialState: {
-        criterion: this.options[0]?.criteria,
+        criterion: this.bindings.store.state.sortOptions[0]?.criteria,
       },
     });
   }
@@ -79,18 +70,24 @@ export class AtomicSortDropdown implements InitializableComponent {
       return;
     }
 
-    this.options = sortExpressionElements.map(({expression, caption}) => {
-      new Schema({
-        caption: new StringValue({emptyAllowed: false, required: true}),
-      }).validate({caption});
-      this.strings[caption] = () => this.bindings.i18n.t(caption);
+    this.bindings.store.set(
+      'sortOptions',
+      sortExpressionElements.map(({expression, caption}) => {
+        new Schema({
+          caption: new StringValue({emptyAllowed: false, required: true}),
+        }).validate({caption});
 
-      return {
-        criteria: parseCriterionExpression(expression),
-        expression,
-        caption,
-      };
-    });
+        return {
+          criteria: parseCriterionExpression(expression),
+          expression,
+          caption,
+        };
+      })
+    );
+  }
+
+  private get options() {
+    return this.bindings.store.state.sortOptions;
   }
 
   private select(e: Event) {
@@ -104,15 +101,19 @@ export class AtomicSortDropdown implements InitializableComponent {
   private buildOption({expression, criteria, caption}: SortDropdownOption) {
     return (
       <option value={expression} selected={this.sort.isSortedBy(criteria)}>
-        {this.strings[caption]()}
+        {this.bindings.i18n.t(caption)}
       </option>
     );
   }
 
   private renderLabel() {
     return (
-      <label class="text-on-background m-2" part="label" htmlFor={this.id}>
-        {this.strings.sortBy()}
+      <label
+        class="m-2 font-bold text-sm with-colon cursor-pointer"
+        part="label"
+        htmlFor={this.id}
+      >
+        {this.bindings.i18n.t('sort-by')}
       </label>
     );
   }
@@ -122,17 +123,19 @@ export class AtomicSortDropdown implements InitializableComponent {
       <div class="relative">
         <select
           id={this.id}
-          class="flex-grow appearance-none rounded bg-background text-primary font-bold border border-neutral py-3 pl-4 pr-24"
+          class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pl-3 pr-24"
           part="select"
-          aria-label={this.strings.sortBy()}
+          aria-label={this.bindings.i18n.t('sort-by')}
           onChange={(option) => this.select(option)}
         >
           {this.options.map((option) => this.buildOption(option))}
         </select>
-        <atomic-icon
-          class="absolute pointer-events-none top-4 right-3 w-3"
-          icon={Arrow}
-        ></atomic-icon>
+        <div
+          part="select-separator"
+          class="w-10 absolute pointer-events-none top-px bottom-px right-0 border-l border-neutral flex justify-center items-center"
+        >
+          <atomic-icon class="w-2.5" icon={ArrowBottomIcon}></atomic-icon>
+        </div>
       </div>
     );
   }
@@ -157,7 +160,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     }
 
     return [
-      <div class="flex items-center flex-wrap">
+      <div class="flex items-center flex-wrap text-on-background">
         {this.renderLabel()}
         {this.renderSelect()}
       </div>,

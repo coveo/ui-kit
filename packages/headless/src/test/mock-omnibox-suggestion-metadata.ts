@@ -8,6 +8,7 @@ export function buildMockOmniboxSuggestionMetadata(
     partialQuery: '',
     suggestionRanking: -1,
     suggestions: [],
+    querySuggestResponseId: '',
     ...config,
   };
 }

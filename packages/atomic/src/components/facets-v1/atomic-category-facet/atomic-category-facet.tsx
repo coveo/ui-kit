@@ -35,8 +35,8 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
-import {createRipple} from '../../../utils/ripple';
 import {registerFacetToStore} from '../../../utils/store';
+import {Button} from '../../common/button';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -233,11 +233,11 @@ export class AtomicCategoryFacet
     const allCategories = this.bindings.i18n.t('all-categories');
     return (
       <li key={allCategories}>
-        <button
+        <Button
+          style="text-neutral"
           part="all-categories-button"
           class="parent-button"
           onClick={() => this.facet.deselectAll()}
-          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
           <atomic-icon
             aria-hidden="true"
@@ -246,7 +246,7 @@ export class AtomicCategoryFacet
             class="back-arrow"
           ></atomic-icon>
           <span class="truncate">{allCategories}</span>
-        </button>
+        </Button>
       </li>
     );
   }
@@ -264,12 +264,12 @@ export class AtomicCategoryFacet
 
     return (
       <li key={displayValue}>
-        <button
+        <Button
+          style="text-neutral"
           part="parent-button"
           class="parent-button"
           onClick={() => this.facet.toggleSelect(facetValue)}
-          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-          aria-label={ariaLabel}
+          ariaLabel={ariaLabel}
         >
           <atomic-icon
             aria-hidden="true"
@@ -278,7 +278,7 @@ export class AtomicCategoryFacet
             class="back-arrow"
           ></atomic-icon>
           <span class="truncate">{displayValue}</span>
-        </button>
+        </Button>
       </li>
     );
   }
