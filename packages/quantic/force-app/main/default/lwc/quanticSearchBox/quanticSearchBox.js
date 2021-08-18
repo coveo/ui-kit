@@ -52,12 +52,7 @@ export default class QuanticSearchBox extends LightningElement {
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-  /** @type {HTMLInputElement} */
-  input;
-  /** @type {HTMLElement} */
-  combobox;
-  /** @type {HTMLButtonElement} */
-  clearButton;
+
 
   /**
    * @param {import("coveo").SearchEngine} engine
@@ -84,15 +79,6 @@ export default class QuanticSearchBox extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
-    if (!this.input) {
-      this.input = this.template.querySelector('input');
-    }
-    if (!this.combobox) {
-      this.combobox = this.template.querySelector('.slds-combobox');
-    }
-    if (!this.clearButton) {
-      this.clearButton = this.template.querySelector('.slds-button__icon');
-    }
   }
 
   disconnectedCallback() {
@@ -116,6 +102,20 @@ export default class QuanticSearchBox extends LightningElement {
     return this.template.querySelector('c-quantic-search-box-suggestions-list');
   }
 
+  /**
+   * @returns {HTMLInputElement}
+   */
+  get input() {
+    return this.template.querySelector('input');
+  }
+
+  /**
+   * @returns {HTMLElement}
+   */
+  get combobox() {
+    return this.template.querySelector('.slds-combobox');
+  }
+
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
       this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
@@ -132,15 +132,19 @@ export default class QuanticSearchBox extends LightningElement {
     return this.combobox.classList.contains('slds-is-open');
   }
 
+  get isQueryEmpty() {
+    return !this.input?.value?.length;
+  }
+
   showSuggestions() {
     this.searchBox.showSuggestions();
-    this.combobox.classList.add('slds-is-open');
-    this.combobox.setAttribute('aria-expanded', 'true');
+    this.combobox?.classList.add('slds-is-open');
+    this.combobox?.setAttribute('aria-expanded', 'true');
   }
 
   hideSuggestions() {
-    this.combobox.classList.remove('slds-is-open');
-    this.combobox.setAttribute('aria-expanded', 'false');
+    this.combobox?.classList.remove('slds-is-open');
+    this.combobox?.setAttribute('aria-expanded', 'false');
     this.suggestionList?.resetSelection();
   }
 
@@ -190,8 +194,6 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   onFocus() {
-    this.clearButton.classList.remove('slds-hidden');
-    this.clearButton.classList.add('slds-visible');
     this.showSuggestions();
   }
 
@@ -201,8 +203,6 @@ export default class QuanticSearchBox extends LightningElement {
 
   clearInput() {
     this.input.value = '';
-    this.clearButton.classList.remove('slds-visible');
-    this.clearButton.classList.add('slds-hidden');
     this.searchBox.updateText(this.input.value);
     this.input.focus();
   }

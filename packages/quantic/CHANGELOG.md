@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.49.0...@coveo/quantic@0.49.1) (2021-08-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.49.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.48.1...@coveo/quantic@0.49.0) (2021-08-17)
+
+
+### Features
+
+* **quantic:** merge facet value components into one ([#1085](https://github.com/coveo/ui-kit/issues/1085)) ([6fa7fd0](https://github.com/coveo/ui-kit/commit/6fa7fd0964a18c50160daefd9713e9a48b0af8dc))
+
+
+
+
+
 ## [0.48.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.48.0...@coveo/quantic@0.48.1) (2021-08-17)
 
 **Note:** Version bump only for package @coveo/quantic

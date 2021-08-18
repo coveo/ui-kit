@@ -1,12 +1,12 @@
 <template>
   <template if:true={hasValues}>
     <div class="facet">
-      <lightning-card title={label} class="niumpoirtquoi">
+      <lightning-card title={label}>
         <lightning-button-icon
           class="slds-p-bottom_small"
           slot="actions"
           onclick={toggleFacetVisibility}
-          icon-name={collapseIconName}
+          icon-name={facetIcon}
           alternative-text="Collapse/show facet"
           variant="bare"
         >
@@ -34,7 +34,12 @@
 
             <template if:false={isFacetSearchActive}>
               <template for:each={values} for:item="v">
-                <c-quantic-facet-value onselectvalue={onSelect} key={v.value} item={v} is-checked={v.checked}></c-quantic-facet-value>
+                <c-quantic-facet-value 
+                  onselectvalue={onSelect} 
+                  key={v.value} 
+                  item={v} 
+                  is-checked={v.checked}>
+                </c-quantic-facet-value>
               </template>
               <div class="facet__show">
                 <template if:true={canShowLess}>
@@ -55,7 +60,12 @@
             <template if:true={isFacetSearchActive}>
               <template if:true={hasSearchResults}>
                 <template for:each={facetSearchResults} for:item="result">
-                  <c-quantic-facet-value onselectvalue={onSelect} key={result.value} item={result} is-checked={result.checked}></c-quantic-facet-value>
+                  <c-quantic-facet-value 
+                    onselectvalue={onSelect} 
+                    key={result.value} 
+                    item={result} 
+                    is-checked={result.checked}>
+                  </c-quantic-facet-value>
                 </template>
               </template>
               <template if:false={hasSearchResults}>
