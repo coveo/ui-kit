@@ -23,7 +23,7 @@ function serialize(obj: SearchParameters) {
     .join(delimiter);
 }
 
-function serializePair(pair: [string, string | number | boolean]) {
+function serializePair(pair: [string, unknown]) {
   const [key, val] = pair;
 
   if (!isValidKey(key)) {
@@ -38,7 +38,9 @@ function serializePair(pair: [string, string | number | boolean]) {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
-  return `${key}${equal}${encodeURIComponent(val)}`;
+  return `${key}${equal}${encodeURIComponent(
+    val as string | number | boolean
+  )}`;
 }
 
 function isFacetObject(obj: unknown): obj is Record<string, string[]> {
@@ -242,12 +244,8 @@ function castUnknownFacetObject(value: string) {
   const jsonParsed = JSON.parse(value) as unknownFacetObject;
   const ret = {} as unknownFacetObject;
   Object.entries(jsonParsed).forEach((entry) => {
-    ret[entry[0]] = entry[1].map((e) => {
-      if (isString(e)) {
-        return decodeURIComponent(e);
-      }
-      return e;
-    });
+    const [facetId, values] = entry;
+    ret[facetId] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
   });
 
   return ret;
