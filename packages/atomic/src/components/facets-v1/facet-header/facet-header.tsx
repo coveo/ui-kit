@@ -26,7 +26,7 @@ export const FacetHeader: FunctionalComponent<{
 
   return [
     <Button
-      style="borderless-outline-on-background"
+      style="transparent-outline-on-background"
       part="label-button"
       class="flex font-bold justify-between w-full py-1 px-2 text-lg"
       title={props.isCollapsed ? expandFacet : collapseFacet}

@@ -7,7 +7,8 @@ interface ButtonProps {
     | 'outline-primary'
     | 'borderless-outline-primary'
     | 'outline-on-background'
-    | 'borderless-outline-on-background';
+    | 'borderless-outline-on-background'
+    | 'transparent-outline-on-background';
   onClick?(): void;
   class?: string;
   text?: string;
@@ -44,6 +45,10 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     case 'borderless-outline-on-background':
       className = 'btn-borderless-outline-on-background';
       rippleColor = 'neutral';
+      break;
+    case 'transparent-outline-on-background':
+      className = 'btn-transparent-outline-on-background';
+      rippleColor = 'neutral-light';
       break;
   }
 

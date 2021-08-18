@@ -114,15 +114,19 @@ export class AtomicRefineModal implements InitializableComponent {
     return (
       <div
         part="header"
-        class="w-full border-neutral border-b p-6 flex justify-between text-xl "
+        class="w-full border-neutral border-b flex justify-between text-xl"
       >
-        <span class="truncate">{this.bindings.i18n.t('sort-and-filter')}</span>
-        <button
+        <span class="truncate p-6">
+          {this.bindings.i18n.t('sort-and-filter')}
+        </span>
+        <Button
+          style="transparent-outline-on-background"
+          class="p-6 grid place-items-center"
           part="close-button"
-          class="fill-current w-5 h-5 hover:text-primary focus:text-primary focus:outline-color"
-          innerHTML={CloseIcon}
           onClick={() => (this.enabled = false)}
-        ></button>
+        >
+          <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
+        </Button>
       </div>
     );
   }
