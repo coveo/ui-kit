@@ -32,6 +32,7 @@ import {
 import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
 import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -181,11 +182,12 @@ describe('headless standalone searchBox', () => {
     });
 
     it('dispatchs an action to update analytics to omniboxFromLink', () => {
-      const metadata = {
+      const metadata: OmniboxSuggestionMetadata = {
         partialQueries: [],
         partialQuery: '',
         suggestionRanking: -1,
         suggestions: [],
+        querySuggestResponseId: '',
       };
 
       const action = updateAnalyticsToOmniboxFromLink({id, metadata});

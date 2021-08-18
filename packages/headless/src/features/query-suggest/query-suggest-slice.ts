@@ -58,6 +58,7 @@ export const querySuggestReducer = createReducer(
             q.replace(/;/, encodeURIComponent(';'))
           );
         }
+        querySuggest.responseId = action.payload.responseId;
         querySuggest.completions = action.payload.completions;
         querySuggest.isLoading = false;
         querySuggest.error = null;
@@ -86,6 +87,7 @@ export const querySuggestReducer = createReducer(
           return;
         }
 
+        querySuggest.responseId = '';
         querySuggest.completions = [];
         querySuggest.partialQueries = [];
       })
@@ -129,6 +131,7 @@ function buildQuerySuggest(
   return {
     id: '',
     completions: [],
+    responseId: '',
     count: 5,
     q: '',
     currentRequestId: '',
