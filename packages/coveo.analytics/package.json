@@ -4,7 +4,7 @@
     "description": "📈 Coveo analytics client (node and browser compatible) ",
     "main": "dist/library.js",
     "module": "dist/library.es.js",
-    "browser": "dist/coveoua.js",
+    "browser": "dist/coveoua.browser.js",
     "types": "dist/definitions/coveoua/library.d.ts",
     "scripts": {
         "lint:check": "prettier --check .",
@@ -13,7 +13,7 @@
         "start": "rollup -c -w --environment SERVE",
         "test": "jest --clearCache && jest --coverage",
         "test:watch": "jest --watch",
-        "prepare-deploy": "mkdir -p deploy && cp dist/coveoua.js dist/coveoua.js.map deploy",
+        "prepare-deploy": "mkdir -p deploy && cp dist/coveoua*.js dist/coveoua*.js.map deploy",
         "clean": "rimraf -rf dist dist_test coverage"
     },
     "author": "Coveo",
