@@ -2,7 +2,8 @@
   <div class="slds-form-element">
     <div class="slds-form-element__control">
       <div class="slds-combobox_container">
-        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
+        <div
+          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
           aria-expanded="true"
           aria-haspopup="listbox"
           role="combobox"
@@ -31,17 +32,17 @@
                 role="textbox"
               />
               <template if:false={isQueryEmpty}>
-                <button
-                  class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
+                <lightning-button-icon
                   onclick={clearInput}
+                  icon-name="utility:close"
+                  variant="bare"
+                  class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                  size="medium"
+                  name="Clear"
                   title="Clear"
-                >
-                  <lightning-icon
-                    class="slds-button__icon"
-                    icon-name="utility:close"
-                    size="x-small"
-                  ></lightning-icon>
-                </button>
+                  aria-label="Clear"
+                  alternative-text="Clear"
+                ></lightning-button-icon>
               </template>
             </div>
             <template if:false={withoutSubmitButton}>
