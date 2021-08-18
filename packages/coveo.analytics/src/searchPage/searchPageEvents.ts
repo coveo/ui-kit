@@ -201,6 +201,22 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a snippet suggestion for a related question is collapsed.
      */
     collapseSmartSnippetSuggestion = 'collapseSmartSnippetSuggestion',
+    /**
+     * Identifies the search event that gets logged when a recent queries list item gets clicked.
+     */
+    recentQueryClick = 'recentQueriesClick',
+    /**
+     * Identifies the custom event that gets logged when a recent queries list gets cleared.
+     */
+    clearRecentQueries = 'clearRecentQueries',
+    /**
+     * Identifies the custom event that gets logged when a recently clicked results list item gets clicked.
+     */
+    recentResultClick = 'recentResultClick',
+    /**
+     * Identifies the custom event that gets logged when a recently clicked results list gets cleared.
+     */
+    clearRecentResults = 'clearRecentResults',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
@@ -230,6 +246,9 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.sendSmartSnippetReason]: 'smartSnippet',
     [SearchPageEvents.expandSmartSnippetSuggestion]: 'smartSnippetSuggestions',
     [SearchPageEvents.collapseSmartSnippetSuggestion]: 'smartSnippetSuggestions',
+    [SearchPageEvents.clearRecentQueries]: 'recentQueries',
+    [SearchPageEvents.recentResultClick]: 'recentlyClickedDocuments',
+    [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
 };
 
 export interface FacetMetadata {

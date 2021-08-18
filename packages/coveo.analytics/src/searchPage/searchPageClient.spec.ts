@@ -487,6 +487,29 @@ describe('SearchPageClient', () => {
         });
     });
 
+    it('should send proper payload for #logRecentQueryClick', async () => {
+        await client.logRecentQueryClick();
+        expectMatchPayload(SearchPageEvents.recentQueryClick);
+    });
+
+    it('should send proper payload for #logClearRecentQueries', async () => {
+        await client.logClearRecentQueries();
+        expectMatchCustomEventPayload(SearchPageEvents.clearRecentQueries);
+    });
+
+    it('should send proper payload for #logRecentResultClick', async () => {
+        await client.logRecentResultClick(fakeDocInfo, fakeDocID);
+        expectMatchCustomEventPayload(SearchPageEvents.recentResultClick, {
+            info: fakeDocInfo,
+            identifier: fakeDocID,
+        });
+    });
+
+    it('should send proper payload for #logClearRecentResults', async () => {
+        await client.logClearRecentResults();
+        expectMatchCustomEventPayload(SearchPageEvents.clearRecentResults);
+    });
+
     it('should send proper payload for #logCustomEventWithType', async () => {
         await client.logCustomEventWithType('foo', 'bar', {buzz: 'bazz'});
         expectMatchCustomEventWithTypePayload('foo', 'bar', {buzz: 'bazz'});
