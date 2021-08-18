@@ -253,7 +253,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
   }
 
   navigateToSearchPage() {
-    console.log(`NavigateTo: ${this.state.redirectTo}`);
     // Navigate to the search page
     this[NavigationMixin.Navigate](
       {
