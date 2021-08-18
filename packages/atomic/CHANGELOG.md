@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.66.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.1...@coveo/atomic@0.66.2) (2021-08-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.66.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.0...@coveo/atomic@0.66.1) (2021-08-18)
+
+
+### Bug Fixes
+
+* **atomic:** made desktop and mobile [@screen](https://github.com/screen) directives mutually exclusive ([#1105](https://github.com/coveo/ui-kit/issues/1105)) ([b026e9b](https://github.com/coveo/ui-kit/commit/b026e9bc5bee0f53b3f215574f34149e3755b72d))
+
+
+
+
+
+# [0.66.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.65.0...@coveo/atomic@0.66.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** style atomic-sort-dropdown for v1 & add a sort dropdown to the atomic-refine-modal ([#1102](https://github.com/coveo/ui-kit/issues/1102)) ([de7b1d4](https://github.com/coveo/ui-kit/commit/de7b1d4d57e92f92318b5f27e7ad09ead58f0e1a))
+
+
+
+
+
+# [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.64.0...@coveo/atomic@0.65.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** added atomic-format-* support to atomic-result-number ([#1096](https://github.com/coveo/ui-kit/issues/1096)) ([b222565](https://github.com/coveo/ui-kit/commit/b22256574fa716b927f5fe29573c1e70c143c659))
+
+
+
+
+
+# [0.64.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.63.1...@coveo/atomic@0.64.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** add refine toggle button and modal components, rework v1.html layout ([#1079](https://github.com/coveo/ui-kit/issues/1079)) ([23a0ebd](https://github.com/coveo/ui-kit/commit/23a0ebdc280cfaaaf932f83a4846df91e81ce5f9))
+
+
+
+
+
 ## [0.63.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.63.0...@coveo/atomic@0.63.1) (2021-08-16)
 
 

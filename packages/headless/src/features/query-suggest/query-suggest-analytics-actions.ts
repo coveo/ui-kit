@@ -47,11 +47,13 @@ export function buildOmniboxSuggestionMetadata(
 
   const lastIndex = querySuggest.partialQueries.length - 1;
   const partialQuery = querySuggest.partialQueries[lastIndex] || '';
+  const querySuggestResponseId = querySuggest.responseId;
 
   return {
     suggestionRanking: suggestions.indexOf(suggestion),
     partialQuery,
     partialQueries: querySuggest.partialQueries,
     suggestions,
+    querySuggestResponseId,
   };
 }

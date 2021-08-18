@@ -9,6 +9,7 @@ export function buildMockQuerySuggest(
     currentRequestId: '',
     q: '',
     completions: [],
+    responseId: '',
     error: null,
     partialQueries: [],
     isLoading: false,

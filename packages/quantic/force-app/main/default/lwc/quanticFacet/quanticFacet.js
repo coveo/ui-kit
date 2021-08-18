@@ -94,11 +94,13 @@ export default class QuanticFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values.map((v) => ({
-        ...v,
-        checked: v.state === 'selected',
-        highlightedResult: v.value,
-      })) || []
+      this.state.values
+        .filter((value) => value.numberOfResults || value.state === 'selected')
+        .map((v) => ({
+          ...v,
+          checked: v.state === 'selected',
+          highlightedResult: v.value,
+        })) || []
     );
   }
 

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.16.0...@coveo/headless@1.16.1) (2021-08-18)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.15.0...@coveo/headless@1.16.0) (2021-08-18)
+
+
+### Features
+
+* **headless:** send query suggest response id with query suggest click metadata ([#1094](https://github.com/coveo/ui-kit/issues/1094)) ([1a4ba30](https://github.com/coveo/ui-kit/commit/1a4ba30317cae9563373a82e11bd319964d2fd4a))
+
+
+
+
+
+# [1.15.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.14.1...@coveo/headless@1.15.0) (2021-08-17)
+
+
+### Bug Fixes
+
+* **headless:** fix prevent auto select when restoring facet search parameters ([#1099](https://github.com/coveo/ui-kit/issues/1099)) ([d48f028](https://github.com/coveo/ui-kit/commit/d48f0288638b324c1704206c7593eecd274b32b8))
+
+
+### Features
+
+* **headless:** add support for anonymous analytics events  ([#1098](https://github.com/coveo/ui-kit/issues/1098)) ([6533bbb](https://github.com/coveo/ui-kit/commit/6533bbbc23f4c0d588073a417f7c1fd4d6bfea7b))
+
+
+
+
+
 ## [1.14.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.14.0...@coveo/headless@1.14.1) (2021-08-10)
 
 

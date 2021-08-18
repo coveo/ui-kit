@@ -1,4 +1,3 @@
-import {createSelector} from '@reduxjs/toolkit';
 import {PaginationSection} from '../../state/state-sections';
 import {calculatePage, calculateMaxPage, minimumPage} from './pagination-slice';
 
@@ -23,38 +22,39 @@ function totalCountFilteredSelector(state: PaginationSection) {
  * @param state SearchPageState.
  * @returns the current page number.
  */
-export const currentPageSelector = createSelector(
-  firstResultSelector,
-  numberOfResultsSelector,
-  calculatePage
-);
+export const currentPageSelector = (state: PaginationSection) => {
+  const firstResult = firstResultSelector(state);
+  const numberOfResults = numberOfResultsSelector(state);
+  return calculatePage(firstResult, numberOfResults);
+};
 
 /** Calculates the maximum page number
  * @param state SearchPageState.
  * @returns the maximum page number.
  */
-export const maxPageSelector = createSelector(
-  totalCountFilteredSelector,
-  numberOfResultsSelector,
-  calculateMaxPage
-);
+export const maxPageSelector = (state: PaginationSection) => {
+  const totalCountFiltered = totalCountFilteredSelector(state);
+  const numberOfResults = numberOfResultsSelector(state);
+  return calculateMaxPage(totalCountFiltered, numberOfResults);
+};
 
 /** Calculates the current pages relative to the current page.
  * @param state SearchPageState.
  * @param desiredNumberOfPages the number of pages to return.
  * @returns the current page numbers.
  */
-export const currentPagesSelector = createSelector(
-  currentPageSelector,
-  maxPageSelector,
-  (_: PaginationSection, desiredNumberOfPages: number) => desiredNumberOfPages,
-  (page, maxPage, desiredNumberOfPages) => {
-    let range = buildRange(page, desiredNumberOfPages);
-    range = shiftRightIfNeeded(range);
-    range = shiftLeftIfNeeded(range, maxPage);
-    return buildCurrentPages(range);
-  }
-);
+export const currentPagesSelector = (
+  state: PaginationSection,
+  desiredNumberOfPages: number
+) => {
+  const page = currentPageSelector(state);
+  const maxPage = maxPageSelector(state);
+
+  let range = buildRange(page, desiredNumberOfPages);
+  range = shiftRightIfNeeded(range);
+  range = shiftLeftIfNeeded(range, maxPage);
+  return buildCurrentPages(range);
+};
 
 function buildRange(page: number, desiredNumberOfPages: number): Range {
   const isEven = desiredNumberOfPages % 2 === 0;
