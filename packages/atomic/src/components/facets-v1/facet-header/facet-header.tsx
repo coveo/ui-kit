@@ -3,7 +3,7 @@ import ArrowTopIcon from 'coveo-styleguide/resources/icons/svg/arrow-top-rounded
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
-import {createRipple} from '../../../utils/ripple';
+import {Button} from '../../common/button';
 
 export const FacetHeader: FunctionalComponent<{
   i18n: i18n;
@@ -25,27 +25,27 @@ export const FacetHeader: FunctionalComponent<{
   });
 
   return [
-    <button
+    <Button
+      style="text-transparent"
       part="label-button"
-      class="flex font-bold justify-between w-full py-1 px-2 text-on-background text-lg hover:text-primary focus:text-primary focus:outline-color"
+      class="flex font-bold justify-between w-full py-1 px-2 text-lg"
       title={props.isCollapsed ? expandFacet : collapseFacet}
-      onMouseDown={(e) => createRipple(e, {color: 'neutral-light'})}
       onClick={() => props.onToggleCollapse()}
-      aria-expanded={(!props.isCollapsed).toString()}
+      ariaExpanded={(!props.isCollapsed).toString()}
+      text={label}
     >
-      <span class="truncate">{label}</span>
       <atomic-icon
         part="label-button-icon"
         class="w-3 self-center flex-shrink-0 ml-4"
         icon={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
       ></atomic-icon>
-    </button>,
+    </Button>,
     props.onClearFilters && props.numberOfSelectedValues > 0 && (
-      <button
+      <Button
+        style="text-primary"
         part="clear-button"
-        class="flex items-baseline max-w-full p-2 text-sm text-primary rounded hover:text-primary focus:text-primary hover:bg-neutral-light focus:bg-neutral-light focus:outline-color"
+        class="flex items-baseline max-w-full p-2 text-sm"
         title={clearFiltersForFacet}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         onClick={() => props.onClearFilters!()}
       >
         <atomic-icon
@@ -54,7 +54,7 @@ export const FacetHeader: FunctionalComponent<{
           icon={CloseIcon}
         ></atomic-icon>
         <span>{clearFilters}</span>
-      </button>
+      </Button>
     ),
   ];
 };

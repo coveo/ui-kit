@@ -40,8 +40,8 @@ describe('Facet v1 Test Suites', () => {
         defaultNumberOfValues
       );
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, false);
-      FacetAssertions.assertDisplayShowMoreButton(true);
-      FacetAssertions.assertDisplayShowLessButton(false);
+      CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
+      CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, false);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
     });
 
@@ -166,7 +166,11 @@ describe('Facet v1 Test Suites', () => {
             FacetSelectors,
             query
           );
-          FacetAssertions.assertDisplayShowMoreButton(false);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            FacetSelectors,
+            false,
+            false
+          );
           CommonFacetAssertions.assertDisplaySearchClearButton(
             FacetSelectors,
             true
@@ -207,7 +211,11 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               false
             );
-            FacetAssertions.assertDisplayShowMoreButton(true);
+            CommonFacetAssertions.assertDisplayShowMoreButton(
+              FacetSelectors,
+              true,
+              false
+            );
             CommonFacetAssertions.assertSearchInputEmpty(FacetSelectors);
             CommonFacetAssertions.assertDisplaySearchClearButton(
               FacetSelectors,
@@ -247,7 +255,10 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               false
             );
-            FacetAssertions.assertDisplayShowMoreButton(true);
+            CommonFacetAssertions.assertDisplayShowMoreButton(
+              FacetSelectors,
+              true
+            );
             CommonFacetAssertions.assertSearchInputEmpty(FacetSelectors);
             CommonFacetAssertions.assertDisplaySearchClearButton(
               FacetSelectors,
@@ -653,8 +664,8 @@ describe('Facet v1 Test Suites', () => {
     describe('verify rendering', () => {
       before(setupSelectShowMore);
 
-      FacetAssertions.assertDisplayShowMoreButton(true);
-      FacetAssertions.assertDisplayShowLessButton(true);
+      CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
+      CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
       FacetAssertions.assertValuesSortedAlphanumerically();
       CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
         FacetSelectors,
@@ -679,8 +690,11 @@ describe('Facet v1 Test Suites', () => {
       describe('verify rendering', () => {
         before(setupSelectShowLess);
 
-        FacetAssertions.assertDisplayShowMoreButton(true);
-        FacetAssertions.assertDisplayShowLessButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          FacetSelectors,
+          false
+        );
         CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
           FacetSelectors,
           defaultNumberOfValues
@@ -711,8 +725,16 @@ describe('Facet v1 Test Suites', () => {
     CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
     CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, false);
     CommonFacetAssertions.assertDisplayValues(FacetSelectors, false);
-    FacetAssertions.assertDisplayShowMoreButton(false);
-    FacetAssertions.assertDisplayShowLessButton(false);
+    CommonFacetAssertions.assertDisplayShowMoreButton(
+      FacetSelectors,
+      false,
+      false
+    );
+    CommonFacetAssertions.assertDisplayShowLessButton(
+      FacetSelectors,
+      false,
+      false
+    );
     CommonFacetAssertions.assertLabelContains(FacetSelectors, label);
 
     describe('when selecting the label button to expand', () => {
@@ -726,7 +748,7 @@ describe('Facet v1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayValues(FacetSelectors, true);
-      FacetAssertions.assertDisplayShowMoreButton(true);
+      CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
     });
   });
 
@@ -744,8 +766,8 @@ describe('Facet v1 Test Suites', () => {
       FacetSelectors,
       numberOfValues
     );
-    FacetAssertions.assertDisplayShowMoreButton(true);
-    FacetAssertions.assertDisplayShowLessButton(false);
+    CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
+    CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, false);
 
     describe('when selecting the "Show More" button', () => {
       before(() => {
@@ -758,8 +780,8 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors,
         numberOfValues * 2
       );
-      FacetAssertions.assertDisplayShowMoreButton(true);
-      FacetAssertions.assertDisplayShowLessButton(true);
+      CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
+      CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
     });
   });
 

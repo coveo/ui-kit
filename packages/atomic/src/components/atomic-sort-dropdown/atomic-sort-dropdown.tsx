@@ -123,7 +123,7 @@ export class AtomicSortDropdown implements InitializableComponent {
       <div class="relative">
         <select
           id={this.id}
-          class="h-10 flex-grow cursor-pointer appearance-none rounded bg-background border border-neutral pl-3 pr-24 focus:outline-none focus:border-primary-light focus:text-primary-light hover:border-primary-light hover:text-primary-light"
+          class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pl-3 pr-24"
           part="select"
           aria-label={this.bindings.i18n.t('sort-by')}
           onChange={(option) => this.select(option)}

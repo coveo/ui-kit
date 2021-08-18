@@ -130,7 +130,7 @@ export class AtomicSearchBox {
       <button
         type="button"
         part="submit-button"
-        class={`submit-button grid place-items-center h-full border-0 focus:outline-none focus:bg-primary-light hover:bg-primary-light bg-primary p-0 ${roundedClasses}`}
+        class={`submit-button grid place-items-center h-full border-0 no-outline focus:bg-primary-light hover:bg-primary-light bg-primary p-0 ${roundedClasses}`}
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >

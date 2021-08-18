@@ -39,8 +39,14 @@ describe('Category Facet Test Suites', () => {
       );
       CategoryFacetAssertions.assertNumberOfChildValues(defaultNumberOfValues);
       CategoryFacetAssertions.assertNumberOfParentValues(0);
-      CategoryFacetAssertions.assertDisplayShowMoreButton(true);
-      CategoryFacetAssertions.assertDisplayShowLessButton(false);
+      CommonFacetAssertions.assertDisplayShowMoreButton(
+        CategoryFacetSelectors,
+        true
+      );
+      CommonFacetAssertions.assertDisplayShowLessButton(
+        CategoryFacetSelectors,
+        false
+      );
       CategoryFacetAssertions.assertDisplaySearchInput(false);
       CommonFacetAssertions.assertDisplayClearButton(
         CategoryFacetSelectors,
@@ -74,8 +80,14 @@ describe('Category Facet Test Suites', () => {
           defaultNumberOfValues
         );
         CategoryFacetAssertions.assertNumberOfParentValues(1);
-        CategoryFacetAssertions.assertDisplayShowMoreButton(true);
-        CategoryFacetAssertions.assertDisplayShowLessButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          false
+        );
         CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
         CategoryFacetAssertions.assertPathInUrl(selectedPath);
       });
@@ -98,7 +110,10 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues * 2
           );
-          CategoryFacetAssertions.assertDisplayShowLessButton(true);
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            true
+          );
         });
 
         describe('verify analytics', () => {
@@ -120,7 +135,10 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetAssertions.assertNumberOfChildValues(
               defaultNumberOfValues
             );
-            CategoryFacetAssertions.assertDisplayShowLessButton(false);
+            CommonFacetAssertions.assertDisplayShowLessButton(
+              CategoryFacetSelectors,
+              false
+            );
           });
 
           describe('verify analytics', () => {
@@ -177,8 +195,16 @@ describe('Category Facet Test Suites', () => {
         );
         CategoryFacetAssertions.assertNumberOfParentValues(4);
         CategoryFacetAssertions.assertNumberOfChildValues(0);
-        CategoryFacetAssertions.assertDisplayShowMoreButton(false);
-        CategoryFacetAssertions.assertDisplayShowLessButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
         CategoryFacetAssertions.assertPathInBreadcrumb(canadaHierarchy);
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
       });
@@ -208,8 +234,14 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues
           );
-          CategoryFacetAssertions.assertDisplayShowMoreButton(true);
-          CategoryFacetAssertions.assertDisplayShowLessButton(false);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            false
+          );
           CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
@@ -231,8 +263,14 @@ describe('Category Facet Test Suites', () => {
       describe('verify rendering', () => {
         before(setupShowMore);
         CategoryFacetAssertions.assertNumberOfChildValues(7);
-        CategoryFacetAssertions.assertDisplayShowLessButton(true);
-        CategoryFacetAssertions.assertDisplayShowMoreButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          true
+        );
       });
 
       describe('verify analytics', () => {
@@ -253,8 +291,14 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues
           );
-          CategoryFacetAssertions.assertDisplayShowLessButton(false);
-          CategoryFacetAssertions.assertDisplayShowMoreButton(true);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            false
+          );
         });
 
         describe('verify analytics', () => {
@@ -427,7 +471,16 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           query
         );
-        CategoryFacetAssertions.assertDisplayShowMoreButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
         CommonFacetAssertions.assertDisplaySearchClearButton(
           CategoryFacetSelectors,
           true
