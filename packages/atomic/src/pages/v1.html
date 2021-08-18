@@ -150,7 +150,7 @@
       }
 
       .status {
-        grid-area: results;
+        grid-area: status;
       }
 
       atomic-facet-manager {
@@ -177,8 +177,7 @@
         align-items: center;
       }
 
-      .results,
-      .result-status {
+      .results {
         grid-area: results;
       }
 
@@ -197,6 +196,7 @@
             '. facets topbar      .'
             '. facets results     .'
             '. facets pagination  .'
+            '. facets status      .'
             '. facets .           .';
         }
 
@@ -282,9 +282,7 @@
       </div>
       <div class="results">
         <atomic-did-you-mean></atomic-did-you-mean>
-        <atomic-query-error></atomic-query-error>
-        <atomic-no-results-v1></atomic-no-results-v1>
-        <atomic-result-list-v1 fields-to-include="snrating,sncost">
+        <atomic-result-list-v1 fields-to-include="snrating,sncost" display="grid">
           <atomic-result-template>
             <template>
               <style>
@@ -406,12 +404,12 @@
           </atomic-result-template>
         </atomic-result-list-v1>
       </div>
+      <div class="pagination">
+        <atomic-load-more-results></atomic-load-more-results>
+      </div>
       <div class="status">
         <atomic-query-error></atomic-query-error>
         <atomic-no-results-v1></atomic-no-results-v1>
-      </div>
-      <div class="pagination">
-        <atomic-load-more-results></atomic-load-more-results>
       </div>
     </atomic-search-interface>
   </body>
