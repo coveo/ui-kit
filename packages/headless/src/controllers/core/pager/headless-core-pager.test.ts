@@ -98,39 +98,15 @@ describe('Pager', () => {
     expect(engine.actions).toContainEqual(updatePage(2));
   });
 
-  // it('#selectPage dispatches #executeSearch', () => {
-  //   pager.selectPage(2);
-  //   const action = engine.actions.find(
-  //     (a) => a.type === executeSearch.pending.type
-  //   );
-  //   expect(action).toBeTruthy();
-  // });
-
   it('#nextPage dispatches a #nextPage action', () => {
     pager.nextPage();
     expect(engine.actions).toContainEqual(nextPage());
   });
 
-  // it('#nextPage dispatches #executeSearch', () => {
-  //   pager.nextPage();
-  //   const action = engine.actions.find(
-  //     (a) => a.type === executeSearch.pending.type
-  //   );
-  //   expect(action).toBeTruthy();
-  // });
-
   it('#previousPage dispatches a #previousPage action', () => {
     pager.previousPage();
     expect(engine.actions).toContainEqual(previousPage());
   });
-
-  // it('#previousPage dispatches #executeSearch', () => {
-  //   pager.previousPage();
-  //   const action = engine.actions.find(
-  //     (a) => a.type === executeSearch.pending.type
-  //   );
-  //   expect(engine.actions).toContainEqual(action);
-  // });
 
   it('calling #isCurrentPage with a page number not equal to the one in state returns false', () => {
     setCurrentPage(2);
