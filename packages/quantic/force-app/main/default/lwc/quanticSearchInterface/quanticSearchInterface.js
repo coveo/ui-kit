@@ -68,9 +68,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribeUrlManager) {
-      this.unsubscribeUrlManager();
-    }
+    this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
   }
 
@@ -83,16 +81,16 @@ export default class QuanticSearchInterface extends LightningElement {
     }
 
     if (!this.skipFirstSearch) {
-      const data = window.localStorage.getItem(
+      const redirectData = window.localStorage.getItem(
         STANDALONE_SEARCH_BOX_STORAGE_KEY
       );
-      if (data) {
-        window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-        const {analytics} = JSON.parse(data);
-        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
-      } else {
+      if (!redirectData) {
         engine.executeFirstSearch();
+        return;
       }
+      window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+      const {analytics} = JSON.parse(redirectData);
+      engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
     }
   };
 

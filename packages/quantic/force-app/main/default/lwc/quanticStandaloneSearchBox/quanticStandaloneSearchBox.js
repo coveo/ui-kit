@@ -9,23 +9,16 @@ import {
   NavigationMixin,
   // @ts-ignore
 } from 'lightning/navigation';
-import {
-  STANDALONE_SEARCH_BOX_STORAGE_KEY
-} from 'c/quanticUtils';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
 
 import search from '@salesforce/label/c.quantic_Search';
 
-const KEYS = {
-  ENTER: 'Enter',
-  ARROWUP: 'ArrowUp',
-  ARROWDOWN: 'ArrowDown',
-};
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
 const CLASS_WITHOUT_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
 
-export default class QuanticStandaloneSearchBox extends NavigationMixin (
+export default class QuanticStandaloneSearchBox extends NavigationMixin(
   LightningElement
 ) {
   
@@ -84,7 +77,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
   }
 
   get actualSearchBox() {
-    if(window.location.href.includes(this.redirectUrl)) {
+    if (window.location.href.includes(this.redirectUrl)) {
       return this.searchBox;
     }
     return this.standaloneSearchBox;
@@ -96,9 +89,11 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
   @api
   initialize(engine) {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
-      options: this.searchBoxOptions
+      options: this.searchBoxOptions,
     });
-    this.unsubscribeSearchBox = this.searchBox.subscribe(() => this.updateSearchBoxState());
+    this.unsubscribeSearchBox = this.searchBox.subscribe(() =>
+      this.updateSearchBoxState()
+    );
 
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
@@ -112,9 +107,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
+    this.unsubscribeSearchBox?.();
   }
 
   updateStandaloneState() {
@@ -163,17 +157,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
 
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
-      if (this.input) {
-        this.input.setAttribute('aria-labelledby', 'fixed-text-label');
-      }
+      this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
       return CLASS_WITH_SUBMIT;
     }
-    if (this.input) {
-      this.input.setAttribute(
-        'aria-labelledby',
-        'fixed-text-label fixed-text-addon-post'
-      );
-    }
+    this.input?.setAttribute(
+      'aria-labelledby',
+      'fixed-text-label fixed-text-addon-post'
+    );
     return CLASS_WITHOUT_SUBMIT;
   }
 
@@ -197,16 +187,15 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
       this.actualSearchBox.selectSuggestion(selectedSuggestion.rawValue);
-      this.input.blur();
     } else {
       this.actualSearchBox.submit();
-      this.input.blur();
     }
+    this.input.blur();
   }
 
   onSubmit(event) {
     event.stopPropagation();
-    if(this.actualSearchBox.state.value !== this.input.value) {
+    if (this.actualSearchBox.state.value !== this.input.value) {
       this.actualSearchBox.updateText(this.input.value);
     }
     this.actualSearchBox.submit();
@@ -218,13 +207,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
    */
   onKeyup(event) {
     switch (event.key) {
-      case KEYS.ENTER:
+      case keys.ENTER:
         this.handleEnter();
         break;
-      case KEYS.ARROWUP:
+      case keys.ARROWUP:
         this.suggestionList.selectionUp();
         break;
-      case KEYS.ARROWDOWN:
+      case keys.ARROWDOWN:
         this.suggestionList.selectionDown();
         break;
       default:
@@ -253,14 +242,14 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
   }
 
   navigateToSearchPage() {
-    // Navigate to the search page
     this[NavigationMixin.Navigate](
       {
         type: 'standard__webPage',
         attributes: {
           url: `${this.redirectUrl}#q=${this.standaloneSearchBox.state.value}`,
         },
-      }, false
+      },
+      false
     );
   }
 
@@ -292,6 +281,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin (
     return !this.input?.value?.length;
   }
 
+  /**
+   * @returns {Boolean}
+   */
   get suggestionsOpen() {
     return this.combobox?.classList.contains('slds-is-open');
   }

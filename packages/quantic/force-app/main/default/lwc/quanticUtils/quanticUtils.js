@@ -84,3 +84,9 @@ export class I18nUtils{
 }
 
 export const STANDALONE_SEARCH_BOX_STORAGE_KEY = 'coveo-standalone-search-box';
+
+export const keys = {
+  ENTER: 'Enter',
+  ARROWUP: 'ArrowUp',
+  ARROWDOWN: 'ArrowDown',
+};

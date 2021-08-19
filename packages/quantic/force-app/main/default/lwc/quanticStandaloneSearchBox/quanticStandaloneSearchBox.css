@@ -19,17 +19,14 @@
 }
 
 .searchbox__submit-button{
-    padding: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
-    border-width: 0px;
-    box-sizing: border-box;
     background-color: #005FB2;
     height: 100%;
-    margin: 0px;
     width: 46.57px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .searchbox__submit-button:hover{
