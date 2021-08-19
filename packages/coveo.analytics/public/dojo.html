@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>coveo.analytics.js + dojotoolkit</title>
+    </head>
+
+    <body>
+        <h1 id="greeting">Coveo +</h1>
+
+        <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js" data-dojo-config="async: true"></script>
+
+        <script>
+            require(['dojo/dom', 'dojo/dom-construct'], function (dom, domConstruct) {
+                var greetingNode = dom.byId('greeting');
+                domConstruct.place('<em> Dojo!</em>', greetingNode);
+            });
+        </script>
+
+        <script>
+            (function (c, o, v, e, O, u, a) {
+                a = 'coveoua';
+                c[a] =
+                    c[a] ||
+                    function () {
+                        (c[a].q = c[a].q || []).push(arguments);
+                    };
+                c[a].t = Date.now();
+                u = o.createElement(v);
+                u.async = 1;
+                u.src = e;
+                O = o.getElementsByTagName(v)[0];
+                O.parentNode.insertBefore(u, O);
+            })(window, document, 'script', 'https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.browser.js');
+
+            coveoua('init', '<TOKEN>', 'https://platform.cloud.coveo.com/rest/ua');
+            coveoua('send', 'view', {
+                contentIdKey: '@permanentid',
+                contentIdValue: 'aurQ9UaLj3',
+                contentType: 'product',
+            });
+        </script>
+    </body>
+</html>

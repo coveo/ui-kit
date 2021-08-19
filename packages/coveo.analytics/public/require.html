@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>coveo.analytics.js + requirejs</title>
+    </head>
+
+    <body>
+        <h1 id="greeting">Coveo +</h1>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"
+            integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg=="
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            requirejs.config({
+                map: {
+                    '*': {
+                        coveoUAS: 'https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js',
+                    },
+                },
+            });
+            requirejs([]);
+            document.getElementById('greeting').insertAdjacentHTML('beforeend', '<em> requirejs!</em');
+            require(['coveoUAS'], function (coveoua) {
+                coveoua('init', '<TOKEN>', 'https://platform.cloud.coveo.com/rest/ua');
+                coveoua('ec:addProduct', {
+                    name: 'wow',
+                    id: 'something',
+                    brand: 'brand',
+                    category: ['not', 'a', 'string'],
+                    custom: {verycustom: 'value'},
+                });
+                coveoua('ec:setAction', 'detail');
+                coveoua('send', 'pageview', '/firstpage');
+            });
+        </script>
+    </body>
+</html>
