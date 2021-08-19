@@ -8,6 +8,7 @@ import {Result} from '../../api/search/search/result';
 import {ConfigurationSection, FoldingSection} from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
 import {CollectionId} from './folding-state';
+import {fakeRes} from './fakeres';
 
 export interface RegisterFoldingActionCreatorPayload {
   /**
@@ -91,6 +92,8 @@ export const loadCollection = createAsyncThunk<
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
     }
+
+    response.success.results = fakeRes.results as any;
 
     return {collectionId, results: response.success.results};
   }

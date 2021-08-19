@@ -54,9 +54,11 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
     if (!this.state.results.length) {
       return <div>No results</div>;
     }
+    console.log('asd0');
 
     return (
       <div>
+        HELLO
         <ul style={{textAlign: 'left'}}>
           {this.state.results.map((collection) => (
             <li key={collection.result.uniqueId}>

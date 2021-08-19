@@ -18,6 +18,7 @@ import {
   SearchEngine,
   loadSearchConfigurationActions,
   SearchEngineConfiguration,
+  buildFoldedResultList,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
@@ -191,6 +192,13 @@ export class AtomicSearchInterface {
     await this.initI18n();
     this.initComponents();
     this.initUrlManager();
+
+    const r = buildFoldedResultList(this.engine!);
+    console.log('asdas');
+
+    setTimeout(() => {
+      r.loadCollection(r.state.results[0]);
+    }, 5000);
 
     this.initialized = true;
   }

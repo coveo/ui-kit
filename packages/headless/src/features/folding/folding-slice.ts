@@ -198,6 +198,8 @@ export const foldingReducer = createReducer(
       .addCase(
         loadCollection.fulfilled,
         (state, {payload: {collectionId, results}}) => {
+          debugger;
+          console.log('ASDASD');
           const rootResult = resolveRootFromFields(
             results as ResultWithFolding[],
             state.fields
