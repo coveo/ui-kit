@@ -92,9 +92,7 @@ describe('recent-queries slice', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: '6',
-        response: buildMockSearchResponse({
-          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-        }),
+        response: buildMockSearchResponse({}),
       }),
       '',
       logSearchEvent({evt: 'foo'})
@@ -107,5 +105,23 @@ describe('recent-queries slice', () => {
       '3',
       '2',
     ]);
+  });
+
+  it('should not set new recent query on search fulfilled if queue already contains the query', () => {
+    const otherTestQuery = 'what is a query';
+    state.queries = testQueries;
+    state.maxQueries = 10;
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        queryExecuted: otherTestQuery,
+        response: buildMockSearchResponse({}),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual(
+      testQueries
+    );
   });
 });

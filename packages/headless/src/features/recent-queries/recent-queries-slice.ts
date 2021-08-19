@@ -18,7 +18,11 @@ export const recentQueriesReducer = createReducer(
         state.queries.length = 0;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.queries.unshift(action.payload.queryExecuted);
+        const query = action.payload.queryExecuted;
+        if (state.queries.includes(query)) {
+          return;
+        }
+        state.queries.unshift(query);
         if (state.queries.length > state.maxQueries) {
           state.queries.pop();
         }

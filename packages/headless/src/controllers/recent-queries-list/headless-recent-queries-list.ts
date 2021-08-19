@@ -39,7 +39,7 @@ export interface RecentQueriesListInitialState {
   queries: string[];
 }
 
-const initialStateSchema = new Schema<Required<RecentQueriesListInitialState>>({
+const initialStateSchema = new Schema<RecentQueriesListInitialState>({
   queries: new ArrayValue({required: false}),
 });
 
@@ -51,7 +51,7 @@ export interface RecentQueriesListOptions {
   maxQueries: number;
 }
 
-const optionsSchema = new Schema<Required<RecentQueriesListOptions>>({
+const optionsSchema = new Schema<RecentQueriesListOptions>({
   maxQueries: new NumberValue({required: false}),
 });
 
@@ -69,7 +69,6 @@ export interface RecentQueriesList extends Controller {
   clear(): void;
   /**
    * Execute the given recent query.
-   *
    * @param query - The recent query to execute.
    */
   executeRecentQuery(query: string): void;
@@ -77,18 +76,18 @@ export interface RecentQueriesList extends Controller {
 
 export function validateRecentQueriesProps(
   engine: SearchEngine,
-  props: RecentQueriesListProps
+  props?: RecentQueriesListProps
 ) {
   validateOptions(
     engine,
     optionsSchema,
-    props.options,
+    props?.options,
     'buildRecentQueriesList'
   );
   validateInitialState(
     engine,
     initialStateSchema,
-    props.initialState,
+    props?.initialState,
     'buildRecentQueriesList'
   );
 }
@@ -102,24 +101,23 @@ export function validateRecentQueriesProps(
  * */
 export function buildRecentQueriesList(
   engine: SearchEngine,
-  props: RecentQueriesListProps
+  props?: RecentQueriesListProps
 ): RecentQueriesList {
   if (!loadRecentQueriesListReducer(engine)) {
     throw loadReducerError;
   }
 
-  const dispatch = engine.dispatch;
+  const controller = buildController(engine);
+  const {dispatch} = engine;
+  const getState = () => engine.state;
 
   validateRecentQueriesProps(engine, props);
   dispatch(
     registerRecentQueries({
-      queries: props.initialState?.queries ?? [],
-      maxQueries: props.options?.maxQueries ?? 10,
+      queries: props?.initialState?.queries ?? [],
+      maxQueries: props?.options?.maxQueries ?? 10,
     })
   );
-
-  const controller = buildController(engine);
-  const getState = () => engine.state;
 
   return {
     ...controller,

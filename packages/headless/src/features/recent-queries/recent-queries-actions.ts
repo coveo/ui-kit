@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {ArrayValue, NumberValue} from '@coveo/bueno';
+import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {validatePayload} from '../../utils/validate-payload';
 
 export interface RegisterRecentQueriesCreatorPayload {
@@ -14,7 +14,7 @@ export interface RegisterRecentQueriesCreatorPayload {
 }
 
 const registerRecentQueriesPayloadDefinition = {
-  queries: new ArrayValue({required: false}),
+  queries: new ArrayValue({required: true, each: new StringValue()}),
   maxQueries: new NumberValue({required: true, default: 10}),
 };
 

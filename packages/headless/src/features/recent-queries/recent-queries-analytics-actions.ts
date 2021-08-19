@@ -1,29 +1,24 @@
 import {makeAnalyticsAction, AnalyticsType} from '../analytics/analytics-utils';
 
-export const logRecentQueryClickThunk = () =>
+/**
+ * Logs a search event with an `actionCause` value of `recentQueriesClick`.
+ */
+export const logClearRecentQueries = () =>
   makeAnalyticsAction(
     'analytics/recentQueries/click',
-    AnalyticsType.Search,
-    (client) => {
-      return client.logRecentQueryClick();
-    }
-  );
-
-export const logClearRecentQueriesThunk = () =>
-  makeAnalyticsAction(
-    'analytics/recentQueries/clear',
     AnalyticsType.Custom,
     (client) => {
-      return client.logClearRecentQueries();
+      return client.logRecentQueryClick();
     }
   );
 
 /**
  * Logs a custom event with an `actionCause` value of `clearRecentQueries`.
  */
-export const logClearRecentQueries = () => logClearRecentQueriesThunk()();
-
-/**
- * Logs a search event with an `actionCause` value of `recentQueriesClick`.
- */
-export const logRecentQueryClick = () => logRecentQueryClickThunk()();
+export const logRecentQueryClick = makeAnalyticsAction(
+  'analytics/recentQueries/clear',
+  AnalyticsType.Search,
+  (client) => {
+    return client.logClearRecentQueries();
+  }
+);
