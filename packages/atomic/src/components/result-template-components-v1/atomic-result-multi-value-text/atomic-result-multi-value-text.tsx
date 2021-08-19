@@ -92,6 +92,22 @@ export class AtomicResultMultiText implements InitializableComponent {
     );
   }
 
+  private getShouldDisplayLabel(values: string[]) {
+    return (
+      this.maxValuesToDisplay > 0 && values.length > this.maxValuesToDisplay
+    );
+  }
+
+  private getNumberOfValuesToDisplay(values: string[]) {
+    if (values.length <= this.maxValuesToDisplay) {
+      return values.length;
+    }
+    if (this.maxValuesToDisplay < 2) {
+      return this.maxValuesToDisplay;
+    }
+    return Math.min(values.length - 2, this.maxValuesToDisplay);
+  }
+
   private renderValue(value: string) {
     const label = getFieldValueCaption(this.field, value, this.bindings.i18n);
     const kebabValue = titleToKebab(value);
@@ -129,10 +145,9 @@ export class AtomicResultMultiText implements InitializableComponent {
 
   private renderListItems() {
     const sortedValues = this.getSortedValues();
-    const shouldDisplayLabel = sortedValues.length > this.maxValuesToDisplay;
-    const numberOfValuesToDisplay = shouldDisplayLabel
-      ? this.maxValuesToDisplay - 1
-      : sortedValues.length;
+    const numberOfValuesToDisplay = this.getNumberOfValuesToDisplay(
+      sortedValues
+    );
 
     const nodes: VNode[] = [];
     for (let i = 0; i < numberOfValuesToDisplay; i++) {
@@ -141,7 +156,7 @@ export class AtomicResultMultiText implements InitializableComponent {
       }
       nodes.push(this.renderValue(sortedValues[i]));
     }
-    if (shouldDisplayLabel) {
+    if (this.getShouldDisplayLabel(sortedValues)) {
       nodes.push(
         this.renderSeparator(
           sortedValues[numberOfValuesToDisplay - 1],
