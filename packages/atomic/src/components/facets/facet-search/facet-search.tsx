@@ -166,7 +166,7 @@ export class FacetSearch {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'placeholder-neutral-dark flex-grow outline-none focus:outline-none mx-2'
+          'placeholder-neutral-dark flex-grow outline-none no-outline mx-2'
         }
         placeholder={this.strings.placeholder()}
         value={this.facetSearchState.query}
