@@ -17,6 +17,8 @@ import {Button} from '../../common/button';
 
 /**
  * The `atomic-result-quickview` component renders a preview of the result.
+ *
+ * @internal This component isn't fully developped and we don't recommend its usage.
  */
 @Component({
   tag: 'atomic-result-quickview',
