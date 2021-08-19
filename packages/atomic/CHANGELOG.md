@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.67.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.0...@coveo/atomic@0.67.1) (2021-08-19)
+
+
+### Bug Fixes
+
+* **atomic:** fixed atomic-icon for Safari ([#1112](https://github.com/coveo/ui-kit/issues/1112)) ([74a6ab4](https://github.com/coveo/ui-kit/commit/74a6ab40c7c68ef1b14941adf583f476a5c93e6e))
+
+
+
+
+
 # [0.67.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.2...@coveo/atomic@0.67.0) (2021-08-18)
 
 
