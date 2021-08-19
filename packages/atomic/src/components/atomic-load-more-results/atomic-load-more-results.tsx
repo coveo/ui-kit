@@ -12,7 +12,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {createRipple} from '../../utils/ripple';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -96,14 +96,13 @@ export class AtomicLoadMoreResults {
 
   private renderLoadMoreResults() {
     return (
-      <button
+      <Button
+        style="primary"
+        text={this.bindings.i18n.t('load-more-results')}
         part="load-more-results-button"
-        class="btn-primary font-bold my-2 p-3"
+        class="font-bold my-2 p-3"
         onClick={() => this.resultList.fetchMoreResults()}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-      >
-        <span>{this.bindings.i18n.t('load-more-results')}</span>
-      </button>
+      ></Button>
     );
   }
 

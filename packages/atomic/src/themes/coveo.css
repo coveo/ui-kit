@@ -21,6 +21,7 @@
   /* Border radius */
   --atomic-border-radius: 0.25rem;
   --atomic-border-radius-lg: 0.75rem;
+  --atomic-border-radius-xl: 1rem;
 
   /* Font */
   --atomic-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica,
@@ -38,6 +39,4 @@
   /* Others */
   /* TODO: Remove from v1 */
   --atomic-icon-size: 30px;
-  --atomic-border-radius: 0.25rem;
-  --atomic-border-radius-xl: 1rem;
 }

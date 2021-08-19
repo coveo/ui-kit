@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.67.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.1...@coveo/atomic@0.67.2) (2021-08-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.67.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.0...@coveo/atomic@0.67.1) (2021-08-19)
+
+
+### Bug Fixes
+
+* **atomic:** fixed atomic-icon for Safari ([#1112](https://github.com/coveo/ui-kit/issues/1112)) ([74a6ab4](https://github.com/coveo/ui-kit/commit/74a6ab40c7c68ef1b14941adf583f476a5c93e6e))
+
+
+
+
+
+# [0.67.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.2...@coveo/atomic@0.67.0) (2021-08-18)
+
+
+### Bug Fixes
+
+* **atomic:** fix v1.html ([#1111](https://github.com/coveo/ui-kit/issues/1111)) ([de12ece](https://github.com/coveo/ui-kit/commit/de12eceb6ac4408fb4f9f6fe0782c2ac2d640008))
+
+
+### Features
+
+* **atomic:** added placeholder for v1 list and grid results ([#1109](https://github.com/coveo/ui-kit/issues/1109)) ([5ff84da](https://github.com/coveo/ui-kit/commit/5ff84dadc59c2d3dfcf05a93eed290894124c587))
+* **atomic:** create & reuse functional Button component ([#1108](https://github.com/coveo/ui-kit/issues/1108)) ([7ff0340](https://github.com/coveo/ui-kit/commit/7ff0340abf939b69a04b2e3be4aced11dd6f85ba))
+
+
+
+
+
 ## [0.66.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.1...@coveo/atomic@0.66.2) (2021-08-18)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.16.1...@coveo/headless@1.16.2) (2021-08-19)
+
+
+### Bug Fixes
+
+* **headless:** fix special characters encoding for search parameter manager ([#1106](https://github.com/coveo/ui-kit/issues/1106)) ([bd1bd7a](https://github.com/coveo/ui-kit/commit/bd1bd7a8803a253fbc28cb59e9d0c68bdd0db422))
+
+
+
+
+
 ## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.16.0...@coveo/headless@1.16.1) (2021-08-18)
 
 **Note:** Version bump only for package @coveo/headless

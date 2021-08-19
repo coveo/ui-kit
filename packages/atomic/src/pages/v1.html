@@ -150,7 +150,7 @@
       }
 
       .status {
-        grid-area: results;
+        grid-area: status;
       }
 
       atomic-facet-manager {
@@ -177,8 +177,7 @@
         align-items: center;
       }
 
-      .results,
-      .result-status {
+      .results {
         grid-area: results;
       }
 
@@ -197,6 +196,7 @@
             '. facets topbar      .'
             '. facets results     .'
             '. facets pagination  .'
+            '. facets status      .'
             '. facets .           .';
         }
 
@@ -232,6 +232,7 @@
         <atomic-category-facet-v1 field="geographicalhierarchy" label="World Atlas" with-search>
         </atomic-category-facet-v1>
         <atomic-facet-v1 field="author" label="Authors"></atomic-facet-v1>
+        <atomic-facet-v1 field="language" label="Language"></atomic-facet-v1>
         <atomic-facet-v1 field="objecttype" label="Type" display-values-as="link"></atomic-facet-v1>
         <atomic-facet-v1 field="year" label="Year" display-values-as="box"></atomic-facet-v1>
         <atomic-numeric-facet-v1
@@ -282,8 +283,6 @@
       </div>
       <div class="results">
         <atomic-did-you-mean></atomic-did-you-mean>
-        <atomic-query-error></atomic-query-error>
-        <atomic-no-results-v1></atomic-no-results-v1>
         <atomic-result-list-v1 fields-to-include="snrating,sncost">
           <atomic-result-template>
             <template>
@@ -336,9 +335,6 @@
                   icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
                 ></atomic-result-badge-v1>
               </atomic-result-section-badges>
-              <atomic-result-section-actions>
-                <atomic-result-quickview></atomic-result-quickview>
-              </atomic-result-section-actions>
               <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <atomic-field-condition class="field" if-defined="snrating">
@@ -365,7 +361,7 @@
 
                   <atomic-field-condition class="field" if-defined="language">
                     <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
-                    <atomic-result-text field="language"></atomic-result-text>
+                    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
                   </atomic-field-condition>
 
                   <atomic-field-condition class="field" if-defined="filetype">
@@ -406,12 +402,12 @@
           </atomic-result-template>
         </atomic-result-list-v1>
       </div>
+      <div class="pagination">
+        <atomic-load-more-results></atomic-load-more-results>
+      </div>
       <div class="status">
         <atomic-query-error></atomic-query-error>
         <atomic-no-results-v1></atomic-no-results-v1>
-      </div>
-      <div class="pagination">
-        <atomic-load-more-results></atomic-load-more-results>
       </div>
     </atomic-search-interface>
   </body>
