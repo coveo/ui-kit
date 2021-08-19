@@ -6,6 +6,9 @@ import {
   buildResultList,
   buildResultTemplatesManager,
   Result,
+  buildResultsPerPage,
+  ResultsPerPageState,
+  ResultsPerPage,
 } from '@coveo/headless';
 import defaultTemplate from '../../templates/default.html';
 import {
@@ -14,12 +17,13 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {parseHTML} from '../../utils/utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result-v1/atomic-result';
-import {parseHTML} from '../../utils/utils';
+  getResultDisplayClasses,
+} from '../atomic-result-v1/atomic-result-display-options';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -32,6 +36,7 @@ import {parseHTML} from '../../utils/utils';
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private resultList!: ResultList;
+  public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
   @Element() private host!: HTMLDivElement;
@@ -39,6 +44,10 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultList')
   @State()
   private resultListState!: ResultListState;
+
+  @BindStateToController('resultsPerPage')
+  @State()
+  private resultsPerPageState!: ResultsPerPageState;
 
   @State() public error!: Error;
   @State() private templateHasError = false;
@@ -59,6 +68,10 @@ export class AtomicResultList implements InitializableComponent {
   @Prop() density: ResultDisplayDensity = 'normal';
 
   @Prop() image: ResultDisplayImageSize = 'icon';
+
+  private get showPlaceholder() {
+    return !this.resultListState.firstSearchExecuted;
+  }
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -98,6 +111,7 @@ export class AtomicResultList implements InitializableComponent {
         fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
       },
     });
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -131,6 +145,19 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private buildListResults() {
+    if (this.showPlaceholder) {
+      return Array.from(
+        {length: this.resultsPerPageState.numberOfResults},
+        (_, i) => (
+          <atomic-result-placeholder-v1
+            key={`placeholder-${i}`}
+            display={this.display}
+            density={this.density}
+            image={this.image}
+          ></atomic-result-placeholder-v1>
+        )
+      );
+    }
     return this.resultListState.results.map((result) => (
       <atomic-result-v1
         key={this.getId(result)}
@@ -183,62 +210,15 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private get results() {
-    if (!this.resultListState.results.length) {
-      return [];
-    }
-
-    if (this.display === 'table') {
+    if (this.display === 'table' && this.resultListState.results.length) {
       return this.buildTableResults();
     }
 
     return this.buildListResults();
   }
 
-  private getDisplayClass() {
-    switch (this.display) {
-      case 'grid':
-        return 'display-grid';
-      case 'list':
-      default:
-        return 'display-list';
-      case 'table':
-        return 'display-table';
-    }
-  }
-
-  private getDensityClass() {
-    switch (this.density) {
-      case 'comfortable':
-        return 'density-comfortable';
-      case 'normal':
-      default:
-        return 'density-normal';
-      case 'compact':
-        return 'density-compact';
-    }
-  }
-
-  private getImageClass() {
-    switch (this.image) {
-      case 'large':
-        return 'image-large';
-      case 'small':
-        return 'image-small';
-      case 'icon':
-      default:
-        return 'image-icon';
-      case 'none':
-        return 'image-none';
-    }
-  }
-
   private getClasses() {
-    const classes = [
-      this.getDisplayClass(),
-      this.getDensityClass(),
-      this.getImageClass(),
-    ];
-    return classes;
+    return getResultDisplayClasses(this.display, this.density, this.image);
   }
 
   @Listen('scroll', {target: 'window'})
@@ -258,10 +238,6 @@ export class AtomicResultList implements InitializableComponent {
   public render() {
     if (this.resultListState.hasError) {
       return;
-    }
-
-    if (!this.resultListState.firstSearchExecuted) {
-      return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
     }
 
     return (

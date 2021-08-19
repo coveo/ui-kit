@@ -1,10 +1,12 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {Result, SearchEngine} from '@coveo/headless';
 import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
-
-export type ResultDisplayLayout = 'list' | 'grid' | 'table';
-export type ResultDisplayDensity = 'comfortable' | 'normal' | 'compact';
-export type ResultDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
+import {
+  ResultDisplayLayout,
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  getResultDisplayClasses,
+} from './atomic-result-display-options';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -56,51 +58,8 @@ export class AtomicResult {
 
   private unbindLogDocumentOpen = () => {};
 
-  private getDisplayClass() {
-    switch (this.display) {
-      case 'grid':
-        return 'display-grid';
-      case 'list':
-      default:
-        return 'display-list';
-      case 'table':
-        return 'display-table';
-    }
-  }
-
-  private getDensityClass() {
-    switch (this.density) {
-      case 'comfortable':
-        return 'density-comfortable';
-      case 'normal':
-      default:
-        return 'density-normal';
-      case 'compact':
-        return 'density-compact';
-    }
-  }
-
-  private getImageClass() {
-    switch (this.image) {
-      case 'large':
-        return 'image-large';
-      case 'small':
-        return 'image-small';
-      case 'icon':
-      default:
-        return 'image-icon';
-      case 'none':
-        return 'image-none';
-    }
-  }
-
   private getClasses() {
-    const classes = [
-      this.getDisplayClass(),
-      this.getDensityClass(),
-      this.getImageClass(),
-    ];
-    return classes;
+    return getResultDisplayClasses(this.display, this.density, this.image);
   }
 
   public componentDidRender() {

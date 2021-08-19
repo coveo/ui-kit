@@ -83,9 +83,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {
@@ -109,7 +107,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get canShowMoreSearchResults() {
-    return this.facet && this.facet.state.facetSearch.moreValuesAvailable;
+    return this.facet?.state.facetSearch.moreValuesAvailable;
   }
 
   get canShowMore() {

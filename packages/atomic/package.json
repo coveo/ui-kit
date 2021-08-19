@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.66.2",
+  "version": "0.67.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
