@@ -56,7 +56,7 @@ const optionsSchema = new Schema<RecentQueriesListOptions>({
 });
 
 /**
- * The `RecentQueriesList` controller is in charge of managing the userès recent queries.
+ * The `RecentQueriesList` controller is in charge of managing the user's recent queries.
  */
 export interface RecentQueriesList extends Controller {
   /**
@@ -64,7 +64,7 @@ export interface RecentQueriesList extends Controller {
    * */
   state: RecentQueriesState;
   /**
-   * Clear the recent queries lsit.
+   * Clear the recent queries list.
    */
   clear(): void;
   /**

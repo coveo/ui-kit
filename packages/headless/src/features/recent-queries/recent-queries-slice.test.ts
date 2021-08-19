@@ -48,7 +48,7 @@ describe('recent-queries slice', () => {
     expect(state.queries).toEqual([]);
   });
 
-  it('should set new recent query on search fulfilled if queue is empty', () => {
+  it('should add new recent query on search fulfilled if queue is empty', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: testQuery,
@@ -65,7 +65,7 @@ describe('recent-queries slice', () => {
     );
   });
 
-  it('should set new recent query on search fulfilled if queue is empty', () => {
+  it('should add new recent query on search fulfilled if queue is non-empty', () => {
     const otherTestQuery = 'bar';
     state.queries = testQueries;
     state.maxQueries = 10;
@@ -86,7 +86,7 @@ describe('recent-queries slice', () => {
     ]);
   });
 
-  it('should set new recent query on search fulfilled and kick out oldest query if queue is full', () => {
+  it('should add new recent query on search fulfilled and kick out oldest query if queue is full', () => {
     state.queries = ['5', '4', '3', '2', '1'];
     state.maxQueries = 5;
     const searchAction = executeSearch.fulfilled(
@@ -107,7 +107,7 @@ describe('recent-queries slice', () => {
     ]);
   });
 
-  it('should not set new recent query on search fulfilled if queue already contains the query', () => {
+  it('should not add new recent query on search fulfilled if queue already contains the query', () => {
     const otherTestQuery = 'what is a query';
     state.queries = testQueries;
     state.maxQueries = 10;

@@ -37,7 +37,7 @@ describe('recent queries list', () => {
       recentQueriesList = buildRecentQueriesList(engine);
     });
 
-    it('should register with props on init', () => {
+    it('should register with default props on init', () => {
       expect(engine.actions).toContainEqual(
         registerRecentQueries({
           queries: [],
@@ -46,11 +46,11 @@ describe('recent queries list', () => {
       );
     });
 
-    it('#state.queries returns empty by default', () => {
+    it('#state.queries initial state is empty', () => {
       expect(recentQueriesList.state.queries.length).toBe(0);
     });
 
-    it('#state.maxQueries returns 10 by default', () => {
+    it('#state.maxQueries initial state is 10', () => {
       expect(recentQueriesList.state.maxQueries).toBe(10);
     });
   });
@@ -74,8 +74,8 @@ describe('recent queries list', () => {
     it('should register with props on init', () => {
       expect(engine.actions).toContainEqual(
         registerRecentQueries({
-          queries: testInitialState.queries,
-          maxQueries: testOptions.maxQueries,
+          queries: testProps.initialState.queries,
+          maxQueries: testProps.options.maxQueries,
         })
       );
     });

@@ -1,7 +1,7 @@
 import {makeAnalyticsAction, AnalyticsType} from '../analytics/analytics-utils';
 
 /**
- * Logs a search event with an `actionCause` value of `recentQueriesClick`.
+ * Logs a custom event with an `actionCause` value of `recentQueriesClick`.
  */
 export const logClearRecentQueries = () =>
   makeAnalyticsAction(
@@ -13,7 +13,7 @@ export const logClearRecentQueries = () =>
   );
 
 /**
- * Logs a custom event with an `actionCause` value of `clearRecentQueries`.
+ * Logs a search event with an `actionCause` value of `clearRecentQueries`.
  */
 export const logRecentQueryClick = makeAnalyticsAction(
   'analytics/recentQueries/clear',
