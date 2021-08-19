@@ -52,10 +52,9 @@ export default class QuanticSummary extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
+  
   updateState() {
     this.state = this.querySummary.state;
   }

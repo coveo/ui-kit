@@ -61,7 +61,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     <button
       title={props.label}
       part="modal-button"
-      class={`rounded-lg text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer truncate w-full ${
+      class={`rounded-lg text-left border-solid bg-background px-4 h-9 outline-none no-outline lg:hidden cursor-pointer truncate w-full ${
         props.hasActiveValues
           ? 'border-2 border-primary text-primary'
           : 'border border-neutral text-on-background'

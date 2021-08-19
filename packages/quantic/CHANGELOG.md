@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.50.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.49.2...@coveo/quantic@0.50.0) (2021-08-19)
+
+
+### Features
+
+* **quantic:** added optional chaining ([#1104](https://github.com/coveo/ui-kit/issues/1104)) ([d85c9e4](https://github.com/coveo/ui-kit/commit/d85c9e4e5fcde7255850b576350c6b5a6e02bc2f))
+
+
+
+
+
 ## [0.49.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.49.1...@coveo/quantic@0.49.2) (2021-08-18)
 
 **Note:** Version bump only for package @coveo/quantic

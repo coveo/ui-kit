@@ -28,6 +28,11 @@ export interface FacetWithSearchSelector extends ComponentSelector {
   valueHighlight: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
+export interface FacetWithShowMoreLessSelector extends ComponentSelector {
+  showLessButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  showMoreButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
+}
+
 export function assertLabelContains(
   BaseFacetSelector: BaseFacetSelector,
   label: string
@@ -246,5 +251,29 @@ export function assertLogFacetSearch(field: string) {
       expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
       expect(analyticsBody.customData).to.have.property('facetField', field);
     });
+  });
+}
+
+export function assertDisplayShowMoreButton(
+  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector,
+  display: boolean,
+  exist = true
+) {
+  it(`${should(display)} display a "Show more" button`, () => {
+    FacetWithShowMoreLessSelector.showMoreButton().should(
+      display ? 'be.visible' : exist ? 'not.be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertDisplayShowLessButton(
+  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector,
+  display: boolean,
+  exist = true
+) {
+  it(`${should(display)} display a "Show less" button`, () => {
+    FacetWithShowMoreLessSelector.showLessButton().should(
+      display ? 'be.visible' : exist ? 'not.be.visible' : 'not.exist'
+    );
   });
 }

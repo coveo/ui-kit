@@ -28,22 +28,6 @@ export function assertNumberOfIdleBoxValues(value: number) {
   });
 }
 
-export function assertDisplayShowMoreButton(display: boolean) {
-  it(`${should(display)} display a "Show more" button`, () => {
-    FacetSelectors.showMoreButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
-export function assertDisplayShowLessButton(display: boolean) {
-  it(`${should(display)} display a "Show less" button`, () => {
-    FacetSelectors.showLessButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
 export function assertLogFacetSelect(field: string, index: number) {
   it('should log the facet select results to UA ', () => {
     cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
