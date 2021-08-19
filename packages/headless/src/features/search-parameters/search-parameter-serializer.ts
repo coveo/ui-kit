@@ -1,3 +1,4 @@
+import {isString} from '@coveo/bueno';
 import {isSearchApiDate} from '../../api/search/date/date-format';
 import {isRelativeDateFormat} from '../../api/search/date/relative-date';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
@@ -8,6 +9,8 @@ import {SearchParameters} from './search-parameter-actions';
 const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
+
+type UnknownFacetObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -35,7 +38,9 @@ function serializePair(pair: [string, unknown]) {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
-  return `${key}${equal}${val}`;
+  return `${key}${equal}${encodeURIComponent(
+    val as string | number | boolean
+  )}`;
 }
 
 function isFacetObject(obj: unknown): obj is Record<string, string[]> {
@@ -77,7 +82,12 @@ function allEntriesAreValid(
 
 function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
-    .map(([facetId, values]) => `${key}[${facetId}]${equal}${values.join(',')}`)
+    .map(
+      ([facetId, values]) =>
+        `${key}[${facetId}]${equal}${values
+          .map((value) => encodeURIComponent(value))
+          .join(',')}`
+    )
     .join(delimiter);
 }
 
@@ -224,8 +234,19 @@ function cast<K extends keyof SearchParameters>(
   }
 
   if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
-    return [key, JSON.parse(value)];
+    return [key, castUnknownFacetObject(value)];
   }
 
-  return pair;
+  return [key, decodeURIComponent(value)];
+}
+
+function castUnknownFacetObject(value: string) {
+  const jsonParsed = JSON.parse(value) as UnknownFacetObject;
+  const ret = {} as UnknownFacetObject;
+  Object.entries(jsonParsed).forEach((entry) => {
+    const [facetId, values] = entry;
+    ret[facetId] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
+  });
+
+  return ret;
 }
