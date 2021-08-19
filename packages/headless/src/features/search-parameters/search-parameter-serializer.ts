@@ -10,7 +10,7 @@ const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
 
-type unknownFacetObject = {[field: string]: unknown[]};
+type UnknownFacetObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -241,8 +241,8 @@ function cast<K extends keyof SearchParameters>(
 }
 
 function castUnknownFacetObject(value: string) {
-  const jsonParsed = JSON.parse(value) as unknownFacetObject;
-  const ret = {} as unknownFacetObject;
+  const jsonParsed = JSON.parse(value) as UnknownFacetObject;
+  const ret = {} as UnknownFacetObject;
   Object.entries(jsonParsed).forEach((entry) => {
     const [facetId, values] = entry;
     ret[facetId] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
