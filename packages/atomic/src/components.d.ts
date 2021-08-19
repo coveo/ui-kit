@@ -590,6 +590,16 @@ export namespace Components {
         "fieldsToInclude": string;
         "image": ResultDisplayImageSize;
     }
+    interface AtomicResultMultiValueText {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay": number;
+    }
     interface AtomicResultNumber {
         /**
           * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -1193,6 +1203,12 @@ declare global {
         prototype: HTMLAtomicResultListV1Element;
         new (): HTMLAtomicResultListV1Element;
     };
+    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
+    }
+    var HTMLAtomicResultMultiValueTextElement: {
+        prototype: HTMLAtomicResultMultiValueTextElement;
+        new (): HTMLAtomicResultMultiValueTextElement;
+    };
     interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
     }
     var HTMLAtomicResultNumberElement: {
@@ -1413,6 +1429,7 @@ declare global {
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-list-v1": HTMLAtomicResultListV1Element;
+        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-number-v1": HTMLAtomicResultNumberV1Element;
         "atomic-result-placeholder-v1": HTMLAtomicResultPlaceholderV1Element;
@@ -2026,6 +2043,16 @@ declare namespace LocalJSX {
         "fieldsToInclude"?: string;
         "image"?: ResultDisplayImageSize;
     }
+    interface AtomicResultMultiValueText {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay"?: number;
+    }
     interface AtomicResultNumber {
         /**
           * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
@@ -2391,6 +2418,7 @@ declare namespace LocalJSX {
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-list-v1": AtomicResultListV1;
+        "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-number-v1": AtomicResultNumberV1;
         "atomic-result-placeholder-v1": AtomicResultPlaceholderV1;
@@ -2471,6 +2499,7 @@ declare module "@stencil/core" {
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-list-v1": LocalJSX.AtomicResultListV1 & JSXBase.HTMLAttributes<HTMLAtomicResultListV1Element>;
+            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-number-v1": LocalJSX.AtomicResultNumberV1 & JSXBase.HTMLAttributes<HTMLAtomicResultNumberV1Element>;
             "atomic-result-placeholder-v1": LocalJSX.AtomicResultPlaceholderV1 & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderV1Element>;
