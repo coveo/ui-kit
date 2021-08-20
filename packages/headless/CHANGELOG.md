@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.16.2...@coveo/headless@1.17.0) (2021-08-20)
+
+
+### Features
+
+* **headless:** added recent queries ([#1113](https://github.com/coveo/ui-kit/issues/1113)) ([8e69f79](https://github.com/coveo/ui-kit/commit/8e69f796104fce1368de5acdd8e28854dccae6cf))
+
+
+
+
+
 ## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.16.1...@coveo/headless@1.16.2) (2021-08-19)
 
 
