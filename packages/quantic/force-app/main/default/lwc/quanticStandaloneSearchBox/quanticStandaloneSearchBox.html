@@ -47,9 +47,11 @@
                 </template>
               </div>
               <template if:false={withoutSubmitButton}>
-                <div class="searchbox__submit-button">
+                <div
+                  class="searchbox__submit-button slds-button_brand"
+                  onclick={onSubmit}
+                >
                   <lightning-button-icon
-                    onclick={onSubmit}
                     title="Submit"
                     id="fixed-text-addon-post"
                     icon-class="searchbox__submit-button-icon"

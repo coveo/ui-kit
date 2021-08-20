@@ -19,19 +19,15 @@
     box-sizing: border-box;
 }
 
-.searchbox__submit-button{
+.searchbox__submit-button {
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
-    background-color: #005FB2;
     height: 100%;
     width: 46.57px;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.searchbox__submit-button:hover{
-    background-color: #0070D2;
+    cursor: pointer;
 }
 
 .searchbox__clear-button {
