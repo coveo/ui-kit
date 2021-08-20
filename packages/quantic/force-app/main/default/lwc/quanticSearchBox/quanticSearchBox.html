@@ -15,7 +15,6 @@
                   class="slds-icon slds-input__icon slds-input__icon_left"
                   icon-name="utility:search"
                   size="x-small"
-                  title=""
                 ></lightning-icon>
               </template>
               <input
@@ -32,33 +31,33 @@
                 role="textbox"
               />
               <template if:false={isQueryEmpty}>
-                <button
-                  class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
+                <lightning-button-icon
                   onclick={clearInput}
+                  icon-name="utility:close"
+                  variant="bare"
+                  class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                  size="medium"
+                  name="Clear"
                   title="Clear"
-                >
-                  <lightning-icon
-                    class="slds-button__icon"
-                    icon-name="utility:close"
-                    size="x-small"
-                  ></lightning-icon>
-                </button>
+                  aria-label="Clear"
+                  alternative-text="Clear"
+                ></lightning-button-icon>
               </template>
             </div>
             <template if:false={withoutSubmitButton}>
-              <button
+              <div
+                class="searchbox__submit-button slds-button_brand"
                 onclick={onSubmit}
-                class="slds-form-element__addon searchbox__submit-button"
-                title="Submit"
-                id="fixed-text-addon-post"
               >
-                <lightning-icon
-                  class="searchbox__submit-button-icon"
-                  variant="inverse"
+                <lightning-button-icon
+                  title="Submit"
+                  id="fixed-text-addon-post"
+                  icon-class="searchbox__submit-button-icon"
+                  variant="bare-inverse"
                   icon-name="utility:search"
-                  size="x-small"
-                ></lightning-icon>
-              </button>
+                  size="medium"
+                ></lightning-button-icon>
+              </div>
             </template>
           </div>
 

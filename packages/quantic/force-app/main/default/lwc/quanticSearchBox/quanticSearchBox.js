@@ -5,13 +5,10 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 
+import { keys } from 'c/quanticUtils';
+
 import search from '@salesforce/label/c.quantic_Search';
 
-const KEYS = {
-  ENTER: 'Enter',
-  ARROWUP: 'ArrowUp',
-  ARROWDOWN: 'ArrowDown',
-};
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -54,7 +51,6 @@ export default class QuanticSearchBox extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-
   /**
    * @param {import("coveo").SearchEngine} engine
    */
@@ -88,7 +84,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   updateState() {
     if (this.state.value !== this.searchBox.state.value) {
-      this.updateSearchboxText(this.searchBox.state.value);
+      this.input.value = this.searchBox.state.value;
     }
     this.state = this.searchBox.state;
   }
@@ -152,13 +148,6 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.value = suggestion.rawValue;
   }
 
-  /**
-   * @param {string} textValue
-   */
-  updateSearchboxText(textValue) {
-    this.input.value = textValue;
-  }
-
   handleEnter() {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
@@ -172,7 +161,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   onSubmit(event) {
     event.stopPropagation();
-    if(this.searchBox.state.value !== this.input.value) {
+    if (this.searchBox.state.value !== this.input.value) {
       this.searchBox.updateText(this.input.value);
     }
     this.searchBox.submit();
@@ -184,13 +173,13 @@ export default class QuanticSearchBox extends LightningElement {
    */
   onKeyup(event) {
     switch (event.key) {
-      case KEYS.ENTER:
+      case keys.ENTER:
         this.handleEnter();
         break;
-      case KEYS.ARROWUP:
+      case keys.ARROWUP:
         this.suggestionList?.selectionUp();
         break;
-      case KEYS.ARROWDOWN:
+      case keys.ARROWDOWN:
         this.suggestionList?.selectionDown();
         break;
       default:
