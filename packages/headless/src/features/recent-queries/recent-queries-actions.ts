@@ -22,7 +22,7 @@ const registerRecentQueriesPayloadDefinition = {
 };
 
 /**
- * Initialize the `recentQueries` state.
+ * Initializes the `recentQueries` state.
  * @param payload (RegisterRecentQueriesCreatorPayload) The initial state and options.
  */
 export const registerRecentQueries = createAction(
@@ -32,7 +32,7 @@ export const registerRecentQueries = createAction(
 );
 
 /**
- * Clear the recent queries list.
+ * Clears the recent queries list.
  */
 export const clearRecentQueries = createAction(
   'recentQueries/clearRecentQueries'

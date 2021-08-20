@@ -12,6 +12,7 @@ import {Action} from 'redux';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
+import {NumberValue} from '@coveo/bueno';
 
 describe('recent queries list', () => {
   let engine: MockSearchEngine;
@@ -69,7 +70,6 @@ describe('recent queries list', () => {
 
     beforeEach(() => {
       recentQueriesList = buildRecentQueriesList(engine, testProps);
-      spyOn(engine.logger, 'error');
     });
 
     it('should register with props on init', () => {
@@ -91,18 +91,15 @@ describe('recent queries list', () => {
       ).toBeDefined();
     });
 
-    it('#executeRecentQuery should not execute a query and should log an error if value at index is undefined', () => {
+    it('#executeRecentQuery should validate the given index parameter', () => {
+      const validationSpy = spyOn(
+        NumberValue.prototype,
+        'validate'
+      ).and.callThrough();
       engine.state.recentQueries = {...testInitialState, ...testOptions};
-      recentQueriesList.executeRecentQuery(100);
 
-      expect(engine.logger.error).toHaveBeenCalledTimes(1);
-      expect(
-        engine.actions.find((a) => a.type === updateQuery.type)
-      ).toBeUndefined();
-      expect(engine.actions).not.toContainEqual(
-        updateQuery({q: testInitialState.queries[100]})
-      );
-      expect(engine.findAsyncAction(executeSearch.pending)).toBeUndefined();
+      expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();
+      expect(validationSpy).toBeCalled();
     });
 
     it('#executeRecentQuery should execute the query and log proper analytics', () => {

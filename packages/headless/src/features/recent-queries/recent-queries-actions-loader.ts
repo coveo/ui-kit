@@ -8,11 +8,11 @@ import {
 } from './recent-queries-actions';
 
 /**
- * The RecentQueries action creators
+ * The RecentQueries action creators.
  */
 export interface RecentQueriesActionCreators {
   /**
-   * Initialize the `recentQueries` state.
+   * Initializes the `recentQueries` state.
    * @param payload (RegisterRecentQueriesCreatorPayload) The initial state and options.
    */
   registerRecentQueries(
@@ -20,7 +20,7 @@ export interface RecentQueriesActionCreators {
   ): PayloadAction<RegisterRecentQueriesCreatorPayload>;
 
   /**
-   * Clear the recent queries list.
+   * Clears the recent queries list.
    */
   clearRecentQueries(): PayloadAction;
 }

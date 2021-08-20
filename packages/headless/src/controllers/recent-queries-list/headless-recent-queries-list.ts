@@ -42,14 +42,14 @@ const defaultRecentQueriesProps: Required<RecentQueriesListProps> = {
 
 export interface RecentQueriesListInitialState {
   /**
-   * The list of recent queries
+   * The list of recent queries.
    * @defaultValue `[]`
    */
   queries: string[];
 }
 
 const initialStateSchema = new Schema<RecentQueriesListInitialState>({
-  queries: new ArrayValue({required: false}),
+  queries: new ArrayValue({required: true}),
 });
 
 export interface RecentQueriesListOptions {
@@ -61,11 +61,11 @@ export interface RecentQueriesListOptions {
 }
 
 const optionsSchema = new Schema<RecentQueriesListOptions>({
-  maxLength: new NumberValue({required: false, min: 1}),
+  maxLength: new NumberValue({required: true, min: 1}),
 });
 
 /**
- * The `RecentQueriesList` controller is in charge of managing the user's recent queries.
+ * The `RecentQueriesList` controller manages the user's recent queries.
  */
 export interface RecentQueriesList extends Controller {
   /**
@@ -73,11 +73,11 @@ export interface RecentQueriesList extends Controller {
    * */
   state: RecentQueriesState;
   /**
-   * Clear the recent queries list.
+   * Clears the recent queries list.
    */
   clear(): void;
   /**
-   * Execute the given recent query.
+   * Executes the given recent query.
    * @param index - The index of the recent query to execute.
    */
   executeRecentQuery(index: number): void;
@@ -120,14 +120,14 @@ export function buildRecentQueriesList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  validateRecentQueriesProps(engine, props);
-
   const registrationProps: Required<RecentQueriesListProps> = {
     ...defaultRecentQueriesProps,
     ...props,
   };
 
-  const options: Required<RecentQueriesState> = {
+  validateRecentQueriesProps(engine, registrationProps);
+
+  const options = {
     queries: registrationProps.initialState.queries,
     maxLength: registrationProps.options.maxLength,
   };
@@ -149,11 +149,13 @@ export function buildRecentQueriesList(
     },
 
     executeRecentQuery(index: number) {
-      if (!this.state.queries[index]) {
-        engine.logger.error(
-          `Could not execute query at index ${index} in recent queries list. Value at ${index} is ${this.state.queries[index]}`
-        );
-        return;
+      const errorMessage = new NumberValue({
+        required: true,
+        min: 0,
+        max: this.state.queries.length,
+      }).validate(index);
+      if (errorMessage) {
+        throw new Error(errorMessage);
       }
       dispatch(updateQuery({q: this.state.queries[index]}));
       dispatch(executeSearch(logRecentQueryClick()));
