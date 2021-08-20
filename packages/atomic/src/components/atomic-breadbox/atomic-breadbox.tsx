@@ -46,7 +46,7 @@ const ELLIPSIS = '...';
 export class AtomicBreadbox implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
-  private facetManager!: FacetManager;
+  facetManager!: FacetManager;
 
   @BindStateToController('breadcrumbManager')
   @State()
@@ -209,10 +209,15 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private renderBreadcrumbs() {
-    const sortedBreadcrumbs = this.allBreadcrumbs; // TODO: sort
+    const sortedBreadcrumbs = this.allBreadcrumbs.sort((a, b) => {
+      const indexA = this.facetManagerState.facetIds.indexOf(a.facetId);
+      const indexB = this.facetManagerState.facetIds.indexOf(b.facetId);
+      return indexA - indexB;
+    });
     const slicedBreadcrumbs = this.isCollapsed
       ? sortedBreadcrumbs.slice(0, this.collapseThreshold)
       : sortedBreadcrumbs;
+
     return [
       slicedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
       this.isCollapsed &&
