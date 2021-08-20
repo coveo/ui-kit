@@ -30,6 +30,14 @@ const ELLIPSIS = '...';
 
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+ *
+ * @part breadcrumb-button - A single breadcrumb button.
+ * @part breadcrumb-label - The breadcrumb label, associated with the facet.
+ * @part breadcrumb-value - The breadcrumb formatted value.
+ * @part show-more - The button to display all breadcrumbs.
+ * @part show-less - The button to display less breadcrumbs.
+ * @part label - The "Filters" label.
+ * @part clear - The button to clear all filters.
  */
 @Component({
   tag: 'atomic-breadbox',
@@ -81,13 +89,19 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li>
         <Button
+          part="breadcrumb-button"
           style="outline-neutral"
           class="py-2 px-3 flex items-center btn-pill"
           title={`${breadcrumb.label}: ${fullValue}`}
           onClick={() => breadcrumb.deselect()}
         >
-          <span class="with-colon text-neutral-dark mr-px">{limitedLabel}</span>
-          <span>{limitedValue}</span>
+          <span
+            part="breadcrumb-label"
+            class="with-colon text-neutral-dark mr-px"
+          >
+            {limitedLabel}
+          </span>
+          <span part="breadcrumb-value">{limitedValue}</span>
           <atomic-icon class="w-2 ml-2" icon={CloseIcon}></atomic-icon>
         </Button>
       </li>
@@ -98,6 +112,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li>
         <Button
+          part="show-more"
           style="outline-primary"
           text={`+ ${value.toLocaleString(this.bindings.i18n.language)}`}
           class="p-2 btn-pill"
@@ -112,6 +127,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li>
         <Button
+          part="show-less"
           style="outline-primary"
           text={this.bindings.i18n.t('show-less')}
           class="p-2 btn-pill"
@@ -125,6 +141,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li>
         <Button
+          part="clear"
           style="text-primary"
           text={this.bindings.i18n.t('clear')}
           class="p-2 btn-pill"
@@ -214,7 +231,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <Host class="atomic-with-values">
         <div class="text-on-background text-sm flex">
-          <span part="filters-label" class="font-bold p-2 with-colon">
+          <span part="label" class="font-bold p-2 with-colon">
             {this.bindings.i18n.t('filters')}
           </span>
           <ul class="flex flex-wrap gap-1">{this.renderBreadcrumbs()}</ul>
