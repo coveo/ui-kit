@@ -48,6 +48,7 @@ export class AtomicBreadbox implements InitializableComponent {
   @State()
   public facetManagerState!: FacetManagerState;
   @State() public error!: Error;
+  @State() private isCollapsed = true;
 
   /**
    * Number of breadcrumbs to display when collapsed.
@@ -83,6 +84,7 @@ export class AtomicBreadbox implements InitializableComponent {
           style="outline-neutral"
           class="py-2 px-3 flex items-center btn-pill"
           title={`${breadcrumb.label}: ${fullValue}`}
+          onClick={() => breadcrumb.deselect()}
         >
           <span class="with-colon text-neutral-dark mr-px">{limitedLabel}</span>
           <span>{limitedValue}</span>
@@ -100,6 +102,7 @@ export class AtomicBreadbox implements InitializableComponent {
           text={`+ ${value.toLocaleString(this.bindings.i18n.language)}`}
           class="p-2 btn-pill"
           ariaLabel={this.bindings.i18n.t('show-n-more-filters', {value})}
+          onClick={() => (this.isCollapsed = false)}
         ></Button>
       </li>
     );
@@ -112,6 +115,7 @@ export class AtomicBreadbox implements InitializableComponent {
           style="outline-primary"
           text={this.bindings.i18n.t('show-less')}
           class="p-2 btn-pill"
+          onClick={() => (this.isCollapsed = true)}
         ></Button>
       </li>
     );
@@ -188,12 +192,17 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private renderBreadcrumbs() {
-    // TODO: sort and cut
-    const sortedBreadcrumbs = this.allBreadcrumbs;
+    const sortedBreadcrumbs = this.allBreadcrumbs; // TODO: sort
+    const slicedBreadcrumbs = this.isCollapsed
+      ? sortedBreadcrumbs.slice(0, this.collapseThreshold)
+      : sortedBreadcrumbs;
     return [
-      sortedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
-      this.renderShowMore(15),
-      this.renderShowLess(),
+      slicedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
+      this.isCollapsed &&
+        sortedBreadcrumbs.length > this.collapseThreshold &&
+        this.renderShowMore(sortedBreadcrumbs.length - this.collapseThreshold),
+      slicedBreadcrumbs.length > this.collapseThreshold &&
+        this.renderShowLess(),
       this.renderClearAll(),
     ];
   }
