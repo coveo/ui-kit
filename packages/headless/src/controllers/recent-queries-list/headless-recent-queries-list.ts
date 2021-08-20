@@ -149,6 +149,12 @@ export function buildRecentQueriesList(
     },
 
     executeRecentQuery(index: number) {
+      if (!this.state.queries[index]) {
+        engine.logger.error(
+          `Could not execute query at index ${index} in recent queries list. Value at ${index} is ${this.state.queries[index]}`
+        );
+        return;
+      }
       dispatch(updateQuery({q: this.state.queries[index]}));
       dispatch(executeSearch(logRecentQueryClick()));
     },

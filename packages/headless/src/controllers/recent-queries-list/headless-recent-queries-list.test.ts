@@ -19,7 +19,7 @@ describe('recent queries list', () => {
 
   const expectContainAction = (action: Action) => {
     const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
+    expect(found).toBeDefined();
   };
 
   beforeEach(() => {
@@ -69,6 +69,7 @@ describe('recent queries list', () => {
 
     beforeEach(() => {
       recentQueriesList = buildRecentQueriesList(engine, testProps);
+      spyOn(engine.logger, 'error');
     });
 
     it('should register with props on init', () => {
@@ -85,7 +86,23 @@ describe('recent queries list', () => {
 
       expectContainAction(clearRecentQueries);
       expect(recentQueriesList.state.queries.length).toBe(0);
-      engine.findAsyncAction(logClearRecentQueries().pending);
+      expect(
+        engine.findAsyncAction(logClearRecentQueries.pending)
+      ).toBeDefined();
+    });
+
+    it('#executeRecentQuery should not execute a query and should log an error if value at index is undefined', () => {
+      engine.state.recentQueries = {...testInitialState, ...testOptions};
+      recentQueriesList.executeRecentQuery(100);
+
+      expect(engine.logger.error).toHaveBeenCalledTimes(1);
+      expect(
+        engine.actions.find((a) => a.type === updateQuery.type)
+      ).toBeUndefined();
+      expect(engine.actions).not.toContainEqual(
+        updateQuery({q: testInitialState.queries[100]})
+      );
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeUndefined();
     });
 
     it('#executeRecentQuery should execute the query and log proper analytics', () => {
@@ -96,7 +113,7 @@ describe('recent queries list', () => {
       expect(engine.actions).toContainEqual(
         updateQuery({q: testInitialState.queries[0]})
       );
-      engine.findAsyncAction(executeSearch.pending);
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeDefined();
     });
   });
 });
