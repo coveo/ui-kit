@@ -1,7 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
+import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {validatePayload} from '../../utils/validate-payload';
 import {Result} from '../../api/search/search/result';
+import {resultPartialDefinition} from '../analytics/analytics-utils';
 
 export interface RegisterRecentResultsCreatorPayload {
   /**
@@ -17,7 +18,7 @@ export interface RegisterRecentResultsCreatorPayload {
 const registerRecentResultsPayloadDefinition = {
   results: new ArrayValue({
     required: true,
-    each: new StringValue({emptyAllowed: false}),
+    each: new RecordValue({values: resultPartialDefinition}),
   }),
   maxLength: new NumberValue({required: true, min: 1, default: 10}),
 };
