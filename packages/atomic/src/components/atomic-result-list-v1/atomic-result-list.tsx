@@ -218,7 +218,15 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.image);
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.image
+    );
+    if (!this.showPlaceholder && this.resultList.state.isLoading) {
+      classes.push('loading');
+    }
+    return classes;
   }
 
   @Listen('scroll', {target: 'window'})

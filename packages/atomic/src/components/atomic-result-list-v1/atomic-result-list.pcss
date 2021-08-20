@@ -4,6 +4,20 @@
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
 /* TODO: Remove v1 suffix */
 atomic-result-list-v1 {
+  .list-root.loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 0.2;
+      }
+    }
+  }
+
   .list-root.display-table {
     padding: 2rem 0;
 
