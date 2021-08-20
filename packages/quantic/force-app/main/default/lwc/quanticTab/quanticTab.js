@@ -16,7 +16,6 @@ export default class QuanticTab extends LightningElement {
   /** @type {string} */
   @api engineId;
 
-
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
