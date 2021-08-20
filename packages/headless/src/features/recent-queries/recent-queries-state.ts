@@ -1,11 +1,11 @@
 export interface RecentQueriesState {
   queries: string[];
-  maxQueries: number;
+  maxLength: number;
 }
 
 export function getRecentQueriesInitialState(): RecentQueriesState {
   return {
     queries: [],
-    maxQueries: 10,
+    maxLength: 10,
   };
 }

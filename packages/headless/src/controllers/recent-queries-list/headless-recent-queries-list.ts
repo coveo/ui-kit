@@ -31,6 +31,15 @@ export interface RecentQueriesListProps {
   options?: RecentQueriesListOptions;
 }
 
+const defaultRecentQueriesProps: Required<RecentQueriesListProps> = {
+  initialState: {
+    queries: [],
+  },
+  options: {
+    maxLength: 10,
+  },
+};
+
 export interface RecentQueriesListInitialState {
   /**
    * The list of recent queries
@@ -48,11 +57,11 @@ export interface RecentQueriesListOptions {
    * The maximum number of queries to retain in the list.
    * @defaultValue `10`
    */
-  maxQueries: number;
+  maxLength: number;
 }
 
 const optionsSchema = new Schema<RecentQueriesListOptions>({
-  maxQueries: new NumberValue({required: false}),
+  maxLength: new NumberValue({required: false, min: 1}),
 });
 
 /**
@@ -69,9 +78,9 @@ export interface RecentQueriesList extends Controller {
   clear(): void;
   /**
    * Execute the given recent query.
-   * @param query - The recent query to execute.
+   * @param index - The index of the recent query to execute.
    */
-  executeRecentQuery(query: string): void;
+  executeRecentQuery(index: number): void;
 }
 
 export function validateRecentQueriesProps(
@@ -112,12 +121,18 @@ export function buildRecentQueriesList(
   const getState = () => engine.state;
 
   validateRecentQueriesProps(engine, props);
-  dispatch(
-    registerRecentQueries({
-      queries: props?.initialState?.queries ?? [],
-      maxQueries: props?.options?.maxQueries ?? 10,
-    })
-  );
+
+  const registrationProps: Required<RecentQueriesListProps> = {
+    ...defaultRecentQueriesProps,
+    ...props,
+  };
+
+  const options: Required<RecentQueriesState> = {
+    queries: registrationProps.initialState.queries,
+    maxLength: registrationProps.options.maxLength,
+  };
+
+  dispatch(registerRecentQueries(options));
 
   return {
     ...controller,
@@ -133,8 +148,8 @@ export function buildRecentQueriesList(
       dispatch(clearRecentQueries());
     },
 
-    executeRecentQuery(value: string) {
-      dispatch(updateQuery({q: value}));
+    executeRecentQuery(index: number) {
+      dispatch(updateQuery({q: this.state.queries[index]}));
       dispatch(executeSearch(logRecentQueryClick()));
     },
   };

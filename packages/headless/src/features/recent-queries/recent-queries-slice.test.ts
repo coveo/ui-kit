@@ -17,7 +17,7 @@ describe('recent-queries slice', () => {
 
   const testQuery = 'what is a query';
   const testQueries = [testQuery];
-  const testMaxQueries = 5;
+  const testMaxLength = 5;
 
   beforeEach(() => {
     state = getRecentQueriesInitialState();
@@ -25,19 +25,19 @@ describe('recent-queries slice', () => {
 
   it('should have initial state', () => {
     expect(recentQueriesReducer(undefined, {type: 'foo'})).toEqual({
-      maxQueries: 10,
+      maxLength: 10,
       queries: [],
     });
   });
 
-  it('#registerRecentQueries should set queries and maxQueries params in state', () => {
+  it('#registerRecentQueries should set queries and maxLength params in state', () => {
     state = recentQueriesReducer(
       state,
-      registerRecentQueries({queries: testQueries, maxQueries: testMaxQueries})
+      registerRecentQueries({queries: testQueries, maxLength: testMaxLength})
     );
 
     expect(state.queries).toEqual(testQueries);
-    expect(state.maxQueries).toEqual(testMaxQueries);
+    expect(state.maxLength).toEqual(testMaxLength);
   });
 
   it('#clearRecentQueries should remove all queries from the queue in state', () => {
@@ -68,7 +68,7 @@ describe('recent-queries slice', () => {
   it('should add new recent query on search fulfilled if queue is non-empty', () => {
     const otherTestQuery = 'bar';
     state.queries = testQueries;
-    state.maxQueries = 10;
+    state.maxLength = 10;
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: otherTestQuery,
@@ -88,7 +88,7 @@ describe('recent-queries slice', () => {
 
   it('should add new recent query on search fulfilled and kick out oldest query if queue is full', () => {
     state.queries = ['5', '4', '3', '2', '1'];
-    state.maxQueries = 5;
+    state.maxLength = 5;
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: '6',
@@ -110,7 +110,7 @@ describe('recent-queries slice', () => {
   it('should not add new recent query on search fulfilled if queue already contains the query', () => {
     const otherTestQuery = 'what is a query';
     state.queries = testQueries;
-    state.maxQueries = 10;
+    state.maxLength = 10;
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: otherTestQuery,

@@ -10,12 +10,15 @@ export interface RegisterRecentQueriesCreatorPayload {
   /**
    * The maximum number of queries to retain in the list.
    */
-  maxQueries: number;
+  maxLength: number;
 }
 
 const registerRecentQueriesPayloadDefinition = {
-  queries: new ArrayValue({required: true, each: new StringValue()}),
-  maxQueries: new NumberValue({required: true, default: 10}),
+  queries: new ArrayValue({
+    required: true,
+    each: new StringValue({emptyAllowed: false}),
+  }),
+  maxLength: new NumberValue({required: true, min: 1, default: 10}),
 };
 
 /**

@@ -41,7 +41,7 @@ describe('recent queries list', () => {
       expect(engine.actions).toContainEqual(
         registerRecentQueries({
           queries: [],
-          maxQueries: 10,
+          maxLength: 10,
         })
       );
     });
@@ -50,8 +50,8 @@ describe('recent queries list', () => {
       expect(recentQueriesList.state.queries.length).toBe(0);
     });
 
-    it('#state.maxQueries initial state is 10', () => {
-      expect(recentQueriesList.state.maxQueries).toBe(10);
+    it('#state.maxLength initial state is 10', () => {
+      expect(recentQueriesList.state.maxLength).toBe(10);
     });
   });
 
@@ -60,7 +60,7 @@ describe('recent queries list', () => {
       queries: ['first query', 'second query'],
     };
     const testOptions = {
-      maxQueries: 5,
+      maxLength: 5,
     };
     const testProps = {
       initialState: testInitialState,
@@ -75,7 +75,7 @@ describe('recent queries list', () => {
       expect(engine.actions).toContainEqual(
         registerRecentQueries({
           queries: testProps.initialState.queries,
-          maxQueries: testProps.options.maxQueries,
+          maxLength: testProps.options.maxLength,
         })
       );
     });
@@ -89,7 +89,8 @@ describe('recent queries list', () => {
     });
 
     it('#executeRecentQuery should execute the query and log proper analytics', () => {
-      recentQueriesList.executeRecentQuery(testInitialState.queries[0]);
+      engine.state.recentQueries = {...testInitialState, ...testOptions};
+      recentQueriesList.executeRecentQuery(0);
 
       expectContainAction(updateQuery);
       expect(engine.actions).toContainEqual(
