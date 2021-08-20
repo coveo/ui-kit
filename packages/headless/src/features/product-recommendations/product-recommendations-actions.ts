@@ -177,6 +177,7 @@ const mapResultToProductResult = (
 
   return {
     permanentid: result.raw.permanentid!,
+    searchUid: result.searchUid,
     clickUri: result.clickUri,
     ec_name: result.raw.ec_name as string,
     ec_brand: result.raw.ec_brand as string,

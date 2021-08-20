@@ -73,6 +73,11 @@ export interface ProductRecommendation {
    * An object containing the requested additional fields for the product.
    */
   additionalFields: Record<string, unknown>;
+
+  /**
+   * The associated `searchUid` of the response where the result was fetched.
+   */
+  searchUid: string;
 }
 
 // Change this list when changing the fields exposed by `ProductRecommendation`
