@@ -24,8 +24,7 @@ interface Breadcrumb {
   deselect: () => void;
 }
 
-const CHARACTER_LIMIT = 30;
-const SEPARATOR = '/';
+const SEPARATOR = ' / ';
 const ELLIPSIS = '...';
 
 /**
@@ -68,23 +67,22 @@ export class AtomicBreadbox implements InitializableComponent {
     this.facetManager = buildFacetManager(this.bindings.engine);
   }
 
-  private limitLength(value: string) {
-    return value.length > CHARACTER_LIMIT
-      ? `${value.substring(0, CHARACTER_LIMIT)}${ELLIPSIS}`
-      : value;
+  private limitPath(path: string[]) {
+    if (path.length <= 3) {
+      return path.join(SEPARATOR);
+    }
+
+    const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
+    return ellipsedPath.join(SEPARATOR);
   }
 
-  // TODO: limit path
-  private limitPath(path: string[]) {}
-
   private renderBreadcrumb(breadcrumb: Breadcrumb) {
-    const limitedLabel = this.limitLength(breadcrumb.label);
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
       : breadcrumb.formattedValue;
-    const limitedValue = Array.isArray(breadcrumb.formattedValue)
+    const value = Array.isArray(breadcrumb.formattedValue)
       ? this.limitPath(breadcrumb.formattedValue)
-      : this.limitLength(breadcrumb.formattedValue);
+      : breadcrumb.formattedValue;
 
     return (
       <li>
@@ -97,11 +95,13 @@ export class AtomicBreadbox implements InitializableComponent {
         >
           <span
             part="breadcrumb-label"
-            class="with-colon text-neutral-dark mr-px"
+            class="max-w-snippet truncate with-colon text-neutral-dark mr-px"
           >
-            {limitedLabel}
+            {breadcrumb.label}
           </span>
-          <span part="breadcrumb-value">{limitedValue}</span>
+          <span part="breadcrumb-value" class="max-w-snippet truncate">
+            {value}
+          </span>
           <atomic-icon class="w-2 ml-2" icon={CloseIcon}></atomic-icon>
         </Button>
       </li>
