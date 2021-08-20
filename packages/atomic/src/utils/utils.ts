@@ -19,6 +19,10 @@ export function camelToKebab(value: string) {
   return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
 
+export function titleToKebab(value: string) {
+  return value.replace(/\s/g, '-').toLowerCase();
+}
+
 export function randomID(prepend?: string, length = 5) {
   return (
     prepend +

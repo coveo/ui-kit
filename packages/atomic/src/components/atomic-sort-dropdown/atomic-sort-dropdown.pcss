@@ -1,1 +1,6 @@
-@import "../../global/global.pcss";
+@import '../../global/global.pcss';
+
+select:hover + div,
+select:focus + div {
+  @apply border-primary-light text-primary-light;
+}

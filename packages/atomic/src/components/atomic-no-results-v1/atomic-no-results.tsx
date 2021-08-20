@@ -16,6 +16,8 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import MagnifyingGlass from '../../images/magnifying-glass.svg';
+import escape from 'escape-html';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -96,13 +98,13 @@ export class AtomicNoResults {
     }
 
     return (
-      <button
+      <Button
+        style="primary"
         part="cancel-button"
-        class="text-neutral-light font-bold bg-primary px-2.5 py-3 rounded-md my-3 hover:bg-primary-light focus:ring-4 focus:outline-none"
+        text={this.bindings.i18n.t('cancel-last-action')}
         onClick={() => this.history.back()}
-      >
-        {this.bindings.i18n.t('cancel-last-action')}
-      </button>
+        class="font-bold px-2.5 py-3 my-3"
+      ></Button>
     );
   }
 

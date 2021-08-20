@@ -49,12 +49,8 @@ export default class QuanticPager extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-    if (this.unsubscribeSearchStatus) {
-      this.unsubscribeSearchStatus();
-    }
+    this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {

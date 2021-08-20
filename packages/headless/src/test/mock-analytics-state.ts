@@ -8,6 +8,7 @@ export function buildMockAnalyticsState(
     enabled: false,
     originLevel2: '',
     originLevel3: '',
+    anonymous: false,
     ...config,
   };
 }

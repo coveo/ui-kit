@@ -8,6 +8,11 @@
   @apply font-sans font-normal text-base;
 }
 
+/* TODO: V1 rename to atomic-hidden and use in all components */
+:host(.atomic-without-values) {
+  display: none;
+}
+
 @layer utilities {
   .empty\:border-none:empty {
     border: none;
@@ -21,6 +26,10 @@
     content: ')';
   }
 
+  .with-colon::after {
+    content: ':';
+  }
+
   .link {
     @apply text-primary hover:text-primary-light hover:underline focus:text-primary-light focus:underline;
   }
@@ -30,15 +39,50 @@
     content: '"';
   }
 
+  .no-outline {
+    @apply focus:outline-none;
+  }
+
+  .with-outline {
+    @apply focus:outline-color;
+  }
+
   .input-primary {
-    @apply border border-neutral bg-background rounded  hover:border-primary-light focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring-primary;
+    @apply border border-neutral bg-background rounded hover:border-primary-light focus:border-primary no-outline focus:ring-2 focus:ring-ring-primary;
   }
 
+  /* Fill with primary color */
   .btn-primary {
-    @apply rounded border bg-primary hover:bg-primary-light focus:bg-primary-light focus:outline-none text-on-primary;
+    @apply rounded bg-primary text-on-primary hover:bg-primary-light no-outline focus:ring-2 focus:ring-ring-primary;
   }
 
+  /* Border neutral, text primary, no background */
   .btn-outline-primary {
-    @apply rounded border border-neutral bg-background hover:border-primary-light focus:border-primary focus:outline-none text-primary hover:text-primary-light;
+    @apply rounded border border-neutral hover:border-primary-light focus:border-primary bg-background text-primary hover:text-primary-light focus:text-primary no-outline;
+  }
+
+  /* No border, text primary, active background neutral */
+  .btn-text-primary {
+    @apply rounded bg-background text-primary hover:bg-neutral-light focus:bg-neutral-light no-outline;
+  }
+
+  /* Border neutral, text neutral, no background */
+  .btn-outline-neutral {
+    @apply rounded border border-neutral hover:border-primary focus:border-primary bg-background text-on-background hover:text-primary focus:text-primary no-outline;
+  }
+
+  /* Border neutral, text neutral, active background neutral */
+  .btn-outline-bg-neutral {
+    @apply btn-outline-neutral hover:bg-neutral-light focus:bg-neutral-light;
+  }
+
+  /* No border, text neutral, active background neutral */
+  .btn-text-neutral {
+    @apply rounded bg-background hover:bg-neutral-light focus:bg-neutral-light no-outline text-on-background focus:text-primary hover:text-primary;
+  }
+
+  /* No border, text neutral, no background */
+  .btn-text-transparent {
+    @apply rounded bg-background with-outline text-on-background focus:text-primary-light hover:text-primary-light;
   }
 }

@@ -3,6 +3,136 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.68.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.0...@coveo/atomic@0.68.1) (2021-08-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.68.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.2...@coveo/atomic@0.68.0) (2021-08-20)
+
+
+### Features
+
+* **atomic:** added atomic-result-multi-text ([#1095](https://github.com/coveo/ui-kit/issues/1095)) ([54f9b39](https://github.com/coveo/ui-kit/commit/54f9b397de15f184d8271a3de14fd0d71652a9a3))
+* **atomic:** made result font sizes personalize-able with CSS variables ([#1110](https://github.com/coveo/ui-kit/issues/1110)) ([5810b0f](https://github.com/coveo/ui-kit/commit/5810b0fcfee3809d6327b95762079cabec0b1210))
+
+
+
+
+
+## [0.67.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.1...@coveo/atomic@0.67.2) (2021-08-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.67.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.0...@coveo/atomic@0.67.1) (2021-08-19)
+
+
+### Bug Fixes
+
+* **atomic:** fixed atomic-icon for Safari ([#1112](https://github.com/coveo/ui-kit/issues/1112)) ([74a6ab4](https://github.com/coveo/ui-kit/commit/74a6ab40c7c68ef1b14941adf583f476a5c93e6e))
+
+
+
+
+
+# [0.67.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.2...@coveo/atomic@0.67.0) (2021-08-18)
+
+
+### Bug Fixes
+
+* **atomic:** fix v1.html ([#1111](https://github.com/coveo/ui-kit/issues/1111)) ([de12ece](https://github.com/coveo/ui-kit/commit/de12eceb6ac4408fb4f9f6fe0782c2ac2d640008))
+
+
+### Features
+
+* **atomic:** added placeholder for v1 list and grid results ([#1109](https://github.com/coveo/ui-kit/issues/1109)) ([5ff84da](https://github.com/coveo/ui-kit/commit/5ff84dadc59c2d3dfcf05a93eed290894124c587))
+* **atomic:** create & reuse functional Button component ([#1108](https://github.com/coveo/ui-kit/issues/1108)) ([7ff0340](https://github.com/coveo/ui-kit/commit/7ff0340abf939b69a04b2e3be4aced11dd6f85ba))
+
+
+
+
+
+## [0.66.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.1...@coveo/atomic@0.66.2) (2021-08-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.66.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.66.0...@coveo/atomic@0.66.1) (2021-08-18)
+
+
+### Bug Fixes
+
+* **atomic:** made desktop and mobile [@screen](https://github.com/screen) directives mutually exclusive ([#1105](https://github.com/coveo/ui-kit/issues/1105)) ([b026e9b](https://github.com/coveo/ui-kit/commit/b026e9bc5bee0f53b3f215574f34149e3755b72d))
+
+
+
+
+
+# [0.66.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.65.0...@coveo/atomic@0.66.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** style atomic-sort-dropdown for v1 & add a sort dropdown to the atomic-refine-modal ([#1102](https://github.com/coveo/ui-kit/issues/1102)) ([de7b1d4](https://github.com/coveo/ui-kit/commit/de7b1d4d57e92f92318b5f27e7ad09ead58f0e1a))
+
+
+
+
+
+# [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.64.0...@coveo/atomic@0.65.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** added atomic-format-* support to atomic-result-number ([#1096](https://github.com/coveo/ui-kit/issues/1096)) ([b222565](https://github.com/coveo/ui-kit/commit/b22256574fa716b927f5fe29573c1e70c143c659))
+
+
+
+
+
+# [0.64.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.63.1...@coveo/atomic@0.64.0) (2021-08-17)
+
+
+### Features
+
+* **atomic:** add refine toggle button and modal components, rework v1.html layout ([#1079](https://github.com/coveo/ui-kit/issues/1079)) ([23a0ebd](https://github.com/coveo/ui-kit/commit/23a0ebdc280cfaaaf932f83a4846df91e81ce5f9))
+
+
+
+
+
+## [0.63.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.63.0...@coveo/atomic@0.63.1) (2021-08-16)
+
+
+### Bug Fixes
+
+* **atomic:** fix no results page query encoding characters ([#1088](https://github.com/coveo/ui-kit/issues/1088)) ([709605a](https://github.com/coveo/ui-kit/commit/709605a9a1a0edc2345b196df3ba7a56d222261d))
+
+
+
+
+
+# [0.63.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.62.0...@coveo/atomic@0.63.0) (2021-08-16)
+
+
+### Features
+
+* **atomic:** atomic load more results ([#1077](https://github.com/coveo/ui-kit/issues/1077)) ([67b6bbc](https://github.com/coveo/ui-kit/commit/67b6bbcd58a0c9bbf1b42722e5793e2022837dd8))
+
+
+
+
+
 # [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.61.0...@coveo/atomic@0.62.0) (2021-08-13)
 
 

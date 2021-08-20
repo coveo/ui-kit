@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {createRipple} from '../../../utils/ripple';
+import {Button} from '../../common/button';
 import {FacetValueProps} from '../facet-common';
 
 export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
@@ -14,15 +14,15 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
 
   return (
     <li key={props.displayValue}>
-      <button
+      <Button
+        style="outline-bg-neutral"
         part="value-box"
         onClick={() => props.onClick()}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-        class={`value-box box-border w-full h-full flex flex-col items-center rounded text-on-background hover:border-primary-light focus:border-primary-light focus:outline-none p-2 group focus:bg-neutral-light hover:bg-neutral-light ${
-          props.isSelected ? 'border-primary border-2' : 'border border-neutral'
+        class={`value-box box-border w-full h-full flex flex-col items-center p-2 group ${
+          props.isSelected ? 'selected' : ''
         }`}
-        aria-pressed={props.isSelected.toString()}
-        aria-label={ariaLabel}
+        ariaPressed={props.isSelected.toString()}
+        ariaLabel={ariaLabel}
       >
         {children}
         <span
@@ -32,7 +32,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
         >
           {count}
         </span>
-      </button>
+      </Button>
     </li>
   );
 };

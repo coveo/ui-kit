@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Host} from '@stencil/core';
+import {Component, h, State, Prop, Host, Element} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -35,7 +35,8 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
-import {createRipple} from '../../../utils/ripple';
+import {registerFacetToStore} from '../../../utils/store';
+import {Button} from '../../common/button';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -87,6 +88,7 @@ export class AtomicCategoryFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -95,7 +97,6 @@ export class AtomicCategoryFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -137,6 +138,10 @@ export class AtomicCategoryFacet
    * Whether to use basePath as a filter for the results.
    */
   @Prop() public filterByBasePath = true;
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   // @Prop() public customSort?: string; TODO: KIT-753 add customSort to headless
 
   public initialize() {
@@ -155,9 +160,11 @@ export class AtomicCategoryFacet
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.categoryFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'categoryFacets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   public componentShouldUpdate(
@@ -165,7 +172,7 @@ export class AtomicCategoryFacet
     prev: unknown,
     propName: keyof AtomicCategoryFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as CategoryFacetState).facetSearch,
         (prev as CategoryFacetState).facetSearch
@@ -226,11 +233,11 @@ export class AtomicCategoryFacet
     const allCategories = this.bindings.i18n.t('all-categories');
     return (
       <li key={allCategories}>
-        <button
+        <Button
+          style="text-neutral"
           part="all-categories-button"
           class="parent-button"
           onClick={() => this.facet.deselectAll()}
-          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         >
           <atomic-icon
             aria-hidden="true"
@@ -239,7 +246,7 @@ export class AtomicCategoryFacet
             class="back-arrow"
           ></atomic-icon>
           <span class="truncate">{allCategories}</span>
-        </button>
+        </Button>
       </li>
     );
   }
@@ -257,12 +264,12 @@ export class AtomicCategoryFacet
 
     return (
       <li key={displayValue}>
-        <button
+        <Button
+          style="text-neutral"
           part="parent-button"
           class="parent-button"
           onClick={() => this.facet.toggleSelect(facetValue)}
-          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-          aria-label={ariaLabel}
+          ariaLabel={ariaLabel}
         >
           <atomic-icon
             aria-hidden="true"
@@ -271,7 +278,7 @@ export class AtomicCategoryFacet
             class="back-arrow"
           ></atomic-icon>
           <span class="truncate">{displayValue}</span>
-        </button>
+        </Button>
       </li>
     );
   }

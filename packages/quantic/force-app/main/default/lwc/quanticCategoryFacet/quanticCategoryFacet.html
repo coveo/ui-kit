@@ -18,16 +18,18 @@
                 </template>
             </ul>
 
-            <lightning-button-group>
-                <template if:true={canShowMore}>
-                    <lightning-button variant="base" label={labels.showMore} title={labels.showMore} icon-name="utility:arrowdown"
-                                      class="slds-m-left_x-small" onclick={showMore} aria-label={showMoreFacetValuesLabel}></lightning-button>
-                </template>
-                <template if:true={canShowLess}>
-                    <lightning-button variant="base" label={labels.showLess} title={labels.showLess} icon-name="utility:arrowup"
-                                      class="slds-m-left_x-small" onclick={showLess} aria-label={showLessFacetValuesLabel}></lightning-button>
-                </template>
-            </lightning-button-group>
+            <template if:true={canShowLess}>
+              <button variant="base" label={labels.showLess}
+                class="slds-m-left_x-small facet__show-less" onclick={showLess}>
+                <span class="facet__show-less_text">- {labels.showLess}</span>
+              </button>
+            </template>
+            <template if:true={canShowMore}>
+              <button variant="base" label={labels.showMore}
+                class="slds-m-left_x-small facet__show-more" onclick={showMore}>
+                <span class="facet__show-more_text">+ {labels.showMore}</span>
+              </button>
+            </template>
         </lightning-card>
     </template>
 </template>

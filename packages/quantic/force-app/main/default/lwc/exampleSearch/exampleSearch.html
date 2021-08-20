@@ -1,7 +1,8 @@
 <template>
     <div onregisterresulttemplates={handleResultTemplateRegistration}>
-        <c-quantic-search-interface engine-id={engineId}>
-            <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">
+        <div class="search__grid">
+            <c-quantic-search-interface engine-id={engineId}>
+                <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">
                 <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
                     <c-quantic-facet field="objecttype" label="Type" engine-id={engineId}></c-quantic-facet>
                     <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
@@ -24,16 +25,18 @@
                         <c-quantic-sort class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_5-of-12" engine-id={engineId}>
                         </c-quantic-sort>
                     </div>
-                    <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
-                    <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>  
-                    <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>
-                    <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
-                    <div class="slds-var-m-vertical_medium">
-                        <c-quantic-pager engine-id={engineId}></c-quantic-pager>
-                        <c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>
+                        <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
+                        <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
+                        <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
+                        <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  
+                        <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
+                        <div class="slds-var-m-vertical_medium">
+                            <c-quantic-pager engine-id={engineId}></c-quantic-pager>
+                            <c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </c-quantic-search-interface>
+            </c-quantic-search-interface>
+        </div>
     </div>
 </template>
