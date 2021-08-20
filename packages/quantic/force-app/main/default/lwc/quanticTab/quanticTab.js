@@ -8,11 +8,11 @@ export default class QuanticTab extends LightningElement {
   /** @type {()=> void} */
   unsubscribe;
   /** @type {boolean} */
-  isActive = false;
+  isActive;
   /** @type {string} */
   @api label;
   /** @type {string} */
-  @api expression = "";
+  @api expression;
   /** @type {string} */
   @api engineId;
 
@@ -43,9 +43,7 @@ export default class QuanticTab extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {
@@ -56,8 +54,8 @@ export default class QuanticTab extends LightningElement {
     this.tab.select();
   }
 
-  get activeTabClass() {
-    return this.isActive ? 'slds-tabs_default__item slds-is-active' : 'slds-tabs_default__item';
+  get tabClass() {
+    return `slds-tabs_default__item ${this.isActive ? 'slds-is-active' : ''}`
   }
 
 }
