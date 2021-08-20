@@ -123,7 +123,7 @@
         grid-template-areas:
           '. search      .'
           '. status      .'
-          '. breadcrumbs .'
+          '. breadbox    .'
           '. topbar      .'
           '. results     .'
           '. pagination  .'
@@ -162,8 +162,8 @@
         margin-bottom: var(--spacing);
       }
 
-      atomic-breadcrumb-manager-v1 {
-        grid-area: breadcrumbs;
+      atomic-breadbox {
+        grid-area: breadbox;
         margin-top: var(--spacing);
         padding-bottom: var(--spacing);
         border-bottom: 1px solid var(--atomic-neutral);
@@ -192,7 +192,7 @@
           grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
           grid-template-areas:
             '. .      search      .'
-            '. facets breadcrumbs .'
+            '. facets breadbox .'
             '. facets topbar      .'
             '. facets results     .'
             '. facets pagination  .'
@@ -271,7 +271,7 @@
           sort-criteria="occurrences"
         ></atomic-color-facet>
       </atomic-facet-manager>
-      <atomic-breadcrumb-manager-v1></atomic-breadcrumb-manager-v1>
+      <atomic-breadbox></atomic-breadbox>
       <div class="topbar">
         <atomic-query-summary enable-duration="false"></atomic-query-summary>
         <atomic-refine-toggle></atomic-refine-toggle>
