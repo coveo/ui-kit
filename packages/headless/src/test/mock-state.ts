@@ -28,6 +28,7 @@ import {getFoldingInitialState} from '../features/folding/folding-state';
 import {getTriggerInitialState} from '../features/triggers/triggers-state';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state';
 import {getStandaloneSearchBoxSetInitialState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
+import {getRecentResultsInitialState} from '../features/recent-results/recent-results-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -63,6 +64,7 @@ export function createMockState(
     triggers: getTriggerInitialState(),
     questionAnswering: getQuestionAnsweringInitialState(),
     standaloneSearchBoxSet: getStandaloneSearchBoxSetInitialState(),
+    recentResults: getRecentResultsInitialState(),
     ...config,
   };
 }
