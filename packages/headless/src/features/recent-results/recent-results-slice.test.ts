@@ -13,8 +13,22 @@ import {
 describe('recent-results slice', () => {
   let state: RecentResultsState;
 
-  const mockResult = buildMockResult();
-  const otherMockResult = buildMockResult({uniqueId: 'different-id-1'});
+  const resultStringParams = {
+    title: 'title',
+    uri: 'uri',
+    printableUri: 'printable-uri',
+    clickUri: 'click-uri',
+    uniqueId: 'unique-id',
+    excerpt: 'exceprt',
+    firstSentences: 'first-sentences',
+    flags: 'flags',
+  };
+
+  const mockResult = buildMockResult(resultStringParams);
+  const otherMockResult = buildMockResult({
+    ...resultStringParams,
+    uniqueId: 'different-id-1',
+  });
   const mockResults = [mockResult];
   const testMaxLength = 5;
 
@@ -63,7 +77,7 @@ describe('recent-results slice', () => {
   it('#pushRecentResult should add new recent result and kick out oldest result if queue is full', () => {
     state.results = [
       otherMockResult,
-      buildMockResult({uniqueId: 'different-id-2'}),
+      buildMockResult({...resultStringParams, uniqueId: 'different-id-2'}),
     ];
     state.maxLength = 2;
     state = recentResultsReducer(state, pushRecentResult(mockResult));

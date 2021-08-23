@@ -3,15 +3,15 @@ import {buildMockRaw} from './mock-raw';
 
 export function buildMockResult(config: Partial<Result> = {}): Result {
   return {
-    title: 'title',
-    uri: 'uri',
-    printableUri: 'printable-uri',
-    clickUri: 'click-uri',
-    uniqueId: 'unique-id',
-    excerpt: 'exceprt',
-    firstSentences: 'first-sentences',
+    title: '',
+    uri: '',
+    printableUri: '',
+    clickUri: '',
+    uniqueId: '',
+    excerpt: '',
+    firstSentences: '',
     summary: null,
-    flags: 'flags',
+    flags: '',
     hasHtmlVersion: false,
     score: 0,
     percentScore: 0,
