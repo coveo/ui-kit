@@ -1,0 +1,34 @@
+@import '../../global/global.pcss';
+@import '../atomic-result-list-v1/atomic-result-table.pcss';
+
+.list-root.display-table {
+  @mixin atomic-result-table;
+  border: 1px solid var(--atomic-neutral);
+  border-radius: var(--atomic-border-radius-xl);
+
+  thead tr,
+  tbody tr:not(:last-child) {
+    position: relative;
+
+    &::after {
+      content: ' ';
+      display: block;
+      position: absolute;
+      height: 1px;
+      bottom: 0;
+      left: var(--padding);
+      right: var(--padding);
+      background-color: var(--atomic-neutral);
+    }
+  }
+
+  th,
+  td {
+    border-color: transparent;
+    border-radius: initial;
+  }
+
+  th {
+    background-color: transparent;
+  }
+}

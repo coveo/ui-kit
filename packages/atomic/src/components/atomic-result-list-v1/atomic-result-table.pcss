@@ -1,0 +1,54 @@
+@define-mixin atomic-result-table {
+  min-width: 100%;
+  margin: 2rem 0;
+  border-spacing: 0;
+  border-collapse: separate;
+
+  th,
+  td {
+    font-family: var(--atomic-font-family);
+    border: 1px solid var(--atomic-neutral);
+    --font-size: var(--atomic-text-sm);
+    font-size: var(--font-size);
+    line-height: 1rem;
+
+    &:not(:first-child) {
+      border-left: none;
+    }
+  }
+
+  th {
+    background-color: var(--atomic-neutral-light);
+    border-bottom: none;
+    font-weight: bold;
+    color: black;
+    padding: 1rem var(--padding);
+
+    &:first-child {
+      border-top-left-radius: var(--atomic-border-radius-xl);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--atomic-border-radius-xl);
+    }
+  }
+
+  td {
+    color: var(--atomic-neutral-dark);
+    border-top: none;
+    vertical-align: top;
+    padding: var(--padding);
+  }
+
+  &.density-comfortable {
+    --padding: 2rem;
+  }
+
+  &.density-normal {
+    --padding: 1.5rem;
+  }
+
+  &.density-compact {
+    --padding: 1rem;
+  }
+}

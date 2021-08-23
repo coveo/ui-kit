@@ -1,4 +1,4 @@
-import {Component, h, Element, State, Prop, Listen} from '@stencil/core';
+import {Component, h, Element, State, Prop, Listen, Host} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -171,7 +171,17 @@ export class AtomicResultList implements InitializableComponent {
     ));
   }
 
-  private buildTableResults() {
+  private buildTable() {
+    if (this.showPlaceholder) {
+      return (
+        <atomic-result-table-placeholder-v1
+          density={this.density}
+          image={this.image}
+          rows={this.resultsPerPageState.numberOfResults}
+        ></atomic-result-table-placeholder-v1>
+      );
+    }
+
     const fieldColumns = Array.from(
       parseHTML(
         this.getTemplate(this.resultListState.results[0])
@@ -179,7 +189,7 @@ export class AtomicResultList implements InitializableComponent {
     );
 
     return (
-      <table>
+      <table class={`list-root ${this.getClasses().join(' ')}`}>
         <thead>
           <tr>
             {fieldColumns.map((column) => (
@@ -209,14 +219,21 @@ export class AtomicResultList implements InitializableComponent {
     );
   }
 
-  private get results() {
-    if (this.display === 'table' && this.resultListState.results.length) {
-      return this.buildTableResults();
-    }
-
-    return this.buildListResults();
+  private buildList() {
+    return (
+      <div class={`list-root ${this.getClasses().join(' ')}`}>
+        {this.buildListResults()}
+      </div>
+    );
   }
 
+  private buildResultRoot() {
+    if (this.display === 'table' && this.resultListState.results.length) {
+      return this.buildTable();
+    }
+
+    return this.buildList();
+  }
   private getClasses() {
     return getResultDisplayClasses(this.display, this.density, this.image);
   }
@@ -241,10 +258,10 @@ export class AtomicResultList implements InitializableComponent {
     }
 
     return (
-      <div class={`list-root ${this.getClasses().join(' ')}`}>
+      <Host>
         {this.templateHasError && <slot></slot>}
-        {this.results}
-      </div>
+        {this.buildResultRoot()}
+      </Host>
     );
   }
 }
