@@ -15,7 +15,7 @@ export const recentQueriesReducer = createReducer(
         state.maxLength = action.payload.maxLength;
       })
       .addCase(clearRecentQueries, (state) => {
-        state.queries.length = 0;
+        state.queries = [];
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const query = action.payload.queryExecuted;

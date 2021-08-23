@@ -5,7 +5,9 @@ import {
   RegisterRecentResultsCreatorPayload,
   registerRecentResults,
   clearRecentResults,
+  pushRecentResult,
 } from './recent-results-actions';
+import {Result} from '../../api/search/search/result';
 
 /**
  * The RecentResults action creators
@@ -23,6 +25,12 @@ export interface RecentResultsActionCreators {
    * Clear the recent results list.
    */
   clearRecentResults(): PayloadAction;
+
+  /**
+   * Add the recent result to the list.
+   * @param payload (Result) The result to add.
+   */
+  pushRecentResult(payload: Result): PayloadAction<Result>;
 }
 
 /**
@@ -39,5 +47,6 @@ export function loadRecentResultsActions(
   return {
     registerRecentResults,
     clearRecentResults,
+    pushRecentResult,
   };
 }

@@ -1,6 +1,8 @@
 import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
+import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 import {ConfigurationSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -79,6 +81,12 @@ export function buildInteractiveResult(
   };
 
   let wasOpened = false;
+
+  const addToRecentResultsList = () => {
+    engine.dispatch(pushRecentResult(options.result));
+    engine.dispatch(logRecentResultClick(options.result));
+  };
+
   const logAnalyticsIfNeverOpened = () => {
     if (wasOpened) {
       return;
@@ -90,7 +98,10 @@ export function buildInteractiveResult(
   let longPressTimer: NodeJS.Timeout;
 
   return {
-    select: logAnalyticsIfNeverOpened,
+    select: () => {
+      addToRecentResultsList();
+      logAnalyticsIfNeverOpened();
+    },
 
     beginDelayedSelect() {
       longPressTimer = setTimeout(

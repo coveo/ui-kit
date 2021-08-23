@@ -14,6 +14,7 @@ describe('recent-results slice', () => {
   let state: RecentResultsState;
 
   const mockResult = buildMockResult();
+  const otherMockResult = buildMockResult({uniqueId: 'different-id-1'});
   const mockResults = [mockResult];
   const testMaxLength = 5;
 
@@ -53,30 +54,28 @@ describe('recent-results slice', () => {
   });
 
   it('#pushRecentResult should add new recent result if queue is non-empty', () => {
-    state.results = [buildMockResult({uniqueId: 'different-id-1'})];
+    state.results = [otherMockResult];
     state = recentResultsReducer(state, pushRecentResult(mockResult));
 
     expect(state.results.length).toBe(2);
   });
 
   it('#pushRecentResult should add new recent result and kick out oldest result if queue is full', () => {
-    const mockResult1 = buildMockResult({uniqueId: 'different-id-1'});
     state.results = [
-      mockResult1,
+      otherMockResult,
       buildMockResult({uniqueId: 'different-id-2'}),
     ];
     state.maxLength = 2;
     state = recentResultsReducer(state, pushRecentResult(mockResult));
 
-    expect(state.results).toEqual([mockResult, mockResult1]);
+    expect(state.results).toEqual([mockResult, otherMockResult]);
   });
 
-  it('#pushRecentResult should not add new recent result if queue already contains the result', () => {
-    const mockResult1 = buildMockResult({uniqueId: 'different-id-1'});
-    state.results = [mockResult, mockResult1];
+  it('#pushRecentResult should place the result at the beginning of the array if it is already present', () => {
+    state.results = [mockResult, otherMockResult];
     state.maxLength = 2;
-    state = recentResultsReducer(state, pushRecentResult(mockResult1));
+    state = recentResultsReducer(state, pushRecentResult(otherMockResult));
 
-    expect(state.results).toEqual([mockResult, mockResult1]);
+    expect(state.results).toEqual([otherMockResult, mockResult]);
   });
 });

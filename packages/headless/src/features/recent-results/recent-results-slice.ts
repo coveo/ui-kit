@@ -15,13 +15,13 @@ export const recentResultsReducer = createReducer(
         state.maxLength = action.payload.maxLength;
       })
       .addCase(clearRecentResults, (state) => {
-        state.results.length = 0;
+        state.results = [];
       })
       .addCase(pushRecentResult, (state, action) => {
         const result = action.payload;
-        if (state.results.some((r) => r.uniqueId === result.uniqueId)) {
-          return;
-        }
+        state.results = state.results.filter(
+          (r) => r.uniqueId !== result.uniqueId
+        );
         state.results.unshift(result);
         if (state.results.length > state.maxLength) {
           state.results.pop();

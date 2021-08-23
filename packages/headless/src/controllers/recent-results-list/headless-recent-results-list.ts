@@ -7,17 +7,13 @@ import {RecentResultsSection} from '../../state/state-sections';
 import {RecentResultsState} from '../../features/recent-results/recent-results-state';
 import {
   clearRecentResults,
-  pushRecentResult,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
 import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {
-  logClearRecentResults,
-  logRecentResultClick,
-} from '../../features/recent-results/recent-results-analytics-actions';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 import {Result} from '../../api/search/search/result';
 
 export interface RecentResultsListProps {
@@ -76,11 +72,6 @@ export interface RecentResultsList extends Controller {
    * Clears the recent results list.
    */
   clear(): void;
-  /**
-   * Adds result to the recent results list.
-   * @param index - The index of the clicked recent result in the list.
-   */
-  handleRecentResultClick(index: number): void;
 }
 
 export function validateRecentResultsProps(
@@ -146,20 +137,6 @@ export function buildRecentResultsList(
     clear() {
       dispatch(logClearRecentResults());
       dispatch(clearRecentResults());
-    },
-
-    handleRecentResultClick(index: number) {
-      const errorMessage = new NumberValue({
-        required: true,
-        min: 0,
-        max: this.state.results.length,
-      }).validate(index);
-      if (errorMessage) {
-        throw new Error(errorMessage);
-      }
-      const result = this.state.results[index];
-      dispatch(pushRecentResult(result));
-      dispatch(logRecentResultClick(result));
     },
   };
 }

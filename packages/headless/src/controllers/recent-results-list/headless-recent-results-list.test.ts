@@ -10,15 +10,10 @@ import {
 import {recentResults} from '../../app/reducers';
 import {
   clearRecentResults,
-  pushRecentResult,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
 import {Action} from 'redux';
-import {
-  logClearRecentResults,
-  logRecentResultClickThunk,
-} from '../../features/recent-results/recent-results-analytics-actions';
-import {NumberValue} from '@coveo/bueno';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 
 describe('recent results list', () => {
   let engine: MockSearchEngine;
@@ -94,36 +89,9 @@ describe('recent results list', () => {
       recentResultsList.clear();
 
       expectContainAction(clearRecentResults);
-      expect(recentResultsList.state.results.length).toBe(0);
       expect(
         engine.findAsyncAction(logClearRecentResults.pending)
       ).toBeDefined();
-    });
-
-    it('#handleRecentResultClick should validate the given index parameter', () => {
-      const validationSpy = spyOn(
-        NumberValue.prototype,
-        'validate'
-      ).and.callThrough();
-      engine.state.recentResults = {...testInitialState, ...testOptions};
-
-      expect(() => recentResultsList.handleRecentResultClick(100)).toThrow();
-      expect(validationSpy).toBeCalled();
-    });
-
-    it('#handleRecentResultClick should execute the result and log proper analytics', () => {
-      const testIndex = 0;
-      engine.state.recentResults = {...testInitialState, ...testOptions};
-      recentResultsList.handleRecentResultClick(testIndex);
-
-      expectContainAction(pushRecentResult);
-      const logAction = engine.actions.find(
-        (action) =>
-          action.type ===
-          logRecentResultClickThunk(testInitialState.results[testIndex]).pending
-            .type
-      );
-      expect(logAction).toBeDefined();
     });
   });
 });
