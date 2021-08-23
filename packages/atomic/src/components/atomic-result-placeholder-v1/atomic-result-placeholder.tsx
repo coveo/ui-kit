@@ -10,6 +10,7 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
 
 /**
  * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
+ * @internal
  */
 @Component({
   tag: 'atomic-result-placeholder-v1',
@@ -17,20 +18,9 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
   shadow: true,
 })
 export class AtomicResultPlaceholder {
-  /**
-   * How results should be displayed.
-   */
-  @Prop() display: ResultDisplayLayout = 'list';
-
-  /**
-   * How large or small results should be.
-   */
-  @Prop() density: ResultDisplayDensity = 'normal';
-
-  /**
-   * How large or small the visual section of results should be.
-   */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop() display!: ResultDisplayLayout;
+  @Prop() density!: ResultDisplayDensity;
+  @Prop() image!: ResultDisplayImageSize;
 
   private getClasses() {
     return getResultDisplayClasses(this.display, this.density, this.image);

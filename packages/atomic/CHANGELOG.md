@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.68.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.0...@coveo/atomic@0.68.1) (2021-08-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.68.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.2...@coveo/atomic@0.68.0) (2021-08-20)
+
+
+### Features
+
+* **atomic:** added atomic-result-multi-text ([#1095](https://github.com/coveo/ui-kit/issues/1095)) ([54f9b39](https://github.com/coveo/ui-kit/commit/54f9b397de15f184d8271a3de14fd0d71652a9a3))
+* **atomic:** made result font sizes personalize-able with CSS variables ([#1110](https://github.com/coveo/ui-kit/issues/1110)) ([5810b0f](https://github.com/coveo/ui-kit/commit/5810b0fcfee3809d6327b95762079cabec0b1210))
+
+
+
+
+
 ## [0.67.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.67.1...@coveo/atomic@0.67.2) (2021-08-19)
 
 **Note:** Version bump only for package @coveo/atomic

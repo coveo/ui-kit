@@ -633,17 +633,8 @@ export namespace Components {
         "field": string;
     }
     interface AtomicResultPlaceholderV1 {
-        /**
-          * How large or small results should be.
-         */
         "density": ResultDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
         "display": ResultDisplayLayout;
-        /**
-          * How large or small the visual section of results should be.
-         */
         "image": ResultDisplayImageSize;
     }
     interface AtomicResultPrice {
@@ -697,6 +688,11 @@ export namespace Components {
     interface AtomicResultSectionTitleMetadata {
     }
     interface AtomicResultSectionVisual {
+    }
+    interface AtomicResultTablePlaceholderV1 {
+        "density": ResultDisplayDensity;
+        "image": ResultDisplayImageSize;
+        "rows": number;
     }
     interface AtomicResultTemplate {
         /**
@@ -1299,6 +1295,12 @@ declare global {
         prototype: HTMLAtomicResultSectionVisualElement;
         new (): HTMLAtomicResultSectionVisualElement;
     };
+    interface HTMLAtomicResultTablePlaceholderV1Element extends Components.AtomicResultTablePlaceholderV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTablePlaceholderV1Element: {
+        prototype: HTMLAtomicResultTablePlaceholderV1Element;
+        new (): HTMLAtomicResultTablePlaceholderV1Element;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
@@ -1445,6 +1447,7 @@ declare global {
         "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
         "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
         "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
+        "atomic-result-table-placeholder-v1": HTMLAtomicResultTablePlaceholderV1Element;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-v1": HTMLAtomicResultV1Element;
@@ -2086,18 +2089,9 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicResultPlaceholderV1 {
-        /**
-          * How large or small results should be.
-         */
-        "density"?: ResultDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display"?: ResultDisplayLayout;
-        /**
-          * How large or small the visual section of results should be.
-         */
-        "image"?: ResultDisplayImageSize;
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
+        "image": ResultDisplayImageSize;
     }
     interface AtomicResultPrice {
         /**
@@ -2150,6 +2144,11 @@ declare namespace LocalJSX {
     interface AtomicResultSectionTitleMetadata {
     }
     interface AtomicResultSectionVisual {
+    }
+    interface AtomicResultTablePlaceholderV1 {
+        "density": ResultDisplayDensity;
+        "image": ResultDisplayImageSize;
+        "rows": number;
     }
     interface AtomicResultTemplate {
         /**
@@ -2434,6 +2433,7 @@ declare namespace LocalJSX {
         "atomic-result-section-title": AtomicResultSectionTitle;
         "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
         "atomic-result-section-visual": AtomicResultSectionVisual;
+        "atomic-result-table-placeholder-v1": AtomicResultTablePlaceholderV1;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-result-v1": AtomicResultV1;
@@ -2515,6 +2515,7 @@ declare module "@stencil/core" {
             "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
             "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
             "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
+            "atomic-result-table-placeholder-v1": LocalJSX.AtomicResultTablePlaceholderV1 & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderV1Element>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-result-v1": LocalJSX.AtomicResultV1 & JSXBase.HTMLAttributes<HTMLAtomicResultV1Element>;
