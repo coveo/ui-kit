@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Host} from '@stencil/core';
+import {Component, h, State, Host} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -20,7 +20,7 @@ import {getFieldValueCaption} from '../../utils/field-utils';
 interface Breadcrumb {
   facetId: string;
   label: string;
-  formattedValue: string | string[];
+  formattedValue: string[];
   deselect: () => void;
 }
 
@@ -57,10 +57,8 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
-  /**
-   * Number of breadcrumbs to display when collapsed.
-   */
-  @Prop() public collapseThreshold = 5;
+  // TODO: KIT-924 Automatically adapt the number of element of the breadbox
+  private collapseThreshold = 5;
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -152,59 +150,73 @@ export class AtomicBreadbox implements InitializableComponent {
     );
   }
 
+  private get facetBreadcrumbs(): Breadcrumb[] {
+    return this.breadcrumbManagerState.facetBreadcrumbs
+      .map(({facetId, field, values}) =>
+        values.map((value) => ({value, facetId, field}))
+      )
+      .flat()
+      .map(({value, facetId, field}) => ({
+        facetId,
+        label: this.bindings.store.state.facets[facetId].label,
+        deselect: value.deselect,
+        formattedValue: [
+          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
+        ],
+      }));
+  }
+
+  private get categoryFacetBreadcrumbs(): Breadcrumb[] {
+    return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
+      ({facetId, field, path, deselect}) => ({
+        facetId,
+        label: this.bindings.store.state.categoryFacets[facetId].label,
+        deselect: deselect,
+        formattedValue: path.map((pathValue) =>
+          getFieldValueCaption(field, pathValue.value, this.bindings.i18n)
+        ),
+      })
+    );
+  }
+
+  private get numericFacetBreadcrumbs(): Breadcrumb[] {
+    return this.breadcrumbManagerState.numericFacetBreadcrumbs
+      .map(({facetId, field, values}) =>
+        values.map((value) => ({value, facetId, field}))
+      )
+      .flat()
+      .map(({value, facetId}) => ({
+        facetId,
+        label: this.bindings.store.state.numericFacets[facetId].label,
+        deselect: value.deselect,
+        formattedValue: [
+          this.bindings.store.state.numericFacets[facetId].format(value.value),
+        ],
+      }));
+  }
+
+  private get dateFacetBreadcrumbs(): Breadcrumb[] {
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs
+      .map(({facetId, field, values}) =>
+        values.map((value) => ({value, facetId, field}))
+      )
+      .flat()
+      .map(({value, facetId}) => ({
+        facetId,
+        label: this.bindings.store.state.dateFacets[facetId].label,
+        deselect: value.deselect,
+        formattedValue: [
+          this.bindings.store.state.dateFacets[facetId].format(value.value),
+        ],
+      }));
+  }
+
   private get allBreadcrumbs(): Breadcrumb[] {
     return [
-      ...this.breadcrumbManagerState.facetBreadcrumbs
-        .map(({facetId, field, values}) =>
-          values.map((value) => ({value, facetId, field}))
-        )
-        .flat()
-        .map(({value, facetId, field}) => ({
-          facetId,
-          label: this.bindings.store.state.facets[facetId].label,
-          deselect: value.deselect,
-          formattedValue: getFieldValueCaption(
-            field,
-            value.value.value,
-            this.bindings.i18n
-          ),
-        })),
-      ...this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
-        ({facetId, field, path, deselect}) => ({
-          facetId,
-          label: this.bindings.store.state.categoryFacets[facetId].label,
-          deselect: deselect,
-          formattedValue: path.map((pathValue) =>
-            getFieldValueCaption(field, pathValue.value, this.bindings.i18n)
-          ),
-        })
-      ),
-      ...this.breadcrumbManagerState.numericFacetBreadcrumbs
-        .map(({facetId, field, values}) =>
-          values.map((value) => ({value, facetId, field}))
-        )
-        .flat()
-        .map(({value, facetId}) => ({
-          facetId,
-          label: this.bindings.store.state.numericFacets[facetId].label,
-          deselect: value.deselect,
-          formattedValue: this.bindings.store.state.numericFacets[
-            facetId
-          ].format(value.value),
-        })),
-      ...this.breadcrumbManagerState.dateFacetBreadcrumbs
-        .map(({facetId, field, values}) =>
-          values.map((value) => ({value, facetId, field}))
-        )
-        .flat()
-        .map(({value, facetId}) => ({
-          facetId,
-          label: this.bindings.store.state.dateFacets[facetId].label,
-          deselect: value.deselect,
-          formattedValue: this.bindings.store.state.dateFacets[facetId].format(
-            value.value
-          ),
-        })),
+      ...this.facetBreadcrumbs,
+      ...this.categoryFacetBreadcrumbs,
+      ...this.numericFacetBreadcrumbs,
+      ...this.dateFacetBreadcrumbs,
     ];
   }
 
@@ -218,6 +230,7 @@ export class AtomicBreadbox implements InitializableComponent {
       ? sortedBreadcrumbs.slice(0, this.collapseThreshold)
       : sortedBreadcrumbs;
 
+    // TODO: update collapse
     return [
       slicedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
       this.isCollapsed &&

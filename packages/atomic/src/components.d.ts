@@ -14,10 +14,6 @@ import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadbox {
-        /**
-          * Number of breadcrumbs to display when collapsed.
-         */
-        "collapseThreshold": number;
     }
     interface AtomicBreadcrumbManager {
         /**
@@ -1439,10 +1435,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadbox {
-        /**
-          * Number of breadcrumbs to display when collapsed.
-         */
-        "collapseThreshold"?: number;
     }
     interface AtomicBreadcrumbManager {
         /**
