@@ -2,7 +2,10 @@ import {createAction} from '@reduxjs/toolkit';
 import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {validatePayload} from '../../utils/validate-payload';
 import {Result} from '../../api/search/search/result';
-import {resultPartialDefinition} from '../analytics/analytics-utils';
+import {
+  resultPartialDefinition,
+  validateResultPayload,
+} from '../analytics/analytics-utils';
 
 export interface RegisterRecentResultsCreatorPayload {
   /**
@@ -37,8 +40,14 @@ export const registerRecentResults = createAction(
  * Push a recent result to the list.
  * @param payload (Result) The recently viewed result to push to the list.
  */
-export const pushRecentResult = createAction<Result>(
-  'recentResults/pushRecentResult'
+export const pushRecentResult = createAction(
+  'recentResults/pushRecentResult',
+  (payload: Result) => {
+    validateResultPayload(payload);
+    return {
+      payload,
+    };
+  }
 );
 
 /**
