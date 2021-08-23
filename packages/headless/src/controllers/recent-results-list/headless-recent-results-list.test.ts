@@ -100,7 +100,7 @@ describe('recent results list', () => {
       ).toBeDefined();
     });
 
-    it('#executeRecentResult should validate the given index parameter', () => {
+    it('#handleRecentResultClick should validate the given index parameter', () => {
       const validationSpy = spyOn(
         NumberValue.prototype,
         'validate'
@@ -111,7 +111,7 @@ describe('recent results list', () => {
       expect(validationSpy).toBeCalled();
     });
 
-    it('#executeRecentResult should execute the result and log proper analytics', () => {
+    it('#handleRecentResultClick should execute the result and log proper analytics', () => {
       const testIndex = 0;
       engine.state.recentResults = {...testInitialState, ...testOptions};
       recentResultsList.handleRecentResultClick(testIndex);
