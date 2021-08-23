@@ -71,7 +71,7 @@ describe('recent-results slice', () => {
     expect(state.results).toEqual([mockResult, mockResult1]);
   });
 
-  it('#pushRecentResult should not add new recent query on search fulfilled if queue already contains the query', () => {
+  it('#pushRecentResult should not add new recent result if queue already contains the result', () => {
     const mockResult1 = buildMockResult({uniqueId: 'different-id-1'});
     state.results = [mockResult, mockResult1];
     state.maxLength = 2;
