@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.69.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.69.0...@coveo/atomic@0.69.1) (2021-08-23)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix result rendering by adding searchResponseId ([#1118](https://github.com/coveo/ui-kit/issues/1118)) ([b16dd65](https://github.com/coveo/ui-kit/commit/b16dd65c38f568572c02a6a8e08ea1bfe4b8e74e))
+
+
+
+
+
 # [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.1...@coveo/atomic@0.69.0) (2021-08-23)
 
 
