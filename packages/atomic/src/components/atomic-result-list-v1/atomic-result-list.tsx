@@ -235,7 +235,15 @@ export class AtomicResultList implements InitializableComponent {
     return this.buildList();
   }
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.image);
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.image
+    );
+    if (!this.showPlaceholder && this.resultList.state.isLoading) {
+      classes.push('loading');
+    }
+    return classes;
   }
 
   @Listen('scroll', {target: 'window'})
