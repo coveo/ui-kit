@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.1...@coveo/atomic@0.69.0) (2021-08-23)
+
+
+### Features
+
+* **atomic:** added placeholder for table result list ([#1115](https://github.com/coveo/ui-kit/issues/1115)) ([80dd249](https://github.com/coveo/ui-kit/commit/80dd249d9d2faf11591c91f850cf09f320bdab46))
+* **atomic:** added pulse animation while results are being replaced ([#1116](https://github.com/coveo/ui-kit/issues/1116)) ([a878662](https://github.com/coveo/ui-kit/commit/a8786622b622ddb79690cb762073778b649dfec6))
+
+
+
+
+
 ## [0.68.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.0...@coveo/atomic@0.68.1) (2021-08-20)
 
 **Note:** Version bump only for package @coveo/atomic
