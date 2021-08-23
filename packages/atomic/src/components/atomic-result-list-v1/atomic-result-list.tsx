@@ -141,7 +141,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private getId(result: Result) {
-    return result.uniqueId + this.resultListState.queryId;
+    return result.uniqueId + this.resultListState.searchResponseId;
   }
 
   private buildListResults() {

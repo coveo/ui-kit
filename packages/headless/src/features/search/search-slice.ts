@@ -45,7 +45,7 @@ export const searchReducer = createReducer(
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
       state.results = action.payload.response.results;
-      state.queryId = action.payload.response.searchUid;
+      state.searchResponseId = action.payload.response.searchUid;
     });
     builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);

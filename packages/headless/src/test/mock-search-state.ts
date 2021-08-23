@@ -12,7 +12,7 @@ export function buildMockSearchState(
     automaticallyCorrected: false,
     isLoading: false,
     results: [],
-    queryId: '',
+    searchResponseId: '',
     ...config,
   };
 }

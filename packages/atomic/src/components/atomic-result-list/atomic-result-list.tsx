@@ -113,7 +113,7 @@ export class AtomicResultList implements InitializableComponent {
   private get results() {
     return this.resultListState.results.map((result) => (
       <atomic-result
-        key={`${result.raw.permanentid}${this.resultListState.queryId}`}
+        key={`${result.raw.permanentid}${this.resultListState.searchResponseId}`}
         result={result}
         engine={this.bindings.engine}
         // TODO: decide to get rid of Mustache or not
