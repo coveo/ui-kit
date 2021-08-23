@@ -71,8 +71,13 @@ export interface ResultListState extends SearchStatusState {
   results: Result[];
   /**
    * The unique identifier of the last executed search.
+   * @deprecated - Use the `queryId` instead.
    */
   searchUid: string;
+  /**
+   * The unique identifier of the response where the results were fetched, this value does not change when loading more results.
+   */
+  queryId: string;
   /**
    * Whether more results are available, using the same parameters as the last successful query.
    *
@@ -165,6 +170,7 @@ export function buildResultList(
         results: state.search.results,
         searchUid: state.search.response.searchUid,
         moreResultsAvailable: moreResultsAvailable(),
+        queryId: state.search.queryId,
       };
     },
 
