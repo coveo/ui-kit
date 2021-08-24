@@ -3,10 +3,10 @@ import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
-  buildGetProductsRequest,
-  GetProductsRequest,
-  GetProductsResponse,
-} from './products-request';
+  buildProductListingRequest,
+  ProductListingRequest,
+  ProductListingSuccessResponse,
+} from './product-listing-request';
 
 /**
  * Initialization options for the `ProductListingAPIClient`.
@@ -59,10 +59,10 @@ export class ProductListingAPIClient {
    * @returns The products for the requested listing.
    */
   async getProducts(
-    req: GetProductsRequest
-  ): Promise<ProductListingAPIResponse<GetProductsResponse>> {
+    req: ProductListingRequest
+  ): Promise<ProductListingAPIResponse<ProductListingSuccessResponse>> {
     const response = await PlatformClient.call({
-      ...buildGetProductsRequest(req),
+      ...buildProductListingRequest(req),
       ...this.options,
     });
 
@@ -72,7 +72,7 @@ export class ProductListingAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as GetProductsResponse}
+      ? {success: body as ProductListingSuccessResponse}
       : {error: body as ProductListingAPIErrorStatusResponse};
   }
 }

@@ -108,7 +108,7 @@ function validateConfiguration(
   try {
     productRecommendationEngineConfigurationSchema.validate(configuration);
   } catch (error) {
-    logger.error(error, 'Product Recommendation engine configuration error');
+    logger.error('Product Recommendation engine configuration error', error);
     throw error;
   }
 }

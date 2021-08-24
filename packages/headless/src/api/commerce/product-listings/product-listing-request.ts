@@ -2,11 +2,11 @@ import {ProductRecommendation} from '../../search/search/product-recommendation'
 import {
   baseProductListingRequest,
   ProductListingsParam,
-} from './product-listings-params';
+} from './product-listing-params';
 
-export type GetProductsRequest = ProductListingsParam;
+export type ProductListingRequest = ProductListingsParam;
 
-export const buildGetProductsRequest = (req: GetProductsRequest) => {
+export const buildProductListingRequest = (req: ProductListingRequest) => {
   const queryStringArguments: Record<string, string> = {};
 
   return {
@@ -20,14 +20,14 @@ export const buildGetProductsRequest = (req: GetProductsRequest) => {
   };
 };
 
-const prepareRequestParams = (req: GetProductsRequest) => ({
+const prepareRequestParams = (req: ProductListingRequest) => ({
   url: req.url,
 });
 
 /**
  * Defines the content of a successful response from the `/commerce/products/listing` API call.
  */
-export interface GetProductsResponse {
+export interface ProductListingSuccessResponse {
   items: ProductRecommendation[];
   totalCount: number;
   responseId: string;

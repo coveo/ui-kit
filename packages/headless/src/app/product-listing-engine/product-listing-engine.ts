@@ -14,12 +14,9 @@ import {
   ProductListingEngineConfiguration,
   productListingEngineConfigurationSchema,
 } from './product-listing-engine-configuration';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {isNullOrUndefined} from '@coveo/bueno';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
+import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
 
 export {
   ProductListingEngineConfiguration,
@@ -40,7 +37,7 @@ type ProductListingEngineState = StateFromReducersMapObject<
 export interface ProductListingEngine<State extends object = {}>
   extends CoreEngine<
     State & ProductListingEngineState,
-    SearchThunkExtraArguments
+    ProductListingThunkExtraArguments
   > {}
 
 /**
@@ -71,7 +68,7 @@ export function buildProductListingEngine(
     logger
   );
 
-  const thunkArguments = {
+  const thunkArguments: ProductListingThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     productListingClient,
   };
@@ -82,14 +79,6 @@ export function buildProductListingEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-
-  const {searchHub, timezone, locale} = options.configuration;
-
-  engine.dispatch(updateSearchConfiguration({timezone, locale}));
-
-  if (!isNullOrUndefined(searchHub)) {
-    engine.dispatch(setSearchHub(searchHub));
-  }
 
   return {
     ...engine,
@@ -107,7 +96,7 @@ function validateConfiguration(
   try {
     productListingEngineConfigurationSchema.validate(configuration);
   } catch (error) {
-    logger.error(error, 'Product Listing engine configuration error');
+    logger.error('Product Listing engine configuration error', error);
     throw error;
   }
 }

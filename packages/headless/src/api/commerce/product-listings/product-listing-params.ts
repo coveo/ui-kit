@@ -18,8 +18,6 @@ export const baseProductListingRequest = (
   contentType: HTTPContentType,
   queryStringArguments: Record<string, string> = {}
 ) => {
-  validateProductListingRequestParams(req);
-
   const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/commerce/products/listing`;
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
@@ -30,22 +28,6 @@ export const baseProductListingRequest = (
     contentType,
     url: effectiveUrl,
   };
-};
-
-const validateProductListingRequestParams = (req: ProductListingsParam) => {
-  if (!req.url) {
-    throw new Error("The 'url' attribute must contain a valid platform URL.");
-  }
-  if (!req.organizationId) {
-    throw new Error(
-      "The 'organizationId' attribute must contain a valid organization ID."
-    );
-  }
-  if (!req.accessToken) {
-    throw new Error(
-      "The 'accessToken' attribute must contain a valid platform access token."
-    );
-  }
 };
 
 const buildQueryString = (args: Record<string, string>): string => {
