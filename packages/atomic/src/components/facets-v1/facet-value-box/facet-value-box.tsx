@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {Button} from '../../common/button';
 import {FacetValueProps} from '../facet-common';
 
 export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
@@ -13,24 +14,25 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
 
   return (
     <li key={props.displayValue}>
-      <button
+      <Button
+        style="outline-bg-neutral"
         part="value-box"
         onClick={() => props.onClick()}
-        class={`value-box box-border w-full h-full flex flex-col items-center rounded text-on-background hover:border-primary-light focus:border-primary-light focus:outline-none py-2 px-1 ${
-          props.isSelected ? 'border-primary border-2' : 'border border-neutral'
+        class={`value-box box-border w-full h-full flex flex-col items-center p-2 group ${
+          props.isSelected ? 'selected' : ''
         }`}
-        aria-pressed={props.isSelected.toString()}
-        aria-label={ariaLabel}
+        ariaPressed={props.isSelected.toString()}
+        ariaLabel={ariaLabel}
       >
         {children}
         <span
           title={count}
           part="value-count"
-          class="text-neutral-dark ellipsed with-parentheses w-full text-sm mt-1"
+          class="text-neutral-dark truncate with-parentheses w-full text-sm mt-1"
         >
           {count}
         </span>
-      </button>
+      </Button>
     </li>
   );
 };

@@ -124,11 +124,11 @@ async function initEngine(engineId) {
  * @param element The Lightning element to use to load dependencies.
  */
 function setEngineOptions(options, engineConstructor, engineId, element) {
-  if (window.coveoHeadless && window.coveoHeadless[engineId] && window.coveoHeadless[engineId].options.isResolved) {
+  if (window.coveoHeadless?.[engineId]?.options?.isResolved) {
     console.warn(`Attempted to overwrite engine options for engine ID: ${engineId}`);
     return;
   }
-  if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
+  if (!window.coveoHeadless?.[engineId]) {
     instantiateWindowEngineObject(element, engineId)
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
@@ -159,8 +159,7 @@ function registerComponentForInit(element, engineId) {
  * @param {string} engineId The id of the engine.
  */
 function setComponentInitialized(element, engineId) {
-  const component = window.coveoHeadless
-    && window.coveoHeadless[engineId]
+  const component = window.coveoHeadless?.[engineId]
     ? getRegisteredComponent(element, engineId)
     : undefined;
 
@@ -192,7 +191,7 @@ function getHeadlessEnginePromise(engineId) {
  * @param {string} engineId The id of the engine.
  */
 function getHeadlessBindings(engineId) {
-  return window.coveoHeadless[engineId].bindings;
+  return window.coveoHeadless?.[engineId]?.bindings;
 }
 
 /**

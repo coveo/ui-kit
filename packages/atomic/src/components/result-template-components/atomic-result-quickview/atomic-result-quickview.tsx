@@ -5,7 +5,7 @@ import {
   QuickviewState,
   Quickview,
 } from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {
   Bindings,
   BindStateToController,
@@ -13,14 +13,17 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import DetailsIcon from 'coveo-styleguide/resources/icons/svg/details.svg';
+import {Button} from '../../common/button';
 
 /**
  * The `atomic-result-quickview` component renders a preview of the result.
+ *
+ * @internal This component isn't fully developped and we don't recommend its usage.
  */
 @Component({
   tag: 'atomic-result-quickview',
   styleUrl: 'atomic-result-quickview.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResultQuickview implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -89,16 +92,14 @@ export class AtomicResultQuickview implements InitializableComponent {
     }
 
     const button = (
-      <button
-        class="block w-full text-primary"
-        aria-label={this.strings.previewResult()}
+      <Button
+        style="outline-primary"
+        class="grid h-full place-items-center"
+        ariaLabel={this.strings.previewResult()}
         onClick={() => this.openModal()}
       >
-        <span
-          class="block h-5 w-5 fill-current mx-auto my-2"
-          innerHTML={DetailsIcon}
-        ></span>
-      </button>
+        <atomic-icon class="w-4 h-4" icon={DetailsIcon}></atomic-icon>
+      </Button>
     );
 
     if (this.isModalOpen) {

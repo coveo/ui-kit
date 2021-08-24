@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -36,6 +36,7 @@ import {
   getFieldValueCaption,
 } from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -69,6 +70,8 @@ import {Schema, StringValue} from '@coveo/bueno';
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
@@ -80,6 +83,7 @@ export class AtomicFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -88,7 +92,6 @@ export class AtomicFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -122,6 +125,10 @@ export class AtomicFacet
    * Possible values are 'checkbox', 'link', and 'box'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
   private validateProps() {
@@ -146,9 +153,11 @@ export class AtomicFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'facets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   public componentShouldUpdate(
@@ -156,7 +165,7 @@ export class AtomicFacet
     prev: unknown,
     propName: keyof AtomicFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
         (prev as FacetState).facetSearch
@@ -214,7 +223,7 @@ export class AtomicFacet
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
     const displayValue = getFieldValueCaption(
-      this.facetId!,
+      this.field,
       facetValue.value,
       this.bindings.i18n
     );

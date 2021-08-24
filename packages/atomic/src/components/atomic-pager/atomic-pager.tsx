@@ -93,7 +93,7 @@ export class AtomicPager implements InitializableComponent {
             this.scrollToTop();
           }}
         >
-          <span class="fill-current" innerHTML={options.icon}></span>
+          <atomic-icon icon={options.icon} class="h-full"></atomic-icon>
         </button>
       </li>
     );

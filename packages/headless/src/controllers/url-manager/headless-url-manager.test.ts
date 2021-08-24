@@ -67,7 +67,7 @@ describe('url manager', () => {
     engine.state.query.q = 'books';
     engine.state.sortCriteria = 'author ascending';
     expect(manager.state.fragment).toBe(
-      'q=books&sortCriteria=author ascending'
+      `q=books&sortCriteria=author${encodeURIComponent(' ')}ascending`
     );
   });
 

@@ -40,6 +40,7 @@ import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
 import {getFieldValueCaption} from '../../../utils/field-utils';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -62,6 +63,8 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
  * @part input-end - The input for the ending value of the custom date range.
  * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-timeframe-facet',
@@ -87,7 +90,6 @@ export class AtomicTimeframeFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -105,6 +107,10 @@ export class AtomicTimeframeFacet
    * Whether this facet should contain an datepicker allowing users to set custom ranges.
    */
   @Prop() public withDatePicker = false;
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   public initialize() {
     this.manualTimeframes = this.getManualTimeframes();
@@ -123,10 +129,12 @@ export class AtomicTimeframeFacet
     };
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.dateFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'dateFacets', {
       label: this.label,
+      facetId: this.facetId!,
+      element: this.host,
       format: (value) => this.formatFacetValue(value),
-    };
+    });
   }
 
   private initializeFilter() {
@@ -224,7 +232,7 @@ export class AtomicTimeframeFacet
 
       if (timeframe?.label) {
         return getFieldValueCaption(
-          this.facetId!,
+          this.field,
           timeframe.label,
           this.bindings.i18n
         );

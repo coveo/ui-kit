@@ -1,9 +1,11 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),
@@ -28,7 +30,12 @@ export const querySetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {queryExecuted} = action.payload;
-        Object.keys(state).forEach((q) => (state[q] = queryExecuted));
+        updateAllQuerySetQuery(state, queryExecuted);
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        if (!isNullOrUndefined(action.payload.q)) {
+          updateAllQuerySetQuery(state, action.payload.q);
+        }
       })
       .addCase(change.fulfilled, (state, action) => {
         if (!action.payload) {
@@ -41,6 +48,10 @@ export const querySetReducer = createReducer(
       });
   }
 );
+
+function updateAllQuerySetQuery(state: QuerySetState, query: string) {
+  Object.keys(state).forEach((id) => (state[id] = query));
+}
 
 const updateQuery = (state: QuerySetState, id: string, query: string) => {
   if (id in state) {

@@ -58,6 +58,7 @@ export function buildMockSearchAppEngine(
   return {
     ...engine,
     executeFirstSearch: jest.fn(),
+    executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
   };
 }
 
@@ -91,12 +92,15 @@ function buildMockCoreEngine<T extends AppState>(
 ): MockCoreEngine<T> {
   const logger = pino({level: 'silent'});
   const storeConfiguration = configureMockStore(logger);
-  const store = storeConfiguration(config.state || mockState());
+  const coreState = buildCoreState(config, mockState);
+  const store = storeConfiguration(coreState);
   const unsubscribe = () => {};
+
+  const {state, ...rest} = config;
 
   return {
     store,
-    state: mockState(),
+    state: buildCoreState(config, mockState),
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
       return store.dispatch;
@@ -112,8 +116,17 @@ function buildMockCoreEngine<T extends AppState>(
     addReducers: jest.fn(),
     enableAnalytics: jest.fn(),
     disableAnalytics: jest.fn(),
-    ...config,
+    ...rest,
   };
+}
+
+function buildCoreState<T extends AppState>(
+  config: Partial<CoreEngine<T>>,
+  mockState: () => T
+) {
+  const state = config.state || mockState();
+  state.configuration.analytics.enabled = false;
+  return state;
 }
 
 const configureMockStore = (logger: Logger) => {

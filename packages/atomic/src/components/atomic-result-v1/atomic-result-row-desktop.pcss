@@ -1,0 +1,233 @@
+@define-mixin row-result-desktop {
+  &.image-large.density-compact atomic-result-section-visual {
+    width: 10.25rem;
+    height: 10.25rem;
+  }
+
+  /* == Density styles == */
+  &.density-comfortable {
+    atomic-result-section-visual {
+      margin-right: 2rem;
+    }
+
+    atomic-result-section-badges {
+      margin-bottom: 1.5rem;
+      height: 2.5rem;
+    }
+
+    atomic-result-section-actions {
+      margin-bottom: 1.5rem;
+      height: 2.5rem;
+    }
+
+    atomic-result-section-title {
+      --font-size: var(--atomic-text-2xl);
+      font-size: var(--font-size);
+      --line-height: 2rem;
+      line-height: var(--line-height);
+    }
+
+    atomic-result-section-excerpt {
+      margin-top: 1.75rem;
+      --font-size: var(--atomic-text-lg);
+      font-size: var(--font-size);
+      --line-height: 1.5rem;
+      line-height: var(--line-height);
+      max-height: 4.5rem;
+      @mixin line-clamp 3;
+    }
+
+    atomic-result-section-bottom-metadata {
+      margin-top: 1.25rem;
+      --font-size: var(--atomic-text-sm);
+      font-size: var(--font-size);
+      --line-height: 2rem;
+      line-height: var(--line-height);
+      max-height: 4rem;
+    }
+  }
+
+  &.density-normal {
+    atomic-result-section-visual {
+      margin-right: 1.5rem;
+    }
+
+    atomic-result-section-badges {
+      margin-bottom: 1rem;
+      height: 2rem;
+    }
+
+    atomic-result-section-actions {
+      margin-bottom: 1rem;
+      height: 2rem;
+    }
+
+    atomic-result-section-title {
+      --font-size: var(--atomic-text-xl);
+      font-size: var(--font-size);
+      --line-height: 1.5rem;
+      line-height: var(--line-height);
+    }
+
+    atomic-result-section-excerpt {
+      margin-top: 1.25rem;
+      --font-size: var(--atomic-text-base);
+      font-size: var(--font-size);
+      --line-height: 1.25rem;
+      line-height: var(--line-height);
+      max-height: 2.5rem;
+      @mixin line-clamp 2;
+    }
+
+    atomic-result-section-bottom-metadata {
+      margin-top: 0.875rem;
+      --font-size: var(--atomic-text-sm);
+      font-size: var(--font-size);
+      --line-height: 1.75rem;
+      line-height: var(--line-height);
+      max-height: 3.5rem;
+    }
+  }
+
+  &.density-compact {
+    atomic-result-section-visual {
+      margin-right: 1rem;
+    }
+
+    atomic-result-section-badges {
+      margin-bottom: 1rem;
+      height: 2rem;
+    }
+
+    atomic-result-section-actions {
+      margin-bottom: 1rem;
+      height: 2rem;
+    }
+
+    atomic-result-section-title {
+      --font-size: var(--atomic-text-xl);
+      font-size: var(--font-size);
+      --line-height: 1.5rem;
+      line-height: var(--line-height);
+    }
+
+    atomic-result-section-excerpt {
+      margin-top: 1rem;
+      --font-size: var(--atomic-text-base);
+      font-size: var(--font-size);
+      --line-height: 1.25rem;
+      line-height: var(--line-height);
+      max-height: 1.25rem;
+      @mixin line-clamp 1;
+    }
+
+    atomic-result-section-bottom-metadata {
+      margin-top: 0.6875rem;
+      --font-size: var(--atomic-text-sm);
+      font-size: var(--font-size);
+      --line-height: 1.625rem;
+      line-height: var(--line-height);
+      max-height: 3.25rem;
+    }
+  }
+
+  /* == Image styles == */
+  &.density-comfortable,
+  &.density-normal,
+  &.density-compact {
+    &.image-large {
+      grid-template-areas:
+        'visual badges          .               actions'
+        'visual title           title           title'
+        'visual title-metadata  title-metadata  title-metadata'
+        'visual emphasized      emphasized      emphasized'
+        'visual excerpt         excerpt         excerpt'
+        'visual bottom-metadata bottom-metadata bottom-metadata'
+        'visual .               .               .';
+      grid-template-columns: minmax(0, min-content) auto 1fr auto;
+      grid-template-rows: repeat(6, auto) 1fr;
+
+      atomic-result-section-visual {
+        width: 20.375rem;
+        height: 20.375rem;
+      }
+    }
+
+    &.image-small {
+      grid-template-areas:
+        'visual badges          .               actions'
+        'visual title           title           title'
+        'visual title-metadata  title-metadata  title-metadata'
+        'visual emphasized      emphasized      emphasized'
+        'visual excerpt         excerpt         excerpt'
+        'visual bottom-metadata bottom-metadata bottom-metadata'
+        'visual .               .               .';
+      grid-template-columns: minmax(0, min-content) auto 1fr auto;
+      grid-template-rows: repeat(6, auto) 1fr;
+
+      atomic-result-section-visual {
+        width: 10rem;
+        height: 10rem;
+      }
+    }
+
+    &.image-icon {
+      grid-template-areas:
+        'badges badges          .               actions'
+        'visual title           title           title'
+        'visual title-metadata  title-metadata  title-metadata'
+        'visual emphasized      emphasized      emphasized'
+        'visual excerpt         excerpt         excerpt'
+        'visual bottom-metadata bottom-metadata bottom-metadata'
+        'visual .               .               .';
+      grid-template-columns: minmax(0, min-content) auto 1fr auto;
+      grid-template-rows: repeat(6, auto) 1fr;
+
+      atomic-result-section-visual {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+
+    &.image-none {
+      grid-template-areas:
+        'badges          .               actions'
+        'title           title           title'
+        'title-metadata  title-metadata  title-metadata'
+        'emphasized      emphasized      emphasized'
+        'excerpt         excerpt         excerpt'
+        'bottom-metadata bottom-metadata bottom-metadata';
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: repeat(6, auto);
+
+      atomic-result-section-visual {
+        display: none;
+      }
+    }
+  }
+
+  /* == Common styles == */
+  atomic-result-section-badges {
+    text-align: left;
+  }
+
+  atomic-result-section-actions {
+    text-align: right;
+  }
+
+  atomic-result-section-title-metadata {
+    --font-size: var(--atomic-text-sm);
+    font-size: var(--font-size);
+    --line-height: 1rem;
+    line-height: var(--line-height);
+  }
+
+  atomic-result-section-emphasized {
+    font-weight: 500;
+    --font-size: var(--atomic-text-2xl);
+    font-size: var(--font-size);
+    --line-height: 2rem;
+    line-height: var(--line-height);
+    margin-top: 0.5rem;
+  }
+}

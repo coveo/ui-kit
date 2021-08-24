@@ -2,6 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import PlusIcon from 'coveo-styleguide/resources/icons/svg/plus.svg';
 import MinusIcon from 'coveo-styleguide/resources/icons/svg/minus.svg';
+import {Button} from '../../common/button';
 
 interface FacetShowMoreProps {
   label: string;
@@ -24,39 +25,43 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   const showLessFacetValues = props.i18n.t('show-less-facet-values', {
     label,
   });
-  const btnClasses =
-    'w-full flex items-baseline text-left py-2 text-sm mt-2 link';
-  const iconClasses = 'fill-current w-2 h-2 mr-1';
-  return [
-    props.canShowLessValues && (
-      <button
+  const btnClasses = 'flex items-baseline text-left p-2 text-sm max-w-full';
+  const iconClasses = 'w-2 h-2 mr-1';
+
+  if (!props.canShowLessValues && !props.canShowMoreValues) {
+    return;
+  }
+
+  return (
+    <div class="mt-2">
+      <Button
+        style="text-primary"
         part="show-less"
-        class={`show-less ${btnClasses}`}
+        class={`${btnClasses} ${props.canShowLessValues ? '' : 'hidden'}`}
         aria-label={showLessFacetValues}
         onClick={() => props.onShowLess()}
       >
-        <div
+        <atomic-icon
           part="show-more-less-icon"
           class={iconClasses}
-          innerHTML={MinusIcon}
-        ></div>
-        {showLess}
-      </button>
-    ),
-    props.canShowMoreValues && (
-      <button
+          icon={MinusIcon}
+        ></atomic-icon>
+        <span class="truncate">{showLess}</span>
+      </Button>
+      <Button
+        style="text-primary"
         part="show-more"
-        class={`show-more ${btnClasses}`}
+        class={`${btnClasses} ${props.canShowMoreValues ? '' : 'hidden'}`}
         aria-label={showMoreFacetValues}
         onClick={() => props.onShowMore()}
       >
-        <div
+        <atomic-icon
           part="show-more-less-icon"
           class={iconClasses}
-          innerHTML={PlusIcon}
-        ></div>
-        {showMore}
-      </button>
-    ),
-  ];
+          icon={PlusIcon}
+        ></atomic-icon>
+        <span class="truncate">{showMore}</span>
+      </Button>
+    </div>
+  );
 };

@@ -30,6 +30,10 @@ export interface SearchState {
    * The list of results.
    */
   results: Result[];
+  /**
+   * The unique ID of the query, taken from the response's `searchUid. This value will not change when loading more results.
+   */
+  searchResponseId: string;
 }
 
 export function emptyQuestionAnswer() {
@@ -62,5 +66,6 @@ export function getSearchInitialState(): SearchState {
     automaticallyCorrected: false,
     isLoading: false,
     results: [],
+    searchResponseId: '',
   };
 }

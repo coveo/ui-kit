@@ -146,10 +146,10 @@ export class FacetSearch {
           this.triggerSearch();
         }}
       >
-        <div
-          innerHTML={ClearIcon}
-          class="text-on-background fill-current h-2.5 w-2.5"
-        />
+        <atomic-icon
+          icon={ClearIcon}
+          class="text-on-background h-2.5 w-2.5"
+        ></atomic-icon>
       </button>
     );
   }
@@ -166,7 +166,7 @@ export class FacetSearch {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'placeholder-neutral-dark flex-grow outline-none focus:outline-none mx-2'
+          'placeholder-neutral-dark flex-grow outline-none no-outline mx-2'
         }
         placeholder={this.strings.placeholder()}
         value={this.facetSearchState.query}
@@ -237,11 +237,11 @@ export class FacetSearch {
           class={this.inputWrapperClasses}
           ref={(el) => (this.containerRef = el as HTMLElement)}
         >
-          <div
+          <atomic-icon
             part="search-icon"
-            class={'ml-2 w-3 h-3 text-neutral-dark fill-current'}
-            innerHTML={SearchIcon}
-          />
+            class={'ml-2 w-3 h-3 text-neutral-dark'}
+            icon={SearchIcon}
+          ></atomic-icon>
           {this.input}
           {this.clearButton}
         </div>

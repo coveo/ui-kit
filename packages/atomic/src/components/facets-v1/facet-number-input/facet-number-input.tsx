@@ -2,6 +2,7 @@ import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
 import {NumberInputType} from './number-input-type';
+import {Button} from '../../common/button';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -54,14 +55,14 @@ export class FacetNumberInput {
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
 
-    const commonClasses = 'rounded p-2.5 border border-neutral';
-    const inputClasses = `${commonClasses} placeholder-neutral-dark min-w-0 mr-1`;
+    const inputClasses =
+      'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
 
     const step = this.type === 'integer' ? '1' : 'any';
 
     return (
       <form
-        class="flex flex-row mt-4"
+        class="flex flex-row mt-4 px-2"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();
@@ -100,14 +101,14 @@ export class FacetNumberInput {
             (this.end = (e.target as HTMLInputElement).valueAsNumber)
           }
         />
-        <button
+        <Button
+          style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class={`${commonClasses} bg-background text-primary flex-none`}
-          aria-label={applyAria}
-        >
-          {apply}
-        </button>
+          class="p-2.5 flex-none truncate"
+          ariaLabel={applyAria}
+          text={apply}
+        ></Button>
       </form>
     );
   }

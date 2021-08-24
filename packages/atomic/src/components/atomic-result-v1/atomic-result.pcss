@@ -1,0 +1,43 @@
+@import '../../global/global.pcss';
+@import './atomic-result-common.pcss';
+@import './atomic-result-row-desktop.pcss';
+@import './atomic-result-row-mobile.pcss';
+@import './atomic-result-cell-desktop.pcss';
+@import './atomic-result-cell-mobile.pcss';
+
+:host {
+  @apply font-sans font-normal;
+}
+
+.result-root {
+  @mixin common-result;
+
+  &.display-list {
+    @screen desktop-only {
+      @mixin row-result-desktop;
+    }
+    @screen mobile-only {
+      @mixin row-result-mobile;
+    }
+  }
+  &.display-grid {
+    &.image-large {
+      @screen desktop-only {
+        @mixin cell-result-desktop;
+      }
+      @screen mobile-only {
+        @mixin row-result-mobile;
+      }
+    }
+    &.image-small,
+    &.image-icon,
+    &.image-none {
+      @screen desktop-only {
+        @mixin cell-result-desktop;
+      }
+      @screen mobile-only {
+        @mixin cell-result-mobile;
+      }
+    }
+  }
+}

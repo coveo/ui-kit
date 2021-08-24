@@ -1,0 +1,8 @@
+/*
+ * `line-clamp` isn't supported yet, but `-webkit-line-clamp` is supported by all major browsers.
+ */
+@define-mixin line-clamp $line-count {
+  display: -webkit-box;
+  -webkit-line-clamp: $line-count;
+  -webkit-box-orient: vertical;
+}

@@ -26,6 +26,8 @@ import {HistoryState} from '../features/history/history-state';
 import {FoldingState} from '../features/folding/folding-state';
 import {TriggerState} from '../features/triggers/triggers-state';
 import {QuestionAnsweringState} from '../features/question-answering/question-answering-state';
+import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
+import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
 
 export interface QuerySection {
   /**
@@ -158,8 +160,16 @@ export interface CategoryFacetSearchSection {
 export interface RedirectionSection {
   /**
    * The URL redirection triggered by the preprocessed query.
+   * @deprecated - The `redirection` property will be removed in the future. Please use `standaloneSearchBoxSet` instead.
    */
   redirection: RedirectionState;
+}
+
+export interface StandaloneSearchBoxSection {
+  /**
+   * The set of standalone search boxes.
+   */
+  standaloneSearchBoxSet: StandaloneSearchBoxSetState;
 }
 
 export interface QuerySuggestionSection {
@@ -244,4 +254,11 @@ export interface QuestionAnsweringSection {
    * The question and answers for a given query, also known as smart snippet.
    */
   questionAnswering: QuestionAnsweringState;
+}
+
+export interface RecentQueriesSection {
+  /**
+   * The recent queries executed by the current user.
+   */
+  recentQueries: RecentQueriesState;
 }

@@ -111,7 +111,7 @@ export interface ClearQuerySuggestActionCreatorPayload {
 }
 
 /**
- * Clears the current partial basic query expression and the list of query suggestions in a specific query suggest entity.
+ * Clears the list of query suggestions in a specific query suggest entity.
  * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
 export const clearQuerySuggest = createAction(
@@ -138,9 +138,7 @@ export interface FetchQuerySuggestionsThunkReturn
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
   FetchQuerySuggestionsActionCreatorPayload,
-  AsyncThunkSearchOptions<StateNeededByQuerySuggest> & {
-    rejectValue: FetchQuerySuggestionsActionCreatorPayload;
-  }
+  AsyncThunkSearchOptions<StateNeededByQuerySuggest>
 >(
   'querySuggest/fetch',
 
@@ -155,7 +153,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     );
 
     if (isErrorResponse(response)) {
-      return rejectWithValue({id, ...response.error});
+      return rejectWithValue(response.error);
     }
 
     return {

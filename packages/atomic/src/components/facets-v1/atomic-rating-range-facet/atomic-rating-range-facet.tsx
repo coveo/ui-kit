@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -21,9 +21,10 @@ import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-fac
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
+import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -45,6 +46,8 @@ import Star from '../../../images/star.svg';
  * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  *
+ * @part ripple - The ripple effect of the component's interactive elements.
+ *
  */
 @Component({
   tag: 'atomic-rating-range-facet',
@@ -58,6 +61,7 @@ export class AtomicRatingRangeFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -66,7 +70,6 @@ export class AtomicRatingRangeFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -89,9 +92,21 @@ export class AtomicRatingRangeFacet
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
-   * The icon used to display the rating.
+   * The minimum value of the field.
+   */
+  @Prop() public minValueInIndex = 1;
+  /**
+   * The SVG icon to use to display the rating.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
    */
   @Prop() public icon = Star;
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -109,10 +124,12 @@ export class AtomicRatingRangeFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.numericFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'numericFacets', {
       label: this.label,
-      format: (facetValue) => this.formatFacetValue(facetValue),
-    };
+      facetId: this.facetId!,
+      element: this.host,
+      format: (value) => this.formatFacetValue(value),
+    });
   }
 
   private get scaleFactor() {
@@ -126,10 +143,10 @@ export class AtomicRatingRangeFacet
 
   private generateCurrentValues() {
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i < this.numberOfIntervals; i++) {
+    for (let i = this.minValueInIndex; i <= this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
-          start: Math.round((i + 1) * this.scaleFactor * 100) / 100,
+          start: Math.round(i * this.scaleFactor * 100) / 100,
           end: Math.round(this.maxValueInIndex * 100) / 100,
           endInclusive: true,
         })
@@ -159,16 +176,12 @@ export class AtomicRatingRangeFacet
   }
 
   private renderLabelText(facetValue: NumericFacetValue) {
-    const textClasses =
-      'ml-1 flex items-center truncate group-hover:underline group-hover:text-primary';
     return (
       <span
         part="value-label"
-        class={
-          facetValue.state === 'selected'
-            ? textClasses + ' font-bold'
-            : textClasses
-        }
+        class={`ml-1 flex items-center truncate group-focus:text-primary group-hover:text-primary ${
+          facetValue.state === 'selected' ? 'font-bold' : ''
+        }`}
       >
         {facetValue.start === this.maxValueInIndex ? (
           <span>{this.bindings.i18n.t('only')}</span>
@@ -190,11 +203,11 @@ export class AtomicRatingRangeFacet
         i18n={this.bindings.i18n}
         onClick={onClick}
       >
-        <FacetValueIconRating
+        <Rating
           numberOfTotalIcons={this.maxValueInIndex}
           numberOfActiveIcons={facetValue.start}
           icon={this.icon}
-        ></FacetValueIconRating>
+        ></Rating>
         {this.renderLabelText(facetValue)}
       </FacetValueLink>
     );
