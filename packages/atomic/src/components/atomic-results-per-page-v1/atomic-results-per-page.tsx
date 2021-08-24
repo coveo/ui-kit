@@ -13,14 +13,15 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
  *
  * @part label - The "Results per page" label.
  * @part buttons - The list of buttons.
- * @part page-button - The page button.
- * @part active-page-button - The active page button.
+ * @part button - The result per page button.
+ * @part active-button - The active result per page button.
  */
 @Component({
   tag: 'atomic-results-per-page-v1', // TODO: remove v1
@@ -39,11 +40,6 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  private strings = {
-    resultsPerPage: () => this.bindings.i18n.t('results-per-page'),
-    displayResultsPerPage: (results: number) =>
-      this.bindings.i18n.t('display-results-per-page', {results}),
-  };
   @State() public error!: Error;
 
   /**
@@ -92,21 +88,20 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
-    const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-light'
-      : 'text-on-background';
 
     return (
-      <button
+      <Button
+        style="outline-neutral"
         role="radio"
-        aria-label={this.strings.displayResultsPerPage(choice)}
-        aria-checked={`${isSelected}`}
-        class={`hover:underline ${classes}`}
-        part={`page-button ${isSelected && 'active-page-button'}`}
+        ariaChecked={`${isSelected}`}
+        ariaLabel={this.bindings.i18n.t('display-results-per-page', {
+          results: choice,
+        })}
         onClick={() => this.resultPerPage.set(choice)}
-      >
-        {choice.toLocaleString(this.bindings.i18n.language)}
-      </button>
+        class={`number-button ${isSelected ? 'selected' : ''}`}
+        part={`button${isSelected && ' active-button'}`}
+        text={choice.toLocaleString(this.bindings.i18n.language)}
+      ></Button>
     );
   }
 
@@ -117,14 +112,14 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
     return (
       <div class="flex items-center">
-        <span part="label" class="text-on-background pr-4">
-          {this.strings.resultsPerPage()}
+        <span part="label" class="text-on-background text-lg mr-3">
+          {this.bindings.i18n.t('results-per-page')}
         </span>
         <div
           part="buttons"
           role="radiogroup"
-          aria-label={this.strings.resultsPerPage()}
-          class="flex flex-wrap flex-grow	mr-2"
+          aria-label={this.bindings.i18n.t('results-per-page')}
+          class="flex flex-wrap space-x-2 h-10"
         >
           {this.choices.map((choice) => this.buildChoice(choice))}
         </div>

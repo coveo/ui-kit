@@ -424,6 +424,12 @@ export namespace Components {
          */
         "numberOfPages": number;
     }
+    interface AtomicPagerV1 {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+    }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
@@ -747,6 +753,16 @@ export namespace Components {
         "result": Result;
     }
     interface AtomicResultsPerPage {
+        /**
+          * A list of choices for the number of results to display per page, separated by commas.
+         */
+        "choicesDisplayed": string;
+        /**
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+         */
+        "initialChoice"?: number;
+    }
+    interface AtomicResultsPerPageV1 {
         /**
           * A list of choices for the number of results to display per page, separated by commas.
          */
@@ -1099,6 +1115,12 @@ declare global {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
     };
+    interface HTMLAtomicPagerV1Element extends Components.AtomicPagerV1, HTMLStencilElement {
+    }
+    var HTMLAtomicPagerV1Element: {
+        prototype: HTMLAtomicPagerV1Element;
+        new (): HTMLAtomicPagerV1Element;
+    };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
     var HTMLAtomicQueryErrorElement: {
@@ -1333,6 +1355,12 @@ declare global {
         prototype: HTMLAtomicResultsPerPageElement;
         new (): HTMLAtomicResultsPerPageElement;
     };
+    interface HTMLAtomicResultsPerPageV1Element extends Components.AtomicResultsPerPageV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultsPerPageV1Element: {
+        prototype: HTMLAtomicResultsPerPageV1Element;
+        new (): HTMLAtomicResultsPerPageV1Element;
+    };
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxElement: {
@@ -1422,6 +1450,7 @@ declare global {
         "atomic-numeric-facet-v1": HTMLAtomicNumericFacetV1Element;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-pager-v1": HTMLAtomicPagerV1Element;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -1461,6 +1490,7 @@ declare global {
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-v1": HTMLAtomicResultV1Element;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
+        "atomic-results-per-page-v1": HTMLAtomicResultsPerPageV1Element;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-size-condition-v1": HTMLAtomicSizeConditionV1Element;
@@ -1889,6 +1919,13 @@ declare namespace LocalJSX {
         "numberOfPages"?: number;
         "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
     }
+    interface AtomicPagerV1 {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+    }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
@@ -2217,6 +2254,16 @@ declare namespace LocalJSX {
          */
         "initialChoice"?: number;
     }
+    interface AtomicResultsPerPageV1 {
+        /**
+          * A list of choices for the number of results to display per page, separated by commas.
+         */
+        "choicesDisplayed"?: string;
+        /**
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+         */
+        "initialChoice"?: number;
+    }
     interface AtomicSearchBox {
         /**
           * Whether the submit button is placed before the input.
@@ -2411,6 +2458,7 @@ declare namespace LocalJSX {
         "atomic-numeric-facet-v1": AtomicNumericFacetV1;
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
+        "atomic-pager-v1": AtomicPagerV1;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -2450,6 +2498,7 @@ declare namespace LocalJSX {
         "atomic-result-text": AtomicResultText;
         "atomic-result-v1": AtomicResultV1;
         "atomic-results-per-page": AtomicResultsPerPage;
+        "atomic-results-per-page-v1": AtomicResultsPerPageV1;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-size-condition-v1": AtomicSizeConditionV1;
@@ -2494,6 +2543,7 @@ declare module "@stencil/core" {
             "atomic-numeric-facet-v1": LocalJSX.AtomicNumericFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetV1Element>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-pager-v1": LocalJSX.AtomicPagerV1 & JSXBase.HTMLAttributes<HTMLAtomicPagerV1Element>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
@@ -2533,6 +2583,7 @@ declare module "@stencil/core" {
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-result-v1": LocalJSX.AtomicResultV1 & JSXBase.HTMLAttributes<HTMLAtomicResultV1Element>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
+            "atomic-results-per-page-v1": LocalJSX.AtomicResultsPerPageV1 & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageV1Element>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-size-condition-v1": LocalJSX.AtomicSizeConditionV1 & JSXBase.HTMLAttributes<HTMLAtomicSizeConditionV1Element>;

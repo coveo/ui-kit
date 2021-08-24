@@ -1,14 +1,13 @@
 @import '../../global/global.pcss';
 
-/**
- * @prop --atomic-pagination-button-size: The size of the pagination buttons.
- * @prop --atomic-pagination-button-border-radius: The border radius of the pagination button.
- * @prop --atomic-pagination-font-size: The font size of the pagination button.
- */
 button {
-  min-width: var(--atomic-pagination-button-size, 2rem);
-  height: var(--atomic-pagination-button-size, 2rem);
-  line-height: var(--atomic-pagination-button-size, 2rem);
-  font-size: var(--atomic-pagination-font-size);
-  border-radius: var(--atomic-pagination-button-border-radius, 50%);
+  @apply h-full w-10 grid place-items-center text-lg;
+}
+
+.number-button {
+  @apply border-0 hover:border focus:border;
+
+  &.selected {
+    @apply font-bold border-2 border-primary;
+  }
 }
