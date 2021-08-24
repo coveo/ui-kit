@@ -16,9 +16,7 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
   @track state = {
-    sortCriterion: 'score',
     values: [],
   };
   /** @type {string} */
@@ -30,7 +28,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {number} */
   @api numberOfValues = 8;
   /** @type  {import("coveo").FacetSortCriterion}*/
-  @api sortCriterion = 'automatic';
+  @api sortCriteria = 'automatic';
   /** @type {boolean} */
   @api withoutSearch = false;
 
@@ -65,8 +63,8 @@ export default class QuanticFacet extends LightningElement {
   initialize(engine) {
     const options = {
       field: this.field,
-      sortCriteria: this.sortCriterion,
-      facetSearch: {numberOfValues: this.numberOfValues},
+      sortCriteria: this.sortCriteria,
+      facetSearch: {numberOfValues: Number(this.numberOfValues)},
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.facetId = this.facet.state.facetId;
@@ -114,7 +112,7 @@ export default class QuanticFacet extends LightningElement {
     if (!this.facet) {
       return false;
     }
-    return this.state.canShowMoreValues && !this.withoutSearch;
+    return this.state.canShowMoreValues;
   }
 
   get canShowLess() {

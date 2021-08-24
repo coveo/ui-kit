@@ -20,7 +20,9 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {number} */
   @api numberOfValues = 8;
   /** @type {import("coveo").RangeFacetSortCriterion} */
-  @api sortCriterion = 'ascending';
+  @api sortCriteria = 'ascending';
+  /** @type {import("coveo").RangeFacetRangeAlgorithm} */
+  @api rangeAlgorithm = 'equiprobable';
 
   /** @type {import("coveo").NumericFacet} */
   facet;
@@ -52,6 +54,8 @@ export default class QuanticNumericFacet extends LightningElement {
       options: {
         field: this.field,
         generateAutomaticRanges: true,
+        sortCriteria: this.sortCriteria,
+        rangeAlgorithm: this.rangeAlgorithm,
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -63,6 +67,10 @@ export default class QuanticNumericFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet.state;
+  }
+
+  get formattingFunction() {
+    return (item) => `${item.start} - ${item.end}`;
   }
 
   get values() {

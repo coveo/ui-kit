@@ -4,6 +4,7 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 import clear from '@salesforce/label/c.quantic_Clear';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class QuanticDateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
@@ -19,7 +20,7 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
-
+  
   /** @type {import("coveo").DateFacet} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
@@ -61,6 +62,14 @@ export default class QuanticDateFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet.state;
+  }
+
+  get formattingFunction() {
+    return (item) => `${new Intl.DateTimeFormat(LOCALE).format(
+      new Date(item.start)
+    )} - ${new Intl.DateTimeFormat(LOCALE).format(
+      new Date(item.end)
+    )}`;
   }
 
   get values() {
