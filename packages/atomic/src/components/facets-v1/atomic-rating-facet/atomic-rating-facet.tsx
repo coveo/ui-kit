@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -22,10 +22,11 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueIconRating} from '../facet-value-icon-rating/facet-value-icon-rating';
+import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -48,6 +49,8 @@ import {Schema, StringValue} from '@coveo/bueno';
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  *
+ * @part ripple - The ripple effect of the component's interactive elements.
+ *
  */
 @Component({
   tag: 'atomic-rating-facet',
@@ -61,6 +64,7 @@ export class AtomicRatingFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -69,7 +73,6 @@ export class AtomicRatingFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -92,14 +95,26 @@ export class AtomicRatingFacet
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
+   * The minimum value of the field.
+   */
+  @Prop() public minValueInIndex = 1;
+  /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
   /**
-   * The icon used to display the rating.
+   * The SVG icon to use to display the rating.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
    */
   @Prop() public icon = Star;
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
 
   private validateProps() {
     new Schema({
@@ -126,10 +141,12 @@ export class AtomicRatingFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.numericFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'numericFacets', {
       label: this.label,
-      format: (facetValue) => this.formatFacetValue(facetValue),
-    };
+      facetId: this.facetId!,
+      element: this.host,
+      format: (value) => this.formatFacetValue(value),
+    });
   }
 
   private get scaleFactor() {
@@ -143,12 +160,12 @@ export class AtomicRatingFacet
 
   private generateCurrentValues() {
     const currentValues: NumericRangeRequest[] = [];
-    for (let i = 0; i < this.numberOfIntervals; i++) {
+    for (let i = this.minValueInIndex; i <= this.numberOfIntervals; i++) {
       currentValues.push(
         buildNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,
           end: Math.round((i + 1) * this.scaleFactor * 100) / 100,
-          endInclusive: true,
+          endInclusive: false,
         })
       );
     }
@@ -188,11 +205,11 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <FacetValueIconRating
+            <Rating
               numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.end}
+              numberOfActiveIcons={facetValue.start}
               icon={this.icon}
-            ></FacetValueIconRating>
+            ></Rating>
           </FacetValueCheckbox>
         );
       case 'link':
@@ -204,11 +221,11 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <FacetValueIconRating
+            <Rating
               numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.end}
+              numberOfActiveIcons={facetValue.start}
               icon={this.icon}
-            ></FacetValueIconRating>
+            ></Rating>
           </FacetValueLink>
         );
     }

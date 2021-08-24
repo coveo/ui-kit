@@ -55,6 +55,9 @@
             "c/quanticSearchBox": [
                 "quanticSearchBox/quanticSearchBox.js"
             ],
+            "c/quanticSearchBoxSuggestionsList": [
+                "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
+            ],
             "c/quanticSearchInterface": [
                 "quanticSearchInterface/quanticSearchInterface.js"
             ],
@@ -72,7 +75,7 @@
     "include": [
         "force-app/main/default/lwc",
         "typings/lwc/**/*.d.ts",
-        "coveo.d.ts"
+        "coveo.d.ts",
     ],
     "exclude": [
         "**/__tests__/**"

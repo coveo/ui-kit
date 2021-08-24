@@ -11,6 +11,10 @@ export interface QuerySuggestState {
    */
   completions: QuerySuggestCompletion[];
   /**
+   * The query suggest response id.
+   */
+  responseId: string;
+  /**
    * The partial basic query expression for which query suggestions were requested (e.g., `cov`).
    */
   q: string;
@@ -30,16 +34,12 @@ export interface QuerySuggestState {
    * The error returned by the Coveo platform while executing the query suggestion request, if any. `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | null;
+  /**
+   * `true` if the query suggest request is currently being executed against the Coveo platform, `false` otherwise.
+   */
+  isLoading: boolean;
 }
 
 export type QuerySuggestSet = Record<string, QuerySuggestState | undefined>;
 
-export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
-  id: '',
-  completions: [],
-  count: 5,
-  q: '',
-  currentRequestId: '',
-  error: null,
-  partialQueries: [],
-});
+export const getQuerySuggestSetInitialState: () => QuerySuggestSet = () => ({});

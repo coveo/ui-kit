@@ -1,0 +1,110 @@
+@import './atomic-result-list-dividers.pcss';
+@import './atomic-result-list-cards.pcss';
+@import './atomic-result-table.pcss';
+
+/* CAREFUL! These styles aren't protected by a shadow DOM. */
+/* TODO: Remove v1 suffix */
+atomic-result-list-v1 {
+  .list-root.loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 0.2;
+      }
+    }
+  }
+
+  .list-root.display-table {
+    @mixin atomic-result-table;
+  }
+
+  .list-root.display-list {
+    display: flex;
+    flex-direction: column;
+
+    /* TODO: Remove v1 suffix */
+    atomic-result-v1,
+    atomic-result-placeholder-v1 {
+      width: auto;
+    }
+
+    @screen desktop-only {
+      @mixin atomic-list-with-dividers;
+    }
+
+    @screen mobile-only {
+      &.image-large {
+        @mixin atomic-list-with-dividers;
+      }
+
+      &.image-small,
+      &.image-icon,
+      &.image-none {
+        @mixin atomic-list-with-cards;
+      }
+    }
+  }
+
+  .list-root.display-grid {
+    display: grid;
+    justify-content: space-evenly;
+
+    @screen desktop-only {
+      grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+
+      &.density-comfortable {
+        padding: 2rem 0.75rem;
+        grid-row-gap: 4rem;
+        grid-column-gap: 1.5rem;
+      }
+
+      &.density-normal,
+      &.density-compact {
+        padding: 1.5rem 0.75rem;
+        grid-row-gap: 3rem;
+        grid-column-gap: 1.5rem;
+      }
+
+      &.image-large {
+        grid-template-columns: repeat(auto-fill, 20.625rem);
+      }
+
+      &.image-small {
+        grid-template-columns: repeat(auto-fill, 15.5rem);
+      }
+    }
+
+    @screen mobile-only {
+      padding: 2rem;
+      &.image-large {
+        @mixin atomic-list-with-dividers;
+        grid-template-columns: auto;
+      }
+      &.image-small {
+        grid-template-columns: repeat(auto-fill, 9.5rem);
+      }
+      &.image-icon,
+      &.image-none {
+        grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+      }
+      &.image-small,
+      &.image-icon,
+      &.image-none {
+        @mixin atomic-list-with-cards;
+        grid-column-gap: 2.5rem;
+        grid-row-gap: 2.5rem;
+
+        /* TODO: Remove v1 suffix */
+        atomic-result-v1,
+        atomic-result-placeholder-v1 {
+          margin: -1rem;
+        }
+      }
+    }
+  }
+}

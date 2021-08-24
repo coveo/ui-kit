@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -20,7 +20,7 @@ import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-fac
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
-import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
@@ -30,6 +30,11 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../utils/field-utils';
+import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -55,13 +60,14 @@ import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-val
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  *
- * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-box - The facet value when display is 'box'.
+ * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-color-facet',
@@ -73,6 +79,7 @@ export class AtomicColorFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -81,7 +88,6 @@ export class AtomicColorFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -115,6 +121,10 @@ export class AtomicColorFacet
    * Possible values are 'checkbox', and 'box'.
    */
   @Prop() public displayValuesAs: 'checkbox' | 'box' = 'box';
+  /**
+   * Specifies if the facet is collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
   public initialize() {
@@ -128,9 +138,11 @@ export class AtomicColorFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'facets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   public componentShouldUpdate(
@@ -138,7 +150,7 @@ export class AtomicColorFacet
     prev: unknown,
     propName: keyof AtomicColorFacet
   ) {
-    if (propName === 'facetState') {
+    if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
         (prev as FacetState).facetSearch
@@ -183,6 +195,9 @@ export class AtomicColorFacet
             this.facet.facetSearch.clear();
             return;
           }
+          this.facet.facetSearch.updateCaptions(
+            getFieldCaptions(this.field, this.bindings.i18n)
+          );
           this.facet.facetSearch.updateText(value);
           this.facet.facetSearch.search();
         }}
@@ -192,12 +207,19 @@ export class AtomicColorFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
-    const displayValue = this.bindings.i18n.t(facetValue.value);
+    const displayValue = getFieldValueCaption(
+      this.facetId!,
+      facetValue.value,
+      this.bindings.i18n
+    );
     const isSelected = facetValue.state === 'selected';
+    const partValue = displayValue
+      .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
+      ?.toString();
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <FacetValueCheckbox
+          <ColorFacetCheckbox
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
@@ -210,7 +232,7 @@ export class AtomicColorFacet
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </FacetValueCheckbox>
+          </ColorFacetCheckbox>
         );
       case 'box':
         return (
@@ -222,6 +244,10 @@ export class AtomicColorFacet
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
           >
+            <div
+              part={`value-${partValue}`}
+              class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
+            ></div>
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
@@ -234,7 +260,7 @@ export class AtomicColorFacet
 
   private renderValuesContainer(children: VNode[]) {
     const classes = `mt-3 ${
-      this.displayValuesAs === 'box' ? 'box-container' : ''
+      this.displayValuesAs === 'box' ? 'box-color-container' : ''
     }`;
     return (
       <ul part="values" class={classes}>

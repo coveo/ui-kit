@@ -1,0 +1,79 @@
+@define-mixin common-result {
+  display: grid;
+  justify-items: stretch;
+
+  /* == Common styles == */
+  /* TODO: Remove v1 suffix */
+  atomic-table-element-v1 {
+    display: none;
+  }
+
+  atomic-result-section-visual {
+    grid-area: visual;
+  }
+
+  atomic-result-section-badges {
+    grid-area: badges;
+  }
+
+  atomic-result-section-actions {
+    grid-area: actions;
+
+    atomic-result-quickview {
+      display: inline-block;
+    }
+  }
+
+  atomic-result-section-title {
+    grid-area: title;
+    color: var(--atomic-on-background);
+  }
+
+  atomic-result-section-title-metadata {
+    grid-area: title-metadata;
+  }
+
+  atomic-result-section-emphasized {
+    grid-area: emphasized;
+  }
+
+  atomic-result-section-excerpt {
+    grid-area: excerpt;
+    color: var(--atomic-neutral-dark);
+  }
+
+  atomic-result-section-bottom-metadata {
+    grid-area: bottom-metadata;
+    color: var(--atomic-neutral-dark);
+  }
+
+  atomic-result-section-visual,
+  atomic-result-section-badges,
+  atomic-result-section-actions,
+  atomic-result-section-title,
+  atomic-result-section-title-metadata,
+  atomic-result-section-emphasized,
+  atomic-result-section-excerpt,
+  atomic-result-section-bottom-metadata {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.empty {
+      display: none;
+    }
+  }
+
+  &.image-large,
+  &.image-small {
+    atomic-result-section-visual {
+      background-color: var(--atomic-neutral);
+      border-radius: var(--atomic-border-radius-xl);
+    }
+  }
+
+  &.image-icon {
+    atomic-result-section-visual {
+      border-radius: var(--atomic-border-radius);
+    }
+  }
+}

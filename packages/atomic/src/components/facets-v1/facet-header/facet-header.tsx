@@ -3,6 +3,7 @@ import ArrowTopIcon from 'coveo-styleguide/resources/icons/svg/arrow-top-rounded
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
+import {Button} from '../../common/button';
 
 export const FacetHeader: FunctionalComponent<{
   i18n: i18n;
@@ -10,7 +11,7 @@ export const FacetHeader: FunctionalComponent<{
   numberOfSelectedValues: number;
   isCollapsed: boolean;
   onToggleCollapse(): void;
-  onClearFilters(): void;
+  onClearFilters?(): void;
 }> = (props) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});
@@ -24,34 +25,36 @@ export const FacetHeader: FunctionalComponent<{
   });
 
   return [
-    <button
+    <Button
+      style="text-transparent"
       part="label-button"
-      class="flex justify-between w-full py-1 text-on-background text-lg hover:text-primary"
+      class="flex font-bold justify-between w-full py-1 px-2 text-lg"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
-      aria-expanded={(!props.isCollapsed).toString()}
+      ariaExpanded={(!props.isCollapsed).toString()}
+      text={label}
     >
-      <span class="ellipsed">{label}</span>
-      <span
+      <atomic-icon
         part="label-button-icon"
-        class="fill-current w-3 h-2 self-center flex-shrink-0 ml-4"
-        innerHTML={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
-      ></span>
-    </button>,
-    props.numberOfSelectedValues > 0 && (
-      <button
+        class="w-3 self-center flex-shrink-0 ml-4"
+        icon={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
+      ></atomic-icon>
+    </Button>,
+    props.onClearFilters && props.numberOfSelectedValues > 0 && (
+      <Button
+        style="text-primary"
         part="clear-button"
-        class="flex items-baseline w-full p-1 text-sm link"
+        class="flex items-baseline max-w-full p-2 text-sm"
         title={clearFiltersForFacet}
-        onClick={() => props.onClearFilters()}
+        onClick={() => props.onClearFilters!()}
       >
-        <span
+        <atomic-icon
           part="clear-button-icon"
-          class="fill-current w-2 h-2 mr-1"
-          innerHTML={CloseIcon}
-        ></span>
+          class="w-2 h-2 mr-1"
+          icon={CloseIcon}
+        ></atomic-icon>
         <span>{clearFilters}</span>
-      </button>
+      </Button>
     ),
   ];
 };

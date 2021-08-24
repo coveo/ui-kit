@@ -130,14 +130,14 @@ export class AtomicSearchBox {
       <button
         type="button"
         part="submit-button"
-        class={`submit-button h-full border-0 focus:outline-none bg-primary p-0 ${roundedClasses}`}
+        class={`submit-button grid place-items-center h-full border-0 no-outline focus:bg-primary-light hover:bg-primary-light bg-primary p-0 ${roundedClasses}`}
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
-        <div
-          innerHTML={SearchIcon}
-          class="search mx-auto w-3.5 h-3.5 text-on-primary fill-current"
-        />
+        <atomic-icon
+          icon={SearchIcon}
+          class="search w-3.5 h-3.5 text-on-primary"
+        ></atomic-icon>
       </button>
     );
   }
@@ -158,10 +158,10 @@ export class AtomicSearchBox {
           this.inputRef.focus();
         }}
       >
-        <div
-          innerHTML={ClearIcon}
-          class="w-2.5 h-2.5 text-on-background fill-current"
-        />
+        <atomic-icon
+          icon={ClearIcon}
+          class="w-2.5 h-2.5 text-on-background"
+        ></atomic-icon>
       </button>
     );
   }
@@ -178,7 +178,7 @@ export class AtomicSearchBox {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'search-input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
+          'search-input bg-background mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
         }
         placeholder={this.placeholder}
         value={this.searchBoxState.value}

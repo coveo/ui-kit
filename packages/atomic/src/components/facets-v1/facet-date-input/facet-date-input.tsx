@@ -2,6 +2,7 @@ import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {DateFilter, DateFilterState, buildDateRange} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
 import dayjs from 'dayjs';
+import {Button} from '../../common/button';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.
@@ -66,13 +67,12 @@ export class FacetDateInput {
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('date-input-apply', {label});
 
-    const commonClasses = 'rounded border border-neutral p-2.5';
-    const inputClasses = `${commonClasses}`;
+    const inputClasses = 'input-primary p-2.5';
     const labelClasses = 'text-neutral-dark self-center';
 
     return (
       <form
-        class="grid gap-2 grid-cols-min-1fr mt-4"
+        class="grid gap-2 grid-cols-min-1fr mt-4 px-2"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();
@@ -121,14 +121,14 @@ export class FacetDateInput {
             (this.end = (e.target as HTMLInputElement).valueAsDate!)
           }
         />
-        <button
+        <Button
+          style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class={`${commonClasses} col-span-2 bg-background text-primary`}
-          aria-label={applyAria}
-        >
-          {apply}
-        </button>
+          class="p-2.5 col-span-2 truncate"
+          ariaLabel={applyAria}
+          text={apply}
+        ></Button>
       </form>
     );
   }

@@ -76,7 +76,7 @@ export function buildUrlManager(
   );
 
   const controller = buildController(engine);
-  let previousFragment = decodeFragment(props.initialState.fragment);
+  let previousFragment = props.initialState.fragment;
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
       parameters: deserializeFragment(previousFragment),
@@ -107,10 +107,9 @@ export function buildUrlManager(
     },
 
     synchronize(fragment: string) {
-      const newFragment = decodeFragment(fragment);
-      previousFragment = newFragment;
+      previousFragment = fragment;
 
-      const parameters = deserializeFragment(newFragment);
+      const parameters = deserializeFragment(fragment);
       searchParameterManager.synchronize(parameters);
     },
   };
@@ -124,10 +123,6 @@ function areFragmentsEquivalent(fragment1: string, fragment2: string) {
   const params1 = deserializeFragment(fragment1);
   const params2 = deserializeFragment(fragment2);
   return deepEqualAnyOrder(params1, params2);
-}
-
-function decodeFragment(fragment: string) {
-  return decodeURIComponent(fragment);
 }
 
 function deserializeFragment(fragment: string) {

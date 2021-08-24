@@ -1,0 +1,78 @@
+<template>
+  <c-quantic-search-interface engine-id={engineId} skip-first-search>
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <div class="slds-combobox_container">
+          <div
+            class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
+            aria-expanded="true"
+            aria-haspopup="listbox"
+            role="combobox"
+          >
+            <div class="searchbox__container">
+              <div class={searchBoxContainerClass} role="none">
+                <template if:true={withoutSubmitButton}>
+                  <lightning-icon
+                    class="slds-icon slds-input__icon slds-input__icon_left"
+                    icon-name="utility:search"
+                    size="x-small"
+                  ></lightning-icon>
+                </template>
+                <input
+                  id="combobox-with-button-id"
+                  class="slds-input slds-combobox__input searchbox__input"
+                  placeholder={placeholder}
+                  type="search"
+                  onkeyup={onKeyup}
+                  onfocus={onFocus}
+                  onblur={onBlur}
+                  aria-autocomplete="list"
+                  aria-controls="listbox-id"
+                  autocomplete="off"
+                  role="textbox"
+                />
+                <template if:false={isQueryEmpty}>
+                  <lightning-button-icon
+                    onclick={clearInput}
+                    icon-name="utility:close"
+                    variant="bare"
+                    class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                    size="medium"
+                    name="Clear"
+                    title="Clear"
+                    aria-label="Clear"
+                    alternative-text="Clear"
+                  ></lightning-button-icon>
+                </template>
+              </div>
+              <template if:false={withoutSubmitButton}>
+                <div
+                  class="searchbox__submit-button slds-button_brand"
+                  onclick={onSubmit}
+                >
+                  <lightning-button-icon
+                    title="Submit"
+                    id="fixed-text-addon-post"
+                    icon-class="searchbox__submit-button-icon"
+                    variant="bare-inverse"
+                    icon-name="utility:search"
+                    size="medium"
+                  ></lightning-button-icon>
+                </div>
+              </template>
+            </div>
+
+            <template if:true={state.suggestions.length}>
+              <c-quantic-search-box-suggestions-list
+                suggestions={suggestions}
+                onhighlightchange={handleHighlightChange}
+                onsuggestionselected={handleSuggestionSelection}
+              >
+              </c-quantic-search-box-suggestions-list>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </c-quantic-search-interface>
+</template>

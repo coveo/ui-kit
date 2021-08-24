@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {Button} from '../../common/button';
 import {FacetValueProps} from '../facet-common';
 
 export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
@@ -13,21 +14,19 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
 
   return (
     <li key={props.displayValue}>
-      <button
+      <Button
+        style="text-neutral"
         part="value-link"
         onClick={() => props.onClick()}
-        class="value-link w-full flex items-center py-2.5 text-on-background ellipsed focus:outline-none group"
-        aria-pressed={props.isSelected.toString()}
-        aria-label={ariaLabel}
+        class="w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
+        ariaPressed={props.isSelected.toString()}
+        ariaLabel={ariaLabel}
       >
         {children}
-        <span
-          part="value-count"
-          class="ml-1.5 text-neutral-dark with-parentheses"
-        >
+        <span part="value-count" class="value-count">
           {count}
         </span>
-      </button>
+      </Button>
     </li>
   );
 };

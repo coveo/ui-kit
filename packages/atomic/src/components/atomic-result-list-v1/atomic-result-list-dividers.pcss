@@ -1,0 +1,82 @@
+@define-mixin atomic-list-with-dividers {
+  &.density-comfortable {
+    padding: 2rem 1rem;
+
+    /* TODO: Remove v1 suffix */
+    atomic-result-v1,
+    atomic-result-placeholder-v1 {
+      &::before {
+        margin: 2rem 0;
+      }
+    }
+  }
+
+  &.density-normal {
+    padding: 1.5rem 1rem;
+
+    /* TODO: Remove v1 suffix */
+    atomic-result-v1,
+    atomic-result-placeholder-v1 {
+      &::before {
+        margin: 1.5rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      padding: 1.75rem 1rem;
+
+      /* TODO: Remove v1 suffix */
+      atomic-result-v1,
+      atomic-result-placeholder-v1 {
+        &::before {
+          margin: 1.75rem 0;
+        }
+      }
+    }
+  }
+
+  &.density-compact {
+    padding: 1rem 1rem;
+
+    /* TODO: Remove v1 suffix */
+    atomic-result-v1,
+    atomic-result-placeholder-v1 {
+      &::before {
+        margin: 1rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      padding: 1.5rem 1rem;
+
+      /* TODO: Remove v1 suffix */
+      atomic-result-v1,
+      atomic-result-placeholder-v1 {
+        &::before {
+          margin: 1.5rem 0;
+        }
+      }
+    }
+  }
+
+  /* TODO: Remove v1 suffix */
+  atomic-result-v1,
+  atomic-result-placeholder-v1 {
+    &::before {
+      display: block;
+      content: ' ';
+      height: 1px;
+      background-color: var(--atomic-neutral);
+    }
+
+    &:first-child::before {
+      display: none;
+    }
+  }
+
+  atomic-result-placeholder-v1 {
+    &::before {
+      background-color: transparent;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Host} from '@stencil/core';
+import {Component, h, Prop, State, Host, Element} from '@stencil/core';
 import {
   CategoryFacetState,
   CategoryFacet,
@@ -31,6 +31,7 @@ import {
   FacetSearchStrings,
 } from '../facet-search/facet-search';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+import {registerFacetToStore} from '../../../utils/store';
 
 const SEPARATOR = '/';
 const ELLIPSIS = '...';
@@ -75,6 +76,7 @@ export class AtomicCategoryFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
@@ -164,9 +166,11 @@ export class AtomicCategoryFacet
       this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.categoryFacets[this.facetId] = {
+    registerFacetToStore(this.bindings.store, 'categoryFacets', {
       label: this.label,
-    };
+      facetId: this.facetId!,
+      element: this.host,
+    });
   }
 
   private get parents() {
@@ -188,8 +192,8 @@ export class AtomicCategoryFacet
         class="value-button"
         onClick={() => this.facet.toggleSelect(parent)}
       >
-        <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
-        <span class="ellipsed">{parent.value}</span>
+        <atomic-icon icon={LeftArrow} class="facet-arrow mr-1.5"></atomic-icon>
+        <span class="truncate">{parent.value}</span>
       </button>
     );
   }
@@ -197,7 +201,7 @@ export class AtomicCategoryFacet
   private buildActiveParent(parent: CategoryFacetValue) {
     return (
       <div part="active-parent" class="value-button font-bold ml-6">
-        <span part="value-label" class="ellipsed">
+        <span part="value-label" class="truncate">
           {parent.value}
         </span>
         <span part="value-count" class="value-count">
@@ -220,13 +224,16 @@ export class AtomicCategoryFacet
           onClick={() => this.facet.toggleSelect(item)}
           aria-label={this.strings.facetValue(item)}
         >
-          <span part="value-label" class="ellipsed">
+          <span part="value-label" class="truncate">
             {item.value}
           </span>
           <span part="value-count" class="value-count">
             {item.numberOfResults.toLocaleString(this.bindings.i18n.language)}
           </span>
-          <div innerHTML={RightArrow} class="facet-arrow ml-1.5" />
+          <atomic-icon
+            icon={RightArrow}
+            class="facet-arrow ml-1.5"
+          ></atomic-icon>
         </button>
       </li>
     );
@@ -243,7 +250,7 @@ export class AtomicCategoryFacet
         onClick={() => this.facet.deselectAll()}
         class="value-button"
       >
-        <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
+        <atomic-icon icon={LeftArrow} class="facet-arrow mr-1.5"></atomic-icon>
         {this.strings.allCategories()}
       </button>
     );
@@ -307,7 +314,7 @@ export class AtomicCategoryFacet
   private renderPath(path: string[]) {
     if (!path.length) {
       return (
-        <span class="ellipsed">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+        <span class="truncate">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
       );
     }
 
@@ -315,7 +322,7 @@ export class AtomicCategoryFacet
       <span class="mr-1">{this.strings.pathPrefix()}</span>,
       this.ellipsedPath(path).map((part, index) => [
         index > 0 && <span>{SEPARATOR}</span>,
-        <span class={part === ELLIPSIS ? '' : 'ellipsed flex-1 max-w-max'}>
+        <span class={part === ELLIPSIS ? '' : 'truncate flex-1 max-w-max'}>
           {part}
         </span>,
       ]),
@@ -327,7 +334,7 @@ export class AtomicCategoryFacet
       <div class="flex items-baseline" aria-hidden="true">
         <span
           part="value-label"
-          class="ellipsed font-bold"
+          class="truncate font-bold"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetState.facetSearch.query

@@ -1,0 +1,38 @@
+@import '../atomic-result-v1/atomic-result.pcss';
+
+/* CAREFUL! These styles aren't protected by a shadow DOM. */
+.result-root {
+  &.display-grid {
+    atomic-result-section-actions {
+      display: none;
+    }
+  }
+
+  .badge {
+    width: 14rem;
+  }
+
+  .action {
+    width: 10rem;
+  }
+
+  .title {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 0.5rem;
+    height: var(--line-height);
+    width: 30rem;
+    max-width: 100%;
+  }
+
+  .fields-placeholder {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, min(11rem, 40%));
+    grid-column-gap: 0.5rem;
+
+    .field-value-placeholder {
+      height: var(--font-size);
+      margin: calc((var(--line-height) - var(--font-size)) / 2) 0;
+    }
+  }
+}

@@ -1,5 +1,9 @@
 import {LightningElement, track, api} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -13,11 +17,23 @@ export default class QuanticNumericFacet extends LightningElement {
   @api label;
   /** @type {string} */
   @api engineId;
+  /** @type {number} */
+  @api numberOfValues = 8;
+  /** @type {import("coveo").RangeFacetSortCriterion} */
+  @api sortCriterion = 'ascending';
 
   /** @type {import("coveo").NumericFacet} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {boolean} */
+  isCollapsed = false;
+  /** @type {string} */
+  collapseIconName = 'utility:dash';
+
+  labels = {
+    clear,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -42,9 +58,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {
@@ -52,14 +66,24 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values.map(v => ({
-      ...v,
-      checked: v.state === 'selected'
-    })) || [];
+    return (
+      this.state.values
+        .filter((value) => value.numberOfResults || value.state === 'selected')
+        .map((value) => {
+          return {
+            ...value,
+            checked: value.state === 'selected',
+          };
+        }) || []
+    );
   }
 
   get hasValues() {
     return this.values.length !== 0;
+  }
+
+  get hasActiveValues() {
+    return this.state.hasActiveValues;
   }
 
   /**
@@ -67,5 +91,14 @@ export default class QuanticNumericFacet extends LightningElement {
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
+  }
+
+  clearSelections() {
+    this.facet.deselectAll();
+  }
+
+  toggleFacetVisibility() {
+    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.isCollapsed = !this.isCollapsed;
   }
 }

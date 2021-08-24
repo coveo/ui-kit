@@ -1,0 +1,24 @@
+@import '../../../global/global.pcss';
+
+atomic-result-fields-list-v1 {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+
+  > * {
+    &::after {
+      display: block;
+      content: ' ';
+      width: 1px;
+      height: 1rem;
+      margin: 0 1rem;
+      background-color: var(--atomic-neutral);
+      vertical-align: middle;
+    }
+
+    &.hide-divider::after {
+      visibility: hidden;
+    }
+  }
+}
