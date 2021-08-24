@@ -1,13 +1,25 @@
 import {
+  CategoryFacetSection,
   ConfigurationSection,
-  ContextSection,
-  ProductRecommendationsSection,
-  SearchHubSection,
+  DateFacetSection,
+  FacetOptionsSection,
+  FacetOrderSection,
+  FacetSection,
+  NumericFacetSection,
+  PaginationSection,
+  ProductListingSection,
+  SortSection,
   VersionSection,
 } from './state-sections';
 
 export type ProductListingAppState = ConfigurationSection &
-  ProductRecommendationsSection &
-  ContextSection &
-  SearchHubSection &
+  ProductListingSection &
+  FacetSection &
+  NumericFacetSection &
+  CategoryFacetSection &
+  DateFacetSection &
+  FacetOptionsSection &
+  FacetOrderSection &
+  SortSection &
+  PaginationSection &
   VersionSection;

@@ -18,6 +18,7 @@ import {redo, snapshot, undo} from '../features/history/history-actions';
 import {historyReducer} from '../features/history/history-slice';
 import {paginationReducer} from '../features/pagination/pagination-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
+import {productListingReducer} from '../features/product-listing/product-listing-slice';
 import {productRecommendationsReducer} from '../features/product-recommendations/product-recommendations-slice';
 import {querySetReducer} from '../features/query-set/query-set-slice';
 import {querySuggestReducer} from '../features/query-suggest/query-suggest-slice';
@@ -79,3 +80,4 @@ export const history = undoable({
 });
 export const recommendation = recommendationReducer;
 export const productRecommendations = productRecommendationsReducer;
+export const productListing = productListingReducer;

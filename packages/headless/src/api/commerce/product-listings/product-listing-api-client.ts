@@ -1,4 +1,6 @@
 import {Logger} from 'pino';
+import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
+import {ProductListingAppState} from '../../../state/product-listing-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
@@ -7,6 +9,14 @@ import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from './product-listing-request';
+
+export interface AsyncThunkProductListingOptions<
+  T extends Partial<ProductListingAppState>
+> {
+  state: T;
+  rejectValue: ProductListingAPIErrorStatusResponse;
+  extra: ProductListingThunkExtraArguments;
+}
 
 /**
  * Initialization options for the `ProductListingAPIClient`.

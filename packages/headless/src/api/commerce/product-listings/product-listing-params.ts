@@ -1,7 +1,39 @@
-import {HTTPContentType, HttpMethods} from '../../platform-client';
+import {FacetOptions} from '../../../features/facet-options/facet-options';
+import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
+import {
+  HTTPContentType,
+  HttpMethods,
+  PlatformClientCallOptions,
+} from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
+export type ProductListingsParam = ProductListingBaseParam &
+  ProductListingRequestParam;
 
-export type ProductListingsParam = BaseParam;
+export type ProductListingBaseParam = Omit<BaseParam, 'url'> & {
+  baseClientUrl: string;
+};
+
+export type ProductListingRequestParam = {
+  url: string;
+  clientId?: string;
+  additionalFields?: string[];
+  advancedParameters?: {
+    debug?: boolean;
+  };
+  facets?: {
+    requests: AnyFacetRequest[];
+    options?: FacetOptions;
+  };
+  sort?: {
+    by: 'RELEVANCE' | 'FIELDS';
+    fields?: [
+      {
+        direction: 'ASC' | 'DESC';
+        name: string;
+      }
+    ];
+  };
+};
 
 /**
  * Builds a base request for calling the Product Listing API.
@@ -17,13 +49,17 @@ export const baseProductListingRequest = (
   method: HttpMethods,
   contentType: HTTPContentType,
   queryStringArguments: Record<string, string> = {}
-) => {
-  const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/commerce/products/listing`;
+): Pick<
+  PlatformClientCallOptions,
+  'accessToken' | 'method' | 'contentType' | 'url'
+> => {
+  const {baseClientUrl, organizationId, accessToken} = req;
+  const baseUrl = `${baseClientUrl}/rest/organizations/${organizationId}/commerce/products/listing`;
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
   return {
-    accessToken: req.accessToken,
+    accessToken,
     method,
     contentType,
     url: effectiveUrl,

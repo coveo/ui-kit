@@ -8,7 +8,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {searchHub} from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   ProductListingEngineConfiguration,
@@ -17,18 +16,20 @@ import {
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
 import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
+import {ProductListingSection} from '../../state/state-sections';
+import {productListing} from '../reducers';
 
 export {
   ProductListingEngineConfiguration,
   getSampleProductListingEngineConfiguration,
 } from './product-listing-engine-configuration';
 
-// TODO COM-1185: Add "productListings" reducers here.
-const productListingEngineReducers = {searchHub};
+const productListingEngineReducers = {productListing};
 type ProductListingEngineReducers = typeof productListingEngineReducers;
 type ProductListingEngineState = StateFromReducersMapObject<
   ProductListingEngineReducers
 > &
+  ProductListingSection &
   Partial<ProductListingAppState>;
 
 /**
