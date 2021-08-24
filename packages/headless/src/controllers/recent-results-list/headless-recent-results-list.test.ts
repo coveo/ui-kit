@@ -19,6 +19,17 @@ describe('recent results list', () => {
   let engine: MockSearchEngine;
   let recentResultsList: RecentResultsList;
 
+  const resultStringParams = {
+    title: 'title',
+    uri: 'uri',
+    printableUri: 'printable-uri',
+    clickUri: 'click-uri',
+    uniqueId: 'unique-id',
+    excerpt: 'exceprt',
+    firstSentences: 'first-sentences',
+    flags: 'flags',
+  };
+
   const expectContainAction = (action: Action) => {
     const found = engine.actions.find((a) => a.type === action.type);
     expect(found).toBeDefined();
@@ -60,8 +71,8 @@ describe('recent results list', () => {
   describe('with props', () => {
     const testInitialState = {
       results: [
-        buildMockResult({uniqueId: '1'}),
-        buildMockResult({uniqueId: '2'}),
+        buildMockResult({...resultStringParams, uniqueId: '1'}),
+        buildMockResult({...resultStringParams, uniqueId: '2'}),
       ],
     };
     const testOptions = {

@@ -4,6 +4,7 @@ import {
   AnalyticsType,
   partialDocumentInformation,
   documentIdentifier,
+  validateResultPayload,
 } from '../analytics/analytics-utils';
 
 export const logRecentResultClickThunk = (result: Result) =>
@@ -11,7 +12,8 @@ export const logRecentResultClickThunk = (result: Result) =>
     'analytics/recentResults/click',
     AnalyticsType.Custom,
     (client, state) => {
-      return client.logRecentResultClick(
+      validateResultPayload(result);
+      client.logRecentResultClick(
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
@@ -30,7 +32,5 @@ export const logRecentResultClick = (result: Result) =>
 export const logClearRecentResults = makeAnalyticsAction(
   'analytics/recentResults/clear',
   AnalyticsType.Custom,
-  (client) => {
-    return client.logClearRecentResults();
-  }
+  (client) => client.logClearRecentResults()
 );

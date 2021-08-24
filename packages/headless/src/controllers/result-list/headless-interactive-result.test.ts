@@ -18,8 +18,20 @@ describe('InteractiveResult', () => {
   let mockResult: Result;
   let interactiveResult: InteractiveResult;
   let logDocumentOpenPendingActionType: string;
+
+  const resultStringParams = {
+    title: 'title',
+    uri: 'uri',
+    printableUri: 'printable-uri',
+    clickUri: 'click-uri',
+    uniqueId: 'unique-id',
+    excerpt: 'exceprt',
+    firstSentences: 'first-sentences',
+    flags: 'flags',
+  };
+
   function initializeInteractiveResult(delay?: number) {
-    const result = (mockResult = buildMockResult());
+    const result = (mockResult = buildMockResult(resultStringParams));
     logDocumentOpenPendingActionType = logDocumentOpenThunk(mockResult).pending
       .type;
     interactiveResult = buildInteractiveResult(engine, {
