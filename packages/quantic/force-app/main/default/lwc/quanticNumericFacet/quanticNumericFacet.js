@@ -56,6 +56,7 @@ export default class QuanticNumericFacet extends LightningElement {
         generateAutomaticRanges: true,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
+        numberOfValues: Number(this.numberOfValues),
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());

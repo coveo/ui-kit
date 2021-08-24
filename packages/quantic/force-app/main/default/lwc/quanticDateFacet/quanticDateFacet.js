@@ -20,7 +20,7 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
-  
+
   /** @type {import("coveo").DateFacet} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
@@ -50,6 +50,7 @@ export default class QuanticDateFacet extends LightningElement {
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
         field: this.field,
+        numberOfValues: Number(this.numberOfValues),
         generateAutomaticRanges: true,
       },
     });

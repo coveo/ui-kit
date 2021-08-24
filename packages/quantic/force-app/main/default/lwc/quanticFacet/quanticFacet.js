@@ -64,6 +64,7 @@ export default class QuanticFacet extends LightningElement {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
+      numberOfValues: Number(this.numberOfValues),
       facetSearch: {numberOfValues: Number(this.numberOfValues)},
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
