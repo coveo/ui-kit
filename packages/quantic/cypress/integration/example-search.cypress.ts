@@ -8,11 +8,12 @@ import {
 describe('example-search', () => {
   const exampleSearchUrl = 'http://localhost:3334/preview/c/exampleSearch';
 
+  beforeEach(() => {
+    cy.visit(exampleSearchUrl).then(setupAliases).wait('@search');
+  });
+
   it('should load results automatically', () => {
-    cy.visit(exampleSearchUrl)
-      .then(setupAliases)
-      .wait('@search')
-      .get('@searchbox')
+    cy.get('@searchbox')
       .should('exist')
       .get('@summary')
       .should('exist')
@@ -24,21 +25,13 @@ describe('example-search', () => {
 
   describe('when clicking a facet', () => {
     it('should trigger query when clicking a facet', () => {
-      cy.visit(exampleSearchUrl)
-        .then(setupAliases)
-        .wait('@search')
-        .get('@facet-type-item-checkbox')
-        .lwcDevCheck()
-        .wait('@search');
+      cy.get('@facet-type-item-checkbox').lwcDevCheck().wait('@search');
     });
   });
 
   describe('when typing a search query', () => {
     it('should trigger query when typing in searchbox', () => {
-      cy.visit(exampleSearchUrl)
-        .then(setupAliases)
-        .wait('@search')
-        .then(() => searchFor('test'))
+      cy.then(() => searchFor('test'))
         .wait('@search')
         .then((interception) => {
           assert.equal(interception.request.body.q, 'test');
@@ -50,10 +43,7 @@ describe('example-search', () => {
 
   describe('when changing the sorting', () => {
     it('should trigger query when changing the sorting', () => {
-      cy.visit(exampleSearchUrl)
-        .then(setupAliases)
-        .wait('@search')
-        .then(sortByDateDescending)
+      cy.then(sortByDateDescending)
         .wait('@search')
         .then((interception) => {
           assert.equal(
@@ -66,10 +56,7 @@ describe('example-search', () => {
 
   describe('when changing result page', () => {
     it('should request new result page when clicking a specific page in the pager', () => {
-      cy.visit(exampleSearchUrl)
-        .then(setupAliases)
-        .wait('@search')
-        .get('@summary')
+      cy.get('@summary')
         .should('contain.text', 'Results 1-10')
         .then(() => selectResultPage(2))
         .wait('@search')

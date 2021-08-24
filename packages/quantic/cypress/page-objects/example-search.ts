@@ -25,7 +25,7 @@ const setupFacetTypeAliases = () =>
     .find('c-quantic-facet-value')
     .as('facet-type-values')
     .get('@facet-type')
-    .find('lightning-button[data-cy="more"]')
+    .find('button[data-cy="more"]')
     .as('facet-type-more')
     .get('@facet-type')
     .find('c-quantic-facet-value[data-cy="Item"] input[type="checkbox"]')
@@ -71,5 +71,5 @@ const searchboxType = (text: string) => {
 
 const searchboxTypeEnter = () =>
   cy.get('@searchbox').then((searchbox) => {
-    cy.wrap(searchbox).trigger('keyup', {which: 13});
+    cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
   });
