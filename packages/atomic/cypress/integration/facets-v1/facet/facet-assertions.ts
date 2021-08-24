@@ -3,7 +3,6 @@ import {
   doSortAlphanumeric,
   doSortOccurences,
 } from '../../../utils/componentUtils';
-import {should} from '../../common-assertions';
 import {FacetSelectors} from './facet-selectors';
 
 export function assertNumberOfSelectedBoxValues(value: number) {

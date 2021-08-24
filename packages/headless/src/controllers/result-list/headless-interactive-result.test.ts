@@ -18,8 +18,8 @@ describe('InteractiveResult', () => {
   let logDocumentOpenPendingActionType: string;
   function initializeInteractiveResult(delay?: number) {
     const result = (mockResult = buildMockResult());
-    logDocumentOpenPendingActionType = logDocumentOpenThunk(mockResult).pending
-      .type;
+    logDocumentOpenPendingActionType =
+      logDocumentOpenThunk(mockResult).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });

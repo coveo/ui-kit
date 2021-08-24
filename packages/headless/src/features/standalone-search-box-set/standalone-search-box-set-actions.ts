@@ -66,9 +66,10 @@ export interface UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload {
   metadata: OmniboxSuggestionMetadata;
 }
 
-export const updateAnalyticsToOmniboxFromLink = createAction<
-  UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload
->('standaloneSearchBox/updateAnalyticsToOmniboxFromLink');
+export const updateAnalyticsToOmniboxFromLink =
+  createAction<UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload>(
+    'standaloneSearchBox/updateAnalyticsToOmniboxFromLink'
+  );
 
 export type StateNeededForRedirect = ConfigurationSection &
   QuerySection &

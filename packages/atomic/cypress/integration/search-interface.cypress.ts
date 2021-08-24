@@ -1,6 +1,5 @@
 import {RouteAlias, setUpPage} from '../utils/setupComponent';
 import {i18n} from 'i18next';
-import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 
 type SearchInterface = HTMLElement & {
   language: string;

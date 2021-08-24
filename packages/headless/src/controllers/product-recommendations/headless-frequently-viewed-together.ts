@@ -21,7 +21,8 @@ export interface FrequentlyViewedTogetherListProps {
 export type FrequentlyViewedTogetherList = ReturnType<
   typeof buildFrequentlyViewedTogetherList
 >;
-export type FrequentlyViewedTogetherListState = FrequentlyViewedTogetherList['state'];
+export type FrequentlyViewedTogetherListState =
+  FrequentlyViewedTogetherList['state'];
 
 export const buildFrequentlyViewedTogetherList = (
   engine: ProductRecommendationEngine,

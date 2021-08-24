@@ -98,7 +98,7 @@ describe('headless standalone searchBox', () => {
   });
 
   it('when configuring an invalid option, it throws an error', () => {
-    options.numberOfSuggestions = ('1' as unknown) as number;
+    options.numberOfSuggestions = '1' as unknown as number;
     expect(() => initController()).toThrow(
       'Check the options of buildStandaloneSearchBox'
     );
@@ -126,17 +126,17 @@ describe('headless standalone searchBox', () => {
   });
 
   it('#state.isLoading uses the value in the standalone search-box reducer', () => {
-    engine.state.standaloneSearchBoxSet[
-      id
-    ] = buildMockStandaloneSearchBoxEntry({isLoading: true});
+    engine.state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry(
+      {isLoading: true}
+    );
     expect(searchBox.state.isLoading).toBe(true);
   });
 
   it('#state.redirectTo uses the value in the standalone search-box reducer', () => {
     const redirectTo = '/search-page';
-    engine.state.standaloneSearchBoxSet[
-      id
-    ] = buildMockStandaloneSearchBoxEntry({redirectTo});
+    engine.state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry(
+      {redirectTo}
+    );
     expect(searchBox.state.redirectTo).toBe(redirectTo);
   });
 
@@ -146,9 +146,9 @@ describe('headless standalone searchBox', () => {
       cause: 'omniboxFromLink',
       metadata,
     };
-    engine.state.standaloneSearchBoxSet[
-      id
-    ] = buildMockStandaloneSearchBoxEntry({analytics});
+    engine.state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry(
+      {analytics}
+    );
 
     expect(searchBox.state.analytics).toEqual(analytics);
   });

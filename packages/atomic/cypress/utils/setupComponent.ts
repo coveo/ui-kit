@@ -7,6 +7,7 @@ export function injectComponent(
 ) {
   cy.document().then(async (document) => {
     document.body.innerHTML = `<${searchInterfaceTag}>${componentHtml}</${searchInterfaceTag}>`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const searchInterface: any = document.querySelector(searchInterfaceTag);
     await searchInterface.initialize({
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',

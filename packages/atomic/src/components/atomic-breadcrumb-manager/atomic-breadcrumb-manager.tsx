@@ -115,9 +115,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private getBreadcrumbValues(breadcrumb: BreadcrumbFacet) {
-    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
-      breadcrumb
-    );
+    const {breadcrumbsToShow, moreButton} =
+      this.collapsedBreadcrumbsHandler(breadcrumb);
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) =>
       this.getBreadcrumbValueContainer(
         this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)
@@ -158,9 +157,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private get numericFacetBreadcrumbs() {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const {format, label} = this.bindings.store.get('numericFacets')[
-          breadcrumb.facetId
-        ];
+        const {format, label} =
+          this.bindings.store.get('numericFacets')[breadcrumb.facetId];
         return this.getBreadcrumbContainer(
           label,
           this.getBreadcrumbValues(
@@ -174,9 +172,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private get dateFacetBreadcrumbs() {
     return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const {format, label} = this.bindings.store.get('dateFacets')[
-          breadcrumb.facetId
-        ];
+        const {format, label} =
+          this.bindings.store.get('dateFacets')[breadcrumb.facetId];
         return this.getBreadcrumbContainer(
           label,
           this.getBreadcrumbValues(
@@ -203,9 +200,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private getCategoryBreadrumbValue(breadcrumb: CategoryFacetBreadcrumb) {
-    const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(
-      breadcrumb
-    );
+    const breadcrumbsToShow =
+      this.categoryCollapsedBreadcrumbsHandler(breadcrumb);
     const joinedBreadcrumbs = breadcrumbsToShow.join(
       ` ${this.categoryDivider} `
     );
@@ -215,9 +211,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private get categoryFacetBreadcrumbs() {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const {label} = this.bindings.store.get('categoryFacets')[
-          breadcrumb.facetId
-        ];
+        const {label} =
+          this.bindings.store.get('categoryFacets')[breadcrumb.facetId];
 
         return this.getBreadcrumbContainer(
           label,
