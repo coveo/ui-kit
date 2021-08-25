@@ -159,8 +159,8 @@ function loadTabReducers(
 }
 
 function assertIdNotEqualToDefaultOriginLevel2(id: string | undefined) {
-  const defaultOriginLevel2 = getConfigurationInitialState().analytics
-    .originLevel2;
+  const defaultOriginLevel2 =
+    getConfigurationInitialState().analytics.originLevel2;
   if (id === defaultOriginLevel2) {
     throw new Error(
       `The #id option on the Tab controller cannot use the reserved value "${defaultOriginLevel2}". Please specify a different value.`

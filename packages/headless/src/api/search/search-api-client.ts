@@ -97,9 +97,8 @@ export class SearchAPIClient {
     const payload = {response, body};
 
     if (isSuccessQuerySuggestionsResponse(body)) {
-      const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
-        payload
-      );
+      const processedResponse =
+        await this.options.postprocessQuerySuggestResponseMiddleware(payload);
       return {
         success: processedResponse.body,
       };
@@ -138,9 +137,8 @@ export class SearchAPIClient {
 
     if (isSuccessSearchResponse(body)) {
       payload.body = shimResponse(body);
-      const processedResponse = await this.options.postprocessSearchResponseMiddleware(
-        payload
-      );
+      const processedResponse =
+        await this.options.postprocessSearchResponseMiddleware(payload);
       return {
         success: processedResponse.body,
       };
@@ -165,9 +163,8 @@ export class SearchAPIClient {
     const body = await response.json();
     const payload = {response, body};
 
-    const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(
-      payload
-    );
+    const processedResponse =
+      await this.options.postprocessFacetSearchResponseMiddleware(payload);
 
     return processedResponse.body;
   }

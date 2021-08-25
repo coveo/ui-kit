@@ -230,10 +230,12 @@ function isRequestInvalid(
   request: CategoryFacetRequest,
   response: CategoryFacetResponse
 ) {
-  const requestParents = partitionIntoParentsAndValues(request.currentValues)
-    .parents;
-  const responseParents = partitionIntoParentsAndValues(response.values)
-    .parents;
+  const requestParents = partitionIntoParentsAndValues(
+    request.currentValues
+  ).parents;
+  const responseParents = partitionIntoParentsAndValues(
+    response.values
+  ).parents;
   return requestParents.length !== responseParents.length;
 }
 

@@ -6,7 +6,7 @@ export interface AtomicEnvironment {
 }
 
 function getWindow() {
-  return (window as unknown) as {CoveoAtomic: AtomicEnvironment};
+  return window as unknown as {CoveoAtomic: AtomicEnvironment};
 }
 
 function getAtomicEnvironment(): AtomicEnvironment {

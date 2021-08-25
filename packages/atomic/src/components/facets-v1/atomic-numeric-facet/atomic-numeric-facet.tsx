@@ -84,9 +84,8 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
   shadow: true,
 })
 export class AtomicNumericFacet
-  implements
-    InitializableComponent,
-    BaseFacet<NumericFacet, NumericFacetState> {
+  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+{
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
   public filter?: NumericFilter;
@@ -192,9 +191,8 @@ export class AtomicNumericFacet
         field: this.field,
       },
     });
-    this.bindings.store.state.numericFacets[
-      this.filter.state.facetId
-    ] = this.bindings.store.state.numericFacets[this.facetId!];
+    this.bindings.store.state.numericFacets[this.filter.state.facetId] =
+      this.bindings.store.state.numericFacets[this.facetId!];
   }
 
   @Listen('atomic/numberFormat')

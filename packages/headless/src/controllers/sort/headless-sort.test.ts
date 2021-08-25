@@ -53,7 +53,7 @@ describe('Sort', () => {
   });
 
   it('when #criterion is an invalid value, it throws an error', () => {
-    props.initialState!.criterion = ('1' as unknown) as SortCriterion;
+    props.initialState!.criterion = '1' as unknown as SortCriterion;
     expect(() => initSort()).toThrow('Check the initialState of buildSort');
   });
 
@@ -104,9 +104,8 @@ describe('Sort', () => {
 
   describe('when the store #sortCiteria is set', () => {
     const criterionInState = buildDateSortCriterion(SortOrder.Descending);
-    const criterionInStateExpression = buildCriterionExpression(
-      criterionInState
-    );
+    const criterionInStateExpression =
+      buildCriterionExpression(criterionInState);
 
     beforeEach(() => {
       const state = createMockState({

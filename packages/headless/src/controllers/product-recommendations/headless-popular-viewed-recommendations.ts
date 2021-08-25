@@ -23,7 +23,8 @@ export interface PopularViewedRecommendationsListProps {
 export type PopularViewedRecommendationsList = ReturnType<
   typeof buildPopularViewedRecommendationsList
 >;
-export type PopularViewedRecommendationsListState = PopularViewedRecommendationsList['state'];
+export type PopularViewedRecommendationsListState =
+  PopularViewedRecommendationsList['state'];
 
 export function buildPopularViewedRecommendationsList(
   engine: ProductRecommendationEngine,

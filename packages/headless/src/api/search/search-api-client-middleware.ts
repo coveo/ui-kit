@@ -21,14 +21,11 @@ export type PostprocessQuerySuggestResponseMiddleware = (
   | PlatformResponse<QuerySuggestSuccessResponse>
   | Promise<PlatformResponse<QuerySuggestSuccessResponse>>;
 
-export const NoopPostprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware = (
-  response
-) => response;
+export const NoopPostprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware =
+  (response) => response;
 
-export const NoopPostprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware = (
-  response
-) => response;
+export const NoopPostprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware =
+  (response) => response;
 
-export const NoopPostprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware = (
-  response
-) => response;
+export const NoopPostprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware =
+  (response) => response;

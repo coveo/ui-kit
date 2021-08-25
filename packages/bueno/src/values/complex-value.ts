@@ -83,7 +83,8 @@ interface ArrayValueConfig<T extends PrimitivesValues = PrimitivesValues>
 }
 
 export class ArrayValue<T extends PrimitivesValues = PrimitivesValues>
-  implements SchemaValue<T[]> {
+  implements SchemaValue<T[]>
+{
   private value: Value<T[]>;
   constructor(private config: ArrayValueConfig<T> = {}) {
     this.value = new Value(this.config);

@@ -24,7 +24,8 @@ export class AtomicProductRecommendations {
   private unsubscribe: Unsubscribe = () => {};
 
   componentWillLoad() {
-    const sampleConfiguration = getSampleProductRecommendationEngineConfiguration();
+    const sampleConfiguration =
+      getSampleProductRecommendationEngineConfiguration();
     this.engine = buildProductRecommendationEngine({
       configuration: {
         ...sampleConfiguration,

@@ -15,9 +15,7 @@ export interface ClickAnalyticsActionCreators {
    * @param result - The selected result.
    * @returns A dispatchable action.
    */
-  logDocumentOpen(
-    result: Result
-  ): AsyncThunkAction<
+  logDocumentOpen(result: Result): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Click;
     },
