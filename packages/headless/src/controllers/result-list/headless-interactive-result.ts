@@ -27,10 +27,7 @@ export interface InteractiveResultProps {
   options: InteractiveResultOptions;
 }
 
-/**
- * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
- */
-export interface InteractiveResult {
+export interface InteractiveResultCore {
   /**
    * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
    *
@@ -57,16 +54,21 @@ export interface InteractiveResult {
   cancelPendingSelect(): void;
 }
 
+/**
+ * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ */
+export interface InteractiveResult extends InteractiveResultCore {}
+
 export function buildCoreInteractiveResult(
   engine: SearchEngine,
   props: InteractiveResultProps,
   action: () => void
-) {
+): InteractiveResultCore {
   if (!loadInteractiveResultReducers(engine)) {
     throw loadReducerError;
   }
 
-  // 1 second is a reasonable amount of time to catch most longpress actions
+  // 1 second is a reasonable amount of time to catch most longpress actions.
   const defaultDelay = 1000;
   const options: Required<InteractiveResultOptions> = {
     selectionDelay: defaultDelay,
