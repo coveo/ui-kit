@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.70.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.69.1...@coveo/atomic@0.70.0) (2021-08-25)
+
+
+### Features
+
+* **atomic:** new V1 atomic-breadbox component ([#1117](https://github.com/coveo/ui-kit/issues/1117)) ([a775987](https://github.com/coveo/ui-kit/commit/a7759878c21d4b534ab326671ce8bed8e7ce326c))
+
+
+
+
+
 ## [0.69.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.69.0...@coveo/atomic@0.69.1) (2021-08-23)
 
 

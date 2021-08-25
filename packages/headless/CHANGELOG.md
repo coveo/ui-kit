@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.17.1...@coveo/headless@1.17.2) (2021-08-25)
+
+
+### Bug Fixes
+
+* **headless:** corrected actions mismatch and slice list ([#1125](https://github.com/coveo/ui-kit/issues/1125)) ([18eb86f](https://github.com/coveo/ui-kit/commit/18eb86f1763182ba840a2a7bef364620b7656f52))
+
+
+
+
+
 ## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.17.0...@coveo/headless@1.17.1) (2021-08-23)
 
 
