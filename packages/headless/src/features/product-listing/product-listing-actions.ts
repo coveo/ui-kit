@@ -1,4 +1,4 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {
   CategoryFacetSection,
@@ -21,6 +21,25 @@ import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
+
+export interface SetProductListingUrlPayload {
+  /**
+   * The url used to determine which product listing to fetch.
+   */
+  url: string;
+}
+
+export const setProductListingUrl = createAction(
+  'productListing/setUrl',
+  (payload: SetProductListingUrlPayload) =>
+    validatePayload(payload, {
+      url: requiredNonEmptyString,
+    })
+);
 
 export type StateNeededByFetchProductListing = ConfigurationSection &
   ProductListingSection &

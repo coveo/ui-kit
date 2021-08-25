@@ -12,6 +12,7 @@ export type ProductListingBaseParam = {
   accessToken: string;
   organizationId: string;
   platformUrl: string;
+  version?: string;
 };
 
 export type ProductListingRequestParam = {
@@ -54,8 +55,10 @@ export const baseProductListingRequest = (
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url'
 > => {
-  const {platformUrl, organizationId, accessToken} = req;
-  const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/products/listing`;
+  const {platformUrl, organizationId, accessToken, version} = req;
+  const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/${
+    version || 'v1'
+  }/products/listing`;
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
