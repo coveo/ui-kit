@@ -230,7 +230,8 @@ const matchExec = (value: string, regex: RegExp) => {
 const parseTermsWeights = (
   termsWeight: RegExpExecArray | null
 ): TermWeightReport | null => {
-  const REGEX_EXTRACT_GROUP_OF_TERMS = /((?:[^:]+: [0-9]+, [0-9]+; )+)\n((?:\w+: [0-9]+; )+)/g;
+  const REGEX_EXTRACT_GROUP_OF_TERMS =
+    /((?:[^:]+: [0-9]+, [0-9]+; )+)\n((?:\w+: [0-9]+; )+)/g;
   const REGEX_EXTRACT_SINGLE_TERM = /([^:]+): ([0-9]+), ([0-9]+); /g;
 
   if (!termsWeight || !termsWeight[1]) {
@@ -264,7 +265,8 @@ const parseTermsWeights = (
 };
 
 const parseQREWeights = (value: string): QueryRankingExpressionWeights[] => {
-  const REGEX_EXTRACT_QRE_WEIGHTS = /(Expression:\s".*")\sScore:\s(?!0)([0-9]+)\n+/g;
+  const REGEX_EXTRACT_QRE_WEIGHTS =
+    /(Expression:\s".*")\sScore:\s(?!0)([0-9]+)\n+/g;
 
   let qreWeightsRegexResult = REGEX_EXTRACT_QRE_WEIGHTS.exec(value);
 

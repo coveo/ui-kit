@@ -23,7 +23,8 @@ export interface PopularBoughtRecommendationsListProps {
 export type PopularBoughtRecommendationsList = ReturnType<
   typeof buildPopularBoughtRecommendationsList
 >;
-export type PopularBoughtRecommendationsListState = PopularBoughtRecommendationsList['state'];
+export type PopularBoughtRecommendationsListState =
+  PopularBoughtRecommendationsList['state'];
 
 export const buildPopularBoughtRecommendationsList = (
   engine: ProductRecommendationEngine,

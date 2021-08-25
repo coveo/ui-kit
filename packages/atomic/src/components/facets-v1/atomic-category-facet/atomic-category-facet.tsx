@@ -84,7 +84,8 @@ import {Button} from '../../common/button';
 export class AtomicCategoryFacet
   implements
     InitializableComponent,
-    BaseFacet<CategoryFacet, CategoryFacetState> {
+    BaseFacet<CategoryFacet, CategoryFacetState>
+{
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;

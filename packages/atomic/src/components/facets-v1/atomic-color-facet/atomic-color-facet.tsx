@@ -75,7 +75,8 @@ import {registerFacetToStore} from '../../../utils/store';
   shadow: true,
 })
 export class AtomicColorFacet
-  implements InitializableComponent, BaseFacet<Facet, FacetState> {
+  implements InitializableComponent, BaseFacet<Facet, FacetState>
+{
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;

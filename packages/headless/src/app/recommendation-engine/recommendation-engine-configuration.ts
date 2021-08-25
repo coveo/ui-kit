@@ -42,15 +42,14 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
   timezone?: string;
 }
 
-export const recommendationEngineConfigurationSchema = new Schema<
-  RecommendationEngineConfiguration
->({
-  ...engineConfigurationDefinitions,
-  pipeline: nonEmptyString,
-  searchHub: nonEmptyString,
-  locale: nonEmptyString,
-  timezone: nonEmptyString,
-});
+export const recommendationEngineConfigurationSchema =
+  new Schema<RecommendationEngineConfiguration>({
+    ...engineConfigurationDefinitions,
+    pipeline: nonEmptyString,
+    searchHub: nonEmptyString,
+    locale: nonEmptyString,
+    timezone: nonEmptyString,
+  });
 
 /**
  * Creates a sample recommendation engine configuration.

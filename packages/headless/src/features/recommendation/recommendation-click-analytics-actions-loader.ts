@@ -18,9 +18,7 @@ export interface ClickAnalyticsActionCreators {
    * @param recommendation - The selected recommendation.
    * @returns A dispatchable action.
    */
-  logRecommendationOpen(
-    recommendation: Result
-  ): AsyncThunkAction<
+  logRecommendationOpen(recommendation: Result): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Click;
     },
