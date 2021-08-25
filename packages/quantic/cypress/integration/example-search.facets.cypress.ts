@@ -42,14 +42,14 @@ describe('example-search-facets', () => {
         .as('facet-type-less')
         .lwcDevClick()
         .wait('@search')
-        .then((interception) => {
+        .then((interception) =>
           assert.equal(
             interception.request.body.facets.find(
               (facet) => facet.field === 'objecttype'
             ).numberOfValues,
             8
-          );
-        })
+          )
+        )
         .get('@facet-type-values')
         .should('have.length', 8)
         .get('@facet-type-less')

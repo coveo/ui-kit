@@ -94,7 +94,7 @@ describe('numeric filter', () => {
   });
 
   it('when an option is invalid, it throws an error', () => {
-    options.field = (0 as unknown) as string;
+    options.field = 0 as unknown as string;
     expect(() => initNumericFilter()).toThrow(
       'Check the options of buildNumericFacet'
     );

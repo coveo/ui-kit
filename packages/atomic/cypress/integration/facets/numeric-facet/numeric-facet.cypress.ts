@@ -263,7 +263,7 @@ describe('Numeric Facet Test Suites', () => {
           end: 100000,
         },
         {
-          start: ('x1000000' as unknown) as number,
+          start: 'x1000000' as unknown as number,
           end: 1000000,
         },
       ];

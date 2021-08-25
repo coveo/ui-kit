@@ -55,9 +55,8 @@ import {registerFacetToStore} from '../../../utils/store';
   shadow: true,
 })
 export class AtomicRatingRangeFacet
-  implements
-    InitializableComponent,
-    BaseFacet<NumericFacet, NumericFacetState> {
+  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+{
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   public searchStatus!: SearchStatus;

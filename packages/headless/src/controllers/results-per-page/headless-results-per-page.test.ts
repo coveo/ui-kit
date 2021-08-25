@@ -66,7 +66,7 @@ describe('ResultsPerPage', () => {
   });
 
   it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
-    props.initialState!.numberOfResults = ('1' as unknown) as number;
+    props.initialState!.numberOfResults = '1' as unknown as number;
 
     expect(() => initResultsPerPage()).toThrow(
       'Check the initialState of buildResultsPerPage'

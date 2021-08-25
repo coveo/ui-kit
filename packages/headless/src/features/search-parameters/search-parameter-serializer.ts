@@ -191,23 +191,21 @@ function isValidPair<K extends keyof SearchParameters>(
 }
 
 function isValidKey(key: string): key is keyof SearchParameters {
-  const supportedParameters: Record<
-    keyof Required<SearchParameters>,
-    boolean
-  > = {
-    q: true,
-    aq: true,
-    cq: true,
-    enableQuerySyntax: true,
-    firstResult: true,
-    numberOfResults: true,
-    sortCriteria: true,
-    f: true,
-    cf: true,
-    nf: true,
-    df: true,
-    debug: true,
-  };
+  const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
+    {
+      q: true,
+      aq: true,
+      cq: true,
+      enableQuerySyntax: true,
+      firstResult: true,
+      numberOfResults: true,
+      sortCriteria: true,
+      f: true,
+      cf: true,
+      nf: true,
+      df: true,
+      debug: true,
+    };
 
   return key in supportedParameters;
 }

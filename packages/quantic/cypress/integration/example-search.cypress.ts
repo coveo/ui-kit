@@ -33,9 +33,9 @@ describe('example-search', () => {
     it('should trigger query when typing in searchbox', () => {
       cy.then(() => searchFor('test'))
         .wait('@search')
-        .then((interception) => {
-          assert.equal(interception.request.body.q, 'test');
-        })
+        .then((interception) =>
+          assert.equal(interception.request.body.q, 'test')
+        )
         .get('@summary')
         .contains('test');
     });
@@ -45,12 +45,12 @@ describe('example-search', () => {
     it('should trigger query when changing the sorting', () => {
       cy.then(sortByDateDescending)
         .wait('@search')
-        .then((interception) => {
+        .then((interception) =>
           assert.equal(
             interception.request.body.sortCriteria,
             'date descending'
-          );
-        });
+          )
+        );
     });
   });
 
@@ -60,9 +60,9 @@ describe('example-search', () => {
         .should('contain.text', 'Results 1-10')
         .then(() => selectResultPage(2))
         .wait('@search')
-        .then((interception) => {
-          assert.equal(interception.request.body.firstResult, 10);
-        })
+        .then((interception) =>
+          assert.equal(interception.request.body.firstResult, 10)
+        )
         .get('@summary')
         .should('contain.text', 'Results 11-20');
     });

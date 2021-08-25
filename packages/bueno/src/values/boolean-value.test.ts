@@ -25,7 +25,7 @@ describe('boolean value', () => {
     it(`when not passing a boolean value
     it returns an error description`, () => {
       value = new BooleanValue();
-      expect(value.validate(('a string' as unknown) as boolean)).not.toBeNull();
+      expect(value.validate('a string' as unknown as boolean)).not.toBeNull();
     });
   });
 });

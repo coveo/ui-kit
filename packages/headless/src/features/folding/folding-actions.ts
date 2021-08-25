@@ -41,9 +41,9 @@ export interface LoadCollectionFulfilledReturn {
   collectionId: CollectionId;
 }
 
-export const foldingOptionsSchemaDefinition: SchemaDefinition<Required<
-  RegisterFoldingActionCreatorPayload
->> = {
+export const foldingOptionsSchemaDefinition: SchemaDefinition<
+  Required<RegisterFoldingActionCreatorPayload>
+> = {
   collectionField: new StringValue(),
   parentField: new StringValue(),
   childField: new StringValue(),
