@@ -53,11 +53,6 @@ describe('InteractiveRecentResult', () => {
     );
   }
 
-  function expectLogRecentResultActionNotPending() {
-    const action = findLogRecentResultClickAction();
-    expect(action).toBeNull();
-  }
-
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     initializeInteractiveRecentResult();
@@ -75,32 +70,5 @@ describe('InteractiveRecentResult', () => {
   it('when calling select(), logs documentOpen', () => {
     interactiveRecentResult.select();
     expectLogRecentResultActionPending();
-  });
-
-  describe('with a delay', () => {
-    const selectDelay = 2;
-    beforeEach(() => {
-      initializeInteractiveRecentResult(selectDelay);
-    });
-
-    it("when calling beginDelayedSelect(), doesn't log documentOpen before the delay", () => {
-      interactiveRecentResult.beginDelayedSelect();
-      jest.advanceTimersByTime(selectDelay - 1);
-      expectLogRecentResultActionNotPending();
-    });
-
-    it('when calling beginDelayedSelect(), logs documentOpen after the delay', () => {
-      interactiveRecentResult.beginDelayedSelect();
-      jest.advanceTimersByTime(selectDelay);
-      expectLogRecentResultActionPending();
-    });
-
-    it("when calling beginDelayedSelect(), doesn't log documentOpen after the delay if cancelPendingSelect() was called", () => {
-      interactiveRecentResult.beginDelayedSelect();
-      jest.advanceTimersByTime(selectDelay - 1);
-      interactiveRecentResult.cancelPendingSelect();
-      jest.advanceTimersByTime(1);
-      expectLogRecentResultActionNotPending();
-    });
   });
 });

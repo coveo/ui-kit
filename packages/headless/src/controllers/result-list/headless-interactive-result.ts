@@ -57,17 +57,11 @@ export interface InteractiveResult {
   cancelPendingSelect(): void;
 }
 
-/**
- * Creates an `InteractiveResult` controller instance.
- *
- * @param engine - The headless engine.
- * @param props - The configurable `InteractiveResult` properties.
- * @returns An `InteractiveResult` controller instance.
- */
-export function buildInteractiveResult(
+export function buildCoreInteractiveResult(
   engine: SearchEngine,
-  props: InteractiveResultProps
-): InteractiveResult {
+  props: InteractiveResultProps,
+  action: () => void
+) {
   if (!loadInteractiveResultReducers(engine)) {
     throw loadReducerError;
   }
@@ -79,39 +73,48 @@ export function buildInteractiveResult(
     ...props.options,
   };
 
-  let wasOpened = false;
-
-  const addToRecentResultsList = () => {
-    engine.dispatch(pushRecentResult(options.result));
-  };
-
-  const logAnalyticsIfNeverOpened = () => {
-    if (wasOpened) {
-      return;
-    }
-    wasOpened = true;
-    engine.dispatch(logDocumentOpen(options.result));
-  };
-
   let longPressTimer: NodeJS.Timeout;
 
   return {
-    select: () => {
-      logAnalyticsIfNeverOpened();
-      addToRecentResultsList();
-    },
+    select: action,
 
     beginDelayedSelect() {
-      longPressTimer = setTimeout(
-        logAnalyticsIfNeverOpened,
-        options.selectionDelay
-      );
+      longPressTimer = setTimeout(action, options.selectionDelay);
     },
 
     cancelPendingSelect() {
       longPressTimer && clearTimeout(longPressTimer);
     },
   };
+}
+
+/**
+ * Creates an `InteractiveResult` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `InteractiveResult` properties.
+ * @returns An `InteractiveResult` controller instance.
+ */
+export function buildInteractiveResult(
+  engine: SearchEngine,
+  props: InteractiveResultProps
+): InteractiveResult {
+  let wasOpened = false;
+
+  const logAnalyticsIfNeverOpened = () => {
+    if (wasOpened) {
+      return;
+    }
+    wasOpened = true;
+    engine.dispatch(logDocumentOpen(props.options.result));
+  };
+
+  const action = () => {
+    logAnalyticsIfNeverOpened();
+    engine.dispatch(pushRecentResult(props.options.result));
+  };
+
+  return buildCoreInteractiveResult(engine, props, action);
 }
 
 function loadInteractiveResultReducers(
