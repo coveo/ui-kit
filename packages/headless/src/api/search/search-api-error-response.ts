@@ -21,7 +21,9 @@ function buildDisconnectedError(): SearchAPIErrorWithStatusCode {
 
 export function buildAPIResponseFromErrorOrThrow(
   error: Error
-): {error: SearchAPIErrorWithStatusCode} {
+): {
+  error: SearchAPIErrorWithStatusCode;
+} {
   if (error instanceof DisconnectedError) {
     return {error: buildDisconnectedError()};
   }

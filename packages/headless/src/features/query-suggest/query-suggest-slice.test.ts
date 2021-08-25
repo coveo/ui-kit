@@ -187,7 +187,9 @@ describe('querySuggest slice', () => {
       const fetchQuerySuggestionsFulfilledAction = fetchQuerySuggestions.fulfilled(
         {completions, id, responseId},
         '',
-        {id}
+        {
+          id,
+        }
       );
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 

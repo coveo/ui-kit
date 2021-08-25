@@ -4,10 +4,10 @@ import {makeAnalyticsAction, AnalyticsType} from '../analytics/analytics-utils';
  * Logs a custom event with an `actionCause` value of `clearRecentQueries`.
  */
 export const logClearRecentQueries = makeAnalyticsAction(
-  'analytics/recentQueries/click',
+  'analytics/recentQueries/clear',
   AnalyticsType.Custom,
   (client) => {
-    return client.logRecentQueryClick();
+    return client.logClearRecentQueries();
   }
 );
 
@@ -15,9 +15,9 @@ export const logClearRecentQueries = makeAnalyticsAction(
  * Logs a search event with an `actionCause` value of `recentQueriesClick`.
  */
 export const logRecentQueryClick = makeAnalyticsAction(
-  'analytics/recentQueries/clear',
+  'analytics/recentQueries/click',
   AnalyticsType.Search,
   (client) => {
-    return client.logClearRecentQueries();
+    return client.logRecentQueryClick();
   }
 );

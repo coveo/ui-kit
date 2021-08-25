@@ -18,7 +18,7 @@ export const ButtonText = {
 export const addSearchBox = (props: TagProps = {}) => (env: TestFixture) =>
   addTag(env, 'atomic-search-box', props);
 
-export const searchBoxAlias = () => (env: TestFixture) => {
+export const searchBoxAlias = () => () => {
   cy.get(SearchBoxSelectors.component)
     .shadow()
     .find('div')

@@ -8,7 +8,7 @@ describe('createRenewAccessTokenMiddleware', () => {
   let logger: Logger;
   let store: MiddlewareAPI;
 
-  async function callMiddleware(middleware: Middleware, action: any) {
+  async function callMiddleware(middleware: Middleware, action: unknown) {
     return await middleware(store)(buildDispatch())(action);
   }
 
@@ -19,7 +19,7 @@ describe('createRenewAccessTokenMiddleware', () => {
   }
 
   function buildDispatch() {
-    return jest.fn((action: any) =>
+    return jest.fn((action: unknown) =>
       typeof action === 'function' ? action() : action
     );
   }

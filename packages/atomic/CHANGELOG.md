@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.70.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.70.0...@coveo/atomic@0.70.1) (2021-08-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.70.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.69.1...@coveo/atomic@0.70.0) (2021-08-25)
+
+
+### Features
+
+* **atomic:** new V1 atomic-breadbox component ([#1117](https://github.com/coveo/ui-kit/issues/1117)) ([a775987](https://github.com/coveo/ui-kit/commit/a7759878c21d4b534ab326671ce8bed8e7ce326c))
+
+
+
+
+
+## [0.69.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.69.0...@coveo/atomic@0.69.1) (2021-08-23)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix result rendering by adding searchResponseId ([#1118](https://github.com/coveo/ui-kit/issues/1118)) ([b16dd65](https://github.com/coveo/ui-kit/commit/b16dd65c38f568572c02a6a8e08ea1bfe4b8e74e))
+
+
+
+
+
+# [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.1...@coveo/atomic@0.69.0) (2021-08-23)
+
+
+### Features
+
+* **atomic:** added placeholder for table result list ([#1115](https://github.com/coveo/ui-kit/issues/1115)) ([80dd249](https://github.com/coveo/ui-kit/commit/80dd249d9d2faf11591c91f850cf09f320bdab46))
+* **atomic:** added pulse animation while results are being replaced ([#1116](https://github.com/coveo/ui-kit/issues/1116)) ([a878662](https://github.com/coveo/ui-kit/commit/a8786622b622ddb79690cb762073778b649dfec6))
+
+
+
+
+
 ## [0.68.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.68.0...@coveo/atomic@0.68.1) (2021-08-20)
 
 **Note:** Version bump only for package @coveo/atomic
