@@ -54,18 +54,18 @@ const searchboxType = (text: string) => {
     return;
   }
 
-  const nextChar = text.substr(0, 1);
-  const textRest = text.substring(1);
+  const head = text.substr(0, 1);
+  const tail = text.substring(1);
 
   return cy
     .get('@searchbox')
     .invoke('val')
     .then((currentText) => {
-      const updatedText = currentText + nextChar;
+      const updatedText = currentText + head;
       cy.get('@searchbox')
         .invoke('val', updatedText)
-        .trigger('keyup', {which: nextChar.charCodeAt(0)})
-        .then(() => searchFor(textRest));
+        .trigger('keyup', {which: head.charCodeAt(0)})
+        .then(() => searchFor(tail));
     });
 };
 
