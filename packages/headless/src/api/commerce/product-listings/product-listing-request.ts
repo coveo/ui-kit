@@ -20,9 +20,10 @@ export const buildProductListingRequest = (req: ProductListingRequest) => {
   };
 };
 
-const prepareRequestParams = (req: ProductListingRequest) => ({
-  url: req.url,
-});
+const prepareRequestParams = (req: ProductListingRequest) => {
+  const {accessToken, platformUrl, organizationId, ...params} = req;
+  return params;
+};
 
 /**
  * Defines the content of a successful response from the `/commerce/products/listing` API call.

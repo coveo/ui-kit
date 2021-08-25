@@ -29,6 +29,7 @@ import {QuestionAnsweringState} from '../features/question-answering/question-an
 import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 import {RecentResultsState} from '../features/recent-results/recent-results-state';
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
+import {ProductListingState} from '../features/product-listing/product-listing-state';
 
 export interface QuerySection {
   /**
@@ -241,6 +242,13 @@ export interface ProductRecommendationsSection {
    * The information related to the product recommendations endpoint.
    */
   productRecommendations: ProductRecommendationsState;
+}
+
+export interface ProductListingSection {
+  /**
+   * The information related to the product listing endpoint.
+   */
+  productListing: ProductListingState;
 }
 
 export interface TriggerSection {
