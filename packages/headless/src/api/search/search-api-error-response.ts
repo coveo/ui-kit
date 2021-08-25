@@ -19,9 +19,7 @@ function buildDisconnectedError(): SearchAPIErrorWithStatusCode {
   };
 }
 
-export function buildAPIResponseFromErrorOrThrow(
-  error: Error
-): {
+export function buildAPIResponseFromErrorOrThrow(error: Error): {
   error: SearchAPIErrorWithStatusCode;
 } {
   if (error instanceof DisconnectedError) {

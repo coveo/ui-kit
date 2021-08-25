@@ -12,12 +12,10 @@ export function sortEntities(entities: AnyEntity[]) {
     (attribute) => !attribute.isOptional
   );
 
-  const sortedMandatoryAttributes = alphabeticallySortEntities(
-    mandatoryAttributes
-  );
-  const sortedOptionalAttributes = alphabeticallySortEntities(
-    optionalAttributes
-  );
+  const sortedMandatoryAttributes =
+    alphabeticallySortEntities(mandatoryAttributes);
+  const sortedOptionalAttributes =
+    alphabeticallySortEntities(optionalAttributes);
   const sortedMethods = alphabeticallySortEntities(methods);
 
   return [

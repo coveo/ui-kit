@@ -139,7 +139,7 @@ function resolvePropertySignature(
 function buildEntityFromProperty(p: ApiPropertySignature) {
   return buildEntity({
     name: p.name,
-    comment: (p.tsdocComment as unknown) as DocComment,
+    comment: p.tsdocComment as unknown as DocComment,
     isOptional: p.isOptional,
     type: p.propertyTypeExcerpt.text,
   });
@@ -183,7 +183,7 @@ function resolveIndexSignature(m: ApiIndexSignature) {
     name,
     type,
     isOptional: false,
-    comment: (m.tsdocComment as unknown) as DocComment,
+    comment: m.tsdocComment as unknown as DocComment,
   });
 }
 
@@ -203,7 +203,7 @@ function resolveMethodSignature(
 
   return buildFuncEntity({
     name: m.displayName,
-    comment: (m.tsdocComment as unknown) as DocComment,
+    comment: m.tsdocComment as unknown as DocComment,
     params,
     returnType,
   });
@@ -321,7 +321,7 @@ function resolveCallSignature(c: ApiCallSignature) {
     name: c.displayName,
     type: c.returnTypeExcerpt.tokens.map((t) => t.text).join(''),
     isOptional: false,
-    comment: (c.tsdocComment as unknown) as DocComment,
+    comment: c.tsdocComment as unknown as DocComment,
   });
 }
 

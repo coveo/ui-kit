@@ -204,8 +204,7 @@ describe('#resolveInterfaceMembers', () => {
 
     const funcEntity = buildMockFuncEntity({
       name: 'isCurrentPage',
-      desc:
-        'Returns `true` when the current page is equal to the passed page, and `false` otherwise.',
+      desc: 'Returns `true` when the current page is equal to the passed page, and `false` otherwise.',
       params: [paramEntity],
       returnType: returnType,
     });
@@ -317,8 +316,7 @@ describe('#resolveInterfaceMembers', () => {
     const returnType = buildMockEntity({
       name: 'returnType',
       type: 'Promise<void>',
-      desc:
-        'A promise that resolves when the previous state has been restored.',
+      desc: 'A promise that resolves when the previous state has been restored.',
     });
 
     const func = buildMockFuncEntity({
@@ -625,8 +623,7 @@ describe('#resolveInterfaceMembers', () => {
 
     const funcEntity = buildMockFuncEntity({
       name: 'add',
-      desc:
-        'Add, or replace if already present, a new context key and value pair.',
+      desc: 'Add, or replace if already present, a new context key and value pair.',
       params: [param],
       returnType: returnType,
     });

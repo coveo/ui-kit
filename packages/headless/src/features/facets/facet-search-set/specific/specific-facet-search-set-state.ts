@@ -4,12 +4,10 @@ import {
   FacetSearchState,
 } from '../facet-search-reducer-helpers';
 
-export type SpecificFacetSearchState = FacetSearchState<
-  SpecificFacetSearchResponse
->;
-export type SpecificFacetSearchSetState = FacetSearchSetState<
-  SpecificFacetSearchResponse
->;
+export type SpecificFacetSearchState =
+  FacetSearchState<SpecificFacetSearchResponse>;
+export type SpecificFacetSearchSetState =
+  FacetSearchSetState<SpecificFacetSearchResponse>;
 
 export function getFacetSearchSetInitialState(): SpecificFacetSearchSetState {
   return {};

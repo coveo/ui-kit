@@ -26,9 +26,8 @@ export function MapProp(opts?: MapPropOptions) {
           continue;
         }
 
-        variable[
-          attribute.name.replace(kebabPrefix, '')
-        ] = `${attribute.value}`.split(',');
+        variable[attribute.name.replace(kebabPrefix, '')] =
+          `${attribute.value}`.split(',');
       }
 
       componentWillLoad.call(this);

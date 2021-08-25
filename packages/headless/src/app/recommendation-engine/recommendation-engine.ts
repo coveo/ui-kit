@@ -40,10 +40,9 @@ const recommendationEngineReducers = {
   recommendation,
 };
 type RecommendationEngineReducers = typeof recommendationEngineReducers;
-type RecommendationEngineState = StateFromReducersMapObject<
-  RecommendationEngineReducers
-> &
-  Partial<RecommendationAppState>;
+type RecommendationEngineState =
+  StateFromReducersMapObject<RecommendationEngineReducers> &
+    Partial<RecommendationAppState>;
 
 /**
  * The engine for powering recommendation experiences.
@@ -131,8 +130,11 @@ function createSearchAPIClient(
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-    postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
-    postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+    postprocessSearchResponseMiddleware:
+      NoopPostprocessSearchResponseMiddleware,
+    postprocessFacetSearchResponseMiddleware:
+      NoopPostprocessFacetSearchResponseMiddleware,
+    postprocessQuerySuggestResponseMiddleware:
+      NoopPostprocessQuerySuggestResponseMiddleware,
   });
 }

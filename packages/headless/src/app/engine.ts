@@ -135,12 +135,8 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
-  const {
-    accessToken,
-    organizationId,
-    platformUrl,
-    analytics,
-  } = options.configuration;
+  const {accessToken, organizationId, platformUrl, analytics} =
+    options.configuration;
 
   engine.dispatch(
     updateBasicConfiguration({

@@ -30,9 +30,8 @@ describe('InteractiveRecentResult', () => {
 
   function initializeInteractiveRecentResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
-    logRecentResultClickPendingActionType = logRecentResultClickThunk(
-      mockResult
-    ).pending.type;
+    logRecentResultClickPendingActionType =
+      logRecentResultClickThunk(mockResult).pending.type;
     interactiveRecentResult = buildInteractiveRecentResult(engine, {
       options: {result, selectionDelay: delay},
     });
