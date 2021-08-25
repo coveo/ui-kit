@@ -1,7 +1,6 @@
 import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/reducers';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {logRecentResultClickThunk} from '../../features/recent-results/recent-results-analytics-actions';
 import {logDocumentOpenThunk} from '../../features/result/result-analytics-actions';
 import {buildMockResult} from '../../test';
 import {
@@ -73,17 +72,12 @@ describe('InteractiveResult', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
-  it('when calling select() should add the result to recent results list and log corresponding analytics', () => {
+  it('when calling select() should add the result to recent results list', () => {
     interactiveResult.select();
 
     expect(
       engine.actions.find((a) => a.type === pushRecentResult.type)
     ).toBeDefined();
-    const logAction = engine.actions.find(
-      (action) =>
-        action.type === logRecentResultClickThunk(mockResult).pending.type
-    );
-    expect(logAction).toBeDefined();
   });
 
   it('when calling select(), logs documentOpen', () => {

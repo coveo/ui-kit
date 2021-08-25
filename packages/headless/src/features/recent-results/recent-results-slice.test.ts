@@ -71,7 +71,7 @@ describe('recent-results slice', () => {
     state.results = [otherMockResult];
     state = recentResultsReducer(state, pushRecentResult(mockResult));
 
-    expect(state.results.length).toBe(2);
+    expect(state.results).toEqual([mockResult, otherMockResult]);
   });
 
   it('#pushRecentResult should add new recent result and kick out oldest result if queue is full', () => {

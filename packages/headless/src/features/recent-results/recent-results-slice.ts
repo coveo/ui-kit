@@ -11,7 +11,10 @@ export const recentResultsReducer = createReducer(
   (builder) => {
     builder
       .addCase(registerRecentResults, (state, action) => {
-        state.results = action.payload.results;
+        state.results = action.payload.results.slice(
+          0,
+          action.payload.maxLength
+        );
         state.maxLength = action.payload.maxLength;
       })
       .addCase(clearRecentResults, (state) => {

@@ -129,9 +129,7 @@ export function buildRecentResultsList(
     ...controller,
 
     get state() {
-      const state = getState();
-
-      return state.recentResults;
+      return getState().recentResults;
     },
 
     clear() {
