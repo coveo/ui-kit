@@ -2,7 +2,7 @@ import {setupAliases} from '../../page-objects/example-quantic-facet';
 
 describe('example-quantic-facet', () => {
   const quanticFacetUrl =
-    'https://sandbox-customization-power-8699-dev-17ae8f94da9.cs10.force.com/examples/s/quantic-facet';
+    'https://sandbox-platform-platform-4255-dev-e-17b79da0ca9.cs91.force.com/examples/s/quantic-facet';
 
   it('should display the right label and content', () => {
     cy.visit(quanticFacetUrl)
@@ -26,17 +26,17 @@ describe('example-quantic-facet', () => {
       .click()
       .get('c-quantic-facet-value')
       .should('have.length', 8)
-      .get('lightning-button[data-cy="more"]')
+      .get('button[data-cy="more"]')
       .click()
       .get('c-quantic-facet-value')
       .should('have.length.greaterThan', 8)
-      .get('lightning-button[data-cy="more"]')
+      .get('button[data-cy="more"]')
       .should('exist')
-      .get('lightning-button[data-cy="less"]')
+      .get('button[data-cy="less"]')
       .click()
       .get('c-quantic-facet-value')
       .should('have.length', 8)
-      .get('lightning-button[data-cy="less"]')
+      .get('button[data-cy="less"]')
       .should('not.exist');
   });
 });
