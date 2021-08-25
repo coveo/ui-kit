@@ -1,22 +1,22 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
 import {
-  buildCoreInteractiveResult,
+  buildInteractiveResultCore,
   InteractiveResultCore,
-  InteractiveResultOptions,
-} from '../result-list/headless-interactive-result';
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+} from '../core/interactive-result/headless-core-interactive-result';
 
 /**
  * The `InteractiveRecentResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a recent query result.
  */
 export interface InteractiveRecentResult extends InteractiveResultCore {}
 
-export interface InteractiveRecentResultProps {
-  /**
-   * The options for the `InteractiveRecentResult` controller.
-   * */
-  options: InteractiveResultOptions;
-}
+export interface InteractiveRecentResultOptions
+  extends InteractiveResultCoreOptions {}
+
+export interface InteractiveRecentResultProps
+  extends InteractiveResultCoreProps {}
 
 /**
  * Creates an `InteractiveRecentResult` controller instance.
@@ -31,5 +31,5 @@ export function buildInteractiveRecentResult(
 ): InteractiveRecentResult {
   const action = () =>
     engine.dispatch(logRecentResultClick(props.options.result));
-  return buildCoreInteractiveResult(engine, props, action);
+  return buildInteractiveResultCore(engine, props, action);
 }
