@@ -176,6 +176,67 @@ describe('category facet slice', () => {
       );
       expect(spy).toHaveBeenCalled();
     });
+
+    it('when a facet is not found in the #cf payload, it does not preventAutoSelection', () => {
+      const initialNumberOfValues = 5;
+
+      const cf = {};
+      const request = buildMockCategoryFacetRequest();
+      request.preventAutoSelect = false;
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.preventAutoSelect).toBe(false);
+    });
+
+    it('when a facet is found in the #cf payload and has no values selected, it does not preventAutoSelection', () => {
+      const initialNumberOfValues = 5;
+
+      const path = [] as string[];
+      const request = buildMockCategoryFacetRequest();
+      request.preventAutoSelect = false;
+
+      const cf = {geography: path};
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.preventAutoSelect).toBe(false);
+    });
+
+    it('when a facet is found in the #cf payload and has values selected, it does preventAutoSelection', () => {
+      const initialNumberOfValues = 5;
+
+      const path = ['a'];
+      const request = buildMockCategoryFacetRequest();
+      request.preventAutoSelect = false;
+
+      const cf = {geography: path};
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.preventAutoSelect).toBe(true);
+    });
   });
 
   describe('deselecting values', () => {
