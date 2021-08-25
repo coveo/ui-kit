@@ -208,7 +208,7 @@
         <value>Check the {{0}} for similar errors or {{1}} for more information.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Check the community for similar errors or contact Coveo support for more information.</shortDescription>
+        <shortDescription>Check the community for similar errors or contact Coveo for more information.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_Community</fullName>
