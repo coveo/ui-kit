@@ -16,6 +16,7 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
+  // @ts-ignore
   @track state = {
     values: [],
   };
