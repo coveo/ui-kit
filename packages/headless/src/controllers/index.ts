@@ -293,3 +293,20 @@ export {
   SmartSnippetRelatedQuestion,
   buildSmartSnippetQuestionsList,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
+
+export {
+  RecentQueriesList,
+  RecentQueriesState,
+  buildRecentQueriesList,
+} from './recent-queries-list/headless-recent-queries-list';
+
+export {
+  RecentResultsList,
+  RecentResultsState,
+  buildRecentResultsList,
+} from './recent-results-list/headless-recent-results-list';
+
+export {
+  InteractiveRecentResult,
+  buildInteractiveRecentResult,
+} from './recent-results-list/headless-interactive-recent-result';

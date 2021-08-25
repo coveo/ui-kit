@@ -4,7 +4,6 @@ import {loadReducerError} from '../../utils/errors';
 import {recentResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {RecentResultsSection} from '../../state/state-sections';
-import {RecentResultsState} from '../../features/recent-results/recent-results-state';
 import {
   clearRecentResults,
   registerRecentResults,
@@ -72,6 +71,20 @@ export interface RecentResultsList extends Controller {
    * Clears the recent results list.
    */
   clear(): void;
+}
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `RecentResultsList` controller.
+ * */
+export interface RecentResultsState {
+  /**
+   * The list of recent results.
+   */
+  results: Result[];
+  /**
+   * The maximum number of results to retain in the list.
+   */
+  maxLength: number;
 }
 
 export function validateRecentResultsProps(
