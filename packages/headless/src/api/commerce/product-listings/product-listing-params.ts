@@ -5,12 +5,13 @@ import {
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client';
-import {BaseParam} from '../../platform-service-params';
 export type ProductListingsParam = ProductListingBaseParam &
   ProductListingRequestParam;
 
-export type ProductListingBaseParam = Omit<BaseParam, 'url'> & {
-  baseClientUrl: string;
+export type ProductListingBaseParam = {
+  accessToken: string;
+  organizationId: string;
+  platformUrl: string;
 };
 
 export type ProductListingRequestParam = {
@@ -53,8 +54,8 @@ export const baseProductListingRequest = (
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url'
 > => {
-  const {baseClientUrl, organizationId, accessToken} = req;
-  const baseUrl = `${baseClientUrl}/rest/organizations/${organizationId}/commerce/products/listing`;
+  const {platformUrl, organizationId, accessToken} = req;
+  const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/products/listing`;
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 

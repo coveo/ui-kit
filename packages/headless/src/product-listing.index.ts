@@ -8,15 +8,6 @@ export {
   getSampleProductListingEngineConfiguration,
 } from './app/product-listing-engine/product-listing-engine';
 
-export {CoreEngine, ExternalEngineOptions} from './app/engine';
-export {
-  EngineConfiguration,
-  AnalyticsConfiguration,
-  AnalyticsRuntimeEnvironment,
-} from './app/engine-configuration';
-export {LoggerOptions} from './app/logger';
-export {LogLevel} from './app/logger';
-
 // Actions
 export * from './features/configuration/configuration-actions-loader';
 
@@ -27,9 +18,9 @@ export {
 } from './controllers/controller/headless-controller';
 
 export {
-  ProductListingList,
-  ProductListingListOptions,
-  ProductListingListProps,
-  ProductListingListState,
-  buildProductListing as buildBaseProductListing,
+  ProductListingController,
+  ProductListingOptions,
+  ProductListingProps,
+  ProductListingControllerState,
+  buildProductListing,
 } from './controllers/product-listing/headless-product-listing';

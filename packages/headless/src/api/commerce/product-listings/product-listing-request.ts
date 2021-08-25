@@ -21,7 +21,7 @@ export const buildProductListingRequest = (req: ProductListingRequest) => {
 };
 
 const prepareRequestParams = (req: ProductListingRequest) => {
-  const {accessToken, baseClientUrl, organizationId, ...params} = req;
+  const {accessToken, platformUrl, organizationId, ...params} = req;
   return params;
 };
 

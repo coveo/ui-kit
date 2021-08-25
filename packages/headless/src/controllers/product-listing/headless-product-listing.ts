@@ -1,4 +1,4 @@
-import {executeProductListingSearch} from '../../features/product-listing/product-listing-actions';
+import {fetchProductListing} from '../../features/product-listing/product-listing-actions';
 import {buildController} from '../controller/headless-controller';
 import {Schema, SchemaValues} from '@coveo/bueno';
 import {configuration, productListing} from '../../app/reducers';
@@ -8,18 +8,18 @@ import {ProductListingEngine} from '../../app/product-listing-engine/product-lis
 // TODO COM-1185 - Actually add options and dispatch the updates
 const optionsSchema = new Schema({});
 
-export type ProductListingListOptions = SchemaValues<typeof optionsSchema>;
+export type ProductListingOptions = SchemaValues<typeof optionsSchema>;
 
-export interface ProductListingListProps {
-  options?: ProductListingListOptions;
+export interface ProductListingProps {
+  options?: ProductListingOptions;
 }
 
-export type ProductListingList = ReturnType<typeof buildProductListing>;
-export type ProductListingListState = ProductListingList['state'];
+export type ProductListingController = ReturnType<typeof buildProductListing>;
+export type ProductListingControllerState = ProductListingController['state'];
 
 export const buildProductListing = (
   engine: ProductListingEngine,
-  _props: ProductListingListProps = {}
+  _props: ProductListingProps = {}
 ) => {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
@@ -30,14 +30,14 @@ export const buildProductListing = (
   const getState = () => engine.state;
 
   // TODO COM-1185 - Actually add options and dispatch the updates
-  /*const options = validateOptions(
-    engine,
-    optionsSchema,
-    props.options,
-    'buildProductListing'
-  ) as Required<ProductListingListOptions>;*/
+  /*const options = {
+    ...defaultOptions,
+    ...props.options,
+  }
 
-  dispatch(executeProductListingSearch());
+  validate(options)*/
+
+  dispatch(fetchProductListing());
 
   return {
     ...controller,

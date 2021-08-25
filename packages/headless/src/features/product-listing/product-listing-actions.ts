@@ -1,4 +1,4 @@
-import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {
   CategoryFacetSection,
@@ -16,16 +16,13 @@ import {getVisitorID} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {sortFacets} from '../../utils/facet-utils';
-import {
-  AsyncThunkProductListingOptions,
-  ProductListingAPIClient,
-} from '../../api/commerce/product-listings/product-listing-api-client';
+import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
 import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
 
-export type StateNeededByExecuteProductListing = ConfigurationSection &
+export type StateNeededByFetchProductListing = ConfigurationSection &
   ProductListingSection &
   Partial<
     PaginationSection &
@@ -38,68 +35,61 @@ export type StateNeededByExecuteProductListing = ConfigurationSection &
       FacetOrderSection
   >;
 
-export interface ExecuteProductListingThunkReturn {
+export interface FetchProductListingThunkReturn {
   /** The successful search response. */
   response: ProductListingSuccessResponse;
-  /** The number of milliseconds it took to receive the response. */
-  duration: number;
 }
 
-const fetchFromAPI = async (
-  client: ProductListingAPIClient,
-  _state: StateNeededByExecuteProductListing,
-  {request}: {request: ProductListingRequest}
-) => {
-  const startedAt = new Date().getTime();
-  const response = await client.getProducts(request);
-  const duration = new Date().getTime() - startedAt;
-  return {response, duration, requestExecuted: request};
-};
-
-export type ProductListingAction = AsyncThunkAction<{}, {}, {}>;
-
 /**
- * Executes a product listing query.
+ * Fetches a product listing.
  */
-export const executeProductListingSearch = createAsyncThunk<
-  ExecuteProductListingThunkReturn,
+export const fetchProductListing = createAsyncThunk<
+  FetchProductListingThunkReturn,
   void,
-  AsyncThunkProductListingOptions<StateNeededByExecuteProductListing>
+  AsyncThunkProductListingOptions<StateNeededByFetchProductListing>
 >(
-  'productListing/executeSearch',
+  'productListing/fetch',
   async (_action, {getState, rejectWithValue, extra}) => {
     const state = getState();
-    const fetched = await fetchFromAPI(extra.productListingClient, state, {
-      request: buildProductListingRequest(state),
-    });
+    const {productListingClient} = extra;
+    const fetched = await productListingClient.getProducts(
+      buildProductListingRequest(state)
+    );
 
-    if (isErrorResponse(fetched.response)) {
-      // dispatch(logQueryError(fetched.response.error));
-      return rejectWithValue(fetched.response.error);
+    if (isErrorResponse(fetched)) {
+      // TODO COM-1185: See if we need this: dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.error);
     }
 
     return {
-      response: fetched.response.success,
-      duration: fetched.duration,
+      response: fetched.success,
     };
   }
 );
 
 export const buildProductListingRequest = (
-  state: StateNeededByExecuteProductListing
+  state: StateNeededByFetchProductListing
 ): ProductListingRequest => {
   const facets = getFacets(state);
 
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    baseClientUrl: state.configuration.platformUrl,
+    platformUrl: state.configuration.platformUrl,
     url: state.productListing?.url,
-    additionalFields: state.productListing.additionalFields || [],
-    advancedParameters: state.productListing.advancedParameters || {},
-    // TODO COM-1185: sort: {something}
     // TODO COM-1185: if (analyticsEnabled) {
     clientId: getVisitorID(),
+    ...(state.productListing.additionalFields?.length
+      ? {
+          additionalFields: state.productListing.additionalFields,
+        }
+      : {}),
+    ...(state.productListing.advancedParameters
+      ? {
+          advancedParameters: state.productListing.advancedParameters || {},
+        }
+      : {}),
+    // TODO COM-1185: sort: {something}
     // TODO COM-1185: properly implement facet options
     ...(facets.length && {
       facets: {
@@ -120,11 +110,11 @@ export const buildProductListingRequest = (
   };
 };
 
-function getFacets(state: StateNeededByExecuteProductListing) {
+function getFacets(state: StateNeededByFetchProductListing) {
   return sortFacets(getAllFacets(state), state.facetOrder ?? []);
 }
 
-function getAllFacets(state: StateNeededByExecuteProductListing) {
+function getAllFacets(state: StateNeededByFetchProductListing) {
   return [
     ...getFacetRequests(state.facetSet),
     ...getFacetRequests(state.numericFacetSet),
