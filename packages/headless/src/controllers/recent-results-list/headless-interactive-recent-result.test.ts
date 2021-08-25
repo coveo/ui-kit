@@ -66,7 +66,7 @@ describe('InteractiveRecentResult', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
-  it('when calling select(), logs documentOpen', () => {
+  it('when calling select(), logs recentResultClick', () => {
     interactiveRecentResult.select();
     expectLogRecentResultActionPending();
   });

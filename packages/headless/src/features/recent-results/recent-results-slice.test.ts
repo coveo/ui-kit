@@ -53,6 +53,16 @@ describe('recent-results slice', () => {
     expect(state.maxLength).toEqual(testMaxLength);
   });
 
+  it('#registerRecentResults should shorten result list if it exceeds maxLength param', () => {
+    const results = [mockResult, otherMockResult];
+    state = recentResultsReducer(
+      state,
+      registerRecentResults({results: results, maxLength: 1})
+    );
+
+    expect(state.results).toEqual([mockResult]);
+  });
+
   it('#clearRecentResults should remove all results from the queue in state', () => {
     state.results = mockResults;
 
