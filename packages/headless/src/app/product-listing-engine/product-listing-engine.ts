@@ -16,7 +16,6 @@ import {
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
 import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
-import {ProductListingSection} from '../../state/state-sections';
 import {productListing} from '../reducers';
 
 export {
@@ -29,7 +28,6 @@ type ProductListingEngineReducers = typeof productListingEngineReducers;
 type ProductListingEngineState = StateFromReducersMapObject<
   ProductListingEngineReducers
 > &
-  ProductListingSection &
   Partial<ProductListingAppState>;
 
 /**
