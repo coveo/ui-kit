@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.17.3...@coveo/headless@1.18.0) (2021-08-26)
+
+
+### Features
+
+* **headless:** added recent results controller ([#1119](https://github.com/coveo/ui-kit/issues/1119)) ([7931d3c](https://github.com/coveo/ui-kit/commit/7931d3c774b468178e0093833935f634ff18455a))
+
+
+
+
+
 ## [1.17.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.17.2...@coveo/headless@1.17.3) (2021-08-25)
 
 **Note:** Version bump only for package @coveo/headless

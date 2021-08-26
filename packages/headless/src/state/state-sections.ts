@@ -27,6 +27,7 @@ import {FoldingState} from '../features/folding/folding-state';
 import {TriggerState} from '../features/triggers/triggers-state';
 import {QuestionAnsweringState} from '../features/question-answering/question-answering-state';
 import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
+import {RecentResultsState} from '../features/recent-results/recent-results-state';
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
 
 export interface QuerySection {
@@ -256,6 +257,12 @@ export interface QuestionAnsweringSection {
   questionAnswering: QuestionAnsweringState;
 }
 
+export interface RecentResultsSection {
+  /**
+   * The recent results viewed by the current user.
+   */
+  recentResults: RecentResultsState;
+}
 export interface RecentQueriesSection {
   /**
    * The recent queries executed by the current user.

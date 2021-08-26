@@ -106,6 +106,26 @@ npm run cypress:open
 ```
 
 
+## Run Cypress for Quantic Components
+
+Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
+
+- All the tests will need to be under folder `cypress/integration`
+
+
+To start the local development server, run:
+
+```bash
+npm run start
+```
+
+To open Cypress in browser mode, run:
+
+```bash
+npm run cypress:open
+```
+
+
 ## Use Quantic From Source
 
 After you have cloned the repository and have run `npm install`, run the following commands:

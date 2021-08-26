@@ -118,7 +118,12 @@ export class AtomicFacet
    */
   @Prop() public enableFacetSearch = true;
   /**
-   * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+   * The sort criterion to apply to the returned facet values. Possible values are:
+   *
+   * * 'score'
+   * * 'numeric'
+   * * 'occurrences'
+   * * 'automatic'
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
 

@@ -4,7 +4,6 @@ import {search, recentQueries} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {RecentQueriesSection} from '../../state/state-sections';
-import {RecentQueriesState} from '../../features/recent-queries/recent-queries-state';
 import {
   clearRecentQueries,
   registerRecentQueries,
@@ -81,6 +80,20 @@ export interface RecentQueriesList extends Controller {
    * @param index - The index of the recent query to execute.
    */
   executeRecentQuery(index: number): void;
+}
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `RecentQueriesList` controller.
+ * */
+export interface RecentQueriesState {
+  /**
+   * The list of recent queries.
+   */
+  queries: string[];
+  /**
+   * The maximum number of queries to retain in the list.
+   */
+  maxLength: number;
 }
 
 export function validateRecentQueriesProps(
