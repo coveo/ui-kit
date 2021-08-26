@@ -4,6 +4,9 @@ import {loadReducerError} from '../../../utils/errors';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {Result} from '../../../api/search/search/result';
 
+/**
+ * The options for the result controller core.
+ */
 export interface InteractiveResultCoreOptions {
   /**
    * The query result.
@@ -18,13 +21,19 @@ export interface InteractiveResultCoreOptions {
   selectionDelay?: number;
 }
 
+/**
+ * The props for the result controller core.
+ */
 export interface InteractiveResultCoreProps {
   /**
-   * The options for the `InteractiveResult` controller.
-   * */
+   * The options for the result controller core.
+   */
   options: InteractiveResultCoreOptions;
 }
 
+/**
+ * The `InteractiveResultCore` manages basic functionality for interactive result controllers.
+ */
 export interface InteractiveResultCore {
   /**
    * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
@@ -53,10 +62,11 @@ export interface InteractiveResultCore {
 }
 
 /**
- * Creates the core of a result controller instance.
+ * Creates the result controller core.
  *
  * @param engine - The headless engine.
  * @param props - The configurable controller properties.
+ * @param action - The action to be triggered on select.
  * @returns An controller core instance.
  */
 export function buildInteractiveResultCore(
@@ -64,7 +74,7 @@ export function buildInteractiveResultCore(
   props: InteractiveResultCoreProps,
   action: () => void
 ): InteractiveResultCore {
-  if (!loadInteractiveResultReducers(engine)) {
+  if (!loadInteractiveResultCoreReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -90,7 +100,7 @@ export function buildInteractiveResultCore(
   };
 }
 
-function loadInteractiveResultReducers(
+function loadInteractiveResultCoreReducers(
   engine: SearchEngine
 ): engine is SearchEngine<ConfigurationSection> {
   engine.addReducers({configuration});
