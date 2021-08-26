@@ -21,7 +21,7 @@ export const buildProductListingRequest = (req: ProductListingRequest) => {
 };
 
 const prepareRequestParams = (req: ProductListingRequest) => {
-  const {accessToken, platformUrl, organizationId, ...params} = req;
+  const {accessToken, platformUrl, organizationId, version, ...params} = req;
   return params;
 };
 
@@ -29,7 +29,9 @@ const prepareRequestParams = (req: ProductListingRequest) => {
  * Defines the content of a successful response from the `/commerce/products/listing` API call.
  */
 export interface ProductListingSuccessResponse {
-  items: ProductRecommendation[];
-  totalCount: number;
+  products: ProductRecommendation[];
+  pagination: {
+    totalCount: number;
+  };
   responseId: string;
 }
