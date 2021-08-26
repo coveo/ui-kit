@@ -237,6 +237,46 @@ describe('category facet slice', () => {
 
       expect(finalState['geography']?.request.preventAutoSelect).toBe(true);
     });
+
+    it('when a facet is found in the #cf payload, has previously selected values, and restore remove selection, it sets #currentValues to the new value', () => {
+      const initialNumberOfValues = 5;
+
+      let path = ['a', 'b'];
+      const request = buildMockCategoryFacetRequest();
+      let cf = {geography: path};
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const intermediateState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(
+        intermediateState['geography']?.request.currentValues[0].value
+      ).toEqual('a');
+      expect(
+        intermediateState['geography']?.request.currentValues[0].children[0]
+          .value
+      ).toEqual('b');
+
+      path = ['a'];
+      cf = {geography: path};
+
+      const finalState = categoryFacetSetReducer(
+        intermediateState,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.currentValues[0].value).toEqual(
+        'a'
+      );
+      expect(
+        finalState['geography']?.request.currentValues[0].children.length
+      ).toBe(0);
+    });
   });
 
   describe('deselecting values', () => {
