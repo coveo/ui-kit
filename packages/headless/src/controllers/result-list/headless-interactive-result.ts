@@ -15,7 +15,7 @@ export interface InteractiveResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
    * */
-  options: InteractiveResultCoreOptions;
+  options: InteractiveResultOptions;
 }
 
 /**

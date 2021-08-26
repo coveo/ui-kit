@@ -7,16 +7,21 @@ import {
   InteractiveResultCoreProps,
 } from '../core/interactive-result/headless-core-interactive-result';
 
-/**
- * The `InteractiveRecentResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a recent query result.
- */
-export interface InteractiveRecentResult extends InteractiveResultCore {}
-
 export interface InteractiveRecentResultOptions
   extends InteractiveResultCoreOptions {}
 
 export interface InteractiveRecentResultProps
-  extends InteractiveResultCoreProps {}
+  extends InteractiveResultCoreProps {
+  /**
+   * The options for the `InteractiveResult` controller.
+   */
+  options: InteractiveRecentResultOptions;
+}
+
+/**
+ * The `InteractiveRecentResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a recent query result.
+ */
+export interface InteractiveRecentResult extends InteractiveResultCore {}
 
 /**
  * Creates an `InteractiveRecentResult` controller instance.

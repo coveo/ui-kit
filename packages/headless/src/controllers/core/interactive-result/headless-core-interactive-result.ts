@@ -4,9 +4,6 @@ import {loadReducerError} from '../../../utils/errors';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {Result} from '../../../api/search/search/result';
 
-/**
- * The options for the result controller core.
- */
 export interface InteractiveResultCoreOptions {
   /**
    * The query result.
@@ -21,9 +18,6 @@ export interface InteractiveResultCoreOptions {
   selectionDelay?: number;
 }
 
-/**
- * The props for the result controller core.
- */
 export interface InteractiveResultCoreProps {
   /**
    * The options for the result controller core.
@@ -67,7 +61,7 @@ export interface InteractiveResultCore {
  * @param engine - The headless engine.
  * @param props - The configurable controller properties.
  * @param action - The action to be triggered on select.
- * @returns An controller core instance.
+ * @returns A controller core instance.
  */
 export function buildInteractiveResultCore(
   engine: SearchEngine,
