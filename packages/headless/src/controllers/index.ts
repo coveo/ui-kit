@@ -310,3 +310,10 @@ export {
   InteractiveRecentResult,
   buildInteractiveRecentResult,
 } from './recent-results-list/headless-interactive-recent-result';
+
+export {
+  InteractiveResultCore,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+  buildInteractiveResultCore,
+} from './core/interactive-result/headless-core-interactive-result';
