@@ -86,6 +86,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
     }
   }
 
+  // TODO: use standard keyboard shortcuts KIT-949
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
 
@@ -98,7 +99,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
           results: choice,
         })}
         onClick={() => this.resultPerPage.set(choice)}
-        class={`number-button ${isSelected ? 'selected' : ''}`}
+        class={`btn-page ${isSelected ? 'selected' : ''}`}
         part={`button${isSelected && ' active-button'}`}
         text={choice.toLocaleString(this.bindings.i18n.language)}
       ></Button>

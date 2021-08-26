@@ -109,14 +109,14 @@ export class AtomicPager implements InitializableComponent {
     return (
       <li>
         <Button
-          ariaCurrent={isSelected ? 'page' : undefined}
+          ariaCurrent={isSelected ? 'page' : 'false'}
           style="outline-neutral"
           ariaLabel={this.bindings.i18n.t('page-number', {page})}
           onClick={() => {
             this.pager.selectPage(page);
             this.scrollToTop();
           }}
-          class={`number-button ${isSelected ? 'selected' : ''}`}
+          class={`btn-page ${isSelected ? 'selected' : ''}`}
           part={`page-button ${isSelected && 'active-page-button'}`}
           text={page.toLocaleString(this.bindings.i18n.language)}
         ></Button>

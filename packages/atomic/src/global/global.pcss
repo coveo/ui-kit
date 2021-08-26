@@ -89,4 +89,12 @@
   .btn-pill {
     @apply rounded-2xl;
   }
+
+  .btn-page {
+    @apply grid place-items-center text-lg border-0 hover:border focus:border;
+
+    &.selected {
+      @apply font-bold border-2 border-primary;
+    }
+  }
 }
