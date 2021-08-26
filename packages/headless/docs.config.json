@@ -137,6 +137,18 @@
         "sources": [
           "src/features/recommendation/recommendation-actions"
         ]
+      },
+      {
+        "name": "RecentQueriesActions",
+        "sources": [
+          "src/features/recent-queries/recent-queries-actions"
+        ]
+      },
+      {
+        "name": "RecentResultsActions",
+        "sources": [
+          "src/features/recent-results/recent-results-actions"
+        ]
       }
     ]
   },
@@ -415,6 +427,61 @@
       },
       "state": "TabState",
       "related": []
+    },
+    {
+      "name": "RecentQueriesList",
+      "initialize": {
+        "initializer": {
+          "name": "buildRecentQueriesList",
+          "source": "src/controllers/recent-queries-list/headless-recent-queries-list.ts"
+        },
+        "other": [
+          {
+            "name": "RecentQueriesListProps",
+            "source": "src/controllers/recent-queries-list/headless-recent-queries-list.ts"
+          },
+          {
+            "name": "RecentQueriesListOptions",
+            "source": "src/controllers/recent-queries-list/headless-recent-queries-list.ts"
+          },
+          {
+            "name": "RecentQueriesListInitialState",
+            "source": "src/controllers/recent-queries-list/headless-recent-queries-list.ts"
+          }
+        ]
+      },
+      "state": "RecentQueriesState",
+      "related": []
+    },
+    {
+      "name": "RecentResultsList",
+      "initialize": {
+        "initializer": {
+          "name": "buildRecentResultsList",
+          "source": "src/controllers/recent-results-list/headless-recent-results-list.ts"
+        },
+        "other": [
+          {
+            "name": "RecentResultsListProps",
+            "source": "src/controllers/recent-results-list/headless-recent-results-list.ts"
+          },
+          {
+            "name": "RecentResultsListOptions",
+            "source": "src/controllers/recent-results-list/headless-recent-results-list.ts"
+          },
+          {
+            "name": "RecentResultsListInitialState",
+            "source": "src/controllers/recent-results-list/headless-recent-results-list.ts"
+          }
+        ]
+      },
+      "state": "RecentResultsState",
+      "related": [
+        {
+          "name": "Interactive Recent Result",
+          "source": "src/controllers/recent-results-list/headless-interactive-recent-result.ts"
+        }
+      ]
     }
   ]
 }

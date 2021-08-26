@@ -170,7 +170,7 @@ const rawPartialDefinition = {
   permanentid: new StringValue(),
 };
 
-const resultPartialDefinition = {
+export const resultPartialDefinition = {
   uniqueId: requiredNonEmptyString,
   raw: new RecordValue({values: rawPartialDefinition}),
   title: requiredNonEmptyString,
