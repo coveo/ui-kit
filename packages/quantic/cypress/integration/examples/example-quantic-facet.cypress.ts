@@ -1,13 +1,14 @@
 import {setupAliases} from '../../page-objects/example-quantic-facet';
 
 describe('example-quantic-facet', () => {
-  const quanticFacetUrl =
-    'https://sandbox-platform-platform-4255-dev-e-17b79da0ca9.cs91.force.com/examples/s/quantic-facet';
+  const quanticFacetUrl = `${Cypress.env('examplesUrl')}/s/quantic-facet`;
+
+  beforeEach(() => {
+    cy.visit(quanticFacetUrl).then(setupAliases);
+  });
 
   it('should display the right label and content', () => {
-    cy.visit(quanticFacetUrl)
-      .then(setupAliases)
-      .get('@configurator-field')
+    cy.get('@configurator-field')
       .invoke('val', 'language')
       .get('@configurator-label')
       .invoke('val', 'Language')
@@ -20,9 +21,7 @@ describe('example-quantic-facet', () => {
   });
 
   it('should display more values when clicking more button and reset when clicking less button', () => {
-    cy.visit(quanticFacetUrl)
-      .then(setupAliases)
-      .get('@configurator-try')
+    cy.get('@configurator-try')
       .click()
       .get('c-quantic-facet-value')
       .should('have.length', 8)
