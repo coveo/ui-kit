@@ -32,7 +32,7 @@ export interface InteractiveResultCoreProps {
 }
 
 /**
- * The `InteractiveResultCore` manages basic functionality for interactive result controllers.
+ * The `InteractiveResultCore` manages common functionality for interactive result controllers.
  */
 export interface InteractiveResultCore {
   /**
