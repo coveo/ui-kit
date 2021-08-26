@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.53.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.4...@coveo/quantic@0.53.0) (2021-08-26)
+
+
+### Features
+
+* **quantic:** add basic cypress tests ([#951](https://github.com/coveo/ui-kit/issues/951)) ([0922bcb](https://github.com/coveo/ui-kit/commit/0922bcb1888adbad0846230b19b971d221d780fb))
+
+
+
+
+
 ## [0.52.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.3...@coveo/quantic@0.52.4) (2021-08-25)
 
 
