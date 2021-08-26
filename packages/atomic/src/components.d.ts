@@ -817,40 +817,6 @@ export namespace Components {
          */
         "timezone"?: string;
     }
-    interface AtomicSizeConditionV1 {
-        /**
-          * The maximum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumHeightExclusive"?: string;
-        /**
-          * The maximum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumHeightInclusive"?: string;
-        /**
-          * The maximum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumWidthExclusive"?: string;
-        /**
-          * The maximum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumWidthInclusive"?: string;
-        /**
-          * The minimum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumHeightExclusive"?: string;
-        /**
-          * The minimum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumHeightInclusive"?: string;
-        /**
-          * The minimum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumWidthExclusive"?: string;
-        /**
-          * The minimum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumWidthInclusive"?: string;
-    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -1345,12 +1311,6 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
-    interface HTMLAtomicSizeConditionV1Element extends Components.AtomicSizeConditionV1, HTMLStencilElement {
-    }
-    var HTMLAtomicSizeConditionV1Element: {
-        prototype: HTMLAtomicSizeConditionV1Element;
-        new (): HTMLAtomicSizeConditionV1Element;
-    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1463,7 +1423,6 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-size-condition-v1": HTMLAtomicSizeConditionV1Element;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-cell-v1": HTMLAtomicTableCellV1Element;
@@ -2270,40 +2229,6 @@ declare namespace LocalJSX {
          */
         "timezone"?: string;
     }
-    interface AtomicSizeConditionV1 {
-        /**
-          * The maximum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumHeightExclusive"?: string;
-        /**
-          * The maximum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumHeightInclusive"?: string;
-        /**
-          * The maximum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumWidthExclusive"?: string;
-        /**
-          * The maximum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "maximumWidthInclusive"?: string;
-        /**
-          * The minimum height (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumHeightExclusive"?: string;
-        /**
-          * The minimum height (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumHeightInclusive"?: string;
-        /**
-          * The minimum width (exclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumWidthExclusive"?: string;
-        /**
-          * The minimum width (inclusively) required to display children.  E.g.: `3rem`, `500px` or `30vw`.
-         */
-        "minimumWidthInclusive"?: string;
-    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -2452,7 +2377,6 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-size-condition-v1": AtomicSizeConditionV1;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-cell-v1": AtomicTableCellV1;
@@ -2535,7 +2459,6 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            "atomic-size-condition-v1": LocalJSX.AtomicSizeConditionV1 & JSXBase.HTMLAttributes<HTMLAtomicSizeConditionV1Element>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-cell-v1": LocalJSX.AtomicTableCellV1 & JSXBase.HTMLAttributes<HTMLAtomicTableCellV1Element>;

@@ -1,4 +1,13 @@
-import {Component, Element, getElement, h, Host, Prop} from '@stencil/core';
+import {
+  Component,
+  Element,
+  getElement,
+  h,
+  Host,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
 
@@ -26,7 +35,7 @@ export class AtomicIcon {
   @Prop() icon!: string;
 
   private error: Error | null = null;
-  private svg: string | null = null;
+  @State() private svg: string | null = null;
 
   private async fetchIcon(url: string) {
     try {
@@ -55,8 +64,13 @@ export class AtomicIcon {
     return sanitizedSvg;
   }
 
-  public async componentWillRender() {
+  @Watch('icon')
+  public async updateIcon() {
     this.svg = await this.getIcon();
+  }
+
+  public componentWillLoad() {
+    this.updateIcon();
   }
 
   public render() {
