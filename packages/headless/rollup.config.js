@@ -57,6 +57,10 @@ const nodejs = [
     input: 'src/product-recommendation.index.ts',
     outDir: 'dist/product-recommendation'
   },
+  {
+    input: 'src/product-listing.index.ts',
+    outDir: 'dist/product-listing'
+  },
 ].map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
@@ -119,6 +123,13 @@ const browser = [
     output: [
       buildUmdOutput('dist/browser/product-recommendation', 'CoveoHeadlessProductRecommendation'),
       buildEsmOutput('dist/browser/product-recommendation')
+    ]
+  },
+  {
+    input: 'src/product-listing.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/product-listing', 'CoveoHeadlessProductListing'),
+      buildEsmOutput('dist/browser/product-listing')
     ]
   },
 ].map(buildBrowserConfiguration);
@@ -192,6 +203,10 @@ const dev = [
     input: 'src/product-recommendation.index.ts',
     output: [buildEsmOutput('../atomic/src/external-builds/product-recommendation')],
   },
+  {
+    input: 'src/product-listing.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/product-listing')],
+  },
 ].map(buildBrowserConfiguration);
 
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
@@ -201,6 +216,7 @@ const typeDefinitions = [
   buildTypeDefinitionConfiguration('index.d.ts'),
   buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
   buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
+  buildTypeDefinitionConfiguration('product-listing.index.d.ts'),
 ];
 
 function buildTypeDefinitionConfiguration(entryFileName) {

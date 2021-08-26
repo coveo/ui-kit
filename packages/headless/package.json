@@ -19,7 +19,8 @@
   "files": [
     "dist/",
     "recommendation/",
-    "product-recommendation/"
+    "product-recommendation/",
+    "product-listing/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
