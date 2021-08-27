@@ -25,6 +25,7 @@ import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {PipelineSection} from '../../state/state-sections';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {ResultWithFolding} from '../folding/folding-slice';
+import {getAllIncludedResultsFrom} from '../folding/folding-utils';
 
 export enum AnalyticsType {
   Search,
@@ -115,29 +116,16 @@ export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
-  const findPositionWithUniqueId = (results: ResultWithFolding[] = []) =>
-    results.findIndex(({uniqueId}) => uniqueId === result.uniqueId);
-
   const paginationBasedIndex = (index: number) =>
     index + (state.pagination?.firstResult ?? 0);
 
   let resultIndex = -1;
 
-  const results = state.search?.results as ResultWithFolding[];
-  resultIndex = findPositionWithUniqueId(results);
+  const parentResults = state.search?.results as ResultWithFolding[];
+  resultIndex = findPositionWithUniqueId(result, parentResults);
 
   if (resultIndex < 0) {
-    results.some((parentResult, i) => {
-      const indexInChildResult = findPositionWithUniqueId(
-        parentResult.childResults
-      );
-
-      if (indexInChildResult > 0) {
-        resultIndex = i;
-        return true;
-      }
-      return false;
-    });
+    resultIndex = findPositionInChildResults(result, parentResults);
   }
 
   if (resultIndex < 0) {
@@ -245,3 +233,25 @@ function getSourceName(result: Result) {
 
 export const validateResultPayload = (result: Result) =>
   new Schema(resultPartialDefinition).validate(partialResultPayload(result));
+
+function findPositionInChildResults(
+  targetResult: Result,
+  parentResults: ResultWithFolding[]
+) {
+  for (const [i, parent] of parentResults.entries()) {
+    const children = getAllIncludedResultsFrom(parent);
+    const childIndex = findPositionWithUniqueId(targetResult, children);
+    if (childIndex !== -1) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function findPositionWithUniqueId(
+  targetResult: Result,
+  results: ResultWithFolding[] = []
+) {
+  return results.findIndex(({uniqueId}) => uniqueId === targetResult.uniqueId);
+}
