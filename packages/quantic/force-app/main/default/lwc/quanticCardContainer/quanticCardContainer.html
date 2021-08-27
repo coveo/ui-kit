@@ -1,0 +1,17 @@
+<template>
+    <host>
+        <article>
+          <header>
+            <div>
+              <h2>{title}</h2>
+            </div>
+            <div>
+              <slot>{actions}</slot>
+            </div>
+          </header>
+          <div class="body">
+            <slot>{main-content}</slot>
+          </div>
+        </article>
+    </host>
+</template>
