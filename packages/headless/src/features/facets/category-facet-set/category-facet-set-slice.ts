@@ -53,7 +53,9 @@ export const categoryFacetSetReducer = createReducer(
         Object.keys(state).forEach((id) => {
           const request = state[id]!.request;
           const path = cf[id] || [];
-          selectPath(request, path, state[id]!.initialNumberOfValues);
+          if (path.length || request.currentValues.length) {
+            selectPath(request, path, state[id]!.initialNumberOfValues);
+          }
         });
       })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
