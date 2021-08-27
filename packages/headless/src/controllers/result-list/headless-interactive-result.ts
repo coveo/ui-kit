@@ -1,3 +1,4 @@
+import {debounce} from 'ts-debounce';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
@@ -35,18 +36,19 @@ export function buildInteractiveResult(
   props: InteractiveResultProps
 ): InteractiveResult {
   let wasOpened = false;
+  const debounceDelay = 500;
+  const debouncedPushRecentResult = debounce(
+    () => engine.dispatch(pushRecentResult(props.options.result)),
+    debounceDelay
+  );
 
-  const logAnalyticsIfNeverOpened = () => {
+  const action = () => {
+    debouncedPushRecentResult();
     if (wasOpened) {
       return;
     }
     wasOpened = true;
     engine.dispatch(logDocumentOpen(props.options.result));
-  };
-
-  const action = () => {
-    logAnalyticsIfNeverOpened();
-    engine.dispatch(pushRecentResult(props.options.result));
   };
 
   return buildInteractiveResultCore(engine, props, action);

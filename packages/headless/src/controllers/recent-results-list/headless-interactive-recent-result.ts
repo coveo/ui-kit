@@ -1,3 +1,4 @@
+import {debounce} from 'ts-debounce';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
 import {
@@ -34,7 +35,12 @@ export function buildInteractiveRecentResult(
   engine: SearchEngine,
   props: InteractiveRecentResultProps
 ): InteractiveRecentResult {
-  const action = () =>
-    engine.dispatch(logRecentResultClick(props.options.result));
-  return buildInteractiveResultCore(engine, props, action);
+  // 1 second is a reasonable amount of time to catch most longpress actions.
+  const debounceDelay = 1000;
+  const debouncedAnalytics = debounce(
+    () => engine.dispatch(logRecentResultClick(props.options.result)),
+    debounceDelay
+  );
+
+  return buildInteractiveResultCore(engine, props, debouncedAnalytics);
 }
