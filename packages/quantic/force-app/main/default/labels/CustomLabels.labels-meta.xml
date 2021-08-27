@@ -113,6 +113,13 @@
         <shortDescription>Show less values for the potato facet</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_AllCategories</fullName>
+        <value>All Categories</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Categories</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NMore</fullName>
         <value>{{0}} more...</value>
         <language>en_US</language>

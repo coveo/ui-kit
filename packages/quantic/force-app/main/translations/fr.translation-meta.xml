@@ -69,6 +69,10 @@
         <name>quantic_ShowLessFacetValues</name>
     </customLabels>
     <customLabels>
+        <label>Toutes les catégories</label>
+        <name>quantic_AllCategories</name>
+    </customLabels>
+    <customLabels>
         <label>{{0}} de plus...</label>
         <name>quantic_NMore</name>
     </customLabels>

@@ -7,6 +7,7 @@ import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
 import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
 import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
+import allCategories from '@salesforce/label/c.quantic_AllCategories';
 
 export default class QuanticCategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -26,13 +27,18 @@ export default class QuanticCategoryFacet extends LightningElement {
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-
+  /** @type {boolean} */
+  isCollapsed = false;
+  /** @type {string} */
+  collapseIconName = 'utility:dash';
+ 
   labels = {
     clear,
     showMore,
     showLess,
     showMoreFacetValues,
     showLessFacetValues,
+    allCategories
   }
 
   connectedCallback() {
@@ -68,9 +74,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   get values() {
     return this.state.values;
   }
-
-  get parents() {
-    return this.state.parents;
+  get nonActiveParents() {
+    return this.state.parents.slice(0, -1);
+  }
+  get activeParent() {
+    return this.state.parents.slice(-1)[0];
   }
 
   get canShowMore() {
@@ -124,5 +132,9 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   reset() {
     this.facet.deselectAll();
+  }
+  toggleFacetVisibility() {
+    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.isCollapsed = !this.isCollapsed;
   }
 }

@@ -27,6 +27,9 @@
             "c/quanticCategoryFacet": [
                 "quanticCategoryFacet/quanticCategoryFacet.js"
             ],
+            "c/quanticCategoryFacetParent": [
+                "quanticCategoryFacetParent/quanticCategoryFacetParent.js"
+            ],
             "c/quanticCategoryFacetValue": [
                 "quanticCategoryFacetValue/quanticCategoryFacetValue.js"
             ],
