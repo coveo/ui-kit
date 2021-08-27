@@ -22,9 +22,10 @@ export class AtomicFormatUnit {
   @Prop() public unit!: string;
   /**
    * The unit formatting style to use in unit formatting.
-   * - "long" (e.g., 16 litres)
-   * - "short" (e.g., 16 l)
-   * - "narrow" (e.g., 16l)
+   *
+   * * "long" (e.g., 16 litres)
+   * * "short" (e.g., 16 l)
+   * * "narrow" (e.g., 16l)
    */
   @Prop() public unitDisplay?: 'long' | 'short' | 'narrow' = 'short';
 
