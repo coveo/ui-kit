@@ -38,6 +38,14 @@ describe('c/quanticUtils', () => {
       it('should return singular variant if count is equal to -1', () => {
         expect(I18nUtils.getLabelNameWithCount(testLabelName, -1)).toBe(testLabelName);
       });
+
+      describe('given other locale', () => {
+        it('should return label name', () => {
+          jest.mock('@salesforce/i18n/locale', () => 'en-CA');
+
+          expect(() => I18nUtils.getLabelNameWithCount(testLabelName, 2)).not.toThrow();
+        });
+      });
     });
 
     describe('format', () => {
