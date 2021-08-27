@@ -60,7 +60,7 @@ The base of the `/src` folder should only contain exports.
 
 `/test` contains test mocks.
 
-# Adding a new controller.
+# Contribution guide: Adding a new controller.
 
 Controllers are the building blocks of Headless, that make it easy to build visual components on top of, by exposing relevant methods and state. Headless provides controllers to power search boxes, result lists, facets, pagers and many more UI components.
 
@@ -85,6 +85,6 @@ Building a new controller typically involves the following steps:
 
 8. Tell the documentation tools how to extract the controller reference documentation and code samples by adding a new entry to the relevant configuration(s) under `headless/doc-parser/use-cases`. Similar as above, that config will configure documentation tool so that all reference and samples appear on docs.coveo.com/headless
 
-9. Think about possibly writing a new dedicated "handwritten" article about the feature and it's usage, if you think/judge that an end user of the library would need more context to understand the usage of a particular controller or high level feature. For example, if a controller requires special configuration in Coveo admin console, or if it needs special interaction with the end user application. If you think such an article would be helpful for end users of the library, write a google doc and share it with the documentation team. They will be able to help you publish it on docs.coveo.com/headless.
+9. Think about possibly writing a new dedicated "handwritten" article about the feature and it's usage, if you judge that an end user of the library would need more context to understand the usage of a particular controller or high level feature. For example, if a controller requires special configuration in Coveo admin console, or if it needs special interaction with the end user application, such an article might help them self serve and troubleshoot better. If that's the case, write a google doc and share it with the documentation team. They will be able to help you publish it on docs.coveo.com/headless.
 
 10. You are done ! You can now consider planning adding support for the new feature in one of our UI component library (Atomic, Quantic).
