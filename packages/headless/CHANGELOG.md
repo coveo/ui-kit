@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.0...@coveo/headless@1.18.1) (2021-08-27)
+
+
+### Bug Fixes
+
+* **headless:** fix analytics click event for result folding ([#1133](https://github.com/coveo/ui-kit/issues/1133)) ([0b25520](https://github.com/coveo/ui-kit/commit/0b2552097f0cc32a7c87e110f1ab9984315392ad))
+* **headless:** search parameter preventing auto selection on category facet ([#1127](https://github.com/coveo/ui-kit/issues/1127)) ([8ae636e](https://github.com/coveo/ui-kit/commit/8ae636eb631772ffc208f870926ed01036523b8e))
+
+
+
+
+
 # [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.17.3...@coveo/headless@1.18.0) (2021-08-26)
 
 
