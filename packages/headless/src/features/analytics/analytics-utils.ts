@@ -24,6 +24,7 @@ import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {PipelineSection} from '../../state/state-sections';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {ResultWithFolding} from '../folding/folding-slice';
 
 export enum AnalyticsType {
   Search,
@@ -114,12 +115,41 @@ export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
-  const resultIndex =
-    (state.search?.results.findIndex(
-      ({uniqueId}) => result.uniqueId === uniqueId
-    ) ?? 0) + (state.pagination?.firstResult ?? 0);
+  const findPositionWithUniqueId = (results: ResultWithFolding[] = []) =>
+    results.findIndex(({uniqueId}) => uniqueId === result.uniqueId);
 
-  return buildPartialDocumentInformation(result, resultIndex, state);
+  const paginationBasedIndex = (index: number) =>
+    index + (state.pagination?.firstResult ?? 0);
+
+  let resultIndex = -1;
+
+  const results = state.search?.results as ResultWithFolding[];
+  resultIndex = findPositionWithUniqueId(results);
+
+  if (resultIndex < 0) {
+    results.some((parentResult, i) => {
+      const indexInChildResult = findPositionWithUniqueId(
+        parentResult.childResults
+      );
+
+      if (indexInChildResult > 0) {
+        resultIndex = i;
+        return true;
+      }
+      return false;
+    });
+  }
+
+  if (resultIndex < 0) {
+    // ¯\_(ツ)_/¯
+    resultIndex = 0;
+  }
+
+  return buildPartialDocumentInformation(
+    result,
+    paginationBasedIndex(resultIndex),
+    state
+  );
 };
 
 export const partialRecommendationInformation = (
