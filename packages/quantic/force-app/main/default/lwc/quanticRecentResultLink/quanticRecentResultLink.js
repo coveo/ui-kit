@@ -46,7 +46,7 @@ export default class QuanticResultLink extends LightningElement {
     selector = undefined,
   ) {
     
-    const interactiveResult = CoveoHeadless.buildInteractiveResult(engine, {
+    const interactiveResult = CoveoHeadless.buildInteractiveRecentResult(engine, {
       options: {result: JSON.parse(JSON.stringify(result))},
     });
 

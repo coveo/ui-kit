@@ -1,0 +1,11 @@
+<template>
+  <div>
+    <ul>
+      <template for:each={results} for:item="result">
+        <li key={result.uniqueId}>
+          <c-quantic-recent-result-link result={result} engine-id={engineId}></c-quantic-recent-result-link>
+        </li>
+      </template>
+    </ul>
+  </div>
+</template>
