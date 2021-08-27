@@ -69,11 +69,8 @@ export class AtomicResultList implements InitializableComponent {
 
   @Prop() image: ResultDisplayImageSize = 'icon';
 
-  private listWrapperRef?: HTMLDivElement;
-
-  private get showPlaceholder() {
-    return !this.resultListState.firstSearchExecuted;
-  }
+  private placeholdersRef: HTMLElement[] = [];
+  private resultsWereRendered = false;
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -147,6 +144,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private buildListPlaceholders() {
+    this.placeholdersRef = [];
     return Array.from(
       {length: this.resultsPerPageState.numberOfResults},
       (_, i) => (
@@ -155,6 +153,7 @@ export class AtomicResultList implements InitializableComponent {
           display={this.display}
           density={this.density}
           image={this.image}
+          ref={(el) => this.placeholdersRef.push(el!)}
         ></atomic-result-placeholder-v1>
       )
     );
@@ -175,11 +174,13 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private buildTablePlaceholder() {
+    this.placeholdersRef = [];
     return (
       <atomic-result-table-placeholder-v1
         density={this.density}
         image={this.image}
         rows={this.resultsPerPageState.numberOfResults}
+        ref={(el) => this.placeholdersRef.push(el!)}
       ></atomic-result-table-placeholder-v1>
     );
   }
@@ -225,8 +226,8 @@ export class AtomicResultList implements InitializableComponent {
   private buildList() {
     return (
       <div class={`list-root ${this.getClasses().join(' ')}`}>
+        {!this.resultsWereRendered ? this.buildListPlaceholders() : null}
         {this.resultListState.results.length ? this.buildListResults() : null}
-        {this.buildListPlaceholders()}
       </div>
     );
   }
@@ -234,23 +235,12 @@ export class AtomicResultList implements InitializableComponent {
   private buildResultRoot() {
     if (this.display === 'table') {
       return [
-        this.buildTablePlaceholder(),
+        !this.resultsWereRendered ? this.buildTablePlaceholder() : null,
         this.resultListState.results.length ? this.buildTable() : null,
       ];
     }
 
     return this.buildList();
-  }
-
-  private buildResultWrapper() {
-    return (
-      <div
-        class="list-wrapper placeholder"
-        ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
-      >
-        {this.buildResultRoot()}
-      </div>
-    );
   }
 
   private getClasses() {
@@ -259,7 +249,10 @@ export class AtomicResultList implements InitializableComponent {
       this.density,
       this.image
     );
-    if (!this.showPlaceholder && this.resultList.state.isLoading) {
+    if (
+      !this.resultListState.firstSearchExecuted &&
+      this.resultList.state.isLoading
+    ) {
       classes.push('loading');
     }
     return classes;
@@ -280,8 +273,10 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (!this.showPlaceholder) {
-      this.listWrapperRef?.classList.remove('placeholder');
+    if (this.resultListState.results.length > 0) {
+      this.resultsWereRendered = true;
+      this.placeholdersRef.forEach((placeholder) => placeholder.remove());
+      this.placeholdersRef = [];
     }
   }
 
@@ -293,7 +288,7 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
-        {this.buildResultWrapper()}
+        {this.buildResultRoot()}
       </Host>
     );
   }
