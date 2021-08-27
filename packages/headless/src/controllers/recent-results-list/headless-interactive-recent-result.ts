@@ -39,7 +39,8 @@ export function buildInteractiveRecentResult(
   const debounceDelay = 1000;
   const debouncedAnalytics = debounce(
     () => engine.dispatch(logRecentResultClick(props.options.result)),
-    debounceDelay
+    debounceDelay,
+    {isImmediate: true}
   );
 
   return buildInteractiveResultCore(engine, props, debouncedAnalytics);

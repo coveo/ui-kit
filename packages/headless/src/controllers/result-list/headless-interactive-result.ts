@@ -36,19 +36,25 @@ export function buildInteractiveResult(
   props: InteractiveResultProps
 ): InteractiveResult {
   let wasOpened = false;
-  const debounceDelay = 500;
+  // 1 second is a reasonable amount of time to catch most longpress actions.
+  const debounceDelay = 1000;
   const debouncedPushRecentResult = debounce(
     () => engine.dispatch(pushRecentResult(props.options.result)),
-    debounceDelay
+    debounceDelay,
+    {isImmediate: true}
   );
 
-  const action = () => {
-    debouncedPushRecentResult();
+  const logAnalyticsIfNeverOpened = () => {
     if (wasOpened) {
       return;
     }
     wasOpened = true;
     engine.dispatch(logDocumentOpen(props.options.result));
+  };
+
+  const action = () => {
+    logAnalyticsIfNeverOpened();
+    debouncedPushRecentResult();
   };
 
   return buildInteractiveResultCore(engine, props, action);
