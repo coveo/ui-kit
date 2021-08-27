@@ -122,12 +122,11 @@ describe('advanced search parameters', () => {
   });
 
   it('allows a restore query on history change', () => {
-    const expectedQuery: AdvancedSearchQueriesState = buildMockAdvancedSearchQueriesState(
-      {
+    const expectedQuery: AdvancedSearchQueriesState =
+      buildMockAdvancedSearchQueriesState({
         cq: 'hello',
         aq: 'hola',
-      }
-    );
+      });
     const historyChange = {
       ...getHistoryInitialState(),
       advancedSearchQueries: expectedQuery,

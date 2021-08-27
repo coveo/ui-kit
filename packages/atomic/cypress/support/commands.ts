@@ -3,9 +3,10 @@
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
-      getAnalyticsAt(selector: string, order: number): Chainable<any>;
-      getTextOfAllElements(selector: string): Chainable<any>;
+      getAnalyticsAt(selector: string, order: number): Chainable<unknown>;
+      getTextOfAllElements(selector: string): Chainable<unknown>;
     }
   }
 }
@@ -21,7 +22,9 @@ Cypress.Commands.add('getAnalyticsAt', (selector: string, order: number) => {
 
 Cypress.Commands.add('getTextOfAllElements', (selector: string) => {
   cy.get(selector).then((elems) => {
-    const originalValues = [...elems].map((el: any) => el.textContent.trim());
+    const originalValues = [...elems].map((el: HTMLElement) =>
+      el.textContent?.trim()
+    );
     cy.wrap(originalValues);
   });
 });

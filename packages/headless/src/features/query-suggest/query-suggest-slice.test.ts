@@ -184,11 +184,10 @@ describe('querySuggest slice', () => {
     describe('fetchQuerySuggestions.fulfilled', () => {
       const responseId = 'response-uuid';
       const completions = getCompletions();
-      const fetchQuerySuggestionsFulfilledAction = fetchQuerySuggestions.fulfilled(
-        {completions, id, responseId},
-        '',
-        {id}
-      );
+      const fetchQuerySuggestionsFulfilledAction =
+        fetchQuerySuggestions.fulfilled({completions, id, responseId}, '', {
+          id,
+        });
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
       it('when fetchQuerySuggestions has an invalid id, it does not throw', () => {

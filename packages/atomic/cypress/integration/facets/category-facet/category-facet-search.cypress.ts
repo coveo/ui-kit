@@ -45,7 +45,6 @@ describe('Category Facet Search Test Suites', () => {
       describe('verify rendering', () => {
         before(setupFocusOnInput);
 
-        CategoryFacetAssertions.assertAccessibility();
         CategoryFacetSearchAssertions.assertNumberOfSearchResults(
           defaultNumberOfValues * 2
         );
@@ -127,7 +126,6 @@ describe('Category Facet Search Test Suites', () => {
       describe('verify rendering', () => {
         before(setupPressDownArrow);
 
-        CategoryFacetAssertions.assertAccessibility();
         CategoryFacetSearchAssertions.assertNumberOfSearchResults(
           defaultNumberOfValues * 2
         );

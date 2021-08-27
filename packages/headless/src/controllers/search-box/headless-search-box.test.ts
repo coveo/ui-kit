@@ -98,7 +98,7 @@ describe('headless searchBox', () => {
   describe('validating options', () => {
     it(`when passing an invalid id as option
     creating the controller should throw`, () => {
-      props.options!.id = (1 as unknown) as string;
+      props.options!.id = 1 as unknown as string;
       expect(() => initController()).toThrow();
     });
 
@@ -112,15 +112,15 @@ describe('headless searchBox', () => {
     creating the controller should throw`, () => {
       props.options!.highlightOptions = {
         notMatchDelimiters: {
-          open: (1 as unknown) as string,
-          close: (2 as unknown) as string,
+          open: 1 as unknown as string,
+          close: 2 as unknown as string,
         },
       };
       expect(() => initController()).toThrow();
     });
 
     it('when passing an invalid option, it throws an error', () => {
-      props.options!.id = (1 as unknown) as string;
+      props.options!.id = 1 as unknown as string;
       expect(() => initController()).toThrow(
         'Check the options of buildSearchBox'
       );

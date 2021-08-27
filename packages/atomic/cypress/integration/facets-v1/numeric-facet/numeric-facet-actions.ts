@@ -27,40 +27,40 @@ export const numericRanges: NumericRange[] = [
   },
 ];
 
-export const addNumericFacet = (
-  props: TagProps = {},
-  formatTag?: string,
-  formatTagProps?: TagProps
-) => (env: TestFixture) => {
-  const e = generateComponentHTML('atomic-numeric-facet-v1', props);
-  if (formatTag && formatTagProps) {
-    const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
-    e.append(formatTagHTML);
-  }
-  env.withElement(e);
-};
+export const addNumericFacet =
+  (props: TagProps = {}, formatTag?: string, formatTagProps?: TagProps) =>
+  (env: TestFixture) => {
+    const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+    if (formatTag && formatTagProps) {
+      const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+      e.append(formatTagHTML);
+    }
+    env.withElement(e);
+  };
 
-export const addNumericFacetWithRange = (
-  props: TagProps = {},
-  ranges: NumericRange[],
-  formatTag?: string,
-  formatTagProps?: TagProps
-) => (env: TestFixture) => {
-  const e = generateComponentHTML('atomic-numeric-facet-v1', props);
-  if (formatTag && formatTagProps) {
-    const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
-    e.append(formatTagHTML);
-  }
-  ranges.forEach((r: NumericRange) => {
-    const rangeHTML = generateComponentHTML('atomic-numeric-range', {
-      start: `${r.start}`,
-      end: `${r.end}`,
+export const addNumericFacetWithRange =
+  (
+    props: TagProps = {},
+    ranges: NumericRange[],
+    formatTag?: string,
+    formatTagProps?: TagProps
+  ) =>
+  (env: TestFixture) => {
+    const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+    if (formatTag && formatTagProps) {
+      const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+      e.append(formatTagHTML);
+    }
+    ranges.forEach((r: NumericRange) => {
+      const rangeHTML = generateComponentHTML('atomic-numeric-range', {
+        start: `${r.start}`,
+        end: `${r.end}`,
+      });
+      e.append(rangeHTML);
     });
-    e.append(rangeHTML);
-  });
 
-  env.withElement(e);
-};
+    env.withElement(e);
+  };
 
 export function selectIdleCheckboxValueAt(index: number) {
   NumericFacetSelectors.idleCheckboxValue().eq(index).click();

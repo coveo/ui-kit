@@ -150,9 +150,8 @@ describe('FacetSearch', () => {
       query: '',
     };
 
-    engine.state.facetSearchSet[facetId] = buildMockFacetSearch(
-      facetSearchState
-    );
+    engine.state.facetSearchSet[facetId] =
+      buildMockFacetSearch(facetSearchState);
     expect(controller.state).toEqual(facetSearchState);
   });
 });

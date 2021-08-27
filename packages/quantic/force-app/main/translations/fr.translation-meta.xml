@@ -133,7 +133,7 @@
         <name>quantic_CoveoOnlineHelpLink</name>
     </customLabels>
     <customLabels>
-        <label>Plus d'information</label>
+        <label>Plus d'informations</label>
         <name>quantic_MoreInformation</name>
     </customLabels>
     <customLabels>
@@ -141,11 +141,11 @@
         <name>quantic_CheckForMore</name>
     </customLabels>
     <customLabels>
-        <label>communauté</label>
+        <label>Communauté</label>
         <name>quantic_Community</name>
     </customLabels>
     <customLabels>
-        <label>contacter l'équipe du support Coveo</label>
+        <label>Contacter l'équipe du support Coveo.</label>
         <name>quantic_ContactCoveoSupportTeam</name>
     </customLabels>
     <customLabels>
@@ -181,7 +181,7 @@
         <name>quantic_OrganizationIsPausedTitle</name>
     </customLabels>
     <customLabels>
-        <label>Votre organisation Coveo est en pause pour cause d'inactivité et la recherche est présentement non disponible.</label>
+        <label>Votre organisation Coveo est en pause pour cause d'inactivité et la recherche est présentement indisponible.</label>
         <name>quantic_OrganizationIsPausedDesc</name>
     </customLabels>
     <customLabels>

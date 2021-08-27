@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.53.0...@coveo/quantic@0.53.1) (2021-08-26)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.53.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.4...@coveo/quantic@0.53.0) (2021-08-26)
+
+
+### Features
+
+* **quantic:** add basic cypress tests ([#951](https://github.com/coveo/ui-kit/issues/951)) ([0922bcb](https://github.com/coveo/ui-kit/commit/0922bcb1888adbad0846230b19b971d221d780fb))
+
+
+
+
+
+## [0.52.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.3...@coveo/quantic@0.52.4) (2021-08-25)
+
+
+### Bug Fixes
+
+* **quantic:** shorten localized string description ([#1128](https://github.com/coveo/ui-kit/issues/1128)) ([75e58ec](https://github.com/coveo/ui-kit/commit/75e58ece559ab791e5270a52a018a32808fd675b))
+
+
+
+
+
+## [0.52.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.2...@coveo/quantic@0.52.3) (2021-08-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.52.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.1...@coveo/quantic@0.52.2) (2021-08-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.52.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.52.0...@coveo/quantic@0.52.1) (2021-08-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.52.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.51.1...@coveo/quantic@0.52.0) (2021-08-23)
 
 

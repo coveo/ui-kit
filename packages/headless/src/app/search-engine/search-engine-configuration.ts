@@ -64,22 +64,21 @@ export interface SearchConfigurationOptions {
   preprocessQuerySuggestResponseMiddleware?: PostprocessQuerySuggestResponseMiddleware;
 }
 
-export const searchEngineConfigurationSchema = new Schema<
-  SearchEngineConfiguration
->({
-  ...engineConfigurationDefinitions,
-  search: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      pipeline: nonEmptyString,
-      searchHub: nonEmptyString,
-      locale: nonEmptyString,
-      timezone: nonEmptyString,
-    },
-  }),
-});
+export const searchEngineConfigurationSchema =
+  new Schema<SearchEngineConfiguration>({
+    ...engineConfigurationDefinitions,
+    search: new RecordValue({
+      options: {
+        required: false,
+      },
+      values: {
+        pipeline: nonEmptyString,
+        searchHub: nonEmptyString,
+        locale: nonEmptyString,
+        timezone: nonEmptyString,
+      },
+    }),
+  });
 
 /**
  * Creates a sample search engine configuration.

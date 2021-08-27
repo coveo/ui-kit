@@ -145,9 +145,8 @@ export class AtomicResultMultiText implements InitializableComponent {
 
   private renderListItems() {
     const sortedValues = this.getSortedValues();
-    const numberOfValuesToDisplay = this.getNumberOfValuesToDisplay(
-      sortedValues
-    );
+    const numberOfValuesToDisplay =
+      this.getNumberOfValuesToDisplay(sortedValues);
 
     const nodes: VNode[] = [];
     for (let i = 0; i < numberOfValuesToDisplay; i++) {

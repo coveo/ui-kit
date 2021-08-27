@@ -61,7 +61,7 @@ describe('generic facet reducers', () => {
 
     it('when the request is not defined, it does not throw', () => {
       expect(() =>
-        handleFacetDeselectAll((undefined as unknown) as FacetRequest)
+        handleFacetDeselectAll(undefined as unknown as FacetRequest)
       ).not.toThrow();
     });
   });

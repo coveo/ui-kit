@@ -6,8 +6,7 @@ describe('atomic-result-template', () => {
   it('renders correctly when it is a children of an AtomicResultList component', async () => {
     const page = await newSpecPage({
       components: [AtomicResultList, AtomicResultTemplate],
-      html:
-        '<atomic-result-list><atomic-result-template></atomic-result-template></atomic-result-list>',
+      html: '<atomic-result-list><atomic-result-template></atomic-result-template></atomic-result-list>',
     });
 
     expect(page.root).toBeTruthy();

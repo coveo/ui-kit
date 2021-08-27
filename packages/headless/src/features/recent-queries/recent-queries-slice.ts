@@ -11,11 +11,14 @@ export const recentQueriesReducer = createReducer(
   (builder) => {
     builder
       .addCase(registerRecentQueries, (state, action) => {
-        state.queries = action.payload.queries;
+        state.queries = action.payload.queries.slice(
+          0,
+          action.payload.maxLength
+        );
         state.maxLength = action.payload.maxLength;
       })
       .addCase(clearRecentQueries, (state) => {
-        state.queries.length = 0;
+        state.queries = [];
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const query = action.payload.queryExecuted;

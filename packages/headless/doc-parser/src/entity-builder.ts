@@ -134,7 +134,7 @@ function getCustomTagValue(comment: DocComment | undefined, customTag: string) {
 
 function getParamDescription(param: Parameter) {
   const nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
-  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
+  const description = emitAsTsDoc(nodes as unknown as readonly DocNode[]);
 
   if (!description) {
     throw new Error(`No description found for param: ${param.name}`);
@@ -145,7 +145,7 @@ function getParamDescription(param: Parameter) {
 
 function getReturnTypeDescription(m: ApiMethodSignature) {
   const nodes = m.tsdocComment?.returnsBlock?.content.getChildNodes() || [];
-  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
+  const description = emitAsTsDoc(nodes as unknown as readonly DocNode[]);
 
   if (m.returnTypeExcerpt.text !== 'void' && !description) {
     throw new Error(`No description found for returnType: ${m.name}`);

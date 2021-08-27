@@ -11,8 +11,7 @@ describe('atomic-field-condition', () => {
         AtomicResultTemplate,
         AtomicFieldCondition,
       ],
-      html:
-        '<template><atomic-field-condition></atomic-field-condition></template>',
+      html: '<template><atomic-field-condition></atomic-field-condition></template>',
     });
 
     expect(page.root).toBeTruthy();

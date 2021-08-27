@@ -18,19 +18,18 @@ export interface CategoryFacetSetupOptions {
   withResultList: boolean;
 }
 
-export const addCategoryFacet = (
-  props: TagProps = {},
-  withResultList = false
-) => (env: TestFixture) => {
-  addTag(env, 'atomic-breadcrumb-manager', {});
-  addTag(env, 'atomic-category-facet-v1', {
-    field: hierarchicalField,
-    label: 'Atlas',
-    'number-of-values': defaultNumberOfValues,
-    ...props,
-  });
-  withResultList && addTag(env, 'atomic-result-list', {});
-};
+export const addCategoryFacet =
+  (props: TagProps = {}, withResultList = false) =>
+  (env: TestFixture) => {
+    addTag(env, 'atomic-breadcrumb-manager', {});
+    addTag(env, 'atomic-category-facet-v1', {
+      field: hierarchicalField,
+      label: 'Atlas',
+      'number-of-values': defaultNumberOfValues,
+      ...props,
+    });
+    withResultList && addTag(env, 'atomic-result-list', {});
+  };
 
 export function selectChildValueAt(index: number) {
   CategoryFacetSelectors.childValue().eq(index).click();

@@ -72,7 +72,8 @@ const PATH_MAX_LENGTH = 3;
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements InitializableComponent, FacetSearchComponent, BaseFacetState {
+  implements InitializableComponent, FacetSearchComponent, BaseFacetState
+{
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;

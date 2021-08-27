@@ -49,7 +49,8 @@ import {registerFacetToStore} from '../../../utils/store';
   shadow: true,
 })
 export class AtomicNumericFacet
-  implements InitializableComponent, BaseFacetState {
+  implements InitializableComponent, BaseFacetState
+{
   @Element() host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   private facet!: NumericFacet;
