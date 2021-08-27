@@ -40,6 +40,9 @@ atomic-result-list-v1 {
     @screen mobile-only {
       &.image-large {
         @mixin atomic-list-with-dividers;
+        display: grid;
+        justify-content: space-evenly;
+        grid-template-columns: minmax(auto, 35rem);
       }
 
       &.image-small,
@@ -83,7 +86,7 @@ atomic-result-list-v1 {
       padding: 2rem;
       &.image-large {
         @mixin atomic-list-with-dividers;
-        grid-template-columns: auto;
+        grid-template-columns: minmax(auto, 35rem);
       }
       &.image-small {
         grid-template-columns: repeat(auto-fill, 9.5rem);
