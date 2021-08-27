@@ -1,7 +1,7 @@
 import {I18nUtils} from "c/quanticUtils";
 
 describe('c/quanticUtils', () => {
-  describe('I18nService', () => {
+  describe('I18nUtils', () => {
     it('getTextWithDecorator should return text wrapped in given tags', () => {
       const text = 'sample text';
       const startTag = '<test-start-tag>';
@@ -40,10 +40,14 @@ describe('c/quanticUtils', () => {
       });
 
       describe('given other locale', () => {
-        it('should return label name', () => {
-          jest.mock('@salesforce/i18n/locale', () => 'en-CA');
+        jest.resetModules();
+        jest.mock('@salesforce/i18n/locale', () => ({
+          default: 'de-DE'
+        }));
+        const withOtherLocale = require('c/quanticUtils');
 
-          expect(() => I18nUtils.getLabelNameWithCount(testLabelName, 2)).not.toThrow();
+        it('should return label name without failing', () => {
+          expect(() => withOtherLocale.I18nUtils.getLabelNameWithCount(testLabelName, 2)).not.toThrow();
         });
       });
     });
