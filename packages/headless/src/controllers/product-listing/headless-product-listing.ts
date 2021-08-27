@@ -48,7 +48,6 @@ export const buildProductListing = (
       url: options.url!,
     })
   );
-  dispatch(fetchProductListing());
 
   return {
     ...controller,
@@ -61,6 +60,8 @@ export const buildProductListing = (
         isLoading,
       };
     },
+
+    refresh: () => dispatch(fetchProductListing()),
   };
 };
 

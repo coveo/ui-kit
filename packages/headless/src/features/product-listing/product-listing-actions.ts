@@ -21,11 +21,8 @@ import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload';
-
+import {validatePayload} from '../../utils/validate-payload';
+import {StringValue} from '@coveo/bueno';
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
@@ -34,10 +31,13 @@ export interface SetProductListingUrlPayload {
 }
 
 export const setProductListingUrl = createAction(
-  'productListing/setUrl',
+  'productlisting/setUrl',
   (payload: SetProductListingUrlPayload) =>
     validatePayload(payload, {
-      url: requiredNonEmptyString,
+      url: new StringValue({
+        required: true,
+        url: true,
+      }),
     })
 );
 
@@ -67,7 +67,7 @@ export const fetchProductListing = createAsyncThunk<
   void,
   AsyncThunkProductListingOptions<StateNeededByFetchProductListing>
 >(
-  'productListing/fetch',
+  'productlisting/fetch',
   async (_action, {getState, rejectWithValue, extra}) => {
     const state = getState();
     const {productListingClient} = extra;
