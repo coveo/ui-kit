@@ -99,7 +99,7 @@ atomic-result-list-v1 {
       &.image-large {
         @media not all and (min-width: 768px) {
           @mixin atomic-list-with-dividers;
-          grid-template-columns: auto;
+          grid-template-columns: minmax(auto, 35rem);
         }
         @media (min-width: 768px) {
           @mixin atomic-grid-with-cards;
