@@ -40,7 +40,7 @@ export class Debouncer {
  * // Result after 5 sec : 'foo'
  * deferred.promise.then(data => console.log(data));```
  */
- export class Deferred {
+export class Deferred {
   constructor() {
     this.promise = new Promise((resolve, reject) => {
       this.isResolved = false
@@ -53,7 +53,7 @@ export class Debouncer {
   }
 }
 
-export class I18nUtils{
+export class I18nUtils {
   static isPluralInLocale = {
     "en-US": (count) => count !== 0 && Math.abs(count) !== 1,
     "fr-CA": (count) => Math.abs(count) >= 2
@@ -72,10 +72,10 @@ export class I18nUtils{
       return `${labelName}_zero`;
     } else if (I18nUtils.isPluralInLocale[LOCALE](count)) {
       return `${labelName}_plural`;
-    } 
+    }
     return labelName;
   }
-  
+
   static format(stringToFormat, ...formattingArguments) {
     if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
@@ -90,3 +90,13 @@ export const keys = {
   ARROWUP: 'ArrowUp',
   ARROWDOWN: 'ArrowDown',
 };
+
+export function getItemfromLocalStorage(key) {
+  console.log(JSON.parse(localStorage.getItem(key)))
+  return JSON.parse(localStorage.getItem(key))? JSON.parse(localStorage.getItem(key)) : [];
+}
+
+export function setIteminLocalStorage(key, item) {
+  const value = JSON.stringify(item);
+  localStorage.setItem(key, value);
+}

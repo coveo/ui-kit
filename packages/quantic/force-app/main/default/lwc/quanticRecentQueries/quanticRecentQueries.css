@@ -1,0 +1,20 @@
+.container {
+  width: 100%;
+  margin: 0 2em 0 0; 
+}
+
+li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color:#0070D2;
+}
+
+li:hover{
+    text-decoration: underline;
+    cursor: pointer; 
+}
+
+.icon-color {
+    color: #0070D2;
+}

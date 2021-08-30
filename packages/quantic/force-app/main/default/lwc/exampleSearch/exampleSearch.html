@@ -10,7 +10,7 @@
                     <c-quantic-date-facet field="date" label="Date" engine-id={engineId}></c-quantic-date-facet>
                     <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
                 </div>
-                <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_9-of-12">
+                <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12">
                     <c-quantic-search-box engine-id={engineId}></c-quantic-search-box>
                     <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
                         <c-quantic-tab label="All" expression="" engine-id={engineId}></c-quantic-tab>
@@ -34,6 +34,9 @@
                             <c-quantic-pager engine-id={engineId}></c-quantic-pager>
                             <c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>
                         </div>
+                    </div>
+                    <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12">
+                        <c-quantic-recent-queries engine-id={engineId}></c-quantic-recent-queries>
                     </div>
                 </div>
             </c-quantic-search-interface>
