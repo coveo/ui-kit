@@ -31,7 +31,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type  {import("coveo").FacetSortCriterion}*/
   @api sortCriteria = 'automatic';
   /** @type {boolean} */
-  @api withoutSearch = false;
+  @api noSearch = false;
 
   /** @type {import("coveo").Facet}} */
   facet;

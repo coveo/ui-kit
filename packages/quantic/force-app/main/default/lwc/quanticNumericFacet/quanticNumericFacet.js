@@ -4,6 +4,7 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 import clear from '@salesforce/label/c.quantic_Clear';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -71,7 +72,11 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get formattingFunction() {
-    return (item) => `${item.start} - ${item.end}`;
+    return (item) => `${new Intl.NumberFormat(LOCALE).format(
+      item.start
+    )} - ${new Intl.NumberFormat(LOCALE).format(
+      item.end
+    )}`;
   }
 
   get values() {
