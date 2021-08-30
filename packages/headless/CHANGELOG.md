@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.2...@coveo/headless@1.18.3) (2021-08-30)
+
+
+### Bug Fixes
+
+* **headless:** specify dymanically required node bundle dependencies as peer dependencies ([#1142](https://github.com/coveo/ui-kit/issues/1142)) ([c63ffdc](https://github.com/coveo/ui-kit/commit/c63ffdc6e5b803585a1cc31423f263d4d16ac6a5))
+
+
+
+
+
+## [1.18.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.1...@coveo/headless@1.18.2) (2021-08-30)
+
+
+### Bug Fixes
+
+* **headless:** added some debounce to click actions ([#1138](https://github.com/coveo/ui-kit/issues/1138)) ([3fc1a98](https://github.com/coveo/ui-kit/commit/3fc1a98d459e70d8afaad00dc5a81d4b1a799d52))
+
+
+
+
+
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.0...@coveo/headless@1.18.1) (2021-08-27)
+
+
+### Bug Fixes
+
+* **headless:** fix analytics click event for result folding ([#1133](https://github.com/coveo/ui-kit/issues/1133)) ([0b25520](https://github.com/coveo/ui-kit/commit/0b2552097f0cc32a7c87e110f1ab9984315392ad))
+* **headless:** search parameter preventing auto selection on category facet ([#1127](https://github.com/coveo/ui-kit/issues/1127)) ([8ae636e](https://github.com/coveo/ui-kit/commit/8ae636eb631772ffc208f870926ed01036523b8e))
+
+
+
+
+
 # [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.17.3...@coveo/headless@1.18.0) (2021-08-26)
 
 

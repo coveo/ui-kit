@@ -59,3 +59,8 @@ The base of the `/src` folder should only contain exports.
 `/api` contains everything regarding api calls.
 
 `/test` contains test mocks.
+
+# Contribution guide: Adding a new controller.
+
+Please see [the contributor guide](./contributors/adding-a-controller.md) for guidance.
+
