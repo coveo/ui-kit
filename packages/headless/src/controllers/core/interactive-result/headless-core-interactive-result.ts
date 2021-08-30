@@ -83,7 +83,7 @@ export function buildInteractiveResultCore(
   let longPressTimer: NodeJS.Timeout;
 
   return {
-    select: debounce(action, defaultDelay, {isImmediate: true}),
+    select: debounce(action, options.selectionDelay, {isImmediate: true}),
 
     beginDelayedSelect() {
       longPressTimer = setTimeout(action, options.selectionDelay);
