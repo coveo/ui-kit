@@ -24,3 +24,12 @@ export {
   ProductListingControllerState,
   buildProductListing,
 } from './controllers/product-listing/headless-product-listing';
+
+export {
+  PagerInitialState,
+  PagerOptions,
+  PagerProps,
+  PagerState,
+  Pager,
+  buildPager,
+} from './controllers/pager/headless-product-listing-pager';

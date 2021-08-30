@@ -118,9 +118,11 @@ export const buildProductListingRequest = (
     ...(state.pagination && {
       pagination: {
         numberOfValues: state.pagination.numberOfResults,
-        page: Math.ceil(
-          state.pagination.firstResult / (state.pagination.numberOfResults || 1)
-        ),
+        page:
+          Math.ceil(
+            state.pagination.firstResult /
+              (state.pagination.numberOfResults || 1)
+          ) + 1,
       },
     }),
     ...(state.sortCriteria && {
