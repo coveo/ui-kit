@@ -60,7 +60,7 @@ Example components are available as a Salesforce community (Digital Experience) 
     sfdx force:community:create -u LWC -n "Quantic Examples" -p examples -t "Build Your Own"
     ```
 
-2. To deploy the Quantic and examples components, run:
+2. To deploy Quantic and the example components, run:
 
     ```bash
     sfdx force:source:deploy -u LWC -p force-app/main,force-app/examples
@@ -99,18 +99,11 @@ Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
 
 - All the tests will need to be under folder `cypress/integration`.
 
-To start the local development server, run:
-
-```bash
-npm run start
-```
-
 To open Cypress in browser mode, run:
 
 ```bash
 npm run cypress:open
 ```
-
 
 ## Run Cypress for Quantic Components
 
