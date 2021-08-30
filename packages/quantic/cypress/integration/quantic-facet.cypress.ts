@@ -1,7 +1,7 @@
-import {configure} from '../../page-objects/configurator';
-import {selectors as facet} from '../../page-objects/example-quantic-facet';
+import {configure} from '../page-objects/configurator';
+import {selectors as facet} from '../page-objects/example-quantic-facet';
 
-describe('example-quantic-facet', () => {
+describe('quantic-facet', () => {
   beforeEach(() => {
     cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-facet`);
   });

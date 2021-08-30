@@ -1,42 +1,53 @@
 import {
+  selectors as search,
   searchFor,
   selectResultPage,
   setupAliases,
   sortByDateDescending,
+  selectRegularFacetValue,
 } from '../page-objects/example-search';
 
 describe('example-search', () => {
-  const fullSearchUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
+  const pageUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
 
   beforeEach(() => {
-    cy.visit(fullSearchUrl).then(setupAliases).wait('@search');
+    cy.visit(pageUrl).then(setupAliases).wait('@search');
   });
 
   it('should load results automatically', () => {
-    cy.get('@searchbox')
+    cy.get(search.searchbox)
       .should('exist')
-      .get('@summary')
+      .get(search.summary)
       .should('exist')
-      .get('@result')
+      .get(search.result)
       .should('have.length.greaterThan', 1)
-      .get('@pager')
+      .get(search.pager)
       .should('exist');
   });
 
-  describe('when clicking a facet', () => {
-    it('should trigger query when clicking a facet', () => {
-      cy.get('@facet-type-item-checkbox').check({force: true}).wait('@search');
+  describe('when selecting a facet value', () => {
+    it('should trigger query when selecting a facet value', () => {
+      cy.visit(pageUrl)
+        .then(setupAliases)
+        .wait('@search')
+        .then((interception) => {
+          const firstFacetValue = interception.response?.body.facets.find(
+            (f) => f.field === 'objecttype'
+          ).values[0].value;
+
+          selectRegularFacetValue(firstFacetValue).wait('@search');
+        });
     });
   });
 
   describe('when typing a search query', () => {
     it('should trigger query when typing in searchbox', () => {
-      cy.then(() => searchFor('test'))
+      searchFor('test')
         .wait('@search')
         .then((interception) =>
           assert.equal(interception.request.body.q, 'test')
         )
-        .get('@summary')
+        .get(search.summary)
         .contains('test');
     });
   });
@@ -56,14 +67,14 @@ describe('example-search', () => {
 
   describe('when changing result page', () => {
     it('should request new result page when clicking a specific page in the pager', () => {
-      cy.get('@summary')
+      cy.get(search.summary)
         .should('contain.text', 'Results 1-10')
         .then(() => selectResultPage(2))
         .wait('@search')
         .then((interception) =>
           assert.equal(interception.request.body.firstResult, 10)
         )
-        .get('@summary')
+        .get(search.summary)
         .should('contain.text', 'Results 11-20');
     });
   });
