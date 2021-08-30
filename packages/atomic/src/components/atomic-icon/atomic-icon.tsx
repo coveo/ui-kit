@@ -36,6 +36,7 @@ export class AtomicIcon {
 
   private error: Error | null = null;
   @State() private svg: string | null = null;
+  private deferRenderingPromise?: Promise<unknown>;
 
   private async fetchIcon(url: string) {
     try {
@@ -66,11 +67,17 @@ export class AtomicIcon {
 
   @Watch('icon')
   public async updateIcon() {
-    this.svg = await this.getIcon();
+    const svgPromise = this.getIcon();
+    this.deferRenderingPromise = svgPromise;
+    this.svg = await svgPromise;
   }
 
   public componentWillLoad() {
     this.updateIcon();
+  }
+
+  public async componentWillRender() {
+    await this.deferRenderingPromise;
   }
 
   public render() {
