@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.2...@coveo/headless@1.18.3) (2021-08-30)
+
+
+### Bug Fixes
+
+* **headless:** specify dymanically required node bundle dependencies as peer dependencies ([#1142](https://github.com/coveo/ui-kit/issues/1142)) ([c63ffdc](https://github.com/coveo/ui-kit/commit/c63ffdc6e5b803585a1cc31423f263d4d16ac6a5))
+
+
+
+
+
 ## [1.18.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.1...@coveo/headless@1.18.2) (2021-08-30)
 
 
