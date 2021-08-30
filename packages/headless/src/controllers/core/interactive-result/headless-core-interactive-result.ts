@@ -17,6 +17,13 @@ export interface InteractiveResultCoreOptions {
    * @defaultValue `1000`
    */
   selectionDelay?: number;
+
+  /**
+   * The number of seconds for which the debounced function should continue catching subsequent calls.
+   *
+   * @defaultValue `1000`
+   */
+  debounceDelay?: number;
 }
 
 export interface InteractiveResultCoreProps {
@@ -77,13 +84,14 @@ export function buildInteractiveResultCore(
   const defaultDelay = 1000;
   const options: Required<InteractiveResultCoreOptions> = {
     selectionDelay: defaultDelay,
+    debounceDelay: defaultDelay,
     ...props.options,
   };
 
   let longPressTimer: NodeJS.Timeout;
 
   return {
-    select: debounce(action, options.selectionDelay, {isImmediate: true}),
+    select: debounce(action, options.debounceDelay, {isImmediate: true}),
 
     beginDelayedSelect() {
       longPressTimer = setTimeout(action, options.selectionDelay);
