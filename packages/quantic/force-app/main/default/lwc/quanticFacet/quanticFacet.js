@@ -16,9 +16,8 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
+  // @ts-ignore
   @track state = {
-    sortCriterion: 'score',
     values: [],
   };
   /** @type {string} */
@@ -30,9 +29,9 @@ export default class QuanticFacet extends LightningElement {
   /** @type {number} */
   @api numberOfValues = 8;
   /** @type  {import("coveo").FacetSortCriterion}*/
-  @api sortCriterion = 'automatic';
+  @api sortCriteria = 'automatic';
   /** @type {boolean} */
-  @api withoutSearch = false;
+  @api noSearch = false;
 
   /** @type {import("coveo").Facet}} */
   facet;
@@ -41,7 +40,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
   /** @type {HTMLInputElement} */
   input;
   /** @type {boolean} */
@@ -65,8 +64,9 @@ export default class QuanticFacet extends LightningElement {
   initialize(engine) {
     const options = {
       field: this.field,
-      sortCriteria: this.sortCriterion,
-      facetSearch: {numberOfValues: this.numberOfValues},
+      sortCriteria: this.sortCriteria,
+      numberOfValues: Number(this.numberOfValues),
+      facetSearch: {numberOfValues: Number(this.numberOfValues)},
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.facetId = this.facet.state.facetId;
@@ -114,7 +114,7 @@ export default class QuanticFacet extends LightningElement {
     if (!this.facet) {
       return false;
     }
-    return this.state.canShowMoreValues && !this.withoutSearch;
+    return this.state.canShowMoreValues;
   }
 
   get canShowLess() {
@@ -202,7 +202,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 
