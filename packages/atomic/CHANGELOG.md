@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.73.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.72.0...@coveo/atomic@0.73.0) (2021-08-30)
+
+
+### Features
+
+* **atomic:** added maximum width for mobile list & grid results with large images ([#1141](https://github.com/coveo/ui-kit/issues/1141)) ([c7e7fba](https://github.com/coveo/ui-kit/commit/c7e7fba17a162d06ebb645ef0c798072a7de5eb4))
+* **atomic:** keep placeholders while results are rendering ([#1137](https://github.com/coveo/ui-kit/issues/1137)) ([72b189a](https://github.com/coveo/ui-kit/commit/72b189a755540c3c3741aca0fcd9c64cfd90ac6a))
+
+
+
+
+
 # [0.72.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.71.1...@coveo/atomic@0.72.0) (2021-08-27)
 
 
