@@ -3,6 +3,7 @@ import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {loadReducerError} from '../../../utils/errors';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {Result} from '../../../api/search/search/result';
+import {debounce} from 'ts-debounce';
 
 export interface InteractiveResultCoreOptions {
   /**
@@ -16,6 +17,13 @@ export interface InteractiveResultCoreOptions {
    * @defaultValue `1000`
    */
   selectionDelay?: number;
+
+  /**
+   * The number of seconds for which the debounced function should continue catching subsequent calls.
+   *
+   * @defaultValue `1000`
+   */
+  debounceWait?: number;
 }
 
 export interface InteractiveResultCoreProps {
@@ -76,13 +84,14 @@ export function buildInteractiveResultCore(
   const defaultDelay = 1000;
   const options: Required<InteractiveResultCoreOptions> = {
     selectionDelay: defaultDelay,
+    debounceWait: defaultDelay,
     ...props.options,
   };
 
   let longPressTimer: NodeJS.Timeout;
 
   return {
-    select: action,
+    select: debounce(action, options.debounceWait, {isImmediate: true}),
 
     beginDelayedSelect() {
       longPressTimer = setTimeout(action, options.selectionDelay);

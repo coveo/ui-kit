@@ -1,6 +1,7 @@
 import {createMockState} from '../../test';
 import {buildMockResult} from '../../test';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {
   partialDocumentInformation,
   partialRecommendationInformation,
@@ -50,12 +51,12 @@ describe('analytics-utils', () => {
       ).toBe('unknown');
     });
 
-    it('when the result is not found in state, the documentPosition is 0', () => {
+    it('when the result is not found in state, the documentPosition is 1', () => {
       const result = buildMockResult({uniqueId: '1'});
       const state = createMockState();
 
       const {documentPosition} = partialDocumentInformation(result, state);
-      expect(documentPosition).toBe(0);
+      expect(documentPosition).toBe(1);
     });
 
     it('when the result is found in state, the documentPosition is the index + 1', () => {
@@ -86,6 +87,29 @@ describe('analytics-utils', () => {
 
       const {documentPosition} = partialDocumentInformation(newResult, state);
       expect(documentPosition).toBe(2);
+    });
+
+    it('when the result is found in child result, is uses the parent result position', () => {
+      const result = buildMockResult({uniqueId: '1'});
+
+      const parentResults = [
+        buildMockResultWithFolding(),
+        buildMockResultWithFolding(),
+        buildMockResultWithFolding(),
+      ];
+      parentResults[1].childResults = [
+        buildMockResultWithFolding(),
+        buildMockResultWithFolding(),
+      ];
+      parentResults[2].childResults = [
+        buildMockResultWithFolding(),
+        buildMockResultWithFolding(),
+        buildMockResultWithFolding({uniqueId: '1'}),
+      ];
+      const state = createMockState();
+      state.search.results = state.search.response.results = parentResults;
+      const {documentPosition} = partialDocumentInformation(result, state);
+      expect(documentPosition).toBe(3);
     });
   });
 
