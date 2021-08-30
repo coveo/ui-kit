@@ -18,24 +18,4 @@ describe('ReducerManager', () => {
     const state = manager.combinedReducer(undefined, {type: ''});
     expect(state).toEqual({pagination: getPaginationInitialState()});
   });
-
-  it('when a key exists, calling #contains returns true', () => {
-    const manager = createReducerManager({pagination});
-    expect(manager.contains({pagination})).toBe(true);
-  });
-
-  it('when a key does not exists, calling #contains returns false', () => {
-    const manager = createReducerManager({pagination});
-    expect(manager.contains({search})).toBe(false);
-  });
-
-  it('when one key does not exists, calling #contains returns false', () => {
-    const manager = createReducerManager({pagination});
-    expect(manager.contains({search, pagination})).toBe(false);
-  });
-
-  it('when all key exists, calling #contains returns true', () => {
-    const manager = createReducerManager({pagination, search});
-    expect(manager.contains({search, pagination})).toBe(true);
-  });
 });
