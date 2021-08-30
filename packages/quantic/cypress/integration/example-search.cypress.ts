@@ -6,10 +6,10 @@ import {
 } from '../page-objects/example-search';
 
 describe('example-search', () => {
-  const exampleSearchUrl = 'http://localhost:3334/preview/c/exampleSearch';
+  const fullSearchUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
 
   beforeEach(() => {
-    cy.visit(exampleSearchUrl).then(setupAliases).wait('@search');
+    cy.visit(fullSearchUrl).then(setupAliases).wait('@search');
   });
 
   it('should load results automatically', () => {
@@ -25,7 +25,7 @@ describe('example-search', () => {
 
   describe('when clicking a facet', () => {
     it('should trigger query when clicking a facet', () => {
-      cy.get('@facet-type-item-checkbox').lwcDevCheck().wait('@search');
+      cy.get('@facet-type-item-checkbox').check({force: true}).wait('@search');
     });
   });
 

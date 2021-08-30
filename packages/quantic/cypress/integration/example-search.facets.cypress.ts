@@ -1,17 +1,17 @@
 import {setupAliases} from '../page-objects/example-search';
 
 describe('example-search-facets', () => {
-  const exampleSearchUrl = 'http://localhost:3334/preview/c/exampleSearch';
+  const fullSearchUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
 
   beforeEach(() => {
-    cy.visit(exampleSearchUrl).then(setupAliases).wait('@search');
+    cy.visit(fullSearchUrl).then(setupAliases).wait('@search');
   });
 
   describe('more link', () => {
     it('should show more facet values when clicking the more link', () => {
       cy.get('@facet-type-values').then((values) => {
         cy.get('@facet-type-more')
-          .lwcDevClick()
+          .click()
           .wait('@search')
           .then((interception) => {
             assert.isAtLeast(
@@ -35,12 +35,12 @@ describe('example-search-facets', () => {
   describe('less link', () => {
     it('should show less facet values when clicking the less link', () => {
       cy.get('@facet-type-more')
-        .lwcDevClick()
+        .click()
         .wait('@search')
         .get('@facet-type')
         .find('button[data-cy="less"]')
         .as('facet-type-less')
-        .lwcDevClick()
+        .click()
         .wait('@search')
         .then((interception) =>
           assert.equal(

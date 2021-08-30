@@ -34,17 +34,16 @@ const setupFacetTypeAliases = () =>
 export const sortByDateDescending = () =>
   cy
     .get('@sort')
-    .find('input[role="textbox"]')
-    .lwcDevClick()
+    .find('input[role="combobox"]')
+    .click()
     .get('@sort')
     .find('div[role="listbox"]')
-    .find('lightning-base-combobox-item[role="option"]')
-    .contains('Newest')
+    .find('lightning-base-combobox-item[data-value="newest"]')
     .trigger('mouseover', {force: true})
-    .lwcDevClick();
+    .click();
 
 export const selectResultPage = (pageNumber: number) =>
-  cy.get('@pager').find('lightning-button').contains(pageNumber).lwcDevClick();
+  cy.get('@pager').find('button').contains(pageNumber).click();
 
 export const searchFor = (text: string) =>
   searchboxType(text)?.then(searchboxTypeEnter);
