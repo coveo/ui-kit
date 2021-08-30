@@ -92,8 +92,7 @@ export const keys = {
 };
 
 export function getItemfromLocalStorage(key) {
-  console.log(JSON.parse(localStorage.getItem(key)))
-  return JSON.parse(localStorage.getItem(key))? JSON.parse(localStorage.getItem(key)) : [];
+  return JSON.parse(localStorage.getItem(key)) ? JSON.parse(localStorage.getItem(key)) : [];
 }
 
 export function setIteminLocalStorage(key, item) {
