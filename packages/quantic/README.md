@@ -50,9 +50,9 @@ Start the server.
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3334/.
 
-## Deploying the Quantic Examples Community
+## Deploy the Quantic Examples Community
 
-Example components are available as a Salesforce community allowing you to experiment with Quantic components.
+Example components are available as a Salesforce community (Digital Experience) allowing you to experiment with Quantic components.
 
 1. To create a community named `Quantic Examples`, run:
 

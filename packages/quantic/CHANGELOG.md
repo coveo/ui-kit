@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.53.3...@coveo/quantic@0.53.4) (2021-08-30)
+
+
+### Bug Fixes
+
+* **quantic:** pluralization with en-CA locale ([#1136](https://github.com/coveo/ui-kit/issues/1136)) ([03125d6](https://github.com/coveo/ui-kit/commit/03125d6db5e70bf9ff925a1a6e9eb224e6d131ca))
+
+
+
+
+
 ## [0.53.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.53.2...@coveo/quantic@0.53.3) (2021-08-30)
 
 **Note:** Version bump only for package @coveo/quantic
