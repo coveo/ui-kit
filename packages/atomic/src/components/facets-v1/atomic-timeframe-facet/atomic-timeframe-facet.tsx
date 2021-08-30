@@ -72,7 +72,8 @@ import {registerFacetToStore} from '../../../utils/store';
   shadow: true,
 })
 export class AtomicTimeframeFacet
-  implements InitializableComponent, BaseFacet<DateFacet, DateFacetState> {
+  implements InitializableComponent, BaseFacet<DateFacet, DateFacetState>
+{
   @InitializeBindings() public bindings!: Bindings;
   public facet?: DateFacet;
   public filter?: DateFilter;
@@ -144,9 +145,8 @@ export class AtomicTimeframeFacet
         field: this.field,
       },
     });
-    this.bindings.store.state.dateFacets[
-      this.filter.state.facetId
-    ] = this.bindings.store.state.dateFacets[this.facetId!];
+    this.bindings.store.state.dateFacets[this.filter.state.facetId] =
+      this.bindings.store.state.dateFacets[this.facetId!];
   }
 
   private getManualTimeframes(): Timeframe[] {

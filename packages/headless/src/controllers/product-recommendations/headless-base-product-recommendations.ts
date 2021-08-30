@@ -49,7 +49,8 @@ export interface ProductRecommendationsListProps {
 export type ProductRecommendationsList = ReturnType<
   typeof buildBaseProductRecommendationsList
 >;
-export type ProductRecommendationsListState = ProductRecommendationsList['state'];
+export type ProductRecommendationsListState =
+  ProductRecommendationsList['state'];
 
 export const buildBaseProductRecommendationsList = (
   engine: ProductRecommendationEngine,

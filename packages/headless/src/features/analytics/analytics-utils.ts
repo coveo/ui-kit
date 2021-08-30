@@ -24,6 +24,8 @@ import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {PipelineSection} from '../../state/state-sections';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {ResultWithFolding} from '../folding/folding-slice';
+import {getAllIncludedResultsFrom} from '../folding/folding-utils';
 
 export enum AnalyticsType {
   Search,
@@ -114,12 +116,28 @@ export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
-  const resultIndex =
-    (state.search?.results.findIndex(
-      ({uniqueId}) => result.uniqueId === uniqueId
-    ) ?? 0) + (state.pagination?.firstResult ?? 0);
+  const paginationBasedIndex = (index: number) =>
+    index + (state.pagination?.firstResult ?? 0);
 
-  return buildPartialDocumentInformation(result, resultIndex, state);
+  let resultIndex = -1;
+
+  const parentResults = state.search?.results as ResultWithFolding[];
+  resultIndex = findPositionWithUniqueId(result, parentResults);
+
+  if (resultIndex < 0) {
+    resultIndex = findPositionInChildResults(result, parentResults);
+  }
+
+  if (resultIndex < 0) {
+    // ¯\_(ツ)_/¯
+    resultIndex = 0;
+  }
+
+  return buildPartialDocumentInformation(
+    result,
+    paginationBasedIndex(resultIndex),
+    state
+  );
 };
 
 export const partialRecommendationInformation = (
@@ -170,7 +188,7 @@ const rawPartialDefinition = {
   permanentid: new StringValue(),
 };
 
-const resultPartialDefinition = {
+export const resultPartialDefinition = {
   uniqueId: requiredNonEmptyString,
   raw: new RecordValue({values: rawPartialDefinition}),
   title: requiredNonEmptyString,
@@ -215,3 +233,25 @@ function getSourceName(result: Result) {
 
 export const validateResultPayload = (result: Result) =>
   new Schema(resultPartialDefinition).validate(partialResultPayload(result));
+
+function findPositionInChildResults(
+  targetResult: Result,
+  parentResults: ResultWithFolding[]
+) {
+  for (const [i, parent] of parentResults.entries()) {
+    const children = getAllIncludedResultsFrom(parent);
+    const childIndex = findPositionWithUniqueId(targetResult, children);
+    if (childIndex !== -1) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function findPositionWithUniqueId(
+  targetResult: Result,
+  results: ResultWithFolding[] = []
+) {
+  return results.findIndex(({uniqueId}) => uniqueId === targetResult.uniqueId);
+}

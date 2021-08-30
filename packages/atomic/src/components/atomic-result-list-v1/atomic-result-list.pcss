@@ -40,6 +40,9 @@ atomic-result-list-v1 {
     @screen mobile-only {
       &.image-large {
         @mixin atomic-list-with-dividers;
+        display: grid;
+        justify-content: space-evenly;
+        grid-template-columns: minmax(auto, 35rem);
       }
 
       &.image-small,
@@ -79,31 +82,38 @@ atomic-result-list-v1 {
       }
     }
 
+    @define-mixin atomic-grid-with-cards {
+      @mixin atomic-list-with-cards;
+      grid-column-gap: 2.5rem;
+      grid-row-gap: 2.5rem;
+
+      /* TODO: Remove v1 suffix */
+      atomic-result-v1,
+      atomic-result-placeholder-v1 {
+        margin: -1rem;
+      }
+    }
+
     @screen mobile-only {
       padding: 2rem;
       &.image-large {
-        @mixin atomic-list-with-dividers;
-        grid-template-columns: auto;
+        @media not all and (min-width: 768px) {
+          @mixin atomic-list-with-dividers;
+          grid-template-columns: minmax(auto, 35rem);
+        }
+        @media (min-width: 768px) {
+          @mixin atomic-grid-with-cards;
+          grid-template-columns: 1fr 1fr;
+        }
       }
       &.image-small {
+        @mixin atomic-grid-with-cards;
         grid-template-columns: repeat(auto-fill, 9.5rem);
       }
       &.image-icon,
       &.image-none {
+        @mixin atomic-grid-with-cards;
         grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
-      }
-      &.image-small,
-      &.image-icon,
-      &.image-none {
-        @mixin atomic-list-with-cards;
-        grid-column-gap: 2.5rem;
-        grid-row-gap: 2.5rem;
-
-        /* TODO: Remove v1 suffix */
-        atomic-result-v1,
-        atomic-result-placeholder-v1 {
-          margin: -1rem;
-        }
       }
     }
   }

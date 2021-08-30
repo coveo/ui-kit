@@ -25,7 +25,7 @@ describe('number value', () => {
     it(`when not passing a number value
     it returns an error description`, () => {
       value = new NumberValue();
-      expect(value.validate(('a string' as unknown) as number)).not.toBeNull();
+      expect(value.validate('a string' as unknown as number)).not.toBeNull();
     });
 
     it(`when passing NaN

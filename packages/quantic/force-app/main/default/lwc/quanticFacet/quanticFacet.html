@@ -38,19 +38,20 @@
                   onselectvalue={onSelect} 
                   key={v.value} 
                   item={v} 
-                  is-checked={v.checked}>
+                  is-checked={v.checked}
+                  data-cy={v.value}>
                 </c-quantic-facet-value>
               </template>
               <div class="facet__show">
                 <template if:true={canShowLess}>
                   <button variant="base" label={labels.showLess}
-                    class="slds-m-left_x-small facet__show-less" onclick={showLess}>
+                    class="slds-m-left_x-small facet__show-less" onclick={showLess} data-cy="less">
                     <span class="facet__show-less_text">- {labels.showLess}</span>
                   </button>
                 </template>
                 <template if:true={canShowMore}>
                   <button variant="base" label={labels.showMore}
-                    class="slds-m-left_x-small facet__show-more" onclick={showMore}>
+                    class="slds-m-left_x-small facet__show-more" onclick={showMore} data-cy="more">
                     <span class="facet__show-more_text">+ {labels.showMore}</span>
                   </button>
                 </template>

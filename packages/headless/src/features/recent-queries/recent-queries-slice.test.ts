@@ -40,6 +40,16 @@ describe('recent-queries slice', () => {
     expect(state.maxLength).toEqual(testMaxLength);
   });
 
+  it('#registerRecentQueries should shorten queries if it exceeds maxLength param', () => {
+    const queries = ['q1', 'q2', 'q3', 'q4'];
+    state = recentQueriesReducer(
+      state,
+      registerRecentQueries({queries: queries, maxLength: 3})
+    );
+
+    expect(state.queries).toEqual(['q1', 'q2', 'q3']);
+  });
+
   it('#clearRecentQueries should remove all queries from the queue in state', () => {
     state.queries = testQueries;
 

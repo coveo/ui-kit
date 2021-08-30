@@ -50,6 +50,7 @@ export function createRenewAccessTokenMiddleware(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isExpiredTokenError(action: any) {
   return action.error?.name === new ExpiredTokenError().name;
 }

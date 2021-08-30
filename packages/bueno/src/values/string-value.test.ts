@@ -31,7 +31,7 @@ describe('string value', () => {
     it(`when not passing a string value
     it returns an error description`, () => {
       value = new StringValue();
-      expect(value.validate((123 as unknown) as string)).not.toBeNull();
+      expect(value.validate(123 as unknown as string)).not.toBeNull();
     });
 
     it(`when emptyAllowed is false

@@ -52,9 +52,7 @@ export interface ProductRecommendationsActionCreators {
    */
   setProductRecommendationsAdditionalFields(
     payload: SetProductRecommendationsAdditionalFieldsActionCreatorPayload
-  ): PayloadAction<
-    SetProductRecommendationsAdditionalFieldsActionCreatorPayload
-  >;
+  ): PayloadAction<SetProductRecommendationsAdditionalFieldsActionCreatorPayload>;
 
   /**
    * Updates the brand used to filter recommendations.
@@ -84,9 +82,7 @@ export interface ProductRecommendationsActionCreators {
    */
   setProductRecommendationsMaxNumberOfRecommendations(
     payload: SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload
-  ): PayloadAction<
-    SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload
-  >;
+  ): PayloadAction<SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload>;
 
   /**
    * Updates the recommender id, used to determine the machine-learning model that should fulfill the request.

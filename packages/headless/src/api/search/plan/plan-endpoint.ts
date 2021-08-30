@@ -27,9 +27,8 @@ export class ExecutionPlan {
    * Returns `null` otherwise.
    */
   public get redirectionUrl() {
-    const redirects = this.response.preprocessingOutput.triggers.filter(
-      isRedirectTrigger
-    );
+    const redirects =
+      this.response.preprocessingOutput.triggers.filter(isRedirectTrigger);
     return redirects.length ? redirects[0].content : null;
   }
 }

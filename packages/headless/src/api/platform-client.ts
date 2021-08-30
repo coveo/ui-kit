@@ -114,14 +114,8 @@ export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
 function buildDefaultRequestOptions(
   options: PlatformClientCallOptions
 ): PlatformRequestOptions {
-  const {
-    url,
-    method,
-    requestParams,
-    contentType,
-    accessToken,
-    signal,
-  } = options;
+  const {url, method, requestParams, contentType, accessToken, signal} =
+    options;
   const body = encodeBody(requestParams, contentType);
 
   return {

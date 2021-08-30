@@ -88,9 +88,9 @@ export class AtomicRefineModal implements InitializableComponent {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
 
-    const facetElementsPayload = getFacetElements(
-      this.bindings.store
-    ).map((f) => ({facetId: f.getAttribute('facet-id')!, payload: f}));
+    const facetElementsPayload = getFacetElements(this.bindings.store).map(
+      (f) => ({facetId: f.getAttribute('facet-id')!, payload: f})
+    );
     const sortedFacetsElements = this.facetManager
       .sort(facetElementsPayload)
       .map((f) => f.payload);

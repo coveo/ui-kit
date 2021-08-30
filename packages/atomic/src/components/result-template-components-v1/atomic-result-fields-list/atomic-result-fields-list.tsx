@@ -25,7 +25,7 @@ export class AtomicResultFieldsList {
     this.resizeObserver.disconnect();
   }
 
-  public componentWasRendered() {
+  public componentDidRender() {
     this.update();
   }
 

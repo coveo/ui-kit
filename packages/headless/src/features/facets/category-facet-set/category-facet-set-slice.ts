@@ -53,7 +53,9 @@ export const categoryFacetSetReducer = createReducer(
         Object.keys(state).forEach((id) => {
           const request = state[id]!.request;
           const path = cf[id] || [];
-          selectPath(request, path, state[id]!.initialNumberOfValues);
+          if (path.length || request.currentValues.length) {
+            selectPath(request, path, state[id]!.initialNumberOfValues);
+          }
         });
       })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
@@ -230,10 +232,12 @@ function isRequestInvalid(
   request: CategoryFacetRequest,
   response: CategoryFacetResponse
 ) {
-  const requestParents = partitionIntoParentsAndValues(request.currentValues)
-    .parents;
-  const responseParents = partitionIntoParentsAndValues(response.values)
-    .parents;
+  const requestParents = partitionIntoParentsAndValues(
+    request.currentValues
+  ).parents;
+  const responseParents = partitionIntoParentsAndValues(
+    response.values
+  ).parents;
   return requestParents.length !== responseParents.length;
 }
 
