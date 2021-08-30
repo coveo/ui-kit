@@ -103,11 +103,6 @@ export class ResultUtils {
 
 
 export class I18nUtils{
-  static isPluralInLocale = {
-    "en-US": (count) => count !== 0 && Math.abs(count) !== 1,
-    "fr-CA": (count) => Math.abs(count) >= 2
-  }
-
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
   }
@@ -116,10 +111,14 @@ export class I18nUtils{
     return I18nUtils.getTextWithDecorator(text, '<b>', '</b>');
   }
 
+  static isSingular(count) {
+    return new Intl.PluralRules(LOCALE).select(count) === 'one';
+  }
+
   static getLabelNameWithCount(labelName, count) {
     if (count === 0) {
       return `${labelName}_zero`;
-    } else if (I18nUtils.isPluralInLocale[LOCALE](count)) {
+    } else if (!I18nUtils.isSingular(count)) {
       return `${labelName}_plural`;
     } 
     return labelName;

@@ -92,6 +92,7 @@
     "include": [
         "**/*",
         "../../../../.sfdx/typings/lwc/**/*.d.ts",
+        "../../../../typings/lwc/**/*.d.ts",
         "../../../../coveo.d.ts"
     ],
     "typeAcquisition": {
