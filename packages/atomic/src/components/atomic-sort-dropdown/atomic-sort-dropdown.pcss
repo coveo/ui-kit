@@ -1,5 +1,10 @@
 @import '../../global/global.pcss';
 
+select {
+  max-width: 192px;
+  text-overflow: ellipsis;
+}
+
 select:hover + div,
 select:focus + div {
   @apply border-primary-light text-primary-light;
