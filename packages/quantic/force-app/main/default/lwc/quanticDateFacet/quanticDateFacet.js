@@ -20,6 +20,12 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
+  /** @type {(import("coveo").DateFacetValue) => string} */
+  @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
+    new Date(item.start)
+  )} - ${new Intl.DateTimeFormat(LOCALE).format(
+    new Date(item.end)
+  )}`;
 
   /** @type {import("coveo").DateFacet} */
   facet;
@@ -63,14 +69,6 @@ export default class QuanticDateFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet.state;
-  }
-
-  get formattingFunction() {
-    return (item) => `${new Intl.DateTimeFormat(LOCALE).format(
-      new Date(item.start)
-    )} - ${new Intl.DateTimeFormat(LOCALE).format(
-      new Date(item.end)
-    )}`;
   }
 
   get values() {
