@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.1...@coveo/headless@1.18.2) (2021-08-30)
+
+
+### Bug Fixes
+
+* **headless:** added some debounce to click actions ([#1138](https://github.com/coveo/ui-kit/issues/1138)) ([3fc1a98](https://github.com/coveo/ui-kit/commit/3fc1a98d459e70d8afaad00dc5a81d4b1a799d52))
+
+
+
+
+
 ## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.0...@coveo/headless@1.18.1) (2021-08-27)
 
 
