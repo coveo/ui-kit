@@ -143,10 +143,10 @@ export class AtomicRefineModal implements InitializableComponent {
     option && this.sort.sortBy(option.criteria);
   }
 
-  private buildOption({expression, criteria, caption}: SortDropdownOption) {
+  private buildOption({expression, criteria, label}: SortDropdownOption) {
     return (
       <option value={expression} selected={this.sort.isSortedBy(criteria)}>
-        {this.bindings.i18n.t(caption)}
+        {this.bindings.i18n.t(label)}
       </option>
     );
   }
