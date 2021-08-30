@@ -24,7 +24,7 @@ export default class QuanticNumericFacet extends LightningElement {
   @api sortCriteria = 'ascending';
   /** @type {import("coveo").RangeFacetRangeAlgorithm} */
   @api rangeAlgorithm = 'equiprobable';
-  /** @type {(import("coveo").NumericFacetValue) => string} */
+  /** @type {(any) => string} */
   @api formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
     item.start
   )} - ${new Intl.NumberFormat(LOCALE).format(
@@ -38,7 +38,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
 
   labels = {
     clear,

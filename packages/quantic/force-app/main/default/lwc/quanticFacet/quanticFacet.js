@@ -40,7 +40,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
   /** @type {HTMLInputElement} */
   input;
   /** @type {boolean} */
@@ -202,7 +202,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 

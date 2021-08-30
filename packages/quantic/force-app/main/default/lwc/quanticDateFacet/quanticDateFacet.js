@@ -20,7 +20,7 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
-  /** @type {(import("coveo").DateFacetValue) => string} */
+  /** @type {(any) => string} */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.start)
   )} - ${new Intl.DateTimeFormat(LOCALE).format(
@@ -34,7 +34,7 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
 
   labels = {
     clear,
@@ -104,7 +104,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 }
