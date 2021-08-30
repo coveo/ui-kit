@@ -69,6 +69,7 @@ describe('InteractiveResult', () => {
 
   it('when calling select() should add the result to recent results list', () => {
     interactiveResult.select();
+    jest.runAllTimers();
 
     expect(
       engine.actions.find((a) => a.type === pushRecentResult.type)
