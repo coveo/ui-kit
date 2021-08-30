@@ -10,6 +10,10 @@ import {
 describe('example-search', () => {
   const pageUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
 
+  before(() => {
+    cy.stub(navigator, 'sendBeacon');
+  });
+
   beforeEach(() => {
     cy.visit(pageUrl).then(setupAliases).wait('@search');
   });
