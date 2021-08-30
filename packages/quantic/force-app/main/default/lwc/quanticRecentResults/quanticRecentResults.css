@@ -1,0 +1,9 @@
+.recent-result__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.recent-result__icon {
+  margin-right: .5rem;
+  margin-left: .25rem;
+}

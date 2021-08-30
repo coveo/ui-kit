@@ -3,23 +3,31 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import {getItemfromLocalStorage, setIteminLocalStorage} from 'c/quanticUtils';
 
 export default class QuanticRecentResults extends LightningElement {
-  /** @type {import("coveo").RecentQueriesState} */
+  /** @type {import("coveo").RecentResultsState} */
   @track state = {};
 
   /** @type {string} */
   @api engineId;
-
   /** @type {number} */
   @api maxLength = 10;
+  /** @type {string} */
+  @api label;
 
-  initialState = {
-    results: []
-  }
-
+  /** @type {string} */
+  localStorageKey = 'quantic-recent-results';
+  /** @type {boolean} */
+  isCollapsed = false;
+  /** @type {string} */
+  collapseIcon = 'utility:dash';
   /** @type {import("coveo").RecentResultsList} */
   recentResultsList;
+  /** @type {import("coveo").RecentResultsState} */
+  initialState = {
+    results: getItemfromLocalStorage(this.localStorageKey) ?? [],
+  }
 
   /** @type {() => void} */
   unsubscribe;
@@ -52,6 +60,12 @@ export default class QuanticRecentResults extends LightningElement {
 
   updateState() {
     this.state = {...this.recentResultsList.state};
+    setIteminLocalStorage(this.localStorageKey, this.state.results)
+  }
+
+  toggleVisibility() {
+    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.isCollapsed = !this.isCollapsed;
   }
 
   get results() {
