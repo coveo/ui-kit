@@ -10,7 +10,7 @@ import {
   NumericFacetSection,
   PaginationSection,
   ProductListingSection,
-  SortSection,
+  StructuredSortSection,
 } from '../../state/state-sections';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
@@ -23,6 +23,14 @@ import {
 } from '../../api/commerce/product-listings/product-listing-request';
 import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
+import {ProductListingSortRequestParam} from '../../api/commerce/product-listings/product-listing-params';
+import {isArray} from '../../utils/utils';
+import {
+  SortBy,
+  SortByField,
+  SortCriterion,
+  SortOrder,
+} from '../sort-criteria/criteria';
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
@@ -45,7 +53,7 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
   ProductListingSection &
   Partial<
     PaginationSection &
-      SortSection &
+      StructuredSortSection &
       FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
@@ -108,7 +116,6 @@ export const buildProductListingRequest = (
           advancedParameters: state.productListing.advancedParameters || {},
         }
       : {}),
-    // TODO COM-1185: sort: {something}
     // TODO COM-1185: properly implement facet options
     ...(facets.length && {
       facets: {
@@ -125,11 +132,53 @@ export const buildProductListingRequest = (
           ) + 1,
       },
     }),
-    ...(state.sortCriteria && {
-      sortCriteria: state.sortCriteria,
+    ...(state.sort && {
+      sort: getSortParam(state.sort),
     }),
   };
 };
+
+function getSortParam(
+  sort: SortCriterion | SortCriterion[]
+): ProductListingSortRequestParam {
+  if (isArray(sort)) {
+    switch (sort[0].by) {
+      case SortBy.Date:
+      case SortBy.NoSort:
+      case SortBy.QRE:
+      case SortBy.Relevancy:
+        return getSortParam(sort[0]);
+      case SortBy.Field:
+        return {
+          by: 'fields',
+          fields: (sort as SortByField[]).map(({order, field}) => ({
+            direction: order === SortOrder.Ascending ? 'ASC' : 'DESC',
+            name: field,
+          })),
+        };
+    }
+  } else {
+    switch (sort.by) {
+      case SortBy.Date:
+      case SortBy.NoSort:
+      case SortBy.QRE:
+      case SortBy.Relevancy:
+        return {
+          by: 'relevance',
+        };
+      case SortBy.Field:
+        return {
+          by: 'fields',
+          fields: [
+            {
+              direction: sort.order === SortOrder.Ascending ? 'ASC' : 'DESC',
+              name: sort.field,
+            },
+          ],
+        };
+    }
+  }
+}
 
 function getFacets(state: StateNeededByFetchProductListing) {
   return sortFacets(getAllFacets(state), state.facetOrder ?? []);

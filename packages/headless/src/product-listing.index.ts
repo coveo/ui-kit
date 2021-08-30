@@ -33,3 +33,11 @@ export {
   Pager,
   buildPager,
 } from './controllers/product-listing/pager/headless-product-listing-pager';
+
+export {
+  SortInitialState,
+  SortProps,
+  Sort,
+  SortState,
+  buildSort,
+} from './controllers/product-listing/sort/headless-product-listing-sort';

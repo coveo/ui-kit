@@ -29,6 +29,7 @@ import {QuestionAnsweringState} from '../features/question-answering/question-an
 import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
+import {SortCriterion} from '../features/sort-criteria/criteria';
 
 export interface QuerySection {
   /**
@@ -103,6 +104,13 @@ export interface SortSection {
    * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria}
    */
   sortCriteria: SortCriteriaState;
+}
+
+export interface StructuredSortSection {
+  /**
+   * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria}
+   */
+  sort: SortCriterion | SortCriterion[];
 }
 
 export interface QuerySetSection {
