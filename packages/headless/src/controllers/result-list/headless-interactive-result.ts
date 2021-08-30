@@ -1,4 +1,3 @@
-import {debounce} from 'ts-debounce';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
@@ -36,13 +35,6 @@ export function buildInteractiveResult(
   props: InteractiveResultProps
 ): InteractiveResult {
   let wasOpened = false;
-  // 1 second is a reasonable amount of time to catch most longpress actions.
-  const debounceDelay = 1000;
-  const debouncedPushRecentResult = debounce(
-    () => engine.dispatch(pushRecentResult(props.options.result)),
-    debounceDelay,
-    {isImmediate: true}
-  );
 
   const logAnalyticsIfNeverOpened = () => {
     if (wasOpened) {
@@ -54,7 +46,7 @@ export function buildInteractiveResult(
 
   const action = () => {
     logAnalyticsIfNeverOpened();
-    debouncedPushRecentResult();
+    engine.dispatch(pushRecentResult(props.options.result));
   };
 
   return buildInteractiveResultCore(engine, props, action);

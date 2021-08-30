@@ -3,6 +3,7 @@ import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {loadReducerError} from '../../../utils/errors';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {Result} from '../../../api/search/search/result';
+import {debounce} from 'ts-debounce';
 
 export interface InteractiveResultCoreOptions {
   /**
@@ -82,7 +83,7 @@ export function buildInteractiveResultCore(
   let longPressTimer: NodeJS.Timeout;
 
   return {
-    select: action,
+    select: debounce(action, defaultDelay, {isImmediate: true}),
 
     beginDelayedSelect() {
       longPressTimer = setTimeout(action, options.selectionDelay);

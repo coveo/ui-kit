@@ -25,9 +25,8 @@ export const recentResultsReducer = createReducer(
         state.results = state.results.filter(
           (r) => r.uniqueId !== result.uniqueId
         );
-        if (state.results.unshift(result) > state.maxLength) {
-          state.results.length = state.maxLength;
-        }
+        const remaining = state.results.slice(0, state.maxLength - 1);
+        state.results = [result, ...remaining];
       });
   }
 );
