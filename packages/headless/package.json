@@ -15,7 +15,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.17.3",
+  "version": "1.18.3",
   "files": [
     "dist/",
     "recommendation/",
@@ -35,6 +35,10 @@
     "doc:generate": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "node ./scripts/extract-documentation.js",
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
+  },
+  "peerDependencies": {
+    "encoding": "^0.1.13",
+    "pino-pretty": "^6.0.0"
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.5",

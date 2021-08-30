@@ -15,9 +15,13 @@ interface ButtonProps {
   text?: string;
   part?: string;
   type?: string;
+  role?: string;
+  disabled?: boolean;
   ariaLabel?: string;
   ariaExpanded?: string;
   ariaPressed?: string;
+  ariaChecked?: string;
+  ariaCurrent?: string;
   title?: string;
   ref?(element?: HTMLButtonElement): void;
 }
@@ -62,9 +66,13 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     onClick: props.onClick,
     title: props.title,
     type: props.type,
+    role: props.role,
     'aria-label': props.ariaLabel,
     'aria-expanded': props.ariaExpanded,
     'aria-pressed': props.ariaPressed,
+    'aria-checked': props.ariaChecked,
+    'aria-current': props.ariaCurrent,
+    disabled: props.disabled,
     ref: props.ref,
   };
 

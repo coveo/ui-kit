@@ -206,7 +206,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are:  * 'score' * 'numeric' * 'occurrences' * 'automatic'
          */
         "sortCriteria": FacetSortCriterion;
     }
@@ -307,7 +307,7 @@ export namespace Components {
          */
         "unit": string;
         /**
-          * The unit formatting style to use in unit formatting. - "long" (e.g., 16 litres) - "short" (e.g., 16 l) - "narrow" (e.g., 16l)
+          * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
@@ -419,6 +419,12 @@ export namespace Components {
         "start": number;
     }
     interface AtomicPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+    }
+    interface AtomicPagerV1 {
         /**
           * Specifies how many page buttons to display in the pager.
          */
@@ -571,7 +577,7 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
-          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure their browsers to open a new window instead. - _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target": string;
     }
@@ -756,6 +762,16 @@ export namespace Components {
          */
         "initialChoice"?: number;
     }
+    interface AtomicResultsPerPageV1 {
+        /**
+          * A list of choices for the number of results to display per page, separated by commas.
+         */
+        "choicesDisplayed": string;
+        /**
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+         */
+        "initialChoice"?: number;
+    }
     interface AtomicSearchBox {
         /**
           * Whether the submit button is placed before the input.
@@ -825,7 +841,7 @@ export namespace Components {
          */
         "caption": string;
         /**
-          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
          */
         "expression": string;
     }
@@ -1065,6 +1081,12 @@ declare global {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
     };
+    interface HTMLAtomicPagerV1Element extends Components.AtomicPagerV1, HTMLStencilElement {
+    }
+    var HTMLAtomicPagerV1Element: {
+        prototype: HTMLAtomicPagerV1Element;
+        new (): HTMLAtomicPagerV1Element;
+    };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
     var HTMLAtomicQueryErrorElement: {
@@ -1299,6 +1321,12 @@ declare global {
         prototype: HTMLAtomicResultsPerPageElement;
         new (): HTMLAtomicResultsPerPageElement;
     };
+    interface HTMLAtomicResultsPerPageV1Element extends Components.AtomicResultsPerPageV1, HTMLStencilElement {
+    }
+    var HTMLAtomicResultsPerPageV1Element: {
+        prototype: HTMLAtomicResultsPerPageV1Element;
+        new (): HTMLAtomicResultsPerPageV1Element;
+    };
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxElement: {
@@ -1382,6 +1410,7 @@ declare global {
         "atomic-numeric-facet-v1": HTMLAtomicNumericFacetV1Element;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-pager-v1": HTMLAtomicPagerV1Element;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -1421,6 +1450,7 @@ declare global {
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-v1": HTMLAtomicResultV1Element;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
+        "atomic-results-per-page-v1": HTMLAtomicResultsPerPageV1Element;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
@@ -1627,7 +1657,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are:  * 'score' * 'numeric' * 'occurrences' * 'automatic'
          */
         "sortCriteria"?: FacetSortCriterion;
     }
@@ -1730,7 +1760,7 @@ declare namespace LocalJSX {
          */
         "unit": string;
         /**
-          * The unit formatting style to use in unit formatting. - "long" (e.g., 16 litres) - "short" (e.g., 16 l) - "narrow" (e.g., 16l)
+          * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
@@ -1842,6 +1872,13 @@ declare namespace LocalJSX {
         "start": number;
     }
     interface AtomicPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+    }
+    interface AtomicPagerV1 {
         /**
           * Specifies how many page buttons to display in the pager.
          */
@@ -1995,7 +2032,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
-          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure their browsers to open a new window instead. - _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target"?: string;
     }
@@ -2176,6 +2213,16 @@ declare namespace LocalJSX {
          */
         "initialChoice"?: number;
     }
+    interface AtomicResultsPerPageV1 {
+        /**
+          * A list of choices for the number of results to display per page, separated by commas.
+         */
+        "choicesDisplayed"?: string;
+        /**
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+         */
+        "initialChoice"?: number;
+    }
     interface AtomicSearchBox {
         /**
           * Whether the submit button is placed before the input.
@@ -2237,7 +2284,7 @@ declare namespace LocalJSX {
          */
         "caption": string;
         /**
-          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
          */
         "expression": string;
     }
@@ -2336,6 +2383,7 @@ declare namespace LocalJSX {
         "atomic-numeric-facet-v1": AtomicNumericFacetV1;
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
+        "atomic-pager-v1": AtomicPagerV1;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -2375,6 +2423,7 @@ declare namespace LocalJSX {
         "atomic-result-text": AtomicResultText;
         "atomic-result-v1": AtomicResultV1;
         "atomic-results-per-page": AtomicResultsPerPage;
+        "atomic-results-per-page-v1": AtomicResultsPerPageV1;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
@@ -2418,6 +2467,7 @@ declare module "@stencil/core" {
             "atomic-numeric-facet-v1": LocalJSX.AtomicNumericFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetV1Element>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-pager-v1": LocalJSX.AtomicPagerV1 & JSXBase.HTMLAttributes<HTMLAtomicPagerV1Element>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
@@ -2457,6 +2507,7 @@ declare module "@stencil/core" {
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-result-v1": LocalJSX.AtomicResultV1 & JSXBase.HTMLAttributes<HTMLAtomicResultV1Element>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
+            "atomic-results-per-page-v1": LocalJSX.AtomicResultsPerPageV1 & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageV1Element>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
