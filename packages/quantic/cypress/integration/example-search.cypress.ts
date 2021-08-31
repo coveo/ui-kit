@@ -10,8 +10,14 @@ import {
 describe('example-search', () => {
   const pageUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
 
-  before(() => {
-    cy.stub(navigator, 'sendBeacon');
+  Cypress.on('uncaught:exception', (err) => {
+    if (
+      err.message.includes(
+        'navigator.sendBeacon is not supported in this browser'
+      )
+    ) {
+      return false;
+    }
   });
 
   beforeEach(() => {
