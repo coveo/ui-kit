@@ -32,4 +32,4 @@ export {
   PagerState,
   Pager,
   buildPager,
-} from './controllers/pager/headless-product-listing-pager';
+} from './controllers/product-listing/pager/headless-product-listing-pager';
