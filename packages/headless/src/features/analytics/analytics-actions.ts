@@ -4,7 +4,6 @@ import {
   requiredNonEmptyString,
   nonEmptyString,
 } from '../../utils/validate-payload';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
@@ -14,6 +13,7 @@ import {
   validateResultPayload,
 } from './analytics-utils';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -151,8 +151,8 @@ export const logInterfaceChange = makeAnalyticsAction(
   (client, state) =>
     client.logInterfaceChange({
       interfaceChangeTo:
-        state.advancedSearchQueries?.cq ||
-        getAdvancedSearchQueriesInitialState().cq,
+        state.configuration?.analytics.originLevel2 ||
+        getConfigurationInitialState().analytics.originLevel2,
     })
 );
 
