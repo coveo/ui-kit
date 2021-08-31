@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.74.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.73.2...@coveo/atomic@0.74.0) (2021-08-31)
+
+
+### Features
+
+* **atomic:** made grid results fill remaining screen width ([#1140](https://github.com/coveo/ui-kit/issues/1140)) ([784f232](https://github.com/coveo/ui-kit/commit/784f23236cd7f59c4137f7b922f60120717aba65))
+
+
+### Performance Improvements
+
+* **atomic:** slightly improved performance while rendering results ([#1132](https://github.com/coveo/ui-kit/issues/1132)) ([9418f8c](https://github.com/coveo/ui-kit/commit/9418f8ccf1968e6264bf54db0e9ef706e617521d))
+
+
+
+
+
 ## [0.73.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.73.1...@coveo/atomic@0.73.2) (2021-08-30)
 
 **Note:** Version bump only for package @coveo/atomic
