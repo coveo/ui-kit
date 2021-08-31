@@ -250,7 +250,7 @@ export class AtomicResultList implements InitializableComponent {
       this.image
     );
     if (
-      !this.resultListState.firstSearchExecuted &&
+      this.resultListState.firstSearchExecuted &&
       this.resultList.state.isLoading
     ) {
       classes.push('loading');
