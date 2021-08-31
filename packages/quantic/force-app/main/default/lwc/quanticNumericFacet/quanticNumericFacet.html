@@ -6,7 +6,7 @@
           class="slds-p-bottom_small facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
-          icon-name={facetIconName}
+          icon-name={collapseIcon}
           alternative-text="Collapse/show facet"
           variant="bare"
         >
@@ -31,7 +31,7 @@
                 key={v.start} 
                 item={v} 
                 is-checked={v.checked}
-                variant="numeric"
+                formatting-function={formattingFunction}
                 >
               </c-quantic-facet-value>
             </template>

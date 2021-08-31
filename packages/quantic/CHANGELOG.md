@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.55.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.54.1...@coveo/quantic@0.55.0) (2021-08-31)
+
+
+### Features
+
+* **quantic:** add component specific end-to-end tests using Salesforce example community ([#1027](https://github.com/coveo/ui-kit/issues/1027)) ([c05adf6](https://github.com/coveo/ui-kit/commit/c05adf661a86e6b40034087fea6bcad7cd76d3d5))
+
+
+
+
+
+## [0.54.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.54.0...@coveo/quantic@0.54.1) (2021-08-31)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.54.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.53.4...@coveo/quantic@0.54.0) (2021-08-30)
+
+
+### Features
+
+* **quantic:** added props to facets ([#1122](https://github.com/coveo/ui-kit/issues/1122)) ([e578eff](https://github.com/coveo/ui-kit/commit/e578eff2e06775cb5bf606ba94956b0d4b292a2d))
+
+
+
+
+
 ## [0.53.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.53.3...@coveo/quantic@0.53.4) (2021-08-30)
 
 
