@@ -3,13 +3,12 @@ import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadl
 import { getItemfromLocalStorage, setIteminLocalStorage } from 'c/quanticUtils';
 
 export default class QuanticRecentQueries extends LightningElement {
-  /** @type {string} */
-  localStorageKey = 'quantic-recent-queries';
   /** @type {import("coveo").RecentQueriesState} */
-  @track state = {
-    queries: getItemfromLocalStorage(this.localStorageKey) ?? [],
-    maxLength: 10,
-  };
+  @track state;
+  /** @type {string} */
+  @api label = "Recent Queries";
+  /** @type {string} */
+  @api engineId;
   /** @type {import("coveo").RecentQueriesList} */
   recentQueriesList;
   /** @type {()=> void} */
@@ -19,9 +18,9 @@ export default class QuanticRecentQueries extends LightningElement {
   /** @type {string} */
   collapseIcon = 'utility:dash';
   /** @type {string} */
-  @api label;
-  /** @type {string} */
-  @api engineId;
+  localStorageKey = 'quantic-recent-queries';
+  /** @type {number} */
+  maxLength = 10;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -38,10 +37,10 @@ export default class QuanticRecentQueries extends LightningElement {
   initialize(engine) {
     this.recentQueriesList = CoveoHeadless.buildRecentQueriesList(engine, {
       initialState: {
-        queries: this.state.queries,
+        queries: getItemfromLocalStorage(this.localStorageKey) ?? [],
       },
       options: {
-        maxLength: this.state.maxLength,
+        maxLength: this.maxLength,
       },
     });
     this.unsubscribe = this.recentQueriesList.subscribe(() => this.updateState());
@@ -65,4 +64,7 @@ export default class QuanticRecentQueries extends LightningElement {
     this.isCollapsed = !this.isCollapsed;
   }
 
+  get queries() {
+    return this.state?.queries ?? []
+  }
 }

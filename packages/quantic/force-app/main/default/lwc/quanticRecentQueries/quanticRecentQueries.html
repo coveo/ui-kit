@@ -12,7 +12,7 @@
     
     <template if:false={isCollapsed}>
       <ul class="slds-m-around_small slds-p-bottom_xxx-small">
-          <template for:each={state.queries} for:item="query" for:index="index">
+          <template for:each={queries} for:item="query" for:index="index">
             <li
               key={q}
               value={index}
