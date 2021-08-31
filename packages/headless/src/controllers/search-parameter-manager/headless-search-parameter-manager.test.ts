@@ -108,6 +108,20 @@ describe('search parameter manager', () => {
     });
   });
 
+  describe('#state.parameters.lq', () => {
+    it('when the parameter is not the default, it is not included', () => {
+      engine.state.advancedSearchQueries.lq = 'abc';
+      engine.state.advancedSearchQueries.defaultFilters.lq = 'def';
+      expect('lq' in manager.state.parameters).toBe(false);
+    });
+
+    it('when the parameter is the default, it is not included', () => {
+      engine.state.advancedSearchQueries.lq = 'abc';
+      engine.state.advancedSearchQueries.defaultFilters.lq = 'abc';
+      expect('lq' in manager.state.parameters).toBe(false);
+    });
+  });
+
   describe('#state.parameters.firstResult', () => {
     it('when the parameter does not equal the default value, it is included', () => {
       engine.state.pagination.firstResult = 1;
@@ -285,7 +299,7 @@ describe('search parameter manager', () => {
   });
 
   it(`given a certain initial state,
-  it is possible to access every search parameter using #state.parameters`, () => {
+  it is possible to access every relevant search parameter using #state.parameters`, () => {
     const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
     engine.state.facetSet = {
       author: buildMockFacetRequest({currentValues: facetValues}),
@@ -314,6 +328,8 @@ describe('search parameter manager', () => {
     engine.state.advancedSearchQueries.defaultFilters.aq = 'anotherAq';
     engine.state.advancedSearchQueries.cq = 'someCq';
     engine.state.advancedSearchQueries.defaultFilters.cq = 'anotherCq';
+    engine.state.advancedSearchQueries.lq = 'someLq';
+    engine.state.advancedSearchQueries.defaultFilters.lq = 'anotherLq';
     engine.state.pagination.firstResult = 1;
     engine.state.pagination.numberOfResults = 1;
     engine.state.sortCriteria = 'qre';
@@ -323,7 +339,7 @@ describe('search parameter manager', () => {
     const allKeys = Object.keys(buildMockSearchParameters());
     const unavailableKeys = allKeys.filter((key) => !(key in stateParams));
 
-    expect(unavailableKeys).toEqual([]);
+    expect(unavailableKeys).toEqual(['lq']);
   });
 
   describe('#synchronize', () => {

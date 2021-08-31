@@ -49,6 +49,11 @@ export interface SearchParameters {
   firstResult?: number;
 
   /**
+   * The large query expression.
+   */
+  lq?: string;
+
+  /**
    * A record of the numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
    */
   nf?: Record<string, NumericRangeRequest[]>;

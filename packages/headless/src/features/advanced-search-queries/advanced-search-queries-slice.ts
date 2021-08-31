@@ -13,7 +13,7 @@ export const advancedSearchQueriesReducer = createReducer(
   (builder) => {
     builder
       .addCase(updateAdvancedSearchQueries, (state, action) => {
-        const {aq, cq} = action.payload;
+        const {aq, cq, lq} = action.payload;
         if (!isUndefined(aq)) {
           state.aq = aq;
           state.aqWasSet = true;
@@ -22,9 +22,13 @@ export const advancedSearchQueriesReducer = createReducer(
           state.cq = cq;
           state.cqWasSet = true;
         }
+        if (!isUndefined(lq)) {
+          state.lq = lq;
+          state.lqWasSet = true;
+        }
       })
       .addCase(registerAdvancedSearchQueries, (state, action) => {
-        const {aq, cq} = action.payload;
+        const {aq, cq, lq} = action.payload;
         if (!isUndefined(aq)) {
           state.defaultFilters.aq = aq;
           if (!state.aqWasSet) {
@@ -37,13 +41,19 @@ export const advancedSearchQueriesReducer = createReducer(
             state.cq = cq;
           }
         }
+        if (!isUndefined(lq)) {
+          state.defaultFilters.lq = lq;
+          if (!state.lqWasSet) {
+            state.lq = lq;
+          }
+        }
       })
       .addCase(
         change.fulfilled,
         (state, action) => action.payload?.advancedSearchQueries ?? state
       )
       .addCase(restoreSearchParameters, (state, action) => {
-        const {aq, cq} = action.payload;
+        const {aq, cq, lq} = action.payload;
         if (!isUndefined(aq)) {
           state.aq = aq;
           state.aqWasSet = true;
@@ -51,6 +61,10 @@ export const advancedSearchQueriesReducer = createReducer(
         if (!isUndefined(cq)) {
           state.cq = cq;
           state.cqWasSet = true;
+        }
+        if (!isUndefined(lq)) {
+          state.lq = lq;
+          state.lqWasSet = true;
         }
       });
   }

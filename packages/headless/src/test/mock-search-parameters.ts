@@ -8,6 +8,7 @@ export function buildMockSearchParameters(
     enableQuerySyntax: false,
     aq: '',
     cq: '',
+    lq: '',
     firstResult: 0,
     numberOfResults: 0,
     sortCriteria: '',
