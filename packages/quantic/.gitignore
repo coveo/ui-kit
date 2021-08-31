@@ -38,6 +38,8 @@ force-app/main/default/staticresources/coveoheadless
 coverage
 reports
 
-# Cypress artefacts
+# Cypress artifacts
 cypress/screenshots/*
 cypress/videos/*
+
+cypress/plugins/config/examples-community.json

@@ -299,9 +299,22 @@
                 }
 
                 .thumbnail {
-                  display: block;
+                  display: none;
                   width: 100%;
                   height: 100%;
+                }
+
+                .icon {
+                  display: none;
+                }
+
+                .result-root.image-small .thumbnail,
+                .result-root.image-large .thumbnail {
+                  display: inline-block;
+                }
+
+                .result-root.image-icon .icon {
+                  display: inline-block;
                 }
 
                 atomic-result-section-badges {
@@ -319,12 +332,8 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-size-condition-v1 maximum-width-inclusive="3rem">
-                  <atomic-result-icon-v1></atomic-result-icon-v1>
-                </atomic-size-condition-v1>
-                <atomic-size-condition-v1 minimum-width-exclusive="3rem">
-                  <img src="https://picsum.photos/350" class="thumbnail" />
-                </atomic-size-condition-v1>
+                <atomic-result-icon-v1 class="icon"></atomic-result-icon-v1>
+                <img src="https://picsum.photos/350" class="thumbnail" />
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
