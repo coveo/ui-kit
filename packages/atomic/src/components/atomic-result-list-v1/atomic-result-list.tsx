@@ -273,7 +273,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (this.resultListState.results.length > 0) {
+    if (this.shouldCleanupPlaceholders()) {
       this.resultsWereRendered = true;
       this.placeholdersRef.forEach((placeholder) => placeholder.remove());
       this.placeholdersRef = [];
@@ -290,6 +290,14 @@ export class AtomicResultList implements InitializableComponent {
         {this.templateHasError && <slot></slot>}
         {this.buildResultRoot()}
       </Host>
+    );
+  }
+
+  private shouldCleanupPlaceholders() {
+    return (
+      this.resultListState.results.length > 0 &&
+      !this.resultsWereRendered &&
+      this.placeholdersRef.length > 0
     );
   }
 }
