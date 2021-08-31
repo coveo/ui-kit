@@ -5,6 +5,8 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {getItemfromLocalStorage, setIteminLocalStorage} from 'c/quanticUtils';
 
+import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLabel';
+
 export default class QuanticRecentResults extends LightningElement {
   /** @type {import("coveo").RecentResultsState} */
   @track state;
@@ -27,6 +29,10 @@ export default class QuanticRecentResults extends LightningElement {
 
   /** @type {() => void} */
   unsubscribe;
+
+  labels = {
+    emptyListLabel,
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -68,5 +74,9 @@ export default class QuanticRecentResults extends LightningElement {
 
   get results() {
     return this.state?.results ?? [];
+  }
+
+  get hasResults() {
+    return !!this.results.length;
   }
 }

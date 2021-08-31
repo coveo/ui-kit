@@ -7,3 +7,7 @@
   margin-right: .5rem;
   margin-left: .25rem;
 }
+
+.empty-list-message {
+  color: var(--sds-c-color-gray-8, #8E959D);;
+}

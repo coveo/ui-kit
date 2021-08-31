@@ -9,8 +9,10 @@
       variant="bare"
     >
     </lightning-button-icon>
-
     <template if:false={isCollapsed}>
+      <template if:false={hasResults}>
+        <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium">{labels.emptyListLabel}</div>
+      </template>
       <ul>
         <template for:each={results} for:item="result">
           <li class="slds-var-m-vertical_small slds-grid" key={result.uniqueId}>
