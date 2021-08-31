@@ -53,7 +53,7 @@ export const advancedSearchQueriesReducer = createReducer(
         (state, action) => action.payload?.advancedSearchQueries ?? state
       )
       .addCase(restoreSearchParameters, (state, action) => {
-        const {aq, cq, lq} = action.payload;
+        const {aq, cq} = action.payload;
         if (!isUndefined(aq)) {
           state.aq = aq;
           state.aqWasSet = true;
@@ -61,10 +61,6 @@ export const advancedSearchQueriesReducer = createReducer(
         if (!isUndefined(cq)) {
           state.cq = cq;
           state.cqWasSet = true;
-        }
-        if (!isUndefined(lq)) {
-          state.lq = lq;
-          state.lqWasSet = true;
         }
       });
   }

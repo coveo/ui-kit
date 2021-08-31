@@ -339,7 +339,7 @@ describe('search parameter manager', () => {
     const allKeys = Object.keys(buildMockSearchParameters());
     const unavailableKeys = allKeys.filter((key) => !(key in stateParams));
 
-    expect(unavailableKeys).toEqual(['lq']);
+    expect(unavailableKeys).toEqual([]);
   });
 
   describe('#synchronize', () => {

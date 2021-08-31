@@ -198,7 +198,6 @@ function isValidKey(key: string): key is keyof SearchParameters {
     q: true,
     aq: true,
     cq: true,
-    lq: true,
     enableQuerySyntax: true,
     firstResult: true,
     numberOfResults: true,
