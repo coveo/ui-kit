@@ -232,10 +232,12 @@ export class AtomicRefineModal implements InitializableComponent {
       >
         <div class="px-6">{this.renderHeader()}</div>
         <hr class="border-neutral"></hr>
-        <div class="overflow-auto overlay-y px-6 flex-grow">
-          <div class="centered">
-            {this.renderSort()}
-            {this.renderFilters()}
+        <div class="overflow-auto px-6 flex-grow">
+          <div class="adjust-for-scroll-bar">
+            <div class="centered">
+              {this.renderSort()}
+              {this.renderFilters()}
+            </div>
           </div>
         </div>
         {this.renderFooter()}
