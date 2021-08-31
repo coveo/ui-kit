@@ -4,6 +4,7 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 import clear from '@salesforce/label/c.quantic_Clear';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -20,7 +21,15 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {number} */
   @api numberOfValues = 8;
   /** @type {import("coveo").RangeFacetSortCriterion} */
-  @api sortCriterion = 'ascending';
+  @api sortCriteria = 'ascending';
+  /** @type {import("coveo").RangeFacetRangeAlgorithm} */
+  @api rangeAlgorithm = 'equiprobable';
+  /** @type {(any) => string} */
+  @api formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
+    item.start
+  )} - ${new Intl.NumberFormat(LOCALE).format(
+    item.end
+  )}`;
 
   /** @type {import("coveo").NumericFacet} */
   facet;
@@ -29,7 +38,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
 
   labels = {
     clear,
@@ -52,6 +61,9 @@ export default class QuanticNumericFacet extends LightningElement {
       options: {
         field: this.field,
         generateAutomaticRanges: true,
+        sortCriteria: this.sortCriteria,
+        rangeAlgorithm: this.rangeAlgorithm,
+        numberOfValues: Number(this.numberOfValues),
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
