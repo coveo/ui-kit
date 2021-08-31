@@ -1,20 +1,25 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 import { getItemfromLocalStorage, setIteminLocalStorage } from 'c/quanticUtils';
 
 export default class QuanticRecentQueries extends LightningElement {
+  /** @type {string} */
+  localStorageKey = 'quantic-recent-queries';
+  /** @type {import("coveo").RecentQueriesState} */
+  @track state = {
+    queries: getItemfromLocalStorage(this.localStorageKey) ?? [],
+    maxLength: 10,
+  };
   /** @type {import("coveo").RecentQueriesList} */
   recentQueriesList;
   /** @type {()=> void} */
   unsubscribe;
-  /** @type {Array} */
-  queries = getItemfromLocalStorage('quantic-recent-queries');
-  /** @type {number} */
-  @api maxLength = 10;
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
+  /** @type {string} */
+  @api label;
   /** @type {string} */
   @api engineId;
 
@@ -33,10 +38,10 @@ export default class QuanticRecentQueries extends LightningElement {
   initialize(engine) {
     this.recentQueriesList = CoveoHeadless.buildRecentQueriesList(engine, {
       initialState: {
-        queries: this.queries,
+        queries: this.state.queries,
       },
       options: {
-        maxLength: this.maxLength,
+        maxLength: this.state.maxLength,
       },
     });
     this.unsubscribe = this.recentQueriesList.subscribe(() => this.updateState());
@@ -47,7 +52,7 @@ export default class QuanticRecentQueries extends LightningElement {
   }
 
   updateState() {
-    this.queries = this.recentQueriesList.state.queries;
+    this.state = this.recentQueriesList.state;
     setIteminLocalStorage('quantic-recent-queries', this.recentQueriesList.state.queries);
   }
 
@@ -55,12 +60,8 @@ export default class QuanticRecentQueries extends LightningElement {
     this.recentQueriesList.executeRecentQuery(e.target.value);
   }
 
-  get hasQueries() {
-    return this.queries.length !== 0;
-  }
-
   toggleVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 

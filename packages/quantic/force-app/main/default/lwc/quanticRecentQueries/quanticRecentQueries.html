@@ -1,48 +1,35 @@
 <template>
-  <template if:true={hasQueries} class="container">
-    <lightning-card title="Your Recent Searches" class="container">
-      <lightning-button-icon
-        class="slds-p-bottom_small"
-        slot="actions"
-        onclick={toggleVisibility}
-        icon-name={collapseIconName}
-        alternative-text="Collapse/show component"
-        variant="bare"
-      >
-      </lightning-button-icon>
-      <template if:false={isCollapsed}>
-        <ul class="slds-m-around_small slds-p-bottom_xxx-small">
-            <template for:each={queries} for:item="query" for:index="index">
-              <li
-                key={q}
-                value={index}
-                onclick={executeQuery}
-                class="slds-grid slds-gutters_direct-xxx-small slds-text-body_small nowrap slds-var-m-bottom_small slds-var-m-left_xx-small"
-              >
-                <span class="slds-col icon-color">
-                  <lightning-icon
-                    icon-name="utility:search"
-                    size="xx-small"
-                    class="slds-current-color"
-                  ></lightning-icon>
-                </span>
-                <span class="slds-col slds-m-left_xxx-small">{query}</span>
-              </li>
-            </template>
-        </ul>
-      </template>
-    </lightning-card>
-  </template>
-  <template if:false={hasQueries} class="">
-    <lightning-card title="Your Recent Searches" class="container">
-        <lightning-button-icon
-          class="slds-p-bottom_small"
-          slot="actions"
-          onclick={toggleVisibility}
-          icon-name={collapseIconName}
-          alternative-text="Collapse/show component"
-          variant="bare"
-        ></lightning-button-icon>
-        </lightning-card>
-  </template>
+  <lightning-card title={label} class="container">
+    <lightning-button-icon
+      class="slds-p-bottom_small"
+      slot="actions"
+      onclick={toggleVisibility}
+      icon-name={collapseIcon}
+      alternative-text="toggle recent queries visibility"
+      variant="bare"
+    >
+    </lightning-button-icon>
+    
+    <template if:false={isCollapsed}>
+      <ul class="slds-m-around_small slds-p-bottom_xxx-small">
+          <template for:each={state.queries} for:item="query" for:index="index">
+            <li
+              key={q}
+              value={index}
+              onclick={executeQuery}
+              class="slds-grid slds-gutters_direct-xxx-small slds-text-body_small nowrap slds-var-m-bottom_small slds-var-m-left_xx-small"
+            >
+              <span class="slds-col icon-color">
+                <lightning-icon
+                  icon-name="utility:search"
+                  size="xx-small"
+                  class="slds-current-color"
+                ></lightning-icon>
+              </span>
+              <span class="slds-col slds-m-left_xxx-small query-text">{query}</span>
+            </li>
+          </template>
+      </ul>
+    </template>
+  </lightning-card>
 </template>

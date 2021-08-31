@@ -3,7 +3,7 @@
   margin: 0 2em 0 0;
 }
 
-li > span:nth-child(2){
+.query-text{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -17,4 +17,8 @@ li:hover {
 
 .icon-color {
   color: #0070d2;
+}
+
+li span {
+  pointer-events: none;
 }
