@@ -13,7 +13,6 @@ import {
   validateResultPayload,
 } from './analytics-utils';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -150,9 +149,7 @@ export const logInterfaceChange = makeAnalyticsAction(
   AnalyticsType.Search,
   (client, state) =>
     client.logInterfaceChange({
-      interfaceChangeTo:
-        state.configuration?.analytics.originLevel2 ||
-        getConfigurationInitialState().analytics.originLevel2,
+      interfaceChangeTo: state.configuration.analytics.originLevel2,
     })
 );
 
