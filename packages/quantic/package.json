@@ -23,7 +23,10 @@
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
     "test:typings": "tsc",
-    "cypress:open": "npx cypress open"
+    "cypress:open": "npx cypress open",
+    "setup:examples": "ts-node scripts/build/deploy-community.ts",
+    "deploy:main": "sfdx force:source:deploy -u LWC -p force-app/main",
+    "deploy:examples": "sfdx force:source:deploy -u LWC -p force-app/examples"
   },
   "dependencies": {
     "@coveo/headless": "^1.18.3"
@@ -32,10 +35,14 @@
     "@salesforce/eslint-config-lwc": "0.11.1",
     "@salesforce/sfdx-lwc-jest": "0.14.0",
     "@types/jest": "26.0.24",
+    "@types/strip-color": "^0.1.0",
     "cypress": "7.6.0",
     "eslint": "7.32.0",
     "eslint-plugin-cypress": "2.11.3",
     "jest-junit": "12.2.0",
-    "ncp": "2.0.0"
+    "ncp": "2.0.0",
+    "sfdx-cli": "7.102.0",
+    "strip-color": "^0.1.0",
+    "ts-node": "^10.2.1"
   }
 }
