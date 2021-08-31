@@ -3,7 +3,7 @@ import {
   doSortOccurences,
 } from '../../../utils/componentUtils';
 import {RouteAlias} from '../../../utils/setupComponent';
-import {ResultListSelectors} from '../../result-list-selectors';
+import {ResultListSelectors} from '../../result-list/result-list-selectors';
 import {
   CategoryFacetSelectors,
   BreadcrumbSelectors,

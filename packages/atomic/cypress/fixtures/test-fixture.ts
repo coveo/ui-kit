@@ -124,10 +124,19 @@ export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
   env.withElement(e);
 };
 
-export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
+export const generateComponentHTML = (
+  tag: string,
+  props: TagProps = {},
+  content: HTMLElement | string | HTMLElement[] | string[] = ''
+) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(props)) {
     e.setAttribute(k, v.toString());
   }
+  (Array.isArray(content) ? content : [content]).forEach((content) => {
+    content instanceof HTMLElement
+      ? e.appendChild(content)
+      : (e.innerHTML += content);
+  });
   return e;
 };
