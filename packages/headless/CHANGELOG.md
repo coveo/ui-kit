@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.3...@coveo/headless@1.18.4) (2021-08-31)
+
+
+### Bug Fixes
+
+* **headless:** disable redux dev tool hot reload ([#1146](https://github.com/coveo/ui-kit/issues/1146)) ([c4ebcce](https://github.com/coveo/ui-kit/commit/c4ebccea7795aa255fceba89b623233c29511241))
+
+
+
+
+
 ## [1.18.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.2...@coveo/headless@1.18.3) (2021-08-30)
 
 

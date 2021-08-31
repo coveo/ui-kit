@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.0...@coveo/atomic@0.74.1) (2021-08-31)
+
+
+### Bug Fixes
+
+* **atomic:** cleanup ripple when animation finish ([#1153](https://github.com/coveo/ui-kit/issues/1153)) ([4373044](https://github.com/coveo/ui-kit/commit/437304438ffc6c9824e73cf4fab86944a3a55d5f))
+
+
+
+
+
 # [0.74.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.73.2...@coveo/atomic@0.74.0) (2021-08-31)
 
 
