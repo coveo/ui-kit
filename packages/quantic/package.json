@@ -13,7 +13,7 @@
   "scripts": {
     "test": "npm run test:lint && npm run test:typings && npm run test:unit",
     "test:lint": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
-    "lint:fix": "eslint force-app/main/default/lwc/ --fix",
+    "lint:fix": "eslint force-app/main/default/lwc/ --fix && eslint force-app/examples/main/lwc/ --fix",
     "fix": "npm run lint:fix",
     "copy:staticresources": "node copy-static-resources.js",
     "build": "npm run copy:staticresources",
