@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.5...@coveo/atomic@0.74.6) (2021-09-01)
+
+
+### Bug Fixes
+
+* **atomic:** center refine modal contents ([#1162](https://github.com/coveo/ui-kit/issues/1162)) ([52681ab](https://github.com/coveo/ui-kit/commit/52681ab7375b95d61605ab557a518692dc61491c))
+
+
+
+
+
 ## [0.74.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.4...@coveo/atomic@0.74.5) (2021-09-01)
 
 
