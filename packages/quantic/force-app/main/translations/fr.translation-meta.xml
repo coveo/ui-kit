@@ -195,7 +195,7 @@
     <customLabels>
         <label>Vos résultats récemment sélectionnés s'afficheront ici.</label>
         <name>quantic_EmptyRecentResultListLabel</name>
-    </customLabels>quantic_ToggleComponentVisibility
+    </customLabels>
     <customLabels>
         <label>Changer la visibilité du composant</label>
         <name>quantic_ToggleComponentVisibility</name>
