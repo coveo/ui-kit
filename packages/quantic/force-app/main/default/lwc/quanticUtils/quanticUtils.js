@@ -140,11 +140,11 @@ export const keys = {
 };
 
 export function getItemFromLocalStorage(key) {
-  const value = localStorage.getItem(key);
-  return value !== 'undefined' ? JSON.parse(value) : null;
+  return JSON.parse(localStorage.getItem(key));
 }
 
 export function setItemInLocalStorage(key, item) {
-  const value = JSON.stringify(item);
-  localStorage.setItem(key, value);
+  if (item) {
+    localStorage.setItem(key, JSON.stringify(item));
+  }
 }
