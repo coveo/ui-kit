@@ -18,8 +18,6 @@ export default class QuanticRecentResults extends LightningElement {
   /** @type {string} */
   @api label;
 
-  /** @type {string} */
-  localStorageKey = 'quantic-recent-results';
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
@@ -78,5 +76,9 @@ export default class QuanticRecentResults extends LightningElement {
 
   get hasResults() {
     return !!this.results.length;
+  }
+
+  get localStorageKey() {
+    return `${this.engineId}_quantic-recent-results`;
   }
 }
