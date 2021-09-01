@@ -378,4 +378,11 @@
         <protected>false</protected>
         <shortDescription>Label displayed when recent results list is empty.</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_ToggleComponentVisibility</fullName>
+        <value>Toggle component visibility</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Toggle component visibility</shortDescription>
+    </labels>
 </CustomLabels>

@@ -7,11 +7,13 @@ import {getItemfromLocalStorage, setIteminLocalStorage} from 'c/quanticUtils';
 
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLabel';
 import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
+import toggleVisibility from '@salesforce/label/c.quantic_ToggleComponentVisibility';
 
 export default class QuanticRecentResultsList extends LightningElement {
   labels = {
     emptyListLabel,
-    recentResultsLabel
+    recentResultsLabel,
+    toggleVisibility,
   }
 
   /** @type {import("coveo").RecentResultsState} */

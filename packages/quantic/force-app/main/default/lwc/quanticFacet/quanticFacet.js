@@ -13,6 +13,7 @@ import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import toggleVisibility from '@salesforce/label/c.quantic_ToggleComponentVisibility';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
@@ -55,6 +56,7 @@ export default class QuanticFacet extends LightningElement {
     search,
     moreMatchesFor,
     noMatchesFor,
+    toggleVisibility,
   };
 
   /**
