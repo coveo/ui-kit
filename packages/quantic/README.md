@@ -48,7 +48,62 @@ Start the server.
 
 - Run `npm run start`
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
-- View the server at http://localhost:3333/.
+- View the server at http://localhost:3334/.
+
+## Deploy the Quantic Examples Community
+
+Example components are available as a Salesforce community (Digital Experience) allowing you to experiment with Quantic components.
+
+1. To create a community named `Quantic Examples`, run:
+
+    ```bash
+    sfdx force:community:create -u LWC -n "Quantic Examples" -p examples -t "Build Your Own"
+    ```
+
+2. To deploy Quantic and the example components, run:
+
+    ```bash
+    sfdx force:source:deploy -u LWC -p force-app/main,force-app/examples
+    ```
+
+3. To deploy the community in the scratch org, run:
+
+    ```bash
+    sfdx force:mdapi:deploy -u LWC -d ./quantic-examples-community -w 5
+    ```
+
+4. To publish the community, run:
+
+    ```bash
+    sfdx force:community:publish -u LWC -n "Quantic Examples" --json
+    ```
+
+    The community URL will appear in the console output.
+
+5. Copy the `cypress/plugins/config/examples-community.json.example` to `cypress/plugins/config/examples-community.json`.
+   
+6. Update the `cypress/plugins/config/examples-community.json` file with the community URL like this:
+
+    ```json
+    {
+      "env": {
+        "examplesUrl": "https://your-salesforce-instance.force.com/examples"
+      }
+    }
+    ```
+## Run Cypress for Quantic Components
+
+**Note** Before attempting to run Cypress tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
+
+Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
+
+- All the tests will need to be under folder `cypress/integration`.
+
+To open Cypress in browser mode, run:
+
+```bash
+npm run cypress:open
+```
 
 ## Run Cypress for Quantic Components
 

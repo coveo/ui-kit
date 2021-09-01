@@ -1,4 +1,5 @@
 {
     "includeShadowDom": true,
+    "pluginsFile": "cypress/plugins/index.ts",
     "video": false
 }
