@@ -25,7 +25,7 @@ export function withAnySectionnableResultList(
                       resultListComponent(template, display, image, density),
                       true
                     );
-                    cy.get(ResultListSelectors.result + ':first-child');
+                    cy.get('.list-wrapper:not(.placeholder)');
                   }
 
                   assertions(setUpResultListPage);
