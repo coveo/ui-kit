@@ -32,9 +32,7 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
-  isCollapsed = false;
-  /** @type {string} */
-  collapseIcon = 'utility:dash';
+  isExpanded = true;
 
   labels = {
     clear,
@@ -92,6 +90,10 @@ export default class QuanticDateFacet extends LightningElement {
     return this.state.hasActiveValues;
   }
 
+  get collapseIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+
   /**
    * @param {CustomEvent<import("coveo").DateFacetValue>} evt
    */
@@ -104,7 +106,10 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
+  }
+
+  preventDefault(evt) {
+    evt.preventDefault();
   }
 }

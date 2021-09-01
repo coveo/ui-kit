@@ -1,17 +1,18 @@
 <template>
   <template if:true={hasValues}>
-    <div class="facet">
+    <div class="facet" aria-expanded={isExpanded}>
       <lightning-card title={label}>
         <lightning-button-icon
           class="slds-p-bottom_small facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
+          onmousedown={preventDefault}
           icon-name={collapseIcon}
           alternative-text="Collapse/show facet"
           variant="bare"
         >
         </lightning-button-icon>
-        <template if:false={isCollapsed}>
+        <template if:true={isExpanded}>
           <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
             <template if:true={hasActiveValues}>
               <lightning-button 

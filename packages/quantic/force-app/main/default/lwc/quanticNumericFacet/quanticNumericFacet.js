@@ -36,9 +36,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
-  isCollapsed = false;
-  /** @type {string} */
-  collapseIcon = 'utility:dash';
+  isExpanded = true;
 
   labels = {
     clear,
@@ -98,6 +96,10 @@ export default class QuanticNumericFacet extends LightningElement {
     return this.state.hasActiveValues;
   }
 
+  get collapseIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+
   /**
    * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
@@ -110,7 +112,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
+  }
+
+  preventDefault(evt) {
+    evt.preventDefault();
   }
 }
