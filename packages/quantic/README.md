@@ -60,9 +60,11 @@ To setup the community in the `LWC` scratch org, run:
 npm run setup:examples
 ```
 
-This script creates, configures, and deploys everything required to have fully working examples. The community URL is provided at the end of the script like this.
+This script creates, configures, and deploys everything required to have fully working examples. The community URL is provided at the end of the script output, as in the following example:
 
-```plain
+```
+...
+
 The 'Quantic Examples' community is ready, you can access it at the following URL:
 https://your-salesforce-scratch-org-instance.force.com/examples
 
@@ -70,7 +72,7 @@ To open Cypress, run:
 npm run cypress:open
 ```
 
-Once the community has been deployed, you can only deploy the `main` or `example` components when needed. To do so, run:
+Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
 
 ```bash
 npm run deploy:main

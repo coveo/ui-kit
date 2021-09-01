@@ -29,13 +29,16 @@ const scratchOrgExists = async (options: Options): Promise<boolean> => {
     (o) => o.alias === options.alias
   );
 
-  if (!!org && org.status !== 'Active') {
+  const isOrgFound = !!org;
+  const isOrgActive = isOrgFound && org.status === 'Active';
+
+  if (isOrgFound && !isOrgActive) {
     console.warn(
       `Org ${options.alias} is found but status is not active. Status is ${org.status}.`
     );
   }
 
-  return !!org && org.status === 'Active';
+  return isOrgActive;
 };
 
 const createScratchOrg = async (options: Options): Promise<void> => {
