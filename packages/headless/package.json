@@ -59,7 +59,7 @@
     "web-encoding": "^1.1.4"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.18.6",
+    "@microsoft/api-extractor": "7.18.7",
     "@microsoft/api-extractor-model": "7.13.5",
     "@microsoft/tsdoc": "0.13.2",
     "@rollup/plugin-alias": "3.1.5",
