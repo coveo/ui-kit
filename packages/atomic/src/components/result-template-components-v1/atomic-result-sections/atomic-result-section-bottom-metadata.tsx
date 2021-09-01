@@ -2,9 +2,15 @@ import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
- * The `atomic-result-section-bottom-metadata` element, when added to a result template,
- * changes the style and position of its content to match specifications
- * from the result list element.
+ * The bottom metadata section helps the information seeker see additional
+ * descriptive information about the item.
+ *
+ * Behaviour:
+ * * Has a maximum height of two lines.
+ *   * It’s recommended to use `atomic-result-fields-list` to ensure fields don’t overflow from this section.
+ * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+ * * Has a text color.
+ * * Has a font weight.
  */
 @Component({
   tag: 'atomic-result-section-bottom-metadata',

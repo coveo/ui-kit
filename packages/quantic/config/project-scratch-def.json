@@ -1,8 +1,11 @@
 {
   "orgName": "quantic local",
   "edition": "Developer",
-  "features": [],
+  "features": ["Communities"],
   "settings": {
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    },
     "languageSettings": {
       "enableTranslationWorkbench":  true,
       "enableEndUserLanguages": true

@@ -74,6 +74,7 @@
     },
     "include": [
         "force-app/main/default/lwc",
+        "force-app/examples/main/lwc",
         "typings/lwc/**/*.d.ts",
         "coveo.d.ts",
     ],

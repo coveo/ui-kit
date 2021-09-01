@@ -1,0 +1,19 @@
+<template>
+    <c-example-layout
+        title="Quantic Facet"
+        description="The Quantic Facet allows to refine search results by selecting one or more field values."
+        show-preview={isConfigured}>
+        
+        <c-configurator-quantic-facet slot="configuration"
+            ontryitnow={handleTryItNow}>
+        </c-configurator-quantic-facet>
+
+        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+            <c-quantic-facet
+                engine-id={engineId}
+                field={config.field}
+                label={config.label}>
+            </c-quantic-facet>
+        </c-quantic-search-interface>
+    </c-example-layout>
+</template>
