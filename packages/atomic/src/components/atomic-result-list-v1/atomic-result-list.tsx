@@ -69,8 +69,7 @@ export class AtomicResultList implements InitializableComponent {
 
   @Prop() image: ResultDisplayImageSize = 'icon';
 
-  private placeholdersRef: HTMLElement[] = [];
-  private resultsWereRendered = false;
+  private listWrapperRef?: HTMLDivElement;
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -144,7 +143,6 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private buildListPlaceholders() {
-    this.placeholdersRef = [];
     return Array.from(
       {length: this.resultsPerPageState.numberOfResults},
       (_, i) => (
@@ -153,7 +151,6 @@ export class AtomicResultList implements InitializableComponent {
           display={this.display}
           density={this.density}
           image={this.image}
-          ref={(el) => this.placeholdersRef.push(el!)}
         ></atomic-result-placeholder-v1>
       )
     );
@@ -174,13 +171,11 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private buildTablePlaceholder() {
-    this.placeholdersRef = [];
     return (
       <atomic-result-table-placeholder-v1
         density={this.density}
         image={this.image}
         rows={this.resultsPerPageState.numberOfResults}
-        ref={(el) => this.placeholdersRef.push(el!)}
       ></atomic-result-table-placeholder-v1>
     );
   }
@@ -226,7 +221,7 @@ export class AtomicResultList implements InitializableComponent {
   private buildList() {
     return (
       <div class={`list-root ${this.getClasses().join(' ')}`}>
-        {!this.resultsWereRendered ? this.buildListPlaceholders() : null}
+        {this.buildListPlaceholders()}
         {this.resultListState.results.length ? this.buildListResults() : null}
       </div>
     );
@@ -235,12 +230,23 @@ export class AtomicResultList implements InitializableComponent {
   private buildResultRoot() {
     if (this.display === 'table') {
       return [
-        !this.resultsWereRendered ? this.buildTablePlaceholder() : null,
+        this.buildTablePlaceholder(),
         this.resultListState.results.length ? this.buildTable() : null,
       ];
     }
 
     return this.buildList();
+  }
+
+  private buildResultWrapper() {
+    return (
+      <div
+        class="list-wrapper placeholder"
+        ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
+      >
+        {this.buildResultRoot()}
+      </div>
+    );
   }
 
   private getClasses() {
@@ -273,10 +279,8 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (this.shouldCleanupPlaceholders()) {
-      this.resultsWereRendered = true;
-      this.placeholdersRef.forEach((placeholder) => placeholder.remove());
-      this.placeholdersRef = [];
+    if (this.resultListState.firstSearchExecuted) {
+      this.listWrapperRef?.classList.remove('placeholder');
     }
   }
 
@@ -288,16 +292,8 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
-        {this.buildResultRoot()}
+        {this.buildResultWrapper()}
       </Host>
-    );
-  }
-
-  private shouldCleanupPlaceholders() {
-    return (
-      this.resultListState.results.length > 0 &&
-      !this.resultsWereRendered &&
-      this.placeholdersRef.length > 0
     );
   }
 }
