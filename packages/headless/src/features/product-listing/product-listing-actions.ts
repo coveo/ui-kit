@@ -10,7 +10,7 @@ import {
   NumericFacetSection,
   PaginationSection,
   ProductListingSection,
-  StructuredSortSection,
+  SortSection,
 } from '../../state/state-sections';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
@@ -31,6 +31,7 @@ import {
   SortCriterion,
   SortOrder,
 } from '../sort-criteria/criteria';
+import {parseCriterionExpression} from '../sort-criteria/criteria-parser';
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
@@ -53,7 +54,7 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
   ProductListingSection &
   Partial<
     PaginationSection &
-      StructuredSortSection &
+      SortSection &
       FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
@@ -103,7 +104,7 @@ export const buildProductListingRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     platformUrl: state.configuration.platformUrl,
-    url: state.productListing?.url,
+    url: state.productListing.url,
     // TODO COM-1185: if (analyticsEnabled) {
     clientId: getVisitorID(),
     ...(state.productListing.additionalFields?.length
@@ -132,8 +133,8 @@ export const buildProductListingRequest = (
           ) + 1,
       },
     }),
-    ...(state.sort && {
-      sort: getSortParam(state.sort),
+    ...(state.sortCriteria && {
+      sort: getSortParam(parseCriterionExpression(state.sortCriteria)),
     }),
   };
 };

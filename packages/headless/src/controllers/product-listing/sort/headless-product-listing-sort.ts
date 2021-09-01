@@ -8,13 +8,7 @@ import {
 } from '../../core/sort/headless-core-sort';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {structuredSort} from '../../../app/reducers';
-import {
-  ConfigurationSection,
-  StructuredSortSection,
-} from '../../../state/state-sections';
-import {CoreEngine} from '../../../app/engine';
-import {loadReducerError} from '../../../utils/errors';
+import {parseCriterionExpression} from '../../../features/sort-criteria/criteria-parser';
 
 export interface ProductListingSortState extends SortState {
   /**
@@ -48,10 +42,6 @@ export function buildSort(
   engine: ProductListingEngine,
   props: SortProps = {}
 ): ProductListingSort {
-  if (!loadSortReducers(engine)) {
-    throw loadReducerError;
-  }
-
   const {dispatch} = engine;
   const sort = buildCoreSort(engine, props);
   const getState = () => engine.state;
@@ -67,15 +57,10 @@ export function buildSort(
     get state() {
       return {
         ...sort.state,
-        sort: getState().sort,
+        sort: getState().sortCriteria
+          ? parseCriterionExpression(getState().sortCriteria!)
+          : [],
       };
     },
   };
-}
-
-function loadSortReducers(
-  engine: CoreEngine
-): engine is CoreEngine<ConfigurationSection & StructuredSortSection> {
-  engine.addReducers({sort: structuredSort});
-  return true;
 }

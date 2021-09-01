@@ -31,7 +31,6 @@ import {resultPreviewReducer} from '../features/result-preview/result-preview-sl
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {searchReducer} from '../features/search/search-slice';
 import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice';
-import {structuredSortReducer} from '../features/sort-criteria/structured-sort-slice';
 import {standaloneSearchBoxSetReducer} from '../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
@@ -58,7 +57,6 @@ export const querySet = querySetReducer;
 export const redirection = redirectionReducer;
 export const querySuggest = querySuggestReducer;
 export const sortCriteria = sortCriteriaReducer;
-export const structuredSort = structuredSortReducer;
 export const context = contextReducer;
 export const didYouMean = didYouMeanReducer;
 export const fields = fieldsReducer;

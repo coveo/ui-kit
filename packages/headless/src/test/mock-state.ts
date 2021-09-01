@@ -29,7 +29,6 @@ import {getTriggerInitialState} from '../features/triggers/triggers-state';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state';
 import {getStandaloneSearchBoxSetInitialState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state';
-import {getStructuredSortInitialState} from '../features/sort-criteria/structured-sort-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -51,7 +50,6 @@ export function createMockState(
     redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
-    sort: getStructuredSortInitialState(),
     context: getContextInitialState(),
     didYouMean: getDidYouMeanInitialState(),
     fields: getFieldsInitialState(),
