@@ -17,6 +17,8 @@ describe('advanced search parameters', () => {
   const cq = 'mock-cq';
   const defaultAq = 'mock-default-aq';
   const aq = 'mock-aq';
+  const defaultLq = 'mock-default-lq';
+  const lq = 'mock-lq';
   let state: AdvancedSearchQueriesState;
 
   beforeEach(() => {
@@ -27,10 +29,12 @@ describe('advanced search parameters', () => {
     const expected = buildMockAdvancedSearchQueriesState({
       aq,
       cq,
+      lq,
       aqWasSet: true,
       cqWasSet: true,
+      lqWasSet: true,
     });
-    const action = updateAdvancedSearchQueries({aq, cq});
+    const action = updateAdvancedSearchQueries({aq, cq, lq});
     state = advancedSearchQueriesReducer(state, action);
 
     expect(state).toEqual(expected);
@@ -52,14 +56,51 @@ describe('advanced search parameters', () => {
     expect(state).toEqual(expected);
   });
 
-  it('#updateAdvancedSearchQueries when setting cq, does not modify aq which is not in initial state', () => {
+  it('#updateAdvancedSearchQueries sets only lq to the correct values', () => {
+    const expected = buildMockAdvancedSearchQueriesState({lq, lqWasSet: true});
+    const action = updateAdvancedSearchQueries({lq});
+    state = advancedSearchQueriesReducer(state, action);
+
+    expect(state).toEqual(expected);
+  });
+
+  it('#updateAdvancedSearchQueries when setting cq, does not modify aq or lq which is not in initial state', () => {
     const expected = buildMockAdvancedSearchQueriesState({
       aq,
       cq,
+      lq,
       cqWasSet: true,
     });
     const action = updateAdvancedSearchQueries({cq});
-    state = buildMockAdvancedSearchQueriesState({aq});
+    state = buildMockAdvancedSearchQueriesState({aq, lq});
+    state = advancedSearchQueriesReducer(state, action);
+
+    expect(state).toEqual(expected);
+  });
+
+  it('#updateAdvancedSearchQueries when setting aq, does not modify cq or lq which is not in initial state', () => {
+    const expected = buildMockAdvancedSearchQueriesState({
+      cq,
+      aq,
+      lq,
+      aqWasSet: true,
+    });
+    const action = updateAdvancedSearchQueries({aq});
+    state = buildMockAdvancedSearchQueriesState({cq, lq});
+    state = advancedSearchQueriesReducer(state, action);
+
+    expect(state).toEqual(expected);
+  });
+
+  it('#updateAdvancedSearchQueries when setting lq, does not modify cq or aq which is not in initial state', () => {
+    const expected = buildMockAdvancedSearchQueriesState({
+      cq,
+      lq,
+      aq,
+      lqWasSet: true,
+    });
+    const action = updateAdvancedSearchQueries({lq});
+    state = buildMockAdvancedSearchQueriesState({cq, aq});
     state = advancedSearchQueriesReducer(state, action);
 
     expect(state).toEqual(expected);
@@ -83,14 +124,28 @@ describe('advanced search parameters', () => {
     expect(state.cq).toEqual(defaultCq);
   });
 
-  it('#registerAdvancedSearchQueries when setting a default aq and cq, modifies aq and cq when they are unset', () => {
+  it("#registerAdvancedSearchQueries when setting a default lq, modifies lq when it's unset", () => {
     state = advancedSearchQueriesReducer(
       buildMockAdvancedSearchQueriesState(),
-      registerAdvancedSearchQueries({aq: defaultAq, cq: defaultCq})
+      registerAdvancedSearchQueries({lq: defaultLq})
+    );
+
+    expect(state.lq).toEqual(defaultLq);
+  });
+
+  it('#registerAdvancedSearchQueries when setting a default aq, cq, and lq, modifies aq, cq, and lq when they are unset', () => {
+    state = advancedSearchQueriesReducer(
+      buildMockAdvancedSearchQueriesState(),
+      registerAdvancedSearchQueries({
+        aq: defaultAq,
+        cq: defaultCq,
+        lq: defaultLq,
+      })
     );
 
     expect(state.aq).toEqual(defaultAq);
     expect(state.cq).toEqual(defaultCq);
+    expect(state.lq).toEqual(defaultLq);
   });
 
   it("#registerAdvancedSearchQueries when setting a default aq, does not modify aq when it's set", () => {
@@ -111,22 +166,42 @@ describe('advanced search parameters', () => {
     expect(state.cq).toEqual('');
   });
 
-  it('#registerAdvancedSearchQueries when setting a default aq and cq, does not modify aq and cq when they are set', () => {
+  it("#registerAdvancedSearchQueries when setting a default lq, does not modify lq when it's set", () => {
     state = advancedSearchQueriesReducer(
-      buildMockAdvancedSearchQueriesState({aqWasSet: true, cqWasSet: true}),
-      registerAdvancedSearchQueries({aq: defaultAq, cq: defaultCq})
+      buildMockAdvancedSearchQueriesState({lqWasSet: true}),
+      registerAdvancedSearchQueries({lq: defaultLq})
+    );
+
+    expect(state.lq).toEqual('');
+  });
+
+  it('#registerAdvancedSearchQueries when setting a default aq, cq, and lq, does not modify aq, cq, and lq when they are set', () => {
+    state = advancedSearchQueriesReducer(
+      buildMockAdvancedSearchQueriesState({
+        aqWasSet: true,
+        cqWasSet: true,
+        lqWasSet: true,
+      }),
+      registerAdvancedSearchQueries({
+        aq: defaultAq,
+        cq: defaultCq,
+        lq: defaultLq,
+      })
     );
 
     expect(state.aq).toEqual('');
     expect(state.cq).toEqual('');
+    expect(state.lq).toEqual('');
   });
 
   it('allows a restore query on history change', () => {
-    const expectedQuery: AdvancedSearchQueriesState =
-      buildMockAdvancedSearchQueriesState({
+    const expectedQuery: AdvancedSearchQueriesState = buildMockAdvancedSearchQueriesState(
+      {
         cq: 'hello',
         aq: 'hola',
-      });
+        lq: 'hallo',
+      }
+    );
     const historyChange = {
       ...getHistoryInitialState(),
       advancedSearchQueries: expectedQuery,
@@ -158,6 +233,15 @@ describe('advanced search parameters', () => {
       expect(finalState.aq).toEqual(state.aq);
     });
 
+    it('when the object does not contain a #lq key, it does not update the property in state', () => {
+      state.lq = 'a';
+      const finalState = advancedSearchQueriesReducer(
+        state,
+        restoreSearchParameters({})
+      );
+      expect(finalState.lq).toEqual(state.lq);
+    });
+
     it('when the object contains an #cq key, it sets the value in state', () => {
       state.cq = 'a';
       const finalState = advancedSearchQueriesReducer(
@@ -174,6 +258,15 @@ describe('advanced search parameters', () => {
         restoreSearchParameters({})
       );
       expect(finalState.cq).toEqual(state.cq);
+    });
+
+    it('when the object does not contain a #lq key, it does not update the property in state', () => {
+      state.lq = 'a';
+      const finalState = advancedSearchQueriesReducer(
+        state,
+        restoreSearchParameters({})
+      );
+      expect(finalState.lq).toEqual(state.lq);
     });
   });
 });
