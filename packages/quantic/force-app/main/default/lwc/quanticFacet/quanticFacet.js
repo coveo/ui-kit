@@ -1,3 +1,4 @@
+
 import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
@@ -14,36 +15,88 @@ import search from '@salesforce/label/c.quantic_Search';
 import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 
+/**
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\
+ * A `QuanticFacet` displays a facet of the results for the current query.
+ * @category Components
+ * @hideconstructor
+ * @example
+ * <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
+ */
 export default class QuanticFacet extends LightningElement {
-  /** @type {import("coveo").FacetState} */
-  // @ts-ignore
-  @track state = {
-    values: [],
-  };
-  /** @type {string} */
+  /**
+   * @type {import("coveo").FacetState}
+   * @ignore
+   */
+  @track state;
+  /**
+   * The field whose values you want to display in the facet.
+   * @type {string}
+   */
   @api field;
-  /** @type {string} */
+  /**
+   * The non-localized label for the facet.
+   * @type {string}
+   */
   @api label;
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @type {string}
+   */
   @api engineId;
-  /** @type {number} */
+  /**
+   * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   * @type {number}
+   * @default 8
+   */
   @api numberOfValues = 8;
-  /** @type  {import("coveo").FacetSortCriterion}*/
+  /**
+   * The sort criterion to apply to the returned facet values
+   * Possible values are:
+   *   - score
+   *   - numeric
+   *   - occurences
+   *   - automatic
+   * @type  {import("coveo").FacetSortCriterion}
+   * @default automatic
+   */
   @api sortCriteria = 'automatic';
-  /** @type {boolean} */
+  /**
+   * Whether this facet should not contain a search box.
+   * @type {boolean}
+   * @default false
+   */
   @api noSearch = false;
 
-  /** @type {import("coveo").Facet}} */
+  /**
+   * @type {import("coveo").Facet}}
+   * @ignore
+   */
   facet;
-  /** @type {import("coveo").Unsubscribe} */
+  /**
+   * @type {import("coveo").Unsubscribe}
+   * @ignore
+   */
   unsubscribe;
-  /** @type {boolean} */
+  /**
+   * @type {boolean} 
+   * @ignore
+   */
   isCollapsed = false;
-  /** @type {string} */
+  /**
+   * @type {string}
+   * @ignore
+   */
   collapseIcon = 'utility:dash';
-  /** @type {HTMLInputElement} */
+  /**
+   * @type {HTMLInputElement}
+   * @ignore
+   */
   input;
-  /** @type {boolean} */
+  /**
+   * @type {boolean}
+   * @ignore
+   */
   isFacetSearchActive = false;
 
   labels = {
@@ -59,8 +112,8 @@ export default class QuanticFacet extends LightningElement {
 
   /**
    * @param {import("coveo").SearchEngine} engine
+   * @ignore
    */
-  @api
   initialize(engine) {
     const options = {
       field: this.field,
@@ -92,7 +145,7 @@ export default class QuanticFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values
+      this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
         .map((v) => ({
           ...v,
@@ -172,6 +225,7 @@ export default class QuanticFacet extends LightningElement {
 
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
+   * @ignore
    */
   onSelect(evt) {
     const specificSearchResult = {

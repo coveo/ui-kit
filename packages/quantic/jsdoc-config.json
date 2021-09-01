@@ -1,0 +1,11 @@
+
+{
+  "tags": {
+    "allowUnknownTags": ["category"]
+  },
+  "plugins": [
+    "plugins/markdown",
+    "./node_modules/better-docs/category",
+    "./node_modules/@ckeditor/jsdoc-plugins/lib/export-fixer/export-fixer.js"
+  ]
+}
