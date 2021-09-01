@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
-import { getItemfromLocalStorage, setIteminLocalStorage } from 'c/quanticUtils';
+import { getItemFromLocalStorage, setItemInLocalStorage } from 'c/quanticUtils';
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentQueriesLabel';
 
 export default class QuanticRecentQueries extends LightningElement {
@@ -19,7 +19,7 @@ export default class QuanticRecentQueries extends LightningElement {
   /** @type {string} */
   collapseIcon = 'utility:dash';
   /** @type {number} */
-  maxLength = 10;
+  @api maxLength = 10;
 
   labels = {
     emptyListLabel,
@@ -40,7 +40,7 @@ export default class QuanticRecentQueries extends LightningElement {
   initialize(engine) {
     this.recentQueriesList = CoveoHeadless.buildRecentQueriesList(engine, {
       initialState: {
-        queries: getItemfromLocalStorage(this.localStorageKey) ?? [],
+        queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
       },
       options: {
         maxLength: this.maxLength,
@@ -54,8 +54,8 @@ export default class QuanticRecentQueries extends LightningElement {
   }
 
   updateState() {
-    this.state = {...this.recentQueriesList.state};
-    setIteminLocalStorage('quantic-recent-queries', this.recentQueriesList.state.queries);
+    this.state = { ...this.recentQueriesList.state };
+    setItemInLocalStorage('quantic-recent-queries', this.recentQueriesList.state.queries);
   }
 
   executeQuery(e) {
@@ -75,7 +75,7 @@ export default class QuanticRecentQueries extends LightningElement {
     return !!this.queries.length;
   }
 
-  get localStorageKey(){
+  get localStorageKey() {
     return `${this.engineId}_quantic-recent-queries`;
   }
 }
