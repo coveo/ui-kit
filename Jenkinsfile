@@ -7,8 +7,8 @@ node('linux && docker') {
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Setup') {
-        sh 'npm ci'
-        sh 'npx lerna bootstrap --ci'
+        sh 'npm i'
+        sh 'npx lerna bootstrap'
         if (!isBump) {
           sh 'npm run lockLernaDependencies'
         }
