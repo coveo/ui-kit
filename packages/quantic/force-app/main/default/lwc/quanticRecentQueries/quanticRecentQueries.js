@@ -1,13 +1,19 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 import { getItemFromLocalStorage, setItemInLocalStorage } from 'c/quanticUtils';
+import recentQueriesLabel from '@salesforce/label/c.quantic_RecentQueries';
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentQueriesLabel';
 
 export default class QuanticRecentQueries extends LightningElement {
+  labels = {
+    recentQueriesLabel,
+    emptyListLabel,
+  }
+  
   /** @type {import("coveo").RecentQueriesState} */
   @track state;
   /** @type {string} */
-  @api label = "Recent Queries";
+  @api label = this.labels.recentQueriesLabel;
   /** @type {string} */
   @api engineId;
   /** @type {import("coveo").RecentQueriesList} */
@@ -20,10 +26,6 @@ export default class QuanticRecentQueries extends LightningElement {
   collapseIcon = 'utility:dash';
   /** @type {number} */
   @api maxLength = 10;
-
-  labels = {
-    emptyListLabel,
-  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
