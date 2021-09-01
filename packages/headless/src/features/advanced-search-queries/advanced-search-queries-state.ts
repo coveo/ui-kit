@@ -61,16 +61,17 @@ export interface AdvancedSearchQueriesState {
   defaultFilters: AdvancedSearchQueriesDefaultFiltersState;
 }
 
-export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesState = () => ({
-  cq: '',
-  cqWasSet: false,
-  aq: '',
-  aqWasSet: false,
-  lq: '',
-  lqWasSet: false,
-  defaultFilters: {
+export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesState =
+  () => ({
     cq: '',
+    cqWasSet: false,
     aq: '',
+    aqWasSet: false,
     lq: '',
-  },
-});
+    lqWasSet: false,
+    defaultFilters: {
+      cq: '',
+      aq: '',
+      lq: '',
+    },
+  });
