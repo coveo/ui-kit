@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 import { getItemfromLocalStorage, setIteminLocalStorage } from 'c/quanticUtils';
+import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentQueriesLabel';
 
 export default class QuanticRecentQueries extends LightningElement {
   /** @type {import("coveo").RecentQueriesState} */
@@ -17,10 +18,12 @@ export default class QuanticRecentQueries extends LightningElement {
   isCollapsed = false;
   /** @type {string} */
   collapseIcon = 'utility:dash';
-  /** @type {string} */
-  localStorageKey = 'quantic-recent-queries';
   /** @type {number} */
   maxLength = 10;
+
+  labels = {
+    emptyListLabel,
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -51,7 +54,7 @@ export default class QuanticRecentQueries extends LightningElement {
   }
 
   updateState() {
-    this.state = this.recentQueriesList.state;
+    this.state = {...this.recentQueriesList.state};
     setIteminLocalStorage('quantic-recent-queries', this.recentQueriesList.state.queries);
   }
 
@@ -66,5 +69,13 @@ export default class QuanticRecentQueries extends LightningElement {
 
   get queries() {
     return this.state?.queries ?? []
+  }
+
+  get hasQueries() {
+    return !!this.queries.length;
+  }
+
+  get localStorageKey(){
+    return `${this.engineId}_quantic-recent-queries`;
   }
 }

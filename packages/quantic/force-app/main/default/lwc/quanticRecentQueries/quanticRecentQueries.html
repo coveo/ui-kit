@@ -11,6 +11,9 @@
     </lightning-button-icon>
     
     <template if:false={isCollapsed}>
+      <template if:false={hasQueries}>
+        <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium">{labels.emptyListLabel}</div>
+      </template>
       <ul class="slds-m-around_small slds-p-bottom_xxx-small">
           <template for:each={queries} for:item="query" for:index="index">
             <li

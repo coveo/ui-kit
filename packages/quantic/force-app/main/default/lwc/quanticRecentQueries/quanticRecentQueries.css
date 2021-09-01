@@ -3,7 +3,7 @@
   margin: 0 2em 0 0;
 }
 
-.query-text{
+.query-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -21,4 +21,8 @@ li:hover {
 
 li span {
   pointer-events: none;
+}
+
+.empty-list-message {
+  color: var(--sds-c-color-gray-8, #8e959d);
 }
