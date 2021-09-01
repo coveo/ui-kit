@@ -31,7 +31,6 @@ node('linux && docker') {
       }
 
       stage('Unit Test') {
-        sh 'npm i -g jest'
         sh 'npm test'
         junit 'packages/*/reports/*.xml'
       }
