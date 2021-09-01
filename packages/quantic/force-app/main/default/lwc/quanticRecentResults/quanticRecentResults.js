@@ -6,8 +6,9 @@ import {
 import {getItemfromLocalStorage, setIteminLocalStorage} from 'c/quanticUtils';
 
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLabel';
+import recentResults from '@salesforce/label/c.quantic_RecentResults';
 
-export default class QuanticRecentResults extends LightningElement {
+export default class QuanticRecentResultsList extends LightningElement {
   /** @type {import("coveo").RecentResultsState} */
   @track state;
 
@@ -16,7 +17,7 @@ export default class QuanticRecentResults extends LightningElement {
   /** @type {number} */
   @api maxLength = 10;
   /** @type {string} */
-  @api label;
+  @api label = this.labels.recentResults;
 
   /** @type {boolean} */
   isCollapsed = false;
@@ -30,6 +31,7 @@ export default class QuanticRecentResults extends LightningElement {
 
   labels = {
     emptyListLabel,
+    recentResults
   }
 
   connectedCallback() {
