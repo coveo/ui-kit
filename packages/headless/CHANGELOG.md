@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.5...@coveo/headless@1.19.0) (2021-09-01)
+
+
+### Features
+
+* **headless:** support for large query expression ([#1152](https://github.com/coveo/ui-kit/issues/1152)) ([ef1c183](https://github.com/coveo/ui-kit/commit/ef1c183265aa836dcbdf48846bc663c79be7da4f))
+
+
+
+
+
 ## [1.18.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.4...@coveo/headless@1.18.5) (2021-08-31)
 
 
