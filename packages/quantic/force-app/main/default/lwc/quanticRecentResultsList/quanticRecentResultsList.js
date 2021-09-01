@@ -9,6 +9,11 @@ import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLab
 import recentResults from '@salesforce/label/c.quantic_RecentResults';
 
 export default class QuanticRecentResultsList extends LightningElement {
+  labels = {
+    emptyListLabel,
+    recentResults
+  }
+  
   /** @type {import("coveo").RecentResultsState} */
   @track state;
 
@@ -28,11 +33,6 @@ export default class QuanticRecentResultsList extends LightningElement {
 
   /** @type {() => void} */
   unsubscribe;
-
-  labels = {
-    emptyListLabel,
-    recentResults
-  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
