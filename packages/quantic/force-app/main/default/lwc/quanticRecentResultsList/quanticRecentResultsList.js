@@ -3,7 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {getItemfromLocalStorage, setIteminLocalStorage} from 'c/quanticUtils';
+import {getItemFromLocalStorage, setItemInLocalStorage} from 'c/quanticUtils';
 
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLabel';
 import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
@@ -51,7 +51,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   initialize(engine) {
     this.recentResultsList = CoveoHeadless.buildRecentResultsList(engine, {
       initialState: {
-        results: getItemfromLocalStorage(this.localStorageKey) ?? []
+        results: getItemFromLocalStorage(this.localStorageKey) ?? []
       },
       options: {
         maxLength: this.maxLength
@@ -66,7 +66,7 @@ export default class QuanticRecentResultsList extends LightningElement {
 
   updateState() {
     this.state = {...this.recentResultsList.state};
-    setIteminLocalStorage(this.localStorageKey, this.state.results)
+    setItemInLocalStorage(this.localStorageKey, this.state.results)
   }
 
   toggleVisibility() {

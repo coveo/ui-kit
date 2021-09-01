@@ -139,12 +139,12 @@ export const keys = {
   ARROWDOWN: 'ArrowDown',
 };
 
-export function getItemfromLocalStorage(key) {
+export function getItemFromLocalStorage(key) {
   const value = localStorage.getItem(key);
   return value !== 'undefined' ? JSON.parse(value) : null;
 }
 
-export function setIteminLocalStorage(key, item) {
+export function setItemInLocalStorage(key, item) {
   const value = JSON.stringify(item);
   localStorage.setItem(key, value);
 }
