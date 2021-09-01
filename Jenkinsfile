@@ -5,7 +5,7 @@ node('linux && docker') {
   def isMaster = env.BRANCH_NAME == 'master'
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
-    withDockerContainer(image: 'node:14', args: '-u=root') {
+    withDockerContainer(image: 'node:16', args: '-u=root') {
       stage('Setup') {
         sh 'npm install'
         sh 'npx lerna bootstrap'
