@@ -7,8 +7,8 @@ import {I18nUtils, getItemFromLocalStorage, setItemInLocalStorage} from 'c/quant
 
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLabel';
 import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
-import collapse from '@salesforce/label/c.quanticCollapse';
-import expand from '@salesforce/label/c.quaticExpand';
+import collapse from '@salesforce/label/c.quantic_Collapse';
+import expand from '@salesforce/label/c.quantic_Expand';
 
 export default class QuanticRecentResultsList extends LightningElement {
   labels = {
@@ -70,8 +70,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   toggleVisibility() {
-    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
   }
 
   get results() {
