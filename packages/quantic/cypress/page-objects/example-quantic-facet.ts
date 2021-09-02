@@ -1,8 +1,6 @@
-export const setupAliases = () =>
-  cy
-    .get('lightning-input[data-cy="configurator-field"] input')
-    .as('configurator-field')
-    .get('lightning-input[data-cy="configurator-label"] input')
-    .as('configurator-label')
-    .get('lightning-button[data-cy="configurator-try"]')
-    .as('configurator-try');
+export const selectors = {
+  title: 'c-quantic-facet .slds-card__header-title',
+  more: 'button[data-cy="more"]',
+  less: 'button[data-cy="less"]',
+  value: 'c-quantic-facet-value',
+};

@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.5...@coveo/atomic@0.74.6) (2021-09-01)
+
+
+### Bug Fixes
+
+* **atomic:** center refine modal contents ([#1162](https://github.com/coveo/ui-kit/issues/1162)) ([52681ab](https://github.com/coveo/ui-kit/commit/52681ab7375b95d61605ab557a518692dc61491c))
+
+
+
+
+
+## [0.74.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.4...@coveo/atomic@0.74.5) (2021-09-01)
+
+
+### Bug Fixes
+
+* **atomic:** fix breadcrumb alignment to baseline ([#1156](https://github.com/coveo/ui-kit/issues/1156)) ([13fde08](https://github.com/coveo/ui-kit/commit/13fde08dd339944cde4489488350da2f7a9e413f))
+* **atomic:** made result list not dynamically remove placeholders ([#1169](https://github.com/coveo/ui-kit/issues/1169)) ([9b80d05](https://github.com/coveo/ui-kit/commit/9b80d053187bf6ca6585cbf26b26b4c7f8e1c775))
+
+
+
+
+
+## [0.74.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.3...@coveo/atomic@0.74.4) (2021-09-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.74.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.2...@coveo/atomic@0.74.3) (2021-08-31)
+
+
+### Bug Fixes
+
+* **atomic:** add check before removing result list placeholder ([#1154](https://github.com/coveo/ui-kit/issues/1154)) ([3a161a0](https://github.com/coveo/ui-kit/commit/3a161a0cca53136fcac6fe6a8349be7f3fdf636d))
+* **atomic:** fix missing max-width on breadcrrumb ([#1155](https://github.com/coveo/ui-kit/issues/1155)) ([63682e7](https://github.com/coveo/ui-kit/commit/63682e7e8c8381b91d19f809ecc746b7da1fb2ca))
+* **atomic:** fixed condition to show loading animation ([#1161](https://github.com/coveo/ui-kit/issues/1161)) ([47daaee](https://github.com/coveo/ui-kit/commit/47daaee99c7b3184fb22001bcf47dfb0d2f39037))
+
+
+
+
+
 ## [0.74.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.1...@coveo/atomic@0.74.2) (2021-08-31)
 
 **Note:** Version bump only for package @coveo/atomic
