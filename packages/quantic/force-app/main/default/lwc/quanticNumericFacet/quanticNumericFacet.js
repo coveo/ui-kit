@@ -6,7 +6,6 @@ import {
 import LOCALE from '@salesforce/i18n/locale';
 
 import clear from '@salesforce/label/c.quantic_Clear';
-import toggleVisibility from '@salesforce/label/c.quantic_ToggleComponentVisibility';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -44,7 +43,6 @@ export default class QuanticNumericFacet extends LightningElement {
 
   labels = {
     clear,
-    toggleVisibility,
   };
 
   connectedCallback() {
