@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.6...@coveo/atomic@0.74.7) (2021-09-02)
+
+
+### Bug Fixes
+
+* **atomic:** add toggle on search interface host element on no results ([#1157](https://github.com/coveo/ui-kit/issues/1157)) ([3529d9a](https://github.com/coveo/ui-kit/commit/3529d9aadfa28821d3125593837d78a60489cb8b))
+* **atomic:** import only base styles to prevent font-size override ([#1172](https://github.com/coveo/ui-kit/issues/1172)) ([3d744fb](https://github.com/coveo/ui-kit/commit/3d744fb6b132ccf479b826daa891fbad6f75031b))
+
+
+
+
+
 ## [0.74.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.5...@coveo/atomic@0.74.6) (2021-09-01)
 
 
