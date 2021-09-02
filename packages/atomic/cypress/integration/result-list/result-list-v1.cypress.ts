@@ -1,4 +1,3 @@
-import {generateComponentHTML} from '../../fixtures/test-fixture';
 import {setUpPage} from '../../utils/setupComponent';
 import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
@@ -73,26 +72,21 @@ describe('Result List Component', () => {
     const lineHeightSelector = '#line-height-el';
 
     function generateLineHeightElement() {
-      return generateComponentHTML('div', {
-        id: lineHeightSelector.slice(1),
-        style:
-          'background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);',
-      });
+      return `<div
+        id="${lineHeightSelector.slice(1)}"
+        style="background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);"
+      ></div>`;
     }
 
     function generateSimpleTextElement() {
-      return generateComponentHTML(
-        'span',
-        {},
-        'I will not use meaningless placeholder text for testing'
-      );
+      return '<span>I will not use meaningless placeholder text for testing</span>';
     }
 
     it('should expose --line-height in the title section', () => {
       setUpResultListPage(
         resultListTemplateComponent({
           title: generateLineHeightElement(),
-        }).outerHTML
+        })
       );
       getFirstResult().find(lineHeightSelector).should('be.visible');
     });
@@ -101,7 +95,7 @@ describe('Result List Component', () => {
       setUpResultListPage(
         resultListTemplateComponent({
           excerpt: generateLineHeightElement(),
-        }).outerHTML
+        })
       );
       getFirstResult().find(lineHeightSelector).should('be.visible');
     });
@@ -110,7 +104,7 @@ describe('Result List Component', () => {
       setUpResultListPage(
         resultListTemplateComponent({
           bottomMetadata: generateLineHeightElement(),
-        }).outerHTML
+        })
       );
       getFirstResult().find(lineHeightSelector).should('be.visible');
     });
@@ -126,7 +120,7 @@ describe('Result List Component', () => {
           emphasized: generateSimpleTextElement(),
           excerpt: generateSimpleTextElement(),
           bottomMetadata: generateSimpleTextElement(),
-        }).outerHTML
+        })
       );
       cy.checkA11y();
     });

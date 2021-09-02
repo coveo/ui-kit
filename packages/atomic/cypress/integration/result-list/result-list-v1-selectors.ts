@@ -1,4 +1,4 @@
-import {generateComponentHTML} from '../../fixtures/test-fixture';
+import {ResultTemplateSelectors} from '../result-templates/result-template-selectors';
 
 type ResultSection =
   | 'visual'
@@ -32,28 +32,25 @@ export const resultListTemplateComponent = (
   const sections = (
     Object.entries(slots).filter(([, content]) => content !== undefined) as [
       ResultSection,
-      string | HTMLElement
+      string
     ][]
   ).map(
     ([section, content]) =>
-      generateComponentHTML(ResultListSelectors.sections[section], {}, content)
-        .outerHTML
+      `<${ResultListSelectors.sections[section]}>${content}<${ResultListSelectors.sections[section]}/>`
   );
-  return generateComponentHTML(
-    'atomic-result-template',
-    {},
-    `<template>${sections.join('')}</template>`
-  );
+  return `<${ResultTemplateSelectors.component}><template>${sections.join(
+    ''
+  )}</template></${ResultTemplateSelectors.component}>`;
 };
 
 export const resultListComponent = (
   slot = '',
-  display = 'list',
-  image = 'icon',
-  density = 'normal'
+  options?: {display?: string; image?: string; density?: string}
 ) =>
-  generateComponentHTML(
-    ResultListSelectors.component,
-    {display, image, density},
-    slot
-  ).outerHTML;
+  `<${ResultListSelectors.component}
+    display="${options?.display ?? 'list'}"
+    image="${options?.image ?? 'icon'}"
+    density="${options?.density ?? 'normal'}"
+   >
+    ${slot}
+   </${ResultListSelectors.component}>`;
