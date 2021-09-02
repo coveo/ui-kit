@@ -4,12 +4,12 @@
       class="slds-p-bottom_small"
       slot="actions"
       onclick={toggleVisibility}
-      icon-name={collapseIcon}
-      alternative-text={labels.toggleVisibility}
+      icon-name={actionButtonIcon}
+      alternative-text={actionButtonLabel}
       variant="bare"
     >
     </lightning-button-icon>
-    <template if:false={isCollapsed}>
+    <template if:true={isExpanded}>
       <template if:false={hasResults}>
         <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium">{labels.emptyListLabel}</div>
       </template>

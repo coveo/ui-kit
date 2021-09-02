@@ -197,7 +197,11 @@
         <name>quantic_EmptyRecentResultListLabel</name>
     </customLabels>
     <customLabels>
-        <label>Changer la visibilité du composant</label>
-        <name>quantic_ToggleComponentVisibility</name>
+        <label>Réduire {{0}}</label>
+        <name>quantic_Collapse</name>
+    </customLabels>
+    <customLabels>
+        <label>Agrandir {{0}}</label>
+        <name>quantic_Expand</name>
     </customLabels>
 </Translations>

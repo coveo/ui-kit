@@ -3,17 +3,19 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {getItemFromLocalStorage, setItemInLocalStorage} from 'c/quanticUtils';
+import {I18nUtils, getItemFromLocalStorage, setItemInLocalStorage} from 'c/quanticUtils';
 
 import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentResultListLabel';
 import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
-import toggleVisibility from '@salesforce/label/c.quantic_ToggleComponentVisibility';
+import collapse from '@salesforce/label/c.quanticCollapse';
+import expand from '@salesforce/label/c.quaticExpand';
 
 export default class QuanticRecentResultsList extends LightningElement {
   labels = {
     emptyListLabel,
     recentResultsLabel,
-    toggleVisibility,
+    collapse,
+    expand,
   }
 
   /** @type {import("coveo").RecentResultsState} */
@@ -27,9 +29,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   @api label = this.labels.recentResultsLabel;
 
   /** @type {boolean} */
-  isCollapsed = false;
-  /** @type {string} */
-  collapseIcon = 'utility:dash';
+  isExpanded = true;
   /** @type {import("coveo").RecentResultsList} */
   recentResultsList;
 
@@ -84,5 +84,14 @@ export default class QuanticRecentResultsList extends LightningElement {
 
   get localStorageKey() {
     return `${this.engineId}_quantic-recent-results`;
+  }
+
+  get actionButtonIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+
+  get actionButtonLabel() {
+    const label = this.isExpanded ? this.labels.collapse : this.labels.expand;
+    return I18nUtils.format(label, this.label);
   }
 }
