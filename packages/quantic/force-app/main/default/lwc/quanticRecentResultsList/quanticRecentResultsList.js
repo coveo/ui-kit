@@ -70,8 +70,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   toggleVisibility() {
-    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
   }
 
   get results() {
