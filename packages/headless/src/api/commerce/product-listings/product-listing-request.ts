@@ -1,3 +1,4 @@
+import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
 import {ProductRecommendation} from '../../search/search/product-recommendation';
 import {
   baseProductListingRequest,
@@ -29,6 +30,9 @@ const prepareRequestParams = (req: ProductListingRequest) => {
  * Defines the content of a successful response from the `/commerce/products/listing` API call.
  */
 export interface ProductListingSuccessResponse {
+  facets: {
+    results: AnyFacetResponse[];
+  };
   products: ProductRecommendation[];
   pagination: {
     totalCount: number;

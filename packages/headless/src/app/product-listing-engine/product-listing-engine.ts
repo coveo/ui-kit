@@ -17,6 +17,13 @@ import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
 import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
 import {productListing} from '../reducers';
+import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
+import {SearchAPIClient} from '../../api/search/search-api-client';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+} from '../../api/search/search-api-client-middleware';
 
 export {
   ProductListingEngineConfiguration,
@@ -66,10 +73,12 @@ export function buildProductListingEngine(
     options.configuration,
     logger
   );
+  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
   const thunkArguments: ProductListingThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     productListingClient,
+    searchAPIClient,
   };
 
   const augmentedOptions: EngineOptions<ProductListingEngineReducers> = {
@@ -98,6 +107,26 @@ function validateConfiguration(
     logger.error('Product Listing engine configuration error', error);
     throw error;
   }
+}
+
+function createSearchAPIClient(
+  configuration: SearchEngineConfiguration,
+  logger: Logger
+) {
+  const {search} = configuration;
+  return new SearchAPIClient({
+    logger,
+    preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
+    postprocessSearchResponseMiddleware:
+      search?.preprocessSearchResponseMiddleware ||
+      NoopPostprocessSearchResponseMiddleware,
+    postprocessFacetSearchResponseMiddleware:
+      search?.preprocessFacetSearchResponseMiddleware ||
+      NoopPostprocessFacetSearchResponseMiddleware,
+    postprocessQuerySuggestResponseMiddleware:
+      search?.preprocessQuerySuggestResponseMiddleware ||
+      NoopPostprocessQuerySuggestResponseMiddleware,
+  });
 }
 
 function createProductListingClient(

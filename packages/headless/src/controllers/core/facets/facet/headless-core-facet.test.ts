@@ -1,8 +1,8 @@
-import {buildFacet, Facet, FacetOptions} from './headless-facet';
+import {buildCoreFacet, Facet, FacetOptions} from './headless-core-facet';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
-} from '../../../test/mock-engine';
+} from '../../../../test/mock-engine';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -10,26 +10,26 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
-} from '../../../features/facets/facet-set/facet-set-actions';
-import {createMockState} from '../../../test/mock-state';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {executeSearch} from '../../../features/search/search-actions';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+} from '../../../../features/facets/facet-set/facet-set-actions';
+import {createMockState} from '../../../../test/mock-state';
+import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
+import {buildMockFacetValue} from '../../../../test/mock-facet-value';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {SearchAppState} from '../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {SearchAppState} from '../../../../state/search-app-state';
+import * as FacetIdDeterminor from '../_common/facet-id-determinor';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 import {
   configuration,
   facetSearchSet,
   facetSet,
   search,
-} from '../../../app/reducers';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+} from '../../../../app/reducers';
+import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 
 describe('facet', () => {
   const facetId = '1';
@@ -40,7 +40,7 @@ describe('facet', () => {
 
   function initFacet() {
     engine = buildMockSearchAppEngine({state});
-    facet = buildFacet(engine, {options});
+    facet = buildCoreFacet(engine, {options});
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
@@ -240,15 +240,6 @@ describe('facet', () => {
         updateFacetOptions({freezeFacetOrder: true})
       );
     });
-
-    it('dispatches a search', () => {
-      facet.deselectAll();
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(engine.actions).toContainEqual(action);
-    });
   });
 
   describe('#state.hasActiveValues', () => {
@@ -288,15 +279,6 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
-    });
-
-    it('dispatches a search', () => {
-      facet.sortBy('score');
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
     });
   });
 
@@ -369,15 +351,6 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
-    });
-
-    it('executes a search', () => {
-      facet.showMoreValues();
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   });
 
@@ -461,14 +434,6 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
-    });
-
-    it('executes a search', () => {
-      facet.showLessValues();
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   });
 

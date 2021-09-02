@@ -19,6 +19,7 @@ export const productListingReducer = createReducer(
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         state.error = null;
+        state.facets = action.payload.response.facets;
         state.products = action.payload.response.products;
         state.responseId = action.payload.response.responseId;
         state.isLoading = false;

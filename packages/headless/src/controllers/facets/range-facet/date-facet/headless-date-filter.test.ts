@@ -13,7 +13,7 @@ import {
   DateFilterOptions,
 } from './headless-date-filter';
 import {buildDateRange} from './date-range';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {
   registerDateFacet,
   updateDateFacetValues,

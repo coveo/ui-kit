@@ -1,6 +1,7 @@
 import {ProductListingAPIClient} from '../api/commerce/product-listings/product-listing-api-client';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {SearchThunkExtraArguments} from './search-thunk-extra-arguments';
 
-export interface ProductListingThunkExtraArguments extends ThunkExtraArguments {
+export interface ProductListingThunkExtraArguments
+  extends SearchThunkExtraArguments {
   productListingClient: ProductListingAPIClient;
 }

@@ -1,9 +1,21 @@
-import {SearchSection} from '../../../state/state-sections';
+import {
+  ProductListingSection,
+  SearchSection,
+} from '../../../state/state-sections';
 import {FacetSection} from '../../../state/state-sections';
 import {FacetResponse, FacetValue} from './interfaces/response';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
-export const baseFacetResponseSelector = (state: SearchSection, id: string) => {
+export const baseFacetResponseSelector = (
+  state: SearchSection | ProductListingSection,
+  id: string
+) => {
+  if ('productListing' in state) {
+    return state.productListing.facets.results.find(
+      (response) => response.facetId === id
+    );
+  }
+
   return state.search.response.facets.find(
     (response) => response.facetId === id
   );

@@ -10,6 +10,10 @@ export function buildFetchProductListingResponse(
         totalCount: 0,
         ...(response?.pagination || {}),
       },
+      facets: {
+        results: [],
+        ...(response?.facets || {}),
+      },
       products: [],
       responseId: '',
       ...(response || {}),

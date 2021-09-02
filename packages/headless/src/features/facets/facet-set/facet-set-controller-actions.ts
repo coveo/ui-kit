@@ -28,18 +28,28 @@ export const executeToggleFacetSelect = createAsyncThunk<
   {
     facetId: string;
     selection: FacetValue;
+    onAfterSend?: (
+      getAnalyticsAction: () => ReturnType<
+        typeof getAnalyticsActionForToggleFacetSelect
+      >
+    ) => void;
   },
   AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
->(
-  'facet/executeToggleSelect',
-  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    const analyticsAction = getAnalyticsActionForToggleFacetSelect(
-      facetId,
-      selection
+>('facet/executeToggleSelect', ({facetId, selection, onAfterSend}, thunk) => {
+  const {
+    dispatch,
+    extra: {validatePayload},
+  } = thunk;
+  validatePayload({facetId, selection}, definition);
+  dispatch(toggleSelectFacetValue({facetId, selection}));
+  dispatch(updateFacetOptions({freezeFacetOrder: true}));
+  if (onAfterSend) {
+    onAfterSend(() =>
+      getAnalyticsActionForToggleFacetSelect(facetId, selection)
     );
-    validatePayload({facetId, selection}, definition);
-    dispatch(toggleSelectFacetValue({facetId, selection}));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
-    dispatch(executeSearch(analyticsAction));
+  } else {
+    dispatch(
+      executeSearch(getAnalyticsActionForToggleFacetSelect(facetId, selection))
+    );
   }
-);
+});
