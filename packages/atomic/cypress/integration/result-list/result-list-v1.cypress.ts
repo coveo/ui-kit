@@ -3,8 +3,8 @@ import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
 import {
   ResultListSelectors,
-  resultListComponent,
-  resultListTemplateComponent,
+  generateResultList,
+  generateResultTemplate,
 } from './result-list-v1-selectors';
 
 describe('Result List Component', () => {
@@ -17,7 +17,7 @@ describe('Result List Component', () => {
   }
 
   it('should load', () => {
-    setUpPage(resultListComponent());
+    setUpPage(generateResultList());
     cy.get(ResultListSelectors.component)
       .find(ResultListSelectors.result)
       .should('have.length.above', 0);
@@ -25,7 +25,7 @@ describe('Result List Component', () => {
 
   describe('when no first search has yet been executed', () => {
     beforeEach(() => {
-      setUpPage(resultListComponent(), false);
+      setUpPage(generateResultList(), false);
     });
 
     it('should render placeholder components', () => {
@@ -37,7 +37,7 @@ describe('Result List Component', () => {
 
   describe('when an initial search is executed', () => {
     it('should render the correct number of results', () => {
-      setUpPage(resultListComponent());
+      setUpPage(generateResultList());
       cy.get(ResultListSelectors.component)
         .find(ResultListSelectors.result)
         .should('have.length', 10);
@@ -48,7 +48,7 @@ describe('Result List Component', () => {
     it('should update the results', () => {
       let firstResultHtml: string;
       setUpPage(
-        `${resultListComponent()}<${PagerSelectors.pager}></${
+        `${generateResultList()}<${PagerSelectors.pager}></${
           PagerSelectors.pager
         }>`
       );
@@ -84,7 +84,7 @@ describe('Result List Component', () => {
 
     it('should expose --line-height in the title section', () => {
       setUpResultListPage(
-        resultListTemplateComponent({
+        generateResultTemplate({
           title: generateLineHeightElement(),
         })
       );
@@ -93,7 +93,7 @@ describe('Result List Component', () => {
 
     it('should expose --line-height in the excerpt section', () => {
       setUpResultListPage(
-        resultListTemplateComponent({
+        generateResultTemplate({
           excerpt: generateLineHeightElement(),
         })
       );
@@ -102,7 +102,7 @@ describe('Result List Component', () => {
 
     it('should expose --line-height in the bottom-metadata section', () => {
       setUpResultListPage(
-        resultListTemplateComponent({
+        generateResultTemplate({
           bottomMetadata: generateLineHeightElement(),
         })
       );
@@ -111,7 +111,7 @@ describe('Result List Component', () => {
 
     it.skip('should pass accessibility tests', () => {
       setUpResultListPage(
-        resultListTemplateComponent({
+        generateResultTemplate({
           visual: generateSimpleTextElement(),
           badges: generateSimpleTextElement(),
           actions: generateSimpleTextElement(),

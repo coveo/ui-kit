@@ -26,7 +26,7 @@ export const ResultListSelectors = {
   },
 };
 
-export const resultListTemplateComponent = (
+export const generateResultTemplate = (
   slots: Partial<Record<ResultSection, string | HTMLElement>> = {}
 ) => {
   const sections = (
@@ -43,7 +43,7 @@ export const resultListTemplateComponent = (
   )}</template></${ResultTemplateSelectors.component}>`;
 };
 
-export const resultListComponent = (
+export const generateResultList = (
   slot = '',
   options?: {display?: string; image?: string; density?: string}
 ) =>

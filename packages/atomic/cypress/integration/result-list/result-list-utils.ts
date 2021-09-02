@@ -1,5 +1,5 @@
 import {buildTestUrl, injectComponent} from '../../utils/setupComponent';
-import {resultListComponent} from './result-list-v1-selectors';
+import {generateResultList} from './result-list-v1-selectors';
 
 export function withAnySectionnableResultList(
   assertions: (setUpResultListPage: (template: string) => void) => void
@@ -19,7 +19,7 @@ export function withAnySectionnableResultList(
                     cy.visit(buildTestUrl());
                     cy.injectAxe();
                     injectComponent(
-                      resultListComponent(template, {display, image, density}),
+                      generateResultList(template, {display, image, density}),
                       true
                     );
                     cy.get('.list-wrapper:not(.placeholder)');
