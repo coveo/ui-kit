@@ -36,7 +36,7 @@ export const generateResultTemplate = (
     ][]
   ).map(
     ([section, content]) =>
-      `<${ResultListSelectors.sections[section]}>${content}<${ResultListSelectors.sections[section]}/>`
+      `<${ResultListSelectors.sections[section]}>${content}</${ResultListSelectors.sections[section]}>`
   );
   return `<${ResultTemplateSelectors.component}><template>${sections.join(
     ''

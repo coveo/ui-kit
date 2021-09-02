@@ -68,7 +68,7 @@ describe('Result List Component', () => {
     });
   });
 
-  withAnySectionnableResultList((setUpResultListPage) => {
+  describe('with elements to measure line height', () => {
     const lineHeightSelector = '#line-height-el';
 
     function generateLineHeightElement() {
@@ -78,51 +78,69 @@ describe('Result List Component', () => {
       ></div>`;
     }
 
+    before(() => {
+      setUpPage(
+        generateResultList(
+          generateResultTemplate({
+            title: generateLineHeightElement(),
+            excerpt: generateLineHeightElement(),
+            bottomMetadata: generateLineHeightElement(),
+          })
+        )
+      );
+      cy.get('.list-wrapper:not(.placeholder)');
+    });
+
+    withAnySectionnableResultList(() => {
+      it('should expose --line-height in the title section', () => {
+        getFirstResult()
+          .find(ResultListSelectors.sections.title)
+          .find(lineHeightSelector)
+          .should('be.visible');
+      });
+
+      it('should expose --line-height in the excerpt section', () => {
+        getFirstResult()
+          .find(ResultListSelectors.sections.excerpt)
+          .find(lineHeightSelector)
+          .should('be.visible');
+      });
+
+      it('should expose --line-height in the bottom-metadata section', () => {
+        getFirstResult()
+          .find(ResultListSelectors.sections.bottomMetadata)
+          .find(lineHeightSelector)
+          .should('be.visible');
+      });
+    });
+  });
+
+  describe('with a full result template', () => {
     function generateSimpleTextElement() {
       return '<span>I will not use meaningless placeholder text for testing</span>';
     }
 
-    it('should expose --line-height in the title section', () => {
-      setUpResultListPage(
-        generateResultTemplate({
-          title: generateLineHeightElement(),
-        })
+    before(() => {
+      setUpPage(
+        generateResultList(
+          generateResultTemplate({
+            visual: generateSimpleTextElement(),
+            badges: generateSimpleTextElement(),
+            actions: generateSimpleTextElement(),
+            title: generateSimpleTextElement(),
+            titleMetadata: generateSimpleTextElement(),
+            emphasized: generateSimpleTextElement(),
+            excerpt: generateSimpleTextElement(),
+            bottomMetadata: generateSimpleTextElement(),
+          })
+        )
       );
-      getFirstResult().find(lineHeightSelector).should('be.visible');
     });
 
-    it('should expose --line-height in the excerpt section', () => {
-      setUpResultListPage(
-        generateResultTemplate({
-          excerpt: generateLineHeightElement(),
-        })
-      );
-      getFirstResult().find(lineHeightSelector).should('be.visible');
-    });
-
-    it('should expose --line-height in the bottom-metadata section', () => {
-      setUpResultListPage(
-        generateResultTemplate({
-          bottomMetadata: generateLineHeightElement(),
-        })
-      );
-      getFirstResult().find(lineHeightSelector).should('be.visible');
-    });
-
-    it.skip('should pass accessibility tests', () => {
-      setUpResultListPage(
-        generateResultTemplate({
-          visual: generateSimpleTextElement(),
-          badges: generateSimpleTextElement(),
-          actions: generateSimpleTextElement(),
-          title: generateSimpleTextElement(),
-          titleMetadata: generateSimpleTextElement(),
-          emphasized: generateSimpleTextElement(),
-          excerpt: generateSimpleTextElement(),
-          bottomMetadata: generateSimpleTextElement(),
-        })
-      );
-      cy.checkA11y();
+    withAnySectionnableResultList(() => {
+      it.skip('should pass accessibility tests', () => {
+        cy.checkA11y();
+      });
     });
   });
 });

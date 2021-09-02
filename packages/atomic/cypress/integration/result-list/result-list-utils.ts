@@ -1,9 +1,6 @@
-import {buildTestUrl, injectComponent} from '../../utils/setupComponent';
-import {generateResultList} from './result-list-v1-selectors';
+import {ResultListSelectors} from './result-list-v1-selectors';
 
-export function withAnySectionnableResultList(
-  assertions: (setUpResultListPage: (template: string) => void) => void
-) {
+export function withAnySectionnableResultList(assertions: () => void) {
   const viewports = {mobile: 1023, desktop: 1024};
   Object.entries(viewports).forEach(([viewport, width]) =>
     describe(`with a ${viewport} viewport`, () =>
@@ -13,19 +10,18 @@ export function withAnySectionnableResultList(
             describe(`with image="${image}"`, () =>
               ['compact', 'normal', 'comfortable'].forEach((density) =>
                 describe(`with density="${density}"`, () => {
-                  function setUpResultListPage(template: string) {
+                  before(() => {
                     const aspectRatio = 16 / 9;
                     cy.viewport(width, width / aspectRatio);
-                    cy.visit(buildTestUrl());
-                    cy.injectAxe();
-                    injectComponent(
-                      generateResultList(template, {display, image, density}),
-                      true
-                    );
-                    cy.get('.list-wrapper:not(.placeholder)');
-                  }
+                    cy.get(ResultListSelectors.component).then((comp) => {
+                      const resultList = comp.get()[0];
+                      resultList.setAttribute('display', display);
+                      resultList.setAttribute('image', image);
+                      resultList.setAttribute('density', density);
+                    });
+                  });
 
-                  assertions(setUpResultListPage);
+                  assertions();
                 })
               ))
           ))
