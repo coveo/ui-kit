@@ -66,7 +66,7 @@ Example components are available as a Salesforce community (Digital Experience) 
     sfdx force:source:deploy -u LWC -p force-app/main,force-app/examples
     ```
 
-3. To deploy the community in the scratch org, run:
+3. To deploy the community, run:
 
     ```bash
     sfdx force:mdapi:deploy -u LWC -d ./quantic-examples-community -w 5
