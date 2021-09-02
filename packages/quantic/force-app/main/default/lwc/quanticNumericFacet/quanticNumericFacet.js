@@ -3,8 +3,12 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import clear from '@salesforce/label/c.quantic_Clear';
+import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
+
+import clear from '@salesforce/label/c.quantic_Clear';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -40,6 +44,8 @@ export default class QuanticNumericFacet extends LightningElement {
 
   labels = {
     clear,
+    collapseFacet,
+    expandFacet,
   };
 
   connectedCallback() {
@@ -96,8 +102,13 @@ export default class QuanticNumericFacet extends LightningElement {
     return this.state.hasActiveValues;
   }
 
-  get collapseIcon() {
+  get actionButtonIcon() {
     return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+  
+  get actionButtonLabel() {
+    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    return I18nUtils.format(label, this.label);
   }
 
   /**

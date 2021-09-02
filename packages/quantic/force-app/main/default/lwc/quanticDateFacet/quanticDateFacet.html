@@ -7,8 +7,8 @@
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
-          icon-name={collapseIcon}
-          alternative-text={labels.toggleVisibility}
+          icon-name={actionButtonIcon}
+          alternative-text={actionButtonLabel}
           variant="bare"
         >
         </lightning-button-icon>
@@ -19,7 +19,7 @@
                 class="slds-p-horizontal_small facet__collapse"
                 icon-name="utility:close" 
                 variant="base" 
-                value={labels.clear} 
+                value={labels.clear}
                 onclick={clearSelections}
                 label={labels.clear}
                 icon-position="right"
