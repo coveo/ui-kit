@@ -40,7 +40,7 @@ node('linux && docker') {
         sh 'rm -rf /var/lib/apt/lists/*'
         sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
         sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
-        sh 'NO_COLOR=1 npm run cypress:test'
+        sh 'sudo ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
       }
 
       stage('Generate Docs') {
