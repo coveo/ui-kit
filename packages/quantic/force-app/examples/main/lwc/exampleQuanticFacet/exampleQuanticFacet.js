@@ -19,6 +19,24 @@ export default class ExampleQuanticFacet extends LightningElement {
             label: 'Label',
             description: 'The label to use as the facet title.',
             defaultValue: 'Type'
+        },
+        {
+            attribute: 'numberOfValues',
+            label: 'Number of values',
+            description: 'The number of values the facet should display.',
+            defaultValue: 8
+        },
+        {
+            attribute: 'sortCriteria',
+            label: 'Sort criteria',
+            description: 'The sorting applied to the facet. Possible values are: automatic, score, alphanumeric, occurrences',
+            defaultValue: 'automatic'
+        },
+        {
+            attribute: 'noSearch',
+            label: 'No search',
+            description: 'Whether to remove the ability to search within facet values.',
+            defaultValue: false
         }
     ]
 

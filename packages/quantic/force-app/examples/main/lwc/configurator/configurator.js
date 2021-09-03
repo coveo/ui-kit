@@ -12,25 +12,42 @@ export default class Configurator extends LightningElement {
             label: option.label ?? option.attribute,
             description: option.description ?? '',
             defaultValue: option.defaultValue,
+            defaultValueAsText: this.formatDefaultValue(option.defaultValue),
             cyId: `cfg-${option.attribute}`,
         }));
+    }
+
+    formatDefaultValue(value) {
+        if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'string') {
+            return value.toString();
+        }
+
+        return '';
     }
 
     connectedCallback() {
         this.options.forEach(this.validateOption);
 
         this.options.forEach((option) => {
-            if (option.defaultValue) {
+            if (typeof (option.defaultValue) !== 'undefined') {
                 this.state[option.attribute] = option.defaultValue;
             }
         });
     }
 
     handleFieldChange(evt) {
-        const option = evt.target.dataset.option;
+        const optionAttribute = evt.target.dataset.option;
         const value = evt.target.value;
 
-        this.state[option] = value;
+        const option = this.options.find((o) => o.attribute === optionAttribute);
+        if (typeof (option.defaultValue) === 'boolean') {
+            this.state[optionAttribute] = Boolean(value);
+        } else if (typeof (option.defaultValue) === 'number') {
+            this.state[optionAttribute] = Number(value);
+        } else {
+            // Let's assume the value is a string
+            this.state[optionAttribute] = value;
+        }
     }
 
     handleTry() {
