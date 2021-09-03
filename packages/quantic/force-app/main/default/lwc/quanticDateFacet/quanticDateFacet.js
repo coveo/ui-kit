@@ -3,6 +3,8 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import LOCALE from '@salesforce/i18n/locale';
+
 import clear from '@salesforce/label/c.quantic_Clear';
 
 export default class QuanticDateFacet extends LightningElement {
@@ -19,6 +21,12 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
+  /** @type {(any) => string} */
+  @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
+    new Date(item.start)
+  )} - ${new Intl.DateTimeFormat(LOCALE).format(
+    new Date(item.end)
+  )}`;
 
   /** @type {import("coveo").DateFacet} */
   facet;
@@ -27,7 +35,7 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {boolean} */
   isCollapsed = false;
   /** @type {string} */
-  collapseIconName = 'utility:dash';
+  collapseIcon = 'utility:dash';
 
   labels = {
     clear,
@@ -49,6 +57,7 @@ export default class QuanticDateFacet extends LightningElement {
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
         field: this.field,
+        numberOfValues: Number(this.numberOfValues),
         generateAutomaticRanges: true,
       },
     });
@@ -96,7 +105,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
+    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
   }
 }

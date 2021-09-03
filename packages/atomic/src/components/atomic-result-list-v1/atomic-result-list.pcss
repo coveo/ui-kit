@@ -2,6 +2,26 @@
 @import './atomic-result-list-cards.pcss';
 @import './atomic-result-table.pcss';
 
+.list-wrapper.placeholder {
+  atomic-result-v1 {
+    display: none;
+  }
+
+  table.list-root {
+    display: none;
+  }
+}
+
+.list-wrapper:not(.placeholder) {
+  atomic-result-placeholder-v1 {
+    display: none;
+  }
+
+  atomic-result-table-placeholder-v1 {
+    display: none;
+  }
+}
+
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
 /* TODO: Remove v1 suffix */
 atomic-result-list-v1 {
@@ -74,11 +94,11 @@ atomic-result-list-v1 {
       }
 
       &.image-large {
-        grid-template-columns: repeat(auto-fill, 20.625rem);
+        grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
       }
 
       &.image-small {
-        grid-template-columns: repeat(auto-fill, 15.5rem);
+        grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
       }
     }
 
@@ -108,7 +128,7 @@ atomic-result-list-v1 {
       }
       &.image-small {
         @mixin atomic-grid-with-cards;
-        grid-template-columns: repeat(auto-fill, 9.5rem);
+        grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
       }
       &.image-icon,
       &.image-none {

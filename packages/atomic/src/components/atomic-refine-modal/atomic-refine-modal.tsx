@@ -114,14 +114,12 @@ export class AtomicRefineModal implements InitializableComponent {
     return (
       <div
         part="header"
-        class="w-full border-neutral border-b flex justify-between text-xl"
+        class="w-full flex justify-between text-xl centered py-6"
       >
-        <span class="truncate p-6">
-          {this.bindings.i18n.t('sort-and-filter')}
-        </span>
+        <span class="truncate">{this.bindings.i18n.t('sort-and-filter')}</span>
         <Button
           style="text-transparent"
-          class="p-6 grid place-items-center"
+          class="grid place-items-center"
           part="close-button"
           onClick={() => (this.enabled = false)}
         >
@@ -206,7 +204,7 @@ export class AtomicRefineModal implements InitializableComponent {
         <Button
           style="primary"
           part="footer-button"
-          class="p-3 w-full flex text-lg justify-center"
+          class="centered p-3 flex text-lg justify-center"
           onClick={() => (this.enabled = false)}
         >
           <span class="truncate mr-1">
@@ -232,10 +230,15 @@ export class AtomicRefineModal implements InitializableComponent {
         part="container"
         class="w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10"
       >
-        {this.renderHeader()}
+        <div class="px-6">{this.renderHeader()}</div>
+        <hr class="border-neutral"></hr>
         <div class="overflow-auto px-6 flex-grow">
-          {this.renderSort()}
-          {this.renderFilters()}
+          <div class="adjust-for-scroll-bar">
+            <div class="centered">
+              {this.renderSort()}
+              {this.renderFilters()}
+            </div>
+          </div>
         </div>
         {this.renderFooter()}
       </div>

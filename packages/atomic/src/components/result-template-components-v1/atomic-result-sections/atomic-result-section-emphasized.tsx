@@ -2,9 +2,14 @@ import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
- * The `atomic-result-section-emphasized` element, when added to a result template,
- * changes the style and position of its content to match specifications
- * from the result list element.
+ * The emphasized section allows the information seeker to quickly see the
+ * field that is important for its search criteria, in cases such as in
+ * commerce, the cost of a product is often an important information, often
+ * more than the title itself.
+ *
+ * Behaviour:
+ * * Has a very large font size
+ * * Is the second closest element underneath the title section
  */
 @Component({
   tag: 'atomic-result-section-emphasized',
