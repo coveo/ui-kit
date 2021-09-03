@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.57.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.57.1...@coveo/quantic@0.57.2) (2021-09-03)
+
+
+### Bug Fixes
+
+* **quantic:** added facetid ([#1178](https://github.com/coveo/ui-kit/issues/1178)) ([71c6e08](https://github.com/coveo/ui-kit/commit/71c6e0863154235f8d8d31bd91a2c683644fd52c))
+
+
+
+
+
 ## [0.57.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.57.0...@coveo/quantic@0.57.1) (2021-09-03)
 
 **Note:** Version bump only for package @coveo/quantic
