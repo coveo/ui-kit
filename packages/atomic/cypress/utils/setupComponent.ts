@@ -1,3 +1,5 @@
+import {SearchResponseSuccess} from '@coveo/headless/dist/definitions/api/search/search/search-response';
+
 export const buildTestUrl = (hash = '') => `test.html#${hash}`;
 
 const searchInterfaceTag = 'atomic-search-interface';
@@ -47,6 +49,27 @@ export function setupIntercept() {
     method: 'POST',
     url: searchEndpoint,
   }).as(RouteAlias.search.substring(1));
+}
+
+export type SearchResponseModifierPredicate = (
+  response: SearchResponseSuccess
+) => SearchResponseSuccess | void;
+
+export function interceptSearchResponse(
+  predicate: SearchResponseModifierPredicate
+) {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: '**/rest/search/v2*',
+    },
+    (request) => {
+      request.reply((response) => {
+        const newResponse = predicate(response.body);
+        response.send(200, newResponse ?? response.body);
+      });
+    }
+  );
 }
 
 // TODO: rename to setupPage (typo)
