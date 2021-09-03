@@ -20,6 +20,9 @@ export default class QuanticFacet extends LightningElement {
   @track state = {
     values: [],
   };
+
+  /** @type {string} */
+  @api facetId;
   /** @type {string} */
   @api field;
   /** @type {string} */
@@ -67,9 +70,9 @@ export default class QuanticFacet extends LightningElement {
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
       facetSearch: {numberOfValues: Number(this.numberOfValues)},
+      facetId: this.facetId ?? this.field,
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
-    this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 

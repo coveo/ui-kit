@@ -13,6 +13,9 @@ export default class QuanticNumericFacet extends LightningElement {
   @track state = {
     values: [],
   };
+
+  /** @type {string} */
+  @api facetId;
   /** @type {string} */
   @api field;
   /** @type {string} */
@@ -65,7 +68,8 @@ export default class QuanticNumericFacet extends LightningElement {
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
         numberOfValues: Number(this.numberOfValues),
-      },
+        facetId: this.facetId ?? this.field,
+      }
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
