@@ -392,6 +392,7 @@
         <protected>false</protected>
         <shortDescription>Expand the [label] facet</shortDescription>
     </labels>
+    <labels>
         <fullName>quantic_Collapse</fullName>
         <value>Collapse {{0}}</value>
         <language>en_US</language>
