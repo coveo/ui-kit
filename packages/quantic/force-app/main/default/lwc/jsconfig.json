@@ -60,6 +60,9 @@
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
             ],
+            "c/quanticRecentResultsList": [
+                "quanticRecentResultsList/quanticRecentResultsList.js"
+            ],
             "c/quanticResultsPerPage": [
                 "quanticResultsPerPage/quanticResultsPerPage.js"
             ],

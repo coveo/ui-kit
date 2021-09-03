@@ -6,7 +6,7 @@ export default class ExampleQuanticFacet extends LightningElement {
     isConfigured = false;
 
     pageTitle = 'Quantic Facet';
-    pageDescription = 'The Quantic Facet allows to refine search results by selecting one or more field values.'
+    pageDescription = 'The Quantic Facet allows users to refine search results by selecting one or more field values.'
     options = [
         {
             attribute: 'field',

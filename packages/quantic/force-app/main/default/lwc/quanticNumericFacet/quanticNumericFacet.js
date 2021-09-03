@@ -3,8 +3,9 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import clear from '@salesforce/label/c.quantic_Clear';
 import LOCALE from '@salesforce/i18n/locale';
+
+import clear from '@salesforce/label/c.quantic_Clear';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */

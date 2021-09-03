@@ -54,43 +54,31 @@ Start the server.
 
 Example components are available as a Salesforce community (Digital Experience) allowing you to experiment with Quantic components.
 
-1. To create a community named `Quantic Examples`, run:
+To setup the community in the `LWC` scratch org, run:
 
-    ```bash
-    sfdx force:community:create -u LWC -n "Quantic Examples" -p examples -t "Build Your Own"
-    ```
+```bash
+npm run setup:examples
+```
 
-2. To deploy Quantic and the example components, run:
+This script creates, configures, and deploys everything required to have fully working examples. The community URL is provided at the end of the script output, as in the following example:
 
-    ```bash
-    sfdx force:source:deploy -u LWC -p force-app/main,force-app/examples
-    ```
+```
+...
 
-3. To deploy the community, run:
+The 'Quantic Examples' community is ready, you can access it at the following URL:
+https://your-salesforce-scratch-org-instance.force.com/examples
 
-    ```bash
-    sfdx force:mdapi:deploy -u LWC -d ./quantic-examples-community -w 5
-    ```
+To open Cypress, run:
+npm run cypress:open
+```
 
-4. To publish the community, run:
+Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
 
-    ```bash
-    sfdx force:community:publish -u LWC -n "Quantic Examples" --json
-    ```
+```bash
+npm run deploy:main
+npm run deploy:examples
+```
 
-    The community URL will appear in the console output.
-
-5. Copy the `cypress/plugins/config/examples-community.json.example` to `cypress/plugins/config/examples-community.json`.
-   
-6. Update the `cypress/plugins/config/examples-community.json` file with the community URL like this:
-
-    ```json
-    {
-      "env": {
-        "examplesUrl": "https://your-salesforce-instance.force.com/examples"
-      }
-    }
-    ```
 ## Run Cypress for Quantic Components
 
 **Note** Before attempting to run Cypress tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
