@@ -81,11 +81,9 @@ npm run deploy:examples
 
 ## Run Cypress for Quantic Components
 
-**Note** Before attempting to run Cypress tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
+**Note** Before attempting to run [Cypress](https://docs.cypress.io) tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
 
-Looking to add new tests? See [adding tests](./docs/adding-tests.md)
-
-Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
+To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 
 - All the tests will need to be under folder `cypress/integration`.
 
