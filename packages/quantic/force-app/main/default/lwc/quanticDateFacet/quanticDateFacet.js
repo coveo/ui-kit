@@ -13,6 +13,9 @@ export default class QuanticDateFacet extends LightningElement {
   @track state = {
     values: [],
   };
+
+  /** @type {string} */
+  @api facetId;
   /** @type {string} */
   @api field;
   /** @type {string} */
@@ -59,6 +62,7 @@ export default class QuanticDateFacet extends LightningElement {
         field: this.field,
         numberOfValues: Number(this.numberOfValues),
         generateAutomaticRanges: true,
+        facetId: this.facetId ?? this.field,
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
