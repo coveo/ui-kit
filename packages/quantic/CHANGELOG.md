@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.57.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.56.0...@coveo/quantic@0.57.0) (2021-09-03)
+
+
+### Bug Fixes
+
+* **quantic:** typo in label names ([#1174](https://github.com/coveo/ui-kit/issues/1174)) ([aa6690a](https://github.com/coveo/ui-kit/commit/aa6690afccf38702b704b0ef5f6216d9984cab4f))
+
+
+### Features
+
+* **quantic:** script community deployment ([#1158](https://github.com/coveo/ui-kit/issues/1158)) ([dafeb5c](https://github.com/coveo/ui-kit/commit/dafeb5c024fe804c07efac63bad818587ad03b1d))
+
+
+
+
+
 # [0.56.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.55.1...@coveo/quantic@0.56.0) (2021-09-02)
 
 
