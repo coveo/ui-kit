@@ -29,7 +29,7 @@ export default class QuanticResultLink extends LightningElement {
       this.engine,
       this.result,
       this.template,
-      CoveoHeadless.buildInteractiveResult
+      CoveoHeadless.buildInteractiveRecentResult
     );
   }
 }
