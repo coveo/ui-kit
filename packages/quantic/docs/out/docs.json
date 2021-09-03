@@ -1,0 +1,185 @@
+{
+    "classes": [
+        {
+            "name": "QuanticFacet",
+            "description": "<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).<br>\nA <code>QuanticFacet</code> displays a facet of the results for the current query.</p>",
+            "extends": [],
+            "access": "",
+            "virtual": false,
+            "fires": "",
+            "constructor": {
+                "name": "QuanticFacet",
+                "description": "",
+                "parameters": [],
+                "examples": [
+                    "<c-quantic-facet field=\"filetype\" label=\"File Type\" engine-id={engineId}></c-quantic-facet>"
+                ]
+            },
+            "properties": [
+                {
+                    "name": "state",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": ""
+                },
+                {
+                    "name": "field",
+                    "access": "",
+                    "virtual": false,
+                    "description": "<p>The field whose values you want to display in the facet.</p>",
+                    "type": {
+                        "names": [
+                            "string"
+                        ]
+                    }
+                },
+                {
+                    "name": "label",
+                    "access": "",
+                    "virtual": false,
+                    "description": "<p>The non-localized label for the facet.</p>",
+                    "type": {
+                        "names": [
+                            "string"
+                        ]
+                    }
+                },
+                {
+                    "name": "engineId",
+                    "access": "",
+                    "virtual": false,
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "type": {
+                        "names": [
+                            "string"
+                        ]
+                    }
+                },
+                {
+                    "name": "numberOfValues",
+                    "access": "",
+                    "virtual": false,
+                    "description": "<p>The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.</p>",
+                    "type": {
+                        "names": [
+                            "number"
+                        ]
+                    }
+                },
+                {
+                    "name": "sortCriteria",
+                    "access": "",
+                    "virtual": false,
+                    "description": "<p>The sort criterion to apply to the returned facet values\nPossible values are:</p>\n<ul>\n<li>score</li>\n<li>numeric</li>\n<li>occurences</li>\n<li>automatic</li>\n</ul>",
+                    "type": ""
+                },
+                {
+                    "name": "noSearch",
+                    "access": "",
+                    "virtual": false,
+                    "description": "<p>Whether this facet should not contain a search box.</p>",
+                    "type": {
+                        "names": [
+                            "boolean"
+                        ]
+                    }
+                },
+                {
+                    "name": "facet",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": ""
+                },
+                {
+                    "name": "unsubscribe",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": ""
+                },
+                {
+                    "name": "isCollapsed",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": {
+                        "names": [
+                            "boolean"
+                        ]
+                    }
+                },
+                {
+                    "name": "collapseIcon",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": {
+                        "names": [
+                            "string"
+                        ]
+                    }
+                },
+                {
+                    "name": "input",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": {
+                        "names": [
+                            "HTMLInputElement"
+                        ]
+                    }
+                },
+                {
+                    "name": "isFacetSearchActive",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "type": {
+                        "names": [
+                            "boolean"
+                        ]
+                    }
+                }
+            ],
+            "functions": [
+                {
+                    "name": "initialize",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "parameters": [
+                        {
+                            "name": "engine",
+                            "type": "",
+                            "description": "",
+                            "default": "",
+                            "optional": "",
+                            "nullable": ""
+                        }
+                    ],
+                    "examples": []
+                },
+                {
+                    "name": "onSelect",
+                    "access": "",
+                    "virtual": false,
+                    "description": "",
+                    "parameters": [
+                        {
+                            "name": "evt",
+                            "type": "",
+                            "description": "",
+                            "default": "",
+                            "optional": "",
+                            "nullable": ""
+                        }
+                    ],
+                    "examples": []
+                }
+            ]
+        }
+    ]
+}
