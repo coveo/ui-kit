@@ -1,0 +1,30 @@
+<template>
+  <lightning-card title={label}>
+    <lightning-button-icon
+      class="slds-p-bottom_small"
+      slot="actions"
+      onclick={toggleVisibility}
+      icon-name={actionButtonIcon}
+      alternative-text={actionButtonLabel}
+      variant="bare"
+    >
+    </lightning-button-icon>
+    <template if:true={isExpanded}>
+      <template if:false={hasResults}>
+        <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium">{labels.emptyListLabel}</div>
+      </template>
+      <ul>
+        <template for:each={results} for:item="result">
+          <li class="slds-var-m-vertical_small slds-grid" key={result.uniqueId}>
+            <div class="slds-col recent-result__container">
+              <lightning-icon class="recent-result__icon" icon-name="utility:page" alternative-text="page icon" size="xx-small"></lightning-icon>
+              <div class="slds-text-body_small nowrap">
+                <c-quantic-recent-result-link result={result} engine-id={engineId}></c-quantic-recent-result-link>
+              </div>
+            </div>
+          </li>
+        </template>
+      </ul>
+    </template>
+  </lightning-card>
+</template>

@@ -12,13 +12,12 @@ describe('atomic-result-template', () => {
     expect(page.root).toBeTruthy();
   });
 
-  it('throws an error when it is not a children of an AtomicResultList component', () => {
-    expect(
-      newSpecPage({
-        components: [AtomicResultTemplate],
-        html: '<atomic-result-template></atomic-result-template>',
-      })
-    ).rejects.toBeTruthy();
+  it('throws an error when it is not a children of an AtomicResultList component', async () => {
+    const page = await newSpecPage({
+      components: [AtomicResultTemplate],
+      html: '<atomic-result-template></atomic-result-template>',
+    });
+    expect(page.doc.querySelector('atomic-component-error')).toBeDefined();
   });
 
   describe('methods', () => {

@@ -1,3 +1,12 @@
+export const selectors = {
+  result: 'c-quantic-result',
+  searchbox: 'c-quantic-search-box input[type="search"]',
+  summary: 'c-quantic-summary lightning-formatted-rich-text span',
+  sort: 'c-quantic-sort',
+  pager: 'c-quantic-pager',
+  regularFacet: 'c-quantic-facet[data-cy="type"]',
+};
+
 export const setupAliases = () =>
   cy
     .intercept(
@@ -5,64 +14,45 @@ export const setupAliases = () =>
       'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples'
     )
     .as('search')
-    .get('c-quantic-result', {timeout: 30000}) // Takes some time to load when server is cold
-    .as('result')
-    .get('c-quantic-search-box input[type="search"]')
-    .as('searchbox')
-    .get('c-quantic-summary lightning-formatted-rich-text span')
-    .as('summary')
-    .get('c-quantic-sort')
-    .as('sort')
-    .get('c-quantic-pager')
-    .as('pager')
-    .then(setupFacetTypeAliases);
+    .get(selectors.result, {timeout: 30000}); // Takes some time to load when server is cold
 
-const setupFacetTypeAliases = () =>
+export const selectRegularFacetValue = (value: string) =>
   cy
-    .get('c-quantic-facet[data-cy="type"]')
-    .as('facet-type')
-    .get('@facet-type')
-    .find('c-quantic-facet-value')
-    .as('facet-type-values')
-    .get('@facet-type')
-    .find('button[data-cy="more"]')
-    .as('facet-type-more')
-    .get('@facet-type')
-    .find('c-quantic-facet-value[data-cy="Item"] input[type="checkbox"]')
-    .as('facet-type-item-checkbox');
+    .get(selectors.regularFacet)
+    .find(`c-quantic-facet-value[data-cy="${value}"] input[type="checkbox"]`)
+    .check({force: true});
 
 export const sortByDateDescending = () =>
   cy
-    .get('@sort')
-    .find('input[role="textbox"]')
-    .lwcDevClick()
-    .get('@sort')
+    .get(selectors.sort)
+    .find('input[role="combobox"]')
+    .click()
+    .get(selectors.sort)
     .find('div[role="listbox"]')
-    .find('lightning-base-combobox-item[role="option"]')
-    .contains('Newest')
+    .find('lightning-base-combobox-item[data-value="newest"]')
     .trigger('mouseover', {force: true})
-    .lwcDevClick();
+    .click();
 
 export const selectResultPage = (pageNumber: number) =>
-  cy.get('@pager').find('lightning-button').contains(pageNumber).lwcDevClick();
+  cy.get(selectors.pager).find('button').contains(pageNumber).click();
 
 export const searchFor = (text: string) =>
   searchboxType(text)?.then(searchboxTypeEnter);
 
 const searchboxType = (text: string) => {
   if (!text) {
-    return;
+    return cy;
   }
 
   const head = text.substr(0, 1);
   const tail = text.substring(1);
 
   return cy
-    .get('@searchbox')
+    .get(selectors.searchbox)
     .invoke('val')
     .then((currentText) => {
       const updatedText = currentText + head;
-      cy.get('@searchbox')
+      cy.get(selectors.searchbox)
         .invoke('val', updatedText)
         .trigger('keyup', {which: head.charCodeAt(0)})
         .then(() => searchFor(tail));
@@ -70,6 +60,6 @@ const searchboxType = (text: string) => {
 };
 
 const searchboxTypeEnter = () =>
-  cy.get('@searchbox').then((searchbox) => {
+  cy.get(selectors.searchbox).then((searchbox) => {
     cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
   });

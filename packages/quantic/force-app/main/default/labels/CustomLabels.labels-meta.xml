@@ -392,4 +392,17 @@
         <protected>false</protected>
         <shortDescription>Expand the [label] facet</shortDescription>
     </labels>
+        <fullName>quantic_Collapse</fullName>
+        <value>Collapse {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Collapse [component label]</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Expand</fullName>
+        <value>Expand {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expand [component label]</shortDescription>
+    </labels>
 </CustomLabels>

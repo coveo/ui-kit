@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.19.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.0...@coveo/headless@1.19.1) (2021-09-03)
+
+
+### Bug Fixes
+
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+
+
+
 # [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.18.5...@coveo/headless@1.19.0) (2021-09-01)
 
 

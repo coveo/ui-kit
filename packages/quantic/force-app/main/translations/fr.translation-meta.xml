@@ -204,4 +204,11 @@
         <label>Agrandir la facette {{0}}</label>
         <name>quantic_ExpandFacet</name>
     </customLabels>
+        <label>Réduire {{0}}</label>
+        <name>quantic_Collapse</name>
+    </customLabels>
+    <customLabels>
+        <label>Agrandir {{0}}</label>
+        <name>quantic_Expand</name>
+    </customLabels>
 </Translations>

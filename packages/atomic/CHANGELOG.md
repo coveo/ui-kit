@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.7...@coveo/atomic@0.74.8) (2021-09-03)
+
+
+### Bug Fixes
+
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+
+
+
+## [0.74.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.6...@coveo/atomic@0.74.7) (2021-09-02)
+
+
+### Bug Fixes
+
+* **atomic:** add toggle on search interface host element on no results ([#1157](https://github.com/coveo/ui-kit/issues/1157)) ([3529d9a](https://github.com/coveo/ui-kit/commit/3529d9aadfa28821d3125593837d78a60489cb8b))
+* **atomic:** import only base styles to prevent font-size override ([#1172](https://github.com/coveo/ui-kit/issues/1172)) ([3d744fb](https://github.com/coveo/ui-kit/commit/3d744fb6b132ccf479b826daa891fbad6f75031b))
+
+
+
+
+
+## [0.74.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.5...@coveo/atomic@0.74.6) (2021-09-01)
+
+
+### Bug Fixes
+
+* **atomic:** center refine modal contents ([#1162](https://github.com/coveo/ui-kit/issues/1162)) ([52681ab](https://github.com/coveo/ui-kit/commit/52681ab7375b95d61605ab557a518692dc61491c))
+
+
+
+
+
 ## [0.74.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.4...@coveo/atomic@0.74.5) (2021-09-01)
 
 
