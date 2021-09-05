@@ -13,6 +13,8 @@ import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").FacetState} */
@@ -41,9 +43,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
-  isCollapsed = false;
-  /** @type {string} */
-  collapseIcon = 'utility:dash';
+  isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
   /** @type {boolean} */
@@ -58,6 +58,8 @@ export default class QuanticFacet extends LightningElement {
     search,
     moreMatchesFor,
     noMatchesFor,
+    collapseFacet,
+    expandFacet,
   };
 
   /**
@@ -173,6 +175,15 @@ export default class QuanticFacet extends LightningElement {
     return I18nUtils.format(this.labels.noMatchesFor, this.query);
   }
 
+  get actionButtonIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+
+  get actionButtonLabel() {
+    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    return I18nUtils.format(label, this.label);
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
@@ -205,8 +216,11 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
+  }
+
+  preventDefault(evt) {
+    evt.preventDefault();
   }
 
   handleKeyUp() {
