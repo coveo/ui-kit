@@ -2,14 +2,13 @@ import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
- * The title metadata section helps the information seeker understand some
- * fields that are in direct relationship with the item name. E.g.: in
- * commerce the rating of an item is closely tied to what the product is,
- * rather than a descriptive of the product.
+ * This section surfaces some fields that are directly related to the title of the item.
+ * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
+ * rather than to the product's description.
  *
  * Behaviour:
- * * Has a very small font size
- * * Is the closest element underneath the title section
+ * * Has a very small font size.
+ * * Is the closest element beneath the title section.
  */
 @Component({
   tag: 'atomic-result-section-title-metadata',

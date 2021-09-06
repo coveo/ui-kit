@@ -2,14 +2,12 @@ import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
- * The emphasized section allows the information seeker to quickly see the
- * field that is important for its search criteria, in cases such as in
- * commerce, the cost of a product is often an important information, often
- * more than the title itself.
+ * This section displays the field that's important for its search criteria.
+ * For example, in Commerce, a product's cost is often more important than the title itself.
  *
  * Behaviour:
- * * Has a very large font size
- * * Is the second closest element underneath the title section
+ * * Has a very large font size.
+ * * Is the second closest element beneath the title section.
  */
 @Component({
   tag: 'atomic-result-section-emphasized',

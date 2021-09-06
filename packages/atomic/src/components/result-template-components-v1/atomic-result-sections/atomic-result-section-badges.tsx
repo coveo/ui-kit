@@ -2,14 +2,13 @@ import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
- * The badges section helps the information seekers understand at a glance
- * special features about the items.
+ * This section provides badges that highlight special features of the item.
  *
  * Behaviour:
- * * Has a fixed height that depends on the layout, the density and the screen size.
- *   * You should ensure that elements inside of it have `height: 100%`.
- * * May appear over, next to or underneath the visual section.
- * * May becomes scrollable horizontally on mobile.
+ * * Has a fixed height that depends on the layout, the density, and the screen size.
+ * ** You should ensure that elements inside of it have `height: 100%`.
+ * * May appear over, next to, or beneath the visual section.
+ * * May become horizontally scrollable on mobile.
  */
 @Component({
   tag: 'atomic-result-section-badges',
