@@ -143,10 +143,11 @@
         display: none;
       }
 
-      atomic-search-box {
+      atomic-search-box-v1 {
         grid-area: search;
         margin: var(--spacing) 0;
         max-width: var(--search-box-width);
+        height: 48px;
       }
 
       .status {
@@ -233,7 +234,7 @@
   <body>
     <atomic-search-interface id="search">
       <div class="header-bg"></div>
-      <atomic-search-box></atomic-search-box>
+      <atomic-search-box-v1></atomic-search-box-v1>
       <atomic-facet-manager>
         <atomic-category-facet-v1 field="geographicalhierarchy" label="World Atlas" with-search>
         </atomic-category-facet-v1>

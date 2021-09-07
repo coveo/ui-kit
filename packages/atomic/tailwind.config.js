@@ -30,6 +30,7 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: 'var(--atomic-border-radius)',
+        md: 'var(--atomic-border-radius-md)',
         lg: 'var(--atomic-border-radius-lg)',
       },
       fontWeight: {
