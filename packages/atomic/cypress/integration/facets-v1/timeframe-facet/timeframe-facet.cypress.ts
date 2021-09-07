@@ -63,6 +63,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         before(setupSelectLinkValue);
         CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
         // CommonAssertions.assertAccessibility(TimeframeFacetSelectors);
+        // TODO: enable it when KIT-996 fixed
         CommonFacetAssertions.assertDisplayClearButton(
           TimeframeFacetSelectors,
           true
@@ -194,6 +195,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
     });
   });
+
   describe('with custom #field timeframe-facet', () => {
     const customField = 'indexeddate';
     const defaultNumberOfValues = unitFrames.length;
@@ -391,6 +393,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe.skip('with custom #period timeframe', () => {
+    // TODO: enable it when KIT-995 fixed
     const period = 'next';
     const periodFrames = [
       {unit: 'day', period: period},
