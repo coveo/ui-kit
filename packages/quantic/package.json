@@ -23,7 +23,8 @@
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
     "test:typings": "tsc",
-    "cypress:open": "npx cypress open"
+    "cypress:open": "npx cypress open",
+    "docs:generate": "jsdoc -c jsdoc-config.json > docs/out/docs.json"
   },
   "dependencies": {
     "@coveo/headless": "^1.18.5"
