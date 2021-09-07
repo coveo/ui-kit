@@ -23,7 +23,11 @@ export function assertDisplayInputWarning(length: number, message?: string) {
     TimeframeFacetSelectors.inputInvalid().should('have.length', length);
     TimeframeFacetSelectors.inputInvalid()
       .invoke('prop', 'validationMessage')
-      .should('equal', message ? message : 'Please fill out this field.');
+      .then((warning) => {
+        expect(warning).to.contains(
+          message ? message : 'Please fill out this field.'
+        );
+      });
   });
 }
 
@@ -84,7 +88,6 @@ function formatDefaultNumericFacetValue(
     period === 'past'
       ? `${period}-${amount}-${unit}..now`
       : `now..${period}-${amount}-${unit}`;
-  console.log(rangeValue);
   return rangeValue;
 }
 

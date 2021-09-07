@@ -313,10 +313,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           invokeSubmitButton();
           clickApplyButton();
         });
-        TimeframeFacetAssertions.assertDisplayInputWarning(
-          2,
-          'Value must be 08/05/2020 or earlier.'
-        );
+        TimeframeFacetAssertions.assertDisplayInputWarning(2, 'or earlier.');
       });
     });
   });
