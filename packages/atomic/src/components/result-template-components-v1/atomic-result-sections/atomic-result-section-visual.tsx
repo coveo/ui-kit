@@ -6,7 +6,7 @@ import {containsVisualElement} from '../../../utils/utils';
  * For example, in Commerce, an image is a great shorthand for a product category.
  * An icon can quickly show the item type, or an avatar can quickly show the target customer.
  *
- * Behaviour:
+ * Behavior:
  * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
  * ** When the image size is set to `icon`, this section stays very small.
  *   * You should ensure that elements inside of it take the available space.

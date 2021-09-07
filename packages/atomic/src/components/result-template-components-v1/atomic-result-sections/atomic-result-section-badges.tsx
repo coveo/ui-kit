@@ -4,7 +4,7 @@ import {containsVisualElement} from '../../../utils/utils';
 /**
  * This section provides badges that highlight special features of the item.
  *
- * Behaviour:
+ * Behavior:
  * * Has a fixed height that depends on the layout, the density, and the screen size.
  * ** You should ensure that elements inside of it have `height: 100%`.
  * * May appear over, next to, or beneath the visual section.

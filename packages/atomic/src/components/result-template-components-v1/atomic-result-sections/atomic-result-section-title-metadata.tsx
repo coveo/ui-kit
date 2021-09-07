@@ -6,7 +6,7 @@ import {containsVisualElement} from '../../../utils/utils';
  * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
  * rather than to the product's description.
  *
- * Behaviour:
+ * Behavior:
  * * Has a very small font size.
  * * Is the closest element beneath the title section.
  */
