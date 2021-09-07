@@ -1,11 +1,13 @@
 
 {
   "tags": {
-    "allowUnknownTags": ["category"]
+    "allowUnknownTags": true
   },
   "plugins": [
     "plugins/markdown",
     "./node_modules/better-docs/category",
+    "./node_modules/better-docs/typescript",
+    "./node_modules/better-docs/typedef-import",
     "./node_modules/@ckeditor/jsdoc-plugins/lib/export-fixer/export-fixer.js"
   ],
   "source": {

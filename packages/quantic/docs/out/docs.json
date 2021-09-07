@@ -21,7 +21,11 @@
                     "access": "",
                     "virtual": false,
                     "description": "",
-                    "type": ""
+                    "type": {
+                        "names": [
+                            "FacetState"
+                        ]
+                    }
                 },
                 {
                     "name": "field",
@@ -72,7 +76,11 @@
                     "access": "",
                     "virtual": false,
                     "description": "<p>The sort criterion to apply to the returned facet values\nPossible values are:</p>\n<ul>\n<li>score</li>\n<li>numeric</li>\n<li>occurences</li>\n<li>automatic</li>\n</ul>",
-                    "type": ""
+                    "type": {
+                        "names": [
+                            "FacetSortCriterion"
+                        ]
+                    }
                 },
                 {
                     "name": "noSearch",
@@ -90,14 +98,22 @@
                     "access": "",
                     "virtual": false,
                     "description": "",
-                    "type": ""
+                    "type": {
+                        "names": [
+                            "Facet"
+                        ]
+                    }
                 },
                 {
                     "name": "unsubscribe",
                     "access": "",
                     "virtual": false,
                     "description": "",
-                    "type": ""
+                    "type": {
+                        "names": [
+                            "Unsubscribe"
+                        ]
+                    }
                 },
                 {
                     "name": "isCollapsed",
@@ -153,7 +169,7 @@
                     "parameters": [
                         {
                             "name": "engine",
-                            "type": "",
+                            "type": "SearchEngine",
                             "description": "",
                             "default": "",
                             "optional": "",
@@ -170,7 +186,7 @@
                     "parameters": [
                         {
                             "name": "evt",
-                            "type": "",
+                            "type": "CustomEvent.<FacetValue>",
                             "description": "",
                             "default": "",
                             "optional": "",
