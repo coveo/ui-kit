@@ -287,6 +287,7 @@ export const buildSearchRequest = (state: StateNeededByExecuteSearch) => {
     ...(state.advancedSearchQueries && {
       aq: state.advancedSearchQueries.aq,
       cq: state.advancedSearchQueries.cq,
+      lq: state.advancedSearchQueries.lq,
     }),
     ...(state.context && {
       context: state.context.contextValues,

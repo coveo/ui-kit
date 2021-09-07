@@ -4,7 +4,7 @@ import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
   resultListComponent,
   ResultListSelectors,
-} from '../result-list-selectors';
+} from '../result-list/result-list-selectors';
 import {
   resultTemplateComponent,
   ResultTemplateSelectors,

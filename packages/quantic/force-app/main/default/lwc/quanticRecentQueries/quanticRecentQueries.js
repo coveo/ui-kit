@@ -57,7 +57,7 @@ export default class QuanticRecentQueries extends LightningElement {
 
   updateState() {
     this.state = { ...this.recentQueriesList.state };
-    setItemInLocalStorage('quantic-recent-queries', this.recentQueriesList.state.queries);
+    setItemInLocalStorage(this.localStorageKey, this.recentQueriesList.state.queries);
   }
 
   executeQuery(e) {

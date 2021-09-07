@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "types": ["node"]
+    },
+    "include": ["./**/*.ts"]
+  }

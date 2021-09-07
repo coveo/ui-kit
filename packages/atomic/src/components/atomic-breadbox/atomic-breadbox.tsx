@@ -87,7 +87,7 @@ export class AtomicBreadbox implements InitializableComponent {
         <Button
           part="breadcrumb-button"
           style="outline-neutral"
-          class="py-2 px-3 flex items-center btn-pill"
+          class="py-2 px-3 flex items-baseline btn-pill"
           title={`${breadcrumb.label}: ${fullValue}`}
           onClick={() => breadcrumb.deselect()}
         >
@@ -230,7 +230,7 @@ export class AtomicBreadbox implements InitializableComponent {
       ? sortedBreadcrumbs.slice(0, this.collapseThreshold)
       : sortedBreadcrumbs;
 
-    // TODO: update collapse
+    // TODO: update collapse KIT-924
     return [
       slicedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
       this.isCollapsed &&
@@ -249,7 +249,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <Host class="atomic-with-values">
         <div class="text-on-background text-sm flex">
-          <span part="label" class="font-bold p-2 with-colon">
+          <span part="label" class="font-bold p-2 pl-0 with-colon">
             {this.bindings.i18n.t('filters')}
           </span>
           <ul class="flex flex-wrap gap-1">{this.renderBreadcrumbs()}</ul>
