@@ -3,23 +3,15 @@
   "team_name": "searchui",
   "general": {
     "aws_regions": {
-      "sequential": [
-        "us-east-1"
-      ]
+      "sequential": ["us-east-1"]
     },
     "environments_order": {
-      "sequential": [
-        "dev",
-        "qa",
-        "prd"
-      ]
+      "sequential": ["dev", "qa", "prd"]
     },
     "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
     "notifications": {
-      "slack_channels": [
-        "#searchuibuilds"
-      ]
+      "slack_channels": ["#searchuibuilds"]
     }
   },
   "ordered_phases": [
@@ -136,5 +128,12 @@
   "package_rollout": {
     "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
   },
-  "deployment_config_version": 2
+  "deployment_config_version": 2,
+  "certifiers": {
+    "dev": [
+      {
+        "system_certifier": "snyk"
+      }
+    ]
+  }
 }

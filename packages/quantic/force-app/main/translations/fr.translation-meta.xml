@@ -188,4 +188,20 @@
         <label>Si le problème persiste, contactez l'administrateur.</label>
         <name>quantic_GenericErrorDesc</name>
     </customLabels>
+    <customLabels>
+        <label>Résultats Récents</label>
+        <name>quantic_RecentResults</name>
+    </customLabels>
+    <customLabels>
+        <label>Vos résultats récemment sélectionnés s'afficheront ici.</label>
+        <name>quantic_EmptyRecentResultListLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Réduire {{0}}</label>
+        <name>quantic_Collapse</name>
+    </customLabels>
+    <customLabels>
+        <label>Agrandir {{0}}</label>
+        <name>quantic_Expand</name>
+    </customLabels>
 </Translations>
