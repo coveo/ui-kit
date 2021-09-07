@@ -1,7 +1,7 @@
 export const selectors = {
   title: 'c-quantic-facet .slds-card__header-title',
-  collapse: 'button[title="Collapse/show facet"]',
-  expand: 'button[title="Collapse/show facet"]',
+  collapse: 'button svg[data-key="dash"]',
+  expand: 'button svg[data-key="add"]',
   more: 'button[data-cy="more"]',
   less: 'button[data-cy="less"]',
   value: 'c-quantic-facet-value',
