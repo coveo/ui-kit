@@ -54,7 +54,7 @@ export default class QuanticRecentResultsList extends LightningElement {
         results: getItemFromLocalStorage(this.localStorageKey) ?? []
       },
       options: {
-        maxLength: this.maxLength
+        maxLength: Number(this.maxLength)
       }
     });
     this.unsubscribe = this.recentResultsList.subscribe(() => this.updateState());

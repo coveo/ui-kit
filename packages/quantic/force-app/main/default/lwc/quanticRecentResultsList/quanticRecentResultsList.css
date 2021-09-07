@@ -1,6 +1,11 @@
 .recent-result__container {
   display: flex;
   flex-direction: row;
+  min-width: 0;
+}
+
+.result-link__container {
+  min-width: 0;
 }
 
 .recent-result__icon {
