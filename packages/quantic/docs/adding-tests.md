@@ -12,7 +12,7 @@ Let's say you just finished coding a `quantic-greeting` component, which display
 
 ## Update the Quantic Examples Community
 
-Now, say that you wish to make this component available in the `Quantic Examples` community. Further, say you want to add end to end tests to prevent any regression. To achieve that, you want a community page containing your example component, and a configuration panel allowing users to modify the `name` option.
+Now, say that you wish to make this component available in the `Quantic Examples` community. Further, say you want to add end to end tests to prevent any regression. To achieve that, you want a community page containing your example component, and a configuration panel allowing users to modify the component's options. In this case, you want to test the `name` option.
 
 Luckily, there are some components that can help you:
 
