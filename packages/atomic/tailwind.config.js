@@ -68,6 +68,7 @@ module.exports = {
       border: ['disabled'],
       cursor: ['disabled'],
       backgroundColor: ['group-focus'],
+      borderRadius: ['first', 'last'],
     },
   },
   plugins: [

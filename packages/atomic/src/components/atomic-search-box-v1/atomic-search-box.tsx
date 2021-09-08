@@ -52,6 +52,7 @@ export class AtomicSearchBox {
         <input
           placeholder="Search..."
           type="text"
+          class="h-full outline-none bg-transparent flex-grow px-4 text-neutral-dark placeholder-neutral-dark text-lg"
           value={this.searchBoxState.value}
           onFocus={() => (this.hasFocus = true)}
           onBlur={() => (this.hasFocus = false)}
@@ -59,13 +60,15 @@ export class AtomicSearchBox {
             this.searchBox.updateText((e.target as HTMLInputElement).value)
           }
         />
-        {this.searchBoxState.isLoading && <span class="loading"></span>}
+        {this.searchBoxState.isLoading && (
+          <span class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"></span>
+        )}
         {!this.searchBoxState.isLoading &&
           this.searchBoxState.value.trim() !== '' && (
             <Button
               style="text-transparent"
               part="clear-button"
-              class="clear-button"
+              class="w-8 h-8 mr-1.5 text-neutral-dark"
               onClick={() => this.searchBox.clear()}
             >
               <atomic-icon icon={ClearIcon} class="w-3 h-3"></atomic-icon>
@@ -86,10 +89,10 @@ export class AtomicSearchBox {
     }
 
     return (
-      <ul class="suggestions">
+      <ul class="w-full absolute left-0 top-full rounded-md bg-background border border-neutral">
         {this.searchBoxState.suggestions.map((suggestion) => {
           return (
-            <li class="suggestion query-suggestion">
+            <li class="flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md">
               {/* TODO: add icon when mixed suggestions */}
               <span innerHTML={suggestion.highlightedValue}></span>
             </li>
@@ -103,7 +106,7 @@ export class AtomicSearchBox {
     return (
       <Button
         style="primary"
-        class="submit-button"
+        class="w-12 h-full rounded-r-md rounded-l-none"
         part="submit-button"
         onClick={() => this.searchBox.submit()}
       >
@@ -114,7 +117,11 @@ export class AtomicSearchBox {
 
   public render() {
     return (
-      <div class={`container ${this.hasFocus ? 'container-focus' : ''}`}>
+      <div
+        class={`relative flex bg-background h-full w-full box-border border-neutral rounded-md ${
+          this.hasFocus ? 'border-primary ring ring-ring-primary' : ''
+        }`}
+      >
         {this.renderInputContainer()}
         {this.renderSuggestions()}
         {this.renderSubmitButton()}

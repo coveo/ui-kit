@@ -1,27 +1,6 @@
 @import '../../global/global.pcss';
 
-.container {
-  @apply relative flex bg-background h-full w-full box-border border-neutral rounded-md;
-}
-
-.container-focus {
-  @apply border-primary ring ring-ring-primary;
-}
-
-.submit-button {
-  @apply w-12 h-full text-on-primary rounded-r-md rounded-l-none;
-}
-
-.clear-button {
-  @apply w-8 h-8 mr-1.5 text-neutral-dark;
-}
-
-input {
-  @apply h-full outline-none bg-transparent flex-grow px-4 text-neutral-dark placeholder-neutral-dark text-lg;
-}
-
 .loading {
-  @apply w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center;
   --tw-gradient-from: var(--atomic-primary-dark);
   --tw-gradient-to: var(--atomic-primary-light);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
@@ -30,24 +9,4 @@ input {
 .loading::after {
   content: '';
   @apply absolute w-5/6 h-5/6 bg-background rounded-full;
-}
-
-.suggestions {
-  @apply w-full absolute left-0 top-full rounded-md bg-background border border-neutral;
-}
-
-.suggestion {
-  @apply hover:bg-neutral-light cursor-pointer;
-
-  &:first-child {
-    @apply rounded-t-md;
-  }
-
-  &:last-child {
-    @apply rounded-b-md;
-  }
-}
-
-.query-suggestion {
-  @apply flex px-4 h-10 items-center text-neutral-dark;
 }

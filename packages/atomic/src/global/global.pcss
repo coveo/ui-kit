@@ -1,50 +1,24 @@
 @import 'tailwindcss/base';
+@import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import './ripple.pcss';
 @import './polyfills.pcss';
+@import './ripple.pcss';
 
-:host {
-  display: block;
-  @apply font-sans font-normal text-base;
+@layer base {
+  :host {
+    display: block;
+    @apply font-sans font-normal text-base;
+  }
+
+  /* TODO: V1 rename to atomic-hidden and use in all components */
+  :host(.atomic-without-values) {
+    display: none;
+  }
 }
 
-/* TODO: V1 rename to atomic-hidden and use in all components */
-:host(.atomic-without-values) {
-  display: none;
-}
-
-@layer utilities {
-  .empty\:border-none:empty {
-    border: none;
-  }
-
-  .with-parentheses::before {
-    content: '(';
-  }
-
-  .with-parentheses::after {
-    content: ')';
-  }
-
-  .with-colon::after {
-    content: ':';
-  }
-
+@layer components {
   .link {
     @apply text-primary hover:text-primary-light hover:underline focus:text-primary-light focus:underline;
-  }
-
-  .quotations::before,
-  .quotations::after {
-    content: '"';
-  }
-
-  .no-outline {
-    @apply focus:outline-none;
-  }
-
-  .with-outline {
-    @apply focus:outline-color;
   }
 
   .input-primary {
@@ -89,5 +63,36 @@
     &.selected {
       @apply font-bold border-2 border-primary;
     }
+  }
+}
+
+@layer utilities {
+  .empty\:border-none:empty {
+    border: none;
+  }
+
+  .with-parentheses::before {
+    content: '(';
+  }
+
+  .with-parentheses::after {
+    content: ')';
+  }
+
+  .with-colon::after {
+    content: ':';
+  }
+
+  .quotations::before,
+  .quotations::after {
+    content: '"';
+  }
+
+  .no-outline {
+    @apply focus:outline-none;
+  }
+
+  .with-outline {
+    @apply focus:outline-color;
   }
 }
