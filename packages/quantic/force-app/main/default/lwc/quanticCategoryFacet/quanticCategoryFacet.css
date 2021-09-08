@@ -1,7 +1,7 @@
 .facet__show-less {
   font-size: 12px;
   outline: 0;
-  background-color: white;
+  background-color: var(--lwc-brandHeader, #FFFFFF);
   color: var(--sds-c-color-gray-8, #8E959D);
   border: none;
   margin-bottom: 5px;
@@ -10,7 +10,7 @@
 .facet__show-more {
   font-size: 12px;
   outline: 0;
-  background-color: white;
+  background-color: var(--lwc-brandHeader, #FFFFFF);
   color: #005FB2;
   border: none;
   margin-bottom: 5px;
@@ -21,8 +21,8 @@
   align-items: left;
 }
 
-.facet-text__bold {
-  font-weight: 700;
+.parent-text__bold {
+  font-weight: var(--lwc-fontWeightBold, 700);
 }
 
 .facet-list_type {
