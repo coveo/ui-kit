@@ -7,7 +7,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #0070d2;
+  color: var(--brand-text-link, #0176d3);
 }
 
 li:hover {
@@ -16,7 +16,7 @@ li:hover {
 }
 
 .icon-color {
-  color: #0070d2;
+  color: var(--brand-text-link, #0176d3);;
 }
 
 li span {

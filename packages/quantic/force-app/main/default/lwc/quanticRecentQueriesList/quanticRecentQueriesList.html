@@ -4,13 +4,13 @@
       class="slds-p-bottom_small"
       slot="actions"
       onclick={toggleVisibility}
-      icon-name={collapseIcon}
-      alternative-text="toggle recent queries visibility"
+      icon-name={actionButtonIcon}
+      alternative-text={actionButtonLabel}
       variant="bare"
     >
     </lightning-button-icon>
     
-    <template if:false={isCollapsed}>
+    <template if:true={isExpanded}>
       <template if:false={hasQueries}>
         <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium">{labels.emptyListLabel}</div>
       </template>

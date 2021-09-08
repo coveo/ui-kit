@@ -372,7 +372,7 @@
         <shortDescription>Recent Queries</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_EmptyRecentQueriesLabel</fullName>
+      <fullName>quantic_EmptyRecentQueriesListLabel</fullName>
       <value>Your recent searches will appear here.</value>
       <language>en_US</language>
       <protected>false</protected>
