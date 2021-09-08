@@ -50,7 +50,8 @@ export class AtomicSearchBox {
     return (
       <div class="flex-grow flex items-center">
         <input
-          placeholder="Search..."
+          placeholder={this.bindings.i18n.t('search')}
+          aria-label={this.bindings.i18n.t('search-box')}
           type="text"
           class="h-full outline-none bg-transparent flex-grow px-4 text-neutral-dark placeholder-neutral-dark text-lg"
           value={this.searchBoxState.value}
@@ -70,6 +71,7 @@ export class AtomicSearchBox {
               part="clear-button"
               class="w-8 h-8 mr-1.5 text-neutral-dark"
               onClick={() => this.searchBox.clear()}
+              ariaLabel={this.bindings.i18n.t('clear')}
             >
               <atomic-icon icon={ClearIcon} class="w-3 h-3"></atomic-icon>
             </Button>
