@@ -1,12 +1,23 @@
 <template>
     <li class="slds-var-m-horizontal_medium slds-var-m-vertical_small slds-grid">  
         <div class="slds-col_bump-right" onclick={onSelect}>
-            <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default">
-                {item.value}
-                <span class="slds-m-horizontal_small">
-                    ({item.numberOfResults})
-                </span>
-            </button>
+            <template if:false={withsearch}>
+                <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default">
+                    {item.value}
+                    <span class="slds-m-horizontal_small">
+                        ({item.numberOfResults})
+                    </span>
+                </button>
+            </template>
+             <template if:true={withsearch}>
+                 <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default">
+                    <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
+                    <span class="slds-m-horizontal_small">
+                        ({item.numberOfResults})
+                    </span>
+                    <span>{item.localizedPath}</span>
+                </button>  
+            </template>
         </div>
     </li>
 </template>

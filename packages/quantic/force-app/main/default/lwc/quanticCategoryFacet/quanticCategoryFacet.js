@@ -8,6 +8,7 @@ import showLess from '@salesforce/label/c.quantic_ShowLess';
 import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
 import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
 import allCategories from '@salesforce/label/c.quantic_AllCategories';
+import search from '@salesforce/label/c.quantic_Search';
 
 export default class QuanticCategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -31,6 +32,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   isCollapsed = false;
   /** @type {string} */
   collapseIconName = 'utility:dash';
+
+  /** @type {HTMLInputElement} */
+  input;
+  /** @type {boolean} */
+  isFacetSearchActive = false;
  
   labels = {
     clear,
@@ -38,7 +44,8 @@ export default class QuanticCategoryFacet extends LightningElement {
     showLess,
     showMoreFacetValues,
     showLessFacetValues,
-    allCategories
+    allCategories,
+    search
   }
 
   connectedCallback() {
@@ -47,6 +54,7 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
   disconnectedCallback() {
@@ -85,7 +93,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     if (!this.facet) {
       return false;
     }
-    return this.state.canShowMoreValues;
+    return this.state.canShowMoreValues  && !this.isFacetSearchActive;
   }
 
   get canShowLess() {
@@ -103,6 +111,23 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.state.values.length !== 0;
   }
 
+  get hasSearchResults() {
+    return this.facet.state.facetSearch.values.length !== 0;
+  }
+
+  get facetSearchResults() {
+    const results = this.facet.state.facetSearch.values;
+    return results.map((result) => ({
+      value: result.rawValue,
+      numberOfResults: result.count,
+      localizedPath: this.buildPath(result.path) ,
+      highlightedResult: this.highlightResult(
+        result.displayValue,
+        this.input.value
+      ),
+    }));
+  }
+
   get hasParentsOrValues() {
     return this.hasParents || this.hasValues;
   }
@@ -113,6 +138,10 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get showLessFacetValuesLabel() {
     return I18nUtils.format(this.labels.showLessFacetValues, this.label)
+  }
+
+  get isSearchComplete() {
+    return !this.facet.state.isLoading;
   }
 
   /**
@@ -136,5 +165,39 @@ export default class QuanticCategoryFacet extends LightningElement {
   toggleFacetVisibility() {
     this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
     this.isCollapsed = !this.isCollapsed;
+  }
+  handleKeyUp() {
+    if (this.isSearchComplete) {
+      this.isFacetSearchActive = this.input.value !== '';
+      this.facet.facetSearch.updateText(this.input.value);
+      this.facet.facetSearch.search();
+    }
+  }
+  clearInput() {
+    this.input.value = '';
+    this.updateState();
+  }
+  highlightResult(result, query) {
+    if (!query || query.trim() === '') {
+      return result;
+    }
+    const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
+    return result.replace(regex, '<b>$1</b>');
+  }
+
+  regexEncode(value) {
+    return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
+  }
+  /**
+   * @param {string[]} path
+   */
+  buildPath(path) {
+    if(!path.length) 
+      return this.labels.allCategories;
+    if(path.length > 2)  
+    {
+      path = path.slice(0, 1).concat("...", ...path.slice(-1));
+    }
+    return path.join('/');
   }
 }

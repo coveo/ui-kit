@@ -4,6 +4,8 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   /** @type {import("coveo").CategoryFacetValue} */
   @api item;
 
+  /** @type {string} */
+  @api withsearch;
   /**
    * @param {InputEvent} evt
    */
