@@ -6,7 +6,7 @@ const getInputSelector = (field: string): string =>
   `lightning-input[data-cy="cfg-${field}"] input`;
 
 export const configure = (
-  options: Record<string, string | number | boolean>
+  options: Record<string, string | number | boolean> = {}
 ) => {
   Object.keys(options).forEach((key) => {
     cy.get(getInputSelector(key)).invoke('val', options[key].toString());

@@ -23,7 +23,7 @@ export default class ExampleQuanticFacet extends LightningElement {
         {
             attribute: 'numberOfValues',
             label: 'Number of values',
-            description: 'The number of values the facet should display.',
+            description: 'The number of values displayed by the facet.',
             defaultValue: 8
         },
         {

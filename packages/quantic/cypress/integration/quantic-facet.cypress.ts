@@ -49,7 +49,7 @@ describe('quantic-facet', () => {
   });
 
   it('should display more values when clicking more button and reset when clicking less button', () => {
-    configure({})
+    configure()
       .get(facet.value)
       .should('have.length', 8)
       .get(facet.more)
@@ -115,7 +115,7 @@ describe('quantic-facet', () => {
 
   it('should filter results when selecting values', () => {
     setupSearchAlias()
-      .then(() => configure({}))
+      .then(() => configure())
       .wait('@search')
       .get(facet.value)
       .first()
