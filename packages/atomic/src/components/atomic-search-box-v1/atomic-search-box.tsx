@@ -94,7 +94,10 @@ export class AtomicSearchBox {
       <ul class="w-full absolute left-0 top-full rounded-md bg-background border border-neutral">
         {this.searchBoxState.suggestions.map((suggestion) => {
           return (
-            <li class="flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md">
+            <li
+              key={suggestion.rawValue}
+              class="flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md"
+            >
               {/* TODO: add icon when mixed suggestions */}
               <span innerHTML={suggestion.highlightedValue}></span>
             </li>
