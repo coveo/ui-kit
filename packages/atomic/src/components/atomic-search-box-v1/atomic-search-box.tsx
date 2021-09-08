@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -33,7 +33,7 @@ import {randomID} from '../../utils/utils';
 })
 export class AtomicSearchBox {
   @InitializeBindings() public bindings!: Bindings;
-
+  @Element() private host!: HTMLElement;
   private searchBox!: SearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
@@ -69,6 +69,69 @@ export class AtomicSearchBox {
     return `${this.id}-popup`;
   }
 
+  private updateActiveDescendant(activeDescendant = '') {
+    this.activeDescendant = activeDescendant;
+  }
+
+  private get activeDescendantElement(): HTMLLIElement | null {
+    if (this.activeDescendant === '') {
+      return null;
+    }
+    return this.host.querySelector(`#${this.activeDescendant}`);
+  }
+
+  private onInput(value: string) {
+    this.searchBox.updateText(value);
+    this.updateActiveDescendant();
+  }
+
+  private onFocus() {
+    this.isExpanded = true;
+    if (!this.searchBoxState.suggestions.length) {
+      this.searchBox.showSuggestions();
+    }
+  }
+
+  private onBlur() {
+    this.isExpanded = false;
+    this.updateActiveDescendant();
+  }
+
+  private onSubmit() {
+    if (this.activeDescendantElement) {
+      this.searchBox.selectSuggestion(
+        this.activeDescendantElement.getAttribute('value')!
+      );
+      return;
+    }
+
+    this.searchBox.submit();
+  }
+
+  private onKeyup(e: KeyboardEvent) {
+    switch (e.key) {
+      case 'Enter':
+        this.onSubmit();
+        break;
+      case 'Escape':
+        this.onBlur();
+        break;
+    }
+  }
+
+  private onKeyDown(e: KeyboardEvent) {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        // this.focusNextValue();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        // this.focusPreviousValue();
+        break;
+    }
+  }
+
   private renderInput() {
     return (
       <input
@@ -88,11 +151,11 @@ export class AtomicSearchBox {
         type="text"
         class="h-full outline-none bg-transparent flex-grow px-4 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
-        onFocus={() => (this.isExpanded = true)}
-        onBlur={() => (this.isExpanded = false)}
-        onInput={(e) =>
-          this.searchBox.updateText((e.target as HTMLInputElement).value)
-        }
+        onFocus={() => this.onFocus()}
+        onBlur={() => this.onBlur()}
+        onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+        onKeyUp={(e) => this.onKeyup(e)}
+        onKeyDown={(e) => this.onKeyDown(e)}
       />
     );
   }
@@ -106,7 +169,6 @@ export class AtomicSearchBox {
         onClick={() => {
           this.searchBox.clear();
           this.inputRef.focus();
-          this.searchBox.showSuggestions();
         }}
         ariaLabel={this.bindings.i18n.t('clear')}
       >
@@ -142,8 +204,16 @@ export class AtomicSearchBox {
         role="option"
         aria-selected={`${isSelected}`}
         key={suggestion.rawValue}
+        value={suggestion.rawValue}
         part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
-        class="flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md"
+        class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
+          isSelected ? 'bg-neutral-light' : ''
+        }`}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => {
+          this.searchBox.selectSuggestion(suggestion.rawValue);
+          this.onBlur();
+        }}
       >
         {/* TODO: add icon when mixed suggestions */}
         <span innerHTML={suggestion.highlightedValue}></span>
