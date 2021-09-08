@@ -17,6 +17,14 @@ import {randomID} from '../../utils/utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
+ *
+ * @part input - The search box input.
+ * @part loading - The search box loading animation.
+ * @part clear-button - The button to clear the search box of input.
+ * @part submit-button - The search box submit button.
+ * @part suggestions - A list of suggested query corrections.
+ * @part suggestion - A suggested query correction.
+ * @part active-suggestion - The currently active suggestion.
  */
 @Component({
   tag: 'atomic-search-box-v1', // TODO: remove v1
@@ -28,6 +36,7 @@ export class AtomicSearchBox {
 
   private searchBox!: SearchBox;
   private id!: string;
+  private inputRef!: HTMLInputElement;
 
   @BindStateToController('searchBox')
   @State()
@@ -63,6 +72,8 @@ export class AtomicSearchBox {
   private renderInput() {
     return (
       <input
+        part="input"
+        ref={(el) => (this.inputRef = el as HTMLInputElement)}
         role="combobox"
         aria-autocomplete="both"
         aria-haspopup="true"
@@ -92,7 +103,11 @@ export class AtomicSearchBox {
         style="text-transparent"
         part="clear-button"
         class="w-8 h-8 mr-1.5 text-neutral-dark"
-        onClick={() => this.searchBox.clear()}
+        onClick={() => {
+          this.searchBox.clear();
+          this.inputRef.focus();
+          this.searchBox.showSuggestions();
+        }}
         ariaLabel={this.bindings.i18n.t('clear')}
       >
         <atomic-icon icon={ClearIcon} class="w-3 h-3"></atomic-icon>
@@ -107,7 +122,10 @@ export class AtomicSearchBox {
       <div class="flex-grow flex items-center">
         {this.renderInput()}
         {isLoading && (
-          <span class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"></span>
+          <span
+            part="loading"
+            class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"
+          ></span>
         )}
         {!isLoading && hasValue && this.renderClearButton()}
       </div>
@@ -124,6 +142,7 @@ export class AtomicSearchBox {
         role="option"
         aria-selected={`${isSelected}`}
         key={suggestion.rawValue}
+        part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
         class="flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md"
       >
         {/* TODO: add icon when mixed suggestions */}
@@ -145,6 +164,7 @@ export class AtomicSearchBox {
       <ul
         id={this.popupId}
         role="listbox"
+        part="suggestions"
         aria-label={this.bindings.i18n.t('query-suggestion-list')}
         class="w-full absolute left-0 top-full rounded-md bg-background border border-neutral"
       >
