@@ -1,7 +1,16 @@
 import {Component, h, Prop, Element} from '@stencil/core';
-import {Result} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {
+  buildInteractiveResult,
+  InteractiveResult,
+  Result,
+} from '@coveo/headless';
+import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {filterProtocol} from '../../../utils/xss-utils';
+import {
+  Bindings,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -13,7 +22,10 @@ import {filterProtocol} from '../../../utils/xss-utils';
   styleUrl: 'atomic-result-link.pcss',
   shadow: false,
 })
-export class AtomicResultValue {
+export class AtomicResultLink implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public error!: Error;
+
   @ResultContext() private result!: Result;
 
   @Element() private host!: HTMLElement;
@@ -30,7 +42,14 @@ export class AtomicResultValue {
    */
   @Prop() target = '_self';
 
+  private interactiveResult!: InteractiveResult;
   private hasSlot!: boolean;
+
+  public initialize() {
+    this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
+      options: {result: this.result},
+    });
+  }
 
   public connectedCallback() {
     this.hasSlot = !!this.host.children.length;
@@ -41,6 +60,12 @@ export class AtomicResultValue {
       <a
         part="result-link"
         href={filterProtocol(this.result.clickUri)}
+        onClick={() => this.interactiveResult.select()}
+        onContextMenu={() => this.interactiveResult.select()}
+        onMouseDown={() => this.interactiveResult.select()}
+        onMouseUp={() => this.interactiveResult.select()}
+        onTouchStart={() => this.interactiveResult.beginDelayedSelect()}
+        onTouchEnd={() => this.interactiveResult.cancelPendingSelect()}
         target={this.target}
       >
         {this.hasSlot ? (

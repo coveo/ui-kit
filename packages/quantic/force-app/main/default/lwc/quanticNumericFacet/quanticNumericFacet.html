@@ -6,12 +6,13 @@
           class="slds-p-bottom_small facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
-          icon-name={facetIconName}
-          alternative-text="Collapse/show facet"
+          onmousedown={preventDefault}
+          icon-name={actionButtonIcon}
+          alternative-text={actionButtonLabel}
           variant="bare"
         >
         </lightning-button-icon>
-        <template if:false={isCollapsed}>
+        <template if:true={isExpanded}>
           <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
             <template if:true={hasActiveValues}>
               <lightning-button 
@@ -31,7 +32,7 @@
                 key={v.start} 
                 item={v} 
                 is-checked={v.checked}
-                variant="numeric"
+                formatting-function={formattingFunction}
                 >
               </c-quantic-facet-value>
             </template>

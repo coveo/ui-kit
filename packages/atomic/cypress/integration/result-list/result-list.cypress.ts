@@ -1,5 +1,5 @@
-import {setUpPage} from '../utils/setupComponent';
-import {createAliasNavigation, PagerSelectors} from './pager-selectors';
+import {setUpPage} from '../../utils/setupComponent';
+import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
 import {
   ResultListSelectors,
   resultListComponent,

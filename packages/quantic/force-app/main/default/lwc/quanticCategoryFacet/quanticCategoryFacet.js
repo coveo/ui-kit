@@ -17,6 +17,9 @@ export default class QuanticCategoryFacet extends LightningElement {
     values: [],
     parents: [],
   };
+
+  /** @type {string} */
+  @api facetId;
   /** @type {string} */
   @api field;
   /** @type {string} */
@@ -70,6 +73,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       options: {
         field: this.field,
         delimitingCharacter: ';',
+        facetId: this.facetId ?? this.field,
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());

@@ -1,0 +1,17 @@
+<template>
+    <c-example-layout
+        title={pageTitle}
+        description={pageDescription}
+        show-preview={isConfigured}>
+
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+            <c-quantic-facet
+                engine-id={engineId}
+                field={config.field}
+                label={config.label}>
+            </c-quantic-facet>
+        </c-quantic-search-interface>
+    </c-example-layout>
+</template>

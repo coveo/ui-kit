@@ -2,6 +2,26 @@
 @import './atomic-result-list-cards.pcss';
 @import './atomic-result-table.pcss';
 
+.list-wrapper.placeholder {
+  atomic-result-v1 {
+    display: none;
+  }
+
+  table.list-root {
+    display: none;
+  }
+}
+
+.list-wrapper:not(.placeholder) {
+  atomic-result-placeholder-v1 {
+    display: none;
+  }
+
+  atomic-result-table-placeholder-v1 {
+    display: none;
+  }
+}
+
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
 /* TODO: Remove v1 suffix */
 atomic-result-list-v1 {
@@ -40,6 +60,9 @@ atomic-result-list-v1 {
     @screen mobile-only {
       &.image-large {
         @mixin atomic-list-with-dividers;
+        display: grid;
+        justify-content: space-evenly;
+        grid-template-columns: minmax(auto, 35rem);
       }
 
       &.image-small,
@@ -71,39 +94,46 @@ atomic-result-list-v1 {
       }
 
       &.image-large {
-        grid-template-columns: repeat(auto-fill, 20.625rem);
+        grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
       }
 
       &.image-small {
-        grid-template-columns: repeat(auto-fill, 15.5rem);
+        grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+      }
+    }
+
+    @define-mixin atomic-grid-with-cards {
+      @mixin atomic-list-with-cards;
+      grid-column-gap: 2.5rem;
+      grid-row-gap: 2.5rem;
+
+      /* TODO: Remove v1 suffix */
+      atomic-result-v1,
+      atomic-result-placeholder-v1 {
+        margin: -1rem;
       }
     }
 
     @screen mobile-only {
       padding: 2rem;
       &.image-large {
-        @mixin atomic-list-with-dividers;
-        grid-template-columns: auto;
+        @media not all and (min-width: 768px) {
+          @mixin atomic-list-with-dividers;
+          grid-template-columns: minmax(auto, 35rem);
+        }
+        @media (min-width: 768px) {
+          @mixin atomic-grid-with-cards;
+          grid-template-columns: 1fr 1fr;
+        }
       }
       &.image-small {
-        grid-template-columns: repeat(auto-fill, 9.5rem);
+        @mixin atomic-grid-with-cards;
+        grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
       }
       &.image-icon,
       &.image-none {
+        @mixin atomic-grid-with-cards;
         grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
-      }
-      &.image-small,
-      &.image-icon,
-      &.image-none {
-        @mixin atomic-list-with-cards;
-        grid-column-gap: 2.5rem;
-        grid-row-gap: 2.5rem;
-
-        /* TODO: Remove v1 suffix */
-        atomic-result-v1,
-        atomic-result-placeholder-v1 {
-          margin: -1rem;
-        }
       }
     }
   }

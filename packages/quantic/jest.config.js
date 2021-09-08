@@ -11,5 +11,8 @@ module.exports = {
       },
     ],
   ],
+  moduleNameMapper: {
+    "^@salesforce/i18n/": "<rootDir>/typings/lwc/customlabels.d.ts"
+  }
   // add any custom configurations here
 };
