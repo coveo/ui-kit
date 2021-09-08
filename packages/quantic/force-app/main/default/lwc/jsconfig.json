@@ -60,6 +60,9 @@
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
             ],
+            "c/quanticRecentResultsList": [
+                "quanticRecentResultsList/quanticRecentResultsList.js"
+            ],
             "c/quanticResultsPerPage": [
                 "quanticResultsPerPage/quanticResultsPerPage.js"
             ],
@@ -89,6 +92,7 @@
     "include": [
         "**/*",
         "../../../../.sfdx/typings/lwc/**/*.d.ts",
+        "../../../../typings/lwc/**/*.d.ts",
         "../../../../coveo.d.ts"
     ],
     "typeAcquisition": {

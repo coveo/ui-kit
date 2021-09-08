@@ -35,4 +35,13 @@ export function createRipple(event: MouseEvent, options: RippleOptions) {
   ripple.style.left = `${event.clientX - (left + radius)}px`;
   ripple.style.top = `${event.clientY - (top + radius)}px`;
   button.prepend(ripple);
+  cleanupAnimationOnFinish(ripple);
+}
+
+async function cleanupAnimationOnFinish(ripple: HTMLSpanElement) {
+  const animationsFinished = ripple
+    .getAnimations()
+    .map((anim) => new Promise<void>((res) => (anim.onfinish = () => res())));
+  await Promise.all(animationsFinished);
+  ripple && ripple.remove();
 }

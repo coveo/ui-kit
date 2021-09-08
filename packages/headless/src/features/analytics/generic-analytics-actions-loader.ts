@@ -27,9 +27,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logSearchEvent(
-    payload: LogSearchEventActionCreatorPayload
-  ): AsyncThunkAction<
+  logSearchEvent(payload: LogSearchEventActionCreatorPayload): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -43,9 +41,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logClickEvent(
-    payload: LogSearchEventActionCreatorPayload
-  ): AsyncThunkAction<
+  logClickEvent(payload: LogSearchEventActionCreatorPayload): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Click;
     },
@@ -59,9 +55,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logCustomEvent(
-    payload: LogCustomEventActionCreatorPayload
-  ): AsyncThunkAction<
+  logCustomEvent(payload: LogCustomEventActionCreatorPayload): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
     },

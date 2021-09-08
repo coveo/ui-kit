@@ -15,6 +15,9 @@ export default class QuanticCategoryFacet extends LightningElement {
     values: [],
     parents: [],
   };
+
+  /** @type {string} */
+  @api facetId;
   /** @type {string} */
   @api field;
   /** @type {string} */
@@ -43,6 +46,10 @@ export default class QuanticCategoryFacet extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
+  disconnectedCallback() {
+    this.unsubscribe?.();
+  }
+
   /**
    * @param {import("coveo").SearchEngine} engine
    */
@@ -52,6 +59,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       options: {
         field: this.field,
         delimitingCharacter: ';',
+        facetId: this.facetId ?? this.field,
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());

@@ -89,7 +89,7 @@ export default class QuanticQueryError extends LightningElement {
 
   async handleCopyToClipboard() {
     const text = this.template.querySelector('code').textContent;
-    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+    if (navigator?.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(text);
       } catch (err) {

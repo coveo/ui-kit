@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.5](https://github.com/coveo/ui-kit/compare/coveo-atomic-example-070-alpha33@0.33.4...coveo-atomic-example-070-alpha33@0.33.5) (2021-09-03)
+
+
+### Bug Fixes
+
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+
+
+
+## [0.33.4](https://github.com/coveo/ui-kit/compare/coveo-atomic-example-070-alpha33@0.33.3...coveo-atomic-example-070-alpha33@0.33.4) (2021-08-25)
+
+**Note:** Version bump only for package coveo-atomic-example-070-alpha33
+
+
+
+
+
 ## [0.33.3](https://github.com/coveo/ui-kit/compare/coveo-atomic-example-070-alpha33@0.33.2...coveo-atomic-example-070-alpha33@0.33.3) (2021-08-09)
 
 **Note:** Version bump only for package coveo-atomic-example-070-alpha33

@@ -42,9 +42,9 @@ export interface LoadCollectionFulfilledReturn {
   collectionId: CollectionId;
 }
 
-export const foldingOptionsSchemaDefinition: SchemaDefinition<Required<
-  RegisterFoldingActionCreatorPayload
->> = {
+export const foldingOptionsSchemaDefinition: SchemaDefinition<
+  Required<RegisterFoldingActionCreatorPayload>
+> = {
   collectionField: new StringValue(),
   parentField: new StringValue(),
   childField: new StringValue(),
@@ -93,6 +93,7 @@ export const loadCollection = createAsyncThunk<
       return rejectWithValue(response.error);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response.success.results = fakeRes.results as any;
 
     return {collectionId, results: response.success.results};

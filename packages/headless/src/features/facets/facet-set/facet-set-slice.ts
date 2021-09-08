@@ -136,9 +136,9 @@ export const facetSetReducer = createReducer(
             return;
           }
 
-          facetRequest.currentValues = (facetResponse as FacetResponse).values.map(
-            convertFacetValueToRequest
-          );
+          facetRequest.currentValues = (
+            facetResponse as FacetResponse
+          ).values.map(convertFacetValueToRequest);
           facetRequest.freezeCurrentValues = false;
           facetRequest.preventAutoSelect = false;
         });

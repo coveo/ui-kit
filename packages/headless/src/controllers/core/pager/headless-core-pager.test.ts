@@ -59,12 +59,12 @@ describe('Pager', () => {
   });
 
   it('when initialState #isActive is an invalid value, it throws an error', () => {
-    initialState.page = ('1' as unknown) as number;
+    initialState.page = '1' as unknown as number;
     expect(() => initPager()).toThrow('Check the initialState of buildPager');
   });
 
   it('when options #expression is an invalid value, it throws an error', () => {
-    options.numberOfPages = ('1' as unknown) as number;
+    options.numberOfPages = '1' as unknown as number;
     expect(() => initPager()).toThrow('Check the options of buildPager');
   });
 

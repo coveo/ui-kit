@@ -2,7 +2,7 @@ import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {Bindings} from '../../../utils/initialization-utils';
 import {NumberInputType} from './number-input-type';
-import {createRipple} from '../../../utils/ripple';
+import {Button} from '../../common/button';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -101,15 +101,14 @@ export class FacetNumberInput {
             (this.end = (e.target as HTMLInputElement).valueAsNumber)
           }
         />
-        <button
+        <Button
+          style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class="btn-outline-primary p-2.5 flex-none truncate"
-          aria-label={applyAria}
-          onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-        >
-          <span class="truncate">{apply}</span>
-        </button>
+          class="p-2.5 flex-none truncate"
+          ariaLabel={applyAria}
+          text={apply}
+        ></Button>
       </form>
     );
   }

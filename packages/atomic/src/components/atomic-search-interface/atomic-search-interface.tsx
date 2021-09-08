@@ -19,6 +19,8 @@ import {
   loadSearchConfigurationActions,
   SearchEngineConfiguration,
   buildFoldedResultList,
+  SearchStatus,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
@@ -42,7 +44,9 @@ export type InitializationOptions = Pick<
 })
 export class AtomicSearchInterface {
   private urlManager!: UrlManager;
+  private searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
+  private unsubscribeSearchStatus: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
@@ -147,6 +151,7 @@ export class AtomicSearchInterface {
 
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
+    this.unsubscribeSearchStatus();
     window.removeEventListener('hashchange', this.onHashChange);
   }
 
@@ -191,6 +196,7 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
+    this.initSearchStatus();
     this.initUrlManager();
 
     const r = buildFoldedResultList(this.engine!);
@@ -291,6 +297,21 @@ export class AtomicSearchInterface {
     );
 
     window.addEventListener('hashchange', this.onHashChange);
+  }
+
+  private initSearchStatus() {
+    this.searchStatus = buildSearchStatus(this.engine!);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
+      const hasNoResultsAfterInitialSearch =
+        !this.searchStatus.state.hasResults &&
+        this.searchStatus.state.firstSearchExecuted &&
+        !this.searchStatus.state.hasError;
+
+      this.host.classList.toggle(
+        'atomic-search-interface-no-results',
+        hasNoResultsAfterInitialSearch
+      );
+    });
   }
 
   private updateHash() {

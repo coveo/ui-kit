@@ -13,10 +13,12 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import DetailsIcon from 'coveo-styleguide/resources/icons/svg/details.svg';
-import {createRipple} from '../../../utils/ripple';
+import {Button} from '../../common/button';
 
 /**
  * The `atomic-result-quickview` component renders a preview of the result.
+ *
+ * @internal This component isn't fully developped and we don't recommend its usage.
  */
 @Component({
   tag: 'atomic-result-quickview',
@@ -90,14 +92,14 @@ export class AtomicResultQuickview implements InitializableComponent {
     }
 
     const button = (
-      <button
-        class="btn-outline-primary grid h-full place-items-center"
-        aria-label={this.strings.previewResult()}
+      <Button
+        style="outline-primary"
+        class="grid h-full place-items-center"
+        ariaLabel={this.strings.previewResult()}
         onClick={() => this.openModal()}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
       >
         <atomic-icon class="w-4 h-4" icon={DetailsIcon}></atomic-icon>
-      </button>
+      </Button>
     );
 
     if (this.isModalOpen) {

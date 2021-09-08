@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "0.49.2",
+  "version": "0.59.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -13,26 +13,36 @@
   "scripts": {
     "test": "npm run test:lint && npm run test:typings && npm run test:unit",
     "test:lint": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
-    "lint:fix": "eslint force-app/main/default/lwc/ --fix",
+    "lint:fix": "eslint force-app/main/default/lwc/ --fix && eslint force-app/examples/main/lwc/ --fix",
     "fix": "npm run lint:fix",
     "copy:staticresources": "node copy-static-resources.js",
     "build": "npm run copy:staticresources",
-    "start": "npx rimraf .localdevserver && npm run copy:staticresources && sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start",
+    "start": "npx rimraf .localdevserver && npm run copy:staticresources && sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
-    "test:typings": "tsc"
+    "test:typings": "tsc",
+    "cypress:open": "npx cypress open",
+    "setup:examples": "ts-node scripts/build/deploy-community.ts",
+    "deploy:main": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/main",
+    "deploy:examples": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples"
   },
   "dependencies": {
-    "@coveo/headless": "^1.16.1"
+    "@coveo/headless": "^1.19.1"
   },
   "devDependencies": {
-    "@salesforce/eslint-config-lwc": "0.7.0",
+    "@salesforce/eslint-config-lwc": "0.11.1",
     "@salesforce/sfdx-lwc-jest": "0.14.0",
-    "@types/jest": "26.0.19",
-    "eslint": "7.26.0",
-    "jest-junit": "12.0.0",
-    "ncp": "2.0.0"
+    "@types/jest": "26.0.24",
+    "@types/strip-color": "^0.1.0",
+    "cypress": "7.6.0",
+    "eslint": "7.32.0",
+    "eslint-plugin-cypress": "2.11.3",
+    "jest-junit": "12.2.0",
+    "ncp": "2.0.0",
+    "sfdx-cli": "7.102.0",
+    "strip-color": "^0.1.0",
+    "ts-node": "^10.2.1"
   }
 }

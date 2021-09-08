@@ -23,7 +23,8 @@ export interface UserInterestRecommendationsListProps {
 export type UserInterestRecommendationsList = ReturnType<
   typeof buildUserInterestRecommendationsList
 >;
-export type UserInterestRecommendationsListState = UserInterestRecommendationsList['state'];
+export type UserInterestRecommendationsListState =
+  UserInterestRecommendationsList['state'];
 
 export function buildUserInterestRecommendationsList(
   engine: ProductRecommendationEngine,

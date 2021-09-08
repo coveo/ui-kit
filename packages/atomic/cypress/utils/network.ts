@@ -26,6 +26,7 @@ export async function getApiRequestBody(
   return interception.request.body;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getAnalytics(selector: string): Promise<any> {
   return new Promise((resolve) => {
     cy.wait(selector).then((interception) => {

@@ -208,7 +208,7 @@
         <value>Check the {{0}} for similar errors or {{1}} for more information.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Check the community for similar errors or contact support for more information.</shortDescription>
+        <shortDescription>Check the community for similar errors or contact Coveo for more information.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_Community</fullName>
@@ -219,10 +219,10 @@
     </labels>
     <labels>
         <fullName>quantic_ContactCoveoSupportTeam</fullName>
-        <value>contact Coveo Support team</value>
+        <value>contact the Coveo Support team.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>contact Coveo Support team</shortDescription>
+        <shortDescription>Contact the Coveo Support team.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_GoBack</fullName>
@@ -236,7 +236,7 @@
         <value>Could not connect.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Could not connect.</shortDescription>
+        <shortDescription>Couldn't connect.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_DisconnectedDesc</fullName>
@@ -247,10 +247,10 @@
     </labels>
     <labels>
         <fullName>quantic_NoEndpointsTitle</fullName>
-        <value>The Coveo Organization has no registered endpoints.</value>
+        <value>The Coveo organization has no registered endpoints.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>The Coveo Organization has no registered endpoints.</shortDescription>
+        <shortDescription>The Coveo organization has no registered endpoints.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_NoEndpointsDesc</fullName>
@@ -261,17 +261,17 @@
     </labels>
     <labels>
         <fullName>quantic_InvalidTokenTitle</fullName>
-        <value>The Coveo Organization cannot be accessed.</value>
+        <value>The Coveo organization cannot be accessed.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>The Coveo Organization cannot be accessed.</shortDescription>
+        <shortDescription>The Coveo organization cannot be accessed.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_InvalidTokenDesc</fullName>
-        <value>The token is invalid.</value>
+        <value>Invalid token.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>The token is invalid.</shortDescription>
+        <shortDescription>Invalid token.</shortDescription>
     </labels>
      <labels>
         <fullName>quantic_OrganizationIsPausedTitle</fullName>
@@ -296,10 +296,10 @@
     </labels>
     <labels>
         <fullName>quantic_GenericErrorDesc</fullName>
-        <value>If the problem persists contact the administrator.</value>
+        <value>If the problem persists, contact the administrator.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>If the problem persists contact the administrator.</shortDescription>
+        <shortDescription>If the problem persists, contact the administrator.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_CoveoDocsLink</fullName>
@@ -363,5 +363,47 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>No matches found for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_RecentResults</fullName>
+        <value>Recent Results</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Recent Results</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_EmptyRecentResultListLabel</fullName>
+        <value>Your recently clicked results will appear here.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label displayed when recent results list is empty.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_CollapseFacet</fullName>
+        <value>Collapse the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Collapse the [label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ExpandFacet</fullName>
+        <value>Expand the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expand the [label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Collapse</fullName>
+        <value>Collapse {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Collapse [component label]</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Expand</fullName>
+        <value>Expand {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expand [component label]</shortDescription>
     </labels>
 </CustomLabels>

@@ -43,13 +43,14 @@ export const questionAnsweringReducer = createReducer(
         state.disliked = true;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.relatedQuestions = action.payload.response.questionAnswer.relatedQuestions.map(
-          (relatedQuestion) => ({
-            contentIdKey: relatedQuestion.documentId.contentIdKey,
-            contentIdValue: relatedQuestion.documentId.contentIdValue,
-            expanded: false,
-          })
-        );
+        state.relatedQuestions =
+          action.payload.response.questionAnswer.relatedQuestions.map(
+            (relatedQuestion) => ({
+              contentIdKey: relatedQuestion.documentId.contentIdKey,
+              contentIdValue: relatedQuestion.documentId.contentIdValue,
+              expanded: false,
+            })
+          );
       })
       .addCase(expandSmartSnippetRelatedQuestion, (state, action) => {
         const idx = findRelatedQuestionIdx(

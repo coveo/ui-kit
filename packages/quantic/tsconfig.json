@@ -8,6 +8,7 @@
         "baseUrl": "force-app/main/default/lwc",
         "target": "es2016",
         "module": "ESNext",
+        "lib": ["es2016", "dom", "ES2018.Intl"],
         "paths": {
             "c/quanticDateFacet": [
                 "quanticDateFacet/quanticDateFacet.js"
@@ -48,6 +49,9 @@
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
             ],
+            "c/quanticRecentResultsList": [
+                "quanticRecentResultsList/quanticRecentResultsList.js"
+            ],
             "c/quanticResultsPerPage": [
                 "quanticResultsPerPage/quanticResultsPerPage.js"
             ],
@@ -73,6 +77,7 @@
     },
     "include": [
         "force-app/main/default/lwc",
+        "force-app/examples/main/lwc",
         "typings/lwc/**/*.d.ts",
         "coveo.d.ts",
     ],

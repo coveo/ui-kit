@@ -19,10 +19,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {createRipple} from '../../utils/ripple';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFacetElements, SortDropdownOption} from '../../utils/store';
 import SortIcon from '../../images/sort.svg';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -88,9 +88,9 @@ export class AtomicRefineModal implements InitializableComponent {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
 
-    const facetElementsPayload = getFacetElements(
-      this.bindings.store
-    ).map((f) => ({facetId: f.getAttribute('facet-id')!, payload: f}));
+    const facetElementsPayload = getFacetElements(this.bindings.store).map(
+      (f) => ({facetId: f.getAttribute('facet-id')!, payload: f})
+    );
     const sortedFacetsElements = this.facetManager
       .sort(facetElementsPayload)
       .map((f) => f.payload);
@@ -114,15 +114,17 @@ export class AtomicRefineModal implements InitializableComponent {
     return (
       <div
         part="header"
-        class="w-full border-neutral border-b p-6 flex justify-between text-xl "
+        class="w-full flex justify-between text-xl centered py-6"
       >
         <span class="truncate">{this.bindings.i18n.t('sort-and-filter')}</span>
-        <button
+        <Button
+          style="text-transparent"
+          class="grid place-items-center"
           part="close-button"
-          class="fill-current w-5 h-5 hover:text-primary focus:text-primary focus:outline-color"
-          innerHTML={CloseIcon}
           onClick={() => (this.enabled = false)}
-        ></button>
+        >
+          <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
+        </Button>
       </div>
     );
   }
@@ -158,7 +160,7 @@ export class AtomicRefineModal implements InitializableComponent {
       </div>,
       <div class="relative">
         <select
-          class="w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg bg-background border border-neutral px-6 py-5 focus:outline-none focus:border-primary-light focus:text-primary-light hover:border-primary-light hover:text-primary-light"
+          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg px-6 py-5"
           part="select"
           aria-label={this.bindings.i18n.t('sort-by')}
           onChange={(option) => this.select(option)}
@@ -183,14 +185,13 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.bindings.i18n.t('filters')}
         </span>
         {this.breadcrumbManagerState.hasBreadcrumbs && (
-          <button
-            part="filter-clear-all"
-            class="truncate btn-no-outline-primary px-2 py-1"
+          <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
-            onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-          >
-            <span>{this.bindings.i18n.t('clear')}</span>
-          </button>
+            style="text-primary"
+            text={this.bindings.i18n.t('clear')}
+            class="px-2 py-1"
+            part="filter-clear-all"
+          ></Button>
         )}
       </div>,
       <slot name="facets"></slot>,
@@ -200,11 +201,11 @@ export class AtomicRefineModal implements InitializableComponent {
   private renderFooter() {
     return (
       <div class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg">
-        <button
+        <Button
+          style="primary"
           part="footer-button"
-          class="btn-primary p-3 w-full flex text-lg justify-center"
+          class="centered p-3 flex text-lg justify-center"
           onClick={() => (this.enabled = false)}
-          onMouseDown={(e) => createRipple(e, {color: 'primary'})}
         >
           <span class="truncate mr-1">
             {this.bindings.i18n.t('view-results')}
@@ -214,7 +215,7 @@ export class AtomicRefineModal implements InitializableComponent {
               this.bindings.i18n.language
             )}
           </span>
-        </button>
+        </Button>
       </div>
     );
   }
@@ -229,10 +230,15 @@ export class AtomicRefineModal implements InitializableComponent {
         part="container"
         class="w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10"
       >
-        {this.renderHeader()}
+        <div class="px-6">{this.renderHeader()}</div>
+        <hr class="border-neutral"></hr>
         <div class="overflow-auto px-6 flex-grow">
-          {this.renderSort()}
-          {this.renderFilters()}
+          <div class="adjust-for-scroll-bar">
+            <div class="centered">
+              {this.renderSort()}
+              {this.renderFilters()}
+            </div>
+          </div>
         </div>
         {this.renderFooter()}
       </div>

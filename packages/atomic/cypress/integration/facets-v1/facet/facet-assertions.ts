@@ -3,7 +3,6 @@ import {
   doSortAlphanumeric,
   doSortOccurences,
 } from '../../../utils/componentUtils';
-import {should} from '../../common-assertions';
 import {FacetSelectors} from './facet-selectors';
 
 export function assertNumberOfSelectedBoxValues(value: number) {
@@ -25,22 +24,6 @@ export function assertNumberOfIdleBoxValues(value: number) {
     }
 
     FacetSelectors.idleBoxValue().should('not.exist');
-  });
-}
-
-export function assertDisplayShowMoreButton(display: boolean) {
-  it(`${should(display)} display a "Show more" button`, () => {
-    FacetSelectors.showMoreButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
-export function assertDisplayShowLessButton(display: boolean) {
-  it(`${should(display)} display a "Show less" button`, () => {
-    FacetSelectors.showLessButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
   });
 }
 

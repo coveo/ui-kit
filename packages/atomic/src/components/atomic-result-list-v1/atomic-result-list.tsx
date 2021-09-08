@@ -1,4 +1,4 @@
-import {Component, h, Element, State, Prop, Listen} from '@stencil/core';
+import {Component, h, Element, State, Prop, Listen, Host} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -6,6 +6,9 @@ import {
   buildResultList,
   buildResultTemplatesManager,
   Result,
+  buildResultsPerPage,
+  ResultsPerPageState,
+  ResultsPerPage,
 } from '@coveo/headless';
 import defaultTemplate from '../../templates/default.html';
 import {
@@ -14,12 +17,13 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {parseHTML} from '../../utils/utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result-v1/atomic-result';
-import {parseHTML} from '../../utils/utils';
+  getResultDisplayClasses,
+} from '../atomic-result-v1/atomic-result-display-options';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -32,6 +36,7 @@ import {parseHTML} from '../../utils/utils';
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private resultList!: ResultList;
+  public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
   @Element() private host!: HTMLDivElement;
@@ -39,6 +44,10 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultList')
   @State()
   private resultListState!: ResultListState;
+
+  @BindStateToController('resultsPerPage')
+  @State()
+  private resultsPerPageState!: ResultsPerPageState;
 
   @State() public error!: Error;
   @State() private templateHasError = false;
@@ -59,6 +68,8 @@ export class AtomicResultList implements InitializableComponent {
   @Prop() density: ResultDisplayDensity = 'normal';
 
   @Prop() image: ResultDisplayImageSize = 'icon';
+
+  private listWrapperRef?: HTMLDivElement;
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -98,6 +109,7 @@ export class AtomicResultList implements InitializableComponent {
         fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
       },
     });
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -127,7 +139,21 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private getId(result: Result) {
-    return result.uniqueId + this.resultListState.searchUid;
+    return result.uniqueId + this.resultListState.searchResponseId;
+  }
+
+  private buildListPlaceholders() {
+    return Array.from(
+      {length: this.resultsPerPageState.numberOfResults},
+      (_, i) => (
+        <atomic-result-placeholder-v1
+          key={`placeholder-${i}`}
+          display={this.display}
+          density={this.density}
+          image={this.image}
+        ></atomic-result-placeholder-v1>
+      )
+    );
   }
 
   private buildListResults() {
@@ -144,7 +170,17 @@ export class AtomicResultList implements InitializableComponent {
     ));
   }
 
-  private buildTableResults() {
+  private buildTablePlaceholder() {
+    return (
+      <atomic-result-table-placeholder-v1
+        density={this.density}
+        image={this.image}
+        rows={this.resultsPerPageState.numberOfResults}
+      ></atomic-result-table-placeholder-v1>
+    );
+  }
+
+  private buildTable() {
     const fieldColumns = Array.from(
       parseHTML(
         this.getTemplate(this.resultListState.results[0])
@@ -152,7 +188,7 @@ export class AtomicResultList implements InitializableComponent {
     );
 
     return (
-      <table>
+      <table class={`list-root ${this.getClasses().join(' ')}`}>
         <thead>
           <tr>
             {fieldColumns.map((column) => (
@@ -182,62 +218,49 @@ export class AtomicResultList implements InitializableComponent {
     );
   }
 
-  private get results() {
-    if (!this.resultListState.results.length) {
-      return [];
-    }
+  private buildList() {
+    return (
+      <div class={`list-root ${this.getClasses().join(' ')}`}>
+        {this.buildListPlaceholders()}
+        {this.resultListState.results.length ? this.buildListResults() : null}
+      </div>
+    );
+  }
 
+  private buildResultRoot() {
     if (this.display === 'table') {
-      return this.buildTableResults();
+      return [
+        this.buildTablePlaceholder(),
+        this.resultListState.results.length ? this.buildTable() : null,
+      ];
     }
 
-    return this.buildListResults();
+    return this.buildList();
   }
 
-  private getDisplayClass() {
-    switch (this.display) {
-      case 'grid':
-        return 'display-grid';
-      case 'list':
-      default:
-        return 'display-list';
-      case 'table':
-        return 'display-table';
-    }
-  }
-
-  private getDensityClass() {
-    switch (this.density) {
-      case 'comfortable':
-        return 'density-comfortable';
-      case 'normal':
-      default:
-        return 'density-normal';
-      case 'compact':
-        return 'density-compact';
-    }
-  }
-
-  private getImageClass() {
-    switch (this.image) {
-      case 'large':
-        return 'image-large';
-      case 'small':
-        return 'image-small';
-      case 'icon':
-      default:
-        return 'image-icon';
-      case 'none':
-        return 'image-none';
-    }
+  private buildResultWrapper() {
+    return (
+      <div
+        class="list-wrapper placeholder"
+        ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
+      >
+        {this.buildResultRoot()}
+      </div>
+    );
   }
 
   private getClasses() {
-    const classes = [
-      this.getDisplayClass(),
-      this.getDensityClass(),
-      this.getImageClass(),
-    ];
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.image
+    );
+    if (
+      this.resultListState.firstSearchExecuted &&
+      this.resultList.state.isLoading
+    ) {
+      classes.push('loading');
+    }
     return classes;
   }
 
@@ -255,20 +278,22 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
+  public componentDidRender() {
+    if (this.resultListState.firstSearchExecuted) {
+      this.listWrapperRef?.classList.remove('placeholder');
+    }
+  }
+
   public render() {
     if (this.resultListState.hasError) {
       return;
     }
 
-    if (!this.resultListState.firstSearchExecuted) {
-      return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
-    }
-
     return (
-      <div class={`list-root ${this.getClasses().join(' ')}`}>
+      <Host>
         {this.templateHasError && <slot></slot>}
-        {this.results}
-      </div>
+        {this.buildResultWrapper()}
+      </Host>
     );
   }
 }

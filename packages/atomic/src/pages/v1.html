@@ -123,7 +123,7 @@
         grid-template-areas:
           '. search      .'
           '. status      .'
-          '. breadcrumbs .'
+          '. breadbox    .'
           '. topbar      .'
           '. results     .'
           '. pagination  .'
@@ -150,7 +150,7 @@
       }
 
       .status {
-        grid-area: results;
+        grid-area: status;
       }
 
       atomic-facet-manager {
@@ -162,8 +162,8 @@
         margin-bottom: var(--spacing);
       }
 
-      atomic-breadcrumb-manager {
-        grid-area: breadcrumbs;
+      atomic-breadbox {
+        grid-area: breadbox;
         margin-top: var(--spacing);
         padding-bottom: var(--spacing);
         border-bottom: 1px solid var(--atomic-neutral);
@@ -177,8 +177,7 @@
         align-items: center;
       }
 
-      .results,
-      .result-status {
+      .results {
         grid-area: results;
       }
 
@@ -187,16 +186,23 @@
         margin: var(--spacing) 0;
       }
 
+      .atomic-search-interface-no-results .topbar,
+      .atomic-search-interface-no-results .results,
+      .atomic-search-interface-no-results .pagination {
+        display: none;
+      }
+
       @media only screen and (min-width: 1024px) {
         atomic-search-interface {
           column-gap: var(--spacing);
           grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
           grid-template-areas:
             '. .      search      .'
-            '. facets breadcrumbs .'
+            '. facets breadbox .'
             '. facets topbar      .'
             '. facets results     .'
             '. facets pagination  .'
+            '. facets status      .'
             '. facets .           .';
         }
 
@@ -232,6 +238,7 @@
         <atomic-category-facet-v1 field="geographicalhierarchy" label="World Atlas" with-search>
         </atomic-category-facet-v1>
         <atomic-facet-v1 field="author" label="Authors"></atomic-facet-v1>
+        <atomic-facet-v1 field="language" label="Language"></atomic-facet-v1>
         <atomic-facet-v1 field="objecttype" label="Type" display-values-as="link"></atomic-facet-v1>
         <atomic-facet-v1 field="year" label="Year" display-values-as="box"></atomic-facet-v1>
         <atomic-numeric-facet-v1
@@ -271,7 +278,7 @@
           sort-criteria="occurrences"
         ></atomic-color-facet>
       </atomic-facet-manager>
-      <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+      <atomic-breadbox></atomic-breadbox>
       <div class="topbar">
         <atomic-query-summary enable-duration="false"></atomic-query-summary>
         <atomic-refine-toggle></atomic-refine-toggle>
@@ -282,8 +289,6 @@
       </div>
       <div class="results">
         <atomic-did-you-mean></atomic-did-you-mean>
-        <atomic-query-error></atomic-query-error>
-        <atomic-no-results-v1></atomic-no-results-v1>
         <atomic-result-list-v1 fields-to-include="snrating,sncost">
           <atomic-result-template>
             <template>
@@ -300,9 +305,22 @@
                 }
 
                 .thumbnail {
-                  display: block;
+                  display: none;
                   width: 100%;
                   height: 100%;
+                }
+
+                .icon {
+                  display: none;
+                }
+
+                .result-root.image-small .thumbnail,
+                .result-root.image-large .thumbnail {
+                  display: inline-block;
+                }
+
+                .result-root.image-icon .icon {
+                  display: inline-block;
                 }
 
                 atomic-result-section-badges {
@@ -320,12 +338,8 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-size-condition-v1 maximum-width-inclusive="3rem">
-                  <atomic-result-icon-v1></atomic-result-icon-v1>
-                </atomic-size-condition-v1>
-                <atomic-size-condition-v1 minimum-width-exclusive="3rem">
-                  <img src="https://picsum.photos/350" class="thumbnail" />
-                </atomic-size-condition-v1>
+                <atomic-result-icon-v1 class="icon"></atomic-result-icon-v1>
+                <img src="https://picsum.photos/350" class="thumbnail" />
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -336,9 +350,6 @@
                   icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
                 ></atomic-result-badge-v1>
               </atomic-result-section-badges>
-              <atomic-result-section-actions>
-                <atomic-result-quickview></atomic-result-quickview>
-              </atomic-result-section-actions>
               <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <atomic-field-condition class="field" if-defined="snrating">
@@ -365,7 +376,7 @@
 
                   <atomic-field-condition class="field" if-defined="language">
                     <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
-                    <atomic-result-text field="language"></atomic-result-text>
+                    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
                   </atomic-field-condition>
 
                   <atomic-field-condition class="field" if-defined="filetype">
@@ -406,12 +417,12 @@
           </atomic-result-template>
         </atomic-result-list-v1>
       </div>
+      <div class="pagination">
+        <atomic-load-more-results></atomic-load-more-results>
+      </div>
       <div class="status">
         <atomic-query-error></atomic-query-error>
         <atomic-no-results-v1></atomic-no-results-v1>
-      </div>
-      <div class="pagination">
-        <atomic-load-more-results></atomic-load-more-results>
       </div>
     </atomic-search-interface>
   </body>

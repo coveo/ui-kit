@@ -76,14 +76,6 @@ const areAllComponentsInitialized = (engineId) =>
 const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engineId].components.find((component) => component.element === element);
 
 /**
- * Returns true if the engineId object exists in window engine object.
- * @param {string} engineId The id of the engine.
- */
-const isEngineIdDefined = (engineId) => { 
-  return window.coveoHeadless && window.coveoHeadless[engineId];
-}
-
-/**
  * Instantiates the coveoHeadless window object and the engine attribute for the provided ID.
  * @param element The Lightning element to use to load dependencies.
  * @param {string} engineId The id of the engine.
@@ -132,11 +124,11 @@ async function initEngine(engineId) {
  * @param element The Lightning element to use to load dependencies.
  */
 function setEngineOptions(options, engineConstructor, engineId, element) {
-  if (isEngineIdDefined(engineId) && window.coveoHeadless[engineId].options.isResolved) {
+  if (window.coveoHeadless?.[engineId]?.options?.isResolved) {
     console.warn(`Attempted to overwrite engine options for engine ID: ${engineId}`);
     return;
   }
-  if (!isEngineIdDefined(engineId)) {
+  if (!window.coveoHeadless?.[engineId]) {
     instantiateWindowEngineObject(element, engineId)
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
@@ -167,8 +159,7 @@ function registerComponentForInit(element, engineId) {
  * @param {string} engineId The id of the engine.
  */
 function setComponentInitialized(element, engineId) {
-  const component = window.coveoHeadless
-    && window.coveoHeadless[engineId]
+  const component = window.coveoHeadless?.[engineId]
     ? getRegisteredComponent(element, engineId)
     : undefined;
 
@@ -200,10 +191,7 @@ function getHeadlessEnginePromise(engineId) {
  * @param {string} engineId The id of the engine.
  */
 function getHeadlessBindings(engineId) {
-  if (!isEngineIdDefined(engineId)) {
-    return undefined;
-  }
-  return window.coveoHeadless[engineId].bindings;
+  return window.coveoHeadless?.[engineId]?.bindings;
 }
 
 /**

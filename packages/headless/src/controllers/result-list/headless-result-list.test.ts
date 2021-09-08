@@ -53,7 +53,7 @@ describe('ResultList', () => {
   it('throws the correct error if the validation is not correct', () => {
     expect(() =>
       buildResultList(engine, {
-        options: {fieldsToInclude: [(1 as unknown) as string]},
+        options: {fieldsToInclude: [1 as unknown as string]},
       })
     ).toThrowError(SchemaValidationError);
   });

@@ -32,11 +32,11 @@ export {
 } from './product-recommendation-engine-configuration';
 
 const productRecommendationEngineReducers = {searchHub, productRecommendations};
-type ProductRecommendationEngineReducers = typeof productRecommendationEngineReducers;
-type ProductRecommendationEngineState = StateFromReducersMapObject<
-  ProductRecommendationEngineReducers
-> &
-  Partial<ProductRecommendationsAppState>;
+type ProductRecommendationEngineReducers =
+  typeof productRecommendationEngineReducers;
+type ProductRecommendationEngineState =
+  StateFromReducersMapObject<ProductRecommendationEngineReducers> &
+    Partial<ProductRecommendationsAppState>;
 
 /**
  * The engine for powering production recommendation experiences.
@@ -120,8 +120,11 @@ function createSearchAPIClient(
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-    postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
-    postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+    postprocessSearchResponseMiddleware:
+      NoopPostprocessSearchResponseMiddleware,
+    postprocessFacetSearchResponseMiddleware:
+      NoopPostprocessFacetSearchResponseMiddleware,
+    postprocessQuerySuggestResponseMiddleware:
+      NoopPostprocessQuerySuggestResponseMiddleware,
   });
 }

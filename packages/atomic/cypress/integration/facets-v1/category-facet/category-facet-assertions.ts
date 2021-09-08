@@ -3,7 +3,7 @@ import {
   doSortOccurences,
 } from '../../../utils/componentUtils';
 import {RouteAlias} from '../../../utils/setupComponent';
-import {ResultListSelectors} from '../../result-list-selectors';
+import {ResultListSelectors} from '../../result-list/result-list-selectors';
 import {
   CategoryFacetSelectors,
   BreadcrumbSelectors,
@@ -36,22 +36,6 @@ export function assertNumberOfParentValues(value: number) {
     CategoryFacetSelectors.parentValue()
       .its('length')
       .should('eq', value - 1);
-  });
-}
-
-export function assertDisplayShowMoreButton(display: boolean) {
-  it(`${should(display)} display a "Show more" button`, () => {
-    CategoryFacetSelectors.showMoreButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
-export function assertDisplayShowLessButton(display: boolean) {
-  it(`${should(display)} display a "Show less" button`, () => {
-    CategoryFacetSelectors.showLessButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
   });
 }
 

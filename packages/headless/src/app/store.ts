@@ -32,6 +32,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
           ? {...state, history: '<<OMIT>>'}
           : state,
       name,
+      shouldHotReload: false, // KIT-961 -> Redux dev tool + hot reloading interacts badly with replaceReducers mechanism.
     },
     middleware: (getDefaultMiddleware) => [
       ...middlewares,
