@@ -3,6 +3,163 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.8...@coveo/atomic@0.74.9) (2021-09-03)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.74.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.7...@coveo/atomic@0.74.8) (2021-09-03)
+
+
+### Bug Fixes
+
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+
+
+
+## [0.74.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.6...@coveo/atomic@0.74.7) (2021-09-02)
+
+
+### Bug Fixes
+
+* **atomic:** add toggle on search interface host element on no results ([#1157](https://github.com/coveo/ui-kit/issues/1157)) ([3529d9a](https://github.com/coveo/ui-kit/commit/3529d9aadfa28821d3125593837d78a60489cb8b))
+* **atomic:** import only base styles to prevent font-size override ([#1172](https://github.com/coveo/ui-kit/issues/1172)) ([3d744fb](https://github.com/coveo/ui-kit/commit/3d744fb6b132ccf479b826daa891fbad6f75031b))
+
+
+
+
+
+## [0.74.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.5...@coveo/atomic@0.74.6) (2021-09-01)
+
+
+### Bug Fixes
+
+* **atomic:** center refine modal contents ([#1162](https://github.com/coveo/ui-kit/issues/1162)) ([52681ab](https://github.com/coveo/ui-kit/commit/52681ab7375b95d61605ab557a518692dc61491c))
+
+
+
+
+
+## [0.74.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.4...@coveo/atomic@0.74.5) (2021-09-01)
+
+
+### Bug Fixes
+
+* **atomic:** fix breadcrumb alignment to baseline ([#1156](https://github.com/coveo/ui-kit/issues/1156)) ([13fde08](https://github.com/coveo/ui-kit/commit/13fde08dd339944cde4489488350da2f7a9e413f))
+* **atomic:** made result list not dynamically remove placeholders ([#1169](https://github.com/coveo/ui-kit/issues/1169)) ([9b80d05](https://github.com/coveo/ui-kit/commit/9b80d053187bf6ca6585cbf26b26b4c7f8e1c775))
+
+
+
+
+
+## [0.74.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.3...@coveo/atomic@0.74.4) (2021-09-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.74.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.2...@coveo/atomic@0.74.3) (2021-08-31)
+
+
+### Bug Fixes
+
+* **atomic:** add check before removing result list placeholder ([#1154](https://github.com/coveo/ui-kit/issues/1154)) ([3a161a0](https://github.com/coveo/ui-kit/commit/3a161a0cca53136fcac6fe6a8349be7f3fdf636d))
+* **atomic:** fix missing max-width on breadcrrumb ([#1155](https://github.com/coveo/ui-kit/issues/1155)) ([63682e7](https://github.com/coveo/ui-kit/commit/63682e7e8c8381b91d19f809ecc746b7da1fb2ca))
+* **atomic:** fixed condition to show loading animation ([#1161](https://github.com/coveo/ui-kit/issues/1161)) ([47daaee](https://github.com/coveo/ui-kit/commit/47daaee99c7b3184fb22001bcf47dfb0d2f39037))
+
+
+
+
+
+## [0.74.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.1...@coveo/atomic@0.74.2) (2021-08-31)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.74.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.0...@coveo/atomic@0.74.1) (2021-08-31)
+
+
+### Bug Fixes
+
+* **atomic:** cleanup ripple when animation finish ([#1153](https://github.com/coveo/ui-kit/issues/1153)) ([4373044](https://github.com/coveo/ui-kit/commit/437304438ffc6c9824e73cf4fab86944a3a55d5f))
+
+
+
+
+
+# [0.74.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.73.2...@coveo/atomic@0.74.0) (2021-08-31)
+
+
+### Features
+
+* **atomic:** made grid results fill remaining screen width ([#1140](https://github.com/coveo/ui-kit/issues/1140)) ([784f232](https://github.com/coveo/ui-kit/commit/784f23236cd7f59c4137f7b922f60120717aba65))
+
+
+### Performance Improvements
+
+* **atomic:** slightly improved performance while rendering results ([#1132](https://github.com/coveo/ui-kit/issues/1132)) ([9418f8c](https://github.com/coveo/ui-kit/commit/9418f8ccf1968e6264bf54db0e9ef706e617521d))
+
+
+
+
+
+## [0.73.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.73.1...@coveo/atomic@0.73.2) (2021-08-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.73.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.73.0...@coveo/atomic@0.73.1) (2021-08-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.73.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.72.0...@coveo/atomic@0.73.0) (2021-08-30)
+
+
+### Features
+
+* **atomic:** added maximum width for mobile list & grid results with large images ([#1141](https://github.com/coveo/ui-kit/issues/1141)) ([c7e7fba](https://github.com/coveo/ui-kit/commit/c7e7fba17a162d06ebb645ef0c798072a7de5eb4))
+* **atomic:** keep placeholders while results are rendering ([#1137](https://github.com/coveo/ui-kit/issues/1137)) ([72b189a](https://github.com/coveo/ui-kit/commit/72b189a755540c3c3741aca0fcd9c64cfd90ac6a))
+
+
+
+
+
+# [0.72.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.71.1...@coveo/atomic@0.72.0) (2021-08-27)
+
+
+### Features
+
+* **atomic:** used InteractiveResult controller with atomic-result-link ([#1139](https://github.com/coveo/ui-kit/issues/1139)) ([51af1e3](https://github.com/coveo/ui-kit/commit/51af1e3ab01fbb77c3ef7d2d7485e794de9c4e92))
+
+
+
+
+
+## [0.71.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.71.0...@coveo/atomic@0.71.1) (2021-08-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.71.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.70.2...@coveo/atomic@0.71.0) (2021-08-26)
 
 

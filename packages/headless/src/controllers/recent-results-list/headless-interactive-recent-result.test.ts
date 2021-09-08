@@ -68,6 +68,8 @@ describe('InteractiveRecentResult', () => {
 
   it('when calling select(), logs recentResultClick', () => {
     interactiveRecentResult.select();
+    jest.runAllTimers();
+
     expectLogRecentResultActionPending();
   });
 });
