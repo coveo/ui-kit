@@ -1,12 +1,3 @@
-.facet {
-    width: 100%;
-    margin: 0 0 2em 0;
-}
-
-.facet__searchbox {
-    width: 100%;
-}
-
 .facet__search-results_no-match {
    color: var(--sds-c-color-gray-8, #8E959D);
    background-color: var(--sds-c-color-gray-3, #F6F7F9);

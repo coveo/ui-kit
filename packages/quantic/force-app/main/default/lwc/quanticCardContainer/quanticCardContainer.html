@@ -1,17 +1,17 @@
 <template>
-    <host>
-        <article class="card">
-          <header class="slds-grid">
-            <div class="slds-media__body slds-truncate">
-              <h2><span class="slds-text-heading_small">{title}</span></h2>
-            </div>
-            <div class="slds-no-flex">
-              <slot name="actions"></slot>
-            </div>
-          </header>
-          <div >
-            <slot></slot>
-          </div>
-        </article>
-    </host>
+  <host>
+    <article class="card">
+      <header class="slds-grid">
+        <div class="slds-media__body slds-truncate">
+          <h2><span class="slds-text-heading_small">{title}</span></h2>
+        </div>
+        <div class="slds-no-flex">
+          <slot name="actions"></slot>
+        </div>
+      </header>
+      <div>
+        <slot></slot>
+      </div>
+    </article>
+  </host>
 </template>
