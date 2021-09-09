@@ -5,6 +5,7 @@ import {
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client';
+import {ProductListingSortCriterion} from '../../../features/product-listing/product-listing-sort';
 export interface ProductListingsParam
   extends ProductListingBaseParam,
     ProductListingRequestParam {}
@@ -27,15 +28,7 @@ export interface ProductListingRequestParam {
     requests: AnyFacetRequest[];
     options?: FacetOptions;
   };
-  sort?: ProductListingSortRequestParam;
-}
-
-export interface ProductListingSortRequestParam {
-  by: 'relevance' | 'fields';
-  fields?: Array<{
-    direction: 'ASC' | 'DESC';
-    name: string;
-  }>;
+  sort?: ProductListingSortCriterion;
 }
 
 /**
