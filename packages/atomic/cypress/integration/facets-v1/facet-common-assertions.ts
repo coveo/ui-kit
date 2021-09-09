@@ -46,7 +46,7 @@ export function assertDisplayFacet(
   BaseFacetSelector: BaseFacetSelector,
   display: boolean
 ) {
-  it(`${should(display)} display the numeric facet`, () => {
+  it(`${should(display)} display the facet`, () => {
     BaseFacetSelector.wrapper().should(display ? 'be.visible' : 'not.exist');
   });
 }
