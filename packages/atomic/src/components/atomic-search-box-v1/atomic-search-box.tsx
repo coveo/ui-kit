@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Element} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -33,10 +33,10 @@ import {randomID} from '../../utils/utils';
 })
 export class AtomicSearchBox {
   @InitializeBindings() public bindings!: Bindings;
-  @Element() private host!: HTMLElement;
   private searchBox!: SearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
+  private listRef!: HTMLElement;
 
   @BindStateToController('searchBox')
   @State()
@@ -69,15 +69,46 @@ export class AtomicSearchBox {
     return `${this.id}-popup`;
   }
 
+  private get hasSuggestions() {
+    return !!this.searchBoxState.suggestions.length;
+  }
+
+  private get hasActiveDescendant() {
+    return this.activeDescendant !== '';
+  }
+
   private updateActiveDescendant(activeDescendant = '') {
     this.activeDescendant = activeDescendant;
   }
 
   private get activeDescendantElement(): HTMLLIElement | null {
-    if (this.activeDescendant === '') {
+    if (!this.hasActiveDescendant) {
       return null;
     }
-    return this.host.querySelector(`#${this.activeDescendant}`);
+
+    return this.listRef.querySelector(`#${this.activeDescendant}`);
+  }
+
+  private get firstValue() {
+    return this.listRef.firstElementChild!.id!;
+  }
+
+  private get nextOrFirstValue() {
+    if (!this.hasActiveDescendant) {
+      return this.firstValue;
+    }
+
+    return (
+      this.activeDescendantElement?.nextElementSibling?.id || this.firstValue
+    );
+  }
+
+  private focusNextValue() {
+    if (!this.hasSuggestions) {
+      return;
+    }
+
+    this.updateActiveDescendant(this.nextOrFirstValue);
   }
 
   private onInput(value: string) {
@@ -100,12 +131,14 @@ export class AtomicSearchBox {
   private onSubmit() {
     if (this.activeDescendantElement) {
       this.searchBox.selectSuggestion(
-        this.activeDescendantElement.getAttribute('value')!
+        this.activeDescendantElement.getAttribute('data-value')!
       );
+      this.updateActiveDescendant();
       return;
     }
 
     this.searchBox.submit();
+    this.updateActiveDescendant();
   }
 
   private onKeyup(e: KeyboardEvent) {
@@ -120,14 +153,15 @@ export class AtomicSearchBox {
   }
 
   private onKeyDown(e: KeyboardEvent) {
+    // TODO: update text
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        // this.focusNextValue();
+        this.focusNextValue();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        // this.focusPreviousValue();
+        // TODO: this.focusPreviousValue();
         break;
     }
   }
@@ -195,8 +229,8 @@ export class AtomicSearchBox {
   }
 
   // TODO: move inside the atomic-query-suggestions/atomic-recent-queries components
-  private renderSuggestion(suggestion: Suggestion) {
-    const id = `${this.id}-${suggestion.rawValue}`;
+  private renderSuggestion(suggestion: Suggestion, index: number) {
+    const id = `${this.id}-suggestion-${index}`;
     const isSelected = id === this.activeDescendant;
     return (
       <li
@@ -204,7 +238,7 @@ export class AtomicSearchBox {
         role="option"
         aria-selected={`${isSelected}`}
         key={suggestion.rawValue}
-        value={suggestion.rawValue}
+        data-value={suggestion.rawValue}
         part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
         class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
           isSelected ? 'bg-neutral-light' : ''
@@ -212,7 +246,6 @@ export class AtomicSearchBox {
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
           this.searchBox.selectSuggestion(suggestion.rawValue);
-          this.onBlur();
         }}
       >
         {/* TODO: add icon when mixed suggestions */}
@@ -222,13 +255,7 @@ export class AtomicSearchBox {
   }
 
   private renderSuggestions() {
-    if (!this.searchBoxState.suggestions.length) {
-      return;
-    }
-
-    if (!this.isExpanded) {
-      return;
-    }
+    const showSuggestions = this.hasSuggestions && this.isExpanded;
 
     return (
       <ul
@@ -236,10 +263,13 @@ export class AtomicSearchBox {
         role="listbox"
         part="suggestions"
         aria-label={this.bindings.i18n.t('query-suggestion-list')}
-        class="w-full absolute left-0 top-full rounded-md bg-background border border-neutral"
+        ref={(el) => (this.listRef = el!)}
+        class={`w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+          showSuggestions ? '' : 'hidden'
+        }`}
       >
-        {this.searchBoxState.suggestions.map((suggestion) =>
-          this.renderSuggestion(suggestion)
+        {this.searchBoxState.suggestions.map((suggestion, index) =>
+          this.renderSuggestion(suggestion, index)
         )}
       </ul>
     );
