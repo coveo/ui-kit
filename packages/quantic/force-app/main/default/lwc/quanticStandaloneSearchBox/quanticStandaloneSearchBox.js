@@ -82,17 +82,23 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   @wire(CurrentPageReference)
-  setCurrentPageReference(currentPageReference) {
-    this.isStandalone = currentPageReference?.type !== 'standard__search' || !window.location.href.includes(this.redirectUrl);
-    if (this.isStandalone && this.standaloneEngine) {
-      this.initialize(this.standaloneEngine)
+  handlePageChange() {
+    this.isStandalone = !window.location.href.includes(this.redirectUrl);
+    if (!this.isStandalone && this.standaloneEngine) {
+      this.reInitializeStandaloneSearchBox(this.standaloneEngine);
     }
+  }
+
+  reInitializeStandaloneSearchBox(engine) {
+    engine.dispatch(
+      CoveoHeadless.loadQueryActions(engine).updateQuery({q: ''})
+    );
+    this.initialize(engine);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
   initialize(engine) {
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
