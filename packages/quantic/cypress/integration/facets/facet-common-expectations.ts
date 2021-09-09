@@ -1,3 +1,4 @@
+import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {
   BaseFacetSelector,
@@ -53,7 +54,11 @@ export function expectDisplayClearButton(
 
 export function expectLogClearFacetValues(field: string) {
   it('should log the facet clear all to UA', () => {
-    throw new Error('not implemented');
+    cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {
+      const analyticsBody = interception.request.body;
+      expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
+      expect(analyticsBody.customData).to.have.property('facetField', field);
+    });
   });
 }
 
@@ -131,7 +136,11 @@ export function expectNoMatchesFoundContainsQuery(
 
 export function expectLogFacetSearch(field: string) {
   it('should log the facet search to UA', () => {
-    throw new Error('not implemented yet');
+    cy.wait(InterceptAliases.UA.Facet.Search).then((interception) => {
+      const analyticsBody = interception.request.body;
+      expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
+      expect(analyticsBody.customData).to.have.property('facetField', field);
+    });
   });
 }
 

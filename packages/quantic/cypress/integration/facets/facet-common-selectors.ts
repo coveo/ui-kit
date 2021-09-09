@@ -5,6 +5,9 @@ export interface BaseFacetSelector extends ComponentSelector {
   values: () => Cypress.Chainable<JQuery<HTMLElement>>;
   clearButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
   valueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  facetValueLabelAtIndex: (
+    index: number
+  ) => Cypress.Chainable<JQuery<HTMLElement>>;
   collapseButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
   expandButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }

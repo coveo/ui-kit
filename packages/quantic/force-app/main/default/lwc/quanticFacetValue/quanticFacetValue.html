@@ -29,12 +29,12 @@
           >
           </lightning-input>
           <template if:true={isStandardFacet}>
-            <span class="slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text">
+            <span class="slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text facet__value_idle">
               <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
             </span>
           </template>
           <template if:false={isStandardFacet}>
-            <span class="slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text">{formattedFacetValue}</span>
+            <span class="slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text facet__value_idle">{formattedFacetValue}</span>
           </template>
           <span class="nowrap slds-text-body_small facet__number-of-results">({item.numberOfResults})</span>
         </div>

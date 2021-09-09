@@ -1,4 +1,4 @@
-import {setupSearchAlias} from '../page-objects/search';
+import {InterceptAliases, interceptSearch} from '../page-objects/search';
 import {configure} from '../page-objects/configurator';
 import {selectors as facet} from '../page-objects/example-quantic-facet';
 
@@ -114,9 +114,9 @@ describe('quantic-facet', () => {
   });
 
   it('should filter results when selecting values', () => {
-    setupSearchAlias()
+    interceptSearch()
       .then(() => configure())
-      .wait('@search')
+      .wait(InterceptAliases.Search)
       .get(facet.value)
       .first()
       .then(($value) => {
@@ -125,7 +125,7 @@ describe('quantic-facet', () => {
           .first()
           .find(facet.valueCheckbox)
           .check({force: true})
-          .wait('@search')
+          .wait(InterceptAliases.Search)
           .then((interception) => {
             const facetRequest =
               interception.request.body.facets[0].currentValues.find(
@@ -135,7 +135,7 @@ describe('quantic-facet', () => {
           })
           .get(facet.clear)
           .click()
-          .wait('@search')
+          .wait(InterceptAliases.Search)
           .then((interception) => {
             const selectedValues =
               interception.request.body.facets[0].currentValues.find(
@@ -149,13 +149,13 @@ describe('quantic-facet', () => {
   describe('given specific sorting', () => {
     ['automatic', 'score', 'alphanumeric', 'occurrences'].forEach((sorting) => {
       it(`should order value with '${sorting}' sorting`, () => {
-        setupSearchAlias()
+        interceptSearch()
           .then(() =>
             configure({
               sortCriteria: sorting,
             })
           )
-          .wait('@search')
+          .wait(InterceptAliases.Search)
           .then((interception) => {
             const facetRequest = interception.request.body.facets[0];
 

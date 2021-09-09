@@ -3,7 +3,7 @@ import {configure} from '../../../page-objects/configurator';
 import {FacetSelectors} from './facet-selectors';
 import * as Expectations from '../facet-common-expectations';
 import * as FacetExpectations from './facet-expectations';
-import {setupSearchAlias} from '../../../page-objects/search';
+import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
 import {checkFirstValue, checkLastValue} from './facet-actions';
 
 interface FacetOptions {
@@ -65,7 +65,12 @@ describe('Facet Test Suite', () => {
       });
 
       describe('verify analytics', () => {
-        // check analytics event
+        before(() => {
+          interceptSearch();
+          selectFirstFacetValue();
+        });
+
+        FacetExpectations.expectLogFacetSelect('objecttype', 0);
       });
 
       describe('when selecting a second value', () => {
@@ -86,7 +91,14 @@ describe('Facet Test Suite', () => {
         });
 
         describe('verify analytics', () => {
-          // check analytics event
+          before(() => {
+            interceptSearch();
+            selectLastFacetValue();
+
+            cy.wait(InterceptAliases.UA.FacetSelect); // catch first selection
+          });
+
+          FacetExpectations.expectLogFacetSelect('objecttype', 1);
         });
 
         describe('when selecting the "Clear" button', () => {
@@ -110,7 +122,12 @@ describe('Facet Test Suite', () => {
           });
 
           describe('verify analytics', () => {
-            // check analytics event
+            before(() => {
+              interceptSearch();
+              clearSelectedValues();
+            });
+
+            Expectations.expectLogClearFacetValues('objecttype');
           });
         });
       });
@@ -179,7 +196,12 @@ describe('Facet Test Suite', () => {
         });
 
         describe('verify analytics', () => {
-          // check analytics event
+          before(() => {
+            interceptSearch();
+            searchForValue();
+          });
+
+          Expectations.expectLogFacetSearch('objecttype');
         });
 
         describe('when selecting a search result', () => {
@@ -207,7 +229,12 @@ describe('Facet Test Suite', () => {
           });
 
           describe('verify analytics', () => {
-            // check analytics event
+            before(() => {
+              interceptSearch();
+              selectSearchResult();
+            });
+
+            FacetExpectations.expectLogFacetSelect('objecttype', 0);
           });
         });
 
@@ -325,11 +352,11 @@ describe('Facet Test Suite', () => {
   describe('with custom sorting', () => {
     ['automatic', 'score', 'alphanumeric', 'occurrences'].forEach((sorting) => {
       it(`should use "${sorting}" sorting in the facet request`, () => {
-        setupSearchAlias();
+        interceptSearch();
         visitFacetPage({
           sortCriteria: sorting,
         });
-        cy.wait('@search').then((interception) => {
+        cy.wait(InterceptAliases.Search).then((interception) => {
           const facetRequest = interception.request.body.facets[0];
           expect(facetRequest.sortCriteria).to.eq(sorting);
         });

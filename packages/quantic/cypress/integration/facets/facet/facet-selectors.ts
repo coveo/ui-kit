@@ -19,6 +19,8 @@ export const FacetSelectors: AllFacetSelectors = {
   values: () => FacetSelectors.get().find('c-quantic-facet-value'),
   clearButton: () => FacetSelectors.get().find('button[value="Clear"]'),
   valueLabel: () => FacetSelectors.get().find('.facet__value-text span'),
+  facetValueLabelAtIndex: (index: number) =>
+    FacetSelectors.valueLabel().eq(index),
   collapseButton: () => FacetSelectors.get().find('.facet__collapse'),
   expandButton: () => FacetSelectors.get().find('.facet__collapse'),
 
@@ -26,7 +28,7 @@ export const FacetSelectors: AllFacetSelectors = {
     FacetSelectors.get().find('.facet__value-text.facet__value_selected'),
 
   idleCheckboxValue: () =>
-    FacetSelectors.get().find('.facet__value-text:not(.facet__value_selected)'),
+    FacetSelectors.get().find('.facet__value-text.facet__value_idle'),
 
   searchInput: () => FacetSelectors.get().find('input[type="search"]'),
   searchClearButton: () =>
