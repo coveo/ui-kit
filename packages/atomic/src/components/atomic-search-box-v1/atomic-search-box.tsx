@@ -111,6 +111,28 @@ export class AtomicSearchBox {
     this.updateActiveDescendant(this.nextOrFirstValue);
   }
 
+  private get lastValue() {
+    return this.listRef.lastElementChild!.id!;
+  }
+
+  private get previousOrLastValue() {
+    if (!this.hasActiveDescendant) {
+      return this.lastValue;
+    }
+
+    return (
+      this.activeDescendantElement?.previousElementSibling?.id || this.lastValue
+    );
+  }
+
+  private focusPreviousValue() {
+    if (!this.hasSuggestions) {
+      return;
+    }
+
+    this.updateActiveDescendant(this.previousOrLastValue);
+  }
+
   private onInput(value: string) {
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
@@ -161,7 +183,7 @@ export class AtomicSearchBox {
         break;
       case 'ArrowUp':
         e.preventDefault();
-        // TODO: this.focusPreviousValue();
+        this.focusPreviousValue();
         break;
     }
   }
