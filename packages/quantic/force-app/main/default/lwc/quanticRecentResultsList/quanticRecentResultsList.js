@@ -41,14 +41,13 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.recentResultsList = CoveoHeadless.buildRecentResultsList(engine, {
       initialState: {
         results: getItemFromLocalStorage(this.localStorageKey) ?? []

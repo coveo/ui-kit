@@ -65,8 +65,7 @@ export default class QuanticFacet extends LightningElement {
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -83,7 +82,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
