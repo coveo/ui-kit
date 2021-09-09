@@ -16,17 +16,21 @@ interface FacetOptions {
 
 describe('Facet Test Suite', () => {
   function visitFacetPage(options: Partial<FacetOptions> = {}) {
+    interceptSearch();
+
     cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-facet`);
     configure(options);
   }
 
   describe('with values', () => {
+    const defaultField = 'objecttype';
+    const defaultLabel = 'Type';
     const defaultNumberOfValues = 8;
 
     function setupWithValues() {
       visitFacetPage({
-        field: 'objecttype',
-        label: 'Type',
+        field: defaultField,
+        label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
     }
@@ -34,7 +38,7 @@ describe('Facet Test Suite', () => {
     describe('verify rendering', () => {
       before(setupWithValues);
 
-      Expectations.expectLabelContains(FacetSelectors, 'Type');
+      Expectations.expectLabelContains(FacetSelectors, defaultLabel);
       Expectations.expectDisplayValues(FacetSelectors, true);
       Expectations.expectNumberOfSelectedCheckboxValues(FacetSelectors, 0);
       Expectations.expectNumberOfIdleCheckboxValues(
@@ -65,17 +69,16 @@ describe('Facet Test Suite', () => {
       });
 
       describe('verify analytics', () => {
-        before(() => {
-          interceptSearch();
-          selectFirstFacetValue();
-        });
+        before(selectFirstFacetValue);
 
-        FacetExpectations.expectLogFacetSelect('objecttype', 0);
+        FacetExpectations.expectLogFacetSelect(defaultField, 0);
       });
 
       describe('when selecting a second value', () => {
         function selectLastFacetValue() {
           selectFirstFacetValue();
+          cy.wait(InterceptAliases.UA.Facet.Select);
+
           checkLastValue(FacetSelectors);
         }
 
@@ -91,14 +94,9 @@ describe('Facet Test Suite', () => {
         });
 
         describe('verify analytics', () => {
-          before(() => {
-            interceptSearch();
-            selectLastFacetValue();
+          before(selectLastFacetValue);
 
-            cy.wait(InterceptAliases.UA.FacetSelect); // catch first selection
-          });
-
-          FacetExpectations.expectLogFacetSelect('objecttype', 1);
+          FacetExpectations.expectLogFacetSelect(defaultField, 1);
         });
 
         describe('when selecting the "Clear" button', () => {
@@ -122,12 +120,9 @@ describe('Facet Test Suite', () => {
           });
 
           describe('verify analytics', () => {
-            before(() => {
-              interceptSearch();
-              clearSelectedValues();
-            });
+            before(clearSelectedValues);
 
-            Expectations.expectLogClearFacetValues('objecttype');
+            Expectations.expectLogClearFacetValues(defaultField);
           });
         });
       });
@@ -196,12 +191,9 @@ describe('Facet Test Suite', () => {
         });
 
         describe('verify analytics', () => {
-          before(() => {
-            interceptSearch();
-            searchForValue();
-          });
+          before(searchForValue);
 
-          Expectations.expectLogFacetSearch('objecttype');
+          Expectations.expectLogFacetSearch(defaultField);
         });
 
         describe('when selecting a search result', () => {
@@ -229,12 +221,9 @@ describe('Facet Test Suite', () => {
           });
 
           describe('verify analytics', () => {
-            before(() => {
-              interceptSearch();
-              selectSearchResult();
-            });
+            before(selectSearchResult);
 
-            FacetExpectations.expectLogFacetSelect('objecttype', 0);
+            FacetExpectations.expectLogFacetSelect(defaultField, 0);
           });
         });
 
@@ -290,7 +279,7 @@ describe('Facet Test Suite', () => {
       describe('verify rendering', () => {
         before(collapseFacet);
 
-        Expectations.expectLabelContains(FacetSelectors, 'Type');
+        Expectations.expectLabelContains(FacetSelectors, defaultLabel);
         Expectations.expectDisplayExpandButton(FacetSelectors, true);
         Expectations.expectDisplaySearchInput(FacetSelectors, false);
         Expectations.expectNumberOfIdleCheckboxValues(FacetSelectors, 0);
@@ -306,7 +295,7 @@ describe('Facet Test Suite', () => {
         describe('verify rendering', () => {
           before(expandFacet);
 
-          Expectations.expectLabelContains(FacetSelectors, 'Type');
+          Expectations.expectLabelContains(FacetSelectors, defaultLabel);
           Expectations.expectDisplayCollapseButton(FacetSelectors, true);
           Expectations.expectDisplaySearchInput(FacetSelectors, true);
           Expectations.expectNumberOfIdleCheckboxValues(
@@ -352,7 +341,6 @@ describe('Facet Test Suite', () => {
   describe('with custom sorting', () => {
     ['automatic', 'score', 'alphanumeric', 'occurrences'].forEach((sorting) => {
       it(`should use "${sorting}" sorting in the facet request`, () => {
-        interceptSearch();
         visitFacetPage({
           sortCriteria: sorting,
         });
