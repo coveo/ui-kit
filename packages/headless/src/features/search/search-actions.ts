@@ -1,4 +1,9 @@
-import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  ThunkDispatch,
+  AnyAction,
+  createAction,
+} from '@reduxjs/toolkit';
 import {
   SearchAPIClient,
   isErrorResponse,
@@ -376,3 +381,5 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
+
+export const clearSearchReponse = createAction('search/clearSearchResponse');

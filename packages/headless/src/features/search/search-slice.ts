@@ -1,5 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {executeSearch, fetchMoreResults} from './search-actions';
+import {
+  clearSearchReponse,
+  executeSearch,
+  fetchMoreResults,
+} from './search-actions';
 import {getSearchInitialState, SearchState} from './search-state';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
@@ -53,5 +57,8 @@ export const searchReducer = createReducer(
     });
     builder.addCase(executeSearch.pending, handlePendingSearch);
     builder.addCase(fetchMoreResults.pending, handlePendingSearch);
+    builder.addCase(clearSearchReponse, (state) => {
+      state.response = getSearchInitialState().response;
+    });
   }
 );
