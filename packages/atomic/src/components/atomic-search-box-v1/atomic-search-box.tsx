@@ -242,7 +242,7 @@ export class AtomicSearchBox {
 
   private renderInputContainer() {
     const isLoading = this.searchBoxState.isLoading;
-    const hasValue = this.searchBoxState.value.trim() !== '';
+    const hasValue = this.searchBoxState.value !== '';
     return (
       <div class="flex-grow flex items-center">
         {this.renderInput()}
