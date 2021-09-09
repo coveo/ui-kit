@@ -7,6 +7,7 @@ import {
   buildSearchBox,
   Suggestion,
   loadQuerySetActions,
+  QuerySetActionCreators,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -39,6 +40,7 @@ export class AtomicSearchBox {
   private id!: string;
   private inputRef!: HTMLInputElement;
   private listRef!: HTMLElement;
+  private querySetActions!: QuerySetActionCreators;
 
   @BindStateToController('searchBox')
   @State()
@@ -49,6 +51,7 @@ export class AtomicSearchBox {
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
+    this.querySetActions = loadQuerySetActions(this.bindings.engine);
     this.searchBox = buildSearchBox(this.bindings.engine, {
       options: {
         id: this.id,
@@ -165,20 +168,9 @@ export class AtomicSearchBox {
     this.updateActiveDescendant();
   }
 
-  private onKeyup(e: KeyboardEvent) {
-    switch (e.key) {
-      case 'Enter':
-        this.onSubmit();
-        break;
-      case 'Escape':
-        this.onBlur();
-        break;
-    }
-  }
-
   private updateQuery(query: string) {
     this.bindings.engine.dispatch(
-      loadQuerySetActions(this.bindings.engine).updateQuerySetQuery({
+      this.querySetActions.updateQuerySetQuery({
         id: this.id,
         query,
       })
@@ -187,6 +179,12 @@ export class AtomicSearchBox {
 
   private onKeyDown(e: KeyboardEvent) {
     switch (e.key) {
+      case 'Enter':
+        this.onSubmit();
+        break;
+      case 'Escape':
+        this.onBlur();
+        break;
       case 'ArrowDown':
         e.preventDefault();
         this.focusNextValue();
@@ -220,7 +218,6 @@ export class AtomicSearchBox {
         onFocus={() => this.onFocus()}
         onBlur={() => this.onBlur()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-        onKeyUp={(e) => this.onKeyup(e)}
         onKeyDown={(e) => this.onKeyDown(e)}
       />
     );
