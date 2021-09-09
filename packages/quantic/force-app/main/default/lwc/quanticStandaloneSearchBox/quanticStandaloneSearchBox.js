@@ -9,6 +9,7 @@ import {
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBindings,
 } from 'c/quanticHeadlessLoader';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
 
@@ -85,16 +86,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   handlePageChange() {
     this.isStandalone = !window.location.href.includes(this.redirectUrl);
     if (!this.isStandalone && this.standaloneEngine) {
-      this.reInitializeStandaloneSearchBox(this.standaloneEngine);
+      this.initialize(this.standaloneEngine);
     }
   }
 
-  reInitializeStandaloneSearchBox(engine) {
-    engine.dispatch(
-      CoveoHeadless.loadQueryActions(engine).updateQuery({q: ''})
-    );
-    this.initialize(engine);
-  }
 
   /**
    * @param {import("coveo").SearchEngine} engine
@@ -239,12 +234,26 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.standaloneSearchBox.selectSuggestion(textValue);
   }
 
+  resetSearchboxState(engineId) {
+    const engine = getHeadlessBindings(engineId)?.engine;
+    if(!engine) {
+      return;
+    }
+    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+
+    engine.dispatch(updateQuery({q: ''}));
+  }
+
   navigateToSearchPage() {
+    const value = this.standaloneSearchBox.state.value;
+
+    this.resetSearchboxState(this.engineId);
+    this.resetSearchboxState(this.standaloneEngineId);
     this[NavigationMixin.Navigate](
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}#q=${this.standaloneSearchBox.state.value}`,
+          url: `${this.redirectUrl}#q=${value}`,
         },
       },
       false
