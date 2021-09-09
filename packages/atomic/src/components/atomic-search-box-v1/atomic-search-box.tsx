@@ -6,6 +6,7 @@ import {
   SearchBoxState,
   buildSearchBox,
   Suggestion,
+  loadQuerySetActions,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -90,7 +91,11 @@ export class AtomicSearchBox {
   }
 
   private get firstValue() {
-    return this.listRef.firstElementChild!.id!;
+    return this.listRef.firstElementChild!;
+  }
+
+  private get lastValue() {
+    return this.listRef.lastElementChild!;
   }
 
   private get nextOrFirstValue() {
@@ -98,9 +103,7 @@ export class AtomicSearchBox {
       return this.firstValue;
     }
 
-    return (
-      this.activeDescendantElement?.nextElementSibling?.id || this.firstValue
-    );
+    return this.activeDescendantElement?.nextElementSibling || this.firstValue;
   }
 
   private focusNextValue() {
@@ -108,11 +111,8 @@ export class AtomicSearchBox {
       return;
     }
 
-    this.updateActiveDescendant(this.nextOrFirstValue);
-  }
-
-  private get lastValue() {
-    return this.listRef.lastElementChild!.id!;
+    this.updateText(this.nextOrFirstValue.getAttribute('data-value')!);
+    this.updateActiveDescendant(this.nextOrFirstValue.id);
   }
 
   private get previousOrLastValue() {
@@ -121,7 +121,7 @@ export class AtomicSearchBox {
     }
 
     return (
-      this.activeDescendantElement?.previousElementSibling?.id || this.lastValue
+      this.activeDescendantElement?.previousElementSibling || this.lastValue
     );
   }
 
@@ -130,7 +130,8 @@ export class AtomicSearchBox {
       return;
     }
 
-    this.updateActiveDescendant(this.previousOrLastValue);
+    this.updateText(this.previousOrLastValue.getAttribute('data-value')!);
+    this.updateActiveDescendant(this.previousOrLastValue.id);
   }
 
   private onInput(value: string) {
@@ -174,8 +175,16 @@ export class AtomicSearchBox {
     }
   }
 
+  private updateText(query: string) {
+    this.bindings.engine.dispatch(
+      loadQuerySetActions(this.bindings.engine).updateQuerySetQuery({
+        id: this.id,
+        query,
+      })
+    );
+  }
+
   private onKeyDown(e: KeyboardEvent) {
-    // TODO: update text
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
