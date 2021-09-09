@@ -365,6 +365,20 @@
         <shortDescription>No matches found for potato</shortDescription>
     </labels>
     <labels>
+     <fullName>quantic_RecentQueries</fullName>
+        <value>Recent Queries</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Recent Queries</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_EmptyRecentQueriesListLabel</fullName>
+      <value>Your recent searches will appear here.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Label displayed when recent queries list is empty.</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_RecentResults</fullName>
         <value>Recent Results</value>
         <language>en_US</language>
