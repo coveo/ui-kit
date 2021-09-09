@@ -40,7 +40,7 @@ export class Debouncer {
  * // Result after 5 sec : 'foo'
  * deferred.promise.then(data => console.log(data));```
  */
- export class Deferred {
+export class Deferred {
   constructor() {
     this.promise = new Promise((resolve, reject) => {
       this.isResolved = false
@@ -69,9 +69,9 @@ export class ResultUtils {
     controllerBuilder,
     selector = undefined,
   ) {
-    
+
     const interactiveResult = controllerBuilder(engine, {
-      options: {result: JSON.parse(JSON.stringify(result))},
+      options: { result: JSON.parse(JSON.stringify(result)) },
     });
 
     const eventsMap = {
@@ -102,7 +102,7 @@ export class ResultUtils {
 }
 
 
-export class I18nUtils{
+export class I18nUtils {
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
   }
@@ -120,10 +120,10 @@ export class I18nUtils{
       return `${labelName}_zero`;
     } else if (!I18nUtils.isSingular(count)) {
       return `${labelName}_plural`;
-    } 
+    }
     return labelName;
   }
-  
+
   static format(stringToFormat, ...formattingArguments) {
     if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
