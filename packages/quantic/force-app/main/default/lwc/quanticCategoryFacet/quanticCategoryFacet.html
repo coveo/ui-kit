@@ -1,23 +1,27 @@
 <template>
     <template if:true={hasParentsOrValues}>
-        <lightning-card title={label}>
-            <ul class="slds-has-dividers_around-space slds-m-bottom_medium">
+        <c-quantic-card-container title={label}>
+            <ul class="slds-has-dividers_around-space slds-var-m-bottom_medium">
                 <template if:true={hasParents}>
-                    <lightning-button variant="base" label={labels.clear} title={labels.clear} icon-name="utility:clear"
-                                      class="slds-m-left_medium" onclick={reset}></lightning-button>
+                    <lightning-button 
+                    variant="base" 
+                    label={labels.clear} 
+                    title={labels.clear} 
+                    icon-name="utility:clear"
+                    class="slds-var-m-left_medium" 
+                    onclick={reset}></lightning-button>
                 </template>
                 <template for:each={parents} for:item="v">
-                    <li class="slds-m-horizontal--medium slds-m-vertical--x-small slds-grid" key={v.value}>
+                    <li class="slds-var-m-horizontal_medium slds-var-m-vertical_x-small slds-grid" key={v.value}>
                         <span class="nowrap slds-text-title_bold">{v.value}</span>
                     </li>
                 </template>
             </ul>
-            <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
+            <ul class="slds-has-dividers_around-space slds-var-m-vertical_medium">
                 <template for:each={values} for:item="v">
                     <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v}></c-quantic-category-facet-value>
                 </template>
             </ul>
-
             <template if:true={canShowLess}>
               <button variant="base" label={labels.showLess}
                 class="slds-m-left_x-small facet__show-less" onclick={showLess}>
@@ -30,6 +34,6 @@
                 <span class="facet__show-more_text">+ {labels.showMore}</span>
               </button>
             </template>
-        </lightning-card>
+        </c-quantic-card-container>
     </template>
 </template>
