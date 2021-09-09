@@ -15,6 +15,7 @@ import {
 } from '../../utils/initialization-utils';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -106,15 +107,6 @@ export class AtomicSearchBox {
     return this.activeDescendantElement?.nextElementSibling || this.firstValue;
   }
 
-  private focusNextValue() {
-    if (!this.hasSuggestions) {
-      return;
-    }
-
-    this.updateText(this.nextOrFirstValue.getAttribute('data-value')!);
-    this.updateActiveDescendant(this.nextOrFirstValue.id);
-  }
-
   private get previousOrLastValue() {
     if (!this.hasActiveDescendant) {
       return this.lastValue;
@@ -125,12 +117,23 @@ export class AtomicSearchBox {
     );
   }
 
+  private focusNextValue() {
+    if (!this.hasSuggestions) {
+      return;
+    }
+
+    const query = this.nextOrFirstValue.getAttribute('data-value');
+    !isNullOrUndefined(query) && this.updateQuery(query);
+    this.updateActiveDescendant(this.nextOrFirstValue.id);
+  }
+
   private focusPreviousValue() {
     if (!this.hasSuggestions) {
       return;
     }
 
-    this.updateText(this.previousOrLastValue.getAttribute('data-value')!);
+    const query = this.previousOrLastValue.getAttribute('data-value');
+    !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.previousOrLastValue.id);
   }
 
@@ -153,9 +156,7 @@ export class AtomicSearchBox {
 
   private onSubmit() {
     if (this.activeDescendantElement) {
-      this.searchBox.selectSuggestion(
-        this.activeDescendantElement.getAttribute('data-value')!
-      );
+      this.activeDescendantElement.click();
       this.updateActiveDescendant();
       return;
     }
@@ -175,7 +176,7 @@ export class AtomicSearchBox {
     }
   }
 
-  private updateText(query: string) {
+  private updateQuery(query: string) {
     this.bindings.engine.dispatch(
       loadQuerySetActions(this.bindings.engine).updateQuerySetQuery({
         id: this.id,
