@@ -120,6 +120,13 @@
         <shortDescription>All Categories</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_InLabel</fullName>
+        <value>in</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>in</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NMore</fullName>
         <value>{{0}} more...</value>
         <language>en_US</language>

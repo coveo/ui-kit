@@ -9,6 +9,10 @@ import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues
 import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
 import allCategories from '@salesforce/label/c.quantic_AllCategories';
 import search from '@salesforce/label/c.quantic_Search';
+import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
+import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 export default class QuanticCategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -26,6 +30,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   @api label;
   /** @type {string} */
   @api engineId;
+  /** @type {boolean} */
+  @api noSearch = false;
 
   /** @type {import("coveo").CategoryFacet}} */
   facet;
@@ -48,7 +54,11 @@ export default class QuanticCategoryFacet extends LightningElement {
     showMoreFacetValues,
     showLessFacetValues,
     allCategories,
-    search
+    search,
+    moreMatchesFor,
+    noMatchesFor,
+    collapseFacet,
+    expandFacet,
   }
 
   connectedCallback() {
@@ -120,17 +130,20 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get facetSearchResults() {
-    console.log(this.input)
     const results = this.facet.state.facetSearch.values;
     return results.map((result) => ({
       value: result.rawValue,
       numberOfResults: result.count,
+      path: result.path,
       localizedPath: this.buildPath(result.path) ,
       highlightedResult: this.highlightResult(
         result.displayValue,
         this.input.value
       ),
     }));
+  }
+  get query() {
+    return this.input.value;
   }
 
   get hasParentsOrValues() {
@@ -145,6 +158,23 @@ export default class QuanticCategoryFacet extends LightningElement {
     return I18nUtils.format(this.labels.showLessFacetValues, this.label)
   }
 
+  get moreMatchesForLabel() {
+    return I18nUtils.format(this.labels.moreMatchesFor, this.query);
+  }
+
+  get noMatchesForLabel() {
+    return I18nUtils.format(this.labels.noMatchesFor, this.query);
+  }
+
+  get actionButtonIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+
+  get actionButtonLabel() {
+    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    return I18nUtils.format(label, this.label);
+  }
+
   get isSearchComplete() {
     return !this.facet.state.isLoading;
   }
@@ -153,7 +183,19 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @param {CustomEvent<import("coveo").CategoryFacetValue>} evt
    */
   onSelect(evt) {
-    this.facet.toggleSelect(evt.detail);
+    const specificSearchResult = {
+      displayValue: evt.detail.value,
+      rawValue: evt.detail.value,
+      count: evt.detail.numberOfResults,
+      path: evt.detail.path
+    };
+    if (this.isFacetSearchActive) {
+      this.facet.facetSearch.select(specificSearchResult);
+    } else {
+      this.facet.toggleSelect(evt.detail);
+    }
+    this.clearInput();
+    this.isFacetSearchActive = false;
   }
 
   showMore() {
@@ -168,7 +210,6 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.facet.deselectAll();
   }
   toggleFacetVisibility() {
-    this.collapseIconName = this.isExpanded ? 'utility:dash' : 'utility:add';
     this.isExpanded = !this.isExpanded;
   }
   handleKeyUp() {
