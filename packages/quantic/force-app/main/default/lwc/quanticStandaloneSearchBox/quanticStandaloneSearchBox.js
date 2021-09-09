@@ -90,7 +90,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     }
   }
 
-
   /**
    * @param {import("coveo").SearchEngine} engine
    */
