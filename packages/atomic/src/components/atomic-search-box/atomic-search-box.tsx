@@ -120,6 +120,12 @@ export class AtomicSearchBox {
     );
   }
 
+  private scrollActiveDescendantIntoView() {
+    this.activeDescendantElement?.scrollIntoView({
+      block: 'nearest',
+    });
+  }
+
   private focusNextValue() {
     if (!this.hasSuggestions) {
       return;
@@ -128,6 +134,7 @@ export class AtomicSearchBox {
     const query = this.nextOrFirstValue.getAttribute('data-value');
     !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.nextOrFirstValue.id);
+    this.scrollActiveDescendantIntoView();
   }
 
   private focusPreviousValue() {
@@ -138,6 +145,7 @@ export class AtomicSearchBox {
     const query = this.previousOrLastValue.getAttribute('data-value');
     !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.previousOrLastValue.id);
+    this.scrollActiveDescendantIntoView();
   }
 
   private onInput(value: string) {
