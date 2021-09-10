@@ -16,7 +16,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';

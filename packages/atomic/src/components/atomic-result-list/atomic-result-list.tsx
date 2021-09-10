@@ -23,7 +23,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   getResultDisplayClasses,
-} from '../atomic-result-v1/atomic-result-display-options';
+} from '../atomic-result/atomic-result-display-options';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.

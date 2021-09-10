@@ -16,11 +16,12 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search/facet-search-input';
-import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
+import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
+import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
@@ -34,11 +35,12 @@ import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../utils/field-utils';
+import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-color-facet` displays a facet of the results for the current query as colors.
+ * An `atomic-facet` displays a facet of the results for the current query.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -60,8 +62,10 @@ import {registerFacetToStore} from '../../../utils/store';
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  *
- * @part value-box - The facet value when display is 'box'.
+ * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-link - The facet value when display is 'link'.
+ * @part value-box - The facet value when display is 'box'.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -70,11 +74,11 @@ import {registerFacetToStore} from '../../../utils/store';
  * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
-  tag: 'atomic-color-facet',
-  styleUrl: 'atomic-color-facet.pcss',
+  tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
+  styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicColorFacet
+export class AtomicFacet
   implements InitializableComponent, BaseFacet<Facet, FacetState>
 {
   @InitializeBindings() public bindings!: Bindings;
@@ -118,17 +122,28 @@ export class AtomicColorFacet
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
   /**
-   * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection).
-   * Possible values are 'checkbox', and 'box'.
+   * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
+   * Possible values are 'checkbox', 'link', and 'box'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'box' = 'box';
+  @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   /**
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   // @Prop() public customSort?: string; TODO: add customSort to headless
 
+  private validateProps() {
+    new Schema({
+      displayValuesAs: new StringValue({
+        constrainTo: ['checkbox', 'link', 'box'],
+      }),
+    }).validate({
+      displayValuesAs: this.displayValuesAs,
+    });
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -149,7 +164,7 @@ export class AtomicColorFacet
   public componentShouldUpdate(
     next: unknown,
     prev: unknown,
-    propName: keyof AtomicColorFacet
+    propName: keyof AtomicFacet
   ) {
     if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
@@ -209,18 +224,15 @@ export class AtomicColorFacet
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
     const displayValue = getFieldValueCaption(
-      this.facetId!,
+      this.field,
       facetValue.value,
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
-    const partValue = displayValue
-      .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
-      ?.toString();
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <ColorFacetCheckbox
+          <FacetValueCheckbox
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
@@ -233,7 +245,24 @@ export class AtomicColorFacet
               isSelected={isSelected}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
-          </ColorFacetCheckbox>
+          </FacetValueCheckbox>
+        );
+      case 'link':
+        return (
+          <FacetValueLink
+            displayValue={displayValue}
+            numberOfResults={facetValue.numberOfResults}
+            isSelected={isSelected}
+            i18n={this.bindings.i18n}
+            onClick={onClick}
+            searchQuery={this.facetState.facetSearch.query}
+          >
+            <FacetValueLabelHighlight
+              displayValue={displayValue}
+              isSelected={isSelected}
+              searchQuery={this.facetState.facetSearch.query}
+            ></FacetValueLabelHighlight>
+          </FacetValueLink>
         );
       case 'box':
         return (
@@ -245,10 +274,6 @@ export class AtomicColorFacet
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
           >
-            <div
-              part={`value-${partValue}`}
-              class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
-            ></div>
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
@@ -261,7 +286,7 @@ export class AtomicColorFacet
 
   private renderValuesContainer(children: VNode[]) {
     const classes = `mt-3 ${
-      this.displayValuesAs === 'box' ? 'box-color-container' : ''
+      this.displayValuesAs === 'box' ? 'box-container' : ''
     }`;
     return (
       <ul part="values" class={classes}>
@@ -273,7 +298,11 @@ export class AtomicColorFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value))
+        this.renderValue(value, () =>
+          this.displayValuesAs === 'link'
+            ? this.facet.toggleSingleSelect(value)
+            : this.facet.toggleSelect(value)
+        )
       )
     );
   }
@@ -287,7 +316,10 @@ export class AtomicColorFacet
             numberOfResults: value.count,
             value: value.rawValue,
           },
-          () => this.facet.facetSearch.select(value)
+          () =>
+            this.displayValuesAs === 'link'
+              ? this.facet.facetSearch.singleSelect(value)
+              : this.facet.facetSearch.select(value)
         )
       )
     );
