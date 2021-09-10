@@ -4,7 +4,7 @@ import {Component, Prop} from '@stencil/core';
  * The `atomic-table-element` element defines a table column in a result list.
  */
 @Component({
-  tag: 'atomic-table-element-v1',
+  tag: 'atomic-table-element',
 })
 export class AtomicTableElement {
   /**

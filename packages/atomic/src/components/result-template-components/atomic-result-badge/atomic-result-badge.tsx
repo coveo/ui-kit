@@ -7,7 +7,7 @@ import {Component, Prop, h} from '@stencil/core';
  * @part result-badge-label - The optional icon displayed in the badge element.
  */
 @Component({
-  tag: 'atomic-result-badge-v1',
+  tag: 'atomic-result-badge',
   styleUrl: 'atomic-result-badge.pcss',
   shadow: true,
 })

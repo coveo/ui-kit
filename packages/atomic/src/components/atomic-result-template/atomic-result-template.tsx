@@ -43,10 +43,8 @@ export class AtomicResultTemplate {
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
   constructor() {
-    // TODO: Remove second half of the condition in v1
     const isParentResultList =
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST' ||
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST-V1';
+      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST';
 
     if (!isParentResultList) {
       this.error = new Error(

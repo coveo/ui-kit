@@ -24,7 +24,7 @@ import {Button} from '../common/button';
  * @part active-button - The active result per page button.
  */
 @Component({
-  tag: 'atomic-results-per-page-v1', // TODO: remove v1
+  tag: 'atomic-results-per-page',
   styleUrl: 'atomic-results-per-page.pcss',
   shadow: true,
 })

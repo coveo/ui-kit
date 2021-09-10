@@ -29,7 +29,7 @@ import {
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  */
 @Component({
-  tag: 'atomic-result-list-v1',
+  tag: 'atomic-result-list',
   styleUrl: 'atomic-result-list.pcss',
   shadow: false,
 })
@@ -146,19 +146,19 @@ export class AtomicResultList implements InitializableComponent {
     return Array.from(
       {length: this.resultsPerPageState.numberOfResults},
       (_, i) => (
-        <atomic-result-placeholder-v1
+        <atomic-result-placeholder
           key={`placeholder-${i}`}
           display={this.display}
           density={this.density}
           image={this.image}
-        ></atomic-result-placeholder-v1>
+        ></atomic-result-placeholder>
       )
     );
   }
 
   private buildListResults() {
     return this.resultListState.results.map((result) => (
-      <atomic-result-v1
+      <atomic-result
         key={this.getId(result)}
         result={result}
         engine={this.bindings.engine}
@@ -166,17 +166,17 @@ export class AtomicResultList implements InitializableComponent {
         density={this.density}
         image={this.image}
         content={this.getTemplate(result)}
-      ></atomic-result-v1>
+      ></atomic-result>
     ));
   }
 
   private buildTablePlaceholder() {
     return (
-      <atomic-result-table-placeholder-v1
+      <atomic-result-table-placeholder
         density={this.density}
         image={this.image}
         rows={this.resultsPerPageState.numberOfResults}
-      ></atomic-result-table-placeholder-v1>
+      ></atomic-result-table-placeholder>
     );
   }
 
@@ -184,7 +184,7 @@ export class AtomicResultList implements InitializableComponent {
     const fieldColumns = Array.from(
       parseHTML(
         this.getTemplate(this.resultListState.results[0])
-      ).querySelectorAll('atomic-table-element-v1')
+      ).querySelectorAll('atomic-table-element')
     );
 
     return (
@@ -205,10 +205,10 @@ export class AtomicResultList implements InitializableComponent {
             <tr key={this.getId(result)}>
               {fieldColumns.map((column) => (
                 <td key={column.getAttribute('label')! + this.getId(result)}>
-                  <atomic-table-cell-v1
+                  <atomic-table-cell
                     result={result}
                     content={column.innerHTML}
-                  ></atomic-table-cell-v1>
+                  ></atomic-table-cell>
                 </td>
               ))}
             </tr>

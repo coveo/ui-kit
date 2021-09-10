@@ -30,7 +30,7 @@ import {isNullOrUndefined} from '@coveo/bueno';
  * @part active-suggestion - The currently active suggestion.
  */
 @Component({
-  tag: 'atomic-search-box-v1', // TODO: remove v1
+  tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.pcss',
   shadow: true,
 })

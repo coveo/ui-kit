@@ -16,7 +16,7 @@ import {
  * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
  */
 @Component({
-  tag: 'atomic-result-number-v1',
+  tag: 'atomic-result-number',
   shadow: false,
 })
 export class AtomicResultNumber {

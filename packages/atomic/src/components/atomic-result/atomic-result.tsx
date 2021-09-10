@@ -12,7 +12,7 @@ import {
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
  */
 @Component({
-  tag: 'atomic-result-v1',
+  tag: 'atomic-result',
   styleUrl: 'atomic-result.pcss',
   shadow: true,
 })

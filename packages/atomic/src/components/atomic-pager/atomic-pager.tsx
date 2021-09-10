@@ -26,7 +26,7 @@ import {Button} from '../common/button';
  * @part active-page-button - The active page button.
  */
 @Component({
-  tag: 'atomic-pager-v1', // TODO: remove v1
+  tag: 'atomic-pager',
   styleUrl: 'atomic-pager.pcss',
   shadow: true,
 })

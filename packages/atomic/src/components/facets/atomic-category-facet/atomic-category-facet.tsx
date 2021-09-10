@@ -77,7 +77,7 @@ import {Button} from '../../common/button';
  * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
-  tag: 'atomic-category-facet-v1', // TODO: remove v1 when old facets are removed
+  tag: 'atomic-category-facet',
   styleUrl: 'atomic-category-facet.pcss',
   shadow: true,
 })

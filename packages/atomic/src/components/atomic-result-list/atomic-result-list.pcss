@@ -3,7 +3,7 @@
 @import './atomic-result-table.pcss';
 
 .list-wrapper.placeholder {
-  atomic-result-v1 {
+  atomic-result {
     display: none;
   }
 
@@ -13,18 +13,17 @@
 }
 
 .list-wrapper:not(.placeholder) {
-  atomic-result-placeholder-v1 {
+  atomic-result-placeholder {
     display: none;
   }
 
-  atomic-result-table-placeholder-v1 {
+  atomic-result-table-placeholder {
     display: none;
   }
 }
 
 /* CAREFUL! These styles aren't protected by a shadow DOM. */
-/* TODO: Remove v1 suffix */
-atomic-result-list-v1 {
+atomic-result-list {
   .list-root.loading {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
@@ -47,9 +46,8 @@ atomic-result-list-v1 {
     display: flex;
     flex-direction: column;
 
-    /* TODO: Remove v1 suffix */
-    atomic-result-v1,
-    atomic-result-placeholder-v1 {
+    atomic-result,
+    atomic-result-placeholder {
       width: auto;
     }
 
@@ -107,9 +105,8 @@ atomic-result-list-v1 {
       grid-column-gap: 2.5rem;
       grid-row-gap: 2.5rem;
 
-      /* TODO: Remove v1 suffix */
-      atomic-result-v1,
-      atomic-result-placeholder-v1 {
+      atomic-result,
+      atomic-result-placeholder {
         margin: -1rem;
       }
     }

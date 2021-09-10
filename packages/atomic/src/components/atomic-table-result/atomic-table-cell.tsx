@@ -5,7 +5,7 @@ import {Result} from '@coveo/headless';
  * The `atomic-table-cell` component is used internally by the `atomic-result-list` component.
  */
 @Component({
-  tag: 'atomic-table-cell-v1',
+  tag: 'atomic-table-cell',
   shadow: true,
 })
 export class AtomicTableCell {

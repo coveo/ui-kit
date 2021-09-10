@@ -9,7 +9,7 @@ import {fileTypeIcons} from './file-type-icons';
  * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
  */
 @Component({
-  tag: 'atomic-result-icon-v1',
+  tag: 'atomic-result-icon',
   styleUrl: 'atomic-result-icon.pcss',
   shadow: true,
 })

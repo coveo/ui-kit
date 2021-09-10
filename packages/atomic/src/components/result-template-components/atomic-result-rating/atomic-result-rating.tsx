@@ -10,7 +10,7 @@ import {Rating} from '../../atomic-rating/atomic-rating';
  *  @part value-rating - The wrapper that contains the row of inactive stars and the row of active stars.
  */
 @Component({
-  tag: 'atomic-result-rating-v1',
+  tag: 'atomic-result-rating',
   styleUrl: 'atomic-result-rating.pcss',
   shadow: true,
 })

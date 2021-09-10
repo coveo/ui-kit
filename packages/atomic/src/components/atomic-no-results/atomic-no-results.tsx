@@ -28,7 +28,7 @@ import {Button} from '../common/button';
  * @part highlight - The highlighted query.
  */
 @Component({
-  tag: 'atomic-no-results-v1', //TODO remove v1
+  tag: 'atomic-no-results',
   styleUrl: 'atomic-no-results.pcss',
   shadow: true,
 })
@@ -87,7 +87,7 @@ export class AtomicNoResults {
   private renderSearchTips() {
     return (
       <div class="my-2 text-lg text-neutral-dark" part="search-tips">
-        {this.bindings.i18n.t('search-tips-v1')}
+        {this.bindings.i18n.t('search-tips')}
       </div>
     );
   }

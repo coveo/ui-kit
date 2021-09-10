@@ -13,7 +13,7 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
  * @internal
  */
 @Component({
-  tag: 'atomic-result-placeholder-v1',
+  tag: 'atomic-result-placeholder',
   styleUrl: 'atomic-result-placeholder.pcss',
   shadow: true,
 })

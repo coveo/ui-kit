@@ -12,7 +12,7 @@ const placeholderClasses = 'block bg-neutral rounded';
  * @internal
  */
 @Component({
-  tag: 'atomic-result-table-placeholder-v1',
+  tag: 'atomic-result-table-placeholder',
   styleUrl: 'atomic-result-table-placeholder.pcss',
   shadow: true,
 })
