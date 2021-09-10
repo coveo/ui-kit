@@ -35,6 +35,11 @@ export class AtomicResult {
   @Prop() content!: string;
 
   /**
+   * Whether this result should use `atomic-result-section-*` components.
+   */
+  @Prop() useSections = true;
+
+  /**
    * How results should be displayed.
    */
   @Prop() display: ResultDisplayLayout = 'list';
@@ -59,7 +64,15 @@ export class AtomicResult {
   private unbindLogDocumentOpen = () => {};
 
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.image);
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.image
+    );
+    if (this.useSections) {
+      classes.push('with-sections');
+    }
+    return classes;
   }
 
   public componentDidRender() {

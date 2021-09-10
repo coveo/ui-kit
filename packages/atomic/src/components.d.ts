@@ -9,6 +9,7 @@ import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCrite
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
+import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -391,6 +392,10 @@ export namespace Components {
           * The result item.
          */
         "result": Result;
+        /**
+          * Whether this result should use `atomic-result-section-*` components.
+         */
+        "useSections": boolean;
     }
     interface AtomicResultBadge {
         /**
@@ -511,7 +516,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<string> | null>;
+        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
     }
     interface AtomicResultText {
         /**
@@ -1479,6 +1484,10 @@ declare namespace LocalJSX {
           * The result item.
          */
         "result": Result;
+        /**
+          * Whether this result should use `atomic-result-section-*` components.
+         */
+        "useSections"?: boolean;
     }
     interface AtomicResultBadge {
         /**

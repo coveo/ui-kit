@@ -24,6 +24,7 @@ import {
   ResultDisplayImageSize,
   getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
+import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -37,7 +38,7 @@ export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultTemplatesManager!: ResultTemplatesManager<string>;
+  private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
   @Element() private host!: HTMLDivElement;
 
@@ -116,7 +117,7 @@ export class AtomicResultList implements InitializableComponent {
 
   private registerDefaultResultTemplates() {
     this.resultTemplatesManager.registerTemplates({
-      content: defaultTemplate,
+      content: {innerHTML: defaultTemplate, usesSections: false},
       conditions: [],
     });
   }
@@ -134,8 +135,13 @@ export class AtomicResultList implements InitializableComponent {
       });
   }
 
-  private getTemplate(result: Result) {
-    return this.resultTemplatesManager.selectTemplate(result) || '';
+  private getTemplate(result: Result): TemplateContent {
+    return (
+      this.resultTemplatesManager.selectTemplate(result) ?? {
+        innerHTML: '',
+        usesSections: false,
+      }
+    );
   }
 
   private getId(result: Result) {
@@ -157,17 +163,22 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private buildListResults() {
-    return this.resultListState.results.map((result) => (
-      <atomic-result
-        key={this.getId(result)}
-        result={result}
-        engine={this.bindings.engine}
-        display={this.display}
-        density={this.density}
-        image={this.image}
-        content={this.getTemplate(result)}
-      ></atomic-result>
-    ));
+    return this.resultListState.results.map((result) => {
+      const template = this.getTemplate(result);
+
+      return (
+        <atomic-result
+          key={this.getId(result)}
+          result={result}
+          engine={this.bindings.engine}
+          display={this.display}
+          density={this.density}
+          image={this.image}
+          useSections={template.usesSections}
+          content={template.innerHTML}
+        ></atomic-result>
+      );
+    });
   }
 
   private buildTablePlaceholder() {
@@ -183,7 +194,7 @@ export class AtomicResultList implements InitializableComponent {
   private buildTable() {
     const fieldColumns = Array.from(
       parseHTML(
-        this.getTemplate(this.resultListState.results[0])
+        this.getTemplate(this.resultListState.results[0]).innerHTML
       ).querySelectorAll('atomic-table-element')
     );
 
