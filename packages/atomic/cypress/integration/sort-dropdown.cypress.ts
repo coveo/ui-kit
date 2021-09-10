@@ -19,10 +19,10 @@ describe('Sort Dropdown Component', () => {
     setUpPage(`
       <atomic-search-box></atomic-search-box>
       <atomic-sort-dropdown ${attributes}>
-        <atomic-sort-expression caption="Relevance" expression="${expressions[0]}"></atomic-sort-expression>
-        <atomic-sort-expression caption="Most Recent" expression="${expressions[1]}"></atomic-sort-expression>
-        <atomic-sort-expression caption="Size Date" expression="${expressions[2]}"></atomic-sort-expression>
-        <atomic-sort-expression caption="QRE" expression="${expressions[3]}"></atomic-sort-expression>
+        <atomic-sort-expression label="Relevance" expression="${expressions[0]}"></atomic-sort-expression>
+        <atomic-sort-expression label="Most Recent" expression="${expressions[1]}"></atomic-sort-expression>
+        <atomic-sort-expression label="Size Date" expression="${expressions[2]}"></atomic-sort-expression>
+        <atomic-sort-expression label="QRE" expression="${expressions[3]}"></atomic-sort-expression>
       </atomic-sort-dropdown>
     `);
   }
@@ -96,7 +96,7 @@ describe('When sort with invalid criteria option', () => {
 
   it.skip('Should render an error when "<atomic-sort-dropdown" is missing', () => {
     setUpPage(`
-    <atomic-sort-expression caption="Relevance" criteria="${expressions[0]}"></atomic-sort-expression>
+    <atomic-sort-expression label="Relevance" criteria="${expressions[0]}"></atomic-sort-expression>
       `);
     shouldRenderErrorComponent(sortDropdown);
   });
