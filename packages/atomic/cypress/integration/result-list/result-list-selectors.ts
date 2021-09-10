@@ -11,9 +11,9 @@ type ResultSection =
   | 'bottomMetadata';
 
 export const ResultListSelectors = {
-  component: 'atomic-result-list-v1',
-  placeholder: 'atomic-result-placeholder-v1',
-  result: 'atomic-result-v1',
+  component: 'atomic-result-list',
+  placeholder: 'atomic-result-placeholder',
+  result: 'atomic-result',
   sections: <Record<ResultSection, string>>{
     visual: 'atomic-result-section-visual',
     badges: 'atomic-result-section-badges',

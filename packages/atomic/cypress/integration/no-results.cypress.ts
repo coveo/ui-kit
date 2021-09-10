@@ -3,7 +3,7 @@ import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {generateAliasForSearchBox} from './search-box-selectors';
 
 describe('No Results Test Suites', () => {
-  const tag = 'atomic-no-results-v1';
+  const tag = 'atomic-no-results';
   const wait = 1000;
   let env: TestFixture;
 

@@ -1,4 +1,4 @@
-export const numericFacetComponent = 'atomic-numeric-facet-v1';
+export const numericFacetComponent = 'atomic-numeric-facet';
 export const NumericFacetSelectors = {
   shadow: () => cy.get(numericFacetComponent).shadow(),
   wrapper: () => NumericFacetSelectors.shadow().find('[part="facet"]'),

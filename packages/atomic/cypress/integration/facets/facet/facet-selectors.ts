@@ -1,4 +1,4 @@
-export const facetComponent = 'atomic-facet-v1';
+export const facetComponent = 'atomic-facet';
 export const FacetSelectors = {
   shadow: () => cy.get(facetComponent).shadow(),
   wrapper: () => FacetSelectors.shadow().find('[part="facet"]'),

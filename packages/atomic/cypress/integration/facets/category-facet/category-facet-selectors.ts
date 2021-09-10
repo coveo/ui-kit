@@ -6,7 +6,7 @@ export const BreadcrumbSelectors = {
     BreadcrumbSelectors.shadow().find('[part="breadcrumb"]'),
 };
 
-export const categoryFacetComponent = 'atomic-category-facet-v1';
+export const categoryFacetComponent = 'atomic-category-facet';
 export const CategoryFacetSelectors = {
   shadow: () => cy.get(categoryFacetComponent).shadow(),
   wrapper: () => CategoryFacetSelectors.shadow().find('[part="facet"]'),

@@ -30,7 +30,7 @@ export const numericRanges: NumericRange[] = [
 export const addNumericFacet =
   (props: TagProps = {}, formatTag?: string, formatTagProps?: TagProps) =>
   (env: TestFixture) => {
-    const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+    const e = generateComponentHTML('atomic-numeric-facet', props);
     if (formatTag && formatTagProps) {
       const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
       e.append(formatTagHTML);
@@ -46,7 +46,7 @@ export const addNumericFacetWithRange =
     formatTagProps?: TagProps
   ) =>
   (env: TestFixture) => {
-    const e = generateComponentHTML('atomic-numeric-facet-v1', props);
+    const e = generateComponentHTML('atomic-numeric-facet', props);
     if (formatTag && formatTagProps) {
       const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
       e.append(formatTagHTML);

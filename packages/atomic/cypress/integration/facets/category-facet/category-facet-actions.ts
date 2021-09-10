@@ -22,7 +22,7 @@ export const addCategoryFacet =
   (props: TagProps = {}, withResultList = false) =>
   (env: TestFixture) => {
     addTag(env, 'atomic-breadcrumb-manager', {});
-    addTag(env, 'atomic-category-facet-v1', {
+    addTag(env, 'atomic-category-facet', {
       field: hierarchicalField,
       label: 'Atlas',
       'number-of-values': defaultNumberOfValues,
