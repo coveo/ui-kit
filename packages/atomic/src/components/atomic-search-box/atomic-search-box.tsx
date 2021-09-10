@@ -174,6 +174,7 @@ export class AtomicSearchBox {
 
     this.searchBox.submit();
     this.updateActiveDescendant();
+    this.inputRef.blur();
   }
 
   private updateQuery(query: string) {
@@ -283,6 +284,7 @@ export class AtomicSearchBox {
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
           this.searchBox.selectSuggestion(suggestion.rawValue);
+          this.inputRef.blur();
         }}
       >
         {/* TODO: add icon when mixed suggestions */}
