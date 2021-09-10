@@ -5,6 +5,7 @@ import {
   SfdxListOrgsResponse,
   SfdxPublishCommunityResponse,
 } from './util/sfdx';
+import {buildLogger} from './util/log';
 
 interface Options {
   alias: string;
@@ -18,9 +19,7 @@ interface Options {
 
 let step = 0;
 const totalSteps = 6;
-
-const log = (currentStep: number, message: string) =>
-  console.log(`[${currentStep}/${totalSteps}] ${message}`);
+const log = buildLogger(totalSteps, () => step);
 
 const scratchOrgExists = async (options: Options): Promise<boolean> => {
   const response = await sfdx<SfdxListOrgsResponse>('force:org:list');
@@ -49,17 +48,14 @@ const createScratchOrg = async (options: Options): Promise<void> => {
 
 const ensureScratchOrgExists = async (options: Options) => {
   ++step;
-  log(step, `Searching for ${options.alias} organization...`);
+  log(`Searching for ${options.alias} organization...`);
 
   if (await scratchOrgExists(options)) {
-    log(step, `${options.alias} organization found.`);
+    log(`${options.alias} organization found.`);
   } else {
-    log(
-      step,
-      `${options.alias} organization not found. Creating organization.`
-    );
+    log(`${options.alias} organization not found. Creating organization.`);
     await createScratchOrg(options);
-    log(step, 'Organization created successfully.');
+    log('Organization created successfully.');
   }
 };
 
@@ -71,13 +67,13 @@ const createCommunity = async (options: Options): Promise<void> => {
 
 const ensureCommunityExists = async (options: Options): Promise<void> => {
   ++step;
-  log(step, `Searching for '${options.community.name}' community`);
+  log(`Searching for '${options.community.name}' community`);
   try {
     await createCommunity(options);
-    log(step, 'Community created successfully.');
+    log('Community created successfully.');
   } catch (error) {
     if (error.message === 'Enter a different name. That one already exists.') {
-      log(step, 'Community found.');
+      log('Community found.');
     } else {
       throw error;
     }
@@ -86,29 +82,29 @@ const ensureCommunityExists = async (options: Options): Promise<void> => {
 
 const deployComponents = async (options: Options): Promise<void> => {
   ++step;
-  log(step, 'Deploying components...');
+  log('Deploying components...');
   await sfdx(
     `force:source:deploy -u ${options.alias} -p force-app/main,force-app/examples`
   );
-  log(step, 'Components deployed.');
+  log('Components deployed.');
 };
 
 const deployCommunityMetadata = async (options: Options): Promise<void> => {
   ++step;
-  log(step, 'Deploying community metadata...');
+  log('Deploying community metadata...');
   await sfdx(
     `force:mdapi:deploy -u ${options.alias} -d quantic-examples-community -w 10`
   );
-  log(step, 'Community metadata deployed.');
+  log('Community metadata deployed.');
 };
 
 const publishCommunity = async (options: Options): Promise<string> => {
   ++step;
-  log(step, 'Publishing community...');
+  log('Publishing community...');
   const response = await sfdx<SfdxPublishCommunityResponse>(
     `force:community:publish -u ${options.alias} -n "${options.community.name}"`
   );
-  log(step, 'Community published.');
+  log('Community published.');
 
   return response.result.url;
 };
@@ -124,12 +120,12 @@ const updateCommunityConfigFile = async (
     },
   };
 
-  log(step, `Searching for configuration file '${options.configFile}'...`);
+  log(`Searching for configuration file '${options.configFile}'...`);
   if (fs.existsSync(options.configFile)) {
-    log(step, 'Configuration file found. Merging settings.');
+    log('Configuration file found. Merging settings.');
     baseConfig = JSON.parse(fs.readFileSync(options.configFile, 'UTF-8'));
   } else {
-    log(step, 'Creating configuration file...');
+    log('Creating configuration file...');
   }
   baseConfig.env.examplesUrl = communityUrl;
 
@@ -138,7 +134,7 @@ const updateCommunityConfigFile = async (
     JSON.stringify(baseConfig, null, 2),
     'UTF-8'
   );
-  log(step, 'Configuration file updated.');
+  log('Configuration file updated.');
 };
 
 (async function () {
