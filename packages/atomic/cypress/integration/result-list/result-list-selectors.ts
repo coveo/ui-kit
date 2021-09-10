@@ -10,8 +10,10 @@ type ResultSection =
   | 'excerpt'
   | 'bottomMetadata';
 
+export const resultListComponent = 'atomic-result-list';
+
 export const ResultListSelectors = {
-  component: 'atomic-result-list',
+  shadow: () => cy.get(resultListComponent).shadow(),
   placeholder: 'atomic-result-placeholder',
   result: 'atomic-result',
   sections: <Record<ResultSection, string>>{
@@ -47,17 +49,16 @@ export const generateResultList = (
   slot = '',
   options?: {display?: string; image?: string; density?: string}
 ) =>
-  `<${ResultListSelectors.component}
+  `<${resultListComponent}
     display="${options?.display ?? 'list'}"
     image="${options?.image ?? 'icon'}"
     density="${options?.density ?? 'normal'}"
    >
     ${slot}
-   </${ResultListSelectors.component}>`;
+   </${resultListComponent}>`;
 
 export function getFirstResult() {
-  return cy
-    .get(ResultListSelectors.component)
+  return ResultListSelectors.shadow()
     .find(ResultListSelectors.result)
     .first()
     .shadow();

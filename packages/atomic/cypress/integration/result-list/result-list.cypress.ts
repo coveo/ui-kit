@@ -9,8 +9,7 @@ import {
 
 describe('Result List Component', () => {
   function getFirstResult() {
-    return cy
-      .get(ResultListSelectors.component)
+    return ResultListSelectors.shadow()
       .find(ResultListSelectors.result)
       .first()
       .shadow();
@@ -18,7 +17,7 @@ describe('Result List Component', () => {
 
   it('should load', () => {
     setUpPage(generateResultList());
-    cy.get(ResultListSelectors.component)
+    ResultListSelectors.shadow()
       .find(ResultListSelectors.result)
       .should('have.length.above', 0);
   });
@@ -29,7 +28,7 @@ describe('Result List Component', () => {
     });
 
     it('should render placeholder components', () => {
-      cy.get(ResultListSelectors.component)
+      ResultListSelectors.shadow()
         .find(ResultListSelectors.placeholder)
         .should('be.visible');
     });
@@ -38,7 +37,7 @@ describe('Result List Component', () => {
   describe('when an initial search is executed', () => {
     it('should render the correct number of results', () => {
       setUpPage(generateResultList());
-      cy.get(ResultListSelectors.component)
+      ResultListSelectors.shadow()
         .find(ResultListSelectors.result)
         .should('have.length', 10);
     });
@@ -88,7 +87,7 @@ describe('Result List Component', () => {
           })
         )
       );
-      cy.get('.list-wrapper:not(.placeholder)');
+      ResultListSelectors.shadow().find('.list-wrapper:not(.placeholder)');
     });
 
     withAnySectionnableResultList(() => {
