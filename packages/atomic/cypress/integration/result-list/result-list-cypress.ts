@@ -5,7 +5,7 @@ import {
   ResultListSelectors,
   generateResultList,
   generateResultTemplate,
-} from './result-list-v1-selectors';
+} from './result-list-selectors';
 
 describe('Result List Component', () => {
   function getFirstResult() {

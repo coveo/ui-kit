@@ -1,4 +1,4 @@
-import {ResultListSelectors} from './result-list-v1-selectors';
+import {ResultListSelectors} from './result-list-selectors';
 
 export function withAnySectionnableResultList(assertions: () => void) {
   const viewports = {mobile: 1023, desktop: 1024};
