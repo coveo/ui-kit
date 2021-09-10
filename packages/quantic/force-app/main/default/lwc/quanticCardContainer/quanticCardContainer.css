@@ -1,7 +1,7 @@
 .card {
     position: relative;
-    padding: var(--lwc-spacingNone, 0);
-    background: #ffff;
+    padding: 0;
+    background: var(--lwc-colorBackgroundAlt, #FFFFFF);
     border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-colorBorder, #dddbda); 
     border-radius: .25rem;
     background-clip: padding-box;
@@ -11,5 +11,5 @@
 
 .card header {
     padding: .75rem 1rem 0;
-    margin: 0 0 .75rem;
+    margin-bottom: .75rem;
 }
