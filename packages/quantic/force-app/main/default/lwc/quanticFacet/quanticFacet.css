@@ -10,8 +10,3 @@
     color: var(--quantic-text-weak);
     font-size: 12px;
 }
-
-.facet__show {
-    display: flex;
-    flex-direction: column;
-}
