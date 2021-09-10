@@ -5,7 +5,17 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
-import {ResultSectionTags} from '../result-template-components/atomic-result-sections/result-section-list';
+
+const resultSectionTags = [
+  'atomic-result-section-visual',
+  'atomic-result-section-badges',
+  'atomic-result-section-actions',
+  'atomic-result-section-title',
+  'atomic-result-section-title-metadata',
+  'atomic-result-section-emphasized',
+  'atomic-result-section-excerpt',
+  'atomic-result-section-bottom-metadata',
+];
 
 export interface TemplateContent {
   innerHTML: string;
@@ -114,8 +124,7 @@ export class AtomicResultTemplate {
 
   private getTemplateHasSections() {
     return Array.from(this.getTemplateElement().content.children).some(
-      (element) =>
-        Object.values(ResultSectionTags).includes(element.tagName.toLowerCase())
+      (element) => resultSectionTags.includes(element.tagName.toLowerCase())
     );
   }
 
