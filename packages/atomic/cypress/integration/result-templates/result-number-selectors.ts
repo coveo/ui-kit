@@ -1,5 +1,5 @@
 export const ResultNumberSelectors = {
-  component: 'atomic-result-number-v1',
+  component: 'atomic-result-number',
   formats: {
     unitFormat: 'atomic-format-unit',
     currencyFormat: 'atomic-format-currency',

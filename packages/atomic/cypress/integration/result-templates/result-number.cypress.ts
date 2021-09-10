@@ -1,17 +1,11 @@
-import {generateComponentHTML} from '../../../fixtures/test-fixture';
-import {
-  interceptSearchResponse,
-  setUpPage,
-} from '../../../utils/setupComponent';
-import {
-  executeFirstSearch,
-  setLanguage,
-} from '../../search-interface-utils.cypress';
+import {generateComponentHTML} from '../../fixtures/test-fixture';
+import {interceptSearchResponse, setUpPage} from '../../utils/setupComponent';
+import {executeFirstSearch, setLanguage} from '../search-interface-utils';
 import {
   generateResultList,
   generateResultTemplate,
   getFirstResult,
-} from '../result-list-v1-selectors';
+} from '../result-list/result-list-selectors';
 import {ResultNumberSelectors} from './result-number-selectors';
 
 describe('Result Number Component', () => {

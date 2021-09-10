@@ -54,3 +54,11 @@ export const generateResultList = (
    >
     ${slot}
    </${ResultListSelectors.component}>`;
+
+export function getFirstResult() {
+  return cy
+    .get(ResultListSelectors.component)
+    .find(ResultListSelectors.result)
+    .first()
+    .shadow();
+}
