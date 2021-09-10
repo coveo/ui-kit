@@ -1,5 +1,7 @@
+export type CypressSelector = () => Cypress.Chainable<JQuery<HTMLElement>>;
+
 export interface ComponentSelector {
-  get: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  get: CypressSelector;
 }
 
 export function should(should: boolean) {
