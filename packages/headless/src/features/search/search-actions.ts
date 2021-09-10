@@ -381,5 +381,3 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
-
-export const clearSearchReponse = createAction('search/clearSearchResponse');

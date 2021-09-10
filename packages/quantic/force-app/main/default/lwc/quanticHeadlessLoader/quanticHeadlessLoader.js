@@ -212,6 +212,16 @@ async function initializeWithHeadless(element, engineId, initialize) {
   }
 }
 
+/**
+ * Removed the headless engine instance from the window object.
+ * @param {string} engineId 
+ */
+function destroyEngine(engineId) {
+  if (window.coveoHeadless?.[engineId]) {
+    delete window.coveoHeadless?.[engineId];
+  }
+}
+
 export {
   loadDependencies,
   setInitializedCallback,
@@ -221,4 +231,5 @@ export {
   getHeadlessEnginePromise,
   getHeadlessBindings,
   initializeWithHeadless,
+  destroyEngine,
 }

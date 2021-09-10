@@ -4,6 +4,7 @@ import {
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
+  destroyEngine,
 } from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -70,6 +71,7 @@ export default class QuanticSearchInterface extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
+    destroyEngine(this.engineId);
   }
 
   /**
@@ -77,7 +79,6 @@ export default class QuanticSearchInterface extends LightningElement {
    */
   initialize = (engine) => {
     const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
-    const {clearSearchReponse} = CoveoHeadless.loadSearchActions(engine);
 
     if (!this.disableStateInUrl) {
       this.initUrlManager(engine);
@@ -94,7 +95,6 @@ export default class QuanticSearchInterface extends LightningElement {
       window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
       const {value, analytics} = JSON.parse(redirectData);
       
-      engine.dispatch(clearSearchReponse());
       engine.dispatch(updateQuery({q: value}));
       engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
     }

@@ -1,10 +1,9 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {SearchAction} from '../analytics/analytics-utils';
 import {
-  clearSearchReponse,
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchMoreResults,
@@ -48,13 +47,6 @@ export interface SearchActionCreators {
     void,
     AsyncThunkSearchOptions<StateNeededByExecuteSearch>
   >;
-
-  /**
-   * Clears the search response state.
-   *
-   * @returns A dispatchable action.
-   */
-  clearSearchReponse(): PayloadAction;
 }
 
 /**
@@ -68,6 +60,5 @@ export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
   return {
     executeSearch,
     fetchMoreResults,
-    clearSearchReponse,
   };
 }
