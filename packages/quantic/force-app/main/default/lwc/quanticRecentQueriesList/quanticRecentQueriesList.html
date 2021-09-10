@@ -1,5 +1,5 @@
 <template>
-  <lightning-card title={label}>
+  <c-quantic-card-container title={label}>
     <lightning-button-icon
       class="slds-p-bottom_small"
       slot="actions"
@@ -11,7 +11,7 @@
     </lightning-button-icon>
     <template if:true={isExpanded}>
       <template if:false={hasQueries}>
-        <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium">{labels.emptyListLabel}</div>
+        <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium slds-var-m-vertical_small">{labels.emptyListLabel}</div>
       </template>
       <ul>
         <template for:each={queries} for:item="query">
@@ -26,5 +26,5 @@
         </template>
       </ul>
     </template>
-  </lightning-card>
+  </c-quantic-card-container>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <template if:true={hasParentsOrValues}>
-        <div class="facet">
-            <lightning-card title={label}>
+        <c-quantic-card-container title={label}>
+            <ul class="slds-has-dividers_around-space slds-var-m-bottom_medium">
                 <lightning-button-icon
                 class="slds-var-p-bottom_small"
                 slot="actions"
@@ -25,6 +25,8 @@
                                     <span class="nowrap">{labels.allCategories}</span>
                                 </div> 
                             </li> 
+                        onclick={reset}>
+                    </lightning-button>
                          </template>
                          <template for:each={nonActiveParents} for:item="v">
                              <c-quantic-category-facet-parent onselectvalue={onSelect} key={v.value} item={v}></c-quantic-category-facet-parent>
@@ -72,8 +74,7 @@
                       <span class="facet__show-more_text">+ {labels.showMore}</span>
                     </button>
                 </template> 
-            </template>
-        </lightning-card>
+        </c-quantic-card-container>
         </div>
         
     </template>

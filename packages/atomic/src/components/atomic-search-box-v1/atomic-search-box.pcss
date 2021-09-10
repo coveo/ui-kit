@@ -1,0 +1,12 @@
+@import '../../global/global.pcss';
+
+.loading {
+  --tw-gradient-from: var(--atomic-primary-dark);
+  --tw-gradient-to: var(--atomic-primary-light);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.loading::after {
+  content: '';
+  @apply absolute w-5/6 h-5/6 bg-background rounded-full;
+}
