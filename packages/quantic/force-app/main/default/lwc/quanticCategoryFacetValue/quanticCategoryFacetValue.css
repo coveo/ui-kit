@@ -1,6 +1,9 @@
-.ellipsed {
+.facet__path {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: flex;
+}
+
+.flex {
+    display: flex
 }

@@ -10,12 +10,15 @@
                 </button>
             </template>
              <template if:true={withsearch}>
-                 <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default">
+                 <button class="slds-var-m-horizontal_medium slds-button slds-text-color_default">
                     <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
                     <span class="slds-m-horizontal_small">
                         ({item.numberOfResults})
                     </span>
-                    <span class="ellipsed">{labels.inLabel} {item.localizedPath}</span>
+                    <div class="flex">
+                        <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
+                    </div>
+                    
                 </button>  
             </template>
         </div>
