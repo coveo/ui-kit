@@ -4,12 +4,13 @@
             <ul class="slds-has-dividers_around-space slds-var-m-bottom_medium">
                 <template if:true={hasParents}>
                     <lightning-button 
-                    variant="base" 
-                    label={labels.clear} 
-                    title={labels.clear} 
-                    icon-name="utility:clear"
-                    class="slds-var-m-left_medium" 
-                    onclick={reset}></lightning-button>
+                        variant="base" 
+                        label={labels.clear} 
+                        title={labels.clear} 
+                        icon-name="utility:clear"
+                        class="slds-var-m-left_medium" 
+                        onclick={reset}>
+                    </lightning-button>
                 </template>
                 <template for:each={parents} for:item="v">
                     <li class="slds-var-m-horizontal_medium slds-var-m-vertical_x-small slds-grid" key={v.value}>
