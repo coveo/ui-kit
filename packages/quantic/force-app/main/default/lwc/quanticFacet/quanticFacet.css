@@ -1,13 +1,4 @@
-@import 'c/quanticStyles';
-
-.facet {
-    width: 100%;
-    margin: 0 0 2em 0;
-}
-
-.facet__searchbox {
-    width: 100%;
-}
+@import 'c/styles';
 
 .facet__search-results_no-match {
    color: var(--quantic-text-weak);
@@ -23,27 +14,4 @@
 .facet__show {
     display: flex;
     flex-direction: column;
-}
-
-.facet__show-less {
-    font-size: 12px;
-    outline: 0;
-    background-color: white;
-    color: var(--quantic-text-weak);
-    border: none;
-    margin-bottom: 5px;
-}
-
-.facet__show-more {
-    font-size: 12px;
-    outline: 0;
-    background-color: white;
-    color: var(--lwc-brandTextLink, dodgerblue);
-    border: none;
-    margin-bottom: 5px;
-}
-
-.facet__show-more_text, .facet__show-less_text{
-    display: flex;
-    align-items: left;
 }
