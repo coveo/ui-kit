@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.60.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.59.0...@coveo/quantic@0.60.0) (2021-09-09)
+
+
+### Features
+
+* **quantic:** added recent-queries component  ([#1149](https://github.com/coveo/ui-kit/issues/1149)) ([d4dd34c](https://github.com/coveo/ui-kit/commit/d4dd34ce73ad6809ce2b64440bdffc72dfb86a66))
+
+
+
+
+
+# [0.59.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.58.0...@coveo/quantic@0.59.0) (2021-09-07)
+
+
+### Features
+
+* **quantic:** add doc to help adding tests ([#1173](https://github.com/coveo/ui-kit/issues/1173)) ([5b24659](https://github.com/coveo/ui-kit/commit/5b246590bced3ac0412eed46f7c70ffa8eaa94b6))
+
+
+
+
+
 # [0.58.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.57.2...@coveo/quantic@0.58.0) (2021-09-05)
 
 

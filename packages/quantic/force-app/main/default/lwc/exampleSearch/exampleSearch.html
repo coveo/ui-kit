@@ -11,11 +11,21 @@
           <div class="slds-col">
             <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">   
               <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
-                <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
-                <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
-                <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-quantic-numeric-facet>
-                <c-quantic-date-facet field="date" label="Date" engine-id={engineId}></c-quantic-date-facet>
-                <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
+                </div>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
+                </div>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-quantic-numeric-facet>
+                </div>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-date-facet field="date" label="Date" engine-id={engineId}></c-quantic-date-facet>
+                </div>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
+                </div>
               </div>
               <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12">
                 <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
@@ -42,7 +52,12 @@
                 </div>
               </div>
               <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12">
-                <c-quantic-recent-results-list engine-id={engineId}></c-quantic-recent-results-list>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-recent-queries-list engine-id={engineId}></c-quantic-recent-queries-list>
+                </div>
+                <div class="slds-m-bottom_large">
+                  <c-quantic-recent-results-list engine-id={engineId}></c-quantic-recent-results-list>
+                </div>
               </div>
             </div>
           </div>
