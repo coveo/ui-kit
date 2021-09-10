@@ -316,7 +316,7 @@ export class AtomicSearchBox {
     return (
       <Button
         style="primary"
-        class="w-12 h-full rounded-r-md rounded-l-none"
+        class="w-12 h-auto rounded-r-md rounded-l-none -my-px"
         part="submit-button"
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => this.searchBox.submit()}
@@ -329,7 +329,7 @@ export class AtomicSearchBox {
   public render() {
     return (
       <div
-        class={`relative flex bg-background h-full w-full box-border border-neutral rounded-md ${
+        class={`relative flex bg-background h-full w-full border border-neutral rounded-md ${
           this.isExpanded ? 'border-primary ring ring-ring-primary' : ''
         }`}
       >
