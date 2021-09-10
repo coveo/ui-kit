@@ -786,6 +786,8 @@ export namespace Components {
          */
         "placeholder": string;
     }
+    interface AtomicSearchBoxV1 {
+    }
     interface AtomicSearchInterface {
         /**
           * The search interface headless engine.
@@ -1333,6 +1335,12 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
+    interface HTMLAtomicSearchBoxV1Element extends Components.AtomicSearchBoxV1, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxV1Element: {
+        prototype: HTMLAtomicSearchBoxV1Element;
+        new (): HTMLAtomicSearchBoxV1Element;
+    };
     interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
     }
     var HTMLAtomicSearchInterfaceElement: {
@@ -1452,6 +1460,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-results-per-page-v1": HTMLAtomicResultsPerPageV1Element;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-search-box-v1": HTMLAtomicSearchBoxV1Element;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
@@ -2237,6 +2246,8 @@ declare namespace LocalJSX {
          */
         "placeholder"?: string;
     }
+    interface AtomicSearchBoxV1 {
+    }
     interface AtomicSearchInterface {
         /**
           * The search interface headless engine.
@@ -2425,6 +2436,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-results-per-page-v1": AtomicResultsPerPageV1;
         "atomic-search-box": AtomicSearchBox;
+        "atomic-search-box-v1": AtomicSearchBoxV1;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
@@ -2509,6 +2521,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-results-per-page-v1": LocalJSX.AtomicResultsPerPageV1 & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageV1Element>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-search-box-v1": LocalJSX.AtomicSearchBoxV1 & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxV1Element>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;

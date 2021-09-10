@@ -30,6 +30,7 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: 'var(--atomic-border-radius)',
+        md: 'var(--atomic-border-radius-md)',
         lg: 'var(--atomic-border-radius-lg)',
       },
       fontWeight: {
@@ -67,6 +68,7 @@ module.exports = {
       border: ['disabled'],
       cursor: ['disabled'],
       backgroundColor: ['group-focus'],
+      borderRadius: ['first', 'last'],
     },
   },
   plugins: [
