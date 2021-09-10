@@ -20,3 +20,15 @@
   display: flex;
   align-items: left;
 }
+
+.facet__search-results_no-match {
+  color: var(--sds-c-color-gray-8, #8E959D);
+  background-color: var(--sds-c-color-gray-3, #F6F7F9);
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.facet__search-results_more-matches{
+   color: var(--sds-c-color-gray-8, #8E959D);
+   font-size: 12px;
+}

@@ -97,10 +97,10 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.state.values;
   }
   get nonActiveParents() {
-    return this.state.parents.slice(0, -1);
+    return this.state.parents?.slice(0, -1);
   }
   get activeParent() {
-    return this.state.parents.slice(-1)[0];
+    return this.state.parents?.slice(-1)[0];
   }
 
   get canShowMore() {
@@ -127,6 +127,10 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get hasSearchResults() {
     return this.facet.state.facetSearch.values.length !== 0;
+  }
+
+  get canShowMoreSearchResults() {
+    return this.facet?.state.facetSearch.moreValuesAvailable;
   }
 
   get facetSearchResults() {

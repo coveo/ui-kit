@@ -1,8 +1,7 @@
 <template>
     <template if:true={hasParentsOrValues}>
         <c-quantic-card-container title={label}>
-            <ul class="slds-has-dividers_around-space slds-var-m-bottom_medium">
-                <lightning-button-icon
+            <lightning-button-icon
                 class="slds-var-p-bottom_small"
                 slot="actions"
                 onclick={toggleFacetVisibility}
@@ -25,8 +24,6 @@
                                     <span class="nowrap">{labels.allCategories}</span>
                                 </div> 
                             </li> 
-                        onclick={reset}>
-                    </lightning-button>
                          </template>
                          <template for:each={nonActiveParents} for:item="v">
                              <c-quantic-category-facet-parent onselectvalue={onSelect} key={v.value} item={v}></c-quantic-category-facet-parent>
@@ -37,17 +34,27 @@
                              </li>  
                          </template>
                          <li class=" slds-var-m-horizontal_medium facet-list_type slds-grid">
-                             <ul>
+                            <ul>
                              <template for:each={values} for:item="v">
-                                 <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} data-cy={v.value}></c-quantic-category-facet-value>
+                                <c-quantic-category-facet-value 
+                                    onselectvalue={onSelect} 
+                                    key={v.value} 
+                                    item={v} 
+                                    data-cy={v.value}>
+                                </c-quantic-category-facet-value>
                              </template>
-                             </ul>
+                            </ul>
                          </li>
                     </template>
                     <template if:true={isFacetSearchActive}>
                         <template if:true={hasSearchResults}>
                             <template for:each={facetSearchResults} for:item="result">
-                                <c-quantic-category-facet-value onselectvalue={onSelect} key={result.value}  item={result} withsearch="true"></c-quantic-category-facet-value>
+                                <c-quantic-category-facet-value 
+                                    onselectvalue={onSelect} 
+                                    key={result.value}  
+                                    item={result} 
+                                    withsearch="true">
+                                </c-quantic-category-facet-value>
                             </template>
                         </template>
                         <template if:false={hasSearchResults}>
@@ -74,8 +81,7 @@
                       <span class="facet__show-more_text">+ {labels.showMore}</span>
                     </button>
                 </template> 
-        </c-quantic-card-container>
-        </div>
-        
+            </template>
+        </c-quantic-card-container>   
     </template>
 </template>

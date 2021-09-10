@@ -11,14 +11,17 @@
             </template>
              <template if:true={withsearch}>
                  <button class="slds-var-m-horizontal_medium slds-button slds-text-color_default">
-                    <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
-                    <span class="slds-m-horizontal_small">
-                        ({item.numberOfResults})
-                    </span>
-                    <div class="flex">
-                        <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
+                    <div class="slds-grid slds-grid_vertical">
+                        <div class="slds-col slds-size_1-of-1 slds-grid_align-spread"> 
+                             <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
+                            <span class="slds-m-horizontal_small">
+                                ({item.numberOfResults})
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-grid_align-space"> 
+                            <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
+                        </div>
                     </div>
-                    
                 </button>  
             </template>
         </div>
