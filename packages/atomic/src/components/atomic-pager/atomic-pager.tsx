@@ -72,6 +72,7 @@ export class AtomicPager implements InitializableComponent {
           ariaLabel={this.bindings.i18n.t('previous')}
           onClick={() => {
             this.pager.previousPage();
+            this.scrollToTop();
           }}
           part="previous-button"
           disabled={!this.pagerState.hasPreviousPage}
@@ -93,6 +94,7 @@ export class AtomicPager implements InitializableComponent {
           ariaLabel={this.bindings.i18n.t('next')}
           onClick={() => {
             this.pager.nextPage();
+            this.scrollToTop();
           }}
           part="next-button"
           disabled={!this.pagerState.hasNextPage}
