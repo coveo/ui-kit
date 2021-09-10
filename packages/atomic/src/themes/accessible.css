@@ -35,8 +35,4 @@
   --atomic-text-lg: 1rem; /* 16px */
   --atomic-text-xl: 1.125rem; /* 18px */
   --atomic-text-2xl: 1.5rem; /* 24px */
-
-  /* Others */
-  /* TODO: Remove from v1 */
-  --atomic-icon-size: 30px;
 }
