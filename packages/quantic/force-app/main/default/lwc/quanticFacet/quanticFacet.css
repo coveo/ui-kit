@@ -1,3 +1,5 @@
+@import 'c/quanticStyles';
+
 .facet {
     width: 100%;
     margin: 0 0 2em 0;
@@ -8,13 +10,13 @@
 }
 
 .facet__search-results_no-match {
-   color: var(--sds-c-color-gray-8, #8E959D);
-   background-color: var(--sds-c-color-gray-3, #F6F7F9);
+   color: var(--quantic-text-weak);
+   background-color: var(--lwc-colorBackground, whitesmoke);
    font-size: 12px;
 }
 
 .facet__search-results_more-matches{
-    color: var(--sds-c-color-gray-8, #8E959D);
+    color: var(--quantic-text-weak);
     font-size: 12px;
 }
 
@@ -27,7 +29,7 @@
     font-size: 12px;
     outline: 0;
     background-color: white;
-    color: var(--sds-c-color-gray-8, #8E959D);
+    color: var(--quantic-text-weak);
     border: none;
     margin-bottom: 5px;
 }
@@ -36,7 +38,7 @@
     font-size: 12px;
     outline: 0;
     background-color: white;
-    color: #005FB2;
+    color: var(--lwc-brandTextLink, dodgerblue);
     border: none;
     margin-bottom: 5px;
 }

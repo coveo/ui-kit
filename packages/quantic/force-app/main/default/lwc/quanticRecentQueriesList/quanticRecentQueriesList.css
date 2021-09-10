@@ -1,8 +1,10 @@
+@import 'c/quanticStyles';
+
 .recent-query__container {
   display: flex;
   flex-direction: row;
   min-width: 0;
-  color: var(--brand-text-link, #0176d3);
+  color: var(--lwc-brandTextLink, dodgerblue);
 }
 
 .query-text__container {
@@ -15,7 +17,7 @@
 }
 
 .empty-list-message {
-  color: var(--sds-c-color-gray-8, #8E959D);
+  color: var(--quantic-text-weak);
 }
 
 li:hover {

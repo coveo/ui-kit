@@ -2,7 +2,7 @@
   font-size: 12px;
   outline: 0;
   background-color: white;
-  color: var(--sds-c-color-gray-8, #8E959D);
+  color: var(--lwc-textPlaceholder, #8E959D);
   border: none;
   margin-bottom: 5px;
 }
