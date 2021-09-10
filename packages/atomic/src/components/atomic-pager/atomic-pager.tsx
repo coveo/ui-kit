@@ -66,36 +66,40 @@ export class AtomicPager implements InitializableComponent {
 
   private get previousButton() {
     return (
-      <Button
-        style="outline-primary"
-        ariaLabel={this.bindings.i18n.t('previous')}
-        onClick={() => {
-          this.pager.previousPage();
-        }}
-        part="previous-button"
-        disabled={!this.pagerState.hasPreviousPage}
-      >
-        <atomic-icon
-          icon={ArrowRight}
-          class="w-5 transform rotate-180"
-        ></atomic-icon>
-      </Button>
+      <li>
+        <Button
+          style="outline-primary"
+          ariaLabel={this.bindings.i18n.t('previous')}
+          onClick={() => {
+            this.pager.previousPage();
+          }}
+          part="previous-button"
+          disabled={!this.pagerState.hasPreviousPage}
+        >
+          <atomic-icon
+            icon={ArrowRight}
+            class="w-5 transform rotate-180"
+          ></atomic-icon>
+        </Button>
+      </li>
     );
   }
 
   private get nextButton() {
     return (
-      <Button
-        style="outline-primary"
-        ariaLabel={this.bindings.i18n.t('next')}
-        onClick={() => {
-          this.pager.nextPage();
-        }}
-        part="next-button"
-        disabled={!this.pagerState.hasNextPage}
-      >
-        <atomic-icon icon={ArrowRight} class="w-5"></atomic-icon>
-      </Button>
+      <li>
+        <Button
+          style="outline-primary"
+          ariaLabel={this.bindings.i18n.t('next')}
+          onClick={() => {
+            this.pager.nextPage();
+          }}
+          part="next-button"
+          disabled={!this.pagerState.hasNextPage}
+        >
+          <atomic-icon icon={ArrowRight} class="w-5"></atomic-icon>
+        </Button>
+      </li>
     );
   }
 

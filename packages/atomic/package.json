@@ -33,7 +33,7 @@
     "generate": "stencil generate",
     "cypress:test": "./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome",
     "cypress:test:firefox": "./node_modules/cypress/bin/cypress --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser firefox",
-    "cypress:open": "npx cypress open",
+    "cypress:open": "./node_modules/cypress/bin/cypress open",
     "npm:publish": "npm publish --access public"
   },
   "dependencies": {

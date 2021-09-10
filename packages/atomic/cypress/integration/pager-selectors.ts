@@ -1,7 +1,7 @@
 export const PagerSelectors = {
   pager: 'atomic-pager',
-  buttonNext: 'button[part="next-button"]',
-  buttonPrevious: 'button[part="previous-button"]',
+  buttonNext: '[part="next-button"]',
+  buttonPrevious: '[part="previous-button"]',
 };
 
 export function createAliasLi() {

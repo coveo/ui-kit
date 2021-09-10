@@ -27,7 +27,7 @@ describe('No Results Test Suites', () => {
     env.withHash('q=dsmndkndjnj').init();
     cy.get(tag)
       .shadow()
-      .find('div div[part="no-results"] .quotations')
+      .find('[part="no-results"] .quotations')
       .should('contain.text', 'dsmndkndjnj');
   });
 
@@ -39,9 +39,9 @@ describe('No Results Test Suites', () => {
   function submitNoResultsSearch() {
     generateAliasForSearchBox();
     cy.get('@searchBoxFirstDiv')
-      .find('.search-input')
+      .find('[part="input"]')
       .type('asiufasfgasiufhsaiufgsa');
-    cy.get('@searchBoxFirstDiv').find('.submit-button').click();
+    cy.get('@searchBoxFirstDiv').find('[part="submit-button"]').click();
     cy.wait(wait);
   }
 

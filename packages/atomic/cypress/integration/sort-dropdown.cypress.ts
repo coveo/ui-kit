@@ -78,9 +78,9 @@ describe('Sort Dropdown Component', () => {
   it('should be invisible when there is no result', () => {
     cy.get(searchbox)
       .shadow()
-      .find('.search-input')
+      .find('[part="input"]')
       .type('lskdfjghsjdgfjsdgfhkjsdhfgkjsdgfksjdhgfkjsdgkjgdsfjh');
-    cy.get(searchbox).shadow().find('.submit-button').click();
+    cy.get(searchbox).shadow().find('[part="submit-button"]').click();
     cy.get(sortDropdown).should('not.be.visible');
   });
 });
