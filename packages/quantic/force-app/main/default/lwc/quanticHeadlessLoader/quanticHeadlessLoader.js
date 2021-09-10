@@ -218,7 +218,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
  */
 function destroyEngine(engineId) {
   if (window.coveoHeadless?.[engineId]) {
-    delete window.coveoHeadless?.[engineId];
+    delete window.coveoHeadless[engineId];
   }
 }
 

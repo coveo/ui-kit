@@ -4,7 +4,6 @@ import {
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
-  destroyEngine,
 } from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -71,7 +70,6 @@ export default class QuanticSearchInterface extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
-    destroyEngine(this.engineId);
   }
 
   /**

@@ -10,6 +10,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBindings,
+  destroyEngine,
 } from 'c/quanticHeadlessLoader';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
 
@@ -87,6 +88,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.isStandalone = !window.location.href.includes(this.redirectUrl);
     if (!this.isStandalone && this.standaloneEngine) {
       this.initialize(this.standaloneEngine);
+    }
+    if (this.isStandalone) {
+      destroyEngine(this.engineId);
     }
   }
 
