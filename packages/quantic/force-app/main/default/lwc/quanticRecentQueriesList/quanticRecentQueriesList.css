@@ -10,15 +10,20 @@
 }
 
 .recent-query__icon {
-  margin-right: .5rem;
-  margin-left: .25rem;
+  margin-right: 0.5rem;
+  margin-left: 0.25rem;
 }
 
 .empty-list-message {
-  color: var(--sds-c-color-gray-8, #8E959D);
+  color: var(--sds-c-color-gray-8, #8e959d);
 }
 
 li:hover {
   text-decoration: underline;
   cursor: pointer;
+  text-decoration-color: var(--brand-text-link, #0176d3);
+}
+
+li div {
+  pointer-events: none;
 }

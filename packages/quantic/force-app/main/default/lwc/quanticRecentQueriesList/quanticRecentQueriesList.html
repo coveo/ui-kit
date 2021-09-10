@@ -14,8 +14,8 @@
         <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium slds-var-m-vertical_small">{labels.emptyListLabel}</div>
       </template>
       <ul>
-        <template for:each={queries} for:item="query">
-          <li class="slds-var-m-vertical_x-small slds-grid" key={query}>
+        <template for:each={queries} for:item="query" for:index="index">
+          <li key={query} value={index} onclick={executeQuery} class="slds-var-m-vertical_x-small slds-grid">
             <div class="slds-col recent-query__container">
               <lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" alternative-text="search icon" size="xx-small"></lightning-icon>
               <div class="slds-text-body_small nowrap query-text__container">
