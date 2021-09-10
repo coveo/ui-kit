@@ -15,7 +15,7 @@ export type AllFacetSelectors = BaseFacetSelector &
 export const FacetSelectors: AllFacetSelectors = {
   get: () => cy.get(facetComponent),
 
-  label: () => FacetSelectors.get().find('.slds-card__header-title'),
+  label: () => FacetSelectors.get().find('header h2 > span'),
   values: () => FacetSelectors.get().find('c-quantic-facet-value'),
   clearButton: () => FacetSelectors.get().find('button[value="Clear"]'),
   valueLabel: () => FacetSelectors.get().find('.facet__value-text span'),
