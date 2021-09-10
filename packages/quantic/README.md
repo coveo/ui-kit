@@ -81,9 +81,9 @@ npm run deploy:examples
 
 ## Run Cypress for Quantic Components
 
-**Note** Before attempting to run Cypress tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
+**Note** Before attempting to run [Cypress](https://docs.cypress.io) tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
 
-Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
+To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 
 - All the tests will need to be under folder `cypress/integration`.
 
@@ -92,26 +92,6 @@ To open Cypress in browser mode, run:
 ```bash
 npm run cypress:open
 ```
-
-## Run Cypress for Quantic Components
-
-Ref: [https://docs.cypress.io/](https://docs.cypress.io/)
-
-- All the tests will need to be under folder `cypress/integration`
-
-
-To start the local development server, run:
-
-```bash
-npm run start
-```
-
-To open Cypress in browser mode, run:
-
-```bash
-npm run cypress:open
-```
-
 
 ## Use Quantic From Source
 

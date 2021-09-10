@@ -41,7 +41,7 @@ node('linux && docker') {
         sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
         sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
         sh 'chown -R $(whoami) /tmp'
-        sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
+        sh 'cd packages/atomic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
       }
 
       stage('Generate Docs') {

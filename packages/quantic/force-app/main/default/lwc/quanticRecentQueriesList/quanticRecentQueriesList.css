@@ -1,19 +1,24 @@
-.recent-result__container {
+.recent-query__container {
   display: flex;
   flex-direction: row;
   min-width: 0;
-  color:  var(--lwc-brandTextLink, #0176d3);
+  color: var(--brand-text-link, #0176d3);
 }
 
-.result-link__container {
+.query-text__container {
   min-width: 0;
 }
 
-.recent-result__icon {
+.recent-query__icon {
   margin-right: .5rem;
   margin-left: .25rem;
 }
 
 .empty-list-message {
   color: var(--sds-c-color-gray-8, #8E959D);
+}
+
+li:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
