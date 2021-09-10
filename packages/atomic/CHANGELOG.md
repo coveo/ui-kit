@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.75.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.10...@coveo/atomic@0.75.0) (2021-09-10)
+
+
+### Features
+
+* **atomic:** add search-box v1 ([#1184](https://github.com/coveo/ui-kit/issues/1184)) ([41702f9](https://github.com/coveo/ui-kit/commit/41702f987a5d943f08b752736603b1446680f1be))
+
+
+
+
+
+## [0.74.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.9...@coveo/atomic@0.74.10) (2021-09-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.74.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.8...@coveo/atomic@0.74.9) (2021-09-03)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [0.74.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.74.7...@coveo/atomic@0.74.8) (2021-09-03)
 
 

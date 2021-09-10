@@ -197,6 +197,14 @@
         <name>quantic_EmptyRecentResultListLabel</name>
     </customLabels>
     <customLabels>
+        <label>Réduire la facette {{0}}</label>
+        <name>quantic_CollapseFacet</name>
+    </customLabels>
+    <customLabels>
+        <label>Agrandir la facette {{0}}</label>
+        <name>quantic_ExpandFacet</name>
+    </customLabels>
+    <customLabels>
         <label>Réduire {{0}}</label>
         <name>quantic_Collapse</name>
     </customLabels>
