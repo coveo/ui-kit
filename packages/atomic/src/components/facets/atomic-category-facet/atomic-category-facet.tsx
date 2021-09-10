@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Host, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -37,6 +37,7 @@ import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.s
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
 import {registerFacetToStore} from '../../../utils/store';
 import {Button} from '../../common/button';
+import {Hidden} from '../../common/hidden';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -391,7 +392,7 @@ export class AtomicCategoryFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
-      return;
+      return <Hidden></Hidden>;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -403,25 +404,23 @@ export class AtomicCategoryFacet
     }
 
     if (!this.facetState.values.length && !this.facetState.parents.length) {
-      return <Host class="atomic-without-values"></Host>;
+      return <Hidden></Hidden>;
     }
 
     return (
-      <Host class="atomic-with-values">
-        <FacetContainer>
-          {this.renderHeader()}
-          {!this.isCollapsed && [
-            this.renderSearchInput(),
-            shouldDisplaySearchResults(this.facetState.facetSearch)
-              ? [this.renderSearchResults(), this.renderMatches()]
-              : [
-                  this.renderParents(),
-                  this.renderValues(),
-                  this.renderShowMoreLess(),
-                ],
-          ]}
-        </FacetContainer>
-      </Host>
+      <FacetContainer>
+        {this.renderHeader()}
+        {!this.isCollapsed && [
+          this.renderSearchInput(),
+          shouldDisplaySearchResults(this.facetState.facetSearch)
+            ? [this.renderSearchResults(), this.renderMatches()]
+            : [
+                this.renderParents(),
+                this.renderValues(),
+                this.renderShowMoreLess(),
+              ],
+        ]}
+      </FacetContainer>
     );
   }
 }

@@ -1,13 +1,4 @@
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  VNode,
-  Host,
-  Element,
-  Listen,
-} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element, Listen} from '@stencil/core';
 import {
   SearchStatus,
   SearchStatusState,
@@ -41,6 +32,7 @@ import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-val
 import dayjs from 'dayjs';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {registerFacetToStore} from '../../../utils/store';
+import {Hidden} from '../../common/hidden';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -311,7 +303,7 @@ export class AtomicTimeframeFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
-      return;
+      return <Hidden></Hidden>;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -323,19 +315,17 @@ export class AtomicTimeframeFacet
     }
 
     if (!this.shouldRenderFacet) {
-      return <Host class="atomic-without-values"></Host>;
+      return <Hidden></Hidden>;
     }
 
     return (
-      <Host class="atomic-with-values">
-        <FacetContainer>
-          {this.renderHeader()}
-          {!this.isCollapsed && [
-            this.shouldRenderInput && this.renderDateInput(),
-            this.shouldRenderValues && this.renderValues(),
-          ]}
-        </FacetContainer>
-      </Host>
+      <FacetContainer>
+        {this.renderHeader()}
+        {!this.isCollapsed && [
+          this.shouldRenderInput && this.renderDateInput(),
+          this.shouldRenderValues && this.renderValues(),
+        ]}
+      </FacetContainer>
     );
   }
 }

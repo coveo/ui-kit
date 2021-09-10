@@ -1,13 +1,4 @@
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  VNode,
-  Element,
-  Listen,
-  Host,
-} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element, Listen} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -47,6 +38,7 @@ import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-val
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
+import {Hidden} from '../../common/hidden';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -382,7 +374,7 @@ export class AtomicNumericFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
-      return;
+      return <Hidden></Hidden>;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -394,19 +386,17 @@ export class AtomicNumericFacet
     }
 
     if (!this.shouldRenderFacet) {
-      return <Host class="atomic-without-values"></Host>;
+      return <Hidden></Hidden>;
     }
 
     return (
-      <Host class="atomic-with-values">
-        <FacetContainer>
-          {this.renderHeader()}
-          {!this.isCollapsed && [
-            this.shouldRenderInput && this.renderNumberInput(),
-            this.shouldRenderValues && this.renderValues(),
-          ]}
-        </FacetContainer>
-      </Host>
+      <FacetContainer>
+        {this.renderHeader()}
+        {!this.isCollapsed && [
+          this.shouldRenderInput && this.renderNumberInput(),
+          this.shouldRenderValues && this.renderValues(),
+        ]}
+      </FacetContainer>
     );
   }
 }

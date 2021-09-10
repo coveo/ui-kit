@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -37,6 +37,7 @@ import {
 } from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
+import {Hidden} from '../../common/hidden';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -355,7 +356,7 @@ export class AtomicFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
-      return;
+      return <Hidden></Hidden>;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -367,21 +368,19 @@ export class AtomicFacet
     }
 
     if (!this.facetState.values.length) {
-      return <Host class="atomic-without-values"></Host>;
+      return <Hidden></Hidden>;
     }
 
     return (
-      <Host class="atomic-with-values">
-        <FacetContainer>
-          {this.renderHeader()}
-          {!this.isCollapsed && [
-            this.renderSearchInput(),
-            shouldDisplaySearchResults(this.facetState.facetSearch)
-              ? [this.renderSearchResults(), this.renderMatches()]
-              : [this.renderValues(), this.renderShowMoreLess()],
-          ]}
-        </FacetContainer>
-      </Host>
+      <FacetContainer>
+        {this.renderHeader()}
+        {!this.isCollapsed && [
+          this.renderSearchInput(),
+          shouldDisplaySearchResults(this.facetState.facetSearch)
+            ? [this.renderSearchResults(), this.renderMatches()]
+            : [this.renderValues(), this.renderShowMoreLess()],
+        ]}
+      </FacetContainer>
     );
   }
 }

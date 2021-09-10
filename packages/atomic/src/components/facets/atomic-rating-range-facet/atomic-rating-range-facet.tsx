@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Host, Element} from '@stencil/core';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -25,6 +25,7 @@ import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {registerFacetToStore} from '../../../utils/store';
+import {Hidden} from '../../common/hidden';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -236,7 +237,7 @@ export class AtomicRatingRangeFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
-      return;
+      return <Hidden></Hidden>;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -248,16 +249,14 @@ export class AtomicRatingRangeFacet
     }
 
     if (!this.valuesToRender.length) {
-      return <Host class="atomic-without-values"></Host>;
+      return <Hidden></Hidden>;
     }
 
     return (
-      <Host class="atomic-with-values">
-        <FacetContainer>
-          {this.renderHeader()}
-          {!this.isCollapsed && this.renderValues()}
-        </FacetContainer>
-      </Host>
+      <FacetContainer>
+        {this.renderHeader()}
+        {!this.isCollapsed && this.renderValues()}
+      </FacetContainer>
     );
   }
 }
