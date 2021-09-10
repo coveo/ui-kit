@@ -1,7 +1,7 @@
 <template>
   <template if:true={hasValues}>
-    <div class="facet">
-      <lightning-card title={label}>
+    <div class="slds-size_1-of-1">
+      <c-quantic-card-container title={label}>
         <lightning-button-icon
           class="slds-p-bottom_small facet__collapse"
           slot="actions"
@@ -38,7 +38,7 @@
             </template>
           </ul>
         </template>
-      </lightning-card>
+      </c-quantic-card-container>
     </div>
   </template>
 </template>
