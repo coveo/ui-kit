@@ -8,7 +8,7 @@
                 icon-name={actionButtonIcon}
                 alternative-text={actionButtonLabel}
                 variant="bare">
-                </lightning-button-icon>
+            </lightning-button-icon>
             <template if:true={isExpanded}>
                 <template if:false={noSearch}>
                     <div onchange={handleKeyUp} class="facet__searchbox">
@@ -18,7 +18,7 @@
                 <ul class="slds-has-dividers_around-space">
                     <template if:false={isFacetSearchActive}>
                         <template if:true={hasParents}>
-                            <li class="slds-var-m-horizontal_medium slds-grid">
+                            <li class="slds-var-m-horizontal_medium slds-var-m-vertical_small slds-grid">
                                 <div onclick={reset}>
                                     <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
                                     <span class="nowrap">{labels.allCategories}</span>
@@ -30,10 +30,10 @@
                          </template>
                          <template if:true={activeParent}>
                              <li class="slds-var-m-horizontal_medium slds-grid">
-                                 <span class="nowrap parent-text__bold slds-var-m-horizontal_small">{activeParent.value} ({activeParent.numberOfResults})</span>
+                                 <span class="nowrap parent-text__bold">{activeParent.value} ({activeParent.numberOfResults})</span>
                              </li>  
                          </template>
-                         <li class=" slds-var-m-horizontal_medium facet-list_type slds-grid">
+                         <li class="slds-var-m-horizontal_medium slds-grid">
                             <ul>
                              <template for:each={values} for:item="v">
                                 <c-quantic-category-facet-value 
@@ -72,13 +72,13 @@
                 <template if:true={canShowLess}>
                     <button variant="base" label={labels.showLess}
                       class="slds-var-m-left_x-small facet__show-less" onclick={showLess}>
-                      <span class="facet__show-less_text">- {labels.showLess}</span>
+                      <span class="facet__show-less-text">{labels.minus} {labels.showLess}</span>
                     </button>
                 </template>
                 <template if:true={canShowMore}>
                     <button variant="base" label={labels.showMore}
                       class="slds-var-m-left_x-small facet__show-more" onclick={showMore}>
-                      <span class="facet__show-more_text">+ {labels.showMore}</span>
+                      <span class="facet__show-more-text">{labels.plus} {labels.showMore}</span>
                     </button>
                 </template> 
             </template>

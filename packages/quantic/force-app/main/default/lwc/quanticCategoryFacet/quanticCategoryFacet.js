@@ -13,6 +13,8 @@ import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import plus from '@salesforce/label/c.quantic_Plus';
+import minus from '@salesforce/label/c.quantic_Minus';
 
 export default class QuanticCategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -59,6 +61,8 @@ export default class QuanticCategoryFacet extends LightningElement {
     noMatchesFor,
     collapseFacet,
     expandFacet,
+    plus,
+    minus
   }
 
   connectedCallback() {

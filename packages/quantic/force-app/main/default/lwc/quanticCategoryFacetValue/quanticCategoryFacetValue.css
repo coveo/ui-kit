@@ -2,9 +2,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #8E959D;
+    color: var(--sds-c-color-gray-8, #8E959D);
+    float: left;
 }
 
-.flex {
-    display: flex
+.facet__numberResults {
+    color: var(--sds-c-color-gray-8, #8E959D);
 }

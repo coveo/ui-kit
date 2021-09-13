@@ -11,12 +11,12 @@
   font-size: 12px;
   outline: 0;
   background-color: var(--lwc-colorBackgroundAlt, #FFFFFF);
-  color: #005FB2;
+  color: var(--brand-text-link, #0176d3);
   border: none;
   margin-bottom: 5px;
 }
 
-.facet__show-more_text, .facet__show-less_text{
+.facet__show-more-text, .facet__show-less-text{
   display: flex;
   align-items: left;
 }
@@ -31,4 +31,8 @@
 .facet__search-results_more-matches{
    color: var(--sds-c-color-gray-8, #8E959D);
    font-size: 12px;
+}
+.parent-text__bold {
+  font-weight: var(--font-weight-bold, 700);
+  margin-left: var(--lwc-varSpacingHorizontalMedium, 1rem);
 }

@@ -1,5 +1,5 @@
 <template>
-    <li class="slds-var-m-horizontal_medium slds-var-m-vertical_small slds-grid">  
+    <li class="slds-var-m-horizontal_medium slds-grid">  
         <div class="slds-col_bump-right" onclick={onSelect}>
             <template if:false={withsearch}>
                 <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default">
@@ -10,15 +10,15 @@
                 </button>
             </template>
              <template if:true={withsearch}>
-                 <button class="slds-var-m-horizontal_medium slds-button slds-text-color_default">
-                    <div class="slds-grid slds-grid_vertical">
-                        <div class="slds-col slds-size_1-of-1 slds-grid_align-spread"> 
-                             <lightning-formatted-rich-text class="slds-truncate" value={item.highlightedResult}></lightning-formatted-rich-text>
-                            <span class="slds-m-horizontal_small">
+                 <button class="slds-button slds-text-color_default">
+                    <div class="slds-grid slds-grid_vertical slds-gutters">
+                        <div class="slds-col">
+                            <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
+                            <span class="facet__numberResults slds-text-align_center">
                                 ({item.numberOfResults})
                             </span>
                         </div>
-                        <div class="slds-col slds-size_1-of-1 slds-grid_align-space"> 
+                        <div class="slds-col">
                             <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
                         </div>
                     </div>

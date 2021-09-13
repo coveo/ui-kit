@@ -73,6 +73,18 @@
         <name>quantic_AllCategories</name>
     </customLabels>
     <customLabels>
+        <label>dans</label>
+        <name>quantic_InLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>+</label>
+        <name>quantic_Plus</name>
+    </customLabels>
+    <customLabels>
+        <label>-</label>
+        <name>quantic_Minus</name>
+    </customLabels>
+    <customLabels>
         <label>{{0}} de plus...</label>
         <name>quantic_NMore</name>
     </customLabels>
