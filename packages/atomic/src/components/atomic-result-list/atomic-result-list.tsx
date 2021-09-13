@@ -10,7 +10,6 @@ import {
   ResultsPerPageState,
   ResultsPerPage,
 } from '@coveo/headless';
-import defaultTemplate from '../../templates/default.html';
 import {
   Bindings,
   BindStateToController,
@@ -117,7 +116,10 @@ export class AtomicResultList implements InitializableComponent {
 
   private registerDefaultResultTemplates() {
     this.resultTemplatesManager.registerTemplates({
-      content: {innerHTML: defaultTemplate, usesSections: false},
+      content: {
+        innerHTML: '<atomic-result-link></atomic-result-link>',
+        usesSections: false,
+      },
       conditions: [],
     });
   }
