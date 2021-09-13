@@ -6,8 +6,10 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 
+// TODO: Remove in v1
 /**
  * The `atomic-result-price` component renders the value of a price result field.
+ * @deprecated Use atomic-result-number with atomic-format-currency instead.
  */
 @Component({
   tag: 'atomic-result-price',
