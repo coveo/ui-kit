@@ -99,6 +99,11 @@ export const loadCollection = createAsyncThunk<
 );
 
 function getQForHighlighting(state: StateNeededByLoadCollection) {
+  // This piece of code serves the following purpose:
+  // Inject the "original" query "q" to get proper keywords highlighting when loading a full collection
+  // However, since the intent behind this feature is to load "every results available for this collection", regardless of other filters (including the search box itself)
+  // For that reason, we force enable query syntax + inject an `OR @uri` expression in the query.
+
   if (state.query.q === '') {
     return '';
   }
