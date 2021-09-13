@@ -54,7 +54,7 @@ node('linux && docker') {
         sh 'cd packages/quantic && echo $SFDX_AUTH_JWT_KEY > packages/quantic/server.key'
         sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
         sh 'cd packages/quantic && npm run setup:examples'
-        sh 'cd packages/quantic && ./node_modles/cypress/bin/cypress run --browser chrome'
+        sh 'cd packages/quantic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --browser chrome'
         sh 'cd packages/quantic && .node_modules/.bin/ts-node scripts/build/delete-org.ts'
       }
 
