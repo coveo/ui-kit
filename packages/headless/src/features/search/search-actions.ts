@@ -32,7 +32,6 @@ import {
   SortSection,
 } from '../../state/state-sections';
 import {
-  getVisitorID,
   historyStore,
   StateNeededByAnalyticsProvider,
 } from '../../api/analytics/analytics';
@@ -49,6 +48,7 @@ import {
   mapSearchRequest,
   mapSearchResponse,
 } from './search-mappings';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/build-search-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -271,50 +271,18 @@ const shouldReExecuteTheQueryWithCorrections = (
 
 export const buildSearchRequest = (state: StateNeededByExecuteSearch) => {
   const facets = getFacets(state);
+  const sharedWithFoldingRequest =
+    buildSearchAndFoldingLoadCollectionRequest(state);
 
   return mapSearchRequest({
-    accessToken: state.configuration.accessToken,
-    organizationId: state.configuration.organizationId,
-    url: state.configuration.search.apiBaseUrl,
-    locale: state.configuration.search.locale,
-    debug: state.debug,
-    tab: state.configuration.analytics.originLevel2,
-    referrer: state.configuration.analytics.originLevel3,
-    timezone: state.configuration.search.timezone,
-    ...(state.configuration.analytics.enabled && {
-      visitorId: getVisitorID(),
-    }),
-    ...(state.advancedSearchQueries && {
-      aq: state.advancedSearchQueries.aq,
-      cq: state.advancedSearchQueries.cq,
-      lq: state.advancedSearchQueries.lq,
-    }),
-    ...(state.context && {
-      context: state.context.contextValues,
-    }),
+    ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
       enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
     ...(facets.length && {facets}),
-    ...(state.fields && {
-      fieldsToInclude: state.fields.fieldsToInclude,
-    }),
     ...(state.pagination && {
       numberOfResults: state.pagination.numberOfResults,
       firstResult: state.pagination.firstResult,
-    }),
-    ...(state.pipeline && {
-      pipeline: state.pipeline,
-    }),
-    ...(state.query && {
-      q: state.query.q,
-      enableQuerySyntax: state.query.enableQuerySyntax,
-    }),
-    ...(state.searchHub && {
-      searchHub: state.searchHub,
-    }),
-    ...(state.sortCriteria && {
-      sortCriteria: state.sortCriteria,
     }),
     ...(state.facetOptions && {
       facetOptions: state.facetOptions,

@@ -344,7 +344,7 @@ describe('folding slice', () => {
         name: 'first-answer',
       });
 
-      dispatchLoadCollection(indexedResults);
+      dispatchLoadCollection([emulateAPIFolding(indexedResults)]);
 
       expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
         testThreadHierarchy
@@ -451,7 +451,7 @@ describe('folding slice', () => {
         indexedStorageResults[0],
       ]);
 
-      dispatchLoadCollection(indexedStorageResults);
+      dispatchLoadCollection([emulateAPIFolding(indexedStorageResults)]);
 
       expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
         testThreadHierarchy
