@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.61.0...@coveo/quantic@0.62.0) (2021-09-13)
+
+
+### Features
+
+* **quantic:** changes to initialize function header ([#1193](https://github.com/coveo/ui-kit/issues/1193)) ([5bd0ed9](https://github.com/coveo/ui-kit/commit/5bd0ed9ff4a392e6c5fa5cc0f42a23303c3d9bb1))
+
+
+
+
+
 # [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.60.0...@coveo/quantic@0.61.0) (2021-09-10)
 
 
