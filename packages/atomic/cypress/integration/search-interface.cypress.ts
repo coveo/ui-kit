@@ -1,8 +1,5 @@
 import {RouteAlias, setUpPage} from '../utils/setupComponent';
-import {
-  getSearchInterface,
-  setLanguage,
-} from './search-interface-utils.cypress';
+import {getSearchInterface, setLanguage} from './search-interface-utils';
 
 describe('Search Interface Component', () => {
   const setTranslation = (lang: string, key: string, value: string) => {
@@ -13,7 +10,7 @@ describe('Search Interface Component', () => {
 
   describe('with an automatic search', () => {
     beforeEach(() => {
-      setUpPage('<atomic-query-summary>', true);
+      setUpPage('<atomic-query-summary enable-duration>', true);
     });
 
     it('should support changing language', () => {

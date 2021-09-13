@@ -3,7 +3,7 @@ on:
 - pull_request
 
 jobs:
-  run-script:
+  pr-robot:
     runs-on: ubuntu-latest
     env:
       GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}

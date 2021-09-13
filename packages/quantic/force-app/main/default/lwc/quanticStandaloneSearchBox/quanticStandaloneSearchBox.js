@@ -73,7 +73,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   get actualSearchBox() {
@@ -86,8 +86,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
       options: this.searchBoxOptions,
     });

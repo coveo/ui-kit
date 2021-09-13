@@ -11,9 +11,9 @@ export class AtomicSortExpression {
   @Element() public host!: HTMLElement;
 
   /**
-   * The non-localized caption to display for this expression.
+   * The non-localized label to display for this expression.
    */
-  @Prop() public caption!: string;
+  @Prop() public label!: string;
 
   /**
    * One or more sort criteria that the end user can select or toggle between.

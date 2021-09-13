@@ -70,7 +70,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
@@ -81,8 +81,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
