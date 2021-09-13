@@ -34,6 +34,7 @@ import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice
 import {standaloneSearchBoxSetReducer} from '../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
+import {productListingSortReducer} from '../features/product-listing/product-listing-sort-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -81,3 +82,4 @@ export const history = undoable({
 export const recommendation = recommendationReducer;
 export const productRecommendations = productRecommendationsReducer;
 export const productListing = productListingReducer;
+export const productListingSort = productListingSortReducer;

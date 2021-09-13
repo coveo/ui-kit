@@ -35,9 +35,17 @@ export {
 } from './controllers/product-listing/pager/headless-product-listing-pager';
 
 export {
-  SortInitialState,
-  SortProps,
-  Sort,
-  SortState,
+  ProductListingSortInitialState,
+  ProductListingSortProps,
+  ProductListingSort,
+  ProductListingSortState,
   buildSort,
+  ProductListingSortBy,
+  ProductListingSortDirection,
+  ProductListingSortByRelevance,
+  ProductListingSortByFields,
+  ProductListingSortByFieldsFields,
+  ProductListingSortCriterion,
+  buildProductListingRelevanceSortCriterion,
+  buildProductListingFieldsSortCriterion,
 } from './controllers/product-listing/sort/headless-product-listing-sort';

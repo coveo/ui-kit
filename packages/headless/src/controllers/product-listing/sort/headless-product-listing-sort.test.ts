@@ -3,14 +3,17 @@ import {
   MockProductListingEngine,
 } from '../../../test';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {SortInitialState} from '../../core/sort/headless-core-sort';
-import {buildSort, Sort} from './headless-product-listing-sort';
-import {SortBy} from '../../../features/sort-criteria/criteria';
+import {
+  buildSort,
+  ProductListingSort,
+  ProductListingSortBy,
+  ProductListingSortInitialState,
+} from './headless-product-listing-sort';
 
 describe('Sort', () => {
   let engine: MockProductListingEngine;
-  let initialState: SortInitialState;
-  let sort: Sort;
+  let initialState: ProductListingSortInitialState;
+  let sort: ProductListingSort;
 
   function initSort() {
     sort = buildSort(engine, {initialState});
@@ -27,7 +30,7 @@ describe('Sort', () => {
   });
 
   it('#sortBy dispatches #fetchProductListing', () => {
-    sort.sortBy({by: SortBy.NoSort});
+    sort.sortBy({by: ProductListingSortBy.Relevance});
     const action = engine.findAsyncAction(fetchProductListing.pending);
     expect(action).toBeTruthy();
   });

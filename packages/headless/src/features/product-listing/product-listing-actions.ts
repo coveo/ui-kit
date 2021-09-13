@@ -10,7 +10,7 @@ import {
   NumericFacetSection,
   PaginationSection,
   ProductListingSection,
-  SortSection,
+  ProductListingSortSection,
 } from '../../state/state-sections';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
@@ -23,15 +23,8 @@ import {
 } from '../../api/commerce/product-listings/product-listing-request';
 import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
-import {ProductListingSortRequestParam} from '../../api/commerce/product-listings/product-listing-params';
-import {isArray} from '../../utils/utils';
-import {
-  SortBy,
-  SortByField,
-  SortCriterion,
-  SortOrder,
-} from '../sort-criteria/criteria';
-import {parseCriterionExpression} from '../sort-criteria/criteria-parser';
+import {ProductListingSortBy} from './product-listing-sort';
+
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
@@ -54,7 +47,7 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
   ProductListingSection &
   Partial<
     PaginationSection &
-      SortSection &
+      ProductListingSortSection &
       FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
@@ -133,54 +126,11 @@ export const buildProductListingRequest = (
           ) + 1,
       },
     }),
-    ...(state.sortCriteria && {
-      sort: getSortParam(parseCriterionExpression(state.sortCriteria)),
+    ...(state.productListingSort?.by === ProductListingSortBy.Fields && {
+      sort: state.productListingSort,
     }),
   };
 };
-
-function getSortParam(
-  sort: SortCriterion | SortCriterion[]
-): ProductListingSortRequestParam {
-  if (isArray(sort)) {
-    switch (sort[0].by) {
-      case SortBy.Date:
-      case SortBy.NoSort:
-      case SortBy.QRE:
-      case SortBy.Relevancy:
-        return getSortParam(sort[0]);
-      case SortBy.Field:
-        return mapToSortByFields(sort as SortByField[]);
-    }
-  } else {
-    switch (sort.by) {
-      case SortBy.Date:
-      case SortBy.NoSort:
-      case SortBy.QRE:
-      case SortBy.Relevancy:
-        return {
-          by: 'relevance',
-        };
-      case SortBy.Field:
-        return mapToSortByFields([sort]);
-    }
-  }
-}
-
-function mapToSortByFields(
-  sortByField: SortByField[]
-): ProductListingSortRequestParam {
-  return {
-    by: 'fields',
-    fields: sortByField.map(({order, field}) => {
-      const nameWithoutAtSign = field.substring(1);
-      return {
-        direction: order === SortOrder.Ascending ? 'asc' : 'desc',
-        name: nameWithoutAtSign,
-      };
-    }),
-  };
-}
 
 function getFacets(state: StateNeededByFetchProductListing) {
   return sortFacets(getAllFacets(state), state.facetOrder ?? []);
