@@ -1,4 +1,4 @@
-import {Component, h, State, Host} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -16,6 +16,7 @@ import {
 import {Button} from '../common/button';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFieldValueCaption} from '../../utils/field-utils';
+import {Hidden} from '../common/hidden';
 
 interface Breadcrumb {
   facetId: string;
@@ -244,17 +245,16 @@ export class AtomicBreadbox implements InitializableComponent {
 
   public render() {
     if (!this.breadcrumbManagerState.hasBreadcrumbs) {
-      return <Host class="atomic-without-values"></Host>;
+      return <Hidden></Hidden>;
     }
+
     return (
-      <Host class="atomic-with-values">
-        <div class="text-on-background text-sm flex">
-          <span part="label" class="font-bold p-2 pl-0 with-colon">
-            {this.bindings.i18n.t('filters')}
-          </span>
-          <ul class="flex flex-wrap gap-1">{this.renderBreadcrumbs()}</ul>
-        </div>
-      </Host>
+      <div class="text-on-background text-sm flex">
+        <span part="label" class="font-bold p-2 pl-0 with-colon">
+          {this.bindings.i18n.t('filters')}
+        </span>
+        <ul class="flex flex-wrap gap-1">{this.renderBreadcrumbs()}</ul>
+      </div>
     );
   }
 }

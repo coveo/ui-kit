@@ -19,7 +19,7 @@ type FacetStore<F extends FacetInfo> = Record<string, F>;
 export interface SortDropdownOption {
   expression: string;
   criteria: SortCriterion[];
-  caption: string;
+  label: string;
 }
 
 export type AtomicStore = {

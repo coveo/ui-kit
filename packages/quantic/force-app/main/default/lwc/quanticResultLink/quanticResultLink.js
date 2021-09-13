@@ -22,8 +22,7 @@ export default class QuanticResultLink extends LightningElement {
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.engine = engine;
     ResultUtils.bindClickEventsOnResult(
       this.engine,

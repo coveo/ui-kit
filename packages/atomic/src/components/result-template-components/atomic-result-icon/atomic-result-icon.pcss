@@ -1,9 +1,11 @@
-atomic-result-icon {
-  display: block;
-  width: var(--atomic-icon-size);
-  height: var(--atomic-icon-size);
-  background-size: var(--atomic-icon-size) var(--atomic-icon-size);
-  border-radius: 2px;
+:host {
+  display: inline-block;
+  width: 100%;
+  height: auto;
+
+  > atomic-icon {
+    width: 100%;
+  }
 }
 
 .salesforce-standard-contact {

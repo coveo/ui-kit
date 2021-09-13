@@ -1,4 +1,4 @@
-import {ResultListSelectors} from './result-list-v1-selectors';
+import {resultListComponent} from './result-list-selectors';
 
 export function withAnySectionnableResultList(assertions: () => void) {
   const viewports = {mobile: 1023, desktop: 1024};
@@ -13,7 +13,7 @@ export function withAnySectionnableResultList(assertions: () => void) {
                   before(() => {
                     const aspectRatio = 16 / 9;
                     cy.viewport(width, width / aspectRatio);
-                    cy.get(ResultListSelectors.component).then((comp) => {
+                    cy.get(resultListComponent).then((comp) => {
                       const resultList = comp.get()[0];
                       resultList.setAttribute('display', display);
                       resultList.setAttribute('image', image);

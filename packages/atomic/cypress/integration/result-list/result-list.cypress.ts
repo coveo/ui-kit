@@ -1,33 +1,34 @@
 import {setUpPage} from '../../utils/setupComponent';
 import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
+import {withAnySectionnableResultList} from './result-list-utils';
 import {
   ResultListSelectors,
-  resultListComponent,
+  generateResultList,
+  generateResultTemplate,
 } from './result-list-selectors';
 
 describe('Result List Component', () => {
   function getFirstResult() {
-    return cy
-      .get(ResultListSelectors.component)
+    return ResultListSelectors.shadow()
       .find(ResultListSelectors.result)
       .first()
       .shadow();
   }
 
   it('should load', () => {
-    setUpPage(resultListComponent());
-    cy.get(ResultListSelectors.component)
+    setUpPage(generateResultList());
+    ResultListSelectors.shadow()
       .find(ResultListSelectors.result)
       .should('have.length.above', 0);
   });
 
   describe('when no first search has yet been executed', () => {
     beforeEach(() => {
-      setUpPage(resultListComponent(), false);
+      setUpPage(generateResultList(), false);
     });
 
-    it('should render a placeholder component', () => {
-      cy.get(ResultListSelectors.component)
+    it('should render placeholder components', () => {
+      ResultListSelectors.shadow()
         .find(ResultListSelectors.placeholder)
         .should('be.visible');
     });
@@ -35,8 +36,8 @@ describe('Result List Component', () => {
 
   describe('when an initial search is executed', () => {
     it('should render the correct number of results', () => {
-      setUpPage(resultListComponent());
-      cy.get(ResultListSelectors.component)
+      setUpPage(generateResultList());
+      ResultListSelectors.shadow()
         .find(ResultListSelectors.result)
         .should('have.length', 10);
     });
@@ -46,7 +47,7 @@ describe('Result List Component', () => {
     it('should update the results', () => {
       let firstResultHtml: string;
       setUpPage(
-        `${resultListComponent()}<${PagerSelectors.pager}></${
+        `${generateResultList()}<${PagerSelectors.pager}></${
           PagerSelectors.pager
         }>`
       );
@@ -62,6 +63,82 @@ describe('Result List Component', () => {
       getFirstResult().should((element) => {
         const secondResultHtml = element[0].innerHTML;
         expect(secondResultHtml).not.to.equal(firstResultHtml);
+      });
+    });
+  });
+
+  describe('with elements to measure line height', () => {
+    const lineHeightSelector = '#line-height-el';
+
+    function generateLineHeightElement() {
+      return `<div
+        id="${lineHeightSelector.slice(1)}"
+        style="background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);"
+      ></div>`;
+    }
+
+    before(() => {
+      setUpPage(
+        generateResultList(
+          generateResultTemplate({
+            title: generateLineHeightElement(),
+            excerpt: generateLineHeightElement(),
+            bottomMetadata: generateLineHeightElement(),
+          })
+        )
+      );
+      ResultListSelectors.shadow().find('.list-wrapper:not(.placeholder)');
+    });
+
+    withAnySectionnableResultList(() => {
+      it('should expose --line-height in the title section', () => {
+        getFirstResult()
+          .find(ResultListSelectors.sections.title)
+          .find(lineHeightSelector)
+          .should('be.visible');
+      });
+
+      it('should expose --line-height in the excerpt section', () => {
+        getFirstResult()
+          .find(ResultListSelectors.sections.excerpt)
+          .find(lineHeightSelector)
+          .should('be.visible');
+      });
+
+      it('should expose --line-height in the bottom-metadata section', () => {
+        getFirstResult()
+          .find(ResultListSelectors.sections.bottomMetadata)
+          .find(lineHeightSelector)
+          .should('be.visible');
+      });
+    });
+  });
+
+  describe('with a full result template', () => {
+    function generateSimpleTextElement() {
+      return '<span>I will not use meaningless placeholder text for testing</span>';
+    }
+
+    before(() => {
+      setUpPage(
+        generateResultList(
+          generateResultTemplate({
+            visual: generateSimpleTextElement(),
+            badges: generateSimpleTextElement(),
+            actions: generateSimpleTextElement(),
+            title: generateSimpleTextElement(),
+            titleMetadata: generateSimpleTextElement(),
+            emphasized: generateSimpleTextElement(),
+            excerpt: generateSimpleTextElement(),
+            bottomMetadata: generateSimpleTextElement(),
+          })
+        )
+      );
+    });
+
+    withAnySectionnableResultList(() => {
+      it.skip('should pass accessibility tests', () => {
+        cy.checkA11y();
       });
     });
   });
