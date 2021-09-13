@@ -12,6 +12,7 @@ import {
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
 
 import search from '@salesforce/label/c.quantic_Search';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -24,6 +25,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   
   labels = {
     search,
+    clear,
   };
 
   // Public props
