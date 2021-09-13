@@ -240,7 +240,7 @@ export default class QuanticFacet extends LightningElement {
       return result;
     }
     const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
-    return result.replace(regex, '<b>$1</b>');
+    return result.replace(regex, '<b class="facet__search-result_highlight">$1</b>');
   }
 
   regexEncode(value) {
