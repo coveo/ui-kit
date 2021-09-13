@@ -17,6 +17,13 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
+/** @typedef {import("coveo").FacetState} FacetState */
+/** @typedef {import("coveo").FacetSortCriterion} FacetSortCriterion */
+/** @typedef {import("coveo").Facet} Facet */
+/** @typedef {import("coveo").FacetValue} FacetValue */
+/** @typedef {import("coveo").Unsubscribe} Unsubscribe */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\
  * A `QuanticFacet` displays a facet of the results for the current query.
@@ -27,7 +34,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  */
 export default class QuanticFacet extends LightningElement {
   /**
-   * @type {import("coveo").FacetState}
+   * @type {FacetState}
    * @ignore
    */
   @track state;
@@ -66,7 +73,7 @@ export default class QuanticFacet extends LightningElement {
    *   - numeric
    *   - occurences
    *   - automatic
-   * @type  {import("coveo").FacetSortCriterion}
+   * @type  {FacetSortCriterion}
    * @default automatic
    */
   @api sortCriteria = 'automatic';
@@ -78,28 +85,28 @@ export default class QuanticFacet extends LightningElement {
   @api noSearch = false;
 
   /**
-   * @type {import("coveo").Facet}}
    * @ignore
+   * @type {Facet}
    */
   facet;
   /**
-   * @type {import("coveo").Unsubscribe}
    * @ignore
+   * @type {Unsubscribe}
    */
   unsubscribe;
   /**
-   * @type {boolean}
    * @ignore
+   * @type {boolean}
    */
   isExpanded = true;
   /**
-   * @type {HTMLInputElement}
    * @ignore
+   * @type {HTMLInputElement}
    */
   input;
   /**
-   * @type {boolean}
    * @ignore
+   * @type {boolean}
    */
   isFacetSearchActive = false;
 
@@ -117,8 +124,8 @@ export default class QuanticFacet extends LightningElement {
   };
 
   /**
-   * @param {import("coveo").SearchEngine} engine
    * @ignore
+   * @param {SearchEngine} engine
    */
   initialize(engine) {
     const options = {
@@ -239,8 +246,8 @@ export default class QuanticFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<import("coveo").FacetValue>} evt
    * @ignore
+   * @param {CustomEvent<FacetValue>} evt
    */
   onSelect(evt) {
     const specificSearchResult = {
