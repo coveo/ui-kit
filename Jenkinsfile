@@ -36,12 +36,26 @@ node('linux && docker') {
       }
 
       stage('Cypress Test') {
+        environment {
+          SFDX_AUTH_JWT_INSTANCE_URL = 'https://login.salesforce.com'
+          SFDX_AUTH_JWT_USERNAME = 'sfdc.integration.devv2.hub@coveo.com'
+          SFDX_AUTH_JWT_KEY = credentials('sfdx-auth-jwt-key')
+          SFDX_AUTH_CLIENT_ID = credentials('sfdx-auth-client-id')
+        }
+        
         sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
         sh 'rm -rf /var/lib/apt/lists/*'
         sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
         sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
         sh 'chown -R $(whoami) /tmp'
         sh 'cd packages/atomic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
+
+        // Quantic tests
+        sh 'cd packages/quantic && echo $SFDX_AUTH_JWT_KEY > packages/quantic/server.key'
+        sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile server.key --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
+        sh 'cd packages/quantic && npm run setup:examples'
+        sh 'cd packages/quantic && ./node_modles/cypress/bin/cypress run --browser chrome'
+        sh 'cd packages/quantic && .node_modules/.bin/ts-node scripts/build/delete-org.ts'
       }
 
       stage('Generate Docs') {
