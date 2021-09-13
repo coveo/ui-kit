@@ -199,13 +199,6 @@ export class AtomicSearchInterface {
     this.initSearchStatus();
     this.initUrlManager();
 
-    const r = buildFoldedResultList(this.engine!);
-    console.log('asdas');
-
-    setTimeout(() => {
-      r.loadCollection(r.state.results[0]);
-    }, 5000);
-
     this.initialized = true;
   }
 
