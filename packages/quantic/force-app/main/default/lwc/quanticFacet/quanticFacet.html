@@ -1,21 +1,22 @@
 <template>
   <template if:true={hasValues}>
-    <div class="facet">
-      <lightning-card title={label}>
+    <div class="slds-size_1-of-1">
+      <c-quantic-card-container title={label}>
         <lightning-button-icon
           class="slds-p-bottom_small"
           slot="actions"
           onclick={toggleFacetVisibility}
-          icon-name={collapseIcon}
-          alternative-text="Collapse/show facet"
+          onmousedown={preventDefault}
+          icon-name={actionButtonIcon}
+          alternative-text={actionButtonLabel}
           variant="bare"
         >
         </lightning-button-icon>
     
-        <template if:false={isCollapsed}>
+        <template if:true={isExpanded}>
           <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
             <template if:false={noSearch}>
-              <div onchange={handleKeyUp} class="facet__searchbox">
+              <div onchange={handleKeyUp} class="slds-size_1-of-1">
                 <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
               </div>
             </template>
@@ -83,7 +84,7 @@
           </ul>
           
         </template>
-      </lightning-card>
+      </c-quantic-card-container>
     </div>
   </template>
 </template>

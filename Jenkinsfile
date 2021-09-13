@@ -5,10 +5,10 @@ node('linux && docker') {
   def isMaster = env.BRANCH_NAME == 'master'
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
-    withDockerContainer(image: 'node:14', args: '-u=root') {
+    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Setup') {
-        sh 'npm install'
-        sh 'npx lerna bootstrap'
+        sh 'npm ci'
+        sh 'npx lerna bootstrap --ci'
         if (!isBump) {
           sh 'npm run lockLernaDependencies'
         }
@@ -38,9 +38,10 @@ node('linux && docker') {
       stage('Cypress Test') {
         sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
         sh 'rm -rf /var/lib/apt/lists/*'
-        sh 'cd packages/atomic && npx cypress install'
+        sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
         sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
-        sh 'NO_COLOR=1 npm run cypress:test'
+        sh 'chown -R $(whoami) /tmp'
+        sh 'cd packages/atomic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
       }
 
       stage('Generate Docs') {
@@ -70,7 +71,7 @@ node('linux && docker') {
       return
     }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
+    withDockerContainer(image: 'node:16', args: '-u=root') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {

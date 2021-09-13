@@ -3,8 +3,12 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import clear from '@salesforce/label/c.quantic_Clear';
+import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
+
+import clear from '@salesforce/label/c.quantic_Clear';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -12,6 +16,9 @@ export default class QuanticNumericFacet extends LightningElement {
   @track state = {
     values: [],
   };
+
+  /** @type {string} */
+  @api facetId;
   /** @type {string} */
   @api field;
   /** @type {string} */
@@ -36,12 +43,12 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {boolean} */
-  isCollapsed = false;
-  /** @type {string} */
-  collapseIcon = 'utility:dash';
+  isExpanded = true;
 
   labels = {
     clear,
+    collapseFacet,
+    expandFacet,
   };
 
   connectedCallback() {
@@ -64,7 +71,8 @@ export default class QuanticNumericFacet extends LightningElement {
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
         numberOfValues: Number(this.numberOfValues),
-      },
+        facetId: this.facetId ?? this.field,
+      }
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
@@ -98,6 +106,15 @@ export default class QuanticNumericFacet extends LightningElement {
     return this.state.hasActiveValues;
   }
 
+  get actionButtonIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+  
+  get actionButtonLabel() {
+    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    return I18nUtils.format(label, this.label);
+  }
+
   /**
    * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
@@ -110,7 +127,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIconName = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
+  }
+
+  preventDefault(evt) {
+    evt.preventDefault();
   }
 }

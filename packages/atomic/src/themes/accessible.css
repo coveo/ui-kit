@@ -20,8 +20,8 @@
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-md: 0.5rem;
   --atomic-border-radius-lg: 0.75rem;
-  --atomic-border-radius-xl: 1rem;
 
   /* Font */
   --atomic-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica,

@@ -14,6 +14,8 @@ import clear from '@salesforce/label/c.quantic_Clear';
 import search from '@salesforce/label/c.quantic_Search';
 import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\
@@ -29,6 +31,13 @@ export default class QuanticFacet extends LightningElement {
    * @ignore
    */
   @track state;
+  /** 
+   * An unique ID used to identify the facet instance.
+   * Defaults to given facet label.
+   * @type {string}
+   * @default (label)
+   */
+  @api facetId;
   /**
    * The field whose values you want to display in the facet.
    * @type {string}
@@ -79,15 +88,10 @@ export default class QuanticFacet extends LightningElement {
    */
   unsubscribe;
   /**
-   * @type {boolean} 
+   * @type {boolean}
    * @ignore
    */
-  isCollapsed = false;
-  /**
-   * @type {string}
-   * @ignore
-   */
-  collapseIcon = 'utility:dash';
+  isExpanded = true;
   /**
    * @type {HTMLInputElement}
    * @ignore
@@ -108,6 +112,8 @@ export default class QuanticFacet extends LightningElement {
     search,
     moreMatchesFor,
     noMatchesFor,
+    collapseFacet,
+    expandFacet,
   };
 
   /**
@@ -120,9 +126,9 @@ export default class QuanticFacet extends LightningElement {
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
       facetSearch: {numberOfValues: Number(this.numberOfValues)},
+      facetId: this.facetId ?? this.field,
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
-    this.facetId = this.facet.state.facetId;
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 
@@ -223,6 +229,15 @@ export default class QuanticFacet extends LightningElement {
     return I18nUtils.format(this.labels.noMatchesFor, this.query);
   }
 
+  get actionButtonIcon() {
+    return this.isExpanded ? 'utility:dash' : 'utility:add';
+  }
+
+  get actionButtonLabel() {
+    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    return I18nUtils.format(label, this.label);
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    * @ignore
@@ -256,8 +271,11 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.collapseIcon = this.isCollapsed ? 'utility:dash' : 'utility:add';
-    this.isCollapsed = !this.isCollapsed;
+    this.isExpanded = !this.isExpanded;
+  }
+
+  preventDefault(evt) {
+    evt.preventDefault();
   }
 
   handleKeyUp() {
