@@ -16,11 +16,10 @@ import {
   UrlManager,
   buildSearchEngine,
   SearchEngine,
-  loadSearchConfigurationActions,
   SearchEngineConfiguration,
-  buildFoldedResultList,
   SearchStatus,
   buildSearchStatus,
+  loadSearchConfigurationActions,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
