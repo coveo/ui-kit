@@ -1,9 +1,4 @@
-import {
-  createAsyncThunk,
-  ThunkDispatch,
-  AnyAction,
-  createAction,
-} from '@reduxjs/toolkit';
+import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 import {
   SearchAPIClient,
   isErrorResponse,
