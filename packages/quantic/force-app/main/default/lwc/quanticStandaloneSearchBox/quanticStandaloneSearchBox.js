@@ -1,11 +1,8 @@
-// @ts-nocheck
 import {LightningElement, api, track, wire} from 'lwc';
 import {
   CurrentPageReference,
   NavigationMixin,
-  // @ts-ignore
 } from 'lightning/navigation';
-// @ts-ignore
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -237,8 +234,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.standaloneSearchBox.selectSuggestion(textValue);
   }
 
-  resetSearchboxState(engineId) {
-    const engine = getHeadlessBindings(engineId)?.engine;
+  resetStandaloneSearchboxState() {
+    const engine = getHeadlessBindings(this.standaloneEngineId)?.engine;
     if(!engine) {
       return;
     }
@@ -250,8 +247,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   navigateToSearchPage() {
     const value = this.standaloneSearchBox.state.value;
 
-    this.resetSearchboxState(this.engineId);
-    this.resetSearchboxState(this.standaloneEngineId);
+    this.resetStandaloneSearchboxState();
     this[NavigationMixin.Navigate](
       {
         type: 'standard__webPage',
@@ -281,6 +277,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * @returns {import('c/quanticSearchBoxSuggestionsList').default}
    */
   get suggestionList() {
+    // @ts-ignore
     return this.template.querySelector('c-quantic-search-box-suggestions-list');
   }
 
