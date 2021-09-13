@@ -1,0 +1,30 @@
+<template>
+  <c-quantic-card-container title={label}>
+    <lightning-button-icon
+      class="slds-p-bottom_small"
+      slot="actions"
+      onclick={toggleVisibility}
+      icon-name={actionButtonIcon}
+      alternative-text={actionButtonLabel}
+      variant="bare"
+    >
+    </lightning-button-icon>
+    <template if:true={isExpanded}>
+      <template if:false={hasQueries}>
+        <div class="slds-text-body_small empty-list-message slds-p-horizontal_medium slds-var-m-vertical_small">{labels.emptyListLabel}</div>
+      </template>
+      <ul>
+        <template for:each={queries} for:item="query">
+          <li class="slds-var-m-vertical_x-small slds-grid" key={query}>
+            <div class="slds-col recent-query__container">
+              <lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" alternative-text="search icon" size="xx-small"></lightning-icon>
+              <div class="slds-text-body_small nowrap query-text__container">
+                <p class="slds-truncate">{query}</p>
+              </div>
+            </div>
+          </li>
+        </template>
+      </ul>
+    </template>
+  </c-quantic-card-container>
+</template>

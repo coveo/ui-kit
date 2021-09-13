@@ -19,14 +19,13 @@ export default class QuanticResultList extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.resultList = CoveoHeadless.buildResultList(engine);
     this.resultTemplatesManager = CoveoHeadless.buildResultTemplatesManager(
       engine

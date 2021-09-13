@@ -71,7 +71,7 @@
   },
   "query-suggestion-list": {
     "en": "Search suggestions. Select one to search.",
-    "fr": ""
+    "fr": "Suggestions de recherche. Sélectionnez-en un pour rechercher."
   },
   "clear": {
     "en": "Clear",
@@ -499,7 +499,7 @@
     "zh-cn": "没有找到与 {{query}} 相关的结果",
     "zh-tw": "沒有找到與 {{query}} 相關的結果"
   },
-  "search-tips-v1": {
+  "search-tips": {
     "en": "You may want to try using different keywords, or checking for spelling mistakes.",
     "fr": "Essayez différents mots-clés ou vérifiez l'orthographe de vos mots-clés."
   },
@@ -540,31 +540,6 @@
     "tr": "Son işlemi iptal et",
     "zh-cn": "取消最后一个动作",
     "zh-tw": "取消最後一個動作"
-  },
-  "search-tips": {
-    "en": "Search tips",
-    "fr": "Conseils de recherche",
-    "cs": "Tipy pro hledání",
-    "da": "Søgetips",
-    "de": "Tipps für die Suche",
-    "el": "Συμβουλές αναζήτησης",
-    "es-es": "Sugerencias de búsqueda",
-    "fi": "Hakuvihjeet",
-    "hu": "Keresési tippek",
-    "id": "Kiat pencarian",
-    "it": "Suggerimenti per ricerca",
-    "ja": "検索ヒント",
-    "ko": "검색 요령",
-    "nl": "Zoektips",
-    "no": "Søketips",
-    "pl": "Wskazówki dotyczące wyszukiwania",
-    "pt-br": "Dicas de pesquisa",
-    "ru": "Найти подсказку",
-    "sv": "Söktips",
-    "th": "เคล็ดลับการค้นหา",
-    "tr": "Arama ipuçları",
-    "zh-cn": "搜索提示",
-    "zh-tw": "搜尋提示"
   },
   "check-spelling": {
     "en": "Check the spelling of your keywords.",

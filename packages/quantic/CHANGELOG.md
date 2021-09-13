@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.61.0...@coveo/quantic@0.62.0) (2021-09-13)
+
+
+### Features
+
+* **quantic:** changes to initialize function header ([#1193](https://github.com/coveo/ui-kit/issues/1193)) ([5bd0ed9](https://github.com/coveo/ui-kit/commit/5bd0ed9ff4a392e6c5fa5cc0f42a23303c3d9bb1))
+
+
+
+
+
+# [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.60.0...@coveo/quantic@0.61.0) (2021-09-10)
+
+
+### Features
+
+* **quantic:** Add card container component ([#1188](https://github.com/coveo/ui-kit/issues/1188)) ([f4904bc](https://github.com/coveo/ui-kit/commit/f4904bc10931dd7c315720a3046f1cf189105621))
+
+
+
+
+
+# [0.60.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.59.0...@coveo/quantic@0.60.0) (2021-09-09)
+
+
+### Features
+
+* **quantic:** added recent-queries component  ([#1149](https://github.com/coveo/ui-kit/issues/1149)) ([d4dd34c](https://github.com/coveo/ui-kit/commit/d4dd34ce73ad6809ce2b64440bdffc72dfb86a66))
+
+
+
+
+
 # [0.59.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.58.0...@coveo/quantic@0.59.0) (2021-09-07)
 
 

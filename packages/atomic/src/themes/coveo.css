@@ -20,6 +20,7 @@
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-md: 0.5rem;
   --atomic-border-radius-lg: 0.75rem;
   --atomic-border-radius-xl: 1rem;
 
@@ -35,8 +36,4 @@
   --atomic-text-lg: 1rem; /* 16px */
   --atomic-text-xl: 1.125rem; /* 18px */
   --atomic-text-2xl: 1.5rem; /* 24px */
-
-  /* Others */
-  /* TODO: Remove from v1 */
-  --atomic-icon-size: 30px;
 }

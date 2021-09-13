@@ -1,6 +1,12 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {Result, SearchEngine} from '@coveo/headless';
 import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
+import {
+  ResultDisplayLayout,
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  getResultDisplayClasses,
+} from './atomic-result-display-options';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -28,6 +34,26 @@ export class AtomicResult {
    */
   @Prop() content!: string;
 
+  /**
+   * Whether this result should use `atomic-result-section-*` components.
+   */
+  @Prop() useSections = true;
+
+  /**
+   * How results should be displayed.
+   */
+  @Prop() display: ResultDisplayLayout = 'list';
+
+  /**
+   * How large or small results should be.
+   */
+  @Prop() density: ResultDisplayDensity = 'normal';
+
+  /**
+   * How large or small the visual section of results should be.
+   */
+  @Prop() image: ResultDisplayImageSize = 'icon';
+
   @Listen('atomic/resolveResult')
   public resolveResult(event: CustomEvent) {
     event.preventDefault();
@@ -36,6 +62,18 @@ export class AtomicResult {
   }
 
   private unbindLogDocumentOpen = () => {};
+
+  private getClasses() {
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.image
+    );
+    if (this.useSections) {
+      classes.push('with-sections');
+    }
+    return classes;
+  }
 
   public componentDidRender() {
     this.unbindLogDocumentOpen = bindLogDocumentOpenOnResult(
@@ -50,6 +88,11 @@ export class AtomicResult {
   }
 
   public render() {
-    return <div innerHTML={this.content}></div>;
+    return (
+      <div
+        class={`result-root ${this.getClasses().join(' ')}`}
+        innerHTML={this.content}
+      ></div>
+    );
   }
 }
