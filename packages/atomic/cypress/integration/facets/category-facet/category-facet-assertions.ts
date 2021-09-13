@@ -176,7 +176,7 @@ export function assertFirstChildContains(value: string) {
 
 export function assertNumberOfSearchResults(numberOfResults: number) {
   it(`should have ${numberOfResults} search results`, () => {
-    cy.get(ResultListSelectors.component)
+    ResultListSelectors.shadow()
       .find(ResultListSelectors.result)
       .should('have.length', numberOfResults);
   });

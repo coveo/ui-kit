@@ -3,6 +3,7 @@ import {setUpPage} from '../../utils/setupComponent';
 import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
   generateResultList,
+  resultListComponent,
   ResultListSelectors,
 } from '../result-list/result-list-selectors';
 import {
@@ -13,7 +14,7 @@ import {
 const customTemplate = '<template>Custom template</template>';
 
 function firstResultShouldUseCustomTemplate() {
-  cy.get(ResultListSelectors.component)
+  ResultListSelectors.shadow()
     .find('atomic-result')
     .first()
     .shadow()
@@ -23,7 +24,7 @@ function firstResultShouldUseCustomTemplate() {
 }
 
 describe('Result Template Component', () => {
-  describe(`when not a child of an "${ResultListSelectors.component}" component`, () => {
+  describe(`when not a child of an "${resultListComponent}" component`, () => {
     it(`should render an "${ComponentErrorSelectors.component}" component`, () => {
       setUpPage(resultTemplateComponent());
       cy.get(ResultTemplateSelectors.component)
@@ -36,8 +37,7 @@ describe('Result Template Component', () => {
   describe('when it does not have a "template" element has a child', () => {
     it(`should render an "${ComponentErrorSelectors.component}" component (in the result list)`, () => {
       setUpPage(generateResultList(resultTemplateComponent('<p>test</p>')));
-      cy.get(ResultListSelectors.component)
-        .find(ResultTemplateSelectors.component)
+      cy.get(ResultTemplateSelectors.component)
         .shadow()
         .find(ComponentErrorSelectors.component)
         .should('be.visible');
