@@ -1,94 +1,96 @@
-import {RangeFacetRangeAlgorithm} from '@coveo/headless';
-import {setUpPage} from '../../../utils/setupComponent';
-
-export const numericField = 'size';
-export const numericLabel = 'File Size';
-export const numericRanges: NumericRange[] = [
-  {
-    start: 0,
-    end: 100000,
-  },
-  {
-    start: 100001,
-    end: 1000000,
-  },
-  {
-    start: 1000001,
-    end: 10000000,
-  },
-];
+import {
+  TestFixture,
+  TagProps,
+  generateComponentHTML,
+} from '../../../fixtures/test-fixture';
+import {NumericFacetSelectors} from './numeric-facet-selectors';
 
 export interface NumericRange {
   start: number;
   end: number;
 }
+export const defaultNumberOfValues = 8;
+export const label = 'Youtube Views';
+export const field = 'ytviewcount';
+export const numericRanges: NumericRange[] = [
+  {
+    start: 0,
+    end: 1000,
+  },
+  {
+    start: 1000,
+    end: 10000,
+  },
+  {
+    start: 10000,
+    end: 100000,
+  },
+];
 
-export interface NumericFacetSetupOptions {
-  field: string;
-  label: string;
-  ranges: NumericRange[];
-  attributes: string;
-  executeFirstSearch: boolean;
-  rangeAlgorithm: RangeFacetRangeAlgorithm;
-}
-
-export function generateDateRangeHtml(numericRanges: NumericRange[]) {
-  return numericRanges
-    .map(
-      (r: NumericRange) =>
-        `<atomic-numeric-range start=${r.start} end=${r.end}></atomic-numeric-range>`
-    )
-    .join();
-}
-
-export function setupNumericFacet(
-  options: Partial<NumericFacetSetupOptions> = {}
-) {
-  const setupOptions: NumericFacetSetupOptions = {
-    attributes: '',
-    executeFirstSearch: true,
-    field: numericField,
-    label: numericLabel,
-    ranges: [],
-    rangeAlgorithm: 'even',
-    ...options,
+export const addNumericFacet =
+  (props: TagProps = {}, formatTag?: string, formatTagProps?: TagProps) =>
+  (env: TestFixture) => {
+    const e = generateComponentHTML('atomic-numeric-facet', props);
+    if (formatTag && formatTagProps) {
+      const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+      e.append(formatTagHTML);
+    }
+    env.withElement(e);
   };
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
-  <atomic-numeric-facet field="${setupOptions.field}" label="${
-      setupOptions.label
-    }" ${setupOptions.attributes} range-algorithm="${
-      setupOptions.rangeAlgorithm
-    }">${generateDateRangeHtml(setupOptions.ranges)}</atomic-numeric-facet>`,
-    setupOptions.executeFirstSearch
-  );
-}
 
-export function revertFormatedNumericFacet(num: string) {
-  return Number(num.replace(/,/g, ''));
-}
+export const addNumericFacetWithRange =
+  (
+    props: TagProps = {},
+    ranges: NumericRange[],
+    formatTag?: string,
+    formatTagProps?: TagProps
+  ) =>
+  (env: TestFixture) => {
+    const e = generateComponentHTML('atomic-numeric-facet', props);
+    if (formatTag && formatTagProps) {
+      const formatTagHTML = generateComponentHTML(formatTag, formatTagProps);
+      e.append(formatTagHTML);
+    }
+    ranges.forEach((r: NumericRange) => {
+      const rangeHTML = generateComponentHTML('atomic-numeric-range', {
+        start: `${r.start}`,
+        end: `${r.end}`,
+      });
+      e.append(rangeHTML);
+    });
 
-export function convertRangeToFacetValue(
-  range: NumericRange,
-  valueSeparator?: string
-) {
-  valueSeparator = valueSeparator ? valueSeparator : ' to ';
-  const formatedStartValue = new Intl.NumberFormat().format(
-    Number(range.start)
-  );
-  const formatedEndValue = new Intl.NumberFormat().format(range.end);
-
-  return `${formatedStartValue}${valueSeparator}${formatedEndValue}`;
-}
-
-export function convertFacetValueToRange(
-  facetValue: string,
-  valueSeparator?: string
-) {
-  valueSeparator = valueSeparator ? valueSeparator : ' to ';
-  const splitFacetValue = facetValue.split(valueSeparator);
-  return {
-    start: Number(splitFacetValue[0].replace(',', '')),
-    end: Number(splitFacetValue[1].replace(',', '')),
+    env.withElement(e);
   };
+
+export function selectIdleCheckboxValueAt(index: number) {
+  NumericFacetSelectors.idleCheckboxValue().eq(index).click();
+}
+
+export function selectIdleLinkValueAt(index: number) {
+  NumericFacetSelectors.idleLinkValue().eq(index).click();
+}
+
+export function selectIdleBoxValueAt(index: number) {
+  NumericFacetSelectors.idleBoxValue().eq(index).click();
+}
+
+export function inputMinValue(value: number | string) {
+  NumericFacetSelectors.minInput().type(value.toString(), {force: true});
+}
+
+export function inputMaxValue(value: number | string) {
+  NumericFacetSelectors.maxInput().type(value.toString(), {force: true});
+}
+
+export function clickApplyButton() {
+  NumericFacetSelectors.applyButton().click({force: true});
+}
+
+export function invokeSubmitButton() {
+  NumericFacetSelectors.rangeInput().invoke('submit', (e: Event) => {
+    // do not actually submit the form
+    e.preventDefault();
+    // fail this test
+    throw new Error('Form should not submit!');
+  });
 }

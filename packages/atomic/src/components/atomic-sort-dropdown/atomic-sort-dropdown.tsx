@@ -72,15 +72,15 @@ export class AtomicSortDropdown implements InitializableComponent {
 
     this.bindings.store.set(
       'sortOptions',
-      sortExpressionElements.map(({expression, caption}) => {
+      sortExpressionElements.map(({expression, label}) => {
         new Schema({
-          caption: new StringValue({emptyAllowed: false, required: true}),
-        }).validate({caption});
+          label: new StringValue({emptyAllowed: false, required: true}),
+        }).validate({label});
 
         return {
           criteria: parseCriterionExpression(expression),
           expression,
-          caption,
+          label,
         };
       })
     );
@@ -98,10 +98,10 @@ export class AtomicSortDropdown implements InitializableComponent {
     option && this.sort.sortBy(option.criteria);
   }
 
-  private buildOption({expression, criteria, caption}: SortDropdownOption) {
+  private buildOption({expression, criteria, label}: SortDropdownOption) {
     return (
       <option value={expression} selected={this.sort.isSortedBy(criteria)}>
-        {this.bindings.i18n.t(caption)}
+        {this.bindings.i18n.t(label)}
       </option>
     );
   }

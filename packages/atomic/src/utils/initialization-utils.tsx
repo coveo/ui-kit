@@ -4,6 +4,7 @@ import {i18n, TOptions} from 'i18next';
 import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
 import {AtomicStore} from './store';
+import {Hidden} from '../components/common/hidden';
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -127,7 +128,7 @@ export function InitializeBindings() {
       }
 
       if (!this.bindings) {
-        return;
+        return <Hidden></Hidden>;
       }
 
       hasRendered = true;
