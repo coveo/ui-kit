@@ -287,6 +287,10 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.clearRecentResults);
     }
 
+    public logNoResultsBack() {
+        return this.logSearchEvent(SearchPageEvents.noResultsBack);
+    }
+
     public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 

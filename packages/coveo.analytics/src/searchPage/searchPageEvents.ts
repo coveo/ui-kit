@@ -217,6 +217,10 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a recently clicked results list gets cleared.
      */
     clearRecentResults = 'clearRecentResults',
+    /**
+     * Identifies the search event that gets logged when a user clicks the Cancel last action link when no results are returned following their last action.
+     */
+    noResultsBack = 'noResultsBack',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {

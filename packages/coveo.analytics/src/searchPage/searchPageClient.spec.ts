@@ -505,6 +505,11 @@ describe('SearchPageClient', () => {
         });
     });
 
+    it('should send proper payload for #logNoResultsBack', async () => {
+        await client.logNoResultsBack();
+        expectMatchPayload(SearchPageEvents.noResultsBack);
+    });
+
     it('should send proper payload for #logClearRecentResults', async () => {
         await client.logClearRecentResults();
         expectMatchCustomEventPayload(SearchPageEvents.clearRecentResults);
