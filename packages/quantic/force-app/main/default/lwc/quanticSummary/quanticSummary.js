@@ -39,14 +39,13 @@ export default class QuanticSummary extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.querySummary = CoveoHeadless.buildQuerySummary(engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }

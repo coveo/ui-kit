@@ -1,6 +1,6 @@
-import {Component, Element, h, getAssetPath, Host, Prop} from '@stencil/core';
+import {Component, Element, h} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
 
@@ -11,22 +11,14 @@ import {fileTypeIcons} from './file-type-icons';
 @Component({
   tag: 'atomic-result-icon',
   styleUrl: 'atomic-result-icon.pcss',
-  shadow: false,
-  assetsDirs: ['assets'],
+  shadow: true,
 })
 export class AtomicResultIcon {
   @ResultContext() private result!: Result;
 
   @Element() host!: HTMLElement;
 
-  /**
-   * Specifies the icon to display from the list of available icons.
-   *
-   * By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
-   */
-  @Prop() icon?: string;
-
-  private get defaultIcon() {
+  private get icon() {
     const fileTypeValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       'filetype'
@@ -38,18 +30,20 @@ export class AtomicResultIcon {
 
     const fileType = fileTypeIcons[fileTypeValue?.toLowerCase()];
     const objectType = objectTypeIcons[objectTypeValue?.toLowerCase()];
-    return objectType || fileType || 'custom';
+    if (!fileType && !objectType) {
+      return null;
+    }
+    return objectType || fileType;
   }
 
   public render() {
-    const icon = this.icon || this.defaultIcon;
-    const iconPath = getAssetPath(`./assets/${icon}.svg`);
-
-    return (
-      <Host
-        class={icon}
-        style={{'background-image': `url(${iconPath})`}}
-      ></Host>
+    const icon = this.icon;
+    return icon ? (
+      <atomic-icon icon={'assets://' + icon} class={icon}></atomic-icon>
+    ) : (
+      <slot>
+        <atomic-icon icon="assets://custom" class="custom"></atomic-icon>
+      </slot>
     );
   }
 }

@@ -8,6 +8,7 @@ import {
 import { keys } from 'c/quanticUtils';
 
 import search from '@salesforce/label/c.quantic_Search';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 
 const CLASS_WITH_SUBMIT =
@@ -35,6 +36,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   labels = {
     search,
+    clear,
   };
 
   /** @type {string} */
@@ -54,8 +56,7 @@ export default class QuanticSearchBox extends LightningElement {
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
@@ -75,7 +76,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   disconnectedCallback() {

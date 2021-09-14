@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.19.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.1...@coveo/headless@1.19.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* **headless:** fix folding load collection  ([#1199](https://github.com/coveo/ui-kit/issues/1199)) ([983e56e](https://github.com/coveo/ui-kit/commit/983e56e3a0e6598ac8d7cb109906b3833a72946f))
+
+
+
+
+
 ## [1.19.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.0...@coveo/headless@1.19.1) (2021-09-03)
 
 
