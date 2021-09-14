@@ -37,6 +37,7 @@ import {
 import {
   logNavigateBackward,
   logNavigateForward,
+  logNoResultsBack,
 } from '../history/history-analytics-actions';
 import {
   logPageNext,
@@ -510,6 +511,14 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  logNoResultsBack(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -555,5 +564,6 @@ export function loadSearchAnalyticsActions(
     logCollapseSmartSnippet,
     logExpandSmartSnippetSuggestion,
     logCollapseSmartSnippetSuggestion,
+    logNoResultsBack,
   };
 }

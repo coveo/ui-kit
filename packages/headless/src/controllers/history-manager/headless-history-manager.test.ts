@@ -41,12 +41,28 @@ describe('History Manager', () => {
     expect(engine.actions.length).toBe(0);
   });
 
+  it("won't navigate backwards on no results when there is no past history", () => {
+    historyManager.backOnNoResults();
+    expect(engine.actions.length).toBe(0);
+  });
+
   it('should allow to navigate backward when there is a past history', () => {
     engine.state.history.present = getHistoryInitialState();
     engine.state.history.past = [extractHistory({pipeline: 'test'})];
     initHistoryManager();
 
     historyManager.back();
+
+    expect(engine.actions[0].type).toBe(back.pending.type);
+    expect(engine.actions[1].type).toBe(undo().type);
+  });
+
+  it('should allow to navigate backward on no results when there is a past history', () => {
+    engine.state.history.present = getHistoryInitialState();
+    engine.state.history.past = [extractHistory({pipeline: 'test'})];
+    initHistoryManager();
+
+    historyManager.backOnNoResults();
 
     expect(engine.actions[0].type).toBe(back.pending.type);
     expect(engine.actions[1].type).toBe(undo().type);
