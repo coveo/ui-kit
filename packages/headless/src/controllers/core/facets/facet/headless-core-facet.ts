@@ -12,6 +12,7 @@ import {
 import {
   facetRequestSelector,
   facetResponseSelector,
+  isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
 import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
@@ -20,6 +21,7 @@ import {
   ConfigurationSection,
   FacetSearchSection,
   FacetSection,
+  ProductListingSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
@@ -38,7 +40,6 @@ import {
   configuration,
   facetSearchSet,
   facetSet,
-  search,
 } from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {CoreEngine} from '../../../../app/engine';
@@ -282,6 +283,7 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
 
   const getRequest = () => facetRequestSelector(engine.state, facetId);
   const getResponse = () => facetResponseSelector(engine.state, facetId);
+  const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
 
   const getNumberOfActiveValues = () => {
     const {currentValues} = getRequest();
@@ -296,13 +298,11 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
     return initialNumberOfValues < currentValues.length && hasIdleValues;
   };
 
-  const getState = () => engine.state;
-
   dispatch(registerFacet(options));
   const facetSearch = createFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
 
-  const facet = {
+  return {
     ...controller,
 
     facetSearch: restOfFacetSearch,
@@ -310,12 +310,13 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
 
-    toggleSingleSelect: (selection: FacetValue) => {
+    // Must use a function here to properly support inheritance with `this`.
+    toggleSingleSelect: function (selection: FacetValue) {
       if (selection.state === 'idle') {
         dispatch(deselectAllFacetValues(facetId));
       }
 
-      facet.toggleSelect(selection);
+      this.toggleSelect(selection);
     },
 
     isValueSelected: isFacetValueSelected,
@@ -363,8 +364,8 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
     get state() {
       const request = getRequest();
       const response = getResponse();
+      const isLoading = getIsLoading();
 
-      const isLoading = getState().search.isLoading;
       const sortCriterion = request.sortCriteria;
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
@@ -384,16 +385,17 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
       };
     },
   };
-
-  return facet;
 }
 
 function loadFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  FacetSection & ConfigurationSection & FacetSearchSection & SearchSection,
+  FacetSection &
+    ConfigurationSection &
+    FacetSearchSection &
+    (SearchSection | ProductListingSection),
   SearchThunkExtraArguments
 > {
-  engine.addReducers({facetSet, configuration, facetSearchSet, search});
+  engine.addReducers({facetSet, configuration, facetSearchSet});
   return true;
 }

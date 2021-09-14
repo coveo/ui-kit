@@ -19,6 +19,21 @@ import {
   FacetValue,
   SpecificFacetSearchResult,
 } from '../../core/facets/facet/headless-core-facet';
+import {CoreEngine} from '../../..';
+import {
+  facetSet,
+  configuration,
+  facetSearchSet,
+  search,
+} from '../../../app/reducers';
+import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {
+  FacetSection,
+  ConfigurationSection,
+  FacetSearchSection,
+  SearchSection,
+} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
 
 export {
   FacetOptions,
@@ -41,6 +56,10 @@ export {
  * @returns A `Facet` controller instance.
  * */
 export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
+  if (!loadFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {dispatch} = engine;
   const controller = buildCoreFacet(engine, props);
   const getFacetId = () => controller.state.facetId;
@@ -80,4 +99,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       };
     },
   };
+}
+
+function loadFacetReducers(
+  engine: CoreEngine
+): engine is CoreEngine<
+  FacetSection & ConfigurationSection & FacetSearchSection & SearchSection,
+  SearchThunkExtraArguments
+> {
+  engine.addReducers({facetSet, configuration, facetSearchSet, search});
+  return true;
 }

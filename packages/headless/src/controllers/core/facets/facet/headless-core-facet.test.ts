@@ -27,7 +27,6 @@ import {
   configuration,
   facetSearchSet,
   facetSet,
-  search,
 } from '../../../../app/reducers';
 import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 
@@ -71,7 +70,6 @@ describe('facet', () => {
       facetSet,
       configuration,
       facetSearchSet,
-      search,
     });
   });
 

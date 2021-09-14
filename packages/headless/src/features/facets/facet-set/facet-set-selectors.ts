@@ -32,7 +32,7 @@ function isFacetResponse(
   return !!response && response.facetId in state.facetSet;
 }
 export const facetResponseSelector = (
-  state: FacetSection & SearchSection,
+  state: (ProductListingSection | SearchSection) & FacetSection,
   facetId: string
 ) => {
   const response = baseFacetResponseSelector(state, facetId);
@@ -44,7 +44,7 @@ export const facetResponseSelector = (
 };
 
 export const facetResponseSelectedValuesSelector = (
-  state: SearchSection & FacetSection,
+  state: (ProductListingSection | SearchSection) & FacetSection,
   facetId: string
 ): FacetValue[] => {
   const response = facetResponseSelector(state, facetId);
@@ -53,4 +53,14 @@ export const facetResponseSelectedValuesSelector = (
   }
 
   return response.values.filter((value) => value.state === 'selected');
+};
+
+export const isFacetLoadingResponseSelector = (
+  state: SearchSection | ProductListingSection
+) => {
+  if ('productListing' in state) {
+    return state.productListing.isLoading;
+  }
+
+  return state.search.isLoading;
 };
