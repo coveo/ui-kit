@@ -27,41 +27,46 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\
  * A `QuanticFacet` displays a facet of the results for the current query.
- * @category Components
- * @hideconstructor
+ * @category LWC
  * @example
  * <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
  */
 export default class QuanticFacet extends LightningElement {
   /**
    * @type {FacetState}
-   * @ignore
+   * @private
    */
   @track state;
   /** 
    * An unique ID used to identify the facet instance.
    * Defaults to given facet label.
+   * @api
    * @type {string}
    * @default (label)
    */
   @api facetId;
   /**
    * The field whose values you want to display in the facet.
+   * @api
    * @type {string}
    */
   @api field;
   /**
    * The non-localized label for the facet.
+   * @api
    * @type {string}
    */
   @api label;
   /**
    * The ID of the engine instance with which to register.
+   * @api
    * @type {string}
    */
   @api engineId;
   /**
-   * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   * The number of values to request for this facet.
+   * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   * @api
    * @type {number}
    * @default 8
    */
@@ -73,39 +78,36 @@ export default class QuanticFacet extends LightningElement {
    *   - numeric
    *   - occurences
    *   - automatic
+   * @api
    * @type  {FacetSortCriterion}
    * @default automatic
    */
   @api sortCriteria = 'automatic';
   /**
    * Whether this facet should not contain a search box.
+   * @api
    * @type {boolean}
    * @default false
    */
   @api noSearch = false;
 
   /**
-   * @ignore
    * @type {Facet}
    */
   facet;
   /**
-   * @ignore
    * @type {Unsubscribe}
    */
   unsubscribe;
   /**
-   * @ignore
    * @type {boolean}
    */
   isExpanded = true;
   /**
-   * @ignore
    * @type {HTMLInputElement}
    */
   input;
   /**
-   * @ignore
    * @type {boolean}
    */
   isFacetSearchActive = false;
@@ -124,7 +126,6 @@ export default class QuanticFacet extends LightningElement {
   };
 
   /**
-   * @ignore
    * @param {SearchEngine} engine
    */
   initialize(engine) {
@@ -246,7 +247,6 @@ export default class QuanticFacet extends LightningElement {
   }
 
   /**
-   * @ignore
    * @param {CustomEvent<FacetValue>} evt
    */
   onSelect(evt) {

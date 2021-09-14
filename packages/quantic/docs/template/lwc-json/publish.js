@@ -1,9 +1,6 @@
-/*eslint no-nested-ternary:0, space-infix-ops: 0 */
 /**
-    @overview Builds a tree-like JSON string from the doclet data.
-    @version 0.0.3
-    @example
-        ./jsdoc scratch/jsdoc_test.js -t templates/haruki -d console -q format=xml 
+  @overview Builds a tree-like JSON string from the doclet data.
+  @version 0.0.1 
  */
 'use strict';
 
@@ -12,7 +9,7 @@ function parseNamespace(element, parentNode, childNodes) {
     parentNode.namespaces = [];
   }
 
-  var thisNamespace = {
+  const thisNamespace = {
     name: element.name,
     description: element.description || '',
     access: element.access || '',
@@ -29,7 +26,7 @@ function parseMixin(element, parentNode, childNodes) {
     parentNode.mixins = [];
   }
 
-  var thisMixin = {
+  const thisMixin = {
     name: element.name,
     description: element.description || '',
     access: element.access || '',
@@ -44,11 +41,15 @@ function parseMixin(element, parentNode, childNodes) {
 function parseFunction(element, parentNode) {
   var i, len;
 
+  if (!isPublic(element)) {
+    return;
+  }
+
   if (!parentNode.functions) {
     parentNode.functions = [];
   }
 
-  var thisFunction = {
+  const thisFunction = {
     name: element.name,
     access: element.access || '',
     virtual: !!element.virtual,
@@ -86,16 +87,25 @@ function parseFunction(element, parentNode) {
   }
 }
 
+function isPublic(element) {
+  if (element.tags?.filter((tag) => tag.title === 'api').length || element.access === "public") {
+    return true;
+  }
+  return false;
+}
+
 function parseMember(element, parentNode) {
+  if (!isPublic(element)) {
+    return;
+  }
   if (!parentNode.properties) {
     parentNode.properties = [];
   }
   parentNode.properties.push({
     name: element.name,
-    access: element.access || '',
-    virtual: !!element.virtual,
+    access: '@api',
     description: element.description || '',
-    type: element.type ? (element.type.length === 1 ? element.type[0] : element.type) : ''
+    type: element.type?.names?.[0] ?? '',
   });
 }
 
@@ -106,7 +116,7 @@ function parseEvent(element, parentNode) {
     parentNode.events = [];
   }
 
-  var thisEvent = {
+  const thisEvent = {
     name: element.name,
     access: element.access || '',
     virtual: !!element.virtual,
@@ -151,26 +161,20 @@ function parseClass(element, parentNode, childNodes) {
     parentNode.classes = [];
   }
 
-  var thisClass = {
+  const thisClass = {
     name: element.name,
     description: element.classdesc || '',
-    extends: element.augments || [],
     access: element.access || '',
-    virtual: !!element.virtual,
     fires: element.fires || '',
-    constructor: {
-      name: element.name,
-      description: element.description || '',
-      parameters: [],
-      examples: []
-    }
+    examples: [],
+    category: element.category || '',
   };
 
   parentNode.classes.push(thisClass);
 
   if (element.examples) {
     for (i = 0, len = element.examples.length; i < len; i++) {
-      thisClass.constructor.examples.push(element.examples[i]);
+      thisClass.examples.push(element.examples[i]);
     }
   }
 
@@ -182,7 +186,7 @@ function parseClass(element, parentNode, childNodes) {
         description: element.params[i].description || '',
         default: element.params[i].defaultvalue || '',
         optional: typeof element.params[i].optional === 'boolean' ? element.params[i].optional : '',
-        nullable: typeof element.params[i].nullable === 'boolean' ? element.params[i].nullable : ''
+        nullable: typeof element.params[i].nullable === 'boolean' ? element.params[i].nullable : '',
       });
     }
   }

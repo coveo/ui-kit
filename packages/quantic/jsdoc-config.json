@@ -19,6 +19,6 @@
     "destination": "console",
     "encoding": "utf8",
     "recurse": true,
-    "template": "templates/haruki"
+    "template": "./docs/template/lwc-json"
   }
 }
