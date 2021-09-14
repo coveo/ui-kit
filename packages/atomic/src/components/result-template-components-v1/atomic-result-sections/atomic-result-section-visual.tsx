@@ -4,7 +4,7 @@ import {containsVisualElement} from '../../../utils/utils';
 /**
  * This section provides visual information about the item.
  * For example, in Commerce, an image is a great shorthand for a product category.
- * An icon can quickly show the item type, or an avatar can quickly identify to whom it is related.
+ * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
  *
  * Behavior:
  * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
