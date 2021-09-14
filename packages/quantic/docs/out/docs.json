@@ -1,45 +1,3 @@
-Doclet {
-  comment: '/**\n' +
-    ' * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\\\n' +
-    ' * A `QuanticFacet` displays a facet of the results for the current query.\n' +
-    ' * @category LWC\n' +
-    ' * @example\n' +
-    ' * <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>\n' +
-    ' */',
-  meta: {
-    range: [ 1233, 7249 ],
-    filename: 'quanticFacet.js',
-    lineno: 34,
-    columnno: 0,
-    path: '/Users/nlafrance/Desktop/ui-kit/packages/quantic/force-app/main/default/lwc/quanticFacet',
-    code: {
-      id: 'astnode100000060',
-      name: 'QuanticFacet',
-      type: 'ClassDeclaration',
-      paramnames: []
-    }
-  },
-  classdesc: '<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).<br>\n' +
-    'A <code>QuanticFacet</code> displays a facet of the results for the current query.</p>',
-  tags: [
-    Tag {
-      originalTitle: 'category',
-      title: 'category',
-      text: 'LWC',
-      value: 'LWC'
-    }
-  ],
-  examples: [
-    '<c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>'
-  ],
-  name: 'QuanticFacet',
-  longname: 'QuanticFacet',
-  kind: 'class',
-  scope: 'global',
-  category: 'LWC',
-  ___id: 'T000002R000002',
-  ___s: true
-}
 {
     "classes": [
         {
@@ -50,6 +8,7 @@ Doclet {
             "examples": [
                 "<c-quantic-facet field=\"filetype\" label=\"File Type\" engine-id={engineId}></c-quantic-facet>"
             ],
+            "category": "LWC",
             "properties": [
                 {
                     "name": "facetId",
