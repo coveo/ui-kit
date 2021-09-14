@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.61.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.60.0...@coveo/quantic@0.61.0) (2021-09-10)
+
+
+### Features
+
+* **quantic:** Add card container component ([#1188](https://github.com/coveo/ui-kit/issues/1188)) ([f4904bc](https://github.com/coveo/ui-kit/commit/f4904bc10931dd7c315720a3046f1cf189105621))
+
+
+
+
+
 # [0.60.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.59.0...@coveo/quantic@0.60.0) (2021-09-09)
 
 
