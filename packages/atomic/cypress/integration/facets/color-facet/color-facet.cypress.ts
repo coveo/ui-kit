@@ -1,17 +1,16 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   addColorFacet,
-  customSript,
-  defaultNumberOfValues,
-  field,
-  label,
+  colorFacetDefaultNumberOfValues,
+  colorFacetField,
+  colorFacetLabel,
   selectIdleBoxValueAt,
 } from './color-facet-actions';
 import {
   colorFacetComponent,
   ColorFacetSelectors,
 } from './color-facet-selectors';
-
+import {typeFacetSearchQuery} from '../facet-common-actions';
 import * as FacetAssertions from '../facet/facet-assertions';
 import * as ColorFacetAssertions from './color-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
@@ -20,17 +19,24 @@ import * as CommonFacetAssertions from '../facet-common-assertions';
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
     function setupColorFacet() {
-      new TestFixture().with(addColorFacet({field, label})).init();
+      new TestFixture()
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .init();
     }
 
     describe('verify rendering', () => {
       before(setupColorFacet);
       CommonAssertions.assertAccessibility(colorFacetComponent);
       CommonAssertions.assertContainsComponentError(ColorFacetSelectors, false);
-      CommonFacetAssertions.assertLabelContains(ColorFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        ColorFacetSelectors,
+        colorFacetLabel
+      );
       CommonFacetAssertions.assertDisplayValues(ColorFacetSelectors, true);
       ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
-      ColorFacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
+      ColorFacetAssertions.assertNumberOfIdleBoxValues(
+        colorFacetDefaultNumberOfValues
+      );
       CommonFacetAssertions.assertDisplayClearButton(
         ColorFacetSelectors,
         false
@@ -55,13 +61,16 @@ describe('Color Facet Test Suites', () => {
         );
         ColorFacetAssertions.assertNumberOfSelectedBoxValues(1);
         ColorFacetAssertions.assertNumberOfIdleBoxValues(
-          defaultNumberOfValues - 1
+          colorFacetDefaultNumberOfValues - 1
         );
       });
 
       describe('verify analytics', () => {
         before(setupSelectBoxValue);
-        ColorFacetAssertions.assertLogColorFacetSelect(field, selectionIndex);
+        ColorFacetAssertions.assertLogColorFacetSelect(
+          colorFacetField,
+          selectionIndex
+        );
       });
 
       describe('when selecting a second value', () => {
@@ -82,7 +91,7 @@ describe('Color Facet Test Suites', () => {
           );
           ColorFacetAssertions.assertNumberOfSelectedBoxValues(2);
           ColorFacetAssertions.assertNumberOfIdleBoxValues(
-            defaultNumberOfValues - 2
+            colorFacetDefaultNumberOfValues - 2
           );
         });
 
@@ -90,7 +99,7 @@ describe('Color Facet Test Suites', () => {
           before(setupSelectSecondBoxValue);
 
           ColorFacetAssertions.assertLogColorFacetSelect(
-            field,
+            colorFacetField,
             secondSelectionIndex
           );
         });
@@ -112,25 +121,78 @@ describe('Color Facet Test Suites', () => {
             );
             ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
             ColorFacetAssertions.assertNumberOfIdleBoxValues(
-              defaultNumberOfValues
+              colorFacetDefaultNumberOfValues
             );
           });
 
           describe('verify analytics', () => {
             before(setupClearBoxValues);
 
-            CommonFacetAssertions.assertLogClearFacetValues(field);
+            CommonFacetAssertions.assertLogClearFacetValues(colorFacetField);
           });
         });
       });
 
-      describe('when searching for a value that returns results', () => {});
+      describe('when searching for a value that returns results', () => {
+        const query = 'html';
+        function setupSearchFor() {
+          setupSelectBoxValue();
+          cy.wait(TestFixture.interceptAliases.UA);
+          typeFacetSearchQuery(ColorFacetSelectors, query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchFor);
+
+          CommonAssertions.assertAccessibility(colorFacetComponent);
+          ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            ColorFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertHighlightsResults(
+            ColorFacetSelectors,
+            query
+          );
+        });
+
+        describe('verify analytics', () => {
+          before(setupSearchFor);
+
+          CommonFacetAssertions.assertLogFacetSearch(colorFacetField);
+        });
+
+        describe('when selecting  a search result', () => {
+          function setupSelectSearchResult() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            selectIdleBoxValueAt(0);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectSearchResult);
+            ColorFacetAssertions.assertNumberOfSelectedBoxValues(2);
+            ColorFacetAssertions.assertNumberOfIdleBoxValues(
+              colorFacetDefaultNumberOfValues - 2
+            );
+            CommonFacetAssertions.assertSearchInputEmpty(ColorFacetSelectors);
+          });
+
+          describe('verify analytics', () => {
+            before(setupSelectSearchResult);
+            ColorFacetAssertions.assertLogColorFacetSelect(colorFacetField, 0);
+          });
+        });
+      });
     });
   });
 
   describe('when selecting the "Show more" button', () => {
     function setupSelectShowMore() {
-      new TestFixture().with(addColorFacet({field, label})).init();
+      new TestFixture()
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .init();
       ColorFacetSelectors.showMoreButton().click();
       cy.wait(TestFixture.interceptAliases.Search);
     }
@@ -148,12 +210,12 @@ describe('Color Facet Test Suites', () => {
       //   CommonAssertions.assertAccessibility(colorFacetComponent);
       ColorFacetAssertions.assertValuesSortedAlphanumerically();
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
-        defaultNumberOfValues * 2
+        colorFacetDefaultNumberOfValues * 2
       );
     });
     describe('verify analytics', () => {
       before(setupSelectShowMore);
-      FacetAssertions.assertLogFacetShowMore(field);
+      FacetAssertions.assertLogFacetShowMore(colorFacetField);
     });
 
     describe('when selecting the "Show less" button', () => {
@@ -175,19 +237,23 @@ describe('Color Facet Test Suites', () => {
           ColorFacetSelectors,
           false
         );
-        ColorFacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
+        ColorFacetAssertions.assertNumberOfIdleBoxValues(
+          colorFacetDefaultNumberOfValues
+        );
       });
 
       describe('verify analytics', () => {
         before(setupSelectShowLess);
-        FacetAssertions.assertLogFacetShowLess(field);
+        FacetAssertions.assertLogFacetShowLess(colorFacetField);
       });
     });
   });
 
   describe('when selecting the label button to collapse', () => {
     function setupSelectLabelCollapse() {
-      new TestFixture().with(addColorFacet({field, label})).init();
+      new TestFixture()
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .init();
       selectIdleBoxValueAt(1);
       cy.wait(TestFixture.interceptAliases.Search);
       ColorFacetSelectors.labelButton().click();
@@ -214,7 +280,10 @@ describe('Color Facet Test Suites', () => {
         false,
         false
       );
-      CommonFacetAssertions.assertLabelContains(ColorFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        ColorFacetSelectors,
+        colorFacetLabel
+      );
     });
 
     describe('when selecting the label button to expand', () => {
@@ -240,7 +309,13 @@ describe('Color Facet Test Suites', () => {
     const numberOfValues = 2;
     function setupCustomNumberOfValues() {
       new TestFixture()
-        .with(addColorFacet({field, label, 'number-of-values': numberOfValues}))
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            'number-of-values': numberOfValues,
+          })
+        )
         .init();
     }
 
@@ -280,7 +355,13 @@ describe('Color Facet Test Suites', () => {
   describe('with #withSearch to false', () => {
     before(() => {
       new TestFixture()
-        .with(addColorFacet({field, label, 'with-search': 'false'}))
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            'with-search': 'false',
+          })
+        )
         .init();
     });
 
@@ -291,7 +372,13 @@ describe('Color Facet Test Suites', () => {
   describe('with custom #sortCriteria, alphanumeric', () => {
     before(() => {
       new TestFixture()
-        .with(addColorFacet({field, label, 'sort-criteria': 'alphanumeric'}))
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            'sort-criteria': 'alphanumeric',
+          })
+        )
         .init();
     });
 
@@ -301,14 +388,16 @@ describe('Color Facet Test Suites', () => {
   describe('with a selected path in the URL', () => {
     before(() => {
       new TestFixture()
-        .with(addColorFacet({field, label}))
-        .withHash(`f[${field}]=YouTubeVideo`)
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .withHash(`f[${colorFacetField}]=YouTubeVideo`)
         .init();
     });
 
     CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
     ColorFacetAssertions.assertNumberOfSelectedBoxValues(1);
-    ColorFacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues - 1);
+    ColorFacetAssertions.assertNumberOfIdleBoxValues(
+      colorFacetDefaultNumberOfValues - 1
+    );
     CommonFacetAssertions.assertFirstValueContains(
       ColorFacetSelectors,
       'YouTubeVideo'
@@ -318,7 +407,13 @@ describe('Color Facet Test Suites', () => {
   describe('with an invalid option', () => {
     before(() => {
       new TestFixture()
-        .with(addColorFacet({field, label, 'sort-criteria': 'nononono'}))
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            'sort-criteria': 'nononono',
+          })
+        )
         .init();
     });
 
@@ -329,7 +424,9 @@ describe('Color Facet Test Suites', () => {
   describe('when field returns no results', () => {
     before(() => {
       new TestFixture()
-        .with(addColorFacet({field: 'notanactualfield', label}))
+        .with(
+          addColorFacet({field: 'notanactualfield', label: colorFacetLabel})
+        )
         .init();
     });
 
@@ -339,11 +436,15 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('with custom css color', () => {
+    const colorFacetStyle = `atomic-color-facet::part(value-YouTubeVideo) {
+      background-color:red
+    }`;
+
     function generateCustomCSS() {
       new TestFixture()
-        .with(addColorFacet({field, label}))
-        .withStyle(customSript)
-        .withHash(`f[${field}]=YouTubeVideo`)
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .withStyle(colorFacetStyle)
+        .withHash(`f[${colorFacetField}]=YouTubeVideo`)
         .init();
     }
     describe('verify rendering', () => {
