@@ -6,6 +6,22 @@ import {
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 
+const resultSectionTags = [
+  'atomic-result-section-visual',
+  'atomic-result-section-badges',
+  'atomic-result-section-actions',
+  'atomic-result-section-title',
+  'atomic-result-section-title-metadata',
+  'atomic-result-section-emphasized',
+  'atomic-result-section-excerpt',
+  'atomic-result-section-bottom-metadata',
+];
+
+export interface TemplateContent {
+  innerHTML: string;
+  usesSections: boolean;
+}
+
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
  */
@@ -43,10 +59,8 @@ export class AtomicResultTemplate {
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
   constructor() {
-    // TODO: Remove second half of the condition in v1
     const isParentResultList =
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST' ||
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST-V1';
+      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST';
 
     if (!isParentResultList) {
       this.error = new Error(
@@ -82,14 +96,18 @@ export class AtomicResultTemplate {
   /**
    * Gets the appropriate result template based on conditions applied.
    */
-  @Method() public async getTemplate(): Promise<ResultTemplate<string> | null> {
+  @Method()
+  public async getTemplate(): Promise<ResultTemplate<TemplateContent> | null> {
     if (this.error) {
       return null;
     }
 
     return {
       conditions: this.getConditions(),
-      content: this.getContent(),
+      content: {
+        innerHTML: this.getContent(),
+        usesSections: this.getTemplateHasSections(),
+      },
       priority: 1,
     };
   }
@@ -98,8 +116,20 @@ export class AtomicResultTemplate {
     return this.conditions.concat(this.matchConditions);
   }
 
+  private getTemplateElement() {
+    return (
+      this.host.querySelector('template') ?? document.createElement('template')
+    );
+  }
+
+  private getTemplateHasSections() {
+    return Array.from(this.getTemplateElement().content.children).some(
+      (element) => resultSectionTags.includes(element.tagName.toLowerCase())
+    );
+  }
+
   private getContent() {
-    return this.host.querySelector('template')?.innerHTML || '';
+    return this.getTemplateElement().innerHTML;
   }
 
   public render() {

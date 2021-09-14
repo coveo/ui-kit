@@ -1,5 +1,11 @@
 {
-    "includeShadowDom": true,
-    "pluginsFile": "cypress/plugins/index.ts",
-    "video": false
+  "includeShadowDom": true,
+  "integrationFolder": "cypress/integration",
+  "testFiles": ["**/*.cypress.ts"],
+  "pluginsFile": "cypress/plugins/index.ts",
+  "video": false,
+  "retries": {
+    "runMode": 3,
+    "openMode": 1
+  }
 }

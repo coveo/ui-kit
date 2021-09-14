@@ -49,12 +49,11 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /** @param {import("coveo").SearchEngine} engine */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
     this.unsubscribe = this.breadcrumbManager.subscribe(() => this.updateState());
   }

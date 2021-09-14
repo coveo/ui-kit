@@ -13,8 +13,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
-import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
+import ArrowRight from '../../images/arrow-right.svg';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -41,12 +41,6 @@ export class AtomicPager implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
-  private strings = {
-    pagination: () => this.bindings.i18n.t('pagination'),
-    previous: () => this.bindings.i18n.t('previous'),
-    next: () => this.bindings.i18n.t('next'),
-    pageNumber: (page: number) => this.bindings.i18n.t('page-number', {page}),
-  };
   @State() error!: Error;
 
   @Event({
@@ -70,57 +64,45 @@ export class AtomicPager implements InitializableComponent {
     this.scrollToTopEvent.emit();
   }
 
-  private buildButton(options: {
-    part: string;
-    disabled: boolean;
-    ariaLabel: string;
-    callback: () => void;
-    icon: string;
-  }) {
+  private get previousButton() {
     return (
       <li>
-        <button
-          part={options.part}
-          class={`text-primary ${
-            options.disabled
-              ? 'opacity-50 cursor-not-allowed'
-              : 'hover:text-primary-light'
-          }`}
-          disabled={options.disabled}
-          aria-label={options.ariaLabel}
+        <Button
+          style="outline-primary"
+          ariaLabel={this.bindings.i18n.t('previous')}
           onClick={() => {
-            options.callback();
+            this.pager.previousPage();
             this.scrollToTop();
           }}
+          part="previous-button"
+          disabled={!this.pagerState.hasPreviousPage}
         >
-          <atomic-icon icon={options.icon} class="h-full"></atomic-icon>
-        </button>
+          <atomic-icon
+            icon={ArrowRight}
+            class="w-5 transform rotate-180"
+          ></atomic-icon>
+        </Button>
       </li>
     );
   }
 
-  private get previousButton() {
-    return this.buildButton({
-      ariaLabel: this.strings.previous(),
-      callback: () => {
-        this.pager.previousPage();
-      },
-      disabled: !this.pagerState.hasPreviousPage,
-      icon: ArrowLeftIcon,
-      part: 'previous-button',
-    });
-  }
-
   private get nextButton() {
-    return this.buildButton({
-      ariaLabel: this.strings.next(),
-      callback: () => {
-        this.pager.nextPage();
-      },
-      disabled: !this.pagerState.hasNextPage,
-      icon: ArrowRightIcon,
-      part: 'next-button',
-    });
+    return (
+      <li>
+        <Button
+          style="outline-primary"
+          ariaLabel={this.bindings.i18n.t('next')}
+          onClick={() => {
+            this.pager.nextPage();
+            this.scrollToTop();
+          }}
+          part="next-button"
+          disabled={!this.pagerState.hasNextPage}
+        >
+          <atomic-icon icon={ArrowRight} class="w-5"></atomic-icon>
+        </Button>
+      </li>
+    );
   }
 
   private get pages() {
@@ -130,24 +112,20 @@ export class AtomicPager implements InitializableComponent {
 
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
-    const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-light'
-      : 'text-on-background';
-
     return (
       <li>
-        <button
-          class={`hover:underline ${classes}`}
-          aria-current={isSelected ? 'page' : null}
-          part={`page-button ${isSelected && 'active-page-button'}`}
-          aria-label={this.strings.pageNumber(page)}
+        <Button
+          ariaCurrent={isSelected ? 'page' : 'false'}
+          style="outline-neutral"
+          ariaLabel={this.bindings.i18n.t('page-number', {page})}
           onClick={() => {
             this.pager.selectPage(page);
             this.scrollToTop();
           }}
-        >
-          {page.toLocaleString(this.bindings.i18n.language)}
-        </button>
+          class={`btn-page ${isSelected ? 'selected' : ''}`}
+          part={`page-button ${isSelected && 'active-page-button'}`}
+          text={page.toLocaleString(this.bindings.i18n.language)}
+        ></Button>
       </li>
     );
   }
@@ -158,8 +136,8 @@ export class AtomicPager implements InitializableComponent {
     }
 
     return (
-      <nav aria-label={this.strings.pagination()} class="items-center">
-        <ul part="buttons" class="flex space-x-2 flex-wrap">
+      <nav aria-label={this.bindings.i18n.t('pagination')}>
+        <ul part="buttons" class="h-10 flex space-x-2 flex-wrap">
           {this.previousButton}
           {this.pages}
           {this.nextButton}

@@ -3,7 +3,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   getResultDisplayClasses,
-} from '../atomic-result-v1/atomic-result-display-options';
+} from '../atomic-result/atomic-result-display-options';
 
 const placeholderClasses = 'block bg-neutral rounded';
 
@@ -12,7 +12,7 @@ const placeholderClasses = 'block bg-neutral rounded';
  * @internal
  */
 @Component({
-  tag: 'atomic-result-table-placeholder-v1',
+  tag: 'atomic-result-table-placeholder',
   styleUrl: 'atomic-result-table-placeholder.pcss',
   shadow: true,
 })

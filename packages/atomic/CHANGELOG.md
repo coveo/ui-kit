@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.0...@coveo/atomic@1.0.1) (2021-09-14)
+
+
+### Bug Fixes
+
+* **headless:** fix folding load collection  ([#1199](https://github.com/coveo/ui-kit/issues/1199)) ([983e56e](https://github.com/coveo/ui-kit/commit/983e56e3a0e6598ac8d7cb109906b3833a72946f))
+
+
+
+
+
+# [1.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.75.1...@coveo/atomic@1.0.0) (2021-09-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [0.75.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.75.0...@coveo/atomic@0.75.1) (2021-09-10)
 
 **Note:** Version bump only for package @coveo/atomic

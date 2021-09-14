@@ -56,8 +56,7 @@ export default class QuanticSearchBox extends LightningElement {
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
@@ -77,7 +76,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   disconnectedCallback() {

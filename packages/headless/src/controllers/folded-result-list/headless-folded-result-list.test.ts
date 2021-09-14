@@ -7,7 +7,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {search, folding, configuration} from '../../app/reducers';
+import {search, folding, configuration, query} from '../../app/reducers';
 import {buildMockResult} from '../../test';
 
 describe('FoldedResultList', () => {
@@ -40,6 +40,7 @@ describe('FoldedResultList', () => {
       search,
       folding,
       configuration,
+      query,
     });
   });
 

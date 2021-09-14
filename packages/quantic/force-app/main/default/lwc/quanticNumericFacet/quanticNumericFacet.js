@@ -56,14 +56,13 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
       options: {
         field: this.field,

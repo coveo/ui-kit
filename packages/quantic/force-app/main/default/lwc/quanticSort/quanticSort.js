@@ -42,14 +42,13 @@ export default class QuanticSort extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.sort = CoveoHeadless.buildSort(engine);
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
