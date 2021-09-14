@@ -101,12 +101,21 @@ function parseMember(element, parentNode) {
   if (!parentNode.properties) {
     parentNode.properties = [];
   }
-  parentNode.properties.push({
+  const prop = {
     name: element.name,
     access: '@api',
     description: element.description || '',
-    type: element.type?.names?.[0] ?? '',
-  });
+    required: !element.defaultvalue,
+    type: {
+      name: element.type?.names?.[0] || '',
+      defaultValue: element.defaultvalue || ''
+    }
+  }
+  if (prop.type.name === 'function') {
+    prop.type.params = element.params || '',
+    prop.type.returns = element.returns || ''
+  }
+  parentNode.properties.push(prop);
 }
 
 function parseEvent(element, parentNode) {

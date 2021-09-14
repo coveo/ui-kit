@@ -12,32 +12,57 @@ import {I18nUtils} from 'c/quanticUtils';
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 
-export default class QuanticBreadcrumbManager extends LightningElement {
-  /** @type {import("coveo").BreadcrumbManager} */
-  breadcrumbManager;
-  /** @type {() => void} */
-  unsubscribe;
-  /** @type {String[]} */
-  expandedBreadcrumbFieldsState = [];
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
+/** @typedef {import("coveo").FacetBreadcrumb} FacetBreadcrumb */
+/** @typedef {import("coveo").CategoryFacetBreadcrumb} CategoryFacetBreadcrumb */
+/** @typedef {import("coveo").NumericFacetBreadcrumb} NumericFacetBreadcrumb */
+/** @typedef {import("coveo").DateFacetBreadcrumb} DateFacetBreadcrumb */
+/** @typedef {import("coveo").BreadcrumbValue} BreadcrumbValue */
 
-  /** @type {import("coveo").FacetBreadcrumb[]} */
+/**
+ * The `QuanticBreadcrumbManager component creates breadcrumbs that display a summary of the currently active facet values.
+ * @category LWC
+ * @example
+ * <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
+ */
+export default class QuanticBreadcrumbManager extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+  /**
+   * A character that divides each path segment in a category facet breadcrumb.
+   * @api
+   * @type {string}
+   */
+  @api categoryDivider = '/';
+  /** 
+   * Number of breadcrumbs to display when collapsed.
+   * @api
+   * @type {Number}
+   */
+  @api collapseThreshold = 5;
+
+  /** @type {FacetBreadcrumb[]} */
   @track facetBreadcrumbs = [];
-  /** @type {import("coveo").CategoryFacetBreadcrumb[]} */
+  /** @type {CategoryFacetBreadcrumb[]} */
   @track categoryFacetBreadcrumbs = [];
-  /** @type {import("coveo").NumericFacetBreadcrumb[]} */
+  /** @type {NumericFacetBreadcrumb[]} */
   @track numericFacetBreadcrumbs = [];
-  /** @type {import("coveo").DateFacetBreadcrumb[]} */
+  /** @type {DateFacetBreadcrumb[]} */
   @track dateFacetBreadcrumbs = [];
   /** @type {Boolean} */
   @track hasBreadcrumbs;
-  
 
-  /** @type {String} */
-  @api engineId;
-  /** @type {String} */
-  @api categoryDivider = '/';
-  /** @type {Number} */
-  @api collapseThreshold = 5;
+  /** @type {BreadcrumbManager} */
+  breadcrumbManager;
+  /** @type {Function} */
+  unsubscribe;
+  /** @type {string[]} */
+  expandedBreadcrumbFieldsState = [];
 
   labels = {
     nMore,
@@ -52,7 +77,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
-  /** @param {import("coveo").SearchEngine} engine */
+  /**
+   * @param {SearchEngine} engine
+   */
   @api
   initialize(engine) {
     this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
@@ -77,7 +104,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     this.expandedBreadcrumbFieldsState = [];
   }
 
-  /** @param {import("coveo").BreadcrumbValue | import("coveo").CategoryFacetBreadcrumb} breadcrumb */
+  /**
+   * @param {BreadcrumbValue | CategoryFacetBreadcrumb} breadcrumb
+   */
   @api
   deselectBreadcrumb(breadcrumb) {
     this.breadcrumbManager.deselectBreadcrumb(breadcrumb);

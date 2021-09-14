@@ -1,56 +1,92 @@
 {
     "classes": [
         {
-            "name": "QuanticFacet",
-            "description": "<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).<br>\nA <code>QuanticFacet</code> displays a facet of the results for the current query.</p>",
+            "name": "QuanticDateFacet",
+            "description": "<p>The <code>QuanticDateFacet</code> component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.</p>",
             "access": "",
             "fires": "",
             "examples": [
-                "<c-quantic-facet field=\"filetype\" label=\"File Type\" engine-id={engineId}></c-quantic-facet>"
+                "<c-quantic-date-facet field=\"date\" label=\"Date\" engine-id={engineId}></c-quantic-date-facet>"
             ],
             "category": "LWC",
             "properties": [
                 {
                     "name": "facetId",
                     "access": "@api",
-                    "description": "<p>An unique ID used to identify the facet instance.\nDefaults to given facet label.</p>",
-                    "type": "string"
+                    "description": "<p>Specifies a unique identifier for the facet.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "[field]"
+                    }
                 },
                 {
                     "name": "field",
                     "access": "@api",
-                    "description": "<p>The field whose values you want to display in the facet.</p>",
-                    "type": "string"
+                    "description": "<p>Specifies the index field whose values the facet should use.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
                 },
                 {
                     "name": "label",
                     "access": "@api",
                     "description": "<p>The non-localized label for the facet.</p>",
-                    "type": "string"
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
                 },
                 {
                     "name": "engineId",
                     "access": "@api",
                     "description": "<p>The ID of the engine instance with which to register.</p>",
-                    "type": "string"
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
                 },
                 {
                     "name": "numberOfValues",
                     "access": "@api",
-                    "description": "<p>The number of values to request for this facet.\nAlso determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.</p>",
-                    "type": "number"
+                    "description": "<p>The number of values to request for this facet, when there are no manual ranges.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": "8"
+                    }
                 },
                 {
-                    "name": "sortCriteria",
+                    "name": "formattingFunction",
                     "access": "@api",
-                    "description": "<p>The sort criterion to apply to the returned facet values\nPossible values are:</p>\n<ul>\n<li>score</li>\n<li>numeric</li>\n<li>occurences</li>\n<li>automatic</li>\n</ul>",
-                    "type": "FacetSortCriterion"
-                },
-                {
-                    "name": "noSearch",
-                    "access": "@api",
-                    "description": "<p>Whether this facet should not contain a search box.</p>",
-                    "type": "boolean"
+                    "description": "<p>The function used to format the date facet value label.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "function",
+                        "defaultValue": "Formatted result: [start] - [end]",
+                        "params": [
+                            {
+                                "type": {
+                                    "names": [
+                                        "DateFacetValue"
+                                    ]
+                                }
+                            }
+                        ],
+                        "returns": [
+                            {
+                                "type": {
+                                    "names": [
+                                        "string"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
         }

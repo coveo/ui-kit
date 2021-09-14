@@ -32,11 +32,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
  */
 export default class QuanticFacet extends LightningElement {
-  /**
-   * @type {FacetState}
-   * @private
-   */
-  @track state;
   /** 
    * An unique ID used to identify the facet instance.
    * Defaults to given facet label.
@@ -92,24 +87,19 @@ export default class QuanticFacet extends LightningElement {
   @api noSearch = false;
 
   /**
-   * @type {Facet}
+   * @type {FacetState}
    */
+  @track state;
+
+  /** @type {Facet} */
   facet;
-  /**
-   * @type {Unsubscribe}
-   */
+  /** @type {Unsubscribe} */
   unsubscribe;
-  /**
-   * @type {boolean}
-   */
+  /** @type {boolean} */
   isExpanded = true;
-  /**
-   * @type {HTMLInputElement}
-   */
+  /** @type {HTMLInputElement} */
   input;
-  /**
-   * @type {boolean}
-   */
+  /** @type {boolean} */
   isFacetSearchActive = false;
 
   labels = {

@@ -11,7 +11,7 @@
     "./node_modules/@ckeditor/jsdoc-plugins/lib/export-fixer/export-fixer.js"
   ],
   "source": {
-    "include": ["./force-app/main/default/lwc/quanticFacet"],
+    "include": ["./force-app/main/default/lwc/quanticDateFacet"],
     "includePattern": "quantic.*.js$",
     "excludePattern": "(node_modules/|example.*.js$)"
   },
