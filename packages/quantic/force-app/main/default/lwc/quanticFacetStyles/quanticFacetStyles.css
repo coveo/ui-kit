@@ -13,7 +13,6 @@
   background-color: white;
   color: var(--lwc-brandTextLink, dodgerblue);
   border: none;
-  margin-bottom: 5px;
 }
 
 .facet__show-more_text, .facet__show-less_text{

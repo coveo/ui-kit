@@ -1,7 +1,7 @@
 <template>
     <template if:true={isChecked}>
       <li class="slds-var-m-vertical_small slds-grid">
-        <div class="slds-col facet__value-option">
+        <div class="slds-col facet__value-option slds-p-around_none">
           <lightning-input 
             type="checkbox"
             variant="label-hidden"
@@ -19,7 +19,7 @@
   
     <template if:false={isChecked}>
       <li class="slds-var-m-vertical_small slds-grid">
-        <div class="slds-col facet__value-option">
+        <div class="slds-col facet__value-option slds-p-around_none">
           <lightning-input 
             type="checkbox"
             variant="label-hidden"
