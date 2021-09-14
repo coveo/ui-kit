@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, regexEncode} from 'c/quanticUtils';
 
 import clear from '@salesforce/label/c.quantic_Clear';
 import showMore from '@salesforce/label/c.quantic_ShowMore';
@@ -13,8 +13,6 @@ import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
-import plus from '@salesforce/label/c.quantic_Plus';
-import minus from '@salesforce/label/c.quantic_Minus';
 
 export default class QuanticCategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -41,7 +39,6 @@ export default class QuanticCategoryFacet extends LightningElement {
   unsubscribe;
   /** @type {string} */
   collapseIconName = 'utility:dash';
-
   /** @type {boolean} */
   isExpanded = true;
   /** @type {HTMLInputElement} */
@@ -61,8 +58,6 @@ export default class QuanticCategoryFacet extends LightningElement {
     noMatchesFor,
     collapseFacet,
     expandFacet,
-    plus,
-    minus
   }
 
   connectedCallback() {
@@ -99,25 +94,21 @@ export default class QuanticCategoryFacet extends LightningElement {
   get values() {
     return this.state.values;
   }
+
   get nonActiveParents() {
     return this.state.parents?.slice(0, -1);
   }
+
   get activeParent() {
     return this.state.parents?.slice(-1)[0];
   }
 
   get canShowMore() {
-    if (!this.facet) {
-      return false;
-    }
-    return this.state.canShowMoreValues  && !this.isFacetSearchActive;
+    return this.facet && this.state.canShowMoreValues  && !this.isFacetSearchActive;
   }
 
   get canShowLess() {
-    if (!this.facet) {
-      return false;
-    }
-    return this.state.canShowLessValues;
+    return this.facet && this.state.canShowLessValues;
   }
 
   get hasParents() {
@@ -149,6 +140,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       ),
     }));
   }
+
   get query() {
     return this.input.value;
   }
@@ -216,9 +208,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   reset() {
     this.facet.deselectAll();
   }
+
   toggleFacetVisibility() {
     this.isExpanded = !this.isExpanded;
   }
+
   handleKeyUp() {
     if (this.isSearchComplete) {
       this.isFacetSearchActive = this.input.value !== '';
@@ -226,29 +220,28 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.facetSearch.search();
     }
   }
+
   clearInput() {
     this.input.value = '';
     this.updateState();
   }
+
   highlightResult(result, query) {
     if (!query || query.trim() === '') {
       return result;
     }
-    const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
+    const regex = new RegExp(`(${regexEncode(query)})`, 'i');
     return result.replace(regex, '<b>$1</b>');
   }
 
-  regexEncode(value) {
-    return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
-  }
   /**
-   * @param {string[]} path
-   */
+  * @param {string[]} path
+  */
   buildPath(path) {
-    if(!path.length) 
+    if(!path.length) {
       return this.labels.allCategories;
-    if(path.length > 2)  
-    {
+    } 
+    if(path.length > 2) {
       path = path.slice(0, 1).concat("...", ...path.slice(-1));
     }
     return path.join('/');

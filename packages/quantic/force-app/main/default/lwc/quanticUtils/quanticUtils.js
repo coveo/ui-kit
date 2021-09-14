@@ -148,3 +148,7 @@ export function setItemInLocalStorage(key, item) {
     localStorage.setItem(key, JSON.stringify(item));
   }
 }
+
+export function regexEncode(value) {
+  return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
+}

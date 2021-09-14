@@ -32,7 +32,7 @@
     margin-bottom: 5px;
 }
 
-.facet__show-more_text, .facet__show-less_text{
+.facet__show-more-text, .facet__show-less-text{
     display: flex;
     align-items: left;
 }

@@ -2,9 +2,9 @@
     <li class="slds-var-m-horizontal_medium slds-grid">  
         <div class="slds-col_bump-right" onclick={onSelect}>
             <template if:false={withsearch}>
-                <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default">
+                <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default facet__value">
                     {item.value}
-                    <span class="slds-m-horizontal_small">
+                    <span class="facet__number-of-results">
                         ({item.numberOfResults})
                     </span>
                 </button>
@@ -14,7 +14,7 @@
                     <div class="slds-grid slds-grid_vertical slds-gutters">
                         <div class="slds-col facet__search-results">
                             <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
-                            <span class="facet__numberResults">
+                            <span class="facet__number-of-results">
                                 ({item.numberOfResults})
                             </span>
                         </div>
