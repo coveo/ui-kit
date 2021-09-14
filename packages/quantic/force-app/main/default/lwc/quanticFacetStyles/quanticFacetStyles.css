@@ -1,12 +1,8 @@
-:host {
-  --quantic-text-weak: #8e959d;
-}
-
 .facet__show-less {
   font-size: 12px;
   outline: 0;
   background-color: white;
-  color: var(--quantic-text-weak);
+  color: #8e959d;
   border: none;
   margin-bottom: 5px;
 }

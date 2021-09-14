@@ -1,4 +1,4 @@
-@import 'c/quanticStyles';
+@import 'c/quanticFacetStyles';
 
 .recent-query__container {
   display: flex;
@@ -17,7 +17,7 @@
 }
 
 .empty-list-message {
-  color: var(--quantic-text-weak);
+  color: #8e959d;
 }
 
 li:hover {

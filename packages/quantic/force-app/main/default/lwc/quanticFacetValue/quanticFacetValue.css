@@ -1,4 +1,4 @@
-@import 'c/quanticStyles';
+@import 'c/quanticFacetStyles';
 
 li {
   white-space: nowrap;
@@ -7,7 +7,7 @@ li {
 }
 
 .facet__number-of-results {
-  color: var(--quantic-text-weak);
+  color: #8e959d;
   font-size: 11px;
   padding-top: 3px;
 }
