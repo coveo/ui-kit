@@ -415,9 +415,6 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadSortCriteriaActions',
   },
   {
-    initializer: 'loadProductListingSortActions',
-  },
-  {
     initializer: 'loadBreadcrumbActions',
   },
   {

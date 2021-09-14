@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {getProductListingSortInitialState} from './product-listing-sort-state';
-import {change} from '../history/history-actions';
 import {
   registerProductListingSortCriterion,
   updateProductListingSortCriterion,
@@ -14,9 +13,9 @@ export const productListingSortReducer = createReducer(
         registerProductListingSortCriterion,
         (_, action) => action.payload
       )
-      .addCase(updateProductListingSortCriterion, (_, action) => action.payload)
-      .addCase(change.fulfilled, (state, action) => {
-        return action.payload?.productListingSort ?? state;
-      });
+      .addCase(
+        updateProductListingSortCriterion,
+        (_, action) => action.payload
+      );
   }
 );

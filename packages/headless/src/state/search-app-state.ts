@@ -30,7 +30,6 @@ import {
   QuestionAnsweringSection,
   StandaloneSearchBoxSection,
   RecentQueriesSection,
-  ProductListingSortSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -42,7 +41,6 @@ export type SearchParametersState = FacetSection &
   AdvancedSearchQueriesSection &
   PaginationSection &
   SortSection &
-  ProductListingSortSection &
   ContextSection &
   QuerySetSection &
   PipelineSection &
