@@ -43,8 +43,6 @@ export default class QuanticCategoryFacet extends LightningElement {
   isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
-  /** @type {boolean} */
-  isFacetSearchActive = false;
  
   labels = {
     clear,
@@ -142,7 +140,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get query() {
-    return this.input.value;
+    return this.input?.value;
   }
 
   get hasParentsOrValues() {
@@ -178,6 +176,10 @@ export default class QuanticCategoryFacet extends LightningElement {
     return !this.facet.state.isLoading;
   }
 
+  get isFacetSearchActive() {
+    return this.input?.value !== '';
+  }
+
   /**
    * @param {CustomEvent<import("coveo").CategoryFacetValue>} evt
    */
@@ -210,20 +212,23 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
+    if (this.isExpanded) {
+      this.clearInput();
+    }
     this.isExpanded = !this.isExpanded;
   }
 
   handleKeyUp() {
     if (this.isSearchComplete) {
-      this.isFacetSearchActive = this.input.value !== '';
-      this.facet.facetSearch.updateText(this.input.value);
+      this.facet.facetSearch.updateText(this.input?.value);
       this.facet.facetSearch.search();
     }
+  
   }
 
   clearInput() {
     this.input.value = '';
-    this.updateState();
+    this.facet.facetSearch.updateText(this.input?.value);
   }
 
   highlightResult(result, query) {
