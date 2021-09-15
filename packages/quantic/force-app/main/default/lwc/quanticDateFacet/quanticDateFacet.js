@@ -92,14 +92,13 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
         field: this.field,

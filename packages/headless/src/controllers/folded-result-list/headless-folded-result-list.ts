@@ -1,5 +1,5 @@
 import {Schema} from '@coveo/bueno';
-import {search, configuration, folding} from '../../app/reducers';
+import {search, configuration, folding, query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   foldingOptionsSchemaDefinition,
@@ -13,6 +13,7 @@ import {
 import {
   ConfigurationSection,
   FoldingSection,
+  QuerySection,
   SearchSection,
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -186,8 +187,8 @@ export function buildFoldedResultList(
 function loadFoldingReducer(
   engine: SearchEngine
 ): engine is SearchEngine<
-  SearchSection & ConfigurationSection & FoldingSection
+  SearchSection & ConfigurationSection & FoldingSection & QuerySection
 > {
-  engine.addReducers({search, configuration, folding});
+  engine.addReducers({search, configuration, folding, query});
   return true;
 }

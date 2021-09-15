@@ -10,6 +10,7 @@
                     class="slds-listbox__item"
                     data-rawvalue={suggestion.rawValue}
                     onclick={handleSuggestionSelection}
+                    onmouseover={handleSuggestionHover}
                     onmousedown={preventDefault}>
                     <template if:true={suggestion.isSelected}>
                         <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-has-focus" role="option" aria-selected="true">
@@ -27,7 +28,6 @@
                             </span>
                         </div>
                     </template>
-
                 </li>
             </template>
         </ul>

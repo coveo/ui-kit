@@ -76,6 +76,8 @@ export default class QuanticSearchInterface extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
+    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+
     if (!this.disableStateInUrl) {
       this.initUrlManager(engine);
     }
@@ -89,7 +91,9 @@ export default class QuanticSearchInterface extends LightningElement {
         return;
       }
       window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-      const {analytics} = JSON.parse(redirectData);
+      const {value, analytics} = JSON.parse(redirectData);
+      
+      engine.dispatch(updateQuery({q: value}));
       engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
     }
   };

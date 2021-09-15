@@ -118,7 +118,7 @@ export default class QuanticFacet extends LightningElement {
   /**
    * @param {SearchEngine} engine
    */
-  initialize(engine) {
+  initialize = (engine) => {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -135,7 +135,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
@@ -293,7 +293,7 @@ export default class QuanticFacet extends LightningElement {
       return result;
     }
     const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
-    return result.replace(regex, '<b>$1</b>');
+    return result.replace(regex, '<b class="facet__search-result_highlight">$1</b>');
   }
 
   regexEncode(value) {

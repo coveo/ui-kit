@@ -5,7 +5,8 @@ import {
   registerComponentForInit,
   setComponentInitialized,
   getHeadlessEnginePromise,
-  initializeWithHeadless
+  initializeWithHeadless,
+  destroyEngine,
 } from '../quanticHeadlessLoader';
 import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
 import { Deferred } from '../../quanticUtils/quanticUtils';
@@ -392,4 +393,31 @@ describe('c/quanticHeadlessLoader', () => {
       });
     });
   });
+
+  describe('destroyEngine', () => {
+    const otherId = 'other-id';
+    beforeEach(() => {
+      window.coveoHeadless = {
+        [testId]: {},
+        [otherId]: {},
+      };
+    })
+    it('should clear the engine instance from window object', () => {
+      destroyEngine(testId);
+
+      expect(window.coveoHeadless[testId]).not.toBeDefined();
+    });
+
+    it('should not clear other engine instances than the one with specified ID', () => {
+      destroyEngine(testId);
+
+      expect(window.coveoHeadless[otherId]).toBeDefined();
+    });
+
+    it('should do nothing if the engine does not exist', () => {
+      destroyEngine('non-existing-engine');
+
+      expect(window.coveoHeadless[testId]).toEqual({});
+    });
+  })
 });

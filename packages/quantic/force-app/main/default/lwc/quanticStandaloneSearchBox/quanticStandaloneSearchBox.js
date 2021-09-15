@@ -1,17 +1,18 @@
-// @ts-nocheck
-import {LightningElement, api, track} from 'lwc';
-// @ts-ignore
+import {LightningElement, api, track, wire} from 'lwc';
+import {
+  CurrentPageReference,
+  NavigationMixin,
+} from 'lightning/navigation';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBindings,
+  destroyEngine,
 } from 'c/quanticHeadlessLoader';
-import {
-  NavigationMixin,
-  // @ts-ignore
-} from 'lightning/navigation';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
 
 import search from '@salesforce/label/c.quantic_Search';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -24,6 +25,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   
   labels = {
     search,
+    clear,
   };
 
   // Public props
@@ -41,10 +43,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   // Private props
   /** @type {import("coveo").StandaloneSearchBox} */
   standaloneSearchBox;
-  /** @type {import("coveo").SearchBox} */
-  searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+
+  @track isStandalone = true;
 
   /** @type {import("coveo").StandaloneSearchBoxState} */
   @track state = {
@@ -68,39 +70,40 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     }));
   }
 
+  get standaloneEngineId() {
+    return `${this.engineId}_standalone`;
+  }
+
   connectedCallback() {
-    registerComponentForInit(this, this.engineId);
+    registerComponentForInit(this, this.standaloneEngineId);
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.standaloneEngineId, this.initialize);
   }
 
-  get actualSearchBox() {
-    if (window.location.href.includes(this.redirectUrl)) {
-      return this.searchBox;
+  @wire(CurrentPageReference)
+  handlePageChange() {
+    this.isStandalone = !window.location.href.includes(this.redirectUrl);
+    if (!this.isStandalone && this.standaloneEngine) {
+      this.initialize(this.standaloneEngine);
     }
-    return this.standaloneSearchBox;
+    if (this.isStandalone) {
+      destroyEngine(this.engineId);
+    }
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
-    this.searchBox = CoveoHeadless.buildSearchBox(engine, {
-      options: this.searchBoxOptions,
-    });
-    this.unsubscribeSearchBox = this.searchBox.subscribe(() =>
-      this.updateSearchBoxState()
-    );
-
+  initialize = (engine) => {
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
         ...this.searchBoxOptions,
         redirectionUrl: 'http://placeholder.com',
       },
     });
+    this.standaloneEngine = engine;
     this.unsubscribe = this.standaloneSearchBox.subscribe(() =>
       this.updateStandaloneState()
     );
@@ -108,7 +111,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   disconnectedCallback() {
     this.unsubscribe?.();
-    this.unsubscribeSearchBox?.();
   }
 
   updateStandaloneState() {
@@ -131,13 +133,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       })
     );
     this.navigateToSearchPage();
-  }
-
-  updateSearchBoxState() {
-    if (this.state.value !== this.searchBox.state.value) {
-      this.input.value = this.searchBox.state.value;
-    }
-    this.state = this.searchBox.state;
   }
 
   /**
@@ -168,7 +163,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   showSuggestions() {
-    this.actualSearchBox.showSuggestions();
+    this.standaloneSearchBox.showSuggestions();
     this.combobox?.classList.add('slds-is-open');
     this.combobox?.setAttribute('aria-expanded', 'true');
   }
@@ -186,19 +181,19 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   handleEnter() {
     const selectedSuggestion = this.suggestionList?.getCurrentSelectedValue();
     if (this.suggestionsOpen && selectedSuggestion) {
-      this.actualSearchBox.selectSuggestion(selectedSuggestion.rawValue);
+      this.standaloneSearchBox.selectSuggestion(selectedSuggestion.rawValue);
     } else {
-      this.actualSearchBox.submit();
+      this.standaloneSearchBox.submit();
     }
     this.input.blur();
   }
 
   onSubmit(event) {
     event.stopPropagation();
-    if (this.actualSearchBox.state.value !== this.input.value) {
-      this.actualSearchBox.updateText(this.input.value);
+    if (this.standaloneSearchBox.state.value !== this.input.value) {
+      this.standaloneSearchBox.updateText(this.input.value);
     }
-    this.actualSearchBox.submit();
+    this.standaloneSearchBox.submit();
     this.input.blur();
   }
 
@@ -218,7 +213,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
         break;
       default:
         this.suggestionList?.resetSelection();
-        this.actualSearchBox.updateText(event.target.value);
+        this.standaloneSearchBox.updateText(event.target.value);
     }
   }
 
@@ -232,21 +227,34 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   clearInput() {
     this.input.value = '';
-    this.actualSearchBox.updateText(this.input.value);
+    this.standaloneSearchBox.updateText(this.input.value);
     this.input.focus();
   }
 
   handleSuggestionSelection(event) {
     const textValue = event.detail;
-    this.actualSearchBox.selectSuggestion(textValue);
+    this.standaloneSearchBox.selectSuggestion(textValue);
+  }
+
+  resetStandaloneSearchboxState() {
+    const engine = getHeadlessBindings(this.standaloneEngineId)?.engine;
+    if(!engine) {
+      return;
+    }
+    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+
+    engine.dispatch(updateQuery({q: ''}));
   }
 
   navigateToSearchPage() {
+    const value = this.standaloneSearchBox.state.value;
+
+    this.resetStandaloneSearchboxState();
     this[NavigationMixin.Navigate](
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}#q=${this.standaloneSearchBox.state.value}`,
+          url: `${this.redirectUrl}#q=${value}`,
         },
       },
       false
@@ -271,6 +279,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * @returns {import('c/quanticSearchBoxSuggestionsList').default}
    */
   get suggestionList() {
+    // @ts-ignore
     return this.template.querySelector('c-quantic-search-box-suggestions-list');
   }
 

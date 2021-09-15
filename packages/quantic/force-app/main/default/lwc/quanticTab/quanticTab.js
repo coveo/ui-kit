@@ -21,14 +21,13 @@ export default class QuanticTab extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
   * @param {import("coveo").SearchEngine} engine
   */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.tab = CoveoHeadless.buildTab(engine, {
       options: {
         expression: this.expression,
@@ -56,5 +55,4 @@ export default class QuanticTab extends LightningElement {
   get tabClass() {
     return `slds-tabs_default__item ${this.isActive ? 'slds-is-active' : ''}`
   }
-
 }
