@@ -102,7 +102,7 @@ export class AtomicNoResults {
         style="primary"
         part="cancel-button"
         text={this.bindings.i18n.t('cancel-last-action')}
-        onClick={() => this.history.back()}
+        onClick={() => this.history.backOnNoResults()}
         class="font-bold px-2.5 py-3 my-3"
       ></Button>
     );
