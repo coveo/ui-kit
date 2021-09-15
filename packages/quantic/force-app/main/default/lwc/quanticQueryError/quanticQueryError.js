@@ -30,8 +30,7 @@ export default class QuanticQueryError extends LightningElement {
    */
   @api engineId;
 
-  /** @type {string}
-   */
+  /** @type {string} */
   @track type;
   /** @type {Boolean} */
   @track hasError;

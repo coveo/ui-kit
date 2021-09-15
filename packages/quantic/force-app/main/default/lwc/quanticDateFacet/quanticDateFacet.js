@@ -22,6 +22,12 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * <c-quantic-date-facet field="date" label="Date" engine-id={engineId}></c-quantic-date-facet>
  */
 export default class QuanticDateFacet extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
   /** 
    * Specifies a unique identifier for the facet.
    * @api
@@ -42,12 +48,6 @@ export default class QuanticDateFacet extends LightningElement {
    */
   @api label;
   /**
-   * The ID of the engine instance with which to register.
-   * @api
-   * @type {string}
-   */
-  @api engineId;
-  /**
    * The number of values to request for this facet, when there are no manual ranges.
    * @api
    * @type {number}
@@ -58,7 +58,7 @@ export default class QuanticDateFacet extends LightningElement {
    * The function used to format the date facet value label.
    * @api
    * @type {Function}
-   * @param {DateFacetValue}
+   * @param {DateFacetValue} item
    * @returns {string}
    * @defaultValue Formatted result: [start] - [end]
    */
@@ -69,9 +69,7 @@ export default class QuanticDateFacet extends LightningElement {
   )}`;
 
   /** @type {DateFacetState} */
-  @track state = {
-    values: [],
-  };
+  @track state;
 
   /** @type {DateFacet} */
   facet;
@@ -119,7 +117,7 @@ export default class QuanticDateFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values
+      this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
         .map((value) => {
           return {
@@ -135,7 +133,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get hasActiveValues() {
-    return this.state.hasActiveValues;
+    return this.state?.hasActiveValues;
   }
 
   get actionButtonIcon() {

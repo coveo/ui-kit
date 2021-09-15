@@ -76,7 +76,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * The function used to format the date facet value label.
    * @api
    * @type {Function}
-   * @param {NumericFacetValue}
+   * @param {NumericFacetValue} item
    * @returns {string}
    * @defaultValue Formatted result: [start] - [end]
    */
@@ -87,9 +87,7 @@ export default class QuanticNumericFacet extends LightningElement {
   )}`;
 
   /** @type {NumericFacetState} */
-  @track state = {
-    values: [],
-  };
+  @track state;
 
   /** @type {NumericFacet} */
   facet;
@@ -139,7 +137,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values
+      this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
         .map((value) => {
           return {
@@ -155,7 +153,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get hasActiveValues() {
-    return this.state.hasActiveValues;
+    return this.state?.hasActiveValues;
   }
 
   get actionButtonIcon() {
@@ -168,7 +166,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {NumericFacetValue} evt
+   * @param {CustomEvent<NumericFacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);

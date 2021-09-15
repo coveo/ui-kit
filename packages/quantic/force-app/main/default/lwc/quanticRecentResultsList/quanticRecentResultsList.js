@@ -10,6 +10,16 @@ import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
 import collapse from '@salesforce/label/c.quantic_Collapse';
 import expand from '@salesforce/label/c.quantic_Expand';
 
+/** @typedef {import("coveo").RecentResultsState} RecentResultsState */
+/** @typedef {import("coveo").RecentResultsList} RecentResultsList */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticRecentResultsList` component displays the current user's recently clicked results.
+ * @category LWC
+ * @example
+ * <c-quantic-recent-results-list engine-id={engineId}></c-quantic-recent-results-list>
+ */
 export default class QuanticRecentResultsList extends LightningElement {
   labels = {
     emptyListLabel,
@@ -18,22 +28,33 @@ export default class QuanticRecentResultsList extends LightningElement {
     expand,
   }
 
-  /** @type {import("coveo").RecentResultsState} */
-  @track state;
-
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {number} */
+  /**
+   * The maximum number of queries to keep in the list.
+   * @api
+   * @type {number}
+   */
   @api maxLength = 10;
-  /** @type {string} */
+  /**
+   * The non-localized label for the component.
+   * @api
+   * @type {string}
+   */
   @api label = this.labels.recentResultsLabel;
 
+  /** @type {RecentResultsState} */
+  @track state;
+
+  /** @type {RecentResultsList} */
+  recentResultsList;
   /** @type {boolean} */
   isExpanded = true;
-  /** @type {import("coveo").RecentResultsList} */
-  recentResultsList;
-
-  /** @type {() => void} */
+  /** @type {Function} */
   unsubscribe;
 
   connectedCallback() {
@@ -45,7 +66,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.recentResultsList = CoveoHeadless.buildRecentResultsList(engine, {

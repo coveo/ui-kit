@@ -12,7 +12,7 @@ import expand from '@salesforce/label/c.quantic_Expand';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * The `QuanticRecentQueriesList` component displays the current user's recet queries.
+ * The `QuanticRecentQueriesList` component displays the current user's recent queries.
  * @category LWC
  * @example
  * <c-quantic-recent-queries-list engine-id={engineId}></c-quantic-recent-queries-list>
@@ -25,22 +25,34 @@ export default class QuanticRecentQueriesList extends LightningElement {
     expand
   }
 
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+  /**
+   * The non-localized label for the component.
+   * @api
+   * @type {string}
+   */
+  @api label = this.labels.recentQueriesLabel;
+  /**
+   * The maximum number of queries to keep in the list.
+   * @api
+   * @type {number}
+   */
+  @api maxLength = 10;
+
   /** @type {RecentQueriesState} */
   @track state;
-
-  /** @type {string} */
-  @api label = this.labels.recentQueriesLabel;
-  /** @type {number} */
-  @api maxLength = 10;
-  /** @type {string} */
-  @api engineId;
   
   /** @type {RecentQueriesList} */
   recentQueriesList;
-  /** @type {Function} */
-  unsubscribe;
   /** @type {boolean} */
   isExpanded = true;
+  /** @type {Function} */
+  unsubscribe;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);

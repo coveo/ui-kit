@@ -2,15 +2,32 @@
 import defaultTemplate from './quanticResult.html';
 import { LightningElement, api } from "lwc";
 
+/** @typedef {import("coveo").Result} Result */
+/** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
+
+/**
+ * The `QuanticResult` component is used internally by the `QuanticResultList` component.
+ * @category LWC
+ */
 export default class QuanticResult extends LightningElement {
-  /** @type {import("coveo").Result} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+   @api engineId;
+  /**
+   * The result item.
+   * @api
+   * @type {Result}
+   */
   @api result;
-
-  /** @type {import("coveo").ResultTemplatesManager} */
+  /**
+   * The template manager from which to get registered custom templates.
+   * @api
+   * @type {ResultTemplatesManager}
+   */
   @api resultTemplatesManager;
-
-  /** @type {string} */
-  @api engineId;
 
   get icon() {
     if (this.objectTypeIcon) {

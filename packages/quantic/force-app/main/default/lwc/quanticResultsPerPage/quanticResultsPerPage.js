@@ -1,24 +1,37 @@
 import {LightningElement, api, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
 
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").ResultsPerPage} ResultsPerPage */
+
+/**
+ * The `QuanticResultsPerPage` component determines how many results to display per page.
+ * @category LWC
+ * @example
+ * <c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>
+ */
 export default class QuanticResultsPerPage extends LightningElement {
-  /** @type {import("coveo").ResultsPerPage} */
-  resultsPerPage;
-  /** @type {import("coveo").SearchStatus} */
-  searchStatus;
-
-  /** @type {number} */
-  currentResultsPerPageValue;
-
-  /** @type {()=> void} */
-  unsubscribe;
-  /** @type {() => void} */
-  unsubscribeSearchStatus;
-
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
+
   /** @type {boolean}*/
   @track hasResults
+
+  /** @type {ResultsPerPage} */
+  resultsPerPage;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {number} */
+  currentResultsPerPageValue;
+  /** @type {Function} */
+  unsubscribe;
+  /** @type {Function}} */
+  unsubscribeSearchStatus;
   
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -29,7 +42,7 @@ export default class QuanticResultsPerPage extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine);

@@ -1,18 +1,35 @@
 import {LightningElement, api, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
 
+/** @typedef {import("coveo").Result} Result */
+/** @typedef {import("coveo").ResultList} ResultList */
+/** @typedef {import("coveo").ResultListState} ResultListState */
+/** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
+ * @category LWC
+ * @example
+ * <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
+ */
 export default class QuanticResultList extends LightningElement {
-  @track state = {};
-
-  /** @type {import("coveo").ResultList} */
-  resultList;
-  /** @type {import("coveo").Unsubscribe} */
-  unsubscribe;
-  /** @type {import("coveo").ResultTemplatesManager} */
-  resultTemplatesManager;
-
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
+
+  /** @type {ResultListState}*/
+  @track state;
+
+  /** @type {ResultList} */
+  resultList;
+  /** @type {Function} */
+  unsubscribe;
+  /** @type {ResultTemplatesManager} */
+  resultTemplatesManager;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -23,7 +40,7 @@ export default class QuanticResultList extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.resultList = CoveoHeadless.buildResultList(engine);
@@ -52,6 +69,6 @@ export default class QuanticResultList extends LightningElement {
   }
 
   get results() {
-    return this.state.results || [];
+    return this.state?.results || [];
   }
 }
