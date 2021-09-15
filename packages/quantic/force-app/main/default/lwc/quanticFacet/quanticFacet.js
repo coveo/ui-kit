@@ -200,7 +200,6 @@ export default class QuanticFacet extends LightningElement {
       this.facet.toggleSelect(evt.detail);
     }
     this.clearInput();
-    this.isFacetSearchActive = false;
   }
 
   showMore() {
