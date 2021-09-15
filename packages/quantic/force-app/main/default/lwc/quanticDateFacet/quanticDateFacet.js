@@ -12,12 +12,11 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /** @typedef {import("coveo").DateFacetState} DateFacetState */
 /** @typedef {import("coveo").DateFacet} DateFacet */
-/** @typedef {import("coveo").Unsubscribe} Unsubscribe */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 
 /**
- * The `QuanticDateFacet` component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.
+ * The `QuanticDateFacet` component displays facet values as date ranges.
  * @category LWC
  * @example
  * <c-quantic-date-facet field="date" label="Date" engine-id={engineId}></c-quantic-date-facet>
@@ -76,7 +75,7 @@ export default class QuanticDateFacet extends LightningElement {
 
   /** @type {DateFacet} */
   facet;
-  /** @type {Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {boolean} */
   isExpanded = true;

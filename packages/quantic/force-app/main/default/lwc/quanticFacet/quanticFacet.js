@@ -21,7 +21,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetSortCriterion} FacetSortCriterion */
 /** @typedef {import("coveo").Facet} Facet */
 /** @typedef {import("coveo").FacetValue} FacetValue */
-/** @typedef {import("coveo").Unsubscribe} Unsubscribe */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
@@ -86,14 +85,12 @@ export default class QuanticFacet extends LightningElement {
    */
   @api noSearch = false;
 
-  /**
-   * @type {FacetState}
-   */
+  /** @type {FacetState} */
   @track state;
 
   /** @type {Facet} */
   facet;
-  /** @type {Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {boolean} */
   isExpanded = true;

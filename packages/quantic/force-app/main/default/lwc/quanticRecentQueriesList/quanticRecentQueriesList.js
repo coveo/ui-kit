@@ -7,6 +7,16 @@ import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentQueriesListLa
 import collapse from '@salesforce/label/c.quantic_Collapse';
 import expand from '@salesforce/label/c.quantic_Expand';
 
+/** @typedef {import("coveo").RecentQueriesState} RecentQueriesState */
+/** @typedef {import("coveo").RecentQueriesList} RecentQueriesList */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticRecentQueriesList` component displays the current user's recet queries.
+ * @category LWC
+ * @example
+ * <c-quantic-recent-queries-list engine-id={engineId}></c-quantic-recent-queries-list>
+ */
 export default class QuanticRecentQueriesList extends LightningElement {
   labels = {
     recentQueriesLabel,
@@ -15,7 +25,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
     expand
   }
 
-  /** @type {import("coveo").RecentQueriesState} */
+  /** @type {RecentQueriesState} */
   @track state;
 
   /** @type {string} */
@@ -25,9 +35,9 @@ export default class QuanticRecentQueriesList extends LightningElement {
   /** @type {string} */
   @api engineId;
   
-  /** @type {import("coveo").RecentQueriesList} */
+  /** @type {RecentQueriesList} */
   recentQueriesList;
-  /** @type {()=> void} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {boolean} */
   isExpanded = true;
@@ -41,7 +51,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
   }
 
   /**
-  * @param {import("coveo").SearchEngine} engine
+  * @param {SearchEngine} engine
   */
   initialize = (engine) => {
     this.recentQueriesList = CoveoHeadless.buildRecentQueriesList(engine, {

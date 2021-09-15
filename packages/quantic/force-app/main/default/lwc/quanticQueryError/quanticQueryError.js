@@ -11,27 +11,37 @@ import goBack from '@salesforce/label/c.quantic_GoBack';
 
 import { errorMap, genericError } from './errorLabels.js';
 
+/** @typedef {import("coveo").QueryError} QueryError */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticQueryError` component handles fatal errors when performing a query on the index or Search API.
+ * When the error is known, it displays a link to relevant documentation link for debugging purposes.
+ * When the error is unknown, it displays a small text area with the JSON content of the error.
+ * @category LWC
+ * @example
+ * <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
+ */
 export default class QuanticQueryError extends LightningElement {
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
 
-  /** @type {import("coveo").QueryError} */
-  queryError;
-  /** @type {import("coveo").Unsubscribe} */
-  unsubscribe;
-
-  /**
-   * @type {string}
+  /** @type {string}
    */
   @track type;
-  /**
-   * @type {Boolean}
-   */
+  /** @type {Boolean} */
   @track hasError;
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   @track error
+
+  /** @type {QueryError} */
+  queryError;
+  /** @type {Function} */
+  unsubscribe;
 
   showMoreInfo = false;
 

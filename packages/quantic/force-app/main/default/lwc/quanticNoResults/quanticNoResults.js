@@ -8,21 +8,54 @@ import noResultsWithFilters from '@salesforce/label/c.quantic_NoResultsWithFilte
 import noResultsWithoutFilters from '@salesforce/label/c.quantic_NoResultsWithoutFilters';
 import undoLastAction from '@salesforce/label/c.quantic_UndoLastAction';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticNoResults` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
+ * @category LWC
+ * @example
+ * <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  
+ */
 export default class QuanticNoResults extends LightningElement {
-  /** @type {string}*/
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
+  /**
+   * Whether to display a button which cancels the last available action.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api disableCancelLastAction = false;
+
+  /** @type {boolean} */
+  @track showNoResultsPanel;
+  /** @type {number} */
+  @track showUndoButton;
+  /** @type {string} */
+  @track query;
+  /** @type {boolean} */
+  @track hasBreadcrumbs;
 
   /** @type {import("coveo").SearchStatus} */
   searchStatus;
-
   /** @type {import("coveo").HistoryManager} */
   historyManager;
-
   /** @type {import("coveo").QuerySummary} */
   querySummary;
-
   /** @type {import("coveo").BreadcrumbManager} */
   breadcrumbManager;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
+  /** @type {Function} */
+  unsubscribeHistoryManager;
+  /** @type {Function} */
+  unsubscribeQuerySummary;
+  /** @type {Function} */
+  unsubscribeBreadcrumbsManager;
 
   labels = {
     noResultsTitle,
@@ -31,38 +64,6 @@ export default class QuanticNoResults extends LightningElement {
     noResultsWithoutFilters,
     undoLastAction
   }
-
-  /** @type {() => void} */
-  unsubscribeSearchStatus;
-  /** @type {() => void} */
-  unsubscribeHistoryManager;
-  /** @type {() => void} */
-  unsubscribeQuerySummary;
-  /** @type {() => void} */
-  unsubscribeBreadcrumbsManager;
-  /**
-   * @type {boolean}
-   */
-  @api disableCancelLastAction
-
-  /**
-   * @type {boolean}
-   */
-  @track showNoResultsPanel;
-
-  /**
-   * @type {number}
-   */
-  @track showUndoButton;
-
-  /**
-   * @type {string}
-   */
-  @track query;
-  /**
-   * @type {boolean}
-   */
-  @track hasBreadcrumbs
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);

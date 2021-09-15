@@ -10,37 +10,90 @@ import clear from '@salesforce/label/c.quantic_Clear';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-export default class QuanticNumericFacet extends LightningElement {
-  /** @type {import("coveo").NumericFacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
-  @track state = {
-    values: [],
-  };
+/** @typedef {import("coveo").NumericFacetState} NumericFacetState */
+/** @typedef {import("coveo").NumericFacet} NumericFacet */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
+/** @typedef {import("coveo").RangeFacetSortCriterion} RangeFacetSortCriterion */
+/** @typedef {import("coveo").RangeFacetRangeAlgorithm} RangeFacetRangeAlgorithm */
 
-  /** @type {string} */
+/**
+ * The `QuanticNumericFacet` component displays facet values as numeric ranges.
+ * @category LWC
+ * @example
+ * <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-quantic-numeric-facet>
+ */
+export default class QuanticNumericFacet extends LightningElement {
+  /** 
+   * Specifies a unique identifier for the facet.
+   * @api
+   * @type {string}
+   * @defaultValue [field]
+   */
   @api facetId;
-  /** @type {string} */
+  /**
+   * Specifies the index field whose values the facet should use.
+   * @api
+   * @type {string}
+   */
   @api field;
-  /** @type {string} */
+  /**
+   * The non-localized label for the facet.
+   * @api
+   * @type {string}
+   */
   @api label;
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {number} */
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   * @api
+   * @type {number}
+   * @defaultValue 8
+   */
   @api numberOfValues = 8;
-  /** @type {import("coveo").RangeFacetSortCriterion} */
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   * @api
+   * @type {RangeFacetSortCriterion}
+   * @defaultValue 'ascending'
+   */
   @api sortCriteria = 'ascending';
-  /** @type {import("coveo").RangeFacetRangeAlgorithm} */
+  /**
+   * The algorithm that’s used for generating the ranges of this facet when they aren’t manually defined.
+   * The default value of "even" generates equally sized facet ranges across all of the results.
+   * The value "equiprobable" generates facet ranges which vary in size but have a more balanced number of results within each range.
+   * @api
+   * @type {RangeFacetRangeAlgorithm}
+   * @defaultValue 'equiprobable'
+   */
   @api rangeAlgorithm = 'equiprobable';
-  /** @type {(any) => string} */
+  /**
+   * The function used to format the date facet value label.
+   * @api
+   * @type {Function}
+   * @param {NumericFacetValue}
+   * @returns {string}
+   * @defaultValue Formatted result: [start] - [end]
+   */
   @api formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
     item.start
   )} - ${new Intl.NumberFormat(LOCALE).format(
     item.end
   )}`;
 
-  /** @type {import("coveo").NumericFacet} */
+  /** @type {NumericFacetState} */
+  @track state = {
+    values: [],
+  };
+
+  /** @type {NumericFacet} */
   facet;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {boolean} */
   isExpanded = true;
@@ -60,7 +113,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
@@ -115,7 +168,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
+   * @param {NumericFacetValue} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);

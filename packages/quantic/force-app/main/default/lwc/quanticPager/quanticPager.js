@@ -4,25 +4,40 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadles
 import next from '@salesforce/label/c.quantic_Next';
 import previous from '@salesforce/label/c.quantic_Previous';
 
+/** @typedef {import("coveo").Pager} Pager */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticPager` provides buttons that allow the end user to navigate through the different result pages.
+ * @category LWC
+ * @example
+ * <c-quantic-pager engine-id={engineId}></c-quantic-pager>
+ */
 export default class QuanticPager extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+
   /** @type {number[]} */
   @track currentPages = [];
   /** @type {boolean}*/
   @track hasResults
 
-  /** @type {import("coveo").Pager} */
+  /** @type {Pager} */
   pager;
-  /** @type {()=> void} */
+  /** @type {Function} */
   unsubscribe;
-  /** @type {() => void} */
+  /** @type {Function} */
   unsubscribeSearchStatus;
   /** @type {boolean} */
   hasPrevious;
   /** @type {boolean} */
   hasNext;
+  /** @type {number} */
   currentPage = 1;
-  /** @type {string} */
-  @api engineId;
 
   labels = {
     next,
@@ -38,7 +53,7 @@ export default class QuanticPager extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.pager = CoveoHeadless.buildPager(engine);
