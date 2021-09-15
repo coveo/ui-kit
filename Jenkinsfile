@@ -55,13 +55,10 @@ node('linux && docker') {
             'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
           ]) {
             sh 'cd packages/quantic && ./node_modules/cypress/bin/cypress install'
-            sh 'cd packages/quantic && ./node_modules/.bin/sfdx --version'
-            sh 'cd packages/quantic && ./node_modules/.bin/sfdx plugins --core'
             sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile $SFDX_AUTH_JWT_KEY --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
-            sh 'cd packages/quantic && chown -R $(whoami) .sfdx'
-            sh 'cd packages/quantic && npm run setup:examples'
+            sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --delete-org-on-error'
             sh 'cd packages/quantic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --browser chrome'
-            sh 'cd packages/quantic && .node_modules/.bin/ts-node scripts/build/delete-org.ts'
+            sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/delete-org.ts'
           }
         }
       }

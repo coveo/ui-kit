@@ -1,4 +1,4 @@
-import {sfdx} from './util/sfdx';
+import {deleteOrg, orgExists, sfdx} from './util/sfdx';
 import {buildLogger} from './util/log';
 
 interface Options {
@@ -12,7 +12,11 @@ const log = buildLogger(totalSteps, () => step);
 const deleteScratchOrg = async (options: Options) => {
   ++step;
   log(`Deleting ${options.alias} organization...`);
-  await sfdx(`force:org:delete -u ${options.alias} --noprompt`);
+
+  if (await orgExists(options.alias)) {
+    await deleteOrg(options.alias);
+  }
+
   log('Organization deleted successfully');
 };
 

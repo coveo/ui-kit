@@ -57,3 +57,24 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
     );
   });
 }
+
+export async function orgExists(alias: string): Promise<boolean> {
+  const response = await sfdx<SfdxListOrgsResponse>('force:org:list');
+
+  const org = response.result.scratchOrgs.find((o) => o.alias === alias);
+
+  const isOrgFound = !!org;
+  const isOrgActive = isOrgFound && org.status === 'Active';
+
+  if (isOrgFound && !isOrgActive) {
+    console.warn(
+      `Org ${alias} is found but status is not active. Status is ${org.status}.`
+    );
+  }
+
+  return isOrgActive;
+}
+
+export async function deleteOrg(alias: string): Promise<void> {
+  await sfdx(`force:org:delete -u ${alias} --noprompt`);
+}

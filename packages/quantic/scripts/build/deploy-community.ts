@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {
+  deleteOrg,
+  orgExists,
   sfdx,
-  SfdxListOrgsResponse,
   SfdxPublishCommunityResponse,
 } from './util/sfdx';
 import {buildLogger} from './util/log';
@@ -15,30 +16,12 @@ interface Options {
     path: string;
     template: string;
   };
+  deleteOrgOnError: boolean;
 }
 
 let step = 0;
 const totalSteps = 6;
 const log = buildLogger(totalSteps, () => step);
-
-const scratchOrgExists = async (options: Options): Promise<boolean> => {
-  const response = await sfdx<SfdxListOrgsResponse>('force:org:list');
-
-  const org = response.result.scratchOrgs.find(
-    (o) => o.alias === options.alias
-  );
-
-  const isOrgFound = !!org;
-  const isOrgActive = isOrgFound && org.status === 'Active';
-
-  if (isOrgFound && !isOrgActive) {
-    console.warn(
-      `Org ${options.alias} is found but status is not active. Status is ${org.status}.`
-    );
-  }
-
-  return isOrgActive;
-};
 
 const createScratchOrg = async (options: Options): Promise<void> => {
   await sfdx(
@@ -50,7 +33,7 @@ const ensureScratchOrgExists = async (options: Options) => {
   ++step;
   log(`Searching for ${options.alias} organization...`);
 
-  if (await scratchOrgExists(options)) {
+  if (await orgExists(options.alias)) {
     log(`${options.alias} organization found.`);
   } else {
     log(`${options.alias} organization not found. Creating organization.`);
@@ -92,9 +75,25 @@ const deployComponents = async (options: Options): Promise<void> => {
 const deployCommunityMetadata = async (options: Options): Promise<void> => {
   ++step;
   log('Deploying community metadata...');
-  await sfdx(
-    `force:mdapi:deploy -u ${options.alias} -d quantic-examples-community -w 10`
-  );
+
+  // There is no easy way to know when the community is ready.
+  // The first deploy attempt may fail.
+  let retry = 0;
+  let success = false;
+  do {
+    try {
+      await sfdx(
+        `force:mdapi:deploy -u ${options.alias} -d quantic-examples-community -w 10`
+      );
+      success = true;
+    } catch (error) {
+      if (retry === 2) {
+        throw error;
+      }
+      retry++;
+    }
+  } while (!success && retry <= 2);
+
   log('Community metadata deployed.');
 };
 
@@ -137,6 +136,12 @@ const updateCommunityConfigFile = async (
   log('Configuration file updated.');
 };
 
+const deleteScratchOrg = async (options: Options): Promise<void> => {
+  log(`Deleting ${options.alias} organization...`);
+  await deleteOrg(options.alias);
+  log('Organization deleted successfully.');
+};
+
 (async function () {
   const options = {
     alias: 'LWC',
@@ -146,10 +151,17 @@ const updateCommunityConfigFile = async (
       path: 'examples',
       template: 'Build Your Own',
     },
+    deleteOrgOnError: process.argv.some(
+      (arg) => arg === '--delete-org-on-error'
+    ),
   };
+
+  let scratchOrgCreated = false;
 
   try {
     await ensureScratchOrgExists(options);
+    scratchOrgCreated = true;
+
     await ensureCommunityExists(options);
     await deployComponents(options);
     await deployCommunityMetadata(options);
@@ -165,6 +177,11 @@ const updateCommunityConfigFile = async (
   } catch (error) {
     console.error('Failed to complete');
     console.error(error);
+
+    if (options.deleteOrgOnError && scratchOrgCreated) {
+      await deleteScratchOrg(options);
+    }
+
     throw error;
   }
 })();
