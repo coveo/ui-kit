@@ -1,4 +1,5 @@
 import {LightningElement, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class QuanticFacetValue extends LightningElement {
   @api item;
@@ -18,6 +19,10 @@ export default class QuanticFacetValue extends LightningElement {
       return this.formattingFunction(this.item);
     }
     return this.item.value;
+  }
+
+  get numberOfResults() {
+    return new Intl.NumberFormat(LOCALE).format(this.item.numberOfResults);
   }
 
   /**
