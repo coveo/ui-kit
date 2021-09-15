@@ -6,9 +6,18 @@ import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
 import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
 import queryCorrectedTo from '@salesforce/label/c.quantic_QueryCorrectedTo';
 
+/** @typedef {import("coveo").DidYouMean} DidYouMean */
+/** @typedef {import("coveo").Unsubscribe} Unsubscribe */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
 export default class QuanticDidYouMean extends LightningElement {
-  /** @type {()=> void} */
-  unsubscribe;
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+
   /** @type {Boolean}*/
   @track hasQueryCorrection;
   /** @type {Boolean}*/
@@ -17,10 +26,10 @@ export default class QuanticDidYouMean extends LightningElement {
   @track originalQuery;
   /** @type {string}*/
   @track correctedQuery;
-  /** @type {string}*/
-  @api engineId;
 
-  /** @type {import("coveo").DidYouMean} */
+  /** @type {Unsubscribe} */
+  unsubscribe;
+  /** @type {DidYouMean} */
   didYouMean;
 
   labels = {
@@ -38,7 +47,7 @@ export default class QuanticDidYouMean extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   @api
   initialize(engine) {
