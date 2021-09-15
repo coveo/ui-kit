@@ -1,12 +1,12 @@
 @import 'c/quanticFacetStyles';
 
 .facet__search-results_no-match {
-   color: #8e959d;
-   background-color: var(--lwc-colorBackground, whitesmoke);
-   font-size: 12px;
+  color: #8e959d;
+  background-color: whitesmoke;
+  font-size: 12px;
 }
 
 .facet__search-results_more-matches{
-    color: #8e959d;
-    font-size: 12px;
+  color: #8e959d;
+  font-size: 12px;
 }
