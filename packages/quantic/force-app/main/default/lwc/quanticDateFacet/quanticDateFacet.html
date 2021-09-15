@@ -13,10 +13,9 @@
         >
         </lightning-button-icon>
         <template if:true={isExpanded}>
-          <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
+          <ul class="slds-has-dividers_around-space">
             <template if:true={hasActiveValues}>
               <lightning-button
-                class="facet__collapse"
                 icon-name="utility:close" 
                 variant="base" 
                 value={labels.clear}
