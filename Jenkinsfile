@@ -45,10 +45,14 @@ node('linux && docker') {
       }
 
       stage('Cypress Test (Quantic)') {
-        withEnv(['SFDX_AUTH_JWT_INSTANCE_URL=https://login.salesforce.com', 'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com']) {
-          withCredentials([
-            string(credentialsId: 'sfdx-auth-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
-            file(credentialsId: 'sfdx-auth-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
+        withCredentials([
+          string(credentialsId: 'sfdx-auth-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
+          file(credentialsId: 'sfdx-auth-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
+        ]) {
+          withEnv([
+            'HOME=${env.WORKSPACE}',
+            'SFDX_AUTH_JWT_INSTANCE_URL=https://login.salesforce.com',
+            'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
           ]) {
             sh 'cd packages/quantic && ./node_modules/cypress/bin/cypress install'
             sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile $SFDX_AUTH_JWT_KEY --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
