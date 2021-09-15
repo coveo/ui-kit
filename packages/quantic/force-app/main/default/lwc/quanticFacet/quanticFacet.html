@@ -3,7 +3,7 @@
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="slds-p-bottom_small facet__collapse"
+          class="facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -17,7 +17,7 @@
           <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
             <template if:true={hasActiveValues}>
               <lightning-button 
-                class="slds-p-horizontal_small facet__collapse"
+                class="facet__collapse"
                 icon-name="utility:close" 
                 variant="base" 
                 value={labels.clear} 
@@ -70,13 +70,13 @@
                 </template>
               </template>
               <template if:false={hasSearchResults}>
-                <li class="slds-var-m-around_small slds-grid">
-                  <span class="slds-truncate slds-p-vertical_small slds-m-bottom_medium slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span>
+                <li class="slds-grid slds-m-top_x-small">
+                  <span class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span>
                 </li>
               </template>
               <template if:true={canShowMoreSearchResults}>
-                <li class="slds-p-left_small">
-                  <span class="facet__search-results_more-matches">{moreMatchesForLabel}</span>
+                <li>
+                  <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span>
                 </li>
               </template>
             </template>
