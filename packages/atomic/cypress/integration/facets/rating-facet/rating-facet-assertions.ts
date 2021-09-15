@@ -9,6 +9,7 @@ export interface BaseRatingFacetSelector
   extends BaseFacetSelector,
     FacetWithLinkSelector {
   starsIconAtIndex: (index: number) => Cypress.Chainable<JQuery<HTMLElement>>;
+  facetValueAtIndex: (index: number) => Cypress.Chainable<JQuery<HTMLElement>>;
   valueRating: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 

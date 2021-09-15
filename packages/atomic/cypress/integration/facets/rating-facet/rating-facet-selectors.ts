@@ -8,7 +8,9 @@ export const RatingFacetSelectors = {
     RatingFacetSelectors.shadow().find('[part="clear-button"]'),
   labelButton: () =>
     RatingFacetSelectors.shadow().find('[part="label-button"]'),
-  valueLabel: () => RatingFacetSelectors.shadow().find('[part="value-rating"]'),
+  valueRating: () =>
+    RatingFacetSelectors.shadow().find('[part="value-rating"]'),
+  valueLabel: () => RatingFacetSelectors.shadow().find('[part="value-label"]'),
   selectedCheckboxValue: () =>
     RatingFacetSelectors.shadow().find(
       '[part="value-checkbox"][aria-checked="true"]'
@@ -26,7 +28,7 @@ export const RatingFacetSelectors = {
       '[part="value-link"][aria-pressed="false"]'
     ),
   facetValueAtIndex: (index: number) =>
-    RatingFacetSelectors.valueLabel().eq(index),
+    RatingFacetSelectors.valueRating().eq(index),
   starsIconAtIndex: (index: number) =>
     RatingFacetSelectors.facetValueAtIndex(index).find('atomic-icon'),
 };
