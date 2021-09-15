@@ -9,8 +9,8 @@
 .facet__number-of-results {
     color: var(--sds-c-color-gray-8, #8E959D);
     margin-left: var(--lwc-spacingXSmall, 0.5rem);
-    font-size: 11px;
 }
+
 .facet__search-results{
     display:flex;
     align-items: baseline;

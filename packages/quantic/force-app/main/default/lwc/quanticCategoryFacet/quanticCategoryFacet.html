@@ -10,15 +10,15 @@
                 variant="bare">
             </lightning-button-icon>
             <template if:true={isExpanded}>
-                <template if:false={noSearch}>
-                    <div onchange={handleKeyUp} class="facet__searchbox">
-                      <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
-                    </div>
-                </template>
-                <ul class="slds-has-dividers_around-space">
+                <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
+                    <template if:false={noSearch}>
+                        <div onchange={handleKeyUp} class="slds-size_1-of-1">
+                        <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
+                        </div>
+                    </template>
                     <template if:false={isFacetSearchActive}>
                         <template if:true={hasParents}>
-                            <li class="slds-var-m-horizontal_medium slds-var-m-vertical_small slds-grid">
+                            <li class="slds-var-m-vertical_small slds-var-m-horizontal_small slds-grid">
                                 <div onclick={reset}>
                                     <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
                                     <span class="nowrap">{labels.allCategories}</span>
@@ -26,21 +26,22 @@
                             </li> 
                          </template>
                          <template for:each={nonActiveParents} for:item="v">
-                             <c-quantic-category-facet-parent onselectvalue={onSelect} key={v.value} item={v}></c-quantic-category-facet-parent>
+                            <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} nonactiveparent="true"></c-quantic-category-facet-value>
                          </template>
                          <template if:true={activeParent}>
-                             <li class="slds-var-m-horizontal_medium slds-grid">
-                                 <span class="nowrap parent-text__bold">{activeParent.value} ({activeParent.numberOfResults})</span>
+                             <li class="slds-grid slds-var-m-horizontal_small">
+                                 <span class="nowrap parent-text__bold">{activeParent.value}</span>
+                                 <span class="facet__number-of-results parent-text__bold">({activeParent.numberOfResults})</span>
                              </li>  
                          </template>
-                         <li class="slds-var-m-horizontal_medium slds-grid">
+                         <li class="slds-grid">
                             <ul>
                              <template for:each={values} for:item="v">
                                 <c-quantic-category-facet-value 
                                     onselectvalue={onSelect} 
                                     key={v.value} 
-                                    item={v} 
-                                    data-cy={v.value}>
+                                    item={v}
+                                    activeparent={activeParent}>
                                 </c-quantic-category-facet-value>
                              </template>
                             </ul>
@@ -82,6 +83,6 @@
                     </button>
                 </template> 
             </template>
-        </c-quantic-card-container>   
+        </c-quantic-card-container>
     </template>
 </template>

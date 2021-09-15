@@ -6,9 +6,22 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   @api item;
   /** @type {string} */
   @api withsearch;
+  /**  @type {string} */
+  @api activeparent;
+  /**  @type {boolean}*/
+  @api nonactiveparent;
 
   labels = {
     inLabel
+  }
+  get categoryFacetLiClass() {
+    if(this.activeparent) {
+      return "slds-var-m-horizontal_large slds-grid";
+    }
+    if(this.nonactiveparent) {
+      return "slds-var-m-horizontal_small slds-var-m-vertical_small slds-grid"
+    }
+    return "slds-var-m-vertical_small slds-grid";
   }
   /**
    * @param {InputEvent} evt

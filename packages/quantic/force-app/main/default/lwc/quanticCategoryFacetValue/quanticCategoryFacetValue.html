@@ -1,28 +1,37 @@
 <template>
-    <li class="slds-var-m-horizontal_medium slds-grid">  
-        <div class="slds-col_bump-right" onclick={onSelect}>
-            <template if:false={withsearch}>
-                <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default facet__value">
-                    {item.value}
-                    <span class="facet__number-of-results">
-                        ({item.numberOfResults})
-                    </span>
-                </button>
+    <li class={categoryFacetLiClass}>  
+        <div onclick={onSelect}>
+            <template if:true={nonactiveparent}>
+                <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
+                <span class="nowrap">{item.value}</span>
+                <span class="facet__number-of-results">
+                    ({item.numberOfResults})
+                </span>
             </template>
-             <template if:true={withsearch}>
-                 <button class="slds-button slds-text-color_default">
-                    <div class="slds-grid slds-grid_vertical slds-gutters">
-                        <div class="slds-col facet__search-results">
-                            <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
-                            <span class="facet__number-of-results">
-                                ({item.numberOfResults})
-                            </span>
+            <template if:false={nonactiveparent}>
+                <template if:false={withsearch}>
+                    <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default facet__value">
+                        {item.value}
+                        <span class="facet__number-of-results">
+                            ({item.numberOfResults})
+                        </span>
+                    </button>
+                </template>
+                 <template if:true={withsearch}>
+                     <button class="slds-button slds-text-color_default">
+                        <div class="slds-grid slds-grid_vertical">
+                            <div class="slds-col facet__search-results">
+                                <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
+                                <span class="facet__number-of-results">
+                                    ({item.numberOfResults})
+                                </span>
+                            </div>
+                            <div class="slds-col">
+                                <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
+                            </div>
                         </div>
-                        <div class="slds-col">
-                            <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
-                        </div>
-                    </div>
-                </button>  
+                    </button>  
+                </template>
             </template>
         </div>
     </li>
