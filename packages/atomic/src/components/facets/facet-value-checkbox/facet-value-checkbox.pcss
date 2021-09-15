@@ -12,15 +12,12 @@
   @apply w-full flex pl-8 pr-2 py-2.5 text-on-background cursor-pointer truncate hover:bg-neutral-light;
 }
 
-/**
- * @prop --atomic-facet-checkbox-thickness: Thickness of the checkbox check.
- */
-.value-checkbox.selected:before {
-  border-width: var(--atomic-facet-checkbox-thickness, 1px);
-  @apply box-content block border-on-primary border-t-0 border-l-0 transform rotate-45;
-  content: '';
-  width: 20%;
-  height: 60%;
+.value-checkbox .svg-checkbox {
+  display: none;
+}
+
+.value-checkbox.selected .svg-checkbox {
+  display: block;
 }
 
 .value-checkbox:focus + label,

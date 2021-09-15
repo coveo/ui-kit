@@ -2,6 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../utils/ripple';
 import {randomID} from '../../../utils/utils';
 import {FacetValueProps} from '../facet-common';
+import Checkbox from '../../../images/checkbox.svg';
 
 export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   props,
@@ -32,7 +33,9 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
             : 'border border-neutral-dark'
         }`}
         aria-label={ariaLabel}
-      ></button>
+      >
+        <atomic-icon class="w-3/5 svg-checkbox" icon={Checkbox}></atomic-icon>
+      </button>
       <label
         ref={(ref) => (labelRef = ref!)}
         htmlFor={id}
