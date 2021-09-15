@@ -149,6 +149,10 @@ export function setItemInLocalStorage(key, item) {
   }
 }
 
+/**
+ * Replace char found in pattern with \\$&
+ * @param {string} value
+ */
 export function regexEncode(value) {
   return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
