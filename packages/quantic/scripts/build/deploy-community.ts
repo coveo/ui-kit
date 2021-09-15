@@ -148,8 +148,6 @@ const updateCommunityConfigFile = async (
     },
   };
 
-  console.log(JSON.stringify(options));
-
   try {
     await ensureScratchOrgExists(options);
     await ensureCommunityExists(options);
