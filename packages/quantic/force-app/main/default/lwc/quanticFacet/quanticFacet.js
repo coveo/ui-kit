@@ -46,8 +46,6 @@ export default class QuanticFacet extends LightningElement {
   isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
-  /** @type {boolean} */
-  isFacetSearchActive = false;
 
   labels = {
     showMore,
@@ -107,7 +105,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get query() {
-    return this.input.value;
+    return this.input?.value;
   }
 
   get canShowMoreSearchResults() {
@@ -183,6 +181,10 @@ export default class QuanticFacet extends LightningElement {
     return I18nUtils.format(label, this.label);
   }
 
+  get isFacetSearchActive() {
+    return this.input?.value !== '';
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
@@ -215,6 +217,9 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
+    if (this.isExpanded) {
+      this.clearInput();
+    }
     this.isExpanded = !this.isExpanded;
   }
 
@@ -224,15 +229,14 @@ export default class QuanticFacet extends LightningElement {
 
   handleKeyUp() {
     if (this.isSearchComplete) {
-      this.isFacetSearchActive = this.input.value !== '';
-      this.facet.facetSearch.updateText(this.input.value);
+      this.facet.facetSearch.updateText(this.input?.value);
       this.facet.facetSearch.search();
     }
   }
 
   clearInput() {
     this.input.value = '';
-    this.updateState();
+    this.facet.facetSearch.updateText(this.input?.value);
   }
 
   highlightResult(result, query) {
