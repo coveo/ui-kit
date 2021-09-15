@@ -42,6 +42,8 @@ export interface SfdxPublishCommunityResponse extends SfdxResponse {
  */
 export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
+    console.log(`DEBUG: cwd: ${process.cwd()}`);
+
     exec(
       `"${path.resolve('node_modules/.bin/sfdx')}" ${command} --json`,
       {maxBuffer: 1024 * 1024},
