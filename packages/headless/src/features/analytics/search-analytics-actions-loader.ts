@@ -512,6 +512,12 @@ export interface SearchAnalyticsActionCreators {
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
 
+  /**
+   * The event to log when no results is shown and the end users cancel last action.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
   logNoResultsBack(): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
