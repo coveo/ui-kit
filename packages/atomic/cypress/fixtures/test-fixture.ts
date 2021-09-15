@@ -21,6 +21,7 @@ export class TestFixture {
     'atomic-search-interface'
   ) as SearchInterface;
   private hash = '';
+  private style = document.createElement('style');
 
   public with(feat: TestFeature) {
     feat(this);
@@ -47,11 +48,17 @@ export class TestFixture {
     return this;
   }
 
+  public withStyle(e: string) {
+    this.style.append(e);
+    return this;
+  }
+
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
 
     cy.document().then((doc) => {
+      doc.head.appendChild(this.style);
       doc.body.appendChild(this.searchInterface);
       cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
     });

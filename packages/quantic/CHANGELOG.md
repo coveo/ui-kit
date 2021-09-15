@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.63.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.1...@coveo/quantic@0.63.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* **quantic:** fixed standalone searchbox issues ([#1190](https://github.com/coveo/ui-kit/issues/1190)) ([57f0af0](https://github.com/coveo/ui-kit/commit/57f0af0d2b38edde3f733f5083a768238196cbd8))
+* **quantic:** merge error went through ([#1204](https://github.com/coveo/ui-kit/issues/1204)) ([a75d6e1](https://github.com/coveo/ui-kit/commit/a75d6e17935bc3dce8581f2eb8fe50080e7924c9))
+
+
+
+
+
 ## [0.63.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.0...@coveo/quantic@0.63.1) (2021-09-14)
 
 **Note:** Version bump only for package @coveo/quantic

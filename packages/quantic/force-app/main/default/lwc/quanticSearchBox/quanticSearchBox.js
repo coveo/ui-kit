@@ -8,6 +8,7 @@ import {
 import { keys } from 'c/quanticUtils';
 
 import search from '@salesforce/label/c.quantic_Search';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 
 const CLASS_WITH_SUBMIT =
@@ -35,6 +36,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   labels = {
     search,
+    clear,
   };
 
   /** @type {string} */
