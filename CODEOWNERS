@@ -1,1 +1,8 @@
-*       @olamothe @samisayegh @ThibodeauJF @btaillon @nbuissoncoveo
+# Default owners for everything in the repo. Later matches take precedence.
+* @coveo/search
+
+# Owners of the Quantic package
+/packages/quantic/ @coveo/service-integrations
+
+# Owners of Atomic's Cypress Tests
+/packages/atomic/cypress/ @coveo/search @coveo/search-qa
