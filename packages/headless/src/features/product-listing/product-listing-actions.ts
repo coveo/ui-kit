@@ -10,7 +10,7 @@ import {
   NumericFacetSection,
   PaginationSection,
   ProductListingSection,
-  ProductListingSortSection,
+  StructuredSortSection,
 } from '../../state/state-sections';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
@@ -23,7 +23,7 @@ import {
 } from '../../api/commerce/product-listings/product-listing-request';
 import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
-import {ProductListingSortBy} from './product-listing-sort';
+import {SortBy} from '../sort/sort';
 
 export interface SetProductListingUrlPayload {
   /**
@@ -47,7 +47,7 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
   ProductListingSection &
   Partial<
     PaginationSection &
-      ProductListingSortSection &
+      StructuredSortSection &
       FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
@@ -126,9 +126,8 @@ export const buildProductListingRequest = (
           ) + 1,
       },
     }),
-    ...((state.productListingSort?.by || ProductListingSortBy.Relevance) !==
-      ProductListingSortBy.Relevance && {
-      sort: state.productListingSort,
+    ...((state.sort?.by || SortBy.Relevance) !== SortBy.Relevance && {
+      sort: state.sort,
     }),
   };
 };

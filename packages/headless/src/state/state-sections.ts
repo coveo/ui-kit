@@ -29,7 +29,7 @@ import {QuestionAnsweringState} from '../features/question-answering/question-an
 import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
-import {ProductListingSortState} from '../features/product-listing/product-listing-sort-state';
+import {SortState} from '../features/sort/sort-state';
 
 export interface QuerySection {
   /**
@@ -251,11 +251,11 @@ export interface ProductListingSection {
   productListing: ProductListingState;
 }
 
-export interface ProductListingSortSection {
+export interface StructuredSortSection {
   /**
-   * The sort to use with the product listing query.
+   * The information related to sort when using a structured sort format.
    */
-  productListingSort: ProductListingSortState;
+  sort: SortState;
 }
 
 export interface TriggerSection {

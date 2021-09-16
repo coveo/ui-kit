@@ -8,7 +8,7 @@ import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-or
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
-import {getProductListingSortInitialState} from '../features/product-listing/product-listing-sort-state';
+import {getSortInitialState} from '../features/sort/sort-state';
 
 export function buildMockProductListingState(
   config: Partial<ProductListingAppState> = {}
@@ -16,7 +16,7 @@ export function buildMockProductListingState(
   return {
     configuration: getConfigurationInitialState(),
     productListing: getProductListingInitialState(),
-    productListingSort: getProductListingSortInitialState(),
+    sort: getSortInitialState(),
     categoryFacetSet: getCategoryFacetSetInitialState(),
     dateFacetSet: getDateFacetSetInitialState(),
     facetOptions: getFacetOptionsInitialState(),

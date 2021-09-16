@@ -4,30 +4,30 @@ import {
 } from '../../../test';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
-  buildProductListingFieldsSortCriterion,
-  buildProductListingRelevanceSortCriterion,
+  buildFieldsSortCriterion,
+  buildRelevanceSortCriterion,
   buildSort,
   ProductListingSort,
-  ProductListingSortBy,
-  ProductListingSortCriterion,
-  ProductListingSortDirection,
+  SortCriterion,
+  SortBy,
   ProductListingSortInitialState,
+  SortDirection,
 } from './headless-product-listing-sort';
-import {configuration, productListingSort} from '../../../app/reducers';
+import {configuration, sort} from '../../../app/reducers';
 import {
-  registerProductListingSortCriterion,
-  updateProductListingSortCriterion,
-} from '../../../features/product-listing/product-listing-sort-actions';
+  registerSortCriterion,
+  updateSortCriterion,
+} from '../../../features/sort/sort-actions';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 
 describe('Sort', () => {
   let engine: MockProductListingEngine;
   let initialState: ProductListingSortInitialState;
-  let sort: ProductListingSort;
+  let plSort: ProductListingSort;
 
   function initSort() {
-    sort = buildSort(engine, {initialState});
+    plSort = buildSort(engine, {initialState});
   }
 
   beforeEach(() => {
@@ -37,11 +37,11 @@ describe('Sort', () => {
   });
 
   it('initializes', () => {
-    expect(sort).toBeTruthy();
+    expect(plSort).toBeTruthy();
   });
 
   it('#sortBy dispatches #fetchProductListing', () => {
-    sort.sortBy({by: ProductListingSortBy.Relevance});
+    plSort.sortBy({by: SortBy.Relevance});
     const action = engine.findAsyncAction(fetchProductListing.pending);
     expect(action).toBeTruthy();
   });
@@ -49,59 +49,59 @@ describe('Sort', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
-      productListingSort,
+      sort,
     });
   });
 
   it('when the #criterion option is not specified, it does not dispatch a registration action', () => {
     const action = engine.actions.find(
-      (a) => a.type === registerProductListingSortCriterion.type
+      (a) => a.type === registerSortCriterion.type
     );
     expect(action).toBe(undefined);
   });
 
   it('when #criterion is an invalid value, it throws an error', () => {
-    initialState.criterion = ('1' as unknown) as ProductListingSortCriterion;
+    initialState.criterion = ('1' as unknown) as SortCriterion;
     expect(() => initSort()).toThrow('Check the initialState of buildSort');
   });
 
   it('when the #criterion option is specified, it dispatches a registration action', () => {
-    initialState.criterion = buildProductListingRelevanceSortCriterion();
+    initialState.criterion = buildRelevanceSortCriterion();
     initSort();
 
     expect(engine.actions).toContainEqual(
-      registerProductListingSortCriterion(initialState.criterion)
+      registerSortCriterion(initialState.criterion)
     );
   });
 
   it('when the #criterion is an array, it dispatches a registration action', () => {
-    initialState.criterion = buildProductListingFieldsSortCriterion([
+    initialState.criterion = buildFieldsSortCriterion([
       {
         name: 'author',
-        direction: ProductListingSortDirection.Ascending,
+        direction: SortDirection.Ascending,
       },
     ]);
     initSort();
 
     expect(engine.actions).toContainEqual(
-      registerProductListingSortCriterion(initialState.criterion)
+      registerSortCriterion(initialState.criterion)
     );
   });
 
   describe('when calling #sortBy with a criterion', () => {
-    const criterion = buildProductListingFieldsSortCriterion([
+    const criterion = buildFieldsSortCriterion([
       {
         name: 'author',
-        direction: ProductListingSortDirection.Ascending,
+        direction: SortDirection.Ascending,
       },
     ]);
 
     beforeEach(() => {
-      sort.sortBy(criterion);
+      plSort.sortBy(criterion);
     });
 
     it('dispatches an updateProductListingSortCriterion action with the passed criterion', () => {
-      const action = updateProductListingSortCriterion(criterion);
+      const action = updateSortCriterion(criterion);
       expect(engine.actions).toContainEqual(action);
     });
 
@@ -111,32 +111,32 @@ describe('Sort', () => {
   });
 
   describe('when the store #sortCriteria is set', () => {
-    const criterionInState = buildProductListingFieldsSortCriterion([
+    const criterionInState = buildFieldsSortCriterion([
       {
         name: 'author',
-        direction: ProductListingSortDirection.Ascending,
+        direction: SortDirection.Ascending,
       },
     ]);
 
     beforeEach(() => {
       const state = buildMockProductListingState({
-        productListingSort: criterionInState,
+        sort: criterionInState,
       });
       engine = buildMockProductListingEngine({state});
       initSort();
     });
 
     it('calling #state returns the sortCriteria expression', () => {
-      expect(sort.state).toEqual({productListingSort: criterionInState});
+      expect(plSort.state).toEqual({sort: criterionInState});
     });
 
     it('calling #isSortedBy with a criterion equal to the one in state returns true', () => {
-      expect(sort.isSortedBy(criterionInState)).toBe(true);
+      expect(plSort.isSortedBy(criterionInState)).toBe(true);
     });
 
     it('calling #isSortedBy with a criterion not equal to the one in state returns false', () => {
-      const criterionNotInState = buildProductListingRelevanceSortCriterion();
-      expect(sort.isSortedBy(criterionNotInState)).toBe(false);
+      const criterionNotInState = buildRelevanceSortCriterion();
+      expect(plSort.isSortedBy(criterionNotInState)).toBe(false);
     });
   });
 });

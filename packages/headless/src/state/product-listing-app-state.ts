@@ -8,7 +8,7 @@ import {
   NumericFacetSection,
   PaginationSection,
   ProductListingSection,
-  ProductListingSortSection,
+  StructuredSortSection,
   VersionSection,
 } from './state-sections';
 
@@ -20,6 +20,6 @@ export type ProductListingAppState = ConfigurationSection &
   DateFacetSection &
   FacetOptionsSection &
   FacetOrderSection &
-  ProductListingSortSection &
+  StructuredSortSection &
   PaginationSection &
   VersionSection;

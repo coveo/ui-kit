@@ -2,55 +2,55 @@ import {fetchProductListing} from '../../../features/product-listing/product-lis
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {
-  productListingCriterionDefinition,
-  ProductListingSortDirection,
-  ProductListingSortBy,
-  ProductListingSortByRelevance,
-  ProductListingSortByFieldsFields,
-  ProductListingSortByFields,
-  ProductListingSortCriterion,
-  buildProductListingRelevanceSortCriterion,
-  buildProductListingFieldsSortCriterion,
-} from '../../../features/product-listing/product-listing-sort';
+  sortCriterionDefinition,
+  SortDirection,
+  SortBy,
+  SortByRelevance,
+  SortByFieldsFields,
+  SortByFields,
+  SortCriterion,
+  buildRelevanceSortCriterion,
+  buildFieldsSortCriterion,
+} from '../../../features/sort/sort';
 import {CoreEngine} from '../../../app/engine';
 import {
   ConfigurationSection,
-  ProductListingSortSection,
+  StructuredSortSection,
 } from '../../../state/state-sections';
-import {configuration, productListingSort} from '../../../app/reducers';
+import {configuration, sort} from '../../../app/reducers';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  registerProductListingSortCriterion,
-  updateProductListingSortCriterion,
-} from '../../../features/product-listing/product-listing-sort-actions';
+  registerSortCriterion,
+  updateSortCriterion,
+} from '../../../features/sort/sort-actions';
 import {Schema} from '@coveo/bueno';
 import {validateInitialState} from '../../../utils/validate-payload';
 
 export {
-  ProductListingSortBy,
-  ProductListingSortDirection,
-  ProductListingSortByRelevance,
-  ProductListingSortByFields,
-  ProductListingSortByFieldsFields,
-  ProductListingSortCriterion,
-  buildProductListingRelevanceSortCriterion,
-  buildProductListingFieldsSortCriterion,
+  SortBy,
+  SortDirection,
+  SortByRelevance,
+  SortByFields,
+  SortByFieldsFields,
+  SortCriterion,
+  buildRelevanceSortCriterion,
+  buildFieldsSortCriterion,
 };
 
 export interface ProductListingSort extends Controller {
-  sortBy(criterion: ProductListingSortCriterion): void;
+  sortBy(criterion: SortCriterion): void;
 
-  isSortedBy(criterion: ProductListingSortCriterion): boolean;
+  isSortedBy(criterion: SortCriterion): boolean;
 
   state: ProductListingSortState;
 }
 
 export interface ProductListingSortState {
-  sort: ProductListingSortCriterion;
+  sort: SortCriterion;
 }
 
 export interface ProductListingSortProps {
@@ -58,11 +58,11 @@ export interface ProductListingSortProps {
 }
 
 export interface ProductListingSortInitialState {
-  criterion?: ProductListingSortCriterion;
+  criterion?: SortCriterion;
 }
 
 function validateSortInitialState(
-  engine: CoreEngine<ConfigurationSection & ProductListingSortSection>,
+  engine: CoreEngine<ConfigurationSection & StructuredSortSection>,
   state: ProductListingSortInitialState | undefined
 ) {
   if (!state) {
@@ -70,7 +70,7 @@ function validateSortInitialState(
   }
 
   const schema = new Schema<ProductListingSortInitialState>({
-    criterion: productListingCriterionDefinition,
+    criterion: sortCriterionDefinition,
   });
 
   validateInitialState(engine, schema, state, 'buildSort');
@@ -93,25 +93,25 @@ export function buildSort(
   const criterion = props.initialState?.criterion;
 
   if (criterion) {
-    dispatch(registerProductListingSortCriterion(criterion));
+    dispatch(registerSortCriterion(criterion));
   }
 
   return {
     ...controller,
 
-    sortBy(criterion: ProductListingSortCriterion) {
-      dispatch(updateProductListingSortCriterion(criterion));
+    sortBy(criterion: SortCriterion) {
+      dispatch(updateSortCriterion(criterion));
       dispatch(updatePage(1));
       dispatch(fetchProductListing());
     },
 
-    isSortedBy(criterion: ProductListingSortCriterion) {
+    isSortedBy(criterion: SortCriterion) {
       return this.state.sort === criterion;
     },
 
     get state() {
       return {
-        sort: getState().productListingSort,
+        sort: getState().sort,
       };
     },
   };
@@ -119,7 +119,7 @@ export function buildSort(
 
 function loadSortReducers(
   engine: CoreEngine
-): engine is CoreEngine<ConfigurationSection & ProductListingSortSection> {
-  engine.addReducers({configuration, productListingSort});
+): engine is CoreEngine<ConfigurationSection & StructuredSortSection> {
+  engine.addReducers({configuration, sort});
   return true;
 }
