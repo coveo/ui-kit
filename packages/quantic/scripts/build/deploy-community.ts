@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {
+  deleteActiveScratchOrgs,
   deleteOrg,
   orgExists,
   sfdx,
   SfdxPublishCommunityResponse,
 } from './util/sfdx';
-import {buildLogger} from './util/log';
+import {StepLogger, StepsRunner} from './util/log';
 
 interface Options {
   alias: string;
@@ -16,12 +17,30 @@ interface Options {
     path: string;
     template: string;
   };
+  deleteOldOrgs: boolean;
   deleteOrgOnError: boolean;
+  jwt: {
+    clientId: string;
+    keyFile: string;
+    username: string;
+  };
 }
 
-let step = 0;
-const totalSteps = 6;
-const log = buildLogger(totalSteps, () => step);
+const deleteOldOrgs = async (
+  log: StepLogger,
+  options: Options
+): Promise<void> => {
+  log('Deleting old scratch organizations...');
+
+  await deleteActiveScratchOrgs({
+    devHubUsername: options.jwt.username,
+    scratchOrgName: 'quantic local',
+    jwtClientId: options.jwt.clientId,
+    jwtKeyFile: options.jwt.keyFile,
+  });
+
+  log('Scratch organizations deleted.');
+};
 
 const createScratchOrg = async (options: Options): Promise<void> => {
   await sfdx(
@@ -29,8 +48,7 @@ const createScratchOrg = async (options: Options): Promise<void> => {
   );
 };
 
-const ensureScratchOrgExists = async (options: Options) => {
-  ++step;
+const ensureScratchOrgExists = async (log: StepLogger, options: Options) => {
   log(`Searching for ${options.alias} organization...`);
 
   if (await orgExists(options.alias)) {
@@ -48,8 +66,10 @@ const createCommunity = async (options: Options): Promise<void> => {
   );
 };
 
-const ensureCommunityExists = async (options: Options): Promise<void> => {
-  ++step;
+const ensureCommunityExists = async (
+  log: StepLogger,
+  options: Options
+): Promise<void> => {
   log(`Searching for '${options.community.name}' community`);
   try {
     await createCommunity(options);
@@ -63,8 +83,10 @@ const ensureCommunityExists = async (options: Options): Promise<void> => {
   }
 };
 
-const deployComponents = async (options: Options): Promise<void> => {
-  ++step;
+const deployComponents = async (
+  log: StepLogger,
+  options: Options
+): Promise<void> => {
   log('Deploying components...');
   await sfdx(
     `force:source:deploy -u ${options.alias} -p force-app/main,force-app/examples`
@@ -72,8 +94,10 @@ const deployComponents = async (options: Options): Promise<void> => {
   log('Components deployed.');
 };
 
-const deployCommunityMetadata = async (options: Options): Promise<void> => {
-  ++step;
+const deployCommunityMetadata = async (
+  log: StepLogger,
+  options: Options
+): Promise<void> => {
   log('Deploying community metadata...');
 
   // There is no easy way to know when the community is ready.
@@ -97,8 +121,10 @@ const deployCommunityMetadata = async (options: Options): Promise<void> => {
   log('Community metadata deployed.');
 };
 
-const publishCommunity = async (options: Options): Promise<string> => {
-  ++step;
+const publishCommunity = async (
+  log: StepLogger,
+  options: Options
+): Promise<string> => {
   log('Publishing community...');
   const response = await sfdx<SfdxPublishCommunityResponse>(
     `force:community:publish -u ${options.alias} -n "${options.community.name}"`
@@ -109,10 +135,10 @@ const publishCommunity = async (options: Options): Promise<string> => {
 };
 
 const updateCommunityConfigFile = async (
+  log: StepLogger,
   options: Options,
   communityUrl: string
 ): Promise<void> => {
-  ++step;
   let baseConfig = {
     env: {
       examplesUrl: '',
@@ -136,7 +162,10 @@ const updateCommunityConfigFile = async (
   log('Configuration file updated.');
 };
 
-const deleteScratchOrg = async (options: Options): Promise<void> => {
+const deleteScratchOrg = async (
+  log: StepLogger,
+  options: Options
+): Promise<void> => {
   log(`Deleting ${options.alias} organization...`);
   await deleteOrg(options.alias);
   log('Organization deleted successfully.');
@@ -151,22 +180,45 @@ const deleteScratchOrg = async (options: Options): Promise<void> => {
       path: 'examples',
       template: 'Build Your Own',
     },
+    deleteOldOrgs: process.argv.some((arg) => arg === '--delete-old-orgs'),
     deleteOrgOnError: process.argv.some(
       (arg) => arg === '--delete-org-on-error'
     ),
+    jwt: {
+      clientId: process.env.SFDX_AUTH_CLIENT_ID,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY,
+      username: process.env.SFDX_AUTH_JWT_USERNAME,
+    },
   };
 
   let scratchOrgCreated = false;
+  const runner = new StepsRunner();
 
   try {
-    await ensureScratchOrgExists(options);
-    scratchOrgCreated = true;
+    let communityUrl = '';
 
-    await ensureCommunityExists(options);
-    await deployComponents(options);
-    await deployCommunityMetadata(options);
-    const communityUrl = await publishCommunity(options);
-    await updateCommunityConfigFile(options, communityUrl);
+    if (options.deleteOldOrgs) {
+      runner.add(async (log) => {
+        await deleteOldOrgs(log, options);
+      });
+    }
+
+    await runner
+      .add(async (log) => {
+        await ensureScratchOrgExists(log, options);
+        scratchOrgCreated = true;
+      })
+      .add(async (log) => await ensureCommunityExists(log, options))
+      .add(async (log) => await deployComponents(log, options))
+      .add(async (log) => await deployCommunityMetadata(log, options))
+      .add(async (log) => {
+        communityUrl = await publishCommunity(log, options);
+      })
+      .add(
+        async (log) =>
+          await updateCommunityConfigFile(log, options, communityUrl)
+      )
+      .run();
 
     console.log(
       `\nThe '${options.community.name}' community is ready, you can access it at the following URL:`
@@ -179,7 +231,7 @@ const deleteScratchOrg = async (options: Options): Promise<void> => {
     console.error(error);
 
     if (options.deleteOrgOnError && scratchOrgCreated) {
-      await deleteScratchOrg(options);
+      await deleteScratchOrg(runner.getLogger(), options);
     }
 
     throw error;

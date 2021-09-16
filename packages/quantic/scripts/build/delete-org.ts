@@ -1,16 +1,11 @@
 import {deleteOrg, orgExists, sfdx} from './util/sfdx';
-import {buildLogger} from './util/log';
+import {StepLogger, StepsRunner} from './util/log';
 
 interface Options {
   alias: string;
 }
 
-let step = 0;
-const totalSteps = 2;
-const log = buildLogger(totalSteps, () => step);
-
-const deleteScratchOrg = async (options: Options) => {
-  ++step;
+const deleteScratchOrg = async (log: StepLogger, options: Options) => {
   log(`Deleting ${options.alias} organization...`);
 
   if (await orgExists(options.alias)) {
@@ -20,8 +15,7 @@ const deleteScratchOrg = async (options: Options) => {
   log('Organization deleted successfully');
 };
 
-const resetOrgAlias = async (options: Options) => {
-  ++step;
+const resetOrgAlias = async (log: StepLogger, options: Options) => {
   log(`Resetting ${options.alias} alias...`);
   await sfdx(`alias:set ${options.alias}=""`);
   log('Alias reset successfully');
@@ -33,8 +27,10 @@ const resetOrgAlias = async (options: Options) => {
   };
 
   try {
-    await deleteScratchOrg(options);
-    await resetOrgAlias(options);
+    await new StepsRunner()
+      .add(async (log) => await deleteScratchOrg(log, options))
+      .add(async (log) => await resetOrgAlias(log, options))
+      .run();
   } catch (error) {
     console.error('Failed to complete');
     console.error(error);
