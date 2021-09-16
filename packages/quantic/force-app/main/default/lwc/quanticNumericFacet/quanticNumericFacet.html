@@ -3,7 +3,7 @@
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="slds-p-bottom_small facet__collapse"
+          class="facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -13,16 +13,15 @@
         >
         </lightning-button-icon>
         <template if:true={isExpanded}>
-          <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
+          <ul class="slds-has-dividers_around-space">
             <template if:true={hasActiveValues}>
               <lightning-button 
-                class="slds-p-horizontal_small facet__collapse"
                 icon-name="utility:close" 
                 variant="base" 
                 value={labels.clear} 
                 onclick={clearSelections}
                 label={labels.clear}
-                icon-position="right"
+                icon-position="left"
                 >
               </lightning-button>  
             </template>
