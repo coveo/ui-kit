@@ -25,7 +25,7 @@ describe('example-search', () => {
   });
 
   beforeEach(() => {
-    cy.visit(pageUrl).then(setupAliases).wait('@search');
+    cy.visit(pageUrl).then(setupAliases).wait('@search', {timeout: 30000});
   });
 
   it('should load results automatically', () => {

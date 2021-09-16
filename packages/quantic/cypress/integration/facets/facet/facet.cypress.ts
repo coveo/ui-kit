@@ -14,11 +14,18 @@ interface FacetOptions {
 }
 
 describe('Facet Test Suite', () => {
-  function visitFacetPage(options: Partial<FacetOptions> = {}) {
+  function visitFacetPage(
+    options: Partial<FacetOptions> = {},
+    waitForInitialSearch = true
+  ) {
     interceptSearch();
 
     cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-facet`);
     configure(options);
+
+    if (waitForInitialSearch) {
+      cy.wait(InterceptAliases.Search);
+    }
   }
 
   describe('with values', () => {
@@ -295,9 +302,12 @@ describe('Facet Test Suite', () => {
   describe('with custom sorting', () => {
     ['automatic', 'score', 'alphanumeric', 'occurrences'].forEach((sorting) => {
       it(`should use "${sorting}" sorting in the facet request`, () => {
-        visitFacetPage({
-          sortCriteria: sorting,
-        });
+        visitFacetPage(
+          {
+            sortCriteria: sorting,
+          },
+          false
+        );
         cy.wait(InterceptAliases.Search).then((interception) => {
           const facetRequest = interception.request.body.facets[0];
           expect(facetRequest.sortCriteria).to.eq(sorting);
