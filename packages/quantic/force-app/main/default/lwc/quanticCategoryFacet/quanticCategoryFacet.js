@@ -50,9 +50,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.unsubscribe?.();
   }
 
-  /**
-   * @param {import("coveo").SearchEngine} engine
-   */
+  /** @param {import("coveo").SearchEngine} engine */
   initialize = (engine) => {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
@@ -110,9 +108,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     return I18nUtils.format(this.labels.showLessFacetValues, this.label)
   }
 
-  /**
-   * @param {CustomEvent<import("coveo").CategoryFacetValue>} evt
-   */
+  /** @param {CustomEvent<import("coveo").CategoryFacetValue>} evt */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
   }

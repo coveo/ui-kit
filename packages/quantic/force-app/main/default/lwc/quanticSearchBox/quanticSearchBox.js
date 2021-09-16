@@ -13,6 +13,7 @@ import clear from '@salesforce/label/c.quantic_Clear';
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
 /** @typedef {import("coveo").SearchBox} SearchBox */
 /** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
+/** @typedef {KeyboardEvent | {target: {value : string}}} KeyboardEventWithTarget */
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -26,7 +27,7 @@ const CLASS_WITHOUT_SUBMIT =
  * <c-quantic-search-box engine-id={engineId}></c-quantic-search-box>
  */
 export default class QuanticSearchBox extends LightningElement {
-  
+
   labels = {
     search,
     clear,
@@ -197,7 +198,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   /**
-   * @param {KeyboardEvent & {target: {value : string}}} event
+   * @param {KeyboardEventWithTarget} event
    */
   onKeyup(event) {
     switch (event.key) {

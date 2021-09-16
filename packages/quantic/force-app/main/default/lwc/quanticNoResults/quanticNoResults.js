@@ -9,6 +9,10 @@ import noResultsWithoutFilters from '@salesforce/label/c.quantic_NoResultsWithou
 import undoLastAction from '@salesforce/label/c.quantic_UndoLastAction';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").HistoryManager} HistoryManager */
+/** @typedef {import("coveo").QuerySummary} QuerySummary*/
+/** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
 
 /**
  * The `QuanticNoResults` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -40,13 +44,13 @@ export default class QuanticNoResults extends LightningElement {
   /** @type {boolean} */
   @track hasBreadcrumbs;
 
-  /** @type {import("coveo").SearchStatus} */
+  /** @type {SearchStatus} */
   searchStatus;
-  /** @type {import("coveo").HistoryManager} */
+  /** @type {HistoryManager} */
   historyManager;
-  /** @type {import("coveo").QuerySummary} */
+  /** @type {QuerySummary} */
   querySummary;
-  /** @type {import("coveo").BreadcrumbManager} */
+  /** @type {BreadcrumbManager} */
   breadcrumbManager;
   /** @type {Function} */
   unsubscribeSearchStatus;
@@ -73,9 +77,7 @@ export default class QuanticNoResults extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
-  /**
-   * @param {import("coveo").SearchEngine} engine
-   */
+  /** @param {SearchEngine} engine */
   initialize = (engine) => {
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.historyManager = CoveoHeadless.buildHistoryManager(engine);

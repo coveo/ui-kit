@@ -30,7 +30,7 @@ export default class QuanticResultsPerPage extends LightningElement {
   currentResultsPerPageValue;
   /** @type {Function} */
   unsubscribe;
-  /** @type {Function}} */
+  /** @type {Function} */
   unsubscribeSearchStatus;
   
   connectedCallback() {

@@ -1,12 +1,281 @@
 {
     "classes": [
         {
+            "name": "QuanticBreadcrumbManager",
+            "description": "<p>The `QuanticBreadcrumbManager component creates breadcrumbs that display a summary of the currently active facet values.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "categoryDivider",
+                    "access": "@api",
+                    "description": "<p>A character that divides each path segment in a category facet breadcrumb.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "collapseThreshold",
+                    "access": "@api",
+                    "description": "<p>Number of breadcrumbs to display when collapsed.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Number",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
             "name": "QuanticDateFacet",
-            "description": "<p>The <code>QuanticDateFacet</code> component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.</p>",
+            "description": "<p>The <code>QuanticDateFacet</code> component displays facet values as date ranges.</p>",
             "access": "",
             "fires": "",
             "examples": [
                 "<c-quantic-date-facet field=\"date\" label=\"Date\" engine-id={engineId}></c-quantic-date-facet>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "facetId",
+                    "access": "@api",
+                    "description": "<p>Specifies a unique identifier for the facet.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "[field]"
+                    }
+                },
+                {
+                    "name": "field",
+                    "access": "@api",
+                    "description": "<p>Specifies the index field whose values the facet should use.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the facet.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "numberOfValues",
+                    "access": "@api",
+                    "description": "<p>The number of values to request for this facet, when there are no manual ranges.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": "8"
+                    }
+                },
+                {
+                    "name": "formattingFunction",
+                    "access": "@api",
+                    "description": "<p>The function used to format the date facet value label.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "function",
+                        "defaultValue": "Formatted result: [start] - [end]",
+                        "params": [
+                            {
+                                "type": {
+                                    "names": [
+                                        "DateFacetValue"
+                                    ]
+                                },
+                                "name": "item"
+                            }
+                        ],
+                        "returns": [
+                            {
+                                "type": {
+                                    "names": [
+                                        "string"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticDidYouMean",
+            "description": "<p>The <code>QuanticDidYouMean</code> component is responsible for handling query corrections.\nWhen a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticFacet",
+            "description": "<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).<br>\nA <code>QuanticFacet</code> displays a facet of the results for the current query.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-facet field=\"filetype\" label=\"File Type\" engine-id={engineId}></c-quantic-facet>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "facetId",
+                    "access": "@api",
+                    "description": "<p>An unique ID used to identify the facet instance.\nDefaults to given facet label.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "(label)"
+                    }
+                },
+                {
+                    "name": "field",
+                    "access": "@api",
+                    "description": "<p>The field whose values you want to display in the facet.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the facet.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "numberOfValues",
+                    "access": "@api",
+                    "description": "<p>The number of values to request for this facet.\nAlso determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": "8"
+                    }
+                },
+                {
+                    "name": "sortCriteria",
+                    "access": "@api",
+                    "description": "<p>The sort criterion to apply to the returned facet values\nPossible values are:</p>\n<ul>\n<li>score</li>\n<li>numeric</li>\n<li>occurences</li>\n<li>automatic</li>\n</ul>",
+                    "required": false,
+                    "type": {
+                        "name": "FacetSortCriterion",
+                        "defaultValue": "automatic"
+                    }
+                },
+                {
+                    "name": "noSearch",
+                    "access": "@api",
+                    "description": "<p>Whether this facet should not contain a search box.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "boolean",
+                        "defaultValue": "false"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticNoResults",
+            "description": "<p>The <code>QuanticNoResults</code> component displays search tips and a &quot;Cancel last action&quot; button when there are no results. Any additional content slotted inside of its element will be displayed as well.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  "
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "disableCancelLastAction",
+                    "access": "@api",
+                    "description": "<p>Whether to display a button which cancels the last available action.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "boolean",
+                        "defaultValue": "false"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticNumericFacet",
+            "description": "<p>The <code>QuanticNumericFacet</code> component displays facet values as numeric ranges.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-numeric-facet field=\"ytlikecount\" label=\"Youtube Likes\" engine-id={engineId}></c-quantic-numeric-facet>"
             ],
             "category": "LWC",
             "properties": [
@@ -61,6 +330,26 @@
                     }
                 },
                 {
+                    "name": "sortCriteria",
+                    "access": "@api",
+                    "description": "<p>The number of values to request for this facet, when there are no manual ranges.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "RangeFacetSortCriterion",
+                        "defaultValue": "'ascending'"
+                    }
+                },
+                {
+                    "name": "rangeAlgorithm",
+                    "access": "@api",
+                    "description": "<p>The algorithm that’s used for generating the ranges of this facet when they aren’t manually defined.\nThe default value of &quot;even&quot; generates equally sized facet ranges across all of the results.\nThe value &quot;equiprobable&quot; generates facet ranges which vary in size but have a more balanced number of results within each range.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "RangeFacetRangeAlgorithm",
+                        "defaultValue": "'equiprobable'"
+                    }
+                },
+                {
                     "name": "formattingFunction",
                     "access": "@api",
                     "description": "<p>The function used to format the date facet value label.</p>",
@@ -72,9 +361,10 @@
                             {
                                 "type": {
                                     "names": [
-                                        "DateFacetValue"
+                                        "NumericFacetValue"
                                     ]
-                                }
+                                },
+                                "name": "item"
                             }
                         ],
                         "returns": [
@@ -86,6 +376,622 @@
                                 }
                             }
                         ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticPager",
+            "description": "<p>The <code>QuanticPager</code> provides buttons that allow the end user to navigate through the different result pages.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-pager engine-id={engineId}></c-quantic-pager>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticQueryError",
+            "description": "<p>The <code>QuanticQueryError</code> component handles fatal errors when performing a query on the index or Search API.\nWhen the error is known, it displays a link to relevant documentation link for debugging purposes.\nWhen the error is unknown, it displays a small text area with the JSON content of the error.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-query-error engine-id={engineId}></c-quantic-query-error>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticRecentQueriesList",
+            "description": "<p>The <code>QuanticRecentQueriesList</code> component displays the current user's recent queries.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-recent-queries-list engine-id={engineId}></c-quantic-recent-queries-list>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the component.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "maxLength",
+                    "access": "@api",
+                    "description": "<p>The maximum number of queries to keep in the list.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticResultLink",
+            "description": "<p>The <code>QuanticResultLink</code> component is used internally by the <code>QuanticRecentResultsList</code> component.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "result",
+                    "access": "@api",
+                    "description": "<p>The result item.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Result",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "result",
+                    "access": "@api",
+                    "description": "<p>The result item.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Result",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "target",
+                    "access": "@api",
+                    "description": "<p>Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).\nThe following keywords have special meanings for where to load the URL:</p>\n<ul>\n<li>_self: the current browsing context. (Default)</li>\n<li>_blank: usually a new tab, but users can configure their browsers to open a new window instead.</li>\n<li>_parent: the parent of the current browsing context. If there’s no parent, this behaves as _self.</li>\n<li>_top: the topmost browsing context (the &quot;highest&quot; context that’s an ancestor of the current one). If there are no ancestors, this behaves as _self.</li>\n</ul>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'_self'"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticRecentResultsList",
+            "description": "<p>The <code>QuanticRecentResultsList</code> component displays the current user's recently clicked results.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-recent-results-list engine-id={engineId}></c-quantic-recent-results-list>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "maxLength",
+                    "access": "@api",
+                    "description": "<p>The maximum number of queries to keep in the list.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the component.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticResult",
+            "description": "<p>The <code>QuanticResult</code> component is used internally by the <code>QuanticResultList</code> component.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "result",
+                    "access": "@api",
+                    "description": "<p>The result item.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Result",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "resultTemplatesManager",
+                    "access": "@api",
+                    "description": "<p>The template manager from which to get registered custom templates.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "ResultTemplatesManager",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticResultLink",
+            "description": "<p>The `QuanticResultLink component creates a clickable link from a result that points to the original item.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "result",
+                    "access": "@api",
+                    "description": "<p>The result item.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Result",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "result",
+                    "access": "@api",
+                    "description": "<p>The result item.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Result",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "target",
+                    "access": "@api",
+                    "description": "<p>Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).\nThe following keywords have special meanings for where to load the URL:</p>\n<ul>\n<li>_self: the current browsing context. (Default)</li>\n<li>_blank: usually a new tab, but users can configure their browsers to open a new window instead.</li>\n<li>_parent: the parent of the current browsing context. If there’s no parent, this behaves as _self.</li>\n<li>_top: the topmost browsing context (the &quot;highest&quot; context that’s an ancestor of the current one). If there are no ancestors, this behaves as _self.</li>\n</ul>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'_self'"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticResultList",
+            "description": "<p>The <code>QuanticResultList</code> component is responsible for displaying query results by applying one or more result templates.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-result-list engine-id={engineId}></c-quantic-result-list>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticResultsPerPage",
+            "description": "<p>The <code>QuanticResultsPerPage</code> component determines how many results to display per page.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticSearchBox",
+            "description": "<p>The <code>QuanticSearchBox</code> component creates a search box with built-in support for query suggestions.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-search-box engine-id={engineId}></c-quantic-search-box>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "placeholder",
+                    "access": "@api",
+                    "description": "<p>The placeholder text to display in the search box input area.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'Search...'"
+                    }
+                },
+                {
+                    "name": "withoutSubmitButton",
+                    "access": "@api",
+                    "description": "<p>Whether not to render a submit button.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "boolean",
+                        "defaultValue": "'false'"
+                    }
+                },
+                {
+                    "name": "numberOfSuggestions",
+                    "access": "@api",
+                    "description": "<p>The maximum number of suggestions to display.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": "5"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticSearchBoxSuggestionsList",
+            "description": "<p>The <code>QuanticSearchBoxSuggestionsList</code> is used internally by SearchBox components to display the query suggestions in an omnibox.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "suggestions",
+                    "access": "@api",
+                    "description": "<p>The query suggestions to display.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "Array.<Suggestion>",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticSearchInterface",
+            "description": "<p>The <code>QuanticSearchInterface</code> component handles the headless search engine and localization configurations.\nA single instance should be used for each instance of the Coveo Headless search engine.</p>\n<p>The <code>timezone</code> used in the search engine options is taken from the <a href=\"https://help.salesforce.com/s/articleView?id=admin_supported_timezone.htm&amp;type=5&amp;language=en_US\">Time Zone settings</a> of the Salesforce org.</p>\n<blockquote>\n<p>The timezone is used to correctly interpret dates in the query expression, facets, and result items.</p>\n</blockquote>\n<p>The <code>locale</code> used in the search engine options is taken from the <a href=\"https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&amp;type=5\">Language Settings</a></p>\n<blockquote>\n<p>Coveo Machine Learning models use this information to provide contextually relevant output.\nMoreover, this information can be referred to in query expressions and QPL statements by using the $locale object.</p>\n</blockquote>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-search-interface engine-id={engineId}></c-quantic-search-interface>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "searchHub",
+                    "access": "@api",
+                    "description": "<p>The search interface <a href=\"https://docs.coveo.com/en/1342/\">search hub</a>.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'default'"
+                    }
+                },
+                {
+                    "name": "pipeline",
+                    "access": "@api",
+                    "description": "<p>The search interface <a href=\"https://docs.coveo.com/en/180/\">query pipeline</a></p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'default'"
+                    }
+                },
+                {
+                    "name": "disableStateInUrl",
+                    "access": "@api",
+                    "description": "<p>Whether the state should not be reflected in the URL parameters.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "boolean",
+                        "defaultValue": "false"
+                    }
+                },
+                {
+                    "name": "skipFirstSearch",
+                    "access": "@api",
+                    "description": "<p>Whether not to perform a search once the interface and it's components are initialized.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "Boolean",
+                        "defaultValue": "false"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticSort",
+            "description": "<p>The <code>QuanticSort</code> component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-sort engine-id={engineId}></c-quantic-sort>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticStandaloneSearchBox",
+            "description": "<p>The <code>QuanticStandaloneSearchBox</code> component creates a search box with built-in support for query suggestions.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-standalone-search-box engine-id={engineId}></c-quantic-standalone-search-box>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "placeholder",
+                    "access": "@api",
+                    "description": "<p>The placeholder text to display in the search box input area.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'Search...'"
+                    }
+                },
+                {
+                    "name": "withoutSubmitButton",
+                    "access": "@api",
+                    "description": "<p>Whether not to render a submit button.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "boolean",
+                        "defaultValue": "'false'"
+                    }
+                },
+                {
+                    "name": "numberOfSuggestions",
+                    "access": "@api",
+                    "description": "<p>The maximum number of suggestions to display.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "number",
+                        "defaultValue": "5"
+                    }
+                },
+                {
+                    "name": "redirectUrl",
+                    "access": "@api",
+                    "description": "<p>The url of the search page to redirect to when a query is made.\nThe target search page should contain a <code>QuanticSearchInterface</code> with the same engine ID specified for this component.</p>",
+                    "required": false,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": "'/global-search/%40uri'"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticSummary",
+            "description": "<p>The <code>QuanticSummary</code> component displays information about the current range of results and the request duration (e.g., &quot;Results 1-10 of 123 in 0.47 seconds&quot;).</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-summary engine-id={engineId}></c-quantic-summary>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                }
+            ]
+        },
+        {
+            "name": "QuanticTab",
+            "description": "<p>The <code>QuanticSearchBox</code> component creates a search box with built-in support for query suggestions.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-tab label=\"Community\" expression=\"@objecttype==&quot;Message&quot;\" engine-id={engineId}></c-quantic-tab>"
+            ],
+            "category": "LWC",
+            "properties": [
+                {
+                    "name": "engineId",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the tab.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
+                    }
+                },
+                {
+                    "name": "expression",
+                    "access": "@api",
+                    "description": "<p>The constant query expression or filter that the Tab should add to any outgoing query.</p>",
+                    "required": true,
+                    "type": {
+                        "name": "string",
+                        "defaultValue": ""
                     }
                 }
             ]

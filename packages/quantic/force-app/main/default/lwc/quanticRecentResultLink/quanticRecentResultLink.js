@@ -2,6 +2,9 @@ import {LightningElement, api} from 'lwc';
 import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
 import {ResultUtils} from 'c/quanticUtils';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").Result} Result*/
+
 /**
  * The `QuanticResultLink` component is used internally by the `QuanticRecentResultsList` component.
  * @category LWC
@@ -16,11 +19,11 @@ export default class QuanticResultLink extends LightningElement {
   /**
    * The result item.
    * @api
-   * @type {import("coveo").Result}
+   * @type {Result}
    */
   @api result;
 
-  /** @type {import("coveo").SearchEngine} */
+  /** @type {SearchEngine} */
   engine;
 
   connectedCallback() {
@@ -32,7 +35,7 @@ export default class QuanticResultLink extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.engine = engine;

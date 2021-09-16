@@ -31,7 +31,7 @@ export default class QuanticSummary extends LightningElement {
   @api engineId;
 
   /** @type {QuerySummaryState} */
-  @track state = {};
+  @track state;
 
   /** @type {QuerySummary} */
   querySummary;
@@ -74,23 +74,23 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get hasResults() {
-    return this.state.hasResults;
+    return this.state?.hasResults;
   }
 
   get hasQuery() {
-    return this.state.hasQuery;
+    return this.state?.hasQuery;
   }
 
   get query() {
-    return this.state.hasQuery ? `${this.state.query}` : '';
+    return this.state?.hasQuery ? `${this.state.query}` : '';
   }
 
   get range() {
-    return `${this.state.firstResult}-${this.state.lastResult}`;
+    return `${this.state?.firstResult}-${this.state?.lastResult}`;
   }
 
   get total() {
-    return this.state.total.toString();
+    return this.state?.total.toString();
   }
 
   get noResultsLabel() {
@@ -100,7 +100,7 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get duration() {
-    if (this.state.hasDuration) {
+    if (this.state?.hasDuration) {
       const duration = this.state.durationInSeconds;
       const labelName = I18nUtils.getLabelNameWithCount('inSeconds', duration);
       return ` ${I18nUtils.format(this.labels[labelName], duration)}`;
@@ -110,8 +110,8 @@ export default class QuanticSummary extends LightningElement {
 
   get summaryLabel() {
     const labelName = this.hasQuery
-      ? I18nUtils.getLabelNameWithCount('showingResultsOfWithQuery', this.state.lastResult)
-      : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state.lastResult);
+      ? I18nUtils.getLabelNameWithCount('showingResultsOfWithQuery', this.state?.lastResult)
+      : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state?.lastResult);
     return `${I18nUtils.format(
       this.labels[labelName],
       I18nUtils.getTextBold(this.range),

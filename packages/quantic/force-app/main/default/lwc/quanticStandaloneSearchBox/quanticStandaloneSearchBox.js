@@ -22,7 +22,9 @@ const CLASS_WITHOUT_SUBMIT =
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").StandaloneSearchBoxState} StandaloneSearchBoxState */
 /** @typedef {import("coveo").StandaloneSearchBox} StandaloneSearchBox */
-/** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
+/** @typedef {import("c/quanticSearchBoxSuggestionsList").default} quanticSearchBoxSuggestionsList */
+/** @typedef {KeyboardEvent | {target: {value : string}}} KeyboardEventWithTarget */
+/** @typedef {{key: number, value: string}} Suggestion */
 
 /**
  * The `QuanticStandaloneSearchBox` component creates a search box with built-in support for query suggestions.
@@ -95,7 +97,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   /** @type {Function} */
   unsubscribe;
 
-  /** @type {{key: number, value: string}[]} */
+  /** @type {Suggestion[]} */
   get suggestions() {
     return this.state.suggestions.map((s, index) => ({
       key: index,
@@ -224,7 +226,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @param {KeyboardEvent & {target: {value : string}}} event
+   * @param {KeyboardEventWithTarget} event
    */
   onKeyup(event) {
     switch (event.key) {
@@ -302,7 +304,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @returns {import('c/quanticSearchBoxSuggestionsList').default}
+   * @returns {quanticSearchBoxSuggestionsList}
    */
   get suggestionList() {
     // @ts-ignore
@@ -310,14 +312,14 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   get isQueryEmpty() {
     return !this.input?.value?.length;
   }
 
   /**
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   get suggestionsOpen() {
     return this.combobox?.classList.contains('slds-is-open');

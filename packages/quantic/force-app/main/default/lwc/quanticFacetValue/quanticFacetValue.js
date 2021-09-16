@@ -6,7 +6,7 @@ export default class QuanticFacetValue extends LightningElement {
   @api isChecked;
   /** @type {string} */
   @api variant = 'standard';
-  /** @type {(any) => string} */
+  /** @type {Function} */
   @api formattingFunction;
 
   get isStandardFacet() {
