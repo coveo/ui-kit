@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.4...@coveo/atomic@1.0.5) (2021-09-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.0.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.3...@coveo/atomic@1.0.4) (2021-09-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.0.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.2...@coveo/atomic@1.0.3) (2021-09-15)
+
+
+### Bug Fixes
+
+* **headless:** fix no results back analytics event ([#1202](https://github.com/coveo/ui-kit/issues/1202)) ([635c40a](https://github.com/coveo/ui-kit/commit/635c40ad3cc0af69506c0eaa646c1f7a4768c361))
+
+
+
+
+
 ## [1.0.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.1...@coveo/atomic@1.0.2) (2021-09-14)
 
 **Note:** Version bump only for package @coveo/atomic
