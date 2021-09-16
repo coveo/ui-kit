@@ -20,13 +20,13 @@
                  <template if:true={withsearch}>
                      <button class="slds-button slds-text-color_default">
                         <div class="slds-grid slds-grid_vertical">
-                            <div class="slds-col facet__search-results">
+                            <div class="slds-col slds-p-left_none facet__search-results">
                                 <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
                                 <span class="facet__number-of-results">
                                     ({item.numberOfResults})
                                 </span>
                             </div>
-                            <div class="slds-col">
+                            <div class="slds-col slds-p-left_none">
                                 <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
                             </div>
                         </div>

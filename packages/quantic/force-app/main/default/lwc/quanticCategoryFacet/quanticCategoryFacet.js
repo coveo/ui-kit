@@ -127,8 +127,9 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get facetSearchResults() {
     const results = this.facet.state.facetSearch.values;
-    return results.map((result) => ({
+    return results.map((result, index) => ({
       value: result.rawValue,
+      index: index,
       numberOfResults: result.count,
       path: result.path,
       localizedPath: this.buildPath(result.path) ,

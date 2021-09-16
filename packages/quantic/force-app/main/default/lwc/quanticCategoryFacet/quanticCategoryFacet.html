@@ -52,20 +52,20 @@
                             <template for:each={facetSearchResults} for:item="result">
                                 <c-quantic-category-facet-value 
                                     onselectvalue={onSelect} 
-                                    key={result.value}  
+                                    key={result.index}  
                                     item={result} 
                                     withsearch="true">
                                 </c-quantic-category-facet-value>
                             </template>
                         </template>
                         <template if:false={hasSearchResults}>
-                            <li class="slds-var-m-around_small slds-grid">
-                                <span class="slds-align_absolute-center slds-var-p-vertical_small slds-var-m-bottom_medium slds-var-p-horizontal_xx-large facet__search-results_no-match">{noMatchesForLabel}</span>
+                            <li class="slds-grid slds-var-m-top_x-small">
+                                <span class="slds-truncate slds-var-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span> 
                             </li>
                         </template>
                         <template if:true={canShowMoreSearchResults}>
-                            <li class="slds-var-p-left_small slds-var-p-bottom_medium slds-var-m-top_small">
-                                <span class="facet__search-results_more-matches">{moreMatchesForLabel}</span> 
+                            <li>
+                                <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span> 
                             </li>
                         </template>
                     </template>
