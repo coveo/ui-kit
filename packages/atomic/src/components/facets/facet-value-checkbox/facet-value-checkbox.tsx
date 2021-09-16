@@ -34,7 +34,10 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
         }`}
         aria-label={ariaLabel}
       >
-        <atomic-icon class="w-3/5 svg-checkbox" icon={Checkbox}></atomic-icon>
+        <atomic-icon
+          class={`w-3/5 svg-checkbox ${props.isSelected ? 'block' : 'hidden'}`}
+          icon={Checkbox}
+        ></atomic-icon>
       </button>
       <label
         ref={(ref) => (labelRef = ref!)}
