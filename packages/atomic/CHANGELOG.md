@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.5...@coveo/atomic@1.0.6) (2021-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** change selected facet box from border to box-shadow ([#1208](https://github.com/coveo/ui-kit/issues/1208)) ([cb32eaa](https://github.com/coveo/ui-kit/commit/cb32eaa208f96db6f131a87ca55109a55167492b))
+
+
+
+
+
 ## [1.0.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.4...@coveo/atomic@1.0.5) (2021-09-16)
 
 **Note:** Version bump only for package @coveo/atomic
