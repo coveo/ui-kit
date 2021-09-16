@@ -82,10 +82,6 @@ export function buildFacet(
       dispatch(fetchProductListing());
     },
 
-    isSortedBy(criterion: FacetSortCriterion) {
-      return this.state.sortCriterion === criterion;
-    },
-
     showMoreValues() {
       controller.showMoreValues();
       dispatch(fetchProductListing());

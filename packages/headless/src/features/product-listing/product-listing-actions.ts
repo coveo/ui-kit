@@ -108,7 +108,7 @@ export const buildProductListingRequest = (
         }
       : {}),
     ...(state.productListing.advancedParameters &&
-    hasOneAdvancedParameterActive(state.productListing.advancedParameters)
+    isDebugActive(state.productListing.advancedParameters)
       ? {
           advancedParameters: state.productListing.advancedParameters || {},
         }
@@ -135,7 +135,7 @@ export const buildProductListingRequest = (
   };
 };
 
-function hasOneAdvancedParameterActive(
+function isDebugActive(
   advanced: ProductListingState['advancedParameters']
 ): boolean {
   return advanced.debug;
