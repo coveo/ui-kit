@@ -1,5 +1,6 @@
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 import {addSearchBox} from '../fixtures/test-fixture-search-box';
+import {getAnalyticsAt} from '../utils/network';
 import {generateAliasForSearchBox} from './search-box-selectors';
 
 describe('No Results Test Suites', () => {
@@ -57,5 +58,14 @@ describe('No Results Test Suites', () => {
     cy.get(tag).shadow().find('button').click();
     cy.wait(wait);
     cy.get(tag).should('not.be.visible');
+  });
+
+  it('clicking on cancel should log proper analytics', async () => {
+    env.init();
+    submitNoResultsSearch();
+    cy.get(tag).shadow().find('button').click();
+    const analyticsBody = (await getAnalyticsAt('@coveoAnalytics', 1)).request
+      .body;
+    expect(analyticsBody).to.have.property('actionCause', 'noResultsBack');
   });
 });

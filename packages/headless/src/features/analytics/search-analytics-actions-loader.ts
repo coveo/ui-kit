@@ -37,6 +37,7 @@ import {
 import {
   logNavigateBackward,
   logNavigateForward,
+  logNoResultsBack,
 } from '../history/history-analytics-actions';
 import {
   logPageNext,
@@ -510,6 +511,20 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when no results is shown and the end users cancel last action.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logNoResultsBack(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -555,5 +570,6 @@ export function loadSearchAnalyticsActions(
     logCollapseSmartSnippet,
     logExpandSmartSnippetSuggestion,
     logCollapseSmartSnippetSuggestion,
+    logNoResultsBack,
   };
 }

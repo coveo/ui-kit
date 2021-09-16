@@ -393,8 +393,8 @@ export class AtomicNumericFacet
       <FacetContainer>
         {this.renderHeader()}
         {!this.isCollapsed && [
-          this.shouldRenderInput && this.renderNumberInput(),
           this.shouldRenderValues && this.renderValues(),
+          this.shouldRenderInput && this.renderNumberInput(),
         ]}
       </FacetContainer>
     );

@@ -1,5 +1,13 @@
 # Coveo UI Kit
 
+## Projects
+
+- [Headless](packages/headless): Stateful middle-layer between UI elements and the Coveo Platform.
+- [Atomic](packages/atomic): Coveo's web-component library for building modern search experiences.
+- [Quantic](packages/quantic): Coveo's LWC library for building Salesforce search experiences.
+- [Bueno](packages/bueno): A simple schema validator.
+- [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
+
 ## Installation
 
 To install all dependencies and link local packages, run:
@@ -14,20 +22,16 @@ To build all projects for production, run:
 npm run build
 ```
 
-To start all projects in development, run:
+To start all projects in development (you should run `npm run build` at least once first), run:
 
 ```sh
 npm start
 ```
 
-**Note:** You should build all separate projects at least once before running the `npm start` command the first time.
-
-To run all FTs for Atomic using Cypress, run: (need to start all projects in development before
-
-**Note:** You should build all separate projects at least once before running tests.
+To start Atomic & Headless simultaneously in development, run:
 
 ```sh
-npm run cypresstest
+npm run dev
 ```
 
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
