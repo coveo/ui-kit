@@ -13,12 +13,12 @@
                 <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
                     <template if:false={noSearch}>
                         <div onchange={handleKeyUp} class="slds-size_1-of-1">
-                            <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
+                            <lightning-input class="facet__searchbox-input slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
                         </div>
                     </template>
                     <template if:false={isFacetSearchActive}>
                         <template if:true={hasParents}>
-                            <li class="slds-var-m-vertical_small slds-var-m-horizontal_small slds-grid">
+                            <li class="slds-var-m-vertical_small slds-grid">
                                 <div onclick={reset}>
                                     <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
                                     <span class="nowrap">{labels.allCategories}</span>
@@ -29,7 +29,7 @@
                             <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} nonactiveparent="true"></c-quantic-category-facet-value>
                          </template>
                          <template if:true={activeParent}>
-                             <li class="slds-grid slds-var-m-horizontal_small slds-var-m-vertical_xx-small">
+                             <li class="slds-grid slds-var-m-vertical_xx-small">
                                  <span class="nowrap parent-text__bold">{activeParent.value}</span>
                                  <span class="facet__number-of-results parent-text__bold">({activeParent.numberOfResults})</span>
                              </li>  
@@ -64,7 +64,7 @@
                             </li>
                         </template>
                         <template if:true={canShowMoreSearchResults}>
-                            <li class="slds-var-p-left_small slds-var-p-bottom_medium">
+                            <li class="slds-var-p-left_small slds-var-p-bottom_medium slds-var-m-top_small">
                                 <span class="facet__search-results_more-matches">{moreMatchesForLabel}</span> 
                             </li>
                         </template>
@@ -72,13 +72,13 @@
                 </ul>
                 <template if:true={canShowLess}>
                     <button variant="base" label={labels.showLess}
-                      class="slds-var-m-left_x-small facet__show-less" onclick={showLess}>
+                      class="facet__show-less " onclick={showLess}>
                       <span class="facet__show-less-text">{labels.showLess}</span>
                     </button>
                 </template>
                 <template if:true={canShowMore}>
                     <button variant="base" label={labels.showMore}
-                      class="slds-var-m-left_x-small facet__show-more" onclick={showMore}>
+                      class="facet__show-more" onclick={showMore}>
                       <span class="facet__show-more-text">{labels.showMore}</span>
                     </button>
                 </template> 

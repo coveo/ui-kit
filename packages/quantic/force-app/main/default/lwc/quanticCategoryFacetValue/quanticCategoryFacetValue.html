@@ -10,7 +10,7 @@
             </template>
             <template if:false={nonactiveparent}>
                 <template if:false={withsearch}>
-                    <button class="slds-var-m-horizontal_medium nowrap slds-button slds-text-color_default facet__value">
+                    <button class="nowrap slds-button slds-text-color_default facet__value">
                         {item.value}
                         <span class="facet__number-of-results">
                             ({item.numberOfResults})
@@ -19,7 +19,7 @@
                 </template>
                  <template if:true={withsearch}>
                      <button class="slds-button slds-text-color_default">
-                        <div class="slds-grid slds-grid_vertical slds-m-horizontal_small">
+                        <div class="slds-grid slds-grid_vertical">
                             <div class="slds-col facet__search-results">
                                 <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
                                 <span class="facet__number-of-results">

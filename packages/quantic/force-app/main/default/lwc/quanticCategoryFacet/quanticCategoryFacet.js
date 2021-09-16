@@ -196,7 +196,6 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.toggleSelect(evt.detail);
     }
     this.clearInput();
-    this.isFacetSearchActive = false;
   }
 
   showMore() {
@@ -223,7 +222,6 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.facetSearch.updateText(this.input?.value);
       this.facet.facetSearch.search();
     }
-  
   }
 
   clearInput() {
