@@ -322,8 +322,8 @@ export class AtomicTimeframeFacet
       <FacetContainer>
         {this.renderHeader()}
         {!this.isCollapsed && [
-          this.shouldRenderInput && this.renderDateInput(),
           this.shouldRenderValues && this.renderValues(),
+          this.shouldRenderInput && this.renderDateInput(),
         ]}
       </FacetContainer>
     );
