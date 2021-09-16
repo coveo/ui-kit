@@ -1,8 +1,4 @@
-import {
-  api,
-  LightningElement,
-  track
-} from 'lwc';
+import {LightningElement, api,track} from 'lwc';
 
 /**
  * @typedef Suggestion
@@ -11,9 +7,18 @@ import {
  * @property {string} rawValue
  */
 
+/**
+ * The `QuanticSearchBoxSuggestionsList` is used internally by SearchBox components to display the query suggestions in an omnibox.
+ * @category LWC
+ */
 export default class QuanticSearchBoxSuggestionsList extends LightningElement {
-  /** @type {Suggestion[]} */
+  /**
+   * The query suggestions to display.
+   * @api
+   * @type {Suggestion[]}
+   */
   @api suggestions = [];
+  
   /** @type {number} */
   @track selectionIndex = -1;
 
@@ -26,7 +31,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Move highlighted selection up.
    */
-  @api 
+  @api
   selectionUp() {
     this.selectionIndex--;
     if(this.selectionIndex < 0) {

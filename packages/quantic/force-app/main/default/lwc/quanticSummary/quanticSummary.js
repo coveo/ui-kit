@@ -12,15 +12,30 @@ import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_Showin
 import inSeconds from '@salesforce/label/c.quantic_InSeconds';
 import inSeconds_plural from '@salesforce/label/c.quantic_InSeconds_plural';
 
-export default class QuanticSummary extends LightningElement {
-  @track state = {};
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").QuerySummary} QuerySummary */
+/** @typedef {import("coveo").QuerySummaryState} QuerySummaryState */
 
-  /** @type {string} */
+/**
+ * The `QuanticSummary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+ * @category LWC
+ * @example
+ * <c-quantic-summary engine-id={engineId}></c-quantic-summary>
+ */
+export default class QuanticSummary extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
 
-  /** @type {import("coveo").QuerySummary} */
+  /** @type {QuerySummaryState} */
+  @track state = {};
+
+  /** @type {QuerySummary} */
   querySummary;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
 
   labels = {
@@ -43,7 +58,7 @@ export default class QuanticSummary extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.querySummary = CoveoHeadless.buildQuerySummary(engine);

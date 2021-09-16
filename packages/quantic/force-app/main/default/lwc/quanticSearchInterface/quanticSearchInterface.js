@@ -7,35 +7,76 @@ import {
 } from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
-// @ts-ignore
+import LOCALE from '@salesforce/i18n/locale';
+import TIMEZONE from '@salesforce/i18n/timeZone';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SearchEngineOptions} SearchEngineOptions */
+/** @typedef {import("coveo").UrlManager} UrlManager */
+
+/**
+ * The `QuanticSearchInterface` component handles the headless search engine and localization configurations.
+ * A single instance should be used for each instance of the Coveo Headless search engine.
+ * 
+ * The `timezone` used in the search engine options is taken from the [Time Zone settings](https://help.salesforce.com/s/articleView?id=admin_supported_timezone.htm&type=5&language=en_US) of the Salesforce org.
+ * > The timezone is used to correctly interpret dates in the query expression, facets, and result items.
+ * 
+ * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5)
+ * > Coveo Machine Learning models use this information to provide contextually relevant output.
+ * > Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
+ * 
+ * @category LWC
+ * @example
+ * <c-quantic-search-interface engine-id={engineId}></c-quantic-search-interface>
+ */
 export default class QuanticSearchInterface extends LightningElement {
-  /** @type {any} */
-  @api flexipageRegionWidth;
-
-  /** @type {string} */
-  @api searchHub = 'default';
-
-  /** @type {string} */
-  @api pipeline = 'default';
-
-  /** @type {boolean} */
-  @api disableStateInUrl = false;
-
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
 
-  /** @type {Boolean} */
-  @api skipFirstSearch;
+  /**
+   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   * @api
+   * @type {string}
+   * @defaultValue 'default'
+   */
+  @api searchHub = 'default';
 
-  /** @type {import("coveo").SearchEngineOptions} */
+  /**
+   * The search interface [query pipeline](https://docs.coveo.com/en/180/)
+   * @api
+   * @type {string}
+   * @defaultValue 'default'
+   */
+  @api pipeline = 'default';
+
+  /**
+   * Whether the state should not be reflected in the URL parameters.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api disableStateInUrl = false;
+
+  /**
+   * Whether not to perform a search once the interface and it's components are initialized.
+   * @api
+   * @type {Boolean}
+   * @defaultValue false
+   */
+  @api skipFirstSearch = false;
+
+  /** @type {SearchEngineOptions} */
   engineOptions;
 
-  /** @type {import("coveo").UrlManager} */
+  /** @type {UrlManager} */
   urlManager;
 
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribeUrlManager;
 
   connectedCallback() {
@@ -49,6 +90,8 @@ export default class QuanticSearchInterface extends LightningElement {
                 search: {
                   searchHub: this.searchHub,
                   pipeline: this.pipeline,
+                  locale: LOCALE,
+                  timezone: TIMEZONE
                 },
               },
             };
@@ -73,7 +116,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     const {updateQuery} = CoveoHeadless.loadQueryActions(engine);

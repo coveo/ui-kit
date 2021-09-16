@@ -2,11 +2,23 @@ import {LightningElement, api} from 'lwc';
 import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
 import {ResultUtils} from 'c/quanticUtils';
 
+/**
+ * The `QuanticResultLink` component is used internally by the `QuanticRecentResultsList` component.
+ * @category LWC
+ */
 export default class QuanticResultLink extends LightningElement {
-  /** @type {import("coveo").Result} */
-  @api result;
-  /** @type {string} */
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
+  /**
+   * The result item.
+   * @api
+   * @type {import("coveo").Result}
+   */
+  @api result;
 
   /** @type {import("coveo").SearchEngine} */
   engine;

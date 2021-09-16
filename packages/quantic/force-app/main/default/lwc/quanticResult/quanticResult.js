@@ -15,7 +15,7 @@ export default class QuanticResult extends LightningElement {
    * @api
    * @type {string}
    */
-   @api engineId;
+  @api engineId;
   /**
    * The result item.
    * @api

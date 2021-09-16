@@ -1,5 +1,4 @@
 import {LightningElement, api, track} from 'lwc';
-// @ts-ignore
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -10,51 +9,67 @@ import { keys } from 'c/quanticUtils';
 import search from '@salesforce/label/c.quantic_Search';
 import clear from '@salesforce/label/c.quantic_Clear';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SearchBoxState} SearchBoxState */
+/** @typedef {import("coveo").SearchBox} SearchBox */
+/** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
 const CLASS_WITHOUT_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
 
+/**
+ * The `QuanticSearchBox` component creates a search box with built-in support for query suggestions.
+ * @category LWC
+ * @example
+ * <c-quantic-search-box engine-id={engineId}></c-quantic-search-box>
+ */
 export default class QuanticSearchBox extends LightningElement {
-  /** @type {import("coveo").SearchBoxState} */
-  @track state = {
-    // @ts-ignore
-    redirectTo: '',
-    suggestions: [],
-    value: '',
-  };
-
-  /** @type {any} */
-  get suggestions() {
-    return this.searchBox.state.suggestions.map((s, index) => ({
-      key: index,
-      rawValue: s.rawValue,
-      value: s.highlightedValue,
-    }));
-  }
-
+  
   labels = {
     search,
     clear,
   };
-
-  /** @type {string} */
+  
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {string} */
+  /**
+   * The placeholder text to display in the search box input area.
+   * @api
+   * @type {string}
+   * @defaultValue 'Search...'
+   */
   @api placeholder = `${this.labels.search}...`;
-  /** @type {boolean} */
+  /**
+   * Whether not to render a submit button.
+   * @api
+   * @type {boolean}
+   * @defaultValue 'false'
+   */
   @api withoutSubmitButton = false;
-  /** @type {number} */
+  /**
+   * The maximum number of suggestions to display.
+   * @api
+   * @type {number}
+   * @defaultValue 5
+   */
   @api numberOfSuggestions = 5;
 
-  /** @type {import("coveo").SearchBox} */
+  /** @type {SearchBoxState} */
+  @track state;
+
+  /** @type {SearchBox} */
   searchBox;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
@@ -84,14 +99,26 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   updateState() {
-    if (this.state.value !== this.searchBox.state.value) {
+    if (this.state?.value !== this.searchBox.state.value) {
       this.input.value = this.searchBox.state.value;
     }
     this.state = this.searchBox.state;
   }
 
+  get hasSuggestions() {
+    return this.state?.suggestions?.length;
+  }
+
+  get suggestions() {
+    return this.searchBox?.state.suggestions.map((s, index) => ({
+      key: index,
+      rawValue: s.rawValue,
+      value: s.highlightedValue,
+    })) ?? [];
+  }
+
   /**
-   * @returns {import('c/quanticSearchBoxSuggestionsList').default}
+   * @returns {quanticSearchBoxSuggestionsList}
    */
   get suggestionList() {
     // @ts-ignore
