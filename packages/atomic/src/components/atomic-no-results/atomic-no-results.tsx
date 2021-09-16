@@ -66,10 +66,10 @@ export class AtomicNoResults {
 
   private renderMagnifyingGlass() {
     return (
-      <div
-        innerHTML={MagnifyingGlass}
+      <atomic-icon
+        icon={MagnifyingGlass}
         class="my-6 flex flex-col items-center w-1/2"
-      ></div>
+      ></atomic-icon>
     );
   }
 
