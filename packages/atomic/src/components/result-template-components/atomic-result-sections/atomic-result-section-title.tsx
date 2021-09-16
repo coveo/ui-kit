@@ -2,14 +2,13 @@ import {Element, Component} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
 
 /**
- * The title section allows the information seeker to recognize the item by its
- * name. Most of the time this would be the page title and it is the go-to for
- * scanning the results.
+ * This section identifies the item by its name, and its main use is to make the result list scannable.
+ * This is usually the page title.
  *
- * Behaviour:
+ * Behavior:
  * * Has a fixed height of two lines on grid layouts.
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
- * * Has a text color.
+ * * Has a defined CSS `color` property for text.
  */
 @Component({
   tag: 'atomic-result-section-title',

@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration, facetOrder, history} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StateWithHistory} from '../../app/undoable';
@@ -5,6 +6,7 @@ import {back, forward} from '../../features/history/history-actions';
 import {
   logNavigateBackward,
   logNavigateForward,
+  logNoResultsBack,
 } from '../../features/history/history-analytics-actions';
 import {HistoryState} from '../../features/history/history-state';
 import {executeSearch} from '../../features/search/search-actions';
@@ -31,6 +33,13 @@ export interface HistoryManager extends Controller {
   forward(): Promise<void>;
 
   /**
+   * Move backward in the interface history when there are no results.
+   *
+   * @returns A promise that resolves when the previous state has been restored.
+   */
+  backOnNoResults(): Promise<void>;
+
+  /**
    * The state relevant to the `HistoryManager` controller.
    * */
   state: HistoryManagerState;
@@ -53,6 +62,10 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
   const {dispatch} = engine;
   const getState = () => engine.state;
 
+  const canGoBack = (state: HistoryManagerState) => {
+    return state.past.length > 0 && !isNullOrUndefined(state.present);
+  };
+
   return {
     ...controller,
     get state() {
@@ -60,7 +73,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
     },
 
     async back() {
-      if (!this.state.past.length || !this.state.present) {
+      if (!canGoBack(this.state)) {
         return;
       }
       await dispatch(back());
@@ -73,6 +86,14 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       }
       await dispatch(forward());
       dispatch(executeSearch(logNavigateForward()));
+    },
+
+    async backOnNoResults() {
+      if (!canGoBack(this.state)) {
+        return;
+      }
+      await dispatch(back());
+      dispatch(executeSearch(logNoResultsBack()));
     },
   };
 }

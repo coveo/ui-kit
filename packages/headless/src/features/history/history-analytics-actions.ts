@@ -18,3 +18,12 @@ export const logNavigateBackward = makeAnalyticsAction(
   AnalyticsType.Search,
   (client) => client.logSearchEvent('historyBackward' as SearchPageEvents) // TODO: Need to create this event natively in coveo.analytics to remove cast
 );
+
+/**
+ * Logs an event which represents when no results is shown and the end users cancel last action.
+ */
+export const logNoResultsBack = makeAnalyticsAction(
+  'history/analytics/noresultsback',
+  AnalyticsType.Search,
+  (client) => client.logNoResultsBack()
+);

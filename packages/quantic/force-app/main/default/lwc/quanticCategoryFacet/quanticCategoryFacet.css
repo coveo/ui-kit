@@ -1,25 +1,4 @@
-.facet__show-less {
-  font-size: 12px;
-  outline: 0;
-  background-color: var(--lwc-colorBackgroundAlt, #FFFFFF);
-  color: var(--sds-c-color-gray-8, #8E959D);
-  border: none;
-  margin-bottom: 5px;
-}
-
-.facet__show-more {
-  font-size: 12px;
-  outline: 0;
-  background-color: var(--lwc-colorBackgroundAlt, #FFFFFF);
-  color: var(--brand-text-link, #0176d3);
-  border: none;
-  margin-bottom: 5px;
-}
-
-.facet__show-more-text, .facet__show-less-text{
-  display: flex;
-  align-items: left;
-}
+@import 'c/quanticFacetStyles';
 
 .facet__search-results_no-match {
   color: var(--sds-c-color-gray-8, #8E959D);
@@ -40,4 +19,3 @@
 .facet__number-of-results {
   color: var(--sds-c-color-gray-8, #8E959D);
   margin-left: var(--lwc-spacingXSmall, 0.5rem);
-}
