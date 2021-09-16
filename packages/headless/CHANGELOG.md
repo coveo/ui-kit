@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.19.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.2...@coveo/headless@1.19.3) (2021-09-15)
+
+
+### Bug Fixes
+
+* **headless:** fix no results back analytics event ([#1202](https://github.com/coveo/ui-kit/issues/1202)) ([635c40a](https://github.com/coveo/ui-kit/commit/635c40ad3cc0af69506c0eaa646c1f7a4768c361))
+
+
+
+
+
 ## [1.19.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.1...@coveo/headless@1.19.2) (2021-09-14)
 
 
