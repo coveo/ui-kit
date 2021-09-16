@@ -126,7 +126,8 @@ export const buildProductListingRequest = (
           ) + 1,
       },
     }),
-    ...(state.productListingSort?.by === ProductListingSortBy.Fields && {
+    ...((state.productListingSort?.by || ProductListingSortBy.Relevance) !==
+      ProductListingSortBy.Relevance && {
       sort: state.productListingSort,
     }),
   };

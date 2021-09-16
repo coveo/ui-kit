@@ -63,7 +63,7 @@ export interface ProductListingSortInitialState {
 
 function validateSortInitialState(
   engine: CoreEngine<ConfigurationSection & ProductListingSortSection>,
-  state: Partial<ProductListingSortInitialState> | undefined
+  state: ProductListingSortInitialState | undefined
 ) {
   if (!state) {
     return;
