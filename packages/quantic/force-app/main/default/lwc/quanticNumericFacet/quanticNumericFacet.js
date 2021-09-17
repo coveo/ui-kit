@@ -40,10 +40,15 @@ export default class QuanticNumericFacet extends LightningElement {
 
   /** @type {import("coveo").NumericFacet} */
   facet;
+  /**  @type {import("coveo").NumericFilter} */
+  numericFilter;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {import("coveo").Unsubscribe} */
+  unsubscribeFilter;
   /** @type {boolean} */
   isExpanded = true;
+
 
   labels = {
     clear,
@@ -57,6 +62,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    // this.start = this.numericFilter.state.range?.start
   }
 
   /**
@@ -73,11 +79,19 @@ export default class QuanticNumericFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
       }
     });
+    this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
+      options: {
+        field: this.field,
+        facetId: this.facetId ?? this.field
+      }
+    });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeFilter?.();
   }
 
   updateState() {
@@ -114,6 +128,14 @@ export default class QuanticNumericFacet extends LightningElement {
     return I18nUtils.format(label, this.label);
   }
 
+  get start() {
+    return this.numericFilter.state.range?.start;
+  }
+
+  get end() {
+    return this.numericFilter.state.range?.end;
+  }
+  
   /**
    * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
@@ -131,5 +153,12 @@ export default class QuanticNumericFacet extends LightningElement {
 
   preventDefault(evt) {
     evt.preventDefault();
+  }
+
+  onApply(evt) {
+    this.numericFilter.setRange({
+      start: evt.detail.min,
+      end: evt.detail.max
+    });
   }
 }

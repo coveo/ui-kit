@@ -420,4 +420,46 @@
         <protected>false</protected>
         <shortDescription>Expand [component label]</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_Min</fullName>
+        <value>Min</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Min</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Max</fullName>
+        <value>Max</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Max</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NumberInputMinimum</fullName>
+        <value>Enter a minimum numerical value for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter a minimum numerical value for the [component label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NumberInputMaximum</fullName>
+        <value>Enter a maximum numerical value for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter a maximum numerical value for the [component label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Apply</fullName>
+        <value>Apply</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Apply</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NumberInputApply</fullName>
+        <value>Apply custom numerical values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Apply custom numerical values for the [component label] facet</shortDescription>
+    </labels>
 </CustomLabels>

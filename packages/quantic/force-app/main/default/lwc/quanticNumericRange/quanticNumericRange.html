@@ -1,13 +1,31 @@
 <template>
     <div class="slds-grid">
         <div class="slds-col slds-p-around_none">
-            <lightning-input type="number" name="input3" label="Min" variant="label-hidden" placeholder="Min"></lightning-input>
+            <lightning-input 
+                type="number" 
+                required
+                class="numeric__input-min" 
+                min={minSafeInteger} 
+                max={end} 
+                label={labels.min} 
+                variant="label-hidden" 
+                placeholder={labels.min} 
+                aria-label={numberInputMinimumLabel}></lightning-input>
         </div>
         <div class="slds-col slds-var-m-horizontal_xxx-small">
-            <lightning-input type="number" name="input4" label="Max" variant="label-hidden" placeholder="Max"></lightning-input>
+            <lightning-input 
+                type="number" 
+                required
+                class="numeric__input-max" 
+                min={start} 
+                max={maxSafeInteger} 
+                label={labels.max} 
+                variant="label-hidden" 
+                placeholder={labels.max} 
+                aria-label={numberInputMaximumLabel}></lightning-input>
         </div>
         <div class="slds-col slds-p-around_none">
-            <lightning-button label="Apply" title="Apply" onclick={handleClick} class=""></lightning-button>
+            <lightning-button label={labels.apply} title={labels.apply} onclick={onApply} class="" aria-label={numberInputApplyLabel}></lightning-button>
         </div>
     </div>
 </template>
