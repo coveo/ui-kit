@@ -558,25 +558,27 @@ describe('category facet slice', () => {
           retrieveCount,
         });
 
-        it("does not add the selection to the parent's children array", () => {
+        it('overwrites the parent, and adds the selection as a child', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(
-            finalState[facetId]?.request.currentValues[0].children
-          ).toEqual([]);
-        });
 
-        it('keeps the parent #state to selected', () => {
-          const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId]?.request.currentValues[0].state).toBe(
-            'selected'
-          );
-        });
+          const currentValues = finalState[facetId]!.request.currentValues;
 
-        it('keeps the parent #retrieveChildren to true', () => {
-          const finalState = categoryFacetSetReducer(state, action);
-          expect(
-            finalState[facetId]?.request.currentValues[0].retrieveChildren
-          ).toBe(true);
+          const child = buildMockCategoryFacetValueRequest({
+            value: 'B',
+            state: 'selected',
+            retrieveChildren: true,
+            retrieveCount,
+          });
+
+          const parent = buildMockCategoryFacetValueRequest({
+            value: 'C',
+            state: 'idle',
+            children: [child],
+            retrieveChildren: false,
+            retrieveCount,
+          });
+
+          expect(currentValues).toEqual([parent]);
         });
       });
     });

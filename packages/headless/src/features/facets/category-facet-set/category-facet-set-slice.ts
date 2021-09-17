@@ -81,18 +81,13 @@ export const categoryFacetSetReducer = createReducer(
         const pathToSelection = path.slice(0, path.length - 1);
 
         for (const segment of pathToSelection) {
-          const parentExists = !!activeLevel[0];
+          let parent = activeLevel[0];
+          const parentExists = !!parent;
 
-          if (!parentExists) {
-            activeLevel.push(
-              buildCategoryFacetValueRequest(segment, retrieveCount)
-            );
-          }
-
-          const parent = activeLevel[0];
-
-          if (segment !== parent.value) {
-            return;
+          if (!parentExists || segment !== parent.value) {
+            parent = buildCategoryFacetValueRequest(segment, retrieveCount);
+            activeLevel.length = 0;
+            activeLevel.push(parent);
           }
 
           parent.retrieveChildren = false;
