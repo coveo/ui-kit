@@ -163,12 +163,23 @@ function parseEvent(element, parentNode) {
   }
 }
 
+function getMetadata(element) {
+  const fs = require('fs');
+  const parser = require('xml2json');
+  const filePath = `${element.meta.path}/${element.meta.filename}-meta.xml`;
+
+  const xmlData = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(parser.toJson(xmlData));
+}
+
 function parseClass(element, parentNode, childNodes) {
   var i, len;
 
   if (!parentNode.classes) {
     parentNode.classes = [];
   }
+
+  element.xmlMeta = getMetadata(element).LightningComponentBundle;
 
   const thisClass = {
     name: element.name,
@@ -177,6 +188,11 @@ function parseClass(element, parentNode, childNodes) {
     fires: element.fires || '',
     examples: [],
     category: element.category || '',
+    salesforceMeta: {
+      apiVersion: element.xmlMeta?.apiVersion || '',
+      isExposed: element.xmlMeta?.isExposed,
+      targets: element.xmlMeta?.targets || []
+    }
   };
 
   parentNode.classes.push(thisClass);

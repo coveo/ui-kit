@@ -37,8 +37,8 @@
     "@salesforce/eslint-config-lwc": "0.11.1",
     "@salesforce/sfdx-lwc-jest": "0.14.0",
     "@types/jest": "26.0.24",
-    "better-docs": "^2.3.2",
     "@types/strip-color": "^0.1.0",
+    "better-docs": "^2.3.2",
     "cypress": "7.6.0",
     "eslint": "7.32.0",
     "eslint-plugin-cypress": "2.11.3",
@@ -47,6 +47,7 @@
     "ncp": "2.0.0",
     "sfdx-cli": "7.102.0",
     "strip-color": "^0.1.0",
-    "ts-node": "^10.2.1"
+    "ts-node": "^10.2.1",
+    "xml2json": "^0.12.0"
   }
 }
