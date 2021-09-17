@@ -1,4 +1,4 @@
-import {deleteOrg, orgExists, sfdx} from './util/sfdx';
+import * as sfdx from './util/sfdx-commands';
 import {StepLogger, StepsRunner} from './util/log';
 
 interface Options {
@@ -8,8 +8,8 @@ interface Options {
 const deleteScratchOrg = async (log: StepLogger, options: Options) => {
   log(`Deleting ${options.alias} organization...`);
 
-  if (await orgExists(options.alias)) {
-    await deleteOrg(options.alias);
+  if (await sfdx.orgExists(options.alias)) {
+    await sfdx.deleteOrg(options.alias);
   }
 
   log('Organization deleted successfully');
@@ -17,7 +17,7 @@ const deleteScratchOrg = async (log: StepLogger, options: Options) => {
 
 const resetOrgAlias = async (log: StepLogger, options: Options) => {
   log(`Resetting ${options.alias} alias...`);
-  await sfdx(`alias:set ${options.alias}=""`);
+  await sfdx.setAlias(options.alias, '');
   log('Alias reset successfully');
 };
 

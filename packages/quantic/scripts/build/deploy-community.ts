@@ -1,16 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  deleteActiveScratchOrgs,
-  deleteOrg,
-  orgExists,
-  sfdx,
-  SfdxPublishCommunityResponse,
-} from './util/sfdx';
 import {StepLogger, StepsRunner} from './util/log';
+import * as sfdx from './util/sfdx-commands';
 
 interface Options {
-  alias: string;
   configFile: string;
   community: {
     name: string;
@@ -24,55 +17,138 @@ interface Options {
     keyFile: string;
     username: string;
   };
+  scratchOrg: {
+    alias: string;
+    defFile: string;
+    duration: number;
+  };
 }
 
-const deleteOldOrgs = async (
-  log: StepLogger,
-  options: Options
-): Promise<void> => {
+function isCi() {
+  return process.argv.some((arg) => arg === '--ci');
+}
+
+function getBranchName() {
+  return process.env.BRANCH_NAME.replace(/[^a-zA-Z0-9-]/g, '-');
+}
+
+function getCiOrgName() {
+  return `quantic-${getBranchName()}`;
+}
+
+async function prepareScratchOrgDefinitionFile(
+  baseDefinitionFile: string
+): Promise<string> {
+  if (isCi()) {
+    return baseDefinitionFile;
+  }
+
+  const orgName = getCiOrgName();
+  const baseDefinition = await readDefinitionFile(baseDefinitionFile);
+
+  const ciDefinitionFile = path.resolve(
+    path.dirname(baseDefinitionFile),
+    'scratch-def.ci.json'
+  );
+  await writeDefinitionFile(ciDefinitionFile, {
+    ...baseDefinition,
+    orgName,
+  });
+
+  return ciDefinitionFile;
+}
+
+async function readDefinitionFile(file: string): Promise<Object> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(JSON.parse(data.toString()));
+      }
+    });
+  });
+}
+
+async function writeDefinitionFile(
+  file: string,
+  definition: Object
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(file, JSON.stringify(definition, null, 2), (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+async function buildOptions(): Promise<Options> {
+  const isCi = process.argv.some((arg) => arg === '--ci');
+
+  return {
+    configFile: path.resolve('cypress/plugins/config/examples-community.json'),
+    community: {
+      name: 'Quantic Examples',
+      path: 'examples',
+      template: 'Build Your Own',
+    },
+    scratchOrg: {
+      alias: 'LWC',
+      defFile: await prepareScratchOrgDefinitionFile(
+        path.resolve('config/project-scratch-def.json')
+      ),
+      duration: isCi ? 1 : 7,
+    },
+    jwt: {
+      clientId: process.env.SFDX_AUTH_CLIENT_ID,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY,
+      username: process.env.SFDX_AUTH_JWT_USERNAME,
+    },
+    deleteOldOrgs: isCi,
+    deleteOrgOnError: isCi,
+  };
+}
+
+async function deleteOldOrgs(log: StepLogger, options: Options): Promise<void> {
   log('Deleting old scratch organizations...');
 
-  await deleteActiveScratchOrgs({
+  await sfdx.deleteActiveScratchOrgs({
     devHubUsername: options.jwt.username,
-    scratchOrgName: 'quantic local',
+    scratchOrgName: getCiOrgName(),
     jwtClientId: options.jwt.clientId,
     jwtKeyFile: options.jwt.keyFile,
   });
 
   log('Scratch organizations deleted.');
-};
+}
 
-const createScratchOrg = async (options: Options): Promise<void> => {
-  await sfdx(
-    `force:org:create -s -f config/project-scratch-def.json -a ${options.alias}`
-  );
-};
+async function ensureScratchOrgExists(log: StepLogger, options: Options) {
+  log(`Searching for ${options.scratchOrg.alias} organization...`);
 
-const ensureScratchOrgExists = async (log: StepLogger, options: Options) => {
-  log(`Searching for ${options.alias} organization...`);
-
-  if (await orgExists(options.alias)) {
-    log(`${options.alias} organization found.`);
+  if (await sfdx.orgExists(options.scratchOrg.alias)) {
+    log(`${options.scratchOrg.alias} organization found.`);
   } else {
-    log(`${options.alias} organization not found. Creating organization.`);
-    await createScratchOrg(options);
+    log(
+      `${options.scratchOrg.alias} organization not found. Creating organization.`
+    );
+    await sfdx.createScratchOrg(options.scratchOrg);
     log('Organization created successfully.');
   }
-};
+}
 
-const createCommunity = async (options: Options): Promise<void> => {
-  await sfdx(
-    `force:community:create -u ${options.alias} -n "${options.community.name}" -p ${options.community.path} -t "${options.community.template}"`
-  );
-};
-
-const ensureCommunityExists = async (
+async function ensureCommunityExists(
   log: StepLogger,
   options: Options
-): Promise<void> => {
+): Promise<void> {
   log(`Searching for '${options.community.name}' community`);
   try {
-    await createCommunity(options);
+    await sfdx.createCommunity({
+      alias: options.scratchOrg.alias,
+      community: options.community,
+    });
     log('Community created successfully.');
   } catch (error) {
     if (error.message === 'Enter a different name. That one already exists.') {
@@ -81,23 +157,26 @@ const ensureCommunityExists = async (
       throw error;
     }
   }
-};
+}
 
-const deployComponents = async (
+async function deployComponents(
   log: StepLogger,
   options: Options
-): Promise<void> => {
+): Promise<void> {
   log('Deploying components...');
-  await sfdx(
-    `force:source:deploy -u ${options.alias} -p force-app/main,force-app/examples`
-  );
-  log('Components deployed.');
-};
 
-const deployCommunityMetadata = async (
+  await sfdx.deploySource({
+    alias: options.scratchOrg.alias,
+    packagePaths: ['force-app/main', 'force-app/examples'],
+  });
+
+  log('Components deployed.');
+}
+
+async function deployCommunity(
   log: StepLogger,
   options: Options
-): Promise<void> => {
+): Promise<void> {
   log('Deploying community metadata...');
 
   // There is no easy way to know when the community is ready.
@@ -106,9 +185,12 @@ const deployCommunityMetadata = async (
   let success = false;
   do {
     try {
-      await sfdx(
-        `force:mdapi:deploy -u ${options.alias} -d quantic-examples-community -w 10`
-      );
+      await sfdx.deployCommunityMetadata({
+        alias: options.scratchOrg.alias,
+        communityMetadataPath: 'quantic-examples-community',
+        timeout: 10,
+      });
+
       success = true;
     } catch (error) {
       if (retry === 2) {
@@ -119,26 +201,28 @@ const deployCommunityMetadata = async (
   } while (!success && retry <= 2);
 
   log('Community metadata deployed.');
-};
+}
 
-const publishCommunity = async (
+async function publishCommunity(
   log: StepLogger,
   options: Options
-): Promise<string> => {
+): Promise<string> {
   log('Publishing community...');
-  const response = await sfdx<SfdxPublishCommunityResponse>(
-    `force:community:publish -u ${options.alias} -n "${options.community.name}"`
-  );
+
+  const response = await sfdx.publishCommunity({
+    alias: options.scratchOrg.alias,
+    communityName: options.community.name,
+  });
   log('Community published.');
 
   return response.result.url;
-};
+}
 
-const updateCommunityConfigFile = async (
+async function updateCommunityConfigFile(
   log: StepLogger,
   options: Options,
   communityUrl: string
-): Promise<void> => {
+): Promise<void> {
   let baseConfig = {
     env: {
       examplesUrl: '',
@@ -160,36 +244,19 @@ const updateCommunityConfigFile = async (
     'UTF-8'
   );
   log('Configuration file updated.');
-};
+}
 
-const deleteScratchOrg = async (
+async function deleteScratchOrg(
   log: StepLogger,
   options: Options
-): Promise<void> => {
-  log(`Deleting ${options.alias} organization...`);
-  await deleteOrg(options.alias);
+): Promise<void> {
+  log(`Deleting ${options.scratchOrg.alias} organization...`);
+  await sfdx.deleteOrg(options.scratchOrg.alias);
   log('Organization deleted successfully.');
-};
+}
 
 (async function () {
-  const options = {
-    alias: 'LWC',
-    configFile: path.resolve('cypress/plugins/config/examples-community.json'),
-    community: {
-      name: 'Quantic Examples',
-      path: 'examples',
-      template: 'Build Your Own',
-    },
-    deleteOldOrgs: process.argv.some((arg) => arg === '--delete-old-orgs'),
-    deleteOrgOnError: process.argv.some(
-      (arg) => arg === '--delete-org-on-error'
-    ),
-    jwt: {
-      clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY,
-      username: process.env.SFDX_AUTH_JWT_USERNAME,
-    },
-  };
+  const options = await buildOptions();
 
   let scratchOrgCreated = false;
   const runner = new StepsRunner();
@@ -203,22 +270,23 @@ const deleteScratchOrg = async (
       });
     }
 
-    await runner
+    runner
       .add(async (log) => {
         await ensureScratchOrgExists(log, options);
         scratchOrgCreated = true;
       })
       .add(async (log) => await ensureCommunityExists(log, options))
       .add(async (log) => await deployComponents(log, options))
-      .add(async (log) => await deployCommunityMetadata(log, options))
+      .add(async (log) => await deployCommunity(log, options))
       .add(async (log) => {
         communityUrl = await publishCommunity(log, options);
       })
       .add(
         async (log) =>
           await updateCommunityConfigFile(log, options, communityUrl)
-      )
-      .run();
+      );
+
+    await runner.run();
 
     console.log(
       `\nThe '${options.community.name}' community is ready, you can access it at the following URL:`
