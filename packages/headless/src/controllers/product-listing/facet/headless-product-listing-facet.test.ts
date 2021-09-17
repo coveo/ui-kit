@@ -91,10 +91,11 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      const action = engine.actions.find(
-        (a) => a.type === fetchProductListing.pending.type
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: fetchProductListing.pending.type,
+        })
       );
-      expect(action).toBeTruthy();
     });
   });
 
@@ -102,44 +103,50 @@ describe('facet', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     facet.toggleSingleSelect(facetValue);
 
-    const action = engine.actions.find(
-      (a) => a.type === fetchProductListing.pending.type
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: fetchProductListing.pending.type,
+      })
     );
-    expect(action).toBeTruthy();
   });
 
   it('#deselectAll dispatches a fetchProductListing', () => {
     facet.deselectAll();
 
-    const action = engine.actions.find(
-      (a) => a.type === fetchProductListing.pending.type
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: fetchProductListing.pending.type,
+      })
     );
-    expect(engine.actions).toContainEqual(action);
   });
 
   it('#sortBy dispatches a fetchProductListing', () => {
     facet.sortBy('score');
-    const action = engine.actions.find(
-      (a) => a.type === fetchProductListing.pending.type
-    );
 
-    expect(engine.actions).toContainEqual(action);
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: fetchProductListing.pending.type,
+      })
+    );
   });
 
   it('#showMoreValues dispatches a fetchProductListing', () => {
     facet.showMoreValues();
 
-    const action = engine.actions.find(
-      (a) => a.type === fetchProductListing.pending.type
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: fetchProductListing.pending.type,
+      })
     );
-    expect(action).toBeTruthy();
   });
 
   it('#showLessValues  dispatches a fetchProductListing', () => {
     facet.showLessValues();
-    const action = engine.actions.find(
-      (a) => a.type === fetchProductListing.pending.type
+
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: fetchProductListing.pending.type,
+      })
     );
-    expect(action).toBeTruthy();
   });
 });

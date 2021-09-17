@@ -156,10 +156,11 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: executeSearch.pending.type,
+        })
       );
-      expect(action).toBeTruthy();
     });
   });
 
@@ -183,10 +184,11 @@ describe('facet', () => {
     it('dispatches a search', () => {
       facet.toggleSingleSelect(facetValue());
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: executeSearch.pending.type,
+        })
       );
-      expect(action).toBeTruthy();
     });
   }
 

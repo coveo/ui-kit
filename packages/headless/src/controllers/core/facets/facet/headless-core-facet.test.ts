@@ -14,7 +14,6 @@ import {
 import {createMockState} from '../../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value';
-import {executeSearch} from '../../../../features/search/search-actions';
 import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 
@@ -149,16 +148,6 @@ describe('facet', () => {
         updateFacetOptions({freezeFacetOrder: true})
       );
     });
-
-    it('dispatches a search', () => {
-      const facetValue = buildMockFacetValue({value: 'TED'});
-      facet.toggleSelect(facetValue);
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
   });
 
   function testCommonToggleSingleSelect(facetValue: () => FacetValue) {
@@ -176,15 +165,6 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
-    });
-
-    it('dispatches a search', () => {
-      facet.toggleSingleSelect(facetValue());
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   }
 

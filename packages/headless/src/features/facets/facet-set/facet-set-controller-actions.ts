@@ -1,17 +1,15 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {FacetValue} from './interfaces/response';
-import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client';
 import {
   ConfigurationSection,
   FacetSection,
 } from '../../../state/state-sections';
-import {getAnalyticsActionForToggleFacetSelect} from './facet-set-utils';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
-import {executeSearch} from '../../search/search-actions';
 import {toggleSelectFacetValue} from './facet-set-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {facetValueDefinition} from './facet-set-validate-payload';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 
 const definition = {
   facetId: facetIdDefinition,
@@ -28,14 +26,9 @@ export const executeToggleFacetSelect = createAsyncThunk<
   {
     facetId: string;
     selection: FacetValue;
-    onAfterSend?: (
-      getAnalyticsAction: () => ReturnType<
-        typeof getAnalyticsActionForToggleFacetSelect
-      >
-    ) => void;
   },
-  AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
->('facet/executeToggleSelect', ({facetId, selection, onAfterSend}, thunk) => {
+  AsyncThunkOptions<FacetSection & ConfigurationSection>
+>('facet/executeToggleSelect', ({facetId, selection}, thunk) => {
   const {
     dispatch,
     extra: {validatePayload},
@@ -43,13 +36,4 @@ export const executeToggleFacetSelect = createAsyncThunk<
   validatePayload({facetId, selection}, definition);
   dispatch(toggleSelectFacetValue({facetId, selection}));
   dispatch(updateFacetOptions({freezeFacetOrder: true}));
-  if (onAfterSend) {
-    onAfterSend(() =>
-      getAnalyticsActionForToggleFacetSelect(facetId, selection)
-    );
-  } else {
-    dispatch(
-      executeSearch(getAnalyticsActionForToggleFacetSelect(facetId, selection))
-    );
-  }
 });

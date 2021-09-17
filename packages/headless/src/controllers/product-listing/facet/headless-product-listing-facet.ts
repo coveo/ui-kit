@@ -20,10 +20,11 @@ import {
   ConfigurationSection,
   FacetSearchSection,
   FacetSection,
-  SearchSection,
 } from '../../../state/state-sections';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {loadReducerError} from '../../../utils/errors';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
+import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
 
 export {
   FacetOptions,
@@ -60,17 +61,16 @@ export function buildFacet(
   return {
     ...controller,
 
-    toggleSelect: (selection: FacetValue) =>
+    toggleSelect: (selection: FacetValue) => {
       dispatch(
         executeToggleFacetSelect({
           facetId: getFacetId(),
           selection,
-          onAfterSend: (getAnalytics) => {
-            dispatch(fetchProductListing());
-            dispatch(getAnalytics());
-          },
         })
-      ),
+      );
+      dispatch(fetchProductListing());
+      dispatch(getAnalyticsActionForToggleFacetSelect(getFacetId(), selection));
+    },
 
     deselectAll() {
       controller.deselectAll();
@@ -101,11 +101,11 @@ export function buildFacet(
 }
 
 function loadFacetReducers(
-  _engine: CoreEngine
-): _engine is CoreEngine<
-  FacetSection & ConfigurationSection & FacetSearchSection & SearchSection,
+  engine: CoreEngine
+): engine is CoreEngine<
+  FacetSection & ConfigurationSection & FacetSearchSection,
   SearchThunkExtraArguments
 > {
-  // engine.addReducers({facetSet, configuration, facetSearchSet, search});
+  engine.addReducers({facetSet, configuration, facetSearchSet});
   return true;
 }

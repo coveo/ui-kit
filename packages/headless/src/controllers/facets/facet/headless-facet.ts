@@ -34,6 +34,7 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
 
 export {
   FacetOptions,
@@ -66,6 +67,15 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 
   return {
     ...controller,
+
+    toggleSelect(selection) {
+      controller.toggleSelect(selection);
+      dispatch(
+        executeSearch(
+          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
+        )
+      );
+    },
 
     deselectAll() {
       controller.deselectAll();
