@@ -56,11 +56,11 @@ export default class QuanticDateFacet extends LightningElement {
   @api numberOfValues = 8;
   /**
    * The function used to format the date facet value label.
+   * The default result format is the following: [start] - [end]
    * @api
    * @type {Function}
    * @param {DateFacetValue} item
    * @returns {string}
-   * @defaultValue Formatted result: [start] - [end]
    */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.start)

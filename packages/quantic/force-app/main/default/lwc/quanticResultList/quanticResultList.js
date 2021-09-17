@@ -10,6 +10,7 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadles
 /**
  * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
  * @category LWC
+ * @fires CustomEvent#registerresulttemplates
  * @example
  * <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
  */

@@ -4,40 +4,6 @@
  */
 'use strict';
 
-function parseNamespace(element, parentNode, childNodes) {
-  if (!parentNode.namespaces) {
-    parentNode.namespaces = [];
-  }
-
-  const thisNamespace = {
-    name: element.name,
-    description: element.description || '',
-    access: element.access || '',
-    virtual: !!element.virtual
-  };
-
-  parentNode.namespaces.push(thisNamespace);
-
-  graft(thisNamespace, childNodes, element.longname, element.name);
-}
-
-function parseMixin(element, parentNode, childNodes) {
-  if (!parentNode.mixins) {
-    parentNode.mixins = [];
-  }
-
-  const thisMixin = {
-    name: element.name,
-    description: element.description || '',
-    access: element.access || '',
-    virtual: !!element.virtual
-  };
-
-  parentNode.mixins.push(thisMixin);
-
-  graft(thisMixin, childNodes, element.longname, element.name);
-}
-
 function parseFunction(element, parentNode) {
   var i, len;
 
@@ -87,14 +53,20 @@ function parseFunction(element, parentNode) {
   }
 }
 
+function isTagDefined(element, tagTitle) {
+  return element.tags?.filter((tag) => tag.title === tagTitle).length;
+}
+
 function isPublic(element) {
-  if (element.tags?.filter((tag) => tag.title === 'api').length || element.access === "public") {
+  if (isTagDefined(element, 'api') || element.access === "public") {
     return true;
   }
   return false;
 }
 
 function parseMember(element, parentNode) {
+  const paramCase = require('change-case').paramCase;
+
   if (!isPublic(element)) {
     return;
   }
@@ -103,64 +75,18 @@ function parseMember(element, parentNode) {
   }
   const prop = {
     name: element.name,
+    attribute: paramCase(element.name),
     access: '@api',
     description: element.description || '',
-    required: !element.defaultvalue,
-    type: {
-      name: element.type?.names?.[0] || '',
-      defaultValue: element.defaultvalue || ''
-    }
+    required: !element.defaultvalue && !isTagDefined(element, 'optional'),
+    defaultValue: element.defaultvalue || '',
+    type: element.type?.names?.[0] || '',
   }
   if (prop.type.name === 'function') {
     prop.type.params = element.params || '',
     prop.type.returns = element.returns || ''
   }
   parentNode.properties.push(prop);
-}
-
-function parseEvent(element, parentNode) {
-  var i, len;
-
-  if (!parentNode.events) {
-    parentNode.events = [];
-  }
-
-  const thisEvent = {
-    name: element.name,
-    access: element.access || '',
-    virtual: !!element.virtual,
-    description: element.description || '',
-    parameters: [],
-    examples: []
-  };
-
-  parentNode.events.push(thisEvent);
-
-  if (element.returns) {
-    thisEvent.returns = {
-      type: element.returns.type ? (element.returns.type.names.length === 1 ? element.returns.type.names[0] : element.returns.type.names) : '',
-      description: element.returns.description || ''
-    };
-  }
-
-  if (element.examples) {
-    for (i = 0, len = element.examples.length; i < len; i++) {
-      thisEvent.examples.push(element.examples[i]);
-    }
-  }
-
-  if (element.params) {
-    for (i = 0, len = element.params.length; i < len; i++) {
-      thisEvent.parameters.push({
-        name: element.params[i].name,
-        type: element.params[i].type ? (element.params[i].type.names.length === 1 ? element.params[i].type.names[0] : element.params[i].type.names) : '',
-        description: element.params[i].description || '',
-        default: element.params[i].defaultvalue || '',
-        optional: typeof element.params[i].optional === 'boolean' ? element.params[i].optional : '',
-        nullable: typeof element.params[i].nullable === 'boolean' ? element.params[i].nullable : ''
-      });
-    }
-  }
 }
 
 function getMetadata(element) {
@@ -173,16 +99,19 @@ function getMetadata(element) {
 }
 
 function parseClass(element, parentNode, childNodes) {
+  const paramCase = require('change-case').paramCase;
+
   var i, len;
 
-  if (!parentNode.classes) {
-    parentNode.classes = [];
+  if (!parentNode.components) {
+    parentNode.components = [];
   }
 
   element.xmlMeta = getMetadata(element).LightningComponentBundle;
 
   const thisClass = {
     name: element.name,
+    attribute: paramCase(element.name),
     description: element.classdesc || '',
     access: element.access || '',
     fires: element.fires || '',
@@ -195,7 +124,7 @@ function parseClass(element, parentNode, childNodes) {
     }
   };
 
-  parentNode.classes.push(thisClass);
+  parentNode.components.push(thisClass);
 
   if (element.examples) {
     for (i = 0, len = element.examples.length; i < len; i++) {
@@ -226,16 +155,10 @@ function graft(parentNode, childNodes, parentLongname, _parentName) {
     })
     .forEach(function (element, _index) {
       switch(element.kind) {
-        case 'namespace':
-          return parseNamespace(element, parentNode, childNodes);
-        case 'mixin':
-          return parseMixin(element, parentNode, childNodes);
         case 'function':
           return parseFunction(element, parentNode);
         case 'member':
           return parseMember(element, parentNode);
-        case 'event':
-          return parseEvent(element, parentNode);
         case 'class':
           return parseClass(element, parentNode, childNodes);
         default:

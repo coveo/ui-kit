@@ -77,7 +77,9 @@ export default class QuanticNoResults extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
-  /** @param {SearchEngine} engine */
+  /**
+   * @param {SearchEngine} engine
+   */
   initialize = (engine) => {
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.historyManager = CoveoHeadless.buildHistoryManager(engine);

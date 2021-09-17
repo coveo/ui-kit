@@ -61,7 +61,9 @@ export default class QuanticQueryError extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
-  /** @param {SearchEngine} engine */
+  /**
+   * @param {SearchEngine} engine
+   */
   initialize = (engine) => {
     this.queryError = CoveoHeadless.buildQueryError(engine);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
@@ -106,7 +108,9 @@ export default class QuanticQueryError extends LightningElement {
       this.copyToClipboardFallback(text);
     } 
   }
-  /** @param {string} text */
+  /**
+   * @param {string} text
+   */
   copyToClipboardFallback(text) {
     const el = document.createElement('textarea');
     el.value = text;
