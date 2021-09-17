@@ -24,6 +24,19 @@ interface Options {
   };
 }
 
+function ensureEnvVariables() {
+  [
+    'BRANCH_NAME',
+    'SFDX_AUTH_CLIENT_ID',
+    'SFDX_AUTH_JWT_KEY',
+    'SFDX_AUTH_JWT_USERNAME',
+  ].forEach((v) => {
+    if (!process.env[v]) {
+      throw new Error(`The environment variable ${v} must be defined.`);
+    }
+  });
+}
+
 function isCi() {
   return process.argv.some((arg) => arg === '--ci');
 }
@@ -39,7 +52,7 @@ function getCiOrgName() {
 async function prepareScratchOrgDefinitionFile(
   baseDefinitionFile: string
 ): Promise<string> {
-  if (isCi()) {
+  if (!isCi()) {
     return baseDefinitionFile;
   }
 
@@ -86,7 +99,11 @@ async function writeDefinitionFile(
 }
 
 async function buildOptions(): Promise<Options> {
-  const isCi = process.argv.some((arg) => arg === '--ci');
+  const ci = isCi();
+
+  if (ci) {
+    ensureEnvVariables();
+  }
 
   return {
     configFile: path.resolve('cypress/plugins/config/examples-community.json'),
@@ -100,15 +117,15 @@ async function buildOptions(): Promise<Options> {
       defFile: await prepareScratchOrgDefinitionFile(
         path.resolve('config/project-scratch-def.json')
       ),
-      duration: isCi ? 1 : 7,
+      duration: ci ? 1 : 7,
     },
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,
       keyFile: process.env.SFDX_AUTH_JWT_KEY,
       username: process.env.SFDX_AUTH_JWT_USERNAME,
     },
-    deleteOldOrgs: isCi,
-    deleteOrgOnError: isCi,
+    deleteOldOrgs: ci,
+    deleteOrgOnError: ci,
   };
 }
 
