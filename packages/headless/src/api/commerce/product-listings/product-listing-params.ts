@@ -5,17 +5,19 @@ import {
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client';
-export type ProductListingsParam = ProductListingBaseParam &
-  ProductListingRequestParam;
+import {SortCriterion} from '../../../features/sort/sort';
+export interface ProductListingsParam
+  extends ProductListingBaseParam,
+    ProductListingRequestParam {}
 
-export type ProductListingBaseParam = {
+export interface ProductListingBaseParam {
   accessToken: string;
   organizationId: string;
   platformUrl: string;
   version?: string;
-};
+}
 
-export type ProductListingRequestParam = {
+export interface ProductListingRequestParam {
   url: string;
   clientId?: string;
   additionalFields?: string[];
@@ -26,16 +28,8 @@ export type ProductListingRequestParam = {
     requests: AnyFacetRequest[];
     options?: FacetOptions;
   };
-  sort?: {
-    by: 'RELEVANCE' | 'FIELDS';
-    fields?: [
-      {
-        direction: 'ASC' | 'DESC';
-        name: string;
-      }
-    ];
-  };
-};
+  sort?: SortCriterion;
+}
 
 /**
  * Builds a base request for calling the Product Listing API.
