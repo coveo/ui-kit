@@ -134,4 +134,22 @@ describe('recent-queries slice', () => {
       testQueries
     );
   });
+
+  it('should not add new recent query on search fulfilled if queue already contains the query with extra whitespace', () => {
+    const otherTestQuery = ' what is a query      ';
+    state.queries = testQueries;
+    state.maxLength = 10;
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        queryExecuted: otherTestQuery,
+        response: buildMockSearchResponse({}),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual(
+      testQueries
+    );
+  });
 });
