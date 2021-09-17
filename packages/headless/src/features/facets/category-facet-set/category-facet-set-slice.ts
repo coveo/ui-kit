@@ -13,7 +13,7 @@ import {
 } from './category-facet-set-actions';
 import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {change} from '../../history/history-actions';
-import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetResponse} from './interfaces/response';
 import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {
@@ -81,6 +81,14 @@ export const categoryFacetSetReducer = createReducer(
         const pathToSelection = path.slice(0, path.length - 1);
 
         for (const segment of pathToSelection) {
+          const parentExists = !!activeLevel[0];
+
+          if (!parentExists) {
+            activeLevel.push(
+              buildCategoryFacetValueRequest(segment, retrieveCount)
+            );
+          }
+
           const parent = activeLevel[0];
 
           if (segment !== parent.value) {
@@ -101,8 +109,8 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const valueRequest = convertCategoryFacetValueToRequest(
-          selection,
+        const valueRequest = buildCategoryFacetValueRequest(
+          selection.value,
           retrieveCount
         );
         activeLevel.push(valueRequest);
@@ -190,11 +198,10 @@ function buildCategoryFacetRequest(
   };
 }
 
-function convertCategoryFacetValueToRequest(
-  categoryFacetValue: CategoryFacetValue,
+function buildCategoryFacetValueRequest(
+  value: string,
   retrieveCount: number
 ): CategoryFacetValueRequest {
-  const {value} = categoryFacetValue;
   return {
     value,
     state: 'selected',

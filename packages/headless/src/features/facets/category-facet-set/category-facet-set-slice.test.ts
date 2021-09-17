@@ -445,6 +445,37 @@ describe('category facet slice', () => {
         ]);
       });
 
+      it('when the value path contains more than one segement, it selects it', () => {
+        const selection = buildMockCategoryFacetValue({
+          value: 'B',
+          path: ['A', 'B'],
+        });
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
+        const finalState = categoryFacetSetReducer(state, action);
+        const currentValues = finalState[facetId]!.request.currentValues;
+
+        const child = buildMockCategoryFacetValueRequest({
+          value: 'B',
+          state: 'selected',
+          retrieveChildren: true,
+          retrieveCount,
+        });
+
+        const parent = buildMockCategoryFacetValueRequest({
+          value: 'A',
+          state: 'idle',
+          children: [child],
+          retrieveChildren: false,
+          retrieveCount,
+        });
+
+        expect(currentValues).toEqual([parent]);
+      });
+
       it('sets the numberOfValues to request to 1', () => {
         const selection = buildMockCategoryFacetValue({
           value: 'A',
