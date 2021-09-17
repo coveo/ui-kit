@@ -23,7 +23,6 @@ const CLASS_WITHOUT_SUBMIT =
 /** @typedef {import("coveo").StandaloneSearchBoxState} StandaloneSearchBoxState */
 /** @typedef {import("coveo").StandaloneSearchBox} StandaloneSearchBox */
 /** @typedef {import("c/quanticSearchBoxSuggestionsList").default} quanticSearchBoxSuggestionsList */
-/** @typedef {KeyboardEvent | {target: {value : string}}} KeyboardEventWithTarget */
 /** @typedef {{key: number, value: string}} Suggestion */
 
 /**
@@ -225,9 +224,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.input.blur();
   }
 
-  /**
-   * @param {KeyboardEventWithTarget} event
-   */
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:

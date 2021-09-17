@@ -9,7 +9,7 @@
                 "<c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "false",
                 "targets": []
@@ -56,7 +56,7 @@
                 "<c-quantic-date-facet field=\"date\" label=\"Date\" engine-id={engineId}></c-quantic-date-facet>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -160,7 +160,7 @@
                 "<c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
                 "targets": {
@@ -195,7 +195,7 @@
                 "<c-quantic-facet field=\"filetype\" label=\"File Type\" engine-id={engineId}></c-quantic-facet>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -290,7 +290,7 @@
                 "<c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  "
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "false",
                 "targets": {
@@ -335,7 +335,7 @@
                 "<c-quantic-numeric-facet field=\"ytlikecount\" label=\"Youtube Likes\" engine-id={engineId}></c-quantic-numeric-facet>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -459,7 +459,7 @@
                 "<c-quantic-pager engine-id={engineId}></c-quantic-pager>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -494,7 +494,7 @@
                 "<c-quantic-query-error engine-id={engineId}></c-quantic-query-error>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": []
@@ -521,7 +521,7 @@
                 "<c-quantic-recent-queries-list engine-id={engineId}></c-quantic-recent-queries-list>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
                 "targets": {
@@ -574,7 +574,7 @@
             "fires": "",
             "examples": [],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "false",
                 "targets": []
@@ -641,7 +641,7 @@
                 "<c-quantic-recent-results-list engine-id={engineId}></c-quantic-recent-results-list>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
                 "targets": {
@@ -694,7 +694,7 @@
             "fires": "",
             "examples": [],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "false",
                 "targets": []
@@ -741,7 +741,7 @@
                 "<c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "false",
                 "targets": []
@@ -808,7 +808,7 @@
                 "<c-quantic-result-list engine-id={engineId}></c-quantic-result-list>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -843,7 +843,7 @@
                 "<c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "false",
                 "targets": []
@@ -870,7 +870,7 @@
                 "<c-quantic-search-box engine-id={engineId}></c-quantic-search-box>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -933,7 +933,7 @@
             "fires": "",
             "examples": [],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "false",
                 "targets": []
@@ -960,7 +960,7 @@
                 "<c-quantic-search-interface engine-id={engineId}></c-quantic-search-interface>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -1035,7 +1035,7 @@
                 "<c-quantic-sort engine-id={engineId}></c-quantic-sort>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -1070,7 +1070,7 @@
                 "<c-quantic-standalone-search-box engine-id={engineId}></c-quantic-standalone-search-box>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -1142,7 +1142,7 @@
                 "<c-quantic-summary engine-id={engineId}></c-quantic-summary>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
                 "targets": {
@@ -1177,7 +1177,7 @@
                 "<c-quantic-tab label=\"Community\" expression=\"@objecttype==&quot;Message&quot;\" engine-id={engineId}></c-quantic-tab>"
             ],
             "category": "LWC",
-            "salesforceMeta": {
+            "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
                 "targets": []

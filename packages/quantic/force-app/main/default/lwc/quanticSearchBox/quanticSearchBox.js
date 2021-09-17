@@ -13,7 +13,6 @@ import clear from '@salesforce/label/c.quantic_Clear';
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
 /** @typedef {import("coveo").SearchBox} SearchBox */
 /** @typedef {import('c/quanticSearchBoxSuggestionsList').default} quanticSearchBoxSuggestionsList */
-/** @typedef {KeyboardEvent | {target: {value : string}}} KeyboardEventWithTarget */
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -197,9 +196,6 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.blur();
   }
 
-  /**
-   * @param {KeyboardEventWithTarget} event
-   */
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:

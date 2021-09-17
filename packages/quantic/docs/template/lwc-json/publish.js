@@ -188,7 +188,7 @@ function parseClass(element, parentNode, childNodes) {
     fires: element.fires || '',
     examples: [],
     category: element.category || '',
-    salesforceMeta: {
+    xmlMeta: {
       apiVersion: element.xmlMeta?.apiVersion || '',
       isExposed: element.xmlMeta?.isExposed,
       targets: element.xmlMeta?.targets || []
