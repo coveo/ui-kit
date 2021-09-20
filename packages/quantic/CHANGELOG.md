@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.63.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.3...@coveo/quantic@0.63.4) (2021-09-16)
+
+
+### Bug Fixes
+
+* **quantic:** card and facet style changes ([#1205](https://github.com/coveo/ui-kit/issues/1205)) ([7b874ca](https://github.com/coveo/ui-kit/commit/7b874ca4a81418a63e9c57744beeb09f85592c15))
+
+
+
+
+
 ## [0.63.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.2...@coveo/quantic@0.63.3) (2021-09-15)
 
 **Note:** Version bump only for package @coveo/quantic

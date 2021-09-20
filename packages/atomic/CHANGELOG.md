@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.6...@coveo/atomic@1.0.7) (2021-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** change facet value checkbox to svg ([#1210](https://github.com/coveo/ui-kit/issues/1210)) ([664771b](https://github.com/coveo/ui-kit/commit/664771b5e3bfb7142b78dbc836554aba5d117b1a))
+* **atomic:** make magnifying glass fluid width on no results ([#1206](https://github.com/coveo/ui-kit/issues/1206)) ([c3ed24d](https://github.com/coveo/ui-kit/commit/c3ed24da04aa6956453b4b8ee9c42bc4b6fc8b51))
+
+
+
+
+
+## [1.0.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.5...@coveo/atomic@1.0.6) (2021-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** change selected facet box from border to box-shadow ([#1208](https://github.com/coveo/ui-kit/issues/1208)) ([cb32eaa](https://github.com/coveo/ui-kit/commit/cb32eaa208f96db6f131a87ca55109a55167492b))
+
+
+
+
+
+## [1.0.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.4...@coveo/atomic@1.0.5) (2021-09-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.0.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.3...@coveo/atomic@1.0.4) (2021-09-15)
 
 **Note:** Version bump only for package @coveo/atomic
