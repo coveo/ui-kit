@@ -45,7 +45,6 @@ export default class QuanticNumericRange extends LightningElement {
     */
     onApply(evt) {
         evt.preventDefault();
-        console.log(this.inputMax.validity);
         if(!this.inputMin.validity.valid || !this.inputMax.validity.valid) {
             return;
         }
