@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.7...@coveo/atomic@1.0.8) (2021-09-20)
+
+
+### Bug Fixes
+
+* **atomic:** add animation on refine modal ([#1215](https://github.com/coveo/ui-kit/issues/1215)) ([5bfcdaf](https://github.com/coveo/ui-kit/commit/5bfcdaf9ef7dfa2a21dfd105c27d09967db6f03c))
+* **atomic:** change hover and visited state for links ([#1212](https://github.com/coveo/ui-kit/issues/1212)) ([8783954](https://github.com/coveo/ui-kit/commit/87839543e715c1710e124281960f1e1c0338b7dc))
+* **atomic:** change numeric and timeframe facet to put input at the bottom ([#1213](https://github.com/coveo/ui-kit/issues/1213)) ([d997c0b](https://github.com/coveo/ui-kit/commit/d997c0b4408e138acc562c7521fe4295676d2b46))
+
+
+
+
+
 ## [1.0.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.6...@coveo/atomic@1.0.7) (2021-09-16)
 
 
