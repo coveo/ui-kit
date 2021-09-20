@@ -77,15 +77,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       );
     },
 
-    toggleSelect(selection) {
-      controller.toggleSelect(selection);
-      dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
-        )
-      );
-    },
-
     deselectAll() {
       coreController.deselectAll();
       dispatch(executeSearch(logFacetClearAll(getFacetId())));

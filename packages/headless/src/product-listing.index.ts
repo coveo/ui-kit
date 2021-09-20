@@ -72,3 +72,16 @@ export {
   SpecificFacetSearchResult,
   buildFacet,
 } from './controllers/product-listing/facet/headless-product-listing-facet';
+
+export {
+  CategoryFacet,
+  CategoryFacetOptions,
+  CategoryFacetProps,
+  CategoryFacetSearch,
+  CategoryFacetSearchOptions,
+  CategoryFacetSearchState,
+  CategoryFacetState,
+  CategoryFacetValue,
+  CategoryFacetSearchResult,
+  buildCategoryFacet,
+} from './controllers/product-listing/category-facet/headless-product-listing-category-facet';

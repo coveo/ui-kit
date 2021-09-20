@@ -1,4 +1,3 @@
-import {executeSearch} from '../../../features/search/search-actions';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -12,7 +11,7 @@ import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
-  SearchSection,
+  ProductListingSection,
 } from '../../../state/state-sections';
 import {
   CategoryFacetOptions,
@@ -24,10 +23,9 @@ import {
   categoryFacetSearchSet,
   categoryFacetSet,
   configuration,
-  search,
+  productListing,
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -37,6 +35,8 @@ import {
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
 } from '../../core/facets/category-facet/headless-core-category-facet';
+import {ProductListingEngine} from '../../../product-listing.index';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 
 export {
   CategoryFacetValue,
@@ -58,7 +58,7 @@ export {
  * @returns A `CategoryFacet` controller instance.
  * */
 export function buildCategoryFacet(
-  engine: SearchEngine,
+  engine: ProductListingEngine,
   props: CategoryFacetProps
 ): CategoryFacet {
   if (!loadCategoryFacetReducers(engine)) {
@@ -74,31 +74,32 @@ export function buildCategoryFacet(
 
     toggleSelect: (selection: CategoryFacetValue) => {
       controller.toggleSelect(selection);
-      const analyticsAction = getToggleSelectAnalyticsAction(
-        facetId,
-        selection
-      );
-      dispatch(executeSearch(analyticsAction));
+      dispatch(fetchProductListing());
+      dispatch(getToggleSelectAnalyticsAction(facetId, selection));
     },
 
     deselectAll: () => {
       controller.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(facetId)));
+      dispatch(fetchProductListing());
+      dispatch(logFacetClearAll(facetId));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       controller.sortBy(criterion);
-      dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
+      dispatch(fetchProductListing());
+      dispatch(logFacetUpdateSort({facetId, criterion}));
     },
 
     showMoreValues() {
       controller.showMoreValues();
-      dispatch(executeSearch(logFacetShowMore(facetId)));
+      dispatch(fetchProductListing());
+      dispatch(logFacetShowMore(facetId));
     },
 
     showLessValues() {
       controller.showLessValues();
-      dispatch(executeSearch(logFacetShowLess(facetId)));
+      dispatch(fetchProductListing());
+      dispatch(logFacetShowLess(facetId));
     },
 
     get state() {
@@ -110,18 +111,18 @@ export function buildCategoryFacet(
 }
 
 function loadCategoryFacetReducers(
-  engine: SearchEngine
-): engine is SearchEngine<
+  engine: ProductListingEngine
+): engine is ProductListingEngine<
   CategoryFacetSection &
     CategoryFacetSearchSection &
     ConfigurationSection &
-    SearchSection
+    ProductListingSection
 > {
   engine.addReducers({
     categoryFacetSet,
     categoryFacetSearchSet,
     configuration,
-    search,
+    productListing,
   });
   return true;
 }

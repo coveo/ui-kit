@@ -2,7 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {
   categoryFacetSortCriteria,
   CategoryFacetSortCriterion,
-} from '../../../features/facets/category-facet-set/interfaces/request';
+} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   facetId,
   field,
@@ -13,7 +13,7 @@ import {
   injectionDepth,
   numberOfValues,
   facetSearch,
-} from '../../core/facets/_common/facet-option-definitions';
+} from '../_common/facet-option-definitions';
 
 export interface CategoryFacetOptions {
   /**
