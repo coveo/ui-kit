@@ -25,7 +25,7 @@
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
-    "npm:publish": "npm publish --access public"
+    "npm:publish": "node ../../scripts/deploy/is-published.js . || npm publish --access public"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "3.1.5",
