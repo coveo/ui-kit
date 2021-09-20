@@ -179,6 +179,8 @@ describe('Facet Test Suite', () => {
           function selectSearchResult() {
             searchForSingleValue();
             checkFirstValue(FacetSelectors);
+
+            cy.wait(InterceptAliases.Search);
           }
 
           describe('verify rendering', () => {
@@ -195,7 +197,6 @@ describe('Facet Test Suite', () => {
 
           describe('verify analytics', () => {
             before(selectSearchResult);
-
             Expect.logFacetSelect(defaultField, 0);
           });
         });
