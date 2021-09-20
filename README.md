@@ -22,6 +22,12 @@ npm start
 
 **Note:** You should build all separate projects at least once before running the `npm start` command the first time.
 
+To build a single project for production (for instance, the `product-listing` package), run:
+
+```sh
+npm run build  -- --filter product-listing
+```
+
 To run all FTs for Atomic using Cypress, run: (need to start all projects in development before
 
 **Note:** You should build all separate projects at least once before running tests.
