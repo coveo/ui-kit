@@ -90,34 +90,35 @@ export interface AnalyticsConfiguration {
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
-  organizationId: requiredNonEmptyString,
-  accessToken: requiredNonEmptyString,
-  platformUrl: new StringValue({
-    required: false,
-    emptyAllowed: false,
-  }),
-  name: new StringValue({
-    required: false,
-    emptyAllowed: false,
-  }),
-  analytics: new RecordValue({
-    options: {
+export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> =
+  {
+    organizationId: requiredNonEmptyString,
+    accessToken: requiredNonEmptyString,
+    platformUrl: new StringValue({
       required: false,
-    },
-    values: {
-      enabled: new BooleanValue({
+      emptyAllowed: false,
+    }),
+    name: new StringValue({
+      required: false,
+      emptyAllowed: false,
+    }),
+    analytics: new RecordValue({
+      options: {
         required: false,
-      }),
-      originLevel2: new StringValue({
-        required: false,
-      }),
-      originLevel3: new StringValue({
-        required: false,
-      }),
-    },
-  }),
-};
+      },
+      values: {
+        enabled: new BooleanValue({
+          required: false,
+        }),
+        originLevel2: new StringValue({
+          required: false,
+        }),
+        originLevel3: new StringValue({
+          required: false,
+        }),
+      },
+    }),
+  };
 
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {

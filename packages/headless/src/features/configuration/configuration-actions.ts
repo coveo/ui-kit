@@ -40,7 +40,9 @@ export const updateBasicConfiguration = createAction(
     validatePayload(payload, {
       accessToken: nonEmptyString,
       organizationId: nonEmptyString,
-      platformUrl: new StringValue({url: true, emptyAllowed: false}),
+      platformUrl: new StringValue({
+        emptyAllowed: false,
+      }),
     })
 );
 
@@ -83,7 +85,9 @@ export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
   (payload: UpdateSearchConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
-      apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
+      apiBaseUrl: new StringValue({
+        emptyAllowed: false,
+      }),
       pipeline: nonEmptyString,
       searchHub: nonEmptyString,
       timezone: nonEmptyString,
@@ -135,7 +139,9 @@ export const updateAnalyticsConfiguration = createAction(
       enabled: new BooleanValue({default: true}),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
-      apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
+      apiBaseUrl: new StringValue({
+        emptyAllowed: false,
+      }),
       runtimeEnvironment: new Value(),
     })
 );
