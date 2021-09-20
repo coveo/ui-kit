@@ -85,7 +85,10 @@ export const categoryFacetSetReducer = createReducer(
           const missingParent = !parent;
 
           if (missingParent || segment !== parent.value) {
-            parent = buildCategoryFacetValueRequest(segment, retrieveCount);
+            parent = buildSelectedCategoryFacetValueRequest(
+              segment,
+              retrieveCount
+            );
             activeLevel.length = 0;
             activeLevel.push(parent);
           }
@@ -104,7 +107,7 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const valueRequest = buildCategoryFacetValueRequest(
+        const valueRequest = buildSelectedCategoryFacetValueRequest(
           selection.value,
           retrieveCount
         );
@@ -193,7 +196,7 @@ function buildCategoryFacetRequest(
   };
 }
 
-function buildCategoryFacetValueRequest(
+function buildSelectedCategoryFacetValueRequest(
   value: string,
   retrieveCount: number
 ): CategoryFacetValueRequest {
