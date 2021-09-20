@@ -287,7 +287,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             );
           });
 
-          describe('versify analytics', () => {
+          describe('verify analytics', () => {
             before(setupSecondLinkValue);
             NumericFacetAssertions.assertLogNumericFacetSelect(
               field,

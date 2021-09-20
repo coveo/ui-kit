@@ -12,19 +12,18 @@ export interface UnitRange extends TagProps {
 export const label = 'Timeframe';
 export const field = 'date';
 export const unitFrames: UnitRange[] = [
-  {unit: 'day'},
-  {unit: 'week'},
   {unit: 'month'},
+  {unit: 'quarter'},
   {unit: 'year'},
 ];
 
 export const unitFramesCustom = [{unit: 'day', period: 'next', amout: 2}];
 export const addTimeframeFacet =
-  (props: TagProps = {}, unites?: UnitRange[]) =>
+  (props: TagProps = {}, units?: UnitRange[]) =>
   (env: TestFixture) => {
     const e = generateComponentHTML('atomic-timeframe-facet', props);
-    if (unites) {
-      unites.forEach((u: UnitRange) => {
+    if (units) {
+      units.forEach((u: UnitRange) => {
         const rangeHTML = generateComponentHTML('atomic-timeframe', u);
         e.append(rangeHTML);
       });

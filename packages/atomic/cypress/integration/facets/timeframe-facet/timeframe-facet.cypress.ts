@@ -41,10 +41,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
         TimeframeFacetSelectors,
         0
       );
-      CommonFacetAssertions.assertNumberOfIdleLinkValues(
-        TimeframeFacetSelectors,
-        defaultNumberOfValues
-      );
       CommonFacetAssertions.assertDisplayClearButton(
         TimeframeFacetSelectors,
         false
@@ -108,7 +104,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           );
         });
 
-        describe('versify analytics', () => {
+        describe('verify analytics', () => {
           before(setupSecondLinkValue);
           TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
             field,
@@ -198,7 +194,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
   describe('with custom #field timeframe-facet', () => {
     const customField = 'indexeddate';
-    const defaultNumberOfValues = unitFrames.length;
     function setupTimeframeFacet() {
       new TestFixture()
         .with(addTimeframeFacet({label, field: customField}, unitFrames))
@@ -214,41 +209,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
         false
       );
       CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
-    });
-
-    describe('when selecting a value', () => {
-      const selectionIndex = 1;
-      function setupSelectLinkValue() {
-        setupTimeframeFacet();
-        selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
-      }
-
-      describe('verify rendering', () => {
-        before(setupSelectLinkValue);
-        CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
-        // CommonAssertions.assertAccessibility(TimeframeFacetSelectors);
-        CommonFacetAssertions.assertDisplayClearButton(
-          TimeframeFacetSelectors,
-          true
-        );
-        CommonFacetAssertions.assertNumberOfSelectedLinkValues(
-          TimeframeFacetSelectors,
-          1
-        );
-        CommonFacetAssertions.assertNumberOfIdleLinkValues(
-          TimeframeFacetSelectors,
-          defaultNumberOfValues - 1
-        );
-      });
-
-      describe('verify analytic', () => {
-        before(setupSelectLinkValue);
-        TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
-          customField,
-          unitFrames[selectionIndex].unit
-        );
-      });
     });
   });
 
@@ -319,14 +279,13 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe('with custom #amount timeframe', () => {
-    const amount = 10;
     const periodFrames = [
-      {unit: 'day', amount: amount},
-      {unit: 'week', amount: amount},
-      {unit: 'month', amount: amount},
+      {unit: 'month', amount: 20},
+      {unit: 'year', amount: 3},
+      {unit: 'year', amount: 5},
     ];
     const customNumberOfValues = periodFrames.length;
-    const selectionIndex = 1;
+    const selectionIndex = 0;
     function setupTimeframeFacetCustomAmount() {
       new TestFixture()
         .with(addTimeframeFacet({label, field}, periodFrames))
@@ -348,53 +307,17 @@ describe('Timeframe Facet V1 Test Suites', () => {
       );
       TimeframeFacetAssertions.assertFacetValueContainsText(
         selectionIndex,
-        `Past ${amount} ${periodFrames[selectionIndex].unit}s`
+        `Past ${periodFrames[selectionIndex].amount} ${periodFrames[selectionIndex].unit}s`
       );
-    });
-
-    describe('when selecting a value', () => {
-      function setupSelectLinkValue() {
-        setupTimeframeFacetCustomAmount();
-        selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
-      }
-
-      describe('verify rendering', () => {
-        before(setupSelectLinkValue);
-        CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
-        // CommonAssertions.assertAccessibility(TimeframeFacetSelectors);
-        CommonFacetAssertions.assertDisplayClearButton(
-          TimeframeFacetSelectors,
-          true
-        );
-        CommonFacetAssertions.assertNumberOfSelectedLinkValues(
-          TimeframeFacetSelectors,
-          1
-        );
-        CommonFacetAssertions.assertNumberOfIdleLinkValues(
-          TimeframeFacetSelectors,
-          customNumberOfValues - 1
-        );
-      });
-
-      describe('verify analytic', () => {
-        before(setupSelectLinkValue);
-        TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
-          field,
-          periodFrames[selectionIndex].unit,
-          'past',
-          periodFrames[selectionIndex].amount
-        );
-      });
     });
   });
 
   describe('with custom #period timeframe', () => {
     const period = 'next';
     const periodFrames = [
-      {unit: 'day', period: period},
-      {unit: 'week', period: period},
-      {unit: 'month', period: period},
+      {unit: 'day', period},
+      {unit: 'week', period},
+      {unit: 'month', period},
     ];
     function setupTimeframeFacetCustomAmount() {
       new TestFixture()
