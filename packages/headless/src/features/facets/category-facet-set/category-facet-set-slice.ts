@@ -93,11 +93,12 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const valueRequest = buildSelectedCategoryFacetValueRequest(
+        const newParent = buildCategoryFacetValueRequest(
           selection.value,
           retrieveCount
         );
-        children.push(valueRequest);
+        newParent.state = 'selected';
+        children.push(newParent);
         request.numberOfValues = 1;
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
@@ -182,7 +183,7 @@ function ensurePathAndReturnChildren(
     const missingParent = !parent;
 
     if (missingParent || segment !== parent.value) {
-      parent = buildSelectedCategoryFacetValueRequest(segment, retrieveCount);
+      parent = buildCategoryFacetValueRequest(segment, retrieveCount);
       children.length = 0;
       children.push(parent);
     }
@@ -207,13 +208,13 @@ function buildCategoryFacetRequest(
   };
 }
 
-function buildSelectedCategoryFacetValueRequest(
+function buildCategoryFacetValueRequest(
   value: string,
   retrieveCount: number
 ): CategoryFacetValueRequest {
   return {
     value,
-    state: 'selected',
+    state: 'idle',
     children: [],
     retrieveChildren: true,
     retrieveCount,
