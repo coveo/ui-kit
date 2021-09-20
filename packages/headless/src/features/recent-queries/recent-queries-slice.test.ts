@@ -117,26 +117,6 @@ describe('recent-queries-slice', () => {
     ]);
   });
 
-  it('should not add an empty query to the list', () => {
-    const emptyQueries = ['', '     '];
-    for (const i in emptyQueries) {
-      state.queries = testQueries;
-      state.maxLength = 10;
-      const searchAction = executeSearch.fulfilled(
-        buildMockSearch({
-          queryExecuted: emptyQueries[i],
-          response: buildMockSearchResponse({}),
-        }),
-        '',
-        logSearchEvent({evt: 'foo'})
-      );
-
-      expect(recentQueriesReducer(state, searchAction).queries).toEqual(
-        testQueries
-      );
-    }
-  });
-
   it('should not add new recent query on search fulfilled if queue already contains the query', () => {
     const duplicates = ['what is a query', ' what is a query      '];
     for (const i in duplicates) {
@@ -153,6 +133,24 @@ describe('recent-queries-slice', () => {
 
       expect(recentQueriesReducer(state, searchAction).queries).toEqual(
         testQueries
+      );
+    }
+  });
+
+  it('should not add an empty query to the list', () => {
+    const emptyQueries = ['', '     '];
+    for (const i in emptyQueries) {
+      const searchAction = executeSearch.fulfilled(
+        buildMockSearch({
+          queryExecuted: emptyQueries[i],
+          response: buildMockSearchResponse({}),
+        }),
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+
+      expect(recentQueriesReducer(state, searchAction).queries.length).toEqual(
+        0
       );
     }
   });
