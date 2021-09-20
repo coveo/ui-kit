@@ -178,8 +178,8 @@ describe('Facet Test Suite', () => {
         describe('when selecting a search result', () => {
           function selectSearchResult() {
             searchForSingleValue();
+            FacetSelectors.values().should('have.length', 1);
             checkFirstValue(FacetSelectors);
-
             cy.wait(InterceptAliases.Search);
           }
 
