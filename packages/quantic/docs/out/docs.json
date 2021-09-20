@@ -279,11 +279,13 @@
         {
             "name": "QuanticFacetValue",
             "attribute": "quantic-facet-value",
-            "description": "<p>The <code>QuanticFacetValue</code> component displays a formatted facet value and number of results with that value.</p>",
+            "description": "<p>The <code>QuanticFacetValue</code> component is used by a facet component to display a formatted facet value and number of results with that value.</p>",
             "access": "",
-            "fires": "",
+            "fires": [
+                "CustomEvent#event:selectvalue"
+            ],
             "examples": [
-                "<c-quantic-date-facet field=\"date\" label=\"Date\" engine-id={engineId}></c-quantic-date-facet>"
+                "<c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked}></c-quantic-facet-value>"
             ],
             "category": "LWC",
             "xmlMeta": {
@@ -296,10 +298,28 @@
                     "name": "item",
                     "attribute": "item",
                     "access": "@api",
-                    "description": "<p>The facet value to display</p>",
+                    "description": "<p>The facet value to display.</p>",
                     "required": true,
                     "defaultValue": "",
-                    "type": ""
+                    "type": "FacetValueBase"
+                },
+                {
+                    "name": "isChecked",
+                    "attribute": "is-checked",
+                    "access": "@api",
+                    "description": "<p>Whether the checkbox ist checked.</p>",
+                    "required": false,
+                    "defaultValue": "false",
+                    "type": "boolean"
+                },
+                {
+                    "name": "formattingFunction",
+                    "attribute": "formatting-function",
+                    "access": "@api",
+                    "description": "<p>A function used to format the displayed value.</p>",
+                    "required": false,
+                    "defaultValue": "undefined",
+                    "type": "function"
                 }
             ]
         },
@@ -344,6 +364,44 @@
                     "required": false,
                     "defaultValue": "false",
                     "type": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "QuanticNumberButton",
+            "attribute": "quantic-number-button",
+            "description": "<p>The <code>QuanticNumberButton</code> component is used internally to display a button in a set of buttons with numeric labels.</p>",
+            "access": "",
+            "fires": [
+                "CustomEvent#event:goto"
+            ],
+            "examples": [
+                "<c-quantic-number-button number=\"1\" current=\"1\" ongoto={goto}></c-quantic-number-button>"
+            ],
+            "category": "LWC",
+            "xmlMeta": {
+                "apiVersion": "50.0",
+                "isExposed": "true",
+                "targets": []
+            },
+            "properties": [
+                {
+                    "name": "number",
+                    "attribute": "number",
+                    "access": "@api",
+                    "description": "<p>The number to display as button label.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "number"
+                },
+                {
+                    "name": "current",
+                    "attribute": "current",
+                    "access": "@api",
+                    "description": "<p>The selected number in the set of buttons.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "number"
                 }
             ]
         },
