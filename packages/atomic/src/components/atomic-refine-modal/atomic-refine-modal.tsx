@@ -171,7 +171,7 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.options.map((option) => this.buildOption(option))}
         </select>
         <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
-          <atomic-icon icon={SortIcon}></atomic-icon>
+          <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
         </div>
       </div>,
     ];
