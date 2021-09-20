@@ -89,6 +89,10 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     this.dispatchEvent(suggestionSelectedEvent);
   }
 
+  handleSuggestionHover() {
+    this.resetSelection();
+  }
+
   preventDefault(event) {
     event.preventDefault();
   }

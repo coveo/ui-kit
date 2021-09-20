@@ -5,8 +5,13 @@ import {
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {Result} from '../../api/search/search/result';
-import {ConfigurationSection, FoldingSection} from '../../state/state-sections';
+import {
+  ConfigurationSection,
+  FoldingSection,
+  QuerySection,
+} from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/build-search-request';
 import {CollectionId} from './folding-state';
 
 export interface RegisterFoldingActionCreatorPayload {
@@ -56,7 +61,9 @@ export const registerFolding = createAction(
     validatePayload(payload, foldingOptionsSchemaDefinition)
 );
 
-export type StateNeededByLoadCollection = ConfigurationSection & FoldingSection;
+export type StateNeededByLoadCollection = ConfigurationSection &
+  FoldingSection &
+  QuerySection;
 
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
@@ -68,24 +75,19 @@ export const loadCollection = createAsyncThunk<
     collectionId: CollectionId,
     {getState, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    const {
-      folding: {fields},
-      configuration: {
-        accessToken,
-        organizationId,
-        search: {apiBaseUrl, timezone},
-      },
-    } = getState();
+    const state = getState();
+    const sharedWithSearchRequest =
+      buildSearchAndFoldingLoadCollectionRequest(state);
 
     const response = await searchAPIClient.search({
-      tab: '',
-      referrer: '',
-      accessToken,
-      organizationId,
-      url: apiBaseUrl,
-      aq: `@${fields.collection} = ${collectionId}`,
-      numberOfResults: 100,
-      timezone,
+      ...sharedWithSearchRequest,
+      q: getQForHighlighting(state),
+      enableQuerySyntax: true,
+      cq: `@${state.folding.fields.collection}=${collectionId}`,
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: 100,
     });
 
     if (isErrorResponse(response)) {
@@ -95,3 +97,18 @@ export const loadCollection = createAsyncThunk<
     return {collectionId, results: response.success.results};
   }
 );
+
+function getQForHighlighting(state: StateNeededByLoadCollection) {
+  // This piece of code serves the following purpose:
+  // Inject the "original" query "q" to get proper keywords highlighting when loading a full collection
+  // However, the intent behind this feature is to load "every results available for this collection", regardless of other end user filters (including the search box itself)
+  // For that reason, we force enable query syntax + inject an `OR @uri` expression in the query.
+
+  if (state.query.q === '') {
+    return '';
+  }
+
+  return state.query.enableQuerySyntax
+    ? `${state.query.q} OR @uri`
+    : `( <@- ${state.query.q} -@> ) OR @uri`;
+}

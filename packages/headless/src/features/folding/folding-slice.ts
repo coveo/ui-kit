@@ -172,23 +172,12 @@ export const foldingReducer = createReducer(
       .addCase(
         loadCollection.fulfilled,
         (state, {payload: {collectionId, results}}) => {
-          const rootResult = resolveRootFromFields(
+          const newCollections = createCollections(
             results as ResultWithFolding[],
             state.fields
           );
-          if (!rootResult) {
-            return;
-          }
-          state.collections[collectionId] = {
-            result: rootResult,
-            children: resolveChildrenFromFields(
-              rootResult,
-              results as ResultWithFolding[],
-              state.fields
-            ),
-            moreResultsAvailable: false,
-            isLoadingMoreResults: false,
-          };
+          state.collections[collectionId] = newCollections[collectionId];
+          state.collections[collectionId].moreResultsAvailable = false;
         }
       )
 );

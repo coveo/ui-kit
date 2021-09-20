@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.63.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.3...@coveo/quantic@0.63.4) (2021-09-16)
+
+
+### Bug Fixes
+
+* **quantic:** card and facet style changes ([#1205](https://github.com/coveo/ui-kit/issues/1205)) ([7b874ca](https://github.com/coveo/ui-kit/commit/7b874ca4a81418a63e9c57744beeb09f85592c15))
+
+
+
+
+
+## [0.63.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.2...@coveo/quantic@0.63.3) (2021-09-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.63.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.1...@coveo/quantic@0.63.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* **quantic:** fixed standalone searchbox issues ([#1190](https://github.com/coveo/ui-kit/issues/1190)) ([57f0af0](https://github.com/coveo/ui-kit/commit/57f0af0d2b38edde3f733f5083a768238196cbd8))
+* **quantic:** merge error went through ([#1204](https://github.com/coveo/ui-kit/issues/1204)) ([a75d6e1](https://github.com/coveo/ui-kit/commit/a75d6e17935bc3dce8581f2eb8fe50080e7924c9))
+
+
+
+
+
+## [0.63.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.0...@coveo/quantic@0.63.1) (2021-09-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.63.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.62.0...@coveo/quantic@0.63.0) (2021-09-13)
+
+
+### Features
+
+* **quantic:** add quantic facet tests ([#1189](https://github.com/coveo/ui-kit/issues/1189)) ([bb1b89f](https://github.com/coveo/ui-kit/commit/bb1b89f51592c993384fe27fb5377532129f3eed))
+
+
+
+
+
 # [0.62.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.61.0...@coveo/quantic@0.62.0) (2021-09-13)
 
 

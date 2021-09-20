@@ -30,7 +30,6 @@ export function typeFacetSearchQuery(
       .should('not.be.disabled')
       .type(character, {force: true, delay: 300});
     cy.wait(TestFixture.interceptAliases.FacetSearch);
-    console.log('hmm', index, characters.length);
     if (index < characters.length - 1) {
       cy.wait(TestFixture.interceptAliases.UA);
     }

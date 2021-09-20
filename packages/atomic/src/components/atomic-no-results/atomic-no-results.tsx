@@ -65,7 +65,12 @@ export class AtomicNoResults {
   }
 
   private renderMagnifyingGlass() {
-    return <div innerHTML={MagnifyingGlass} class="my-6"></div>;
+    return (
+      <atomic-icon
+        icon={MagnifyingGlass}
+        class="my-6 flex flex-col items-center w-1/2"
+      ></atomic-icon>
+    );
   }
 
   private renderNoResults() {
@@ -102,7 +107,7 @@ export class AtomicNoResults {
         style="primary"
         part="cancel-button"
         text={this.bindings.i18n.t('cancel-last-action')}
-        onClick={() => this.history.back()}
+        onClick={() => this.history.backOnNoResults()}
         class="font-bold px-2.5 py-3 my-3"
       ></Button>
     );

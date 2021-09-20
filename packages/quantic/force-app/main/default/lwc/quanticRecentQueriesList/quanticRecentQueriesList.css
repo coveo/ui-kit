@@ -1,8 +1,10 @@
+@import 'c/quanticFacetStyles';
+
 .recent-query__container {
   display: flex;
   flex-direction: row;
   min-width: 0;
-  color: var(--brand-text-link, #0176d3);
+  color: var(--lwc-brandTextLink, dodgerblue);
 }
 
 .query-text__container {
@@ -11,11 +13,10 @@
 
 .recent-query__icon {
   margin-right: .5rem;
-  margin-left: .25rem;
 }
 
 .empty-list-message {
-  color: var(--sds-c-color-gray-8, #8E959D);
+  color: #8e959d;
 }
 
 li:hover {

@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.6...@coveo/atomic@1.0.7) (2021-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** change facet value checkbox to svg ([#1210](https://github.com/coveo/ui-kit/issues/1210)) ([664771b](https://github.com/coveo/ui-kit/commit/664771b5e3bfb7142b78dbc836554aba5d117b1a))
+* **atomic:** make magnifying glass fluid width on no results ([#1206](https://github.com/coveo/ui-kit/issues/1206)) ([c3ed24d](https://github.com/coveo/ui-kit/commit/c3ed24da04aa6956453b4b8ee9c42bc4b6fc8b51))
+
+
+
+
+
+## [1.0.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.5...@coveo/atomic@1.0.6) (2021-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** change selected facet box from border to box-shadow ([#1208](https://github.com/coveo/ui-kit/issues/1208)) ([cb32eaa](https://github.com/coveo/ui-kit/commit/cb32eaa208f96db6f131a87ca55109a55167492b))
+
+
+
+
+
+## [1.0.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.4...@coveo/atomic@1.0.5) (2021-09-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.0.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.3...@coveo/atomic@1.0.4) (2021-09-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.0.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.2...@coveo/atomic@1.0.3) (2021-09-15)
+
+
+### Bug Fixes
+
+* **headless:** fix no results back analytics event ([#1202](https://github.com/coveo/ui-kit/issues/1202)) ([635c40a](https://github.com/coveo/ui-kit/commit/635c40ad3cc0af69506c0eaa646c1f7a4768c361))
+
+
+
+
+
+## [1.0.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.1...@coveo/atomic@1.0.2) (2021-09-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.0.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.0...@coveo/atomic@1.0.1) (2021-09-14)
+
+
+### Bug Fixes
+
+* **headless:** fix folding load collection  ([#1199](https://github.com/coveo/ui-kit/issues/1199)) ([983e56e](https://github.com/coveo/ui-kit/commit/983e56e3a0e6598ac8d7cb109906b3833a72946f))
+
+
+
+
+
 # [1.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@0.75.1...@coveo/atomic@1.0.0) (2021-09-13)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -1,38 +1,13 @@
+@import 'c/quanticFacetStyles';
+
 .facet__search-results_no-match {
-   color: var(--sds-c-color-gray-8, #8E959D);
-   background-color: var(--sds-c-color-gray-3, #F6F7F9);
-   font-size: 12px;
+  color: #8e959d;
+  background-color: whitesmoke;
+  font-size: 12px;
+  border-radius: .25rem;
 }
 
 .facet__search-results_more-matches{
-    color: var(--sds-c-color-gray-8, #8E959D);
-    font-size: 12px;
-}
-
-.facet__show {
-    display: flex;
-    flex-direction: column;
-}
-
-.facet__show-less {
-    font-size: 12px;
-    outline: 0;
-    background-color: white;
-    color: var(--sds-c-color-gray-8, #8E959D);
-    border: none;
-    margin-bottom: 5px;
-}
-
-.facet__show-more {
-    font-size: 12px;
-    outline: 0;
-    background-color: white;
-    color: #005FB2;
-    border: none;
-    margin-bottom: 5px;
-}
-
-.facet__show-more_text, .facet__show-less_text{
-    display: flex;
-    align-items: left;
+  color: #8e959d;
+  font-size: 12px;
 }
