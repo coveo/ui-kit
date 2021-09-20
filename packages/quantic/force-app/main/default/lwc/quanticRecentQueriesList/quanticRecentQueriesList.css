@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: row;
   min-width: 0;
-  color: var(--brand-text-link, #0176d3);
 }
 
 .query-text__container {
@@ -16,14 +15,4 @@
 
 .empty-list-message {
   color: var(--sds-c-color-gray-8, #8e959d);
-}
-
-li:hover {
-  text-decoration: underline;
-  cursor: pointer;
-  text-decoration-color: var(--brand-text-link, #0176d3);
-}
-
-li div {
-  pointer-events: none;
 }

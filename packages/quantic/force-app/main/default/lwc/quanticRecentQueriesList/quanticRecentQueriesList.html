@@ -15,13 +15,13 @@
       </template>
       <ul>
         <template for:each={queries} for:item="query" for:index="index">
-          <li key={query} value={index} onclick={executeQuery} class="slds-var-m-vertical_x-small slds-grid">
-            <div class="slds-col recent-query__container">
-              <lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" alternative-text="search icon" size="xx-small"></lightning-icon>
-              <div class="slds-text-body_small nowrap query-text__container">
-                <p class="slds-truncate">{query}</p>
-              </div>
-            </div>
+          <li key={query} class="slds-var-m-vertical_x-small slds-grid" value={index} onclick={executeQuery}>
+            <a class="slds-col recent-query__container">
+              <span><lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" alternative-text="search icon" size="xx-small"></lightning-icon></span>
+              <span class="slds-text-body_small nowrap query-text__container slds-truncate slds-text-link">
+               {query}
+              </span>
+            </a>
           </li>
         </template>
       </ul>
