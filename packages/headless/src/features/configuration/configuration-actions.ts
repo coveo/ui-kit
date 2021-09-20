@@ -4,7 +4,7 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {StringValue, BooleanValue, Value} from '@coveo/bueno';
+import {BooleanValue, Value} from '@coveo/bueno';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
@@ -40,7 +40,7 @@ export const updateBasicConfiguration = createAction(
     validatePayload(payload, {
       accessToken: nonEmptyString,
       organizationId: nonEmptyString,
-      platformUrl: new StringValue({url: true, emptyAllowed: false}),
+      platformUrl: nonEmptyString,
     })
 );
 
@@ -83,7 +83,7 @@ export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
   (payload: UpdateSearchConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
-      apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
+      apiBaseUrl: nonEmptyString,
       pipeline: nonEmptyString,
       searchHub: nonEmptyString,
       timezone: nonEmptyString,
@@ -141,7 +141,7 @@ export const updateAnalyticsConfiguration = createAction(
       enabled: new BooleanValue({default: true}),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
-      apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
+      apiBaseUrl: nonEmptyString,
       runtimeEnvironment: new Value(),
       anonymous: new BooleanValue({default: false}),
     })
