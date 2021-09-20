@@ -3,7 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 
 import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
@@ -113,11 +113,17 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get canShowMore() {
-    return this.facet && this.state.canShowMoreValues;
+    if (!this.facet) {
+      return false;
+    }
+    return this.state.canShowMoreValues;
   }
 
   get canShowLess() {
-    return this.facet && this.state.canShowLessValues;
+    if (!this.facet) {
+      return false;
+    }
+    return this.state.canShowLessValues;
   }
 
   get hasValues() {
@@ -228,17 +234,19 @@ export default class QuanticFacet extends LightningElement {
   }
 
   clearInput() {
-    if(this.input) {
-      this.input.value = '';
-    }
-    this.facet.facetSearch.updateText('');
+    this.input.value = '';
+    this.facet.facetSearch.updateText(this.input?.value);
   }
 
   highlightResult(result, query) {
     if (!query || query.trim() === '') {
       return result;
     }
-    const regex = new RegExp(`(${regexEncode(query)})`, 'i');
+    const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
     return result.replace(regex, '<b class="facet__search-result_highlight">$1</b>');
+  }
+
+  regexEncode(value) {
+    return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
   }
 }
