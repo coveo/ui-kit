@@ -10,11 +10,11 @@ import {Result} from '../../api/search/search/result';
  */
 export const getResultProperty = (result: Result, property: string) => {
   const anyResult = result as unknown as Record<string, unknown>;
-  if (property in result && anyResult[property] !== undefined) {
+  if (anyResult[property] !== undefined) {
     return anyResult[property];
   }
 
-  if (property in result.raw && result.raw[property] !== undefined) {
+  if (result.raw[property] !== undefined) {
     return result.raw[property];
   }
 
