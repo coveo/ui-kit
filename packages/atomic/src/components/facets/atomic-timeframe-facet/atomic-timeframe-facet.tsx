@@ -154,10 +154,15 @@ export class AtomicTimeframeFacet
 
   private get currentValues(): DateRangeRequest[] {
     return this.manualTimeframes.map(({period, amount, unit}) =>
-      buildDateRange({
-        start: {period, unit, amount},
-        end: {period: 'now'},
-      })
+      period === 'past'
+        ? buildDateRange({
+            start: {period, unit, amount},
+            end: {period: 'now'},
+          })
+        : buildDateRange({
+            start: {period: 'now'},
+            end: {period, unit, amount},
+          })
     );
   }
 
@@ -322,8 +327,8 @@ export class AtomicTimeframeFacet
       <FacetContainer>
         {this.renderHeader()}
         {!this.isCollapsed && [
-          this.shouldRenderInput && this.renderDateInput(),
           this.shouldRenderValues && this.renderValues(),
+          this.shouldRenderInput && this.renderDateInput(),
         ]}
       </FacetContainer>
     );

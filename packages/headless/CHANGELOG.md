@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.19.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.3...@coveo/headless@1.19.4) (2021-09-20)
+
+
+### Bug Fixes
+
+* **headless:** trim query string before saving it in recent queries ([#1216](https://github.com/coveo/ui-kit/issues/1216)) ([a84c59f](https://github.com/coveo/ui-kit/commit/a84c59f62ae4e64fb9358f36c3296b2436b63ef5))
+
+
+
+
+
 ## [1.19.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.2...@coveo/headless@1.19.3) (2021-09-15)
 
 

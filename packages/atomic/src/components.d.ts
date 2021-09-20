@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
+import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
@@ -357,7 +358,7 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRefineModal {
-        "enabled": boolean;
+        "modalStatus": ModalStatus;
     }
     interface AtomicRefineToggle {
     }
@@ -1449,7 +1450,7 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRefineModal {
-        "enabled": boolean;
+        "modalStatus": ModalStatus;
     }
     interface AtomicRefineToggle {
     }

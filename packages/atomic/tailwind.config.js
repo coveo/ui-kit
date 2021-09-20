@@ -54,6 +54,22 @@ module.exports = {
       zIndex: {
         1: '1',
       },
+      animation: {
+        scaleUpRefineModal:
+          'scaleUp .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
+        scaleDownRefineModal:
+          'scaleDown .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
+      },
+      keyframes: {
+        scaleUp: {
+          '0%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
+          '100%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
+        },
+        scaleDown: {
+          '0%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
+          '100%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
+        },
+      },
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),
