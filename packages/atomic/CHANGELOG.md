@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.8...@coveo/atomic@1.0.9) (2021-09-20)
+
+
+### Bug Fixes
+
+* **atomic:** allow timeframes in the future ([#1219](https://github.com/coveo/ui-kit/issues/1219)) ([a429973](https://github.com/coveo/ui-kit/commit/a429973f85893128688e37e44852562fd7f0405b))
+* **atomic:** set width on refine modal sort icon ([#1220](https://github.com/coveo/ui-kit/issues/1220)) ([2729400](https://github.com/coveo/ui-kit/commit/2729400ed3af3d13eb9f4b6ca37b9b4e5e1a08bb))
+
+
+
+
+
 ## [1.0.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.7...@coveo/atomic@1.0.8) (2021-09-20)
 
 
