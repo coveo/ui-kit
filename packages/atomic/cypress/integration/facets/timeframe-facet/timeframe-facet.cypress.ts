@@ -54,7 +54,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
         setupTimeframeFacet();
         selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
         cy.wait(TestFixture.interceptAliases.Search);
-        cy.wait(100);
       }
       describe('verify rendering', () => {
         before(setupSelectLinkValue);
