@@ -31,7 +31,7 @@ describe('string value', () => {
     it(`when not passing a string value
     it returns an error description`, () => {
       value = new StringValue();
-      expect(value.validate((123 as unknown) as string)).not.toBeNull();
+      expect(value.validate(123 as unknown as string)).not.toBeNull();
     });
 
     it(`when emptyAllowed is false
@@ -56,10 +56,17 @@ describe('string value', () => {
     });
 
     it(`when url is true
-    when passing a valid URL value
+    when passing a valid absolute URL value
     it returns null`, () => {
       value = new StringValue({url: true});
       expect(value.validate('https://www.coveo.com?test=allo')).toBeNull();
+    });
+
+    it(`when url is true
+    when passing a valid relative URL value
+    it returns null`, () => {
+      value = new StringValue({url: true});
+      expect(value.validate('/page/subpage')).toBeNull();
     });
 
     it(`when constraining values are specified,
