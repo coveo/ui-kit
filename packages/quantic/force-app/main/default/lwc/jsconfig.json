@@ -15,6 +15,9 @@
             "c/quanticHeadlessLoader": [
                 "quanticHeadlessLoader/quanticHeadlessLoader.js"
             ],
+            "c/quanticNoResults": [
+                "quanticNoResults/quanticNoResults.js"
+            ],
             "c/quanticDateFacetValue": [
                 "quanticDateFacetValue/quanticDateFacetValue.js"
             ],
@@ -32,6 +35,9 @@
             ],
             "c/quanticPager": [
                 "quanticPager/quanticPager.js"
+            ],
+            "c/quanticQueryError": [
+                "quanticQueryError/quanticQueryError.js"
             ],
             "c/quanticResult": [
                 "quanticResult/quanticResult.js"
@@ -54,17 +60,26 @@
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
             ],
+            "c/quanticRecentResultsList": [
+                "quanticRecentResultsList/quanticRecentResultsList.js"
+            ],
             "c/quanticResultsPerPage": [
                 "quanticResultsPerPage/quanticResultsPerPage.js"
             ],
             "c/quanticSearchBox": [
                 "quanticSearchBox/quanticSearchBox.js"
             ],
+            "c/quanticSearchBoxSuggestionsList": [
+                "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
+            ],
             "c/quanticSearchInterface": [
                 "quanticSearchInterface/quanticSearchInterface.js"
             ],
             "c/quanticNumberButton": [
                 "quanticNumberButton/quanticNumberButton.js"
+            ],
+            "c/quanticSvg": [
+                "quanticSvg/quanticSvg.js"
             ],
             "c/quanticUtils": [
                 "quanticUtils/quanticUtils.js"
@@ -77,6 +92,7 @@
     "include": [
         "**/*",
         "../../../../.sfdx/typings/lwc/**/*.d.ts",
+        "../../../../typings/lwc/**/*.d.ts",
         "../../../../coveo.d.ts"
     ],
     "typeAcquisition": {

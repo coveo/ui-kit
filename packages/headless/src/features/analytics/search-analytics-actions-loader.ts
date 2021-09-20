@@ -37,6 +37,7 @@ import {
 import {
   logNavigateBackward,
   logNavigateForward,
+  logNoResultsBack,
 } from '../history/history-analytics-actions';
 import {
   logPageNext,
@@ -121,9 +122,7 @@ export interface SearchAnalyticsActionCreators {
    * @param metadata - The metadata of the clicked query suggestion that triggered the redirect.
    * @returns A dispatchable action.
    */
-  logOmniboxFromLink(
-    metadata: OmniboxSuggestionMetadata
-  ): AsyncThunkAction<
+  logOmniboxFromLink(metadata: OmniboxSuggestionMetadata): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -195,9 +194,7 @@ export interface SearchAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetClearAll(
-    facetId: string
-  ): AsyncThunkAction<
+  logFacetClearAll(facetId: string): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -227,9 +224,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetSelect(
-    payload: LogFacetSelectActionCreatorPayload
-  ): AsyncThunkAction<
+  logFacetSelect(payload: LogFacetSelectActionCreatorPayload): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -243,9 +238,7 @@ export interface SearchAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowLess(
-    facetId: string
-  ): AsyncThunkAction<
+  logFacetShowLess(facetId: string): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -259,9 +252,7 @@ export interface SearchAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowMore(
-    facetId: string
-  ): AsyncThunkAction<
+  logFacetShowMore(facetId: string): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },
@@ -520,6 +511,20 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when no results is shown and the end users cancel last action.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logNoResultsBack(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -565,5 +570,6 @@ export function loadSearchAnalyticsActions(
     logCollapseSmartSnippet,
     logExpandSmartSnippetSuggestion,
     logCollapseSmartSnippetSuggestion,
+    logNoResultsBack,
   };
 }

@@ -26,7 +26,7 @@ export function resolveFunction(
 
   return buildFuncEntity({
     name: fn.name,
-    comment: (fn.tsdocComment as unknown) as DocComment,
+    comment: fn.tsdocComment as unknown as DocComment,
     params,
     returnType,
   });
@@ -55,7 +55,7 @@ function buildObjEntityFromInterface(
     name,
     type: name,
     isOptional: false,
-    comment: (apiInterface.tsdocComment as unknown) as DocComment,
+    comment: apiInterface.tsdocComment as unknown as DocComment,
   });
 
   return buildObjEntity({entity, members, typeName: name});

@@ -24,9 +24,8 @@ describe('CategoryFacetSearch', () => {
 
   function initEngine() {
     engine = buildMockSearchAppEngine();
-    engine.state.categoryFacetSearchSet[
-      facetId
-    ] = buildMockCategoryFacetSearch();
+    engine.state.categoryFacetSearchSet[facetId] =
+      buildMockCategoryFacetSearch();
   }
 
   function initFacetSearch() {

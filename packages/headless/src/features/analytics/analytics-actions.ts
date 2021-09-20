@@ -4,7 +4,6 @@ import {
   requiredNonEmptyString,
   nonEmptyString,
 } from '../../utils/validate-payload';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
@@ -150,9 +149,7 @@ export const logInterfaceChange = makeAnalyticsAction(
   AnalyticsType.Search,
   (client, state) =>
     client.logInterfaceChange({
-      interfaceChangeTo:
-        state.advancedSearchQueries?.cq ||
-        getAdvancedSearchQueriesInitialState().cq,
+      interfaceChangeTo: state.configuration.analytics.originLevel2,
     })
 );
 

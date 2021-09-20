@@ -5,6 +5,8 @@
 }
 
 .sort__header {
-    color: #3e3e3c;
-    padding: 6px 6px 0px 0px;
+    color: var(--lwc-colorTextActionLabel, darkslategray);
+    padding-top: 6px;
+    padding-right: 4px;
+    white-space: nowrap;
 }

@@ -71,7 +71,7 @@
   },
   "query-suggestion-list": {
     "en": "Search suggestions. Select one to search.",
-    "fr": ""
+    "fr": "Suggestions de recherche. Sélectionnez-en un pour rechercher."
   },
   "clear": {
     "en": "Clear",
@@ -229,6 +229,14 @@
   "display-results-per-page": {
     "en": "Display {{results}} results per page",
     "fr": "Afficher {{results}} résultats par page"
+  },
+  "sort": {
+    "en": "Sort",
+    "fr": "Tri"
+  },
+  "filters": {
+    "en": "Filters",
+    "fr": "Filtres"
   },
   "sort-by": {
     "en": "Sort by",
@@ -408,6 +416,14 @@
     "zh-cn": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
     "zh-tw": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}"
   },
+  "showing-results-of-load-more": {
+    "en": "Showing {{last}} of {{total}} results",
+    "fr": "Affichant {{last}} de {{total}} résultats"
+  },
+  "load-more-results": {
+    "en": "Load more results",
+    "fr": "Afficher plus de résultats"
+  },
   "in-seconds": {
     "en": "in {{count}} second",
     "fr": "en {{count}} seconde",
@@ -459,8 +475,8 @@
     "zh-tw": "用時 {{count}} 秒"
   },
   "no-results-for": {
-    "en": "No results for {{query}}",
-    "fr": "Aucun résultat pour {{query}}",
+    "en": "We couldn't find anything for {{query}}",
+    "fr": "Nous n'avons rien trouvé pour {{query}}",
     "cs": "Pro dotaz {{query}} nebyly nalezeny žádné výsledky",
     "da": "Ingen resultater for {{query}}",
     "de": "Keine Ergebnisse für {{query}}",
@@ -482,6 +498,10 @@
     "tr": "{{query}} için sonuç yok",
     "zh-cn": "没有找到与 {{query}} 相关的结果",
     "zh-tw": "沒有找到與 {{query}} 相關的結果"
+  },
+  "search-tips": {
+    "en": "You may want to try using different keywords, or checking for spelling mistakes.",
+    "fr": "Essayez différents mots-clés ou vérifiez l'orthographe de vos mots-clés."
   },
   "no-results": {
     "en": "No results",
@@ -520,31 +540,6 @@
     "tr": "Son işlemi iptal et",
     "zh-cn": "取消最后一个动作",
     "zh-tw": "取消最後一個動作"
-  },
-  "search-tips": {
-    "en": "Search tips",
-    "fr": "Conseils de recherche",
-    "cs": "Tipy pro hledání",
-    "da": "Søgetips",
-    "de": "Tipps für die Suche",
-    "el": "Συμβουλές αναζήτησης",
-    "es-es": "Sugerencias de búsqueda",
-    "fi": "Hakuvihjeet",
-    "hu": "Keresési tippek",
-    "id": "Kiat pencarian",
-    "it": "Suggerimenti per ricerca",
-    "ja": "検索ヒント",
-    "ko": "검색 요령",
-    "nl": "Zoektips",
-    "no": "Søketips",
-    "pl": "Wskazówki dotyczące wyszukiwania",
-    "pt-br": "Dicas de pesquisa",
-    "ru": "Найти подсказку",
-    "sv": "Söktips",
-    "th": "เคล็ดลับการค้นหา",
-    "tr": "Arama ipuçları",
-    "zh-cn": "搜索提示",
-    "zh-tw": "搜尋提示"
   },
   "check-spelling": {
     "en": "Check the spelling of your keywords.",
@@ -1022,6 +1017,14 @@
   "preview-result": {
     "en": "Preview the result",
     "fr": "Prévisualiser le résultat"
+  },
+  "sort-and-filter": {
+    "en": "Sort & Filter",
+    "fr": "Trier et Filtrer"
+  },
+  "view-results": {
+    "en": "View results",
+    "fr": "Visualiser les résultats"
   },
   "organization-is-paused": {
     "en": "Your Coveo organization is paused due to inactivity and search is currently unavailable.",

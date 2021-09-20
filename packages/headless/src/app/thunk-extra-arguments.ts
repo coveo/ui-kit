@@ -32,6 +32,7 @@ function getAnalyticsClientMiddleware(
   configuration: EngineConfiguration
 ): AnalyticsClientSendEventHook {
   const {analytics} = configuration;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const NoopAnalyticsMiddleware = (_: string, p: any) => p;
   return analytics?.analyticsClientMiddleware || NoopAnalyticsMiddleware;
 }

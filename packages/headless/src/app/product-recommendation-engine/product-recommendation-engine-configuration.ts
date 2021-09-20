@@ -37,14 +37,13 @@ export interface ProductRecommendationEngineConfiguration
   timezone?: string;
 }
 
-export const productRecommendationEngineConfigurationSchema = new Schema<
-  ProductRecommendationEngineConfiguration
->({
-  ...engineConfigurationDefinitions,
-  searchHub: nonEmptyString,
-  locale: nonEmptyString,
-  timezone: nonEmptyString,
-});
+export const productRecommendationEngineConfigurationSchema =
+  new Schema<ProductRecommendationEngineConfiguration>({
+    ...engineConfigurationDefinitions,
+    searchHub: nonEmptyString,
+    locale: nonEmptyString,
+    timezone: nonEmptyString,
+  });
 
 /**
  * Creates a sample product recommendation engine configuration.

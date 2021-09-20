@@ -1,11 +1,43 @@
 <template>
   <template if:true={hasValues}>
-    <lightning-card title={label}>
-      <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
-        <template for:each={values} for:item="v">
-          <c-quantic-date-facet-value onselectvalue={onSelect} key={v.start} item={v} is-checked={v.checked}></c-quantic-date-facet-value>
+    <div class="slds-size_1-of-1">
+      <c-quantic-card-container title={label}>
+        <lightning-button-icon
+          class="facet__collapse"
+          slot="actions"
+          onclick={toggleFacetVisibility}
+          onmousedown={preventDefault}
+          icon-name={actionButtonIcon}
+          alternative-text={actionButtonLabel}
+          variant="bare"
+        >
+        </lightning-button-icon>
+        <template if:true={isExpanded}>
+          <ul class="slds-has-dividers_around-space">
+            <template if:true={hasActiveValues}>
+              <lightning-button
+                icon-name="utility:close" 
+                variant="base" 
+                value={labels.clear}
+                onclick={clearSelections}
+                label={labels.clear}
+                icon-position="left"
+              >
+              </lightning-button>
+            </template>
+            <template for:each={values} for:item="v">
+              <c-quantic-facet-value 
+                onselectvalue={onSelect} 
+                key={v.start} 
+                item={v} 
+                is-checked={v.checked}
+                formatting-function={formattingFunction}
+              >
+              </c-quantic-facet-value>
+            </template>
+          </ul>
         </template>
-      </ul>
-    </lightning-card>
+      </c-quantic-card-container>
+    </div>
   </template>
 </template>

@@ -1,5 +1,22 @@
+@import 'c/quanticFacetStyles';
+
 li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.facet__number-of-results {
+  color: #8e959d;
+  font-size: 11px;
+  padding-top: 3px;
+}
+
+.facet__value_selected{
+  font-weight: bold;
+}
+
+.facet__value-option {
+  display: flex;
+  flex-direction: row;
 }

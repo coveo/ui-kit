@@ -1,32 +1,10 @@
-import {SearchEngine, NumericFacetValue, DateFacetValue} from '@coveo/headless';
+import {SearchEngine} from '@coveo/headless';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {i18n, TOptions} from 'i18next';
 import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
-
-interface FacetLabel {
-  label: string;
-}
-
-interface FacetValueFormat<ValueType> {
-  format(facetValue: ValueType): string;
-}
-
-type FacetStore<F extends FacetLabel> = Record<string, F>;
-
-export type AtomicStore = {
-  facets: FacetStore<FacetLabel>;
-  numericFacets: FacetStore<FacetLabel & FacetValueFormat<NumericFacetValue>>;
-  dateFacets: FacetStore<FacetLabel & FacetValueFormat<DateFacetValue>>;
-  categoryFacets: FacetStore<FacetLabel>;
-};
-
-export const initialStore: () => AtomicStore = () => ({
-  facets: {},
-  numericFacets: {},
-  dateFacets: {},
-  categoryFacets: {},
-});
+import {AtomicStore} from './store';
+import {Hidden} from '../components/common/hidden';
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -44,6 +22,10 @@ export interface Bindings {
    * Global state for Atomic
    */
   store: ObservableMap<AtomicStore>;
+  /**
+   * A reference to the `AtomicSearchInterface` element.
+   */
+  interfaceElement: HTMLElement;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;
@@ -112,7 +94,9 @@ export function InitializeBindings() {
             this.bindings.i18n.off('languageChanged', updateLanguage);
 
           try {
-            this.initialize && this.initialize();
+            // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
+            // In this case, we have to manually trigger it.
+            this.initialize ? this.initialize() : forceUpdate(this);
           } catch (e) {
             this.error = e;
           }
@@ -144,7 +128,7 @@ export function InitializeBindings() {
       }
 
       if (!this.bindings) {
-        return;
+        return <Hidden></Hidden>;
       }
 
       hasRendered = true;

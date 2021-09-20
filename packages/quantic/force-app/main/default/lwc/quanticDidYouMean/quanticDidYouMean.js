@@ -34,22 +34,19 @@ export default class QuanticDidYouMean extends LightningElement {
   }
   
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.didYouMean = CoveoHeadless.buildDidYouMean(engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
   }
 
   updateState() {

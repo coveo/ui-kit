@@ -1,0 +1,25 @@
+@import 'c/quanticFacetStyles';
+
+.recent-query__container {
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+  color: var(--lwc-brandTextLink, dodgerblue);
+}
+
+.query-text__container {
+  min-width: 0;
+}
+
+.recent-query__icon {
+  margin-right: .5rem;
+}
+
+.empty-list-message {
+  color: #8e959d;
+}
+
+li:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

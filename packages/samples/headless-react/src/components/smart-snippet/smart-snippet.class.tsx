@@ -50,14 +50,8 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
       return null;
     }
 
-    const {
-      answerFound,
-      answer,
-      question,
-      liked,
-      disliked,
-      expanded,
-    } = this.state;
+    const {answerFound, answer, question, liked, disliked, expanded} =
+      this.state;
 
     if (!answerFound) {
       return <div>Sorry, no answer has been found for this query.</div>;

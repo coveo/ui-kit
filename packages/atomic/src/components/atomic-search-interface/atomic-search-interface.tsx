@@ -16,19 +16,17 @@ import {
   UrlManager,
   buildSearchEngine,
   SearchEngine,
-  loadSearchConfigurationActions,
   SearchEngineConfiguration,
+  SearchStatus,
+  buildSearchStatus,
+  loadSearchConfigurationActions,
 } from '@coveo/headless';
-import {
-  AtomicStore,
-  Bindings,
-  InitializeEvent,
-  initialStore,
-} from '../../utils/initialization-utils';
+import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
+import {AtomicStore, initialStore} from '../../utils/store';
 
 export type InitializationOptions = Pick<
   SearchEngineConfiguration,
@@ -45,12 +43,14 @@ export type InitializationOptions = Pick<
 })
 export class AtomicSearchInterface {
   private urlManager!: UrlManager;
+  private searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
+  private unsubscribeSearchStatus: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
 
-  @Element() private host!: HTMLDivElement;
+  @Element() private host!: HTMLElement;
 
   @State() private error?: Error;
 
@@ -150,6 +150,7 @@ export class AtomicSearchInterface {
 
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
+    this.unsubscribeSearchStatus();
     window.removeEventListener('hashchange', this.onHashChange);
   }
 
@@ -194,6 +195,7 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
+    this.initSearchStatus();
     this.initUrlManager();
 
     this.initialized = true;
@@ -255,7 +257,12 @@ export class AtomicSearchInterface {
   }
 
   private get bindings(): Bindings {
-    return {engine: this.engine!, i18n: this.i18n, store: this.store};
+    return {
+      engine: this.engine!,
+      i18n: this.i18n,
+      store: this.store,
+      interfaceElement: this.host,
+    };
   }
 
   private initComponents() {
@@ -284,6 +291,21 @@ export class AtomicSearchInterface {
     window.addEventListener('hashchange', this.onHashChange);
   }
 
+  private initSearchStatus() {
+    this.searchStatus = buildSearchStatus(this.engine!);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
+      const hasNoResultsAfterInitialSearch =
+        !this.searchStatus.state.hasResults &&
+        this.searchStatus.state.firstSearchExecuted &&
+        !this.searchStatus.state.hasError;
+
+      this.host.classList.toggle(
+        'atomic-search-interface-no-results',
+        hasNoResultsAfterInitialSearch
+      );
+    });
+  }
+
   private updateHash() {
     history.pushState(
       null,
@@ -309,7 +331,7 @@ export class AtomicSearchInterface {
     return [
       this.engine && (
         <atomic-relevance-inspector
-          bindings={{engine: this.engine, i18n: this.i18n, store: this.store}}
+          bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),
       <slot></slot>,

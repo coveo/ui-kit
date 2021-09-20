@@ -189,4 +189,235 @@
         <protected>false</protected>
         <shortDescription>Oldest</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_CoveoOnlineHelpLink</fullName>
+        <value>Coveo Online Help</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Coveo Online Help</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_MoreInformation</fullName>
+        <value>More information</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>More Information</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_CheckForMore</fullName>
+        <value>Check the {{0}} for similar errors or {{1}} for more information.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Check the community for similar errors or contact Coveo for more information.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Community</fullName>
+        <value>community</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>community</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ContactCoveoSupportTeam</fullName>
+        <value>contact the Coveo Support team.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Contact the Coveo Support team.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_GoBack</fullName>
+        <value>Go back</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Go back</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DisconnectedTitle</fullName>
+        <value>Could not connect.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Couldn't connect.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DisconnectedDesc</fullName>
+        <value>Your query couldn't be sent. Verify your internet connection.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your query couldn't be sent. Verify your internet connection.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoEndpointsTitle</fullName>
+        <value>The Coveo organization has no registered endpoints.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The Coveo organization has no registered endpoints.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoEndpointsDesc</fullName>
+        <value>You will need to add sources in your index, or wait for the created sources to finish indexing.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Add sources in your index, or wait for the created sources to finish indexing.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InvalidTokenTitle</fullName>
+        <value>The Coveo organization cannot be accessed.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The Coveo organization cannot be accessed.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InvalidTokenDesc</fullName>
+        <value>Invalid token.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid token.</shortDescription>
+    </labels>
+     <labels>
+        <fullName>quantic_OrganizationIsPausedTitle</fullName>
+        <value>Your organization is resuming and will be available shortly.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your organization is resuming and will be available shortly.</shortDescription>
+    </labels>
+     <labels>
+        <fullName>quantic_OrganizationIsPausedDesc</fullName>
+        <value>Your Coveo organization is paused due to inactivity and search is currently unavailable.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Your Coveo organization is paused.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_GenericErrorTitle</fullName>
+        <value>Something went wrong.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Something went wrong.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_GenericErrorDesc</fullName>
+        <value>If the problem persists, contact the administrator.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>If the problem persists, contact the administrator.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_CoveoDocsLink</fullName>
+        <value>https://docs.coveo.com/</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>https://docs.coveo.com/</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_OrganisationPausedLink</fullName>
+        <value>https://docs.coveo.com/l6af0467</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>https://docs.coveo.com/l6af0467</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsTitle</fullName>
+        <value>No results</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No results</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsForTitle</fullName>
+        <value>We couldn’t find anything for {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>We couldn’t find anything for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsWithoutFilters</fullName>
+        <value>You may want to try using different keywords, or checking for spelling mistakes.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>You may want to try using different keywords, or checking for spelling mistakes.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoResultsWithFilters</fullName>
+        <value>You may want to try using different keywords, checking for spelling mistakes or select fewer filters.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Check for spelling mistakes or select fewer filters.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_UndoLastAction</fullName>
+        <value>Undo last action</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Undo last action</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_MoreMatchesFor</fullName>
+        <value>More matches for '{{0}}'</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>More matches for potato</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoMatchesFor</fullName>
+        <value>No matches found for '{{0}}'</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No matches found for potato</shortDescription>
+    </labels>
+    <labels>
+     <fullName>quantic_RecentQueries</fullName>
+        <value>Recent Queries</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Recent Queries</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_EmptyRecentQueriesListLabel</fullName>
+      <value>Your recent searches will appear here.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Label displayed when recent queries list is empty.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_RecentResults</fullName>
+        <value>Recent Results</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Recent Results</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_EmptyRecentResultListLabel</fullName>
+        <value>Your recently clicked results will appear here.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label displayed when recent results list is empty.</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_CollapseFacet</fullName>
+        <value>Collapse the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Collapse the [label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ExpandFacet</fullName>
+        <value>Expand the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expand the [label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Collapse</fullName>
+        <value>Collapse {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Collapse [component label]</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Expand</fullName>
+        <value>Expand {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Expand [component label]</shortDescription>
+    </labels>
 </CustomLabels>

@@ -7,7 +7,8 @@ import {
 describe('Query Summary Test Suites', () => {
   const tag = 'atomic-query-summary';
   const searchBox = '<atomic-search-box></atomic-search-box>';
-  const component = (attributes = '') => `<${tag} ${attributes}></${tag}>`;
+  const component = (attributes = 'enable-duration') =>
+    `<${tag} ${attributes}></${tag}>`;
   const wait = 1000;
 
   function contentShouldMatch(content: RegExp | string) {
@@ -39,32 +40,11 @@ describe('Query Summary Test Suites', () => {
         /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities in [\d.]+ seconds$/
       );
     });
-
-    it('with a query yielding no results', () => {
-      cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
-      injectComponent(component() + searchBox);
-      cy.wait(wait);
-      contentShouldMatch(/^No results for gahaiusdhgaiuewjfsf$/);
-    });
-
-    it('with no query yielding no results', () => {
-      cy.visit(buildTestUrl('numberOfResults=0'));
-      injectComponent(component());
-      cy.wait(wait);
-      contentShouldMatch(/^No results$/);
-    });
-
-    it('with a query containing an XSS injection', () => {
-      cy.visit(buildTestUrl('q=<script>alert("hello");</script>'));
-      injectComponent(component() + searchBox);
-      cy.wait(wait);
-      contentShouldMatch('No results for <script>alert("hello");</script>');
-    });
   });
 
   it('when "enableDuration" is false, should not show duration', () => {
     cy.visit(buildTestUrl('q=test'));
-    injectComponent(component('enable-duration="false"') + searchBox);
+    injectComponent(component('') + searchBox);
     cy.wait(wait);
     contentShouldMatch(/Results 1-10 of [\d,]+ for test$/);
   });

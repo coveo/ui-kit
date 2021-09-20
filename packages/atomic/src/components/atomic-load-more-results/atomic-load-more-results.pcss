@@ -1,0 +1,11 @@
+@import '../../global/global.pcss';
+
+/**
+ * @prop --atomic-more-results-progress-bar-color-from: Color of the start of the gradient for the load more results progress bar.
+ * @prop --atomic-more-results-progress-bar-color-to: Color of the end of the gradient for the load more results progress bar.
+ */
+.progress-bar {
+  --tw-gradient-from: var(--atomic-more-results-progress-bar-color-from, var(--atomic-primary-dark));
+  --tw-gradient-to: var(--atomic-more-results-progress-bar-color-to, var(--atomic-primary-light));
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}

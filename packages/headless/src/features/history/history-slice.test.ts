@@ -83,9 +83,11 @@ describe('history slice', () => {
       advancedSearchQueries: {
         aq: '',
         cq: '',
+        lq: '',
         aqWasSet: false,
         cqWasSet: false,
-        defaultFilters: {aq: '', cq: ''},
+        lqWasSet: false,
+        defaultFilters: {aq: '', cq: '', lq: ''},
       },
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',

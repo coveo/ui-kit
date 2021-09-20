@@ -18,18 +18,19 @@ export type ProductRecommendationsState = {
   duration: number;
 };
 
-export const getProductRecommendationsInitialState = (): ProductRecommendationsState => ({
-  id: '',
-  skus: [],
-  maxNumberOfRecommendations: 5,
-  filter: {
-    brand: '',
-    category: '',
-  },
-  additionalFields: [],
-  recommendations: [],
-  error: null,
-  isLoading: false,
-  searchUid: '',
-  duration: 0,
-});
+export const getProductRecommendationsInitialState =
+  (): ProductRecommendationsState => ({
+    id: '',
+    skus: [],
+    maxNumberOfRecommendations: 5,
+    filter: {
+      brand: '',
+      category: '',
+    },
+    additionalFields: [],
+    recommendations: [],
+    error: null,
+    isLoading: false,
+    searchUid: '',
+    duration: 0,
+  });

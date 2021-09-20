@@ -1,6 +1,12 @@
 import {AnyAction} from 'redux';
+import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
-import {buildMockResult} from '../../test';
+import {
+  buildMockResult,
+  buildMockSearchAppEngine,
+  createMockState,
+  MockSearchEngine,
+} from '../../test';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
@@ -165,6 +171,108 @@ describe('folding slice', () => {
         fields: {collection: 'collection', parent: 'parent', child: 'id'},
         filterFieldRange: -1234,
       };
+    });
+
+    describe('when calling the platform to load a collection', () => {
+      let rootResult: ResultWithFolding;
+      let mockEngine: MockSearchEngine;
+
+      beforeEach(() => {
+        const fetched = () => {
+          const payload = buildMockSearchResponse({
+            results: [],
+          });
+
+          const body = JSON.stringify(payload);
+          const response = new Response(body);
+
+          return Promise.resolve(response);
+        };
+
+        PlatformClient.call = jest.fn().mockImplementationOnce(fetched);
+        mockEngine = buildMockSearchAppEngine();
+      });
+
+      const doLoadCollection = () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        rootResult = emulateAPIFolding(indexedResults);
+
+        mockEngine.dispatch(loadCollection(rootResult.raw.collection!));
+      };
+
+      it('uses #cq with correct expression to obtain the full collection', () => {
+        doLoadCollection();
+        expect(PlatformClient.call).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestParams: expect.objectContaining({
+              cq: `@foldingcollection=${rootResult.raw.collection!}`,
+            }),
+          })
+        );
+      });
+
+      it('uses #folding parameters to obtain parent and max 100 child results', () => {
+        doLoadCollection();
+        expect(PlatformClient.call).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestParams: expect.objectContaining({
+              filterField: 'foldingcollection',
+              parentField: 'foldingchild',
+              filterFieldRange: 100,
+            }),
+          })
+        );
+      });
+
+      it('when #querySyntax is enabled and #q is non empty, it build a proper query expression to get keywords highlighting', () => {
+        mockEngine = buildMockSearchAppEngine({
+          state: {
+            ...createMockState(),
+            query: {enableQuerySyntax: true, q: 'hello'},
+          },
+        });
+        doLoadCollection();
+        expect(PlatformClient.call).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestParams: expect.objectContaining({
+              q: 'hello OR @uri',
+              enableQuerySyntax: true,
+            }),
+          })
+        );
+      });
+
+      it('when #querySyntax is disabled and #q is non empty, it build a proper query expression to get keywords highlighting', () => {
+        mockEngine = buildMockSearchAppEngine({
+          state: {
+            ...createMockState(),
+            query: {enableQuerySyntax: false, q: 'hello'},
+          },
+        });
+        doLoadCollection();
+        expect(PlatformClient.call).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestParams: expect.objectContaining({
+              q: '( <@- hello -@> ) OR @uri',
+              enableQuerySyntax: true,
+            }),
+          })
+        );
+      });
+
+      it('does not uses facets to get the full collection', () => {
+        doLoadCollection();
+        expect(PlatformClient.call).toHaveBeenCalledWith(
+          expect.objectContaining({
+            requestParams: expect.not.objectContaining({
+              facet: expect.anything(),
+            }),
+          })
+        );
+      });
     });
 
     it('should resolve the hierarchy from the root when the root is the relevant result', () => {
@@ -344,7 +452,7 @@ describe('folding slice', () => {
         name: 'first-answer',
       });
 
-      dispatchLoadCollection(indexedResults);
+      dispatchLoadCollection([emulateAPIFolding(indexedResults)]);
 
       expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
         testThreadHierarchy
@@ -451,7 +559,7 @@ describe('folding slice', () => {
         indexedStorageResults[0],
       ]);
 
-      dispatchLoadCollection(indexedStorageResults);
+      dispatchLoadCollection([emulateAPIFolding(indexedStorageResults)]);
 
       expect(extractMockFoldingHierarchy(state.collections.thread)).toEqual(
         testThreadHierarchy

@@ -1,0 +1,13 @@
+@import 'c/quanticFacetStyles';
+
+.facet__search-results_no-match {
+  color: #8e959d;
+  background-color: whitesmoke;
+  font-size: 12px;
+  border-radius: .25rem;
+}
+
+.facet__search-results_more-matches{
+  color: #8e959d;
+  font-size: 12px;
+}

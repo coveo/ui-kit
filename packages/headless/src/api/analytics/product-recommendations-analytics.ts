@@ -8,11 +8,13 @@ import {
 } from '../../state/state-sections';
 import {getLanguage} from './shared-analytics';
 
-export type StateNeededByProductRecommendationsAnalyticsProvider = ConfigurationSection &
-  Partial<SearchHubSection & ProductRecommendationsSection>;
+export type StateNeededByProductRecommendationsAnalyticsProvider =
+  ConfigurationSection &
+    Partial<SearchHubSection & ProductRecommendationsSection>;
 
 export class ProductRecommendationAnalyticsProvider
-  implements SearchPageClientProvider {
+  implements SearchPageClientProvider
+{
   private initialState = getProductRecommendationsInitialState();
   constructor(
     private state: StateNeededByProductRecommendationsAnalyticsProvider
@@ -59,6 +61,10 @@ export class ProductRecommendationAnalyticsProvider
 
   public getOriginLevel3() {
     return this.state.configuration.analytics.originLevel3 || 'default';
+  }
+
+  public getIsAnonymous() {
+    return this.state.configuration.analytics.anonymous;
   }
 
   private mapResultsToAnalyticsDocument() {

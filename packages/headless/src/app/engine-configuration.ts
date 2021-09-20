@@ -86,6 +86,11 @@ export interface AnalyticsConfiguration {
    * See https://github.com/coveo/coveo.analytics.js for more info.
    */
   runtimeEnvironment?: AnalyticsRuntimeEnvironment;
+  /**
+   * Whether analytics events should be logged anonymously.
+   * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
+   */
+  anonymous?: boolean;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;

@@ -51,7 +51,7 @@ describe('headless recommendation', () => {
   });
 
   it('when #options.id is set to an invalid value, it throws an error', () => {
-    const options = {id: (1 as unknown) as string};
+    const options = {id: 1 as unknown as string};
     const fn = () => buildRecommendationList(engine, {options});
     expect(fn).toThrow('Check the options of buildRecommendationList');
   });

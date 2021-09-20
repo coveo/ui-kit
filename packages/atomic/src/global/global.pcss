@@ -1,18 +1,73 @@
 @import 'tailwindcss/base';
+@import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './polyfills.pcss';
+@import './ripple.pcss';
 
-:host {
-  display: block;
-  @apply font-sans font-normal text-base;
+@layer base {
+  :host {
+    display: block;
+    @apply font-sans font-normal text-base;
+  }
+
+  :host(.atomic-hidden) {
+    display: none;
+  }
+}
+
+@layer components {
+  .link {
+    @apply text-primary hover:text-primary-light hover:underline focus:text-primary-light focus:underline;
+  }
+
+  .input-primary {
+    @apply border border-neutral bg-background rounded hover:border-primary-light focus:border-primary no-outline focus:ring-2 focus:ring-ring-primary;
+  }
+
+  .btn-primary {
+    @apply rounded bg-primary text-on-primary hover:bg-primary-light no-outline focus:ring-2 focus:ring-ring-primary;
+  }
+
+  .btn-outline-primary {
+    @apply rounded border border-neutral hover:border-primary-light focus:border-primary bg-background text-primary hover:text-primary-light focus:text-primary no-outline disabled:border-neutral disabled:text-neutral disabled:cursor-not-allowed;
+  }
+
+  .btn-text-primary {
+    @apply rounded bg-background text-primary hover:bg-neutral-light focus:bg-neutral-light no-outline;
+  }
+
+  .btn-outline-neutral {
+    @apply rounded border border-neutral hover:border-primary focus:border-primary bg-background text-on-background hover:text-primary focus:text-primary no-outline;
+  }
+
+  .btn-outline-bg-neutral {
+    @apply btn-outline-neutral hover:bg-neutral-light focus:bg-neutral-light;
+  }
+
+  .btn-text-neutral {
+    @apply rounded bg-background hover:bg-neutral-light focus:bg-neutral-light no-outline text-on-background focus:text-primary hover:text-primary;
+  }
+
+  .btn-text-transparent {
+    @apply rounded bg-background with-outline text-on-background focus:text-primary-light hover:text-primary-light;
+  }
+
+  .btn-pill {
+    @apply rounded-2xl;
+  }
+
+  .btn-page {
+    @apply grid place-items-center text-lg border-0 hover:border focus:border;
+
+    &.selected {
+      @apply font-bold border-2 border-primary;
+    }
+  }
 }
 
 @layer utilities {
   .empty\:border-none:empty {
     border: none;
-  }
-
-  .ellipsed {
-    @apply whitespace-nowrap overflow-ellipsis overflow-hidden;
   }
 
   .with-parentheses::before {
@@ -23,7 +78,20 @@
     content: ')';
   }
 
-  .link {
-    @apply text-primary hover:text-primary-light hover:underline focus:text-primary-light focus:underline;
+  .with-colon::after {
+    content: ':';
+  }
+
+  .quotations::before,
+  .quotations::after {
+    content: '"';
+  }
+
+  .no-outline {
+    @apply focus:outline-none;
+  }
+
+  .with-outline {
+    @apply focus:outline-color;
   }
 }

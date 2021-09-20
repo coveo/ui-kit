@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
-import {isArray, removeDuplicates} from '../../utils/utils';
+import {isArray} from '../../utils/utils';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
 import {loadCollection, registerFolding} from './folding-actions';
 import {
@@ -10,6 +10,7 @@ import {
   FoldingFields,
   getFoldingInitialState,
 } from './folding-state';
+import {getAllIncludedResultsFrom} from './folding-utils';
 
 export interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
@@ -37,18 +38,6 @@ function areDefinedAndEqual<T>(
   value2: T | undefined
 ): boolean {
   return (value1 || value2) !== undefined && value1 === value2;
-}
-
-function getChildResultsRecursively(
-  result: ResultWithFolding
-): ResultWithFolding[] {
-  if (!result.childResults) {
-    return [];
-  }
-  return result.childResults.flatMap((childResult) => [
-    childResult,
-    ...getChildResultsRecursively(childResult),
-  ]);
 }
 
 function resolveChildrenFromFields(
@@ -93,21 +82,6 @@ function resolveRootFromFields(
     );
     return hasNoParent || isParentOfItself;
   });
-}
-
-function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
-  const foldedResults = getChildResultsRecursively(relevantResult);
-
-  const parentResults = [relevantResult, ...foldedResults]
-    .filter((result) => result.parentResult)
-    .map((result) => result.parentResult!);
-
-  const resultsInCollection = removeDuplicates(
-    [relevantResult, ...foldedResults, ...parentResults],
-    (result) => result.uniqueId
-  );
-
-  return resultsInCollection;
 }
 
 function createCollectionFromResult(
@@ -198,23 +172,12 @@ export const foldingReducer = createReducer(
       .addCase(
         loadCollection.fulfilled,
         (state, {payload: {collectionId, results}}) => {
-          const rootResult = resolveRootFromFields(
+          const newCollections = createCollections(
             results as ResultWithFolding[],
             state.fields
           );
-          if (!rootResult) {
-            return;
-          }
-          state.collections[collectionId] = {
-            result: rootResult,
-            children: resolveChildrenFromFields(
-              rootResult,
-              results as ResultWithFolding[],
-              state.fields
-            ),
-            moreResultsAvailable: false,
-            isLoadingMoreResults: false,
-          };
+          state.collections[collectionId] = newCollections[collectionId];
+          state.collections[collectionId].moreResultsAvailable = false;
         }
       )
 );

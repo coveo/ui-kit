@@ -16,9 +16,12 @@ export function buildMockSearchAPIClient(
   return new SearchAPIClient({
     logger: pino({level: 'silent'}),
     preprocessRequest: NoopPreprocessRequest,
-    postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-    postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
-    postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+    postprocessSearchResponseMiddleware:
+      NoopPostprocessSearchResponseMiddleware,
+    postprocessFacetSearchResponseMiddleware:
+      NoopPostprocessFacetSearchResponseMiddleware,
+    postprocessQuerySuggestResponseMiddleware:
+      NoopPostprocessQuerySuggestResponseMiddleware,
     ...options,
   });
 }

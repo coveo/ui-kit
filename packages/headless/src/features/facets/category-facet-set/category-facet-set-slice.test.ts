@@ -176,6 +176,107 @@ describe('category facet slice', () => {
       );
       expect(spy).toHaveBeenCalled();
     });
+
+    it('when a facet is not found in the #cf payload, it does not preventAutoSelection', () => {
+      const initialNumberOfValues = 5;
+
+      const cf = {};
+      const request = buildMockCategoryFacetRequest();
+      request.preventAutoSelect = false;
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.preventAutoSelect).toBe(false);
+    });
+
+    it('when a facet is found in the #cf payload and has no values selected, it does not preventAutoSelection', () => {
+      const initialNumberOfValues = 5;
+
+      const path = [] as string[];
+      const request = buildMockCategoryFacetRequest();
+      request.preventAutoSelect = false;
+
+      const cf = {geography: path};
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.preventAutoSelect).toBe(false);
+    });
+
+    it('when a facet is found in the #cf payload and has values selected, it does preventAutoSelection', () => {
+      const initialNumberOfValues = 5;
+
+      const path = ['a'];
+      const request = buildMockCategoryFacetRequest();
+      request.preventAutoSelect = false;
+
+      const cf = {geography: path};
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.preventAutoSelect).toBe(true);
+    });
+
+    it('when a facet is found in the #cf payload, has previously selected values, and restore remove selection, it sets #currentValues to the new value', () => {
+      const initialNumberOfValues = 5;
+
+      let path = ['a', 'b'];
+      const request = buildMockCategoryFacetRequest();
+      let cf = {geography: path};
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const intermediateState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(
+        intermediateState['geography']?.request.currentValues[0].value
+      ).toEqual('a');
+      expect(
+        intermediateState['geography']?.request.currentValues[0].children[0]
+          .value
+      ).toEqual('b');
+
+      path = ['a'];
+      cf = {geography: path};
+
+      const finalState = categoryFacetSetReducer(
+        intermediateState,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography']?.request.currentValues[0].value).toEqual(
+        'a'
+      );
+      expect(
+        finalState['geography']?.request.currentValues[0].children.length
+      ).toBe(0);
+    });
   });
 
   describe('deselecting values', () => {

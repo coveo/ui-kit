@@ -1,0 +1,41 @@
+<template>
+    <div class="slds-grid slds-grid_vertical slds-gutters">
+        <template for:each={_options} for:item="option">
+            <div key={option.attribute}>
+                <div class="slds-col slds-var-m-top_large">
+                    <lightning-input
+                        type="text"
+                        label={option.label}
+                        value={option.defaultValueAsText}
+                        onchange={handleFieldChange}
+                        readonly={configured}
+                        data-option={option.attribute}
+                        data-cy={option.cyId}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-var-m-top_small">
+                    <span>{option.description}</span>
+                </div>
+            </div>
+        </template>
+
+        <div class="slds-col slds-var-m-top_large">
+            <lightning-button
+                variant="brand"
+                label="Try it now"
+                title="Try it now"
+                onclick={handleTry}
+                disabled={configured}
+                data-cy="cfg-try"
+            ></lightning-button>
+
+            <lightning-button
+                label="Reset"
+                title="Reset"
+                onclick={handleReset}
+                data-cy="cfg-reset"
+                class="slds-var-m-left_medium"
+            ></lightning-button>
+        </div>
+    </div>
+</template>

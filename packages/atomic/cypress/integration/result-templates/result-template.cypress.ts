@@ -2,9 +2,10 @@ import {modifySearchResultAt} from '../../utils/network';
 import {setUpPage} from '../../utils/setupComponent';
 import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
+  generateResultList,
   resultListComponent,
   ResultListSelectors,
-} from '../result-list-selectors';
+} from '../result-list/result-list-selectors';
 import {
   resultTemplateComponent,
   ResultTemplateSelectors,
@@ -13,7 +14,7 @@ import {
 const customTemplate = '<template>Custom template</template>';
 
 function firstResultShouldUseCustomTemplate() {
-  cy.get(ResultListSelectors.component)
+  ResultListSelectors.shadow()
     .find('atomic-result')
     .first()
     .shadow()
@@ -23,7 +24,7 @@ function firstResultShouldUseCustomTemplate() {
 }
 
 describe('Result Template Component', () => {
-  describe(`when not a child of an "${ResultListSelectors.component}" component`, () => {
+  describe(`when not a child of an "${resultListComponent}" component`, () => {
     it(`should render an "${ComponentErrorSelectors.component}" component`, () => {
       setUpPage(resultTemplateComponent());
       cy.get(ResultTemplateSelectors.component)
@@ -35,9 +36,8 @@ describe('Result Template Component', () => {
 
   describe('when it does not have a "template" element has a child', () => {
     it(`should render an "${ComponentErrorSelectors.component}" component (in the result list)`, () => {
-      setUpPage(resultListComponent(resultTemplateComponent('<p>test</p>')));
-      cy.get(ResultListSelectors.component)
-        .find(ResultTemplateSelectors.component)
+      setUpPage(generateResultList(resultTemplateComponent('<p>test</p>')));
+      cy.get(ResultTemplateSelectors.component)
         .shadow()
         .find(ComponentErrorSelectors.component)
         .should('be.visible');
@@ -45,7 +45,7 @@ describe('Result Template Component', () => {
   });
 
   it('should save the template content in order to render', () => {
-    setUpPage(resultListComponent(resultTemplateComponent(customTemplate)));
+    setUpPage(generateResultList(resultTemplateComponent(customTemplate)));
     firstResultShouldUseCustomTemplate();
   });
 
@@ -56,7 +56,7 @@ describe('Result Template Component', () => {
       return result;
     });
     setUpPage(
-      resultListComponent(
+      generateResultList(
         resultTemplateComponent(
           customTemplate,
           `must-match-filetype="${filetype}"`
@@ -74,7 +74,7 @@ describe('Result Template Component', () => {
       return result;
     });
     setUpPage(
-      resultListComponent(
+      generateResultList(
         resultTemplateComponent(
           customTemplate,
           `must-not-match-filetype="${filetype}"`
@@ -92,7 +92,7 @@ describe('Result Template Component', () => {
       return result;
     });
     setUpPage(
-      resultListComponent(
+      generateResultList(
         resultTemplateComponent(
           `${customTemplate}
           <script>

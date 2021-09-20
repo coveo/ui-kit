@@ -1,0 +1,39 @@
+/* Shared style between the searchBox and the standaloneSearchBox */
+
+.searchbox__container{
+    display: flex;
+    position: relative;
+    border-color: #e5e8e8;
+    height: 48px;
+    box-sizing: border-box;
+}
+
+.searchbox__input {
+    display: flex;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0rem;
+    border-top-right-radius: 0rem;
+    position: relative;
+    height: 48px;
+    box-sizing: border-box;
+}
+
+.searchbox__submit-button {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    height: 100%;
+    width: 46.57px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.searchbox__clear-button {
+    box-shadow: none;
+}
+
+.slds-input-has-icon .slds-input__icon.input__icon_cursor:not(button) {
+    pointer-events: auto;
+}

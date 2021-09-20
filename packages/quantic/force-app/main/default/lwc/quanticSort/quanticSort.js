@@ -1,5 +1,8 @@
 import {LightningElement, track, api} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 
 import sortBy from '@salesforce/label/c.quantic_SortBy';
 import relevancy from '@salesforce/label/c.quantic_Relevancy';
@@ -14,35 +17,54 @@ export default class QuanticSort extends LightningElement {
 
   /** @type {import("coveo").Sort} */
   sort;
-  /** @type {import("coveo").Unsubscribe} */
-  unsubscribe;
+  /** @type {import("coveo").SearchStatus} */
+  searchStatus;
+
+  /** @type {() => void} */
+  unsubscribeSort;
+  /** @type {() => void} */
+  unsubscribeSearchStatus;
+
+  /**
+   * @type {boolean}
+   */
+  @track hasResults;
 
   labels = {
     sortBy,
     relevancy,
     newest,
-    oldest
-  }
+    oldest,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.sort = CoveoHeadless.buildSort(engine);
-    this.unsubscribe = this.sort.subscribe(() => this.updateState());
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+  }
+
+  disconnectedCallback() {
+    this.unsubscribeSearchStatus?.();
+    this.unsubscribeSort?.();
   }
 
   updateState() {
     this.state = this.sort.state;
+    this.hasResults = this.searchStatus.state.hasResults;
   }
 
   /**
@@ -74,15 +96,22 @@ export default class QuanticSort extends LightningElement {
   }
 
   get dateDescending() {
-    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Descending)
+    return CoveoHeadless.buildDateSortCriterion(
+      CoveoHeadless.SortOrder.Descending
+    );
   }
-  
+
   get dateAscending() {
-    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Ascending)
+    return CoveoHeadless.buildDateSortCriterion(
+      CoveoHeadless.SortOrder.Ascending
+    );
   }
 
   get largest() {
-    return CoveoHeadless.buildFieldSortCriterion('size', CoveoHeadless.SortOrder.Descending)
+    return CoveoHeadless.buildFieldSortCriterion(
+      'size',
+      CoveoHeadless.SortOrder.Descending
+    );
   }
 
   get options() {
@@ -94,7 +123,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    if (!this.sort) {
+    if (!this.sort || !this.state.sortCriteria.expression) {
       return 'relevancy';
     }
     return this.state.sortCriteria.expression;

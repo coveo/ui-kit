@@ -120,6 +120,11 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
    */
   runtimeEnvironment?: AnalyticsRuntimeEnvironment;
+  /**
+   * Whether analytics events should be logged anonymously.
+   * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
+   */
+  anonymous?: boolean;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -131,6 +136,7 @@ export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
  * @param originLevel3 (string) The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request (e.g., `https://connect.coveo.com/s/`).
  * @param apiBaseUrl (string) The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/ua`).
  * @param runtimeEnvironment (IRuntimeEnvironment) The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
+ * @param anonymous (boolean) Whether the interaction that caused the search interface to log the event was triggered by an anonymous user.
  */
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
@@ -143,6 +149,7 @@ export const updateAnalyticsConfiguration = createAction(
         emptyAllowed: false,
       }),
       runtimeEnvironment: new Value(),
+      anonymous: new BooleanValue({default: false}),
     })
 );
 

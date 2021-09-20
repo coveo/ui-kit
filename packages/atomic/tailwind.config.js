@@ -1,6 +1,8 @@
+const plugin = require('tailwindcss/plugin');
 const isDevWatch = process.argv.indexOf('--dev') > -1;
 
 module.exports = {
+  mode: 'jit', // Still some issues for reloading styles with jit mode https://github.com/ionic-team/stencil-postcss/pull/35
   purge: {
     content: ['./src/**/*.tsx', './src/**/*.css'],
     enabled: !isDevWatch,
@@ -14,6 +16,7 @@ module.exports = {
         'primary-light': 'var(--atomic-primary-light)',
         'primary-dark': 'var(--atomic-primary-dark)',
         'on-primary': 'var(--atomic-on-primary)',
+        'ring-primary': 'var(--atomic-ring-primary)',
         // Neutral
         neutral: 'var(--atomic-neutral)',
         'neutral-light': 'var(--atomic-neutral-light)',
@@ -27,6 +30,7 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: 'var(--atomic-border-radius)',
+        md: 'var(--atomic-border-radius-md)',
         lg: 'var(--atomic-border-radius-lg)',
       },
       fontWeight: {
@@ -37,9 +41,34 @@ module.exports = {
         sm: 'var(--atomic-text-sm)',
         base: 'var(--atomic-text-base)',
         lg: 'var(--atomic-text-lg)',
+        xl: 'var(--atomic-text-xl)',
+        '2xl': 'var(--atomic-text-2xl)',
+      },
+      screens: {
+        'desktop-only': {min: '1024px'},
+        'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
+      },
+      zIndex: {
+        1: '1',
+      },
+      animation: {
+        scaleUpRefineModal:
+          'scaleUp .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
+        scaleDownRefineModal:
+          'scaleDown .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
+      },
+      keyframes: {
+        scaleUp: {
+          '0%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
+          '100%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
+        },
+        scaleDown: {
+          '0%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
+          '100%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
+        },
       },
     },
     backgroundColor: (theme) => ({
@@ -51,8 +80,23 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['visited'],
+      textColor: ['visited', 'group-focus', 'disabled'],
+      border: ['disabled'],
+      cursor: ['disabled'],
+      backgroundColor: ['group-focus'],
+      borderRadius: ['first', 'last'],
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({addUtilities, theme}) {
+      addUtilities(
+        {
+          '.outline-color': {
+            outlineColor: theme('colors.primary-light'),
+          },
+        },
+        {variants: ['focus']}
+      );
+    }),
+  ],
 };

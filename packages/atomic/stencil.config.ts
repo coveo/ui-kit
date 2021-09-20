@@ -6,9 +6,11 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 
 import tailwind from 'tailwindcss';
+import postcssNesting from 'postcss-nested';
 import atImport from 'postcss-import';
 import autoprefixer from 'autoprefixer';
 import replacePlugin from '@rollup/plugin-replace';
+import mixins from 'postcss-mixins';
 import {readFileSync} from 'fs';
 
 const isProduction = process.env.BUILD === 'production';
@@ -64,7 +66,13 @@ export const config: Config = {
   plugins: [
     inlineSvg(),
     postcss({
-      plugins: [atImport(), tailwind(), autoprefixer()],
+      plugins: [
+        atImport(),
+        mixins(),
+        tailwind(),
+        postcssNesting(),
+        autoprefixer(),
+      ],
     }),
     replace(),
   ],

@@ -80,9 +80,11 @@ describe('InitializeBindings decorator', () => {
     });
 
     it(`when "engine" is not defined
-    should render nothing `, () => {
+    should render an element with the atomic-hidden class `, () => {
       InitializeBindings()(component, 'bindings');
-      expect(component.render!()).toBeUndefined();
+      expect(component.render!()).toMatchObject({
+        $attrs$: {class: 'atomic-hidden'},
+      });
     });
 
     it(`when "engine" is defined

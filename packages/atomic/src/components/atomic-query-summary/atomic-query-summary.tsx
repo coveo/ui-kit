@@ -17,7 +17,6 @@ import escape from 'escape-html';
  *
  * @part container - The container for the whole summary.
  * @part results - The container for the results.
- * @part no-results - The container for when there are no results.
  * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
@@ -42,7 +41,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   /**
    * Whether to display the duration of the last query execution.
    */
-  @Prop() enableDuration = true;
+  @Prop() enableDuration = false;
 
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);
@@ -61,16 +60,6 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private wrapHighlight(content: string) {
     return `<span class="font-bold" part="highlight">${content}</span>`;
-  }
-
-  private renderNoResults() {
-    const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('no-results-for', {
-          interpolation: {escapeValue: false},
-          query: this.wrapHighlight(escape(this.querySummaryState.query)),
-        })
-      : this.bindings.i18n.t('no-results');
-    return <span part="no-results" innerHTML={content}></span>;
   }
 
   private get resultOfOptions() {
@@ -119,9 +108,10 @@ export class AtomicQuerySummary implements InitializableComponent {
 
     return (
       <div class="text-on-background" part="container">
-        {this.querySummaryState.hasResults
-          ? [this.renderHasResults(), this.renderDuration()]
-          : this.renderNoResults()}
+        {this.querySummaryState.hasResults && [
+          this.renderHasResults(),
+          this.renderDuration(),
+        ]}
       </div>
     );
   }

@@ -1,0 +1,5 @@
+{
+    "env": {
+        "examplesUrl": "https://your-salesforce-instance.force.com/examples"
+    }
+}

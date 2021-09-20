@@ -91,7 +91,7 @@ describe('date filter', () => {
   });
 
   it('when an option is invalid, it throws an error', () => {
-    options.field = (0 as unknown) as string;
+    options.field = 0 as unknown as string;
     expect(() => initDateFilter()).toThrow(
       'Check the options of buildDateFacet'
     );

@@ -7,11 +7,15 @@ import previous from '@salesforce/label/c.quantic_Previous';
 export default class QuanticPager extends LightningElement {
   /** @type {number[]} */
   @track currentPages = [];
+  /** @type {boolean}*/
+  @track hasResults
 
   /** @type {import("coveo").Pager} */
   pager;
   /** @type {()=> void} */
   unsubscribe;
+  /** @type {() => void} */
+  unsubscribeSearchStatus;
   /** @type {boolean} */
   hasPrevious;
   /** @type {boolean} */
@@ -30,22 +34,22 @@ export default class QuanticPager extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     this.pager = CoveoHeadless.buildPager(engine);
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
@@ -53,6 +57,7 @@ export default class QuanticPager extends LightningElement {
     this.hasNext = this.pager.state.hasNextPage;
     this.currentPages = this.pager.state.currentPages;
     this.currentPage = this.pager.state.currentPage;
+    this.hasResults = this.searchStatus.state.hasResults;
   }
 
   previous() {

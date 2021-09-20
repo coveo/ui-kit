@@ -1,32 +1,12 @@
 @import '../../global/global.pcss';
 
-/**
- * @prop --atomic-submit-button-size: The size of the submit button inside the search box.
- * @prop --atomic-search-box-height: The height of the search box.
- */
-.submit-button {
-  width: var(--atomic-submit-button-size, 3rem);
+.loading {
+  --tw-gradient-from: var(--atomic-primary-dark);
+  --tw-gradient-to: var(--atomic-primary-light);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
-.search-box,
-.suggestion {
-  height: var(--atomic-search-box-height, 3rem);
-}
-
-.input-wrapper.leading-submit {
-  @apply border-l-0 rounded-r;
-}
-
-.suggestions {
-  top: var(--atomic-search-box-height, 3rem);
-  left: 0;
-}
-
-.suggestion.active,
-.suggestion:hover {
-  @apply bg-primary text-on-primary border-primary;
-}
-
-.suggestion:last-child {
-  @apply border-b rounded-b;
+.loading::after {
+  content: '';
+  @apply absolute w-5/6 h-5/6 bg-background rounded-full;
 }
