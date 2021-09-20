@@ -1,1 +1,22 @@
 @import 'c/quanticFacetStyles';
+
+.facet__search-results_no-match {
+  color: #8E959D;
+  background-color: var(--sds-c-color-gray-3, #F6F7F9);
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.facet__search-results_more-matches {
+   color:  #8E959D;
+   font-size: 12px;
+}
+.parent-text__bold {
+  font-weight: var(--font-weight-bold, 700);
+  margin-left: var(--lwc-varSpacingHorizontalMedium, 1rem);
+}
+
+.facet__number-of-results {
+  color: #8E959D;
+  margin-left: var(--lwc-spacingXSmall, 0.5rem);
+}

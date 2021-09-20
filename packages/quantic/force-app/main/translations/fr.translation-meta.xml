@@ -53,11 +53,11 @@
         <name>quantic_Clear</name>
     </customLabels>
     <customLabels>
-        <label>Voir plus de résultats</label>
+        <label>+ Voir plus de résultats</label>
         <name>quantic_ShowMore</name>
     </customLabels>
     <customLabels>
-        <label>Voir moins de résultats</label>
+        <label>- Voir moins de résultats</label>
         <name>quantic_ShowLess</name>
     </customLabels>
     <customLabels>
@@ -67,6 +67,14 @@
     <customLabels>
         <label>Afficher moins de valeurs pour la facette {{label}}</label>
         <name>quantic_ShowLessFacetValues</name>
+    </customLabels>
+    <customLabels>
+        <label>Toutes les catégories</label>
+        <name>quantic_AllCategories</name>
+    </customLabels>
+    <customLabels>
+        <label>dans</label>
+        <name>quantic_InLabel</name>
     </customLabels>
     <customLabels>
         <label>{{0}} de plus...</label>
