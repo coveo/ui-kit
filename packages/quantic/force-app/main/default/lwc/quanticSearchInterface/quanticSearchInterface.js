@@ -9,6 +9,7 @@ import {
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 // @ts-ignore
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
+import loading from '@salesforce/label/c.quantic_Loading';
 
 export default class QuanticSearchInterface extends LightningElement {
   /** @type {any} */
@@ -37,6 +38,12 @@ export default class QuanticSearchInterface extends LightningElement {
 
   /** @type {import("coveo").Unsubscribe} */
   unsubscribeUrlManager;
+
+  isInitialized = false;
+
+  labels = {
+    loading,
+  };
 
   connectedCallback() {
     loadDependencies(this).then((CoveoHeadless) => {
@@ -88,6 +95,7 @@ export default class QuanticSearchInterface extends LightningElement {
       );
       if (!redirectData) {
         engine.executeFirstSearch();
+        this.isInitialized = true;
         return;
       }
       window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
@@ -96,6 +104,8 @@ export default class QuanticSearchInterface extends LightningElement {
       engine.dispatch(updateQuery({q: value}));
       engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
     }
+
+    this.isInitialized = true;
   };
 
   get fragment() {
@@ -123,4 +133,8 @@ export default class QuanticSearchInterface extends LightningElement {
   onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   };
+
+  get contentCssClasses() {
+    return !this.isInitialized ? 'search__content_hidden' : '';
+  }
 }

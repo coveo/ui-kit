@@ -1,5 +1,11 @@
 <template>
   <div class={flexipageRegionWidth}>
-    <slot></slot>
+    <template if:false={isInitialized}>
+      <div class="search__loading-container">
+        <lightning-spinner alternative-text={labels.loading} size="large"></lightning-spinner>
+      </div>
+    </template>
+
+    <slot class={contentCssClasses}></slot>
   </div>
 </template>

@@ -220,4 +220,8 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+        <label>Chargement</label>
+        <name>quantic_Loading</name>
+    </customLabels>
 </Translations>

@@ -1,0 +1,7 @@
+.search__content_hidden {
+  display: none;
+}
+
+.search__loading-container {
+  height: 10rem;
+}
