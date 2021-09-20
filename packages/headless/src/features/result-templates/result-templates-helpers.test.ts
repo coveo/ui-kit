@@ -36,9 +36,12 @@ describe('result template helpers', () => {
   describe('fieldsMustBeDefined', () => {
     it(`when sending a list of fields that are all defined in the result
     should return true`, () => {
-      const match = fieldsMustBeDefined(['language', 'anotherfield']);
+      const match = fieldsMustBeDefined([
+        'language',
+        'anotherfield',
+        'excerpt',
+      ]);
       const result = buildMockResult();
-      result.raw['language'] = ['Test'];
       result.raw['anotherfield'] = 0;
       expect(match(result)).toBe(true);
     });
@@ -55,8 +58,12 @@ describe('result template helpers', () => {
   describe('fieldsMustNotBeDefined', () => {
     it(`when sending a list of fields that are all undefined in the result
     should return true`, () => {
-      const match = fieldsMustNotBeDefined(['somefield', 'anotherfield']);
-      const result = buildMockResult();
+      const match = fieldsMustNotBeDefined([
+        'somefield',
+        'anotherfield',
+        'excerpt',
+      ]);
+      const result = buildMockResult({excerpt: undefined});
       result.raw['anotherfield'] = undefined;
       expect(match(result)).toBe(true);
     });
@@ -75,6 +82,13 @@ describe('result template helpers', () => {
     should return true`, () => {
       const match = fieldMustMatch('language', ['French', 'English']);
       const result = buildResult('language', 'English');
+      expect(match(result)).toBe(true);
+    });
+
+    it(`when sending a field that contains one of the values (as part of the root result) to match
+    should return true`, () => {
+      const match = fieldMustMatch('excerpt', ['test']);
+      const result = buildMockResult({excerpt: 'test'});
       expect(match(result)).toBe(true);
     });
 
@@ -111,6 +125,13 @@ describe('result template helpers', () => {
     should return true`, () => {
       const match = fieldMustNotMatch('language', ['English', 'French']);
       const result = buildResult('language', 'Arabic');
+      expect(match(result)).toBe(true);
+    });
+
+    it(`when sending a field that does not contain any of the values (as part of the root result) to match
+    should return true`, () => {
+      const match = fieldMustNotMatch('excerpt', ['test']);
+      const result = buildMockResult({excerpt: 'no!'});
       expect(match(result)).toBe(true);
     });
 

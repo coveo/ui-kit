@@ -9,11 +9,12 @@ import {Result} from '../../api/search/search/result';
  * @returns (unknown) The value of the specified property in the specified result, or null if the property does not exist.
  */
 export const getResultProperty = (result: Result, property: string) => {
-  if (property in result) {
-    return (result as unknown as Record<string, unknown>)[property];
+  const anyResult = result as unknown as Record<string, unknown>;
+  if (property in result && anyResult[property] !== undefined) {
+    return anyResult[property];
   }
 
-  if (property in result.raw) {
+  if (property in result.raw && result.raw[property] !== undefined) {
     return result.raw[property];
   }
 
@@ -29,7 +30,9 @@ export const fieldsMustBeDefined = (
   fieldNames: string[]
 ): ResultTemplateCondition => {
   return (result: Result) => {
-    return fieldNames.every((fieldName) => result.raw[fieldName] !== undefined);
+    return fieldNames.every(
+      (fieldName) => getResultProperty(result, fieldName) !== null
+    );
   };
 };
 
@@ -42,7 +45,9 @@ export const fieldsMustNotBeDefined = (
   fieldNames: string[]
 ): ResultTemplateCondition => {
   return (result: Result) => {
-    return fieldNames.every((fieldName) => result.raw[fieldName] === undefined);
+    return fieldNames.every(
+      (fieldName) => getResultProperty(result, fieldName) === null
+    );
   };
 };
 
@@ -89,6 +94,6 @@ export const fieldMustNotMatch = (
 };
 
 const getFieldValuesFromResult = (fieldName: string, result: Result) => {
-  const rawValue = result.raw[fieldName];
+  const rawValue = getResultProperty(result, fieldName);
   return isArray(rawValue) ? rawValue : [rawValue];
 };
