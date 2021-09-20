@@ -39,6 +39,7 @@
   "dependencies": {
     "@coveo/bueno": "^0.32.6",
     "@coveo/headless": "^1.19.4",
+    "@salesforce-ux/design-system": "^2.16.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "dompurify": "^2.3.0",

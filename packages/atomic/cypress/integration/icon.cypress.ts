@@ -31,13 +31,13 @@ describe('Icon Test Suites', () => {
   });
 
   it('should render an icon from a URL', () => {
-    getSvg('mail').then((icon) => {
+    getSvg('email').then((icon) => {
       const url = 'https://some-website-with-icons.com/my-icon.svg';
       cy.intercept(url, {
         body: icon,
       });
       setupIcon(url);
-      shouldRenderIcon('mail');
+      shouldRenderIcon('email');
     });
   });
 
