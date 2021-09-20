@@ -12,7 +12,7 @@ import {
   RecentQueriesState,
 } from './recent-queries-state';
 
-describe('recent-queries slice', () => {
+describe('recent-queries-slice', () => {
   let state: RecentQueriesState;
 
   const testQuery = 'what is a query';
@@ -135,5 +135,26 @@ describe('recent-queries slice', () => {
         testQueries
       );
     }
+  });
+
+  it('should place the query at the start of the list if it already exists', () => {
+    state.queries = ['5', '4', '3', '2', '1'];
+    state.maxLength = 5;
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        queryExecuted: '3',
+        response: buildMockSearchResponse({}),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual([
+      '3',
+      '5',
+      '4',
+      '2',
+      '1',
+    ]);
   });
 });
