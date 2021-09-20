@@ -3,7 +3,9 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 import {
+  deselectAllCategoryFacetValues,
   registerCategoryFacet,
+  toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
@@ -13,6 +15,9 @@ import {
   logFacetUpdateSort,
   logFacetShowMore,
   logFacetShowLess,
+  logFacetDeselect,
+  logFacetSelect,
+  logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
@@ -26,10 +31,6 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
-import {
-  executeDeselectAllCategoryFacetValues,
-  executeToggleCategoryFacetSelect,
-} from '../../../features/facets/category-facet-set/category-facet-set-controller-actions';
 import {validateOptions} from '../../../utils/validate-payload';
 import {
   CategoryFacetOptions,
@@ -279,17 +280,25 @@ export function buildCategoryFacet(
     ...controller,
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection: CategoryFacetValue) =>
-      dispatch(
-        executeToggleCategoryFacetSelect({
-          facetId,
-          selection,
-          retrieveCount: options.numberOfValues,
-        })
-      ),
+    toggleSelect(selection: CategoryFacetValue) {
+      const retrieveCount = options.numberOfValues;
+      const analyticsAction = getToggleSelectAnalyticsAction(
+        facetId,
+        selection
+      );
 
-    deselectAll: () =>
-      dispatch(executeDeselectAllCategoryFacetValues({facetId})),
+      dispatch(
+        toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
+      );
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(executeSearch(analyticsAction));
+    },
+
+    deselectAll() {
+      dispatch(deselectAllCategoryFacetValues(facetId));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
+    },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       const facetId = options.facetId;
@@ -365,4 +374,17 @@ function loadCategoryFacetReducers(
     search,
   });
   return true;
+}
+
+function getToggleSelectAnalyticsAction(
+  facetId: string,
+  selection: CategoryFacetValue
+) {
+  const payload = {
+    facetId,
+    facetValue: selection.value,
+  };
+
+  const isSelected = selection.state === 'selected';
+  return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
 }
