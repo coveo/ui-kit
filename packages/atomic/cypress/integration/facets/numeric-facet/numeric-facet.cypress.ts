@@ -368,44 +368,6 @@ describe('Numeric Facet V1 Test Suites', () => {
         false
       );
     });
-
-    describe('when selecting a value', () => {
-      const selectionIndex = 1;
-      function setupSelectCheckboxValue() {
-        setupCustomRangesWithCheckboxValues();
-        selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
-      }
-
-      describe('verify rendering', () => {
-        before(setupSelectCheckboxValue);
-        CommonAssertions.assertAccessibility(numericFacetComponent);
-        CommonFacetAssertions.assertDisplayClearButton(
-          NumericFacetSelectors,
-          true
-        );
-        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
-          NumericFacetSelectors,
-          1
-        );
-        CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
-          NumericFacetSelectors,
-          numberOfCustomRanges - 1
-        );
-        CommonFacetAssertions.assertDisplayClearButton(
-          NumericFacetSelectors,
-          true
-        );
-      });
-
-      describe('verify analytics', () => {
-        before(setupSelectCheckboxValue);
-        NumericFacetAssertions.assertLogNumericFacetSelect(
-          field,
-          selectionIndex
-        );
-      });
-    });
   });
 
   describe('with custom #withInput only', () => {
@@ -630,40 +592,6 @@ describe('Numeric Facet V1 Test Suites', () => {
         NumericFacetSelectors,
         customNumberOfValues
       );
-    });
-
-    describe('when selecting a value', () => {
-      const selectionIndex = 3;
-      function setupSelectCheckboxValue() {
-        setupRangesWithCustomNumberOfValues();
-        selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
-      }
-
-      describe('verify rendering', () => {
-        before(setupSelectCheckboxValue);
-        CommonAssertions.assertAccessibility(numericFacetComponent);
-        CommonFacetAssertions.assertDisplayClearButton(
-          NumericFacetSelectors,
-          true
-        );
-        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
-          NumericFacetSelectors,
-          1
-        );
-        CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
-          NumericFacetSelectors,
-          customNumberOfValues - 1
-        );
-      });
-
-      describe('verify analytics', () => {
-        before(setupSelectCheckboxValue);
-        NumericFacetAssertions.assertLogNumericFacetSelect(
-          field,
-          selectionIndex
-        );
-      });
     });
   });
 
