@@ -45,6 +45,7 @@ export class AtomicResultIcon {
       <atomic-icon
         icon={'assets://' + icon}
         class={icon}
+        title={icon}
         style={{backgroundColor}}
       ></atomic-icon>
     );

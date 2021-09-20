@@ -3,14 +3,12 @@ import {setUpPage} from '../utils/setupComponent';
 import {IconSelectors} from './icon-selectors';
 
 function getSvg(fileName: string) {
-  const file = cy.readFile(
-    `./src/components/atomic-icon/assets/${fileName}.svg`
-  );
+  const file = cy.readFile(`./www/build/assets/${fileName}.svg`);
   return file;
 }
 
 function shouldRenderIcon(icon: string) {
-  cy.get(IconSelectors.title).should('have.text', icon);
+  cy.get(IconSelectors.svg).should('be.visible', icon);
 }
 
 describe('Icon Test Suites', () => {
