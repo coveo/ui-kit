@@ -229,6 +229,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     if(this.input) {
       this.input.value = '';
     }
+    this.facet.facetSearch.updateText('');
   }
 
   highlightResult(result, query) {
