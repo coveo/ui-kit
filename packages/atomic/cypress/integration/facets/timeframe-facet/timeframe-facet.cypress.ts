@@ -54,12 +54,12 @@ describe('Timeframe Facet V1 Test Suites', () => {
         setupTimeframeFacet();
         selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
         cy.wait(TestFixture.interceptAliases.Search);
+        cy.wait(100);
       }
       describe('verify rendering', () => {
         before(setupSelectLinkValue);
         CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
-        // CommonAssertions.assertAccessibility(TimeframeFacetSelectors);
-        // TODO: enable it when KIT-996 fixed
+        CommonAssertions.assertAccessibility(timeframeFacetComponent);
         CommonFacetAssertions.assertDisplayClearButton(
           TimeframeFacetSelectors,
           true
@@ -93,7 +93,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupSecondLinkValue);
-          // CommonAssertions.assertAccessibility(timeframeFacetComponent);
+          CommonAssertions.assertAccessibility(timeframeFacetComponent);
           CommonFacetAssertions.assertNumberOfSelectedLinkValues(
             TimeframeFacetSelectors,
             1
@@ -400,7 +400,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addTimeframeFacet({label, field}, unitFrames))
-        .withHash(`df[${field}]=past-1-week..now`)
+        .withHash(`df[${field}]=past-1-month..now`)
         .init();
     });
 
@@ -408,10 +408,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
     CommonFacetAssertions.assertNumberOfSelectedLinkValues(
       TimeframeFacetSelectors,
       1
-    );
-    CommonFacetAssertions.assertNumberOfIdleLinkValues(
-      TimeframeFacetSelectors,
-      defaultNumberOfValues - 1
     );
     TimeframeFacetAssertions.assertFacetValueContainsText(
       2,
