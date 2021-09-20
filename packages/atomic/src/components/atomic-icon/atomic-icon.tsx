@@ -20,7 +20,6 @@ import {sanitize} from 'dompurify';
   tag: 'atomic-icon',
   styleUrl: 'atomic-icon.pcss',
   shadow: false,
-  assetsDirs: ['assets'],
 })
 export class AtomicIcon {
   @Element() host!: HTMLElement;
