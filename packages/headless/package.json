@@ -31,7 +31,8 @@
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
-    "npm:publish": "npm publish --access public",
+    "npm:publish": "node ../../scripts/deploy/publish.js",
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "doc:generate": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "node ./scripts/extract-documentation.js",
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
