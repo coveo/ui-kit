@@ -1,6 +1,7 @@
 import {ResultTemplateCondition} from './result-templates';
 import {isArray} from '../../utils/utils';
 import {Result} from '../../api/search/search/result';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 /**
  * Extracts a property from a result object.
@@ -10,11 +11,11 @@ import {Result} from '../../api/search/search/result';
  */
 export const getResultProperty = (result: Result, property: string) => {
   const anyResult = result as unknown as Record<string, unknown>;
-  if (anyResult[property] !== undefined) {
+  if (!isNullOrUndefined(anyResult[property])) {
     return anyResult[property];
   }
 
-  if (result.raw[property] !== undefined) {
+  if (!isNullOrUndefined(result.raw[property])) {
     return result.raw[property];
   }
 
@@ -31,7 +32,7 @@ export const fieldsMustBeDefined = (
 ): ResultTemplateCondition => {
   return (result: Result) => {
     return fieldNames.every(
-      (fieldName) => getResultProperty(result, fieldName) !== null
+      (fieldName) => !isNullOrUndefined(getResultProperty(result, fieldName))
     );
   };
 };
@@ -45,8 +46,8 @@ export const fieldsMustNotBeDefined = (
   fieldNames: string[]
 ): ResultTemplateCondition => {
   return (result: Result) => {
-    return fieldNames.every(
-      (fieldName) => getResultProperty(result, fieldName) === null
+    return fieldNames.every((fieldName) =>
+      isNullOrUndefined(getResultProperty(result, fieldName))
     );
   };
 };
