@@ -445,7 +445,7 @@ describe('category facet slice', () => {
         ]);
       });
 
-      it('when the value path contains more than one segement, it selects it', () => {
+      it('when the value path contains more than one segment, it selects it', () => {
         const selection = buildMockCategoryFacetValue({
           value: 'B',
           path: ['A', 'B'],
