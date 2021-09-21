@@ -16,7 +16,9 @@ const optionsSchema = new Schema({
     url: true,
   }),
   additionalFields: new ArrayValue<string>({
-    each: new StringValue(),
+    each: new StringValue({
+      emptyAllowed: false,
+    }),
   }),
 });
 

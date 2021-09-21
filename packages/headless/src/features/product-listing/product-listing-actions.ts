@@ -57,7 +57,10 @@ export const setAdditionalFields = createAction(
     validatePayload(payload, {
       additionalFields: new ArrayValue({
         required: true,
-        each: new StringValue(),
+        each: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
       }),
     })
 );
