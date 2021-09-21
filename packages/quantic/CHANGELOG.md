@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.64.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.5...@coveo/quantic@0.64.0) (2021-09-20)
+
+
+### Features
+
+* **quantic:** Update hierarchic facet ([#1135](https://github.com/coveo/ui-kit/issues/1135)) ([f277dd3](https://github.com/coveo/ui-kit/commit/f277dd3457b0248fa182cc41d32432e00237336f))
+
+
+
+
+
 ## [0.63.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.4...@coveo/quantic@0.63.5) (2021-09-20)
 
 **Note:** Version bump only for package @coveo/quantic

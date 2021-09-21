@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.9...@coveo/atomic@1.0.10) (2021-09-20)
+
+
+### Bug Fixes
+
+* **atomic:** breadbox has wrong rounded class ([#1223](https://github.com/coveo/ui-kit/issues/1223)) ([e75a777](https://github.com/coveo/ui-kit/commit/e75a777c45ee0c8f1bd61ac7f87a6a49d4df4ba4))
+* **atomic:** facet header should not be rounded ([#1222](https://github.com/coveo/ui-kit/issues/1222)) ([bc342ab](https://github.com/coveo/ui-kit/commit/bc342ab703785680471f26748028fce558a869bb))
+* **atomic:** reduce result template visual section potential height ([#1224](https://github.com/coveo/ui-kit/issues/1224)) ([b1710bd](https://github.com/coveo/ui-kit/commit/b1710bdbd51aeb02d5915b457789c934f46efb0e))
+
+
+
+
+
 ## [1.0.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.8...@coveo/atomic@1.0.9) (2021-09-20)
 
 
