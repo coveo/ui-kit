@@ -93,16 +93,16 @@ export default class QuanticSearchInterface extends LightningElement {
       const redirectData = window.localStorage.getItem(
         STANDALONE_SEARCH_BOX_STORAGE_KEY
       );
-      if (!redirectData) {
+
+      if (redirectData) {
+        window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+        const {value, analytics} = JSON.parse(redirectData);
+        
+        engine.dispatch(updateQuery({q: value}));
+        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+      } else {
         engine.executeFirstSearch();
-        this.isInitialized = true;
-        return;
       }
-      window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-      const {value, analytics} = JSON.parse(redirectData);
-      
-      engine.dispatch(updateQuery({q: value}));
-      engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
     }
 
     this.isInitialized = true;
