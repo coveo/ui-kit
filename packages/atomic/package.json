@@ -38,6 +38,7 @@
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
   },
   "dependencies": {
+    "@salesforce-ux/design-system": "^2.16.1",
     "@coveo/bueno": "^0.32.7",
     "@coveo/headless": "^1.20.0",
     "coveo-styleguide": "^9.26.0",
