@@ -38,7 +38,7 @@ export class AtomicResultIcon {
     return objectType || fileType;
   }
 
-  public render() {
+  private renderIcon() {
     const icon = this.icon || 'custom';
     const backgroundColor = bgIcons[snakeToCamel(icon)] || 'transparent';
     return (
@@ -49,5 +49,9 @@ export class AtomicResultIcon {
         style={{backgroundColor}}
       ></atomic-icon>
     );
+  }
+
+  public render() {
+    return this.icon ? this.renderIcon() : <slot>{this.renderIcon()}</slot>;
   }
 }
