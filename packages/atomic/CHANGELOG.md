@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.11...@coveo/atomic@1.1.0) (2021-09-21)
+
+
+### Features
+
+* **atomic:** add delimitingCharacter, filterFacetCount & injectionDepth options to facets ([#1231](https://github.com/coveo/ui-kit/issues/1231)) ([93ac1d2](https://github.com/coveo/ui-kit/commit/93ac1d2085423e96bbf7cef1607b5df7a73498dd))
+
+
+
+
+
 ## [1.0.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.10...@coveo/atomic@1.0.11) (2021-09-21)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.64.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.1...@coveo/quantic@0.64.2) (2021-09-21)
+
+
+### Bug Fixes
+
+* **quantic:** inverse button color ([#1217](https://github.com/coveo/ui-kit/issues/1217)) ([5e3bf4d](https://github.com/coveo/ui-kit/commit/5e3bf4d9c4648f806a3cbf9953bddf25e2623386))
+
+
+
+
+
 ## [0.64.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.0...@coveo/quantic@0.64.1) (2021-09-21)
 
 **Note:** Version bump only for package @coveo/quantic
