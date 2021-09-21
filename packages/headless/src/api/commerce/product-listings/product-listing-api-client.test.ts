@@ -93,6 +93,9 @@ describe('product listing api client', () => {
 
       const expectedBody: ProductListingSuccessResponse = {
         products: [],
+        facets: {
+          results: [],
+        },
         pagination: {
           totalCount: 31,
         },

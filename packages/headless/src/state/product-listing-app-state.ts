@@ -4,6 +4,7 @@ import {
   DateFacetSection,
   FacetOptionsSection,
   FacetOrderSection,
+  FacetSearchSection,
   FacetSection,
   NumericFacetSection,
   PaginationSection,
@@ -14,6 +15,7 @@ import {
 
 export type ProductListingAppState = ConfigurationSection &
   ProductListingSection &
+  FacetSearchSection &
   FacetSection &
   NumericFacetSection &
   CategoryFacetSection &

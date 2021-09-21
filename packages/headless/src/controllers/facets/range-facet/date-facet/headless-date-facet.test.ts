@@ -18,7 +18,7 @@ import {
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 import {SearchAppState} from '../../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';

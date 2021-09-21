@@ -13,7 +13,7 @@ import {
   NumericFilterOptions,
 } from './headless-numeric-filter';
 import {buildNumericRange} from './numeric-range';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {
   registerNumericFacet,
   updateNumericFacetValues,

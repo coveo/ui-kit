@@ -1,24 +1,24 @@
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test/mock-engine';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
-import {executeSearch} from '../../../features/search/search-actions';
-import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
+} from '../../../../test/mock-engine';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options';
 import {
   buildGenericFacetSearch,
   GenericFacetSearch,
   GenericFacetSearchProps,
 } from './facet-search';
-import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 
 describe('FacetSearch', () => {
   const facetId = '1';

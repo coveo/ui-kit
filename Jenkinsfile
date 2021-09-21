@@ -4,7 +4,7 @@ node('linux && docker') {
   def isBump = !!tag
   def isMaster = env.BRANCH_NAME == 'master'
 
-  withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
+  withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=4096']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Setup') {
         sh 'npm install'

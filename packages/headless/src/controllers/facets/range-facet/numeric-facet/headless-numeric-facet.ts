@@ -24,7 +24,7 @@ import {
   NumericFacetOptions,
   validateNumericFacetOptions,
 } from './headless-numeric-facet-options';
-import {determineFacetId} from '../../_common/facet-id-determinor';
+import {determineFacetId} from '../../../core/facets/_common/facet-id-determinor';
 import {buildNumericRange, NumericRangeOptions} from './numeric-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';

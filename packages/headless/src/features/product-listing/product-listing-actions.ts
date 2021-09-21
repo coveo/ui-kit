@@ -24,7 +24,7 @@ import {
 import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {SortBy} from '../sort/sort';
-
+import {ProductListingState} from './product-listing-state';
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
@@ -92,20 +92,23 @@ export const buildProductListingRequest = (
   state: StateNeededByFetchProductListing
 ): ProductListingRequest => {
   const facets = getFacets(state);
+  const visitorId = getVisitorID();
 
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     platformUrl: state.configuration.platformUrl,
-    url: state.productListing.url,
-    // TODO COM-1185: if (analyticsEnabled) {
-    clientId: getVisitorID(),
+    url: state.productListing?.url,
+    ...(state.configuration.analytics.enabled && visitorId
+      ? {clientId: getVisitorID()}
+      : {}),
     ...(state.productListing.additionalFields?.length
       ? {
           additionalFields: state.productListing.additionalFields,
         }
       : {}),
-    ...(state.productListing.advancedParameters
+    ...(state.productListing.advancedParameters &&
+    isDebugActive(state.productListing.advancedParameters)
       ? {
           advancedParameters: state.productListing.advancedParameters || {},
         }
@@ -131,6 +134,12 @@ export const buildProductListingRequest = (
     }),
   };
 };
+
+function isDebugActive(
+  advanced: ProductListingState['advancedParameters']
+): boolean {
+  return advanced.debug;
+}
 
 function getFacets(state: StateNeededByFetchProductListing) {
   return sortFacets(getAllFacets(state), state.facetOrder ?? []);

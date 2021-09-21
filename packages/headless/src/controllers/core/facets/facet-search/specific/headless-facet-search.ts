@@ -1,16 +1,16 @@
 import {
   registerFacetSearch,
   selectFacetSearchResult,
-} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {buildGenericFacetSearch} from '../facet-search';
-import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
-import {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
+import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {
   ConfigurationSection,
   FacetSearchSection,
-} from '../../../../state/state-sections';
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../state/state-sections';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+import {CoreEngine} from '../../../../../app/engine';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;
@@ -19,7 +19,7 @@ export interface FacetSearchProps {
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 
 export function buildFacetSearch(
-  engine: SearchEngine<FacetSearchSection & ConfigurationSection>,
+  engine: CoreEngine<FacetSearchSection & ConfigurationSection>,
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;

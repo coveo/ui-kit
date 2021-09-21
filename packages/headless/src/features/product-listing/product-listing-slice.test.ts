@@ -9,6 +9,7 @@ import {
   setProductListingUrl,
 } from './product-listing-actions';
 import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
 
 describe('product-listing-slice', () => {
   let state: ProductListingState;
@@ -34,14 +35,17 @@ describe('product-listing-slice', () => {
 
   it('when a fetchProductListing fulfilled is received, it updates the state to the received payload', () => {
     const result = buildMockProductRecommendation();
+    const facet = buildMockFacetResponse();
     const response = buildFetchProductListingResponse({
       products: [result],
+      facets: {results: [facet]},
     });
 
     const action = fetchProductListing.fulfilled(response, '');
     const finalState = productListingReducer(state, action);
 
     expect(finalState.products[0]).toEqual(result);
+    expect(finalState.facets.results[0]).toEqual(facet);
     expect(finalState.isLoading).toBe(false);
   });
 

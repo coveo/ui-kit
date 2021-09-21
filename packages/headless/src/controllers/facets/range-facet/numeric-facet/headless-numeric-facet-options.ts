@@ -22,7 +22,7 @@ import {
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-} from '../../_common/facet-option-definitions';
+} from '../../../core/facets/_common/facet-option-definitions';
 import {validateOptions} from '../../../../utils/validate-payload';
 import {
   ConfigurationSection,

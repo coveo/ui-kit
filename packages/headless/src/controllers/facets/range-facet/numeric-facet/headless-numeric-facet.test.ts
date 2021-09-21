@@ -19,7 +19,7 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';

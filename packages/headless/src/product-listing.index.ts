@@ -49,3 +49,17 @@ export {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
 } from './controllers/product-listing/sort/headless-product-listing-sort';
+
+export {
+  Facet,
+  FacetOptions,
+  FacetProps,
+  FacetSearch,
+  FacetSearchOptions,
+  FacetSearchState,
+  FacetState,
+  FacetValue,
+  FacetValueState,
+  SpecificFacetSearchResult,
+  buildFacet,
+} from './controllers/product-listing/facet/headless-product-listing-facet';

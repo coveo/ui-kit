@@ -1,40 +1,30 @@
-import {executeSearch} from '../../../features/search/search-actions';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
-import {FacetOptions, FacetSearchOptions} from './headless-facet-options';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   buildCoreFacet,
   Facet,
+  FacetOptions,
   FacetProps,
   FacetSearch,
+  FacetSearchOptions,
   FacetSearchState,
   FacetState,
   FacetValue,
   SpecificFacetSearchResult,
 } from '../../core/facets/facet/headless-core-facet';
-import {CoreEngine} from '../../..';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {executeToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-controller-actions';
+import {CoreEngine} from '../../../app/engine';
 import {
-  facetSet,
-  configuration,
-  facetSearchSet,
-  search,
-} from '../../../app/reducers';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {
-  FacetSection,
   ConfigurationSection,
   FacetSearchSection,
-  SearchSection,
+  FacetSection,
 } from '../../../state/state-sections';
+import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {loadReducerError} from '../../../utils/errors';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
+import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
 
 export {
   FacetOptions,
@@ -56,7 +46,10 @@ export {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
+export function buildFacet(
+  engine: ProductListingEngine,
+  props: FacetProps
+): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -68,39 +61,35 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   return {
     ...coreController,
 
-    toggleSelect: (selection) => {
-      coreController.toggleSelect(selection);
+    toggleSelect: (selection: FacetValue) => {
       dispatch(
-        executeSearch(
-          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
-        )
+        executeToggleFacetSelect({
+          facetId: getFacetId(),
+          selection,
+        })
       );
+      dispatch(fetchProductListing());
+      dispatch(getAnalyticsActionForToggleFacetSelect(getFacetId(), selection));
     },
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+      dispatch(fetchProductListing());
     },
 
     sortBy(criterion: FacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
-      );
-    },
-
-    isSortedBy(criterion: FacetSortCriterion) {
-      return this.state.sortCriterion === criterion;
+      dispatch(fetchProductListing());
     },
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(executeSearch(logFacetShowMore(getFacetId())));
+      dispatch(fetchProductListing());
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(executeSearch(logFacetShowLess(getFacetId())));
+      dispatch(fetchProductListing());
     },
 
     get state() {
@@ -114,9 +103,9 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 function loadFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  FacetSection & ConfigurationSection & FacetSearchSection & SearchSection,
+  FacetSection & ConfigurationSection & FacetSearchSection,
   SearchThunkExtraArguments
 > {
-  engine.addReducers({facetSet, configuration, facetSearchSet, search});
+  engine.addReducers({facetSet, configuration, facetSearchSet});
   return true;
 }

@@ -23,6 +23,9 @@ import {
 import {getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {WritableDraft} from 'immer/dist/internal';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -128,20 +131,21 @@ export const facetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
-        facets.forEach((facetResponse) => {
-          const id = facetResponse.facetId;
-          const facetRequest = state[id];
-
-          if (!facetRequest) {
-            return;
-          }
-
-          facetRequest.currentValues = (facetResponse as FacetResponse).values.map(
-            convertFacetValueToRequest
-          );
-          facetRequest.freezeCurrentValues = false;
-          facetRequest.preventAutoSelect = false;
-        });
+        facets.forEach((facetResponse) =>
+          mutateStateFromFacetResponse(
+            state[facetResponse.facetId],
+            facetResponse
+          )
+        );
+      })
+      .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const facets = action.payload.response?.facets?.results || [];
+        facets.forEach((facetResponse) =>
+          mutateStateFromFacetResponse(
+            state[facetResponse.facetId],
+            facetResponse
+          )
+        );
       })
       .addCase(selectFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
@@ -181,6 +185,21 @@ export const facetSetReducer = createReducer(
       });
   }
 );
+
+function mutateStateFromFacetResponse(
+  facetRequest: WritableDraft<FacetRequest> | undefined,
+  facetResponse: AnyFacetResponse
+) {
+  if (!facetRequest) {
+    return;
+  }
+
+  facetRequest.currentValues = (facetResponse as FacetResponse).values.map(
+    convertFacetValueToRequest
+  );
+  facetRequest.freezeCurrentValues = false;
+  facetRequest.preventAutoSelect = false;
+}
 
 export const defaultFacetOptions: FacetOptionalParameters = {
   delimitingCharacter: '>',
