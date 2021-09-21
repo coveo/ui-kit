@@ -11,7 +11,11 @@ import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
 import {createMockState} from '../../test';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {configuration, debug, search} from '../../app/reducers';
+import {configuration, debug, search, fields} from '../../app/reducers';
+import {
+  debugFields,
+  fetchFieldsDescription,
+} from '../../features/fields/fields-actions';
 
 describe('RelevanceInspector', () => {
   let engine: MockSearchEngine;
@@ -35,6 +39,7 @@ describe('RelevanceInspector', () => {
       debug,
       search,
       configuration,
+      fields,
     });
   });
 
@@ -88,6 +93,18 @@ describe('RelevanceInspector', () => {
     expect(engine.actions).toContainEqual(disableDebug());
   });
 
+  it(`when calling debugFields()
+  it should dispatch an "debugFields" action`, () => {
+    relevanceInspector.debugFields(true);
+    expect(engine.actions).toContainEqual(debugFields(true));
+  });
+
+  it(`when calling fetchFieldsDescription()
+  it should dispatch an "fetchFieldsDescription" action`, () => {
+    relevanceInspector.fetchFieldsDescription();
+    expect(engine.findAsyncAction(fetchFieldsDescription.pending)).toBeTruthy();
+  });
+
   it('should return the right state when its disabled', () => {
     expect(relevanceInspector.state).toEqual({isEnabled: false});
   });
@@ -100,17 +117,20 @@ describe('RelevanceInspector', () => {
     engine = buildMockSearchAppEngine({state});
     relevanceInspector = buildRelevanceInspector(engine);
 
-    expect(relevanceInspector.state).toEqual({
-      isEnabled: true,
-      rankingInformation: rankingInformationSelector(engine.state),
-      executionReport: responseWithDebug.executionReport,
-      expressions: {
-        basicExpression: responseWithDebug.basicExpression,
-        advancedExpression: responseWithDebug.advancedExpression,
-        constantExpression: responseWithDebug.constantExpression,
-      },
-      userIdentities: responseWithDebug.userIdentities,
-      rankingExpressions: responseWithDebug.rankingExpressions,
-    });
+    expect(relevanceInspector.state).toMatchObject(
+      expect.objectContaining({
+        isEnabled: true,
+        rankingInformation: rankingInformationSelector(engine.state),
+        executionReport: responseWithDebug.executionReport,
+        expressions: {
+          basicExpression: responseWithDebug.basicExpression,
+          advancedExpression: responseWithDebug.advancedExpression,
+          constantExpression: responseWithDebug.constantExpression,
+        },
+        userIdentities: responseWithDebug.userIdentities,
+        rankingExpressions: responseWithDebug.rankingExpressions,
+        fieldsDescription: [],
+      })
+    );
   });
 });

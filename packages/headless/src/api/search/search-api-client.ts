@@ -32,6 +32,7 @@ import {BaseParam} from '../platform-service-params';
 import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
+import {FieldsDescriptionResponseSuccess} from './fields/fields-response';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -241,6 +242,26 @@ export class SearchAPIClient {
     };
   }
 
+  async fieldsDescription(req: BaseParam) {
+    const response = await PlatformClient.call({
+      ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
+      requestParams: {},
+      ...this.options,
+    });
+    if (response instanceof Error) {
+      throw response;
+    }
+    const body = await response.json();
+
+    if (isSuccessFieldsDescriptionResponse(body)) {
+      return {success: body};
+    }
+
+    return {
+      error: unwrapError({response, body}),
+    };
+  }
+
   private getAbortControllerInstanceIfAvailable(): AbortController | null {
     // For nodejs environments only, we want to load the implementation of AbortController from node-abort-controller package.
     // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
@@ -330,6 +351,12 @@ function isSuccessPlanResponse(body: unknown): body is PlanResponseSuccess {
 
 function isSuccessHtmlResponse(body: unknown): body is string {
   return typeof body === 'string';
+}
+
+function isSuccessFieldsDescriptionResponse(
+  body: unknown
+): body is FieldsDescriptionResponseSuccess {
+  return (body as FieldsDescriptionResponseSuccess).fields !== undefined;
 }
 
 function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {
