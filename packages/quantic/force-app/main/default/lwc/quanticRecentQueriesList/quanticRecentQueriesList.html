@@ -17,7 +17,7 @@
         <template for:each={queries} for:item="query" for:index="index">
           <li key={query} class="slds-var-m-vertical_x-small slds-grid" value={index} onclick={executeQuery}>
             <a class="slds-col recent-query__container">
-              <span><lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" alternative-text="search icon" size="xx-small"></lightning-icon></span>
+              <lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" alternative-text="search icon" size="xx-small"></lightning-icon>
               <span class="slds-text-body_small nowrap query-text__container slds-truncate slds-text-link">
                {query}
               </span>
