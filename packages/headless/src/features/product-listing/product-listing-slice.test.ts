@@ -6,6 +6,7 @@ import {
 import {productListingReducer} from './product-listing-slice';
 import {
   fetchProductListing,
+  setAdditionalFields,
   setProductListingUrl,
 } from './product-listing-actions';
 import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
@@ -31,6 +32,17 @@ describe('product-listing-slice', () => {
         })
       ).url
     ).toEqual('http://bloup.com/🐬');
+  });
+
+  it('should allow to set the additional fields', () => {
+    expect(
+      productListingReducer(
+        state,
+        setAdditionalFields({
+          additionalFields: ['ensure'],
+        })
+      ).additionalFields
+    ).toEqual(['ensure']);
   });
 
   it('when a fetchProductListing fulfilled is received, it updates the state to the received payload', () => {

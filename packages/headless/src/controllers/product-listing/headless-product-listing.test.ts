@@ -12,11 +12,12 @@ import {configuration} from '../../app/reducers';
 import {productListingReducer} from '../../features/product-listing/product-listing-slice';
 import {
   fetchProductListing,
+  setAdditionalFields,
   setProductListingUrl,
 } from '../../features/product-listing/product-listing-actions';
 
 describe('headless product-listing', () => {
-  let productRecommendations: ProductListingController;
+  let productListing: ProductListingController;
   let engine: MockProductListingEngine;
 
   const baseOptions: Partial<ProductListingOptions> = {
@@ -25,7 +26,7 @@ describe('headless product-listing', () => {
 
   beforeEach(() => {
     engine = buildMockProductListingEngine();
-    productRecommendations = buildProductListing(engine, {
+    productListing = buildProductListing(engine, {
       options: baseOptions,
     });
   });
@@ -46,8 +47,23 @@ describe('headless product-listing', () => {
     expectContainAction(setProductListingUrl);
   });
 
+  it('dispatches #setAdditionalFields on load if additionalFields is defined', () => {
+    productListing = buildProductListing(engine, {
+      options: {
+        ...baseOptions,
+        additionalFields: ['afield'],
+      },
+    });
+    expectContainAction(setAdditionalFields);
+  });
+
   it('refresh dispatches #fetchProductListing', () => {
-    productRecommendations.refresh();
+    productListing.refresh();
     expectContainAction(fetchProductListing.pending);
+  });
+
+  it('dispatches #setAdditionalFields on load if additionalFields is defined', () => {
+    productListing.setAdditionalFields(['afield']);
+    expectContainAction(setAdditionalFields);
   });
 });
