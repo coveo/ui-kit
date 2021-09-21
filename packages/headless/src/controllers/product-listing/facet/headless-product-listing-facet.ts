@@ -55,11 +55,11 @@ export function buildFacet(
   }
 
   const {dispatch} = engine;
-  const controller = buildCoreFacet(engine, props);
-  const getFacetId = () => controller.state.facetId;
+  const coreController = buildCoreFacet(engine, props);
+  const getFacetId = () => coreController.state.facetId;
 
   return {
-    ...controller,
+    ...coreController,
 
     toggleSelect: (selection: FacetValue) => {
       dispatch(
@@ -73,28 +73,28 @@ export function buildFacet(
     },
 
     deselectAll() {
-      controller.deselectAll();
+      coreController.deselectAll();
       dispatch(fetchProductListing());
     },
 
     sortBy(criterion: FacetSortCriterion) {
-      controller.sortBy(criterion);
+      coreController.sortBy(criterion);
       dispatch(fetchProductListing());
     },
 
     showMoreValues() {
-      controller.showMoreValues();
+      coreController.showMoreValues();
       dispatch(fetchProductListing());
     },
 
     showLessValues() {
-      controller.showLessValues();
+      coreController.showLessValues();
       dispatch(fetchProductListing());
     },
 
     get state() {
       return {
-        ...controller.state,
+        ...coreController.state,
       };
     },
   };

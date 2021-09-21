@@ -62,14 +62,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   }
 
   const {dispatch} = engine;
-  const controller = buildCoreFacet(engine, props);
-  const getFacetId = () => controller.state.facetId;
+  const coreController = buildCoreFacet(engine, props);
+  const getFacetId = () => coreController.state.facetId;
 
   return {
-    ...controller,
+    ...coreController,
 
-    toggleSelect(selection) {
-      controller.toggleSelect(selection);
+    toggleSelect: (selection) => {
+      coreController.toggleSelect(selection);
       dispatch(
         executeSearch(
           getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
@@ -78,12 +78,12 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
     },
 
     deselectAll() {
-      controller.deselectAll();
+      coreController.deselectAll();
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
     sortBy(criterion: FacetSortCriterion) {
-      controller.sortBy(criterion);
+      coreController.sortBy(criterion);
       dispatch(
         executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
       );
@@ -94,18 +94,18 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
     },
 
     showMoreValues() {
-      controller.showMoreValues();
+      coreController.showMoreValues();
       dispatch(executeSearch(logFacetShowMore(getFacetId())));
     },
 
     showLessValues() {
-      controller.showLessValues();
+      coreController.showLessValues();
       dispatch(executeSearch(logFacetShowLess(getFacetId())));
     },
 
     get state() {
       return {
-        ...controller.state,
+        ...coreController.state,
       };
     },
   };
