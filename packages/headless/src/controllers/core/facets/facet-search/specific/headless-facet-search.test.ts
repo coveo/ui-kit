@@ -6,16 +6,16 @@ import {
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../../test/mock-engine';
-import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+} from '../../../../../test/mock-engine';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
 import {
   registerFacetSearch,
   selectFacetSearchResult,
-} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
-import {CategoryFacetSearchResult} from '../../category-facet/headless-category-facet';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {executeSearch} from '../../../../../features/search/search-actions';
+import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result';
+import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 
 describe('FacetSearch', () => {
   const facetId = '1';

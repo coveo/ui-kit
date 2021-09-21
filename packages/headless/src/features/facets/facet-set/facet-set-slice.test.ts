@@ -25,6 +25,8 @@ import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
+import {fetchProductListing} from '../../product-listing/product-listing-actions';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -354,6 +356,59 @@ describe('facet-set slice', () => {
       const id = '1';
       const facet = buildMockFacetResponse({facetId: id});
       const action = buildExecuteSearchAction([facet]);
+
+      expect(() => facetSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('#fetchProductListing.fulfilled', () => {
+    function buildFetchProductListingAction(facets: FacetResponse[]) {
+      const productListing = buildFetchProductListingResponse();
+      productListing.response.facets = {results: facets};
+
+      return fetchProductListing.fulfilled(productListing, '');
+    }
+
+    it('updates the currentValues of facet requests to the values in the response', () => {
+      const id = '1';
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
+
+      state[id] = buildMockFacetRequest({facetId: id});
+
+      const action = buildFetchProductListingAction([facet]);
+      const finalState = facetSetReducer(state, action);
+
+      const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
+      expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
+    });
+
+    it('sets #freezeCurrentValues to false', () => {
+      const id = '1';
+      state[id] = buildMockFacetRequest({freezeCurrentValues: true});
+
+      const facet = buildMockFacetResponse({facetId: id});
+      const action = buildFetchProductListingAction([facet]);
+
+      const finalState = facetSetReducer(state, action);
+      expect(finalState[id].freezeCurrentValues).toBe(false);
+    });
+
+    it('sets #preventAutoSelect to false', () => {
+      const id = '1';
+      state[id] = buildMockFacetRequest({preventAutoSelect: true});
+
+      const facet = buildMockFacetResponse({facetId: id});
+      const action = buildFetchProductListingAction([facet]);
+
+      const finalState = facetSetReducer(state, action);
+      expect(finalState[id].preventAutoSelect).toBe(false);
+    });
+
+    it('response containing unregistered facet ids does not throw', () => {
+      const id = '1';
+      const facet = buildMockFacetResponse({facetId: id});
+      const action = buildFetchProductListingAction([facet]);
 
       expect(() => facetSetReducer(state, action)).not.toThrow();
     });

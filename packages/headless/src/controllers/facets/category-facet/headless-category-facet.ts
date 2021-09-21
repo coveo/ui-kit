@@ -22,7 +22,7 @@ import {
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
+import {buildCategoryFacetSearch} from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
   CategoryFacetSearchSection,
@@ -37,7 +37,7 @@ import {
   categoryFacetOptionsSchema,
   CategoryFacetSearchOptions,
 } from './headless-category-facet-options';
-import {determineFacetId} from '../_common/facet-id-determinor';
+import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
   categoryFacetSearchSet,

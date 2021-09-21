@@ -1,8 +1,8 @@
 import pino, {Logger} from 'pino';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {generateFacetId, FacetIdConfig} from './facet-id-generator';
 
 describe('#generateFacetId', () => {
