@@ -52,6 +52,16 @@ export class RelevanceInspector extends Component<{}, RelevanceInspectorState> {
             }
           />
         </label>
+        <label>
+          Enable fields debugging:{' '}
+          <input
+            type="checkbox"
+            checked={this.state.debugFields}
+            onChange={() =>
+              this.controller.debugFields(!this.state.debugFields)
+            }
+          />
+        </label>
         <button onClick={() => this.controller.fetchFieldsDescription()}>
           {' '}
           Retrieve fields description

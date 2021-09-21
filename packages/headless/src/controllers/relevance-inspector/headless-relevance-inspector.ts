@@ -124,6 +124,10 @@ export interface RelevanceInspectorState {
    * The description of all fields available in the index.
    */
   fieldsDescription?: FieldDescription[];
+  /**
+   * Wether fields debugging is enabled, returning all fields available on query results.
+   */
+  debugFields?: boolean;
 }
 
 export interface ResultRankingInformation {
@@ -205,7 +209,7 @@ export function buildRelevanceInspector(
         rankingExpressions,
       } = state.search.response as SearchResponseSuccessWithDebugInfo;
 
-      const {fieldsDescription} = state.fields;
+      const {fieldsDescription, debugFields} = state.fields;
 
       return {
         isEnabled,
@@ -219,6 +223,7 @@ export function buildRelevanceInspector(
         userIdentities,
         rankingExpressions,
         fieldsDescription,
+        debugFields,
       };
     },
 
