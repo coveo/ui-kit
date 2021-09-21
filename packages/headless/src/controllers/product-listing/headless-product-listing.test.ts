@@ -57,6 +57,11 @@ describe('headless product-listing', () => {
     expectContainAction(setAdditionalFields);
   });
 
+  it('setUrl dispatches #setProductListingUrl', () => {
+    productListing.setUrl('http://bloup.🐟️');
+    expectContainAction(setProductListingUrl);
+  });
+
   it('refresh dispatches #fetchProductListing', () => {
     productListing.refresh();
     expectContainAction(fetchProductListing.pending);

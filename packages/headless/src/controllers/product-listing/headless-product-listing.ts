@@ -85,6 +85,13 @@ export const buildProductListing = (
       };
     },
 
+    setUrl: (url: string) =>
+      dispatch(
+        setProductListingUrl({
+          url,
+        })
+      ),
+
     setAdditionalFields: (additionalFields: string[]) =>
       dispatch(setAdditionalFields({additionalFields})),
 
