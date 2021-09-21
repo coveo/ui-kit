@@ -1,0 +1,26 @@
+.facet__show-less {
+  font-size: 12px;
+  outline: 0;
+  background-color: white;
+  color: #8e959d;
+  border: none;
+  margin-bottom: 5px;
+}
+
+.facet__show-more {
+  font-size: 12px;
+  outline: 0;
+  background-color: white;
+  color: var(--lwc-brandTextLink, dodgerblue);
+  border: none;
+}
+
+.facet__show-more_text, .facet__show-less_text{
+  display: flex;
+  align-items: left;
+}
+
+.facet__show {
+  display: flex;
+  flex-direction: column;
+}

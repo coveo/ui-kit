@@ -5,6 +5,9 @@ import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
+  QuerySummary,
+  QuerySummaryState,
+  buildQuerySummary,
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
 import {
@@ -12,14 +15,17 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import MagnifyingGlass from '../../images/magnifying-glass.svg';
+import escape from 'escape-html';
+import {Button} from '../common/button';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
  *
- * @part tips-title - The "Search tips" title.
- * @part tips-list - The tips list.
- * @part tips-list-element - The tips list elements.
  * @part cancel-button - The "Cancel last action" button.
+ * @part no-results - The text indicating that no results were found for the search.
+ * @part search-tips - The search tips to help the user correct the query.
+ * @part highlight - The highlighted query.
  */
 @Component({
   tag: 'atomic-no-results',
@@ -30,6 +36,7 @@ export class AtomicNoResults {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
   public history!: HistoryManager;
+  public querySummary!: QuerySummary;
 
   @BindStateToController('searchStatus')
   @State()
@@ -37,28 +44,57 @@ export class AtomicNoResults {
   @BindStateToController('history')
   @State()
   private historyState!: HistoryManagerState;
-  private strings = {
-    cancelLastAction: () => this.bindings.i18n.t('cancel-last-action'),
-    searchTips: () => this.bindings.i18n.t('search-tips'),
-    checkSpelling: () => this.bindings.i18n.t('check-spelling'),
-    tryUsingFewerKeywords: () =>
-      this.bindings.i18n.t('try-using-fewer-keywords'),
-    selectFewerFilters: () => this.bindings.i18n.t('select-fewer-filters'),
-  };
+  @BindStateToController('querySummary')
+  @State()
+  private querySummaryState!: QuerySummaryState;
   @State() public error!: Error;
 
   /**
    * Whether to display a button which cancels the last available action.
    */
   @Prop() enableCancelLastAction = true;
-  /**
-   * Whether to display a list of search tips to the user.
-   */
-  @Prop() enableSearchTips = true;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.history = buildHistoryManager(this.bindings.engine);
+    this.querySummary = buildQuerySummary(this.bindings.engine);
+  }
+
+  private wrapHighlight(content: string) {
+    return `<span class="font-bold quotations" part="highlight">${content}</span>`;
+  }
+
+  private renderMagnifyingGlass() {
+    return (
+      <atomic-icon
+        icon={MagnifyingGlass}
+        class="my-6 flex flex-col items-center w-1/2"
+      ></atomic-icon>
+    );
+  }
+
+  private renderNoResults() {
+    const content = this.querySummaryState.hasQuery
+      ? this.bindings.i18n.t('no-results-for', {
+          interpolation: {escapeValue: false},
+          query: this.wrapHighlight(escape(this.querySummaryState.query)),
+        })
+      : this.bindings.i18n.t('no-results');
+    return (
+      <div
+        class="my-2 text-2xl font-medium"
+        part="no-results"
+        innerHTML={content}
+      ></div>
+    );
+  }
+
+  private renderSearchTips() {
+    return (
+      <div class="my-2 text-lg text-neutral-dark" part="search-tips">
+        {this.bindings.i18n.t('search-tips')}
+      </div>
+    );
   }
 
   private renderCancel() {
@@ -67,27 +103,14 @@ export class AtomicNoResults {
     }
 
     return (
-      <button
+      <Button
+        style="primary"
         part="cancel-button"
-        class="text-primary hover:underline font-bold"
-        onClick={() => this.history.back()}
-      >
-        {this.strings.cancelLastAction()}
-      </button>
+        text={this.bindings.i18n.t('cancel-last-action')}
+        onClick={() => this.history.backOnNoResults()}
+        class="font-bold px-2.5 py-3 my-3"
+      ></Button>
     );
-  }
-
-  private renderSearchTips() {
-    return [
-      <div part="tips-title" class="mt-2 text-lg">
-        {this.strings.searchTips()}
-      </div>,
-      <ul part="tips-list" class="ml-5 list-disc list-inside">
-        <li part="tips-list-element">{this.strings.checkSpelling()}</li>
-        <li part="tips-list-element">{this.strings.tryUsingFewerKeywords()}</li>
-        <li part="tips-list-element">{this.strings.selectFewerFilters()}</li>
-      </ul>,
-    ];
   }
 
   public render() {
@@ -100,9 +123,11 @@ export class AtomicNoResults {
     }
 
     return [
-      <div class="text-on-background">
+      <div class="flex flex-col items-center h-full w-full text-on-background">
+        {this.renderMagnifyingGlass()}
+        {this.renderNoResults()}
+        {this.renderSearchTips()}
         {this.enableCancelLastAction && this.renderCancel()}
-        {this.enableSearchTips && this.renderSearchTips()}
       </div>,
       <slot></slot>,
     ];

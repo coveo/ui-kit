@@ -3,7 +3,7 @@
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="slds-p-bottom_small"
+          class="facet__collapse"
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -14,25 +14,23 @@
         </lightning-button-icon>
     
         <template if:true={isExpanded}>
-          <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
-            <template if:false={noSearch}>
-              <div onchange={handleKeyUp} class="slds-size_1-of-1">
-                <lightning-input class="facet__searchbox-input slds-var-m-horizontal_small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
-              </div>
-            </template>
+          <ul class="slds-has-dividers_around-space">
             <template if:true={hasActiveValues}>
               <lightning-button 
-                class="slds-p-horizontal_small facet__collapse"
                 icon-name="utility:close" 
                 variant="base" 
                 value={labels.clear} 
                 onclick={clearSelections}
                 label={labels.clear}
-                icon-position="right"
+                icon-position="left"
                 >
               </lightning-button>
             </template>
-
+            <template if:false={noSearch}>
+              <div onchange={handleKeyUp} class="slds-size_1-of-1">
+                <lightning-input class="facet__searchbox-input slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
+              </div>
+            </template>
             <template if:false={isFacetSearchActive}>
               <template for:each={values} for:item="v">
                 <c-quantic-facet-value 
@@ -46,14 +44,14 @@
               <div class="facet__show">
                 <template if:true={canShowLess}>
                   <button variant="base" label={labels.showLess}
-                    class="slds-m-left_x-small facet__show-less" onclick={showLess} data-cy="less">
-                    <span class="facet__show-less_text">- {labels.showLess}</span>
+                    class="facet__show-less slds-p-around_none" onclick={showLess} data-cy="less">
+                    <span class="facet__show-less_text">{labels.showLess}</span>
                   </button>
                 </template>
                 <template if:true={canShowMore}>
                   <button variant="base" label={labels.showMore}
-                    class="slds-m-left_x-small facet__show-more" onclick={showMore} data-cy="more">
-                    <span class="facet__show-more_text">+ {labels.showMore}</span>
+                    class="facet__show-more slds-p-around_none" onclick={showMore} data-cy="more">
+                    <span class="facet__show-more_text">{labels.showMore}</span>
                   </button>
                 </template>
               </div>
@@ -71,13 +69,13 @@
                 </template>
               </template>
               <template if:false={hasSearchResults}>
-                <li class="slds-var-m-around_small slds-grid">
-                  <span class="slds-align_absolute-center slds-p-vertical_small slds-m-bottom_medium slds-p-horizontal_xx-large facet__search-results_no-match">{noMatchesForLabel}</span>
+                <li class="slds-grid slds-m-top_x-small">
+                  <span class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span>
                 </li>
               </template>
               <template if:true={canShowMoreSearchResults}>
-                <li class="slds-p-left_small slds-p-bottom_medium">
-                  <span class="facet__search-results_more-matches">{moreMatchesForLabel}</span>
+                <li>
+                  <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span>
                 </li>
               </template>
             </template>

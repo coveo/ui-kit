@@ -1,48 +1,69 @@
-import {buildTestUrl, RouteAlias} from '../../../utils/setupComponent';
-import {CategoryFacetSelectors} from './category-facet-selectors';
+import {
+  CategoryFacetSelectors,
+  categoryFacetComponent,
+} from './category-facet-selectors';
 import * as CategoryFacetAssertions from './category-facet-assertions';
-import * as CategoryFacetSearchAssertions from './category-facet-search-assertions';
+import * as CommonAssertions from '../../common-assertions';
+import * as CommonFacetAssertions from '../facet-common-assertions';
 import {
   selectChildValueAt,
   canadaHierarchyIndex,
   canadaHierarchy,
   defaultNumberOfValues,
   togoHierarchy,
-  setupCategoryFacet,
+  addCategoryFacet,
+  hierarchicalField,
+  selectSearchResultAt,
 } from './category-facet-actions';
+import {TestFixture} from '../../../fixtures/test-fixture';
+import {typeFacetSearchQuery} from '../facet-common-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
     function setupWithDefaultSettings() {
-      setupCategoryFacet({
-        attributes: `number-of-values=${defaultNumberOfValues}`,
-      });
-      cy.wait(RouteAlias.search);
+      new TestFixture().with(addCategoryFacet()).init();
     }
 
     describe('verify rendering', () => {
       before(setupWithDefaultSettings);
 
-      CategoryFacetAssertions.assertAccessibility();
-      CategoryFacetAssertions.assertContainsComponentError(false);
-      CategoryFacetAssertions.assertDisplayFacet(true);
-      CategoryFacetAssertions.assertDisplayPlaceholder(false);
+      CommonAssertions.assertAccessibility(categoryFacetComponent);
+      CommonAssertions.assertContainsComponentError(
+        CategoryFacetSelectors,
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(CategoryFacetSelectors, true);
+      CommonFacetAssertions.assertDisplayPlaceholder(
+        CategoryFacetSelectors,
+        false
+      );
       CategoryFacetAssertions.assertNumberOfChildValues(defaultNumberOfValues);
       CategoryFacetAssertions.assertNumberOfParentValues(0);
-      CategoryFacetAssertions.assertDisplayShowMoreButton(true);
-      CategoryFacetAssertions.assertDisplayShowLessButton(false);
-      CategoryFacetSearchAssertions.assertDisplaySearch(false);
-      CategoryFacetAssertions.assertDisplayClearButton(false);
-      CategoryFacetAssertions.assertLabelContains('Atlas');
+      CommonFacetAssertions.assertDisplayShowMoreButton(
+        CategoryFacetSelectors,
+        true
+      );
+      CommonFacetAssertions.assertDisplayShowLessButton(
+        CategoryFacetSelectors,
+        false
+      );
+      CategoryFacetAssertions.assertDisplaySearchInput(false);
+      CommonFacetAssertions.assertDisplayClearButton(
+        CategoryFacetSelectors,
+        false
+      );
+      CommonFacetAssertions.assertLabelContains(
+        CategoryFacetSelectors,
+        'Atlas'
+      );
       CategoryFacetAssertions.assertValuesSortedByOccurences();
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
       function setupGoDeeperOneLevel() {
         setupWithDefaultSettings();
-        cy.wait(RouteAlias.analytics);
         selectChildValueAt(canadaHierarchyIndex[0]);
-        cy.wait(RouteAlias.search);
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       const selectedPath = canadaHierarchy.slice(0, 1);
@@ -50,14 +71,23 @@ describe('Category Facet Test Suites', () => {
       describe('verify rendering', () => {
         before(setupGoDeeperOneLevel);
 
-        CategoryFacetAssertions.assertAccessibility();
-        CategoryFacetAssertions.assertDisplayClearButton(true);
+        CommonAssertions.assertAccessibility(categoryFacetComponent);
+        CommonFacetAssertions.assertDisplayClearButton(
+          CategoryFacetSelectors,
+          true
+        );
         CategoryFacetAssertions.assertNumberOfChildValues(
           defaultNumberOfValues
         );
         CategoryFacetAssertions.assertNumberOfParentValues(1);
-        CategoryFacetAssertions.assertDisplayShowMoreButton(true);
-        CategoryFacetAssertions.assertDisplayShowLessButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          false
+        );
         CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
         CategoryFacetAssertions.assertPathInUrl(selectedPath);
       });
@@ -70,9 +100,9 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the "Show more" button', () => {
         function setupShowMore() {
           setupGoDeeperOneLevel();
-          cy.wait(RouteAlias.analytics);
+          cy.wait(TestFixture.interceptAliases.UA);
           CategoryFacetSelectors.showMoreButton().click();
-          cy.wait(RouteAlias.search);
+          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -80,7 +110,10 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues * 2
           );
-          CategoryFacetAssertions.assertDisplayShowLessButton(true);
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            true
+          );
         });
 
         describe('verify analytics', () => {
@@ -91,9 +124,9 @@ describe('Category Facet Test Suites', () => {
         describe('when selecting the "Show less" button', () => {
           function setupShowLess() {
             setupShowMore();
-            cy.wait(RouteAlias.analytics);
+            cy.wait(TestFixture.interceptAliases.UA);
             CategoryFacetSelectors.showLessButton().click();
-            cy.wait(RouteAlias.search);
+            cy.wait(TestFixture.interceptAliases.Search);
             cy.wait(200); // flakiness prevention
           }
 
@@ -102,7 +135,10 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetAssertions.assertNumberOfChildValues(
               defaultNumberOfValues
             );
-            CategoryFacetAssertions.assertDisplayShowLessButton(false);
+            CommonFacetAssertions.assertDisplayShowLessButton(
+              CategoryFacetSelectors,
+              false
+            );
           });
 
           describe('verify analytics', () => {
@@ -115,14 +151,17 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the "All Categories" button', () => {
         function setupClear() {
           setupGoDeeperOneLevel();
-          cy.wait(RouteAlias.analytics);
+          cy.wait(TestFixture.interceptAliases.UA);
           CategoryFacetSelectors.clearButton().click();
-          cy.wait(RouteAlias.search);
+          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
           before(setupClear);
-          CategoryFacetAssertions.assertDisplayClearButton(false);
+          CommonFacetAssertions.assertDisplayClearButton(
+            CategoryFacetSelectors,
+            false
+          );
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoBreadcrumb();
           CategoryFacetAssertions.assertNoPathInUrl();
@@ -138,24 +177,34 @@ describe('Category Facet Test Suites', () => {
     describe('when selecting values subsequently to go deeper three level (last level of the dataset)', () => {
       function setupGoDeeperLastLevel() {
         setupWithDefaultSettings();
-        cy.wait(RouteAlias.analytics);
         selectChildValueAt(canadaHierarchyIndex[0]);
-        cy.wait(RouteAlias.analytics);
+        cy.wait(TestFixture.interceptAliases.UA);
         selectChildValueAt(canadaHierarchyIndex[1]);
-        cy.wait(RouteAlias.analytics);
+        cy.wait(TestFixture.interceptAliases.UA);
         selectChildValueAt(canadaHierarchyIndex[2]);
-        cy.wait(RouteAlias.analytics);
+        cy.wait(TestFixture.interceptAliases.UA);
         selectChildValueAt(canadaHierarchyIndex[3]);
-        cy.wait(RouteAlias.search);
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
         before(setupGoDeeperLastLevel);
-        CategoryFacetAssertions.assertDisplayClearButton(true);
+        CommonFacetAssertions.assertDisplayClearButton(
+          CategoryFacetSelectors,
+          true
+        );
         CategoryFacetAssertions.assertNumberOfParentValues(4);
         CategoryFacetAssertions.assertNumberOfChildValues(0);
-        CategoryFacetAssertions.assertDisplayShowMoreButton(false);
-        CategoryFacetAssertions.assertDisplayShowLessButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
         CategoryFacetAssertions.assertPathInBreadcrumb(canadaHierarchy);
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
       });
@@ -168,22 +217,31 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the first parent button', () => {
         function setupSelectFirstParent() {
           setupGoDeeperLastLevel();
-          cy.wait(RouteAlias.analytics);
+          cy.wait(TestFixture.interceptAliases.UA);
           CategoryFacetSelectors.parentValue().first().click();
-          cy.wait(RouteAlias.search);
+          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         const selectedPath = canadaHierarchy.slice(0, 1);
 
         describe('verify rendering', () => {
           before(setupSelectFirstParent);
-          CategoryFacetAssertions.assertDisplayClearButton(true);
+          CommonFacetAssertions.assertDisplayClearButton(
+            CategoryFacetSelectors,
+            true
+          );
           CategoryFacetAssertions.assertNumberOfParentValues(1);
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues
           );
-          CategoryFacetAssertions.assertDisplayShowMoreButton(true);
-          CategoryFacetAssertions.assertDisplayShowLessButton(false);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            false
+          );
           CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
@@ -198,16 +256,21 @@ describe('Category Facet Test Suites', () => {
     describe('when selecting the "Show more" button', () => {
       function setupShowMore() {
         setupWithDefaultSettings();
-        cy.wait(RouteAlias.analytics);
         CategoryFacetSelectors.showMoreButton().click();
-        cy.wait(RouteAlias.search);
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
         before(setupShowMore);
         CategoryFacetAssertions.assertNumberOfChildValues(7);
-        CategoryFacetAssertions.assertDisplayShowLessButton(true);
-        CategoryFacetAssertions.assertDisplayShowMoreButton(false);
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          true
+        );
       });
 
       describe('verify analytics', () => {
@@ -218,9 +281,9 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the "Show less" button', () => {
         function setupShowLess() {
           setupShowMore();
-          cy.wait(RouteAlias.analytics);
+          cy.wait(TestFixture.interceptAliases.UA);
           CategoryFacetSelectors.showLessButton().click();
-          cy.wait(RouteAlias.search);
+          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -228,8 +291,14 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues
           );
-          CategoryFacetAssertions.assertDisplayShowLessButton(false);
-          CategoryFacetAssertions.assertDisplayShowMoreButton(true);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            false
+          );
         });
 
         describe('verify analytics', () => {
@@ -243,8 +312,9 @@ describe('Category Facet Test Suites', () => {
   describe('with custom #numberOfValues', () => {
     const numberOfValues = 2;
     function setupCustomNumberOfValues() {
-      setupCategoryFacet({attributes: `number-of-values="${numberOfValues}"`});
-      cy.wait(RouteAlias.search);
+      new TestFixture()
+        .with(addCategoryFacet({'number-of-values': numberOfValues}))
+        .init();
     }
 
     before(setupCustomNumberOfValues);
@@ -255,7 +325,6 @@ describe('Category Facet Test Suites', () => {
       before(() => {
         setupCustomNumberOfValues();
         selectChildValueAt(0);
-        cy.wait(RouteAlias.search);
       });
 
       CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
@@ -264,26 +333,25 @@ describe('Category Facet Test Suites', () => {
 
   describe('with custom #sortCriteria, alphanumeric', () => {
     before(() => {
-      setupCategoryFacet({attributes: 'sort-criteria="alphanumeric"'});
+      new TestFixture()
+        .with(addCategoryFacet({'sort-criteria': 'alphanumeric'}))
+        .init();
     });
     CategoryFacetAssertions.assertValuesSortedAlphanumerically();
   });
 
-  // TODO: enable with new setup
-  describe.skip('with a selected path in the URL', () => {
+  describe('with a selected path in the URL', () => {
     before(() => {
-      setupCategoryFacet({
-        withResultList: true,
-      });
-      cy.visit(
-        buildTestUrl(
-          `cf[geographicalhierarchy]=${togoHierarchy.slice(0, 2).join(',')}`
-        )
-      );
-      cy.wait(RouteAlias.search);
+      new TestFixture()
+        .with(addCategoryFacet({}, true))
+        .withHash('cf[geographicalhierarchy]=Africa,Togo')
+        .init();
     });
 
-    CategoryFacetAssertions.assertDisplayClearButton(true);
+    CommonFacetAssertions.assertDisplayClearButton(
+      CategoryFacetSelectors,
+      true
+    );
     CategoryFacetAssertions.assertNumberOfParentValues(2);
     CategoryFacetAssertions.assertNumberOfSearchResults(1);
     CategoryFacetAssertions.assertFirstChildContains(togoHierarchy[2]);
@@ -291,26 +359,38 @@ describe('Category Facet Test Suites', () => {
 
   describe('with #basePath & #filterByBasePath set to true (default)', () => {
     before(() => {
-      setupCategoryFacet({
-        attributes: `base-path="${togoHierarchy.slice(0, 2).join(',')}"`,
-        withResultList: true,
-      });
+      new TestFixture()
+        .with(
+          addCategoryFacet(
+            {'base-path': togoHierarchy.slice(0, 2).join(',')},
+            true
+          )
+        )
+        .init();
     });
 
     CategoryFacetAssertions.assertNumberOfSearchResults(1);
     CategoryFacetAssertions.assertFirstChildContains(togoHierarchy[2]);
-    CategoryFacetAssertions.assertDisplayClearButton(false);
+    CommonFacetAssertions.assertDisplayClearButton(
+      CategoryFacetSelectors,
+      false
+    );
     CategoryFacetAssertions.assertNumberOfParentValues(0);
   });
 
   describe('with #basePath & #filterByBasePath set to false', () => {
     before(() => {
-      setupCategoryFacet({
-        attributes: `base-path="${togoHierarchy
-          .slice(0, 2)
-          .join(',')}" filter-by-base-path="false"`,
-        withResultList: true,
-      });
+      new TestFixture()
+        .with(
+          addCategoryFacet(
+            {
+              'base-path': togoHierarchy.slice(0, 2).join(','),
+              'filter-by-base-path': 'false',
+            },
+            true
+          )
+        )
+        .init();
     });
 
     CategoryFacetAssertions.assertNumberOfSearchResults(
@@ -320,33 +400,193 @@ describe('Category Facet Test Suites', () => {
 
   describe('when no search has yet been executed', () => {
     before(() => {
-      setupCategoryFacet({executeFirstSearch: false});
+      new TestFixture()
+        .with(addCategoryFacet())
+        .withoutFirstAutomaticSearch()
+        .init();
     });
 
-    CategoryFacetAssertions.assertDisplayPlaceholder(true);
+    CommonFacetAssertions.assertDisplayPlaceholder(
+      CategoryFacetSelectors,
+      true
+    );
   });
 
   describe('with an invalid option', () => {
     before(() => {
-      setupCategoryFacet({attributes: 'sort-criteria="notasortcriteria"'});
+      new TestFixture()
+        .with(addCategoryFacet({'sort-criteria': 'notasortcriteria'}))
+        .init();
     });
 
-    CategoryFacetAssertions.assertContainsComponentError(true);
+    CommonAssertions.assertContainsComponentError(CategoryFacetSelectors, true);
   });
 
   describe('when field returns no results', () => {
     before(() => {
-      setupCategoryFacet({field: 'notanactualfield'});
+      new TestFixture()
+        .with(addCategoryFacet({field: 'notanactualfield'}))
+        .init();
     });
 
-    CategoryFacetAssertions.assertDisplayFacet(false);
+    CommonFacetAssertions.assertDisplayFacet(CategoryFacetSelectors, false);
   });
 
-  // See category-facet-search.cypress.ts for more facet search tests
-  describe('with #enableFacetSearch set to true', () => {
-    before(() => {
-      setupCategoryFacet({attributes: 'enable-facet-search'});
+  describe('with "with-search" set to "true"', () => {
+    function setupWithFacetSearch() {
+      new TestFixture().with(addCategoryFacet({'with-search': 'true'})).init();
+    }
+
+    describe('verify rendering', () => {
+      before(() => {
+        setupWithFacetSearch();
+      });
+
+      CategoryFacetAssertions.assertDisplaySearchInput(true);
     });
-    CategoryFacetSearchAssertions.assertDisplaySearch(true);
+
+    describe('when searching for a value that returns many results', () => {
+      const query = 'mal';
+      function setupSearchFor() {
+        setupWithFacetSearch();
+        typeFacetSearchQuery(CategoryFacetSelectors, query);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSearchFor);
+
+        CommonAssertions.assertAccessibility(categoryFacetComponent);
+        CategoryFacetAssertions.assertNumberOfFacetSearchResults(
+          defaultNumberOfValues
+        );
+        CommonFacetAssertions.assertDisplayMoreMatchesFound(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertDisplayNoMatchesFound(
+          CategoryFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertMoreMatchesFoundContainsQuery(
+          CategoryFacetSelectors,
+          query
+        );
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          CategoryFacetSelectors,
+          false,
+          false
+        );
+        CommonFacetAssertions.assertDisplaySearchClearButton(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertHighlightsResults(
+          CategoryFacetSelectors,
+          query
+        );
+      });
+
+      describe('verify analytics', () => {
+        before(setupSearchFor);
+
+        CommonFacetAssertions.assertLogFacetSearch(hierarchicalField);
+      });
+
+      describe('when selecting a search result', () => {
+        function setupSelectSearchResult() {
+          setupSearchFor();
+          selectSearchResultAt(2);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSelectSearchResult);
+
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayClearButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
+          CategoryFacetAssertions.assertNumberOfChildValues(1);
+          CategoryFacetAssertions.assertNumberOfParentValues(2);
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+        });
+      });
+
+      describe('when clearing the facet search results', () => {
+        function setupClearFacetSearchResults() {
+          setupSearchFor();
+          CategoryFacetSelectors.searchClearButton().click();
+        }
+
+        describe('verify rendering', () => {
+          before(setupClearFacetSearchResults);
+
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayMoreMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayNoMatchesFound(
+            CategoryFacetSelectors,
+            false
+          );
+          CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
+          CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+        });
+      });
+    });
+
+    describe('when searching for a value that returns no results', () => {
+      const query = 'nonono';
+      function setupSearchForNoValues() {
+        setupWithFacetSearch();
+        typeFacetSearchQuery(CategoryFacetSelectors, query);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSearchForNoValues);
+
+        CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
+        CommonFacetAssertions.assertDisplayMoreMatchesFound(
+          CategoryFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayNoMatchesFound(
+          CategoryFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertNoMatchesFoundContainsQuery(
+          CategoryFacetSelectors,
+          query
+        );
+        CommonFacetAssertions.assertDisplaySearchClearButton(
+          CategoryFacetSelectors,
+          true
+        );
+      });
+    });
   });
 });

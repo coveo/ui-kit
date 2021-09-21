@@ -1,22 +1,22 @@
-.facet__show-less {
+@import 'c/quanticFacetStyles';
+
+.facet__search-results_no-match {
+  color: #8E959D;
+  background-color: var(--sds-c-color-gray-3, #F6F7F9);
   font-size: 12px;
-  outline: 0;
-  background-color: var(--lwc-colorBackgroundAlt, #FFFFFF);
-  color: var(--sds-c-color-gray-8, #8E959D);
-  border: none;
-  margin-bottom: 5px;
+  border-radius: 4px;
 }
 
-.facet__show-more {
-  font-size: 12px;
-  outline: 0;
-  background-color: var(--lwc-colorBackgroundAlt, #FFFFFF);
-  color: #005FB2;
-  border: none;
-  margin-bottom: 5px;
+.facet__search-results_more-matches {
+   color:  #8E959D;
+   font-size: 12px;
+}
+.parent-text__bold {
+  font-weight: var(--font-weight-bold, 700);
+  margin-left: var(--lwc-varSpacingHorizontalMedium, 1rem);
 }
 
-.facet__show-more_text, .facet__show-less_text{
-  display: flex;
-  align-items: left;
+.facet__number-of-results {
+  color: #8E959D;
+  margin-left: var(--lwc-spacingXSmall, 0.5rem);
 }

@@ -24,6 +24,8 @@ import {getFacetElements, SortDropdownOption} from '../../utils/store';
 import SortIcon from '../../images/sort.svg';
 import {Button} from '../common/button';
 
+export type ModalStatus = 'closed' | 'opened' | 'beingClosed';
+
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
  *
@@ -62,12 +64,12 @@ export class AtomicRefineModal implements InitializableComponent {
   @State() @BindStateToController('sort') public sortState!: SortState;
   @State() public error!: Error;
 
-  @Prop({reflect: true, mutable: true}) enabled!: boolean;
-  @Watch('enabled')
-  watchEnabled(enabled: boolean) {
+  @Prop({reflect: true, mutable: true}) modalStatus!: ModalStatus;
+  @Watch('modalStatus')
+  watchEnabled(modalStatus: ModalStatus) {
     const modalOpenedClass = 'atomic-modal-opened';
 
-    if (enabled) {
+    if (modalStatus === 'opened' || modalStatus === 'beingClosed') {
       document.body.classList.add(modalOpenedClass);
       this.duplicateFacetElements();
       return;
@@ -78,6 +80,7 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   public initialize() {
+    this.modalStatus = 'closed';
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
@@ -121,7 +124,7 @@ export class AtomicRefineModal implements InitializableComponent {
           style="text-transparent"
           class="grid place-items-center"
           part="close-button"
-          onClick={() => (this.enabled = false)}
+          onClick={() => this.dismiss()}
         >
           <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
         </Button>
@@ -141,10 +144,10 @@ export class AtomicRefineModal implements InitializableComponent {
     option && this.sort.sortBy(option.criteria);
   }
 
-  private buildOption({expression, criteria, caption}: SortDropdownOption) {
+  private buildOption({expression, criteria, label}: SortDropdownOption) {
     return (
       <option value={expression} selected={this.sort.isSortedBy(criteria)}>
-        {this.bindings.i18n.t(caption)}
+        {this.bindings.i18n.t(label)}
       </option>
     );
   }
@@ -168,7 +171,7 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.options.map((option) => this.buildOption(option))}
         </select>
         <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
-          <atomic-icon icon={SortIcon}></atomic-icon>
+          <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
         </div>
       </div>,
     ];
@@ -205,7 +208,7 @@ export class AtomicRefineModal implements InitializableComponent {
           style="primary"
           part="footer-button"
           class="centered p-3 flex text-lg justify-center"
-          onClick={() => (this.enabled = false)}
+          onClick={() => this.dismiss()}
         >
           <span class="truncate mr-1">
             {this.bindings.i18n.t('view-results')}
@@ -220,15 +223,26 @@ export class AtomicRefineModal implements InitializableComponent {
     );
   }
 
+  private dismiss() {
+    setTimeout(() => {
+      this.modalStatus = 'closed';
+    }, 500);
+    this.modalStatus = 'beingClosed';
+  }
+
   public render() {
-    if (!this.enabled) {
+    if (this.modalStatus === 'closed') {
       return;
     }
 
     return (
       <div
         part="container"
-        class="w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10"
+        class={`w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10 ${
+          this.modalStatus === 'opened'
+            ? 'animate-scaleUpRefineModal'
+            : 'animate-scaleDownRefineModal'
+        }`}
       >
         <div class="px-6">{this.renderHeader()}</div>
         <hr class="border-neutral"></hr>

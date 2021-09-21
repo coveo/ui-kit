@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.5...@coveo/headless@1.20.0) (2021-09-21)
+
+
+### Bug Fixes
+
+* **headless:** result templates helpers should all evaluate root result object ([#1221](https://github.com/coveo/ui-kit/issues/1221)) ([3dcc484](https://github.com/coveo/ui-kit/commit/3dcc484713eae580bd33f698e015d94741bf9e11))
+
+
+### Features
+
+* **headless:** support relative urls ([#1229](https://github.com/coveo/ui-kit/issues/1229)) ([dd6c82a](https://github.com/coveo/ui-kit/commit/dd6c82a047bff19dcdedfbdc06061de0a7ccae8a))
+
+
+
+
+
+## [1.19.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.4...@coveo/headless@1.19.5) (2021-09-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.19.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.3...@coveo/headless@1.19.4) (2021-09-20)
+
+
+### Bug Fixes
+
+* **headless:** trim query string before saving it in recent queries ([#1216](https://github.com/coveo/ui-kit/issues/1216)) ([a84c59f](https://github.com/coveo/ui-kit/commit/a84c59f62ae4e64fb9358f36c3296b2436b63ef5))
+
+
+
+
+
+## [1.19.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.2...@coveo/headless@1.19.3) (2021-09-15)
+
+
+### Bug Fixes
+
+* **headless:** fix no results back analytics event ([#1202](https://github.com/coveo/ui-kit/issues/1202)) ([635c40a](https://github.com/coveo/ui-kit/commit/635c40ad3cc0af69506c0eaa646c1f7a4768c361))
+
+
+
+
+
+## [1.19.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.1...@coveo/headless@1.19.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* **headless:** fix folding load collection  ([#1199](https://github.com/coveo/ui-kit/issues/1199)) ([983e56e](https://github.com/coveo/ui-kit/commit/983e56e3a0e6598ac8d7cb109906b3833a72946f))
+
+
+
+
+
 ## [1.19.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.0...@coveo/headless@1.19.1) (2021-09-03)
 
 

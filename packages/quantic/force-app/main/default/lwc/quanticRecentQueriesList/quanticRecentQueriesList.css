@@ -1,3 +1,5 @@
+@import 'c/quanticFacetStyles';
+
 .recent-query__container {
   display: flex;
   flex-direction: row;
@@ -10,9 +12,8 @@
 
 .recent-query__icon {
   margin-right: 0.5rem;
-  margin-left: 0.25rem;
 }
 
 .empty-list-message {
-  color: var(--sds-c-color-gray-8, #8e959d);
+  color: #8e959d;
 }

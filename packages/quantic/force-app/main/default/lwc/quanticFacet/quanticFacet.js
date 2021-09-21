@@ -46,8 +46,6 @@ export default class QuanticFacet extends LightningElement {
   isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
-  /** @type {boolean} */
-  isFacetSearchActive = false;
 
   labels = {
     showMore,
@@ -65,8 +63,7 @@ export default class QuanticFacet extends LightningElement {
   /**
    * @param {import("coveo").SearchEngine} engine
    */
-  @api
-  initialize(engine) {
+  initialize = (engine) => {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -83,7 +80,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
@@ -108,7 +105,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get query() {
-    return this.input.value;
+    return this.input?.value;
   }
 
   get canShowMoreSearchResults() {
@@ -184,6 +181,10 @@ export default class QuanticFacet extends LightningElement {
     return I18nUtils.format(label, this.label);
   }
 
+  get isFacetSearchActive() {
+    return this.input?.value !== '';
+  }
+
   /**
    * @param {CustomEvent<import("coveo").FacetValue>} evt
    */
@@ -199,7 +200,6 @@ export default class QuanticFacet extends LightningElement {
       this.facet.toggleSelect(evt.detail);
     }
     this.clearInput();
-    this.isFacetSearchActive = false;
   }
 
   showMore() {
@@ -216,6 +216,9 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
+    if (this.isExpanded) {
+      this.clearInput();
+    }
     this.isExpanded = !this.isExpanded;
   }
 
@@ -225,15 +228,14 @@ export default class QuanticFacet extends LightningElement {
 
   handleKeyUp() {
     if (this.isSearchComplete) {
-      this.isFacetSearchActive = this.input.value !== '';
-      this.facet.facetSearch.updateText(this.input.value);
+      this.facet.facetSearch.updateText(this.input?.value);
       this.facet.facetSearch.search();
     }
   }
 
   clearInput() {
     this.input.value = '';
-    this.updateState();
+    this.facet.facetSearch.updateText(this.input?.value);
   }
 
   highlightResult(result, query) {
@@ -241,7 +243,7 @@ export default class QuanticFacet extends LightningElement {
       return result;
     }
     const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
-    return result.replace(regex, '<b>$1</b>');
+    return result.replace(regex, '<b class="facet__search-result_highlight">$1</b>');
   }
 
   regexEncode(value) {
