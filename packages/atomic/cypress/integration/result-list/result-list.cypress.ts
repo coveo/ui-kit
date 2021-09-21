@@ -8,18 +8,9 @@ import {
 } from './result-list-selectors';
 
 describe('Result List Component', () => {
-  function getFirstResult() {
-    return ResultListSelectors.shadow()
-      .find(ResultListSelectors.result)
-      .first()
-      .shadow();
-  }
-
   it('should load', () => {
     setUpPage(generateResultList());
-    ResultListSelectors.shadow()
-      .find(ResultListSelectors.result)
-      .should('have.length.above', 0);
+    ResultListSelectors.result().should('have.length.above', 0);
   });
 
   describe('when no first search has yet been executed', () => {
@@ -28,18 +19,14 @@ describe('Result List Component', () => {
     });
 
     it('should render placeholder components', () => {
-      ResultListSelectors.shadow()
-        .find(ResultListSelectors.placeholder)
-        .should('be.visible');
+      ResultListSelectors.placeholder().should('be.visible');
     });
   });
 
   describe('when an initial search is executed', () => {
     it('should render the correct number of results', () => {
       setUpPage(generateResultList());
-      ResultListSelectors.shadow()
-        .find(ResultListSelectors.result)
-        .should('have.length', 10);
+      ResultListSelectors.result().should('have.length', 10);
     });
   });
 
@@ -53,14 +40,14 @@ describe('Result List Component', () => {
       );
       createAliasNavigation();
 
-      getFirstResult().then((element) => {
+      ResultListSelectors.firstResult().then((element) => {
         firstResultHtml = element[0].innerHTML;
       });
 
       cy.get('@nextButton').click();
       cy.wait(500);
 
-      getFirstResult().should((element) => {
+      ResultListSelectors.firstResult().should((element) => {
         const secondResultHtml = element[0].innerHTML;
         expect(secondResultHtml).not.to.equal(firstResultHtml);
       });
@@ -92,21 +79,21 @@ describe('Result List Component', () => {
 
     withAnySectionnableResultList(() => {
       it('should expose --line-height in the title section', () => {
-        getFirstResult()
+        ResultListSelectors.firstResult()
           .find(ResultListSelectors.sections.title)
           .find(lineHeightSelector)
           .should('be.visible');
       });
 
       it('should expose --line-height in the excerpt section', () => {
-        getFirstResult()
+        ResultListSelectors.firstResult()
           .find(ResultListSelectors.sections.excerpt)
           .find(lineHeightSelector)
           .should('be.visible');
       });
 
       it('should expose --line-height in the bottom-metadata section', () => {
-        getFirstResult()
+        ResultListSelectors.firstResult()
           .find(ResultListSelectors.sections.bottomMetadata)
           .find(lineHeightSelector)
           .should('be.visible');

@@ -14,8 +14,10 @@ export const resultListComponent = 'atomic-result-list';
 
 export const ResultListSelectors = {
   shadow: () => cy.get(resultListComponent).shadow(),
-  placeholder: 'atomic-result-placeholder',
-  result: 'atomic-result',
+  placeholder: () =>
+    ResultListSelectors.shadow().find('atomic-result-placeholder'),
+  result: () => ResultListSelectors.shadow().find('atomic-result'),
+  firstResult: () => ResultListSelectors.result().first().shadow(),
   sections: <Record<ResultSection, string>>{
     visual: 'atomic-result-section-visual',
     badges: 'atomic-result-section-badges',
@@ -58,8 +60,5 @@ export const generateResultList = (
    </${resultListComponent}>`;
 
 export function getFirstResult() {
-  return ResultListSelectors.shadow()
-    .find(ResultListSelectors.result)
-    .first()
-    .shadow();
+  return ResultListSelectors.firstResult();
 }
