@@ -12,6 +12,7 @@ import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   ProductListingEngineConfiguration,
   productListingEngineConfigurationSchema,
+  getSampleProductListingEngineConfiguration,
 } from './product-listing-engine-configuration';
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
@@ -28,7 +29,7 @@ import {
 export {
   ProductListingEngineConfiguration,
   getSampleProductListingEngineConfiguration,
-} from './product-listing-engine-configuration';
+};
 
 const productListingEngineReducers = {productListing};
 type ProductListingEngineReducers = typeof productListingEngineReducers;

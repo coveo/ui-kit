@@ -22,9 +22,10 @@ import {
   ProductListingSuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
 import {validatePayload} from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
+import {ArrayValue, StringValue} from '@coveo/bueno';
 import {SortBy} from '../sort/sort';
 import {ProductListingState} from './product-listing-state';
+
 export interface SetProductListingUrlPayload {
   /**
    * The url used to determine which product listing to fetch.
@@ -39,6 +40,27 @@ export const setProductListingUrl = createAction(
       url: new StringValue({
         required: true,
         url: true,
+      }),
+    })
+);
+
+export interface SetAdditionalFieldsPayload {
+  /**
+   * The additional fields to fetch with the product listing.
+   */
+  additionalFields: string[];
+}
+
+export const setAdditionalFields = createAction(
+  'productlisting/setAdditionalFields',
+  (payload: SetAdditionalFieldsPayload) =>
+    validatePayload(payload, {
+      additionalFields: new ArrayValue({
+        required: true,
+        each: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
       }),
     })
 );
