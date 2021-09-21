@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.5...@coveo/headless@1.20.0) (2021-09-21)
+
+
+### Bug Fixes
+
+* **headless:** result templates helpers should all evaluate root result object ([#1221](https://github.com/coveo/ui-kit/issues/1221)) ([3dcc484](https://github.com/coveo/ui-kit/commit/3dcc484713eae580bd33f698e015d94741bf9e11))
+
+
+### Features
+
+* **headless:** support relative urls ([#1229](https://github.com/coveo/ui-kit/issues/1229)) ([dd6c82a](https://github.com/coveo/ui-kit/commit/dd6c82a047bff19dcdedfbdc06061de0a7ccae8a))
+
+
+
+
+
 ## [1.19.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.4...@coveo/headless@1.19.5) (2021-09-20)
 
 **Note:** Version bump only for package @coveo/headless
