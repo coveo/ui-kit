@@ -127,7 +127,21 @@ export class AtomicColorFacet
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
-  // @Prop() public customSort?: string; TODO: add customSort to headless
+  /**
+   * The character that separates values of a multi-value field.
+   */
+  @Prop() public delimitingCharacter = '>';
+  /**
+   * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   */
+  @Prop() public filterFacetCount = true;
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   */
+  @Prop() public injectionDepth = 1000;
+  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -137,6 +151,9 @@ export class AtomicColorFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
+      delimitingCharacter: this.delimitingCharacter,
+      injectionDepth: this.injectionDepth,
+      filterFacetCount: this.filterFacetCount,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;

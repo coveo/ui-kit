@@ -115,6 +115,16 @@ export class AtomicRatingFacet
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   */
+  @Prop() public filterFacetCount = true;
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   */
+  @Prop() public injectionDepth = 1000;
 
   private validateProps() {
     new Schema({
@@ -138,6 +148,8 @@ export class AtomicRatingFacet
       currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
+      filterFacetCount: this.filterFacetCount,
+      injectionDepth: this.injectionDepth,
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
