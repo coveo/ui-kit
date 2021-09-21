@@ -10,7 +10,7 @@ import numberInputApply from "@salesforce/label/c.quantic_NumberInputApply";
 import {I18nUtils} from 'c/quanticUtils';
 
 
-export default class QuanticNumericRange extends LightningElement {
+export default class QuanticNumericInput extends LightningElement {
 
     /**@type {number} */
     @api start;
