@@ -118,7 +118,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get hasSearchResults() {
-    return this.facet?.state.facetSearch.values.length !== 0;
+    return this.facet?.state.facetSearch.values?.length !== 0;
   }
 
   get canShowMoreSearchResults() {
@@ -126,8 +126,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get facetSearchResults() {
-    const results = this.facet.state.facetSearch.values;
-    return results?.map((result, index) => ({
+    const results = this.facet.state.facetSearch.values ?? [];
+    return results.map((result, index) => ({
       value: result.rawValue,
       index: index,
       numberOfResults: result.count,

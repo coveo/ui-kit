@@ -135,12 +135,12 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get hasSearchResults() {
-    return this.facet.state.facetSearch.values.length !== 0;
+    return this.facet.state.facetSearch.values?.length !== 0;
   }
 
   get facetSearchResults() {
-    const results = this.facet.state.facetSearch.values;
-    return results?.map((result) => ({
+    const results = this.facet.state.facetSearch.values ?? [];
+    return results.map((result) => ({
       value: result.rawValue,
       state: 'idle',
       numberOfResults: result.count,
