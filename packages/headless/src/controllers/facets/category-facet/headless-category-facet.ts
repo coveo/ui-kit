@@ -65,15 +65,15 @@ export function buildCategoryFacet(
     throw loadReducerError;
   }
 
-  const controller = buildCoreCategoryFacet(engine, props);
+  const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
   const facetId = determineFacetId(engine, props.options);
 
   return {
-    ...controller,
+    ...coreController,
 
     toggleSelect: (selection: CategoryFacetValue) => {
-      controller.toggleSelect(selection);
+      coreController.toggleSelect(selection);
       const analyticsAction = getToggleSelectAnalyticsAction(
         facetId,
         selection
@@ -82,28 +82,28 @@ export function buildCategoryFacet(
     },
 
     deselectAll: () => {
-      controller.deselectAll();
+      coreController.deselectAll();
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
-      controller.sortBy(criterion);
+      coreController.sortBy(criterion);
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
     showMoreValues() {
-      controller.showMoreValues();
+      coreController.showMoreValues();
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
 
     showLessValues() {
-      controller.showLessValues();
+      coreController.showLessValues();
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
     get state() {
       return {
-        ...controller.state,
+        ...coreController.state,
       };
     },
   };

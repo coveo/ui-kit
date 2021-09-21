@@ -65,46 +65,46 @@ export function buildCategoryFacet(
     throw loadReducerError;
   }
 
-  const controller = buildCoreCategoryFacet(engine, props);
+  const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
   const facetId = determineFacetId(engine, props.options);
 
   return {
-    ...controller,
+    ...coreController,
 
     toggleSelect: (selection: CategoryFacetValue) => {
-      controller.toggleSelect(selection);
+      coreController.toggleSelect(selection);
       dispatch(fetchProductListing());
       dispatch(getToggleSelectAnalyticsAction(facetId, selection));
     },
 
     deselectAll: () => {
-      controller.deselectAll();
+      coreController.deselectAll();
       dispatch(fetchProductListing());
       dispatch(logFacetClearAll(facetId));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
-      controller.sortBy(criterion);
+      coreController.sortBy(criterion);
       dispatch(fetchProductListing());
       dispatch(logFacetUpdateSort({facetId, criterion}));
     },
 
     showMoreValues() {
-      controller.showMoreValues();
+      coreController.showMoreValues();
       dispatch(fetchProductListing());
       dispatch(logFacetShowMore(facetId));
     },
 
     showLessValues() {
-      controller.showLessValues();
+      coreController.showLessValues();
       dispatch(fetchProductListing());
       dispatch(logFacetShowLess(facetId));
     },
 
     get state() {
       return {
-        ...controller.state,
+        ...coreController.state,
       };
     },
   };
