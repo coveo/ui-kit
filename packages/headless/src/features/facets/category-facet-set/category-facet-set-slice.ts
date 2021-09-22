@@ -13,7 +13,7 @@ import {
 } from './category-facet-set-actions';
 import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {change} from '../../history/history-actions';
-import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetResponse} from './interfaces/response';
 import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {
@@ -76,36 +76,29 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        let activeLevel = request.currentValues;
         const {path} = selection;
         const pathToSelection = path.slice(0, path.length - 1);
+        const children = ensurePathAndReturnChildren(
+          request,
+          pathToSelection,
+          retrieveCount
+        );
 
-        for (const segment of pathToSelection) {
-          const parent = activeLevel[0];
+        if (children.length) {
+          const lastSelectedParent = children[0];
 
-          if (segment !== parent.value) {
-            return;
-          }
-
-          parent.retrieveChildren = false;
-          parent.state = 'idle';
-          activeLevel = parent.children;
-        }
-
-        if (activeLevel.length) {
-          const parentSelection = activeLevel[0];
-
-          parentSelection.retrieveChildren = true;
-          parentSelection.state = 'selected';
-          parentSelection.children = [];
+          lastSelectedParent.retrieveChildren = true;
+          lastSelectedParent.state = 'selected';
+          lastSelectedParent.children = [];
           return;
         }
 
-        const valueRequest = convertCategoryFacetValueToRequest(
-          selection,
+        const newParent = buildCategoryFacetValueRequest(
+          selection.value,
           retrieveCount
         );
-        activeLevel.push(valueRequest);
+        newParent.state = 'selected';
+        children.push(newParent);
         request.numberOfValues = 1;
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
@@ -178,6 +171,31 @@ export const defaultCategoryFacetOptions: CategoryFacetOptionalParameters = {
   filterByBasePath: true,
 };
 
+function ensurePathAndReturnChildren(
+  request: CategoryFacetRequest,
+  path: string[],
+  retrieveCount: number
+) {
+  let children = request.currentValues;
+
+  for (const segment of path) {
+    let parent = children[0];
+    const missingParent = !parent;
+
+    if (missingParent || segment !== parent.value) {
+      parent = buildCategoryFacetValueRequest(segment, retrieveCount);
+      children.length = 0;
+      children.push(parent);
+    }
+
+    parent.retrieveChildren = false;
+    parent.state = 'idle';
+    children = parent.children;
+  }
+
+  return children;
+}
+
 function buildCategoryFacetRequest(
   config: RegisterCategoryFacetActionCreatorPayload
 ): CategoryFacetRequest {
@@ -190,14 +208,13 @@ function buildCategoryFacetRequest(
   };
 }
 
-function convertCategoryFacetValueToRequest(
-  categoryFacetValue: CategoryFacetValue,
+function buildCategoryFacetValueRequest(
+  value: string,
   retrieveCount: number
 ): CategoryFacetValueRequest {
-  const {value} = categoryFacetValue;
   return {
     value,
-    state: 'selected',
+    state: 'idle',
     children: [],
     retrieveChildren: true,
     retrieveCount,
