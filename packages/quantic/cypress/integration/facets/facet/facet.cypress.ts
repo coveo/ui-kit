@@ -110,118 +110,202 @@ describe('Facet Test Suite', () => {
           });
         });
       });
+    });
 
-      describe('when searching for a value that returns results', () => {
-        const query = 'a';
+    describe('when searching for a value that returns results', () => {
+      const query = 'a';
 
-        function searchForValue() {
+      function searchForValue() {
+        setupWithValues();
+        FacetSelectors.searchInput().type(query);
+      }
+
+      function searchForSingleValue() {
+        setupWithValues();
+        FacetSelectors.valueLabel()
+          .first()
+          .then((element) => {
+            const facetValue = element.text();
+            FacetSelectors.searchInput().type(facetValue);
+          });
+      }
+
+      describe('verify rendering', () => {
+        before(searchForValue);
+
+        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+        Expect.numberOfSelectedCheckboxValues(0);
+        Expect.displayMoreMatchesFound(true);
+        Expect.displayNoMatchesFound(false);
+        Expect.moreMatchesFoundContainsQuery(query);
+        Expect.displayShowMoreButton(false);
+        Expect.displaySearchClearButton(true);
+        Expect.highlightsResults(query);
+      });
+
+      describe('when clearing the facet search results', () => {
+        function clearSearchInput() {
+          searchForValue();
+          FacetSelectors.searchClearButton().click();
+        }
+
+        describe('verify rendering', () => {
+          before(clearSearchInput);
+
+          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+          Expect.numberOfSelectedCheckboxValues(0);
+          Expect.displayMoreMatchesFound(false);
+          Expect.displayNoMatchesFound(false);
+          Expect.displayShowMoreButton(true);
+          Expect.displayShowLessButton(false);
+          Expect.searchInputEmpty();
+          Expect.displaySearchClearButton(false);
+        });
+      });
+
+      describe('verify analytics', () => {
+        before(searchForValue);
+
+        Expect.logFacetSearch(defaultField);
+      });
+
+      describe('when selecting a search result', () => {
+        function selectSearchResult() {
+          searchForSingleValue();
+          checkFirstValue(FacetSelectors);
+        }
+
+        describe('verify rendering', () => {
+          before(selectSearchResult);
+
+          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+          Expect.numberOfSelectedCheckboxValues(1);
+          Expect.displayMoreMatchesFound(false);
+          Expect.displayNoMatchesFound(false);
+          Expect.displayShowMoreButton(true);
+          Expect.displaySearchInput(true);
+          Expect.displaySearchClearButton(false);
+        });
+
+        describe('verify analytics', () => {
+          before(selectSearchResult);
+
+          Expect.logFacetSelect(defaultField, 0);
+        });
+      });
+
+      describe('when searching for a value that returns a single result', () => {
+        describe('verify rendering', () => {
+          before(searchForSingleValue);
+
+          Expect.numberOfIdleCheckboxValues(1);
+          Expect.numberOfSelectedCheckboxValues(0);
+          Expect.displayMoreMatchesFound(false);
+          Expect.displayNoMatchesFound(false);
+          Expect.displaySearchClearButton(true);
+        });
+      });
+
+      describe('when searching for a value that returns no results', () => {
+        const query = 'this facet value does not exist';
+
+        function searchForInvalidValue() {
           setupWithValues();
           FacetSelectors.searchInput().type(query);
         }
 
-        function searchForSingleValue() {
-          setupWithValues();
-          FacetSelectors.valueLabel()
-            .first()
-            .then((element) => {
-              const facetValue = element.text();
-              FacetSelectors.searchInput().type(facetValue);
-            });
+        describe('verify rendering', () => {
+          before(searchForInvalidValue);
+
+          Expect.numberOfIdleCheckboxValues(0);
+          Expect.numberOfSelectedCheckboxValues(0);
+          Expect.displayMoreMatchesFound(false);
+          Expect.displayNoMatchesFound(true);
+          Expect.noMatchesFoundContainsQuery(query);
+          Expect.displaySearchClearButton(true);
+        });
+      });
+    });
+
+    describe('show more/less values', () => {
+      describe('when facet has no more values', () => {
+        function setupWithAllValues() {
+          visitFacetPage({
+            field: defaultField,
+            label: defaultLabel,
+            numberOfValues: 1000,
+          });
+          cy.wait(InterceptAliases.Search);
         }
 
         describe('verify rendering', () => {
-          before(searchForValue);
+          before(setupWithAllValues);
 
-          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-          Expect.numberOfSelectedCheckboxValues(0);
-          Expect.displayMoreMatchesFound(true);
-          Expect.displayNoMatchesFound(false);
-          Expect.moreMatchesFoundContainsQuery(query);
           Expect.displayShowMoreButton(false);
-          Expect.displaySearchClearButton(true);
-          Expect.highlightsResults(query);
+          Expect.displayShowLessButton(false);
+        });
+      });
+
+      describe('when clicking show more values', () => {
+        const smallNumberOfValues = 2;
+
+        function showMoreValues() {
+          visitFacetPage({
+            field: defaultField,
+            label: defaultLabel,
+            numberOfValues: smallNumberOfValues,
+          });
+          cy.wait(InterceptAliases.Search);
+          FacetSelectors.showMoreButton().click();
+          cy.wait(InterceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(showMoreValues);
+
+          it('should display twice the number of values', () => {
+            FacetSelectors.values().should(
+              'have.length',
+              smallNumberOfValues * 2
+            );
+          });
         });
 
-        describe('when clearing the facet search results', () => {
-          function clearSearchInput() {
-            searchForValue();
-            FacetSelectors.searchClearButton().click();
+        describe('when clicking show more button again', () => {
+          function showMoreValuesAgain() {
+            showMoreValues();
+            FacetSelectors.showMoreButton().click();
+            cy.wait(InterceptAliases.Search);
           }
 
           describe('verify rendering', () => {
-            before(clearSearchInput);
+            before(showMoreValuesAgain);
 
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-            Expect.numberOfSelectedCheckboxValues(0);
-            Expect.displayMoreMatchesFound(false);
-            Expect.displayNoMatchesFound(false);
-            Expect.displayShowMoreButton(true);
-            Expect.displayShowLessButton(false);
-            Expect.searchInputEmpty();
-            Expect.displaySearchClearButton(false);
-          });
-        });
-
-        describe('verify analytics', () => {
-          before(searchForValue);
-
-          Expect.logFacetSearch(defaultField);
-        });
-
-        describe('when selecting a search result', () => {
-          function selectSearchResult() {
-            searchForSingleValue();
-            checkFirstValue(FacetSelectors);
-          }
-
-          describe('verify rendering', () => {
-            before(selectSearchResult);
-
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
-            Expect.numberOfSelectedCheckboxValues(1);
-            Expect.displayMoreMatchesFound(false);
-            Expect.displayNoMatchesFound(false);
-            Expect.displayShowMoreButton(true);
-            Expect.displaySearchInput(true);
-            Expect.displaySearchClearButton(false);
+            it('should display three times the number of values', () => {
+              FacetSelectors.values().should(
+                'have.length',
+                smallNumberOfValues * 3
+              );
+            });
           });
 
-          describe('verify analytics', () => {
-            before(selectSearchResult);
+          describe('when clicking show less button', () => {
+            function showLessValues() {
+              showMoreValuesAgain();
+              FacetSelectors.showLessButton().click();
+              cy.wait(InterceptAliases.Search);
+            }
 
-            Expect.logFacetSelect(defaultField, 0);
-          });
-        });
+            describe('verify rendering', () => {
+              before(showLessValues);
 
-        describe('when searching for a value that returns a single result', () => {
-          describe('verify rendering', () => {
-            before(searchForSingleValue);
-
-            Expect.numberOfIdleCheckboxValues(1);
-            Expect.numberOfSelectedCheckboxValues(0);
-            Expect.displayMoreMatchesFound(false);
-            Expect.displayNoMatchesFound(false);
-            Expect.displaySearchClearButton(true);
-          });
-        });
-
-        describe('when searching for a value that returns no results', () => {
-          const query = 'this facet value does not exist';
-
-          function searchForInvalidValue() {
-            setupWithValues();
-            FacetSelectors.searchInput().type(query);
-          }
-
-          describe('verify rendering', () => {
-            before(searchForInvalidValue);
-
-            Expect.numberOfIdleCheckboxValues(0);
-            Expect.numberOfSelectedCheckboxValues(0);
-            Expect.displayMoreMatchesFound(false);
-            Expect.displayNoMatchesFound(true);
-            Expect.noMatchesFoundContainsQuery(query);
-            Expect.displaySearchClearButton(true);
+              it('should display the original number of values', () => {
+                FacetSelectors.values().should(
+                  'have.length',
+                  smallNumberOfValues
+                );
+              });
+            });
           });
         });
       });
@@ -278,6 +362,17 @@ describe('Facet Test Suite', () => {
     });
   });
 
+  describe('when field returns no results', () => {
+    before(() => {
+      visitFacetPage({
+        field: 'somethingthatdoesnotexist',
+      });
+      cy.wait(InterceptAliases.Search);
+    });
+
+    Expect.displayLabel(false);
+  });
+
   describe('with custom number of results', () => {
     function setupCustomNumberOfResults() {
       visitFacetPage({
@@ -304,6 +399,16 @@ describe('Facet Test Suite', () => {
         });
       });
     });
+  });
+
+  describe('with invalid sorting', () => {
+    before(() => {
+      visitFacetPage({
+        sortCriteria: 'invalid',
+      });
+    });
+
+    Expect.displayLabel(false);
   });
 
   describe('with no search', () => {
