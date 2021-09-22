@@ -61,7 +61,7 @@ describe('Sort', () => {
   });
 
   it('when #criterion is an invalid value, it throws an error', () => {
-    initialState.criterion = ('1' as unknown) as SortCriterion;
+    initialState.criterion = '1' as unknown as SortCriterion;
     expect(() => initSort()).toThrow('Check the initialState of buildSort');
   });
 

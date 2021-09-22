@@ -14,7 +14,6 @@ import {
 } from '../../core/facets/facet/headless-core-facet';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {executeToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-controller-actions';
 import {CoreEngine} from '../../../app/engine';
 import {
   ConfigurationSection,
@@ -25,6 +24,12 @@ import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-argumen
 import {loadReducerError} from '../../../utils/errors';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
 import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
+import {
+  logFacetClearAll,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export {
   FacetOptions,
@@ -62,12 +67,7 @@ export function buildFacet(
     ...coreController,
 
     toggleSelect: (selection: FacetValue) => {
-      dispatch(
-        executeToggleFacetSelect({
-          facetId: getFacetId(),
-          selection,
-        })
-      );
+      coreController.toggleSelect(selection);
       dispatch(fetchProductListing());
       dispatch(getAnalyticsActionForToggleFacetSelect(getFacetId(), selection));
     },
@@ -75,21 +75,25 @@ export function buildFacet(
     deselectAll() {
       coreController.deselectAll();
       dispatch(fetchProductListing());
+      dispatch(logFacetClearAll(getFacetId()));
     },
 
     sortBy(criterion: FacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(fetchProductListing());
+      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
     },
 
     showMoreValues() {
       coreController.showMoreValues();
       dispatch(fetchProductListing());
+      dispatch(logFacetShowMore(getFacetId()));
     },
 
     showLessValues() {
       coreController.showLessValues();
       dispatch(fetchProductListing());
+      dispatch(logFacetShowLess(getFacetId()));
     },
 
     get state() {

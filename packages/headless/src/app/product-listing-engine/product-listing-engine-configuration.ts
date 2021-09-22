@@ -11,11 +11,10 @@ import {
 export interface ProductListingEngineConfiguration
   extends EngineConfiguration {}
 
-export const productListingEngineConfigurationSchema = new Schema<
-  ProductListingEngineConfiguration
->({
-  ...engineConfigurationDefinitions,
-});
+export const productListingEngineConfigurationSchema =
+  new Schema<ProductListingEngineConfiguration>({
+    ...engineConfigurationDefinitions,
+  });
 
 /**
  * Creates a sample product recommendation engine configuration.
