@@ -40,7 +40,13 @@ export const config: Config = {
     {
       type: 'dist',
       esmLoaderPath: '../loader',
-      copy: [{src: 'themes'}],
+      copy: [
+        {src: 'themes'},
+        {
+          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          dest: 'assets',
+        },
+      ],
     },
     {
       type: 'docs-json',
@@ -49,7 +55,14 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
-      copy: [{src: 'pages', keepDirStructure: false}, {src: 'themes'}],
+      copy: [
+        {src: 'pages', keepDirStructure: false},
+        {src: 'themes'},
+        {
+          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          dest: 'build/assets',
+        },
+      ],
     },
   ],
   testing: {

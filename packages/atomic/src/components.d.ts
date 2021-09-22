@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
+import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
@@ -37,6 +38,14 @@ export namespace Components {
          */
         "filterByBasePath": boolean;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
+        /**
           * Specifies if the facet is collapsed.
          */
         "isCollapsed": boolean;
@@ -59,6 +68,10 @@ export namespace Components {
     }
     interface AtomicColorFacet {
         /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter": string;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs": 'checkbox' | 'box';
@@ -70,6 +83,14 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -99,6 +120,10 @@ export namespace Components {
     }
     interface AtomicFacet {
         /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter": string;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs": 'checkbox' | 'link' | 'box';
@@ -110,6 +135,14 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -228,6 +261,14 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
+        /**
           * Specifies if the facet is collapsed.
          */
         "isCollapsed": boolean;
@@ -298,9 +339,17 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -332,9 +381,17 @@ export namespace Components {
          */
         "field": string;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -357,7 +414,7 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRefineModal {
-        "enabled": boolean;
+        "modalStatus": ModalStatus;
     }
     interface AtomicRefineToggle {
     }
@@ -656,6 +713,14 @@ export namespace Components {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -1126,6 +1191,14 @@ declare namespace LocalJSX {
          */
         "filterByBasePath"?: boolean;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
+        /**
           * Specifies if the facet is collapsed.
          */
         "isCollapsed"?: boolean;
@@ -1148,6 +1221,10 @@ declare namespace LocalJSX {
     }
     interface AtomicColorFacet {
         /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter"?: string;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs"?: 'checkbox' | 'box';
@@ -1159,6 +1236,14 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -1188,6 +1273,10 @@ declare namespace LocalJSX {
     }
     interface AtomicFacet {
         /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter"?: string;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs"?: 'checkbox' | 'link' | 'box';
@@ -1199,6 +1288,14 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -1319,6 +1416,14 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
+        /**
           * Specifies if the facet is collapsed.
          */
         "isCollapsed"?: boolean;
@@ -1390,9 +1495,17 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -1424,9 +1537,17 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
         /**
           * Specifies if the facet is collapsed.
          */
@@ -1449,7 +1570,7 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRefineModal {
-        "enabled": boolean;
+        "modalStatus": ModalStatus;
     }
     interface AtomicRefineToggle {
     }
@@ -1736,6 +1857,14 @@ declare namespace LocalJSX {
           * The field whose values you want to display in the facet.
          */
         "field"?: string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
         /**
           * Specifies if the facet is collapsed.
          */

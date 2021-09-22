@@ -87,7 +87,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
   }
 
   executeQuery(e) {
-    this.recentQueriesList.executeRecentQuery(e.target.value);
+    this.recentQueriesList.executeRecentQuery(e.currentTarget.value);
   }
 
   toggleVisibility() {

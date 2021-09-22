@@ -86,17 +86,17 @@
     </labels>
     <labels>
         <fullName>quantic_ShowMore</fullName>
-        <value>Show more</value>
+        <value>+ Show more</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Show more</shortDescription>
+        <shortDescription>+ Show more</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_ShowLess</fullName>
-        <value>Show less</value>
+        <value>- Show less</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Show less</shortDescription>
+        <shortDescription>- Show less</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_ShowMoreFacetValues</fullName>
@@ -111,6 +111,20 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Show less values for the potato facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_AllCategories</fullName>
+        <value>All Categories</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Categories</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_InLabel</fullName>
+        <value>in</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>in</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_NMore</fullName>

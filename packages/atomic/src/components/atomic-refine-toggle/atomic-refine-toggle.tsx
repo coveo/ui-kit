@@ -39,7 +39,7 @@ export class AtomicRefineToggle implements InitializableComponent {
   }
 
   private enableModal() {
-    this.modalRef?.setAttribute('enabled', 'true');
+    this.modalRef && (this.modalRef.modalStatus = 'opened');
   }
 
   public render() {
