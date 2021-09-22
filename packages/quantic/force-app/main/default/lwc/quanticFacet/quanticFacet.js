@@ -185,7 +185,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   getSearchValues() {
-    return this.facet?.state.facetSearch?.values ?? [];
+    return this.facet?.state?.facetSearch?.values ?? [];
   }
 
   /**
