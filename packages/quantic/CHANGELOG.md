@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.64.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.2...@coveo/quantic@0.64.3) (2021-09-22)
+
+
+### Bug Fixes
+
+* **quantic:** fixed quantic RecentQueries onClick issue ([#1198](https://github.com/coveo/ui-kit/issues/1198)) ([9346062](https://github.com/coveo/ui-kit/commit/934606238a244f74faed0a6fc7f21df1bae731d0))
+
+
+
+
+
 ## [0.64.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.1...@coveo/quantic@0.64.2) (2021-09-21)
 
 

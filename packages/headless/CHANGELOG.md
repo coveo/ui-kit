@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.1...@coveo/headless@1.20.2) (2021-09-22)
+
+
+### Bug Fixes
+
+* **headless:** support selecting deep category facet values ([#1214](https://github.com/coveo/ui-kit/issues/1214)) ([dbfce2e](https://github.com/coveo/ui-kit/commit/dbfce2e2a7c47fe675a29dfc4122d32f6066227d))
+
+
+
+
+
 ## [1.20.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.0...@coveo/headless@1.20.1) (2021-09-21)
 
 
