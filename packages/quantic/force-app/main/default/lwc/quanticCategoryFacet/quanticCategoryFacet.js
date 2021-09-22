@@ -118,7 +118,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get hasSearchResults() {
-    return this.facet?.state.facetSearch.values?.length !== 0;
+    return this.getSearchValues().length > 0;
   }
 
   get canShowMoreSearchResults() {
@@ -126,8 +126,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get facetSearchResults() {
-    const results = this.facet.state.facetSearch.values ?? [];
-    return results.map((result, index) => ({
+    return this.getSearchValues().map((result, index) => ({
       value: result.rawValue,
       index: index,
       numberOfResults: result.count,
@@ -179,6 +178,10 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get isFacetSearchActive() {
     return this.input?.value !== '';
+  }
+
+  getSearchValues() {
+    return this.facet?.state.facetSearch?.values ?? [];
   }
 
   /**
