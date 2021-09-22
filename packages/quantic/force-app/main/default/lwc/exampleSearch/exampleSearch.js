@@ -26,7 +26,7 @@ export default class ExampleSearch extends LightningElement {
     );
     const isChatter = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
       'objecttype',
-      ['feeditem']
+      ['FeedItem']
     );
     resultTemplatesManager.registerTemplates(
       {content: template1, conditions: [isYouTube], fields: ['ytvideoid', 'ytvideoduration']},

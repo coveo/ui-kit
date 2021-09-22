@@ -146,7 +146,6 @@ export default class QuanticResult extends LightningElement {
   }
 
   render() {
-    console.log(this.result)
     const template = this.resultTemplatesManager.selectTemplate(this.result);
     if (template) {
       return template;
