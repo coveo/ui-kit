@@ -8,9 +8,9 @@ export interface FieldsState {
    */
   fieldsToInclude: string[];
   /**
-   * Flag that specify if all fields should be retrieved from the index. Useful in development or debugging scenarios.
+   * A flag that specifies if all fields should be retrieved from the index. Useful in development or debugging scenarios.
    *
-   * Should not be set to true in any production environment, as this can have a negative impact on query execution time.
+   * This should not be set to `true` in any production environment, as this can have a negative impact on query execution time.
    */
   debugFields: boolean;
   /**

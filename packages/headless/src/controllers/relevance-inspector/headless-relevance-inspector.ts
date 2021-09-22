@@ -70,7 +70,7 @@ export interface RelevanceInspector extends Controller {
    */
   fetchFieldsDescription(): void;
   /**
-   * Fetch all fields available from the index on each individual results.
+   * Fetch all fields available from the index on each of the individual results.
    */
   debugFields(fetchAll: boolean): void;
   /**
@@ -125,7 +125,7 @@ export interface RelevanceInspectorState {
    */
   fieldsDescription?: FieldDescription[];
   /**
-   * Wether fields debugging is enabled, returning all fields available on query results.
+   * Whether fields debugging is enabled, returning all fields available on query results.
    */
   debugFields?: boolean;
 }

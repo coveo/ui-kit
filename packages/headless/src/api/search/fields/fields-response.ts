@@ -1,50 +1,49 @@
 /**
- * Information about a single field in the index
+ * Information about a single field in the index.
  */
 export interface FieldDescription {
   /**
-   * It's type, as a string
+   * The field type.
    */
   type: string;
   /**
-   * It's name, as a string
+   * The field name.
    */
   name: string;
   /**
-   * A small(ish) description of the field
+   * A modest description of the field.
    */
   description: string;
   /**
-   * The default value of the field
+   * The default value of the field.
    */
   defaultValue: string;
   /**
-   * It's fieldType, as a string.<br/>
-   * eg: Date, Double, Integer, LargeString, Long, SmallString
+   * The `fieldType` (eg., Date, Double, Integer, LargeString, Long, SmallString).
    */
   fieldType: string;
   /**
-   * It's fieldSourceType, as a string.
+   * The `fieldSourceType`.
    */
   fieldSourceType: string;
   /**
-   * Gets whether the field can be referenced in a query.
+   * Whether the field can be referenced in a query.
    */
   includeInQuery: boolean;
   /**
-   * Gets whether the field is returned with results.
+   * Whether the field is returned with results.
    */
   includeInResults: boolean;
   /**
-   * Gets whether the field is considered groupBy (facet)
+   * Whether the field is considered `groupBy` (facet).
    */
   groupByField: boolean;
   /**
-   * Gets whether the field is considered splitGroupBy (facet with ; between values)
+   * Whether the field is considered `splitGroupBy` (ie., facet with values delimited by `;`).
    */
   splitGroupByField: boolean;
   /**
-   * Gets whether the field can be used to sort results
+   * Whether the field can be used to sort results.
    */
   sortByField: boolean;
 }
@@ -54,7 +53,7 @@ export interface FieldDescription {
  */
 export interface FieldsDescriptionResponseSuccess {
   /**
-   * The description of all fields available
+   * The description of all fields available.
    */
   fields: FieldDescription[];
 }
