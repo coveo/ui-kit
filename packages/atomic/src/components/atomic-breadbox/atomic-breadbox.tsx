@@ -58,7 +58,6 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
-  // TODO: KIT-924 Automatically adapt the number of element of the breadbox
   private collapseThreshold = 5;
 
   public initialize() {
@@ -231,7 +230,6 @@ export class AtomicBreadbox implements InitializableComponent {
       ? sortedBreadcrumbs.slice(0, this.collapseThreshold)
       : sortedBreadcrumbs;
 
-    // TODO: update collapse KIT-924
     return [
       slicedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
       this.isCollapsed &&
@@ -253,7 +251,17 @@ export class AtomicBreadbox implements InitializableComponent {
         <span part="label" class="font-bold p-2 pl-0 with-colon">
           {this.bindings.i18n.t('filters')}
         </span>
-        <ul class="flex flex-wrap gap-1">{this.renderBreadcrumbs()}</ul>
+        <div class="relative flex-grow">
+          <ul
+            class={`flex gap-1 ${
+              this.isCollapsed
+                ? 'flex-nowrap overflow-hidden absolute w-full'
+                : 'flex-wrap'
+            }`}
+          >
+            {this.renderBreadcrumbs()}
+          </ul>
+        </div>
       </div>
     );
   }
