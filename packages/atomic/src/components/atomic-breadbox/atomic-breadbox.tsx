@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -47,7 +47,11 @@ const ELLIPSIS = '...';
 export class AtomicBreadbox implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
+  private resizeObserver!: ResizeObserver;
+  private showMore!: HTMLButtonElement;
   facetManager!: FacetManager;
+
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('breadcrumbManager')
   @State()
@@ -58,11 +62,67 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
-  private collapseThreshold = 5;
-
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
+    this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
+    this.resizeObserver.observe(this.host.parentElement!);
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver.disconnect();
+  }
+
+  private get breadcrumbs() {
+    return Array.from(
+      this.host.shadowRoot!.querySelectorAll('li.breadcrumb')
+    ) as HTMLElement[];
+  }
+
+  private hide(element: HTMLElement) {
+    element.style.display = 'none';
+  }
+
+  private show(element: HTMLElement) {
+    element.style.display = '';
+  }
+
+  private showAllBreadcrumbs() {
+    this.breadcrumbs.forEach((breadcrumb) => this.show(breadcrumb));
+  }
+
+  private hideOverflowingBreadcrumbs() {
+    let hiddenBreadcrumbs = 0;
+    for (
+      let i = this.breadcrumbs.length - 1;
+      this.isOverflowing && i >= 0;
+      i--
+    ) {
+      this.hide(this.breadcrumbs[i]);
+      hiddenBreadcrumbs++;
+    }
+    this.updateShowMoreValue(hiddenBreadcrumbs);
+  }
+
+  private adaptBreadcrumbs() {
+    if (!this.breadcrumbs.length) {
+      return;
+    }
+    this.showAllBreadcrumbs();
+    if (!this.isCollapsed) {
+      return;
+    }
+
+    this.updateShowMoreValue(this.breadcrumbs.length);
+    this.hideOverflowingBreadcrumbs();
+  }
+
+  private get isOverflowing() {
+    const listElement = this.host.shadowRoot!.querySelector('ul');
+    if (!listElement) {
+      return false;
+    }
+    return listElement.scrollWidth > listElement.clientWidth;
   }
 
   private limitPath(path: string[]) {
@@ -83,7 +143,7 @@ export class AtomicBreadbox implements InitializableComponent {
       : breadcrumb.formattedValue;
 
     return (
-      <li>
+      <li class="breadcrumb" key={value}>
         <Button
           part="breadcrumb-button"
           style="outline-neutral"
@@ -106,15 +166,31 @@ export class AtomicBreadbox implements InitializableComponent {
     );
   }
 
-  private renderShowMore(value: number) {
+  private updateShowMoreValue(value: number) {
+    if (value === 0) {
+      this.showMore.style.display = 'none';
+      return;
+    }
+    this.showMore.textContent = `+ ${value.toLocaleString(
+      this.bindings.i18n.language
+    )}`;
+
+    this.showMore.setAttribute(
+      'aria-label',
+      this.bindings.i18n.t('show-n-more-filters', {
+        value,
+      })
+    );
+  }
+
+  private renderShowMore() {
     return (
-      <li>
+      <li key="show-more">
         <Button
+          ref={(ref) => (this.showMore = ref!)}
           part="show-more"
           style="outline-primary"
-          text={`+ ${value.toLocaleString(this.bindings.i18n.language)}`}
-          class="p-2 btn-pill"
-          ariaLabel={this.bindings.i18n.t('show-n-more-filters', {value})}
+          class="p-2 btn-pill whitespace-nowrap"
           onClick={() => (this.isCollapsed = false)}
         ></Button>
       </li>
@@ -123,7 +199,7 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private renderShowLess() {
     return (
-      <li>
+      <li key="show-less">
         <Button
           part="show-less"
           style="outline-primary"
@@ -137,7 +213,7 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private renderClearAll() {
     return (
-      <li>
+      <li key="clear-all">
         <Button
           part="clear"
           style="text-primary"
@@ -226,17 +302,11 @@ export class AtomicBreadbox implements InitializableComponent {
       const indexB = this.facetManagerState.facetIds.indexOf(b.facetId);
       return indexA - indexB;
     });
-    const slicedBreadcrumbs = this.isCollapsed
-      ? sortedBreadcrumbs.slice(0, this.collapseThreshold)
-      : sortedBreadcrumbs;
 
     return [
-      slicedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
-      this.isCollapsed &&
-        sortedBreadcrumbs.length > this.collapseThreshold &&
-        this.renderShowMore(sortedBreadcrumbs.length - this.collapseThreshold),
-      slicedBreadcrumbs.length > this.collapseThreshold &&
-        this.renderShowLess(),
+      sortedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
+      this.isCollapsed && this.renderShowMore(),
+      !this.isCollapsed && this.renderShowLess(),
       this.renderClearAll(),
     ];
   }
@@ -264,5 +334,9 @@ export class AtomicBreadbox implements InitializableComponent {
         </div>
       </div>
     );
+  }
+
+  public componentDidRender() {
+    this.adaptBreadcrumbs();
   }
 }
