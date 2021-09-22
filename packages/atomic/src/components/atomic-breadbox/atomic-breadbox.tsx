@@ -168,9 +168,11 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private updateShowMoreValue(value: number) {
     if (value === 0) {
-      this.showMore.style.display = 'none';
+      this.hide(this.showMore);
       return;
     }
+
+    this.show(this.showMore);
     this.showMore.textContent = `+ ${value.toLocaleString(
       this.bindings.i18n.language
     )}`;
