@@ -32,6 +32,8 @@ import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 
 export {
   buildNumericRange,
@@ -168,6 +170,11 @@ export function buildNumericFacet(
 
   const handleToggleSelect = (selection: NumericFacetValue) => {
     dispatch(executeToggleNumericFacetSelect({facetId, selection}));
+    dispatch(
+      executeSearch(
+        getAnalyticsActionForToggleRangeFacetSelect(facetId, selection)
+      )
+    );
   };
 
   return {
@@ -180,7 +187,7 @@ export function buildNumericFacet(
         dispatch(deselectAllFacetValues(facetId));
       }
 
-      dispatch(executeToggleNumericFacetSelect({facetId, selection}));
+      handleToggleSelect(selection);
     },
 
     get state() {

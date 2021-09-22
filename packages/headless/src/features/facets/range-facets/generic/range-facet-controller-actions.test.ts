@@ -22,9 +22,6 @@ describe('range facet controller actions', () => {
         type: 'facetOptions/update',
         payload: {freezeFacetOrder: true},
       }),
-      expect.objectContaining({
-        type: 'search/executeSearch/pending',
-      }),
     ]);
   });
 });
