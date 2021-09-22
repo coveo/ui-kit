@@ -19,7 +19,8 @@ import {
   TermWeightReport,
 } from '../../features/debug/ranking-info-parser';
 import {
-  debugFields,
+  disableFetchAllFields,
+  enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
 import {
@@ -70,9 +71,13 @@ export interface RelevanceInspector extends Controller {
    */
   fetchFieldsDescription(): void;
   /**
-   * Fetch all fields available from the index on each of the individual results.
+   * Fetch all fields available from the index on each individual results.
    */
-  debugFields(fetchAll: boolean): void;
+  enableFetchAllFields(): void;
+  /**
+   * Disable fetching all available fields from the index.
+   */
+  disableFetchAllFields(): void;
   /**
    * Enables debug mode.
    */
@@ -127,7 +132,7 @@ export interface RelevanceInspectorState {
   /**
    * Whether fields debugging is enabled, returning all fields available on query results.
    */
-  debugFields?: boolean;
+  fetchAllFields?: boolean;
 }
 
 export interface ResultRankingInformation {
@@ -189,6 +194,12 @@ export function buildRelevanceInspector(
     dispatch(enableDebug());
   }
 
+  const warnProductionEnvironment = (flag: string) => {
+    engine.logger.warn(
+      `Flag [ ${flag} ] is now activated. This should *not* be used in any production environment as it negatively impact performance.`
+    );
+  };
+
   return {
     ...controller,
 
@@ -209,7 +220,7 @@ export function buildRelevanceInspector(
         rankingExpressions,
       } = state.search.response as SearchResponseSuccessWithDebugInfo;
 
-      const {fieldsDescription, debugFields} = state.fields;
+      const {fieldsDescription, fetchAllFields} = state.fields;
 
       return {
         isEnabled,
@@ -223,24 +234,32 @@ export function buildRelevanceInspector(
         userIdentities,
         rankingExpressions,
         fieldsDescription,
-        debugFields,
+        fetchAllFields,
       };
     },
 
     enable() {
       dispatch(enableDebug());
+      warnProductionEnvironment('debug');
     },
 
     disable() {
       dispatch(disableDebug());
+      dispatch(disableFetchAllFields());
     },
 
-    debugFields(fetchAll: boolean) {
-      dispatch(debugFields(fetchAll));
+    enableFetchAllFields() {
+      dispatch(enableFetchAllFields());
+      warnProductionEnvironment('fetchAllFields');
+    },
+
+    disableFetchAllFields() {
+      dispatch(disableFetchAllFields());
     },
 
     fetchFieldsDescription() {
       dispatch(fetchFieldsDescription());
+      warnProductionEnvironment('fieldsDescription');
     },
   };
 }

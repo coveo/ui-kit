@@ -49,7 +49,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
       context: state.context.contextValues,
     }),
     ...(state.fields &&
-      !state.fields.debugFields && {
+      !state.fields.fetchAllFields && {
         fieldsToInclude: state.fields.fieldsToInclude,
       }),
     ...(state.pipeline && {

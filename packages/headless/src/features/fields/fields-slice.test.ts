@@ -1,6 +1,7 @@
 import {fieldsReducer} from './fields-slice';
 import {
-  debugFields,
+  disableFetchAllFields,
+  enableFetchAllFields,
   fetchFieldsDescription,
   registerFieldsToInclude,
 } from './fields-actions';
@@ -39,15 +40,17 @@ describe('fields slice', () => {
     expect(fieldsReducer(undefined, action)).toEqual(getFieldsInitialState());
   });
 
-  it('should add debug fields if requested', () => {
+  it('should fetch all fields if requested', () => {
     expect(
-      fieldsReducer(getFieldsInitialState(), debugFields(true)).debugFields
+      fieldsReducer(getFieldsInitialState(), enableFetchAllFields())
+        .fetchAllFields
     ).toBe(true);
   });
 
-  it('should remove debug fields if requested', () => {
+  it('should not fetch all fields if requested', () => {
     expect(
-      fieldsReducer(getFieldsInitialState(), debugFields(false)).debugFields
+      fieldsReducer(getFieldsInitialState(), disableFetchAllFields())
+        .fetchAllFields
     ).toBe(false);
   });
 

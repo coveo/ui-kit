@@ -1,5 +1,10 @@
+import {
+  SearchAPIErrorWithExceptionInBody,
+  SearchAPIErrorWithStatusCode,
+} from '../search-api-error-response';
+
 /**
- * Information about a single field in the index.
+ * Field description
  */
 export interface FieldDescription {
   /**
@@ -51,9 +56,14 @@ export interface FieldDescription {
 /**
  * Describes the fields available in the index.
  */
-export interface FieldsDescriptionResponseSuccess {
+export interface FieldDescriptionsResponseSuccess {
   /**
    * The description of all fields available.
    */
   fields: FieldDescription[];
 }
+
+export type FieldDescriptions =
+  | FieldDescriptionsResponseSuccess
+  | SearchAPIErrorWithExceptionInBody
+  | SearchAPIErrorWithStatusCode;

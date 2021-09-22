@@ -53,12 +53,14 @@ export class RelevanceInspector extends Component<{}, RelevanceInspectorState> {
           />
         </label>
         <label>
-          Enable fields debugging:{' '}
+          Enable fetch all fields:{' '}
           <input
             type="checkbox"
-            checked={this.state.debugFields}
+            checked={this.state.fetchAllFields}
             onChange={() =>
-              this.controller.debugFields(!this.state.debugFields)
+              this.state.fetchAllFields
+                ? this.controller.disableFetchAllFields()
+                : this.controller.enableFetchAllFields()
             }
           />
         </label>

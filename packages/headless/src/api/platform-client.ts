@@ -118,7 +118,7 @@ function buildDefaultRequestOptions(
     options;
   const isMethodWithBody =
     options.method === 'POST' || options.method === 'PUT';
-  const body = isMethodWithBody ? encodeBody(requestParams, contentType) : null;
+  const body = encodeBody(requestParams, contentType);
 
   return {
     url,

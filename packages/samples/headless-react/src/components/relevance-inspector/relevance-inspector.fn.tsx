@@ -33,11 +33,15 @@ export const RelevanceInspector: FunctionComponent<RelevanceInspectorProps> = (
         />
       </label>
       <label>
-        Enable fields debugging:{' '}
+        Enable fetch all fields:{' '}
         <input
           type="checkbox"
-          checked={state.debugFields}
-          onChange={() => controller.debugFields(!state.debugFields)}
+          checked={state.fetchAllFields}
+          onChange={() =>
+            state.fetchAllFields
+              ? controller.disableFetchAllFields()
+              : controller.enableFetchAllFields()
+          }
         />
       </label>
       <button onClick={() => controller.fetchFieldsDescription()}>

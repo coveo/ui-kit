@@ -12,7 +12,7 @@ export interface FieldsState {
    *
    * This should not be set to `true` in any production environment, as this can have a negative impact on query execution time.
    */
-  debugFields: boolean;
+  fetchAllFields: boolean;
   /**
    * The description of all available fields from the index.
    */
@@ -29,6 +29,6 @@ export const getFieldsInitialState: () => FieldsState = () => ({
     'source',
     'permanentid',
   ],
-  debugFields: false,
+  fetchAllFields: false,
   fieldsDescription: [],
 });

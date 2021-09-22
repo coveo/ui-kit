@@ -32,9 +32,16 @@ import {BaseParam} from '../platform-service-params';
 import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
-import {FieldsDescriptionResponseSuccess} from './fields/fields-response';
+import {
+  FieldDescription,
+  FieldDescriptionsResponseSuccess,
+} from './fields/fields-response';
 
-export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
+export type AllSearchAPIResponse =
+  | Plan
+  | Search
+  | QuerySuggest
+  | FieldDescription;
 
 export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
   state: T;
@@ -242,7 +249,7 @@ export class SearchAPIClient {
     };
   }
 
-  async fieldsDescription(req: BaseParam) {
+  async fieldDescriptions(req: BaseParam) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
       requestParams: {},
@@ -355,8 +362,8 @@ function isSuccessHtmlResponse(body: unknown): body is string {
 
 function isSuccessFieldsDescriptionResponse(
   body: unknown
-): body is FieldsDescriptionResponseSuccess {
-  return (body as FieldsDescriptionResponseSuccess).fields !== undefined;
+): body is FieldDescriptionsResponseSuccess {
+  return (body as FieldDescriptionsResponseSuccess).fields !== undefined;
 }
 
 function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {

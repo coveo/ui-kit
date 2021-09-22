@@ -1,7 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {getFieldsInitialState} from './fields-state';
 import {
-  debugFields,
+  disableFetchAllFields,
+  enableFetchAllFields,
   fetchFieldsDescription,
   registerFieldsToInclude,
 } from './fields-actions';
@@ -15,8 +16,11 @@ export const fieldsReducer = createReducer(getFieldsInitialState(), (builder) =>
         ...new Set(state.fieldsToInclude.concat(action.payload)),
       ];
     })
-    .addCase(debugFields, (state, {payload}) => {
-      state.debugFields = payload;
+    .addCase(enableFetchAllFields, (state) => {
+      state.fetchAllFields = true;
+    })
+    .addCase(disableFetchAllFields, (state) => {
+      state.fetchAllFields = false;
     })
     .addCase(fetchFieldsDescription.fulfilled, (state, {payload}) => {
       state.fieldsDescription = payload;

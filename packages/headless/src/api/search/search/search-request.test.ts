@@ -157,9 +157,9 @@ describe('search request', () => {
     );
   });
 
-  it('#searchRequest.fieldsToInclude holds not #fieldsToInclude if #debugFields is active', () => {
+  it('#searchRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
-    state.fields.debugFields = true;
+    state.fields.fetchAllFields = true;
     expect(buildSearchRequest(state).request.fieldsToInclude).not.toBeDefined();
   });
 });

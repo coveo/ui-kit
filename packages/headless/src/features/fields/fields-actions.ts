@@ -3,7 +3,7 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {ArrayValue, BooleanValue} from '@coveo/bueno';
+import {ArrayValue} from '@coveo/bueno';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
@@ -26,14 +26,25 @@ export const registerFieldsToInclude = createAction(
 );
 
 /**
- * Enable retrieve all fields.
+ * Enable fetch all fields.
+ *
+ * This should not be used in any production environment, as it can have a negative impact on query execution time.
+ *
+ * Should be used for debugging purposes.
  */
-export const debugFields = createAction('fields/debug', (fetchAll: boolean) =>
-  validatePayload(fetchAll, new BooleanValue({required: true}))
-);
+export const enableFetchAllFields = createAction('fields/fetchall/enable');
+
+/**
+ * Disable fetch all fields.
+ */
+export const disableFetchAllFields = createAction('fields/fetchall/disable');
 
 /**
  * Retrieve fields descrption from the index.
+ *
+ * This should not be used in any production environment, as it can have a negative impact on query execution time.
+ *
+ * Should be used for debugging purposes.
  */
 export const fetchFieldsDescription = createAsyncThunk<
   FieldDescription[],
@@ -43,7 +54,7 @@ export const fetchFieldsDescription = createAsyncThunk<
   const state = getState();
   const {accessToken, organizationId} = state.configuration;
   const {apiBaseUrl} = state.configuration.search;
-  const descriptions = await extra.searchAPIClient.fieldsDescription({
+  const descriptions = await extra.searchAPIClient.fieldDescriptions({
     accessToken,
     organizationId,
     url: apiBaseUrl,
