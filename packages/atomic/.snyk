@@ -3,7 +3,7 @@
 ignore:
   'SNYK:LIC:NPM:SALESFORCE-UX:DESIGN-SYSTEM:UNKNOWN':
     - '*':
-        reason: None Given
+        reason: License is described in the Readme https://github.com/salesforce-ux/design-system#licenses
         expires: 2031-09-22T15:43:23.605Z
         created: 2021-09-22T15:43:23.611Z
 version: v1.22.1
