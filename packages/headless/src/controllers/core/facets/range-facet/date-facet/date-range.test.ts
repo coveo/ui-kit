@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
-import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
+import {formatDateForSearchApi} from '../../../../../api/search/date/date-format';
 import {
   RelativeDate,
   serializeRelativeDate,
-} from '../../../../api/search/date/relative-date';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+} from '../../../../../api/search/date/relative-date';
+import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {buildDateRange} from './date-range';
 
 describe('date range', () => {

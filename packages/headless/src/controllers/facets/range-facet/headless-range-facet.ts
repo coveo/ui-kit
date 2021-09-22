@@ -1,4 +1,3 @@
-import {buildController} from '../../controller/headless-controller';
 import {
   RangeFacetResponse,
   RangeFacetRequest,
@@ -8,24 +7,21 @@ import {
   logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
-import {baseFacetResponseSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {RangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
-import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
   ConfigurationSection,
   SearchSection,
 } from '../../../state/state-sections';
-import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {buildCoreRangeFacet} from '../../core/facets/range-facet/headless-core-range-facet';
 
-export type RangeFacet = ReturnType<typeof buildRangeFacet>;
+import {
+  RangeFacet,
+  RangeFacetProps,
+  assertRangeFacetOptions,
+} from '../../core/facets/range-facet/headless-core-range-facet';
 
-export type RangeFacetProps<T extends RangeFacetRequest> = {
-  facetId: string;
-  getRequest: () => T;
-};
+export {RangeFacet, RangeFacetProps, assertRangeFacetOptions};
 
 export function buildRangeFacet<
   T extends RangeFacetRequest,
@@ -34,68 +30,27 @@ export function buildRangeFacet<
   engine: SearchEngine<ConfigurationSection & SearchSection>,
   props: RangeFacetProps<T>
 ) {
-  type RangeFacetValue = R['values'][0];
-
-  const {facetId, getRequest} = props;
-  const controller = buildController(engine);
+  const facetId = props.facetId;
+  const coreController = buildCoreRangeFacet<T, R>(engine, props);
   const dispatch = engine.dispatch;
 
   return {
-    ...controller,
-
-    isValueSelected: isRangeFacetValueSelected,
+    ...coreController,
 
     deselectAll() {
-      dispatch(deselectAllFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      coreController.deselectAll();
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
-      dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      coreController.sortBy(criterion);
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
-    isSortedBy(criterion: RangeFacetSortCriterion) {
-      return this.state.sortCriterion === criterion;
-    },
-
     get state() {
-      const request = getRequest();
-      const response = baseFacetResponseSelector(engine.state, facetId) as
-        | R
-        | undefined;
-
-      const sortCriterion = request.sortCriteria;
-      const values: R['values'] = response ? response.values : [];
-      const isLoading = engine.state.search.isLoading;
-      const hasActiveValues = values.some(
-        (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
-      );
-
       return {
-        facetId,
-        values,
-        sortCriterion,
-        hasActiveValues,
-        isLoading,
+        ...coreController.state,
       };
     },
   };
-}
-
-interface AssertRangeFacetOptions {
-  generateAutomaticRanges: boolean;
-  currentValues?: unknown[];
-}
-
-export function assertRangeFacetOptions(
-  options: AssertRangeFacetOptions,
-  controllerName: 'buildNumericFacet' | 'buildDateFacet'
-) {
-  if (!options.generateAutomaticRanges && options.currentValues === undefined) {
-    const message = `currentValues should be specified for ${controllerName} when generateAutomaticRanges is false.`;
-    throw new Error(message);
-  }
 }

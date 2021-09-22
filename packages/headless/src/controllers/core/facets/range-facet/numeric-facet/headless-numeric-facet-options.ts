@@ -7,14 +7,14 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {facetValueStates} from '../../../../features/facets/facet-api/value';
+import {facetValueStates} from '../../../../../features/facets/facet-api/value';
 import {
   rangeFacetRangeAlgorithm,
   RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
   RangeFacetSortCriterion,
-} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
+} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {
   facetId,
   field,
@@ -22,15 +22,15 @@ import {
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-} from '../../../core/facets/_common/facet-option-definitions';
-import {validateOptions} from '../../../../utils/validate-payload';
+} from '../../../../core/facets/_common/facet-option-definitions';
+import {validateOptions} from '../../../../../utils/validate-payload';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../../state/state-sections';
-import {validateManualNumericRanges} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
+} from '../../../../../state/state-sections';
+import {validateManualNumericRanges} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {CoreEngine} from '../../../../../app/engine';
 
 /**
  * The options defining a `NumericFacet`.
@@ -131,7 +131,7 @@ export const numericFacetOptionsSchema = new Schema<
 });
 
 export function validateNumericFacetOptions(
-  engine: SearchEngine<
+  engine: CoreEngine<
     NumericFacetSection & ConfigurationSection & SearchSection
   >,
   options: NumericFacetOptions
