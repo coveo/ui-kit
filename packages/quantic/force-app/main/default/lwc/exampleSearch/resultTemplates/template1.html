@@ -1,38 +1,41 @@
 <template>
-  <h1>Custom Template 1</h1>
-  <div class="slds-p-around_medium lgc-bg slds-border_bottom">
+  <div class="lgc-bg slds-border_bottom">
     <lightning-tile type="media">
-      <h3><c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link></h3>
-      <lightning-icon slot="media" icon-name={icon}></lightning-icon>
-      <p class="slds-text-body_regular">{result.excerpt}</p>
-      <dl class="slds-dl_horizontal">
-        <dt class="slds-dl_horizontal__label">
-          <p class="slds-truncate" title="Date">Date:</p>
-        </dt>
-        <dd class="slds-dl_horizontal__detail slds-tile__meta">
+      <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
+        <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left" style="font-weight: 400; font-size:12px">
+          <span><lightning-icon slot="media" icon-name={icon} size="small"></lightning-icon></span>
+          <span class="slds-m-left_xx-small">{label}</span>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
+          <template if:true={result.isRecommendation}><div><lightning-badge label="Recommended" class="recommended-badge" icon-name="utility:favorite"></lightning-badge></div></template>
+        </div>
+        <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right" style="font-weight: 400; font-size:12px">
           <p class="slds-truncate" title="Date">
             <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
           </p>
-        </dd>
-        <dt class="slds-dl_horizontal__label">
-          <p class="slds-truncate" title="Type">Type:</p>
-        </dt>
-        <dd class="slds-dl_horizontal__detail slds-tile__meta">
-          <p class="slds-truncate" title="Type">{result.raw.objecttype}</p>
-        </dd>
-        <dt class="slds-dl_horizontal__label">
-          <p class="slds-truncate" title="Type">File Type:</p>
-        </dt>
-        <dd class="slds-dl_horizontal__detail slds-tile__meta">
-          <p class="slds-truncate" title="Type">{result.raw.filetype}</p>
-        </dd>
-        <dt class="slds-dl_horizontal__label">
-          <p class="slds-truncate" title="Lang">Language:</p>
-        </dt>
-        <dd class="slds-dl_horizontal__detail slds-tile__meta">
-          <p class="slds-truncate" title="Lang">{result.raw.language}</p>
-        </dd>
-      </dl>
+        </div>
+      </div>
+      <div class="slds-grid slds-wrap slds-m-vertical_small ">
+        <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left">
+            <iframe style="height:85px; width:130px;" src={videoSourceId}></iframe>
+        </div>
+        <div class="slds-col slds-order_2 slds-large-order_2 slds-size_1-of-1 slds-large-size_9-of-12 slds-text-align_left slds-p-around_none">
+          <div class="slds-grid slds-wrap">
+              <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 700;">
+                  <h3 style="color:black" class="slds-truncate"><c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link></h3>
+              </div>
+              <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 400;">
+                <span>{result.Excerpt}</span>
+              </div>
+              <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 400; font-size: 10px">
+                  <span>
+                    <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
+                    <span class="slds-m-left_xxx-small slds-m-top_small">5:04 min</span>
+                  </span>
+              </div>
+        </div>
+        </div>
+      </div>
     </lightning-tile>
   </div>
 </template>

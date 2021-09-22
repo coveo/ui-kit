@@ -26,7 +26,11 @@ export default class QuanticResultList extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
-    this.resultList = CoveoHeadless.buildResultList(engine);
+    this.resultList = CoveoHeadless.buildResultList(engine,{
+      options: {
+        fieldsToInclude : ['date', 'filetype'],
+      }
+    });
     this.resultTemplatesManager = CoveoHeadless.buildResultTemplatesManager(
       engine
     );

@@ -1,0 +1,33 @@
+<template>
+    <div class="lgc-bg slds-border_bottom">
+      <lightning-tile type="media">
+        <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
+          <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left" style="font-weight: 400; font-size:12px">
+            <span><lightning-icon slot="media" icon-name={icon} size="small"></lightning-icon></span>
+            <span class="slds-m-left_x-small">{label}</span>
+          </div>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
+            <template if:true={result.isRecommendation}><div><lightning-badge label="Recommended" class="recommended-badge" icon-name="utility:favorite"></lightning-badge></div></template>
+          </div>
+          <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right" style="font-weight: 400; font-size:12px">
+            <p class="slds-truncate" title="Date">
+              <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+            </p>
+          </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
+          <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 700;">
+            <h3 style="color:black"><c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link></h3>
+          </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
+          <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left slds-p-bottom_xx-small" style="font-weight: 400;">
+            <span style="font-size: 14px; color:#3E3E3C">From: Bob Ross</span>
+          </div>
+          <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 400;">
+            {result.Excerpt}
+          </div>
+        </div>
+      </lightning-tile>
+    </div>
+  </template>
