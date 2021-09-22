@@ -67,14 +67,8 @@ export const buildProductListing = (
     ...controller,
 
     get state() {
-      const {
-        products,
-        error,
-        isLoading,
-        responseId,
-        additionalFields,
-        url,
-      } = getState().productListing;
+      const {products, error, isLoading, responseId, additionalFields, url} =
+        getState().productListing;
       return {
         products,
         error,

@@ -248,7 +248,7 @@ export function buildCoreCategoryFacet(
   );
 
   const createFacetSearch = () => {
-    const {facetId, facetSearch} = options;
+    const {facetSearch} = options;
     const facetSearchOptions = {facetId, ...facetSearch};
 
     return buildCategoryFacetSearch(engine, {options: facetSearchOptions});
@@ -273,7 +273,7 @@ export function buildCoreCategoryFacet(
     ...controller,
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection: CategoryFacetValue) => {
+    toggleSelect(selection: CategoryFacetValue) {
       const retrieveCount = options.numberOfValues;
       dispatch(
         toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
@@ -281,14 +281,12 @@ export function buildCoreCategoryFacet(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
-    deselectAll: () => {
+    deselectAll() {
       dispatch(deselectAllCategoryFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
-      const facetId = options.facetId;
-
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
@@ -299,7 +297,7 @@ export function buildCoreCategoryFacet(
     },
 
     showMoreValues() {
-      const {facetId, numberOfValues: increment} = options;
+      const {numberOfValues: increment} = options;
       const {values} = this.state;
       const numberOfValues = values.length + increment;
 
@@ -308,7 +306,7 @@ export function buildCoreCategoryFacet(
     },
 
     showLessValues() {
-      const {facetId, numberOfValues} = options;
+      const {numberOfValues} = options;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));

@@ -18,7 +18,6 @@ import {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
 } from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
   categoryFacetSearchSet,
@@ -67,38 +66,40 @@ export function buildCategoryFacet(
 
   const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
-  const facetId = determineFacetId(engine, props.options);
+  const getFacetId = () => coreController.state.facetId;
 
   return {
     ...coreController,
 
-    toggleSelect: (selection: CategoryFacetValue) => {
+    toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
       const analyticsAction = getToggleSelectAnalyticsAction(
-        facetId,
+        getFacetId(),
         selection
       );
       dispatch(executeSearch(analyticsAction));
     },
 
-    deselectAll: () => {
+    deselectAll() {
       coreController.deselectAll();
-      dispatch(executeSearch(logFacetClearAll(facetId)));
+      dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
+      dispatch(
+        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
     },
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(executeSearch(logFacetShowMore(facetId)));
+      dispatch(executeSearch(logFacetShowMore(getFacetId())));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(executeSearch(logFacetShowLess(facetId)));
+      dispatch(executeSearch(logFacetShowLess(getFacetId())));
     },
 
     get state() {

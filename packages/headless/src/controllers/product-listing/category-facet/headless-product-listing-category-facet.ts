@@ -17,7 +17,6 @@ import {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
 } from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
   categoryFacetSearchSet,
@@ -67,7 +66,7 @@ export function buildCategoryFacet(
 
   const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
-  const facetId = determineFacetId(engine, props.options);
+  const getFacetId = () => coreController.state.facetId;
 
   return {
     ...coreController,
@@ -75,31 +74,31 @@ export function buildCategoryFacet(
     toggleSelect: (selection: CategoryFacetValue) => {
       coreController.toggleSelect(selection);
       dispatch(fetchProductListing());
-      dispatch(getToggleSelectAnalyticsAction(facetId, selection));
+      dispatch(getToggleSelectAnalyticsAction(getFacetId(), selection));
     },
 
     deselectAll: () => {
       coreController.deselectAll();
       dispatch(fetchProductListing());
-      dispatch(logFacetClearAll(facetId));
+      dispatch(logFacetClearAll(getFacetId()));
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(fetchProductListing());
-      dispatch(logFacetUpdateSort({facetId, criterion}));
+      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
     },
 
     showMoreValues() {
       coreController.showMoreValues();
       dispatch(fetchProductListing());
-      dispatch(logFacetShowMore(facetId));
+      dispatch(logFacetShowMore(getFacetId()));
     },
 
     showLessValues() {
       coreController.showLessValues();
       dispatch(fetchProductListing());
-      dispatch(logFacetShowLess(facetId));
+      dispatch(logFacetShowLess(getFacetId()));
     },
 
     get state() {

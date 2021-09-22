@@ -68,7 +68,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   return {
     ...coreController,
 
-    toggleSelect: (selection) => {
+    toggleSelect(selection) {
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch(

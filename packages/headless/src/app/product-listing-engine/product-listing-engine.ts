@@ -33,10 +33,9 @@ export {
 
 const productListingEngineReducers = {productListing};
 type ProductListingEngineReducers = typeof productListingEngineReducers;
-type ProductListingEngineState = StateFromReducersMapObject<
-  ProductListingEngineReducers
-> &
-  Partial<ProductListingAppState>;
+type ProductListingEngineState =
+  StateFromReducersMapObject<ProductListingEngineReducers> &
+    Partial<ProductListingAppState>;
 
 /**
  * The engine for powering production listing experiences.
