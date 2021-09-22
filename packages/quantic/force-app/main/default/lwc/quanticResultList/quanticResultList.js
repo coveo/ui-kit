@@ -1,5 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import { LightningElement, api, track } from 'lwc';
+import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */
@@ -21,6 +21,12 @@ export default class QuanticResultList extends LightningElement {
    * @type {string}
    */
   @api engineId;
+  /**
+   * A list of fields to include in the query results, separated by commas.
+   * @api
+   * @type {string}
+   */
+  @api fieldsToInclude = '';
 
   /** @type {ResultListState}*/
   @track state;
@@ -44,7 +50,11 @@ export default class QuanticResultList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.resultList = CoveoHeadless.buildResultList(engine);
+    this.resultList = CoveoHeadless.buildResultList(engine, {
+      options: {
+        fieldsToInclude: this.fields
+      }
+    });
     this.resultTemplatesManager = CoveoHeadless.buildResultTemplatesManager(
       engine
     );
@@ -67,6 +77,11 @@ export default class QuanticResultList extends LightningElement {
 
   updateState() {
     this.state = this.resultList.state;
+  }
+
+  get fields() {
+    if (this.fieldsToInclude.trim() === '') return [];
+    return this.fieldsToInclude.split(',').map((field) => field.trim());
   }
 
   get results() {
