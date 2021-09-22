@@ -14,28 +14,59 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-export default class QuanticCategoryFacet extends LightningElement {
-  /** @type {import("coveo").CategoryFacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
-  @track state = {
-    values: [],
-    parents: [],
-  };
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").CategoryFacet} CategoryFacet */
+/** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
+/** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 
-  /** @type {string} */
+/**
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A `QuanticCategoryFacet` displays a facet of values in a browsable, hierarchical fashion.
+ * @category LWC
+ * @example
+ * <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
+ */
+export default class QuanticCategoryFacet extends LightningElement {
+  /** 
+   * An unique ID used to identify the facet instance.
+   * Defaults to given facet label.
+   * @api
+   * @type {string}
+   * @default (label)
+   */
   @api facetId;
-  /** @type {string} */
+   /**
+    * The field whose values you want to display in the facet.
+    * @api
+    * @type {string}
+    */
   @api field;
-  /** @type {string} */
+   /**
+    * The non-localized label for the facet.
+    * @api
+    * @type {string}
+    */
   @api label;
-  /** @type {string} */
+   /**
+    * The ID of the engine instance with which to register.
+    * @api
+    * @type {string}
+    */
   @api engineId;
-  /** @type {boolean} */
+  /**
+   * Whether this facet should not contain a search box.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
   @api noSearch = false;
 
-  /** @type {import("coveo").CategoryFacet}} */
+  /** @type {CategoryFacetState} */
+  @track state;
+
+  /** @type {CategoryFacet} */
   facet;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {string} */
   collapseIconName = 'utility:dash';
@@ -71,7 +102,9 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.unsubscribe?.();
   }
 
-  /** @param {import("coveo").SearchEngine} engine */
+  /**
+   * @param {SearchEngine} engine
+   */
   initialize = (engine) => {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
@@ -180,7 +213,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<import("coveo").CategoryFacetValue>} evt
+   * @param {CustomEvent<CategoryFacetValue>} evt
    */
   onSelect(evt) {
     const specificSearchResult = {
@@ -239,8 +272,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-  * @param {string[]} path
-  */
+   * @param {string[]} path
+   */
   buildPath(path) {
     if(!path.length) {
       return this.labels.allCategories;

@@ -73,6 +73,141 @@
             ]
         },
         {
+            "name": "QuanticCategoryFacet",
+            "attribute": "quantic-category-facet",
+            "description": "<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\nA <code>QuanticCategoryFacet</code> displays a facet of values in a browsable, hierarchical fashion.</p>",
+            "access": "",
+            "fires": "",
+            "examples": [
+                "<c-quantic-category-facet field=\"geographicalhierarchy\" label=\"Country\" engine-id={engineId}></c-quantic-category-facet>"
+            ],
+            "category": "LWC",
+            "xmlMeta": {
+                "apiVersion": "50.0",
+                "isExposed": "true",
+                "targets": {
+                    "target": [
+                        "lightning__RecordPage",
+                        "lightning__AppPage",
+                        "lightning__HomePage",
+                        "lightningCommunity__Page",
+                        "lightningCommunity__Default"
+                    ]
+                }
+            },
+            "properties": [
+                {
+                    "name": "facetId",
+                    "attribute": "facet-id",
+                    "access": "@api",
+                    "description": "<p>An unique ID used to identify the facet instance.\nDefaults to given facet label.</p>",
+                    "required": false,
+                    "defaultValue": "(label)",
+                    "type": "string"
+                },
+                {
+                    "name": "field",
+                    "attribute": "field",
+                    "access": "@api",
+                    "description": "<p>The field whose values you want to display in the facet.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
+                {
+                    "name": "label",
+                    "attribute": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the facet.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
+                {
+                    "name": "engineId",
+                    "attribute": "engine-id",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
+                {
+                    "name": "noSearch",
+                    "attribute": "no-search",
+                    "access": "@api",
+                    "description": "<p>Whether this facet should not contain a search box.</p>",
+                    "required": false,
+                    "defaultValue": "false",
+                    "type": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "QuanticCategoryFacetValue",
+            "attribute": "quantic-category-facet-value",
+            "description": "<p>The <code>QuanticCategoryFacetValue</code> component is used by a <code>QuanticCategoryFacet</code> component to display a formatted facet value, path to that value and number of results with that value.</p>",
+            "access": "",
+            "fires": [
+                "CustomEvent#event:selectvalue"
+            ],
+            "examples": [
+                "<c-quantic-category-facet-value onselectvalue={onSelect} item={result} withsearch=\"true\"></c-quantic-category-facet-value>"
+            ],
+            "category": "LWC",
+            "xmlMeta": {
+                "apiVersion": "50.0",
+                "isExposed": "true",
+                "targets": {
+                    "target": [
+                        "lightning__RecordPage",
+                        "lightning__AppPage",
+                        "lightning__HomePage",
+                        "lightningCommunity__Page",
+                        "lightningCommunity__Default"
+                    ]
+                }
+            },
+            "properties": [
+                {
+                    "name": "item",
+                    "attribute": "item",
+                    "access": "@api",
+                    "description": "<p>The facet value to display.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "CategoryFacetValue"
+                },
+                {
+                    "name": "withsearch",
+                    "attribute": "withsearch",
+                    "access": "@api",
+                    "description": "<p>Whether the value is a search result.</p>",
+                    "required": false,
+                    "defaultValue": "false",
+                    "type": "boolean"
+                },
+                {
+                    "name": "activeparent",
+                    "attribute": "activeparent",
+                    "access": "@api",
+                    "description": "<p>Whether the value is an active parent node.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
+                {
+                    "name": "nonactiveparent",
+                    "attribute": "nonactiveparent",
+                    "access": "@api",
+                    "description": "<p>Whether the value is a non-active parent node.</p>",
+                    "required": false,
+                    "defaultValue": "false",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "QuanticDateFacet",
             "attribute": "quantic-date-facet",
             "description": "<p>The <code>QuanticDateFacet</code> component displays facet values as date ranges.</p>",
@@ -190,7 +325,7 @@
         {
             "name": "QuanticFacet",
             "attribute": "quantic-facet",
-            "description": "<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).<br>\nA <code>QuanticFacet</code> displays a facet of the results for the current query.</p>",
+            "description": "<p>A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).\nA <code>QuanticFacet</code> displays a facet of the results for the current query.</p>",
             "access": "",
             "fires": "",
             "examples": [
@@ -869,6 +1004,15 @@
                     "attribute": "engine-id",
                     "access": "@api",
                     "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
+                {
+                    "name": "fieldsToInclude",
+                    "attribute": "fields-to-include",
+                    "access": "@api",
+                    "description": "<p>A list of fields to include in the query results, separated by commas.</p>",
                     "required": true,
                     "defaultValue": "",
                     "type": "string"
