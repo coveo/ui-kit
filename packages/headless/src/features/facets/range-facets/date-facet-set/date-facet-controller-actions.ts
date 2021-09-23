@@ -10,6 +10,7 @@ import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 
 const definition = {
   facetId: facetIdDefinition,
@@ -34,5 +35,6 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
   }
 );

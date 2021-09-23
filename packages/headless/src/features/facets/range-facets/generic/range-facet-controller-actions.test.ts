@@ -16,11 +16,7 @@ describe('range facet controller actions', () => {
 
     expect(engine.actions).toEqual([
       expect.objectContaining({
-        type: 'rangeFacet/executeToggleSelect/pending',
-      }),
-      expect.objectContaining({
-        type: 'facetOptions/update',
-        payload: {freezeFacetOrder: true},
+        type: 'rangeFacet/executeToggleSelect',
       }),
     ]);
   });
