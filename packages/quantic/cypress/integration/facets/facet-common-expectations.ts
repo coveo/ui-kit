@@ -73,6 +73,12 @@ export function facetWithCheckboxExpectations(
   selector: FacetWithCheckboxSelector
 ) {
   return {
+    selectedCheckboxValuesContain: (value: string) => {
+      it(`${value} should be selected`, () => {
+        selector.selectedCheckboxValue().should('contain', value);
+      });
+    },
+
     numberOfSelectedCheckboxValues: (value: number) => {
       it(`should display ${value} selected checkbox values`, () => {
         selector.selectedCheckboxValue().should('have.length', value);

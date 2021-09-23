@@ -14,6 +14,10 @@ interface FacetOptions {
 }
 
 describe('Facet Test Suite', () => {
+  const defaultField = 'objecttype';
+  const defaultLabel = 'Type';
+  const defaultNumberOfValues = 8;
+
   function visitFacetPage(options: Partial<FacetOptions> = {}) {
     interceptSearch();
 
@@ -21,11 +25,15 @@ describe('Facet Test Suite', () => {
     configure(options);
   }
 
-  describe('with values', () => {
-    const defaultField = 'objecttype';
-    const defaultLabel = 'Type';
-    const defaultNumberOfValues = 8;
+  function loadFromUrlHash(
+    options: Partial<FacetOptions> = {},
+    urlHash: string
+  ) {
+    cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-facet#${urlHash}`);
+    configure(options);
+  }
 
+  describe('with values', () => {
     function setupWithValues() {
       visitFacetPage({
         field: defaultField,
@@ -409,6 +417,27 @@ describe('Facet Test Suite', () => {
       before(setupNoSearch);
 
       Expect.displaySearchInput(false);
+    });
+  });
+
+  describe('with a selected value in the URL', () => {
+    const selectedValue = 'Account';
+
+    function loadWithSelectedValue() {
+      loadFromUrlHash(
+        {
+          field: defaultField,
+        },
+        `f[objecttype]=${selectedValue}`
+      );
+    }
+
+    describe('verify rendering', () => {
+      before(loadWithSelectedValue);
+
+      Expect.numberOfSelectedCheckboxValues(1);
+      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+      Expect.selectedCheckboxValuesContain(selectedValue);
     });
   });
 });
