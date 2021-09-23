@@ -9,7 +9,7 @@
         <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
           <template if:true={result.isRecommendation}><div><lightning-badge label="Recommended" class="recommended-badge" icon-name="utility:favorite"></lightning-badge></div></template>
         </div>
-        <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right" style="font-weight: 400; font-size:12px">
+        <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right" style="font-weight: 400; font-size:12px; color:#3E3E3C">
           <p class="slds-truncate" title="Date">
             <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
           </p>

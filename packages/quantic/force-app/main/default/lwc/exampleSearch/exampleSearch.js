@@ -1,9 +1,9 @@
 // @ts-ignore
-import template1 from './resultTemplates/template1.html';
+import template1 from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
-import template2 from './resultTemplates/template2.html';
+import template2 from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
-import template3 from './resultTemplates/template3.html';
+import template3 from './resultTemplates/chatterResultTemplate.html';
 import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
