@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.1...@coveo/atomic@1.1.2) (2021-09-23)
+
+
+### Bug Fixes
+
+* **atomic:** add .snyk file to ignore unknown @salesforce-ux/design-system license ([#1240](https://github.com/coveo/ui-kit/issues/1240)) ([93effb8](https://github.com/coveo/ui-kit/commit/93effb8e8e496800868b5bbe549e21f6c60b93ca))
+* **atomic:** display result placeholders by adding with-sections ([#1237](https://github.com/coveo/ui-kit/issues/1237)) ([f6b37f8](https://github.com/coveo/ui-kit/commit/f6b37f8924022eafc1e13d0317f19c371ea939ec))
+
+
+
+
+
 ## [1.1.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.0...@coveo/atomic@1.1.1) (2021-09-22)
 
 **Note:** Version bump only for package @coveo/atomic

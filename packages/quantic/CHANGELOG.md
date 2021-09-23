@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.64.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.3...@coveo/quantic@0.64.4) (2021-09-23)
+
+
+### Bug Fixes
+
+* **quantic:** fix the facet when click on collapse/expand button ([#1235](https://github.com/coveo/ui-kit/issues/1235)) ([45096b5](https://github.com/coveo/ui-kit/commit/45096b5bec32480fba43fff6c52254983fe39533))
+
+
+
+
+
 ## [0.64.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.2...@coveo/quantic@0.64.3) (2021-09-22)
 
 
