@@ -120,7 +120,7 @@ function parseClass(element, parentNode, childNodes) {
     xmlMeta: {
       apiVersion: element.xmlMeta?.apiVersion || '',
       isExposed: element.xmlMeta?.isExposed,
-      targets: element.xmlMeta?.targets || []
+      targets: element.xmlMeta?.targets?.target || []
     }
   };
 

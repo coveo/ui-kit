@@ -20,6 +20,13 @@ export default class QuanticPager extends LightningElement {
    * @type {string}
    */
   @api engineId;
+  /**
+   * Specifies how many page buttons to display in the pager.
+   * @api
+   * @type {number}
+   * @defaultValue 5
+   */
+  @api numberOfPages = 5;
 
   /** @type {number[]} */
   @track currentPages = [];
@@ -56,7 +63,11 @@ export default class QuanticPager extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.pager = CoveoHeadless.buildPager(engine);
+    this.pager = CoveoHeadless.buildPager(engine, {
+      options: {
+        numberOfPages: Number(this.numberOfPages),
+      }
+    });
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());

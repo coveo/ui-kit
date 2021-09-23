@@ -27,39 +27,87 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
  */
 export default class QuanticCategoryFacet extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
   /** 
    * An unique ID used to identify the facet instance.
    * Defaults to given facet label.
    * @api
    * @type {string}
-   * @default (label)
+   * @default [label]
    */
   @api facetId;
-   /**
-    * The field whose values you want to display in the facet.
-    * @api
-    * @type {string}
-    */
+  /**
+   * The field whose values you want to display in the facet.
+   * @api
+   * @type {string}
+   */
   @api field;
-   /**
-    * The non-localized label for the facet.
-    * @api
-    * @type {string}
-    */
-  @api label;
-   /**
-    * The ID of the engine instance with which to register.
-    * @api
-    * @type {string}
-    */
-  @api engineId;
+  /**
+   * The base path shared by all values for the facet, separated by commas.
+   * @api
+   * @type {string[]}
+   * @defaultValue `[]`
+   */
+  @api basePath;
+  /**
+   * Whether to use basePath as a filter for the results.
+   * @api
+   * @type {boolean}
+   * @defaultValue `true`
+   */
+  @api filterByBasePath;
+  /**
+   * The character that separates values of a multi-value field.
+   * @api
+   * @type {string}
+   * @defaultValue `;`
+   */
+  @api delimitingCharacter;
+  /**
+   * Specifies if the facet should be collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api isCollapsed = false;
+  /**
+   * The number of values to request for this facet.
+   * Also determines the number of additional values to request each time more values are shown.
+   * @api
+   * @type {number} 
+   * @default 8
+   */
+  @api numberOfValues = 8;
+  /**
+   * The sort criterion to apply to the returned facet values
+   * Possible values are:
+   *   - score
+   *   - alphanumeric
+   *   - occurences
+   *   - automatic
+   * @api
+   * @type  {FacetSortCriterion}
+   * @default `occurences`
+   */
+  @api sortCriteria = 'occurences';
   /**
    * Whether this facet should not contain a search box.
    * @api
    * @type {boolean}
-   * @default false
+   * @defaultValue `false`
    */
   @api noSearch = false;
+  /**
+   * The non-localized label for the facet.
+   * @api
+   * @type {string}
+   */
+  @api label;
 
   /** @type {CategoryFacetState} */
   @track state;
@@ -71,7 +119,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {string} */
   collapseIconName = 'utility:dash';
   /** @type {boolean} */
-  isExpanded = true;
+  isExpanded = !this.isCollapsed ?? true;
   /** @type {HTMLInputElement} */
   input;
  
@@ -109,8 +157,12 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
-        delimitingCharacter: ';',
         facetId: this.facetId ?? this.field,
+        delimitingCharacter: this.delimitingCharacter,
+        basePath: this.basePath,
+        filterByBasePath: this.filterByBasePath,
+        numberOfValues: this.numberOfValues,
+        sortCriteria: this.sortCriteria,
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());

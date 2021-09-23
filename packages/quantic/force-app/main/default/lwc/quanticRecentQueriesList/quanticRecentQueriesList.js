@@ -32,17 +32,17 @@ export default class QuanticRecentQueriesList extends LightningElement {
    */
   @api engineId;
   /**
-   * The non-localized label for the component.
-   * @api
-   * @type {string}
-   */
-  @api label = this.labels.recentQueriesLabel;
-  /**
    * The maximum number of queries to keep in the list.
    * @api
    * @type {number}
    */
   @api maxLength = 10;
+  /**
+   * The non-localized label for the component.
+   * @api
+   * @type {string}
+   */
+  @api label = this.labels.recentQueriesLabel;
 
   /** @type {RecentQueriesState} */
   @track state;

@@ -24,6 +24,12 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-quantic-numeric-facet>
  */
 export default class QuanticNumericFacet extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
   /** 
    * Specifies a unique identifier for the facet.
    * @api
@@ -43,12 +49,6 @@ export default class QuanticNumericFacet extends LightningElement {
    * @type {string}
    */
   @api label;
-  /**
-   * The ID of the engine instance with which to register.
-   * @api
-   * @type {string}
-   */
-  @api engineId;
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    * @api

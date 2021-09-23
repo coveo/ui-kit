@@ -31,6 +31,12 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * <c-quantic-facet field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
  */
 export default class QuanticFacet extends LightningElement {
+  /**
+   * The ID of the engine instance with which to register.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
   /** 
    * An unique ID used to identify the facet instance.
    * Defaults to given facet label.
@@ -51,12 +57,6 @@ export default class QuanticFacet extends LightningElement {
    * @type {string}
    */
   @api label;
-  /**
-   * The ID of the engine instance with which to register.
-   * @api
-   * @type {string}
-   */
-  @api engineId;
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
