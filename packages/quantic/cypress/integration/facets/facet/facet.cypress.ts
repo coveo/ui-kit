@@ -122,12 +122,11 @@ describe('Facet Test Suite', () => {
 
       function searchForSingleValue() {
         setupWithValues();
-        FacetSelectors.valueLabel()
-          .first()
-          .then((element) => {
-            const facetValue = element.text();
-            FacetSelectors.searchInput().type(facetValue);
-          });
+        const singleValueQuery = 'account';
+        FacetSelectors.searchInput().type(singleValueQuery);
+        for (let i = 0; i < singleValueQuery.length; i++) {
+          cy.wait(InterceptAliases.FacetSearch);
+        }
       }
 
       describe('verify rendering', () => {
@@ -229,7 +228,7 @@ describe('Facet Test Suite', () => {
 
     describe('show more/less values', () => {
       describe('when facet has no more values', () => {
-        function setupWithAllValues() {
+        function showAllValues() {
           visitFacetPage({
             field: defaultField,
             label: defaultLabel,
@@ -239,7 +238,7 @@ describe('Facet Test Suite', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupWithAllValues);
+          before(showAllValues);
 
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
@@ -346,19 +345,21 @@ describe('Facet Test Suite', () => {
     });
   });
 
-  describe('with custom field and label', () => {
-    function setupCustomFieldAndLabel() {
+  describe('with custom field, label, and number of results', () => {
+    function setupCustomOptions() {
       visitFacetPage({
         field: 'language',
         label: 'Language',
+        numberOfValues: 3,
       });
     }
 
     describe('verify rendering', () => {
-      before(setupCustomFieldAndLabel);
+      before(setupCustomOptions);
 
       Expect.labelContains('Language');
       Expect.facetValueContains('English');
+      Expect.numberOfIdleCheckboxValues(3);
     });
   });
 
@@ -371,20 +372,6 @@ describe('Facet Test Suite', () => {
     });
 
     Expect.displayLabel(false);
-  });
-
-  describe('with custom number of results', () => {
-    function setupCustomNumberOfResults() {
-      visitFacetPage({
-        numberOfValues: 3,
-      });
-    }
-
-    describe('verify rendering', () => {
-      before(setupCustomNumberOfResults);
-
-      Expect.numberOfIdleCheckboxValues(3);
-    });
   });
 
   describe('with custom sorting', () => {
