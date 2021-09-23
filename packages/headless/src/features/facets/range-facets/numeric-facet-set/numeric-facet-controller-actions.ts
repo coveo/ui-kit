@@ -10,6 +10,7 @@ import {toggleSelectNumericFacetValue} from './numeric-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 
 const definition = {
   facetId: facetIdDefinition,
@@ -36,5 +37,6 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectNumericFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
   }
 );
