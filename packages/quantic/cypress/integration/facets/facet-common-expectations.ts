@@ -51,6 +51,12 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
       });
     },
 
+    numberOfValues: (value: number) => {
+      it(`should display ${value} facet values`, () => {
+        selector.values().should('have.length', value);
+      });
+    },
+
     logClearFacetValues: (field: string) => {
       it('should log the facet clear all to UA', () => {
         cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {

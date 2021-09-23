@@ -14,6 +14,8 @@ interface FacetOptions {
 }
 
 describe('Facet Test Suite', () => {
+  const pageUrl = `${Cypress.env('examplesUrl')}/s/quantic-facet`;
+
   const defaultField = 'objecttype';
   const defaultLabel = 'Type';
   const defaultNumberOfValues = 8;
@@ -21,7 +23,7 @@ describe('Facet Test Suite', () => {
   function visitFacetPage(options: Partial<FacetOptions> = {}) {
     interceptSearch();
 
-    cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-facet`);
+    cy.visit(pageUrl);
     configure(options);
   }
 
@@ -29,7 +31,9 @@ describe('Facet Test Suite', () => {
     options: Partial<FacetOptions> = {},
     urlHash: string
   ) {
-    cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-facet#${urlHash}`);
+    interceptSearch();
+
+    cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
   }
 
@@ -270,12 +274,7 @@ describe('Facet Test Suite', () => {
         describe('verify rendering', () => {
           before(showMoreValues);
 
-          it('should display twice the number of values', () => {
-            FacetSelectors.values().should(
-              'have.length',
-              smallNumberOfValues * 2
-            );
-          });
+          Expect.numberOfValues(smallNumberOfValues * 2);
         });
 
         describe('when clicking show more button again', () => {
@@ -288,12 +287,7 @@ describe('Facet Test Suite', () => {
           describe('verify rendering', () => {
             before(showMoreValuesAgain);
 
-            it('should display three times the number of values', () => {
-              FacetSelectors.values().should(
-                'have.length',
-                smallNumberOfValues * 3
-              );
-            });
+            Expect.numberOfValues(smallNumberOfValues * 3);
           });
 
           describe('when clicking show less button', () => {
@@ -306,12 +300,7 @@ describe('Facet Test Suite', () => {
             describe('verify rendering', () => {
               before(showLessValues);
 
-              it('should display the original number of values', () => {
-                FacetSelectors.values().should(
-                  'have.length',
-                  smallNumberOfValues
-                );
-              });
+              Expect.numberOfValues(smallNumberOfValues);
             });
           });
         });
