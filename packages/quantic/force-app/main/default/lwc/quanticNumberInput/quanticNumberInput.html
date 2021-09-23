@@ -1,10 +1,12 @@
 <template>
-    <div >
+    <div>
         <form onsubmit={onApply} class="slds-grid">
             <div class="slds-col slds-p-around_none">
                 <lightning-input 
                     type="number" 
                     required
+                    step="1"
+                    value={start}
                     class="numeric__input-min" 
                     min={minSafeInteger} 
                     max={end} 
@@ -14,10 +16,12 @@
                     aria-label={numberInputMinimumLabel}>
                 </lightning-input>
             </div>
-            <div class="slds-col slds-var-m-horizontal_xxx-small">
+            <div class="slds-col">
                 <lightning-input 
                     type="number" 
                     required
+                    step="1"
+                    value={end}
                     class="numeric__input-max" 
                     min={start} 
                     max={maxSafeInteger} 
@@ -32,7 +36,8 @@
                     label={labels.apply} 
                     title={labels.apply} 
                     aria-label={numberInputApplyLabel}
-                    type="submit">
+                    type="submit"
+                    class="slds-size_small">
                 </lightning-button>
             </div>
         </form>

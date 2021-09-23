@@ -10,7 +10,7 @@ import numberInputApply from "@salesforce/label/c.quantic_NumberInputApply";
 import {I18nUtils} from 'c/quanticUtils';
 
 
-export default class QuanticNumericInput extends LightningElement {
+export default class QuanticNumberInput extends LightningElement {
 
     /**@type {number} */
     @api start;
@@ -48,7 +48,7 @@ export default class QuanticNumericInput extends LightningElement {
         if(!this.inputMin.validity.valid || !this.inputMax.validity.valid) {
             return;
         }
-        this.dispatchEvent(new CustomEvent('apply', { detail : { min: this.inputMin?.value, max: this.inputMax?.value }}));
+        this.dispatchEvent(new CustomEvent('apply', { detail : { min: this.inputMin?.valueAsNumber, max: this.inputMax?.valueAsNumber }}));
     }
 
     get numberInputMinimumLabel() {

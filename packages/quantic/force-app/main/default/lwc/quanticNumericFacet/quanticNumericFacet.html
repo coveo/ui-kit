@@ -25,7 +25,9 @@
                 >
               </lightning-button>  
             </template>
-            <c-quantic-numeric-input start={start} end={end} label={label} onapply={onApply}></c-quantic-numeric-input>
+            <template if:false={withoutInput}>
+              <c-quantic-number-input start={start} end={end} label={label} onapply={onApply}></c-quantic-number-input>
+            </template>
             <template for:each={values} for:item="v">
               <c-quantic-facet-value 
                 onselectvalue={onSelect} 
