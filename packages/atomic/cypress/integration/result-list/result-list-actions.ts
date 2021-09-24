@@ -1,5 +1,9 @@
 import {TestFixture, generateComponentHTML} from '../../fixtures/test-fixture';
-import {ResultSection, resultSectionTags} from './result-list-selectors';
+import {
+  resultListComponent,
+  ResultSection,
+  resultSectionTags,
+} from './result-list-selectors';
 
 function toArray<T>(values: T | T[]): T[] {
   return Array.isArray(values) ? values : [values];
@@ -31,7 +35,7 @@ export const addResultList =
     sections: Partial<Record<ResultSection, HTMLElement | HTMLElement[]>> = {}
   ) =>
   (fixture: TestFixture) => {
-    const resultList = generateComponentHTML('atomic-result-list');
+    const resultList = generateComponentHTML(resultListComponent);
     const template = buildTemplate(sections);
     if (template) {
       resultList.appendChild(template);
