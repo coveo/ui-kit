@@ -18,6 +18,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
 /** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
+/** @typedef {import("coveo").CategoryFacetSortCriterion} CategoryFacetSortCriterion */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -91,10 +92,10 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   - occurences
    *   - automatic
    * @api
-   * @type  {FacetSortCriterion}
+   * @type  {CategoryFacetSortCriterion}
    * @default `occurences`
    */
-  @api sortCriteria = 'occurences';
+  @api sortCriteria = 'occurrences';
   /**
    * Whether this facet should not contain a search box.
    * @api
@@ -119,7 +120,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {string} */
   collapseIconName = 'utility:dash';
   /** @type {boolean} */
-  isExpanded = !this.isCollapsed ?? true;
+  isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
  
@@ -144,6 +145,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
+    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {
@@ -173,31 +175,31 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values;
+    return this.state?.values ?? [];
   }
 
   get nonActiveParents() {
-    return this.state.parents?.slice(0, -1);
+    return this.state?.parents?.slice(0, -1) ?? [];
   }
 
   get activeParent() {
-    return this.state.parents?.slice(-1)[0];
+    return this.state?.parents?.slice(-1)[0];
   }
 
   get canShowMore() {
-    return this.facet && this.state.canShowMoreValues  && !this.isFacetSearchActive;
+    return this.facet && this.state?.canShowMoreValues  && !this.isFacetSearchActive;
   }
 
   get canShowLess() {
-    return this.facet && this.state.canShowLessValues;
+    return this.facet && this.state?.canShowLessValues;
   }
 
   get hasParents() {
-    return this.state.parents.length !== 0;
+    return this.state?.parents.length !== 0;
   }
 
   get hasValues() {
-    return this.state.values.length !== 0;
+    return this.state?.values.length !== 0;
   }
 
   get hasSearchResults() {
@@ -209,7 +211,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get facetSearchResults() {
-    const results = this.facet.state.facetSearch.values;
+    const results = this.facet?.state?.facetSearch?.values ?? [];
     return results.map((result, index) => ({
       value: result.rawValue,
       index: index,

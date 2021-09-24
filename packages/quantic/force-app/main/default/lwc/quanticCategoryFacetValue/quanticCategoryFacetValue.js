@@ -9,7 +9,7 @@ import inLabel from "@salesforce/label/c.quantic_InLabel";
  * @category LWC
  * @fires CustomEvent#selectvalue
  * @example
- * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} withsearch="true"></c-quantic-category-facet-value>
+ * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result="true"></c-quantic-category-facet-value>
  */
 export default class QuanticCategoryFacetValue extends LightningElement {
   /**
@@ -23,30 +23,30 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @type {boolean}
    * @defaultValue false
    */
-  @api withsearch = false;
+  @api isSearchResult = false;
   /** 
    * Whether the value is an active parent node.
    * @api
-   * @type {string}
+   * @type {boolean}
    */
-  @api activeparent = false;
+  @api activeParent = false;
   /** 
    * Whether the value is a non-active parent node.
    * @api
-   * @type {string}
+   * @type {boolean}
    * @defaultValue false
    */
-  @api nonactiveparent = false;
+  @api nonActiveParent = false;
 
   labels = {
     inLabel
   }
 
   get categoryFacetLiClass() {
-    if(this.activeparent) {
+    if(this.activeParent) {
       return "slds-var-m-horizontal_large slds-grid";
     }
-    if(this.nonactiveparent) {
+    if(this.nonActiveParent) {
       return "slds-var-m-vertical_small slds-grid"
     }
     return "slds-grid";

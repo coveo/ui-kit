@@ -85,24 +85,31 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
+                {
+                    "name": "engineId",
+                    "attribute": "engine-id",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
                 {
                     "name": "facetId",
                     "attribute": "facet-id",
                     "access": "@api",
                     "description": "<p>An unique ID used to identify the facet instance.\nDefaults to given facet label.</p>",
                     "required": false,
-                    "defaultValue": "(label)",
+                    "defaultValue": "[label]",
                     "type": "string"
                 },
                 {
@@ -115,22 +122,58 @@
                     "type": "string"
                 },
                 {
-                    "name": "label",
-                    "attribute": "label",
+                    "name": "basePath",
+                    "attribute": "base-path",
                     "access": "@api",
-                    "description": "<p>The non-localized label for the facet.</p>",
-                    "required": true,
-                    "defaultValue": "",
+                    "description": "<p>The base path shared by all values for the facet, separated by commas.</p>",
+                    "required": false,
+                    "defaultValue": "`[]`",
+                    "type": "Array.<string>"
+                },
+                {
+                    "name": "filterByBasePath",
+                    "attribute": "filter-by-base-path",
+                    "access": "@api",
+                    "description": "<p>Whether to use basePath as a filter for the results.</p>",
+                    "required": false,
+                    "defaultValue": "`true`",
+                    "type": "boolean"
+                },
+                {
+                    "name": "delimitingCharacter",
+                    "attribute": "delimiting-character",
+                    "access": "@api",
+                    "description": "<p>The character that separates values of a multi-value field.</p>",
+                    "required": false,
+                    "defaultValue": "`;`",
                     "type": "string"
                 },
                 {
-                    "name": "engineId",
-                    "attribute": "engine-id",
+                    "name": "isCollapsed",
+                    "attribute": "is-collapsed",
                     "access": "@api",
-                    "description": "<p>The ID of the engine instance with which to register.</p>",
-                    "required": true,
-                    "defaultValue": "",
-                    "type": "string"
+                    "description": "<p>Specifies if the facet should be collapsed.</p>",
+                    "required": false,
+                    "defaultValue": "`false`",
+                    "type": "boolean"
+                },
+                {
+                    "name": "numberOfValues",
+                    "attribute": "number-of-values",
+                    "access": "@api",
+                    "description": "<p>The number of values to request for this facet.\nAlso determines the number of additional values to request each time more values are shown.</p>",
+                    "required": false,
+                    "defaultValue": "8",
+                    "type": "number"
+                },
+                {
+                    "name": "sortCriteria",
+                    "attribute": "sort-criteria",
+                    "access": "@api",
+                    "description": "<p>The sort criterion to apply to the returned facet values\nPossible values are:</p>\n<ul>\n<li>score</li>\n<li>alphanumeric</li>\n<li>occurences</li>\n<li>automatic</li>\n</ul>",
+                    "required": false,
+                    "defaultValue": "`occurences`",
+                    "type": "FacetSortCriterion"
                 },
                 {
                     "name": "noSearch",
@@ -138,8 +181,17 @@
                     "access": "@api",
                     "description": "<p>Whether this facet should not contain a search box.</p>",
                     "required": false,
-                    "defaultValue": "false",
+                    "defaultValue": "`false`",
                     "type": "boolean"
+                },
+                {
+                    "name": "label",
+                    "attribute": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the facet.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
                 }
             ]
         },
@@ -152,21 +204,19 @@
                 "CustomEvent#event:selectvalue"
             ],
             "examples": [
-                "<c-quantic-category-facet-value onselectvalue={onSelect} item={result} withsearch=\"true\"></c-quantic-category-facet-value>"
+                "<c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result=\"true\"></c-quantic-category-facet-value>"
             ],
             "category": "LWC",
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -179,8 +229,8 @@
                     "type": "CategoryFacetValue"
                 },
                 {
-                    "name": "withsearch",
-                    "attribute": "withsearch",
+                    "name": "isSearchResult",
+                    "attribute": "is-search-result",
                     "access": "@api",
                     "description": "<p>Whether the value is a search result.</p>",
                     "required": false,
@@ -188,8 +238,8 @@
                     "type": "boolean"
                 },
                 {
-                    "name": "activeparent",
-                    "attribute": "activeparent",
+                    "name": "activeParent",
+                    "attribute": "active-parent",
                     "access": "@api",
                     "description": "<p>Whether the value is an active parent node.</p>",
                     "required": true,
@@ -197,8 +247,8 @@
                     "type": "string"
                 },
                 {
-                    "name": "nonactiveparent",
-                    "attribute": "nonactiveparent",
+                    "name": "nonActiveParent",
+                    "attribute": "non-active-parent",
                     "access": "@api",
                     "description": "<p>Whether the value is a non-active parent node.</p>",
                     "required": false,
@@ -220,15 +270,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -300,15 +348,13 @@
             "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -335,17 +381,24 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
+                {
+                    "name": "engineId",
+                    "attribute": "engine-id",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
                 {
                     "name": "facetId",
                     "attribute": "facet-id",
@@ -369,15 +422,6 @@
                     "attribute": "label",
                     "access": "@api",
                     "description": "<p>The non-localized label for the facet.</p>",
-                    "required": true,
-                    "defaultValue": "",
-                    "type": "string"
-                },
-                {
-                    "name": "engineId",
-                    "attribute": "engine-id",
-                    "access": "@api",
-                    "description": "<p>The ID of the engine instance with which to register.</p>",
                     "required": true,
                     "defaultValue": "",
                     "type": "string"
@@ -471,15 +515,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "false",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -553,17 +595,24 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
+                {
+                    "name": "engineId",
+                    "attribute": "engine-id",
+                    "access": "@api",
+                    "description": "<p>The ID of the engine instance with which to register.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
+                },
                 {
                     "name": "facetId",
                     "attribute": "facet-id",
@@ -587,15 +636,6 @@
                     "attribute": "label",
                     "access": "@api",
                     "description": "<p>The non-localized label for the facet.</p>",
-                    "required": true,
-                    "defaultValue": "",
-                    "type": "string"
-                },
-                {
-                    "name": "engineId",
-                    "attribute": "engine-id",
-                    "access": "@api",
-                    "description": "<p>The ID of the engine instance with which to register.</p>",
                     "required": true,
                     "defaultValue": "",
                     "type": "string"
@@ -651,15 +691,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -670,6 +708,15 @@
                     "required": true,
                     "defaultValue": "",
                     "type": "string"
+                },
+                {
+                    "name": "numberOfPages",
+                    "attribute": "number-of-pages",
+                    "access": "@api",
+                    "description": "<p>Specifies how many page buttons to display in the pager.</p>",
+                    "required": false,
+                    "defaultValue": "5",
+                    "type": "number"
                 }
             ]
         },
@@ -713,15 +760,13 @@
             "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -734,15 +779,6 @@
                     "type": "string"
                 },
                 {
-                    "name": "label",
-                    "attribute": "label",
-                    "access": "@api",
-                    "description": "<p>The non-localized label for the component.</p>",
-                    "required": true,
-                    "defaultValue": "",
-                    "type": "string"
-                },
-                {
                     "name": "maxLength",
                     "attribute": "max-length",
                     "access": "@api",
@@ -750,6 +786,15 @@
                     "required": true,
                     "defaultValue": "",
                     "type": "number"
+                },
+                {
+                    "name": "label",
+                    "attribute": "label",
+                    "access": "@api",
+                    "description": "<p>The non-localized label for the component.</p>",
+                    "required": true,
+                    "defaultValue": "",
+                    "type": "string"
                 }
             ]
         },
@@ -827,15 +872,13 @@
             "xmlMeta": {
                 "apiVersion": "52.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -988,15 +1031,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -1059,15 +1100,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -1149,15 +1188,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -1220,15 +1257,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -1255,12 +1290,10 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -1323,15 +1356,13 @@
             "xmlMeta": {
                 "apiVersion": "50.0",
                 "isExposed": "true",
-                "targets": {
-                    "target": [
-                        "lightning__RecordPage",
-                        "lightning__AppPage",
-                        "lightning__HomePage",
-                        "lightningCommunity__Page",
-                        "lightningCommunity__Default"
-                    ]
-                }
+                "targets": [
+                    "lightning__RecordPage",
+                    "lightning__AppPage",
+                    "lightning__HomePage",
+                    "lightningCommunity__Page",
+                    "lightningCommunity__Default"
+                ]
             },
             "properties": [
                 {
@@ -1387,6 +1418,15 @@
                     "required": true,
                     "defaultValue": "",
                     "type": "string"
+                },
+                {
+                    "name": "initAsActive",
+                    "attribute": "init-as-active",
+                    "access": "@api",
+                    "description": "<p>Whether to initialize the tab as active.</p>",
+                    "required": false,
+                    "defaultValue": "`false`",
+                    "type": "boolean"
                 }
             ]
         }
