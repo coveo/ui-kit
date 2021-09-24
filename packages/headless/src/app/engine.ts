@@ -168,6 +168,12 @@ function buildCoreEngine<
 
   return {
     addReducers(reducers: ReducersMapObject) {
+      const keys = Object.keys(reducers);
+
+      if (reducerManager.containsAll(keys)) {
+        return;
+      }
+
       reducerManager.add(reducers);
       store.replaceReducer(reducerManager.combinedReducer);
     },

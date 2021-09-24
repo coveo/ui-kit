@@ -1,6 +1,7 @@
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import * as Store from '../app/store';
+import {configuration} from './reducers';
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
@@ -92,5 +93,17 @@ describe('engine', () => {
         name: 'coveo-headless',
       })
     );
+  });
+
+  it('when calling addReducers and all keys already exist, it does not update state', () => {
+    options.reducers = {configuration};
+    initEngine();
+
+    const stateListener = jest.fn();
+
+    engine.subscribe(stateListener);
+    engine.addReducers({configuration});
+
+    expect(stateListener).not.toHaveBeenCalled();
   });
 });
