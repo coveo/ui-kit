@@ -91,7 +91,7 @@ describe('Result Link Component', () => {
       });
     });
 
-    describe('when there is not slot', () => {
+    describe('when there is no slot', () => {
       beforeEach(() => {
         setupResultLink();
       });
