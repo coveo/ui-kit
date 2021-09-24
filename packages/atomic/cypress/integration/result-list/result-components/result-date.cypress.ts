@@ -1,37 +1,33 @@
-import {generateComponentHTML} from '../../../fixtures/test-fixture';
 import {
-  interceptSearchResponse,
-  setUpPage,
-} from '../../../utils/setupComponent';
-import {executeFirstSearch} from '../../search-interface-utils';
-import {
-  generateResultList,
-  generateResultTemplate,
-} from '../result-list-selectors';
+  generateComponentHTML,
+  TagProps,
+  TestFixture,
+} from '../../../fixtures/test-fixture';
+import {addResultList} from '../result-list-actions';
 import {
   resultDateComponent,
   ResultDateSelectors,
 } from './result-date-selectors';
 
-describe('Result Date Component', () => {
-  function setupResultDatePage(
-    props: Record<string, string | number>,
-    executeSearch = true
-  ) {
-    setUpPage(
-      generateResultList(
-        generateResultTemplate({
-          bottomMetadata: generateComponentHTML(resultDateComponent, props)
-            .outerHTML,
-        })
-      ),
-      executeSearch
-    );
-  }
+interface ResultDateProps {
+  field?: string;
+  format?: string;
+}
 
+const addResultDateInResultList = (props: ResultDateProps = {}) =>
+  addResultList({
+    bottomMetadata: generateComponentHTML(
+      resultDateComponent,
+      props as TagProps
+    ),
+  });
+
+describe('Result Date Component', () => {
   describe('when not used inside a result template', () => {
     beforeEach(() => {
-      setUpPage(generateComponentHTML(resultDateComponent).outerHTML);
+      new TestFixture()
+        .withElement(generateComponentHTML(resultDateComponent))
+        .init();
     });
 
     it.skip('should remove the component from the DOM', () => {
@@ -47,9 +43,9 @@ describe('Result Date Component', () => {
 
   describe('when the field does not exist for the result', () => {
     beforeEach(() => {
-      setupResultDatePage({
-        field: 'thisfielddoesnotexist',
-      });
+      new TestFixture()
+        .with(addResultDateInResultList({field: 'thisfielddoesnotexist'}))
+        .init();
     });
 
     it('should remove the component from the DOM', () => {
@@ -60,16 +56,12 @@ describe('Result Date Component', () => {
   describe('when the field value is not a date', () => {
     beforeEach(() => {
       const field = 'my-field';
-      setupResultDatePage(
-        {
-          field,
-        },
-        false
-      );
-      interceptSearchResponse((response) =>
-        response.results.forEach((result) => (result.raw[field] = 'Abc'))
-      );
-      executeFirstSearch();
+      new TestFixture()
+        .with(addResultDateInResultList({field}))
+        .withCustomResponse((response) =>
+          response.results.forEach((result) => (result.raw[field] = 'Abc'))
+        )
+        .init();
     });
 
     it('should remove the component from the DOM', () => {
@@ -81,17 +73,12 @@ describe('Result Date Component', () => {
     const field = 'my-creation-date';
     const apiDate = '2021/09/03@10:31:23';
     function setupFieldDateField(format: string) {
-      setupResultDatePage(
-        {
-          field,
-          format,
-        },
-        false
-      );
-      interceptSearchResponse((response) =>
-        response.results.forEach((result) => (result.raw[field] = apiDate))
-      );
-      executeFirstSearch();
+      new TestFixture()
+        .with(addResultDateInResultList({field, format}))
+        .withCustomResponse((response) =>
+          response.results.forEach((result) => (result.raw[field] = apiDate))
+        )
+        .init();
     }
 
     describe('when the format is invalid', () => {

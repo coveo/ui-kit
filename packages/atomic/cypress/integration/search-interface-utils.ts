@@ -14,23 +14,8 @@ export function getSearchInterface(
   });
 }
 
-export function setLanguage(lang: string) {
-  return getSearchInterface((searchInterface) => {
-    searchInterface.language = lang;
-  });
-}
-
 export function executeFirstSearch() {
   return getSearchInterface((searchInterface) => {
     searchInterface.executeFirstSearch();
-  });
-}
-
-export function setFieldCaptions(
-  field: string,
-  captions: Record<string, string>
-) {
-  getSearchInterface((searchInterface) => {
-    searchInterface.i18n.addResourceBundle('en', `caption-${field}`, captions);
   });
 }

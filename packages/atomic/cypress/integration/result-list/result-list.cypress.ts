@@ -1,21 +1,21 @@
-import {setUpPage} from '../../utils/setupComponent';
 import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
-import {
-  ResultListSelectors,
-  generateResultList,
-  generateResultTemplate,
-} from './result-list-selectors';
+import {ResultListSelectors} from './result-list-selectors';
+import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
+import {addResultList} from './result-list-actions';
 
 describe('Result List Component', () => {
   it('should load', () => {
-    setUpPage(generateResultList());
+    new TestFixture().with(addResultList()).init();
     ResultListSelectors.result().should('have.length.above', 0);
   });
 
   describe('when no first search has yet been executed', () => {
     beforeEach(() => {
-      setUpPage(generateResultList(), false);
+      new TestFixture()
+        .withoutFirstAutomaticSearch()
+        .with(addResultList())
+        .init();
     });
 
     it('should render placeholder components', () => {
@@ -25,20 +25,22 @@ describe('Result List Component', () => {
 
   describe('when an initial search is executed', () => {
     it('should render the correct number of results', () => {
-      setUpPage(generateResultList());
+      new TestFixture().with(addResultList()).init();
       ResultListSelectors.result().should('have.length', 10);
     });
   });
 
   describe('when multiple searches are executed', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addResultList())
+        .withElement(generateComponentHTML(PagerSelectors.pager))
+        .init();
+      createAliasNavigation();
+    });
+
     it('should update the results', () => {
       let firstResultHtml: string;
-      setUpPage(
-        `${generateResultList()}<${PagerSelectors.pager}></${
-          PagerSelectors.pager
-        }>`
-      );
-      createAliasNavigation();
 
       ResultListSelectors.firstResult().then((element) => {
         firstResultHtml = element[0].innerHTML;
@@ -58,43 +60,44 @@ describe('Result List Component', () => {
     const lineHeightSelector = '#line-height-el';
 
     function generateLineHeightElement() {
-      return `<div
-        id="${lineHeightSelector.slice(1)}"
-        style="background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);"
-      ></div>`;
+      return generateComponentHTML('div', {
+        id: lineHeightSelector.slice(1),
+        style:
+          'background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);',
+      });
     }
 
     before(() => {
-      setUpPage(
-        generateResultList(
-          generateResultTemplate({
+      new TestFixture()
+        .with(
+          addResultList({
             title: generateLineHeightElement(),
             excerpt: generateLineHeightElement(),
             bottomMetadata: generateLineHeightElement(),
           })
         )
-      );
+        .init();
       ResultListSelectors.shadow().find('.list-wrapper:not(.placeholder)');
     });
 
     withAnySectionnableResultList(() => {
       it('should expose --line-height in the title section', () => {
-        ResultListSelectors.firstResult()
-          .find(ResultListSelectors.sections.title)
+        ResultListSelectors.sections
+          .title()
           .find(lineHeightSelector)
           .should('be.visible');
       });
 
       it('should expose --line-height in the excerpt section', () => {
-        ResultListSelectors.firstResult()
-          .find(ResultListSelectors.sections.excerpt)
+        ResultListSelectors.sections
+          .excerpt()
           .find(lineHeightSelector)
           .should('be.visible');
       });
 
       it('should expose --line-height in the bottom-metadata section', () => {
-        ResultListSelectors.firstResult()
-          .find(ResultListSelectors.sections.bottomMetadata)
+        ResultListSelectors.sections
+          .bottomMetadata()
           .find(lineHeightSelector)
           .should('be.visible');
       });
@@ -103,13 +106,16 @@ describe('Result List Component', () => {
 
   describe('with a full result template', () => {
     function generateSimpleTextElement() {
-      return '<span>I will not use meaningless placeholder text for testing</span>';
+      const element = generateComponentHTML('span');
+      element.innerText =
+        'I will not use meaningless placeholder text for testing';
+      return element;
     }
 
     before(() => {
-      setUpPage(
-        generateResultList(
-          generateResultTemplate({
+      new TestFixture()
+        .with(
+          addResultList({
             visual: generateSimpleTextElement(),
             badges: generateSimpleTextElement(),
             actions: generateSimpleTextElement(),
@@ -120,7 +126,7 @@ describe('Result List Component', () => {
             bottomMetadata: generateSimpleTextElement(),
           })
         )
-      );
+        .init();
     });
 
     withAnySectionnableResultList(() => {

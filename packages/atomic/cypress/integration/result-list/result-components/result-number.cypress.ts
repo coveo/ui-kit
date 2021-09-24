@@ -1,39 +1,38 @@
-import {generateComponentHTML} from '../../../fixtures/test-fixture';
 import {
-  interceptSearchResponse,
-  setUpPage,
-} from '../../../utils/setupComponent';
-import {executeFirstSearch, setLanguage} from '../../search-interface-utils';
-import {
-  generateResultList,
-  generateResultTemplate,
-} from '../result-list-selectors';
+  generateComponentHTML,
+  TagProps,
+  TestFixture,
+} from '../../../fixtures/test-fixture';
+import {addResultList} from '../result-list-actions';
 import {
   resultNumberComponent,
   ResultNumberSelectors,
 } from './result-number-selectors';
 
-describe('Result Number Component', () => {
-  function setupResultNumberPage(
-    props: Record<string, string | number>,
-    executeSearch = true,
-    slot = ''
-  ) {
-    const component = generateComponentHTML(resultNumberComponent, props);
-    component.innerHTML = slot;
-    setUpPage(
-      generateResultList(
-        generateResultTemplate({
-          bottomMetadata: component.outerHTML,
-        })
-      ),
-      executeSearch
-    );
-  }
+interface ResultNumberProps {
+  field?: string;
+}
 
+const addResultNumberInResultList = (
+  props: ResultNumberProps = {},
+  slot?: HTMLElement
+) => {
+  const resultLinkEl = generateComponentHTML(
+    resultNumberComponent,
+    props as TagProps
+  );
+  if (slot) {
+    resultLinkEl.appendChild(slot);
+  }
+  return addResultList({bottomMetadata: resultLinkEl});
+};
+
+describe('Result Number Component', () => {
   describe('when not used inside a result template', () => {
     beforeEach(() => {
-      setUpPage(generateComponentHTML(resultNumberComponent).outerHTML);
+      new TestFixture()
+        .withElement(generateComponentHTML(resultNumberComponent))
+        .init();
     });
 
     it.skip('should remove the component from the DOM', () => {
@@ -49,9 +48,9 @@ describe('Result Number Component', () => {
 
   describe('when the field does not exist for the result', () => {
     beforeEach(() => {
-      setupResultNumberPage({
-        field: 'thisfielddoesnotexist',
-      });
+      new TestFixture()
+        .with(addResultNumberInResultList({field: 'thisfielddoesnotexist'}))
+        .init();
     });
 
     it.skip('should remove the component from the DOM', () => {
@@ -62,16 +61,12 @@ describe('Result Number Component', () => {
   describe('when the field value cannot be parsed to a number', () => {
     beforeEach(() => {
       const field = 'my-field';
-      setupResultNumberPage(
-        {
-          field,
-        },
-        false
-      );
-      interceptSearchResponse((response) =>
-        response.results.forEach((result) => (result.raw[field] = 'Abc'))
-      );
-      executeFirstSearch();
+      new TestFixture()
+        .with(addResultNumberInResultList({field}))
+        .withCustomResponse((response) =>
+          response.results.forEach((result) => (result.raw[field] = 'Abc'))
+        )
+        .init();
     });
 
     it.skip('should remove the component from the DOM', () => {
@@ -80,23 +75,18 @@ describe('Result Number Component', () => {
   });
 
   describe('when the field value is valid', () => {
-    function setupExistingFieldValue(value: number) {
-      setupResultNumberPage(
-        {
-          field: 'my-field',
-        },
-        false
-      );
-      interceptSearchResponse((response) =>
-        response.results.forEach((result) => (result.raw['my-field'] = value))
-      );
-      executeFirstSearch();
+    function prepareExistingFieldValue(value: number) {
+      return new TestFixture()
+        .with(addResultNumberInResultList({field: 'my-field'}))
+        .withCustomResponse((response) =>
+          response.results.forEach((result) => (result.raw['my-field'] = value))
+        );
     }
 
     describe('when the value is under 1000', () => {
       const value = 666;
       beforeEach(() => {
-        setupExistingFieldValue(value);
+        prepareExistingFieldValue(value).init();
       });
 
       it('should render the component', () => {
@@ -105,33 +95,33 @@ describe('Result Number Component', () => {
     });
 
     describe('when the value is equal or above 1000', () => {
-      const value = 1234;
-      beforeEach(() => {
-        setupExistingFieldValue(value);
+      const value = 1234.5;
+
+      it('should correctly display values in french', () => {
+        prepareExistingFieldValue(value).withLanguage('fr').init();
+        ResultNumberSelectors.firstInResult().should(
+          'have.text',
+          '1\u202f234,5'
+        );
       });
 
-      it("the rendered value should respect the interface's language", () => {
-        setLanguage('fr');
-        ResultNumberSelectors.firstInResult().should('have.text', '1\u202f234');
-        setLanguage('en');
-        ResultNumberSelectors.firstInResult().should('have.text', '1,234');
+      it('should correctly display values in english', () => {
+        prepareExistingFieldValue(value).withLanguage('en').init();
+        ResultNumberSelectors.firstInResult().should('have.text', '1,234.5');
       });
     });
 
     describe('with a format', () => {
       const value = 1234.5678;
-      function setupResultNumberWithFormat(slot: string) {
-        setupResultNumberPage(
-          {
-            field: 'my-field',
-          },
-          false,
-          slot
-        );
-        interceptSearchResponse((response) =>
-          response.results.forEach((result) => (result.raw['my-field'] = value))
-        );
-        executeFirstSearch();
+      function setupResultNumberWithFormat(slot: HTMLElement) {
+        new TestFixture()
+          .with(addResultNumberInResultList({field: 'my-field'}, slot))
+          .withCustomResponse((response) =>
+            response.results.forEach(
+              (result) => (result.raw['my-field'] = value)
+            )
+          )
+          .init();
       }
 
       describe('with a number format', () => {
@@ -159,7 +149,7 @@ describe('Result Number Component', () => {
               ...(options.maximumSignificantDigits !== undefined && {
                 'maximum-significant-digits': options.maximumSignificantDigits,
               }),
-            }).outerHTML
+            })
           );
         }
 
@@ -203,7 +193,7 @@ describe('Result Number Component', () => {
             generateComponentHTML(ResultNumberSelectors.formats.unitFormat, {
               unit,
               'unit-display': display,
-            }).outerHTML
+            })
           );
         }
 
@@ -240,7 +230,7 @@ describe('Result Number Component', () => {
               {
                 currency,
               }
-            ).outerHTML
+            )
           );
         }
 

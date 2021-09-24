@@ -1,39 +1,38 @@
-import {generateComponentHTML} from '../../../fixtures/test-fixture';
 import {
-  interceptSearchResponse,
-  setUpPage,
-} from '../../../utils/setupComponent';
-import {executeFirstSearch} from '../../search-interface-utils';
-import {
-  generateResultList,
-  generateResultTemplate,
-} from '../result-list-selectors';
+  generateComponentHTML,
+  TagProps,
+  TestFixture,
+} from '../../../fixtures/test-fixture';
+import {addResultList} from '../result-list-actions';
 import {
   resultLinkComponent,
   ResultLinkSelectors,
 } from './result-link-selectors';
 
-describe('Result Link Component', () => {
-  function setupResultLinkPage(
-    props: Record<string, string | number>,
-    executeSearch = true,
-    slot = ''
-  ) {
-    const component = generateComponentHTML(resultLinkComponent, props);
-    component.innerHTML = slot;
-    setUpPage(
-      generateResultList(
-        generateResultTemplate({
-          title: component.outerHTML,
-        })
-      ),
-      executeSearch
-    );
-  }
+interface ResultLinkProps {
+  target?: '_self' | '_blank' | '_parent' | '_top';
+}
 
+const addResultLinkInResultList = (
+  props: ResultLinkProps = {},
+  slot?: HTMLElement
+) => {
+  const resultLinkEl = generateComponentHTML(
+    resultLinkComponent,
+    props as TagProps
+  );
+  if (slot) {
+    resultLinkEl.appendChild(slot);
+  }
+  return addResultList({title: resultLinkEl});
+};
+
+describe('Result Link Component', () => {
   describe('when not used inside a result template', () => {
     beforeEach(() => {
-      setUpPage(generateComponentHTML(resultLinkComponent).outerHTML);
+      new TestFixture()
+        .withElement(generateComponentHTML(resultLinkComponent))
+        .init();
     });
 
     it.skip('should remove the component from the DOM', () => {
@@ -52,22 +51,17 @@ describe('Result Link Component', () => {
     const title = 'Abc result';
     function setupResultLink(
       target?: '_self' | '_blank' | '_parent' | '_top',
-      slot = ''
+      slot?: HTMLElement
     ) {
-      setupResultLinkPage(
-        {
-          ...(target !== undefined ? {target} : {}),
-        },
-        false,
-        slot
-      );
-      interceptSearchResponse((response) =>
-        response.results.forEach((result) => {
-          result.clickUri = clickUri;
-          result.title = title;
-        })
-      );
-      executeFirstSearch();
+      new TestFixture()
+        .with(addResultLinkInResultList(target ? {target} : {}, slot))
+        .withCustomResponse((response) =>
+          response.results.forEach((result) => {
+            result.clickUri = clickUri;
+            result.title = title;
+          })
+        )
+        .init();
     }
 
     it('the "target" prop should set the target on the "a" tag', () => {
@@ -87,10 +81,7 @@ describe('Result Link Component', () => {
     describe('when there is a slot', () => {
       const slottedComponent = 'canvas';
       beforeEach(() => {
-        setupResultLink(
-          undefined,
-          generateComponentHTML(slottedComponent).outerHTML
-        );
+        setupResultLink(undefined, generateComponentHTML(slottedComponent));
       });
 
       it('should render the slot inside of the "a" tag', () => {
