@@ -6,7 +6,8 @@ import {
 import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
-import clear from '@salesforce/label/c.quantic_Clear';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
@@ -42,7 +43,8 @@ export default class QuanticDateFacet extends LightningElement {
   isExpanded = true;
 
   labels = {
-    clear,
+    clearFilter,
+    clearFilter_plural,
     collapseFacet,
     expandFacet,
   };
@@ -106,6 +108,18 @@ export default class QuanticDateFacet extends LightningElement {
   get actionButtonLabel() {
     const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
     return I18nUtils.format(label, this.label);
+  }
+
+  get numberOfSelectedValues() {
+    return this.state.values.filter(({state}) => state === 'selected').length;
+  }
+
+  get clearFilterLabel() {
+    if (this.hasActiveValues) {
+      const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
+      return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
+    }
+    return '';
   }
 
   /**

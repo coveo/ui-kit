@@ -19,4 +19,11 @@ li {
 .facet__value-option {
   display: flex;
   flex-direction: row;
+  cursor: pointer;
+  border-radius: .25rem;
+}
+
+.facet__value-option:hover {
+  color: var(--lwc-brandTextLink, dodgerblue);
+  background-color: #f6f7f9;
 }

@@ -1,6 +1,6 @@
 <template>
     <li class={categoryFacetLiClass}>  
-        <div onclick={onSelect}>
+        <div class="slds-p-horizontal_x-small" onclick={onSelect}>
             <template if:true={nonactiveparent}>
                 <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
                 <span class="nowrap">{item.value}</span>

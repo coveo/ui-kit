@@ -13,7 +13,7 @@
                 <ul class="slds-has-dividers_around-space slds-m-vertical_xx-small">
                     <template if:false={noSearch}>
                         <div onchange={handleKeyUp} class="slds-size_1-of-1">
-                            <lightning-input class="facet__searchbox-input slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
+                            <lightning-input class="facet__searchbox-input slds-p-horizontal_x-small slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
                         </div>
                     </template>
                     <template if:false={isFacetSearchActive}>
@@ -58,30 +58,34 @@
                                 </c-quantic-category-facet-value>
                             </template>
                         </template>
-                        <template if:false={hasSearchResults}>
-                            <li class="slds-grid slds-var-m-top_x-small">
-                                <span class="slds-truncate slds-var-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span> 
-                            </li>
-                        </template>
-                        <template if:true={canShowMoreSearchResults}>
-                            <li>
-                                <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span> 
-                            </li>
-                        </template>
+                        <div class="slds-p-horizontal_x-small">
+                          <template if:false={hasSearchResults}>
+                              <li class="slds-grid slds-var-m-top_x-small">
+                                  <span class="slds-truncate slds-var-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span> 
+                              </li>
+                          </template>
+                          <template if:true={canShowMoreSearchResults}>
+                              <li>
+                                  <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span> 
+                              </li>
+                          </template>
+                        </div>
                     </template>
                 </ul>
-                <template if:true={canShowLess}>
-                    <button variant="base" label={labels.showLess}
-                      class="facet__show-less slds-p-around_none" onclick={showLess}>
-                      <span class="facet__show-less_text">{labels.showLess}</span>
-                    </button>
-                </template>
-                <template if:true={canShowMore}>
-                    <button variant="base" label={labels.showMore}
-                      class="facet__show-more slds-p-around_none" onclick={showMore}>
-                      <span class="facet__show-more_text">{labels.showMore}</span>
-                    </button>
-                </template> 
+                <div class="facet__show slds-p-horizontal_x-small">
+                  <template if:true={canShowLess}>
+                      <button variant="base" label={labels.showLess}
+                        class="facet__show-less slds-p-around_none" onclick={showLess}>
+                        <span class="facet__show-less_text">{labels.showLess}</span>
+                      </button>
+                  </template>
+                  <template if:true={canShowMore}>
+                      <button variant="base" label={labels.showMore}
+                        class="facet__show-more slds-p-around_none" onclick={showMore}>
+                        <span class="facet__show-more_text">{labels.showMore}</span>
+                      </button>
+                  </template> 
+                </div>
             </template>
         </c-quantic-card-container>
     </template>
