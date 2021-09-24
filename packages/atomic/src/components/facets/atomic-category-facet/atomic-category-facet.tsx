@@ -144,7 +144,17 @@ export class AtomicCategoryFacet
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
-  // @Prop() public customSort?: string; TODO: KIT-753 add customSort to headless
+  /**
+   * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   */
+  @Prop() public filterFacetCount = true;
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   */
+  @Prop() public injectionDepth = 1000;
+  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -159,6 +169,8 @@ export class AtomicCategoryFacet
         : undefined,
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
+      injectionDepth: this.injectionDepth,
+      filterFacetCount: this.filterFacetCount,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;

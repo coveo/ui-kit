@@ -42,6 +42,16 @@ describe('validatePayload', () => {
     expect(validatedPayload.payload).toEqual(11);
     expect(validatedPayload.error).toBeDefined();
   });
+
+  it('when SchemaDefinition is an object, validating a payload that is not an object should be invalid', () => {
+    const notAnObject = ['foo', 11, true];
+    for (const testCase in notAnObject) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const validatedPayload = validatePayload(testCase, definition as any);
+      expect(validatedPayload.payload).toEqual(testCase);
+      expect(validatedPayload.error).toBeDefined();
+    }
+  });
 });
 
 describe('validatePayloadAndThrow', () => {

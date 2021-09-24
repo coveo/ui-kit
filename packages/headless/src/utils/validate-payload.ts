@@ -4,6 +4,7 @@ import {
   Schema,
   SchemaValidationError,
   StringValue,
+  RecordValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
 import {CoreEngine} from '../app/engine';
@@ -47,11 +48,16 @@ export const validatePayloadAndThrow = <P>(
     };
   }
 
-  return {
-    payload: new Schema(definition as SchemaDefinition<Required<P>>).validate(
-      payload
-    ) as P,
-  };
+  const asRecordValue = new RecordValue({
+    options: {required: true},
+    values: definition as SchemaDefinition<Record<string, Object>>,
+  });
+
+  const isInvalid = asRecordValue.validate(payload);
+  if (isInvalid) {
+    throw new SchemaValidationError(isInvalid);
+  }
+  return {payload};
 };
 
 /**

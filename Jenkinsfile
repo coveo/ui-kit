@@ -79,7 +79,7 @@ node('linux && docker') {
     }
 
     if (!isBump) {
-      withDockerContainer(image: 'node:14', args: '-u=root') {
+      withDockerContainer(image: 'node:16', args: '-u=root') {
         stage('Commit bumped version') {
           sh 'git clean -xfd -e node_modules/ -e .husky'
           withCredentials([
@@ -91,7 +91,7 @@ node('linux && docker') {
       return
     }
 
-    withDockerContainer(image: 'node:16', args: '-u=root') {
+    withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
