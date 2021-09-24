@@ -1,3 +1,4 @@
+import {buildMockResult} from '../../test';
 import {fetchResultContent} from './result-preview-actions';
 import {resultPreviewReducer} from './result-preview-slice';
 import {
@@ -24,7 +25,8 @@ describe('ResultPreview', () => {
   it(`on #fetchResultContent.pending,
   it sets #isLoading to true`, () => {
     state.isLoading = false;
-    const action = fetchResultContent.pending('', {uniqueId: '1'});
+    const result = buildMockResult({uniqueId: '1'});
+    const action = fetchResultContent.pending('', {result});
 
     state = resultPreviewReducer(state, action);
     expect(state.isLoading).toBe(true);
@@ -37,7 +39,8 @@ describe('ResultPreview', () => {
     };
 
     it('sets the #uniqueId and #content to the payload values', () => {
-      const action = fetchResultContent.fulfilled(payload, '', {uniqueId: '1'});
+      const result = buildMockResult({uniqueId: '1'});
+      const action = fetchResultContent.fulfilled(payload, '', {result});
       state = resultPreviewReducer(state, action);
 
       expect(state.content).toEqual(payload.content);
@@ -47,7 +50,9 @@ describe('ResultPreview', () => {
     it('sets #isLoading to false', () => {
       state.isLoading = true;
 
-      const action = fetchResultContent.fulfilled(payload, '', {uniqueId: '1'});
+      const result = buildMockResult({uniqueId: '1'});
+      const action = fetchResultContent.fulfilled(payload, '', {result});
+
       state = resultPreviewReducer(state, action);
 
       expect(state.isLoading).toBe(false);

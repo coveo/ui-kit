@@ -2,7 +2,6 @@ import {Result} from '../../api/search/search/result';
 import {configuration, resultPreview} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   ConfigurationSection,
   ResultPreviewSection,
@@ -86,9 +85,8 @@ export function buildQuickview(
 
     fetchResultContent() {
       dispatch(
-        fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
+        fetchResultContent({result, requestedOutputSize: maximumPreviewSize})
       );
-      dispatch(logDocumentQuickview(result));
     },
 
     get state() {

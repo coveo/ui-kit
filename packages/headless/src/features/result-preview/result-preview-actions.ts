@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {HtmlRequestOptions} from '../../api/search/html/html-request';
+import {Result} from '../../api/search/search/result';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
@@ -8,21 +8,36 @@ import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder';
+import {logDocumentQuickview} from './result-preview-analytics-actions';
 
 interface FetchResultContentResponse {
   content: string;
   uniqueId: string;
 }
 
+interface FetchResultContentOptions {
+  result: Result;
+  requestedOutputSize?: number;
+}
+
 export const fetchResultContent = createAsyncThunk<
   FetchResultContentResponse,
-  HtmlRequestOptions,
+  FetchResultContentOptions,
   AsyncThunkSearchOptions<StateNeededByHtmlEndpoint>
 >(
   'resultPreview/fetchResultContent',
-  async (options: HtmlRequestOptions, {extra, getState, rejectWithValue}) => {
+  async (
+    options: FetchResultContentOptions,
+    {extra, getState, rejectWithValue}
+  ) => {
+    const {result, requestedOutputSize} = options;
+    const uniqueId = result.uniqueId;
     const state = getState();
-    const req = buildResultPreviewRequest(state, options);
+    const req = buildResultPreviewRequest(state, {
+      uniqueId,
+      requestedOutputSize,
+    });
+
     const res = await extra.searchAPIClient.html(req);
 
     if (isErrorResponse(res)) {
@@ -31,7 +46,8 @@ export const fetchResultContent = createAsyncThunk<
 
     return {
       content: res.success,
-      uniqueId: options.uniqueId,
+      uniqueId,
+      analyticsAction: logDocumentQuickview(result),
     };
   }
 );

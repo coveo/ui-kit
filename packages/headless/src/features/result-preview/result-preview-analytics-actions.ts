@@ -15,7 +15,7 @@ export const logDocumentQuickview = (result: Result) => {
   return buildDocumentQuickviewThunk(result)();
 };
 
-export const buildDocumentQuickviewThunk = (result: Result) => {
+const buildDocumentQuickviewThunk = (result: Result) => {
   return makeAnalyticsAction(
     'analytics/resultPreview/open',
     AnalyticsType.Click,

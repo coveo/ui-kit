@@ -1,6 +1,5 @@
 import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
@@ -48,11 +47,11 @@ describe('Quickview', () => {
   });
 
   describe('#fetchResultContent', () => {
-    const uniqueId = '1';
+    const result = buildMockResult({uniqueId: '1'});
     const requestedOutputSize = 0;
 
     beforeEach(() => {
-      options.result = buildMockResult({uniqueId});
+      options.result = result;
       initQuickview();
 
       quickview.fetchResultContent();
@@ -60,15 +59,7 @@ describe('Quickview', () => {
 
     it('dispatches a #fetchResultContent action with the result uniqueId', () => {
       const action = engine.findAsyncAction(fetchResultContent.pending);
-      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
-    });
-
-    it('dispatches a document quickview click event', () => {
-      const result = buildMockResult();
-      const thunk = buildDocumentQuickviewThunk(result);
-      const action = engine.findAsyncAction(thunk.pending);
-
-      expect(action).toBeTruthy();
+      expect(action?.meta.arg).toEqual({result, requestedOutputSize});
     });
   });
 
