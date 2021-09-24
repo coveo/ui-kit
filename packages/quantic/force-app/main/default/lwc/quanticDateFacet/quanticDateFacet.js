@@ -27,6 +27,8 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
+  /** @type {boolean} */
+  @api isCollapsed = false;
   /** @type {(any) => string} */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.start)
@@ -59,6 +61,7 @@ export default class QuanticDateFacet extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
+    this.isExpanded = !this.isCollapsed;
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
         field: this.field,
