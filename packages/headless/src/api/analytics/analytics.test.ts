@@ -10,7 +10,6 @@ import {getConfigurationInitialState} from '../../features/configuration/configu
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {getSearchInitialState} from '../../features/search/search-state';
-import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
@@ -89,7 +88,17 @@ describe('analytics', () => {
 
     it('when search pipeline is not provided, #getSearchPipeline returns the default pipeline', () => {
       const provider = new AnalyticsProvider(baseState);
-      expect(provider.getPipeline()).toEqual(getPipelineInitialState());
+      expect(provider.getPipeline()).toEqual('default');
+    });
+
+    it('when search pipeline is not provided, #getSearchPipeline returns pipeline from the API response if available', () => {
+      const state = {
+        ...baseState,
+        search: buildMockSearchState({}),
+      };
+      state.search.response.pipeline = 'some-pipeline';
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getPipeline()).toEqual('some-pipeline');
     });
 
     it('when search pipeline is provided, #getSearchPipeline returns the correct pipeline', () => {
