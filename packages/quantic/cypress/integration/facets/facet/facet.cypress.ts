@@ -11,9 +11,15 @@ interface FacetOptions {
   numberOfValues: number;
   sortCriteria: string;
   noSearch: boolean;
+  isCollapsed: boolean;
+  displayValuesAs: string;
 }
 
 describe('Facet Test Suite', () => {
+  const defaultField = 'objecttype';
+  const defaultLabel = 'Type';
+  const defaultNumberOfValues = 8;
+
   function visitFacetPage(options: Partial<FacetOptions> = {}) {
     interceptSearch();
 
@@ -21,12 +27,8 @@ describe('Facet Test Suite', () => {
     configure(options);
   }
 
-  describe('with values', () => {
-    const defaultField = 'objecttype';
-    const defaultLabel = 'Type';
-    const defaultNumberOfValues = 8;
-
-    function setupWithValues() {
+  describe('with checkbox values', () => {
+    function setupWithCheckboxValues() {
       visitFacetPage({
         field: defaultField,
         label: defaultLabel,
@@ -35,7 +37,7 @@ describe('Facet Test Suite', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupWithValues);
+      before(setupWithCheckboxValues);
 
       Expect.labelContains(defaultLabel);
       Expect.displayValues(true);
@@ -49,8 +51,12 @@ describe('Facet Test Suite', () => {
 
     describe('when selecting a value', () => {
       function selectFirstFacetValue() {
-        setupWithValues();
+        setupWithCheckboxValues();
         checkFirstValue(FacetSelectors);
+      }
+
+      function collapseFacet() {
+        FacetSelectors.collapseButton().click();
       }
 
       describe('verify rendering', () => {
@@ -67,7 +73,19 @@ describe('Facet Test Suite', () => {
         Expect.logFacetSelect(defaultField, 0);
       });
 
+      describe('when collapsing the facet', () => {
+        before(() => {
+          selectFirstFacetValue();
+          collapseFacet();
+        });
+
+        describe('verify rendering', () => {
+          Expect.displayClearButton(true);
+        });
+      });
+
       describe('when selecting a second value', () => {
+        const initialNumberOfValues = 2;
         function selectLastFacetValue() {
           selectFirstFacetValue();
           cy.wait(InterceptAliases.UA.Facet.Select);
@@ -78,9 +96,11 @@ describe('Facet Test Suite', () => {
         describe('verify rendering', () => {
           before(selectLastFacetValue);
 
-          Expect.displayClearButton(true);
-          Expect.numberOfSelectedCheckboxValues(2);
-          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 2);
+          Expect.displayClearXFiltersButton(initialNumberOfValues);
+          Expect.numberOfSelectedCheckboxValues(initialNumberOfValues);
+          Expect.numberOfIdleCheckboxValues(
+            defaultNumberOfValues - initialNumberOfValues
+          );
         });
 
         describe('verify analytics', () => {
@@ -89,10 +109,21 @@ describe('Facet Test Suite', () => {
           Expect.logFacetSelect(defaultField, 1);
         });
 
+        describe('when collapsing the facet', () => {
+          before(() => {
+            selectLastFacetValue();
+            collapseFacet();
+          });
+
+          describe('verify rendering', () => {
+            Expect.displayClearXFiltersButton(initialNumberOfValues);
+          });
+        });
+
         describe('when selecting the "Clear" button', () => {
           function clearSelectedValues() {
             selectFirstFacetValue();
-            FacetSelectors.clearButton().click();
+            FacetSelectors.clearFilterButton().click();
           }
 
           describe('verify rendering', () => {
@@ -115,12 +146,12 @@ describe('Facet Test Suite', () => {
         const query = 'a';
 
         function searchForValue() {
-          setupWithValues();
+          setupWithCheckboxValues();
           FacetSelectors.searchInput().type(query);
         }
 
         function searchForSingleValue() {
-          setupWithValues();
+          setupWithCheckboxValues();
           FacetSelectors.valueLabel()
             .first()
             .then((element) => {
@@ -209,7 +240,7 @@ describe('Facet Test Suite', () => {
           const query = 'this facet value does not exist';
 
           function searchForInvalidValue() {
-            setupWithValues();
+            setupWithCheckboxValues();
             FacetSelectors.searchInput().type(query);
           }
 
@@ -229,7 +260,7 @@ describe('Facet Test Suite', () => {
 
     describe('when collapsing a facet', () => {
       function collapseFacet() {
-        setupWithValues();
+        setupWithCheckboxValues();
         FacetSelectors.collapseButton().click();
       }
 
@@ -259,6 +290,30 @@ describe('Facet Test Suite', () => {
           Expect.displayShowMoreButton(true);
         });
       });
+    });
+  });
+
+  describe('with link values', () => {
+    function setupWithLinkValues() {
+      visitFacetPage({
+        field: defaultField,
+        label: defaultLabel,
+        displayValuesAs: 'link',
+      });
+    }
+
+    describe('verify rendering', () => {
+      before(setupWithLinkValues);
+
+      Expect.labelContains(defaultLabel);
+      Expect.displayValues(true);
+      Expect.hasCheckbox(false);
+      Expect.numberOfSelectedLinkValues(0);
+      Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+      Expect.displayClearButton(false);
+      Expect.displayShowMoreButton(true);
+      Expect.displayShowLessButton(false);
+      Expect.displaySearchInput(true);
     });
   });
 

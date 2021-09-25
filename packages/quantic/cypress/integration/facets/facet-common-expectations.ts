@@ -3,6 +3,7 @@ import {should} from '../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithCheckboxSelector,
+  FacetWithLinkSelector,
   FacetWithSearchSelector,
   FacetWithShowMoreLessSelector,
 } from './facet-common-selectors';
@@ -23,7 +24,15 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
 
     displayClearButton: (display: boolean) => {
       it(`${should(display)} display a "Clear filter" button`, () => {
-        selector.clearButton().should(display ? 'exist' : 'not.exist');
+        selector.clearFilterButton().should(display ? 'exist' : 'not.exist');
+      });
+    },
+
+    displayClearXFiltersButton: (numberOfActiveFacets: number) => {
+      it(`should display a "Clear ${numberOfActiveFacets} filters" button`, () => {
+        selector
+          .clearMultipleFilterButton(numberOfActiveFacets)
+          .should('exist');
       });
     },
 
@@ -105,6 +114,28 @@ export function facetWithCheckboxExpectations(
               );
             });
         });
+      });
+    },
+  };
+}
+
+export function facetWithLinkExpectatinos(selector: FacetWithLinkSelector) {
+  return {
+    hasCheckbox: (display: boolean) => {
+      it(`${should(display)} display facet values with checkboxes`, () => {
+        selector.checkbox().should(display ? 'be.visible' : 'not.exist');
+      });
+    },
+
+    numberOfSelectedLinkValues: (value: number) => {
+      it(`should display ${value} selected checkbox values`, () => {
+        selector.selectedLinkValue().should('have.length', value);
+      });
+    },
+
+    numberOfIdleLinkValues: (value: number) => {
+      it(`should display ${value} idle checkbox values`, () => {
+        selector.idleLinkValue().should('have.length', value);
       });
     },
   };
