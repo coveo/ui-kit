@@ -84,6 +84,27 @@ describe('Facet Test Suite', () => {
         });
       });
 
+      describe('when selecting the "Clear" button', () => {
+        function clearSelectedValues() {
+          selectFirstFacetValue();
+          FacetSelectors.clearFilterButton().click();
+        }
+
+        describe('verify rendering', () => {
+          before(clearSelectedValues);
+
+          Expect.displayClearButton(false);
+          Expect.numberOfSelectedCheckboxValues(0);
+          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+        });
+
+        describe('verify analytics', () => {
+          before(clearSelectedValues);
+
+          Expect.logClearFacetValues(defaultField);
+        });
+      });
+
       describe('when selecting a second value', () => {
         const initialNumberOfValues = 2;
         function selectLastFacetValue() {
@@ -117,27 +138,6 @@ describe('Facet Test Suite', () => {
 
           describe('verify rendering', () => {
             Expect.displayClearXFiltersButton(initialNumberOfValues);
-          });
-        });
-
-        describe('when selecting the "Clear" button', () => {
-          function clearSelectedValues() {
-            selectFirstFacetValue();
-            FacetSelectors.clearFilterButton().click();
-          }
-
-          describe('verify rendering', () => {
-            before(clearSelectedValues);
-
-            Expect.displayClearButton(false);
-            Expect.numberOfSelectedCheckboxValues(0);
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-          });
-
-          describe('verify analytics', () => {
-            before(clearSelectedValues);
-
-            Expect.logClearFacetValues(defaultField);
           });
         });
       });

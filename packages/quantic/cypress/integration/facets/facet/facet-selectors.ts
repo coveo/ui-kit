@@ -1,7 +1,6 @@
 import {
   BaseFacetSelector,
-  FacetWithCheckboxSelector,
-  FacetWithLinkSelector,
+  FacetWithValuesSelector,
   FacetWithSearchSelector,
   FacetWithShowMoreLessSelector,
 } from '../facet-common-selectors';
@@ -9,8 +8,7 @@ import {
 export const facetComponent = 'c-quantic-facet';
 
 export type AllFacetSelectors = BaseFacetSelector &
-  FacetWithCheckboxSelector &
-  FacetWithLinkSelector &
+  FacetWithValuesSelector &
   FacetWithSearchSelector &
   FacetWithShowMoreLessSelector;
 
@@ -31,14 +29,13 @@ export const FacetSelectors: AllFacetSelectors = {
   collapseButton: () => FacetSelectors.get().find('.facet__collapse'),
   expandButton: () => FacetSelectors.get().find('.facet__collapse'),
 
-  selectedCheckboxValue: () =>
+  selectedCheckbox: () =>
     FacetSelectors.get().find('input[type="checkbox"]:checked'),
-  idleCheckboxValue: () =>
+  idleCheckbox: () =>
     FacetSelectors.get().find('input[type="checkbox"]:not(:checked)'),
-
-  selectedLinkValue: () =>
+  selectedValue: () =>
     FacetSelectors.get().find('.facet__value-text.facet__value_selected'),
-  idleLinkValue: () =>
+  idleValue: () =>
     FacetSelectors.get().find('.facet__value-text.facet__value_idle'),
   checkbox: () => FacetSelectors.get().find('.slds-checkbox'),
 

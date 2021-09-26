@@ -11,14 +11,11 @@ export interface BaseFacetSelector extends ComponentSelector {
   expandButton: () => CypressSelector;
 }
 
-export interface FacetWithCheckboxSelector extends ComponentSelector {
-  selectedCheckboxValue: () => CypressSelector;
-  idleCheckboxValue: () => CypressSelector;
-}
-
-export interface FacetWithLinkSelector extends ComponentSelector {
-  selectedLinkValue: () => CypressSelector;
-  idleLinkValue: () => CypressSelector;
+export interface FacetWithValuesSelector extends ComponentSelector {
+  selectedCheckbox: () => CypressSelector;
+  idleCheckbox: () => CypressSelector;
+  selectedValue: () => CypressSelector;
+  idleValue: () => CypressSelector;
   checkbox: () => CypressSelector;
 }
 

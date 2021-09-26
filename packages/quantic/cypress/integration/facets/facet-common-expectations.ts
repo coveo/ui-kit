@@ -2,8 +2,7 @@ import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {
   BaseFacetSelector,
-  FacetWithCheckboxSelector,
-  FacetWithLinkSelector,
+  FacetWithValuesSelector,
   FacetWithSearchSelector,
   FacetWithShowMoreLessSelector,
 } from './facet-common-selectors';
@@ -72,19 +71,35 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
   };
 }
 
-export function facetWithCheckboxExpectations(
-  selector: FacetWithCheckboxSelector
-) {
+export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
   return {
     numberOfSelectedCheckboxValues: (value: number) => {
       it(`should display ${value} selected checkbox values`, () => {
-        selector.selectedCheckboxValue().should('have.length', value);
+        selector.selectedCheckbox().should('have.length', value);
       });
     },
 
     numberOfIdleCheckboxValues: (value: number) => {
       it(`should display ${value} idle checkbox values`, () => {
-        selector.idleCheckboxValue().should('have.length', value);
+        selector.idleCheckbox().should('have.length', value);
+      });
+    },
+
+    hasCheckbox: (display: boolean) => {
+      it(`${should(display)} display facet values with checkboxes`, () => {
+        selector.checkbox().should(display ? 'be.visible' : 'not.exist');
+      });
+    },
+
+    numberOfSelectedLinkValues: (value: number) => {
+      it(`should display ${value} selected checkbox values`, () => {
+        selector.selectedValue().should('have.length', value);
+      });
+    },
+
+    numberOfIdleLinkValues: (value: number) => {
+      it(`should display ${value} idle checkbox values`, () => {
+        selector.idleValue().should('have.length', value);
       });
     },
 
@@ -104,7 +119,7 @@ export function facetWithCheckboxExpectations(
           expect(analyticsBody.facetState[0]).to.have.property('field', field);
 
           selector
-            .selectedCheckboxValue()
+            .selectedValue()
             .eq(selectedValueIndex)
             .invoke('text')
             .then((txt: string) => {
@@ -114,28 +129,6 @@ export function facetWithCheckboxExpectations(
               );
             });
         });
-      });
-    },
-  };
-}
-
-export function facetWithLinkExpectatinos(selector: FacetWithLinkSelector) {
-  return {
-    hasCheckbox: (display: boolean) => {
-      it(`${should(display)} display facet values with checkboxes`, () => {
-        selector.checkbox().should(display ? 'be.visible' : 'not.exist');
-      });
-    },
-
-    numberOfSelectedLinkValues: (value: number) => {
-      it(`should display ${value} selected checkbox values`, () => {
-        selector.selectedLinkValue().should('have.length', value);
-      });
-    },
-
-    numberOfIdleLinkValues: (value: number) => {
-      it(`should display ${value} idle checkbox values`, () => {
-        selector.idleLinkValue().should('have.length', value);
       });
     },
   };
