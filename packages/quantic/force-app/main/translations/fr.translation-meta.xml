@@ -53,6 +53,14 @@
         <name>quantic_Clear</name>
     </customLabels>
     <customLabels>
+        <label>Enlever le filtre</label>
+        <name>quantic_ClearFilter</name>
+    </customLabels>
+    <customLabels>
+        <label>Enlever {{0}} filtres</label>
+        <name>quantic_ClearFilter_plural</name>
+    </customLabels>
+    <customLabels>
         <label>+ Voir plus de résultats</label>
         <name>quantic_ShowMore</name>
     </customLabels>
