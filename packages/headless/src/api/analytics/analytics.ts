@@ -6,7 +6,6 @@ import {
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
-import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../../features/search/search-state';
@@ -76,7 +75,9 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   }
 
   public getPipeline() {
-    return this.state.pipeline || getPipelineInitialState();
+    return (
+      this.state.pipeline || this.state.search?.response.pipeline || 'default'
+    );
   }
 
   public getOriginLevel1() {
