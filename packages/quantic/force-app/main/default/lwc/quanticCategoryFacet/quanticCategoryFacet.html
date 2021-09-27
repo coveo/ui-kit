@@ -1,92 +1,92 @@
 <template>
-    <template if:true={hasParentsOrValues}>
-        <c-quantic-card-container title={label}>
-            <lightning-button-icon
-                class="slds-var-p-bottom_small"
-                slot="actions"
-                onclick={toggleFacetVisibility}
-                icon-name={actionButtonIcon}
-                alternative-text={actionButtonLabel}
-                variant="bare">
-            </lightning-button-icon>
-            <template if:true={isExpanded}>
-                <ul class="slds-has-dividers_around-space slds-m-top_medium">
-                    <template if:false={noSearch}>
-                        <div onchange={handleKeyUp} class="slds-size_1-of-1">
-                            <lightning-input class="facet__searchbox-input slds-p-horizontal_x-small slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
-                        </div>
-                    </template>
-                    <template if:false={isFacetSearchActive}>
-                        <template if:true={hasParents}>
-                            <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
-                                <div onclick={reset}>
-                                    <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
-                                    <span class="nowrap">{labels.allCategories}</span>
-                                </div> 
-                            </li> 
-                         </template>
-                         <template for:each={nonActiveParents} for:item="v">
-                            <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} nonactiveparent="true"></c-quantic-category-facet-value>
-                         </template>
-                         <template if:true={activeParent}>
-                             <li class="slds-grid slds-p-around_x-small">
-                                 <span class="nowrap parent-text__bold">{activeParent.value}</span>
-                                 <span class="facet__number-of-results parent-text__bold">({activeParent.numberOfResults})</span>
-                             </li>  
-                         </template>
-                         <li class="slds-grid">
-                            <ul class="slds-size_1-of-1">
-                             <template for:each={values} for:item="v">
-                                <c-quantic-category-facet-value
-                                    onselectvalue={onSelect} 
-                                    key={v.value} 
-                                    item={v}
-                                    activeparent={activeParent}>
-                                </c-quantic-category-facet-value>
-                             </template>
-                            </ul>
-                         </li>
-                    </template>
-                    <template if:true={isFacetSearchActive}>
-                        <template if:true={hasSearchResults}>
-                            <template for:each={facetSearchResults} for:item="result">
-                                <c-quantic-category-facet-value 
-                                    onselectvalue={onSelect} 
-                                    key={result.index}  
-                                    item={result} 
-                                    withsearch="true">
-                                </c-quantic-category-facet-value>
-                            </template>
-                        </template>
-                        <div class="slds-p-horizontal_x-small">
-                          <template if:false={hasSearchResults}>
-                              <li class="slds-grid slds-var-m-top_x-small">
-                                  <span class="slds-truncate slds-var-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span> 
-                              </li>
-                          </template>
-                          <template if:true={canShowMoreSearchResults}>
-                              <li>
-                                  <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span> 
-                              </li>
-                          </template>
-                        </div>
-                    </template>
-                </ul>
-                <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
-                  <template if:true={canShowLess}>
-                      <button variant="base" label={labels.showLess}
-                        class="facet__show-less slds-p-around_none" onclick={showLess}>
-                        <span class="facet__show-less_text">{labels.showLess}</span>
-                      </button>
-                  </template>
-                  <template if:true={canShowMore}>
-                      <button variant="base" label={labels.showMore}
-                        class="facet__show-more slds-p-around_none" onclick={showMore}>
-                        <span class="facet__show-more_text">{labels.showMore}</span>
-                      </button>
-                  </template> 
-                </div>
+  <template if:true={hasParentsOrValues}>
+    <c-quantic-card-container title={label}>
+      <lightning-button-icon
+        class="slds-var-p-bottom_small"
+        slot="actions"
+        onclick={toggleFacetVisibility}
+        icon-name={actionButtonIcon}
+        alternative-text={actionButtonLabel}
+        variant="bare">
+      </lightning-button-icon>
+      <template if:true={isExpanded}>
+        <ul class="slds-has-dividers_around-space slds-m-top_medium">
+          <template if:false={noSearch}>
+            <div onchange={handleKeyUp} class="slds-size_1-of-1">
+              <lightning-input class="facet__searchbox-input slds-p-horizontal_x-small slds-var-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
+            </div>
+          </template>
+          <template if:false={isFacetSearchActive}>
+            <template if:true={hasParents}>
+              <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+                <div onclick={reset}>
+                  <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
+                  <span class="nowrap">{labels.allCategories}</span>
+                </div> 
+              </li> 
             </template>
-        </c-quantic-card-container>
-    </template>
+            <template for:each={nonActiveParents} for:item="v">
+              <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} nonactiveparent="true"></c-quantic-category-facet-value>
+            </template>
+            <template if:true={activeParent}>
+              <li class="slds-grid slds-p-around_x-small">
+                <span class="nowrap parent-text__bold">{activeParent.value}</span>
+                <span class="facet__number-of-results parent-text__bold">({activeParent.numberOfResults})</span>
+              </li>  
+            </template>
+            <li class="slds-grid">
+              <ul class="slds-size_1-of-1">
+                <template for:each={values} for:item="v">
+                  <c-quantic-category-facet-value
+                    onselectvalue={onSelect} 
+                    key={v.value} 
+                    item={v}
+                    activeparent={activeParent}>
+                  </c-quantic-category-facet-value>
+                </template>
+              </ul>
+            </li>
+          </template>
+          <template if:true={isFacetSearchActive}>
+            <template if:true={hasSearchResults}>
+              <template for:each={facetSearchResults} for:item="result">
+                <c-quantic-category-facet-value 
+                  onselectvalue={onSelect} 
+                  key={result.index}  
+                  item={result} 
+                  withsearch="true">
+                </c-quantic-category-facet-value>
+              </template>
+            </template>
+            <div class="slds-p-horizontal_x-small">
+              <template if:false={hasSearchResults}>
+                <li class="slds-grid slds-var-m-top_x-small">
+                  <span class="slds-truncate slds-var-p-around_small slds-size_1-of-1 facet__search-results_no-match">{noMatchesForLabel}</span> 
+                </li>
+              </template>
+              <template if:true={canShowMoreSearchResults}>
+                <li>
+                  <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span> 
+                </li>
+              </template>
+            </div>
+          </template>
+        </ul>
+        <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
+          <template if:true={canShowLess}>
+            <button variant="base" label={labels.showLess}
+              class="facet__show-less slds-p-around_none" onclick={showLess}>
+              <span class="facet__show-less_text">{labels.showLess}</span>
+            </button>
+          </template>
+          <template if:true={canShowMore}>
+            <button variant="base" label={labels.showMore}
+              class="facet__show-more slds-p-around_none" onclick={showMore}>
+              <span class="facet__show-more_text">{labels.showMore}</span>
+            </button>
+          </template> 
+        </div>
+      </template>
+    </c-quantic-card-container>
+  </template>
 </template>
