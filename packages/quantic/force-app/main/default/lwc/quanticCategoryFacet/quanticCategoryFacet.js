@@ -38,7 +38,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * Defaults to given facet label.
    * @api
    * @type {string}
-   * @default [label]
+   * @defaultValue `(field)`
    */
   @api facetId;
   /**
@@ -80,7 +80,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * Also determines the number of additional values to request each time more values are shown.
    * @api
    * @type {number} 
-   * @default 8
+   * @defaultValue `8`
    */
   @api numberOfValues = 8;
   /**
@@ -92,7 +92,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   - automatic
    * @api
    * @type  {'alphanumeric' | 'occurrences'}
-   * @default `occurences`
+   * @defaultValue `'occurences'`
    */
   @api sortCriteria = 'occurrences';
   /**

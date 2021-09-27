@@ -32,7 +32,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * Specifies a unique identifier for the facet.
    * @api
    * @type {string}
-   * @defaultValue [field]
+   * @defaultValue `(field)`
    */
   @api facetId;
   /**
@@ -51,14 +51,14 @@ export default class QuanticNumericFacet extends LightningElement {
    * The number of values to request for this facet, when there are no manual ranges.
    * @api
    * @type {number}
-   * @defaultValue 8
+   * @defaultValue `8`
    */
   @api numberOfValues = 8;
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    * @api
    * @type {'ascending' | 'descending'}
-   * @defaultValue 'ascending'
+   * @defaultValue `'ascending'`
    */
   @api sortCriteria = 'ascending';
   /**
@@ -67,16 +67,16 @@ export default class QuanticNumericFacet extends LightningElement {
    * The value "equiprobable" generates facet ranges which vary in size but have a more balanced number of results within each range.
    * @api
    * @type {'even' | 'equiprobable'}
-   * @defaultValue 'equiprobable'
+   * @defaultValue `'equiprobable'`
    */
   @api rangeAlgorithm = 'equiprobable';
   /**
    * The function used to format the date facet value label.
+   * The default result format is the following: [start] - [end]
    * @api
    * @type {Function}
    * @param {NumericFacetValue} item
    * @returns {string}
-   * @defaultValue Formatted result: [start] - [end]
    */
   @api formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
     item.start

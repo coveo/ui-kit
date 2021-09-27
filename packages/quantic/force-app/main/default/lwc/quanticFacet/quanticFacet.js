@@ -41,7 +41,7 @@ export default class QuanticFacet extends LightningElement {
    * Defaults to given facet label.
    * @api
    * @type {string}
-   * @default (label)
+   * @defaultValue `(field)`
    */
   @api facetId;
   /**
@@ -61,7 +61,7 @@ export default class QuanticFacet extends LightningElement {
    * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    * @api
    * @type {number}
-   * @default 8
+   * @defaultValue `8`
    */
   @api numberOfValues = 8;
   /**
@@ -73,14 +73,14 @@ export default class QuanticFacet extends LightningElement {
    *   - automatic
    * @api
    * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}
-   * @default automatic
+   * @defaultValue `'automatic'`
    */
   @api sortCriteria = 'automatic';
   /**
    * Whether this facet should not contain a search box.
    * @api
    * @type {boolean}
-   * @default false
+   * @defaultValue `false`
    */
   @api noSearch = false;
 

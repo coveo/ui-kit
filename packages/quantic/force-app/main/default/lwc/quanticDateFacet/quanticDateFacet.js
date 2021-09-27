@@ -32,7 +32,7 @@ export default class QuanticDateFacet extends LightningElement {
    * Specifies a unique identifier for the facet.
    * @api
    * @type {string}
-   * @defaultValue [field]
+   * @defaultValue `(field)`
    */
   @api facetId;
   /**
@@ -51,7 +51,7 @@ export default class QuanticDateFacet extends LightningElement {
    * The number of values to request for this facet, when there are no manual ranges.
    * @api
    * @type {number}
-   * @defaultValue 8
+   * @defaultValue `8`
    */
   @api numberOfValues = 8;
   /**
