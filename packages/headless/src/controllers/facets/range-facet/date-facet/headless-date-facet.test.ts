@@ -23,6 +23,8 @@ import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-reques
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -101,6 +103,55 @@ describe('date facet', () => {
     it('dispatches a search', () => {
       const value = buildMockDateFacetValue();
       dateFacet.toggleSelect(value);
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#deselectAll', () => {
+    beforeEach(() => dateFacet.deselectAll());
+
+    it('dispatches #deselectAllFacetValues with the facet id', () => {
+      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    });
+
+    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+
+      expect(engine.actions).toContainEqual(action);
+    });
+  });
+
+  describe('#sortBy', () => {
+    it('dispatches #updateRangeFacetSortCriterion', () => {
+      const criterion = 'descending';
+      dateFacet.sortBy(criterion);
+      const action = updateRangeFacetSortCriterion({facetId, criterion});
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+      dateFacet.sortBy('descending');
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      dateFacet.sortBy('descending');
 
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type

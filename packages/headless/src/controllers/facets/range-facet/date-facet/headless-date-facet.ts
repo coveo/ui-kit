@@ -14,6 +14,11 @@ import {
   DateRangeInput,
   DateRangeOptions,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 
 export {
   DateFacetOptions,
@@ -43,6 +48,18 @@ export function buildDateFacet(
 
   return {
     ...coreController,
+
+    deselectAll() {
+      coreController.deselectAll();
+      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+    },
+
+    sortBy(criterion: RangeFacetSortCriterion) {
+      coreController.sortBy(criterion);
+      dispatch(
+        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
+    },
 
     toggleSelect: (selection: DateFacetValue) => {
       coreController.toggleSelect(selection);

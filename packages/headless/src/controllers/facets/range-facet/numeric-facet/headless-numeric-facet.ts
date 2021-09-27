@@ -19,6 +19,11 @@ import {
   NumericFacetState,
   NumericRangeOptions,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export {
   buildNumericRange,
@@ -52,6 +57,18 @@ export function buildNumericFacet(
 
   return {
     ...coreController,
+
+    deselectAll() {
+      coreController.deselectAll();
+      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+    },
+
+    sortBy(criterion: RangeFacetSortCriterion) {
+      coreController.sortBy(criterion);
+      dispatch(
+        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
+    },
 
     toggleSelect: (selection: NumericFacetValue) => {
       coreController.toggleSelect(selection);
