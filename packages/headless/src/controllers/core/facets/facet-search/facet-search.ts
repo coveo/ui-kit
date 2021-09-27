@@ -1,6 +1,4 @@
 import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {logFacetSelect} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
@@ -15,7 +13,8 @@ import {
   FacetSearchSection,
 } from '../../../../state/state-sections';
 import {CoreEngine} from '../../../../app/engine';
-import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 
@@ -29,7 +28,7 @@ export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
 export function buildGenericFacetSearch<T extends FacetSearchState>(
   engine: CoreEngine<
     ConfigurationSection & (FacetSearchSection | CategoryFacetSearchSection),
-    SearchThunkExtraArguments
+    ClientThunkExtraArguments<FacetSearchAPIClient>
   >,
   props: GenericFacetSearchProps<T>
 ) {
@@ -72,11 +71,11 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
     },
 
     /** Selects a search result.*/
-    select(value: GenericFacetSearchResult) {
-      const facetValue = value.rawValue;
+    select(_value: GenericFacetSearchResult) {
+      // const facetValue = value.rawValue;
 
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(logFacetSelect({facetId, facetValue})));
+      // dispatch(executeSearch(logFacetSelect({facetId, facetValue})));
     },
 
     /** Resets the query and empties the values. */

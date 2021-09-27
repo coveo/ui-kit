@@ -94,8 +94,8 @@ export const fetchProductListing = createAsyncThunk<
   'productlisting/fetch',
   async (_action, {getState, rejectWithValue, extra}) => {
     const state = getState();
-    const {productListingClient} = extra;
-    const fetched = await productListingClient.getProducts(
+    const {apiClient} = extra;
+    const fetched = await apiClient.getProducts(
       buildProductListingRequest(state)
     );
 

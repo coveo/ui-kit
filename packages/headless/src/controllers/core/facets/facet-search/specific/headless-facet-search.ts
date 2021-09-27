@@ -14,6 +14,7 @@ import {CoreEngine} from '../../../../../app/engine';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;
+  // select: (value: SpecificFacetSearchResult) => void;
 }
 
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;

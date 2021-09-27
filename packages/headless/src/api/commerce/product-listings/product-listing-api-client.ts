@@ -3,6 +3,12 @@ import {ProductListingThunkExtraArguments} from '../../../app/product-listing-th
 import {ProductListingAppState} from '../../../state/product-listing-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
+import {FacetSearchRequest} from '../../search/facet-search/facet-search-request';
+import {FacetSearchResponse} from '../../search/facet-search/facet-search-response';
+import {
+  FacetSearchAPIClient,
+  SearchAPIClient,
+} from '../../search/search-api-client';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
   buildProductListingRequest,
@@ -59,8 +65,11 @@ export interface ProductListingAPIErrorResponse {
 /**
  * The client to use to interface with the Product Listing API.
  */
-export class ProductListingAPIClient {
-  constructor(private options: ProductListingAPIClientOptions) {}
+export class ProductListingAPIClient implements FacetSearchAPIClient {
+  constructor(
+    private options: ProductListingAPIClientOptions,
+    private searchAPIClient: SearchAPIClient
+  ) {}
 
   /**
    * Retrieves the product listing from the API.
@@ -84,5 +93,9 @@ export class ProductListingAPIClient {
     return response.ok
       ? {success: body as ProductListingSuccessResponse}
       : {error: body as ProductListingAPIErrorStatusResponse};
+  }
+
+  async facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse> {
+    return this.searchAPIClient.facetSearch(req);
   }
 }

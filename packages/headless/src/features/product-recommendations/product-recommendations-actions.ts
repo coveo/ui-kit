@@ -142,10 +142,10 @@ export const getProductRecommendations = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByGetProductRecommendations>
 >(
   'productrecommendations/get',
-  async (_, {getState, rejectWithValue, extra: {searchAPIClient}}) => {
+  async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();
-    const fetched = await searchAPIClient.productRecommendations(
+    const fetched = await apiClient.productRecommendations(
       buildProductRecommendationsRequest(state)
     );
     const duration = new Date().getTime() - startedAt;

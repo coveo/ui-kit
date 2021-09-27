@@ -29,15 +29,29 @@ import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
-import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {FacetSearchResponse} from './facet-search/facet-search-response';
+
+export interface FacetSearchAPIClient {
+  facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
+}
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
-export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>>
-  extends AsyncThunkOptions<T, SearchThunkExtraArguments> {
+export interface AsyncThunkSearchOptions<
+  T extends Partial<SearchAppState>
+> extends AsyncThunkOptions<
+    T,
+    ClientThunkExtraArguments<SearchAPIClient> & {
+      /*
+       * @deprecated This property is now unused, please use `apiClient` instead.
+       */
+      searchAPIClient?: SearchAPIClient;
+    }
+  > {
   rejectValue: SearchAPIErrorWithStatusCode;
 }
 
@@ -53,7 +67,7 @@ export type SearchAPIClientResponse<T> =
   | {success: T}
   | {error: SearchAPIErrorWithStatusCode};
 
-export class SearchAPIClient {
+export class SearchAPIClient implements FacetSearchAPIClient {
   constructor(private options: SearchAPIClientOptions) {}
 
   async plan(
