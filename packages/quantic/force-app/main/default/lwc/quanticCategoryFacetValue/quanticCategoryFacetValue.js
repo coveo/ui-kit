@@ -18,9 +18,6 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     if(this.activeparent) {
       return "slds-var-m-left_large slds-grid";
     }
-    if(this.nonactiveparent) {
-      return "slds-grid"
-    }
     return "slds-grid";
   }
   /**
