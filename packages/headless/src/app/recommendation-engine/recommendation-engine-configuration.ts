@@ -59,7 +59,6 @@ export const recommendationEngineConfigurationSchema =
 export function getSampleRecommendationEngineConfiguration(): RecommendationEngineConfiguration {
   return {
     ...getSampleEngineConfiguration(),
-    pipeline: 'default',
     searchHub: 'default',
   };
 }
