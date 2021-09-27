@@ -31,8 +31,6 @@ export default class QuanticNumericFacet extends LightningElement {
   @api sortCriteria = 'ascending';
   /** @type {import("coveo").RangeFacetRangeAlgorithm} */
   @api rangeAlgorithm = 'equiprobable';
-  /** @type {boolean} */
-  @api isCollapsed = false;
   /** @type {(any) => string} */
   @api formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
     item.start
@@ -65,7 +63,6 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
-    this.isExpanded = !this.isCollapsed;
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
       options: {
         field: this.field,
