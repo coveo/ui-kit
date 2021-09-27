@@ -54,21 +54,21 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @type {string[]}
    * @defaultValue `[]`
    */
-  @api basePath;
+  @api basePath = [];
   /**
-   * Whether to use basePath as a filter for the results.
+   * Whether not to use basePath as a filter for the results.
    * @api
    * @type {boolean}
-   * @defaultValue `true`
+   * @defaultValue `false`
    */
-  @api filterByBasePath;
+  @api noFilterByBasePath = false;
   /**
    * The character that separates values of a multi-value field.
    * @api
    * @type {string}
    * @defaultValue `;`
    */
-  @api delimitingCharacter;
+  @api delimitingCharacter = ';';
   /**
    * Specifies if the facet should be collapsed.
    * @api
