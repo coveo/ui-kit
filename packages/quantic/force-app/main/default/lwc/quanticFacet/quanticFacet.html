@@ -25,7 +25,7 @@
           </lightning-button>
         </template>
         <template if:true={isExpanded}>
-          <ul class="slds-has-dividers_around-space">
+          <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template if:false={noSearch}>
               <div onchange={handleKeyUp} class="slds-size_1-of-1">
                 <lightning-input class="facet__searchbox-input slds-p-horizontal_x-small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
@@ -42,7 +42,7 @@
                   display-as-link={isDisplayAsLink}>
                 </c-quantic-facet-value>
               </template>
-              <div class="facet__show slds-p-horizontal_x-small">
+              <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
                   <button variant="base" label={labels.showLess}
                     class="facet__show-less slds-p-around_none" onclick={showLess} data-cy="less">

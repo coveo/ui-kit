@@ -32,6 +32,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   @api engineId;
   /** @type {boolean} */
   @api noSearch = false;
+  /** @type {boolean} */
+  @api isCollapsed = false;
 
   /** @type {import("coveo").CategoryFacet}} */
   facet;
@@ -83,6 +85,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    this.isExpanded = !this.isCollapsed;
   }
 
   updateState() {

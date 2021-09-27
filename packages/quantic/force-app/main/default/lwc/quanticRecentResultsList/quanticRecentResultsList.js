@@ -25,6 +25,8 @@ export default class QuanticRecentResultsList extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api maxLength = 10;
+  /** @type {boolean} */
+  @api isCollapsed = false;
   /** @type {string} */
   @api label = this.labels.recentResultsLabel;
 
@@ -57,6 +59,7 @@ export default class QuanticRecentResultsList extends LightningElement {
       }
     });
     this.unsubscribe = this.recentResultsList.subscribe(() => this.updateState());
+    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {

@@ -28,6 +28,8 @@ export default class QuanticNumericFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
+  /** @type {boolean} */
+  @api isCollapsed = false;
   /** @type {import("coveo").RangeFacetSortCriterion} */
   @api sortCriteria = 'ascending';
   /** @type {import("coveo").RangeFacetRangeAlgorithm} */
@@ -76,6 +78,7 @@ export default class QuanticNumericFacet extends LightningElement {
       }
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {

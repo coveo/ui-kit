@@ -24,9 +24,9 @@
           ></lightning-button>
         </template>
         <template if:true={isExpanded}>
-          <ul class="slds-has-dividers_around-space">
+          <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template for:each={values} for:item="v">
-              <c-quantic-facet-value 
+              <c-quantic-facet-value
                 onselectvalue={onSelect} 
                 key={v.start} 
                 item={v} 

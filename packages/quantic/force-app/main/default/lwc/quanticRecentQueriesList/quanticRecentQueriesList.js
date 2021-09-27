@@ -22,6 +22,8 @@ export default class QuanticRecentQueriesList extends LightningElement {
   @api label = this.labels.recentQueriesLabel;
   /** @type {number} */
   @api maxLength = 10;
+  /** @type {boolean} */
+  @api isCollapsed = false;
   /** @type {string} */
   @api engineId;
   
@@ -53,6 +55,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
       },
     });
     this.unsubscribe = this.recentQueriesList.subscribe(() => this.updateState());
+    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {

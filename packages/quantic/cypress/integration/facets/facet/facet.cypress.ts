@@ -374,4 +374,22 @@ describe('Facet Test Suite', () => {
       Expect.displaySearchInput(false);
     });
   });
+
+  describe('with is collapsed', () => {
+    function setupIsCollapsed() {
+      visitFacetPage({
+        isCollapsed: true,
+      });
+    }
+
+    describe('verify rendering', () => {
+      before(setupIsCollapsed);
+
+      Expect.labelContains(defaultLabel);
+      Expect.displayExpandButton(true);
+      Expect.displaySearchInput(false);
+      Expect.numberOfIdleCheckboxValues(0);
+      Expect.displayShowMoreButton(false);
+    });
+  });
 });

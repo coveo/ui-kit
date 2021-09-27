@@ -28,6 +28,8 @@ export default class QuanticDateFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
+  /** @type {boolean} */
+  @api isCollapsed = false;
   /** @type {(any) => string} */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.start)
@@ -70,6 +72,7 @@ export default class QuanticDateFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {

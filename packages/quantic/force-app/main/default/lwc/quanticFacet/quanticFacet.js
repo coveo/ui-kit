@@ -84,6 +84,7 @@ export default class QuanticFacet extends LightningElement {
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    this.isExpanded = !this.isCollapsed;
   }
 
   connectedCallback() {
