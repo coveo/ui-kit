@@ -1,1 +1,1 @@
-export const getPipelineInitialState = () => 'default';
+export const getPipelineInitialState = () => '';

@@ -89,7 +89,6 @@ export function getSampleSearchEngineConfiguration(): SearchEngineConfiguration 
   return {
     ...getSampleEngineConfiguration(),
     search: {
-      pipeline: 'default',
       searchHub: 'default',
     },
   };
