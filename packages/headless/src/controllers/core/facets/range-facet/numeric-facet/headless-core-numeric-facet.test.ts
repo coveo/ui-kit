@@ -1,30 +1,31 @@
 import {
   NumericFacet,
-  buildNumericFacet,
+  buildCoreNumericFacet,
   NumericFacetOptions,
   buildNumericRange,
-} from './headless-numeric-facet';
+} from './headless-core-numeric-facet';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
-} from '../../../../test/mock-engine';
-import {createMockState} from '../../../../test/mock-state';
-import {executeSearch} from '../../../../features/search/search-actions';
+} from '../../../../../test/mock-engine';
+import {createMockState} from '../../../../../test/mock-state';
 import {
   deselectAllNumericFacetValues,
   registerNumericFacet,
   toggleSelectNumericFacetValue,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {SearchAppState} from '../../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
+import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {SearchAppState} from '../../../../../state/search-app-state';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import {
+  configuration,
+  numericFacetSet,
+  search,
+} from '../../../../../app/reducers';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -35,7 +36,7 @@ describe('numeric facet', () => {
 
   function initNumericFacet() {
     engine = buildMockSearchAppEngine({state});
-    numericFacet = buildNumericFacet(engine, {options});
+    numericFacet = buildCoreNumericFacet(engine, {options});
   }
 
   beforeEach(() => {
@@ -106,65 +107,6 @@ describe('numeric facet', () => {
       const action = toggleSelectNumericFacetValue({facetId, selection: value});
       expect(engine.actions).toContainEqual(action);
     });
-
-    it('dispatches a search', () => {
-      const value = buildMockNumericFacetValue();
-      numericFacet.toggleSelect(value);
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
-  });
-
-  describe('#deselectAll', () => {
-    beforeEach(() => numericFacet.deselectAll());
-
-    it('dispatches #deselectAllFacetValues with the facet id', () => {
-      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
-    });
-
-    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
-    });
-
-    it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-
-      expect(engine.actions).toContainEqual(action);
-    });
-  });
-
-  describe('#sortBy', () => {
-    it('dispatches #updateRangeFacetSortCriterion', () => {
-      const criterion = 'descending';
-      numericFacet.sortBy(criterion);
-      const action = updateRangeFacetSortCriterion({facetId, criterion});
-
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      numericFacet.sortBy('descending');
-
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
-    });
-
-    it('dispatches a search', () => {
-      numericFacet.sortBy('descending');
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
   });
 
   function testCommonToggleSingleSelect(facetValue: () => NumericFacetValue) {
@@ -182,15 +124,6 @@ describe('numeric facet', () => {
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
-    });
-
-    it('dispatches a search', () => {
-      numericFacet.toggleSingleSelect(facetValue());
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   }
 

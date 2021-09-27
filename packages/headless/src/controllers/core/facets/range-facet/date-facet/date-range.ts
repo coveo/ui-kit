@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {formatDateForSearchApi} from '../../../../api/search/date/date-format';
+import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {FacetValueState} from '../../../../../features/facets/facet-api/value';
+import {formatDateForSearchApi} from '../../../../../api/search/date/date-format';
 import {
   serializeRelativeDate,
   isRelativeDate,
   isRelativeDateFormat,
   RelativeDate,
-} from '../../../../api/search/date/relative-date';
+} from '../../../../../api/search/date/relative-date';
 import {isUndefined} from '@coveo/bueno';
 
 dayjs.extend(customParseFormat);

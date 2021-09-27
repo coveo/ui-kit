@@ -1,37 +1,35 @@
-import {buildController} from '../../controller/headless-controller';
+import {buildController} from '../../../controller/headless-controller';
 import {
   RangeFacetResponse,
   RangeFacetRequest,
-} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
+} from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {
-  logFacetUpdateSort,
-  logFacetClearAll,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {executeSearch} from '../../../features/search/search-actions';
-import {baseFacetResponseSelector} from '../../../features/facets/facet-set/facet-set-selectors';
-import {RangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
-import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+  baseFacetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   ConfigurationSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
+} from '../../../../state/state-sections';
+import {isRangeFacetValueSelected} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {CoreEngine} from '../../../../app/engine';
 
-export type RangeFacet = ReturnType<typeof buildRangeFacet>;
+export type RangeFacet = ReturnType<typeof buildCoreRangeFacet>;
 
 export type RangeFacetProps<T extends RangeFacetRequest> = {
   facetId: string;
   getRequest: () => T;
 };
 
-export function buildRangeFacet<
+export function buildCoreRangeFacet<
   T extends RangeFacetRequest,
   R extends RangeFacetResponse
 >(
-  engine: SearchEngine<ConfigurationSection & SearchSection>,
+  engine: CoreEngine<ConfigurationSection & SearchSection>,
   props: RangeFacetProps<T>
 ) {
   type RangeFacetValue = R['values'][0];
@@ -48,13 +46,11 @@ export function buildRangeFacet<
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
     isSortedBy(criterion: RangeFacetSortCriterion) {
@@ -69,7 +65,7 @@ export function buildRangeFacet<
 
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];
-      const isLoading = engine.state.search.isLoading;
+      const isLoading = isFacetLoadingResponseSelector(engine.state);
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );

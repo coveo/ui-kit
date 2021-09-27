@@ -6,14 +6,14 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {facetValueStates} from '../../../../features/facets/facet-api/value';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {facetValueStates} from '../../../../../features/facets/facet-api/value';
+import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {
   rangeFacetRangeAlgorithm,
   RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
   RangeFacetSortCriterion,
-} from '../../../../features/facets/range-facets/generic/interfaces/request';
+} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {
   field,
   facetId,
@@ -21,15 +21,15 @@ import {
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-} from '../../../core/facets/_common/facet-option-definitions';
-import {validateOptions} from '../../../../utils/validate-payload';
+} from '../../../../core/facets/_common/facet-option-definitions';
+import {validateOptions} from '../../../../../utils/validate-payload';
 import {
   ConfigurationSection,
   DateFacetSection,
   SearchSection,
-} from '../../../../state/state-sections';
-import {validateManualDateRanges} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
+} from '../../../../../state/state-sections';
+import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {CoreEngine} from '../../../../../app/engine';
 
 export interface DateFacetOptions {
   /**
@@ -125,7 +125,7 @@ export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
 });
 
 export function validateDateFacetOptions(
-  engine: SearchEngine<ConfigurationSection & SearchSection & DateFacetSection>,
+  engine: CoreEngine<ConfigurationSection & SearchSection & DateFacetSection>,
   options: DateFacetOptions
 ) {
   validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
