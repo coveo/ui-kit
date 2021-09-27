@@ -85,3 +85,47 @@ export {
   CategoryFacetSearchResult,
   buildCategoryFacet,
 } from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
+
+export {
+  DateFacet,
+  DateFacetOptions,
+  DateFacetProps,
+  DateFacetState,
+  DateRangeInput,
+  DateRangeOptions,
+  DateRangeRequest,
+  buildDateFacet,
+  buildDateRange,
+} from './controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
+
+export {
+  buildDateFilter,
+  DateFilter,
+  DateFilterOptions,
+  DateFilterProps,
+  DateFilterRange,
+  DateFilterState,
+  DateFilterInitialState,
+} from './controllers/product-listing/range-facet/date-facet/headless-product-listing-date-filter';
+
+export {
+  NumericFacet,
+  NumericFacetOptions,
+  NumericFacetProps,
+  NumericFacetState,
+  NumericFacetValue,
+  NumericRangeOptions,
+  NumericRangeRequest,
+  buildNumericFacet,
+  buildNumericRange,
+} from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-facet';
+
+export {
+  buildNumericFilter,
+  NumericFilter,
+  NumericFilterOptions,
+  NumericFilterProps,
+  NumericFilterRange,
+  NumericFilterState,
+  NumericFilterInitialState,
+} from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';
