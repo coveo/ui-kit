@@ -10,8 +10,17 @@ import {loadReducerError} from '../../utils/errors';
 import {
   buildCoreResultsPerPage,
   ResultsPerPage,
+  ResultsPerPageInitialState,
   ResultsPerPageProps,
+  ResultsPerPageState,
 } from '../core/results-per-page/headless-core-results-per-page';
+
+export {
+  ResultsPerPage,
+  ResultsPerPageProps,
+  ResultsPerPageInitialState,
+  ResultsPerPageState,
+};
 
 /**
  * Creates a `ResultsPerPage` controller instance.
@@ -43,10 +52,6 @@ export function buildResultsPerPage(
     set(num: number) {
       coreController.set(num);
       dispatch(executeSearch(logPagerResize()));
-    },
-
-    isSetTo(num: number) {
-      return coreController.isSetTo(num);
     },
   };
 }
