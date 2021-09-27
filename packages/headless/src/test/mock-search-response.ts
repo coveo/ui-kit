@@ -16,6 +16,7 @@ export function buildMockSearchResponse(
     queryCorrections: [emptyCorrection()],
     triggers: [],
     questionAnswer: emptyQuestionAnswer(),
+    pipeline: '',
     ...config,
   };
 }
@@ -34,6 +35,7 @@ export function buildMockSearchResponseWithDebugInfo(
       children: [],
       duration: 0,
     },
+    pipeline: '',
     ...config,
   };
 }
