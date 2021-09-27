@@ -21,11 +21,11 @@ describe('ReducerManager', () => {
 
   it('when all keys exist, #containsAll returns true', () => {
     const manager = createReducerManager({pagination, search});
-    expect(manager.containsAll(['pagination', 'search'])).toBe(true);
+    expect(manager.containsAll({pagination, search})).toBe(true);
   });
 
   it('when only some keys exist, #containsAll returns false', () => {
     const manager = createReducerManager({pagination});
-    expect(manager.containsAll(['pagination', 'search'])).toBe(false);
+    expect(manager.containsAll({pagination, search})).toBe(false);
   });
 });

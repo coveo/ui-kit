@@ -3,7 +3,7 @@ import {combineReducers, ReducersMapObject, Reducer} from '@reduxjs/toolkit';
 export interface ReducerManager {
   combinedReducer: Reducer;
   add: (newReducers: ReducersMapObject) => void;
-  containsAll(keys: string[]): boolean;
+  containsAll(newReducers: ReducersMapObject): boolean;
 }
 
 export function createReducerManager(
@@ -16,7 +16,8 @@ export function createReducerManager(
       return combineReducers(reducers);
     },
 
-    containsAll(keys: string[]) {
+    containsAll(newReducers: ReducersMapObject) {
+      const keys = Object.keys(newReducers);
       return keys.every((key) => key in reducers);
     },
 

@@ -168,9 +168,7 @@ function buildCoreEngine<
 
   return {
     addReducers(reducers: ReducersMapObject) {
-      const keys = Object.keys(reducers);
-
-      if (reducerManager.containsAll(keys)) {
+      if (reducerManager.containsAll(reducers)) {
         return;
       }
 
