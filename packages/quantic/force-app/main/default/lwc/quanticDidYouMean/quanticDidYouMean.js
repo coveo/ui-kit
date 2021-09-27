@@ -25,16 +25,16 @@ export default class QuanticDidYouMean extends LightningElement {
    */
   @api engineId;
 
-  /** @type {Boolean}*/
+  /** @type {boolean}*/
   @track hasQueryCorrection;
-  /** @type {Boolean}*/
+  /** @type {boolean}*/
   @track wasAutomaticallyCorrected;
   /** @type {string}*/
   @track originalQuery;
   /** @type {string}*/
   @track correctedQuery;
 
-  /** @type {Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {DidYouMean} */
   didYouMean;

@@ -14,8 +14,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").NumericFacet} NumericFacet */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
-/** @typedef {import("coveo").RangeFacetSortCriterion} RangeFacetSortCriterion */
-/** @typedef {import("coveo").RangeFacetRangeAlgorithm} RangeFacetRangeAlgorithm */
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
@@ -59,7 +57,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    * @api
-   * @type {RangeFacetSortCriterion}
+   * @type {'ascending' | 'descending'}
    * @defaultValue 'ascending'
    */
   @api sortCriteria = 'ascending';
@@ -68,7 +66,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * The default value of "even" generates equally sized facet ranges across all of the results.
    * The value "equiprobable" generates facet ranges which vary in size but have a more balanced number of results within each range.
    * @api
-   * @type {RangeFacetRangeAlgorithm}
+   * @type {'even' | 'equiprobable'}
    * @defaultValue 'equiprobable'
    */
   @api rangeAlgorithm = 'equiprobable';

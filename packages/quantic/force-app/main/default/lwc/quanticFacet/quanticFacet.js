@@ -18,7 +18,6 @@ import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /** @typedef {import("coveo").FacetState} FacetState */
-/** @typedef {import("coveo").FacetSortCriterion} FacetSortCriterion */
 /** @typedef {import("coveo").Facet} Facet */
 /** @typedef {import("coveo").FacetValue} FacetValue */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -73,7 +72,7 @@ export default class QuanticFacet extends LightningElement {
    *   - occurences
    *   - automatic
    * @api
-   * @type  {FacetSortCriterion}
+   * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}
    * @default automatic
    */
   @api sortCriteria = 'automatic';

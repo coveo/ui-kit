@@ -65,7 +65,7 @@ export default class QuanticSearchInterface extends LightningElement {
   /**
    * Whether not to perform a search once the interface and it's components are initialized.
    * @api
-   * @type {Boolean}
+   * @type {boolean}
    * @defaultValue false
    */
   @api skipFirstSearch = false;

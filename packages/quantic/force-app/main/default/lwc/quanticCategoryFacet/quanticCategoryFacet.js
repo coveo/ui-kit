@@ -18,7 +18,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
 /** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
-/** @typedef {import("coveo").CategoryFacetSortCriterion} CategoryFacetSortCriterion */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -92,7 +91,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   - occurences
    *   - automatic
    * @api
-   * @type  {CategoryFacetSortCriterion}
+   * @type  {'alphanumeric' | 'occurrences'}
    * @default `occurences`
    */
   @api sortCriteria = 'occurrences';
@@ -162,7 +161,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
         delimitingCharacter: this.delimitingCharacter,
         basePath: this.basePath,
-        filterByBasePath: this.filterByBasePath,
+        filterByBasePath: !this.noFilterByBasePath,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
       },
