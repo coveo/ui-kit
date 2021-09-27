@@ -57,6 +57,22 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
       });
     },
 
+    facetValuesEqual: (responseValuesAlias: string) => {
+      it('should contain facet values in specific order', () => {
+        cy.get(responseValuesAlias).then((responseValues) => {
+          selector
+            .valueLabel()
+            .should('have.length', responseValues.length)
+            .then((elements) => {
+              return Cypress.$.makeArray(elements).map(
+                (element) => element.innerText
+              );
+            })
+            .should('deep.equal', responseValues);
+        });
+      });
+    },
+
     logClearFacetValues: (field: string) => {
       it('should log the facet clear all to UA', () => {
         cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {

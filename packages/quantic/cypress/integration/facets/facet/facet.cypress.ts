@@ -2,7 +2,11 @@ import {configure} from '../../../page-objects/configurator';
 
 import {FacetSelectors} from './facet-selectors';
 import {FacetExpectations as Expect} from './facet-expectations';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {
+  extractFacetValues,
+  InterceptAliases,
+  interceptSearch,
+} from '../../../page-objects/search';
 import {checkFirstValue, checkLastValue} from './facet-actions';
 
 interface FacetOptions {
@@ -14,7 +18,7 @@ interface FacetOptions {
 }
 
 describe('Facet Test Suite', () => {
-  const pageUrl = `${Cypress.env('examplesUrl')}/s/quantic-facet`;
+  const pageUrl = 's/quantic-facet';
 
   const defaultField = 'objecttype';
   const defaultLabel = 'Type';
@@ -38,12 +42,21 @@ describe('Facet Test Suite', () => {
   }
 
   describe('with values', () => {
+    const indexFacetValuesAlias = '@indexFacetValues';
+    function aliasFacetValues() {
+      cy.wait(InterceptAliases.Search).then((interception) => {
+        const indexValues = extractFacetValues(interception.response);
+        cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
+      });
+    }
+
     function setupWithValues() {
       visitFacetPage({
         field: defaultField,
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
+      aliasFacetValues();
     }
 
     describe('verify rendering', () => {
@@ -57,6 +70,7 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+      Expect.facetValuesEqual(indexFacetValuesAlias);
     });
 
     describe('when selecting a value', () => {
@@ -268,12 +282,13 @@ describe('Facet Test Suite', () => {
           });
           cy.wait(InterceptAliases.Search);
           FacetSelectors.showMoreButton().click();
-          cy.wait(InterceptAliases.Search);
+          aliasFacetValues();
         }
 
         describe('verify rendering', () => {
           before(showMoreValues);
 
+          Expect.facetValuesEqual(indexFacetValuesAlias);
           Expect.numberOfValues(smallNumberOfValues * 2);
         });
 
@@ -281,12 +296,13 @@ describe('Facet Test Suite', () => {
           function showMoreValuesAgain() {
             showMoreValues();
             FacetSelectors.showMoreButton().click();
-            cy.wait(InterceptAliases.Search);
+            aliasFacetValues();
           }
 
           describe('verify rendering', () => {
             before(showMoreValuesAgain);
 
+            Expect.facetValuesEqual(indexFacetValuesAlias);
             Expect.numberOfValues(smallNumberOfValues * 3);
           });
 
@@ -294,12 +310,13 @@ describe('Facet Test Suite', () => {
             function showLessValues() {
               showMoreValuesAgain();
               FacetSelectors.showLessButton().click();
-              cy.wait(InterceptAliases.Search);
+              aliasFacetValues();
             }
 
             describe('verify rendering', () => {
               before(showLessValues);
 
+              Expect.facetValuesEqual(indexFacetValuesAlias);
               Expect.numberOfValues(smallNumberOfValues);
             });
           });
