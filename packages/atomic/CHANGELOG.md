@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.1...@coveo/atomic@1.2.2) (2021-09-27)
+
+
+### Bug Fixes
+
+* **atomic:** add timeframe future locales & allow timeframes in refine modal ([#1251](https://github.com/coveo/ui-kit/issues/1251)) ([aa2c1c8](https://github.com/coveo/ui-kit/commit/aa2c1c8f7918c4620308a4d976f8cd970a071c62))
+
+
+
+
+
 ## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.0...@coveo/atomic@1.2.1) (2021-09-27)
 
 
