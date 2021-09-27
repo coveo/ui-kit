@@ -6,7 +6,6 @@ import {updateFacetSearch} from '../../../../features/facets/facet-search-set/sp
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
-import {executeSearch} from '../../../../features/search/search-actions';
 import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options';
 import {
   buildGenericFacetSearch,
@@ -114,12 +113,12 @@ describe('FacetSearch', () => {
       );
     });
 
-    it('dispatches #executeSearch', () => {
+    /*it('dispatches #executeSearch', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
-    });
+    });*/
   });
 
   it('#clear dispatches #clearFacetSearch', () => {

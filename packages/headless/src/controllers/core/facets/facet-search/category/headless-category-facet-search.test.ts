@@ -13,7 +13,6 @@ import {
 } from './headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
-import {executeSearch} from '../../../../../features/search/search-actions';
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('CategoryFacetSearch', () => {
@@ -80,11 +79,11 @@ describe('CategoryFacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #executeSearch action', () => {
+    /*it('dispatches #executeSearch action', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
-    });
+    });*/
   });
 });
