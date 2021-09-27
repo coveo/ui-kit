@@ -32,7 +32,7 @@ import {selectFacetSearchResult} from '../facets/facet-search-set/specific/speci
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 
 export const minimumPage = 1;
-export const maximumNumberOfResultsFromIndex = 1000;
+export const maximumNumberOfResultsFromIndex = 5000;
 
 export const paginationReducer = createReducer(
   getPaginationInitialState(),
