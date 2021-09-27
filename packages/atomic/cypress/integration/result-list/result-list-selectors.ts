@@ -29,27 +29,21 @@ export const ResultListSelectors = {
   firstResult: () => ResultListSelectors.result().first().shadow(),
   sections: {
     visual: () =>
-      ResultListSelectors.firstResult().find('atomic-result-section-visual'),
+      ResultListSelectors.firstResult().find(resultSectionTags.visual),
     badges: () =>
-      ResultListSelectors.firstResult().find('atomic-result-section-badges'),
+      ResultListSelectors.firstResult().find(resultSectionTags.badges),
     actions: () =>
-      ResultListSelectors.firstResult().find('atomic-result-section-actions'),
+      ResultListSelectors.firstResult().find(resultSectionTags.actions),
     title: () =>
-      ResultListSelectors.firstResult().find('atomic-result-section-title'),
+      ResultListSelectors.firstResult().find(resultSectionTags.title),
     titleMetadata: () =>
-      ResultListSelectors.firstResult().find(
-        'atomic-result-section-title-metadata'
-      ),
+      ResultListSelectors.firstResult().find(resultSectionTags.titleMetadata),
     emphasized: () =>
-      ResultListSelectors.firstResult().find(
-        'atomic-result-section-emphasized'
-      ),
+      ResultListSelectors.firstResult().find(resultSectionTags.emphasized),
     excerpt: () =>
-      ResultListSelectors.firstResult().find('atomic-result-section-excerpt'),
+      ResultListSelectors.firstResult().find(resultSectionTags.excerpt),
     bottomMetadata: () =>
-      ResultListSelectors.firstResult().find(
-        'atomic-result-section-bottom-metadata'
-      ),
+      ResultListSelectors.firstResult().find(resultSectionTags.bottomMetadata),
   },
 };
 
