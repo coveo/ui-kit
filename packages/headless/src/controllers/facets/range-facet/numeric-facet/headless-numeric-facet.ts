@@ -5,7 +5,6 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {buildNumericRange, NumericRangeOptions} from './numeric-range';
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
@@ -13,10 +12,12 @@ import {executeSearch} from '../../../../features/search/search-actions';
 import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {
   buildCoreNumericFacet,
+  buildNumericRange,
   NumericFacet,
   NumericFacetOptions,
   NumericFacetProps,
   NumericFacetState,
+  NumericRangeOptions,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
 
 export {

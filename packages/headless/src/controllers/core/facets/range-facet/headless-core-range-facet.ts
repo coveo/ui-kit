@@ -3,7 +3,10 @@ import {
   RangeFacetResponse,
   RangeFacetRequest,
 } from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {baseFacetResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {
+  baseFacetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from '../../../../features/facets/facet-set/facet-set-selectors';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
@@ -62,7 +65,7 @@ export function buildCoreRangeFacet<
 
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];
-      const isLoading = engine.state.search.isLoading;
+      const isLoading = isFacetLoadingResponseSelector(engine.state);
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );

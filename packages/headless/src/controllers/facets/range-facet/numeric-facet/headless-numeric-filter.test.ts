@@ -12,7 +12,6 @@ import {
   NumericFilterInitialState,
   NumericFilterOptions,
 } from './headless-numeric-filter';
-import {buildNumericRange} from './numeric-range';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {
   registerNumericFacet,
@@ -22,6 +21,7 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {executeSearch} from '../../../../features/search/search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildNumericRange} from '../../../core/facets/range-facet/numeric-facet/numeric-range';
 
 describe('numeric filter', () => {
   const facetId = '1';

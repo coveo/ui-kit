@@ -6,14 +6,11 @@ import {
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
   logFacetClearAll,
   logFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {updateDateFacetValues} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   buildCoreDateFilter,
   DateFilter,
@@ -52,33 +49,18 @@ export function buildDateFilter(
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
     setRange: (range) => {
-      const facetValue: DateFacetValue = {
-        ...range,
-        state: 'selected',
-        numberOfResults: 0,
-        endInclusive: true,
-      };
-
-      const updateFacetValuesAction = updateDateFacetValues({
-        facetId: getFacetId(),
-        values: [facetValue],
-      });
-
-      if (updateFacetValuesAction.error) {
-        return false;
+      const success = coreController.setRange(range);
+      if (success) {
+        dispatch(
+          executeSearch(
+            logFacetSelect({
+              facetId: getFacetId(),
+              facetValue: `${range.start}..${range.end}`,
+            })
+          )
+        );
       }
-
-      dispatch(updateFacetValuesAction);
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(
-        executeSearch(
-          logFacetSelect({
-            facetId: getFacetId(),
-            facetValue: `${facetValue.start}..${facetValue.end}`,
-          })
-        )
-      );
-      return true;
+      return success;
     },
 
     get state() {

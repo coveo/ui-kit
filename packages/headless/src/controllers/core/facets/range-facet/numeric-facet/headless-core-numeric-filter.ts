@@ -24,6 +24,7 @@ import {
 import {validateNumericFacetOptions} from './headless-numeric-facet-options';
 import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {CoreEngine} from '../../../../../app/engine';
+import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
 
 /**
  * The options defining a `NumericFilter`.
@@ -187,7 +188,7 @@ export function buildCoreNumericFilter(
     },
 
     get state() {
-      const isLoading = getState().search.isLoading;
+      const isLoading = isFacetLoadingResponseSelector(getState());
       const selectedRanges = numericFacetSelectedValuesSelector(
         getState(),
         facetId

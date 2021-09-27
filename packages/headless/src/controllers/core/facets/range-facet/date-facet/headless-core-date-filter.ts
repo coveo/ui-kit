@@ -20,6 +20,7 @@ import {
 import {validateDateFacetOptions} from './headless-date-facet-options';
 import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {CoreEngine} from '../../../../../app/engine';
+import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
 
 /**
  * The options defining a `DateFilter`.
@@ -119,7 +120,7 @@ export interface DateFilter extends Controller {
    * @param range - The date range.
    * @returns Whether the range is valid.
    */
-  setRange(range: DateFilterRange): void;
+  setRange(range: DateFilterRange): boolean;
 
   /**
    * The state of the `DateFacet` controller.
@@ -185,7 +186,7 @@ export function buildCoreDateFilter(
     },
 
     get state() {
-      const isLoading = getState().search.isLoading;
+      const isLoading = isFacetLoadingResponseSelector(getState());
       const selectedRanges = dateFacetSelectedValuesSelector(
         getState(),
         facetId
