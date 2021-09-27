@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.0...@coveo/atomic@1.2.1) (2021-09-27)
+
+
+### Bug Fixes
+
+* **headless:** rework default pipeline parameter ([#1247](https://github.com/coveo/ui-kit/issues/1247)) ([0be2ef3](https://github.com/coveo/ui-kit/commit/0be2ef37caffec40bcf9deec977019a9c0b43972))
+
+
+
+
+
 # [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.2...@coveo/atomic@1.2.0) (2021-09-27)
 
 

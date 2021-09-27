@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.37.25](https://github.com/coveo/ui-kit/compare/headless-react@0.37.24...headless-react@0.37.25) (2021-09-27)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.37.24](https://github.com/coveo/ui-kit/compare/headless-react@0.37.23...headless-react@0.37.24) (2021-09-22)
 
 **Note:** Version bump only for package headless-react

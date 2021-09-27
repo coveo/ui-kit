@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.2...@coveo/headless@1.20.3) (2021-09-27)
+
+
+### Bug Fixes
+
+* **headless:** rework default pipeline parameter ([#1247](https://github.com/coveo/ui-kit/issues/1247)) ([0be2ef3](https://github.com/coveo/ui-kit/commit/0be2ef37caffec40bcf9deec977019a9c0b43972))
+
+
+
+
+
 ## [1.20.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.1...@coveo/headless@1.20.2) (2021-09-22)
 
 
