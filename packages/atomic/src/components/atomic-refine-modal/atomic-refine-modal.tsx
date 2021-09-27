@@ -69,14 +69,16 @@ export class AtomicRefineModal implements InitializableComponent {
   watchEnabled(modalStatus: ModalStatus) {
     const modalOpenedClass = 'atomic-modal-opened';
 
-    if (modalStatus === 'opened' || modalStatus === 'beingClosed') {
-      document.body.classList.add(modalOpenedClass);
-      this.duplicateFacetElements();
-      return;
+    switch (modalStatus) {
+      case 'opened':
+        document.body.classList.add(modalOpenedClass);
+        this.duplicateFacetElements();
+        break;
+      case 'closed':
+        document.body.classList.remove(modalOpenedClass);
+        this.flushFacetElements();
+        break;
     }
-
-    document.body.classList.remove(modalOpenedClass);
-    this.flushFacetElements();
   }
 
   public initialize() {
@@ -99,7 +101,7 @@ export class AtomicRefineModal implements InitializableComponent {
       .map((f) => f.payload);
 
     sortedFacetsElements.forEach((facetElement) => {
-      const clone = facetElement.cloneNode(false) as HTMLElement;
+      const clone = facetElement.cloneNode(true) as HTMLElement;
       clone.style.marginBottom =
         'var(--atomic-refine-modal-facet-margin, 20px)';
       clone.setAttribute('is-collapsed', 'true');

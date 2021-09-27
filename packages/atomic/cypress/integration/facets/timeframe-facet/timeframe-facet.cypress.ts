@@ -313,11 +313,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
   describe('with custom #period timeframe', () => {
     const period = 'next';
-    const periodFrames = [
-      {unit: 'day', period},
-      {unit: 'week', period},
-      {unit: 'month', period},
-    ];
+    const periodFrames = [{unit: 'year', period, amount: 25}];
     function setupTimeframeFacetCustomAmount() {
       new TestFixture()
         .with(addTimeframeFacet({label, field}, periodFrames))
@@ -326,7 +322,26 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
     describe('verify rendering', () => {
       before(setupTimeframeFacetCustomAmount);
+      CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
+      CommonAssertions.assertAccessibility(timeframeFacetComponent);
       CommonAssertions.assertContainsComponentError(
+        TimeframeFacetSelectors,
+        false
+      );
+      CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
+      CommonFacetAssertions.assertNumberOfIdleLinkValues(
+        TimeframeFacetSelectors,
+        1
+      );
+      CommonFacetAssertions.assertFirstValueContains(
+        TimeframeFacetSelectors,
+        `Next ${periodFrames[0].amount} years`
+      );
+      CommonFacetAssertions.assertNumberOfSelectedLinkValues(
+        TimeframeFacetSelectors,
+        0
+      );
+      CommonFacetAssertions.assertDisplayClearButton(
         TimeframeFacetSelectors,
         false
       );
