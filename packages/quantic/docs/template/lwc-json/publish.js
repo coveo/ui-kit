@@ -1,6 +1,6 @@
 /**
-  @overview Builds a tree-like JSON string from the doclet data.
-  @version 0.0.1 
+ * @overview Builds a tree-like JSON string from the LWC doclet data.
+ * @version 0.0.1 
  */
 'use strict';
 
@@ -168,9 +168,9 @@ function graft(parentNode, childNodes, parentLongname, _parentName) {
 }
 
 /**
-  @param {TAFFY} data
-  @param {object} opts
-*/
+ * @param {TAFFY} data
+ * @param {object} opts
+ */
 exports.publish = function (data, opts) {
   var root = {},
     docs;
