@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.2...@coveo/atomic@1.2.0) (2021-09-27)
+
+
+### Features
+
+* **atomic:** automatically adapt the number of element of the breadbox ([#1241](https://github.com/coveo/ui-kit/issues/1241)) ([b46c290](https://github.com/coveo/ui-kit/commit/b46c290df4615d495c8860eac1b0015b2cc36e03))
+
+
+
+
+
 ## [1.1.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.1...@coveo/atomic@1.1.2) (2021-09-23)
 
 
