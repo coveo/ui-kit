@@ -44,7 +44,7 @@ export const RelevanceInspector: FunctionComponent<RelevanceInspectorProps> = (
           }
         />
       </label>
-      <button onClick={() => controller.fetchFieldsDescription()}>
+      <button onClick={() => controller.fetchFieldDescriptions()}>
         {' '}
         Retrieve fields description
       </button>

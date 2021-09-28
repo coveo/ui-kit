@@ -64,7 +64,7 @@ export class RelevanceInspector extends Component<{}, RelevanceInspectorState> {
             }
           />
         </label>
-        <button onClick={() => this.controller.fetchFieldsDescription()}>
+        <button onClick={() => this.controller.fetchFieldDescriptions()}>
           {' '}
           Retrieve fields description
         </button>
