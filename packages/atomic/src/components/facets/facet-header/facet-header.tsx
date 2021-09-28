@@ -28,7 +28,7 @@ export const FacetHeader: FunctionalComponent<{
     <Button
       style="text-transparent"
       part="label-button"
-      class="flex font-bold justify-between w-full py-1 px-2 text-lg"
+      class="flex font-bold justify-between w-full py-1 px-2 text-lg rounded-none"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
       ariaExpanded={(!props.isCollapsed).toString()}

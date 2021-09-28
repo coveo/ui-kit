@@ -44,7 +44,11 @@ export class AtomicResultPlaceholder {
 
   public render() {
     return (
-      <div class={`result-root animate-pulse ${this.getClasses().join(' ')}`}>
+      <div
+        class={`result-root with-sections animate-pulse ${this.getClasses().join(
+          ' '
+        )}`}
+      >
         <atomic-result-section-visual>
           <div class={placeholderClasses}></div>
         </atomic-result-section-visual>

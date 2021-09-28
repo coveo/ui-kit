@@ -13,8 +13,8 @@ async function authenticateGitClient() {
   await exec(
     `git remote set-url origin https://${credentials}@github.com/coveo/ui-kit.git`
   );
-  await exec('git config --global user.email "jenkins-bot@coveo.com"');
-  await exec('git config --global user.name "Jenkins Bot"');
+  await exec('git config user.email "jenkins-bot@coveo.com"');
+  await exec('git config user.name "Jenkins Bot"');
 }
 
 async function getHeadCommitHash() {

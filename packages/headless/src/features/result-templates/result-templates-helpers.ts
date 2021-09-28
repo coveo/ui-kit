@@ -1,6 +1,7 @@
 import {ResultTemplateCondition} from './result-templates';
 import {isArray} from '../../utils/utils';
 import {Result} from '../../api/search/search/result';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 /**
  * Extracts a property from a result object.
@@ -9,11 +10,12 @@ import {Result} from '../../api/search/search/result';
  * @returns (unknown) The value of the specified property in the specified result, or null if the property does not exist.
  */
 export const getResultProperty = (result: Result, property: string) => {
-  if (property in result) {
-    return (result as unknown as Record<string, unknown>)[property];
+  const anyResult = result as unknown as Record<string, unknown>;
+  if (!isNullOrUndefined(anyResult[property])) {
+    return anyResult[property];
   }
 
-  if (property in result.raw) {
+  if (!isNullOrUndefined(result.raw[property])) {
     return result.raw[property];
   }
 
@@ -29,7 +31,9 @@ export const fieldsMustBeDefined = (
   fieldNames: string[]
 ): ResultTemplateCondition => {
   return (result: Result) => {
-    return fieldNames.every((fieldName) => result.raw[fieldName] !== undefined);
+    return fieldNames.every(
+      (fieldName) => !isNullOrUndefined(getResultProperty(result, fieldName))
+    );
   };
 };
 
@@ -42,7 +46,9 @@ export const fieldsMustNotBeDefined = (
   fieldNames: string[]
 ): ResultTemplateCondition => {
   return (result: Result) => {
-    return fieldNames.every((fieldName) => result.raw[fieldName] === undefined);
+    return fieldNames.every((fieldName) =>
+      isNullOrUndefined(getResultProperty(result, fieldName))
+    );
   };
 };
 
@@ -89,6 +95,6 @@ export const fieldMustNotMatch = (
 };
 
 const getFieldValuesFromResult = (fieldName: string, result: Result) => {
-  const rawValue = result.raw[fieldName];
+  const rawValue = getResultProperty(result, fieldName);
   return isArray(rawValue) ? rawValue : [rawValue];
 };

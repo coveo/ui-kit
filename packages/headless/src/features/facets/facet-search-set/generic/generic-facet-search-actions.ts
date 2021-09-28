@@ -42,6 +42,7 @@ export const executeFacetSearch = createAsyncThunk<
         state as StateNeededForCategoryFacetSearch
       );
     }
+
     const response = await searchAPIClient.facetSearch(req);
     dispatch(logFacetSearch(facetId));
 

@@ -11,7 +11,7 @@ import {
   injectionDepth,
   numberOfValues,
   facetSearch,
-} from '../_common/facet-option-definitions';
+} from '../../core/facets/_common/facet-option-definitions';
 
 export interface FacetOptions {
   /**

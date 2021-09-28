@@ -3,6 +3,96 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.4...@coveo/headless@1.21.0) (2021-09-28)
+
+
+### Features
+
+* **atomic:** set maximumNumberOfResultsFromIndex to 5000 ([#1252](https://github.com/coveo/ui-kit/issues/1252)) ([cf3e48e](https://github.com/coveo/ui-kit/commit/cf3e48e6899859baa1f9164efe4fca7ef2419f0e))
+
+
+
+
+
+## [1.20.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.3...@coveo/headless@1.20.4) (2021-09-28)
+
+
+### Bug Fixes
+
+* **headless:** prevent state update when all reducer keys already exist ([#1246](https://github.com/coveo/ui-kit/issues/1246)) ([89c5217](https://github.com/coveo/ui-kit/commit/89c52170c8aff1b6e463e6107208de470764f44d))
+
+
+
+
+
+## [1.20.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.2...@coveo/headless@1.20.3) (2021-09-27)
+
+
+### Bug Fixes
+
+* **headless:** rework default pipeline parameter ([#1247](https://github.com/coveo/ui-kit/issues/1247)) ([0be2ef3](https://github.com/coveo/ui-kit/commit/0be2ef37caffec40bcf9deec977019a9c0b43972))
+
+
+
+
+
+## [1.20.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.1...@coveo/headless@1.20.2) (2021-09-22)
+
+
+### Bug Fixes
+
+* **headless:** support selecting deep category facet values ([#1214](https://github.com/coveo/ui-kit/issues/1214)) ([dbfce2e](https://github.com/coveo/ui-kit/commit/dbfce2e2a7c47fe675a29dfc4122d32f6066227d))
+
+
+
+
+
+## [1.20.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.0...@coveo/headless@1.20.1) (2021-09-21)
+
+
+### Bug Fixes
+
+* **headless:** validate action that receives a payload that is not an object ([#1227](https://github.com/coveo/ui-kit/issues/1227)) ([9849f97](https://github.com/coveo/ui-kit/commit/9849f97897adba31ae2417d17b6970fe9e1d50fa))
+
+
+
+
+
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.5...@coveo/headless@1.20.0) (2021-09-21)
+
+
+### Bug Fixes
+
+* **headless:** result templates helpers should all evaluate root result object ([#1221](https://github.com/coveo/ui-kit/issues/1221)) ([3dcc484](https://github.com/coveo/ui-kit/commit/3dcc484713eae580bd33f698e015d94741bf9e11))
+
+
+### Features
+
+* **headless:** support relative urls ([#1229](https://github.com/coveo/ui-kit/issues/1229)) ([dd6c82a](https://github.com/coveo/ui-kit/commit/dd6c82a047bff19dcdedfbdc06061de0a7ccae8a))
+
+
+
+
+
+## [1.19.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.4...@coveo/headless@1.19.5) (2021-09-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.19.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.3...@coveo/headless@1.19.4) (2021-09-20)
+
+
+### Bug Fixes
+
+* **headless:** trim query string before saving it in recent queries ([#1216](https://github.com/coveo/ui-kit/issues/1216)) ([a84c59f](https://github.com/coveo/ui-kit/commit/a84c59f62ae4e64fb9358f36c3296b2436b63ef5))
+
+
+
+
+
 ## [1.19.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.19.2...@coveo/headless@1.19.3) (2021-09-15)
 
 

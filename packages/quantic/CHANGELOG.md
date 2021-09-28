@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.64.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.6...@coveo/quantic@0.64.7) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.64.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.5...@coveo/quantic@0.64.6) (2021-09-28)
+
+
+### Bug Fixes
+
+* **quantic:** improve/add missing quantic facet tests ([#1244](https://github.com/coveo/ui-kit/issues/1244)) ([49ea3f7](https://github.com/coveo/ui-kit/commit/49ea3f7c5d5a85255996f93db3ad3a0ab71c5465))
+
+
+
+
+
+## [0.64.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.4...@coveo/quantic@0.64.5) (2021-09-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.64.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.3...@coveo/quantic@0.64.4) (2021-09-23)
+
+
+### Bug Fixes
+
+* **quantic:** fix the facet when click on collapse/expand button ([#1235](https://github.com/coveo/ui-kit/issues/1235)) ([45096b5](https://github.com/coveo/ui-kit/commit/45096b5bec32480fba43fff6c52254983fe39533))
+
+
+
+
+
+## [0.64.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.2...@coveo/quantic@0.64.3) (2021-09-22)
+
+
+### Bug Fixes
+
+* **quantic:** fixed quantic RecentQueries onClick issue ([#1198](https://github.com/coveo/ui-kit/issues/1198)) ([9346062](https://github.com/coveo/ui-kit/commit/934606238a244f74faed0a6fc7f21df1bae731d0))
+
+
+
+
+
+## [0.64.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.1...@coveo/quantic@0.64.2) (2021-09-21)
+
+
+### Bug Fixes
+
+* **quantic:** inverse button color ([#1217](https://github.com/coveo/ui-kit/issues/1217)) ([5e3bf4d](https://github.com/coveo/ui-kit/commit/5e3bf4d9c4648f806a3cbf9953bddf25e2623386))
+
+
+
+
+
+## [0.64.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.0...@coveo/quantic@0.64.1) (2021-09-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.64.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.5...@coveo/quantic@0.64.0) (2021-09-20)
+
+
+### Features
+
+* **quantic:** Update hierarchic facet ([#1135](https://github.com/coveo/ui-kit/issues/1135)) ([f277dd3](https://github.com/coveo/ui-kit/commit/f277dd3457b0248fa182cc41d32432e00237336f))
+
+
+
+
+
+## [0.63.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.4...@coveo/quantic@0.63.5) (2021-09-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [0.63.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.63.3...@coveo/quantic@0.63.4) (2021-09-16)
 
 

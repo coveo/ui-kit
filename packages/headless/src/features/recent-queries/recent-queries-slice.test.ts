@@ -12,7 +12,7 @@ import {
   RecentQueriesState,
 } from './recent-queries-state';
 
-describe('recent-queries slice', () => {
+describe('recent-queries-slice', () => {
   let state: RecentQueriesState;
 
   const testQuery = 'what is a query';
@@ -118,20 +118,61 @@ describe('recent-queries slice', () => {
   });
 
   it('should not add new recent query on search fulfilled if queue already contains the query', () => {
-    const otherTestQuery = 'what is a query';
-    state.queries = testQueries;
-    state.maxLength = 10;
+    const duplicates = ['what is a query', ' what is a query      '];
+    for (const i in duplicates) {
+      state.queries = testQueries;
+      state.maxLength = 10;
+      const searchAction = executeSearch.fulfilled(
+        buildMockSearch({
+          queryExecuted: duplicates[i],
+          response: buildMockSearchResponse({}),
+        }),
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+
+      expect(recentQueriesReducer(state, searchAction).queries).toEqual(
+        testQueries
+      );
+    }
+  });
+
+  it('should not add an empty query to the list', () => {
+    const emptyQueries = ['', '     '];
+    for (const i in emptyQueries) {
+      const searchAction = executeSearch.fulfilled(
+        buildMockSearch({
+          queryExecuted: emptyQueries[i],
+          response: buildMockSearchResponse({}),
+        }),
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+
+      expect(recentQueriesReducer(state, searchAction).queries.length).toEqual(
+        0
+      );
+    }
+  });
+
+  it('should place the query at the start of the list if it already exists', () => {
+    state.queries = ['5', '4', '3', '2', '1'];
+    state.maxLength = 5;
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
-        queryExecuted: otherTestQuery,
+        queryExecuted: '3',
         response: buildMockSearchResponse({}),
       }),
       '',
       logSearchEvent({evt: 'foo'})
     );
 
-    expect(recentQueriesReducer(state, searchAction).queries).toEqual(
-      testQueries
-    );
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual([
+      '3',
+      '5',
+      '4',
+      '2',
+      '1',
+    ]);
   });
 });

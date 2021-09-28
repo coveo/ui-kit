@@ -26,9 +26,6 @@ describe('facet set controller actions', () => {
         type: 'facetOptions/update',
         payload: {freezeFacetOrder: true},
       }),
-      expect.objectContaining({
-        type: 'search/executeSearch/pending',
-      }),
     ]);
   });
 });

@@ -69,14 +69,16 @@ export class AtomicRefineModal implements InitializableComponent {
   watchEnabled(modalStatus: ModalStatus) {
     const modalOpenedClass = 'atomic-modal-opened';
 
-    if (modalStatus === 'opened' || modalStatus === 'beingClosed') {
-      document.body.classList.add(modalOpenedClass);
-      this.duplicateFacetElements();
-      return;
+    switch (modalStatus) {
+      case 'opened':
+        document.body.classList.add(modalOpenedClass);
+        this.duplicateFacetElements();
+        break;
+      case 'closed':
+        document.body.classList.remove(modalOpenedClass);
+        this.flushFacetElements();
+        break;
     }
-
-    document.body.classList.remove(modalOpenedClass);
-    this.flushFacetElements();
   }
 
   public initialize() {
@@ -99,7 +101,7 @@ export class AtomicRefineModal implements InitializableComponent {
       .map((f) => f.payload);
 
     sortedFacetsElements.forEach((facetElement) => {
-      const clone = facetElement.cloneNode(false) as HTMLElement;
+      const clone = facetElement.cloneNode(true) as HTMLElement;
       clone.style.marginBottom =
         'var(--atomic-refine-modal-facet-margin, 20px)';
       clone.setAttribute('is-collapsed', 'true');
@@ -171,7 +173,7 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.options.map((option) => this.buildOption(option))}
         </select>
         <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
-          <atomic-icon icon={SortIcon}></atomic-icon>
+          <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
         </div>
       </div>,
     ];

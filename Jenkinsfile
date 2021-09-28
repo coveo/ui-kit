@@ -4,7 +4,7 @@ node('linux && docker') {
   def isBump = !!tag
   def isMaster = env.BRANCH_NAME == 'master'
 
-  withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
+  withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=4096']) {
     withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Setup') {
         sh 'npm ci'
@@ -59,7 +59,7 @@ node('linux && docker') {
     }
 
     if (!isBump) {
-      withDockerContainer(image: 'node:14', args: '-u=root') {
+      withDockerContainer(image: 'node:16', args: '-u=root') {
         stage('Commit bumped version') {
           sh 'git clean -xfd -e node_modules/ -e .husky'
           withCredentials([
@@ -71,7 +71,7 @@ node('linux && docker') {
       return
     }
 
-    withDockerContainer(image: 'node:16', args: '-u=root') {
+    withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {

@@ -3,7 +3,7 @@
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="facet__collapse"
+          class={actionButtonCssClasses}
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -45,13 +45,13 @@
                 <template if:true={canShowLess}>
                   <button variant="base" label={labels.showLess}
                     class="facet__show-less slds-p-around_none" onclick={showLess} data-cy="less">
-                    <span class="facet__show-less_text">- {labels.showLess}</span>
+                    <span class="facet__show-less_text">{labels.showLess}</span>
                   </button>
                 </template>
                 <template if:true={canShowMore}>
                   <button variant="base" label={labels.showMore}
                     class="facet__show-more slds-p-around_none" onclick={showMore} data-cy="more">
-                    <span class="facet__show-more_text">+ {labels.showMore}</span>
+                    <span class="facet__show-more_text">{labels.showMore}</span>
                   </button>
                 </template>
               </div>

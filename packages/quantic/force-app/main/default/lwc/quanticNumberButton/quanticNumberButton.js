@@ -13,6 +13,6 @@ export default class QuanticNumberButton extends LightningElement {
   }
 
   get variant() {
-    return this.number === this.current ? 'brand-outline' : 'brand';
+    return this.number === this.current ? 'brand' : 'brand-outline';
   }
 }

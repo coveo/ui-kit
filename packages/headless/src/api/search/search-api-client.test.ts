@@ -153,6 +153,7 @@ describe('search api client', () => {
 
   describe('noop middleware', () => {
     beforeEach(() => {
+      state.pipeline = 'some-pipeline';
       buildSearchAPIClient();
     });
 
@@ -380,6 +381,7 @@ describe('search api client', () => {
 
       const recommendationState = createMockRecommendationState();
       recommendationState.configuration.analytics = analytics;
+      recommendationState.pipeline = 'some-pipeline';
 
       const req = buildRecommendationRequest(recommendationState);
 

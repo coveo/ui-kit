@@ -36,6 +36,7 @@ import {
   FieldDescription,
   FieldDescriptionsResponseSuccess,
 } from './fields/fields-response';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
 
 export type AllSearchAPIResponse =
   | Plan
@@ -43,10 +44,9 @@ export type AllSearchAPIResponse =
   | QuerySuggest
   | FieldDescription;
 
-export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
-  state: T;
+export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>>
+  extends AsyncThunkOptions<T, SearchThunkExtraArguments> {
   rejectValue: SearchAPIErrorWithStatusCode;
-  extra: SearchThunkExtraArguments;
 }
 
 export interface SearchAPIClientOptions {

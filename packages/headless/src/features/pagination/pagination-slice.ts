@@ -30,9 +30,10 @@ import {
 import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
+import {fetchProductListing} from '../product-listing/product-listing-actions';
 
 export const minimumPage = 1;
-export const maximumNumberOfResultsFromIndex = 1000;
+export const maximumNumberOfResultsFromIndex = 5000;
 
 export const paginationReducer = createReducer(
   getPaginationInitialState(),
@@ -89,6 +90,10 @@ export const paginationReducer = createReducer(
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {response} = action.payload;
         state.totalCountFiltered = response.totalCountFiltered;
+      })
+      .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const {response} = action.payload;
+        state.totalCountFiltered = response.pagination.totalCount;
       })
       .addCase(deselectAllFacetValues, (state) => {
         handlePaginationReset(state);

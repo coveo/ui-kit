@@ -1006,6 +1006,54 @@
     "en": "Past {{count}} years",
     "fr": "{{count}} années passées"
   },
+  "next-hour": {
+    "en": "Next hour",
+    "fr": "Heure prochaine"
+  },
+  "next-hour_plural": {
+    "en": "Next {{count}} hours",
+    "fr": "{{count}} heures prochaines"
+  },
+  "next-day": {
+    "en": "Next day",
+    "fr": "Jour prochain"
+  },
+  "next-day_plural": {
+    "en": "Next {{count}} days",
+    "fr": "{{count}} jours prochains"
+  },
+  "next-week": {
+    "en": "Next week",
+    "fr": "Semaine prochaine"
+  },
+  "next-week_plural": {
+    "en": "Next {{count}} weeks",
+    "fr": "{{count}} semaines prochaines"
+  },
+  "next-month": {
+    "en": "Next month",
+    "fr": "Mois prochain"
+  },
+  "next-month_plural": {
+    "en": "Next {{count}} months",
+    "fr": "{{count}} mois prochains"
+  },
+  "next-quarter": {
+    "en": "Next quarter",
+    "fr": "Trimestre prochain"
+  },
+  "next-quarter_plural": {
+    "en": "Next {{count}} quarters",
+    "fr": "{{count}} trimestre prochains"
+  },
+  "next-year": {
+    "en": "Next year",
+    "fr": "Année prochaine"
+  },
+  "next-year_plural": {
+    "en": "Next {{count}} years",
+    "fr": "{{count}} années prochaines"
+  },
   "in": {
     "en": "in",
     "fr": "dans"

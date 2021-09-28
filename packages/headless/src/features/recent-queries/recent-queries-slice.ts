@@ -21,14 +21,13 @@ export const recentQueriesReducer = createReducer(
         state.queries = [];
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        const query = action.payload.queryExecuted;
-        if (!query.length || state.queries.includes(query)) {
+        const query = action.payload.queryExecuted.trim();
+        if (!query.length) {
           return;
         }
-        state.queries.unshift(query);
-        if (state.queries.length > state.maxLength) {
-          state.queries.pop();
-        }
+        state.queries = state.queries.filter((q) => q !== query);
+        const remaining = state.queries.slice(0, state.maxLength - 1);
+        state.queries = [query, ...remaining];
       });
   }
 );
