@@ -27,7 +27,7 @@ export const FacetSelectors: AllFacetSelectors = {
   facetValueLabelAtIndex: (index: number) =>
     FacetSelectors.valueLabel().eq(index),
   collapseButton: () => FacetSelectors.get().find('.facet__collapse'),
-  expandButton: () => FacetSelectors.get().find('.facet__collapse'),
+  expandButton: () => FacetSelectors.get().find('.facet__expand'),
 
   selectedCheckbox: () =>
     FacetSelectors.get().find('input[type="checkbox"]:checked'),

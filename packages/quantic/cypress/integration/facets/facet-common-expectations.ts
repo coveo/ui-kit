@@ -9,6 +9,12 @@ import {
 
 export function baseFacetExpectations(selector: BaseFacetSelector) {
   return {
+    displayLabel: (display: boolean) => {
+      it(`${should(display)} display the facet`, () => {
+        selector.label().should(display ? 'exist' : 'not.exist');
+      });
+    },
+
     labelContains: (label: string) => {
       it(`should have the label "${label}"`, () => {
         selector.label().contains(label);
@@ -53,6 +59,28 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
       });
     },
 
+    numberOfValues: (value: number) => {
+      it(`should display ${value} facet values`, () => {
+        selector.values().should('have.length', value);
+      });
+    },
+
+    facetValuesEqual: (responseValuesAlias: string) => {
+      it('should contain facet values in specific order', () => {
+        cy.get(responseValuesAlias).then((responseValues) => {
+          selector
+            .valueLabel()
+            .should('have.length', responseValues.length)
+            .then((elements) => {
+              return Cypress.$.makeArray(elements).map(
+                (element) => element.innerText
+              );
+            })
+            .should('deep.equal', responseValues);
+        });
+      });
+    },
+
     logClearFacetValues: (field: string) => {
       it('should log the facet clear all to UA', () => {
         cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {
@@ -73,6 +101,12 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
 
 export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
   return {
+    selectedCheckboxValuesContain: (value: string) => {
+      it(`${value} should be selected`, () => {
+        selector.selectedCheckboxValue().should('contain', value);
+      });
+    },
+
     numberOfSelectedCheckboxValues: (value: number) => {
       it(`should display ${value} selected checkbox values`, () => {
         selector.selectedCheckbox().should('have.length', value);

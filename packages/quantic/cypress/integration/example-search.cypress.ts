@@ -6,9 +6,10 @@ import {
   sortByDateDescending,
   selectRegularFacetValue,
 } from '../page-objects/example-search';
+import {InterceptAliases} from '../page-objects/search';
 
 describe('example-search', () => {
-  const pageUrl = `${Cypress.env('examplesUrl')}/s/full-search-example`;
+  const pageUrl = 's/full-search-example';
 
   Cypress.on('uncaught:exception', (err) => {
     if (
@@ -25,7 +26,7 @@ describe('example-search', () => {
   });
 
   beforeEach(() => {
-    cy.visit(pageUrl).then(setupAliases).wait('@search');
+    cy.visit(pageUrl).then(setupAliases).wait(InterceptAliases.Search);
   });
 
   it('should load results automatically', () => {
@@ -43,13 +44,15 @@ describe('example-search', () => {
     it('should trigger query when selecting a facet value', () => {
       cy.visit(pageUrl)
         .then(setupAliases)
-        .wait('@search')
+        .wait(InterceptAliases.Search)
         .then((interception) => {
           const firstFacetValue = interception.response?.body.facets.find(
             (f) => f.field === 'objecttype'
           ).values[0].value;
 
-          selectRegularFacetValue(firstFacetValue).wait('@search');
+          selectRegularFacetValue(firstFacetValue).wait(
+            InterceptAliases.Search
+          );
         });
     });
   });
@@ -57,7 +60,7 @@ describe('example-search', () => {
   describe('when typing a search query', () => {
     it('should trigger query when typing in searchbox', () => {
       searchFor('test')
-        .wait('@search')
+        .wait(InterceptAliases.Search)
         .then((interception) =>
           assert.equal(interception.request.body.q, 'test')
         )
@@ -69,7 +72,7 @@ describe('example-search', () => {
   describe('when changing the sorting', () => {
     it('should trigger query when changing the sorting', () => {
       cy.then(sortByDateDescending)
-        .wait('@search')
+        .wait(InterceptAliases.Search)
         .then((interception) =>
           assert.equal(
             interception.request.body.sortCriteria,
@@ -84,7 +87,7 @@ describe('example-search', () => {
       cy.get(search.summary)
         .should('contain.text', 'Results 1-10')
         .then(() => selectResultPage(2))
-        .wait('@search')
+        .wait(InterceptAliases.Search)
         .then((interception) =>
           assert.equal(interception.request.body.firstResult, 10)
         )

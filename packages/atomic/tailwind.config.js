@@ -32,6 +32,7 @@ module.exports = {
         DEFAULT: 'var(--atomic-border-radius)',
         md: 'var(--atomic-border-radius-md)',
         lg: 'var(--atomic-border-radius-lg)',
+        xl: 'var(--atomic-border-radius-xl)',
       },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',

@@ -59,6 +59,7 @@ export function getSearchInitialState(): SearchState {
       queryCorrections: [],
       triggers: [],
       questionAnswer: emptyQuestionAnswer(),
+      pipeline: '',
     },
     duration: 0,
     queryExecuted: '',

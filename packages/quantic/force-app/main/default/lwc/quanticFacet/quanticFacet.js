@@ -187,6 +187,10 @@ export default class QuanticFacet extends LightningElement {
     return this.isExpanded ? 'utility:dash' : 'utility:add';
   }
 
+  get actionButtonCssClasses() {
+    return this.isExpanded ? 'facet__collapse' : 'facet__expand';
+  }
+
   get actionButtonLabel() {
     const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
     return I18nUtils.format(label, this.label);
