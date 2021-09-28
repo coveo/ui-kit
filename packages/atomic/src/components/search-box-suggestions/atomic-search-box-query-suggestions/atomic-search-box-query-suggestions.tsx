@@ -47,6 +47,7 @@ export class AtomicSearchBoxQuerySuggestions {
                 .slice(0, max)
                 .map((suggestion) => ({
                   content: (
+                    // TODO: add icon when other types of suggestions can appear
                     <span innerHTML={suggestion.highlightedValue}></span>
                   ),
                   value: suggestion.rawValue,

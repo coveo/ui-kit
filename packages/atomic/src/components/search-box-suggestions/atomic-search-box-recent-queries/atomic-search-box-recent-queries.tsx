@@ -42,6 +42,7 @@ export class AtomicSearchBoxRecentQueries {
             return filteredQueries.map((value) => ({
               value,
               content: (
+                // TODO: add icon when other types of suggestions can appear
                 <span
                   innerHTML={HighlightUtils.highlightString({
                     content: value,
