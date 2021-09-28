@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.4...@coveo/headless@1.21.0) (2021-09-28)
+
+
+### Features
+
+* **atomic:** set maximumNumberOfResultsFromIndex to 5000 ([#1252](https://github.com/coveo/ui-kit/issues/1252)) ([cf3e48e](https://github.com/coveo/ui-kit/commit/cf3e48e6899859baa1f9164efe4fca7ef2419f0e))
+
+
+
+
+
 ## [1.20.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.3...@coveo/headless@1.20.4) (2021-09-28)
 
 
