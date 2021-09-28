@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, Listen} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -17,10 +17,10 @@ import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  querySuggestions,
-  recentQueries,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+  SearchBoxSuggestionsEvent,
 } from '../search-box-suggestions/suggestions-common';
 
 /**
@@ -46,6 +46,7 @@ export class AtomicSearchBox {
   private inputRef!: HTMLInputElement;
   private listRef!: HTMLElement;
   private querySetActions!: QuerySetActionCreators;
+  private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
 
   @BindStateToController('searchBox')
@@ -85,16 +86,31 @@ export class AtomicSearchBox {
       },
     });
 
-    // TODO: respond to child components
-    const suggestionBindings = {
+    this.suggestions.push(
+      ...this.pendingSuggestionEvents.map((event) =>
+        event(this.suggestionBindings)
+      )
+    );
+    this.pendingSuggestionEvents = [];
+  }
+
+  @Listen('atomic/searchBoxSuggestion')
+  public setFormat(event: CustomEvent<SearchBoxSuggestionsEvent>) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.searchBox) {
+      this.suggestions.push(event.detail(this.suggestionBindings));
+      return;
+    }
+    this.pendingSuggestionEvents.push(event.detail);
+  }
+
+  private get suggestionBindings(): SearchBoxSuggestionsBindings {
+    return {
       ...this.bindings,
       id: this.id,
       searchBoxController: this.searchBox,
     };
-    this.suggestions = [
-      recentQueries(suggestionBindings),
-      querySuggestions(suggestionBindings),
-    ];
   }
 
   private get popupId() {

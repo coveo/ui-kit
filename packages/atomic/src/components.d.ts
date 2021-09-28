@@ -605,6 +605,14 @@ export namespace Components {
          */
         "numberOfQueries": number;
     }
+    interface AtomicSearchBoxQuerySuggestions {
+        "maxWithQuery"?: number;
+        "maxWithoutQuery"?: number;
+    }
+    interface AtomicSearchBoxRecentQueries {
+        "maxWithQuery"?: number;
+        "maxWithoutQuery"?: number;
+    }
     interface AtomicSearchInterface {
         /**
           * The search interface headless engine.
@@ -1058,6 +1066,18 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
+    interface HTMLAtomicSearchBoxQuerySuggestionsElement extends Components.AtomicSearchBoxQuerySuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxQuerySuggestionsElement: {
+        prototype: HTMLAtomicSearchBoxQuerySuggestionsElement;
+        new (): HTMLAtomicSearchBoxQuerySuggestionsElement;
+    };
+    interface HTMLAtomicSearchBoxRecentQueriesElement extends Components.AtomicSearchBoxRecentQueries, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxRecentQueriesElement: {
+        prototype: HTMLAtomicSearchBoxRecentQueriesElement;
+        new (): HTMLAtomicSearchBoxRecentQueriesElement;
+    };
     interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
     }
     var HTMLAtomicSearchInterfaceElement: {
@@ -1160,6 +1180,8 @@ declare global {
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
+        "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
@@ -1761,6 +1783,14 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
     }
+    interface AtomicSearchBoxQuerySuggestions {
+        "maxWithQuery"?: number;
+        "maxWithoutQuery"?: number;
+    }
+    interface AtomicSearchBoxRecentQueries {
+        "maxWithQuery"?: number;
+        "maxWithoutQuery"?: number;
+    }
     interface AtomicSearchInterface {
         /**
           * The search interface headless engine.
@@ -1940,6 +1970,8 @@ declare namespace LocalJSX {
         "atomic-result-text": AtomicResultText;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
+        "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
+        "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
@@ -2007,6 +2039,8 @@ declare module "@stencil/core" {
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
+            "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
