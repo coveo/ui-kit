@@ -60,3 +60,10 @@ export const addDictionaryFieldContext = createAction(
     );
   }
 );
+
+export const removeDictionaryFieldContext = createAction(
+  'dictionaryFieldContext/remove',
+  (payload: string) => {
+    return validatePayload(payload, requiredEmptyAllowedString);
+  }
+);
