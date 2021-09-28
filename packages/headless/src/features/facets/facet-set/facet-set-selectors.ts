@@ -1,9 +1,21 @@
-import {SearchSection} from '../../../state/state-sections';
+import {
+  ProductListingSection,
+  SearchSection,
+} from '../../../state/state-sections';
 import {FacetSection} from '../../../state/state-sections';
 import {FacetResponse, FacetValue} from './interfaces/response';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
-export const baseFacetResponseSelector = (state: SearchSection, id: string) => {
+export const baseFacetResponseSelector = (
+  state: SearchSection | ProductListingSection,
+  id: string
+) => {
+  if ('productListing' in state) {
+    return state.productListing.facets.results.find(
+      (response) => response.facetId === id
+    );
+  }
+
   return state.search.response.facets.find(
     (response) => response.facetId === id
   );
@@ -20,7 +32,7 @@ function isFacetResponse(
   return !!response && response.facetId in state.facetSet;
 }
 export const facetResponseSelector = (
-  state: FacetSection & SearchSection,
+  state: (ProductListingSection | SearchSection) & FacetSection,
   facetId: string
 ) => {
   const response = baseFacetResponseSelector(state, facetId);
@@ -32,7 +44,7 @@ export const facetResponseSelector = (
 };
 
 export const facetResponseSelectedValuesSelector = (
-  state: SearchSection & FacetSection,
+  state: (ProductListingSection | SearchSection) & FacetSection,
   facetId: string
 ): FacetValue[] => {
   const response = facetResponseSelector(state, facetId);
@@ -41,4 +53,14 @@ export const facetResponseSelectedValuesSelector = (
   }
 
   return response.values.filter((value) => value.state === 'selected');
+};
+
+export const isFacetLoadingResponseSelector = (
+  state: SearchSection | ProductListingSection
+) => {
+  if ('productListing' in state) {
+    return state.productListing.isLoading;
+  }
+
+  return state.search.isLoading;
 };
