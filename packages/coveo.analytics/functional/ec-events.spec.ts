@@ -842,6 +842,25 @@ describe('ec events', () => {
                 pr1group: 'nsync',
             });
         });
+
+        it('can send an event with base extension keys', async () => {
+            await coveoua('send', 'event', {
+                contentId: 123,
+                contentIdKey: 'bloup',
+                contentType: 'fish',
+                invalidOne: 'nope',
+            });
+
+            const [body] = getParsedBody();
+
+            expect(body).toEqual({
+                ...defaultContextValues,
+                t: 'event',
+                contentId: 123,
+                contentIdKey: 'bloup',
+                contentType: 'fish',
+            });
+        });
     });
 
     const getParsedBody = (): any[] => {
