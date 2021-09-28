@@ -1,7 +1,7 @@
 import {
   buildCoreCategoryFacet,
-  CategoryFacet,
   CategoryFacetOptions,
+  CoreCategoryFacet,
 } from './headless-core-category-facet';
 import {
   buildMockSearchAppEngine,
@@ -23,7 +23,6 @@ import {
   CategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/interfaces/request';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
-import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../../state/search-app-state';
@@ -42,7 +41,7 @@ describe('category facet', () => {
   let options: CategoryFacetOptions;
   let state: SearchAppState;
   let engine: MockSearchEngine;
-  let categoryFacet: CategoryFacet;
+  let categoryFacet: CoreCategoryFacet;
 
   function initCategoryFacet() {
     engine = buildMockSearchAppEngine({state});
@@ -437,35 +436,5 @@ describe('category facet', () => {
   it('#isSortedBy returns correct value', () => {
     expect(categoryFacet.isSortedBy('alphanumeric')).toBe(false);
     expect(categoryFacet.isSortedBy('occurrences')).toBe(true);
-  });
-
-  it('exposes a #facetSearch property', () => {
-    jest.spyOn(CategoryFacetSearch, 'buildCategoryFacetSearch');
-    initCategoryFacet();
-
-    expect(categoryFacet.facetSearch).toBeTruthy();
-    expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
-      1
-    );
-  });
-
-  it('exposes a #facetSearch state', () => {
-    expect(categoryFacet.state.facetSearch).toBeTruthy();
-    expect(categoryFacet.state.facetSearch.values).toEqual([]);
-
-    const fakeResponseValue = {
-      count: 123,
-      displayValue: 'foo',
-      rawValue: 'foo',
-      path: ['bar', 'bazz'],
-    };
-
-    engine.state.categoryFacetSearchSet[facetId].response.values = [
-      fakeResponseValue,
-    ];
-
-    expect(categoryFacet.state.facetSearch.values[0]).toMatchObject(
-      fakeResponseValue
-    );
   });
 });

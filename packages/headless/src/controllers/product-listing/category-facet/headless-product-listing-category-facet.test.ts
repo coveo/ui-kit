@@ -3,6 +3,7 @@ import {
   CategoryFacet,
   CategoryFacetOptions,
 } from './headless-product-listing-category-facet';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-core-category-facet-search';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
@@ -175,5 +176,35 @@ describe('category facet', () => {
         })
       );
     });
+  });
+
+  it('exposes a #facetSearch property', () => {
+    jest.spyOn(CategoryFacetSearch, 'buildCategoryFacetSearch');
+    initCategoryFacet();
+
+    expect(categoryFacet.facetSearch).toBeTruthy();
+    expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
+      1
+    );
+  });
+
+  it('exposes a #facetSearch state', () => {
+    expect(categoryFacet.state.facetSearch).toBeTruthy();
+    expect(categoryFacet.state.facetSearch.values).toEqual([]);
+
+    const fakeResponseValue = {
+      count: 123,
+      displayValue: 'foo',
+      rawValue: 'foo',
+      path: ['bar', 'bazz'],
+    };
+
+    engine.state.categoryFacetSearchSet[facetId].response.values = [
+      fakeResponseValue,
+    ];
+
+    expect(categoryFacet.state.facetSearch.values[0]).toMatchObject(
+      fakeResponseValue
+    );
   });
 });

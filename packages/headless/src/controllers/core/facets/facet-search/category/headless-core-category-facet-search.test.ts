@@ -10,7 +10,7 @@ import {
   CategoryFacetSearchProps,
   CategoryFacetSearch,
   buildCategoryFacetSearch,
-} from './headless-category-facet-search';
+} from './headless-core-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
@@ -37,6 +37,7 @@ describe('CategoryFacetSearch', () => {
         ...defaultFacetSearchOptions,
         facetId,
       },
+      select: jest.fn(),
     };
 
     initEngine();
@@ -79,11 +80,8 @@ describe('CategoryFacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    /*it('dispatches #executeSearch action', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });*/
+    it('calls the select prop #executeSearch action', () => {
+      expect(props.select).toHaveBeenCalled();
+    });
   });
 });

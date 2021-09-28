@@ -2,7 +2,6 @@ import {updateFacetSearch} from '../../../../features/facets/facet-search-set/sp
 import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   clearFacetSearch,
   executeFacetSearch,
@@ -32,9 +31,6 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
   >,
   props: GenericFacetSearchProps<T>
 ) {
-  type GenericFacetSearchResults = T['response']['values'];
-  type GenericFacetSearchResult = GenericFacetSearchResults[0];
-
   const dispatch = engine.dispatch;
   const {options, getFacetSearch} = props;
   const {facetId} = options;
@@ -70,14 +66,6 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
       dispatch(executeFacetSearch(facetId));
     },
 
-    /** Selects a search result.*/
-    select(_value: GenericFacetSearchResult) {
-      // const facetValue = value.rawValue;
-
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      // dispatch(executeSearch(logFacetSelect({facetId, facetValue})));
-    },
-
     /** Resets the query and empties the values. */
     clear() {
       dispatch(clearFacetSearch({facetId}));
@@ -99,7 +87,7 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
     get state() {
       const {response, isLoading, options} = getFacetSearch();
       const {query} = options;
-      const values: GenericFacetSearchResults = response.values;
+      const values: T['response']['values'] = response.values;
 
       return {
         ...response,
