@@ -45,7 +45,7 @@ export interface DictionaryFieldContext extends Controller {
 
 export interface DictionaryFieldContextState {
   /**
-   * An object holding the dictionary field context keys and their values.
+   * An object holding the dictionary field context fields and keys to retrieve values for.
    */
   values: Record<string, string>;
 }
