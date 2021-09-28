@@ -48,7 +48,7 @@ export default class QuanticNumberInput extends LightningElement {
         if(!this.inputMin.validity.valid || !this.inputMax.validity.valid) {
             return;
         }
-        this.dispatchEvent(new CustomEvent('apply', { detail : { min: this.inputMin?.valueAsNumber, max: this.inputMax?.valueAsNumber }}));
+        this.dispatchEvent(new CustomEvent('apply', { detail : { min: Number(this.inputMin?.value) , max: Number(this.inputMax?.value) }}));
     }
 
     get numberInputMinimumLabel() {

@@ -2,6 +2,7 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBindings
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
@@ -37,10 +38,8 @@ export default class QuanticNumericFacet extends LightningElement {
   )} - ${new Intl.NumberFormat(LOCALE).format(
     item.end
   )}`;
-  /**
-   * @type {boolean}
-   */
-  @api withoutInput;
+  /** @type {boolean} */
+  @api noInput;
   /** @type {import("coveo").NumericFacet} */
   facet;
   /**  @type {import("coveo").NumericFilter} */
@@ -55,7 +54,6 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {boolean} */
   isExpanded = true;
-  type;
 
 
   labels = {
@@ -86,7 +84,7 @@ export default class QuanticNumericFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
       }
     });
-    if(!this.withoutInput) {
+    if(!this.noInput) {
       this.initializeFilter(engine);
     }
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
@@ -164,7 +162,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   clearSelections() {
-    this.facet.deselectAll();
+    if(this.numericFilter?.state?.range) {
+      this.numericFilter.clear();
+    }
+    this.facet?.deselectAll();
   }
 
   toggleFacetVisibility() {
@@ -176,11 +177,9 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   onApply(evt) {
+    const engine = getHeadlessBindings(this.engineId).engine;
+    engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facetId));
     this.numericFilter.setRange({
-      start: evt.detail.min,
-      end: evt.detail.max
-    });
-    console.log({
       start: evt.detail.min,
       end: evt.detail.max
     });

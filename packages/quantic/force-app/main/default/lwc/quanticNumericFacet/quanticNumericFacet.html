@@ -25,18 +25,20 @@
                 >
               </lightning-button>  
             </template>
-            <template if:false={withoutInput}>
+            <template if:false={noInput}>
               <c-quantic-number-input start={start} end={end} label={label} onapply={onApply}></c-quantic-number-input>
             </template>
-            <template for:each={values} for:item="v">
-              <c-quantic-facet-value 
-                onselectvalue={onSelect} 
-                key={v.start} 
-                item={v} 
-                is-checked={v.checked}
-                formatting-function={formattingFunction}
-                >
-              </c-quantic-facet-value>
+            <template if:true={showValues}>
+               <template for:each={values} for:item="v">
+                <c-quantic-facet-value 
+                  onselectvalue={onSelect} 
+                  key={v.start} 
+                  item={v} 
+                  is-checked={v.checked}
+                  formatting-function={formattingFunction}
+                  >
+                </c-quantic-facet-value>
+              </template>
             </template>
           </ul>
         </template>
