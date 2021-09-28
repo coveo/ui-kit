@@ -29,6 +29,7 @@ import {QuestionAnsweringState} from '../features/question-answering/question-an
 import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 import {RecentResultsState} from '../features/recent-results/recent-results-state';
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
+import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
 
 export interface QuerySection {
   /**
@@ -96,6 +97,13 @@ export interface ContextSection {
    * The context to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/2081/coveo-machine-learning/understanding-custom-context}
    */
   context: ContextState;
+}
+
+export interface DictionaryFieldContextSection {
+  /**
+   * Holds the [dictionary field context](https://docs.coveo.com/en/2036/index-content/about-fields#dictionary-fields) information.
+   */
+  dictionaryFieldContext: DictionaryFieldContextState;
 }
 
 export interface SortSection {

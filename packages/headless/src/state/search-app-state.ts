@@ -31,6 +31,7 @@ import {
   StandaloneSearchBoxSection,
   RecentResultsSection,
   RecentQueriesSection,
+  DictionaryFieldContextSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -43,6 +44,7 @@ export type SearchParametersState = FacetSection &
   PaginationSection &
   SortSection &
   ContextSection &
+  DictionaryFieldContextSection &
   QuerySetSection &
   PipelineSection &
   SearchHubSection &

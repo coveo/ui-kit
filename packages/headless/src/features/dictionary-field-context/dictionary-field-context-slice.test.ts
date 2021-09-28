@@ -1,3 +1,5 @@
+import {change} from '../history/history-actions';
+import {getHistoryInitialState, HistoryState} from '../history/history-state';
 import {
   addContext,
   addContextActionCreatorPayload,
@@ -78,5 +80,19 @@ describe('dictionary field context slice', () => {
       const payload = removeContext(true as unknown as string);
       expect('error' in payload).toBe(true);
     });
+  });
+
+  it('#change.fulfilled updates the context values', () => {
+    const contextValues = {price: 'cad'};
+
+    const state: HistoryState = {
+      ...getHistoryInitialState(),
+      dictionaryFieldContext: {contextValues},
+    };
+
+    const action = change.fulfilled(state, '');
+    const finalState = dictionaryFieldContextReducer(undefined, action);
+
+    expect(finalState.contextValues).toEqual(contextValues);
   });
 });

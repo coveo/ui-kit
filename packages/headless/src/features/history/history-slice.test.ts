@@ -69,6 +69,7 @@ describe('history slice', () => {
   it('allows to add a snapshot to the state', () => {
     const expectedSnapshot: HistoryState = {
       context: {contextValues: {foo: 'bar'}},
+      dictionaryFieldContext: {contextValues: {price: 'cad'}},
       facetSet: {foo: buildMockFacetRequest()},
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
@@ -176,6 +177,15 @@ describe('history slice', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
         getSnapshot({context: {contextValues: {foo: 'bar'}}}),
         getSnapshot({context: {contextValues: {foo: 'bazz'}}})
+      );
+    });
+
+    it('for #dictionaryFieldContext keys', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({dictionaryFieldContext: {contextValues: {price: 'cad'}}}),
+        getSnapshot({
+          dictionaryFieldContext: {contextValues: {geography: 'qc'}},
+        })
       );
     });
 

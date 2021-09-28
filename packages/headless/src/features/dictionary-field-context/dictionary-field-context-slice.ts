@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {change} from '../history/history-actions';
 import {
   addContext,
   removeContext,
@@ -19,12 +20,14 @@ export const dictionaryFieldContextReducer = createReducer(
       })
       .addCase(removeContext, (state, action) => {
         delete state.contextValues[action.payload];
+      })
+      .addCase(change.fulfilled, (state, action) => {
+        if (!action.payload) {
+          return;
+        }
+
+        state.contextValues =
+          action.payload.dictionaryFieldContext.contextValues;
       });
-    // .addCase(change.fulfilled, (state, action) => {
-    //   if (!action.payload) {
-    //     return;
-    //   }
-    //   state.contextValues = action.payload.context.contextValues;
-    // });
   }
 );
