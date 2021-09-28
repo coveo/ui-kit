@@ -10,8 +10,7 @@ export interface SearchBoxSuggestionElement {
 }
 
 export interface SearchBoxSuggestions {
-  // TODO: add query context onInput
-  // TODO: add position (priority in the list)
+  position: number;
   onInput(): Promise<unknown> | void;
   renderItems(): SearchBoxSuggestionElement[];
 }

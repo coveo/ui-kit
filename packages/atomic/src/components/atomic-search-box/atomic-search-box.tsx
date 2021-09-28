@@ -201,7 +201,7 @@ export class AtomicSearchBox {
       this.suggestions.map((suggestion) => suggestion.onInput())
     );
     this.suggestionElements = this.suggestions
-      // TODO: sort by position
+      .sort((a, b) => a.position - b.position)
       .map((suggestion) => suggestion.renderItems())
       .flat()
       .slice(0, this.numberOfQueries);

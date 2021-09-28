@@ -30,6 +30,9 @@ export class AtomicSearchBoxQuerySuggestions {
           );
 
           return {
+            position: Array.from(this.host.parentNode!.children).indexOf(
+              this.host
+            ),
             onInput: () =>
               (engine as SearchEngine<QuerySuggestionSection>).dispatch(
                 fetchQuerySuggestions({

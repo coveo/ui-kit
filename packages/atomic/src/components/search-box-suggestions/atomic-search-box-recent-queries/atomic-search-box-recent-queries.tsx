@@ -24,6 +24,9 @@ export class AtomicSearchBoxRecentQueries {
         });
 
         return {
+          position: Array.from(this.host.parentNode!.children).indexOf(
+            this.host
+          ),
           onInput: () => {},
           renderItems: () =>
             // TODO: limit values according to maxWithQuery/maxWithoutQuery
