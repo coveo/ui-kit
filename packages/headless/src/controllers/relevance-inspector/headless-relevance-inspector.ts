@@ -69,7 +69,7 @@ export interface RelevanceInspector extends Controller {
   /**
    * Fetch the description of all fields available from the index.
    */
-  fetchFieldsDescription(): void;
+  fetchFieldDescriptions(): void;
   /**
    * Fetch all fields available from the index on each individual results.
    */
@@ -128,7 +128,7 @@ export interface RelevanceInspectorState {
   /**
    * The description of all fields available in the index.
    */
-  fieldsDescription?: FieldDescription[];
+  fieldDescriptions?: FieldDescription[];
   /**
    * Whether fields debugging is enabled, returning all fields available on query results.
    */
@@ -257,9 +257,15 @@ export function buildRelevanceInspector(
       dispatch(disableFetchAllFields());
     },
 
-    fetchFieldsDescription() {
+    fetchFieldDescriptions() {
       dispatch(fetchFieldsDescription());
       warnProductionEnvironment('fieldsDescription');
+      engine.logger.warn(
+        `For production environment, please specify the necessary fields either when instantiating a ResultList controller, or by dispatching a registerFieldsToInclude action.
+        
+        https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#resultlistoptions
+        https://docs.coveo.com/en/headless/latest/reference/actions/field/#registerfieldstoinclude`
+      );
     },
   };
 }

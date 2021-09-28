@@ -108,7 +108,7 @@ describe('RelevanceInspector', () => {
 
   it(`when calling fetchFieldsDescription()
   it should dispatch an "fetchFieldsDescription" action`, () => {
-    relevanceInspector.fetchFieldsDescription();
+    relevanceInspector.fetchFieldDescriptions();
     expect(engine.findAsyncAction(fetchFieldsDescription.pending)).toBeTruthy();
   });
 
@@ -124,7 +124,7 @@ describe('RelevanceInspector', () => {
     engine = buildMockSearchAppEngine({state});
     relevanceInspector = buildRelevanceInspector(engine);
 
-    expect(relevanceInspector.state).toMatchObject({
+    expect(relevanceInspector.state).toEqual({
       isEnabled: true,
       rankingInformation: rankingInformationSelector(engine.state),
       executionReport: responseWithDebug.executionReport,
