@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.3...@coveo/headless@1.20.4) (2021-09-28)
+
+
+### Bug Fixes
+
+* **headless:** prevent state update when all reducer keys already exist ([#1246](https://github.com/coveo/ui-kit/issues/1246)) ([89c5217](https://github.com/coveo/ui-kit/commit/89c52170c8aff1b6e463e6107208de470764f44d))
+
+
+
+
+
 ## [1.20.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.2...@coveo/headless@1.20.3) (2021-09-27)
 
 
