@@ -4,7 +4,7 @@ export interface BaseFacetSelector extends ComponentSelector {
   label: () => CypressSelector;
   values: () => CypressSelector;
   clearFilterButton: () => CypressSelector;
-  clearMultipleFilterButton: (numberOfActiveFacets: number) => CypressSelector;
+  clearMultipleFiltersButton: (numberOfActiveFacets: number) => CypressSelector;
   valueLabel: () => CypressSelector;
   facetValueLabelAtIndex: (index: number) => CypressSelector;
   collapseButton: () => CypressSelector;

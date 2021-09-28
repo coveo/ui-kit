@@ -19,7 +19,7 @@ export const FacetSelectors: AllFacetSelectors = {
   values: () => FacetSelectors.get().find('c-quantic-facet-value'),
   clearFilterButton: () =>
     FacetSelectors.get().find('button[value="Clear filter"]'),
-  clearMultipleFilterButton: (numberOfActiveFacets: number) =>
+  clearMultipleFiltersButton: (numberOfActiveFacets: number) =>
     FacetSelectors.get().find(
       `button[value="Clear ${numberOfActiveFacets} filters"]`
     ),

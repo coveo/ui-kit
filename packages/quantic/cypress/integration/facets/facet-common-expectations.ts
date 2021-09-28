@@ -36,7 +36,7 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
     displayClearXFiltersButton: (numberOfActiveFacets: number) => {
       it(`should display a "Clear ${numberOfActiveFacets} filters" button`, () => {
         selector
-          .clearMultipleFilterButton(numberOfActiveFacets)
+          .clearMultipleFiltersButton(numberOfActiveFacets)
           .should('exist');
       });
     },

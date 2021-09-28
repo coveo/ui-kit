@@ -64,6 +64,7 @@ describe('Facet Test Suite', () => {
     describe('verify rendering', () => {
       before(setupWithValues);
 
+      Expect.facetValuesEqual(indexFacetValuesAlias);
       Expect.labelContains(defaultLabel);
       Expect.displayValues(true);
       Expect.numberOfSelectedCheckboxValues(0);
@@ -72,7 +73,6 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
-      Expect.facetValuesEqual(indexFacetValuesAlias);
     });
 
     describe('when selecting a value', () => {
