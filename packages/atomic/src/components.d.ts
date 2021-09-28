@@ -600,6 +600,10 @@ export namespace Components {
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
+        /**
+          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
+         */
+        "numberOfQueries": number;
     }
     interface AtomicSearchInterface {
         /**
@@ -1752,6 +1756,10 @@ declare namespace LocalJSX {
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
+        /**
+          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
+         */
+        "numberOfQueries"?: number;
     }
     interface AtomicSearchInterface {
         /**

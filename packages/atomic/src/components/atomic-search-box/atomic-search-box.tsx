@@ -1,11 +1,10 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Prop} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
   buildSearchBox,
-  Suggestion,
   loadQuerySetActions,
   QuerySetActionCreators,
 } from '@coveo/headless';
@@ -17,6 +16,12 @@ import {
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
 import {isNullOrUndefined} from '@coveo/bueno';
+import {
+  querySuggestions,
+  recentQueries,
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+} from '../search-box-suggestions/suggestions-common';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -41,6 +46,7 @@ export class AtomicSearchBox {
   private inputRef!: HTMLInputElement;
   private listRef!: HTMLElement;
   private querySetActions!: QuerySetActionCreators;
+  private suggestions: SearchBoxSuggestions[] = [];
 
   @BindStateToController('searchBox')
   @State()
@@ -48,6 +54,16 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
+  @State() private suggestionElements: SearchBoxSuggestionElement[] = [];
+
+  /**
+   * The amount of queries displayed when the user interacts with the search box.
+   * By default, a mix of query suggestions and recent queries will be shown.
+   * You can configure those settings using the following components as children:
+   *  - atomic-search-box-query-suggestions
+   *  - atomic-search-box-recent-queries
+   */
+  @Prop() public numberOfQueries = 8;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -55,7 +71,7 @@ export class AtomicSearchBox {
     this.searchBox = buildSearchBox(this.bindings.engine, {
       options: {
         id: this.id,
-        numberOfSuggestions: 8, // TODO: handle when adding query suggestion component
+        numberOfSuggestions: 0,
         highlightOptions: {
           notMatchDelimiters: {
             open: '<span class="font-bold">',
@@ -68,14 +84,29 @@ export class AtomicSearchBox {
         },
       },
     });
+
+    // TODO: respond to child components
+    const suggestionBindings = {
+      ...this.bindings,
+      id: this.id,
+      searchBoxController: this.searchBox,
+    };
+    this.suggestions = [
+      recentQueries(suggestionBindings),
+      querySuggestions(suggestionBindings),
+    ];
   }
 
   private get popupId() {
     return `${this.id}-popup`;
   }
 
+  private get hasInputValue() {
+    return this.searchBoxState.value !== '';
+  }
+
   private get hasSuggestions() {
-    return !!this.searchBoxState.suggestions.length;
+    return !!this.suggestionElements.length;
   }
 
   private get hasActiveDescendant() {
@@ -148,16 +179,24 @@ export class AtomicSearchBox {
     this.scrollActiveDescendantIntoView();
   }
 
+  private async triggerSuggestions() {
+    await Promise.all(
+      this.suggestions.map((suggestion) => suggestion.onInput())
+    );
+    this.suggestionElements = this.suggestions
+      .map((suggestion) => suggestion.renderItems())
+      .flat();
+  }
+
   private onInput(value: string) {
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
+    this.triggerSuggestions();
   }
 
   private onFocus() {
     this.isExpanded = true;
-    if (!this.searchBoxState.suggestions.length) {
-      this.searchBox.showSuggestions();
-    }
+    this.triggerSuggestions();
   }
 
   private onBlur() {
@@ -251,7 +290,6 @@ export class AtomicSearchBox {
 
   private renderInputContainer() {
     const isLoading = this.searchBoxState.isLoading;
-    const hasValue = this.searchBoxState.value !== '';
     return (
       <div class="flex-grow flex items-center">
         {this.renderInput()}
@@ -261,13 +299,15 @@ export class AtomicSearchBox {
             class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"
           ></span>
         )}
-        {!isLoading && hasValue && this.renderClearButton()}
+        {!isLoading && this.hasInputValue && this.renderClearButton()}
       </div>
     );
   }
 
-  // TODO: move inside the atomic-query-suggestions/atomic-recent-queries components
-  private renderSuggestion(suggestion: Suggestion, index: number) {
+  private renderSuggestion(
+    suggestion: SearchBoxSuggestionElement,
+    index: number
+  ) {
     const id = `${this.id}-suggestion-${index}`;
     const isSelected = id === this.activeDescendant;
     return (
@@ -275,20 +315,16 @@ export class AtomicSearchBox {
         id={id}
         role="option"
         aria-selected={`${isSelected}`}
-        key={suggestion.rawValue}
-        data-value={suggestion.rawValue}
+        key={suggestion.value}
+        data-value={suggestion.value}
         part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
         class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => {
-          this.searchBox.selectSuggestion(suggestion.rawValue);
-          this.inputRef.blur();
-        }}
+        onClick={() => suggestion.onClick()}
       >
-        {/* TODO: add icon when mixed suggestions */}
-        <span innerHTML={suggestion.highlightedValue}></span>
+        {suggestion.content}
       </li>
     );
   }
@@ -307,7 +343,7 @@ export class AtomicSearchBox {
           showSuggestions ? '' : 'hidden'
         }`}
       >
-        {this.searchBoxState.suggestions.map((suggestion, index) =>
+        {this.suggestionElements.map((suggestion, index) =>
           this.renderSuggestion(suggestion, index)
         )}
       </ul>
