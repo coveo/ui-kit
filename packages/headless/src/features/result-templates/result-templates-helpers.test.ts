@@ -31,14 +31,38 @@ describe('result template helpers', () => {
     it('should return null when the property is not defined at all', () => {
       expect(getResultProperty(buildMockResult(), 'doesnt_exist')).toBeNull();
     });
+
+    it('should return null when the property is undefined', () => {
+      const result = buildMockResult();
+      result.raw.doesnt_exist = undefined;
+      (result as unknown as Record<string, unknown>).doesnt_exist = undefined;
+      expect(getResultProperty(result, 'doesnt_exist')).toBeNull();
+    });
+
+    it('should return null when the property is null', () => {
+      const result = buildMockResult();
+      result.raw.doesnt_exist = null;
+      (result as unknown as Record<string, unknown>).doesnt_exist = null;
+      expect(getResultProperty(result, 'doesnt_exist')).toBeNull();
+    });
+
+    it('should not return null when the property is falsy', () => {
+      const result = buildMockResult();
+      result.raw.doesnt_exist = 0;
+      (result as unknown as Record<string, unknown>).doesnt_exist = false;
+      expect(getResultProperty(result, 'doesnt_exist')).not.toBeNull();
+    });
   });
 
   describe('fieldsMustBeDefined', () => {
     it(`when sending a list of fields that are all defined in the result
     should return true`, () => {
-      const match = fieldsMustBeDefined(['language', 'anotherfield']);
+      const match = fieldsMustBeDefined([
+        'language',
+        'anotherfield',
+        'excerpt',
+      ]);
       const result = buildMockResult();
-      result.raw['language'] = ['Test'];
       result.raw['anotherfield'] = 0;
       expect(match(result)).toBe(true);
     });
@@ -55,9 +79,13 @@ describe('result template helpers', () => {
   describe('fieldsMustNotBeDefined', () => {
     it(`when sending a list of fields that are all undefined in the result
     should return true`, () => {
-      const match = fieldsMustNotBeDefined(['somefield', 'anotherfield']);
-      const result = buildMockResult();
-      result.raw['anotherfield'] = undefined;
+      const match = fieldsMustNotBeDefined([
+        'somefield',
+        'anotherfield',
+        'excerpt',
+      ]);
+      const result = buildMockResult({excerpt: undefined});
+      result.raw['anotherfield'] = null;
       expect(match(result)).toBe(true);
     });
 
@@ -75,6 +103,13 @@ describe('result template helpers', () => {
     should return true`, () => {
       const match = fieldMustMatch('language', ['French', 'English']);
       const result = buildResult('language', 'English');
+      expect(match(result)).toBe(true);
+    });
+
+    it(`when sending a field that contains one of the values (as part of the root result) to match
+    should return true`, () => {
+      const match = fieldMustMatch('excerpt', ['test']);
+      const result = buildMockResult({excerpt: 'test'});
       expect(match(result)).toBe(true);
     });
 
@@ -111,6 +146,13 @@ describe('result template helpers', () => {
     should return true`, () => {
       const match = fieldMustNotMatch('language', ['English', 'French']);
       const result = buildResult('language', 'Arabic');
+      expect(match(result)).toBe(true);
+    });
+
+    it(`when sending a field that does not contain any of the values (as part of the root result) to match
+    should return true`, () => {
+      const match = fieldMustNotMatch('excerpt', ['test']);
+      const result = buildMockResult({excerpt: 'no!'});
       expect(match(result)).toBe(true);
     });
 

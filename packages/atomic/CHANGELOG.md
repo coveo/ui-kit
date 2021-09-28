@@ -3,6 +3,115 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.4...@coveo/atomic@1.2.5) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.3...@coveo/atomic@1.2.4) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.2...@coveo/atomic@1.2.3) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.1...@coveo/atomic@1.2.2) (2021-09-27)
+
+
+### Bug Fixes
+
+* **atomic:** add timeframe future locales & allow timeframes in refine modal ([#1251](https://github.com/coveo/ui-kit/issues/1251)) ([aa2c1c8](https://github.com/coveo/ui-kit/commit/aa2c1c8f7918c4620308a4d976f8cd970a071c62))
+
+
+
+
+
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.0...@coveo/atomic@1.2.1) (2021-09-27)
+
+
+### Bug Fixes
+
+* **headless:** rework default pipeline parameter ([#1247](https://github.com/coveo/ui-kit/issues/1247)) ([0be2ef3](https://github.com/coveo/ui-kit/commit/0be2ef37caffec40bcf9deec977019a9c0b43972))
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.2...@coveo/atomic@1.2.0) (2021-09-27)
+
+
+### Features
+
+* **atomic:** automatically adapt the number of element of the breadbox ([#1241](https://github.com/coveo/ui-kit/issues/1241)) ([b46c290](https://github.com/coveo/ui-kit/commit/b46c290df4615d495c8860eac1b0015b2cc36e03))
+
+
+
+
+
+## [1.1.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.1...@coveo/atomic@1.1.2) (2021-09-23)
+
+
+### Bug Fixes
+
+* **atomic:** add .snyk file to ignore unknown @salesforce-ux/design-system license ([#1240](https://github.com/coveo/ui-kit/issues/1240)) ([93effb8](https://github.com/coveo/ui-kit/commit/93effb8e8e496800868b5bbe549e21f6c60b93ca))
+* **atomic:** display result placeholders by adding with-sections ([#1237](https://github.com/coveo/ui-kit/issues/1237)) ([f6b37f8](https://github.com/coveo/ui-kit/commit/f6b37f8924022eafc1e13d0317f19c371ea939ec))
+
+
+
+
+
+## [1.1.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.0...@coveo/atomic@1.1.1) (2021-09-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.1.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.11...@coveo/atomic@1.1.0) (2021-09-21)
+
+
+### Features
+
+* **atomic:** add delimitingCharacter, filterFacetCount & injectionDepth options to facets ([#1231](https://github.com/coveo/ui-kit/issues/1231)) ([93ac1d2](https://github.com/coveo/ui-kit/commit/93ac1d2085423e96bbf7cef1607b5df7a73498dd))
+
+
+
+
+
+## [1.0.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.10...@coveo/atomic@1.0.11) (2021-09-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.0.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.9...@coveo/atomic@1.0.10) (2021-09-20)
+
+
+### Bug Fixes
+
+* **atomic:** breadbox has wrong rounded class ([#1223](https://github.com/coveo/ui-kit/issues/1223)) ([e75a777](https://github.com/coveo/ui-kit/commit/e75a777c45ee0c8f1bd61ac7f87a6a49d4df4ba4))
+* **atomic:** facet header should not be rounded ([#1222](https://github.com/coveo/ui-kit/issues/1222)) ([bc342ab](https://github.com/coveo/ui-kit/commit/bc342ab703785680471f26748028fce558a869bb))
+* **atomic:** reduce result template visual section potential height ([#1224](https://github.com/coveo/ui-kit/issues/1224)) ([b1710bd](https://github.com/coveo/ui-kit/commit/b1710bdbd51aeb02d5915b457789c934f46efb0e))
+
+
+
+
+
 ## [1.0.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.0.8...@coveo/atomic@1.0.9) (2021-09-20)
 
 

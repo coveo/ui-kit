@@ -1,6 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {DateFacetValue} from './interfaces/response';
-import {AsyncThunkSearchOptions} from '../../../../api/search/search-api-client';
 import {
   ConfigurationSection,
   DateFacetSection,
@@ -10,6 +9,8 @@ import {toggleSelectDateFacetValue} from './date-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 
 const definition = {
   facetId: facetIdDefinition,
@@ -27,12 +28,13 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     facetId: string;
     selection: DateFacetValue;
   },
-  AsyncThunkSearchOptions<ConfigurationSection & DateFacetSection>
+  AsyncThunkOptions<ConfigurationSection & DateFacetSection>
 >(
   'dateFacet/executeToggleSelect',
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
   }
 );

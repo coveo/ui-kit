@@ -3,6 +3,8 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
+import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
+import {snakeToCamel} from '../../../utils/utils';
 
 /**
  * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -36,14 +38,20 @@ export class AtomicResultIcon {
     return objectType || fileType;
   }
 
-  public render() {
-    const icon = this.icon;
-    return icon ? (
-      <atomic-icon icon={'assets://' + icon} class={icon}></atomic-icon>
-    ) : (
-      <slot>
-        <atomic-icon icon="assets://custom" class="custom"></atomic-icon>
-      </slot>
+  private renderIcon() {
+    const icon = this.icon || 'custom';
+    const backgroundColor = bgIcons[snakeToCamel(icon)] || 'transparent';
+    return (
+      <atomic-icon
+        icon={'assets://' + icon}
+        class={icon}
+        title={icon}
+        style={{backgroundColor}}
+      ></atomic-icon>
     );
+  }
+
+  public render() {
+    return this.icon ? this.renderIcon() : <slot>{this.renderIcon()}</slot>;
   }
 }

@@ -32,13 +32,13 @@ import {BaseParam} from '../platform-service-params';
 import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
-export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
-  state: T;
+export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>>
+  extends AsyncThunkOptions<T, SearchThunkExtraArguments> {
   rejectValue: SearchAPIErrorWithStatusCode;
-  extra: SearchThunkExtraArguments;
 }
 
 export interface SearchAPIClientOptions {

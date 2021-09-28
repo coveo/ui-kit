@@ -61,45 +61,51 @@
 
       /* Example on how to customize the color facet */
       atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('/build/assets/mail.svg');
+        background-image: url('/build/assets/email.svg');
         background-position: center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-color: rgb(149, 174, 197);
       }
 
       atomic-color-facet::part(value-lithiumuser) {
         background-image: url('/build/assets/folder.svg');
         background-position: center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-color: rgb(139, 154, 227);
       }
 
       atomic-color-facet::part(value-YouTubeVideo) {
         background-image: url('build/assets/video.svg');
         background-position: center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-color: rgb(176, 112, 230);
       }
 
       atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('build/assets/kb.svg');
+        background-image: url('build/assets/knowledge.svg');
         background-position: center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-color: rgb(236, 148, 237);
       }
 
       atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('build/assets/salesforce-standard-post.svg');
+        background-image: url('build/assets/post.svg');
         background-position: center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-image: rgb(101, 202, 228);
       }
 
       atomic-color-facet::part(value-html) {
-        background-image: url('build/assets/webpage.svg');
+        background-image: url('build/assets/html.svg');
         background-position: center;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-color: transparent;
       }
     </style>
     <style>
@@ -253,6 +259,7 @@
           <atomic-timeframe unit="month"></atomic-timeframe>
           <atomic-timeframe unit="quarter"></atomic-timeframe>
           <atomic-timeframe unit="year"></atomic-timeframe>
+          <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
         </atomic-timeframe-facet>
         <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
         <atomic-rating-range-facet

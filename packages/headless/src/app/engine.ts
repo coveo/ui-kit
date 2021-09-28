@@ -168,6 +168,10 @@ function buildCoreEngine<
 
   return {
     addReducers(reducers: ReducersMapObject) {
+      if (reducerManager.containsAll(reducers)) {
+        return;
+      }
+
       reducerManager.add(reducers);
       store.replaceReducer(reducerManager.combinedReducer);
     },

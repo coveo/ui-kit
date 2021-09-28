@@ -1,4 +1,4 @@
 export const IconSelectors = {
   icon: 'atomic-icon',
-  title: 'atomic-icon > svg > title',
+  svg: 'atomic-icon > svg',
 };

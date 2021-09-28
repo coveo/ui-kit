@@ -37,6 +37,19 @@ function onWarn(warning, warn) {
   warn(warning);
 }
 
+/**
+ * @param {string} value
+ * @returns {boolean}
+ */
+function matchesFilter(value) {
+  const filterIndex = process.argv.indexOf("--filter");
+  if (filterIndex === -1) {
+    return true;
+  }
+
+  const filter = process.argv[filterIndex + 1];
+  return value.includes(filter);
+}
 
 // Node Bundles
 
@@ -57,7 +70,11 @@ const nodejs = [
     input: 'src/product-recommendation.index.ts',
     outDir: 'dist/product-recommendation'
   },
-].map(buildNodeConfiguration);
+  {
+    input: 'src/product-listing.index.ts',
+    outDir: 'dist/product-listing'
+  },
+].filter(b => matchesFilter(b.input)).map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
   return {
@@ -121,7 +138,14 @@ const browser = [
       buildEsmOutput('dist/browser/product-recommendation')
     ]
   },
-].map(buildBrowserConfiguration);
+  {
+    input: 'src/product-listing.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/product-listing', 'CoveoHeadlessProductListing'),
+      buildEsmOutput('dist/browser/product-listing')
+    ]
+  },
+].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
 function buildBrowserConfiguration({input, output}) {
   return {
@@ -192,7 +216,11 @@ const dev = [
     input: 'src/product-recommendation.index.ts',
     output: [buildEsmOutput('../atomic/src/external-builds/product-recommendation')],
   },
-].map(buildBrowserConfiguration);
+  {
+    input: 'src/product-listing.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/product-listing')],
+  },
+].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
 // can consume. When the api-extractor limitation is resolved, this step will not be necessary.
@@ -201,7 +229,8 @@ const typeDefinitions = [
   buildTypeDefinitionConfiguration('index.d.ts'),
   buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
   buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
-];
+  buildTypeDefinitionConfiguration('product-listing.index.d.ts'),
+].filter(b => matchesFilter(b.input));
 
 function buildTypeDefinitionConfiguration(entryFileName) {
   return {

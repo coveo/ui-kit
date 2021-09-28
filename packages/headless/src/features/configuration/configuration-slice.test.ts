@@ -75,6 +75,12 @@ describe('configuration slice', () => {
         )
       ).toEqual(expectedState);
     });
+
+    it('setting platformUrl to a relative url does not return an error', () => {
+      const platformUrl = '/rest/search/v2';
+      const action = updateBasicConfiguration({platformUrl});
+      expect('error' in action).toBe(false);
+    });
   });
 
   describe('updateAnalyticsConfiguration', () => {
@@ -128,6 +134,12 @@ describe('configuration slice', () => {
         )
       ).toEqual(expectedState);
     });
+
+    it('setting apiBaseUrl to a relative url does not return an error', () => {
+      const apiBaseUrl = '/rest/ua';
+      const action = updateAnalyticsConfiguration({apiBaseUrl});
+      expect('error' in action).toBe(false);
+    });
   });
 
   describe('updateSearchConfiguration', () => {
@@ -152,6 +164,7 @@ describe('configuration slice', () => {
         )
       ).toEqual(expectedState);
     });
+
     it('works on existing state', () => {
       const expectedState: ConfigurationState = {
         ...existingState,
@@ -172,6 +185,12 @@ describe('configuration slice', () => {
           })
         )
       ).toEqual(expectedState);
+    });
+
+    it('setting apiBaseUrl to a relative url does not return an error', () => {
+      const apiBaseUrl = '/rest/search/v2';
+      const action = updateSearchConfiguration({apiBaseUrl});
+      expect('error' in action).toBe(false);
     });
   });
 

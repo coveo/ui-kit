@@ -22,6 +22,12 @@ To build all projects for production, run:
 npm run build
 ```
 
+To build a single project for production (for instance, the `product-listing` package), run:
+
+```sh
+npm run build  -- --filter product-listing
+```
+
 To start all projects in development (you should run `npm run build` at least once first), run:
 
 ```sh

@@ -3,7 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, regexEncode} from 'c/quanticUtils';
 
 import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
@@ -135,19 +135,18 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get hasSearchResults() {
-    return this.facet.state.facetSearch.values.length !== 0;
+    return this.getSearchValues().length > 0;
   }
 
   get facetSearchResults() {
-    const results = this.facet.state.facetSearch.values;
-    return results.map((result) => ({
+    return this.getSearchValues().map((result) => ({
       value: result.rawValue,
       state: 'idle',
       numberOfResults: result.count,
       checked: false,
       highlightedResult: this.highlightResult(
         result.displayValue,
-        this.input.value
+        this.input?.value
       ),
     }));
   }
@@ -176,6 +175,10 @@ export default class QuanticFacet extends LightningElement {
     return this.isExpanded ? 'utility:dash' : 'utility:add';
   }
 
+  get actionButtonCssClasses() {
+    return this.isExpanded ? 'facet__collapse' : 'facet__expand';
+  }
+
   get actionButtonLabel() {
     const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
     return I18nUtils.format(label, this.label);
@@ -183,6 +186,10 @@ export default class QuanticFacet extends LightningElement {
 
   get isFacetSearchActive() {
     return this.input?.value !== '';
+  }
+
+  getSearchValues() {
+    return this.facet?.state?.facetSearch?.values ?? [];
   }
 
   /**
@@ -234,19 +241,17 @@ export default class QuanticFacet extends LightningElement {
   }
 
   clearInput() {
-    this.input.value = '';
-    this.facet.facetSearch.updateText(this.input?.value);
+    if(this.input) {
+      this.input.value = '';
+    }
+    this.facet.facetSearch.updateText('');
   }
 
   highlightResult(result, query) {
     if (!query || query.trim() === '') {
       return result;
     }
-    const regex = new RegExp(`(${this.regexEncode(query)})`, 'i');
+    const regex = new RegExp(`(${regexEncode(query)})`, 'i');
     return result.replace(regex, '<b class="facet__search-result_highlight">$1</b>');
-  }
-
-  regexEncode(value) {
-    return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
   }
 }
