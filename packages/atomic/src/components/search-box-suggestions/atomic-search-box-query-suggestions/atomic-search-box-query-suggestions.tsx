@@ -1,4 +1,9 @@
-import {loadQuerySuggestActions, SearchEngine} from '@coveo/headless';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import {
+  loadQuerySuggestActions,
+  SearchEngine,
+  Suggestion,
+} from '@coveo/headless';
 import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
@@ -56,28 +61,38 @@ export class AtomicSearchBoxQuerySuggestions {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    // TODO: filter out identical recent queries (requires context)
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     return this.bindings.searchBoxController.state.suggestions
       .slice(0, max)
-      .map((suggestion) => ({
-        content:
-          // TODO: add icon when other types of suggestions are possible (requires context)
-          hasQuery ? (
+      .map((suggestion) => this.renderItem(suggestion));
+  }
+
+  private renderItem(suggestion: Suggestion) {
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
+    return {
+      content: (
+        <div class="flex items-center">
+          {this.bindings.getSuggestions().length > 1 && (
+            <atomic-icon
+              icon={SearchIcon}
+              class="w-4 h-4 text-neutral mr-2"
+            ></atomic-icon>
+          )}
+          {hasQuery ? (
             <span innerHTML={suggestion.highlightedValue}></span>
           ) : (
             <span>{suggestion.rawValue}</span>
-          ),
-        key: suggestion.rawValue,
-        query: suggestion.rawValue,
-        onSelect: () => {
-          this.bindings.searchBoxController.selectSuggestion(
-            suggestion.rawValue
-          );
-          this.bindings.inputRef.blur();
-        },
-      }));
+          )}
+        </div>
+      ),
+      key: suggestion.rawValue,
+      query: suggestion.rawValue,
+      onSelect: () => {
+        this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
+        this.bindings.inputRef.blur();
+      },
+    };
   }
 
   public render() {

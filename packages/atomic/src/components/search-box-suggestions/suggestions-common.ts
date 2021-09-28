@@ -26,6 +26,7 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   numberOfQueries: number;
   inputRef: HTMLInputElement;
   triggerSuggestions(): void;
+  getSuggestions: () => SearchBoxSuggestions[];
 }
 
 export const dispatchSearchBoxSuggestionsEvent = (

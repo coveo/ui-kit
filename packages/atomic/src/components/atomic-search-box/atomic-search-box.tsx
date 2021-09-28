@@ -113,6 +113,7 @@ export class AtomicSearchBox {
       numberOfQueries: this.numberOfQueries,
       inputRef: this.inputRef,
       triggerSuggestions: () => this.triggerSuggestions(),
+      getSuggestions: () => this.suggestions,
     };
   }
 

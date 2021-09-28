@@ -100,7 +100,7 @@ export class AtomicSearchBoxRecentQueries {
         <div class="flex items-center">
           <atomic-icon
             icon={Clock}
-            class="w-5 h-5 text-neutral mr-1 -ml-1 mt-0.5"
+            class="w-5 h-5 text-neutral mr-2 -ml-1"
           ></atomic-icon>
           {query === '' ? (
             <span>{value}</span>
