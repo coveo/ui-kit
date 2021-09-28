@@ -137,7 +137,10 @@ describe('Facet Test Suite', () => {
           });
 
           describe('verify analytics', () => {
-            before(clearSelectedValues);
+            before(() => {
+              clearSelectedValues();
+              FacetSelectors.selectedCheckboxValue().should('have.length', 0);
+            });
 
             Expect.logClearFacetValues(defaultField);
           });
