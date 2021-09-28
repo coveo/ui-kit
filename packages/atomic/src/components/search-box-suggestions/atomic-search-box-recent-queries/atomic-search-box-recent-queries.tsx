@@ -1,7 +1,6 @@
 import {buildRecentQueriesList} from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
-import {SearchBoxSuggestionsEvent} from '../suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '../suggestions-common';
 
 @Component({
   tag: 'atomic-search-box-recent-queries',
@@ -17,32 +16,28 @@ export class AtomicSearchBoxRecentQueries {
 
   componentWillLoad() {
     try {
-      const event = buildCustomEvent<SearchBoxSuggestionsEvent>(
-        'atomic/searchBoxSuggestion',
-        ({engine}) => {
-          const recentQueriesList = buildRecentQueriesList(engine, {
-            initialState: {queries: ['hello', 'hola', 'bonjour', 'buongiorno']},
-          });
+      dispatchSearchBoxSuggestionsEvent(({engine, numberOfQueries}) => {
+        const recentQueriesList = buildRecentQueriesList(engine, {
+          // TODO: fetch initial state from cookies or local storage
+          initialState: {queries: ['hello', 'hola', 'bonjour', 'buongiorno']},
+          options: {maxLength: numberOfQueries},
+        });
 
-          return {
-            onInput: () => {},
-            renderItems: () =>
-              // TODO: filter, highlight, limit
-              recentQueriesList.state.queries.map((value, i) => ({
-                value,
-                content: <span>{value}</span>,
-                onClick: () => recentQueriesList.executeRecentQuery(i),
-              })),
-          };
-        }
-      );
-
-      const canceled = this.host.dispatchEvent(event);
-      if (canceled) {
-        throw new Error(
-          'The "atomic-search-box-recent-queries" component was not handled, as it is not a child of a "atomic-search-box" component.'
-        );
-      }
+        return {
+          onInput: () => {},
+          renderItems: () =>
+            // TODO: limit values according to maxWithQuery/maxWithoutQuery
+            // TODO: filter values according to query
+            // TODO: add "clear recent queries element"
+            recentQueriesList.state.queries.map((value, i) => ({
+              value,
+              // TODO: highlight values
+              content: <span>{value}</span>,
+              // TODO: save state to local storage
+              onClick: () => recentQueriesList.executeRecentQuery(i),
+            })),
+        };
+      }, this.host);
     } catch (error) {
       this.error = error as Error;
     }

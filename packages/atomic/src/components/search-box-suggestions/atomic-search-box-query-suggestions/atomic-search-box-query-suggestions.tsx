@@ -1,8 +1,7 @@
 import {loadQuerySuggestActions, SearchEngine} from '@coveo/headless';
 import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
-import {SearchBoxSuggestionsEvent} from '../suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '../suggestions-common';
 
 @Component({
   tag: 'atomic-search-box-query-suggestions',
@@ -18,8 +17,7 @@ export class AtomicSearchBoxQuerySuggestions {
 
   componentWillLoad() {
     try {
-      const event = buildCustomEvent<SearchBoxSuggestionsEvent>(
-        'atomic/searchBoxSuggestion',
+      dispatchSearchBoxSuggestionsEvent(
         ({engine, id, searchBoxController, numberOfQueries}) => {
           const {registerQuerySuggest, fetchQuerySuggestions} =
             loadQuerySuggestActions(engine);
@@ -39,7 +37,7 @@ export class AtomicSearchBoxQuerySuggestions {
                 })
               ),
             renderItems: () =>
-              // TODO: limit
+              // TODO: limit values according to maxWithQuery/maxWithoutQuery
               searchBoxController.state.suggestions.map((suggestion) => ({
                 content: <span innerHTML={suggestion.highlightedValue}></span>,
                 value: suggestion.rawValue,
@@ -47,15 +45,9 @@ export class AtomicSearchBoxQuerySuggestions {
                   searchBoxController.selectSuggestion(suggestion.rawValue),
               })),
           };
-        }
+        },
+        this.host
       );
-
-      const canceled = this.host.dispatchEvent(event);
-      if (canceled) {
-        throw new Error(
-          'The "atomic-search-box-query-suggestions" component was not handled, as it is not a child of a "atomic-search-box" component.'
-        );
-      }
     } catch (error) {
       this.error = error as Error;
     }
