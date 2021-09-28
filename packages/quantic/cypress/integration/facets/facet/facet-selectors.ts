@@ -17,12 +17,7 @@ export const FacetSelectors: AllFacetSelectors = {
 
   label: () => FacetSelectors.get().find('header h2 > span'),
   values: () => FacetSelectors.get().find('c-quantic-facet-value'),
-  clearFilterButton: () =>
-    FacetSelectors.get().find('button[value="Clear filter"]'),
-  clearMultipleFiltersButton: (numberOfActiveFacets: number) =>
-    FacetSelectors.get().find(
-      `button[value="Clear ${numberOfActiveFacets} filters"]`
-    ),
+  clearFilterButton: () => FacetSelectors.get().find('.facet__clear-filter'),
   valueLabel: () => FacetSelectors.get().find('.facet__value-text span'),
   facetValueLabelAtIndex: (index: number) =>
     FacetSelectors.valueLabel().eq(index),

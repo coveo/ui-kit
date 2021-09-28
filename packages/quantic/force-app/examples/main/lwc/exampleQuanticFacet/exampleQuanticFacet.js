@@ -47,7 +47,7 @@ export default class ExampleQuanticFacet extends LightningElement {
         {
             attribute: 'displayValuesAs',
             label: 'Display Values As',
-            description: 'Whether to display the facet values as checkboxes (multiple selection) or links (single selection).',
+            description: 'Whether to display the facet values in "checkbox" mode (multiple selection) or "link" mode (single selection).',
             defaultValue: 'checkbox'
         }
     ]

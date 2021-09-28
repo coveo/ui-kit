@@ -28,16 +28,14 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
     },
 
     displayClearButton: (display: boolean) => {
-      it(`${should(display)} display a "Clear filter" button`, () => {
+      it(`${should(display)} display a clear filter button`, () => {
         selector.clearFilterButton().should(display ? 'exist' : 'not.exist');
       });
     },
 
-    displayClearXFiltersButton: (numberOfActiveFacets: number) => {
-      it(`should display a "Clear ${numberOfActiveFacets} filters" button`, () => {
-        selector
-          .clearMultipleFiltersButton(numberOfActiveFacets)
-          .should('exist');
+    clearFilterContains: (value: string) => {
+      it(`should display a clear filter button with text "${value}"`, () => {
+        selector.clearFilterButton().should('contain', value);
       });
     },
 
@@ -126,13 +124,13 @@ export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
     },
 
     numberOfSelectedLinkValues: (value: number) => {
-      it(`should display ${value} selected checkbox values`, () => {
+      it(`should display ${value} selected link values`, () => {
         selector.selectedValue().should('have.length', value);
       });
     },
 
     numberOfIdleLinkValues: (value: number) => {
-      it(`should display ${value} idle checkbox values`, () => {
+      it(`should display ${value} idle link values`, () => {
         selector.idleValue().should('have.length', value);
       });
     },

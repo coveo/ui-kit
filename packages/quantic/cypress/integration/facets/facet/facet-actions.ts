@@ -12,9 +12,9 @@ export function checkLastValue(selector: BaseFacetSelector) {
 }
 
 export function selectFirstLinkValue(selector: BaseFacetSelector) {
-  selector.values().first().find(valueLink).check({force: true});
+  selector.values().first().find(valueLink).click({force: true});
 }
 
 export function selectLastLinkValue(selector: BaseFacetSelector) {
-  selector.values().last().find(valueLink).check({force: true});
+  selector.values().last().find(valueLink).click({force: true});
 }
