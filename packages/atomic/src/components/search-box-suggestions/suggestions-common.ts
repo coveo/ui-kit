@@ -4,7 +4,8 @@ import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings} from '../../utils/initialization-utils';
 
 export interface SearchBoxSuggestionElement {
-  value: string;
+  key: string;
+  query?: string;
   onSelect(): void;
   content: VNode;
 }
@@ -23,6 +24,8 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   id: string;
   searchBoxController: SearchBox;
   numberOfQueries: number;
+  inputRef: HTMLInputElement;
+  triggerSuggestions(): void;
 }
 
 export const dispatchSearchBoxSuggestionsEvent = (

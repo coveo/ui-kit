@@ -111,6 +111,8 @@ export class AtomicSearchBox {
       id: this.id,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
+      inputRef: this.inputRef,
+      triggerSuggestions: () => this.triggerSuggestions(),
     };
   }
 
@@ -179,7 +181,7 @@ export class AtomicSearchBox {
       return;
     }
 
-    const query = this.nextOrFirstValue.getAttribute('data-value');
+    const query = this.nextOrFirstValue.getAttribute('data-query');
     !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.nextOrFirstValue.id);
     this.scrollActiveDescendantIntoView();
@@ -190,7 +192,7 @@ export class AtomicSearchBox {
       return;
     }
 
-    const query = this.previousOrLastValue.getAttribute('data-value');
+    const query = this.previousOrLastValue.getAttribute('data-query');
     !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.previousOrLastValue.id);
     this.scrollActiveDescendantIntoView();
@@ -200,11 +202,15 @@ export class AtomicSearchBox {
     await Promise.all(
       this.suggestions.map((suggestion) => suggestion.onInput())
     );
-    this.suggestionElements = this.suggestions
+    const suggestionElements = this.suggestions
       .sort((a, b) => a.position - b.position)
       .map((suggestion) => suggestion.renderItems())
-      .flat()
-      .slice(0, this.numberOfQueries);
+      .flat();
+
+    const max =
+      this.numberOfQueries +
+      suggestionElements.filter((sug) => sug.query === undefined).length;
+    this.suggestionElements = suggestionElements.slice(0, max);
   }
 
   private onInput(value: string) {
@@ -340,17 +346,14 @@ export class AtomicSearchBox {
         id={id}
         role="option"
         aria-selected={`${isSelected}`}
-        key={suggestion.value}
-        data-value={suggestion.value}
+        key={suggestion.key}
+        data-query={suggestion.query}
         part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
         class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => {
-          suggestion.onSelect();
-          this.inputRef.blur();
-        }}
+        onClick={() => suggestion.onSelect()}
       >
         {suggestion.content}
       </li>

@@ -516,6 +516,10 @@
     "en": "No matches found for {{query}}",
     "fr": "Aucun résultat pour {{query}}"
   },
+  "recent-searches": {
+    "en": "Recent searches",
+    "fr": "Recherches récente"
+  },
   "cancel-last-action": {
     "en": "Cancel last action",
     "fr": "Annuler la dernière action",

@@ -56,21 +56,27 @@ export class AtomicSearchBoxQuerySuggestions {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    // TODO: filter out identical recent queries, might require "context"
+    // TODO: filter out identical recent queries (requires context)
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     return this.bindings.searchBoxController.state.suggestions
       .slice(0, max)
       .map((suggestion) => ({
-        content: (
-          // TODO: add icon when other types of suggestions can appear
-          <span innerHTML={suggestion.highlightedValue}></span>
-        ),
-        value: suggestion.rawValue,
-        onSelect: () =>
+        content:
+          // TODO: add icon when other types of suggestions are possible (requires context)
+          hasQuery ? (
+            <span innerHTML={suggestion.highlightedValue}></span>
+          ) : (
+            <span>{suggestion.rawValue}</span>
+          ),
+        key: suggestion.rawValue,
+        query: suggestion.rawValue,
+        onSelect: () => {
           this.bindings.searchBoxController.selectSuggestion(
             suggestion.rawValue
-          ),
+          );
+          this.bindings.inputRef.blur();
+        },
       }));
   }
 

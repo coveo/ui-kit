@@ -1,3 +1,4 @@
+import Clock from '../../../images/clock.svg';
 import {
   buildRecentQueriesList,
   HighlightUtils,
@@ -55,37 +56,79 @@ export class AtomicSearchBoxRecentQueries {
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
-      .filter((recentQuery) =>
-        recentQuery.toLowerCase().startsWith(query.toLowerCase())
+      .filter(
+        (recentQuery) =>
+          recentQuery !== query &&
+          recentQuery.toLowerCase().startsWith(query.toLowerCase())
       )
       .slice(0, max);
 
-    // TODO: add "clear recent queries element"
-    return filteredQueries.map((value) => ({
-      value,
+    const suggestionElements = filteredQueries.map((value) =>
+      this.renderItem(value)
+    );
+    if (suggestionElements.length) {
+      suggestionElements.unshift(this.renderClear());
+    }
+
+    return suggestionElements;
+  }
+
+  private renderClear(): SearchBoxSuggestionElement {
+    return {
+      key: 'recent-query-clear',
       content: (
-        // TODO: add icon when other types of suggestions can appear
-        <span
-          innerHTML={HighlightUtils.highlightString({
-            content: value,
-            openingDelimiter: '<span class="font-bold">',
-            closingDelimiter: '</span>',
-            highlights: [
-              {
-                offset: query.length,
-                length: value.length - query.length,
-              },
-            ],
-          })}
-        ></span>
+        <div class="flex justify-between w-full">
+          <span class="font-bold">
+            {this.bindings.i18n.t('recent-searches')}
+          </span>
+          <span>{this.bindings.i18n.t('clear')}</span>
+        </div>
+      ),
+      onSelect: () => {
+        this.recentQueriesList.clear();
+        this.bindings.triggerSuggestions();
+      },
+    };
+  }
+
+  private renderItem(value: string): SearchBoxSuggestionElement {
+    const query = this.bindings.searchBoxController.state.value;
+    return {
+      key: value,
+      query: value,
+      content: (
+        <div class="flex items-center">
+          <atomic-icon
+            icon={Clock}
+            class="w-5 h-5 text-neutral mr-1 -ml-1 mt-0.5"
+          ></atomic-icon>
+          {query === '' ? (
+            <span>{value}</span>
+          ) : (
+            <span
+              innerHTML={HighlightUtils.highlightString({
+                content: value,
+                openingDelimiter: '<span class="font-bold">',
+                closingDelimiter: '</span>',
+                highlights: [
+                  {
+                    offset: query.length,
+                    length: value.length - query.length,
+                  },
+                ],
+              })}
+            ></span>
+          )}
+        </div>
       ),
       onSelect: () => {
         // TODO: save state to local storage
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );
+        this.bindings.inputRef.blur();
       },
-    }));
+    };
   }
 
   public render() {
