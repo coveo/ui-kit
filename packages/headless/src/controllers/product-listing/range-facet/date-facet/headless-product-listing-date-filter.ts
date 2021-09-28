@@ -18,8 +18,8 @@ import {
   DateFilterRange,
   DateFilterState,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-filter';
-import {ProductListingEngine} from '../../../../product-listing.index';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
 export {
   DateFilterOptions,
@@ -46,18 +46,20 @@ export function buildDateFilter(
     ...coreController,
     clear: () => {
       coreController.clear();
-      dispatch(fetchProductListing());
-      dispatch(logFacetClearAll(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetClearAll(getFacetId()))
+      );
     },
     setRange: (range) => {
       const success = coreController.setRange(range);
       if (success) {
-        dispatch(fetchProductListing());
-        dispatch(
-          logFacetSelect({
-            facetId: getFacetId(),
-            facetValue: `${range.start}..${range.end}`,
-          })
+        dispatch(fetchProductListing()).then(() =>
+          dispatch(
+            logFacetSelect({
+              facetId: getFacetId(),
+              facetValue: `${range.start}..${range.end}`,
+            })
+          )
         );
       }
       return success;

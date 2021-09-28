@@ -1,19 +1,19 @@
-import {configuration, pagination} from '../../app/reducers';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
+import {configuration, pagination} from '../../../app/reducers';
+import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {ProductListingEngine} from '../../../product-listing.index';
 import {
   ConfigurationSection,
   PaginationSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
 import {
   buildCoreResultsPerPage,
   ResultsPerPage,
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
-} from '../core/results-per-page/headless-core-results-per-page';
+} from '../../core/results-per-page/headless-core-results-per-page';
 
 export {
   ResultsPerPage,
@@ -30,7 +30,7 @@ export {
  * @returns A `ResultsPerPage` controller instance.
  */
 export function buildResultsPerPage(
-  engine: SearchEngine,
+  engine: ProductListingEngine,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {
   if (!loadResultsPerPageReducers(engine)) {
@@ -51,14 +51,14 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(executeSearch(logPagerResize()));
+      dispatch(fetchProductListing()).then(() => dispatch(logPagerResize()));
     },
   };
 }
 
 function loadResultsPerPageReducers(
-  engine: SearchEngine
-): engine is SearchEngine<PaginationSection & ConfigurationSection> {
+  engine: ProductListingEngine
+): engine is ProductListingEngine<PaginationSection & ConfigurationSection> {
   engine.addReducers({pagination, configuration});
   return true;
 }
