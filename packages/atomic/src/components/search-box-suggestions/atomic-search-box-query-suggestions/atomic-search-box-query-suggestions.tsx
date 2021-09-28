@@ -36,14 +36,20 @@ export class AtomicSearchBoxQuerySuggestions {
                   id,
                 })
               ),
-            renderItems: () =>
-              // TODO: limit values according to maxWithQuery/maxWithoutQuery
-              searchBoxController.state.suggestions.map((suggestion) => ({
-                content: <span innerHTML={suggestion.highlightedValue}></span>,
-                value: suggestion.rawValue,
-                onClick: () =>
-                  searchBoxController.selectSuggestion(suggestion.rawValue),
-              })),
+            renderItems: () => {
+              const hasQuery = searchBoxController.state.value !== '';
+              const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
+              return searchBoxController.state.suggestions
+                .slice(0, max)
+                .map((suggestion) => ({
+                  content: (
+                    <span innerHTML={suggestion.highlightedValue}></span>
+                  ),
+                  value: suggestion.rawValue,
+                  onClick: () =>
+                    searchBoxController.selectSuggestion(suggestion.rawValue),
+                }));
+            },
           };
         },
         this.host
