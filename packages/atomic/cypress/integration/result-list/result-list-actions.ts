@@ -1,4 +1,9 @@
-import {TestFixture, generateComponentHTML} from '../../fixtures/test-fixture';
+import {
+  TestFixture,
+  generateComponentHTML,
+  TagProps,
+} from '../../fixtures/test-fixture';
+import {resultTemplateComponent} from '../result-templates/result-template-selectors';
 import {
   resultListComponent,
   ResultSection,
@@ -9,34 +14,37 @@ function toArray<T>(values: T | T[]): T[] {
   return Array.isArray(values) ? values : [values];
 }
 
-function buildTemplate(
-  sections: Partial<Record<ResultSection, HTMLElement | HTMLElement[]>>
+export function buildTemplateWithoutSections(
+  elements: HTMLElement | HTMLElement[],
+  props: TagProps = {}
+) {
+  const resultTemplate = generateComponentHTML(resultTemplateComponent, props);
+  const template = generateComponentHTML('template') as HTMLTemplateElement;
+  resultTemplate.appendChild(template);
+  toArray(elements).forEach((element) => template.content.appendChild(element));
+  return resultTemplate;
+}
+
+export function buildTemplateWithSections(
+  sections: Partial<Record<ResultSection, HTMLElement | HTMLElement[]>>,
+  props: TagProps = {}
 ) {
   const sectionPairs = Object.entries(sections) as [
     ResultSection,
     HTMLElement | HTMLElement[]
   ][];
-  if (sectionPairs.length === 0) {
-    return null;
-  }
-  const resultTemplate = generateComponentHTML('atomic-result-template');
-  const template = generateComponentHTML('template') as HTMLTemplateElement;
-  resultTemplate.appendChild(template);
+  const sectionsEls: HTMLElement[] = [];
   for (const [section, elements] of sectionPairs) {
-    const element = generateComponentHTML(resultSectionTags[section]);
-    toArray(elements).forEach((e) => element.appendChild(e));
-    template.content.appendChild(element);
+    const sectionEl = generateComponentHTML(resultSectionTags[section]);
+    toArray(elements).forEach((e) => sectionEl.appendChild(e));
+    sectionsEls.push(sectionEl);
   }
-  return resultTemplate;
+  return buildTemplateWithoutSections(sectionsEls, props);
 }
 
 export const addResultList =
-  (
-    sections: Partial<Record<ResultSection, HTMLElement | HTMLElement[]>> = {}
-  ) =>
-  (fixture: TestFixture) => {
+  (template?: HTMLElement) => (fixture: TestFixture) => {
     const resultList = generateComponentHTML(resultListComponent);
-    const template = buildTemplate(sections);
     if (template) {
       resultList.appendChild(template);
     }

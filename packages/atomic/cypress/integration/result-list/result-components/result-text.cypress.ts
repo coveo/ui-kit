@@ -4,7 +4,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {addResultList} from '../result-list-actions';
+import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultTextComponent,
   ResultTextSelectors,
@@ -17,12 +17,14 @@ interface ResultTextProps {
 }
 
 const addResultTextInResultList = (props: ResultTextProps = {}) =>
-  addResultList({
-    bottomMetadata: generateComponentHTML(
-      resultTextComponent,
-      props as TagProps
-    ),
-  });
+  addResultList(
+    buildTemplateWithSections({
+      bottomMetadata: generateComponentHTML(
+        resultTextComponent,
+        props as TagProps
+      ),
+    })
+  );
 
 describe('Result Text Component', () => {
   describe('when not used inside a result template', () => {

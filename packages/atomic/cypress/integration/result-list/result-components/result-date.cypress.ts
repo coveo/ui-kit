@@ -3,7 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {addResultList} from '../result-list-actions';
+import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultDateComponent,
   ResultDateSelectors,
@@ -15,12 +15,14 @@ interface ResultDateProps {
 }
 
 const addResultDateInResultList = (props: ResultDateProps = {}) =>
-  addResultList({
-    bottomMetadata: generateComponentHTML(
-      resultDateComponent,
-      props as TagProps
-    ),
-  });
+  addResultList(
+    buildTemplateWithSections({
+      bottomMetadata: generateComponentHTML(
+        resultDateComponent,
+        props as TagProps
+      ),
+    })
+  );
 
 describe('Result Date Component', () => {
   describe('when not used inside a result template', () => {

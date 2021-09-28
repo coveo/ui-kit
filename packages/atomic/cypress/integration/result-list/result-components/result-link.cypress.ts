@@ -3,7 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {addResultList} from '../result-list-actions';
+import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultLinkComponent,
   ResultLinkSelectors,
@@ -24,7 +24,7 @@ const addResultLinkInResultList = (
   if (slot) {
     resultLinkEl.appendChild(slot);
   }
-  return addResultList({title: resultLinkEl});
+  return addResultList(buildTemplateWithSections({title: resultLinkEl}));
 };
 
 describe('Result Link Component', () => {

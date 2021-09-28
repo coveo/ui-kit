@@ -2,7 +2,7 @@ import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
 import {ResultListSelectors} from './result-list-selectors';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
-import {addResultList} from './result-list-actions';
+import {addResultList, buildTemplateWithSections} from './result-list-actions';
 
 describe('Result List Component', () => {
   it('should load', () => {
@@ -70,11 +70,13 @@ describe('Result List Component', () => {
     before(() => {
       new TestFixture()
         .with(
-          addResultList({
-            title: generateLineHeightElement(),
-            excerpt: generateLineHeightElement(),
-            bottomMetadata: generateLineHeightElement(),
-          })
+          addResultList(
+            buildTemplateWithSections({
+              title: generateLineHeightElement(),
+              excerpt: generateLineHeightElement(),
+              bottomMetadata: generateLineHeightElement(),
+            })
+          )
         )
         .init();
       ResultListSelectors.shadow().find('.list-wrapper:not(.placeholder)');
@@ -115,16 +117,18 @@ describe('Result List Component', () => {
     before(() => {
       new TestFixture()
         .with(
-          addResultList({
-            visual: generateSimpleTextElement(),
-            badges: generateSimpleTextElement(),
-            actions: generateSimpleTextElement(),
-            title: generateSimpleTextElement(),
-            titleMetadata: generateSimpleTextElement(),
-            emphasized: generateSimpleTextElement(),
-            excerpt: generateSimpleTextElement(),
-            bottomMetadata: generateSimpleTextElement(),
-          })
+          addResultList(
+            buildTemplateWithSections({
+              visual: generateSimpleTextElement(),
+              badges: generateSimpleTextElement(),
+              actions: generateSimpleTextElement(),
+              title: generateSimpleTextElement(),
+              titleMetadata: generateSimpleTextElement(),
+              emphasized: generateSimpleTextElement(),
+              excerpt: generateSimpleTextElement(),
+              bottomMetadata: generateSimpleTextElement(),
+            })
+          )
         )
         .init();
     });

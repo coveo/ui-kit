@@ -14,6 +14,12 @@ export function getSearchInterface(
   });
 }
 
+export function setLanguage(lang: string) {
+  return getSearchInterface((searchInterface) => {
+    searchInterface.language = lang;
+  });
+}
+
 export function executeFirstSearch() {
   return getSearchInterface((searchInterface) => {
     searchInterface.executeFirstSearch();
