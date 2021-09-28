@@ -110,6 +110,7 @@ export class AtomicSearchBox {
       ...this.bindings,
       id: this.id,
       searchBoxController: this.searchBox,
+      numberOfQueries: this.numberOfQueries,
     };
   }
 
@@ -201,6 +202,7 @@ export class AtomicSearchBox {
     );
     this.suggestionElements = this.suggestions
       .map((suggestion) => suggestion.renderItems())
+      // .slice(0, this.numberOfQueries)
       .flat();
   }
 
@@ -381,7 +383,7 @@ export class AtomicSearchBox {
   }
 
   public render() {
-    return (
+    return [
       <div
         class={`relative flex bg-background h-full w-full border border-neutral rounded-md ${
           this.isExpanded ? 'border-primary ring ring-ring-primary' : ''
@@ -390,7 +392,13 @@ export class AtomicSearchBox {
         {this.renderInputContainer()}
         {this.renderSuggestions()}
         {this.renderSubmitButton()}
-      </div>
-    );
+      </div>,
+      !this.suggestions.length && (
+        <slot>
+          <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+          <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+        </slot>
+      ),
+    ];
   }
 }

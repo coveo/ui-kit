@@ -20,4 +20,5 @@ export type SearchBoxSuggestionsEvent = (
 export interface SearchBoxSuggestionsBindings extends Bindings {
   id: string;
   searchBoxController: SearchBox;
+  numberOfQueries: number;
 }

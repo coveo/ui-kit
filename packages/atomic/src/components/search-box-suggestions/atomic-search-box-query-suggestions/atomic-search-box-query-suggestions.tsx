@@ -20,13 +20,14 @@ export class AtomicSearchBoxQuerySuggestions {
     try {
       const event = buildCustomEvent<SearchBoxSuggestionsEvent>(
         'atomic/searchBoxSuggestion',
-        ({engine, id, searchBoxController}) => {
+        ({engine, id, searchBoxController, numberOfQueries}) => {
           const {registerQuerySuggest, fetchQuerySuggestions} =
             loadQuerySuggestActions(engine);
 
           (engine as SearchEngine<QuerySuggestionSection>).dispatch(
             registerQuerySuggest({
               id,
+              count: numberOfQueries,
             })
           );
 
