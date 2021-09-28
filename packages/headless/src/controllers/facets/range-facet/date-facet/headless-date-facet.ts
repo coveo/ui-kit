@@ -1,38 +1,24 @@
-import {
-  DateFacetRequest,
-  DateRangeRequest,
-} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {
-  DateFacetResponse,
-  DateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {
-  RegisterDateFacetActionCreatorPayload,
-  registerDateFacet,
-} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {
-  assertRangeFacetOptions,
-  buildRangeFacet,
-} from '../headless-range-facet';
-import {
-  ConfigurationSection,
-  DateFacetSection,
-  SearchSection,
-} from '../../../../state/state-sections';
-import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
-import {
-  DateFacetOptions,
-  validateDateFacetOptions,
-} from './headless-date-facet-options';
-import {determineFacetId} from '../../_common/facet-id-determinor';
-import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
-import {Controller} from '../../../controller/headless-controller';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
-import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options';
+import {
+  buildCoreDateFacet,
+  buildDateRange,
+  DateFacet,
+  DateFacetProps,
+  DateFacetState,
+  DateRangeInput,
+  DateRangeOptions,
+} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 
 export {
   DateFacetOptions,
@@ -40,95 +26,10 @@ export {
   DateRangeOptions,
   DateRangeRequest,
   buildDateRange,
+  DateFacetProps,
+  DateFacet,
+  DateFacetState,
 };
-
-export interface DateFacetProps {
-  /**
-   * The options for the `DateFacet` controller.
-   * */
-  options: DateFacetOptions;
-}
-
-/**
- * The `DateFacet` controller makes it possible to create a facet with date ranges.
- * */
-export interface DateFacet extends Controller {
-  /**
-   * Deselects all facet values.
-   */
-  deselectAll(): void;
-
-  /**
-   * Checks whether the facet values are sorted according to the specified criterion.
-   *
-   * @param criterion - The criterion to compare.
-   * @returns Whether the facet values are sorted according to the specified criterion.
-   */
-  isSortedBy(criterion: RangeFacetSortCriterion): boolean;
-
-  /**
-   * Checks whether the specified facet value is selected.
-   *
-   * @param selection - The facet value to check.
-   * @returns Whether the specified facet value is selected.
-   */
-  isValueSelected(selection: DateFacetValue): boolean;
-
-  /** Sorts the facet values according to the specified criterion.
-   *
-   * @param criterion - The criterion by which to sort values.
-   */
-  sortBy(criterion: RangeFacetSortCriterion): void;
-
-  /**
-   * Toggles the specified facet value.
-   *
-   * @param selection - The facet value to toggle.
-   */
-  toggleSelect(selection: DateFacetValue): void;
-
-  /**
-   * Toggles the specified facet value, deselecting others.
-   *
-   * @param selection - The facet value to toggle.
-   */
-  toggleSingleSelect(selection: DateFacetValue): void;
-
-  /**
-   * The state of the `DateFacet` controller.
-   */
-  state: DateFacetState;
-}
-
-/**
- * A scoped and simplified part of the headless state that is relevant to the `DateFacet` controller.
- */
-export interface DateFacetState {
-  /**
-   * The facet ID.
-   * */
-  facetId: string;
-
-  /**
-   * The values of the facet.
-   */
-  values: DateFacetValue[];
-
-  /**
-   * The active sortCriterion of the facet.
-   */
-  sortCriterion: RangeFacetSortCriterion;
-
-  /**
-   * `true` if a search is in progress and `false` otherwise.
-   */
-  isLoading: boolean;
-
-  /**
-   * `true` if there is at least one non-idle value and `false` otherwise.
-   */
-  hasActiveValues: boolean;
-}
 
 /**
  * Creates a `DateFacet` controller instance.
@@ -141,60 +42,36 @@ export function buildDateFacet(
   engine: SearchEngine,
   props: DateFacetProps
 ): DateFacet {
-  if (!loadDateFacetReducers(engine)) {
-    throw loadReducerError;
-  }
-
-  assertRangeFacetOptions(props.options, 'buildDateFacet');
-
+  const coreController = buildCoreDateFacet(engine, props);
   const dispatch = engine.dispatch;
-
-  const facetId = determineFacetId(engine, props.options);
-  const options: RegisterDateFacetActionCreatorPayload = {
-    currentValues: [],
-    ...props.options,
-    facetId,
-  };
-
-  validateDateFacetOptions(engine, options);
-  dispatch(registerDateFacet(options));
-
-  const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
-    engine,
-    {
-      facetId,
-      getRequest: () => engine.state.dateFacetSet[facetId],
-    }
-  );
-
-  const handleToggleSelect = (selection: DateFacetValue) => {
-    dispatch(executeToggleDateFacetSelect({facetId, selection}));
-  };
+  const getFacetId = () => coreController.state.facetId;
 
   return {
-    ...rangeFacet,
+    ...coreController,
 
-    toggleSelect: (selection: DateFacetValue) => handleToggleSelect(selection),
+    deselectAll() {
+      coreController.deselectAll();
+      dispatch(executeSearch(logFacetClearAll(getFacetId())));
+    },
 
-    toggleSingleSelect: (selection: DateFacetValue) => {
-      if (selection.state === 'idle') {
-        dispatch(deselectAllFacetValues(facetId));
-      }
+    sortBy(criterion: RangeFacetSortCriterion) {
+      coreController.sortBy(criterion);
+      dispatch(
+        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
+    },
 
-      handleToggleSelect(selection);
+    toggleSelect: (selection: DateFacetValue) => {
+      coreController.toggleSelect(selection);
+      dispatch(
+        executeSearch(
+          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+        )
+      );
     },
 
     get state() {
-      return rangeFacet.state;
+      return coreController.state;
     },
   };
-}
-
-function loadDateFacetReducers(
-  engine: SearchEngine
-): engine is SearchEngine<
-  ConfigurationSection & SearchSection & DateFacetSection
-> {
-  engine.addReducers({configuration, search, dateFacetSet});
-  return true;
 }

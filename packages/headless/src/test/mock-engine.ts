@@ -24,6 +24,9 @@ import {SearchEngine} from '../app/search-engine/search-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
 import {CoreEngine} from '../app/engine';
 import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
+import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
+import {ProductListingAppState} from '../state/product-listing-app-state';
+import {buildMockProductListingState} from './mock-product-listing-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -36,7 +39,8 @@ type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
 type AppState =
   | SearchAppState
   | RecommendationAppState
-  | ProductRecommendationsAppState;
+  | ProductRecommendationsAppState
+  | ProductListingAppState;
 
 interface MockEngine {
   actions: AnyAction[];
@@ -82,6 +86,16 @@ export function buildMockProductRecommendationsAppEngine(
   > = {}
 ): MockProductRecommendationEngine {
   return buildMockCoreEngine(config, buildMockProductRecommendationsState);
+}
+
+export interface MockProductListingEngine
+  extends ProductListingEngine,
+    MockEngine {}
+
+export function buildMockProductListingEngine(
+  config: Partial<ProductListingEngine<ProductListingAppState>> = {}
+): MockProductListingEngine {
+  return buildMockCoreEngine(config, buildMockProductListingState);
 }
 
 interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}

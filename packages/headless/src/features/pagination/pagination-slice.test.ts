@@ -36,6 +36,8 @@ import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {Action} from '@reduxjs/toolkit';
+import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -155,6 +157,20 @@ describe('pagination slice', () => {
     const finalState = paginationReducer(state, action);
     expect(finalState.totalCountFiltered).toBe(
       search.response.totalCountFiltered
+    );
+  });
+
+  it('fetchProductListing.fulfilled updates totalCountFiltered to the response value', () => {
+    const response = buildFetchProductListingResponse({
+      pagination: {
+        totalCount: 100,
+      },
+    });
+    const action = fetchProductListing.fulfilled(response, '');
+
+    const finalState = paginationReducer(state, action);
+    expect(finalState.totalCountFiltered).toBe(
+      response.response.pagination.totalCount
     );
   });
 
