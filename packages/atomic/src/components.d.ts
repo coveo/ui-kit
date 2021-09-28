@@ -629,7 +629,7 @@ export namespace Components {
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
-        "pipeline": string;
+        "pipeline"?: string;
         /**
           * Whether the state should be reflected in the URL parameters.
          */

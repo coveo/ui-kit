@@ -1,3 +1,5 @@
+import {InterceptAliases} from './search';
+
 export const selectors = {
   result: 'c-quantic-result',
   searchbox: 'c-quantic-search-box input[type="search"]',
@@ -13,7 +15,7 @@ export const setupAliases = () =>
       'POST',
       'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples'
     )
-    .as('search')
+    .as(InterceptAliases.Search.substring(1))
     .get(selectors.result, {timeout: 30000}); // Takes some time to load when server is cold
 
 export const selectRegularFacetValue = (value: string) =>

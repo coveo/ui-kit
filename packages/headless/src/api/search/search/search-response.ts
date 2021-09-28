@@ -19,6 +19,7 @@ export interface SearchResponseSuccess {
   queryCorrections: QueryCorrection[];
   triggers: Trigger[];
   questionAnswer: QuestionsAnswers;
+  pipeline: string;
 }
 
 export interface SearchResponseSuccessWithDebugInfo

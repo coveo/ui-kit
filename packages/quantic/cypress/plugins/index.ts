@@ -1,7 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const getCommunityConfigFile = () => {
+interface CommunityConfig {
+  baseUrl?: string;
+  env?: {
+    examplesUrl?: string;
+  };
+}
+
+async function getCommunityConfigFile(): Promise<CommunityConfig> {
   const pathToConfigFile = path.resolve(
     'cypress',
     'plugins',
@@ -18,11 +25,18 @@ const getCommunityConfigFile = () => {
       }
     });
   });
-};
+}
 
 /**
  * @type {Cypress.PluginConfig}
  */
 module.exports = async () => {
-  return await getCommunityConfigFile();
+  const baseConfig = await getCommunityConfigFile();
+
+  const config = JSON.parse(JSON.stringify(baseConfig)) as CommunityConfig;
+  if (!baseConfig.baseUrl && baseConfig?.env?.examplesUrl) {
+    config.baseUrl = baseConfig?.env?.examplesUrl;
+  }
+
+  return config;
 };
