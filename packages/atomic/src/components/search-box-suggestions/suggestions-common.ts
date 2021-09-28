@@ -5,7 +5,7 @@ import {Bindings} from '../../utils/initialization-utils';
 
 export interface SearchBoxSuggestionElement {
   value: string;
-  onClick(): void;
+  onSelect(): void;
   content: VNode;
 }
 
@@ -30,11 +30,11 @@ export const dispatchSearchBoxSuggestionsEvent = (
   element: Element
 ) => {
   const canceled = element.dispatchEvent(
-    buildCustomEvent('atomic/searchBoxSuggestion', event)
+    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
   );
   if (canceled) {
     throw new Error(
-      'The Atomic search box suggestion component was not handled, as it is not a child of a search box component'
+      `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of an "atomic-search-box" component`
     );
   }
 };

@@ -94,7 +94,7 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents = [];
   }
 
-  @Listen('atomic/searchBoxSuggestion')
+  @Listen('atomic/searchBoxSuggestion/register')
   public setFormat(event: CustomEvent<SearchBoxSuggestionsEvent>) {
     event.preventDefault();
     event.stopPropagation();
@@ -348,7 +348,7 @@ export class AtomicSearchBox {
         }`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
-          suggestion.onClick();
+          suggestion.onSelect();
           this.inputRef.blur();
         }}
       >

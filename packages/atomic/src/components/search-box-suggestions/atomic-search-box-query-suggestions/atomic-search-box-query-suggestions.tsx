@@ -3,6 +3,7 @@ import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/sta
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 
@@ -54,7 +55,7 @@ export class AtomicSearchBoxQuerySuggestions {
     }, this.host);
   }
 
-  private renderItems() {
+  private renderItems(): SearchBoxSuggestionElement[] {
     // TODO: filter out identical recent queries, might require "context"
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
@@ -66,7 +67,7 @@ export class AtomicSearchBoxQuerySuggestions {
           <span innerHTML={suggestion.highlightedValue}></span>
         ),
         value: suggestion.rawValue,
-        onClick: () =>
+        onSelect: () =>
           this.bindings.searchBoxController.selectSuggestion(
             suggestion.rawValue
           ),

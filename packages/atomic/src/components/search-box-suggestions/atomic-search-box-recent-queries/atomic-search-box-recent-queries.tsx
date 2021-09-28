@@ -6,6 +6,7 @@ import {
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 
@@ -49,7 +50,7 @@ export class AtomicSearchBoxRecentQueries {
     }, this.host);
   }
 
-  private renderItems() {
+  private renderItems(): SearchBoxSuggestionElement[] {
     const query = this.bindings.searchBoxController.state.value;
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
@@ -78,7 +79,7 @@ export class AtomicSearchBoxRecentQueries {
           })}
         ></span>
       ),
-      onClick: () => {
+      onSelect: () => {
         // TODO: save state to local storage
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
