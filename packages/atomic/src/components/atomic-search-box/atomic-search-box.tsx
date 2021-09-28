@@ -221,6 +221,7 @@ export class AtomicSearchBox {
   private onBlur() {
     this.isExpanded = false;
     this.updateActiveDescendant();
+    this.clearSuggestionElements();
   }
 
   private onSubmit() {
@@ -298,6 +299,7 @@ export class AtomicSearchBox {
         class="w-8 h-8 mr-1.5 text-neutral-dark"
         onClick={() => {
           this.searchBox.clear();
+          this.clearSuggestionElements();
           this.inputRef.focus();
         }}
         ariaLabel={this.bindings.i18n.t('clear')}
@@ -323,6 +325,10 @@ export class AtomicSearchBox {
     );
   }
 
+  private clearSuggestionElements() {
+    this.suggestionElements = [];
+  }
+
   private renderSuggestion(
     suggestion: SearchBoxSuggestionElement,
     index: number
@@ -341,7 +347,10 @@ export class AtomicSearchBox {
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => suggestion.onClick()}
+        onClick={() => {
+          suggestion.onClick();
+          this.inputRef.blur();
+        }}
       >
         {suggestion.content}
       </li>
@@ -376,7 +385,10 @@ export class AtomicSearchBox {
         class="w-12 h-auto rounded-r-md rounded-l-none -my-px"
         part="submit-button"
         ariaLabel={this.bindings.i18n.t('search')}
-        onClick={() => this.searchBox.submit()}
+        onClick={() => {
+          this.searchBox.submit();
+          this.clearSuggestionElements();
+        }}
       >
         <atomic-icon icon={SearchIcon} class="w-4 h-4"></atomic-icon>
       </Button>

@@ -40,6 +40,7 @@ export class AtomicSearchBoxQuerySuggestions {
                 })
               ),
             renderItems: () => {
+              // TODO: filter out identical recent queries, might require "context"
               const hasQuery = searchBoxController.state.value !== '';
               const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
               return searchBoxController.state.suggestions

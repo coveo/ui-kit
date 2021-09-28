@@ -1,4 +1,4 @@
-import {buildRecentQueriesList} from '@coveo/headless';
+import {buildRecentQueriesList, HighlightUtils} from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {dispatchSearchBoxSuggestionsEvent} from '../suggestions-common';
 
@@ -11,16 +11,16 @@ export class AtomicSearchBoxRecentQueries {
 
   @State() public error!: Error;
 
-  @Prop() public maxWithQuery?: number;
+  @Prop() public maxWithQuery = 3;
   @Prop() public maxWithoutQuery?: number;
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent(({engine, numberOfQueries}) => {
+      dispatchSearchBoxSuggestionsEvent(({engine, searchBoxController}) => {
         const recentQueriesList = buildRecentQueriesList(engine, {
           // TODO: fetch initial state from cookies or local storage
           initialState: {queries: ['hello', 'hola', 'bonjour', 'buongiorno']},
-          options: {maxLength: numberOfQueries},
+          options: {maxLength: 1000},
         });
 
         return {
@@ -28,17 +28,42 @@ export class AtomicSearchBoxRecentQueries {
             this.host
           ),
           onInput: () => {},
-          renderItems: () =>
-            // TODO: limit values according to maxWithQuery/maxWithoutQuery
-            // TODO: filter values according to query
+          renderItems: () => {
+            const query = searchBoxController.state.value;
+            const hasQuery = query !== '';
+            const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
+            const filteredQueries = recentQueriesList.state.queries
+              .filter((recentQuery) =>
+                recentQuery.toLowerCase().startsWith(query.toLowerCase())
+              )
+              .slice(0, max);
+
             // TODO: add "clear recent queries element"
-            recentQueriesList.state.queries.map((value, i) => ({
+            return filteredQueries.map((value) => ({
               value,
-              // TODO: highlight values
-              content: <span>{value}</span>,
-              // TODO: save state to local storage
-              onClick: () => recentQueriesList.executeRecentQuery(i),
-            })),
+              content: (
+                <span
+                  innerHTML={HighlightUtils.highlightString({
+                    content: value,
+                    openingDelimiter: '<span class="font-bold">',
+                    closingDelimiter: '</span>',
+                    highlights: [
+                      {
+                        offset: query.length,
+                        length: value.length - query.length,
+                      },
+                    ],
+                  })}
+                ></span>
+              ),
+              onClick: () => {
+                // TODO: save state to local storage
+                recentQueriesList.executeRecentQuery(
+                  recentQueriesList.state.queries.indexOf(value)
+                );
+              },
+            }));
+          },
         };
       }, this.host);
     } catch (error) {
