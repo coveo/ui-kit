@@ -13,7 +13,7 @@ import inLabel from "@salesforce/label/c.quantic_InLabel";
  */
 export default class QuanticCategoryFacetValue extends LightningElement {
   /**
-   * The facet value to display. See https://docs.coveo.com/en/headless/latest/reference/controllers/category-facet/#categoryfacetvalue.
+   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/controllers/category-facet/#categoryfacetvalue) to display.
    * @api
    * @type {CategoryFacetValue} */
   @api item;
