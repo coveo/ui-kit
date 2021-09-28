@@ -6,7 +6,7 @@ import {
 } from '../../utils/validate-payload';
 import {DictionaryFieldContextPayload} from './dictionary-field-context-state';
 
-export const setDictionaryFieldContext = createAction(
+export const setContext = createAction(
   'dictionaryFieldContext/set',
   (payload: DictionaryFieldContextPayload) => {
     const objSchema = new RecordValue({options: {required: true}});
@@ -31,7 +31,7 @@ export const setDictionaryFieldContext = createAction(
   }
 );
 
-export interface AddDictionaryFieldContextActionCreatorPayload {
+export interface addContextActionCreatorPayload {
   /**
    * The name of the dictionary field.
    */
@@ -43,9 +43,9 @@ export interface AddDictionaryFieldContextActionCreatorPayload {
   key: string;
 }
 
-export const addDictionaryFieldContext = createAction(
+export const addContext = createAction(
   'dictionaryFieldContext/add',
-  (payload: AddDictionaryFieldContextActionCreatorPayload) => {
+  (payload: addContextActionCreatorPayload) => {
     const schema = new RecordValue({
       options: {required: true},
       values: {
@@ -54,14 +54,11 @@ export const addDictionaryFieldContext = createAction(
       },
     });
 
-    return validatePayload<AddDictionaryFieldContextActionCreatorPayload>(
-      payload,
-      schema
-    );
+    return validatePayload<addContextActionCreatorPayload>(payload, schema);
   }
 );
 
-export const removeDictionaryFieldContext = createAction(
+export const removeContext = createAction(
   'dictionaryFieldContext/remove',
   (payload: string) => {
     return validatePayload(payload, requiredEmptyAllowedString);

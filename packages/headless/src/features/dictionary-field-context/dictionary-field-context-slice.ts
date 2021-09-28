@@ -1,8 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  addDictionaryFieldContext,
-  removeDictionaryFieldContext,
-  setDictionaryFieldContext,
+  addContext,
+  removeContext,
+  setContext,
 } from './dictionary-field-context-actions';
 import {getDictionaryFieldContextInitialState} from './dictionary-field-context-state';
 
@@ -10,14 +10,14 @@ export const dictionaryFieldContextReducer = createReducer(
   getDictionaryFieldContextInitialState(),
   (builder) => {
     builder
-      .addCase(setDictionaryFieldContext, (state, action) => {
+      .addCase(setContext, (state, action) => {
         state.contextValues = action.payload;
       })
-      .addCase(addDictionaryFieldContext, (state, action) => {
+      .addCase(addContext, (state, action) => {
         const {field, key} = action.payload;
         state.contextValues[field] = key;
       })
-      .addCase(removeDictionaryFieldContext, (state, action) => {
+      .addCase(removeContext, (state, action) => {
         delete state.contextValues[action.payload];
       });
     // .addCase(change.fulfilled, (state, action) => {

@@ -1,8 +1,8 @@
 import {
-  addDictionaryFieldContext,
-  AddDictionaryFieldContextActionCreatorPayload,
-  removeDictionaryFieldContext,
-  setDictionaryFieldContext,
+  addContext,
+  addContextActionCreatorPayload,
+  removeContext,
+  setContext,
 } from './dictionary-field-context-actions';
 import {dictionaryFieldContextReducer} from './dictionary-field-context-slice';
 import {
@@ -16,46 +16,46 @@ describe('dictionary field context slice', () => {
     expect(finalState).toEqual({contextValues: {}});
   });
 
-  describe('#setDictionaryFieldContext', () => {
+  describe('#setContext', () => {
     it('stores the object in state', () => {
       const payload = {price: 'cad'};
-      const action = setDictionaryFieldContext(payload);
+      const action = setContext(payload);
 
       const {contextValues} = dictionaryFieldContextReducer(undefined, action);
       expect(contextValues).toEqual(payload);
     });
 
     it('when the payload is not an object, the action contains an error', () => {
-      const payload = setDictionaryFieldContext(
+      const payload = setContext(
         undefined as unknown as DictionaryFieldContextPayload
       );
       expect('error' in payload).toBe(true);
     });
 
     it('when a value is not a string, the action contains an error', () => {
-      const payload = setDictionaryFieldContext({
+      const payload = setContext({
         a: true,
       } as unknown as DictionaryFieldContextPayload);
       expect('error' in payload).toBe(true);
     });
   });
 
-  describe('#addDictionaryFieldContext', () => {
+  describe('#addContext', () => {
     it('it adds the field and key to state', () => {
-      const action = addDictionaryFieldContext({field: 'price', key: 'cad'});
+      const action = addContext({field: 'price', key: 'cad'});
       const {contextValues} = dictionaryFieldContextReducer(undefined, action);
       expect(contextValues).toEqual({price: 'cad'});
     });
 
     it('when the payload is not an object, the action contains an error', () => {
-      const payload = addDictionaryFieldContext(
-        undefined as unknown as AddDictionaryFieldContextActionCreatorPayload
+      const payload = addContext(
+        undefined as unknown as addContextActionCreatorPayload
       );
       expect('error' in payload).toBe(true);
     });
 
     it('when the field is not a string, the action contains an error', () => {
-      const payload = addDictionaryFieldContext({
+      const payload = addContext({
         field: true as unknown as string,
         key: 'cad',
       });
@@ -63,19 +63,19 @@ describe('dictionary field context slice', () => {
     });
   });
 
-  describe('#removeDictionaryFieldContext', () => {
+  describe('#removeContext', () => {
     it('removes the specified field from state', () => {
       const state: DictionaryFieldContextState = {
         contextValues: {price: 'CAD'},
       };
 
-      const action = removeDictionaryFieldContext('price');
+      const action = removeContext('price');
       const {contextValues} = dictionaryFieldContextReducer(state, action);
       expect(contextValues).toEqual({});
     });
 
     it('when the field is not a string, the action contains an error', () => {
-      const payload = removeDictionaryFieldContext(true as unknown as string);
+      const payload = removeContext(true as unknown as string);
       expect('error' in payload).toBe(true);
     });
   });
