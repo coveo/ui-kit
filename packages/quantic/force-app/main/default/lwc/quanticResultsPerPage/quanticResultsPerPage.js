@@ -39,7 +39,7 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
-    this.choices = this.validateChoicesDisplayed();
+    this.choices = this.parseChoicesDisplayed();
     this.validateInitialChoice();
     this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine, {
       initialState: {numberOfResults: Number(this.initialChoice) ?? this.choices[0]},
