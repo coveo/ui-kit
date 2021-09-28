@@ -125,6 +125,7 @@ describe('Facet Test Suite', () => {
         describe('when selecting the "Clear" button', () => {
           function clearSelectedValues() {
             selectFirstFacetValue();
+            cy.wait(InterceptAliases.UA.Facet.Select);
             FacetSelectors.clearButton().click();
           }
 
@@ -139,7 +140,6 @@ describe('Facet Test Suite', () => {
           describe('verify analytics', () => {
             before(() => {
               clearSelectedValues();
-              FacetSelectors.selectedCheckboxValue().should('have.length', 0);
             });
 
             Expect.logClearFacetValues(defaultField);
