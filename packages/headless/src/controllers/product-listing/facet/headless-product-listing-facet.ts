@@ -86,14 +86,16 @@ export function buildFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchProductListing());
-      dispatch(logFacetShowMore(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetShowMore(getFacetId()))
+      );
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchProductListing());
-      dispatch(logFacetShowLess(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetShowLess(getFacetId()))
+      );
     },
 
     get state() {

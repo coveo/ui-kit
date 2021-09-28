@@ -18,7 +18,7 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../../product-listing.index';
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
 export {
   DateFacetOptions,
@@ -51,21 +51,24 @@ export function buildDateFacet(
 
     deselectAll() {
       coreController.deselectAll();
-      dispatch(fetchProductListing());
-      dispatch(logFacetClearAll(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetClearAll(getFacetId()))
+      );
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(fetchProductListing());
-      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
     },
 
     toggleSelect: (selection: DateFacetValue) => {
       coreController.toggleSelect(selection);
-      dispatch(fetchProductListing());
-      dispatch(
-        getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(
+          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+        )
       );
     },
 
