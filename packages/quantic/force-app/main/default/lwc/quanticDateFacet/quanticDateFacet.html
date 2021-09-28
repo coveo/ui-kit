@@ -3,7 +3,7 @@
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="facet__collapse"
+          class="actionButtonCssClasses"
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -23,7 +23,7 @@
             class="slds-p-horizontal_x-small"
           ></lightning-button>
         </template>
-        <template if:true={isExpanded}>
+        <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template for:each={values} for:item="v">
               <c-quantic-facet-value

@@ -24,7 +24,7 @@
             >
           </lightning-button>
         </template>
-        <template if:true={isExpanded}>
+        <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template if:false={noSearch}>
               <div onchange={handleKeyUp} class="slds-size_1-of-1">

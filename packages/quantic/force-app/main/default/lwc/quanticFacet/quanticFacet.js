@@ -39,21 +39,26 @@ export default class QuanticFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
-  /** @type {boolean} */
-  @api isCollapsed = false;
   /** @type  {import("coveo").FacetSortCriterion}*/
   @api sortCriteria = 'automatic';
   /** @type {boolean} */
   @api noSearch = false;
   /** @type {string} */
   @api displayValuesAs = displayOptions.checkbox;
-
+  /** @type {boolean} */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }
+  
+  /** @type {boolean} */
+  _isCollapsed = false;
   /** @type {import("coveo").Facet}} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-  /** @type {boolean} */
-  isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
 
@@ -84,7 +89,6 @@ export default class QuanticFacet extends LightningElement {
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-    this.isExpanded = !this.isCollapsed;
   }
 
   connectedCallback() {
@@ -184,15 +188,15 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
 
   get actionButtonCssClasses() {
-    return this.isExpanded ? 'facet__collapse' : 'facet__expand';
+    return this.isCollapsed ? 'facet__expand' : 'facet__collapse';
   }
 
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
@@ -259,10 +263,10 @@ export default class QuanticFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    if (this.isExpanded) {
+    if (this.isCollapsed) {
       this.clearInput();
     }
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   preventDefault(evt) {

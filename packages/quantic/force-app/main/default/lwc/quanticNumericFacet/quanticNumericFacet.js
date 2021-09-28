@@ -28,8 +28,6 @@ export default class QuanticNumericFacet extends LightningElement {
   @api engineId;
   /** @type {number} */
   @api numberOfValues = 8;
-  /** @type {boolean} */
-  @api isCollapsed = false;
   /** @type {import("coveo").RangeFacetSortCriterion} */
   @api sortCriteria = 'ascending';
   /** @type {import("coveo").RangeFacetRangeAlgorithm} */
@@ -40,13 +38,20 @@ export default class QuanticNumericFacet extends LightningElement {
   )} - ${new Intl.NumberFormat(LOCALE).format(
     item.end
   )}`;
-
+  /** @type {boolean} */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }
+  
+  /** @type {boolean} */
+  _isCollapsed = false;
   /** @type {import("coveo").NumericFacet} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-  /** @type {boolean} */
-  isExpanded = true;
 
   labels = {
     clearFilter,
@@ -78,7 +83,6 @@ export default class QuanticNumericFacet extends LightningElement {
       }
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {
@@ -111,11 +115,15 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
-  
+
+  get actionButtonCssClasses() {
+    return this.isCollapsed ? 'facet__expand' : 'facet__collapse';
+  }
+
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
@@ -143,7 +151,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   preventDefault(evt) {
