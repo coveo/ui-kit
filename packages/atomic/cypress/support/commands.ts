@@ -7,6 +7,9 @@ declare global {
     interface Chainable<Subject> {
       getAnalyticsAt(selector: string, order: number): Chainable<unknown>;
       getTextOfAllElements(selector: string): Chainable<unknown>;
+      // https://github.com/cypress-io/cypress-documentation/issues/108
+      state(key: string): CypressRequest[];
+      shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
     }
   }
 }
@@ -27,6 +30,20 @@ Cypress.Commands.add('getTextOfAllElements', (selector: string) => {
     );
     cy.wrap(originalValues);
   });
+});
+
+interface CypressRequest {
+  xhr: {url: string};
+}
+
+// Only possible to filter on the url
+Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
+  expect(
+    cy
+      .state('requests')
+      .filter((call: CypressRequest) => call.xhr.url.includes(urlPart)),
+    `Url containing "${urlPart}"" should have been called ${timesCalled} times`
+  ).to.have.length(timesCalled);
 });
 
 // Convert this to a module instead of script (allows import/export)

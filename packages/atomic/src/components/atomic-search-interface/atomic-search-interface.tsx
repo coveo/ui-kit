@@ -99,6 +99,11 @@ export class AtomicSearchInterface {
   @Prop() public reflectStateInUrl = true;
 
   /**
+   * Whether analytics should be enabled.
+   */
+  @Prop({reflect: true}) public analyticsEnabled = true;
+
+  /**
    * The CSS selector for the container where the interface will scroll back to.
    */
   @Prop() public scrollContainer = 'atomic-search-interface';
@@ -119,6 +124,16 @@ export class AtomicSearchInterface {
         searchHub: this.searchHub,
       })
     );
+  }
+
+  @Watch('analyticsEnabled')
+  public updateEnableAnalytics() {
+    if (this.analyticsEnabled) {
+      this.engine?.enableAnalytics();
+      return;
+    }
+
+    this.engine?.disableAnalytics();
   }
 
   @Watch('language')
@@ -236,13 +251,16 @@ export class AtomicSearchInterface {
             locale: this.language,
             timezone: this.timezone,
           },
+          analytics: {
+            enabled: this.analyticsEnabled,
+          },
         },
         loggerOptions: {
           level: this.logLevel,
         },
       });
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
       throw error;
     }
   }
