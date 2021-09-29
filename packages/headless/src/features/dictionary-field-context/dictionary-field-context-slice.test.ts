@@ -2,7 +2,7 @@ import {change} from '../history/history-actions';
 import {getHistoryInitialState, HistoryState} from '../history/history-state';
 import {
   addContext,
-  addContextActionCreatorPayload,
+  AddDictionaryFieldContextActionCreatorPayload,
   removeContext,
   setContext,
 } from './dictionary-field-context-actions';
@@ -51,7 +51,7 @@ describe('dictionary field context slice', () => {
 
     it('when the payload is not an object, the action contains an error', () => {
       const payload = addContext(
-        undefined as unknown as addContextActionCreatorPayload
+        undefined as unknown as AddDictionaryFieldContextActionCreatorPayload
       );
       expect('error' in payload).toBe(true);
     });

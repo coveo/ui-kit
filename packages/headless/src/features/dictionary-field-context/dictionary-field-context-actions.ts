@@ -31,7 +31,7 @@ export const setContext = createAction(
   }
 );
 
-export interface addContextActionCreatorPayload {
+export interface AddDictionaryFieldContextActionCreatorPayload {
   /**
    * The name of the dictionary field.
    */
@@ -45,7 +45,7 @@ export interface addContextActionCreatorPayload {
 
 export const addContext = createAction(
   'dictionaryFieldContext/add',
-  (payload: addContextActionCreatorPayload) => {
+  (payload: AddDictionaryFieldContextActionCreatorPayload) => {
     const schema = new RecordValue({
       options: {required: true},
       values: {
@@ -54,7 +54,10 @@ export const addContext = createAction(
       },
     });
 
-    return validatePayload<addContextActionCreatorPayload>(payload, schema);
+    return validatePayload<AddDictionaryFieldContextActionCreatorPayload>(
+      payload,
+      schema
+    );
   }
 );
 
