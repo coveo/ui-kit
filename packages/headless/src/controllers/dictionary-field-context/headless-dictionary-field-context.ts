@@ -19,9 +19,9 @@ export interface DictionaryFieldContext extends Controller {
   /**
    * Sets the dictionary field context for the query. This replaces any existing context with the new one.
    *
-   *  @param ctx - The dictionary field context to set for the query.
+   *  @param context - The dictionary field context to set for the query.
    */
-  set(ctx: DictionaryFieldContextPayload): void;
+  set(context: DictionaryFieldContextPayload): void;
 
   /**
    * Adds (or, if one is already present, replaces) a new dictionary field context key-value pair.
@@ -76,8 +76,8 @@ export function buildDictionaryFieldContext(
       };
     },
 
-    set(ctx: DictionaryFieldContextPayload) {
-      dispatch(setContext(ctx));
+    set(context: DictionaryFieldContextPayload) {
+      dispatch(setContext(context));
     },
 
     add(field: string, key: string) {
