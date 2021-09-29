@@ -11,6 +11,8 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 
+const localStorageKey = 'recent-queries';
+
 @Component({
   tag: 'atomic-search-box-recent-queries',
   shadow: true,
@@ -18,6 +20,7 @@ import {
 export class AtomicSearchBoxRecentQueries {
   private bindings!: SearchBoxSuggestionsBindings;
   private recentQueriesList!: RecentQueriesList;
+  private userWarned = false;
 
   @Element() private host!: HTMLElement;
 
@@ -38,10 +41,11 @@ export class AtomicSearchBoxRecentQueries {
     dispatchSearchBoxSuggestionsEvent((bindings) => {
       this.bindings = bindings;
       this.recentQueriesList = buildRecentQueriesList(bindings.engine, {
-        // TODO: fetch initial state from cookies or local storage
-        initialState: {queries: ['hello', 'hola', 'bonjour', 'buongiorno']},
+        initialState: {queries: this.retrieveLocalStorage()},
         options: {maxLength: 1000},
       });
+
+      this.recentQueriesList.subscribe(() => this.updateLocalStorage());
 
       return {
         position: Array.from(this.host.parentNode!.children).indexOf(this.host),
@@ -51,7 +55,39 @@ export class AtomicSearchBoxRecentQueries {
     }, this.host);
   }
 
+  private retrieveLocalStorage() {
+    return JSON.parse(
+      window.localStorage.getItem(localStorageKey) || '[]'
+    ) as string[];
+  }
+
+  private updateLocalStorage() {
+    if (!this.recentQueriesList.state.analyticsEnabled) {
+      return this.disableFeature();
+    }
+
+    window.localStorage.setItem(
+      localStorageKey,
+      JSON.stringify(this.recentQueriesList.state.queries)
+    );
+  }
+
+  private disableFeature() {
+    if (!this.userWarned) {
+      this.userWarned = true;
+      this.bindings.engine.logger.warn(
+        'Because analytics are disabled, the recent queries feature is deactivated.'
+      );
+    }
+
+    window.localStorage.removeItem(localStorageKey);
+  }
+
   private renderItems(): SearchBoxSuggestionElement[] {
+    if (!this.recentQueriesList.state.analyticsEnabled) {
+      return [];
+    }
+
     const query = this.bindings.searchBoxController.state.value;
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
@@ -122,7 +158,6 @@ export class AtomicSearchBoxRecentQueries {
         </div>
       ),
       onSelect: () => {
-        // TODO: save state to local storage
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );
