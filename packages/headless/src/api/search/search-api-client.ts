@@ -183,7 +183,12 @@ export class SearchAPIClient {
     const body = await response.json();
 
     if (isSuccessSearchResponse(body)) {
-      return {success: body};
+      const processedResponse =
+        await this.options.postprocessSearchResponseMiddleware({
+          response,
+          body,
+        });
+      return {success: processedResponse.body};
     }
 
     return {

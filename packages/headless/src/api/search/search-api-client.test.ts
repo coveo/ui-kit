@@ -76,8 +76,8 @@ describe('search api client', () => {
   });
 
   describe('middleware', () => {
-    it('should preprocess search responses if appropriate middleware is provided', async () => {
-      const newId = 'notInitialID';
+    const newId = 'notInitialID';
+    const buildSearchAPIClientWithPreprocessResponseModifySearchID = () =>
       buildSearchAPIClient({
         postprocessSearchResponseMiddleware: (response) => {
           return {
@@ -89,8 +89,19 @@ describe('search api client', () => {
           };
         },
       });
+    it('should preprocess search responses if appropriate middleware is provided', async () => {
+      buildSearchAPIClientWithPreprocessResponseModifySearchID();
       const req = buildSearchRequest(state).request;
       const res = await searchAPIClient.search(req);
+      if (!isErrorResponse(res)) {
+        expect(res.success.searchUid).toEqual(newId);
+      }
+    });
+
+    it('should preprocess recommendation responses if appropriate middleware is provided', async () => {
+      buildSearchAPIClientWithPreprocessResponseModifySearchID();
+      const req = buildRecommendationRequest(createMockRecommendationState({}));
+      const res = await searchAPIClient.recommendations(req);
       if (!isErrorResponse(res)) {
         expect(res.success.searchUid).toEqual(newId);
       }
