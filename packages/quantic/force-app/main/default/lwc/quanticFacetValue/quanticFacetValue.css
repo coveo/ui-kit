@@ -15,8 +15,3 @@ li {
 .facet__value_selected{
   font-weight: bold;
 }
-
-.facet__value-option {
-  display: flex;
-  flex-direction: row;
-}
