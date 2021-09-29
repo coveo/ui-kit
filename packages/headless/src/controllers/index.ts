@@ -27,6 +27,13 @@ export {
 } from './context/headless-context';
 
 export {
+  DictionaryFieldContext,
+  DictionaryFieldContextState,
+  DictionaryFieldContextPayload,
+  buildDictionaryFieldContext,
+} from './dictionary-field-context/headless-dictionary-field-context';
+
+export {
   DidYouMean,
   DidYouMeanState,
   QueryCorrection,

@@ -85,6 +85,12 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildDictionaryFieldContext',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
     initializer: 'buildCategoryFacet',
     samplePaths: {
       react_class: [
@@ -359,6 +365,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadDictionaryFieldContextActions',
   },
   {
     initializer: 'loadDebugActions',
