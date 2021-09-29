@@ -1,5 +1,10 @@
 import {i18n} from 'i18next';
+import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {buildTestUrl} from '../utils/setupComponent';
+
+export type SearchResponseModifierPredicate = (
+  response: SearchResponseSuccess
+) => SearchResponseSuccess | void;
 
 export type SearchInterface = HTMLElement & {
   initialize: (opts: {
@@ -22,6 +27,10 @@ export class TestFixture {
   ) as SearchInterface;
   private hash = '';
   private style = document.createElement('style');
+  private language?: string;
+  private fieldCaptions: {field: string; captions: Record<string, string>}[] =
+    [];
+  private responseModifier: SearchResponseModifierPredicate | null = null;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -53,6 +62,21 @@ export class TestFixture {
     return this;
   }
 
+  public withLanguage(lang: string) {
+    this.language = lang;
+    return this;
+  }
+
+  public withFieldCaptions(field: string, captions: Record<string, string>) {
+    this.fieldCaptions.push({field, captions});
+    return this;
+  }
+
+  public withCustomResponse(predicate: SearchResponseModifierPredicate) {
+    this.responseModifier = predicate;
+    return this;
+  }
+
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
@@ -66,12 +90,38 @@ export class TestFixture {
     cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
       const searchInterfaceComponent = $si.get()[0] as SearchInterface;
 
+      if (this.language) {
+        searchInterfaceComponent.setAttribute('language', this.language);
+      }
+
+      if (this.responseModifier) {
+        cy.intercept(
+          {
+            method: 'POST',
+            url: '**/rest/search/v2?*',
+          },
+          (request) => {
+            request.reply((response) => {
+              const newResponse = this.responseModifier!(response.body);
+              response.send(200, newResponse ?? response.body);
+            });
+          }
+        ).as(TestFixture.interceptAliases.Search.substring(1));
+      }
+
       searchInterfaceComponent
         .initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
         })
         .then(() => {
+          this.fieldCaptions.forEach(({field, captions}) =>
+            searchInterfaceComponent.i18n.addResourceBundle(
+              'en',
+              `caption-${field}`,
+              captions
+            )
+          );
           if (this.execFirstSearch) {
             searchInterfaceComponent.executeFirstSearch();
           }

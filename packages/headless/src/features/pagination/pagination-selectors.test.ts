@@ -58,7 +58,7 @@ describe('pagination selectors', () => {
         maximumNumberOfResultsFromIndex + 10;
       const maxPage = maxPageSelector(state);
 
-      expect(maxPage).toBe(100);
+      expect(maxPage).toBe(maximumNumberOfResultsFromIndex / 10);
     });
   });
 
