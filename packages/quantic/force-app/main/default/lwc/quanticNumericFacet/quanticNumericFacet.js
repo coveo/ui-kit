@@ -63,9 +63,9 @@ export default class QuanticNumericFacet extends LightningElement {
    */
   @api sortCriteria = 'ascending';
   /**
-   * The algorithm that’s used for generating the ranges of this facet when they aren’t manually defined.
-   * The default value of "even" generates equally sized facet ranges across all of the results.
-   * The value "equiprobable" generates facet ranges which vary in size but have a more balanced number of results within each range.
+   * The algorithm used for generating the ranges of this facet when they aren’t manually defined.
+   * The default value of `'even'` generates equally sized facet ranges across all of the results.
+   * The value `'equiprobable'` generates facet ranges which vary in size but have a more balanced number of results within each range.
    * @api
    * @type {'even' | 'equiprobable'}
    * @defaultValue `'equiprobable'`
@@ -73,7 +73,7 @@ export default class QuanticNumericFacet extends LightningElement {
   @api rangeAlgorithm = 'equiprobable';
   /**
    * The function used to format the date facet value label.
-   * The default result format is the following: [start] - [end]
+   * The default result format is the following: `[start] - [end]`
    * @api
    * @type {Function}
    * @param {NumericFacetValue} item
@@ -85,7 +85,7 @@ export default class QuanticNumericFacet extends LightningElement {
     item.end
   )}`;
   /**
-   * Specifies if the facet should be collapsed.
+   * Whether the facet should be collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

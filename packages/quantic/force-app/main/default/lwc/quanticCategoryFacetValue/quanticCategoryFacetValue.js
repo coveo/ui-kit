@@ -5,7 +5,7 @@ import inLabel from "@salesforce/label/c.quantic_InLabel";
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 
 /**
- * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and number of results with that value.
+ * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and the number of results with that value.
  * @category LWC
  * @fires CustomEvent#selectvalue
  * @example

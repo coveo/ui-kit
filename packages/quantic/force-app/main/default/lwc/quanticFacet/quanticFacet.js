@@ -44,7 +44,7 @@ export default class QuanticFacet extends LightningElement {
   @api engineId;
   /** 
    * An unique ID used to identify the facet instance.
-   * Defaults to given facet label.
+   * Defaults to the facet label.
    * @api
    * @type {string}
    * @defaultValue `(field)`
@@ -73,10 +73,10 @@ export default class QuanticFacet extends LightningElement {
   /**
    * The sort criterion to apply to the returned facet values
    * Possible values are:
-   *   - score
-   *   - numeric
-   *   - occurences
-   *   - automatic
+   *   - `score`
+   *   - `numeric`
+   *   - `occurences`
+   *   - `automatic`
    * @api
    * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}
    * @defaultValue `'automatic'`
@@ -97,7 +97,7 @@ export default class QuanticFacet extends LightningElement {
    */
   @api displayValuesAs = displayOptions.checkbox;
   /**
-   * Specifies if the facet should be collapsed.
+   * Whether the facet should be collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

@@ -34,11 +34,11 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api engineId;
   /** 
-   * An unique ID used to identify the facet instance.
-   * Defaults to given facet label.
+   * A unique ID used to identify the facet instance.
+   * Defaults to the `field` value.
    * @api
    * @type {string}
-   * @defaultValue `(field)`
+   * @defaultValue Defaults to the `field` value.
    */
   @api facetId;
   /**
@@ -77,12 +77,12 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api numberOfValues = 8;
   /**
-   * The sort criterion to apply to the returned facet values
+   * The sort criterion to apply to the returned facet values.
    * Possible values are:
-   *   - score
-   *   - alphanumeric
-   *   - occurences
-   *   - automatic
+   *   - `score`
+   *   - `alphanumeric`
+   *   - `occurences`
+   *   - `automatic`
    * @api
    * @type  {'alphanumeric' | 'occurrences'}
    * @defaultValue `'occurences'`

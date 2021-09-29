@@ -8,7 +8,7 @@ import LOCALE from '@salesforce/i18n/locale';
  */
 
 /**
- * The `QuanticFacetValue` component is used by a facet component to display a formatted facet value and number of results with that value.
+ * The `QuanticFacetValue` component is used by a facet component to display a formatted facet value and the number of results with that value.
  * @category LWC
  * @fires CustomEvent#selectvalue
  * @example
@@ -22,7 +22,7 @@ export default class QuanticFacetValue extends LightningElement {
    */
   @api item;
   /**
-   * Whether the checkbox ist checked.
+   * Whether the checkbox is checked.
    * @api
    * @type {boolean}
    * @defaultValue false

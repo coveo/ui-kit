@@ -47,7 +47,7 @@ export default class QuanticRecentResultsList extends LightningElement {
    */
   @api label = this.labels.recentResultsLabel;
   /**
-   * Specifies if the component should be collapsed.
+   * Whether the component should be collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

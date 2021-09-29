@@ -57,7 +57,7 @@ export default class QuanticDateFacet extends LightningElement {
   @api numberOfValues = 8;
   /**
    * The function used to format the date facet value label.
-   * The default result format is the following: [start] - [end]
+   * The default result format is the following: `[start] - [end]`
    * @api
    * @type {Function}
    * @param {DateFacetValue} item
@@ -69,7 +69,7 @@ export default class QuanticDateFacet extends LightningElement {
     new Date(item.end)
   )}`;
   /** 
-   * Specifies if the facet should be collapsed.
+   * Whether the facet should be collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

@@ -44,7 +44,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
    */
   @api label = this.labels.recentQueriesLabel;
   /**
-   * Specifies if the component should be collapsed.
+   * Whether the component should be collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

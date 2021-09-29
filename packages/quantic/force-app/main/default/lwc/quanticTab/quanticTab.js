@@ -5,7 +5,7 @@ import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadl
 /** @typedef {import("coveo").Tab} Tab */
 
 /**
- * The `QuanticSearchBox` component creates a search box with built-in support for query suggestions.
+ * The `QuanticTab` component allows the end user to view a subset of results.
  * @category LWC
  * @example
  * <c-quantic-tab label="Community" expression="@objecttype==&quot;Message&quot;" engine-id={engineId}></c-quantic-tab>
