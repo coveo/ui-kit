@@ -54,6 +54,7 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {boolean} */
   isExpanded = true;
+  isSelected=true;
 
 
   labels = {
@@ -146,26 +147,27 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get start() {
-    return this.numericFilter?.state?.range?.start || '';
+    return this.isSelected ? '' : this.numericFilter?.state?.range?.start;
   }
 
   get end() {
-    return this.numericFilter?.state?.range?.end || '';
+    return this.isSelected ? '' :  this.numericFilter?.state?.range?.end;
   }
 
   get showValues() {
-    console.log(this.numericFilter?.state);
-    return !this.searchStatus?.state?.hasError && !this.numericFilter?.state?.range && this.values.length > 0;
+    return !this.searchStatus?.state?.hasError && (this.isSelected || !this.numericFilter?.state?.range) && !!this.values.length;
   }
   
   /**
    * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
   onSelect(evt) {
+    this.isSelected = true;
     this.facet.toggleSelect(evt.detail);
   }
 
   clearSelections() {
+    this.isSelected = true;
     if(this.numericFilter?.state?.range) {
       this.numericFilter.clear();
     }
@@ -181,6 +183,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   onApply(evt) {
+    this.isSelected = false;
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
     this.numericFilter.setRange({
