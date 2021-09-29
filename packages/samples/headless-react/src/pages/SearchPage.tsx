@@ -120,10 +120,11 @@ import {
   StandaloneSearchBoxAnalytics,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
-import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
 import {relativeDateRanges} from '../components/relative-date-facet/relative-date-utils';
 import {standaloneSearchBoxStorageKey} from '../components/standalone-search-box/standalone-search-box-storage-key';
+import {DictionaryFieldContext} from '../components/dictionary-field-context/dictionary-field-context.fn';
+import {Context} from '../components/context/context';
 
 declare global {
   interface Window {
@@ -344,8 +345,6 @@ export class SearchPage extends Component {
 
     // A search should not be executed until the search parameters are restored.
     this.executeInitialSearch();
-
-    this.updateAnalyticsContext();
   }
 
   componentWillUnmount() {
@@ -383,14 +382,12 @@ export class SearchPage extends Component {
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
-  private updateAnalyticsContext() {
-    setContext(this.engine, '30-45', ['sports', 'camping', 'electronics']);
-  }
-
   render() {
     return (
       <div>
         <AppContext.Provider value={{engine: this.engine}}>
+          <Context />
+          <DictionaryFieldContext />
           <Section title="tabs">
             <nav>
               <Tab id="all" expression="" active>
