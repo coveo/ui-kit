@@ -28,11 +28,18 @@ export default class QuanticFacetValue extends LightningElement {
    * @defaultValue false
    */
   @api isChecked;
+  /**
+   * Whether the facet value should display as a link.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api displayAsLink = false;
   /** 
    * A function used to format the displayed value.
    * @api
    * @type {Function}
-   * @defaultValue undefined
+   * @defaultValue `undefined`
    */
   @api formattingFunction;
 

@@ -25,12 +25,3 @@ export function executeFirstSearch() {
     searchInterface.executeFirstSearch();
   });
 }
-
-export function setFieldCaptions(
-  field: string,
-  captions: Record<string, string>
-) {
-  getSearchInterface((searchInterface) => {
-    searchInterface.i18n.addResourceBundle('en', `caption-${field}`, captions);
-  });
-}

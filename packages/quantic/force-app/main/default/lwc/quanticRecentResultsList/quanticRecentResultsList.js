@@ -46,14 +46,27 @@ export default class QuanticRecentResultsList extends LightningElement {
    * @type {string}
    */
   @api label = this.labels.recentResultsLabel;
+  /**
+   * Specifies if the component should be collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }  
+  /** @type {boolean} */
+  _isCollapsed = false;
+
 
   /** @type {RecentResultsState} */
   @track state;
 
   /** @type {RecentResultsList} */
   recentResultsList;
-  /** @type {boolean} */
-  isExpanded = true;
   /** @type {Function} */
   unsubscribe;
 
@@ -90,7 +103,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   toggleVisibility() {
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   get results() {
@@ -106,11 +119,11 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
 
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapse : this.labels.expand;
+    const label = this.isCollapsed ? this.labels.expand : this.labels.collapse;
     return I18nUtils.format(label, this.label);
   }
 }

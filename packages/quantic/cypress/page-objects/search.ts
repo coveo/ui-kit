@@ -1,3 +1,6 @@
+// eslint-disable-next-line node/no-unpublished-import
+import {CyHttpMessages} from 'cypress/types/net-stubbing';
+
 export const InterceptAliases = {
   UA: {
     Facet: {
@@ -11,8 +14,8 @@ export const InterceptAliases = {
   FacetSearch: '@coveoFacetSearch',
 };
 
-export const interceptSearch = () =>
-  cy
+export function interceptSearch() {
+  return cy
     .intercept('POST', '**/rest/ua/v15/analytics/*', (req) => {
       switch (req.body.actionCause) {
         case 'facetClearAll':
@@ -35,3 +38,13 @@ export const interceptSearch = () =>
 
     .intercept('POST', '**/rest/search/v2/facet?*')
     .as(InterceptAliases.FacetSearch.substring(1));
+}
+
+export function extractFacetValues(
+  response: CyHttpMessages.IncomingResponse | undefined
+) {
+  if (!response || !response.body) {
+    throw new Error('A search response was expected');
+  }
+  return response.body.facets[0].values.map((v) => v.value);
+}

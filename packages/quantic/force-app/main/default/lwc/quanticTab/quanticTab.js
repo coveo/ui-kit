@@ -36,13 +36,24 @@ export default class QuanticTab extends LightningElement {
    * @defaultValue `false`
    */
   @api initAsActive = false
+  /**
+   * Whether the tab should be active.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api get isActive() {
+    return this._isActive;
+  }
+  set isActive(isActive) {
+    this._isActive = isActive;
+  }
+  _isActive = false;
 
   /** @type {Tab} */
   tab;
   /** @type {Function} */
   unsubscribe;
-  /** @type {boolean} */
-  isActive;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -73,7 +84,7 @@ export default class QuanticTab extends LightningElement {
   }
 
   updateState() {
-    this.isActive = this.tab.state.isActive;
+    this._isActive = this.tab.state.isActive;
   }
 
   select() {

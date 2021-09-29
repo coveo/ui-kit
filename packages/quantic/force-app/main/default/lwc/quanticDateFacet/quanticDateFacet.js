@@ -6,7 +6,8 @@ import {
 import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
-import clear from '@salesforce/label/c.quantic_Clear';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
@@ -46,7 +47,7 @@ export default class QuanticDateFacet extends LightningElement {
    * @api
    * @type {string}
    */
-  @api label;
+  @api label = 'no-label';
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    * @api
@@ -67,6 +68,20 @@ export default class QuanticDateFacet extends LightningElement {
   )} - ${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.end)
   )}`;
+  /** 
+   * Specifies if the facet should be collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }
+  /** @type {boolean} */
+  _isCollapsed = false;
 
   /** @type {DateFacetState} */
   @track state;
@@ -75,11 +90,10 @@ export default class QuanticDateFacet extends LightningElement {
   facet;
   /** @type {Function} */
   unsubscribe;
-  /** @type {boolean} */
-  isExpanded = true;
 
   labels = {
-    clear,
+    clearFilter,
+    clearFilter_plural,
     collapseFacet,
     expandFacet,
   };
@@ -137,12 +151,28 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
-  
+
+  get actionButtonCssClasses() {
+    return this.isCollapsed ? 'facet__expand' : 'facet__collapse';
+  }
+
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
+  }
+
+  get numberOfSelectedValues() {
+    return this.state.values.filter(({state}) => state === 'selected').length;
+  }
+
+  get clearFilterLabel() {
+    if (this.hasActiveValues) {
+      const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
+      return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
+    }
+    return '';
   }
 
   /**
@@ -157,7 +187,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   preventDefault(evt) {

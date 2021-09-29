@@ -24,11 +24,11 @@ import {
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import * as FacetIdDeterminor from '../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {
   categoryFacetSearchSet,

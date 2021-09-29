@@ -1,14 +1,10 @@
 .card {
     position: relative;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem .8rem;
     background: var(--lwc-colorBackgroundAlt, #FFFFFF);
     border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-colorBorder, #dddbda); 
     border-radius: .25rem;
     background-clip: padding-box;
     -webkit-box-shadow: 0 2px 2px 0 rgb(0 0 0 / 10%);
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 10%);
-}
-
-.card header {
-    margin-bottom: .75rem;
 }
