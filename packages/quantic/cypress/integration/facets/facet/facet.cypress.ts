@@ -112,6 +112,7 @@ describe('Facet Test Suite', () => {
 
         describe('verify rendering', () => {
           Expect.displayClearButton(true);
+          Expect.clearFilterContains('Clear filter');
         });
       });
 
@@ -169,6 +170,7 @@ describe('Facet Test Suite', () => {
 
           describe('verify rendering', () => {
             Expect.displayClearButton(true);
+            Expect.clearFilterContains('Clear 2 filters');
           });
         });
       });
@@ -450,6 +452,7 @@ describe('Facet Test Suite', () => {
 
         describe('verify rendering', () => {
           Expect.displayClearButton(true);
+          Expect.clearFilterContains('Clear filter');
         });
       });
 
