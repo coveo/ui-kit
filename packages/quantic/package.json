@@ -18,7 +18,7 @@
     "copy:staticresources": "node copy-static-resources.js",
     "build": "npm run copy:staticresources",
     "start": "npx rimraf .localdevserver && npm run copy:staticresources && sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start --port 3334",
-    "test:unit": "lwc-jest",
+    "test:unit": "./node_modules/.bin/lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
