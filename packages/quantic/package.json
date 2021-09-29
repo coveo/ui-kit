@@ -18,7 +18,7 @@
     "copy:staticresources": "node copy-static-resources.js",
     "build": "npm run copy:staticresources",
     "start": "npx rimraf .localdevserver && npm run copy:staticresources && sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start --port 3334",
-    "test:unit": "./node_modules/.bin/lwc-jest",
+    "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "^25.4.2",
     "@salesforce/eslint-config-lwc": "0.11.1",
-    "@salesforce/sfdx-lwc-jest": "0.14.0",
+    "@salesforce/sfdx-lwc-jest": "^1.0.1",
     "@types/jest": "26.0.24",
     "@types/strip-color": "^0.1.0",
     "better-docs": "^2.3.2",
