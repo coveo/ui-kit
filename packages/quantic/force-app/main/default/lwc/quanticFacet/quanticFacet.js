@@ -34,7 +34,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {string} */
   @api field;
   /** @type {string} */
-  @api label;
+  @api label = 'no-label';
   /** @type {string} */
   @api engineId;
   /** @type {number} */
