@@ -19,11 +19,6 @@ export default class QuanticNumberInput extends LightningElement {
     /** @type {string} */
     @api label;
 
-    /** @type {HTMLInputElement} */
-    inputMin;
-    /** @type {HTMLInputElement} */
-    inputMax;
-
     minSafeInteger = Number.MIN_SAFE_INTEGER;
     maxSafeInteger = Number.MAX_SAFE_INTEGER;
 
@@ -36,10 +31,6 @@ export default class QuanticNumberInput extends LightningElement {
         numberInputApply
     }
 
-    renderedCallback() {
-        this.inputMin = this.template.querySelector('.numeric__input-min');
-        this.inputMax = this.template.querySelector('.numeric__input-max');
-    }
     /**
     * @param {InputEvent} evt
     */
@@ -49,6 +40,16 @@ export default class QuanticNumberInput extends LightningElement {
             return;
         }
         this.dispatchEvent(new CustomEvent('apply', { detail : { min: Number(this.inputMin?.value) , max: Number(this.inputMax?.value) }}));
+    }
+
+    /** @returns {HTMLInputElement} */
+    get inputMin() {
+        return this.template.querySelector('.numeric__input-min');
+    }
+
+    /** @returns {HTMLInputElement} */
+    get inputMax() {
+        return this.template.querySelector('.numeric__input-max');
     }
 
     get numberInputMinimumLabel() {

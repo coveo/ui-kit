@@ -26,7 +26,7 @@
               </lightning-button>  
             </template>
             <template if:false={noInput}>
-              <c-quantic-number-input start={start} end={end} label={label} onapply={onApply}></c-quantic-number-input>
+              <c-quantic-number-input start={start} end={end} label={label} onapply={onFilterApply}></c-quantic-number-input>
             </template>
             <template if:true={showValues}>
                <template for:each={values} for:item="v">

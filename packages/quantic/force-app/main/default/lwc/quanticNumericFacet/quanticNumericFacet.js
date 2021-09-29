@@ -182,7 +182,7 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
   }
 
-  onApply(evt) {
+  onFilterApply(evt) {
     this.isSelected = false;
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
