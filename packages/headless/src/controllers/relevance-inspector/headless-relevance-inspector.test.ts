@@ -133,6 +133,7 @@ describe('RelevanceInspector', () => {
         advancedExpression: responseWithDebug.advancedExpression,
         constantExpression: responseWithDebug.constantExpression,
       },
+      fetchAllFields: false,
       userIdentities: responseWithDebug.userIdentities,
       rankingExpressions: responseWithDebug.rankingExpressions,
       fieldsDescription: [],
