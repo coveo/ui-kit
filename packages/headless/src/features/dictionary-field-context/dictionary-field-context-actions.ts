@@ -16,7 +16,7 @@ export const setContext = createAction(
       return {payload, error: objError};
     }
 
-    for (const [_, value] of Object.entries(payload)) {
+    for (const value of Object.values(payload)) {
       const valueError = validatePayload(
         value,
         requiredEmptyAllowedString
