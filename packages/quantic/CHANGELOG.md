@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.66.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.65.0...@coveo/quantic@0.66.0) (2021-09-29)
+
+
+### Features
+
+* **quantic:** add apache 2.0 license ([#1270](https://github.com/coveo/ui-kit/issues/1270)) ([317ce6a](https://github.com/coveo/ui-kit/commit/317ce6a8523c7acd4eed2b52cff85c85f115ff62))
+
+
+
+
+
 # [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.8...@coveo/quantic@0.65.0) (2021-09-29)
 
 
