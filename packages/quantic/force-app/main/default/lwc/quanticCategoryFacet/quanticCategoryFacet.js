@@ -115,7 +115,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
   /** @type {boolean} */
   _isCollapsed = false;
-  
+
   /** @type {CategoryFacetState} */
   @track state;
   
@@ -149,7 +149,6 @@ export default class QuanticCategoryFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
-    this.isExpanded = !this.isCollapsed;
   }
 
   disconnectedCallback() {
