@@ -35,8 +35,10 @@ import {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
-import {buildCategoryFacetSearch} from '../../core/facets/facet-search/category/headless-core-category-facet-search';
+import {buildCategoryFacetSearch} from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 export {
@@ -49,6 +51,8 @@ export {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 };
 
 /**

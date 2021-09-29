@@ -36,7 +36,7 @@ import {
 } from '../../core/facets/category-facet/headless-core-category-facet';
 import {ProductListingEngine} from '../../../product-listing.index';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {buildCategoryFacetSearch} from '../../core/facets/facet-search/category/headless-core-category-facet-search';
+import {buildCategoryFacetSearch} from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 export {

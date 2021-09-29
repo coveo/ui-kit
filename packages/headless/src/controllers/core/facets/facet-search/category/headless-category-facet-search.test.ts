@@ -10,7 +10,7 @@ import {
   CategoryFacetSearchProps,
   CategoryFacetSearch,
   buildCategoryFacetSearch,
-} from './headless-core-category-facet-search';
+} from './headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';

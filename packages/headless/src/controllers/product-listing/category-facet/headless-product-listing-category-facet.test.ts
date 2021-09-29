@@ -3,7 +3,7 @@ import {
   CategoryFacet,
   CategoryFacetOptions,
 } from './headless-product-listing-category-facet';
-import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-core-category-facet-search';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
