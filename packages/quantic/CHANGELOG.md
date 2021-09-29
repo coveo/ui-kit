@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.65.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.8...@coveo/quantic@0.65.0) (2021-09-29)
+
+
+### Features
+
+* **quantic:** added some missing component options ([#1256](https://github.com/coveo/ui-kit/issues/1256)) ([207e3e4](https://github.com/coveo/ui-kit/commit/207e3e4d0d499386b63cb2e6c0ff24c841d353f2))
+* **quantic:** facet onhover style and display as link ([#1253](https://github.com/coveo/ui-kit/issues/1253)) ([2cb9e99](https://github.com/coveo/ui-kit/commit/2cb9e993c417a5475715bc948cf63812d46ba901))
+
+
+
+
+
 ## [0.64.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.64.7...@coveo/quantic@0.64.8) (2021-09-28)
 
 **Note:** Version bump only for package @coveo/quantic
