@@ -18,6 +18,11 @@ export default class QuanticNumericFacet extends LightningElement {
   @track state = {
     values: [],
   };
+  /** @type {import("coveo").NumericFilterState} */
+  @track stateFilter = {
+    isLoading: false,
+    facetId: undefined
+  }
 
   /** @type {string} */
   @api facetId;
@@ -112,7 +117,7 @@ export default class QuanticNumericFacet extends LightningElement {
         facetId: this.facetId ?? this.field
       }
     });
-    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateState());
+    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateStateFilter());
   }
 
   disconnectedCallback() {
@@ -123,6 +128,10 @@ export default class QuanticNumericFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet.state;
+  }
+
+  updateStateFilter() {
+    this.stateFilter = this.numericFilter.state;
   }
 
   get values() {
@@ -159,20 +168,22 @@ export default class QuanticNumericFacet extends LightningElement {
     return I18nUtils.format(label, this.label);
   }
 
-  get start() {
-    return this.isSelected ? '' : this.numericFilter?.state?.range?.start;
-    }
   get numberOfSelectedValues() {
-    return this.state.values.filter(({state}) => state === 'selected').length;
+      return this.state.values.filter(({state}) => state === 'selected').length;
+  }
+
+  get start() {
+    return this.isSelected ? '' : this.stateFilter?.range?.start;
   }
 
   get end() {
-    return this.isSelected ? '' :  this.numericFilter?.state?.range?.end;
+    return this.isSelected ? '' :  this.stateFilter?.range?.end;
   }
 
   get showValues() {
-    return !this.searchStatus?.state?.hasError && (this.isSelected || !this.numericFilter?.state?.range) && !!this.values.length;
+    return !this.searchStatus?.state?.hasError && (this.isSelected || !this.stateFilter?.range) && !!this.values.length;
     }
+
   get clearFilterLabel() {
     if (this.hasActiveValues) {
       const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
@@ -191,7 +202,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   clearSelections() {
     this.isSelected = true;
-    if(this.numericFilter?.state?.range) {
+    if(this.stateFilter?.range) {
       this.numericFilter.clear();
     }
     this.facet?.deselectAll();
