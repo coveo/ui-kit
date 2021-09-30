@@ -101,7 +101,7 @@ export class AtomicSearchInterface {
   /**
    * Whether analytics should be enabled.
    */
-  @Prop({reflect: true}) public analyticsEnabled = true;
+  @Prop() public disableAnalytics = false;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -127,13 +127,13 @@ export class AtomicSearchInterface {
   }
 
   @Watch('analyticsEnabled')
-  public updateEnableAnalytics() {
-    if (this.analyticsEnabled) {
-      this.engine?.enableAnalytics();
+  public toggleAnalytics() {
+    if (this.disableAnalytics) {
+      this.engine?.disableAnalytics();
       return;
     }
 
-    this.engine?.disableAnalytics();
+    this.engine?.enableAnalytics();
   }
 
   @Watch('language')
@@ -252,7 +252,7 @@ export class AtomicSearchInterface {
             timezone: this.timezone,
           },
           analytics: {
-            enabled: this.analyticsEnabled,
+            enabled: !this.disableAnalytics,
           },
         },
         loggerOptions: {
