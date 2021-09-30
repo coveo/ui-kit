@@ -21,7 +21,11 @@ describe('numeric facet controller actions', () => {
           payload: {facetId, selection},
         }),
         expect.objectContaining({
-          type: 'rangeFacet/executeToggleSelect/pending',
+          type: 'rangeFacet/executeToggleSelect',
+        }),
+        expect.objectContaining({
+          type: 'facetOptions/update',
+          payload: {freezeFacetOrder: true},
         }),
       ])
     );

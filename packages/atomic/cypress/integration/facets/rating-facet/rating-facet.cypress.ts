@@ -76,8 +76,7 @@ describe('Rating Facet Test Suites', () => {
         describe('verify rendering', () => {
           before(setupSelectCheckboxValue);
 
-          // CommonAssertions.assertAccessibility(ratingFacetComponent);
-          // TODO: enable it when issue KIT-1005 is fixed
+          CommonAssertions.assertAccessibility(ratingFacetComponent);
           CommonFacetAssertions.assertDisplayClearButton(
             RatingFacetSelectors,
             true

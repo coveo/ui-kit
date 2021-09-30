@@ -43,14 +43,22 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {'alphanumeric' | 'occurrences'} */
   @api sortCriteria = 'occurrences';
 
+  /** @type {boolean} */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }
+  
+  /** @type {boolean} */
+  _isCollapsed = false;
   /** @type {import("coveo").CategoryFacet}} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   /** @type {string} */
   collapseIconName = 'utility:dash';
-  /** @type {boolean} */
-  isExpanded = true;
   /** @type {HTMLInputElement} */
   input;
  
@@ -181,11 +189,15 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
+  }
+
+  get actionButtonCssClasses() {
+    return this.isCollapsed ? 'facet__expand' : 'facet__collapse';
   }
 
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
@@ -232,10 +244,10 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    if (this.isExpanded) {
+    if (this.isCollapsed) {
       this.clearInput();
     }
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   handleKeyUp() {

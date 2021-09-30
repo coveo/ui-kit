@@ -39,7 +39,7 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
-    this.choices = this.validateChoicesDisplayed();
+    this.choices = this.parseChoicesDisplayed();
     this.validateInitialChoice();
     this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine, {
       initialState: {numberOfResults: Number(this.initialChoice) ?? this.choices[0]},
@@ -59,21 +59,17 @@ export default class QuanticResultsPerPage extends LightningElement {
     this.hasResults = this.searchStatus.state.hasResults;
   }
 
-  validateChoicesDisplayed() {
+  parseChoicesDisplayed() {
     return this.choicesDisplayed.split(',').map((choice) => {
       const parsedChoice = parseInt(choice, 10);
       if (isNaN(parsedChoice)) {
         throw new Error(`The choice value "${choice}" from the "choicesDisplayed" option is not a number.`);
       }
-
       return parsedChoice;
     });
   }
 
   validateInitialChoice() {
-    if (!this.initialChoice) {
-      return;
-    }
     if (!this.choices.includes(Number(this.initialChoice))) {
       throw new Error(`The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`);
     }

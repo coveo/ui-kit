@@ -15,15 +15,16 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.20.2",
+  "version": "1.23.0",
   "files": [
     "dist/",
     "recommendation/",
-    "product-recommendation/"
+    "product-recommendation/",
+    "product-listing/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
-    "build": "npm run clean && npm run build:prod",
+    "build": "npm run clean && npm run build:prod --",
     "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",

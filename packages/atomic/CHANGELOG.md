@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.6...@coveo/atomic@1.2.7) (2021-09-30)
+
+
+### Bug Fixes
+
+* **atomic:** add search box input default vertical padding ([#1273](https://github.com/coveo/ui-kit/issues/1273)) ([739cd96](https://github.com/coveo/ui-kit/commit/739cd967424e7eed622717dadd9ce6b476e7e552))
+
+
+
+
+
+## [1.2.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.5...@coveo/atomic@1.2.6) (2021-09-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.4...@coveo/atomic@1.2.5) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.3...@coveo/atomic@1.2.4) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.2...@coveo/atomic@1.2.3) (2021-09-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.2.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.1...@coveo/atomic@1.2.2) (2021-09-27)
+
+
+### Bug Fixes
+
+* **atomic:** add timeframe future locales & allow timeframes in refine modal ([#1251](https://github.com/coveo/ui-kit/issues/1251)) ([aa2c1c8](https://github.com/coveo/ui-kit/commit/aa2c1c8f7918c4620308a4d976f8cd970a071c62))
+
+
+
+
+
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.0...@coveo/atomic@1.2.1) (2021-09-27)
+
+
+### Bug Fixes
+
+* **headless:** rework default pipeline parameter ([#1247](https://github.com/coveo/ui-kit/issues/1247)) ([0be2ef3](https://github.com/coveo/ui-kit/commit/0be2ef37caffec40bcf9deec977019a9c0b43972))
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.2...@coveo/atomic@1.2.0) (2021-09-27)
+
+
+### Features
+
+* **atomic:** automatically adapt the number of element of the breadbox ([#1241](https://github.com/coveo/ui-kit/issues/1241)) ([b46c290](https://github.com/coveo/ui-kit/commit/b46c290df4615d495c8860eac1b0015b2cc36e03))
+
+
+
+
+
 ## [1.1.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.1.1...@coveo/atomic@1.1.2) (2021-09-23)
 
 

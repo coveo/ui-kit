@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.22.0...@coveo/headless@1.23.0) (2021-09-29)
+
+
+### Features
+
+* **core:** add exports for product-listing results-per-page ([#1266](https://github.com/coveo/ui-kit/issues/1266)) ([7034a6c](https://github.com/coveo/ui-kit/commit/7034a6c80cd5b64fa1689a6cf63b971ca0264611))
+
+
+
+
+
+# [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.21.0...@coveo/headless@1.22.0) (2021-09-28)
+
+
+### Features
+
+* **core:** split results-per-page into core ([#1257](https://github.com/coveo/ui-kit/issues/1257)) ([ae74725](https://github.com/coveo/ui-kit/commit/ae7472528e31bbda9fb69221d3e7289ba5a8b74b))
+* **productlisting:** send analytics after fetch ([#1262](https://github.com/coveo/ui-kit/issues/1262)) ([80349ca](https://github.com/coveo/ui-kit/commit/80349caf54fe5aa02e83516cbe971471ed2866b2))
+
+
+
+
+
+# [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.4...@coveo/headless@1.21.0) (2021-09-28)
+
+
+### Features
+
+* **atomic:** set maximumNumberOfResultsFromIndex to 5000 ([#1252](https://github.com/coveo/ui-kit/issues/1252)) ([cf3e48e](https://github.com/coveo/ui-kit/commit/cf3e48e6899859baa1f9164efe4fca7ef2419f0e))
+
+
+
+
+
+## [1.20.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.3...@coveo/headless@1.20.4) (2021-09-28)
+
+
+### Bug Fixes
+
+* **headless:** prevent state update when all reducer keys already exist ([#1246](https://github.com/coveo/ui-kit/issues/1246)) ([89c5217](https://github.com/coveo/ui-kit/commit/89c52170c8aff1b6e463e6107208de470764f44d))
+
+
+
+
+
+## [1.20.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.2...@coveo/headless@1.20.3) (2021-09-27)
+
+
+### Bug Fixes
+
+* **headless:** rework default pipeline parameter ([#1247](https://github.com/coveo/ui-kit/issues/1247)) ([0be2ef3](https://github.com/coveo/ui-kit/commit/0be2ef37caffec40bcf9deec977019a9c0b43972))
+
+
+
+
+
 ## [1.20.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.20.1...@coveo/headless@1.20.2) (2021-09-22)
 
 

@@ -231,7 +231,11 @@ export class AtomicTimeframeFacet
 
   private formatFacetValue(facetValue: DateFacetValue) {
     try {
-      const relativeDate = deserializeRelativeDate(facetValue.start);
+      const startDate = deserializeRelativeDate(facetValue.start);
+      const relativeDate =
+        startDate.period === 'past'
+          ? startDate
+          : deserializeRelativeDate(facetValue.end);
       const timeframe = this.getManualTimeframes().find(
         (timeframe) =>
           timeframe.period === relativeDate.period &&
