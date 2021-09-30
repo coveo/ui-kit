@@ -18,7 +18,6 @@ import inSeconds_plural from '@salesforce/label/c.quantic_InSeconds_plural';
 
 /**
  * The `QuanticSummary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
- * @category LWC
  * @example
  * <c-quantic-summary engine-id={engineId}></c-quantic-summary>
  */

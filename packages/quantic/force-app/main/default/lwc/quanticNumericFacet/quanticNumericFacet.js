@@ -18,9 +18,8 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
- * @category LWC
  * @example
- * <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-quantic-numeric-facet>
+ * <c-quantic-numeric-facet engine-id={engineId} facet-id="myfacet" field="ytlikecount" label="Youtube Likes" numberOfValues="5" sort-criteria="descending" range-algorithm="even" formatting-function={myFormattingFunction} is-collapsed></c-quantic-numeric-facet>
  */
 export default class QuanticNumericFacet extends LightningElement {
   /**

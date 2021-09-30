@@ -7,9 +7,8 @@ import {ResultUtils} from 'c/quanticUtils';
 
 /**
  * The `QuanticResultLink component creates a clickable link from a result that points to the original item.
- * @category LWC
  * @example
- * <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+ * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
  */
 export default class QuanticResultLink extends LightningElement {
   /**

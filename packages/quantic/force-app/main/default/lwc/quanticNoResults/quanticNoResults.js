@@ -16,9 +16,9 @@ import undoLastAction from '@salesforce/label/c.quantic_UndoLastAction';
 
 /**
  * The `QuanticNoResults` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
- * @category LWC
+ * 
  * @example
- * <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  
+ * <c-quantic-no-results engine-id={engineId} disable-cancel-last-action></c-quantic-no-results>  
  */
 export default class QuanticNoResults extends LightningElement {
   /**

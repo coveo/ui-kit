@@ -5,10 +5,8 @@
   },
   "plugins": [
     "plugins/markdown",
-    "./node_modules/better-docs/category",
-    "./node_modules/better-docs/typescript",
-    "./node_modules/better-docs/typedef-import",
-    "./node_modules/@ckeditor/jsdoc-plugins/lib/export-fixer/export-fixer.js"
+    "./node_modules/@ckeditor/jsdoc-plugins/lib/export-fixer/export-fixer.js",
+    "./node_modules/jsdoc-tsimport-plugin/index.js"
   ],
   "recurseDepth": 10,
   "source": {
@@ -19,10 +17,11 @@
       "node_modules",
       "example.*.js$",
       "force-app/main/default/lwc/quanticUtils",
-      "force-app/main/default/lwc/quanticHeadlessLoader"
+      "force-app/main/default/lwc/quanticHeadlessLoader",
+      "force-app/main/defualt/staticresources"
     ],
     "includePattern": "quantic.*.js$",
-    "excludePattern": "(node_modules/|example.*.js$)"
+    "excludePattern": "(node_modules/|staticresources/|example.*.js$)"
   },
   "opts": {
     "destination": "console",

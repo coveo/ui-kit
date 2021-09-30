@@ -22,9 +22,8 @@ import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 
 /**
  * The `QuanticBreadcrumbManager` component creates breadcrumbs that display a summary of the currently active facet values.
- * @category LWC
  * @example
- * <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
+ * <c-quantic-breadcrumb-manager engine-id={engineId} category-divider="/" collapse-threshold="5"></c-quantic-breadcrumb-manager>
  */
 export default class QuanticBreadcrumbManager extends LightningElement {
   /**

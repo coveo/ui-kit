@@ -2,9 +2,8 @@ import { LightningElement, api } from 'lwc';
 
 /**
  * The `QuanticCardContainer` component is used internally as a styling container.
- * @category LWC
  * @example
- * <c-quantic-card-container title={label}></c-quantic-card-container>
+ * <c-quantic-card-container title="Card Example"></c-quantic-card-container>
  */
 export default class QuanticCardContainer extends LightningElement {
     /**

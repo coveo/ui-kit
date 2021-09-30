@@ -9,9 +9,8 @@ import previous from '@salesforce/label/c.quantic_Previous';
 
 /**
  * The `QuanticPager` provides buttons that allow the end user to navigate through the different result pages.
- * @category LWC
  * @example
- * <c-quantic-pager engine-id={engineId}></c-quantic-pager>
+ * <c-quantic-pager engine-id={engineId} number-of-pages="4"></c-quantic-pager>
  */
 export default class QuanticPager extends LightningElement {
   /**

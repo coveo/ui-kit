@@ -8,7 +8,6 @@ import _default from './default.html';
 
 /**
  * The `QuanticSvg` is used internally to display static svg images.
- * @category LWC
  * @example
  * <c-quantic-svg name="noResults"></c-quantic-svg>
  */

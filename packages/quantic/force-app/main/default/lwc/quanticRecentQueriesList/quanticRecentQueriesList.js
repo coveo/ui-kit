@@ -13,9 +13,8 @@ import expand from '@salesforce/label/c.quantic_Expand';
 
 /**
  * The `QuanticRecentQueriesList` component displays the current user's recent queries.
- * @category LWC
  * @example
- * <c-quantic-recent-queries-list engine-id={engineId}></c-quantic-recent-queries-list>
+ * <c-quantic-recent-queries-list engine-id={engineId} max-length="8" label="Recent Searches" is-collapsed></c-quantic-recent-queries-list>
  */
 export default class QuanticRecentQueriesList extends LightningElement {
   labels = {

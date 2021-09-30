@@ -116,7 +116,6 @@ function parseClass(element, parentNode, childNodes) {
     access: element.access || '',
     fires: element.fires || '',
     examples: [],
-    category: element.category || '',
     xmlMeta: {
       apiVersion: element.xmlMeta?.apiVersion || '',
       isExposed: element.xmlMeta?.isExposed,

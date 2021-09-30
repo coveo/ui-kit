@@ -16,7 +16,6 @@ import oldest from '@salesforce/label/c.quantic_Oldest';
 
 /**
  * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
- * @category LWC
  * @example
  * <c-quantic-sort engine-id={engineId}></c-quantic-sort>
  */

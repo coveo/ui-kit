@@ -9,10 +9,9 @@ import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadl
 
 /**
  * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
- * @category LWC
  * @fires CustomEvent#registerresulttemplates
  * @example
- * <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
+ * <c-quantic-result-list engine-id={engineId} fields-to-include="objecttype,gdfiletitle"></c-quantic-result-list>
  */
 export default class QuanticResultList extends LightningElement {
   /**

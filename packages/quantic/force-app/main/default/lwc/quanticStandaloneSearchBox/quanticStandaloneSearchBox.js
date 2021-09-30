@@ -27,9 +27,8 @@ const CLASS_WITHOUT_SUBMIT =
 
 /**
  * The `QuanticStandaloneSearchBox` component creates a search box with built-in support for query suggestions.
- * @category LWC
  * @example
- * <c-quantic-standalone-search-box engine-id={engineId}></c-quantic-standalone-search-box>
+ * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri"></c-quantic-standalone-search-box>
  */
 export default class QuanticStandaloneSearchBox extends NavigationMixin(
   LightningElement

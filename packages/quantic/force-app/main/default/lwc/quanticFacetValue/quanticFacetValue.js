@@ -9,10 +9,9 @@ import LOCALE from '@salesforce/i18n/locale';
 
 /**
  * The `QuanticFacetValue` component is used by a facet component to display a formatted facet value and the number of results with that value.
- * @category LWC
  * @fires CustomEvent#selectvalue
  * @example
- * <c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked}></c-quantic-facet-value>
+ * <c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
  */
 export default class QuanticFacetValue extends LightningElement {
   /**
@@ -27,7 +26,7 @@ export default class QuanticFacetValue extends LightningElement {
    * @type {boolean}
    * @defaultValue false
    */
-  @api isChecked;
+  @api isChecked = false;
   /**
    * Whether the facet value should display as a link.
    * @api

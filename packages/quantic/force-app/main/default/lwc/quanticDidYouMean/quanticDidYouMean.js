@@ -13,7 +13,6 @@ import queryCorrectedTo from '@salesforce/label/c.quantic_QueryCorrectedTo';
 /**
  * The `QuanticDidYouMean` component is responsible for handling query corrections.
  * When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
- * @category LWC
  * @example
  * <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
  */

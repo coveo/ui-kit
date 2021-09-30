@@ -16,9 +16,8 @@ import expand from '@salesforce/label/c.quantic_Expand';
 
 /**
  * The `QuanticRecentResultsList` component displays the current user's recently clicked results.
- * @category LWC
  * @example
- * <c-quantic-recent-results-list engine-id={engineId}></c-quantic-recent-results-list>
+ * <c-quantic-recent-results-list engine-id={engineId} max-length="8" label="Recently Viewed Results" is-collapsed></c-quantic-recent-results-list>
  */
 export default class QuanticRecentResultsList extends LightningElement {
   labels = {

@@ -6,9 +6,8 @@ import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadl
 
 /**
  * The `QuanticTab` component allows the end user to view a subset of results.
- * @category LWC
  * @example
- * <c-quantic-tab label="Community" expression="@objecttype==&quot;Message&quot;" engine-id={engineId}></c-quantic-tab>
+ * <c-quantic-tab engine-id={engineId} label="Community" expression="@objecttype==&quot;Message&quot;" is-active></c-quantic-tab>
  */
 export default class QuanticTab extends LightningElement {
   /**
@@ -29,13 +28,6 @@ export default class QuanticTab extends LightningElement {
    * @type {string}
    */
   @api expression;
-  /**
-   * Whether to initialize the tab as active.
-   * @api
-   * @type {boolean}
-   * @defaultValue `false`
-   */
-  @api initAsActive = false
   /**
    * Whether the tab should be active.
    * @api
@@ -73,7 +65,7 @@ export default class QuanticTab extends LightningElement {
         id: this.label,
       },
       initialState: {
-        isActive: this.initAsActive,
+        isActive: this.isActive,
       }
     });
     this.unsubscribe = this.tab.subscribe(() => this.updateState());

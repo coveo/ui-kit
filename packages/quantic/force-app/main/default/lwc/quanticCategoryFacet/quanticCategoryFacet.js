@@ -22,9 +22,8 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * A `QuanticCategoryFacet` displays a facet of values in a browsable, hierarchical fashion.
- * @category LWC
  * @example
- * <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
+ * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path="false" delimiting-character=";" number-of-values="8" is-collapsed></c-quantic-category-facet>
  */
 export default class QuanticCategoryFacet extends LightningElement {
   /**
@@ -48,12 +47,18 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api field;
   /**
+   * The non-localized label for the facet.
+   * @api
+   * @type {string}
+   */
+  @api label = 'no-label';
+  /**
    * The base path shared by all values for the facet, separated by commas.
    * @api
-   * @type {string[]}
-   * @defaultValue `[]`
+   * @type {string}
+   * @defaultValue `''`
    */
-  @api basePath = [];
+  @api basePath = '';
   /**
    * Whether not to use basePath as a filter for the results.
    * @api
@@ -95,12 +100,6 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @defaultValue `false`
    */
   @api noSearch = false;
-  /**
-   * The non-localized label for the facet.
-   * @api
-   * @type {string}
-   */
-  @api label = 'no-label';
   /**
    * Specifies if the facet should be collapsed.
    * @api
@@ -164,7 +163,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         field: this.field,
         facetId: this.facetId ?? this.field,
         delimitingCharacter: this.delimitingCharacter,
-        basePath: this.basePath,
+        basePath: this.basePath.split(','),
         filterByBasePath: !this.noFilterByBasePath,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
@@ -190,7 +189,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get canShowMore() {
-    return this.facet && this.state?.canShowMoreValues  && !this.isFacetSearchActive;
+    return this.facet && this.state?.canShowMoreValues && !this.isFacetSearchActive;
   }
 
   get canShowLess() {
