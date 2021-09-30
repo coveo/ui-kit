@@ -31,28 +31,28 @@ export class AtomicSearchBoxRecentQueries {
 
   componentWillLoad() {
     try {
-      this.initialize();
+      dispatchSearchBoxSuggestionsEvent((bindings) => {
+        this.bindings = bindings;
+        return this.initialize();
+      }, this.host);
     } catch (error) {
       this.error = error as Error;
     }
   }
 
   private initialize() {
-    dispatchSearchBoxSuggestionsEvent((bindings) => {
-      this.bindings = bindings;
-      this.recentQueriesList = buildRecentQueriesList(bindings.engine, {
-        initialState: {queries: this.retrieveLocalStorage()},
-        options: {maxLength: 1000},
-      });
+    this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
+      initialState: {queries: this.retrieveLocalStorage()},
+      options: {maxLength: 1000},
+    });
 
-      this.recentQueriesList.subscribe(() => this.updateLocalStorage());
+    this.recentQueriesList.subscribe(() => this.updateLocalStorage());
 
-      return {
-        position: Array.from(this.host.parentNode!.children).indexOf(this.host),
-        onInput: () => {},
-        renderItems: () => this.renderItems(),
-      };
-    }, this.host);
+    return {
+      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      onInput: () => {},
+      renderItems: () => this.renderItems(),
+    };
   }
 
   private retrieveLocalStorage() {
@@ -130,7 +130,7 @@ export class AtomicSearchBoxRecentQueries {
   private renderItem(value: string): SearchBoxSuggestionElement {
     const query = this.bindings.searchBoxController.state.value;
     return {
-      key: value,
+      key: `recent-${value}`,
       query: value,
       content: (
         <div class="flex items-center">

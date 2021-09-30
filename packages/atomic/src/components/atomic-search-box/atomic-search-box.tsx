@@ -95,7 +95,7 @@ export class AtomicSearchBox {
   }
 
   @Listen('atomic/searchBoxSuggestion/register')
-  public setFormat(event: CustomEvent<SearchBoxSuggestionsEvent>) {
+  public registerSuggestions(event: CustomEvent<SearchBoxSuggestionsEvent>) {
     event.preventDefault();
     event.stopPropagation();
     if (this.searchBox) {

@@ -27,37 +27,37 @@ export class AtomicSearchBoxQuerySuggestions {
 
   componentWillLoad() {
     try {
-      this.initialize();
+      dispatchSearchBoxSuggestionsEvent((bindings) => {
+        this.bindings = bindings;
+        return this.initialize();
+      }, this.host);
     } catch (error) {
       this.error = error as Error;
     }
   }
 
   private initialize() {
-    dispatchSearchBoxSuggestionsEvent((bindings) => {
-      this.bindings = bindings;
-      const engine = bindings.engine as SearchEngine<QuerySuggestionSection>;
-      const {registerQuerySuggest, fetchQuerySuggestions} =
-        loadQuerySuggestActions(engine);
+    const engine = this.bindings.engine as SearchEngine<QuerySuggestionSection>;
+    const {registerQuerySuggest, fetchQuerySuggestions} =
+      loadQuerySuggestActions(engine);
 
-      engine.dispatch(
-        registerQuerySuggest({
-          id: bindings.id,
-          count: bindings.numberOfQueries,
-        })
-      );
+    engine.dispatch(
+      registerQuerySuggest({
+        id: this.bindings.id,
+        count: this.bindings.numberOfQueries,
+      })
+    );
 
-      return {
-        position: Array.from(this.host.parentNode!.children).indexOf(this.host),
-        onInput: () =>
-          engine.dispatch(
-            fetchQuerySuggestions({
-              id: bindings.id,
-            })
-          ),
-        renderItems: () => this.renderItems(),
-      };
-    }, this.host);
+    return {
+      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      onInput: () =>
+        engine.dispatch(
+          fetchQuerySuggestions({
+            id: this.bindings.id,
+          })
+        ),
+      renderItems: () => this.renderItems(),
+    };
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
@@ -86,7 +86,7 @@ export class AtomicSearchBoxQuerySuggestions {
           )}
         </div>
       ),
-      key: suggestion.rawValue,
+      key: `qs-${suggestion.rawValue}`,
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
