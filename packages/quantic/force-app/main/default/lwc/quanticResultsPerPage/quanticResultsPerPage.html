@@ -1,8 +1,8 @@
 <template>
     <template if:true={hasResults}>
        <div class="slds-float_right">
-            <template for:each={resultsPerPageOptions} for:item="option">
-                <c-quantic-number-button key={option} number={option} current={currentResultsPerPageValue} ongoto={goto}></c-quantic-number-button>
+            <template for:each={choices} for:item="choice">
+                <c-quantic-number-button key={choice} number={choice} current={currentResultsPerPageValue} ongoto={goto}></c-quantic-number-button>
             </template>
         </div> 
     </template>

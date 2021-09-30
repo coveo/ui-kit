@@ -3,7 +3,7 @@
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="facet__collapse"
+          class="actionButtonCssClasses"
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -12,19 +12,20 @@
           variant="bare"
         >
         </lightning-button-icon>
-        <template if:true={isExpanded}>
-          <ul class="slds-has-dividers_around-space">
-            <template if:true={hasActiveValues}>
-              <lightning-button 
-                icon-name="utility:close" 
-                variant="base" 
-                value={labels.clear} 
-                onclick={clearSelections}
-                label={labels.clear}
-                icon-position="left"
-                >
-              </lightning-button>  
-            </template>
+        <template if:true={hasActiveValues}>
+          <lightning-button 
+            icon-name="utility:close" 
+            variant="base" 
+            value={clearFilterLabel} 
+            onclick={clearSelections}
+            label={clearFilterLabel}
+            icon-position="left"
+            class="facet__clear-filter slds-p-horizontal_x-small"
+            >
+          </lightning-button>  
+        </template>
+        <template if:false={isCollapsed}>
+          <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template if:false={noInput}>
               <c-quantic-number-input start={start} end={end} label={label} onapply={onFilterApply}></c-quantic-number-input>
             </template>

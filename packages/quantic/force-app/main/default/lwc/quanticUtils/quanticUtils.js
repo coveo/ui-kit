@@ -101,7 +101,6 @@ export class ResultUtils {
   }
 }
 
-
 export class I18nUtils {
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;

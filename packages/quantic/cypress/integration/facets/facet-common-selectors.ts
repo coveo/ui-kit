@@ -3,16 +3,19 @@ import {ComponentSelector, CypressSelector} from '../common-selectors';
 export interface BaseFacetSelector extends ComponentSelector {
   label: () => CypressSelector;
   values: () => CypressSelector;
-  clearButton: () => CypressSelector;
+  clearFilterButton: () => CypressSelector;
   valueLabel: () => CypressSelector;
   facetValueLabelAtIndex: (index: number) => CypressSelector;
   collapseButton: () => CypressSelector;
   expandButton: () => CypressSelector;
 }
 
-export interface FacetWithCheckboxSelector extends ComponentSelector {
-  selectedCheckboxValue: () => CypressSelector;
-  idleCheckboxValue: () => CypressSelector;
+export interface FacetWithValuesSelector extends ComponentSelector {
+  selectedCheckbox: () => CypressSelector;
+  idleCheckbox: () => CypressSelector;
+  selectedValue: () => CypressSelector;
+  idleValue: () => CypressSelector;
+  checkbox: () => CypressSelector;
 }
 
 export interface FacetWithSearchSelector extends ComponentSelector {

@@ -7,7 +7,8 @@ import {
 import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
-import clear from '@salesforce/label/c.quantic_Clear';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
@@ -23,7 +24,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {string} */
   @api field;
   /** @type {string} */
-  @api label;
+  @api label = 'no-label';
   /** @type {string} */
   @api engineId;
   /** @type {number} */
@@ -40,6 +41,15 @@ export default class QuanticNumericFacet extends LightningElement {
   )}`;
   /** @type {boolean} */
   @api noInput;
+  /** @type {boolean} */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }
+  /** @type {boolean} */
+  _isCollapsed = false;
   /** @type {import("coveo").NumericFacet} */
   facet;
   /**  @type {import("coveo").NumericFilter} */
@@ -52,13 +62,12 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeFilter;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribeSearchStatus;
-  /** @type {boolean} */
-  isExpanded = true;
   isSelected=true;
 
 
   labels = {
-    clear,
+    clearFilter,
+    clearFilter_plural,
     collapseFacet,
     expandFacet,
   };
@@ -138,16 +147,23 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
-  
+
+  get actionButtonCssClasses() {
+    return this.isCollapsed ? 'facet__expand' : 'facet__collapse';
+  }
+
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
   get start() {
     return this.isSelected ? '' : this.numericFilter?.state?.range?.start;
+    }
+  get numberOfSelectedValues() {
+    return this.state.values.filter(({state}) => state === 'selected').length;
   }
 
   get end() {
@@ -156,8 +172,15 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get showValues() {
     return !this.searchStatus?.state?.hasError && (this.isSelected || !this.numericFilter?.state?.range) && !!this.values.length;
+    }
+  get clearFilterLabel() {
+    if (this.hasActiveValues) {
+      const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
+      return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
+    }
+    return '';
   }
-  
+
   /**
    * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
@@ -175,7 +198,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   preventDefault(evt) {

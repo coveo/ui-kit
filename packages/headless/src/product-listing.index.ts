@@ -42,6 +42,14 @@ export {
 } from './controllers/product-listing/pager/headless-product-listing-pager';
 
 export {
+  ResultsPerPageInitialState,
+  ResultsPerPageProps,
+  ResultsPerPageState,
+  ResultsPerPage,
+  buildResultsPerPage,
+} from './controllers/product-listing/results-per-page/headless-product-listing-results-per-page';
+
+export {
   ProductListingSortInitialState,
   ProductListingSortProps,
   ProductListingSort,

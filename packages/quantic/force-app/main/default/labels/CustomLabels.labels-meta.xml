@@ -85,6 +85,20 @@
         <shortDescription>Clear</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_ClearFilter</fullName>
+        <value>Clear filter</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear filter</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ClearFilter_plural</fullName>
+        <value>Clear {{0}} filters</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear 2 filters</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_ShowMore</fullName>
         <value>+ Show more</value>
         <language>en_US</language>
