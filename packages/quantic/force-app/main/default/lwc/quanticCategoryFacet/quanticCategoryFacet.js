@@ -84,8 +84,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are:
-   *   - `alphanumeric`
-   *   - `occurences`
+   *   - `alphanumeric`: 
+   *   - `occurrences`
    * @api
    * @type {'alphanumeric' | 'occurrences'}
    * @defaultValue `'occurences'`
@@ -161,7 +161,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         field: this.field,
         facetId: this.facetId ?? this.field,
         delimitingCharacter: this.delimitingCharacter,
-        basePath: this.basePath.split(','),
+        basePath: this.basePath.length ? this.basePath.split(',') : [],
         filterByBasePath: !this.noFilterByBasePath,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
@@ -266,7 +266,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value !== '';
+    return this.input?.value?.length;
   }
 
   getSearchValues() {

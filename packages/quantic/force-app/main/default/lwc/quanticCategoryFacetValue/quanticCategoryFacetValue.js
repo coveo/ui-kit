@@ -17,7 +17,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @type {CategoryFacetValue} */
   @api item;
   /**
-   * Whether the value is a search result.
+   * Whether the value is a facet search result.
    * @api
    * @type {boolean}
    * @defaultValue false

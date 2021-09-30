@@ -27,7 +27,7 @@
               </li> 
             </template>
             <template for:each={nonActiveParents} for:item="v">
-              <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} nonactiveparent="true"></c-quantic-category-facet-value>
+              <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
             </template>
             <template if:true={activeParent}>
               <li class="slds-grid slds-p-around_x-small">
@@ -42,7 +42,7 @@
                     onselectvalue={onSelect} 
                     key={v.value} 
                     item={v}
-                    activeparent={activeParent}>
+                    active-parent={activeParent}>
                   </c-quantic-category-facet-value>
                 </template>
               </ul>
@@ -55,7 +55,7 @@
                   onselectvalue={onSelect} 
                   key={result.index}  
                   item={result} 
-                  withsearch="true">
+                  is-search-result="true">
                 </c-quantic-category-facet-value>
               </template>
             </template>
