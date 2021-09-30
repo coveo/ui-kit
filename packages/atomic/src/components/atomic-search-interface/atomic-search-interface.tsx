@@ -126,7 +126,7 @@ export class AtomicSearchInterface {
     );
   }
 
-  @Watch('analyticsEnabled')
+  @Watch('disableAnalytics')
   public toggleAnalytics() {
     if (this.disableAnalytics) {
       this.engine?.disableAnalytics();
