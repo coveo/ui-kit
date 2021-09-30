@@ -222,7 +222,7 @@ export class AtomicSearchBox {
         placeholder={this.bindings.i18n.t('search')}
         aria-label={this.bindings.i18n.t('search-box')}
         type="text"
-        class="h-full outline-none bg-transparent flex-grow px-4 text-neutral-dark placeholder-neutral-dark text-lg"
+        class="h-full outline-none bg-transparent flex-grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
         onBlur={() => this.onBlur()}

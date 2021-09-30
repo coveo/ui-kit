@@ -63,13 +63,11 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
-      aliasFacetValues();
     }
 
     describe('verify rendering', () => {
       before(setupWithValues);
 
-      Expect.facetValuesEqual(indexFacetValuesAlias);
       Expect.labelContains(defaultLabel);
       Expect.displayValues(true);
       Expect.numberOfSelectedCheckboxValues(0);
@@ -78,6 +76,15 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('verify facet values ordering', () => {
+      before(() => {
+        setupWithValues();
+        aliasFacetValues();
+      });
+
+      Expect.facetValuesEqual(indexFacetValuesAlias);
     });
 
     describe('when selecting a value', () => {
@@ -320,42 +327,64 @@ describe('Facet Test Suite', () => {
           });
           cy.wait(InterceptAliases.Search);
           FacetSelectors.showMoreButton().click();
-          aliasFacetValues();
         }
 
         describe('verify rendering', () => {
           before(showMoreValues);
 
-          Expect.facetValuesEqual(indexFacetValuesAlias);
           Expect.numberOfValues(smallNumberOfValues * 2);
+        });
+
+        describe('verify facet values ordering', () => {
+          before(() => {
+            showMoreValues();
+            aliasFacetValues();
+          });
+
+          Expect.facetValuesEqual(indexFacetValuesAlias);
         });
 
         describe('when clicking show more button again', () => {
           function showMoreValuesAgain() {
             showMoreValues();
             FacetSelectors.showMoreButton().click();
-            aliasFacetValues();
           }
 
           describe('verify rendering', () => {
             before(showMoreValuesAgain);
 
-            Expect.facetValuesEqual(indexFacetValuesAlias);
             Expect.numberOfValues(smallNumberOfValues * 3);
+          });
+
+          describe('verify facet values ordering', () => {
+            before(() => {
+              showMoreValuesAgain();
+              aliasFacetValues();
+            });
+
+            Expect.facetValuesEqual(indexFacetValuesAlias);
           });
 
           describe('when clicking show less button', () => {
             function showLessValues() {
               showMoreValuesAgain();
+              cy.wait(InterceptAliases.Search);
               FacetSelectors.showLessButton().click();
-              aliasFacetValues();
             }
 
             describe('verify rendering', () => {
               before(showLessValues);
 
-              Expect.facetValuesEqual(indexFacetValuesAlias);
               Expect.numberOfValues(smallNumberOfValues);
+            });
+
+            describe('verify facet values ordering', () => {
+              before(() => {
+                showLessValues();
+                aliasFacetValues();
+              });
+
+              Expect.facetValuesEqual(indexFacetValuesAlias);
             });
           });
         });
