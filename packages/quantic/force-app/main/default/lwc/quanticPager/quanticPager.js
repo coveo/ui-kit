@@ -23,6 +23,8 @@ export default class QuanticPager extends LightningElement {
   currentPage = 1;
   /** @type {string} */
   @api engineId;
+  /** @type {number} */
+  @api numberOfPages = 5;
 
   labels = {
     next,
@@ -41,7 +43,11 @@ export default class QuanticPager extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initialize = (engine) => {
-    this.pager = CoveoHeadless.buildPager(engine);
+    this.pager = CoveoHeadless.buildPager(engine, {
+      options: {
+        numberOfPages: Number(this.numberOfPages)
+      }
+    });
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());

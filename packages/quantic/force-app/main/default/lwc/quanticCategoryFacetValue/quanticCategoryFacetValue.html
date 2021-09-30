@@ -1,38 +1,34 @@
 <template>
-    <li class={categoryFacetLiClass}>  
-        <div onclick={onSelect}>
-            <template if:true={nonactiveparent}>
-                <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
-                <span class="nowrap">{item.value}</span>
-                <span class="facet__number-of-results">
-                    ({item.numberOfResults})
-                </span>
-            </template>
-            <template if:false={nonactiveparent}>
-                <template if:false={withsearch}>
-                    <button class="nowrap slds-button slds-text-color_default facet__value">
-                        {item.value}
-                        <span class="facet__number-of-results">
-                            ({item.numberOfResults})
-                        </span>
-                    </button>
-                </template>
-                 <template if:true={withsearch}>
-                     <button class="slds-button slds-text-color_default">
-                        <div class="slds-grid slds-grid_vertical">
-                            <div class="slds-col slds-p-left_none facet__search-results">
-                                <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
-                                <span class="facet__number-of-results">
-                                    ({item.numberOfResults})
-                                </span>
-                            </div>
-                            <div class="slds-col slds-p-left_none">
-                                <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
-                            </div>
-                        </div>
-                    </button>  
-                </template>
-            </template>
+  <li class={categoryFacetLiClass}>  
+    <div class="slds-size_1-of-1" onclick={onSelect}>
+      <template if:true={nonactiveparent}>
+        <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+          <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
+          <span class="nowrap">{item.value}</span>
+          <span class="facet__number-of-results">({item.numberOfResults})</span>
         </div>
-    </li>
+      </template>
+      <template if:false={nonactiveparent}>
+        <template if:false={withsearch}>
+          <div class="nowrap slds-text-color_default facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+            {item.value}
+            <span class="facet__number-of-results">({item.numberOfResults})</span>
+          </div>
+        </template>
+        <template if:true={withsearch}>
+          <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small slds-text-color_default">
+            <div class="slds-grid slds-grid_vertical">
+              <div class="slds-col slds-p-left_none facet__search-results slds-m-bottom_xxx-small">
+                <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
+                <span class="facet__number-of-results">({item.numberOfResults})</span>
+              </div>
+              <div class="slds-col slds-p-left_none">
+                <span class="facet__path">{labels.inLabel} {item.localizedPath}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </template>
+    </div>
+  </li>
 </template>

@@ -12,8 +12,7 @@ import {
   DateFilterInitialState,
   DateFilterOptions,
 } from './headless-date-filter';
-import {buildDateRange} from './date-range';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {
   registerDateFacet,
   updateDateFacetValues,
@@ -22,6 +21,7 @@ import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
+import {buildDateRange} from '../../../core/facets/range-facet/date-facet/date-range';
 
 describe('date filter', () => {
   const facetId = '1';
