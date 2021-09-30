@@ -101,7 +101,7 @@ export default class QuanticCategoryFacet extends LightningElement {
           numberOfValues: Number(this.numberOfValues)
         },
         delimitingCharacter: this.delimitingCharacter,
-        basePath: this.basePath.split(','),
+        basePath: this.basePath.length ? this.basePath.split(',') : [],
         filterByBasePath: !this.noFilterByBasePath,
         numberOfValues: Number(this.numberOfValues),
         sortCriteria: this.sortCriteria,
