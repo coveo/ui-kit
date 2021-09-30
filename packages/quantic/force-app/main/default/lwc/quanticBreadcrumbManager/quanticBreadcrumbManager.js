@@ -27,7 +27,7 @@ import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
  */
 export default class QuanticBreadcrumbManager extends LightningElement {
   /**
-   * The ID of the engine instance with which to register.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
@@ -39,7 +39,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
    */
   @api categoryDivider = '/';
   /** 
-   * Number of breadcrumbs to display when collapsed.
+   * Maximum number of displayed breadcrumb values. When more values are selected, additional values appear under the "More" button.
    * @api
    * @type {Number}
    */

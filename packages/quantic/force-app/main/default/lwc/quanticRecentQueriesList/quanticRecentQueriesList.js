@@ -25,7 +25,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
   }
 
   /**
-   * The ID of the engine instance with which to register.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */

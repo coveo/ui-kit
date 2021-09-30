@@ -20,14 +20,14 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * A `QuanticCategoryFacet` displays a facet of values in a browsable, hierarchical fashion.
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
+ * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
  * @example
  * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
  */
 export default class QuanticCategoryFacet extends LightningElement {
   /**
-   * The ID of the engine instance with which to register.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
@@ -84,10 +84,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are:
-   *   - `score`
    *   - `alphanumeric`
    *   - `occurences`
-   *   - `automatic`
    * @api
    * @type {'alphanumeric' | 'occurrences'}
    * @defaultValue `'occurences'`
@@ -101,7 +99,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api noSearch = false;
   /**
-   * Specifies if the facet should be collapsed.
+   * Specifies if the facet is collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

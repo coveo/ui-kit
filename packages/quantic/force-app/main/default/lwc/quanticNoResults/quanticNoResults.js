@@ -22,7 +22,7 @@ import undoLastAction from '@salesforce/label/c.quantic_UndoLastAction';
  */
 export default class QuanticNoResults extends LightningElement {
   /**
-   * The ID of the engine instance with which to register.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */

@@ -14,7 +14,7 @@ import previous from '@salesforce/label/c.quantic_Previous';
  */
 export default class QuanticPager extends LightningElement {
   /**
-   * The ID of the engine instance with which to register.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */

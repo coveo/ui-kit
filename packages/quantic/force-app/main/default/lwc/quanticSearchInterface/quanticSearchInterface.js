@@ -30,7 +30,7 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
  */
 export default class QuanticSearchInterface extends LightningElement {
   /**
-   * The ID of the engine instance with which to register.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
