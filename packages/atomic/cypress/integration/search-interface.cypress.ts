@@ -12,7 +12,9 @@ describe('Search Interface Component', () => {
 
   describe('with an automatic search', () => {
     beforeEach(() => {
-      new TestFixture().with(addQuerySummary()).init();
+      new TestFixture()
+        .with(addQuerySummary({'enable-duration': 'true'}))
+        .init();
     });
 
     it('should support changing language', () => {
@@ -27,7 +29,9 @@ describe('Search Interface Component', () => {
       setTranslation('fr', 'showing-results-of_plural', 'patate');
       setLanguage('fr');
 
-      QuerySummarySelectors.text().should('contain', 'patate');
+      QuerySummarySelectors.text()
+        .should('contain', 'patate')
+        .should('contain', 'seconde');
     });
   });
 

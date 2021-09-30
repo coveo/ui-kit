@@ -65,6 +65,11 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public searchHub = 'default';
 
   /**
+   * Whether analytics should be enabled.
+   */
+  @Prop({reflect: true}) public analytics = true;
+
+  /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
    * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
    *
@@ -99,11 +104,6 @@ export class AtomicSearchInterface {
   @Prop() public reflectStateInUrl = true;
 
   /**
-   * Whether analytics should be enabled.
-   */
-  @Prop() public disableAnalytics = false;
-
-  /**
    * The CSS selector for the container where the interface will scroll back to.
    */
   @Prop() public scrollContainer = 'atomic-search-interface';
@@ -126,9 +126,9 @@ export class AtomicSearchInterface {
     );
   }
 
-  @Watch('disableAnalytics')
+  @Watch('analytics')
   public toggleAnalytics() {
-    if (this.disableAnalytics) {
+    if (!this.analytics) {
       this.engine?.disableAnalytics();
       return;
     }
@@ -252,7 +252,7 @@ export class AtomicSearchInterface {
             timezone: this.timezone,
           },
           analytics: {
-            enabled: !this.disableAnalytics,
+            enabled: !this.analytics,
           },
         },
         loggerOptions: {

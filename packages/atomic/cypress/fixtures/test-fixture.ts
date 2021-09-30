@@ -101,7 +101,7 @@ export class TestFixture {
       }
 
       if (this.disabledAnalytics) {
-        searchInterfaceComponent.setAttribute('disable-analytics', 'true');
+        searchInterfaceComponent.setAttribute('analytics', 'false');
       }
 
       if (this.responseModifier) {
