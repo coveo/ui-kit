@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.22.0...@coveo/headless@1.23.0) (2021-09-29)
+
+
+### Features
+
+* **core:** add exports for product-listing results-per-page ([#1266](https://github.com/coveo/ui-kit/issues/1266)) ([7034a6c](https://github.com/coveo/ui-kit/commit/7034a6c80cd5b64fa1689a6cf63b971ca0264611))
+
+
+
+
+
 # [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.21.0...@coveo/headless@1.22.0) (2021-09-28)
 
 
