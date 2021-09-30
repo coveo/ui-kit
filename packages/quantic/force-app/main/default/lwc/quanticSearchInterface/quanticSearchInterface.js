@@ -20,7 +20,7 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
  * A single instance should be used for each instance of the Coveo Headless search engine.
  * 
  * The `timezone` used in the search engine options is taken from the [Time Zone settings](https://help.salesforce.com/s/articleView?id=admin_supported_timezone.htm&type=5&language=en_US) of the Salesforce org.
- * > The `timezone` is used to correctly interpret dates in the query expression, facets, and result items.
+ * It is used to correctly interpret dates in the query expression, facets, and result items.
  * 
  * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5)
  * Coveo Machine Learning models use this information to provide contextually relevant output.
