@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.6...@coveo/atomic@1.2.7) (2021-09-30)
+
+
+### Bug Fixes
+
+* **atomic:** add search box input default vertical padding ([#1273](https://github.com/coveo/ui-kit/issues/1273)) ([739cd96](https://github.com/coveo/ui-kit/commit/739cd967424e7eed622717dadd9ce6b476e7e552))
+
+
+
+
+
 ## [1.2.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.5...@coveo/atomic@1.2.6) (2021-09-29)
 
 **Note:** Version bump only for package @coveo/atomic
