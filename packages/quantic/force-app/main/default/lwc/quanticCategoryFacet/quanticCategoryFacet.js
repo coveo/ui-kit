@@ -32,8 +32,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   @api engineId;
   /** @type {boolean} */
   @api noSearch = false;
-  /** @type {string[]} */
-  @api basePath = [];
+  /** @type {string} */
+  @api basePath = '';
   /** @type {boolean} */
   @api noFilterByBasePath = false;
   /** @type {string} */
@@ -101,7 +101,7 @@ export default class QuanticCategoryFacet extends LightningElement {
           numberOfValues: Number(this.numberOfValues)
         },
         delimitingCharacter: this.delimitingCharacter,
-        basePath: this.basePath,
+        basePath: this.basePath.split(','),
         filterByBasePath: !this.noFilterByBasePath,
         numberOfValues: Number(this.numberOfValues),
         sortCriteria: this.sortCriteria,
