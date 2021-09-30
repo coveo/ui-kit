@@ -63,7 +63,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
   
   /** @type {RecentQueriesList} */
   recentQueriesList;
-  /** @type {()=> void} */
+  /** @type {Function} */
   unsubscribe;
 
   connectedCallback() {

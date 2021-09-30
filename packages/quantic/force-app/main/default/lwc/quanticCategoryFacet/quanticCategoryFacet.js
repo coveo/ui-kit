@@ -84,7 +84,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   - `occurences`
    *   - `automatic`
    * @api
-   * @type  {'alphanumeric' | 'occurrences'}
+   * @type {'alphanumeric' | 'occurrences'}
    * @defaultValue `'occurences'`
    */
   @api sortCriteria = 'occurrences';
@@ -119,7 +119,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {CategoryFacetState} */
   @track state;
   
-  /** @type {import("coveo").CategoryFacet}} */
+  /** @type {CategoryFacet} */
   facet;
   /** @type {Function} */
   unsubscribe;
