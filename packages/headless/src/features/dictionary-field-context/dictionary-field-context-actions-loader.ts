@@ -16,7 +16,7 @@ export {AddDictionaryFieldContextActionCreatorPayload};
  */
 export interface DictionaryFieldContextActionCreators {
   /**
-   * Adds a new dictionary field context value.
+   * Adds a new dictionary field context field-key pair.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
