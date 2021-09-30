@@ -10,7 +10,7 @@ export default class QuanticTab extends LightningElement {
   /** @type {string} */
   @api label;
   /** @type {string} */
-  @api expression;
+  @api expression = '';
   /** @type {string} */
   @api engineId;
   /** @type {boolean} */
@@ -37,7 +37,7 @@ export default class QuanticTab extends LightningElement {
   initialize = (engine) => {
     this.tab = CoveoHeadless.buildTab(engine, {
       options: {
-        expression: this.expression ?? '',
+        expression: this.expression,
         id: this.label,
       },
       initialState: {
