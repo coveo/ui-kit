@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -16,15 +16,12 @@ export const setContext = createAction(
       return {payload, error: objError};
     }
 
-    for (const value of Object.values(payload)) {
-      const valueError = validatePayload(
-        value,
-        requiredEmptyAllowedString
-      ).error;
+    const values = Object.values(payload);
+    const valueSchema = new ArrayValue({each: requiredEmptyAllowedString});
+    const valuesError = validatePayload(values, valueSchema).error;
 
-      if (valueError) {
-        return {payload, error: valueError};
-      }
+    if (valuesError) {
+      return {payload, error: valuesError};
     }
 
     return {payload};
