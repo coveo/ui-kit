@@ -41,7 +41,7 @@ export default class QuanticTab extends LightningElement {
         id: this.label,
       },
       initialState: {
-        isActive: this.initAsActive,
+        isActive: this.isActive,
       }
     });
     this.unsubscribe = this.tab.subscribe(() => this.updateState());
