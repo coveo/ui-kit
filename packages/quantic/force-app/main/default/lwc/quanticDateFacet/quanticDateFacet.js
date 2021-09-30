@@ -19,7 +19,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /**
  * The `QuanticDateFacet` component displays facet values as date ranges.
  * @example
- * <c-quantic-date-facet engine-id={engineId} facet-id="myfacet" field="date" label="Date" number-of-values="8" formatting-function={formattingFunction} is-collapsed></c-quantic-date-facet>
+ * <c-quantic-date-facet engine-id={engineId} facet-id="myfacet" field="date" label="Date" number-of-values="5" formatting-function={formattingFunction} is-collapsed></c-quantic-date-facet>
  */
 export default class QuanticDateFacet extends LightningElement {
   /**

@@ -32,7 +32,7 @@ const displayOptions = {
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * A `QuanticFacet` displays a facet of the results for the current query.
  * @example
- * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="8" sort-criteria="automatic" no-search display-values-as="checkbox" is-collapsed></c-quantic-facet>
+ * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
  */
 export default class QuanticFacet extends LightningElement {
   /**
