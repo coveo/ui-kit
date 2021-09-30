@@ -7,7 +7,12 @@ import {
   InterceptAliases,
   interceptSearch,
 } from '../../../page-objects/search';
-import {checkFirstValue, checkLastValue} from './facet-actions';
+import {
+  checkFirstValue,
+  checkLastValue,
+  selectFirstLinkValue,
+  selectLastLinkValue,
+} from './facet-actions';
 
 interface FacetOptions {
   field: string;
@@ -15,6 +20,8 @@ interface FacetOptions {
   numberOfValues: number;
   sortCriteria: string;
   noSearch: boolean;
+  isCollapsed: boolean;
+  displayValuesAs: string;
 }
 
 describe('Facet Test Suite', () => {
@@ -86,10 +93,14 @@ describe('Facet Test Suite', () => {
         checkFirstValue(FacetSelectors);
       }
 
+      function collapseFacet() {
+        FacetSelectors.collapseButton().click();
+      }
+
       describe('verify rendering', () => {
         before(selectFirstFacetValue);
 
-        Expect.displayClearButton(true);
+        Expect.clearFilterContains('Clear filter');
         Expect.numberOfSelectedCheckboxValues(1);
         Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
       });
@@ -100,7 +111,41 @@ describe('Facet Test Suite', () => {
         Expect.logFacetSelect(defaultField, 0);
       });
 
+      describe('when collapsing the facet', () => {
+        before(() => {
+          selectFirstFacetValue();
+          collapseFacet();
+        });
+
+        describe('verify rendering', () => {
+          Expect.displayClearButton(true);
+          Expect.clearFilterContains('Clear filter');
+        });
+      });
+
+      describe('when selecting the "Clear" button', () => {
+        function clearSelectedValues() {
+          selectFirstFacetValue();
+          FacetSelectors.clearFilterButton().click();
+        }
+
+        describe('verify rendering', () => {
+          before(clearSelectedValues);
+
+          Expect.displayClearButton(false);
+          Expect.numberOfSelectedCheckboxValues(0);
+          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+        });
+
+        describe('verify analytics', () => {
+          before(clearSelectedValues);
+
+          Expect.logClearFacetValues(defaultField);
+        });
+      });
+
       describe('when selecting a second value', () => {
+        const initialNumberOfSelectedValues = 2;
         function selectLastFacetValue() {
           selectFirstFacetValue();
           cy.wait(InterceptAliases.UA.Facet.Select);
@@ -111,9 +156,11 @@ describe('Facet Test Suite', () => {
         describe('verify rendering', () => {
           before(selectLastFacetValue);
 
-          Expect.displayClearButton(true);
-          Expect.numberOfSelectedCheckboxValues(2);
-          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 2);
+          Expect.clearFilterContains('Clear 2 filters');
+          Expect.numberOfSelectedCheckboxValues(initialNumberOfSelectedValues);
+          Expect.numberOfIdleCheckboxValues(
+            defaultNumberOfValues - initialNumberOfSelectedValues
+          );
         });
 
         describe('verify analytics', () => {
@@ -122,27 +169,15 @@ describe('Facet Test Suite', () => {
           Expect.logFacetSelect(defaultField, 1);
         });
 
-        describe('when selecting the "Clear" button', () => {
-          function clearSelectedValues() {
-            selectFirstFacetValue();
-            cy.wait(InterceptAliases.UA.Facet.Select);
-            FacetSelectors.clearButton().click();
-          }
-
-          describe('verify rendering', () => {
-            before(clearSelectedValues);
-
-            Expect.displayClearButton(false);
-            Expect.numberOfSelectedCheckboxValues(0);
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+        describe('when collapsing the facet', () => {
+          before(() => {
+            selectLastFacetValue();
+            collapseFacet();
           });
 
-          describe('verify analytics', () => {
-            before(() => {
-              clearSelectedValues();
-            });
-
-            Expect.logClearFacetValues(defaultField);
+          describe('verify rendering', () => {
+            Expect.displayClearButton(true);
+            Expect.clearFilterContains('Clear 2 filters');
           });
         });
       });
@@ -391,6 +426,122 @@ describe('Facet Test Suite', () => {
     });
   });
 
+  describe('with link values', () => {
+    function setupWithLinkValues() {
+      visitFacetPage({
+        field: defaultField,
+        label: defaultLabel,
+        displayValuesAs: 'link',
+      });
+    }
+
+    describe('verify rendering', () => {
+      before(setupWithLinkValues);
+
+      Expect.labelContains(defaultLabel);
+      Expect.displayValues(true);
+      Expect.hasCheckbox(false);
+      Expect.numberOfSelectedLinkValues(0);
+      Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+      Expect.displayClearButton(false);
+      Expect.displayShowMoreButton(true);
+      Expect.displayShowLessButton(false);
+      Expect.displaySearchInput(true);
+    });
+
+    describe('when selecting a value', () => {
+      function selectFirstFacetValue() {
+        setupWithLinkValues();
+        selectFirstLinkValue(FacetSelectors);
+      }
+
+      function collapseFacet() {
+        FacetSelectors.collapseButton().click();
+      }
+
+      describe('verify rendering', () => {
+        before(selectFirstFacetValue);
+
+        Expect.clearFilterContains('Clear filter');
+        Expect.numberOfSelectedLinkValues(1);
+        Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+      });
+
+      describe('verify analytics', () => {
+        before(selectFirstFacetValue);
+
+        Expect.logFacetSelect(defaultField, 0);
+      });
+
+      describe('when collapsing the facet', () => {
+        before(() => {
+          selectFirstFacetValue();
+          collapseFacet();
+        });
+
+        describe('verify rendering', () => {
+          Expect.displayClearButton(true);
+          Expect.clearFilterContains('Clear filter');
+        });
+      });
+
+      describe('when selecting the "Clear" button', () => {
+        function clearSelectedValues() {
+          selectFirstFacetValue();
+          FacetSelectors.clearFilterButton().click();
+        }
+
+        describe('verify rendering', () => {
+          before(clearSelectedValues);
+
+          Expect.displayClearButton(false);
+          Expect.numberOfSelectedLinkValues(0);
+          Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+        });
+
+        describe('verify analytics', () => {
+          before(clearSelectedValues);
+
+          Expect.logClearFacetValues(defaultField);
+        });
+      });
+
+      describe('when selecting a second value', () => {
+        function selectLastFacetValue() {
+          selectFirstFacetValue();
+          cy.wait(InterceptAliases.UA.Facet.Select);
+
+          selectLastLinkValue(FacetSelectors);
+        }
+
+        describe('verify rendering', () => {
+          before(selectLastFacetValue);
+
+          Expect.clearFilterContains('Clear filter');
+          Expect.numberOfSelectedLinkValues(1);
+          Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+        });
+
+        describe('verify analytics', () => {
+          before(selectLastFacetValue);
+
+          Expect.logFacetSelect(defaultField, 0);
+        });
+
+        describe('when collapsing the facet', () => {
+          before(() => {
+            selectLastFacetValue();
+            collapseFacet();
+          });
+
+          describe('verify rendering', () => {
+            Expect.clearFilterContains('Clear filter');
+          });
+        });
+      });
+    });
+  });
+
   describe('with custom field, label, and number of results', () => {
     function setupCustomOptions() {
       visitFacetPage({
@@ -455,6 +606,24 @@ describe('Facet Test Suite', () => {
       before(setupNoSearch);
 
       Expect.displaySearchInput(false);
+    });
+  });
+
+  describe('with is collapsed', () => {
+    function setupIsCollapsed() {
+      visitFacetPage({
+        isCollapsed: true,
+      });
+    }
+
+    describe('verify rendering', () => {
+      before(setupIsCollapsed);
+
+      Expect.labelContains(defaultLabel);
+      Expect.displayExpandButton(true);
+      Expect.displaySearchInput(false);
+      Expect.numberOfIdleCheckboxValues(0);
+      Expect.displayShowMoreButton(false);
     });
   });
 

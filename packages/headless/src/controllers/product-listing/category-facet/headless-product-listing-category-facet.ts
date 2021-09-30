@@ -34,8 +34,8 @@ import {
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
 } from '../../core/facets/category-facet/headless-core-category-facet';
-import {ProductListingEngine} from '../../../product-listing.index';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 
 export {
   CategoryFacetValue,
@@ -79,26 +79,30 @@ export function buildCategoryFacet(
 
     deselectAll: () => {
       coreController.deselectAll();
-      dispatch(fetchProductListing());
-      dispatch(logFacetClearAll(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetClearAll(getFacetId()))
+      );
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
-      dispatch(fetchProductListing());
-      dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
     },
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(fetchProductListing());
-      dispatch(logFacetShowMore(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetShowMore(getFacetId()))
+      );
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(fetchProductListing());
-      dispatch(logFacetShowLess(getFacetId()));
+      dispatch(fetchProductListing()).then(() =>
+        dispatch(logFacetShowLess(getFacetId()))
+      );
     },
 
     get state() {

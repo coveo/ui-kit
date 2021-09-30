@@ -37,6 +37,18 @@ export default class ExampleQuanticFacet extends LightningElement {
             label: 'No search',
             description: 'Whether to remove the ability to search within facet values.',
             defaultValue: false
+        },
+        {
+            attribute: 'isCollapsed',
+            label: 'Is Collapsed',
+            description: 'Whether to collapse the facet.',
+            defaultValue: false
+        },
+        {
+            attribute: 'displayValuesAs',
+            label: 'Display Values As',
+            description: 'Whether to display the facet values in "checkbox" mode (multiple selection) or "link" mode (single selection).',
+            defaultValue: 'checkbox'
         }
     ]
 
