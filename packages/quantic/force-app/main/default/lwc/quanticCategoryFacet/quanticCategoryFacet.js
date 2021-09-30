@@ -47,7 +47,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api field;
   /**
-   * The non-localized label for the facet.
+   * The non-localized label for the facet. This label is displayed in the facet header.
    * @api
    * @type {string}
    */
@@ -84,11 +84,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are:
-   *   - `alphanumeric`: 
-   *   - `occurrences`
+   *   - `alphanumeric`: Filters are sorted in alphanumerical order.
+   *   - `occurrences`: Filters are sorted in descending order of number of occurences.
    * @api
    * @type {'alphanumeric' | 'occurrences'}
-   * @defaultValue `'occurences'`
+   * @defaultValue `'occurrences'`
    */
   @api sortCriteria = 'occurrences';
   /**
@@ -195,11 +195,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get hasParents() {
-    return this.state?.parents.length !== 0;
+    return this.state?.parents?.length;
   }
 
   get hasValues() {
-    return this.state?.values.length !== 0;
+    return this.state?.values?.length;
   }
 
   get hasSearchResults() {

@@ -11,7 +11,7 @@
       ></lightning-button>
   
       <template for:each={currentPages} for:item="pageNumber">
-        <c-quantic-number-button key={pageNumber} number={pageNumber} current={currentPage} ongoto={goto}></c-quantic-number-button>
+        <c-quantic-number-button key={pageNumber} number={pageNumber} selected={currentPage} ongoto={goto}></c-quantic-number-button>
       </template>
   
       <lightning-button

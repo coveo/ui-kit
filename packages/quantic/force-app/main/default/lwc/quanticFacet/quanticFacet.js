@@ -43,10 +43,10 @@ export default class QuanticFacet extends LightningElement {
   @api engineId;
   /** 
    * An unique ID used to identify the facet instance.
-   * Defaults to the facet label.
+   * Defaults to the facet field.
    * @api
    * @type {string}
-   * @defaultValue `(field)`
+   * @defaultValue Defaults to the `field` value.
    */
   @api facetId;
   /**
@@ -91,7 +91,7 @@ export default class QuanticFacet extends LightningElement {
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox', 'link'.
    * @api
-   * @type {string}
+   * @type {'checkbox' | 'link'}
    * @defaultValue `'checkbox'`
    */
   @api displayValuesAs = displayOptions.checkbox;

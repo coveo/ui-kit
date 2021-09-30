@@ -18,14 +18,14 @@ export default class QuanticNumberButton extends LightningElement {
    * @api
    * @type {number}
    */
-  @api current;
+  @api selected;
 
-  get isCurrent() {
-    return this.number === this.current;
+  get isSelected() {
+    return this.number === this.selected;
   }
 
   get variant() {
-    return this.number === this.current ? 'brand' : 'brand-outline';
+    return this.number === this.selected ? 'brand' : 'brand-outline';
   }
 
   goto() {

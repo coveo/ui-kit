@@ -32,7 +32,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * Specifies a unique identifier for the facet.
    * @api
    * @type {string}
-   * @defaultValue `(field)`
+   * @defaultValue Defaults to the `field` value.
    */
   @api facetId;
   /**
