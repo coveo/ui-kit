@@ -1,5 +1,6 @@
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {resultListComponent} from '../integration/result-list/result-list-selectors';
 import {buildTestUrl} from '../utils/setupComponent';
 
 export type SearchResponseModifierPredicate = (
@@ -80,6 +81,7 @@ export class TestFixture {
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
+    this.stubConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -153,6 +155,14 @@ export class TestFixture {
     };
   }
 
+  public static get consoleAliases() {
+    return {
+      error: '@consoleError',
+      warn: '@consoleWarn',
+      log: '@consoleLog',
+    };
+  }
+
   private intercept() {
     cy.intercept({
       method: 'POST',
@@ -173,6 +183,24 @@ export class TestFixture {
       method: 'POST',
       path: '**/rest/search/v2/facet?*',
     }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
+  }
+
+  private stubConsole() {
+    cy.window().then((win) => {
+      cy.stub(win.console, 'error').as(
+        TestFixture.consoleAliases.error.substring(1)
+      );
+      cy.stub(win.console, 'warn').as(
+        TestFixture.consoleAliases.warn.substring(1)
+      );
+      cy.stub(win.console, 'log').as(
+        TestFixture.consoleAliases.log.substring(1)
+      );
+    });
+  }
+
+  private hasResultList() {
+    return this.searchInterface.querySelector(resultListComponent) !== null;
   }
 }
 
