@@ -4,6 +4,7 @@
       <template if:false={displayAsLink}>
         <lightning-input 
           type="checkbox"
+          class="facet__value-checkbox"
           variant="label-hidden"
           label="Facet value option"
           name="facet value checkbox"
@@ -12,7 +13,7 @@
         ></lightning-input>
       </template>
       <template if:true={isChecked}>
-        <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text facet__value_selected">{formattedFacetValue}</span>
+        <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text facet__value_selected">qe;orijs;dfgms;dklfgsdlfkgjnsdl;fkgj;sdlfjg;sdlkgjs;dlfkgj;sdlfkgjs;dflkgj;s</span>
         <span class="nowrap slds-text-body_small facet__number-of-results facet__value_selected">({item.numberOfResults})</span>
       </template>
       <template if:false={isChecked}>

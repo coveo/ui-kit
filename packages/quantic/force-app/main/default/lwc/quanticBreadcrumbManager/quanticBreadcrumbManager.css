@@ -1,5 +1,6 @@
 .breadcrumb-manager__line {
     align-items: baseline;
+    min-width: 0;
 }
 
 .breadcrumb-manager__value:hover {
@@ -11,7 +12,6 @@
 }
 
 .breadcrumb-manager__value-line-item {
-    line-height: 0.7;
     white-space: nowrap;
 }
 
@@ -21,4 +21,23 @@
 
 .breadcrumb-manager__more-button:hover {
     color: var(--color-text-action-label);
+}
+
+.breadcrumb__container {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  border-radius: .25rem;
+}
+
+.breadcrumb__container:hover {
+  background-color: #f6f7f9;
+}
+
+.breadcrumb__text-container {
+  min-width: 0;
+}
+
+a {
+  text-decoration: none;
 }

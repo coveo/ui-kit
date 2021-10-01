@@ -1,20 +1,23 @@
 <template>
     <template if:true={hasBreadcrumbs}>
-        <div class="slds-grid slds-var-m-vertical_x-small">
-            <div class="slds-col slds-col_bump-right breadcrumb-manager__column">
+        <div class="slds-grid slds-grid_vertical-align-start slds-size_1-of-1 slds-var-m-vertical_x-small">
+            <div class="slds-col slds-truncate slds-col_bump-right breadcrumb-manager__column">
                 <ul>
                     <template for:each={facetBreadcrumbValues} for:item="breadcrumb">
                         <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
-                            <span class="breadcrumb-manager__field-name">{breadcrumb.field} : </span>
-                            <ul class="slds-list_horizontal slds-has-block-links_space slds-grid slds-wrap">
+                            <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumb.field} : </span>
+                            <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
                                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
-                                    <li key={breadcrumbValue.value.value} class="breadcrumb-manager__value-line-item">
-                                        <a onclick={breadcrumbValue.deselect} class="breadcrumb-manager__value">{breadcrumbValue.value.value} X</a>
-                                    </li>
+                                  <li key={breadcrumbValue.value.value}>
+                                    <a class="breadcrumb__container slds-grid_vertical-align-center slds-p-horizontal_x-small slds-p-around_xx-small" onclick={breadcrumbValue.deselect}>
+                                      <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text="remove breadcrumb" size="xx-small"></lightning-icon>
+                                      <span class="nowrap breadcrumb__text-container slds-truncate">{breadcrumbValue.value.value}</span>
+                                    </a>
+                                  </li>
                                 </template>
                                 <template if:true={breadcrumb.showMoreButton}>
-                                    <li class="breadcrumb-manager__value-line-item">
-                                        <a onclick={breadcrumb.expandButtonClick} class="slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                                    <li class="breadcrumb__container">
+                                        <a onclick={breadcrumb.expandButtonClick} class="slds-p-around_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
                                     </li>
                                 </template>
                             </ul>
@@ -66,12 +69,12 @@
                     </template>
                 </ul>
             </div>
-            <div class="slds-col breadcrumb-manager__column">
-                <ul class="slds-list_horizontal slds-has-block-links_space">
-                    <li class="breadcrumb-manager__value-line-item">
-                        <a onclick={deselectAll}>{labels.clearAllFilters}</a>
-                    </li>
-                </ul>
+            <div class="slds-col slds-nowrap breadcrumb-manager__clear-button slds-m-around_xx-small">
+              <ul>
+                <li>
+                  <a onclick={deselectAll}>{labels.clearAllFilters}</a>
+                </li>
+              </ul>
             </div>
         </div>
     </template>
