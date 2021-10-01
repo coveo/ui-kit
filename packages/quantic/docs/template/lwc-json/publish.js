@@ -70,7 +70,7 @@ function isTagDefined(element, tagTitle) {
 }
 
 function isPublic(element) {
-  if (isTagDefined(element, 'api') || element.access === 'public') {
+  if (isTagDefined(element, 'api')) {
     return true;
   }
   return false;
