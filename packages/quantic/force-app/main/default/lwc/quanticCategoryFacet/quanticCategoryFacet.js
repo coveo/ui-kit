@@ -291,6 +291,10 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.clearInput();
   }
 
+  preventDefault(evt) {
+    evt.preventDefault();
+  }
+
   showMore() {
     this.facet.showMoreValues();
   }
