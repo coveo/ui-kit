@@ -24,7 +24,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticFacet` displays a facet of the results for the current query.
  * @example
  * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
@@ -37,7 +37,7 @@ export default class QuanticFacet extends LightningElement {
    */
   @api engineId;
   /** 
-   * An unique ID used to identify the facet instance.
+   * A unique identifier for the facet.
    * Defaults to the facet field.
    * @api
    * @type {string}
@@ -51,7 +51,7 @@ export default class QuanticFacet extends LightningElement {
    */
   @api field;
   /**
-   * The non-localized label for the facet.
+   * The non-localized label for the facet. This label is displayed in the facet header.
    * @api
    * @type {string}
    */
@@ -91,7 +91,7 @@ export default class QuanticFacet extends LightningElement {
    */
   @api displayValuesAs = 'checkbox';
   /**
-   * Whether the facet should be collapsed.
+   * Whether the facet is collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

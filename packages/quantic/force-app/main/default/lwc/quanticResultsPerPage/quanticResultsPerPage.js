@@ -96,10 +96,17 @@ export default class QuanticResultsPerPage extends LightningElement {
     }
   }
 
+  get choicesObjects() {
+    return this.choices.map((choice) => ({
+      value: choice,
+      selected: choice === this.currentResultsPerPageValue
+    }));
+  }
+
   /**
    * @param {CustomEvent<number>} event
    */
-  goto(event) {
+  select(event) {
     this.resultsPerPage.set(event.detail);
   }
 }

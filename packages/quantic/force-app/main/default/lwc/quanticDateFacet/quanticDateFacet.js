@@ -29,20 +29,20 @@ export default class QuanticDateFacet extends LightningElement {
    */
   @api engineId;
   /** 
-   * Specifies a unique identifier for the facet.
+   * A unique identifier for the facet.
    * @api
    * @type {string}
    * @defaultValue Defaults to the `field` value.
    */
   @api facetId;
   /**
-   * Specifies the index field whose values the facet should use.
+   * The index field whose values the facet should use.
    * @api
    * @type {string}
    */
   @api field;
   /**
-   * The non-localized label for the facet.
+   * The non-localized label for the facet. This label is displayed in the facet header.
    * @api
    * @type {string}
    */
@@ -68,7 +68,7 @@ export default class QuanticDateFacet extends LightningElement {
     new Date(item.end)
   )}`;
   /** 
-   * Whether the facet should be collapsed.
+   * Whether the facet is collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

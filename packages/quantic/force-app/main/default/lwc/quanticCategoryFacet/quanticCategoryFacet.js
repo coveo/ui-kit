@@ -33,7 +33,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api engineId;
   /** 
-   * A unique ID used to identify the facet instance.
+   * A unique identifier for the facet.
    * Defaults to the `field` value.
    * @api
    * @type {string}
@@ -53,21 +53,21 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api label = 'no-label';
   /**
-   * The base path shared by all values for the facet, separated by commas.
+   * The base path shared by all facet values, separated by commas.
    * @api
    * @type {string}
    * @defaultValue `''`
    */
   @api basePath = '';
   /**
-   * Whether not to use basePath as a filter for the results.
+   * Whether not to use the `basePath` as a filter for the results.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
   @api noFilterByBasePath = false;
   /**
-   * The character that separates values of a multi-value field.
+   * The character that separates the values of the target multi-value field.
    * @api
    * @type {string}
    * @defaultValue `;`
@@ -99,7 +99,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api noSearch = false;
   /**
-   * Specifies if the facet is collapsed.
+   * Whether the facet is collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

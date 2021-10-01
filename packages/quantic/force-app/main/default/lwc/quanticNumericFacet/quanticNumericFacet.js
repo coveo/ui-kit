@@ -29,7 +29,7 @@ export default class QuanticNumericFacet extends LightningElement {
    */
   @api engineId;
   /** 
-   * Specifies a unique identifier for the facet.
+   * A unique identifier for the facet.
    * @api
    * @type {string}
    * @defaultValue Defaults to the `field` value.
@@ -42,7 +42,7 @@ export default class QuanticNumericFacet extends LightningElement {
    */
   @api field;
   /**
-   * The non-localized label for the facet.
+   * The non-localized label for the facet. This label is displayed in the facet header.
    * @api
    * @type {string}
    */
@@ -55,7 +55,9 @@ export default class QuanticNumericFacet extends LightningElement {
    */
   @api numberOfValues = 8;
   /**
-   * The number of values to request for this facet, when there are no manual ranges.
+   * The sort criterion to apply to the returned facet values. Possible values are:
+   *   - `ascending`
+   *   - `descending`
    * @api
    * @type {'ascending' | 'descending'}
    * @defaultValue `'ascending'`
@@ -84,7 +86,7 @@ export default class QuanticNumericFacet extends LightningElement {
     item.end
   )}`;
   /**
-   * Whether the facet should be collapsed.
+   * Whether the facet is collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`

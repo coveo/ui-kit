@@ -107,4 +107,11 @@ export default class QuanticPager extends LightningElement {
   get previousDisabled() {
     return !this.hasPrevious;
   }
+
+  get currentPagesObjects() {
+    return this.currentPages.map((page) => ({
+      number: page,
+      selected: page === this.currentPage
+    }));
+  }
 }
