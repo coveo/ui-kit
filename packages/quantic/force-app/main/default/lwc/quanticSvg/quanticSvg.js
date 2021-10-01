@@ -17,9 +17,10 @@ export default class QuanticSvg extends LightningElement {
    * The options are:
    *   - `'pageNotFound'`
    *   - `'noResults'`
-   *   - `undefined` (default)
+   *   - `undefined (default)`
    * @api
    * @type {string}
+   * @defaultValue `undefined`
    */
   @api name;
 

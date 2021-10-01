@@ -18,7 +18,7 @@
       "example.*.js$",
       "force-app/main/default/lwc/quanticUtils",
       "force-app/main/default/lwc/quanticHeadlessLoader",
-      "force-app/main/defualt/staticresources"
+      "force-app/main/default/staticresources"
     ],
     "includePattern": "quantic.*.js$",
     "excludePattern": "(node_modules/|staticresources/|example.*.js$)"

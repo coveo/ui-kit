@@ -15,7 +15,7 @@ import oldest from '@salesforce/label/c.quantic_Oldest';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
+ * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
  * @example
  * <c-quantic-sort engine-id={engineId}></c-quantic-sort>
  */

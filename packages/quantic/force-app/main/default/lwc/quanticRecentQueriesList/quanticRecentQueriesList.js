@@ -12,7 +12,7 @@ import expand from '@salesforce/label/c.quantic_Expand';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * The `QuanticRecentQueriesList` component displays the current user's recent queries.
+ * The `QuanticRecentQueriesList` component displays the user's recent queries.
  * @example
  * <c-quantic-recent-queries-list engine-id={engineId} max-length="8" label="Recent Searches" is-collapsed></c-quantic-recent-queries-list>
  */
@@ -37,13 +37,13 @@ export default class QuanticRecentQueriesList extends LightningElement {
    */
   @api maxLength = 10;
   /**
-   * The non-localized label for the component.
+   * The non-localized label for the component. This label is displayed in the component header.
    * @api
    * @type {string}
    */
   @api label = this.labels.recentQueriesLabel;
   /**
-   * Whether the component should be collapsed.
+   * Whether the component is collapsed.
    * @api
    * @type {boolean}
    * @defaultValue `false`
