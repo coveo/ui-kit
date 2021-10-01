@@ -27,7 +27,7 @@ export default class QuanticTab extends LightningElement {
    * @api
    * @type {string}
    */
-  @api expression;
+  @api expression = '';
   /**
    * Whether the tab should be active.
    * @api
