@@ -68,7 +68,7 @@ export default class QuanticFacet extends LightningElement {
    * The sort criterion to apply to the returned facet values
    * Possible values are:
    *   - `score`
-   *   - `numeric`
+   *   - `alphanumeric`
    *   - `occurences`
    *   - `automatic`
    * @api
