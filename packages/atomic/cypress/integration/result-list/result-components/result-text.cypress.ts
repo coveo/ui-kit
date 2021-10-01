@@ -38,7 +38,7 @@ describe('Result Text Component', () => {
       cy.get(resultTextComponent).should('not.exist');
     });
 
-    it('should log a console error', () => {
+    it.skip('should log a console error', () => {
       cy.get(resultTextComponent)
         .find('atomic-component-error')
         .should('exist');
