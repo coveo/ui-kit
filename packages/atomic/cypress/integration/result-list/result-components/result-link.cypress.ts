@@ -39,7 +39,7 @@ describe('Result Link Component', () => {
       cy.get(resultLinkComponent).should('not.exist');
     });
 
-    it('should log a console error', () => {
+    it.skip('should log a console error', () => {
       cy.get(resultLinkComponent)
         .find('atomic-component-error')
         .should('exist');
