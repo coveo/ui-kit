@@ -67,6 +67,13 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api noFilterByBasePath = false;
   /**
+   * Whether not to exclude the parents of folded results when estimating the result count for each facet value.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false
+   */  
+  @api noFilterFacetCount = false;
+  /**
    * The character that separates the values of the target multi-value field.
    * @api
    * @type {string}
@@ -92,12 +99,12 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api sortCriteria = 'occurrences';
   /**
-   * Whether this facet should not contain a search box.
+   * Whether this facet should contain a search box.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api noSearch = false;
+  @api withSearch = false;
   /**
    * Whether the facet is collapsed.
    * @api
@@ -160,10 +167,14 @@ export default class QuanticCategoryFacet extends LightningElement {
       options: {
         field: this.field,
         facetId: this.facetId ?? this.field,
+        facetSearch: this.withSearch ? {
+          numberOfValues: Number(this.numberOfValues)
+        } : undefined,
         delimitingCharacter: this.delimitingCharacter,
-        basePath: this.basePath.length ? this.basePath.split(',') : [],
+        basePath: this.basePath?.length ? this.basePath.split(',') : [],
         filterByBasePath: !this.noFilterByBasePath,
-        numberOfValues: this.numberOfValues,
+        filterFacetCount: !this.noFilterFacetCount,
+        numberOfValues: Number(this.numberOfValues),
         sortCriteria: this.sortCriteria,
       },
     });
@@ -266,7 +277,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value?.length;
+    return !!this.input?.value.length;
   }
 
   getSearchValues() {

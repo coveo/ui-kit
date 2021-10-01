@@ -91,6 +91,29 @@ export default class QuanticFacet extends LightningElement {
    */
   @api displayValuesAs = 'checkbox';
   /**
+   * The character that separates values of a multi-value field.
+   * @api
+   * @type {string}
+   * @defaultValue `'>'`
+   */
+  @api delimitingCharacter = '>';
+  /**
+   * Whether not to exclude the parents of folded results when estimating the result count for each facet value.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api noFilterFacetCount = false;
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   * @api
+   * @type {number}
+   * @defaultValue `1000`
+   */
+  @api injectionDepth = 1000;
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -137,8 +160,13 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch: {numberOfValues: Number(this.numberOfValues)},
+      facetSearch: {
+        numberOfValues: Number(this.numberOfValues)
+      },
       facetId: this.facetId ?? this.field,
+      delimitingCharacter: this.delimitingCharacter,
+      filterFacetCount: !this.noFilterFacetCount,
+      injectionDepth: Number(this.injectionDepth),
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
