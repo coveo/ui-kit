@@ -43,7 +43,7 @@ export default class QuanticSearchBox extends LightningElement {
    * @type {string}
    * @defaultValue 'Search...'
    */
-  @api placeholder = `${this.labels.search}...`;
+  @api placeholder = `${this.labels.search}`;
   /**
    * Whether not to render a submit button.
    * @api
