@@ -44,7 +44,7 @@ export default class QuanticFacet extends LightningElement {
   /** @type {boolean} */
   @api noSearch = false;
   /** @type {string} */
-  @api delimitingCharacter = '<';
+  @api delimitingCharacter = '>';
   /** @type {boolean} */
   @api noFilterFacetCount = false;
   /** @type {number} */
