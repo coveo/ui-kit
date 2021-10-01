@@ -31,15 +31,17 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {string} */
   @api engineId;
   /** @type {boolean} */
-  @api noSearch = false;
+  @api withSearch = false;
   /** @type {string} */
   @api basePath = '';
   /** @type {boolean} */
   @api noFilterByBasePath = false;
+  /** @type {boolean} */
+  @api noFilterFacetCount = false;
   /** @type {string} */
   @api delimitingCharacter = ';';
   /** @type {number} */
-  @api numberOfValues = 5;
+  @api numberOfValues = 8;
   /** @type {'alphanumeric' | 'occurrences'} */
   @api sortCriteria = 'occurrences';
 
@@ -97,12 +99,13 @@ export default class QuanticCategoryFacet extends LightningElement {
       options: {
         field: this.field,
         facetId: this.facetId ?? this.field,
-        facetSearch: {
+        facetSearch: this.withSearch ? {
           numberOfValues: Number(this.numberOfValues)
-        },
+        } : undefined,
         delimitingCharacter: this.delimitingCharacter,
         basePath: this.basePath?.length ? this.basePath.split(',') : [],
         filterByBasePath: !this.noFilterByBasePath,
+        filterFacetCount: !this.noFilterFacetCount,
         numberOfValues: Number(this.numberOfValues),
         sortCriteria: this.sortCriteria,
       },
@@ -206,7 +209,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value !== '';
+    return !!this.input?.value.length;
   }
 
   getSearchValues() {
