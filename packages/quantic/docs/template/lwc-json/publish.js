@@ -4,9 +4,22 @@
  */
 'use strict';
 
-function parseFunction(element, parentNode) {
-  var i, len;
+const fs = require('fs');
+const paramCase = require('change-case').paramCase;
+const xmlToJson = require('xml2json').toJson;
+const dump = require('jsdoc/util/dumper').dump; 
 
+function formatType(type) {
+  return type
+    ? (type.names.length === 1 ? type.names[0] : type.names)
+    : '';
+}
+
+function formatBooleanParam(boolParam) {
+  return typeof boolParam === 'boolean' ? boolParam : ''
+}
+
+function parseFunction(element, parentNode) {
   if (!isPublic(element)) {
     return;
   }
@@ -28,26 +41,25 @@ function parseFunction(element, parentNode) {
 
   if (element.returns) {
     thisFunction.returns = {
-      type: element.returns[0].type ? (element.returns[0].type.names.length === 1 ? element.returns[0].type.names[0] : element.returns[0].type.names) : '',
+      type: formatType(element.returns[0].type),
       description: element.returns[0].description || ''
     };
   }
 
   if (element.examples) {
-    for (i = 0, len = element.examples.length; i < len; i++) {
+    for (let i = 0; i < element.examples.length; i++) {
       thisFunction.examples.push(element.examples[i]);
     }
   }
 
   if (element.params) {
-    for (i = 0, len = element.params.length; i < len; i++) {
+    for (let i = 0; i < element.params.length; i++) {
       thisFunction.parameters.push({
         name: element.params[i].name,
-        type: element.params[i].type ? (element.params[i].type.names.length === 1 ? element.params[i].type.names[0] : element.params[i].type.names) : '',
+        type: formatType(element.params[i].type),
         description: element.params[i].description || '',
         default: element.params[i].defaultvalue || '',
-        optional: typeof element.params[i].optional === 'boolean' ? element.params[i].optional : '',
-        nullable: typeof element.params[i].nullable === 'boolean' ? element.params[i].nullable : ''
+        optional: formatBooleanParam(element.params[i].optional),
       });
     }
   }
@@ -58,15 +70,13 @@ function isTagDefined(element, tagTitle) {
 }
 
 function isPublic(element) {
-  if (isTagDefined(element, 'api') || element.access === "public") {
+  if (isTagDefined(element, 'api') || element.access === 'public') {
     return true;
   }
   return false;
 }
 
 function parseMember(element, parentNode) {
-  const paramCase = require('change-case').paramCase;
-
   if (!isPublic(element)) {
     return;
   }
@@ -90,19 +100,13 @@ function parseMember(element, parentNode) {
 }
 
 function getMetadata(element) {
-  const fs = require('fs');
-  const parser = require('xml2json');
   const filePath = `${element.meta.path}/${element.meta.filename}-meta.xml`;
 
   const xmlData = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(parser.toJson(xmlData));
+  return JSON.parse(xmlToJson(xmlData));
 }
 
 function parseClass(element, parentNode, childNodes) {
-  const paramCase = require('change-case').paramCase;
-
-  var i, len;
-
   if (!parentNode.components) {
     parentNode.components = [];
   }
@@ -126,28 +130,26 @@ function parseClass(element, parentNode, childNodes) {
   parentNode.components.push(thisClass);
 
   if (element.examples) {
-    for (i = 0, len = element.examples.length; i < len; i++) {
+    for (let i = 0, len = element.examples.length; i < len; i++) {
       thisClass.examples.push(element.examples[i]);
     }
   }
 
   if (element.params) {
-    for (i = 0, len = element.params.length; i < len; i++) {
+    for (let i = 0; i < element.params.length; i++) {
       thisClass.constructor.parameters.push({
         name: element.params[i].name,
-        type: element.params[i].type ? (element.params[i].type.names.length === 1 ? element.params[i].type.names[0] : element.params[i].type.names) : '',
-        description: element.params[i].description || '',
+        type: formatType(element.params[i].type),
         default: element.params[i].defaultvalue || '',
-        optional: typeof element.params[i].optional === 'boolean' ? element.params[i].optional : '',
-        nullable: typeof element.params[i].nullable === 'boolean' ? element.params[i].nullable : '',
+        optional: formatBooleanParam(element.params[i].optional),
       });
     }
   }
 
-  graft(thisClass, childNodes, element.longname, element.name);
+  graft(thisClass, childNodes, element.longname);
 }
 
-function graft(parentNode, childNodes, parentLongname, _parentName) {
+function graft(parentNode, childNodes, parentLongname) {
   childNodes
     .filter(function (element) {
       return (element.memberof === parentLongname);
@@ -171,22 +173,15 @@ function graft(parentNode, childNodes, parentLongname, _parentName) {
  * @param {object} opts
  */
 exports.publish = function (data, opts) {
-  var root = {},
-    docs;
+  let root = {};
 
   data({ undocumented: true }).remove();
-  docs = data().get(); // <-- an array of Doclet objects
+  const docs = data().get();
 
   graft(root, docs);
 
   if (opts.destination === 'console') {
-    if (opts.query && opts.query.format === 'xml') {
-      var xml = require('js2xmlparser');
-      console.log(xml('jsdoc', root));
-    }
-    else {
-      console.log(require('jsdoc/util/dumper').dump(root));
-    }
+    console.log(dump(root));
   }
   else {
     console.log('This template only supports output to the console. Use the option "-d console" when you run JSDoc.');
