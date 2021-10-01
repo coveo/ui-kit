@@ -27,12 +27,6 @@ export function assertContainsComponentError(
   });
 }
 
-export function assertRemovedFromDOM(componentTag: string) {
-  it('should be removed from the DOM', () => {
-    cy.get(componentTag).should('not.exist');
-  });
-}
-
 export function assertConsoleError() {
   it('should log an error to the console', () => {
     cy.get(TestFixture.consoleAliases.error).should('be.called');

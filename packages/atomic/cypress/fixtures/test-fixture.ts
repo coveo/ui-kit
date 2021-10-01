@@ -1,6 +1,5 @@
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
-import {resultListComponent} from '../integration/result-list/result-list-selectors';
 import {buildTestUrl} from '../utils/setupComponent';
 
 export type SearchResponseModifierPredicate = (
@@ -197,10 +196,6 @@ export class TestFixture {
         TestFixture.consoleAliases.log.substring(1)
       );
     });
-  }
-
-  private hasResultList() {
-    return this.searchInterface.querySelector(resultListComponent) !== null;
   }
 }
 
