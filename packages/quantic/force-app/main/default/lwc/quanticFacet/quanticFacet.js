@@ -23,11 +23,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetValue} FacetValue */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
-const displayOptions = {
-  checkbox: 'checkbox',
-  link: 'link'
-}
-
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * A `QuanticFacet` displays a facet of the results for the current query.
@@ -94,7 +89,7 @@ export default class QuanticFacet extends LightningElement {
    * @type {'checkbox' | 'link'}
    * @defaultValue `'checkbox'`
    */
-  @api displayValuesAs = displayOptions.checkbox;
+  @api displayValuesAs = 'checkbox';
   /**
    * Whether the facet should be collapsed.
    * @api
@@ -263,7 +258,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isDisplayAsLink() {
-    return this.displayValuesAs === displayOptions.link
+    return this.displayValuesAs === 'link'
   }
 
   get numberOfSelectedValues() {
