@@ -9,15 +9,12 @@
               <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value.value}>
-                    <a class="breadcrumb__container slds-grid_vertical-align-center slds-p-horizontal_x-small slds-p-around_xx-small" onclick={breadcrumbValue.deselect}>
-                      <span class="nowrap breadcrumb__text-container slds-truncate">{breadcrumbValue.value.value}</span>
-                      <lightning-icon class="slds-current-color slds-m-left_xx-small" icon-name="utility:close" alternative-text="remove breadcrumb" size="xx-small"></lightning-icon>
-                    </a>
+                    <c-quantic-pill value={breadcrumbValue.value.value} alt-text={breadcrumbValue.value.value} deselect={breadcrumbValue.deselect}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li class="breadcrumb__container">
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-p-around_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <a onclick={breadcrumb.expandButtonClick} class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
                   </li>
                 </template>
               </ul>
@@ -29,29 +26,23 @@
               <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value.value}>
-                    <a class="breadcrumb__container slds-grid_vertical-align-center slds-p-horizontal_x-small slds-p-around_xx-small" onclick={breadcrumbValue.deselect}>
-                      <span class="nowrap breadcrumb__text-container slds-truncate">{breadcrumbValue.value}</span>
-                      <lightning-icon class="slds-current-color slds-m-left_xx-small" icon-name="utility:close" alternative-text="remove breadcrumb" size="xx-small"></lightning-icon>
-                    </a>
+                    <c-quantic-pill value={breadcrumbValue.value} alt-text={breadcrumbValue.value} deselect={breadcrumbValue.deselect}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li class="breadcrumb__container">
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-p-around_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <a onclick={breadcrumb.expandButtonClick} class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
                   </li>
                 </template>
               </ul>
             </li>
           </template>
-          <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumb">
+          <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumbValue">
             <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
-              <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumb.field} : </span>
+              <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumbValue.field} : </span>
               <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
                 <li>
-                  <a class="breadcrumb__container slds-grid_vertical-align-center slds-p-horizontal_x-small slds-p-around_xx-small" onclick={breadcrumb.deselect}>
-                    <span class="nowrap breadcrumb__text-container slds-truncate">{breadcrumb.value}</span>
-                    <lightning-icon class="slds-current-color slds-m-left_xx-small" icon-name="utility:close" alternative-text="remove breadcrumb" size="xx-small"></lightning-icon>
-                  </a>
+                  <c-quantic-pill value={breadcrumbValue.value} alt-text={breadcrumbValue.value} deselect={breadcrumbValue.deselect}></c-quantic-pill>
                 </li>
               </ul>
             </li>
@@ -62,15 +53,12 @@
               <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value.value}>
-                    <a class="breadcrumb__container slds-grid_vertical-align-center slds-p-horizontal_x-small slds-p-around_xx-small" onclick={breadcrumbValue.deselect}>
-                      <span class="nowrap breadcrumb__text-container slds-truncate">{breadcrumbValue.value}</span>
-                      <lightning-icon class="slds-current-color slds-m-left_xx-small" icon-name="utility:close" alternative-text="remove breadcrumb" size="xx-small"></lightning-icon>
-                    </a>
+                    <c-quantic-pill value={breadcrumbValue.value} alt-text={breadcrumbValue.value} deselect={breadcrumbValue.deselect}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li class="breadcrumb__container">
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-p-around_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <a onclick={breadcrumb.expandButtonClick} class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
                   </li>
                 </template>
               </ul>
@@ -78,8 +66,8 @@
           </template>
         </ul>
       </div>
-      <div class="slds-col slds-nowrap breadcrumb-manager__clear-button slds-m-around_xx-small">
-        <ul>
+      <div class="slds-col breadcrumb-manager__column slds-nowrap breadcrumb-manager__clear-button slds-m-left_small">
+        <ul class="slds-m-around_xx-small">
           <li>
             <a onclick={deselectAll}>{labels.clearAllFilters}</a>
           </li>
