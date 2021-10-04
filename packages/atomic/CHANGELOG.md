@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.3.0...@coveo/atomic@1.4.0) (2021-10-04)
+
+
+### Features
+
+* **atomic:** add prop on search interface for disabling analytics ([#1272](https://github.com/coveo/ui-kit/issues/1272)) ([9842e90](https://github.com/coveo/ui-kit/commit/9842e90a54cf4ddcfa559f6b829e053fcc80caf4))
+
+
+
+
+
 # [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.8...@coveo/atomic@1.3.0) (2021-10-04)
 
 
