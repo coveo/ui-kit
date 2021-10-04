@@ -1,0 +1,16 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}>
+  
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <c-quantic-pager
+        engine-id={engineId}
+        number-of-pages={config.numberOfPages}>
+      </c-quantic-pager>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>
