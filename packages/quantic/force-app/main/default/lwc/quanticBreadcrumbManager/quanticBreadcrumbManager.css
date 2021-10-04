@@ -14,3 +14,7 @@
 .breadcrumb-manager__more-button:hover {
   color: var(--color-text-action-label);
 }
+
+.breadcrumb__container {
+  min-width: 0;
+}
