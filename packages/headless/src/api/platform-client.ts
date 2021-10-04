@@ -88,10 +88,10 @@ export class PlatformClient {
 }
 
 type PlatformCombination =
-  | {env: 'dev'; region: 'us-east-1' | 'eu-west-1' | 'eu-west-3'}
-  | {env: 'qa'; region: 'us-east-1' | 'eu-west-1' | 'ap-southeast-2'}
-  | {env: 'hipaa'; region: 'us-east-1'}
-  | {env: 'prod'; region: 'us-east-1' | 'us-west-2' | 'eu-west-1'};
+  | {env: 'dev'; region: 'us' | 'eu'}
+  | {env: 'qa'; region: 'us' | 'eu'}
+  | {env: 'hipaa'; region: 'us'}
+  | {env: 'prod'; region: 'us' | 'eu' | 'au'};
 
 type PlatformEnvironment = PlatformCombination['env'];
 
@@ -104,7 +104,7 @@ export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
       ? ''
       : options.environment;
   const urlRegion =
-    !options || !options.region || options.region === 'us-east-1'
+    !options || !options.region || options.region === 'us'
       ? ''
       : `-${options.region}`;
 

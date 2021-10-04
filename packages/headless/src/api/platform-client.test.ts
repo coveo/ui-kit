@@ -35,17 +35,17 @@ describe('platformUrl helper', () => {
     );
   });
 
-  it(`when the region is us-east-1
+  it(`when the region is us
   should not return it in the url e.g. https://platform.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'us-east-1'})).toBe(
+    expect(platformUrl({region: 'us'})).toBe(
       'https://platform.cloud.coveo.com'
     );
   });
 
-  it(`when the region is not us-east-1
-  should return it in the url e.g. https://platform-us-west-2.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'us-west-2'})).toBe(
-      'https://platform-us-west-2.cloud.coveo.com'
+  it(`when the region is not us
+  should return it in the url e.g. https://platform-eu.cloud.coveo.com`, () => {
+    expect(platformUrl({region: 'eu'})).toBe(
+      'https://platform-eu.cloud.coveo.com'
     );
   });
 });
