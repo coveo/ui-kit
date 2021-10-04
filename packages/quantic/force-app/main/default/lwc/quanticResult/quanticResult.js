@@ -8,7 +8,7 @@ import { LightningElement, api } from "lwc";
 /**
  * The `QuanticResult` component is used internally by the `QuanticResultList` component.
  * @example
- * <c-quantic-result engine-id={engineId} key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager}></c-quantic-result>
+ * <c-quantic-result engine-id={engineId} result={result} result-templates-manager={resultTemplatesManager}></c-quantic-result>
  */
 export default class QuanticResult extends LightningElement {
   /**

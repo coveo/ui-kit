@@ -37,7 +37,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
    */
   @api maxLength = 10;
   /**
-   * The non-localized label for the component.
+   * The non-localized label for the component. This label is displayed in the component header.
    * @api
    * @type {string}
    */

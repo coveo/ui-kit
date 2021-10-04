@@ -92,6 +92,7 @@ export default class QuanticFacet extends LightningElement {
   @api displayValuesAs = 'checkbox';
   /**
    * The character that separates values of a multi-value field.
+   * If the field is defined as a "multi-value", each path is delimited by `;`, and each part of a path is delimited by `>`. So the indexed value looks like `parent1>child1; parent2>child2`, and `delimitingCharacter` should be set to `>`.
    * @api
    * @type {string}
    * @defaultValue `'>'`

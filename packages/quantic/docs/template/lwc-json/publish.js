@@ -70,11 +70,9 @@ function isTagDefined(element, tagTitle) {
 }
 
 function isPublic(element) {
-  if (isTagDefined(element, 'api')) {
-    return true;
-  }
-  return false;
+  return isTagDefined(element, 'api');
 }
+
 
 function parseMember(element, parentNode) {
   if (!isPublic(element)) {

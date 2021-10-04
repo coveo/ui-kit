@@ -68,7 +68,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   @api numberOfSuggestions = 5;
   /**
    * The url of the search page to redirect to when a query is made.
-   * The target search page should contain a `QuanticSearchInterface` with the same engine ID specified for this component.
+   * The target search page should contain a `QuanticSearchInterface` with the same engine ID as the one specified for this component.
    * @api
    * @type {string}
    * @defaultValue '/global-search/%40uri'

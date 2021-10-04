@@ -19,14 +19,16 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
  * The `QuanticSearchInterface` component handles the headless search engine and localization configurations.
  * A single instance should be used for each instance of the Coveo Headless search engine.
  * 
+ * 
  * The `timezone` used in the search engine options is taken from the [Time Zone settings](https://help.salesforce.com/s/articleView?id=admin_supported_timezone.htm&type=5&language=en_US) of the Salesforce org.
  * It is used to correctly interpret dates in the query expression, facets, and result items.
  * 
- * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5)
+ * 
+ * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5).
  * Coveo Machine Learning models use this information to provide contextually relevant output.
- * Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
+ * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
  * @example
- * <c-quantic-search-interface engine-id={engineId}></c-quantic-search-interface>
+ * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeine="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
  */
 export default class QuanticSearchInterface extends LightningElement {
   /**

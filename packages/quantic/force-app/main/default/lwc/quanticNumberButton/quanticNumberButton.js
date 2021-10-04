@@ -4,7 +4,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticNumberButton` component is used internally to display a button in a set of buttons with numeric labels.
  * @fires CustomEvent#select
  * @example
- * <c-quantic-number-button number="1" current="1" onselect={select}></c-quantic-number-button>
+ * <c-quantic-number-button number="1" selected onselect={select}></c-quantic-number-button>
  */
 export default class QuanticNumberButton extends LightningElement {
   /**

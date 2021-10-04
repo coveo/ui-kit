@@ -75,6 +75,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   @api noFilterFacetCount = false;
   /**
    * The character that separates the values of the target multi-value field.
+   * If the field is defined as "hierarchical", parts of a path are delimited by `;`. A value is indexed as `parent;child` and `delimitingCharacter` should be set to `;`.
    * @api
    * @type {string}
    * @defaultValue `;`
