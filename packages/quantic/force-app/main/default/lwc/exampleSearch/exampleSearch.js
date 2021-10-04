@@ -29,13 +29,21 @@ export default class ExampleSearch extends LightningElement {
       ['FeedItem']
     );
     resultTemplatesManager.registerTemplates(
-      {content: template1, conditions: [isYouTube], fields: ['ytvideoid', 'ytvideoduration']},
+      {
+        content: template1,
+        conditions: [isYouTube],
+        fields: ['ytvideoid', 'ytvideoduration']
+      },
       {
         content: template2,
         conditions: [isCase],
         fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber']
       },
-      {content: template3, conditions: [isChatter]},
+      {
+        content: template3,
+        conditions: [isChatter],
+        fields: ['sfcreatedbyname']
+      },
     );
   }
 }

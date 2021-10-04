@@ -1,9 +1,9 @@
 <template>
-  <div class="lgc-bg slds-border_bottom">
-    <lightning-tile type="media">
-      <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
-        <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left" style="font-weight: 400; font-size:12px">
-          <span><lightning-icon slot="media" icon-name={icon} size="small"></lightning-icon></span>
+  <div class="lgc-bg slds-border_bottom slds-p-vertical_small">
+    <lightning-tile>
+      <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+        <div class="slds-col slds-grid slds-grid_vertical-align-center slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left" style="font-weight: 400; font-size:12px">
+          <span><lightning-icon icon-name={icon} size="small"></lightning-icon></span>
           <span class="slds-m-left_x-small">{result.raw.objecttype}</span>
           <span class="slds-m-left_xxx-small" style="font-size: 10px; color: grey">[{result.raw.sfcasenumber}]</span>
         </div>
@@ -16,13 +16,13 @@
           </p>
         </div>
       </div>
-      <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
+      <div class="slds-grid slds-gutters slds-wrap slds-m-vertical_x-small ">
         <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left">
           <h3><span style="font-weight: 400; color: #157E19">{result.raw.sfstatus} |</span>
           <span class="slds-m-left_xx-small" style="font-weight: 700;"><c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link></span></h3>
         </div>
       </div>
-      <div class="slds-grid slds-wrap slds-m-vertical_x-small ">
+      <div class="slds-grid slds-gutters slds-wrap slds-m-top_x-small ">
         <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 400;">
           {result.Excerpt}
         </div>

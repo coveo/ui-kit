@@ -1,6 +1,4 @@
 .recommended-badge {
-    background-color: var(--sds-c-badge-color-background, #4fbe75);
-    color: white;
-  }
-  
-  
+  background-color: var(--sds-c-badge-color-background, #4fbe75);
+  color: white;
+}
