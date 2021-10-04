@@ -18,3 +18,7 @@
 .breadcrumb__container {
   min-width: 0;
 }
+
+.breadcrumb-manager__clear-button a {
+  white-space: nowrap;
+}
