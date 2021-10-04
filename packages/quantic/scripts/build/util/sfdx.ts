@@ -11,29 +11,6 @@ export interface SfdxResponse {
   result: object;
 }
 
-export interface SfdxOrg {
-  alias?: string;
-  username: string;
-  status: string;
-}
-
-export interface SfdxListOrgsResponse extends SfdxResponse {
-  result: {
-    nonScratchOrgs: Array<SfdxOrg>;
-    scratchOrgs: Array<SfdxOrg>;
-  };
-}
-
-export interface SfdxCreateOrgResponse extends SfdxResponse {
-  result: SfdxOrg;
-}
-
-export interface SfdxPublishCommunityResponse extends SfdxResponse {
-  result: {
-    url: string;
-  };
-}
-
 /**
  * Executes the given sfdx function and returns the result as an object.
  * @param command The command to be executed, starting with force:.
@@ -44,7 +21,11 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     exec(
       `"${path.resolve('node_modules/.bin/sfdx')}" ${command} --json`,
-      {maxBuffer: 1024 * 1024},
+      {
+        cwd: process.cwd(),
+        env: process.env,
+        maxBuffer: 1024 * 1024,
+      },
       (error, stdout) => {
         (error ? reject : resolve)(
           stdout ? (JSON.parse(strip(stdout)) as T) : null

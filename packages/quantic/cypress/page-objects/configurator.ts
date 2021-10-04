@@ -15,5 +15,8 @@ export const configure = (
     cy.get(getInputSelector(key)).invoke('val', options[key].toString());
   });
 
-  return cy.get(selectors.try).click();
+  return cy
+    .get(selectors.try)
+    .click()
+    .get('slot[name="preview"]', {timeout: 30000});
 };
