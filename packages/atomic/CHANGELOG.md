@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.7...@coveo/atomic@1.2.8) (2021-10-01)
+
+
+### Bug Fixes
+
+* **atomic:** result template components should be removed from DOM on error ([#1276](https://github.com/coveo/ui-kit/issues/1276)) ([915e8a6](https://github.com/coveo/ui-kit/commit/915e8a6d19ed77f539d46ddc091ec7ee45114534))
+
+
+
+
+
 ## [1.2.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.6...@coveo/atomic@1.2.7) (2021-09-30)
 
 

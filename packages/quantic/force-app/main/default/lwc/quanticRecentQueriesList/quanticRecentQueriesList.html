@@ -12,7 +12,7 @@
     <template if:false={isCollapsed}>
       <div class="slds-m-top_medium">
         <template if:false={hasQueries}>
-          <div class="slds-text-body_small empty-list-message slds-var-m-vertical_small">{labels.emptyListLabel}</div>
+          <div class="slds-text-body_small empty-list-message slds-var-m-vertical_small slds-p-horizontal_x-small">{labels.emptyListLabel}</div>
         </template>
         <ul>
           <template for:each={queries} for:item="query" for:index="index">

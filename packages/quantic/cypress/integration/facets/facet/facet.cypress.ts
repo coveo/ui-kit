@@ -213,6 +213,12 @@ describe('Facet Test Suite', () => {
         Expect.highlightsResults(query);
       });
 
+      describe('verify analytics', () => {
+        before(searchForValue);
+
+        Expect.logFacetSearch(defaultField);
+      });
+
       describe('when clearing the facet search results', () => {
         function clearSearchInput() {
           searchForValue();
@@ -231,12 +237,6 @@ describe('Facet Test Suite', () => {
           Expect.searchInputEmpty();
           Expect.displaySearchClearButton(false);
         });
-      });
-
-      describe('verify analytics', () => {
-        before(searchForValue);
-
-        Expect.logFacetSearch(defaultField);
       });
 
       describe('when selecting a search result', () => {
@@ -586,13 +586,15 @@ describe('Facet Test Suite', () => {
   });
 
   describe('with invalid sorting', () => {
-    before(() => {
-      visitFacetPage({
-        sortCriteria: 'invalid',
+    describe('verify rendering', () => {
+      before(() => {
+        visitFacetPage({
+          sortCriteria: 'invalid',
+        });
       });
-    });
 
-    Expect.displayLabel(false);
+      Expect.displayLabel(false);
+    });
   });
 
   describe('with no search', () => {

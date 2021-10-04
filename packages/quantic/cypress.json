@@ -4,8 +4,11 @@
   "testFiles": ["**/*.cypress.ts"],
   "pluginsFile": "cypress/plugins/index.ts",
   "video": false,
+  "defaultCommandTimeout": 10000,
   "retries": {
     "runMode": 3,
     "openMode": 1
-  }
+  },
+  "viewportHeight": 1080,
+  "viewportWidth": 1920
 }
