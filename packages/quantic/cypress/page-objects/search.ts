@@ -1,17 +1,19 @@
 // eslint-disable-next-line node/no-unpublished-import
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
 
+const uaAliasPrefix = '@UA-';
+
 export const InterceptAliases = {
   UA: {
     Facet: {
-      ClearAll: '@coveoUaFacetClearAll',
-      Search: '@coveoUaFacetSearch',
-      Select: '@coveoUaFacetSelect',
+      ClearAll: uaAliasPrefix + 'facetClearAll',
+      Search: uaAliasPrefix + 'facetSearch',
+      Select: uaAliasPrefix + 'facetSelect',
     },
     Pager: {
-      Previous: '@coveoUaPagerPrevious',
-      Next: '@coveoUaPagerNext',
-      Number: '@coveoUaPagerNumber',
+      Previous: uaAliasPrefix + 'pagerPrevious',
+      Next: uaAliasPrefix + 'pagerNext',
+      Number: uaAliasPrefix + 'pagerNumber',
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',
@@ -22,30 +24,10 @@ export const InterceptAliases = {
 export function interceptSearch() {
   return cy
     .intercept('POST', '**/rest/ua/v15/analytics/*', (req) => {
-      switch (req.body.actionCause) {
-        case 'facetClearAll':
-          req.alias = InterceptAliases.UA.Facet.ClearAll.substring(1);
-          break;
-        case 'facetSearch':
-          req.alias = InterceptAliases.UA.Facet.Search.substring(1);
-          break;
-        case 'facetSelect':
-          req.alias = InterceptAliases.UA.Facet.Select.substring(1);
-          break;
-      }
-
-      if (req.body.eventType === 'getMoreResults') {
-        switch (req.body.eventValue) {
-          case 'pagerPrevious':
-            req.alias = InterceptAliases.UA.Pager.Previous.substring(1);
-            break;
-          case 'pagerNext':
-            req.alias = InterceptAliases.UA.Pager.Next.substring(1);
-            break;
-          case 'pagerNumber':
-            req.alias = InterceptAliases.UA.Pager.Number.substring(1);
-            break;
-        }
+      if (req.body.actionCause) {
+        req.alias = uaAliasPrefix.substring(1) + req.body.actionCause;
+      } else if (req.body.eventType === 'getMoreResults') {
+        req.alias = uaAliasPrefix.substring(1) + req.body.eventValue;
       }
     })
 

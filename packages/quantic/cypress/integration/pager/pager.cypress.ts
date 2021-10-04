@@ -24,7 +24,6 @@ describe('quantic-pager', () => {
     urlHash: string
   ) {
     interceptSearch();
-
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
   }
