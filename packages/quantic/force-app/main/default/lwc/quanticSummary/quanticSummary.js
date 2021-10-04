@@ -12,15 +12,29 @@ import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_Showin
 import inSeconds from '@salesforce/label/c.quantic_InSeconds';
 import inSeconds_plural from '@salesforce/label/c.quantic_InSeconds_plural';
 
-export default class QuanticSummary extends LightningElement {
-  @track state = {};
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").QuerySummary} QuerySummary */
+/** @typedef {import("coveo").QuerySummaryState} QuerySummaryState */
 
-  /** @type {string} */
+/**
+ * The `QuanticSummary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+ * @example
+ * <c-quantic-summary engine-id={engineId}></c-quantic-summary>
+ */
+export default class QuanticSummary extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
 
-  /** @type {import("coveo").QuerySummary} */
+  /** @type {QuerySummaryState} */
+  @track state;
+
+  /** @type {QuerySummary} */
   querySummary;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
 
   labels = {
@@ -43,7 +57,7 @@ export default class QuanticSummary extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.querySummary = CoveoHeadless.buildQuerySummary(engine);
@@ -59,23 +73,23 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get hasResults() {
-    return this.state.hasResults;
+    return this.state?.hasResults;
   }
 
   get hasQuery() {
-    return this.state.hasQuery;
+    return this.state?.hasQuery;
   }
 
   get query() {
-    return this.state.hasQuery ? `${this.state.query}` : '';
+    return this.state?.hasQuery ? `${this.state.query}` : '';
   }
 
   get range() {
-    return `${this.state.firstResult}-${this.state.lastResult}`;
+    return `${this.state?.firstResult}-${this.state?.lastResult}`;
   }
 
   get total() {
-    return this.state.total.toString();
+    return this.state?.total.toString();
   }
 
   get noResultsLabel() {
@@ -85,7 +99,7 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get duration() {
-    if (this.state.hasDuration) {
+    if (this.state?.hasDuration) {
       const duration = this.state.durationInSeconds;
       const labelName = I18nUtils.getLabelNameWithCount('inSeconds', duration);
       return ` ${I18nUtils.format(this.labels[labelName], duration)}`;
@@ -95,8 +109,8 @@ export default class QuanticSummary extends LightningElement {
 
   get summaryLabel() {
     const labelName = this.hasQuery
-      ? I18nUtils.getLabelNameWithCount('showingResultsOfWithQuery', this.state.lastResult)
-      : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state.lastResult);
+      ? I18nUtils.getLabelNameWithCount('showingResultsOfWithQuery', this.state?.lastResult)
+      : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state?.lastResult);
     return `${I18nUtils.format(
       this.labels[labelName],
       I18nUtils.getTextBold(this.range),

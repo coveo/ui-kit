@@ -15,3 +15,7 @@ li {
 .facet__value_selected{
   font-weight: bold;
 }
+
+.facet__value-checkbox {
+  min-width: unset;
+}
