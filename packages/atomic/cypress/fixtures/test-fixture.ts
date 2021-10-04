@@ -28,6 +28,7 @@ export class TestFixture {
   private hash = '';
   private style = document.createElement('style');
   private language?: string;
+  private disabledAnalytics = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private responseModifier: SearchResponseModifierPredicate | null = null;
@@ -67,6 +68,11 @@ export class TestFixture {
     return this;
   }
 
+  public withoutAnalytics() {
+    this.disabledAnalytics = true;
+    return this;
+  }
+
   public withFieldCaptions(field: string, captions: Record<string, string>) {
     this.fieldCaptions.push({field, captions});
     return this;
@@ -93,6 +99,10 @@ export class TestFixture {
 
       if (this.language) {
         searchInterfaceComponent.setAttribute('language', this.language);
+      }
+
+      if (this.disabledAnalytics) {
+        searchInterfaceComponent.setAttribute('analytics', 'false');
       }
 
       if (this.responseModifier) {
@@ -131,7 +141,9 @@ export class TestFixture {
 
     if (this.execFirstSearch) {
       cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      if (!this.disabledAnalytics) {
+        cy.wait(TestFixture.interceptAliases.UA);
+      }
     }
 
     this.aliases.forEach((alias) => alias(this));

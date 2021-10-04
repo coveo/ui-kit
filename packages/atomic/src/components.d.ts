@@ -603,6 +603,10 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
           * The search interface headless engine.
          */
         "engine"?: SearchEngine;
@@ -1754,6 +1758,10 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
     }
     interface AtomicSearchInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
         /**
           * The search interface headless engine.
          */

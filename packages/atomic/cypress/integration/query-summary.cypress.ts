@@ -1,41 +1,49 @@
-import {
-  buildTestUrl,
-  injectComponent,
-  setUpPage,
-} from '../utils/setupComponent';
+import {TestFixture} from '../fixtures/test-fixture';
+import {addSearchBox} from '../fixtures/test-fixture-search-box';
+import {addQuerySummary} from './query-summary-actions';
+import {QuerySummarySelectors} from './query-summary-selectors';
 
 describe('Query Summary Test Suites', () => {
-  const tag = 'atomic-query-summary';
-  const searchBox = '<atomic-search-box></atomic-search-box>';
-  const component = (attributes = 'enable-duration') =>
-    `<${tag} ${attributes}></${tag}>`;
-  const wait = 1000;
-
   function contentShouldMatch(content: RegExp | string) {
-    cy.get(tag).shadow().find('div[part="container"]').contains(content);
+    QuerySummarySelectors.text().should('match', content);
   }
 
-  it('should be visible', () => {
-    setUpPage(component());
-    cy.get(tag).should('be.visible');
+  it('when search has not been executed, placeholder should be displayed', () => {
+    new TestFixture()
+      .with(addQuerySummary())
+      .withoutFirstAutomaticSearch()
+      .init();
+    QuerySummarySelectors.placeholder().should('be.visible');
+  });
+
+  it('when search yields no results, container should be empty', () => {
+    new TestFixture()
+      .with(addQuerySummary({'enable-duration': 'true'}))
+      .with(addSearchBox())
+      .withHash('q=nowaythisquerywillevereverevertreturnanythingitsimpossible')
+      .init();
+
+    QuerySummarySelectors.container().should('be.empty');
   });
 
   describe('should match text content', () => {
     it('with a query yielding multiple results', () => {
-      cy.visit(buildTestUrl('q=test'));
-      injectComponent(component() + searchBox);
-      cy.wait(wait);
+      new TestFixture()
+        .with(addQuerySummary({'enable-duration': 'true'}))
+        .with(addSearchBox())
+        .withHash('q=test')
+        .init();
       contentShouldMatch(/^Results 1-10 of [\d,]+ for test in [\d.]+ seconds$/);
     });
 
     it('with a query yielding a single result', () => {
-      cy.visit(
-        buildTestUrl(
+      new TestFixture()
+        .with(addQuerySummary({'enable-duration': 'true'}))
+        .with(addSearchBox())
+        .withHash(
           "q=Queen's%20Gambit%20sparks%20world%20of%20online%20chess%20celebrities"
         )
-      );
-      injectComponent(component() + searchBox);
-      cy.wait(wait);
+        .init();
       contentShouldMatch(
         /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities in [\d.]+ seconds$/
       );
@@ -43,9 +51,11 @@ describe('Query Summary Test Suites', () => {
   });
 
   it('when "enableDuration" is false, should not show duration', () => {
-    cy.visit(buildTestUrl('q=test'));
-    injectComponent(component('') + searchBox);
-    cy.wait(wait);
+    new TestFixture()
+      .with(addQuerySummary())
+      .with(addSearchBox())
+      .withHash('q=test')
+      .init();
     contentShouldMatch(/Results 1-10 of [\d,]+ for test$/);
   });
 });
