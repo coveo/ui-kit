@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.70.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.69.0...@coveo/quantic@0.70.0) (2021-10-04)
+
+
+### Bug Fixes
+
+* **quantic:** fixed clear filter button alignment ([#1282](https://github.com/coveo/ui-kit/issues/1282)) ([a897d4c](https://github.com/coveo/ui-kit/commit/a897d4c7da745a04b9f8ef5dace267e588f1de99))
+* **quantic:** update to breadcrumb style ([#1283](https://github.com/coveo/ui-kit/issues/1283)) ([57a7b3d](https://github.com/coveo/ui-kit/commit/57a7b3d7951b0b317bdde2e57d0d5652109c4e7d))
+
+
+### Features
+
+* **quantic:** added jsdoc generated documentation ([#1255](https://github.com/coveo/ui-kit/issues/1255)) ([a37a23f](https://github.com/coveo/ui-kit/commit/a37a23f6c93ccd3bd2929c49395cbc7c1e21a6bf)), closes [#1264](https://github.com/coveo/ui-kit/issues/1264)
+
+
+
+
+
 # [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.68.0...@coveo/quantic@0.69.0) (2021-10-04)
 
 

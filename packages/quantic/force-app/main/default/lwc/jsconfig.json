@@ -81,6 +81,9 @@
             "c/quanticNumberButton": [
                 "quanticNumberButton/quanticNumberButton.js"
             ],
+            "c/quanticPill": [
+                "quanticPill/quanticPill.js"
+            ],
             "c/quanticSvg": [
                 "quanticSvg/quanticSvg.js"
             ],
