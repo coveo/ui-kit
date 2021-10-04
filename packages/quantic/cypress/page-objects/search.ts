@@ -8,6 +8,11 @@ export const InterceptAliases = {
       Search: '@coveoUaFacetSearch',
       Select: '@coveoUaFacetSelect',
     },
+    Pager: {
+      Previous: '@coveoUaPagerPrevious',
+      Next: '@coveoUaPagerNext',
+      Number: '@coveoUaPagerNumber',
+    },
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -27,6 +32,20 @@ export function interceptSearch() {
         case 'facetSelect':
           req.alias = InterceptAliases.UA.Facet.Select.substring(1);
           break;
+      }
+
+      if (req.body.eventType === 'getMoreResults') {
+        switch (req.body.eventValue) {
+          case 'pagerPrevious':
+            req.alias = InterceptAliases.UA.Pager.Previous.substring(1);
+            break;
+          case 'pagerNext':
+            req.alias = InterceptAliases.UA.Pager.Next.substring(1);
+            break;
+          case 'pagerNumber':
+            req.alias = InterceptAliases.UA.Pager.Number.substring(1);
+            break;
+        }
       }
     })
 
