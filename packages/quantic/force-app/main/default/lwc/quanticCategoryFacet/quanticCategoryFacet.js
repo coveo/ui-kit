@@ -31,7 +31,20 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {string} */
   @api engineId;
   /** @type {boolean} */
-  @api noSearch = false;
+  @api withSearch = false;
+  /** @type {string} */
+  @api basePath = '';
+  /** @type {boolean} */
+  @api noFilterByBasePath = false;
+  /** @type {boolean} */
+  @api noFilterFacetCount = false;
+  /** @type {string} */
+  @api delimitingCharacter = ';';
+  /** @type {number} */
+  @api numberOfValues = 8;
+  /** @type {'alphanumeric' | 'occurrences'} */
+  @api sortCriteria = 'occurrences';
+
   /** @type {boolean} */
   @api get isCollapsed() {
     return this._isCollapsed;
@@ -85,8 +98,16 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
-        delimitingCharacter: ';',
         facetId: this.facetId ?? this.field,
+        facetSearch: this.withSearch ? {
+          numberOfValues: Number(this.numberOfValues)
+        } : undefined,
+        delimitingCharacter: this.delimitingCharacter,
+        basePath: this.basePath?.length ? this.basePath.split(',') : [],
+        filterByBasePath: !this.noFilterByBasePath,
+        filterFacetCount: !this.noFilterFacetCount,
+        numberOfValues: Number(this.numberOfValues),
+        sortCriteria: this.sortCriteria,
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -188,7 +209,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value !== '';
+    return !!this.input?.value.length;
   }
 
   getSearchValues() {

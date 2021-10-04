@@ -10,7 +10,7 @@ export default class QuanticTab extends LightningElement {
   /** @type {string} */
   @api label;
   /** @type {string} */
-  @api expression;
+  @api expression = '';
   /** @type {string} */
   @api engineId;
   /** @type {boolean} */
