@@ -2,6 +2,7 @@ import {configure} from '../../page-objects/configurator';
 import {InterceptAliases, interceptSearch} from '../../page-objects/search';
 import {PagerExpectations as Expect} from './pager-expectations';
 import {PagerActions as Actions} from './pager-actions';
+import {stubConsoleError} from '../console-selectors';
 
 interface PagerOptions {
   numberOfPages: number;
@@ -26,6 +27,11 @@ describe('quantic-pager', () => {
     interceptSearch();
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
+  }
+
+  function performSearchQuery() {
+    cy.get('.configurator__perform-search').click();
+    cy.wait(InterceptAliases.Search);
   }
 
   describe('with default options', () => {
@@ -53,9 +59,8 @@ describe('quantic-pager', () => {
       Expect.logPageNumber(3);
       Expect.selectedPageContains(3);
 
-      // Scenario 5
-      // Perform a new search query. Pager should return to page 1
-      // TODO: See if we can trigger a new search directly from headless.
+      performSearchQuery();
+      Expect.selectedPageContains(1);
     });
   });
 
@@ -84,21 +89,20 @@ describe('quantic-pager', () => {
 
   describe('with invalid number of pages', () => {
     it('should not load the component', () => {
-      visitPager(
-        {
-          numberOfPages: -1,
+      interceptSearch();
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleError(win);
         },
-        false
-      );
-
-      // Validate that:
-      // Scenario 7
-      // - does not load the component
-      // - report the error in browser console
+      });
+      configure({
+        numberOfPages: -1,
+      });
 
       Expect.displayPrevious(false);
       Expect.displayNext(false);
       Expect.numberOfPages(0);
+      Expect.console.error(true);
     });
   });
 });

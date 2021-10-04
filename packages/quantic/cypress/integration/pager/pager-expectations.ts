@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../page-objects/search';
+import {ConsoleExpectations} from '../console-expectations';
 import {PagerSelector, PagerSelectors} from './pager-selectors';
 
 function pagerExpectations(selector: PagerSelector) {
@@ -58,4 +59,7 @@ function pagerExpectations(selector: PagerSelector) {
 
 export const PagerExpectations = {
   ...pagerExpectations(PagerSelectors),
+  console: {
+    ...ConsoleExpectations,
+  },
 };
