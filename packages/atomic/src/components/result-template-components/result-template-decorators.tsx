@@ -12,7 +12,7 @@ export class MissingResultParentError extends Error {
 
 export function ResultContext() {
   return (component: ComponentInterface, resultVariable: string) => {
-    const {connectedCallback} = component;
+    const {connectedCallback, render} = component;
     component.connectedCallback = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
@@ -30,6 +30,19 @@ export function ResultContext() {
         return;
       }
       return connectedCallback && connectedCallback.call(this);
+    };
+
+    component.render = function () {
+      if (this.error) {
+        this.host?.remove();
+        console.error(
+          'Result component is in error and has been removed from the DOM',
+          this.error,
+          this
+        );
+        return;
+      }
+      return render && render.call(this);
     };
   };
 }

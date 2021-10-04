@@ -44,6 +44,11 @@ export default class QuanticFacet extends LightningElement {
   /** @type {boolean} */
   @api noSearch = false;
   /** @type {string} */
+  @api delimitingCharacter = '>';
+  /** @type {boolean} */
+  @api noFilterFacetCount = false;
+  /** @type {number} */
+  @api injectionDepth = 1000;
   @api displayValuesAs = displayOptions.checkbox;
   /** @type {boolean} */
   @api get isCollapsed() {
@@ -84,8 +89,13 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch: {numberOfValues: Number(this.numberOfValues)},
+      facetSearch: {
+        numberOfValues: Number(this.numberOfValues)
+      },
       facetId: this.facetId ?? this.field,
+      delimitingCharacter: this.delimitingCharacter,
+      filterFacetCount: !this.noFilterFacetCount,
+      injectionDepth: Number(this.injectionDepth),
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
