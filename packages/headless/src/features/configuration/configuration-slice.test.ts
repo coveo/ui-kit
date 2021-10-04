@@ -15,7 +15,7 @@ import {
 } from './configuration-state';
 
 describe('configuration slice', () => {
-  const url = platformUrl({environment: 'dev', region: 'eu-west-3'});
+  const url = platformUrl({environment: 'dev', region: 'eu'});
   const existingState: ConfigurationState = {
     ...getConfigurationInitialState(),
     accessToken: 'mytoken123',
