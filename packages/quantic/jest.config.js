@@ -13,6 +13,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     "^@salesforce/i18n/": "<rootDir>/typings/lwc/customlabels.d.ts"
-  }
+  },
+  modulePathIgnorePatterns: ['.cache']
   // add any custom configurations here
 };
