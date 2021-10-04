@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.8...@coveo/atomic@1.3.0) (2021-10-04)
+
+
+### Features
+
+* **atomic:** improve Query Error Component with new illustrations ([#1278](https://github.com/coveo/ui-kit/issues/1278)) ([73c2c7b](https://github.com/coveo/ui-kit/commit/73c2c7bb651687e163c0181a6352be26f71de3de))
+
+
+
+
+
 ## [1.2.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.7...@coveo/atomic@1.2.8) (2021-10-01)
 
 
