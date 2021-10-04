@@ -61,7 +61,7 @@
             </template>
           </div>
 
-          <template if:true={state.suggestions.length}>
+          <template if:true={hasSuggestions}>
             <c-quantic-search-box-suggestions-list
               suggestions={suggestions}
               onhighlightchange={handleHighlightChange}

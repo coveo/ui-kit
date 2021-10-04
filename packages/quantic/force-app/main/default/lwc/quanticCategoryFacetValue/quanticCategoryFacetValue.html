@@ -1,21 +1,21 @@
 <template>
   <li class={categoryFacetLiClass}>  
     <div class="slds-size_1-of-1" onclick={onSelect}>
-      <template if:true={nonactiveparent}>
+      <template if:true={nonActiveParent}>
         <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
           <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
           <span class="nowrap">{item.value}</span>
           <span class="facet__number-of-results">({item.numberOfResults})</span>
         </div>
       </template>
-      <template if:false={nonactiveparent}>
-        <template if:false={withsearch}>
+      <template if:false={nonActiveParent}>
+        <template if:false={isSearchResult}>
           <div class="nowrap slds-text-color_default facet__value-option slds-size_1-of-1 slds-p-around_x-small">
             {item.value}
             <span class="facet__number-of-results">({item.numberOfResults})</span>
           </div>
         </template>
-        <template if:true={withsearch}>
+        <template if:true={isSearchResult}>
           <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small slds-text-color_default">
             <div class="slds-grid slds-grid_vertical">
               <div class="slds-col slds-p-left_none facet__search-results slds-m-bottom_xxx-small">
