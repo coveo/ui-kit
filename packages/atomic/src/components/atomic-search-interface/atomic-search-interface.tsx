@@ -252,7 +252,7 @@ export class AtomicSearchInterface {
             timezone: this.timezone,
           },
           analytics: {
-            enabled: !this.analytics,
+            enabled: this.analytics,
           },
         },
         loggerOptions: {

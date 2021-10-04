@@ -605,7 +605,7 @@ export namespace Components {
         /**
           * Whether analytics should be enabled.
          */
-        "analyticsEnabled": boolean;
+        "analytics": boolean;
         /**
           * The search interface headless engine.
          */
@@ -1761,7 +1761,7 @@ declare namespace LocalJSX {
         /**
           * Whether analytics should be enabled.
          */
-        "analyticsEnabled"?: boolean;
+        "analytics"?: boolean;
         /**
           * The search interface headless engine.
          */
