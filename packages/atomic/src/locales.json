@@ -717,7 +717,7 @@
   },
   "add-sources": {
     "en": "Add content sources or wait for your newly created sources to finish indexing.",
-    "fr": "Vous devrez ajouter des sources à votre index, ou attendre la fin de l'indexation des sources créées."
+    "fr": "Ajoutez des sources de contenu ou attendez la fin de l'indexation de vos nouvelles sources."
   },
   "coveo-online-help": {
     "en": "Coveo Online Help",
