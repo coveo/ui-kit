@@ -10,6 +10,15 @@ import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
 import collapse from '@salesforce/label/c.quantic_Collapse';
 import expand from '@salesforce/label/c.quantic_Expand';
 
+/** @typedef {import("coveo").RecentResultsState} RecentResultsState */
+/** @typedef {import("coveo").RecentResultsList} RecentResultsList */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * The `QuanticRecentResultsList` component displays the current user's recently clicked results.
+ * @example
+ * <c-quantic-recent-results-list engine-id={engineId} max-length="8" label="Recently Viewed Results" is-collapsed></c-quantic-recent-results-list>
+ */
 export default class QuanticRecentResultsList extends LightningElement {
   labels = {
     emptyListLabel,
@@ -18,22 +27,58 @@ export default class QuanticRecentResultsList extends LightningElement {
     expand,
   }
 
-  /** @type {import("coveo").RecentResultsState} */
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+  /**
+   * The maximum number of queries to keep in the list.
+   * @api
+   * @type {number}
+   */
+  @api maxLength = 10;
+  /**
+   * The non-localized label for the component. This label is displayed in the component header.
+   * @api
+   * @type {string}
+   */
+  @api label = this.labels.recentResultsLabel;
+  /**
+   * Where to display the linked URLs, as the name for a browsing context (a tab, window, or <iframe>).
+   * The following keywords have special meanings for where to load the URL:
+   *   - `_self`: the current browsing context. (Default)
+   *   - `_blank`: usually a new tab, but users can configure their browsers to open a new window instead.
+   *   - `_parent`: the parent of the current browsing context. If there’s no parent, this behaves as `_self`.
+   *   - `_top`: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+   * @api
+   * @type {string}
+   * @defaultValue `'_self'`
+   */
+  @api target = '_self';
+  /**
+   * Whether the component is collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }  
+  /** @type {boolean} */
+  _isCollapsed = false;
+
+
+  /** @type {RecentResultsState} */
   @track state;
 
-  /** @type {string} */
-  @api engineId;
-  /** @type {number} */
-  @api maxLength = 10;
-  /** @type {string} */
-  @api label = this.labels.recentResultsLabel;
-
-  /** @type {boolean} */
-  isExpanded = true;
-  /** @type {import("coveo").RecentResultsList} */
+  /** @type {RecentResultsList} */
   recentResultsList;
-
-  /** @type {() => void} */
+  /** @type {Function} */
   unsubscribe;
 
   connectedCallback() {
@@ -45,7 +90,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.recentResultsList = CoveoHeadless.buildRecentResultsList(engine, {
@@ -69,7 +114,7 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   toggleVisibility() {
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   get results() {
@@ -85,11 +130,11 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
 
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapse : this.labels.expand;
+    const label = this.isCollapsed ? this.labels.expand : this.labels.collapse;
     return I18nUtils.format(label, this.label);
   }
 }

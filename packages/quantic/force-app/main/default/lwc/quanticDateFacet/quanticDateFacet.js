@@ -6,43 +6,93 @@ import {
 import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
-import clear from '@salesforce/label/c.quantic_Clear';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-export default class QuanticDateFacet extends LightningElement {
-  /** @type {import("coveo").DateFacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
-  @track state = {
-    values: [],
-  };
+/** @typedef {import("coveo").DateFacetState} DateFacetState */
+/** @typedef {import("coveo").DateFacet} DateFacet */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 
-  /** @type {string} */
-  @api facetId;
-  /** @type {string} */
-  @api field;
-  /** @type {string} */
-  @api label;
-  /** @type {string} */
+/**
+ * The `QuanticDateFacet` component displays facet values as date ranges.
+ * @example
+ * <c-quantic-date-facet engine-id={engineId} facet-id="myfacet" field="date" label="Date" number-of-values="5" formatting-function={formattingFunction} is-collapsed></c-quantic-date-facet>
+ */
+export default class QuanticDateFacet extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {number} */
+  /** 
+   * A unique identifier for the facet.
+   * @api
+   * @type {string}
+   * @defaultValue Defaults to the `field` value.
+   */
+  @api facetId;
+  /**
+   * The index field whose values the facet should use.
+   * @api
+   * @type {string}
+   */
+  @api field;
+  /**
+   * The non-localized label for the facet. This label is displayed in the facet header.
+   * @api
+   * @type {string}
+   */
+  @api label = 'no-label';
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   * @api
+   * @type {number}
+   * @defaultValue `8`
+   */
   @api numberOfValues = 8;
-  /** @type {(any) => string} */
+  /**
+   * The function used to format the date facet value label.
+   * The default result format is the following: `[start] - [end]`
+   * @api
+   * @type {Function}
+   * @param {DateFacetValue} item
+   * @returns {string}
+   */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.start)
   )} - ${new Intl.DateTimeFormat(LOCALE).format(
     new Date(item.end)
   )}`;
-
-  /** @type {import("coveo").DateFacet} */
-  facet;
-  /** @type {import("coveo").Unsubscribe} */
-  unsubscribe;
+  /** 
+   * Whether the facet is collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api get isCollapsed() {
+    return this._isCollapsed;
+  }
+  set isCollapsed(collapsed) {
+    this._isCollapsed = collapsed;
+  }
   /** @type {boolean} */
-  isExpanded = true;
+  _isCollapsed = false;
+
+  /** @type {DateFacetState} */
+  @track state;
+
+  /** @type {DateFacet} */
+  facet;
+  /** @type {Function} */
+  unsubscribe;
 
   labels = {
-    clear,
+    clearFilter,
+    clearFilter_plural,
     collapseFacet,
     expandFacet,
   };
@@ -56,7 +106,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.facet = CoveoHeadless.buildDateFacet(engine, {
@@ -80,7 +130,7 @@ export default class QuanticDateFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values
+      this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
         .map((value) => {
           return {
@@ -96,20 +146,36 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get hasActiveValues() {
-    return this.state.hasActiveValues;
+    return this.state?.hasActiveValues;
   }
 
   get actionButtonIcon() {
-    return this.isExpanded ? 'utility:dash' : 'utility:add';
+    return this.isCollapsed ? 'utility:add' : 'utility:dash';
   }
-  
+
+  get actionButtonCssClasses() {
+    return this.isCollapsed ? 'facet__expand' : 'facet__collapse';
+  }
+
   get actionButtonLabel() {
-    const label = this.isExpanded ? this.labels.collapseFacet : this.labels.expandFacet;
+    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
+  get numberOfSelectedValues() {
+    return this.state.values.filter(({state}) => state === 'selected').length;
+  }
+
+  get clearFilterLabel() {
+    if (this.hasActiveValues) {
+      const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
+      return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
+    }
+    return '';
+  }
+
   /**
-   * @param {CustomEvent<import("coveo").DateFacetValue>} evt
+   * @param {CustomEvent<DateFacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
@@ -120,7 +186,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   toggleFacetVisibility() {
-    this.isExpanded = !this.isExpanded;
+    this._isCollapsed = !this.isCollapsed;
   }
 
   preventDefault(evt) {

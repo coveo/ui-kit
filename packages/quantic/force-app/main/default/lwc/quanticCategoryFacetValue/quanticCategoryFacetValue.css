@@ -1,3 +1,5 @@
+@import 'c/quanticFacetStyles';
+
 .facet__path {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -14,7 +16,6 @@
 .facet__search-results{
     display: flex;
     align-items: baseline;
-    margin-bottom: -0.5rem;
 }
 
 .facet__value:hover {

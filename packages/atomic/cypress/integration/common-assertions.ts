@@ -1,3 +1,4 @@
+import {TestFixture} from '../fixtures/test-fixture';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
@@ -23,5 +24,11 @@ export function assertContainsComponentError(
       .shadow()
       .find(ComponentErrorSelectors.component)
       .should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
+export function assertConsoleError() {
+  it('should log an error to the console', () => {
+    cy.get(TestFixture.consoleAliases.error).should('be.called');
   });
 }

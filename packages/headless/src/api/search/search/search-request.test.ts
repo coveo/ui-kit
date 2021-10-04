@@ -50,6 +50,14 @@ describe('search request', () => {
     expect(params.firstResult).toBe(state.pagination.firstResult);
   });
 
+  it('#searchRequest returns the state #dictionaryFieldContext.contextValues', () => {
+    const contextValues = {price: 'cad'};
+    state.dictionaryFieldContext.contextValues = contextValues;
+    const params = buildSearchRequest(state).request;
+
+    expect(params.dictionaryFieldContext).toBe(contextValues);
+  });
+
   it('#searchRequest returns the facets in the state #facetSet', () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = request;
