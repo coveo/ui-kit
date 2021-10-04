@@ -301,7 +301,6 @@ export default class QuanticNumericFacet extends LightningElement {
   onSelect(evt) {
     this.isSelected = true;
     this.facet.toggleSelect(evt.detail);
-    console.log(this.stateFilter.range);
   }
 
   clearSelections() {
