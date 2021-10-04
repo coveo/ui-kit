@@ -1,3 +1,4 @@
+
 import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
@@ -17,47 +18,123 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-const displayOptions = {
-  checkbox: 'checkbox',
-  link: 'link'
-}
+/** @typedef {import("coveo").FacetState} FacetState */
+/** @typedef {import("coveo").Facet} Facet */
+/** @typedef {import("coveo").FacetValue} FacetValue */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
+/**
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
+ * A `QuanticFacet` displays a facet of the results for the current query.
+ * @example
+ * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
+ */
 export default class QuanticFacet extends LightningElement {
-  /** @type {import("coveo").FacetState} */
-  // @ts-ignore
-  @track state = {
-    values: [],
-  };
-
-  /** @type {string} */
-  @api facetId;
-  /** @type {string} */
-  @api field;
-  /** @type {string} */
-  @api label = 'no-label';
-  /** @type {string} */
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {number} */
+  /** 
+   * A unique identifier for the facet.
+   * Defaults to the facet field.
+   * @api
+   * @type {string}
+   * @defaultValue Defaults to the `field` value.
+   */
+  @api facetId;
+  /**
+   * The field whose values you want to display in the facet.
+   * @api
+   * @type {string}
+   */
+  @api field;
+  /**
+   * The non-localized label for the facet. This label is displayed in the facet header.
+   * @api
+   * @type {string}
+   */
+  @api label = 'no-label';
+  /**
+   * The number of values to request for this facet.
+   * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   * @api
+   * @type {number}
+   * @defaultValue `8`
+   */
   @api numberOfValues = 8;
-  /** @type  {import("coveo").FacetSortCriterion}*/
+  /**
+   * The sort criterion to apply to the returned facet values
+   * Possible values are:
+   *   - `score`
+   *   - `alphanumeric`
+   *   - `occurences`
+   *   - `automatic`
+   * @api
+   * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}
+   * @defaultValue `'automatic'`
+   */
   @api sortCriteria = 'automatic';
-  /** @type {boolean} */
+  /**
+   * Whether this facet should not contain a search box.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api noSearch = false;
-  /** @type {string} */
-  @api displayValuesAs = displayOptions.checkbox;
-  /** @type {boolean} */
+  /**
+   * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox', 'link'.
+   * @api
+   * @type {'checkbox' | 'link'}
+   * @defaultValue `'checkbox'`
+   */
+  @api displayValuesAs = 'checkbox';
+  /**
+   * The character that separates values of a multi-value field.
+   * If the field is defined as a "multi-value", each path is delimited by `;`, and each part of a path is delimited by `>`. So the indexed value looks like `parent1>child1; parent2>child2`, and `delimitingCharacter` should be set to `>`.
+   * @api
+   * @type {string}
+   * @defaultValue `'>'`
+   */
+  @api delimitingCharacter = '>';
+  /**
+   * Whether not to exclude the parents of folded results when estimating the result count for each facet value.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api noFilterFacetCount = false;
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   * @api
+   * @type {number}
+   * @defaultValue `1000`
+   */
+  @api injectionDepth = 1000;
+  /**
+   * Whether the facet is collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api get isCollapsed() {
     return this._isCollapsed;
   }
   set isCollapsed(collapsed) {
     this._isCollapsed = collapsed;
   }
-  
   /** @type {boolean} */
   _isCollapsed = false;
-  /** @type {import("coveo").Facet}} */
+
+  /** @type {FacetState} */
+  @track state;
+  
+  /** @type {Facet} */
   facet;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {HTMLInputElement} */
   input;
@@ -77,15 +154,20 @@ export default class QuanticFacet extends LightningElement {
   };
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch: {numberOfValues: Number(this.numberOfValues)},
+      facetSearch: {
+        numberOfValues: Number(this.numberOfValues)
+      },
       facetId: this.facetId ?? this.field,
+      delimitingCharacter: this.delimitingCharacter,
+      filterFacetCount: !this.noFilterFacetCount,
+      injectionDepth: Number(this.injectionDepth),
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -110,7 +192,7 @@ export default class QuanticFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values
+      this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
         .map((v) => ({
           ...v,
@@ -205,7 +287,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isDisplayAsLink() {
-    return this.displayValuesAs === displayOptions.link
+    return this.displayValuesAs === 'link'
   }
 
   get numberOfSelectedValues() {
@@ -233,7 +315,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<import("coveo").FacetValue>} evt
+   * @param {CustomEvent<FacetValue>} evt
    */
   onSelect(evt) {
     const specificSearchResult = {

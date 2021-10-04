@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.70.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.69.0...@coveo/quantic@0.70.0) (2021-10-04)
+
+
+### Bug Fixes
+
+* **quantic:** fixed clear filter button alignment ([#1282](https://github.com/coveo/ui-kit/issues/1282)) ([a897d4c](https://github.com/coveo/ui-kit/commit/a897d4c7da745a04b9f8ef5dace267e588f1de99))
+* **quantic:** update to breadcrumb style ([#1283](https://github.com/coveo/ui-kit/issues/1283)) ([57a7b3d](https://github.com/coveo/ui-kit/commit/57a7b3d7951b0b317bdde2e57d0d5652109c4e7d))
+
+
+### Features
+
+* **quantic:** added jsdoc generated documentation ([#1255](https://github.com/coveo/ui-kit/issues/1255)) ([a37a23f](https://github.com/coveo/ui-kit/commit/a37a23f6c93ccd3bd2929c49395cbc7c1e21a6bf)), closes [#1264](https://github.com/coveo/ui-kit/issues/1264)
+
+
+
+
+
+# [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.68.0...@coveo/quantic@0.69.0) (2021-10-04)
+
+
+### Features
+
+* **quantic:** adding quantic tests in build pipeline ([#1200](https://github.com/coveo/ui-kit/issues/1200)) ([e8f1d3c](https://github.com/coveo/ui-kit/commit/e8f1d3cc310e061bcfa265b94d3e4cd6f9f75092))
+
+
+
+
+
+# [0.68.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.67.0...@coveo/quantic@0.68.0) (2021-10-01)
+
+
+### Features
+
+* **quantic:** added some missing facet options ([#1277](https://github.com/coveo/ui-kit/issues/1277)) ([e7c9c56](https://github.com/coveo/ui-kit/commit/e7c9c56160599942874396ea90c713104bf343bd))
+
+
+
+
+
+# [0.67.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.66.1...@coveo/quantic@0.67.0) (2021-10-01)
+
+
+### Features
+
+* **quantic:** tab expression default ([#1279](https://github.com/coveo/ui-kit/issues/1279)) ([5ff672c](https://github.com/coveo/ui-kit/commit/5ff672ce3534e3b8b96b0789a11cf7966619b761))
+
+
+
+
+
 ## [0.66.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.66.0...@coveo/quantic@0.66.1) (2021-09-30)
 
 

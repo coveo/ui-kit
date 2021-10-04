@@ -36,3 +36,13 @@
   color: var(--lwc-brandTextLink, dodgerblue);
   background-color: #f6f7f9;
 }
+
+.facet__clear-filter {
+  line-height: inherit;
+}
+
+.facet__clear-filter:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

@@ -19,6 +19,17 @@ const CLASS_WITH_SUBMIT =
 const CLASS_WITHOUT_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").StandaloneSearchBoxState} StandaloneSearchBoxState */
+/** @typedef {import("coveo").StandaloneSearchBox} StandaloneSearchBox */
+/** @typedef {import("c/quanticSearchBoxSuggestionsList").default} quanticSearchBoxSuggestionsList */
+/** @typedef {{key: number, value: string}} Suggestion */
+
+/**
+ * The `QuanticStandaloneSearchBox` component creates a search box with built-in support for query suggestions.
+ * @example
+ * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri"></c-quantic-standalone-search-box>
+ */
 export default class QuanticStandaloneSearchBox extends NavigationMixin(
   LightningElement
 ) {
@@ -28,27 +39,45 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     clear,
   };
 
-  // Public props
-  /** @type {number} */
-  @api numberOfSuggestions = 5;
-  /** @type {string} */
-  @api placeholder = `${this.labels.search}...`;
-  /** @type {string} */
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {boolean} */
+  /**
+  * The placeholder text to display in the search box input area.
+  * @api
+  * @type {string}
+  * @defaultValue 'Search...'
+  */
+  @api placeholder = `${this.labels.search}...`;
+  /**
+  * Whether not to render a submit button.
+  * @api
+  * @type {boolean}
+  * @defaultValue 'false'
+  */
   @api withoutSubmitButton = false;
-  /** @type {string} */
+  /**
+  * The maximum number of suggestions to display.
+  * @api
+  * @type {number}
+  * @defaultValue 5
+  */
+  @api numberOfSuggestions = 5;
+  /**
+   * The url of the search page to redirect to when a query is made.
+   * The target search page should contain a `QuanticSearchInterface` with the same engine ID as the one specified for this component.
+   * @api
+   * @type {string}
+   * @defaultValue '/global-search/%40uri'
+   */
   @api redirectUrl = '/global-search/%40uri';
 
-  // Private props
-  /** @type {import("coveo").StandaloneSearchBox} */
-  standaloneSearchBox;
-  /** @type {import("coveo").Unsubscribe} */
-  unsubscribe;
-
+  /** @type {boolean} */
   @track isStandalone = true;
-
-  /** @type {import("coveo").StandaloneSearchBoxState} */
+  /** @type {StandaloneSearchBoxState} */
   @track state = {
     analytics: {
       cause: '',
@@ -61,7 +90,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     isLoadingSuggestions: false,
   };
 
-  /** @type {{key: number, value: string}[]} */
+  /** @type {StandaloneSearchBox} */
+  standaloneSearchBox;
+  /** @type {Function} */
+  unsubscribe;
+
+  /** @type {Suggestion[]} */
   get suggestions() {
     return this.state.suggestions.map((s, index) => ({
       key: index,
@@ -70,6 +104,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     }));
   }
 
+  /** @type {string} */
   get standaloneEngineId() {
     return `${this.engineId}_standalone`;
   }
@@ -94,12 +129,18 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
-        ...this.searchBoxOptions,
+        numberOfSuggestions: this.numberOfSuggestions,
+        highlightOptions: {
+          notMatchDelimiters: {
+            open: '<b>',
+            close: '</b>',
+          },
+        },
         redirectionUrl: 'http://placeholder.com',
       },
     });
@@ -133,21 +174,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       })
     );
     this.navigateToSearchPage();
-  }
-
-  /**
-    @returns {import("coveo").SearchBoxOptions}
-   */
-  get searchBoxOptions() {
-    return {
-      numberOfSuggestions: this.numberOfSuggestions,
-      highlightOptions: {
-        notMatchDelimiters: {
-          open: '<b>',
-          close: '</b>',
-        },
-      },
-    };
   }
 
   get searchBoxContainerClass() {
@@ -197,9 +223,6 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.input.blur();
   }
 
-  /**
-   * @param {KeyboardEvent & {target: {value : string}}} event
-   */
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -276,7 +299,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @returns {import('c/quanticSearchBoxSuggestionsList').default}
+   * @returns {quanticSearchBoxSuggestionsList}
    */
   get suggestionList() {
     // @ts-ignore
@@ -284,14 +307,14 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   get isQueryEmpty() {
     return !this.input?.value?.length;
   }
 
   /**
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   get suggestionsOpen() {
     return this.combobox?.classList.contains('slds-is-open');
