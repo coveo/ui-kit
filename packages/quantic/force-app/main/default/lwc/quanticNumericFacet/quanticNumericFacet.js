@@ -11,6 +11,12 @@ import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import min from "@salesforce/label/c.quantic_Min";
+import max from "@salesforce/label/c.quantic_Max";
+import numberInputMinimum from "@salesforce/label/c.quantic_NumberInputMinimum";
+import numberInputMaximum from "@salesforce/label/c.quantic_NumberInputMaximum";
+import apply from "@salesforce/label/c.quantic_Apply";
+import numberInputApply from "@salesforce/label/c.quantic_NumberInputApply";
 
 export default class QuanticNumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -69,12 +75,20 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeSearchStatus;
   isSelected=true;
 
+  minSafeInteger = Number.MIN_SAFE_INTEGER;
+  maxSafeInteger = Number.MAX_SAFE_INTEGER;
 
   labels = {
     clearFilter,
     clearFilter_plural,
     collapseFacet,
     expandFacet,
+    min,
+    max,
+    numberInputMinimum,
+    numberInputMaximum,
+    apply,
+    numberInputApply
   };
 
   connectedCallback() {
@@ -147,6 +161,16 @@ export default class QuanticNumericFacet extends LightningElement {
     );
   }
 
+  /** @returns {HTMLInputElement} */
+  get inputMin() {
+    return this.template.querySelector('.numeric__input-min');
+  }
+
+  /** @returns {HTMLInputElement} */
+  get inputMax() {
+    return this.template.querySelector('.numeric__input-max');
+  }
+
   get hasValues() {
     return this.values.length !== 0;
   }
@@ -192,12 +216,34 @@ export default class QuanticNumericFacet extends LightningElement {
     return '';
   }
 
+  get minValue() {
+    return this.inputMin?.value;
+  }
+
+  get maxValue() {
+    return this.inputMax?.value;
+  }
+
+  setValidityParameters() {
+    this.inputMin.max = this.maxValue.toString() || this.maxSafeInteger.toString();
+    this.inputMax.min = this.minValue.toString() || this.minSafeInteger.toString();
+    this.inputMin.required = true;
+    this.inputMax.required = true;
+  }
+
+  resetValidityParameters() {
+    this.inputMin.max = this.maxSafeInteger.toString();
+    this.inputMax.min = this.minSafeInteger.toString();
+    this.inputMin.required = false;
+    this.inputMax.required = false;
+  }
   /**
    * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
   onSelect(evt) {
     this.isSelected = true;
     this.facet.toggleSelect(evt.detail);
+    console.log(this.stateFilter.range);
   }
 
   clearSelections() {
@@ -205,6 +251,7 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.stateFilter?.range) {
       this.numericFilter.clear();
     }
+    this.resetValidityParameters();
     this.facet?.deselectAll();
   }
 
@@ -216,13 +263,38 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
   }
 
-  onFilterApply(evt) {
+  onApply(evt) {
+    evt.preventDefault();
+    this.setValidityParameters();
+
+    const allValid = [...this.template.querySelectorAll('lightning-input')]
+      .reduce((validSoFar, inputCmp) => {
+        return validSoFar && inputCmp.reportValidity();
+      }, true);
+      
+    this.resetValidityParameters();
+
+    if (!allValid) {
+      return;
+    }
     this.isSelected = false;
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
     this.numericFilter.setRange({
-      start: evt.detail.min,
-      end: evt.detail.max
+      start: Number(this.inputMin?.value),
+      end: Number(this.inputMax?.value)
     });
+  }
+
+  get numberInputMinimumLabel() {
+    return I18nUtils.format(this.labels.numberInputMinimum, this.label);
+  }
+
+  get numberInputMaximumLabel() {
+    return I18nUtils.format(this.labels.numberInputMaximum, this.label);
+  }
+
+  get numberInputApplyLabel() {
+    return I18nUtils.format(this.labels.numberInputApply, this.label);
   }
 }

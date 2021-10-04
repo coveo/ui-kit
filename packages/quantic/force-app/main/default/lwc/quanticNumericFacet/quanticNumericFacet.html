@@ -27,7 +27,45 @@
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template if:false={noInput}>
-              <c-quantic-number-input start={start} end={end} label={label} onapply={onFilterApply}></c-quantic-number-input>
+              <div>
+                <form onsubmit={onApply} class="slds-grid slds-var-p-bottom_small slds-var-p-top_small">
+                    <div class="slds-col slds-p-around_none">
+                        <lightning-input 
+                            type="number"
+                            step="1"
+                            required
+                            value={start}
+                            class="numeric__input-min" 
+                            label={labels.min} 
+                            variant="label-hidden"
+                            placeholder={labels.min}
+                            aria-label={numberInputMinimumLabel}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input 
+                            type="number"
+                            step="1"
+                            required
+                            value={end}
+                            class="numeric__input-max"
+                            label={labels.max} 
+                            variant="label-hidden" 
+                            placeholder={labels.max}
+                            aria-label={numberInputMaximumLabel}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-p-around_none">
+                        <lightning-button 
+                            label={labels.apply} 
+                            title={labels.apply} 
+                            aria-label={numberInputApplyLabel}
+                            type="submit"
+                            class="slds-size_small">
+                        </lightning-button>
+                    </div>
+                </form>
+            </div>
             </template>
             <template if:true={showValues}>
                <template for:each={values} for:item="v">
@@ -36,8 +74,7 @@
                   key={v.start} 
                   item={v} 
                   is-checked={v.checked}
-                  formatting-function={formattingFunction}
-                  >
+                  formatting-function={formattingFunction}>
                 </c-quantic-facet-value>
               </template>
             </template>

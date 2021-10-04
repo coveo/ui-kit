@@ -31,15 +31,15 @@ export default class QuanticNumberInput extends LightningElement {
   }
 
   setValidityParameters() {
-    this.inputMin.max = this.maxValue || this.maxSafeInteger;
-    this.inputMax.min = this.minValue || this.minSafeInteger;
+    this.inputMin.max = this.maxValue.toString() || this.maxSafeInteger.toString();
+    this.inputMax.min = this.minValue.toString() || this.minSafeInteger.toString();
     this.inputMin.required = true;
     this.inputMax.required = true;
   }
 
   resetValidityParameters() {
-    this.inputMin.max = this.maxSafeInteger;
-    this.inputMax.min = this.minSafeInteger;
+    this.inputMin.max = this.maxSafeInteger.toString();
+    this.inputMax.min = this.minSafeInteger.toString();
     this.inputMin.required = false;
     this.inputMax.required = false;
   }
