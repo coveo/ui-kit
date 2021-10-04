@@ -47,3 +47,6 @@ cypress/screenshots/*
 cypress/videos/*
 
 cypress/plugins/config/examples-community.json
+
+# Generated Documentation
+docs/out/*

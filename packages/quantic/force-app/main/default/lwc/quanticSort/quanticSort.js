@@ -9,26 +9,37 @@ import relevancy from '@salesforce/label/c.quantic_Relevancy';
 import newest from '@salesforce/label/c.quantic_Newest';
 import oldest from '@salesforce/label/c.quantic_Oldest';
 
-export default class QuanticSort extends LightningElement {
-  @track state = {};
+/** @typedef {import("coveo").Sort} Sort */
+/** @typedef {import("coveo").SortState} SortState */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
-  /** @type {string} */
+/**
+ * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
+ * @example
+ * <c-quantic-sort engine-id={engineId}></c-quantic-sort>
+ */
+export default class QuanticSort extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
 
-  /** @type {import("coveo").Sort} */
-  sort;
-  /** @type {import("coveo").SearchStatus} */
-  searchStatus;
-
-  /** @type {() => void} */
-  unsubscribeSort;
-  /** @type {() => void} */
-  unsubscribeSearchStatus;
-
-  /**
-   * @type {boolean}
-   */
+  /** @type {boolean} */
   @track hasResults;
+  /** @type {SortState} */
+  @track state;
+
+  /** @type {Sort} */
+  sort;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {Function} */
+  unsubscribeSort;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
 
   labels = {
     sortBy,
@@ -46,7 +57,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.sort = CoveoHeadless.buildSort(engine);
@@ -123,9 +134,9 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    if (!this.sort || !this.state.sortCriteria.expression) {
+    if (!this.sort || !this.state?.sortCriteria) {
       return 'relevancy';
     }
-    return this.state.sortCriteria.expression;
+    return this.state?.sortCriteria;
   }
 }

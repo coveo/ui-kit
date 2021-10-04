@@ -14,50 +14,119 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").CategoryFacet} CategoryFacet */
+/** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
+/** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
+
+/**
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
+ * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
+ * @example
+ * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
+ */
 export default class QuanticCategoryFacet extends LightningElement {
-  /** @type {import("coveo").CategoryFacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
-  @track state = {
-    values: [],
-    parents: [],
-  };
-
-  /** @type {string} */
-  @api facetId;
-  /** @type {string} */
-  @api field;
-  /** @type {string} */
-  @api label = 'no-label';
-  /** @type {string} */
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {boolean} */
-  @api withSearch = false;
-  /** @type {string} */
+  /** 
+   * A unique identifier for the facet.
+   * Defaults to the `field` value.
+   * @api
+   * @type {string}
+   * @defaultValue Defaults to the `field` value.
+   */
+  @api facetId;
+  /**
+   * The field whose values you want to display in the facet.
+   * @api
+   * @type {string}
+   */
+  @api field;
+  /**
+   * The non-localized label for the facet. This label is displayed in the facet header.
+   * @api
+   * @type {string}
+   */
+  @api label = 'no-label';
+  /**
+   * The base path shared by all facet values, separated by commas.
+   * @api
+   * @type {string}
+   * @defaultValue `''`
+   */
   @api basePath = '';
-  /** @type {boolean} */
+  /**
+   * Whether not to use the `basePath` as a filter for the results.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api noFilterByBasePath = false;
-  /** @type {boolean} */
+  /**
+   * Whether not to exclude the parents of folded results when estimating the result count for each facet value.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false
+   */  
   @api noFilterFacetCount = false;
-  /** @type {string} */
+  /**
+   * The character that separates the values of the target multi-value field.
+   * If the field is defined as "hierarchical", parts of a path are delimited by `;`. A value is indexed as `parent;child` and `delimitingCharacter` should be set to `;`.
+   * @api
+   * @type {string}
+   * @defaultValue `;`
+   */
   @api delimitingCharacter = ';';
-  /** @type {number} */
+  /**
+   * The number of values to request for this facet.
+   * Also determines the number of additional values to request each time more values are shown.
+   * @api
+   * @type {number} 
+   * @defaultValue `8`
+   */
   @api numberOfValues = 8;
-  /** @type {'alphanumeric' | 'occurrences'} */
+  /**
+   * The sort criterion to apply to the returned facet values.
+   * Possible values are:
+   *   - `alphanumeric`: Filters are sorted in alphanumerical order.
+   *   - `occurrences`: Filters are sorted in descending order of number of occurences.
+   * @api
+   * @type {'alphanumeric' | 'occurrences'}
+   * @defaultValue `'occurrences'`
+   */
   @api sortCriteria = 'occurrences';
-
-  /** @type {boolean} */
+  /**
+   * Whether this facet should contain a search box.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api withSearch = false;
+  /**
+   * Whether the facet is collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api get isCollapsed() {
     return this._isCollapsed;
   }
   set isCollapsed(collapsed) {
     this._isCollapsed = collapsed;
   }
-  
   /** @type {boolean} */
   _isCollapsed = false;
-  /** @type {import("coveo").CategoryFacet}} */
+
+  /** @type {CategoryFacetState} */
+  @track state;
+  
+  /** @type {CategoryFacet} */
   facet;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
   /** @type {string} */
   collapseIconName = 'utility:dash';
@@ -92,7 +161,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
@@ -118,31 +187,31 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get values() {
-    return this.state.values;
+    return this.state?.values ?? [];
   }
 
   get nonActiveParents() {
-    return this.state.parents?.slice(0, -1);
+    return this.state?.parents?.slice(0, -1) ?? [];
   }
 
   get activeParent() {
-    return this.state.parents?.slice(-1)[0];
+    return this.state?.parents?.slice(-1)[0];
   }
 
   get canShowMore() {
-    return this.facet && this.state.canShowMoreValues  && !this.isFacetSearchActive;
+    return this.facet && this.state?.canShowMoreValues && !this.isFacetSearchActive;
   }
 
   get canShowLess() {
-    return this.facet && this.state.canShowLessValues;
+    return this.facet && this.state?.canShowLessValues;
   }
 
   get hasParents() {
-    return this.state.parents.length !== 0;
+    return this.state?.parents?.length;
   }
 
   get hasValues() {
-    return this.state.values.length !== 0;
+    return this.state?.values?.length;
   }
 
   get hasSearchResults() {
@@ -217,7 +286,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<import("coveo").CategoryFacetValue>} evt
+   * @param {CustomEvent<CategoryFacetValue>} evt
    */
   onSelect(evt) {
     const specificSearchResult = {
@@ -232,6 +301,10 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.toggleSelect(evt.detail);
     }
     this.clearInput();
+  }
+
+  preventDefault(evt) {
+    evt.preventDefault();
   }
 
   showMore() {
@@ -276,8 +349,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-  * @param {string[]} path
-  */
+   * @param {string[]} path
+   */
   buildPath(path) {
     if(!path.length) {
       return this.labels.allCategories;

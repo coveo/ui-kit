@@ -1,8 +1,4 @@
-import {
-  api,
-  LightningElement,
-  track
-} from 'lwc';
+import {LightningElement, api,track} from 'lwc';
 
 /**
  * @typedef Suggestion
@@ -11,22 +7,25 @@ import {
  * @property {string} rawValue
  */
 
+/**
+ * The `QuanticSearchBoxSuggestionsList` is used internally by search box components to display the query suggestions in an omnibox.
+ * @fires CustomEvent#highlightchange
+ * @fires CustomEvent#suggestionselected
+ * @example
+ * <c-quantic-search-box-suggestions-list suggestions={suggestions} onhighlightchange={handleHighlightChange} onsuggestionselected={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
+ */
 export default class QuanticSearchBoxSuggestionsList extends LightningElement {
-  /** @type {Suggestion[]} */
+  /**
+   * The query suggestions to display.
+   * @api
+   * @type {Suggestion[]}
+   */
   @api suggestions = [];
-  /** @type {number} */
-  @track selectionIndex = -1;
-
-  renderedCallback() {
-    if(this.selectionIndex > -1) {
-      this.emitSuggestionHighlighted();
-    }
-  }
 
   /**
    * Move highlighted selection up.
    */
-  @api 
+  @api
   selectionUp() {
     this.selectionIndex--;
     if(this.selectionIndex < 0) {
@@ -63,6 +62,15 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   @api 
   resetSelection() {
     this.selectionIndex = -1;
+  }
+  
+  /** @type {number} */
+  @track selectionIndex = -1;
+
+  renderedCallback() {
+    if(this.selectionIndex > -1) {
+      this.emitSuggestionHighlighted();
+    }
   }
 
   get suggestionsToRender() {

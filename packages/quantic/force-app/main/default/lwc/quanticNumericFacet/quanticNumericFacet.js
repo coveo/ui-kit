@@ -11,46 +11,101 @@ import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-export default class QuanticNumericFacet extends LightningElement {
-  /** @type {import("coveo").NumericFacetState} */
-  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
-  @track state = {
-    values: [],
-  };
+/** @typedef {import("coveo").NumericFacetState} NumericFacetState */
+/** @typedef {import("coveo").NumericFacet} NumericFacet */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 
-  /** @type {string} */
-  @api facetId;
-  /** @type {string} */
-  @api field;
-  /** @type {string} */
-  @api label = 'no-label';
-  /** @type {string} */
+/**
+ * The `QuanticNumericFacet` component displays facet values as numeric ranges.
+ * @example
+ * <c-quantic-numeric-facet engine-id={engineId} facet-id="myfacet" field="ytlikecount" label="Youtube Likes" numberOfValues="5" sort-criteria="descending" range-algorithm="even" formatting-function={myFormattingFunction} is-collapsed></c-quantic-numeric-facet>
+ */
+export default class QuanticNumericFacet extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
-  /** @type {number} */
+  /** 
+   * A unique identifier for the facet.
+   * @api
+   * @type {string}
+   * @defaultValue Defaults to the `field` value.
+   */
+  @api facetId;
+  /**
+   * Specifies the index field whose values the facet should use.
+   * @api
+   * @type {string}
+   */
+  @api field;
+  /**
+   * The non-localized label for the facet. This label is displayed in the facet header.
+   * @api
+   * @type {string}
+   */
+  @api label = 'no-label';
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   * @api
+   * @type {number}
+   * @defaultValue `8`
+   */
   @api numberOfValues = 8;
-  /** @type {import("coveo").RangeFacetSortCriterion} */
+  /**
+   * The sort criterion to apply to the returned facet values. Possible values are:
+   *   - `ascending`
+   *   - `descending`
+   * @api
+   * @type {'ascending' | 'descending'}
+   * @defaultValue `'ascending'`
+   */
   @api sortCriteria = 'ascending';
-  /** @type {import("coveo").RangeFacetRangeAlgorithm} */
+  /**
+   * The algorithm used for generating the ranges of this facet when they aren’t manually defined.
+   * The default value of `'even'` generates equally sized facet ranges across all of the results.
+   * The value `'equiprobable'` generates facet ranges which vary in size but have a more balanced number of results within each range.
+   * @api
+   * @type {'even' | 'equiprobable'}
+   * @defaultValue `'equiprobable'`
+   */
   @api rangeAlgorithm = 'equiprobable';
-  /** @type {(any) => string} */
+  /**
+   * The function used to format the date facet value label.
+   * The default result format is the following: `[start] - [end]`
+   * @api
+   * @type {Function}
+   * @param {NumericFacetValue} item
+   * @returns {string}
+   */
   @api formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
     item.start
   )} - ${new Intl.NumberFormat(LOCALE).format(
     item.end
   )}`;
-  /** @type {boolean} */
+  /**
+   * Whether the facet is collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api get isCollapsed() {
     return this._isCollapsed;
   }
   set isCollapsed(collapsed) {
     this._isCollapsed = collapsed;
   }
-  
   /** @type {boolean} */
   _isCollapsed = false;
-  /** @type {import("coveo").NumericFacet} */
+
+  /** @type {NumericFacetState} */
+  @track state;
+
+  /** @type {NumericFacet} */
   facet;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
 
   labels = {
@@ -69,7 +124,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").SearchEngine} engine
+   * @param {SearchEngine} engine
    */
   initialize = (engine) => {
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
@@ -95,7 +150,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get values() {
     return (
-      this.state.values
+      this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
         .map((value) => {
           return {
@@ -111,7 +166,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get hasActiveValues() {
-    return this.state.hasActiveValues;
+    return this.state?.hasActiveValues;
   }
 
   get actionButtonIcon() {
@@ -140,7 +195,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
+   * @param {CustomEvent<NumericFacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
