@@ -6,7 +6,7 @@ export function DictionaryFieldContext() {
   const {engine} = useContext(AppContext);
   const ctx = buildDictionaryFieldContext(engine!);
 
-  ctx.set({price: 'usd', city: 'boston'});
+  ctx.set({price_currency: 'fr', price_discounted: 'fr'});
 
   return null;
 }
