@@ -713,7 +713,7 @@
   },
   "invalid-token": {
     "en": "Ensure that the token is valid.",
-    "fr": "Faites en sorte que le jeton d'identification soit invalide."
+    "fr": "Faites en sorte que le jeton d'identification soit valide."
   },
   "add-sources": {
     "en": "Add content sources or wait for your newly created sources to finish indexing.",
