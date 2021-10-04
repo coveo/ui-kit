@@ -85,6 +85,14 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildDictionaryFieldContext',
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/dictionary-field-context/dictionary-field-context.fn.ts',
+      ],
+    },
+  },
+  {
     initializer: 'buildCategoryFacet',
     samplePaths: {
       react_class: [
@@ -359,6 +367,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadDictionaryFieldContextActions',
   },
   {
     initializer: 'loadDebugActions',

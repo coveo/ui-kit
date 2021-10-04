@@ -2,6 +2,7 @@ import {
   BaseParam,
   ContextParam,
   DebugParam,
+  DictionaryFieldContextParam,
   FoldingParam,
   LocaleParam,
   NumberOfResultsParam,
@@ -34,6 +35,7 @@ export type SearchRequest = BaseParam &
   SortCriteriaParam &
   FacetsParam &
   ContextParam &
+  DictionaryFieldContextParam &
   EnableDidYouMeanParam &
   EnableQuerySyntaxParam &
   FieldsToIncludeParam &

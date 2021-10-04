@@ -30,6 +30,7 @@ import {getQuestionAnsweringInitialState} from '../features/question-answering/q
 import {getStandaloneSearchBoxSetInitialState} from '../features/standalone-search-box-set/standalone-search-box-set-state';
 import {getRecentResultsInitialState} from '../features/recent-results/recent-results-state';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state';
+import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -52,6 +53,7 @@ export function createMockState(
     search: getSearchInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
     context: getContextInitialState(),
+    dictionaryFieldContext: getDictionaryFieldContextInitialState(),
     didYouMean: getDidYouMeanInitialState(),
     fields: getFieldsInitialState(),
     history: makeHistory(getHistoryInitialState()),
