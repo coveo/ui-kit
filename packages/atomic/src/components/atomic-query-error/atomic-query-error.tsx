@@ -18,6 +18,13 @@ const noEndpointsException = 'NoEndpointsException';
 const invalidTokenException = 'InvalidTokenException';
 const organizationIsPausedException = 'OrganizationIsPausedException';
 
+interface QueryErrorDetails {
+  icon: string;
+  title: string;
+  description: string;
+  link?: string;
+}
+
 /**
  * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
@@ -78,63 +85,45 @@ export class AtomicQueryError implements InitializableComponent {
     return this.queryErrorState.error!.type;
   }
 
-  private get icon() {
+  private get details(): QueryErrorDetails {
     switch (this.errorType) {
       case disconnectedException:
-        return NoConnection;
+        return {
+          icon: NoConnection,
+          title: this.bindings.i18n.t('disconnected'),
+          description: this.bindings.i18n.t('check-your-connection'),
+        };
       case noEndpointsException:
-        return Indexing;
+        return {
+          icon: Indexing,
+          title: this.bindings.i18n.t('no-endpoints', {org: this.org}),
+          description: this.bindings.i18n.t('add-sources'),
+          link: 'https://docs.coveo.com/', // TODO: KIT-1061 update link
+        };
       case invalidTokenException:
-        return CannotAccess;
+        return {
+          icon: CannotAccess,
+          title: this.bindings.i18n.t('cannot-access', {org: this.org}),
+          description: this.bindings.i18n.t('invalid-token'),
+          link: 'https://docs.coveo.com/', // TODO: KIT-1061 update link
+        };
       case organizationIsPausedException:
-        return SearchInactive;
+        return {
+          icon: SearchInactive,
+          title: this.bindings.i18n.t('organization-is-paused', {
+            org: this.org,
+          }),
+          description: this.bindings.i18n.t('organization-will-resume', {
+            org: this.org,
+          }),
+          link: 'https://docs.coveo.com/l6af0467',
+        };
       default:
-        return SomethingWrong;
-    }
-  }
-
-  private get title() {
-    switch (this.errorType) {
-      case disconnectedException:
-        return this.bindings.i18n.t('disconnected');
-      case noEndpointsException:
-        return this.bindings.i18n.t('no-endpoints', {org: this.org});
-      case invalidTokenException:
-        return this.bindings.i18n.t('cannot-access', {org: this.org});
-      case organizationIsPausedException:
-        return this.bindings.i18n.t('organization-is-paused', {org: this.org});
-      default:
-        return this.bindings.i18n.t('something-went-wrong');
-    }
-  }
-
-  private get description() {
-    switch (this.errorType) {
-      case disconnectedException:
-        return this.bindings.i18n.t('check-your-connection');
-      case noEndpointsException:
-        return this.bindings.i18n.t('add-sources');
-      case invalidTokenException:
-        return this.bindings.i18n.t('invalid-token');
-      case organizationIsPausedException:
-        return this.bindings.i18n.t('organization-will-resume', {
-          org: this.org,
-        });
-      default:
-        return this.bindings.i18n.t('if-problem-persists');
-    }
-  }
-
-  private get link() {
-    switch (this.errorType) {
-      case noEndpointsException:
-        return 'https://docs.coveo.com/'; // TODO: KIT-1061 update link
-      case invalidTokenException:
-        return 'https://docs.coveo.com/'; // TODO: KIT-1061 update link
-      case organizationIsPausedException:
-        return 'https://docs.coveo.com/l6af0467';
-      default:
-        return null;
+        return {
+          icon: SomethingWrong,
+          title: this.bindings.i18n.t('something-went-wrong'),
+          description: this.bindings.i18n.t('if-problem-persists'),
+        };
     }
   }
 
@@ -147,18 +136,18 @@ export class AtomicQueryError implements InitializableComponent {
       <div class="text-center">
         <atomic-icon
           part="icon"
-          icon={this.icon}
+          icon={this.details.icon}
           class="w-1/2 mt-8"
         ></atomic-icon>
         <h3 part="title" class="text-2xl text-on-background mt-8">
-          {this.title}
+          {this.details.title}
         </h3>
         <p part="description" class="text-lg text-neutral-dark mt-2.5">
-          {this.description}
+          {this.details.description}
         </p>
-        {this.link ? (
+        {this.details.link ? (
           <a
-            href={this.link}
+            href={this.details.link}
             part="doc-link"
             class="btn-primary p-3 mt-10 inline-block"
           >
