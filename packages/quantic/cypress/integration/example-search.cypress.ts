@@ -26,7 +26,9 @@ describe('example-search', () => {
   });
 
   beforeEach(() => {
-    cy.visit(pageUrl).then(setupAliases).wait(InterceptAliases.Search);
+    cy.visit(pageUrl)
+      .then(setupAliases)
+      .wait(InterceptAliases.Search, {timeout: 30000});
   });
 
   it('should load results automatically', () => {

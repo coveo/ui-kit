@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.68.0...@coveo/quantic@0.69.0) (2021-10-04)
+
+
+### Features
+
+* **quantic:** adding quantic tests in build pipeline ([#1200](https://github.com/coveo/ui-kit/issues/1200)) ([e8f1d3c](https://github.com/coveo/ui-kit/commit/e8f1d3cc310e061bcfa265b94d3e4cd6f9f75092))
+
+
+
+
+
+# [0.68.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.67.0...@coveo/quantic@0.68.0) (2021-10-01)
+
+
+### Features
+
+* **quantic:** added some missing facet options ([#1277](https://github.com/coveo/ui-kit/issues/1277)) ([e7c9c56](https://github.com/coveo/ui-kit/commit/e7c9c56160599942874396ea90c713104bf343bd))
+
+
+
+
+
 # [0.67.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.66.1...@coveo/quantic@0.67.0) (2021-10-01)
 
 

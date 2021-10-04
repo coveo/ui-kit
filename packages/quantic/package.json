@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "0.67.0",
+  "version": "0.69.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -24,7 +24,8 @@
     "test:unit:coverage": "lwc-jest --coverage",
     "test:typings": "tsc",
     "cypress:open": "npx cypress open",
-    "setup:examples": "ts-node scripts/build/deploy-community.ts",
+    "cypress:test": "npx cypress run --browser chrome",
+    "setup:examples": "node_modules/.bin/ts-node scripts/build/deploy-community.ts",
     "deploy:main": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/main",
     "deploy:examples": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples",
     "docs:generate": "jsdoc -c jsdoc-config.json > docs/out/docs.json"
