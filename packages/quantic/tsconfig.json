@@ -67,6 +67,9 @@
             "c/quanticNumberButton": [
                 "quanticNumberButton/quanticNumberButton.js"
             ],
+            "c/quanticPill": [
+                "quanticPill/quanticPill.js"
+            ],
             "c/quanticHeadlessLoader": [
                 "quanticHeadlessLoader/quanticHeadlessLoader.js"
             ],

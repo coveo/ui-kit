@@ -1,8 +1,10 @@
-import {modifySearchResultAt} from '../../utils/network';
-import {setUpPage} from '../../utils/setupComponent';
+import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
-  generateResultList,
+  addResultList,
+  buildTemplateWithoutSections,
+} from '../result-list/result-list-actions';
+import {
   resultListComponent,
   ResultListSelectors,
 } from '../result-list/result-list-selectors';
@@ -11,24 +13,29 @@ import {
   ResultTemplateSelectors,
 } from './result-template-selectors';
 
-const customTemplate = '<template>Custom template</template>';
+function buildScriptElement(content: string) {
+  const element = generateComponentHTML('script');
+  element.innerHTML = content;
+  return element as HTMLScriptElement;
+}
+
+function buildCustomTemplateContent() {
+  const element = generateComponentHTML('span');
+  element.innerText = 'Custom template';
+  return element;
+}
 
 function firstResultShouldUseCustomTemplate() {
-  ResultListSelectors.shadow()
-    .find('atomic-result')
-    .first()
-    .shadow()
-    .then((firstResult) => {
-      expect(firstResult[0].innerHTML).contain('Custom template');
-    });
+  ResultListSelectors.firstResult().then((firstResult) => {
+    expect(firstResult[0].innerHTML).contain('<span>Custom template</span>');
+  });
 }
 
 describe('Result Template Component', () => {
   describe(`when not a child of an "${resultListComponent}" component`, () => {
     it(`should render an "${ComponentErrorSelectors.component}" component`, () => {
-      setUpPage(resultTemplateComponent());
-      cy.get(ResultTemplateSelectors.component)
-        .shadow()
+      new TestFixture().withElement(buildTemplateWithoutSections([])).init();
+      ResultTemplateSelectors.shadow()
         .find(ComponentErrorSelectors.component)
         .should('be.visible');
     });
@@ -36,74 +43,86 @@ describe('Result Template Component', () => {
 
   describe('when it does not have a "template" element has a child', () => {
     it(`should render an "${ComponentErrorSelectors.component}" component (in the result list)`, () => {
-      setUpPage(generateResultList(resultTemplateComponent('<p>test</p>')));
-      cy.get(ResultTemplateSelectors.component)
-        .shadow()
+      const templateEl = generateComponentHTML(resultTemplateComponent);
+      templateEl.appendChild(generateComponentHTML('p'));
+      new TestFixture().with(addResultList(templateEl)).init();
+      ResultTemplateSelectors.shadow()
         .find(ComponentErrorSelectors.component)
         .should('be.visible');
     });
   });
 
   it('should save the template content in order to render', () => {
-    setUpPage(generateResultList(resultTemplateComponent(customTemplate)));
+    new TestFixture()
+      .with(
+        addResultList(
+          buildTemplateWithoutSections(buildCustomTemplateContent())
+        )
+      )
+      .init();
     firstResultShouldUseCustomTemplate();
   });
 
   it('the "must-match-x" prop should add a condition to the template', () => {
     const filetype = 'veryspecificfiletype';
-    modifySearchResultAt((result) => {
-      result.raw.filetype = filetype;
-      return result;
-    });
-    setUpPage(
-      generateResultList(
-        resultTemplateComponent(
-          customTemplate,
-          `must-match-filetype="${filetype}"`
+    new TestFixture()
+      .with(
+        addResultList(
+          buildTemplateWithoutSections(buildCustomTemplateContent(), {
+            'must-match-filetype': filetype,
+          })
         )
       )
-    );
+      .withCustomResponse((response) => {
+        response.results.forEach((result) => (result.raw.filetype = filetype));
+      })
+      .init();
 
     firstResultShouldUseCustomTemplate();
   });
 
   it('the "must-not-match-x" prop should add a condition to the template', () => {
     const filetype = 'veryspecificfiletype';
-    modifySearchResultAt((result) => {
-      result.raw.filetype = 'anotherfiletype';
-      return result;
-    });
-    setUpPage(
-      generateResultList(
-        resultTemplateComponent(
-          customTemplate,
-          `must-not-match-filetype="${filetype}"`
+    new TestFixture()
+      .with(
+        addResultList(
+          buildTemplateWithoutSections(buildCustomTemplateContent(), {
+            'must-not-match-filetype': 'anotherfiletype',
+          })
         )
       )
-    );
+      .withCustomResponse((response) => {
+        response.results.forEach((result) => (result.raw.filetype = filetype));
+      })
+      .init();
 
     firstResultShouldUseCustomTemplate();
   });
 
   it('the "conditions" prop should add a condition(s) to the template', () => {
     const title = 'averyspecifictitle';
-    modifySearchResultAt((result) => {
-      result.title = title;
-      return result;
-    });
-    setUpPage(
-      generateResultList(
-        resultTemplateComponent(
-          `${customTemplate}
-          <script>
-              document.querySelector('atomic-result-template#mytemplate').conditions = [
-                  (result) => /${title}/i.test(result.title),
-              ];
-          </script>`,
-          'id="mytemplate"'
+    const scriptEl = buildScriptElement(
+      `
+        document.querySelector('atomic-result-template#mytemplate').conditions = [
+          (result) => /${title}/i.test(result.title),
+        ];
+      `
+    );
+    new TestFixture()
+      .with(
+        addResultList(
+          buildTemplateWithoutSections(
+            [scriptEl, buildCustomTemplateContent()],
+            {
+              id: 'mytemplate',
+            }
+          )
         )
       )
-    );
+      .withCustomResponse((response) => {
+        response.results.forEach((result) => (result.title = title));
+      })
+      .init();
 
     firstResultShouldUseCustomTemplate();
   });

@@ -2,13 +2,19 @@ import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {
   BaseFacetSelector,
-  FacetWithCheckboxSelector,
+  FacetWithValuesSelector,
   FacetWithSearchSelector,
   FacetWithShowMoreLessSelector,
 } from './facet-common-selectors';
 
 export function baseFacetExpectations(selector: BaseFacetSelector) {
   return {
+    displayLabel: (display: boolean) => {
+      it(`${should(display)} display the facet`, () => {
+        selector.label().should(display ? 'exist' : 'not.exist');
+      });
+    },
+
     labelContains: (label: string) => {
       it(`should have the label "${label}"`, () => {
         selector.label().contains(label);
@@ -22,8 +28,14 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
     },
 
     displayClearButton: (display: boolean) => {
-      it(`${should(display)} display a "Clear filter" button`, () => {
-        selector.clearButton().should(display ? 'exist' : 'not.exist');
+      it(`${should(display)} display a clear filter button`, () => {
+        selector.clearFilterButton().should(display ? 'exist' : 'not.exist');
+      });
+    },
+
+    clearFilterContains: (value: string) => {
+      it(`should display a clear filter button with text "${value}"`, () => {
+        selector.clearFilterButton().should('contain', value);
       });
     },
 
@@ -45,6 +57,28 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
       });
     },
 
+    numberOfValues: (value: number) => {
+      it(`should display ${value} facet values`, () => {
+        selector.values().should('have.length', value);
+      });
+    },
+
+    facetValuesEqual: (responseValuesAlias: string) => {
+      it('should contain facet values in specific order', () => {
+        cy.get(responseValuesAlias).then((responseValues) => {
+          selector
+            .valueLabel()
+            .should('have.length', responseValues.length)
+            .then((elements) => {
+              return Cypress.$.makeArray(elements).map(
+                (element) => element.innerText
+              );
+            })
+            .should('deep.equal', responseValues);
+        });
+      });
+    },
+
     logClearFacetValues: (field: string) => {
       it('should log the facet clear all to UA', () => {
         cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {
@@ -63,19 +97,41 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
   };
 }
 
-export function facetWithCheckboxExpectations(
-  selector: FacetWithCheckboxSelector
-) {
+export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
   return {
+    selectedCheckboxValuesContain: (value: string) => {
+      it(`${value} should be selected`, () => {
+        selector.selectedValue().should('contain', value);
+      });
+    },
+
     numberOfSelectedCheckboxValues: (value: number) => {
       it(`should display ${value} selected checkbox values`, () => {
-        selector.selectedCheckboxValue().should('have.length', value);
+        selector.selectedCheckbox().should('have.length', value);
       });
     },
 
     numberOfIdleCheckboxValues: (value: number) => {
       it(`should display ${value} idle checkbox values`, () => {
-        selector.idleCheckboxValue().should('have.length', value);
+        selector.idleCheckbox().should('have.length', value);
+      });
+    },
+
+    hasCheckbox: (display: boolean) => {
+      it(`${should(display)} display facet values with checkboxes`, () => {
+        selector.checkbox().should(display ? 'be.visible' : 'not.exist');
+      });
+    },
+
+    numberOfSelectedLinkValues: (value: number) => {
+      it(`should display ${value} selected link values`, () => {
+        selector.selectedValue().should('have.length', value);
+      });
+    },
+
+    numberOfIdleLinkValues: (value: number) => {
+      it(`should display ${value} idle link values`, () => {
+        selector.idleValue().should('have.length', value);
       });
     },
 
@@ -95,7 +151,7 @@ export function facetWithCheckboxExpectations(
           expect(analyticsBody.facetState[0]).to.have.property('field', field);
 
           selector
-            .selectedCheckboxValue()
+            .selectedValue()
             .eq(selectedValueIndex)
             .invoke('text')
             .then((txt: string) => {

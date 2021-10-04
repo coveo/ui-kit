@@ -57,7 +57,7 @@ export class AtomicSearchInterface {
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    */
-  @Prop({reflect: true}) public pipeline = 'default';
+  @Prop({reflect: true}) public pipeline?: string;
 
   /**
    * The search interface [search hub](https://docs.coveo.com/en/1342/).

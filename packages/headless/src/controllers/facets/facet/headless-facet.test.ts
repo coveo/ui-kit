@@ -20,9 +20,9 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import * as FacetIdDeterminor from '../_common/facet-id-determinor';
+import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import * as FacetSearch from '../facet-search/specific/headless-facet-search';
+import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
 import {
   configuration,
   facetSearchSet,
@@ -156,10 +156,11 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: executeSearch.pending.type,
+        })
       );
-      expect(action).toBeTruthy();
     });
   });
 
@@ -183,10 +184,11 @@ describe('facet', () => {
     it('dispatches a search', () => {
       facet.toggleSingleSelect(facetValue());
 
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: executeSearch.pending.type,
+        })
       );
-      expect(action).toBeTruthy();
     });
   }
 

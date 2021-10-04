@@ -20,7 +20,6 @@ import {
   RangeFacetRangeAlgorithm,
 } from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
 import {DateRangeRequest} from './interfaces/request';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
@@ -28,6 +27,7 @@ import {
   formatRelativeDateForSearchApi,
   isRelativeDateFormat,
 } from '../../../../api/search/date/relative-date';
+import {buildDateRange} from '../../../../controllers/core/facets/range-facet/date-facet/date-range';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**

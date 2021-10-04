@@ -16,7 +16,6 @@ li {
   font-weight: bold;
 }
 
-.facet__value-option {
-  display: flex;
-  flex-direction: row;
+.facet__value-checkbox {
+  min-width: unset;
 }

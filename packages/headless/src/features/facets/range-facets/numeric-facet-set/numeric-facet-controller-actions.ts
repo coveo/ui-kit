@@ -1,6 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {NumericFacetValue} from './interfaces/response';
-import {AsyncThunkSearchOptions} from '../../../../api/search/search-api-client';
 import {
   ConfigurationSection,
   NumericFacetSection,
@@ -10,6 +9,8 @@ import {toggleSelectNumericFacetValue} from './numeric-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 
 const definition = {
   facetId: facetIdDefinition,
@@ -29,12 +30,13 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     facetId: string;
     selection: NumericFacetValue;
   },
-  AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
+  AsyncThunkOptions<ConfigurationSection & NumericFacetSection>
 >(
   executeToggleNumericFacetSelectType,
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleSelectNumericFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
   }
 );

@@ -31,6 +31,9 @@ $RECYCLE.BIN/
 # (Precaution) jwt key file
 server.key
 
+# CI files
+scratch-def.ci.json
+
 # Static resources copied from node_modules
 force-app/main/default/staticresources/coveoheadless
 
@@ -39,7 +42,11 @@ coverage
 reports
 
 # Cypress artifacts
+.cache/
 cypress/screenshots/*
 cypress/videos/*
 
 cypress/plugins/config/examples-community.json
+
+# Generated Documentation
+docs/out/*
