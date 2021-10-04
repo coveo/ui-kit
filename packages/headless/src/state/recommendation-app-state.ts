@@ -3,6 +3,7 @@ import {
   ConfigurationSection,
   ContextSection,
   DebugSection,
+  DictionaryFieldContextSection,
   FieldsSection,
   PipelineSection,
   RecommendationSection,
@@ -14,6 +15,7 @@ export type RecommendationAppState = ConfigurationSection &
   FieldsSection &
   AdvancedSearchQueriesSection &
   ContextSection &
+  DictionaryFieldContextSection &
   PipelineSection &
   SearchHubSection &
   DebugSection &
