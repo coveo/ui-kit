@@ -311,6 +311,10 @@ export default class QuanticNumericFacet extends LightningElement {
     }
     this.resetValidityParameters();
     this.facet?.deselectAll();
+    [...this.template.querySelectorAll('lightning-input')].forEach( input => {
+      input.checkValidity();
+      input.reportValidity();
+    });
   }
 
   toggleFacetVisibility() {
