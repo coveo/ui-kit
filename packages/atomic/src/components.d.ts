@@ -120,6 +120,10 @@ export namespace Components {
     }
     interface AtomicFacet {
         /**
+          * Places the specified values at the top of the facet if found in the the search api response.
+         */
+        "customSort": string;
+        /**
           * The character that separates values of a multi-value field.
          */
         "delimitingCharacter": string;
@@ -1276,6 +1280,10 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
+        /**
+          * Places the specified values at the top of the facet if found in the the search api response.
+         */
+        "customSort"?: string;
         /**
           * The character that separates values of a multi-value field.
          */

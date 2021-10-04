@@ -145,7 +145,10 @@ export class AtomicFacet
    * Minimum: `0`
    */
   @Prop() public injectionDepth = 1000;
-  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
+  /**
+   * Places the specified values at the top of the facet if found in the the search api response.
+   */
+  @Prop() public customSort = '';
 
   private validateProps() {
     new Schema({
@@ -314,8 +317,9 @@ export class AtomicFacet
   }
 
   private renderValues() {
+    const sortedValues = this.sortedValues;
     return this.renderValuesContainer(
-      this.facetState.values.map((value) =>
+      sortedValues.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
             ? this.facet.toggleSingleSelect(value)
@@ -323,6 +327,25 @@ export class AtomicFacet
         )
       )
     );
+  }
+
+  private get sortedValues() {
+    const configured = this.customSort.split(',');
+    const valueMap: Record<string, FacetValue> = this.facetState.values.reduce(
+      (map, curr) => ({...map, [curr.value]: curr}),
+      {}
+    );
+
+    const prioritized: FacetValue[] = [];
+    configured.forEach((value) => {
+      if (value in valueMap) {
+        prioritized.push(valueMap[value]);
+        delete valueMap[value];
+      }
+    });
+
+    const remaining = Object.values(valueMap);
+    return [...prioritized, ...remaining];
   }
 
   private renderSearchResults() {
