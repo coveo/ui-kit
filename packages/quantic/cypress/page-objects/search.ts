@@ -1,19 +1,21 @@
 // eslint-disable-next-line node/no-unpublished-import
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
 
-const uaAliasPrefix = '@UA-';
+function uaAlias(eventName: string) {
+  return `@UA-${eventName}`;
+}
 
 export const InterceptAliases = {
   UA: {
     Facet: {
-      ClearAll: uaAliasPrefix + 'facetClearAll',
-      Search: uaAliasPrefix + 'facetSearch',
-      Select: uaAliasPrefix + 'facetSelect',
+      ClearAll: uaAlias('facetClearAll'),
+      Search: uaAlias('facetSearch'),
+      Select: uaAlias('facetSelect'),
     },
     Pager: {
-      Previous: uaAliasPrefix + 'pagerPrevious',
-      Next: uaAliasPrefix + 'pagerNext',
-      Number: uaAliasPrefix + 'pagerNumber',
+      Previous: uaAlias('pagerPrevious'),
+      Next: uaAlias('pagerNext'),
+      Number: uaAlias('pagerNumber'),
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',
@@ -25,9 +27,9 @@ export function interceptSearch() {
   return cy
     .intercept('POST', '**/rest/ua/v15/analytics/*', (req) => {
       if (req.body.actionCause) {
-        req.alias = uaAliasPrefix.substring(1) + req.body.actionCause;
+        req.alias = uaAlias(req.body.actionCause).substring(1);
       } else if (req.body.eventType === 'getMoreResults') {
-        req.alias = uaAliasPrefix.substring(1) + req.body.eventValue;
+        req.alias = uaAlias(req.body.eventValue).substring(1);
       }
     })
 
