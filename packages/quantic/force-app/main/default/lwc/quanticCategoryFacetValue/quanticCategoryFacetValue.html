@@ -2,7 +2,7 @@
   <li class={categoryFacetLiClass}>  
     <div class="slds-size_1-of-1" onclick={onSelect}>
       <template if:true={nonactiveparent}>
-        <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+        <div class="facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small">
           <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
           <span class="nowrap">{item.value}</span>
           <span class="facet__number-of-results">({item.numberOfResults})</span>
@@ -10,7 +10,7 @@
       </template>
       <template if:false={nonactiveparent}>
         <template if:false={withsearch}>
-          <div class="nowrap slds-text-color_default facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+          <div class="slds-nowrap slds-text-color_default slds-grid slds-grid_vertical-align-center facet__value-option slds-size_1-of-1 slds-p-around_x-small">
             {item.value}
             <span class="facet__number-of-results">({item.numberOfResults})</span>
           </div>
@@ -18,7 +18,7 @@
         <template if:true={withsearch}>
           <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small slds-text-color_default">
             <div class="slds-grid slds-grid_vertical">
-              <div class="slds-col slds-p-left_none facet__search-results slds-m-bottom_xxx-small">
+              <div class="slds-col slds-p-left_none slds-grid_vertical-align-center facet__search-results slds-m-bottom_xxx-small">
                 <lightning-formatted-rich-text class="slds-truncate slds-float_left" value={item.highlightedResult}></lightning-formatted-rich-text>
                 <span class="facet__number-of-results">({item.numberOfResults})</span>
               </div>

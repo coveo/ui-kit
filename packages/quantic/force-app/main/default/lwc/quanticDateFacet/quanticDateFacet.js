@@ -30,9 +30,9 @@ export default class QuanticDateFacet extends LightningElement {
   @api numberOfValues = 8;
   /** @type {(any) => string} */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
-    new Date(item.start)
+    new Date(this.fixDateForAllBrowsers(item.start))
   )} - ${new Intl.DateTimeFormat(LOCALE).format(
-    new Date(item.end)
+    new Date(this.fixDateForAllBrowsers(item.end))
   )}`;
   /** @type {boolean} */
   @api get isCollapsed() {
@@ -132,6 +132,12 @@ export default class QuanticDateFacet extends LightningElement {
       return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
     }
     return '';
+  }
+
+  fixDateForAllBrowsers(dateString) {
+    return dateString
+      .replaceAll('/', '-')
+      .replaceAll('@', 'T');
   }
 
   /**
