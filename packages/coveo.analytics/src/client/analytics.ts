@@ -26,10 +26,11 @@ import {
     isMeasurementProtocolKey,
     convertCustomMeasurementProtocolKeys,
 } from './measurementProtocolMapper';
-import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
+import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime, NoopRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
+import doNotTrack from '../donottrack';
 
 export const Version = 'v15';
 
@@ -131,7 +132,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
-        if (hasWindow() && hasDocument()) {
+        if (doNotTrack) {
+            return new NoopRuntime();
+        } else if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
         } else if (isReactNative()) {
             console.warn(ReactNativeRuntimeWarning);

@@ -55,6 +55,21 @@ describe('Analytics', () => {
         });
     });
 
+    it('should honor doNotTrack', () => {
+        jest.mock('../doNotTrack', () => ({
+            doNotTrack: false,
+        }));
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: anEndpoint,
+            version: A_VERSION,
+        });
+
+        client.runtime.storage.setItem('vistorId', 'bob');
+        expect(client.runtime.storage.getItem('visitorId')).toBeNull();
+    });
+
     it('should call fetch with the parameters', async () => {
         mockFetchRequestForEventType(EventType.view);
 

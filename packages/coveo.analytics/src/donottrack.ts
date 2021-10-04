@@ -6,10 +6,11 @@
 
 import {hasNavigator} from './detector';
 
-export const doNotTrack = hasNavigator()
-    ? [true, 'yes', '1'].indexOf(
+export const doNotTrack: boolean = hasNavigator()
+    ? !!(<any>navigator).globalPrivacyControl ||
+      [true, 'yes', '1'].indexOf(
           (<any>navigator).doNotTrack || (<any>navigator).msDoNotTrack || (<any>window).doNotTrack
-      )
-    : 0;
+      ) !== -1
+    : false;
 
 export default doNotTrack;
