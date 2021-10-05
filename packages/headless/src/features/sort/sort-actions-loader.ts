@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
+import {CoreEngine} from '../../app/engine';
 import {sort} from '../../app/reducers';
 import {SortCriterion} from './sort';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {registerSortCriterion, updateSortCriterion} from './sort-actions';
 
 /**
@@ -31,7 +31,7 @@ export interface SortActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadSortActions(engine: SearchEngine): SortActionCreators {
+export function loadSortActions(engine: CoreEngine): SortActionCreators {
   engine.addReducers({sort});
 
   return {

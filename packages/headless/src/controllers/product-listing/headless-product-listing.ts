@@ -26,14 +26,14 @@ const optionsSchema = new Schema({
 
 export interface ProductListingOptions {
   /**
-   * The initial url used to retrieve the product listing.
+   * The initial URL used to retrieve the product listing.
    */
   url: string;
 
   /**
    * The initial additional fields to retrieve with the product listing.
    */
-  additionalFields: string[];
+  additionalFields?: string[];
 }
 
 export interface ProductListingProps {
@@ -44,18 +44,18 @@ export interface ProductListingProps {
 }
 
 /**
- * The `ProductListing` headless controller allows the end user to configure and retrieve product listing data.
+ * The `ProductListing` controller allows the end user to configure and retrieve product listing data.
  */
-export interface ProductListingController extends Controller {
+export interface ProductListing extends Controller {
   /**
-   * Changes the current url used to retrieve product listing.
-   * @param url - The new url.
+   * Changes the current URL used to retrieve product listing.
+   * @param url - The new URL.
    */
   setUrl(url: string): void;
 
   /**
    * Sets the additional fields to request in addition to the standard commerce fields.
-   * @param additionalFields - The new additional fields
+   * @param additionalFields - The new additional fields.
    */
   setAdditionalFields(additionalFields: string[]): void;
 
@@ -79,7 +79,7 @@ export interface ProductListingState {
   url: string;
 }
 
-export type ProductListingControllerState = ProductListingController['state'];
+export type ProductListingControllerState = ProductListing['state'];
 
 /**
  * Creates a `ProductListingController` controller instance.
@@ -91,7 +91,7 @@ export type ProductListingControllerState = ProductListingController['state'];
 export function buildProductListing(
   engine: ProductListingEngine,
   props: ProductListingProps = {}
-): ProductListingController {
+): ProductListing {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
   }

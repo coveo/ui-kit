@@ -35,7 +35,7 @@ export {
 
 export {
   ProductListingState,
-  ProductListingController,
+  ProductListing as ProductListingController,
   ProductListingOptions,
   ProductListingProps,
   ProductListingControllerState,
