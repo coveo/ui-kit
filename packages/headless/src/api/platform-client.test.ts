@@ -59,6 +59,10 @@ describe('url helper', () => {
         in: {environment: 'dev', region: 'eu'},
         out: 'https://platformdev-eu.cloud.coveo.com',
       },
+      {
+        in: {environment: 'dev', region: 'us'},
+        out: 'https://platformdev.cloud.coveo.com',
+      },
     ];
 
     expectations.forEach((expectation) => {
@@ -104,6 +108,10 @@ describe('url helper', () => {
       {
         in: {environment: 'dev', region: 'eu'},
         out: 'https://analyticsdev-eu.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'dev', region: 'us'},
+        out: 'https://analyticsdev.cloud.coveo.com',
       },
     ];
 
