@@ -30,7 +30,7 @@ import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime, NoopRuntime} from '.
 import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
-import doNotTrack from '../donottrack';
+import {doNotTrack} from '../donottrack';
 
 export const Version = 'v15';
 
@@ -132,7 +132,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
-        if (doNotTrack) {
+        if (doNotTrack()) {
             return new NoopRuntime();
         } else if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());

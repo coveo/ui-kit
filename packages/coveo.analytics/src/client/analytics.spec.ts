@@ -4,6 +4,8 @@ import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieStorage} from '../storage';
 import HistoryStore from '../history';
 import {mockFetch} from '../../tests/fetchMock';
+import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
+import * as doNotTrack from '../donottrack';
 
 const aVisitorId = '123';
 
@@ -53,21 +55,6 @@ describe('Analytics', () => {
             endpoint: anEndpoint,
             version: A_VERSION,
         });
-    });
-
-    it('should honor doNotTrack', () => {
-        jest.mock('../doNotTrack', () => ({
-            doNotTrack: false,
-        }));
-
-        client = new CoveoAnalyticsClient({
-            token: aToken,
-            endpoint: anEndpoint,
-            version: A_VERSION,
-        });
-
-        client.runtime.storage.setItem('vistorId', 'bob');
-        expect(client.runtime.storage.getItem('visitorId')).toBeNull();
     });
 
     it('should call fetch with the parameters', async () => {
@@ -434,4 +421,22 @@ describe('Analytics', () => {
             return JSON.parse(body.toString());
         });
     };
+});
+
+describe('doNotTrack', () => {
+    it('should do business as usual if doNotTrack returns false', () => {
+        jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => false);
+
+        let client = new CoveoAnalyticsClient({});
+
+        expect(client.runtime).toBeInstanceOf(BrowserRuntime);
+    });
+
+    it('should honor doNotTrack', () => {
+        jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+
+        let client = new CoveoAnalyticsClient({});
+
+        expect(client.runtime).toBeInstanceOf(NoopRuntime);
+    });
 });

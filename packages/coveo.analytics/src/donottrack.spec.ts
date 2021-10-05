@@ -1,5 +1,5 @@
 describe('doNotTrack', () => {
-    let doNotTrack: boolean;
+    let doNotTrack: () => boolean;
     function initModule(
         hasNav: boolean,
         options?: {
@@ -45,7 +45,7 @@ describe('doNotTrack', () => {
         it('should be false', () => {
             initModule(false);
 
-            expect(doNotTrack).toBeFalsy();
+            expect(doNotTrack()).toBeFalsy();
         });
     });
     describe('with a Navigator', () => {
@@ -54,44 +54,44 @@ describe('doNotTrack', () => {
                 navigatorGlobalPrivacyControl: false,
             });
 
-            expect(doNotTrack).toBeFalsy();
+            expect(doNotTrack()).toBeFalsy();
         });
         it('should respect GPC true', () => {
             initModule(true, {
                 navigatorGlobalPrivacyControl: true,
             });
 
-            expect(doNotTrack).toBeTruthy();
+            expect(doNotTrack()).toBeTruthy();
         });
         it('should respect GPC undefined', () => {
             initModule(true, {
                 navigatorGlobalPrivacyControl: undefined,
             });
 
-            expect(doNotTrack).toBeFalsy();
+            expect(doNotTrack()).toBeFalsy();
         });
 
         [true, 'yes', '1'].forEach((value) => {
-            it('should fallback `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
+            it('should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
                 initModule(true, {
                     navigatorDoNotTrack: value,
                 });
 
-                expect(doNotTrack).toBeTruthy();
+                expect(doNotTrack()).toBeTruthy();
             });
 
             it('should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value), () => {
                 initModule(true, {
                     navigatorMsDoNotTrack: value,
                 });
-                expect(doNotTrack).toBeTruthy();
+                expect(doNotTrack()).toBeTruthy();
             });
 
             it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
                 initModule(true, {
                     windowDoNotTrack: value,
                 });
-                expect(doNotTrack).toBeTruthy();
+                expect(doNotTrack()).toBeTruthy();
             });
         });
     });
