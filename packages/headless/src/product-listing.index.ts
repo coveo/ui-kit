@@ -8,6 +8,15 @@ export {
   getSampleProductListingEngineConfiguration,
 } from './app/product-listing-engine/product-listing-engine';
 
+export {CoreEngine, ExternalEngineOptions} from './app/engine';
+export {
+  EngineConfiguration,
+  AnalyticsConfiguration,
+  AnalyticsRuntimeEnvironment,
+} from './app/engine-configuration';
+export {LoggerOptions} from './app/logger';
+export {LogLevel} from './app/logger';
+
 export {ProductRecommendation} from './api/search/search/product-recommendation';
 
 // Actions
@@ -25,6 +34,7 @@ export {
 } from './controllers/controller/headless-controller';
 
 export {
+  ProductListingState,
   ProductListingController,
   ProductListingOptions,
   ProductListingProps,
@@ -65,7 +75,12 @@ export {
   buildRelevanceSortCriterion,
 } from './controllers/product-listing/sort/headless-product-listing-sort';
 
-export {buildFacetManager} from './controllers/product-listing/facet/headless-product-listing-facet-manager';
+export {
+  FacetManager,
+  FacetManagerPayload,
+  FacetManagerState,
+  buildFacetManager,
+} from './controllers/product-listing/facet/headless-product-listing-facet-manager';
 
 export {
   Facet,
@@ -99,6 +114,7 @@ export {
   DateFacetOptions,
   DateFacetProps,
   DateFacetState,
+  DateFacetValue,
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,

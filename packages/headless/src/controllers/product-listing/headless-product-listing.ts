@@ -88,10 +88,10 @@ export type ProductListingControllerState = ProductListingController['state'];
  * @param props - The configurable `ProductListingController` properties.
  * @returns A `ProductListingController` controller instance.
  */
-export const buildProductListing = (
+export function buildProductListing(
   engine: ProductListingEngine,
   props: ProductListingProps = {}
-): ProductListingController => {
+): ProductListingController {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
   }
@@ -148,7 +148,7 @@ export const buildProductListing = (
 
     refresh: () => dispatch(fetchProductListing()),
   };
-};
+}
 
 function loadBaseProductListingReducers(
   engine: ProductListingEngine

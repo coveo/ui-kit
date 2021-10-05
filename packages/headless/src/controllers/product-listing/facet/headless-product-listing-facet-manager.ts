@@ -5,9 +5,12 @@ import {buildController} from '../../controller/headless-controller';
 import {
   FacetManager,
   FacetManagerPayload,
+  FacetManagerState,
 } from '../../facet-manager/headless-facet-manager';
 import {ProductListingSection} from '../../../state/state-sections';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+
+export {FacetManager, FacetManagerState, FacetManagerPayload};
 
 /**
  * Creates a `FacetManager` instance for the product listing.

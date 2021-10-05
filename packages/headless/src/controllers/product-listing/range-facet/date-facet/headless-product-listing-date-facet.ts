@@ -22,6 +22,7 @@ import {ProductListingEngine} from '../../../../app/product-listing-engine/produ
 
 export {
   DateFacetOptions,
+  DateFacetValue,
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,
