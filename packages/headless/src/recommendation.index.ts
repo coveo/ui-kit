@@ -21,6 +21,7 @@ export {LogLevel} from './app/logger';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/advanced-search-queries/advanced-search-queries-actions-loader';
 export * from './features/context/context-actions-loader';
+export * from './features/dictionary-field-context/dictionary-field-context-actions-loader';
 export * from './features/fields/fields-actions-loader';
 export * from './features/pipeline/pipeline-actions-loader';
 export * from './features/search-hub/search-hub-actions-loader';
@@ -49,6 +50,13 @@ export {
   ContextPayload,
   buildContext,
 } from './controllers/context/headless-context';
+
+export {
+  DictionaryFieldContext,
+  DictionaryFieldContextState,
+  DictionaryFieldContextPayload,
+  buildDictionaryFieldContext,
+} from './controllers/dictionary-field-context/headless-dictionary-field-context';
 
 // Miscellaneous
 export {Result} from './api/search/search/result';

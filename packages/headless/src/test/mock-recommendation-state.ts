@@ -7,6 +7,7 @@ import {RecommendationAppState} from '../state/recommendation-app-state';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 import {getRecommendationInitialState} from '../features/recommendation/recommendation-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
+import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
 
 export function createMockRecommendationState(
   config: Partial<RecommendationAppState> = {}
@@ -15,6 +16,7 @@ export function createMockRecommendationState(
     configuration: getConfigurationInitialState(),
     advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
     context: getContextInitialState(),
+    dictionaryFieldContext: getDictionaryFieldContextInitialState(),
     fields: getFieldsInitialState(),
     searchHub: getSearchHubInitialState(),
     pipeline: getPipelineInitialState(),
