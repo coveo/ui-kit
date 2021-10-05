@@ -100,7 +100,8 @@ interface ExtractURLFromEnvironment<E extends PlatformEnvironment> {
   region?: Extract<PlatformCombination, {env: E}>['region'];
 }
 
-export function platformUrl<E extends PlatformEnvironment>(
+function coveoCloudURL<E extends PlatformEnvironment>(
+  subdomain: string,
   options?: ExtractURLFromEnvironment<E>
 ) {
   const urlEnv =
@@ -112,13 +113,19 @@ export function platformUrl<E extends PlatformEnvironment>(
       ? ''
       : `-${options.region}`;
 
-  return `https://platform${urlEnv}${urlRegion}.cloud.coveo.com`;
+  return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
+}
+
+export function platformUrl<E extends PlatformEnvironment>(
+  options?: ExtractURLFromEnvironment<E>
+) {
+  return coveoCloudURL('platform', options);
 }
 
 export function analyticsUrl<E extends PlatformEnvironment = 'prod'>(
   options?: ExtractURLFromEnvironment<E>
 ) {
-  return platformUrl(options).replace('platform', 'analytics');
+  return coveoCloudURL('analytics', options);
 }
 
 function buildDefaultRequestOptions(

@@ -2,6 +2,7 @@ import {
   platformUrl,
   PlatformClient,
   PlatformClientCallOptions,
+  analyticsUrl,
 } from './platform-client';
 import pino from 'pino';
 import * as BackOff from 'exponential-backoff';
@@ -16,37 +17,104 @@ import {ExpiredTokenError} from '../utils/errors';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
-describe('platformUrl helper', () => {
-  it('should return https://platform.cloud.coveo.com by default', () => {
-    expect(platformUrl()).toBe('https://platform.cloud.coveo.com');
+describe('url helper', () => {
+  type testedRegion = 'us' | 'au' | 'eu';
+  type testedEnvironment = 'dev' | 'qa' | 'prod' | 'hipaa';
+  type urlHelperExpectation = {
+    in: {environment?: testedEnvironment; region?: testedRegion};
+    out: string;
+  };
+
+  it('return the correct #platformUrl()', () => {
+    const expectations: urlHelperExpectation[] = [
+      {
+        in: {},
+        out: 'https://platform.cloud.coveo.com',
+      },
+      {
+        in: {environment: undefined, region: 'us'},
+        out: 'https://platform.cloud.coveo.com',
+      },
+      {
+        in: {environment: undefined, region: 'au'},
+        out: 'https://platform-au.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'prod', region: 'eu'},
+        out: 'https://platform-eu.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'hipaa', region: undefined},
+        out: 'https://platformhipaa.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'qa', region: 'us'},
+        out: 'https://platformqa.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'qa', region: 'eu'},
+        out: 'https://platformqa-eu.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'dev', region: 'eu'},
+        out: 'https://platformdev-eu.cloud.coveo.com',
+      },
+    ];
+
+    expectations.forEach((expectation) => {
+      expect(
+        platformUrl({
+          environment: expectation.in.environment,
+          region: expectation.in.region,
+        })
+      ).toEqual(expectation.out);
+    });
   });
 
-  it(`when the environment is prod
-  should not return it in the url e.g. https://platform.cloud.coveo.com`, () => {
-    expect(platformUrl({environment: 'prod'})).toBe(
-      'https://platform.cloud.coveo.com'
-    );
-  });
+  it('return the correct #analyticsUrl()', () => {
+    const expectations: urlHelperExpectation[] = [
+      {
+        in: {},
+        out: 'https://analytics.cloud.coveo.com',
+      },
+      {
+        in: {environment: undefined, region: 'us'},
+        out: 'https://analytics.cloud.coveo.com',
+      },
+      {
+        in: {environment: undefined, region: 'au'},
+        out: 'https://analytics-au.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'prod', region: 'eu'},
+        out: 'https://analytics-eu.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'hipaa', region: undefined},
+        out: 'https://analyticshipaa.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'qa', region: 'us'},
+        out: 'https://analyticsqa.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'qa', region: 'eu'},
+        out: 'https://analyticsqa-eu.cloud.coveo.com',
+      },
+      {
+        in: {environment: 'dev', region: 'eu'},
+        out: 'https://analyticsdev-eu.cloud.coveo.com',
+      },
+    ];
 
-  it(`when the environment is not prod
-  should return it in the url e.g. https://platformdev.cloud.coveo.com`, () => {
-    expect(platformUrl({environment: 'dev'})).toBe(
-      'https://platformdev.cloud.coveo.com'
-    );
-  });
-
-  it(`when the region is us
-  should not return it in the url e.g. https://platform.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'us'})).toBe(
-      'https://platform.cloud.coveo.com'
-    );
-  });
-
-  it(`when the region is not us
-  should return it in the url e.g. https://platform-eu.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'eu'})).toBe(
-      'https://platform-eu.cloud.coveo.com'
-    );
+    expectations.forEach((expectation) => {
+      expect(
+        analyticsUrl({
+          environment: expectation.in.environment,
+          region: expectation.in.region,
+        })
+      ).toEqual(expectation.out);
+    });
   });
 });
 
