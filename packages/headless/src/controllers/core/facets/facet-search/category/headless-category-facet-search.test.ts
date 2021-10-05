@@ -9,7 +9,7 @@ import {
 import {
   CategoryFacetSearchProps,
   CategoryFacetSearch,
-  buildCategoryFacetSearch,
+  buildCoreCategoryFacetSearch,
 } from './headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
@@ -28,7 +28,7 @@ describe('CategoryFacetSearch', () => {
   }
 
   function initFacetSearch() {
-    controller = buildCategoryFacetSearch(engine, props);
+    controller = buildCoreCategoryFacetSearch(engine, props);
   }
 
   beforeEach(() => {
@@ -37,7 +37,6 @@ describe('CategoryFacetSearch', () => {
         ...defaultFacetSearchOptions,
         facetId,
       },
-      select: jest.fn(),
     };
 
     initEngine();
@@ -78,10 +77,6 @@ describe('CategoryFacetSearch', () => {
         value,
       });
       expect(engine.actions).toContainEqual(action);
-    });
-
-    it('calls the select prop #executeSearch action', () => {
-      expect(props.select).toHaveBeenCalled();
     });
   });
 });

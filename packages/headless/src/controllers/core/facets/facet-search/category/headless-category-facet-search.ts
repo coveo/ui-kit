@@ -14,18 +14,18 @@ import {CoreEngine} from '../../../../../app/engine';
 
 export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;
-  select: (value: CategoryFacetSearchResult) => void;
 }
 
-export type CategoryFacetSearch = ReturnType<typeof buildCategoryFacetSearch>;
+export type CategoryFacetSearch = ReturnType<
+  typeof buildCoreCategoryFacetSearch
+>;
 
-export function buildCategoryFacetSearch(
+export function buildCoreCategoryFacetSearch(
   engine: CoreEngine<CategoryFacetSearchSection & ConfigurationSection>,
   props: CategoryFacetSearchProps
 ) {
   const {dispatch} = engine;
   const options = {...defaultFacetSearchOptions, ...props.options};
-  const {select} = props;
   const {facetId} = options;
   const getFacetSearch = () => engine.state.categoryFacetSearchSet[facetId];
 
@@ -46,7 +46,6 @@ export function buildCategoryFacetSearch(
           value,
         })
       );
-      select(value);
     },
 
     get state() {
