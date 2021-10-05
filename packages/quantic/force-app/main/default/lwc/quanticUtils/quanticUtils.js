@@ -155,3 +155,16 @@ export function setItemInLocalStorage(key, item) {
 export function regexEncode(value) {
   return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
+
+/**
+ * Replaces certain characters in date string returned from Coveo Search API for browser compatibility. 
+ * Replace `/` characters in date string with `-`.
+ * Replace `@` characters in date string with `T`.
+ * @param {string} dateString 
+ * @returns {string}
+ */
+export function fromSearchApiDate(dateString) {
+  return dateString
+    .replaceAll('/', '-')
+    .replaceAll('@', 'T');
+}

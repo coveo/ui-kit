@@ -3,7 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, fromSearchApiDate} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
@@ -63,9 +63,9 @@ export default class QuanticDateFacet extends LightningElement {
    * @returns {string}
    */
   @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
-    new Date(this.fixDateForAllBrowsers(item.start))
+    new Date(fromSearchApiDate(item.start))
   )} - ${new Intl.DateTimeFormat(LOCALE).format(
-    new Date(this.fixDateForAllBrowsers(item.end))
+    new Date(fromSearchApiDate(item.end))
   )}`;
   /** 
    * Whether the facet is collapsed.
@@ -172,12 +172,6 @@ export default class QuanticDateFacet extends LightningElement {
       return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
     }
     return '';
-  }
-
-  fixDateForAllBrowsers(dateString) {
-    return dateString
-      .replaceAll('/', '-')
-      .replaceAll('@', 'T');
   }
 
   /**
