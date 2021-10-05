@@ -37,52 +37,56 @@ export default class QuanticResult extends LightningElement {
     if (this.fileTypeIcon) {
       return this.fileTypeIcon;
     }
-
     return `standard:document`;
   }
 
   get objectTypeIcon() {
-    const objType = this.result.raw.objecttype;
+    const objType = this.result.raw.objecttype?.toLowerCase();
     if (!objType) {
       return undefined;
     }
-    switch (objType.toLowerCase()) {
-      case 'feeditem':
-        return 'standard:feed';
-      case 'how_to':
-        return 'standard:question_feed';
-      case 'message':
-        return 'standard:note';
-      case 'city':
-        return 'standard:household';
-      case 'kb_knowledge':
-        return 'standard:knowledge';
-      default:
-        return `standard:${objType.toLowerCase()}`;
-    }
+
+    const defaultIcon = `standard:${objType}`;
+    const iconMap = {
+      'feeditem': 'standard:feed',
+      'how_to': 'standard:question_feed',
+      'message': 'standard:note',
+      'city': 'standard:address',
+      'continent': 'standard:location',
+      'kb_knowledge': 'standard:knowledge',
+      'item': 'standard:display_text',
+      'blogpost': 'standard:news',
+      'attachment': 'doctype:attachment',
+      'board': 'standard:dashboard_ea',
+      'casecomment': 'standard:case_comment',
+      'collaborationgroup': 'standard:team_member',
+      'contentversion': 'standard:drafts',
+      'food': 'custom:custom51',
+      'goal': 'standard:goals',
+      'invoice': 'standard:partner_fund_claim',
+      'doc': 'doctype:word',
+    };
+
+    const icon = iconMap[objType];
+    return icon ?? defaultIcon;
   }
 
   get fileTypeIcon() {
-    const fileType = this.result.raw.filetype;
+    const fileType = this.result.raw.filetype?.toLowerCase();
     if (!fileType) {
       return undefined;
     }
 
-    const lower = fileType.toLowerCase();
-    switch (lower) {
-      case 'youtubevideo':
-        return 'custom:custom99';
-      case 'kb_knowledge':
-        return 'standard:knowledge';
-      case 'html':
-        return 'standard:document';
-      case 'doc':
-        return 'doctype:gdoc';
-      case 'xls':
-        return 'doctype:excel';
-      default:
-        return `doctype:${lower}`;
+    const defaultIcon = `doctype:${fileType}`;
+    const iconMap = {
+      'youtubevideo': 'custom:custom99',
+      'kb_knowledge': 'standard:knowledge',
+      'doc': 'doctype:word',
+      'xls': 'doctype:excel',
     }
+
+    const icon = iconMap[fileType];
+    return icon ?? defaultIcon;
   }
 
   get label() {
@@ -95,8 +99,6 @@ export default class QuanticResult extends LightningElement {
     if (this.sourceTypeLabel) {
       return this.sourceTypeLabel;
     }
-    
-    
     return `Documentation`
   }
 
@@ -144,13 +146,13 @@ export default class QuanticResult extends LightningElement {
     if (!fileType) {
       return undefined;
     }
-
     const lower = fileType.toLowerCase();
     switch (lower) {
       case 'pdf':
-        return `PDF`;
       case 'ppt':
-        return `PPT`;
+      case 'xls':
+      case 'doc':
+        return lower.toUpperCase();
       case 'kb_knowledge':
         return `Knowledge`;
       default:
@@ -168,7 +170,6 @@ export default class QuanticResult extends LightningElement {
     if (template) {
       return template;
     }
-
     return defaultTemplate;
   }
 }
