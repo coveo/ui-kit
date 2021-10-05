@@ -157,7 +157,7 @@ export function regexEncode(value) {
 }
 
 /**
- * Replaces certain characters in date string returned from Coveo Search API for browser compatibility. 
+ * Converts a date string from the Coveo Search API format to the ISO-8601 format.
  * Replace `/` characters in date string with `-`.
  * Replace `@` characters in date string with `T`.
  * @param {string} dateString 
