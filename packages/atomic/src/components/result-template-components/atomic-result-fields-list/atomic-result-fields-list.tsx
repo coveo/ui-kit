@@ -1,4 +1,5 @@
 import {Component, h, Element, Host} from '@stencil/core';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
@@ -9,11 +10,11 @@ import {Component, h, Element, Host} from '@stencil/core';
   shadow: false,
 })
 export class AtomicResultFieldsList {
+  @ResultContext()
   private resizeObserver!: ResizeObserver;
 
   private updatingChildren = false;
   private rows: number[] = [];
-
   @Element() private host!: HTMLElement;
 
   public connectedCallback() {
