@@ -5,12 +5,12 @@ import {
   Result,
 } from '@coveo/headless';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
-import {filterProtocol} from '../../../utils/xss-utils';
 import {
   Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {ResultLink} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -57,16 +57,11 @@ export class AtomicResultLink implements InitializableComponent {
 
   public render() {
     return (
-      <a
-        part="result-link"
-        href={filterProtocol(this.result.clickUri)}
-        onClick={() => this.interactiveResult.select()}
-        onContextMenu={() => this.interactiveResult.select()}
-        onMouseDown={() => this.interactiveResult.select()}
-        onMouseUp={() => this.interactiveResult.select()}
-        onTouchStart={() => this.interactiveResult.beginDelayedSelect()}
-        onTouchEnd={() => this.interactiveResult.cancelPendingSelect()}
+      <ResultLink
+        interactiveResult={this.interactiveResult}
+        result={this.result}
         target={this.target}
+        part="result-link"
       >
         {this.hasSlot ? (
           <slot></slot>
@@ -76,7 +71,7 @@ export class AtomicResultLink implements InitializableComponent {
             default="no-title"
           ></atomic-result-text>
         )}
-      </a>
+      </ResultLink>
     );
   }
 }

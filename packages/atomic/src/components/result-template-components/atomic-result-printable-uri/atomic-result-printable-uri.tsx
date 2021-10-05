@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, Element, h, Prop, State} from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {parseXML} from '../../../utils/utils';
@@ -27,6 +27,7 @@ import Arrow from '../../../images/arrow-right.svg';
 export class AtomicResultPrintableUri {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
+  @Element() private host!: HTMLElement;
 
   @State() listExpanded = false;
   private strings = {
@@ -109,6 +110,10 @@ export class AtomicResultPrintableUri {
   }
 
   public render() {
+    if (this.error) {
+      this.host?.remove();
+      return;
+    }
     const parents = this.renderParents();
     if (parents.length) {
       const parts = `result-printable-uri-list ${
