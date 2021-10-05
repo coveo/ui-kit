@@ -15,6 +15,10 @@ import {
   analyticsAPIEndpoint,
 } from './configuration-state';
 
+function analyticsUrlFromPlatformUrl(platformUrl: string) {
+  return platformUrl.replace(/^(https?:\/\/)platform/, '$1analytics');
+}
+
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),
   (builder) =>
@@ -29,7 +33,9 @@ export const configurationReducer = createReducer(
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = `${action.payload.platformUrl}${analyticsAPIEndpoint}`;
+          state.analytics.apiBaseUrl = `${analyticsUrlFromPlatformUrl(
+            action.payload.platformUrl
+          )}${analyticsAPIEndpoint}`;
         }
       })
       .addCase(updateSearchConfiguration, (state, action) => {

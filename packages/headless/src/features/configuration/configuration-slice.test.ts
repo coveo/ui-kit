@@ -13,6 +13,7 @@ import {
   ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state';
+import {allValidPlatformCombination} from '../../test/platform-url';
 
 describe('configuration slice', () => {
   const url = platformUrl({environment: 'dev', region: 'eu'});
@@ -80,6 +81,20 @@ describe('configuration slice', () => {
       const platformUrl = '/rest/search/v2';
       const action = updateBasicConfiguration({platformUrl});
       expect('error' in action).toBe(false);
+    });
+
+    it('setting platformUrl keep search and analytics url in sync', () => {
+      allValidPlatformCombination().forEach((expectation) => {
+        const newState = configurationReducer(
+          existingState,
+          updateBasicConfiguration({
+            platformUrl: expectation.platform,
+          })
+        );
+
+        expect(newState.search.apiBaseUrl).toBe(expectation.search);
+        expect(newState.analytics.apiBaseUrl).toBe(expectation.analytics);
+      });
     });
   });
 

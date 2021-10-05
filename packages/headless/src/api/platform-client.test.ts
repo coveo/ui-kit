@@ -14,104 +14,22 @@ import {
   PlatformRequestOptions,
 } from './preprocess-request';
 import {ExpiredTokenError} from '../utils/errors';
+import {allValidPlatformCombination} from '../test/platform-url';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
 describe('url helper', () => {
-  type testedRegion = 'us' | 'au' | 'eu';
-  type testedEnvironment = 'dev' | 'qa' | 'prod' | 'hipaa';
-  type urlHelperExpectation = {
-    in: {environment?: testedEnvironment; region?: testedRegion};
-    out: string;
-  };
-
   it('return the correct #platformUrl()', () => {
-    const expectations: urlHelperExpectation[] = [
-      {
-        in: {},
-        out: 'https://platform.cloud.coveo.com',
-      },
-      {
-        in: {environment: undefined, region: 'us'},
-        out: 'https://platform.cloud.coveo.com',
-      },
-      {
-        in: {environment: undefined, region: 'au'},
-        out: 'https://platform-au.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'prod', region: 'eu'},
-        out: 'https://platform-eu.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'hipaa', region: undefined},
-        out: 'https://platformhipaa.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'qa', region: 'us'},
-        out: 'https://platformqa.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'qa', region: 'eu'},
-        out: 'https://platformqa-eu.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'dev', region: 'eu'},
-        out: 'https://platformdev-eu.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'dev', region: 'us'},
-        out: 'https://platformdev.cloud.coveo.com',
-      },
-    ];
-
-    expectations.forEach((expectation) => {
-      expect(platformUrl(expectation.in)).toEqual(expectation.out);
+    allValidPlatformCombination().forEach((expectation) => {
+      expect(platformUrl(expectation)).toEqual(expectation.platform);
     });
   });
 
   it('return the correct #analyticsUrl()', () => {
-    const expectations: urlHelperExpectation[] = [
-      {
-        in: {},
-        out: 'https://analytics.cloud.coveo.com',
-      },
-      {
-        in: {environment: undefined, region: 'us'},
-        out: 'https://analytics.cloud.coveo.com',
-      },
-      {
-        in: {environment: undefined, region: 'au'},
-        out: 'https://analytics-au.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'prod', region: 'eu'},
-        out: 'https://analytics-eu.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'hipaa', region: undefined},
-        out: 'https://analyticshipaa.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'qa', region: 'us'},
-        out: 'https://analyticsqa.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'qa', region: 'eu'},
-        out: 'https://analyticsqa-eu.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'dev', region: 'eu'},
-        out: 'https://analyticsdev-eu.cloud.coveo.com',
-      },
-      {
-        in: {environment: 'dev', region: 'us'},
-        out: 'https://analyticsdev.cloud.coveo.com',
-      },
-    ];
-
-    expectations.forEach((expectation) => {
-      expect(analyticsUrl(expectation.in)).toEqual(expectation.out);
+    allValidPlatformCombination().forEach((expectation) => {
+      expect(analyticsUrl(expectation)).toEqual(
+        expectation.analytics.split('/rest')[0]
+      );
     });
   });
 });
