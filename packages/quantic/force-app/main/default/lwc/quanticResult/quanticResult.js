@@ -48,13 +48,13 @@ export default class QuanticResult extends LightningElement {
 
     const defaultIcon = `standard:${objType}`;
     const iconMap = {
-      'feeditem': 'standard:feed',
+      'feeditem': 'standard:post',
       'how_to': 'standard:question_feed',
       'message': 'standard:note',
       'city': 'standard:address',
       'continent': 'standard:location',
       'kb_knowledge': 'standard:knowledge',
-      'item': 'standard:display_text',
+      'item': 'standard:feed',
       'blogpost': 'standard:news',
       'attachment': 'doctype:attachment',
       'board': 'standard:dashboard_ea',
@@ -135,7 +135,7 @@ export default class QuanticResult extends LightningElement {
       case 'confluence2':
         return `Documentation`;
       case 'sharepoint':
-        return `PDF`;
+        return 'PDF';
       default:
         return sourceType;
     }
@@ -162,7 +162,6 @@ export default class QuanticResult extends LightningElement {
 
   get videoSourceId() {
     return `https://www.youtube.com/embed/${this.result.raw.ytvideoid}?autoplay=0`
-
   }
 
   render() {
