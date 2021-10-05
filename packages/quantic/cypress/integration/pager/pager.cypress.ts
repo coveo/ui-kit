@@ -35,7 +35,7 @@ describe('quantic-pager', () => {
   }
 
   describe('with default options', () => {
-    it('should render properly', () => {
+    it('should work as expected', () => {
       visitPager({
         numberOfPages: 5,
       });
@@ -65,7 +65,7 @@ describe('quantic-pager', () => {
   });
 
   describe('with custom number of pages', () => {
-    it('should render properly', () => {
+    it('should display the right number of pages', () => {
       visitPager({
         numberOfPages: 10,
       });
@@ -75,7 +75,7 @@ describe('quantic-pager', () => {
   });
 
   describe('when loading options from URL', () => {
-    it('should load the options', () => {
+    it('should select the right page', () => {
       loadFromUrlHash(
         {
           numberOfPages: 5,
