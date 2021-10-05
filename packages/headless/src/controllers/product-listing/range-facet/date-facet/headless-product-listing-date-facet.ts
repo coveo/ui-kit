@@ -32,7 +32,7 @@ export {
 };
 
 /**
- * Creates a `DateFacet` controller instance.
+ * Creates a `DateFacet` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `DateFacet` controller properties.

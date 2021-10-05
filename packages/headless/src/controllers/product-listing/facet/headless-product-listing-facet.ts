@@ -45,7 +45,7 @@ export {
 };
 
 /**
- * Creates a `Facet` controller instance.
+ * Creates a `Facet` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.

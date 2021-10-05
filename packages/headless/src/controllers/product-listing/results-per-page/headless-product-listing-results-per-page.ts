@@ -23,7 +23,7 @@ export {
 };
 
 /**
- * Creates a `ResultsPerPage` controller instance.
+ * Creates a `ResultsPerPage` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ResultsPerPage` properties.

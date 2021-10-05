@@ -10,7 +10,7 @@ import {ProductListingSection} from '../../../state/state-sections';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 
 /**
- * Creates a `FacetManager` instance.
+ * Creates a `FacetManager` instance for the product listing.
  *
  * @param productListingEngine - The headless engine.
  */

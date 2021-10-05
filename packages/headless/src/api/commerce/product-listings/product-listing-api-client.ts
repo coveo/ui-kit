@@ -66,7 +66,7 @@ export class ProductListingAPIClient {
    * Retrieves the product listing from the API.
    *
    * @param req - The request parameters.
-   * @returns The products for the requested listing.
+   * @returns The products for the requested product listing.
    */
   async getProducts(
     req: ProductListingRequest
