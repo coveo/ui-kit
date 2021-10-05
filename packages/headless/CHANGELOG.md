@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.24.0...@coveo/headless@1.24.1) (2021-10-05)
+
+
+### Bug Fixes
+
+* **headless:** fix platformURL exported function ([#1285](https://github.com/coveo/ui-kit/issues/1285)) ([a41874f](https://github.com/coveo/ui-kit/commit/a41874f6be10b957d59f4d9eeaca9920f1d6096e))
+
+
+
+
+
 # [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.23.0...@coveo/headless@1.24.0) (2021-10-04)
 
 
