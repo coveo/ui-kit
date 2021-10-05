@@ -66,12 +66,7 @@ describe('url helper', () => {
     ];
 
     expectations.forEach((expectation) => {
-      expect(
-        platformUrl({
-          environment: expectation.in.environment,
-          region: expectation.in.region,
-        })
-      ).toEqual(expectation.out);
+      expect(platformUrl(expectation.in)).toEqual(expectation.out);
     });
   });
 
@@ -116,12 +111,7 @@ describe('url helper', () => {
     ];
 
     expectations.forEach((expectation) => {
-      expect(
-        analyticsUrl({
-          environment: expectation.in.environment,
-          region: expectation.in.region,
-        })
-      ).toEqual(expectation.out);
+      expect(analyticsUrl(expectation.in)).toEqual(expectation.out);
     });
   });
 });
