@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](https://github.com/coveo/ui-kit/compare/headless-react@0.37.29...headless-react@0.38.0) (2021-10-04)
+
+
+### Features
+
+* **headless:** support DictionaryFieldContext ([#1268](https://github.com/coveo/ui-kit/issues/1268)) ([17c4562](https://github.com/coveo/ui-kit/commit/17c456234e0fe9f7dc30142252ea81f217ef9b9d))
+
+
+
+
+
 ## [0.37.29](https://github.com/coveo/ui-kit/compare/headless-react@0.37.28...headless-react@0.37.29) (2021-09-29)
 
 **Note:** Version bump only for package headless-react
