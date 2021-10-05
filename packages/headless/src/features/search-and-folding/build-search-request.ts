@@ -50,11 +50,12 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     ...(state.context && {
       context: state.context.contextValues,
     }),
+    ...(state.fields &&
+      !state.fields.fetchAllFields && {
+        fieldsToInclude: state.fields.fieldsToInclude,
+      }),
     ...(state.dictionaryFieldContext && {
       dictionaryFieldContext: state.dictionaryFieldContext.contextValues,
-    }),
-    ...(state.fields && {
-      fieldsToInclude: state.fields.fieldsToInclude,
     }),
     ...(state.pipeline && {
       pipeline: state.pipeline,

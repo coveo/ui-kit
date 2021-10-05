@@ -1,4 +1,5 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
+import {FieldDescription} from '../../api/search/fields/fields-response';
 import {
   ExecutionReport,
   ExecutionStep,
@@ -7,7 +8,7 @@ import {QueryRankingExpression} from '../../api/search/search/query-ranking-expr
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {configuration, debug, search} from '../../app/reducers';
+import {configuration, debug, search, fields} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
@@ -18,8 +19,14 @@ import {
   TermWeightReport,
 } from '../../features/debug/ranking-info-parser';
 import {
+  disableFetchAllFields,
+  enableFetchAllFields,
+  fetchFieldsDescription,
+} from '../../features/fields/fields-actions';
+import {
   ConfigurationSection,
   DebugSection,
+  FieldsSection,
   SearchSection,
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -59,6 +66,18 @@ export interface RelevanceInspectorInitialState {
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  */
 export interface RelevanceInspector extends Controller {
+  /**
+   * Fetch the description of all fields available from the index.
+   */
+  fetchFieldDescriptions(): void;
+  /**
+   * Fetch all fields available from the index on each individual results.
+   */
+  enableFetchAllFields(): void;
+  /**
+   * Disable fetching all available fields from the index.
+   */
+  disableFetchAllFields(): void;
   /**
    * Enables debug mode.
    */
@@ -105,6 +124,15 @@ export interface RelevanceInspectorState {
    * The ranking expressions.
    */
   rankingExpressions?: QueryRankingExpression[];
+
+  /**
+   * The description of all fields available in the index.
+   */
+  fieldDescriptions?: FieldDescription[];
+  /**
+   * Whether fields debugging is enabled, returning all fields available on query results.
+   */
+  fetchAllFields?: boolean;
 }
 
 export interface ResultRankingInformation {
@@ -166,6 +194,12 @@ export function buildRelevanceInspector(
     dispatch(enableDebug());
   }
 
+  const warnProductionEnvironment = (flag: string) => {
+    engine.logger.warn(
+      `Flag [ ${flag} ] is now activated. This should *not* be used in any production environment as it negatively impact performance.`
+    );
+  };
+
   return {
     ...controller,
 
@@ -186,6 +220,8 @@ export function buildRelevanceInspector(
         rankingExpressions,
       } = state.search.response as SearchResponseSuccessWithDebugInfo;
 
+      const {fieldsDescription, fetchAllFields} = state.fields;
+
       return {
         isEnabled,
         rankingInformation: rankingInformationSelector(state),
@@ -197,27 +233,53 @@ export function buildRelevanceInspector(
         },
         userIdentities,
         rankingExpressions,
-        // fields: [], TODO: allow to fetch fields from the API
+        fieldsDescription,
+        fetchAllFields,
       };
     },
 
     enable() {
       dispatch(enableDebug());
+      warnProductionEnvironment('debug');
     },
 
     disable() {
       dispatch(disableDebug());
+      dispatch(disableFetchAllFields());
+    },
+
+    enableFetchAllFields() {
+      dispatch(enableFetchAllFields());
+      warnProductionEnvironment('fetchAllFields');
+    },
+
+    disableFetchAllFields() {
+      dispatch(disableFetchAllFields());
+    },
+
+    fetchFieldDescriptions() {
+      dispatch(fetchFieldsDescription());
+      warnProductionEnvironment('fieldsDescription');
+      engine.logger.warn(
+        `For production environment, please specify the necessary fields either when instantiating a ResultList controller, or by dispatching a registerFieldsToInclude action.
+        
+        https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#resultlistoptions
+        https://docs.coveo.com/en/headless/latest/reference/actions/field/#registerfieldstoinclude`
+      );
     },
   };
 }
 
 function loadRelevanceInspectorReducers(
   engine: SearchEngine
-): engine is SearchEngine<DebugSection & SearchSection & ConfigurationSection> {
+): engine is SearchEngine<
+  DebugSection & SearchSection & ConfigurationSection & FieldsSection
+> {
   engine.addReducers({
     debug,
     search,
     configuration,
+    fields,
   });
   return true;
 }
