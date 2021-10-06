@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.25.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.24.1...@coveo/headless@1.25.0) (2021-10-05)
+
+
+### Features
+
+* **headless:** add support for fields debugging in relevance inspector ([#1236](https://github.com/coveo/ui-kit/issues/1236)) ([282c7c1](https://github.com/coveo/ui-kit/commit/282c7c141a13173a8fd848bbae9611653ba92c67))
+* **headless:** support dictionaryFieldContext on recommendation and product-recommendation ([#1287](https://github.com/coveo/ui-kit/issues/1287)) ([1027dc6](https://github.com/coveo/ui-kit/commit/1027dc678fb6ccef32a8d35b5aa259a27b94598a))
+
+
+
+
+
+## [1.24.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.24.0...@coveo/headless@1.24.1) (2021-10-05)
+
+
+### Bug Fixes
+
+* **headless:** fix platformURL exported function ([#1285](https://github.com/coveo/ui-kit/issues/1285)) ([a41874f](https://github.com/coveo/ui-kit/commit/a41874f6be10b957d59f4d9eeaca9920f1d6096e))
+
+
+
+
+
+# [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.23.0...@coveo/headless@1.24.0) (2021-10-04)
+
+
+### Features
+
+* **headless:** support DictionaryFieldContext ([#1268](https://github.com/coveo/ui-kit/issues/1268)) ([17c4562](https://github.com/coveo/ui-kit/commit/17c456234e0fe9f7dc30142252ea81f217ef9b9d))
+
+
+
+
+
 # [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.22.0...@coveo/headless@1.23.0) (2021-09-29)
 
 

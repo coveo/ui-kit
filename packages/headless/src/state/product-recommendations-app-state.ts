@@ -1,6 +1,7 @@
 import {
   ConfigurationSection,
   ContextSection,
+  DictionaryFieldContextSection,
   ProductRecommendationsSection,
   SearchHubSection,
   VersionSection,
@@ -9,5 +10,6 @@ import {
 export type ProductRecommendationsAppState = ConfigurationSection &
   ProductRecommendationsSection &
   ContextSection &
+  DictionaryFieldContextSection &
   SearchHubSection &
   VersionSection;

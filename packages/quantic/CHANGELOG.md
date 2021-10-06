@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.71.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.0...@coveo/quantic@0.71.1) (2021-10-06)
+
+
+### Bug Fixes
+
+* **quantic:** fixed filter number of results alignment ([#1284](https://github.com/coveo/ui-kit/issues/1284)) ([774b233](https://github.com/coveo/ui-kit/commit/774b233c6cc0aee016c3d30c7dfc2cbd1e4d52a7))
+
+
+
+
+
+# [0.71.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.70.2...@coveo/quantic@0.71.0) (2021-10-05)
+
+
+### Features
+
+* **quantic:** add pager end to end tests ([#1286](https://github.com/coveo/ui-kit/issues/1286)) ([0b5ce82](https://github.com/coveo/ui-kit/commit/0b5ce82f6c4fdc34597c40ba2c8db401dd957990))
+
+
+
+
+
+## [0.70.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.70.1...@coveo/quantic@0.70.2) (2021-10-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.70.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.70.0...@coveo/quantic@0.70.1) (2021-10-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.70.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.69.0...@coveo/quantic@0.70.0) (2021-10-04)
 
 

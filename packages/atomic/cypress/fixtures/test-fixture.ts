@@ -28,6 +28,7 @@ export class TestFixture {
   private hash = '';
   private style = document.createElement('style');
   private language?: string;
+  private disabledAnalytics = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private responseModifier: SearchResponseModifierPredicate | null = null;
@@ -67,6 +68,11 @@ export class TestFixture {
     return this;
   }
 
+  public withoutAnalytics() {
+    this.disabledAnalytics = true;
+    return this;
+  }
+
   public withFieldCaptions(field: string, captions: Record<string, string>) {
     this.fieldCaptions.push({field, captions});
     return this;
@@ -80,6 +86,7 @@ export class TestFixture {
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
+    this.stubConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -92,6 +99,10 @@ export class TestFixture {
 
       if (this.language) {
         searchInterfaceComponent.setAttribute('language', this.language);
+      }
+
+      if (this.disabledAnalytics) {
+        searchInterfaceComponent.setAttribute('analytics', 'false');
       }
 
       if (this.responseModifier) {
@@ -130,7 +141,9 @@ export class TestFixture {
 
     if (this.execFirstSearch) {
       cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      if (!this.disabledAnalytics) {
+        cy.wait(TestFixture.interceptAliases.UA);
+      }
     }
 
     this.aliases.forEach((alias) => alias(this));
@@ -150,6 +163,14 @@ export class TestFixture {
   public get elementAliases() {
     return {
       SearchInterface: 'searchInterface',
+    };
+  }
+
+  public static get consoleAliases() {
+    return {
+      error: '@consoleError',
+      warn: '@consoleWarn',
+      log: '@consoleLog',
     };
   }
 
@@ -173,6 +194,20 @@ export class TestFixture {
       method: 'POST',
       path: '**/rest/search/v2/facet?*',
     }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
+  }
+
+  private stubConsole() {
+    cy.window().then((win) => {
+      cy.stub(win.console, 'error').as(
+        TestFixture.consoleAliases.error.substring(1)
+      );
+      cy.stub(win.console, 'warn').as(
+        TestFixture.consoleAliases.warn.substring(1)
+      );
+      cy.stub(win.console, 'log').as(
+        TestFixture.consoleAliases.log.substring(1)
+      );
+    });
   }
 }
 

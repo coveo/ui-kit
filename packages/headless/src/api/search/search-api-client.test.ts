@@ -382,6 +382,9 @@ describe('search api client', () => {
       const recommendationState = createMockRecommendationState();
       recommendationState.configuration.analytics = analytics;
       recommendationState.pipeline = 'some-pipeline';
+      recommendationState.dictionaryFieldContext = {
+        contextValues: {price: 'fr'},
+      };
 
       const req = buildRecommendationRequest(recommendationState);
 
@@ -401,6 +404,7 @@ describe('search api client', () => {
           cq: recommendationState.advancedSearchQueries.cq,
           fieldsToInclude: recommendationState.fields.fieldsToInclude,
           context: recommendationState.context.contextValues,
+          dictionaryFieldContext: recommendationState.context.contextValues,
           pipeline: recommendationState.pipeline,
           searchHub: recommendationState.searchHub,
           timezone: state.configuration.search.timezone,
@@ -429,6 +433,10 @@ describe('search api client', () => {
           },
         },
       });
+      productRecommendationsState.dictionaryFieldContext = {
+        contextValues: {price: 'fr'},
+      };
+
       const req = buildProductRecommendationsRequest(
         productRecommendationsState
       );
@@ -447,6 +455,8 @@ describe('search api client', () => {
         requestParams: {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,
+          dictionaryFieldContext:
+            productRecommendationsState.dictionaryFieldContext.contextValues,
           searchHub: productRecommendationsState.searchHub,
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,

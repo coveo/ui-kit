@@ -4,6 +4,7 @@ import {
   ConfigurationSection,
   ContextSection,
   DebugSection,
+  DictionaryFieldContextSection,
   FieldsSection,
   PipelineSection,
   QuerySection,
@@ -18,6 +19,7 @@ export type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
       AdvancedSearchQueriesSection &
       SortSection &
       ContextSection &
+      DictionaryFieldContextSection &
       FieldsSection &
       PipelineSection &
       SearchHubSection &
@@ -48,8 +50,12 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     ...(state.context && {
       context: state.context.contextValues,
     }),
-    ...(state.fields && {
-      fieldsToInclude: state.fields.fieldsToInclude,
+    ...(state.fields &&
+      !state.fields.fetchAllFields && {
+        fieldsToInclude: state.fields.fieldsToInclude,
+      }),
+    ...(state.dictionaryFieldContext && {
+      dictionaryFieldContext: state.dictionaryFieldContext.contextValues,
     }),
     ...(state.pipeline && {
       pipeline: state.pipeline,

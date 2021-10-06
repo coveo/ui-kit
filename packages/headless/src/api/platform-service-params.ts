@@ -8,6 +8,10 @@ export interface ContextParam {
   context?: Record<string, string | string[]>;
 }
 
+export interface DictionaryFieldContextParam {
+  dictionaryFieldContext?: Record<string, string>;
+}
+
 export interface DebugParam {
   debug?: boolean;
 }

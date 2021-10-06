@@ -2,6 +2,7 @@ import {SearchParametersState} from '../../state/search-app-state';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {getContextInitialState} from '../context/context-state';
 import {getDebugInitialState} from '../debug/debug-state';
+import {getDictionaryFieldContextInitialState} from '../dictionary-field-context/dictionary-field-context-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
 import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
 import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
@@ -26,6 +27,8 @@ export function getHistoryInitialState(): HistoryState {
 export function extractHistory(state: Partial<HistoryState>): HistoryState {
   return {
     context: state.context || getContextInitialState(),
+    dictionaryFieldContext:
+      state.dictionaryFieldContext || getDictionaryFieldContextInitialState(),
     facetSet: state.facetSet || getFacetSetInitialState(),
     numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
     dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),

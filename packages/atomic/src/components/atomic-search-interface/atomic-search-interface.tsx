@@ -65,6 +65,11 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public searchHub = 'default';
 
   /**
+   * Whether analytics should be enabled.
+   */
+  @Prop({reflect: true}) public analytics = true;
+
+  /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
    * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
    *
@@ -119,6 +124,16 @@ export class AtomicSearchInterface {
         searchHub: this.searchHub,
       })
     );
+  }
+
+  @Watch('analytics')
+  public toggleAnalytics() {
+    if (!this.analytics) {
+      this.engine?.disableAnalytics();
+      return;
+    }
+
+    this.engine?.enableAnalytics();
   }
 
   @Watch('language')
@@ -236,13 +251,16 @@ export class AtomicSearchInterface {
             locale: this.language,
             timezone: this.timezone,
           },
+          analytics: {
+            enabled: this.analytics,
+          },
         },
         loggerOptions: {
           level: this.logLevel,
         },
       });
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
       throw error;
     }
   }

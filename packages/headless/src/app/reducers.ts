@@ -36,6 +36,7 @@ import {standaloneSearchBoxSetReducer} from '../features/standalone-search-box-s
 import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
 import {sortReducer} from '../features/sort/sort-slice';
+import {dictionaryFieldContextReducer} from '../features/dictionary-field-context/dictionary-field-context-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -60,6 +61,7 @@ export const redirection = redirectionReducer;
 export const querySuggest = querySuggestReducer;
 export const sortCriteria = sortCriteriaReducer;
 export const context = contextReducer;
+export const dictionaryFieldContext = dictionaryFieldContextReducer;
 export const didYouMean = didYouMeanReducer;
 export const fields = fieldsReducer;
 export const pipeline = pipelineReducer;

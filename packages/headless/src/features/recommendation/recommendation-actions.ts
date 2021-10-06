@@ -7,14 +7,8 @@ import {
 } from '../../api/search/search-api-client';
 import {Result} from '../../api/search/search/result';
 import {
-  AdvancedSearchQueriesSection,
   ConfigurationSection,
-  ContextSection,
-  DebugSection,
-  FieldsSection,
-  PipelineSection,
   RecommendationSection,
-  SearchHubSection,
 } from '../../state/state-sections';
 import {
   validatePayload,
@@ -22,17 +16,11 @@ import {
 } from '../../utils/validate-payload';
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
-  Partial<
-    SearchHubSection &
-      PipelineSection &
-      AdvancedSearchQueriesSection &
-      DebugSection &
-      ContextSection &
-      FieldsSection
-  >;
+  Partial<RecommendationAppState>;
 
 export interface GetRecommendationsThunkReturn {
   recommendations: Result[];
@@ -113,6 +101,9 @@ export const buildRecommendationRequest = (
   }),
   ...(s.context && {
     context: s.context.contextValues,
+  }),
+  ...(s.dictionaryFieldContext && {
+    dictionaryFieldContext: s.dictionaryFieldContext.contextValues,
   }),
   ...(s.fields && {
     fieldsToInclude: s.fields.fieldsToInclude,

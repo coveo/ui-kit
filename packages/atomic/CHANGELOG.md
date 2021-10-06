@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.4.1...@coveo/atomic@1.4.2) (2021-10-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.4.0...@coveo/atomic@1.4.1) (2021-10-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.3.0...@coveo/atomic@1.4.0) (2021-10-04)
+
+
+### Features
+
+* **atomic:** add prop on search interface for disabling analytics ([#1272](https://github.com/coveo/ui-kit/issues/1272)) ([9842e90](https://github.com/coveo/ui-kit/commit/9842e90a54cf4ddcfa559f6b829e053fcc80caf4))
+
+
+
+
+
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.8...@coveo/atomic@1.3.0) (2021-10-04)
+
+
+### Features
+
+* **atomic:** improve Query Error Component with new illustrations ([#1278](https://github.com/coveo/ui-kit/issues/1278)) ([73c2c7b](https://github.com/coveo/ui-kit/commit/73c2c7bb651687e163c0181a6352be26f71de3de))
+
+
+
+
+
 ## [1.2.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.2.7...@coveo/atomic@1.2.8) (2021-10-01)
 
 
