@@ -128,13 +128,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         };
 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
+        if (doNotTrack()) {
+            this.clear();
+            this.runtime = new NoopRuntime();
+        }
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
     }
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
-        if (doNotTrack()) {
-            return new NoopRuntime();
-        } else if (hasWindow() && hasDocument()) {
+        if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
         } else if (isReactNative()) {
             console.warn(ReactNativeRuntimeWarning);

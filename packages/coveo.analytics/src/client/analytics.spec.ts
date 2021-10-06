@@ -6,6 +6,7 @@ import HistoryStore from '../history';
 import {mockFetch} from '../../tests/fetchMock';
 import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
 import * as doNotTrack from '../donottrack';
+import {Cookie} from '../cookieutils';
 
 const aVisitorId = '123';
 
@@ -438,5 +439,15 @@ describe('doNotTrack', () => {
         let client = new CoveoAnalyticsClient({});
 
         expect(client.runtime).toBeInstanceOf(NoopRuntime);
+    });
+
+    it('should clear existing cookies', async () => {
+        jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+        Cookie.set('coveo_visitorId', aVisitorId);
+        expect(Cookie.get('coveo_visitorId')).toBe(aVisitorId);
+
+        new CoveoAnalyticsClient({});
+
+        expect(Cookie.get('coveo_visitorId')).not.toBe(aVisitorId);
     });
 });
