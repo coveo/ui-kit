@@ -30,12 +30,14 @@
                             required
                             value={start}
                             min={minSafeInteger}
-                            max={maxValue}
+                            max={end}
+                            message-when-range-overflow={custumMessageOverflow}
                             class="numeric__input-min" 
                             label={labels.min} 
                             variant="label-hidden"
                             placeholder={labels.min}
-                            aria-label={numberInputMinimumLabel}>
+                            aria-label={numberInputMinimumLabel}
+                            onchange={onChangeMin}>
                         </lightning-input>
                     </div>
                     <div class="slds-col">
@@ -44,13 +46,15 @@
                             step="1"
                             required
                             value={end}
-                            min={minValue}
+                            min={start}
                             max={maxSafeInteger}
+                            message-when-range-underflow={custumMessageUnderflow}
                             class="numeric__input-max"
                             label={labels.max} 
                             variant="label-hidden" 
                             placeholder={labels.max}
-                            aria-label={numberInputMaximumLabel}>
+                            aria-label={numberInputMaximumLabel}
+                            onchange={onChangeMax}>
                         </lightning-input>
                     </div>
                     <div class="slds-col slds-p-around_none">
