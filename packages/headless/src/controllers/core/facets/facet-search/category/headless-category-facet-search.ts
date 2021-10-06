@@ -16,9 +16,11 @@ export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;
 }
 
-export type CategoryFacetSearch = ReturnType<typeof buildCategoryFacetSearch>;
+export type CategoryFacetSearch = ReturnType<
+  typeof buildCoreCategoryFacetSearch
+>;
 
-export function buildCategoryFacetSearch(
+export function buildCoreCategoryFacetSearch(
   engine: CoreEngine<CategoryFacetSearchSection & ConfigurationSection>,
   props: CategoryFacetSearchProps
 ) {
@@ -44,7 +46,6 @@ export function buildCategoryFacetSearch(
           value,
         })
       );
-      genericFacetSearch.select(value);
     },
 
     get state() {

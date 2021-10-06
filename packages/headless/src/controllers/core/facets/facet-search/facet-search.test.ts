@@ -5,7 +5,6 @@ import {
 import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options';
 import {
   buildGenericFacetSearch,
@@ -13,7 +12,6 @@ import {
   GenericFacetSearchProps,
 } from './facet-search';
 import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   clearFacetSearch,
   executeFacetSearch,
@@ -99,26 +97,6 @@ describe('FacetSearch', () => {
     );
 
     expect(action).toBeTruthy();
-  });
-
-  describe('#select', () => {
-    beforeEach(() => {
-      const value = buildMockFacetSearchResult();
-      controller.select(value);
-    });
-
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
-    });
-
-    /*it('dispatches #executeSearch', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });*/
   });
 
   it('#clear dispatches #clearFacetSearch', () => {

@@ -90,7 +90,7 @@ export function buildMockProductRecommendationsAppEngine(
 }
 
 export interface MockProductListingEngine
-  extends ProductListingEngine,
+  extends ProductListingEngine<ProductListingAppState>,
     MockEngine {}
 
 export function buildMockProductListingEngine(

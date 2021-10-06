@@ -36,6 +36,7 @@ import {
 } from '../../core/facets/category-facet/headless-core-category-facet';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
 
 export {
   CategoryFacetValue,
@@ -67,9 +68,19 @@ export function buildCategoryFacet(
   const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
   const getFacetId = () => coreController.state.facetId;
+  const facetSearch = buildCategoryFacetSearch(engine, {
+    options: {
+      facetId: getFacetId(),
+      ...props.options.facetSearch,
+    },
+  });
+
+  const {state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,
+
+    facetSearch: restOfFacetSearch,
 
     toggleSelect: (selection: CategoryFacetValue) => {
       coreController.toggleSelect(selection);
@@ -108,6 +119,7 @@ export function buildCategoryFacet(
     get state() {
       return {
         ...coreController.state,
+        facetSearch: facetSearch.state,
       };
     },
   };
