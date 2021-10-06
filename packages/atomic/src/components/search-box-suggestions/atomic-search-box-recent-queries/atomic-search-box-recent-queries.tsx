@@ -10,8 +10,9 @@ import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
+import {once} from '../../../utils/utils';
 
-const localStorageKey = 'recent-queries';
+const localStorageKey = 'coveo-recent-queries';
 
 @Component({
   tag: 'atomic-search-box-recent-queries',
@@ -20,7 +21,6 @@ const localStorageKey = 'recent-queries';
 export class AtomicSearchBoxRecentQueries {
   private bindings!: SearchBoxSuggestionsBindings;
   private recentQueriesList!: RecentQueriesList;
-  private userWarned = false;
 
   @Element() private host!: HTMLElement;
 
@@ -56,9 +56,13 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private retrieveLocalStorage() {
-    return JSON.parse(
-      window.localStorage.getItem(localStorageKey) || '[]'
-    ) as string[];
+    try {
+      return JSON.parse(
+        window.localStorage.getItem(localStorageKey) || '[]'
+      ) as string[];
+    } catch (error) {
+      return [];
+    }
   }
 
   private updateLocalStorage() {
@@ -66,21 +70,29 @@ export class AtomicSearchBoxRecentQueries {
       return this.disableFeature();
     }
 
-    window.localStorage.setItem(
-      localStorageKey,
-      JSON.stringify(this.recentQueriesList.state.queries)
-    );
+    try {
+      window.localStorage.setItem(
+        localStorageKey,
+        JSON.stringify(this.recentQueriesList.state.queries)
+      );
+    } catch (error) {
+      return null;
+    }
   }
 
-  private disableFeature() {
-    if (!this.userWarned) {
-      this.userWarned = true;
-      this.bindings.engine.logger.warn(
-        'Because analytics are disabled, the recent queries feature is deactivated.'
-      );
-    }
+  private warnUser = once(() =>
+    this.bindings.engine.logger.warn(
+      'Because analytics are disabled, the recent queries feature is deactivated.'
+    )
+  );
 
-    window.localStorage.removeItem(localStorageKey);
+  private disableFeature() {
+    this.warnUser();
+    try {
+      window.localStorage.removeItem(localStorageKey);
+    } catch (error) {
+      return;
+    }
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
