@@ -1,13 +1,23 @@
-import {loadQuerySuggestActions, SearchEngine} from '@coveo/headless';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import {
+  loadQuerySuggestActions,
+  SearchEngine,
+  Suggestion,
+} from '@coveo/headless';
 import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {dispatchSearchBoxSuggestionsEvent} from '../suggestions-common';
+import {
+  dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestionsBindings,
+} from '../suggestions-common';
 
 @Component({
   tag: 'atomic-search-box-query-suggestions',
   shadow: true,
 })
 export class AtomicSearchBoxQuerySuggestions {
+  private bindings!: SearchBoxSuggestionsBindings;
   @Element() private host!: HTMLElement;
 
   @State() public error!: Error;
@@ -17,40 +27,72 @@ export class AtomicSearchBoxQuerySuggestions {
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent(
-        ({engine, id, searchBoxController, numberOfQueries}) => {
-          const {registerQuerySuggest, fetchQuerySuggestions} =
-            loadQuerySuggestActions(engine);
-
-          (engine as SearchEngine<QuerySuggestionSection>).dispatch(
-            registerQuerySuggest({
-              id,
-              count: numberOfQueries,
-            })
-          );
-
-          return {
-            onInput: () =>
-              (engine as SearchEngine<QuerySuggestionSection>).dispatch(
-                fetchQuerySuggestions({
-                  id,
-                })
-              ),
-            renderItems: () =>
-              // TODO: limit values according to maxWithQuery/maxWithoutQuery
-              searchBoxController.state.suggestions.map((suggestion) => ({
-                content: <span innerHTML={suggestion.highlightedValue}></span>,
-                value: suggestion.rawValue,
-                onClick: () =>
-                  searchBoxController.selectSuggestion(suggestion.rawValue),
-              })),
-          };
-        },
-        this.host
-      );
+      dispatchSearchBoxSuggestionsEvent((bindings) => {
+        this.bindings = bindings;
+        return this.initialize();
+      }, this.host);
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  private initialize() {
+    const engine = this.bindings.engine as SearchEngine<QuerySuggestionSection>;
+    const {registerQuerySuggest, fetchQuerySuggestions} =
+      loadQuerySuggestActions(engine);
+
+    engine.dispatch(
+      registerQuerySuggest({
+        id: this.bindings.id,
+        count: this.bindings.numberOfQueries,
+      })
+    );
+
+    return {
+      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      onInput: () =>
+        engine.dispatch(
+          fetchQuerySuggestions({
+            id: this.bindings.id,
+          })
+        ),
+      renderItems: () => this.renderItems(),
+    };
+  }
+
+  private renderItems(): SearchBoxSuggestionElement[] {
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
+    const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
+    return this.bindings.searchBoxController.state.suggestions
+      .slice(0, max)
+      .map((suggestion) => this.renderItem(suggestion));
+  }
+
+  private renderItem(suggestion: Suggestion) {
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
+    return {
+      content: (
+        <div class="flex items-center">
+          {this.bindings.getSuggestions().length > 1 && (
+            <atomic-icon
+              icon={SearchIcon}
+              class="w-4 h-4 text-neutral mr-2"
+            ></atomic-icon>
+          )}
+          {hasQuery ? (
+            <span innerHTML={suggestion.highlightedValue}></span>
+          ) : (
+            <span>{suggestion.rawValue}</span>
+          )}
+        </div>
+      ),
+      key: `qs-${suggestion.rawValue}`,
+      query: suggestion.rawValue,
+      onSelect: () => {
+        this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
+        this.bindings.inputRef.blur();
+      },
+    };
   }
 
   public render() {

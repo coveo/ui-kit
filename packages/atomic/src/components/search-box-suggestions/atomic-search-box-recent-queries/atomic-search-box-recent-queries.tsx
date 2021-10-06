@@ -1,46 +1,181 @@
-import {buildRecentQueriesList} from '@coveo/headless';
+import Clock from '../../../images/clock.svg';
+import {
+  buildRecentQueriesList,
+  HighlightUtils,
+  RecentQueriesList,
+} from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {dispatchSearchBoxSuggestionsEvent} from '../suggestions-common';
+import {
+  dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestionsBindings,
+} from '../suggestions-common';
+import {once} from '../../../utils/utils';
+
+const localStorageKey = 'coveo-recent-queries';
 
 @Component({
   tag: 'atomic-search-box-recent-queries',
   shadow: true,
 })
 export class AtomicSearchBoxRecentQueries {
+  private bindings!: SearchBoxSuggestionsBindings;
+  private recentQueriesList!: RecentQueriesList;
+
   @Element() private host!: HTMLElement;
 
   @State() public error!: Error;
 
-  @Prop() public maxWithQuery?: number;
+  @Prop() public maxWithQuery = 3;
   @Prop() public maxWithoutQuery?: number;
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent(({engine, numberOfQueries}) => {
-        const recentQueriesList = buildRecentQueriesList(engine, {
-          // TODO: fetch initial state from cookies or local storage
-          initialState: {queries: ['hello', 'hola', 'bonjour', 'buongiorno']},
-          options: {maxLength: numberOfQueries},
-        });
-
-        return {
-          onInput: () => {},
-          renderItems: () =>
-            // TODO: limit values according to maxWithQuery/maxWithoutQuery
-            // TODO: filter values according to query
-            // TODO: add "clear recent queries element"
-            recentQueriesList.state.queries.map((value, i) => ({
-              value,
-              // TODO: highlight values
-              content: <span>{value}</span>,
-              // TODO: save state to local storage
-              onClick: () => recentQueriesList.executeRecentQuery(i),
-            })),
-        };
+      dispatchSearchBoxSuggestionsEvent((bindings) => {
+        this.bindings = bindings;
+        return this.initialize();
       }, this.host);
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  private initialize() {
+    this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
+      initialState: {queries: this.retrieveLocalStorage()},
+      options: {maxLength: 1000},
+    });
+
+    this.recentQueriesList.subscribe(() => this.updateLocalStorage());
+
+    return {
+      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      onInput: () => {},
+      renderItems: () => this.renderItems(),
+    };
+  }
+
+  private retrieveLocalStorage() {
+    try {
+      return JSON.parse(
+        window.localStorage.getItem(localStorageKey) || '[]'
+      ) as string[];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  private updateLocalStorage() {
+    if (!this.recentQueriesList.state.analyticsEnabled) {
+      return this.disableFeature();
+    }
+
+    try {
+      window.localStorage.setItem(
+        localStorageKey,
+        JSON.stringify(this.recentQueriesList.state.queries)
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private warnUser = once(() =>
+    this.bindings.engine.logger.warn(
+      'Because analytics are disabled, the recent queries feature is deactivated.'
+    )
+  );
+
+  private disableFeature() {
+    this.warnUser();
+    try {
+      window.localStorage.removeItem(localStorageKey);
+    } catch (error) {
+      return;
+    }
+  }
+
+  private renderItems(): SearchBoxSuggestionElement[] {
+    if (!this.recentQueriesList.state.analyticsEnabled) {
+      return [];
+    }
+
+    const query = this.bindings.searchBoxController.state.value;
+    const hasQuery = query !== '';
+    const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
+    const filteredQueries = this.recentQueriesList.state.queries
+      .filter(
+        (recentQuery) =>
+          recentQuery !== query &&
+          recentQuery.toLowerCase().startsWith(query.toLowerCase())
+      )
+      .slice(0, max);
+
+    const suggestionElements = filteredQueries.map((value) =>
+      this.renderItem(value)
+    );
+    if (suggestionElements.length) {
+      suggestionElements.unshift(this.renderClear());
+    }
+
+    return suggestionElements;
+  }
+
+  private renderClear(): SearchBoxSuggestionElement {
+    return {
+      key: 'recent-query-clear',
+      content: (
+        <div class="flex justify-between w-full">
+          <span class="font-bold">
+            {this.bindings.i18n.t('recent-searches')}
+          </span>
+          <span>{this.bindings.i18n.t('clear')}</span>
+        </div>
+      ),
+      onSelect: () => {
+        this.recentQueriesList.clear();
+        this.bindings.triggerSuggestions();
+      },
+    };
+  }
+
+  private renderItem(value: string): SearchBoxSuggestionElement {
+    const query = this.bindings.searchBoxController.state.value;
+    return {
+      key: `recent-${value}`,
+      query: value,
+      content: (
+        <div class="flex items-center">
+          <atomic-icon
+            icon={Clock}
+            class="w-5 h-5 text-neutral mr-2 -ml-1"
+          ></atomic-icon>
+          {query === '' ? (
+            <span>{value}</span>
+          ) : (
+            <span
+              innerHTML={HighlightUtils.highlightString({
+                content: value,
+                openingDelimiter: '<span class="font-bold">',
+                closingDelimiter: '</span>',
+                highlights: [
+                  {
+                    offset: query.length,
+                    length: value.length - query.length,
+                  },
+                ],
+              })}
+            ></span>
+          )}
+        </div>
+      ),
+      onSelect: () => {
+        this.recentQueriesList.executeRecentQuery(
+          this.recentQueriesList.state.queries.indexOf(value)
+        );
+        this.bindings.inputRef.blur();
+      },
+    };
   }
 
   public render() {

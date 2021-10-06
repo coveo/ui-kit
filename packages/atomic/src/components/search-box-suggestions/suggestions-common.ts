@@ -4,14 +4,14 @@ import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings} from '../../utils/initialization-utils';
 
 export interface SearchBoxSuggestionElement {
-  value: string;
-  onClick(): void;
+  key: string;
+  query?: string;
+  onSelect(): void;
   content: VNode;
 }
 
 export interface SearchBoxSuggestions {
-  // TODO: add query context onInput
-  // TODO: add position (priority in the list)
+  position: number;
   onInput(): Promise<unknown> | void;
   renderItems(): SearchBoxSuggestionElement[];
 }
@@ -24,6 +24,9 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   id: string;
   searchBoxController: SearchBox;
   numberOfQueries: number;
+  inputRef: HTMLInputElement;
+  triggerSuggestions(): void;
+  getSuggestions: () => SearchBoxSuggestions[];
 }
 
 export const dispatchSearchBoxSuggestionsEvent = (
@@ -31,11 +34,11 @@ export const dispatchSearchBoxSuggestionsEvent = (
   element: Element
 ) => {
   const canceled = element.dispatchEvent(
-    buildCustomEvent('atomic/searchBoxSuggestion', event)
+    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
   );
   if (canceled) {
     throw new Error(
-      'The Atomic search box suggestion component was not handled, as it is not a child of a search box component'
+      `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of an "atomic-search-box" component`
     );
   }
 };

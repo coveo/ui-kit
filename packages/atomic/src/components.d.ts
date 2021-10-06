@@ -610,7 +610,7 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
-        "maxWithQuery"?: number;
+        "maxWithQuery": number;
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchInterface {
