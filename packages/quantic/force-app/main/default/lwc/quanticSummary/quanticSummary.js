@@ -98,23 +98,14 @@ export default class QuanticSummary extends LightningElement {
         I18nUtils.getTextBold(this.query));
   }
 
-  get duration() {
-    if (this.state?.hasDuration) {
-      const duration = this.state.durationInSeconds;
-      const labelName = I18nUtils.getLabelNameWithCount('inSeconds', duration);
-      return ` ${I18nUtils.format(this.labels[labelName], duration)}`;
-    }
-    return '';
-  }
-
   get summaryLabel() {
     const labelName = this.hasQuery
       ? I18nUtils.getLabelNameWithCount('showingResultsOfWithQuery', this.state?.lastResult)
       : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state?.lastResult);
-    return `${I18nUtils.format(
+    return I18nUtils.format(
       this.labels[labelName],
       I18nUtils.getTextBold(this.range),
       I18nUtils.getTextBold(this.total),
-      I18nUtils.getTextBold(this.query))} ${this.duration}`;
+      I18nUtils.getTextBold(this.query));
   }
 }
