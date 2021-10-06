@@ -26,7 +26,7 @@
                     <div class="slds-col slds-p-around_none">
                         <lightning-input 
                             type="number"
-                            step="1"
+                            step={step}
                             required
                             value={start}
                             min={minSafeInteger}
@@ -43,7 +43,7 @@
                     <div class="slds-col">
                         <lightning-input 
                             type="number"
-                            step="1"
+                            step={step}
                             required
                             value={end}
                             min={start}

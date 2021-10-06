@@ -228,4 +228,36 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+        <label>Min</label>
+        <name>quantic_Min</name>
+    </customLabels>
+    <customLabels>
+        <label>Max</label>
+        <name>quantic_Max</name>
+    </customLabels>
+    <customLabels>
+        <label>Entrez une valeur numérique minimale pour la facette {{0}}</label>
+        <name>quantic_NumberInputMinimum</name>
+    </customLabels>
+    <customLabels>
+        <label>Entrez une valeur numérique maximale pour la facette {{0}}</label>
+        <name>quantic_NumberInputMaximum</name>
+    </customLabels>
+    <customLabels>
+        <label>Filtrer</label>
+        <name>quantic_Apply</name>
+    </customLabels>
+    <customLabels>
+        <label>Appliquer les filtres numériques manuels pour la facette {{0}}</label>
+        <name>quantic_NumberInputApply</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette valeur doit être inférieure ou égale à {{0}}</label>
+        <name>quantic_MessageWhenRangeOverflow</name>
+    </customLabels>
+    <customLabels>
+        <label>Cette valeur doit être supérieure ou égale à {{0}}</label>
+        <name>quantic_MessageWhenRangeUnderflow</name>
+    </customLabels>
 </Translations>

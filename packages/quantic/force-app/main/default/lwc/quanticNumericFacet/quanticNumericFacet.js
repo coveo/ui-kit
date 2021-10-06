@@ -96,8 +96,15 @@ export default class QuanticNumericFacet extends LightningElement {
   )} - ${new Intl.NumberFormat(LOCALE).format(
     item.end
   )}`;
-  /** @type {boolean} */
-  @api noInput;
+  /**
+   * The sort criterion to apply to the returned facet values. Possible values are:
+   *   - `ascending`
+   *   - `descending`
+   * @api
+   * @type {'integer' | 'decimal'}
+   * @defaultValue `'integer'`
+   */
+  @api withInput;
   /*
    * Whether the facet is collapsed.
    * @api
@@ -180,7 +187,7 @@ export default class QuanticNumericFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
       }
     });
-    if(!this.noInput) {
+    if(!this.withInput) {
       this.initializeFilter(engine);
     }
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
@@ -227,6 +234,9 @@ export default class QuanticNumericFacet extends LightningElement {
     );
   }
 
+  get step() {
+    return this.withInput ==='integer' ? '1' : 'any';
+  }
   /** @returns {HTMLInputElement} */
   get inputMin() {
     return this.template.querySelector('.numeric__input-min');
