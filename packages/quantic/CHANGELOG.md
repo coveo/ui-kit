@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.71.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.1...@coveo/quantic@0.71.2) (2021-10-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [0.71.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.0...@coveo/quantic@0.71.1) (2021-10-06)
 
 
