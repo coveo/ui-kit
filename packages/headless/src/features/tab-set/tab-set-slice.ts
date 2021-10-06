@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {registerTab, updateActiveTab} from './tab-set-actions';
-import {getTabSetInitialState} from './tab-set-state';
+import {getTabSetInitialState, TabSetState} from './tab-set-state';
 
 export const tabSetReducer = createReducer(
   getTabSetInitialState(),
@@ -15,18 +15,19 @@ export const tabSetReducer = createReducer(
         }
 
         state[id] = tab;
+        tab.isActive && activateTab(state, id);
       })
       .addCase(updateActiveTab, (state, action) => {
         const id = action.payload;
         const hasId = id in state;
 
-        if (!hasId) {
-          return;
-        }
-
-        Object.keys(state).forEach((tabId) => {
-          state[tabId].isActive = tabId === id;
-        });
+        hasId && activateTab(state, id);
       });
   }
 );
+
+function activateTab(state: TabSetState, id: string) {
+  Object.keys(state).forEach((tabId) => {
+    state[tabId].isActive = tabId === id;
+  });
+}
