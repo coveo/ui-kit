@@ -49,7 +49,7 @@ export class AtomicResultBadge {
         {this.field ? (
           <atomic-result-text field={this.field}></atomic-result-text>
         ) : (
-          this.label
+          <atomic-text value={this.label ?? ''}></atomic-text>
         )}
       </span>
     );

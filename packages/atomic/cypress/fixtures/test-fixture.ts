@@ -31,6 +31,7 @@ export class TestFixture {
   private disabledAnalytics = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
+  private translations: Record<string, string> = {};
   private responseModifier: SearchResponseModifierPredicate | null = null;
 
   public with(feat: TestFeature) {
@@ -75,6 +76,14 @@ export class TestFixture {
 
   public withFieldCaptions(field: string, captions: Record<string, string>) {
     this.fieldCaptions.push({field, captions});
+    return this;
+  }
+
+  public withTranslation(translations: Record<string, string>) {
+    this.translations = {
+      ...this.translations,
+      ...translations,
+    };
     return this;
   }
 
@@ -132,6 +141,11 @@ export class TestFixture {
               `caption-${field}`,
               captions
             )
+          );
+          searchInterfaceComponent.i18n.addResourceBundle(
+            'en',
+            'translation',
+            this.translations
           );
           if (this.execFirstSearch) {
             searchInterfaceComponent.executeFirstSearch();
