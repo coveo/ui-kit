@@ -264,7 +264,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get showValues() {
     return !this.searchStatus?.state?.hasError && (this.isSelected || !this.stateFilter?.range) && !!this.values.length;
-    }
+  }
 
   get clearFilterLabel() {
     if (this.hasActiveValues) {
@@ -295,9 +295,8 @@ export default class QuanticNumericFacet extends LightningElement {
     this.inputMin.required = false;
     this.inputMax.required = false;
   }
-  /**
-   * @param {CustomEvent<NumericFacetValue>} evt
-   */
+
+  /** @param {CustomEvent<NumericFacetValue>} evt */
   onSelect(evt) {
     this.isSelected = true;
     this.facet.toggleSelect(evt.detail);
@@ -326,6 +325,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   onApply(evt) {
     evt.preventDefault();
+
     this.setValidityParameters();
 
     const allValid = [...this.template.querySelectorAll('lightning-input')]
@@ -342,8 +342,8 @@ export default class QuanticNumericFacet extends LightningElement {
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
     this.numericFilter.setRange({
-      start: Number(this.inputMin?.value),
-      end: Number(this.inputMax?.value)
+      start: this.inputMin ? Number(this.inputMin.value) : undefined,
+      end: this.inputMax ? Number(this.inputMax.value) : undefined
     });
   }
 
