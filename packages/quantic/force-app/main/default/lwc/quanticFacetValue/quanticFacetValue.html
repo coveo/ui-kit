@@ -14,7 +14,7 @@
       </template>
       <template if:true={isChecked}>
         <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small slds-text-body_small nowrap facet__value-text facet__value_selected">{formattedFacetValue}</span>
-        <span class="nowrap slds-text-body_small facet__number-of-results facet__value_selected">({item.numberOfResults})</span>
+        <span class="nowrap slds-text-body_small facet__number-of-results facet__value_selected">({numberOfResults})</span>
       </template>
       <template if:false={isChecked}>
         <template if:true={isStandardFacet}>
