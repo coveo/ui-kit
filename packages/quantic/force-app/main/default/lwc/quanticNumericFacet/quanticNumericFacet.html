@@ -29,6 +29,8 @@
                             step="1"
                             required
                             value={start}
+                            min={minSafeInteger}
+                            max={maxValue}
                             class="numeric__input-min" 
                             label={labels.min} 
                             variant="label-hidden"
@@ -42,6 +44,8 @@
                             step="1"
                             required
                             value={end}
+                            min={minValue}
+                            max={maxSafeInteger}
                             class="numeric__input-max"
                             label={labels.max} 
                             variant="label-hidden" 
