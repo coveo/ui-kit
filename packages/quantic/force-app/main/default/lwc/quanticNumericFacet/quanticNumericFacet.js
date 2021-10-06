@@ -97,9 +97,10 @@ export default class QuanticNumericFacet extends LightningElement {
     item.end
   )}`;
   /**
-   * The sort criterion to apply to the returned facet values. Possible values are:
-   *   - `ascending`
-   *   - `descending`
+   * Whether this facet should contain an input allowing users to set custom ranges.
+   * Depending on the field, the input can allow either decimal or integer values.
+   *   - `integer`
+   *   - `decimal`
    * @api
    * @type {'integer' | 'decimal'}
    * @defaultValue `'integer'`
@@ -147,8 +148,8 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {string} */
   end;
 
-  minSafeInteger = Number.MIN_SAFE_INTEGER;
-  maxSafeInteger = Number.MAX_SAFE_INTEGER;
+  minSafeValue = Number.MIN_VALUE;
+  maxSafeValue = Number.MAX_VALUE;
 
   labels = {
     clearFilter,
@@ -298,15 +299,15 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   setValidityParameters() {
-    this.inputMin.max = this.end || this.maxSafeInteger.toString();
-    this.inputMax.min = this.start || this.minSafeInteger.toString();
+    this.inputMin.max = this.end || this.maxSafeValue.toString();
+    this.inputMax.min = this.start || this.minSafeValue.toString();
     this.inputMin.required = true;
     this.inputMax.required = true;
   }
 
   resetValidityParameters() {
-    this.inputMin.max = this.maxSafeInteger.toString();
-    this.inputMax.min = this.minSafeInteger.toString();
+    this.inputMin.max = this.maxSafeValue.toString();
+    this.inputMax.min = this.minSafeValue.toString();
     this.inputMin.required = false;
     this.inputMax.required = false;
   }
