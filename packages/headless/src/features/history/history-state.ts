@@ -15,6 +15,7 @@ import {getQuerySetInitialState} from '../query-set/query-set-state';
 import {getQueryInitialState} from '../query/query-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
+import {getTabSetInitialState} from '../tab-set/tab-set-state';
 
 export interface HistoryState extends SearchParametersState {
   facetOrder: string[];
@@ -36,6 +37,7 @@ export function extractHistory(state: Partial<HistoryState>): HistoryState {
       state.categoryFacetSet || getCategoryFacetSetInitialState(),
     pagination: state.pagination || getPaginationInitialState(),
     query: state.query || getQueryInitialState(),
+    tabSet: state.tabSet || getTabSetInitialState(),
     advancedSearchQueries:
       state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
     querySet: state.querySet || getQuerySetInitialState(),
