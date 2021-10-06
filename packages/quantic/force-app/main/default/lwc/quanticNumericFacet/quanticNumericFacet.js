@@ -103,7 +103,6 @@ export default class QuanticNumericFacet extends LightningElement {
    *   - `decimal`
    * @api
    * @type {'integer' | 'decimal'}
-   * @defaultValue `'integer'`
    */
   @api withInput;
   /*
@@ -188,7 +187,7 @@ export default class QuanticNumericFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
       }
     });
-    if(!this.withInput) {
+    if(this.withInput) {
       this.initializeFilter(engine);
     }
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
@@ -270,10 +269,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get numberOfSelectedValues() {
-    if (this.stateFilter?.range) {
-      return 1;
-    }
-      return this.state.values.filter(({state}) => state === 'selected').length;
+    return this.stateFilter?.range ? 1 : this.state.values.filter(({state}) => state === 'selected').length;
   }
 
   get showValues() {

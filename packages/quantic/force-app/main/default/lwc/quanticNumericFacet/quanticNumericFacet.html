@@ -20,7 +20,7 @@
         </template>
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-var-m-top_medium">
-            <template if:false={noInput}>
+            <template if:true={withInput}>
               <div>
                 <form onsubmit={onApply} class="slds-grid slds-var-p-bottom_small slds-var-p-top_small">
                     <div class="slds-col slds-p-around_none">
