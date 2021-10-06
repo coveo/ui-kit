@@ -1,5 +1,9 @@
-import {Component, Element, h, Prop, State} from '@stencil/core';
-import {Result} from '@coveo/headless';
+import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {
+  buildInteractiveResult,
+  InteractiveResult,
+  Result,
+} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {parseXML} from '../../../utils/utils';
 import {
@@ -7,8 +11,8 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
-import {filterProtocol} from '../../../utils/xss-utils';
 import Arrow from '../../../images/arrow-right.svg';
+import {ResultLink} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -40,6 +44,20 @@ export class AtomicResultPrintableUri {
    */
   @Prop() maxNumberOfParts = 5;
 
+  /**
+   * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   *
+   * The following keywords have special meanings:
+   *
+   * * _self: the current browsing context. (Default)
+   * * _blank: usually a new tab, but users can configure their browsers to open a new window instead.
+   * * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`.
+   * * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+   */
+  @Prop() target = '_self';
+
+  private interactiveResult!: InteractiveResult;
+
   public connectedCallback() {
     try {
       new Schema({
@@ -48,6 +66,12 @@ export class AtomicResultPrintableUri {
     } catch (error) {
       this.error = error;
     }
+  }
+
+  public initialize() {
+    this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
+      options: {result: this.result},
+    });
   }
 
   private renderEllipsis() {
@@ -73,9 +97,7 @@ export class AtomicResultPrintableUri {
       const uri = parent.getAttribute('uri')!;
       return (
         <li part="result-printable-uri-list-element">
-          <a part="result-printable-uri-link" href={filterProtocol(uri)}>
-            {name}
-          </a>
+          {this.renderLink(name, uri)}
           {i === parents.length - 1 ? null : this.renderSeparator()}
         </li>
       );
@@ -109,6 +131,19 @@ export class AtomicResultPrintableUri {
     ];
   }
 
+  private renderLink(content: VNode | string | null, uri: string) {
+    return (
+      <ResultLink
+        interactiveResult={this.interactiveResult}
+        href={uri}
+        part={'result-printable-uri-link'}
+        target={this.target}
+      >
+        {content}
+      </ResultLink>
+    );
+  }
+
   public render() {
     if (this.error) {
       this.host?.remove();
@@ -116,20 +151,16 @@ export class AtomicResultPrintableUri {
     }
     const parents = this.renderParents();
     if (parents.length) {
-      const parts = `result-printable-uri-list ${
+      const parts = `result-printable-uri-list${
         this.listExpanded ? ' result-printable-uri-list-expanded' : ''
       }`;
 
       return <ul part={parts}>{parents}</ul>;
     }
 
-    return (
-      <a
-        part="result-printable-uri-link"
-        href={filterProtocol(this.result.clickUri)}
-      >
-        <atomic-result-text field="printableUri"></atomic-result-text>
-      </a>
+    return this.renderLink(
+      <atomic-result-text field="printableUri"></atomic-result-text>,
+      this.result.clickUri
     );
   }
 }

@@ -59,7 +59,7 @@ export class AtomicResultLink implements InitializableComponent {
     return (
       <ResultLink
         interactiveResult={this.interactiveResult}
-        result={this.result}
+        href={this.result.clickUri}
         target={this.target}
         part="result-link"
       >

@@ -1,21 +1,21 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../utils/xss-utils';
-import {InteractiveResult, Result} from '@coveo/headless';
+import {InteractiveResult} from '@coveo/headless';
 
 export interface ResultLinkProps {
   interactiveResult: InteractiveResult;
-  result: Result;
+  href: string;
   target: string;
   part: string;
 }
 
 export const ResultLink: FunctionalComponent<ResultLinkProps> = (
-  {result, interactiveResult, target, part},
+  {href, interactiveResult, target, part},
   children
 ) => (
   <a
     part={part}
-    href={filterProtocol(result.clickUri)}
+    href={filterProtocol(href)}
     onClick={() => interactiveResult.select()}
     onContextMenu={() => interactiveResult.select()}
     onMouseDown={() => interactiveResult.select()}
