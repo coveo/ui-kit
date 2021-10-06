@@ -1,0 +1,15 @@
+<template>
+  <div class="slds-grid slds-grid_vertical-align-center">
+    <template for:each={foldedParents} for:item="parent">
+      <div class="slds-grid slds-grid_vertical-align-center slds-nowrap" key={parent.name}>
+        <template if:true={parent.isFolded}>
+          <a onclick={expandParents}>...</a>
+        </template>
+        <template if:false={parent.isFolded}>
+          <a class="slds-nowrap" href={parent.uri}>{parent.name}</a>
+        </template>
+        <lightning-icon class="slds-m-horizontal_xx-small" icon-name="utility:chevronright" size="xx-small"></lightning-icon>
+      </div>
+    </template>
+  </div>
+</template>

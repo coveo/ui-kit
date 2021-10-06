@@ -155,3 +155,61 @@ export function setItemInLocalStorage(key, item) {
 export function regexEncode(value) {
   return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
+
+export function parseXML(string) {
+  return new window.DOMParser().parseFromString(string, 'text/xml');
+}
+
+export class TimeSpan {
+  constructor(time, isMilliseconds = true) {
+    if (isMilliseconds) {
+      this.milliseconds = time;
+    } else {
+      this.milliseconds = time * 1000;
+    }
+  }
+
+  getMilliseconds() {
+    return this.milliseconds;
+  }
+
+  getSeconds() {
+    return this.getMilliseconds() / 1000;
+  }
+
+  getMinutes() {
+    return this.getSeconds() / 60;
+  }
+
+  getHours() {
+    return this.getMinutes() / 60;
+  }
+
+  getDays() {
+    return this.getHours() / 24;
+  }
+
+  getWeeks() {
+    return this.getDays() / 7;
+  }
+
+  getHHMMSS() {
+    const hours = Math.floor(this.getHours());
+    const minutes = Math.floor(this.getMinutes()) % 60;
+    const seconds = Math.floor(this.getSeconds()) % 60;
+    let hoursString, minutesString, secondsString;
+    if (hours === 0) {
+      hoursString = '';
+    } else {
+      hoursString = hours < 10 ? '0' + hours.toString() : hours.toString();
+    }
+    minutesString = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
+    secondsString = seconds < 10 ? '0' + seconds.toString() : seconds.toString();
+    const hhmmss = (hoursString !== '' ? hoursString + ':' : '') + minutesString + ':' + secondsString;
+    return hhmmss;
+  }
+
+  getCleanHHMMSS() {
+    return this.getHHMMSS().replace(/^0+/, '');
+  }
+}

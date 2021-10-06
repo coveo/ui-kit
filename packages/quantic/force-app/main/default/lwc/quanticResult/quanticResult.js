@@ -1,6 +1,7 @@
 // @ts-ignore
 import defaultTemplate from './quanticResult.html';
 import { LightningElement, api } from "lwc";
+import {TimeSpan} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
@@ -99,7 +100,7 @@ export default class QuanticResult extends LightningElement {
     if (this.sourceTypeLabel) {
       return this.sourceTypeLabel;
     }
-    return `Documentation`
+    return `Documentation`;
   }
 
   get objectTypeLabel() {
@@ -160,8 +161,16 @@ export default class QuanticResult extends LightningElement {
     }
   }
 
+  get videoThumbnail() {
+    return `http://img.youtube.com/vi/${this.result.raw.ytvideoid}/mqdefault.jpg`
+  }
+
   get videoSourceId() {
-    return `https://www.youtube.com/embed/${this.result.raw.ytvideoid}?autoplay=0`
+    return `https://www.youtube.com/embed/${this.result.raw.ytvideoid}?autoplay=0`;
+  }
+
+  get videoTimeSpan() {
+    return new TimeSpan(this.result.raw.ytvideoduration, false).getCleanHHMMSS();
   }
 
   render() {
