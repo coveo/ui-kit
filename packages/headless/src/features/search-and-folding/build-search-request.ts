@@ -83,7 +83,5 @@ function buildConstantQuery(state: StateNeededByExecuteSearchAndFolding) {
   );
   const tabExpression = activeTab?.expression.trim() || '';
 
-  const candidates = [cq, tabExpression].filter((expression) => !!expression);
-
-  return candidates.join(' AND ');
+  return [cq, tabExpression].filter((expression) => !!expression).join(' AND ');
 }
