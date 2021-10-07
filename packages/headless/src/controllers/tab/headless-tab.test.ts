@@ -3,14 +3,12 @@ import {
   buildMockSearchAppEngine,
 } from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
-import {
-  registerAdvancedSearchQueries,
-  updateAdvancedSearchQueries,
-} from '../../features/advanced-search-queries/advanced-search-queries-actions';
+import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
-import {advancedSearchQueries, configuration} from '../../app/reducers';
+import {configuration, tabSet} from '../../app/reducers';
 import {setOriginLevel2} from '../../features/configuration/configuration-actions';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {registerTab} from '../../features/tab-set/tab-set-actions';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -41,7 +39,7 @@ describe('Tab', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
-      advancedSearchQueries,
+      tabSet,
     });
   });
 
@@ -56,11 +54,11 @@ describe('Tab', () => {
   });
 
   describe('initalization', () => {
-    it('calls #registerAdvancedSearchQueries if isActive is true', () => {
-      props.initialState!.isActive = true;
+    it('dispatches #registerTab', () => {
       initTab();
 
-      const action = registerAdvancedSearchQueries({cq: expression});
+      const {id, expression} = props.options;
+      const action = registerTab({id, expression, isActive: false});
       expect(engine.actions).toContainEqual(action);
     });
 

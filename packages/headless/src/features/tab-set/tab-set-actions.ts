@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import {BooleanValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -29,7 +29,7 @@ export const registerTab = createAction(
       values: {
         id: requiredEmptyAllowedString,
         expression: requiredEmptyAllowedString,
-        isActive: requiredEmptyAllowedString,
+        isActive: new BooleanValue({required: true}),
       },
     });
 
