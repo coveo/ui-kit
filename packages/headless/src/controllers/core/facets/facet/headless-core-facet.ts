@@ -14,7 +14,6 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
-import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
@@ -54,15 +53,22 @@ export interface FacetProps {
   options: FacetOptions;
 }
 
-/**
- * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
- */
-export interface Facet extends Controller {
+export interface Facet extends CoreFacet {
   /**
    * Provides methods to search the facet's values.
    */
   facetSearch: FacetSearch;
 
+  /**
+   * The state of the `Facet` controller.
+   */
+  state: FacetState;
+}
+
+/**
+ * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
+ */
+export interface CoreFacet extends Controller {
   /**
    * Toggles the specified facet value.
    *
@@ -118,13 +124,18 @@ export interface Facet extends Controller {
   /**
    * The state of the `Facet` controller.
    * */
-  state: FacetState;
+  state: CoreFacetState;
+}
+
+export interface FacetState extends CoreFacetState {
+  /** The state of the facet's searchbox. */
+  facetSearch: FacetSearchState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  */
-export interface FacetState {
+export interface CoreFacetState {
   /** The facet ID. */
   facetId: string;
 
@@ -145,9 +156,6 @@ export interface FacetState {
 
   /** `true` if fewer values can be displayed and `false` otherwise. */
   canShowLessValues: boolean;
-
-  /** The state of the facet's searchbox. */
-  facetSearch: FacetSearchState;
 }
 
 export interface FacetSearch {
@@ -256,7 +264,10 @@ export interface FacetValue {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
+export function buildCoreFacet(
+  engine: CoreEngine,
+  props: FacetProps
+): CoreFacet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -273,13 +284,6 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
   };
 
   validateOptions(engine, facetOptionsSchema, options, 'buildFacet');
-
-  const createFacetSearch = () => {
-    const {facetId, facetSearch} = options;
-    const facetSearchOptions = {facetId, ...facetSearch};
-
-    return buildFacetSearch(engine, {options: facetSearchOptions});
-  };
 
   const getRequest = () => facetRequestSelector(engine.state, facetId);
   const getResponse = () => facetResponseSelector(engine.state, facetId);
@@ -299,13 +303,9 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
   };
 
   dispatch(registerFacet(options));
-  const facetSearch = createFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...controller,
-
-    facetSearch: restOfFacetSearch,
 
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
@@ -381,7 +381,6 @@ export function buildCoreFacet(engine: CoreEngine, props: FacetProps): Facet {
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues: computeCanShowLessValues(),
-        facetSearch: facetSearch.state,
       };
     },
   };
