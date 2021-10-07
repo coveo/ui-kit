@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.1...@coveo/atomic@1.5.2) (2021-10-07)
+
+
+### Bug Fixes
+
+* **atomic:** fix printable uri to behave as links + cypress tests ([#1295](https://github.com/coveo/ui-kit/issues/1295)) ([8d22803](https://github.com/coveo/ui-kit/commit/8d2280380645a15d6eada796790af52601b6c39a))
+
+
+
+
+
 ## [1.5.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.0...@coveo/atomic@1.5.1) (2021-10-06)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -1,4 +1,4 @@
-import {buildCoreFacet, Facet, FacetOptions} from './headless-core-facet';
+import {buildCoreFacet, CoreFacet, FacetOptions} from './headless-core-facet';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
@@ -21,7 +21,6 @@ import {updateFacetOptions} from '../../../../features/facet-options/facet-optio
 import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 import {
   configuration,
   facetSearchSet,
@@ -34,7 +33,7 @@ describe('facet', () => {
   let options: FacetOptions;
   let state: SearchAppState;
   let engine: MockSearchEngine;
-  let facet: Facet;
+  let facet: CoreFacet;
 
   function initFacet() {
     engine = buildMockSearchAppEngine({state});
@@ -447,26 +446,5 @@ describe('facet', () => {
 
       expect(facet.state.canShowLessValues).toBe(false);
     });
-  });
-
-  it('exposes a #facetSearch property', () => {
-    jest.spyOn(FacetSearch, 'buildFacetSearch');
-    initFacet();
-    expect(facet.facetSearch).toBeTruthy();
-    expect(FacetSearch.buildFacetSearch).toHaveBeenCalled();
-  });
-
-  it('exposes a #facetSearch state', () => {
-    expect(facet.state.facetSearch).toBeTruthy();
-    expect(facet.state.facetSearch.values).toEqual([]);
-
-    const fakeResponseValue = {
-      count: 123,
-      displayValue: 'foo',
-      rawValue: 'foo',
-    };
-    engine.state.facetSearchSet[facetId].response.values = [fakeResponseValue];
-
-    expect(facet.state.facetSearch.values[0]).toMatchObject(fakeResponseValue);
   });
 });

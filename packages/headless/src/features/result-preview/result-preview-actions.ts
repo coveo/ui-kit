@@ -23,7 +23,7 @@ export const fetchResultContent = createAsyncThunk<
   async (options: HtmlRequestOptions, {extra, getState, rejectWithValue}) => {
     const state = getState();
     const req = buildResultPreviewRequest(state, options);
-    const res = await extra.searchAPIClient.html(req);
+    const res = await extra.apiClient.html(req);
 
     if (isErrorResponse(res)) {
       return rejectWithValue(res.error);
