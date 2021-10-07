@@ -49,6 +49,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
     const parentsXml = parseXML(`${this.result.raw.parents}`);
     const parents = Array.from(parentsXml.getElementsByTagName('parent'));
     return parents.map((parent, index) => ({
+      id: index,
       name: parent.getAttribute('name'),
       uri: parent.getAttribute('uri'),
       isFolded: false,
@@ -60,7 +61,11 @@ export default class QuanticResultPrintableUri extends LightningElement {
     if (this.allParents.length <= this.maxNumberOfParts || this.isExpanded) {
       return this.allParents;
     }
-    return [...this.allParents.slice(0, 2), { name: '...', isFolded: true }, this.allParents.slice(-1)[0]];
+    return [
+      ...this.allParents.slice(0, 2),
+      { id: 'separator', name: '...', isFolded: true },
+      this.allParents.slice(-1)[0]
+    ];
   }
 
   expandParents() {

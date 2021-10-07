@@ -81,6 +81,7 @@ export default class QuanticResult extends LightningElement {
     const defaultIcon = `doctype:${fileType}`;
     const iconMap = {
       'youtubevideo': 'custom:custom99',
+      'youtubeplaylist': 'custom:custom99',
       'kb_knowledge': 'standard:knowledge',
       'doc': 'doctype:word',
       'xls': 'doctype:excel',

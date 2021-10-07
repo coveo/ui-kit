@@ -21,8 +21,8 @@ export default class ExampleSearch extends LightningElement {
       ['Case']
     );
     const isYouTube = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
-      'sourcetype',
-      ['YouTube']
+      'filetype',
+      ['YouTubeVideo']
     );
     const isChatter = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
       'objecttype',

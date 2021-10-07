@@ -1,7 +1,7 @@
 <template>
   <div class="slds-grid_vertical-align-center slds-size_1-of-1 slds-list_horizontal">
     <template for:each={foldedParents} for:item="parent">
-      <div class="result-parenturi__container slds-grid slds-grid_vertical-align-center" key={parent.name}>
+      <div class="result-parenturi__container slds-grid slds-grid_vertical-align-center" key={parent.id}>
         <template if:true={parent.isFolded}>
           <a onclick={expandParents}>...</a>
         </template>
