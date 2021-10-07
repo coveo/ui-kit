@@ -32,8 +32,7 @@ node('linux && docker') {
       }
 
       stage('Install Chrome') {
-        when { not { tag } }
-        steps {
+        if (!isBump) {
           sh "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -"
           sh "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list"
           sh "apt-get update"
@@ -43,16 +42,14 @@ node('linux && docker') {
       }
 
       stage('Prepare Cypress') {
-        when { not { tag } }
-        steps {
+        if (!isBump) {
           sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
           sh 'rm -rf /var/lib/apt/lists/*'
         }
       }
 
       stage('Cypress Test') {
-        when { not { tag } }
-        steps {
+        if (!isBump) {
           parallel([
             'atomic': {
               sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
