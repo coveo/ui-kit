@@ -64,6 +64,7 @@ export default class QuanticResultLabel extends LightningElement {
   }
 
   setLabelSize() {
+    // @ts-ignore
     this.template.querySelector('.result-label__label')?.style.setProperty('font-size', this.size);
   }
 
