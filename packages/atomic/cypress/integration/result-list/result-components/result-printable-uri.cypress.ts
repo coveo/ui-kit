@@ -28,6 +28,27 @@ describe('Result Printable Uri Component', () => {
     CommonAssertions.assertConsoleError();
   });
 
+  describe('when the "max-number-of-parts" prop is not a number', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML(resultPrintableUriComponent, {
+                'max-number-of-parts': 'yes',
+              }),
+            ])
+          )
+        )
+        .init();
+    });
+
+    it('should be removed from the DOM', () => {
+      ResultPrintableUriSelectors.firstInResult().should('not.exist');
+    });
+    CommonAssertions.assertConsoleError();
+  });
+
   describe('when the "max-number-of-parts" prop is less than 3', () => {
     beforeEach(() => {
       new TestFixture()
