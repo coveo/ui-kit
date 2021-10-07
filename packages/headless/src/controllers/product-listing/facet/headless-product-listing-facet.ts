@@ -26,10 +26,13 @@ import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/f
 import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
 import {
   logFacetClearAll,
+  logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 export {
   FacetOptions,
@@ -45,7 +48,7 @@ export {
 };
 
 /**
- * Creates a `Facet` controller instance.
+ * Creates a `Facet` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.
@@ -63,8 +66,27 @@ export function buildFacet(
   const coreController = buildCoreFacet(engine, props);
   const getFacetId = () => coreController.state.facetId;
 
+  const createFacetSearch = () => {
+    const {facetSearch} = props.options;
+
+    return buildFacetSearch(engine, {
+      options: {facetId: getFacetId(), ...facetSearch},
+      select: (value) => {
+        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(fetchProductListing()).then(() =>
+          logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
+        );
+      },
+    });
+  };
+
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+
   return {
     ...coreController,
+
+    facetSearch: restOfFacetSearch,
 
     toggleSelect: (selection: FacetValue) => {
       coreController.toggleSelect(selection);
@@ -101,6 +123,7 @@ export function buildFacet(
     get state() {
       return {
         ...coreController.state,
+        facetSearch: facetSearch.state,
       };
     },
   };

@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.25.0...@coveo/headless@1.26.0) (2021-10-06)
+
+
+### Features
+
+* **atomic:** add configurable query suggestions & recent queries to search box ([#1261](https://github.com/coveo/ui-kit/issues/1261)) ([bb38b27](https://github.com/coveo/ui-kit/commit/bb38b273fd6f98062b516b6a00fd2f3b2767cefd))
+
+
+
+
+
+# [1.25.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.24.1...@coveo/headless@1.25.0) (2021-10-05)
+
+
+### Features
+
+* **headless:** add support for fields debugging in relevance inspector ([#1236](https://github.com/coveo/ui-kit/issues/1236)) ([282c7c1](https://github.com/coveo/ui-kit/commit/282c7c141a13173a8fd848bbae9611653ba92c67))
+* **headless:** support dictionaryFieldContext on recommendation and product-recommendation ([#1287](https://github.com/coveo/ui-kit/issues/1287)) ([1027dc6](https://github.com/coveo/ui-kit/commit/1027dc678fb6ccef32a8d35b5aa259a27b94598a))
+
+
+
+
+
 ## [1.24.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.24.0...@coveo/headless@1.24.1) (2021-10-05)
 
 

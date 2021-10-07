@@ -73,13 +73,13 @@ export const loadCollection = createAsyncThunk<
   'folding/loadCollection',
   async (
     collectionId: CollectionId,
-    {getState, rejectWithValue, extra: {searchAPIClient}}
+    {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
       buildSearchAndFoldingLoadCollectionRequest(state);
 
-    const response = await searchAPIClient.search({
+    const response = await apiClient.search({
       ...sharedWithSearchRequest,
       q: getQForHighlighting(state),
       enableQuerySyntax: true,

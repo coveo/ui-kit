@@ -27,6 +27,7 @@ import {ProductRecommendationEngine} from '../app/product-recommendation-engine/
 import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
 import {ProductListingAppState} from '../state/product-listing-app-state';
 import {buildMockProductListingState} from './mock-product-listing-state';
+import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -89,7 +90,7 @@ export function buildMockProductRecommendationsAppEngine(
 }
 
 export interface MockProductListingEngine
-  extends ProductListingEngine,
+  extends ProductListingEngine<ProductListingAppState>,
     MockEngine {}
 
 export function buildMockProductListingEngine(
@@ -144,14 +145,19 @@ function buildCoreState<T extends AppState>(
 }
 
 const configureMockStore = (logger: Logger) => {
+  const thunkExtraArguments: Omit<
+    SearchThunkExtraArguments,
+    'analyticsClientMiddleware'
+  > = {
+    searchAPIClient: buildMockSearchAPIClient({logger}),
+    apiClient: buildMockSearchAPIClient({logger}),
+    validatePayload: validatePayloadAndThrow,
+    logger,
+  };
   return configureStore<AppState, DispatchExts>([
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-    thunk.withExtraArgument({
-      searchAPIClient: buildMockSearchAPIClient({logger}),
-      validatePayload: validatePayloadAndThrow,
-      logger,
-    }),
+    thunk.withExtraArgument(thunkExtraArguments),
     ...getDefaultMiddleware(),
     logActionMiddleware(logger),
   ]);

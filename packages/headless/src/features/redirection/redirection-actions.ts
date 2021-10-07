@@ -38,19 +38,14 @@ export const checkForRedirection = createAsyncThunk<
   'redirection/check',
   async (
     payload,
-    {
-      dispatch,
-      getState,
-      rejectWithValue,
-      extra: {searchAPIClient, validatePayload},
-    }
+    {dispatch, getState, rejectWithValue, extra: {apiClient, validatePayload}}
   ) => {
     validatePayload(payload, {
       defaultRedirectionUrl: new StringValue({
         emptyAllowed: false,
       }),
     });
-    const response = await searchAPIClient.plan(buildPlanRequest(getState()));
+    const response = await apiClient.plan(buildPlanRequest(getState()));
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
     }

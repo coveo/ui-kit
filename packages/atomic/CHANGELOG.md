@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.0...@coveo/atomic@1.5.1) (2021-10-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.4.2...@coveo/atomic@1.5.0) (2021-10-06)
+
+
+### Features
+
+* **atomic:** add configurable query suggestions & recent queries to search box ([#1261](https://github.com/coveo/ui-kit/issues/1261)) ([bb38b27](https://github.com/coveo/ui-kit/commit/bb38b273fd6f98062b516b6a00fd2f3b2767cefd))
+
+
+
+
+
+## [1.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.4.1...@coveo/atomic@1.4.2) (2021-10-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.4.0...@coveo/atomic@1.4.1) (2021-10-05)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -20,20 +20,21 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * Whether the value is a facet search result.
    * @api
    * @type {boolean}
-   * @defaultValue false
+   * @defaultValue `false`
    */
   @api isSearchResult = false;
   /** 
    * Whether the value is an active parent node.
    * @api
    * @type {boolean}
+   * @defaultValue `false`
    */
   @api activeParent = false;
   /** 
    * Whether the value is a non-active parent node.
    * @api
    * @type {boolean}
-   * @defaultValue false
+   * @defaultValue `false`
    */
   @api nonActiveParent = false;
 
