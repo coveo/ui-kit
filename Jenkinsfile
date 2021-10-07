@@ -22,6 +22,10 @@ node('linux && docker') {
         sh 'npm run lint:check'
       }
 
+      stage('Generate Docs') {
+        sh 'npm run doc:generate'
+      }
+
       stage('Unit Test') {
         sh 'npm test'
         junit 'packages/*/reports/*.xml'
@@ -77,10 +81,6 @@ node('linux && docker') {
             }
           ])
         }
-      }
-
-      stage('Generate Docs') {
-        sh 'npm run doc:generate'
       }
     }
 
