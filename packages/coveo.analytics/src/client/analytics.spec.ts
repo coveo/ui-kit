@@ -4,6 +4,9 @@ import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieStorage} from '../storage';
 import HistoryStore from '../history';
 import {mockFetch} from '../../tests/fetchMock';
+import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
+import * as doNotTrack from '../donottrack';
+import {Cookie} from '../cookieutils';
 
 const aVisitorId = '123';
 
@@ -419,4 +422,32 @@ describe('Analytics', () => {
             return JSON.parse(body.toString());
         });
     };
+});
+
+describe('doNotTrack', () => {
+    it('should do business as usual if doNotTrack returns false', () => {
+        jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => false);
+
+        let client = new CoveoAnalyticsClient({});
+
+        expect(client.runtime).toBeInstanceOf(BrowserRuntime);
+    });
+
+    it('should honor doNotTrack', () => {
+        jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+
+        let client = new CoveoAnalyticsClient({});
+
+        expect(client.runtime).toBeInstanceOf(NoopRuntime);
+    });
+
+    it('should clear existing cookies', async () => {
+        jest.spyOn(doNotTrack, 'doNotTrack').mockImplementation(() => true);
+        Cookie.set('coveo_visitorId', aVisitorId);
+        expect(Cookie.get('coveo_visitorId')).toBe(aVisitorId);
+
+        new CoveoAnalyticsClient({});
+
+        expect(Cookie.get('coveo_visitorId')).not.toBe(aVisitorId);
+    });
 });

@@ -26,10 +26,11 @@ import {
     isMeasurementProtocolKey,
     convertCustomMeasurementProtocolKeys,
 } from './measurementProtocolMapper';
-import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
+import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime, NoopRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
+import {doNotTrack} from '../donottrack';
 
 export const Version = 'v15';
 
@@ -127,6 +128,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         };
 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
+        if (doNotTrack()) {
+            this.clear();
+            this.runtime = new NoopRuntime();
+        }
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
     }
 
