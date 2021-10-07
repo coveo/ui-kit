@@ -8,6 +8,8 @@ import {
   resultLinkComponent,
   ResultLinkSelectors,
 } from './result-link-selectors';
+import * as CommonAssertions from '../../common-assertions';
+import {ResultTemplateSelectors} from '../../result-templates/result-template-selectors';
 
 interface ResultLinkProps {
   target?: '_self' | '_blank' | '_parent' | '_top';
@@ -35,15 +37,11 @@ describe('Result Link Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       cy.get(resultLinkComponent).should('not.exist');
     });
 
-    it.skip('should log a console error', () => {
-      cy.get(resultLinkComponent)
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when used inside a result template', () => {
@@ -63,6 +61,12 @@ describe('Result Link Component', () => {
         )
         .init();
     }
+
+    it('should log one UA click event', () => {
+      setupResultLink();
+      ResultLinkSelectors.firstInResult().rightclick();
+      cy.shouldBeCalled(TestFixture.urlParts.UAClick, 1);
+    });
 
     it('the "target" prop should set the target on the "a" tag', () => {
       setupResultLink('_parent');

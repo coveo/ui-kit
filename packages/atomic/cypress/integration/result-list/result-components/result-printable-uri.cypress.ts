@@ -82,6 +82,11 @@ describe('Result Printable Uri Component', () => {
         .should('have.attr', 'href', 'https://coveo.com')
         .should('have.attr', 'target', '_self');
     });
+
+    it('should log one UA click event', () => {
+      ResultPrintableUriSelectors.links().first().rightclick();
+      cy.shouldBeCalled(TestFixture.urlParts.UAClick, 1);
+    });
   });
 
   describe('when there is a "parents" property in the result object', () => {
