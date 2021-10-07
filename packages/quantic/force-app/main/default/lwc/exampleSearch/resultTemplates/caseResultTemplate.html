@@ -3,8 +3,7 @@
     <lightning-tile>
       <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
         <div class="slds-col slds-grid slds-grid_vertical-align-center slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left">
-          <span><lightning-icon icon-name={icon} size="small"></lightning-icon></span>
-          <span class="slds-m-left_x-small">{result.raw.objecttype}</span>
+          <c-quantic-result-label result={result}></c-quantic-result-label>
           <span class="slds-m-left_xxx-small" style="font-size: 10px; color: grey">[{result.raw.sfcasenumber}]</span>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
@@ -15,7 +14,7 @@
           </template>
         </div>
         <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right" style="color:#3E3E3C">
-          <p class="slds-truncate" title="Date">
+          <p class="slds-truncate">
             <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
           </p>
         </div>

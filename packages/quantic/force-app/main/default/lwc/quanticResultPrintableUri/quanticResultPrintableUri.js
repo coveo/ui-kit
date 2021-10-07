@@ -6,11 +6,11 @@ import {parseXML} from 'c/quanticUtils';
 /**
  * The `QuanticResultPrintableUri` component displays the URI, or path, to access a result.
  * @example
- * <c-quantic-result-printable-uri engine-id={engineId} result={result} result-templates-manager={resultTemplatesManager}></c-quantic-result-printable-uri>
+ * <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
  */
 export default class QuanticResultPrintableUri extends LightningElement {
   /**
-   * The result item.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
    * @api
    * @type {Result}
    */
@@ -38,10 +38,13 @@ export default class QuanticResultPrintableUri extends LightningElement {
   MIN_MAX_NUMBER_OF_PARTS = 3;
   /** @type {boolean} */
   isExpanded = false;
+  /** @type {string} */
+  error;
 
   renderedCallback() {
     if (this.maxNumberOfParts < this.MIN_MAX_NUMBER_OF_PARTS) {
       console.error(`The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${this.MIN_MAX_NUMBER_OF_PARTS}.`);
+      this.error = 'QuanticResultPrintableUri Error';
     }
   }
 

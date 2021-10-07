@@ -2,9 +2,8 @@
   <div class="lgc-bg slds-border_bottom slds-p-vertical_medium">
     <lightning-tile>
       <div class="slds-grid slds-grid_vertical-align-center slds-gutters slds-wrap slds-m-bottom_x-small">
-        <div class="slds-col result__label slds-grid slds-grid_vertical-align-center slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left">
-          <span><lightning-icon icon-name={icon} size="small"></lightning-icon></span>
-          <span class="slds-m-left_x-small">{label}</span>
+        <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left">
+          <c-quantic-result-label result={result}></c-quantic-result-label>
         </div>
         <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
           <template if:true={result.isRecommendation}>
@@ -12,7 +11,7 @@
           </template>
         </div>
         <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right">
-          <p class="slds-truncate result__date" title="Date">
+          <p class="slds-truncate result__date">
             <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
           </p>
         </div>
