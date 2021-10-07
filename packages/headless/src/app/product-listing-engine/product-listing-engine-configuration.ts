@@ -17,9 +17,9 @@ export const productListingEngineConfigurationSchema =
   });
 
 /**
- * Creates a sample product recommendation engine configuration.
+ * Creates a sample product listing engine configuration.
  *
- * @returns The sample product recommendation engine configuration.
+ * @returns The sample product listing engine configuration.
  */
 export function getSampleProductListingEngineConfiguration(): ProductListingEngineConfiguration {
   return {
