@@ -1,9 +1,9 @@
 // @ts-ignore
-import template1 from './resultTemplates/youtubeResultTemplate.html';
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
-import template2 from './resultTemplates/caseResultTemplate.html';
+import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
-import template3 from './resultTemplates/chatterResultTemplate.html';
+import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
@@ -30,17 +30,17 @@ export default class ExampleSearch extends LightningElement {
     );
     resultTemplatesManager.registerTemplates(
       {
-        content: template1,
+        content: youtubeTemplate,
         conditions: [isYouTube],
         fields: ['ytvideoid', 'ytvideoduration']
       },
       {
-        content: template2,
+        content: caseTemplate,
         conditions: [isCase],
         fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber']
       },
       {
-        content: template3,
+        content: chatterTemplate,
         conditions: [isChatter],
         fields: ['sfcreatedbyname']
       },

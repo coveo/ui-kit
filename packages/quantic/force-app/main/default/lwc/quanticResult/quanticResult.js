@@ -1,6 +1,6 @@
 // @ts-ignore
 import defaultTemplate from './quanticResult.html';
-import { LightningElement, api } from "lwc";
+import {LightningElement, api} from "lwc";
 import {TimeSpan} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
