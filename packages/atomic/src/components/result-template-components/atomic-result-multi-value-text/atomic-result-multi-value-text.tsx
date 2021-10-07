@@ -19,6 +19,7 @@ const listItemClasses = 'inline-block';
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
  * @part result-multi-value-text-separator - The separator to display between each of the field values.
  * @part result-multi-value-text-value - A field value.
+ * @part result-multi-value-text-value-more - A label indicating some values were omitted.
  * @slot result-multi-value-text-value-* - Lets you specify a custom caption value for a given part of a mutli-text field value. (e.g., if you want to use `Sweet!` as a caption value for `sweet` in `salty;sweet;sour`, you'd use  `<span slot="result-multi-value-text-value-sweet">Sweet!</span>`).
  */
 @Component({
@@ -49,7 +50,7 @@ export class AtomicResultMultiText {
    */
   @Prop() public maxValuesToDisplay = 3;
 
-  private sortedValues: string[] = [];
+  private sortedValues: string[] | null = null;
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -62,7 +63,7 @@ export class AtomicResultMultiText {
     );
 
     if (value === null) {
-      return [];
+      return null;
     }
 
     if (Array.isArray(value)) {
@@ -73,7 +74,7 @@ export class AtomicResultMultiText {
       this.error = new Error(
         `Could not parse "${value}" from field "${this.field}" as a string array.`
       );
-      return [];
+      return null;
     }
 
     return [value];
@@ -93,6 +94,10 @@ export class AtomicResultMultiText {
 
   private updateSortedValues() {
     const allValues = this.resultValues;
+    if (allValues === null) {
+      this.sortedValues = null;
+      return;
+    }
     const allValuesSet = new Set(allValues);
     const firstValues = this.facetSelectedValues.filter((value) =>
       allValuesSet.has(value)
@@ -147,36 +152,34 @@ export class AtomicResultMultiText {
 
   private renderMoreLabel(value: number) {
     return (
-      <li key="more-field-values" class={listItemClasses}>
+      <li
+        key="more-field-values"
+        part="result-multi-value-text-value-more"
+        class={listItemClasses}
+      >
         {this.bindings.i18n.t('n-more', {value})}
       </li>
     );
   }
 
-  private renderListItems() {
-    const numberOfValuesToDisplay = this.getNumberOfValuesToDisplay(
-      this.sortedValues
-    );
+  private renderListItems(values: string[]) {
+    const numberOfValuesToDisplay = this.getNumberOfValuesToDisplay(values);
 
     const nodes: VNode[] = [];
     for (let i = 0; i < numberOfValuesToDisplay; i++) {
       if (i > 0) {
-        nodes.push(
-          this.renderSeparator(this.sortedValues[i - 1], this.sortedValues[i])
-        );
+        nodes.push(this.renderSeparator(values[i - 1], values[i]));
       }
-      nodes.push(this.renderValue(this.sortedValues[i]));
+      nodes.push(this.renderValue(values[i]));
     }
-    if (this.getShouldDisplayLabel(this.sortedValues)) {
+    if (this.getShouldDisplayLabel(values)) {
       nodes.push(
         this.renderSeparator(
-          this.sortedValues[numberOfValuesToDisplay - 1],
+          values[numberOfValuesToDisplay - 1],
           'more-field-values'
         )
       );
-      nodes.push(
-        this.renderMoreLabel(this.sortedValues.length - numberOfValuesToDisplay)
-      );
+      nodes.push(this.renderMoreLabel(values.length - numberOfValuesToDisplay));
     }
     return nodes;
   }
@@ -186,6 +189,14 @@ export class AtomicResultMultiText {
   }
 
   public render() {
-    return <ul class="flex list-none">{...this.renderListItems()}</ul>;
+    if (this.sortedValues === null) {
+      this.host.remove();
+      return;
+    }
+    return (
+      <ul class="flex list-none">
+        {...this.renderListItems(this.sortedValues)}
+      </ul>
+    );
   }
 }
