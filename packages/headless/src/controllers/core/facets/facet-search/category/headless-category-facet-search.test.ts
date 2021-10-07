@@ -9,11 +9,10 @@ import {
 import {
   CategoryFacetSearchProps,
   CategoryFacetSearch,
-  buildCategoryFacetSearch,
+  buildCoreCategoryFacetSearch,
 } from './headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
-import {executeSearch} from '../../../../../features/search/search-actions';
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('CategoryFacetSearch', () => {
@@ -29,7 +28,7 @@ describe('CategoryFacetSearch', () => {
   }
 
   function initFacetSearch() {
-    controller = buildCategoryFacetSearch(engine, props);
+    controller = buildCoreCategoryFacetSearch(engine, props);
   }
 
   beforeEach(() => {
@@ -78,13 +77,6 @@ describe('CategoryFacetSearch', () => {
         value,
       });
       expect(engine.actions).toContainEqual(action);
-    });
-
-    it('dispatches #executeSearch action', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   });
 });

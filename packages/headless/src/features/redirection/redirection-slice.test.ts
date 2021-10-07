@@ -74,6 +74,7 @@ describe('redirection slice', () => {
     const response = await checkForRedirection({
       defaultRedirectionUrl,
     })(engine.dispatch, () => createMockState(), {
+      apiClient: apiClient,
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
       logger: pino({level: 'silent'}),
