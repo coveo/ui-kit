@@ -3,12 +3,15 @@ import {
   buildMockSearchAppEngine,
 } from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
-import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {configuration, tabSet} from '../../app/reducers';
-import {setOriginLevel2} from '../../features/configuration/configuration-actions';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {registerTab} from '../../features/tab-set/tab-set-actions';
+import {
+  registerTab,
+  updateActiveTab,
+} from '../../features/tab-set/tab-set-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -58,16 +61,16 @@ describe('Tab', () => {
       initTab();
 
       const {id, expression} = props.options;
-      const action = registerTab({id, expression, isActive: false});
+      const action = registerTab({id, expression});
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('when isActive is true, it sets originLevel2 to the #id option', () => {
+    it('when isActive is true, it dispatches #updateActiveTab', () => {
+      const {id} = props.options;
       props.initialState!.isActive = true;
       initTab();
 
-      const action = setOriginLevel2({originLevel2: props.options.id!});
-      expect(engine.actions).toContainEqual(action);
+      expect(engine.actions).toContainEqual(updateActiveTab(id));
     });
 
     it('does not throw if initialState is undefined', () => {
@@ -92,27 +95,30 @@ describe('Tab', () => {
     });
   });
 
-  it('#select calls #updateConstantQuery', () => {
-    tab.select();
-    const action = updateAdvancedSearchQueries({cq: expression});
-    expect(engine.actions).toContainEqual(action);
+  describe('#select', () => {
+    it('dispatches #updateActiveTab', () => {
+      const {id} = props.options;
+      tab.select();
+
+      expect(engine.actions).toContainEqual(updateActiveTab(id));
+    });
+
+    it('dispatches #executeSearch', () => {
+      tab.select();
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action).toBeTruthy();
+    });
   });
 
-  it('#select sets the originLevel2 to the #id option', () => {
-    tab.select();
-    const action = setOriginLevel2({originLevel2: props.options.id!});
-    expect(engine.actions).toContainEqual(action);
-  });
-
-  it('#state.isActive is false by default', () => {
+  it('when the entry in the tabSet is not active, #state.isActive is false', () => {
+    const {id} = props.options;
+    engine.state.tabSet[id] = buildMockTabSlice({id, isActive: false});
     expect(tab.state.isActive).toBe(false);
   });
 
-  it('#state.isActive is true if the tabs cq matches the active cq', () => {
-    props.options.expression = 'abc123';
-    initTab();
-
-    engine.state.advancedSearchQueries.cq = props.options.expression;
+  it('when the entry in the tabSet is active, #state.isActive is true', () => {
+    const {id} = props.options;
+    engine.state.tabSet[id] = buildMockTabSlice({id, isActive: true});
     expect(tab.state.isActive).toBe(true);
   });
 });
