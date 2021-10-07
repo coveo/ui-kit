@@ -1,7 +1,9 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
+import {SearchAPIClient} from '../../api/search/search-api-client';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {SearchAction} from '../analytics/analytics-utils';
 import {
   executeSearch,
@@ -34,7 +36,10 @@ export interface SearchActionCreators {
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     SearchAction,
-    AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+    AsyncThunkOptions<
+      StateNeededByExecuteSearch,
+      ClientThunkExtraArguments<SearchAPIClient>
+    >
   >;
 
   /**
@@ -45,7 +50,10 @@ export interface SearchActionCreators {
   fetchMoreResults(): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     void,
-    AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+    AsyncThunkOptions<
+      StateNeededByExecuteSearch,
+      ClientThunkExtraArguments<SearchAPIClient>
+    >
   >;
 }
 

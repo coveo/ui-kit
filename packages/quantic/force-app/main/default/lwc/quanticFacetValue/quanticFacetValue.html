@@ -1,6 +1,6 @@
 <template>
   <li class="slds-grid">
-    <div onclick={onSelect} class="facet__value-container facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+    <div onclick={onSelect} class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small">
       <template if:false={displayAsLink}>
         <lightning-input 
           type="checkbox"
@@ -30,4 +30,3 @@
     </div>
   </li>
 </template>
-

@@ -6,9 +6,7 @@ import {
 
 import {
   ConfigurationSection,
-  SearchHubSection,
   ProductRecommendationsSection,
-  ContextSection,
 } from '../../state/state-sections';
 import {
   validatePayload,
@@ -25,10 +23,11 @@ import {
 import {Result} from '../../api/search/search/result';
 import {logProductRecommendations} from './product-recommendations-analytics.actions';
 import {SearchAction} from '../analytics/analytics-utils';
+import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 
 export type StateNeededByGetProductRecommendations = ConfigurationSection &
   ProductRecommendationsSection &
-  Partial<ContextSection & SearchHubSection>;
+  Partial<ProductRecommendationsAppState>;
 
 export interface GetProductRecommendationsThunkReturn {
   recommendations: ProductRecommendation[];
@@ -142,10 +141,10 @@ export const getProductRecommendations = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByGetProductRecommendations>
 >(
   'productrecommendations/get',
-  async (_, {getState, rejectWithValue, extra: {searchAPIClient}}) => {
+  async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();
-    const fetched = await searchAPIClient.productRecommendations(
+    const fetched = await apiClient.productRecommendations(
       buildProductRecommendationsRequest(state)
     );
     const duration = new Date().getTime() - startedAt;
@@ -238,6 +237,9 @@ export const buildProductRecommendationsRequest = (
       : [],
     ...(s.context && {
       context: s.context.contextValues,
+    }),
+    ...(s.dictionaryFieldContext && {
+      dictionaryFieldContext: s.dictionaryFieldContext.contextValues,
     }),
     ...(s.searchHub && {
       searchHub: s.searchHub,

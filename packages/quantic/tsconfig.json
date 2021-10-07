@@ -8,7 +8,7 @@
         "baseUrl": "force-app/main/default/lwc",
         "target": "es2016",
         "module": "ESNext",
-        "lib": ["es2016", "dom", "ES2018.Intl"],
+        "lib": ["es2016", "dom", "ES2018.Intl", "ESNext.String"],
         "paths": {
             "c/quanticDateFacet": [
                 "quanticDateFacet/quanticDateFacet.js"

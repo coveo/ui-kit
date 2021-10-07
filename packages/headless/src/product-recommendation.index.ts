@@ -21,6 +21,7 @@ export {LogLevel} from './app/logger';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/product-recommendations/product-recommendations-actions-loader';
 export * from './features/context/context-actions-loader';
+export * from './features/dictionary-field-context/dictionary-field-context-actions-loader';
 export * from './features/search-hub/search-hub-actions-loader';
 
 // Controllers
@@ -85,3 +86,10 @@ export {
   ContextPayload,
   buildContext,
 } from './controllers/context/headless-context';
+
+export {
+  DictionaryFieldContext,
+  DictionaryFieldContextState,
+  DictionaryFieldContextPayload,
+  buildDictionaryFieldContext,
+} from './controllers/dictionary-field-context/headless-dictionary-field-context';

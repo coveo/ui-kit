@@ -133,6 +133,8 @@ function buildDefaultRequestOptions(
 ): PlatformRequestOptions {
   const {url, method, requestParams, contentType, accessToken, signal} =
     options;
+  const isMethodWithBody =
+    options.method === 'POST' || options.method === 'PUT';
   const body = encodeBody(requestParams, contentType);
 
   return {
@@ -143,7 +145,7 @@ function buildDefaultRequestOptions(
       Authorization: `Bearer ${accessToken}`,
       ...options.headers,
     },
-    body,
+    ...(isMethodWithBody && {body}),
     signal,
   };
 }

@@ -480,13 +480,13 @@ describe('category facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
-    jest.spyOn(CategoryFacetSearch, 'buildCategoryFacetSearch');
+    jest.spyOn(CategoryFacetSearch, 'buildCoreCategoryFacetSearch');
     initCategoryFacet();
 
     expect(categoryFacet.facetSearch).toBeTruthy();
-    expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
-      1
-    );
+    expect(
+      CategoryFacetSearch.buildCoreCategoryFacetSearch
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('exposes a #facetSearch state', () => {

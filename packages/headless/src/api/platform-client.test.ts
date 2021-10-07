@@ -119,6 +119,7 @@ describe('PlatformClient call', () => {
   it(`when the contentType is www-url-form-encoded and the #requestParams cannot be encoded,
   it sends an empty string`, async () => {
     await platformCall({
+      method: 'POST',
       contentType: 'application/x-www-form-urlencoded',
       requestParams: {q: {}},
     });
@@ -136,6 +137,58 @@ describe('PlatformClient call', () => {
     expect(mockFetch).toHaveBeenCalledWith(
       platformUrl(),
       expect.objectContaining({body: JSON.stringify(requestParams)})
+    );
+  });
+
+  it('when the method is POST, #body should be present', async () => {
+    await platformCall({
+      method: 'POST',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: 'q=hello&page=5'})
+    );
+  });
+
+  it('when the method is PUT, #body is used for body', async () => {
+    await platformCall({
+      method: 'PUT',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: 'q=hello&page=5'})
+    );
+  });
+
+  it('when the method is GET, #body should be absent', async () => {
+    await platformCall({
+      method: 'GET',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.not.objectContaining({body: expect.anything()})
+    );
+  });
+
+  it('when the method is DELETE, #body should be absent', async () => {
+    await platformCall({
+      method: 'DELETE',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.not.objectContaining({body: expect.anything()})
     );
   });
 

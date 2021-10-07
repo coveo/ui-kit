@@ -13,7 +13,6 @@ import {categoryFacetResponseSelector} from '../../../../features/facets/categor
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   CategoryFacetSearchSection,
@@ -48,15 +47,22 @@ export interface CategoryFacetProps {
   options: CategoryFacetOptions;
 }
 
-/**
- * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
- */
-export interface CategoryFacet extends Controller {
+export interface CategoryFacet extends CoreCategoryFacet {
   /**
    * Provides methods to search the facet's values.
    */
   facetSearch: CategoryFacetSearch;
 
+  /**
+   * The state of the `Facet` controller.
+   * */
+  state: CategoryFacetState;
+}
+
+/**
+ * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
+ */
+export interface CoreCategoryFacet extends Controller {
   /**
    * Toggles the specified facet value.
    *
@@ -97,13 +103,18 @@ export interface CategoryFacet extends Controller {
   /**
    * The state of the `Facet` controller.
    * */
-  state: CategoryFacetState;
+  state: CoreCategoryFacetState;
+}
+
+export interface CategoryFacetState extends CoreCategoryFacetState {
+  /** The state of the facet's searchbox. */
+  facetSearch: CategoryFacetSearchState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
  */
-export interface CategoryFacetState {
+export interface CoreCategoryFacetState {
   /** The facet ID. */
   facetId: string;
 
@@ -127,9 +138,6 @@ export interface CategoryFacetState {
 
   /** Returns `true` if fewer values can be displayed, and `false` if not. */
   canShowLessValues: boolean;
-
-  /** The state of the facet's searchbox. */
-  facetSearch: CategoryFacetSearchState;
 }
 
 export interface CategoryFacetSearch {
@@ -224,7 +232,7 @@ export interface CategoryFacetSearchResult {
 export function buildCoreCategoryFacet(
   engine: CoreEngine,
   props: CategoryFacetProps
-): CategoryFacet {
+): CoreCategoryFacet {
   if (!loadCategoryFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -247,13 +255,6 @@ export function buildCoreCategoryFacet(
     'buildCategoryFacet'
   );
 
-  const createFacetSearch = () => {
-    const {facetSearch} = options;
-    const facetSearchOptions = {facetId, ...facetSearch};
-
-    return buildCategoryFacetSearch(engine, {options: facetSearchOptions});
-  };
-
   const getRequest = () => {
     return categoryFacetRequestSelector(engine.state, facetId);
   };
@@ -266,12 +267,8 @@ export function buildCoreCategoryFacet(
 
   dispatch(registerCategoryFacet(options));
 
-  const facetSearch = createFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
-
   return {
     ...controller,
-    facetSearch: restOfFacetSearch,
 
     toggleSelect(selection: CategoryFacetValue) {
       const retrieveCount = options.numberOfValues;
@@ -334,7 +331,6 @@ export function buildCoreCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request!.sortCriteria,
-        facetSearch: facetSearch.state,
       };
     },
   };

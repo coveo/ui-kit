@@ -157,4 +157,17 @@ describe('search request', () => {
     state.configuration.analytics.originLevel3 = originLevel3;
     expect(buildSearchRequest(state).request.referrer).toBe(originLevel3);
   });
+
+  it('#searchRequest.fieldsToInclude holds the #fieldsToInclude', () => {
+    state.fields.fieldsToInclude = ['foo', 'bar'];
+    expect(buildSearchRequest(state).request.fieldsToInclude).toEqual(
+      expect.arrayContaining(['foo', 'bar'])
+    );
+  });
+
+  it('#searchRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', () => {
+    state.fields.fieldsToInclude = ['foo', 'bar'];
+    state.fields.fetchAllFields = true;
+    expect(buildSearchRequest(state).request.fieldsToInclude).not.toBeDefined();
+  });
 });

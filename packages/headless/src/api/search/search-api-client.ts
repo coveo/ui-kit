@@ -29,15 +29,37 @@ import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
-import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
+import {
+  FieldDescription,
+  FieldDescriptionsResponseSuccess,
+} from './fields/fields-response';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {FacetSearchResponse} from './facet-search/facet-search-response';
 
-export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
+export interface FacetSearchAPIClient {
+  facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
+}
 
-export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>>
-  extends AsyncThunkOptions<T, SearchThunkExtraArguments> {
+export type AllSearchAPIResponse =
+  | Plan
+  | Search
+  | QuerySuggest
+  | FieldDescription;
+
+export interface AsyncThunkSearchOptions<
+  T extends Partial<SearchAppState>
+> extends AsyncThunkOptions<
+    T,
+    ClientThunkExtraArguments<SearchAPIClient> & {
+      /*
+       * @deprecated This property is now unused, please use `apiClient` instead.
+       */
+      searchAPIClient?: SearchAPIClient;
+    }
+  > {
   rejectValue: SearchAPIErrorWithStatusCode;
 }
 
@@ -53,7 +75,7 @@ export type SearchAPIClientResponse<T> =
   | {success: T}
   | {error: SearchAPIErrorWithStatusCode};
 
-export class SearchAPIClient {
+export class SearchAPIClient implements FacetSearchAPIClient {
   constructor(private options: SearchAPIClientOptions) {}
 
   async plan(
@@ -241,6 +263,26 @@ export class SearchAPIClient {
     };
   }
 
+  async fieldDescriptions(req: BaseParam) {
+    const response = await PlatformClient.call({
+      ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
+      requestParams: {},
+      ...this.options,
+    });
+    if (response instanceof Error) {
+      throw response;
+    }
+    const body = await response.json();
+
+    if (isSuccessFieldsDescriptionResponse(body)) {
+      return {success: body};
+    }
+
+    return {
+      error: unwrapError({response, body}),
+    };
+  }
+
   private getAbortControllerInstanceIfAvailable(): AbortController | null {
     // For nodejs environments only, we want to load the implementation of AbortController from node-abort-controller package.
     // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
@@ -330,6 +372,12 @@ function isSuccessPlanResponse(body: unknown): body is PlanResponseSuccess {
 
 function isSuccessHtmlResponse(body: unknown): body is string {
   return typeof body === 'string';
+}
+
+function isSuccessFieldsDescriptionResponse(
+  body: unknown
+): body is FieldDescriptionsResponseSuccess {
+  return (body as FieldDescriptionsResponseSuccess).fields !== undefined;
 }
 
 function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {

@@ -55,6 +55,7 @@ export * from './features/analytics/index';
 
 // Types & Helpers
 export {Result} from './api/search/search/result';
+export {FieldDescription} from './api/search/fields/fields-response';
 export {Raw} from './api/search/search/raw';
 export {
   SortCriterion,
