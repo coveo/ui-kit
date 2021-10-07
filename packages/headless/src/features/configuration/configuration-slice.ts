@@ -16,7 +16,13 @@ import {
 } from './configuration-state';
 
 function analyticsUrlFromPlatformUrl(platformUrl: string) {
-  return platformUrl.replace(/^(https?:\/\/)platform/, '$1analytics');
+  const isCoveoURL = platformUrl.match(
+    /^https:\/\/platform(dev|qa|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/
+  );
+  if (isCoveoURL) {
+    return platformUrl.replace(/^(https?:\/\/)platform/, '$1analytics');
+  }
+  return platformUrl;
 }
 
 export const configurationReducer = createReducer(

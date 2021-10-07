@@ -96,6 +96,34 @@ describe('configuration slice', () => {
         expect(newState.analytics.apiBaseUrl).toBe(expectation.analytics);
       });
     });
+
+    it('setting platformUrl to a relative URL keep search and analytics url in sync', () => {
+      const newState = configurationReducer(
+        existingState,
+        updateBasicConfiguration({
+          platformUrl: '/foo',
+        })
+      );
+
+      expect(newState.search.apiBaseUrl).toBe('/foo/rest/search/v2');
+      expect(newState.analytics.apiBaseUrl).toBe('/foo/rest/ua');
+    });
+
+    it('setting platformUrl to a non relative URL pointing to a non Coveo platform keep search and analytics url in sync', () => {
+      const newState = configurationReducer(
+        existingState,
+        updateBasicConfiguration({
+          platformUrl: 'https://my.domain.com',
+        })
+      );
+
+      expect(newState.search.apiBaseUrl).toBe(
+        'https://my.domain.com/rest/search/v2'
+      );
+      expect(newState.analytics.apiBaseUrl).toBe(
+        'https://my.domain.com/rest/ua'
+      );
+    });
   });
 
   describe('updateAnalyticsConfiguration', () => {
