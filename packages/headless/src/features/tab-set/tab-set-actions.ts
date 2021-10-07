@@ -2,6 +2,7 @@ import {RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
+  requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
 
@@ -22,7 +23,7 @@ export const registerTab = createAction(
   (payload: RegisterTabActionCreatorPayload) => {
     const schema = new RecordValue({
       values: {
-        id: requiredEmptyAllowedString,
+        id: requiredNonEmptyString,
         expression: requiredEmptyAllowedString,
       },
     });
@@ -34,6 +35,6 @@ export const registerTab = createAction(
 export const updateActiveTab = createAction(
   'tab/updateActiveTab',
   (id: string) => {
-    return validatePayload(id, requiredEmptyAllowedString);
+    return validatePayload(id, requiredNonEmptyString);
   }
 );

@@ -38,9 +38,9 @@ describe('tab set slice', () => {
       expect(finalState.b.isActive).toBe(false);
     });
 
-    it(`when the #id has an incorrect type,
+    it(`when the #id is an empty string,
     the action detects an error`, () => {
-      const tab = buildMockTabSlice({id: 1 as unknown as string});
+      const tab = buildMockTabSlice({id: ''});
       const action = registerTab(tab);
 
       expect('error' in action).toBe(true);
@@ -82,9 +82,9 @@ describe('tab set slice', () => {
       expect(finalState).toEqual({a: tab});
     });
 
-    it(`when the #id has an incorrect type,
+    it(`when the #id is an empty string,
     the action detects an error`, () => {
-      const action = updateActiveTab(1 as unknown as string);
+      const action = updateActiveTab('');
       expect('error' in action).toBe(true);
     });
   });
