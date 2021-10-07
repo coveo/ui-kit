@@ -1,4 +1,5 @@
 import {LightningElement, track, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
 
 import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
@@ -9,8 +10,6 @@ import showingResultsOf from '@salesforce/label/c.quantic_ShowingResultsOf';
 import showingResultsOf_plural from '@salesforce/label/c.quantic_ShowingResultsOf_plural';
 import showingResultsOfWithQuery from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery';
 import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery_plural';
-import inSeconds from '@salesforce/label/c.quantic_InSeconds';
-import inSeconds_plural from '@salesforce/label/c.quantic_InSeconds_plural';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
@@ -43,9 +42,7 @@ export default class QuanticSummary extends LightningElement {
     showingResultsOf,
     showingResultsOf_plural,
     showingResultsOfWithQuery,
-    showingResultsOfWithQuery_plural,
-    inSeconds,
-    inSeconds_plural,
+    showingResultsOfWithQuery_plural
   }
 
   connectedCallback() {
@@ -85,11 +82,11 @@ export default class QuanticSummary extends LightningElement {
   }
 
   get range() {
-    return `${this.state?.firstResult}-${this.state?.lastResult}`;
+    return `${Intl.NumberFormat(LOCALE).format(this.state?.firstResult)}-${Intl.NumberFormat(LOCALE).format(this.state?.lastResult)}`;
   }
 
   get total() {
-    return this.state?.total.toString();
+    return Intl.NumberFormat(LOCALE).format(this.state?.total).toString();
   }
 
   get noResultsLabel() {
