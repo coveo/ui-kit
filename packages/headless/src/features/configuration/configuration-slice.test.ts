@@ -13,6 +13,7 @@ import {
   ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state';
+import {updateActiveTab} from '../tab-set/tab-set-actions';
 
 describe('configuration slice', () => {
   const url = platformUrl({environment: 'dev', region: 'eu'});
@@ -229,5 +230,13 @@ describe('configuration slice', () => {
       configurationReducer(state, setOriginLevel3({originLevel3})).analytics
         .originLevel3
     ).toBe(originLevel3);
+  });
+
+  it('#updateActiveTab updates the originLevel2 to the tab id', () => {
+    const state = getConfigurationInitialState();
+    state.analytics.originLevel2 = 'default';
+
+    const finalState = configurationReducer(state, updateActiveTab('tab'));
+    expect(finalState.analytics.originLevel2).toBe('tab');
   });
 });
