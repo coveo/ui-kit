@@ -5,6 +5,10 @@ import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {EngineConfiguration} from './engine-configuration';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 
+export interface ClientThunkExtraArguments<T> extends ThunkExtraArguments {
+  apiClient: T;
+}
+
 export interface ThunkExtraArguments {
   preprocessRequest?: PreprocessRequest;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
