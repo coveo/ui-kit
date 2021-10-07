@@ -3,6 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import {assertConsoleError} from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultNumberComponent,
@@ -37,15 +38,11 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       cy.get(resultNumberComponent).should('not.exist');
     });
 
-    it.skip('should log a console error', () => {
-      cy.get(resultNumberComponent)
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    assertConsoleError();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -55,9 +52,11 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       ResultNumberSelectors.firstInResult().should('not.exist');
     });
+
+    assertConsoleError(false);
   });
 
   describe('when the field value cannot be parsed to a number', () => {
@@ -71,9 +70,11 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       ResultNumberSelectors.firstInResult().should('not.exist');
     });
+
+    assertConsoleError();
   });
 
   describe('when the field value is valid', () => {

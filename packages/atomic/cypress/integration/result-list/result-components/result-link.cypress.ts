@@ -3,6 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import {assertConsoleError} from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultLinkComponent,
@@ -35,15 +36,11 @@ describe('Result Link Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       cy.get(resultLinkComponent).should('not.exist');
     });
 
-    it.skip('should log a console error', () => {
-      cy.get(resultLinkComponent)
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    assertConsoleError();
   });
 
   describe('when used inside a result template', () => {

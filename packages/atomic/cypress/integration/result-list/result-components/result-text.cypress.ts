@@ -4,6 +4,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import {assertConsoleError} from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultTextComponent,
@@ -11,7 +12,7 @@ import {
 } from './result-text-selectors';
 
 interface ResultTextProps {
-  field?: string | number;
+  field?: string;
   default?: string;
   'should-highlight'?: string;
 }
@@ -34,15 +35,11 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       cy.get(resultTextComponent).should('not.exist');
     });
 
-    it.skip('should log a console error', () => {
-      cy.get(resultTextComponent)
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    assertConsoleError();
   });
 
   describe('when the field does not exist for the result but the "default" prop is set', () => {
@@ -79,18 +76,21 @@ describe('Result Text Component', () => {
   });
 
   describe('when the field value is not a string', () => {
+    const field = 'hello';
     beforeEach(() => {
       new TestFixture()
-        .with(addResultTextInResultList({field: 420}))
+        .with(addResultTextInResultList({field}))
         .withCustomResponse((response) =>
-          response.results.forEach((result) => (result.raw['420'] = 'Abc'))
+          response.results.forEach((result) => (result.raw[field] = 1337))
         )
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
+    it('should remove the component from the DOM', () => {
       ResultTextSelectors.firstInResult().should('not.exist');
     });
+
+    assertConsoleError(false);
   });
 
   describe('when the field value exists & is a string', () => {
@@ -150,11 +150,9 @@ describe('Result Text Component', () => {
           .should('not.exist');
       });
 
-      it.skip('should render an "atomic-text" component with the localized value', () => {
-        ResultTextSelectors.firstInResult()
-          .find('atomic-text')
-          .shadow()
-          .should('have.text', localizedValue);
+      it('should render text value with localization', () => {
+        ResultTextSelectors.firstInResult().should('have.text', localizedValue);
+        ResultTextSelectors.highlight().should('not.exist');
       });
     });
 
@@ -166,13 +164,6 @@ describe('Result Text Component', () => {
       it('should render text value with localization', () => {
         ResultTextSelectors.firstInResult().should('have.text', localizedValue);
         ResultTextSelectors.highlight().should('not.exist');
-      });
-
-      it.skip('should render an "atomic-text" component with the localized value', () => {
-        ResultTextSelectors.firstInResult()
-          .find('atomic-text')
-          .shadow()
-          .should('have.text', localizedValue);
       });
     });
   });

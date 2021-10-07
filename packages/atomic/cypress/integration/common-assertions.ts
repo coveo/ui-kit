@@ -27,8 +27,10 @@ export function assertContainsComponentError(
   });
 }
 
-export function assertConsoleError() {
-  it('should log an error to the console', () => {
-    cy.get(TestFixture.consoleAliases.error).should('be.called');
+export function assertConsoleError(error = true) {
+  it(`${should(error)} log an error to the console`, () => {
+    cy.get(TestFixture.consoleAliases.error).should(
+      error ? 'be.called' : 'not.be.called'
+    );
   });
 }

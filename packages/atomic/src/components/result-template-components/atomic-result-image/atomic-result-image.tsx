@@ -28,6 +28,7 @@ export class AtomicResultImage {
     );
 
     if (typeof url !== 'string') {
+      console.error(`Expected "${this.field}" to be a text field.`, this.host);
       this.host.remove();
       return;
     }

@@ -1,13 +1,4 @@
-import {
-  Component,
-  Element,
-  getElement,
-  h,
-  Host,
-  Prop,
-  State,
-  Watch,
-} from '@stencil/core';
+import {Component, Element, h, Host, Prop, State, Watch} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
 
@@ -49,7 +40,7 @@ export class AtomicIcon {
       this.error = null;
       return await response.text();
     } catch (e) {
-      this.error = e;
+      this.error = e as Error;
       return null;
     }
   }
@@ -82,12 +73,9 @@ export class AtomicIcon {
 
   public render() {
     if (this.error) {
-      return (
-        <atomic-component-error
-          element={getElement(this)}
-          error={this.error}
-        ></atomic-component-error>
-      );
+      console.error(this.error, this.host);
+      this.host.remove();
+      return;
     }
     return <Host innerHTML={this.svg}></Host>;
   }

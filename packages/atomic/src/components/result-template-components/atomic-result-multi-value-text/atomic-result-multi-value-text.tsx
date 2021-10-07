@@ -1,4 +1,4 @@
-import {Component, Prop, h, State, VNode} from '@stencil/core';
+import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
 import {
   BreadcrumbManager,
   buildBreadcrumbManager,
@@ -9,7 +9,6 @@ import {ResultContext} from '../../result-template-components/result-template-de
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
   Bindings,
-  InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {titleToKebab} from '../../../utils/utils';
@@ -27,11 +26,13 @@ const listItemClasses = 'inline-block';
   styleUrl: 'atomic-result-multi-value-text.pcss',
   shadow: true,
 })
-export class AtomicResultMultiText implements InitializableComponent {
+export class AtomicResultMultiText {
   public breadcrumbManager!: BreadcrumbManager;
 
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
+
+  @Element() host!: HTMLElement;
 
   @State() public error!: Error;
 
@@ -48,6 +49,8 @@ export class AtomicResultMultiText implements InitializableComponent {
    */
   @Prop() public maxValuesToDisplay = 3;
 
+  private sortedValues: string[] = [];
+
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
@@ -58,11 +61,18 @@ export class AtomicResultMultiText implements InitializableComponent {
       this.field
     );
 
+    if (value === null) {
+      return [];
+    }
+
     if (Array.isArray(value)) {
       return value.map((v) => `${v}`);
     }
 
     if (typeof value !== 'string' || value.trim() === '') {
+      this.error = new Error(
+        `Could not parse "${value}" from field "${this.field}" as a string array.`
+      );
       return [];
     }
 
@@ -81,13 +91,13 @@ export class AtomicResultMultiText implements InitializableComponent {
       );
   }
 
-  private getSortedValues() {
+  private updateSortedValues() {
     const allValues = this.resultValues;
-    const allValuesSet = new Set(this.resultValues);
+    const allValuesSet = new Set(allValues);
     const firstValues = this.facetSelectedValues.filter((value) =>
       allValuesSet.has(value)
     );
-    return Array.from(
+    this.sortedValues = Array.from(
       allValues.reduce((set, value) => set.add(value), new Set(firstValues))
     );
   }
@@ -144,29 +154,35 @@ export class AtomicResultMultiText implements InitializableComponent {
   }
 
   private renderListItems() {
-    const sortedValues = this.getSortedValues();
-    const numberOfValuesToDisplay =
-      this.getNumberOfValuesToDisplay(sortedValues);
+    const numberOfValuesToDisplay = this.getNumberOfValuesToDisplay(
+      this.sortedValues
+    );
 
     const nodes: VNode[] = [];
     for (let i = 0; i < numberOfValuesToDisplay; i++) {
       if (i > 0) {
-        nodes.push(this.renderSeparator(sortedValues[i - 1], sortedValues[i]));
+        nodes.push(
+          this.renderSeparator(this.sortedValues[i - 1], this.sortedValues[i])
+        );
       }
-      nodes.push(this.renderValue(sortedValues[i]));
+      nodes.push(this.renderValue(this.sortedValues[i]));
     }
-    if (this.getShouldDisplayLabel(sortedValues)) {
+    if (this.getShouldDisplayLabel(this.sortedValues)) {
       nodes.push(
         this.renderSeparator(
-          sortedValues[numberOfValuesToDisplay - 1],
+          this.sortedValues[numberOfValuesToDisplay - 1],
           'more-field-values'
         )
       );
       nodes.push(
-        this.renderMoreLabel(sortedValues.length - numberOfValuesToDisplay)
+        this.renderMoreLabel(this.sortedValues.length - numberOfValuesToDisplay)
       );
     }
     return nodes;
+  }
+
+  public componentWillRender() {
+    this.updateSortedValues();
   }
 
   public render() {
