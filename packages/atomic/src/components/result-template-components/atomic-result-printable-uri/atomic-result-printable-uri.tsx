@@ -12,7 +12,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
 import Arrow from '../../../images/arrow-right.svg';
-import {ResultLink} from '../../result-link/result-link';
+import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -45,7 +45,7 @@ export class AtomicResultPrintableUri {
   @Prop() maxNumberOfParts = 5;
 
   /**
-   * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    *
    * The following keywords have special meanings:
    *
@@ -133,14 +133,14 @@ export class AtomicResultPrintableUri {
 
   private renderLink(content: VNode | string | null, uri: string) {
     return (
-      <ResultLink
+      <LinkWithResultAnalytics
         interactiveResult={this.interactiveResult}
         href={uri}
         part={'result-printable-uri-link'}
         target={this.target}
       >
         {content}
-      </ResultLink>
+      </LinkWithResultAnalytics>
     );
   }
 

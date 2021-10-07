@@ -10,7 +10,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {ResultLink} from '../../result-link/result-link';
+import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -31,7 +31,7 @@ export class AtomicResultLink implements InitializableComponent {
   @Element() private host!: HTMLElement;
 
   /**
-   * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    *
    * The following keywords have special meanings:
    *
@@ -57,7 +57,7 @@ export class AtomicResultLink implements InitializableComponent {
 
   public render() {
     return (
-      <ResultLink
+      <LinkWithResultAnalytics
         interactiveResult={this.interactiveResult}
         href={this.result.clickUri}
         target={this.target}
@@ -71,7 +71,7 @@ export class AtomicResultLink implements InitializableComponent {
             default="no-title"
           ></atomic-result-text>
         )}
-      </ResultLink>
+      </LinkWithResultAnalytics>
     );
   }
 }

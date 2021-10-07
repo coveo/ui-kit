@@ -9,7 +9,7 @@ export interface ResultLinkProps {
   part: string;
 }
 
-export const ResultLink: FunctionalComponent<ResultLinkProps> = (
+export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   {href, interactiveResult, target, part},
   children
 ) => (
