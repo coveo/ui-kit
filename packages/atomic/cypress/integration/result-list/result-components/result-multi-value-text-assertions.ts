@@ -14,12 +14,15 @@ export function assertShouldRenderValues(values: string[], message?: string) {
 
 export function assertDoesNotDisplayXMoreLabel() {
   it('should not display a "x more" label', () => {
-    ResultMultiValueTextSelectors.more().should('not.exist');
+    ResultMultiValueTextSelectors.moreLabel().should('not.exist');
   });
 }
 
 export function assertDisplaysXMoreLabel(count: number) {
   it(`should display a "${count} more" label`, () => {
-    ResultMultiValueTextSelectors.more().should('have.text', `${count} more`);
+    ResultMultiValueTextSelectors.moreLabel().should(
+      'have.text',
+      `${count} more`
+    );
   });
 }

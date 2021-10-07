@@ -16,6 +16,12 @@ import {
   ResultMultiValueTextSelectors,
 } from './result-multi-value-text-selectors';
 import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
+import {
+  assertAccessibility,
+  assertConsoleError,
+  assertRemovesComponent,
+} from '../../common-assertions';
+import {resultListComponent} from '../result-list-selectors';
 
 export interface MultiValueTextProps {
   field?: string | number;
@@ -73,16 +79,8 @@ describe('Result MultiValueText Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
-      cy.get(resultMultiValueTextComponent).should('not.exist');
-    });
-
-    it.skip('should log a console error', () => {
-      cy.get(resultMultiValueTextComponent)
-        .shadow()
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    assertRemovesComponent(ResultMultiValueTextSelectors.shadow);
+    assertConsoleError();
   });
 
   describe('when used inside a result template', () => {
@@ -93,24 +91,21 @@ describe('Result MultiValueText Component', () => {
           .init();
       });
 
-      it.skip('should remove the component from the DOM', () => {
-        ResultMultiValueTextSelectors.firstInResult().should('not.exist');
-      });
+      assertRemovesComponent(ResultMultiValueTextSelectors.firstInResult);
     });
 
     describe('when the field value is not a string nor a string array', () => {
       beforeEach(() => {
         new TestFixture()
-          .with(addMultiValueText({field: 420}))
+          .with(addMultiValueText({field: 'hello'}))
           .withCustomResponse((response) => {
-            response.results.forEach((result) => (result.raw['420'] = 'Abc'));
+            response.results.forEach((result) => (result.raw['hello'] = 420));
           })
           .init();
       });
 
-      it.skip('should remove the component from the DOM', () => {
-        ResultMultiValueTextSelectors.firstInResult().should('not.exist');
-      });
+      assertRemovesComponent(ResultMultiValueTextSelectors.firstInResult);
+      assertConsoleError();
     });
 
     describe('when the field value exists & is a string array', () => {
@@ -136,7 +131,7 @@ describe('Result MultiValueText Component', () => {
           .withTranslation({'n-more': '{{value}} more'});
       }
 
-      describe('with 2 values', () => {
+      describe('and the field has an array of 2 values', () => {
         const values = {
           first: 'The first value',
           second: 'The last value',
@@ -149,12 +144,11 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
-
           assertDisplaysXMoreLabel(1);
         });
       });
 
-      describe('with 3 values', () => {
+      describe('and the field has an array of 3 values', () => {
         const values = {
           first: 'The first value',
           second: 'Another value',
@@ -168,7 +162,6 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
-
           assertDisplaysXMoreLabel(2);
         });
 
@@ -178,12 +171,11 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
-
           assertDisplaysXMoreLabel(2);
         });
       });
 
-      describe('with 4 values', () => {
+      describe('and the field has an array of 4 values', () => {
         const values = {
           first: 'The first value',
           second: 'Another value',
@@ -198,7 +190,6 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
-
           assertDisplaysXMoreLabel(3);
         });
 
@@ -208,7 +199,6 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 2));
-
           assertDisplaysXMoreLabel(2);
         });
 
@@ -218,12 +208,8 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 2));
-
           assertDisplaysXMoreLabel(2);
-
-          it.skip('should pass accessibility tests', () => {
-            cy.checkA11y();
-          });
+          assertAccessibility(resultListComponent);
         });
 
         describe('with max-values-to-display=4', () => {
@@ -235,12 +221,8 @@ describe('Result MultiValueText Component', () => {
             });
 
             assertShouldRenderValues(localizedValues);
-
             assertDoesNotDisplayXMoreLabel();
-
-            it.skip('should pass accessibility tests', () => {
-              cy.checkA11y();
-            });
+            assertAccessibility(resultListComponent);
           });
 
           describe('with slots', () => {
@@ -264,9 +246,7 @@ describe('Result MultiValueText Component', () => {
               'should replace the correct values'
             );
 
-            it.skip('should pass accessibility tests', () => {
-              cy.checkA11y();
-            });
+            assertAccessibility(resultListComponent);
           });
 
           describe('with a facet and two selected values', () => {
@@ -305,7 +285,6 @@ describe('Result MultiValueText Component', () => {
           });
 
           assertShouldRenderValues(localizedValues);
-
           assertDoesNotDisplayXMoreLabel();
         });
       });
