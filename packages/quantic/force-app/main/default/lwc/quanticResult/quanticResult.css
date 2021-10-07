@@ -1,8 +1,3 @@
-.recommended-badge {
-  background-color: var(--sds-c-badge-color-background, #4fbe75);
-  color: white;
-}
-
 .result__title {
   font-weight: 700;
   font-size: 1.1em;

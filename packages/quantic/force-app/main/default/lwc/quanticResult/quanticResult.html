@@ -5,9 +5,16 @@
         <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left">
           <c-quantic-result-label result={result}></c-quantic-result-label>
         </div>
-        <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
+        <div class="slds-col slds-grid slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
           <template if:true={result.isRecommendation}>
-            <lightning-badge label="Recommended" class="recommended-badge" icon-name="utility:favorite"></lightning-badge>
+            <div class="slds-m-right_xx-small">
+              <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
+            </div>
+          </template>
+          <template if:true={result.isTopResult}>
+            <div class="slds-m-right_xx-small">
+              <c-quantic-result-badge variant="featured"></c-quantic-result-badge>
+            </div>
           </template>
         </div>
         <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right">

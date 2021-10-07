@@ -11,8 +11,7 @@ const CHATTER='Chatter';
 
 /**
  * The `QuanticResultLabel` component displays an icon and label for a result.
- * If the `Result` option is set this component can infer default label and icon based on the result properties.
- * Otherwise the `label` and `icon` properties are required.
+ * If the `Result` option is set this component can infer default label and icon based on the result properties. Otherwise the `label` and `icon` properties are required.
  * @example
  * <c-quantic-result-label label="My Result" icon="thisicon" size="medium"></c-quantic-result-label>
  */
@@ -159,6 +158,8 @@ export default class QuanticResultLabel extends LightningElement {
         return this.labels.chatter;
       case 'message':
         return this.labels.message;
+      case 'knowledge':
+        return this.labels.knowledge;
       default:
         return undefined;
     }

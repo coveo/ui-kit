@@ -1,0 +1,11 @@
+.slds-badge__icon {
+  color: white;
+}
+
+.recommended-badge {
+  background-color: #4fbe75;
+}
+
+.featured-badge {
+  background-color: #b070e6;
+}
