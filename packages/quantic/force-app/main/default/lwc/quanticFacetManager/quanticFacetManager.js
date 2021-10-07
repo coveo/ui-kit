@@ -3,12 +3,16 @@ import { api, LightningElement, track } from 'lwc';
 
 export default class QuanticFacetManager extends LightningElement {
   @api engineId;
-  @track state;
+  @track facetManagerState;
+  @track searchStatusState;
 
   facetManager;
-  unsubscribe;
+  unsubscribeFacetManager;
+  searchStatus;
+  unsubscribeSearchStatus;
 
   host;
+  itemTemplate;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -18,36 +22,60 @@ export default class QuanticFacetManager extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
 
     this.host = this.template.querySelector('.facet-manager__host');
+    this.resolveItemTemplate();
     this.moveFacetsToHost();
   }
 
   disconnectedCallback() {
-    this.unsubscribe?.();
+    this.unsubscribeFacetManager?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   initialize = (engine) => {
     this.facetManager = CoveoHeadless.buildFacetManager(engine);
-    this.unsubscribe = this.facetManager.subscribe(() => this.updateState());
+    this.unsubscribeFacetManager = this.facetManager.subscribe(() => this.updateFacetManagerState());
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateSearchStatusState());
   }
 
-  updateState() {
-    console.log(`Facet Ids: ${this.facetManager.state.facetIds.join(', ')}`);
+  updateFacetManagerState() {
     this.reorderFacets();
+  }
+
+  updateSearchStatusState() {
+    this.searchStatusState = this.searchStatus.state;
   }
 
   moveFacetsToHost() {
     const facets = this.querySelectorAll('*');
     facets.forEach((facet) => {
-      this.host.appendChild(facet);
+      const wrapper = this.itemTemplate.cloneNode(false);
+      wrapper.setAttribute('data-facet-id', facet.facetId ?? facet.field);
+      
+      wrapper.appendChild(facet);
+      this.host.appendChild(wrapper);
     });
   }
 
+  resolveItemTemplate() {
+    this.itemTemplate = document.createElement('div');
+    this.itemTemplate.className = 'slds-var-m-bottom_large';
+
+    const slotElement = this.querySelector('*[slot="itemTemplate"]');
+    if (slotElement) {
+      this.itemTemplate = slotElement.cloneNode(false);
+      this.itemTemplate.removeAttribute('slot');
+      
+      slotElement.remove();
+    }
+  }
+
   reorderFacets() {
-    if (!this.host) {
+    if (!this.searchStatusState?.firstSearchExecuted) {
       return;
     }
 
-    const payload = this.facets.map((f) => ({facetId: f.field, payload: f}));
+    const payload = this.facets.map((f) => ({facetId: f.dataset.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
     sortedFacets.forEach((sortedFacet) => {
@@ -69,6 +97,6 @@ export default class QuanticFacetManager extends LightningElement {
   }
 
   isPseudoFacet(el) {
-    return 'field' in el;
+    return 'facetId' in el.dataset;
   }
 }
