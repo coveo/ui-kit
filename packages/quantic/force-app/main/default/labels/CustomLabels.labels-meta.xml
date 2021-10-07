@@ -448,4 +448,39 @@
         <protected>false</protected>
         <shortDescription>Expand [component label]</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_Documentation</fullName>
+        <value>Documentation</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Documentation</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Message</fullName>
+        <value>Message</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Message</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Video</fullName>
+        <value>Video</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Video</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Recommended</fullName>
+        <value>Recommended</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Recommended</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Featured</fullName>
+        <value>Featured</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Featured</shortDescription>
+    </labels>
 </CustomLabels>

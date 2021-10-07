@@ -44,7 +44,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
   renderedCallback() {
     if (this.maxNumberOfParts < this.MIN_MAX_NUMBER_OF_PARTS) {
       console.error(`The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${this.MIN_MAX_NUMBER_OF_PARTS}.`);
-      this.error = 'QuanticResultPrintableUri Error';
+      this.error = `${this.template.host.localName} Error`;
     }
   }
 

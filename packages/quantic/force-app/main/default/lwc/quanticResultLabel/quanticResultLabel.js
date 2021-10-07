@@ -1,5 +1,12 @@
 import {LightningElement, api} from "lwc";
 
+import documentation from '@salesforce/label/c.quantic_Documentation';
+import message from '@salesforce/label/c.quantic_Message';
+import video from '@salesforce/label/c.quantic_Video';
+
+const KNOWLEDGE='Knowledge';
+const CHATTER='Chatter';
+
 /** @typedef {import("coveo").Result} Result */
 
 /**
@@ -36,12 +43,20 @@ export default class QuanticResultLabel extends LightningElement {
    */
   @api size  ='small';
 
+  labels = {
+    documentation,
+    message,
+    video,
+    chatter: CHATTER,
+    knowledge: KNOWLEDGE,
+  }
+
   error;
 
   connectedCallback() {
     if (!this.result && (!this.label || !this.icon)) {
-      console.error(`The QuanticResultLabel requires either specified value for label and icon or a result object to display correctly.`);
-      this.error = 'QuanticResultLabel Error';
+      console.error(`The ${this.template.host.localName} requires either specified value for label and icon or a result object to display correctly.`);
+      this.error = `${this.template.host.localName} Error`;
     }
   }
 
@@ -63,7 +78,7 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.fileTypeIcon) {
       return this.fileTypeIcon;
     }
-    return `standard:document`;
+    return 'standard:document';
   }
 
   get labelToDisplay() {
@@ -79,7 +94,7 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.sourceTypeLabel) {
       return this.sourceTypeLabel;
     }
-    return `Documentation`;
+    return this.labels.documentation;
   }
 
   get objectTypeIcon() {
@@ -141,33 +156,11 @@ export default class QuanticResultLabel extends LightningElement {
     const lower = objType.toLowerCase();
     switch (lower) {
       case 'feeditem':
-        return `Chatter`;
+        return this.labels.chatter;
       case 'message':
-        return `Message`;
+        return this.labels.message;
       default:
         return undefined;
-    }
-  }
-
-  get sourceTypeLabel() {
-    const sourceType = this.result.raw.sourcetype;
-    if (!sourceType) {
-      return undefined;
-    }
-
-    const lower = sourceType.toLowerCase();
-    switch (lower) {
-      case 'youtube':
-        return `Video`;
-      case 'web':
-      case 'sitemap':
-      case 'salesforce':
-      case 'confluence2':
-        return `Documentation`;
-      case 'sharepoint':
-        return 'PDF';
-      default:
-        return sourceType;
     }
   }
 
@@ -184,9 +177,31 @@ export default class QuanticResultLabel extends LightningElement {
       case 'doc':
         return lower.toUpperCase();
       case 'kb_knowledge':
-        return `Knowledge`;
+        return this.labels.knowledge;
       default:
         return fileType;
+    }
+  }
+
+  get sourceTypeLabel() {
+    const sourceType = this.result.raw.sourcetype;
+    if (!sourceType) {
+      return undefined;
+    }
+
+    const lower = sourceType.toLowerCase();
+    switch (lower) {
+      case 'sharepoint':
+        return 'PDF';
+      case 'youtube':
+        return this.labels.video;
+      case 'web':
+      case 'sitemap':
+      case 'salesforce':
+      case 'confluence2':
+        return this.labels.documentation;
+      default:
+        return sourceType;
     }
   }
 }
