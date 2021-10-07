@@ -1,14 +1,44 @@
 import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
 import { api, LightningElement, track } from 'lwc';
 
+/** @typedef {import("coveo").FacetManager} FacetManager */
+/** @typedef {import("coveo").FacetManagerState} FacetManagerState */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchStatusState} SearchStatusState */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+
+/**
+ * The `QuanticFacetManager` component acts as a container component allowing facets to be reordered dynamically as search queries are performed.
+ * 
+ * An item template element can be assigned to the `itemTemplate` slot allowing to customize the element that wraps each facet.
+ * 
+ * @example
+ * <c-quantic-facet-manager engine-id={engineId}>
+ *   <c-quantic-facet engine-id={engineId} field="type"></c-quantic-facet>
+ *   <c-quantic-facet engine-id={engineId} field="author"></c-quantic-facet>
+ * 
+ *   <div slot="itemTemplate" class="slds-var-m-bottom_large"></div>
+ * </c-quantic-facet-manager>
+ */
 export default class QuanticFacetManager extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   */
   @api engineId;
+
+  /** @type {FacetManagerState} */
   @track facetManagerState;
+  /** @type {SearchStatusState} */
   @track searchStatusState;
 
+  /** @type {FacetManager} */
   facetManager;
+  /** @type {Function} */
   unsubscribeFacetManager;
+  /** @type {SearchStatus} */
   searchStatus;
+  /** @type {Function} */
   unsubscribeSearchStatus;
 
   host;
@@ -31,6 +61,9 @@ export default class QuanticFacetManager extends LightningElement {
     this.unsubscribeSearchStatus?.();
   }
 
+  /**
+   * @param {SearchEngine} engine 
+   */
   initialize = (engine) => {
     this.facetManager = CoveoHeadless.buildFacetManager(engine);
     this.unsubscribeFacetManager = this.facetManager.subscribe(() => this.updateFacetManagerState());
@@ -50,6 +83,7 @@ export default class QuanticFacetManager extends LightningElement {
     const facets = this.querySelectorAll('*');
     facets.forEach((facet) => {
       const wrapper = this.itemTemplate.cloneNode(false);
+      // @ts-ignore
       wrapper.setAttribute('data-facet-id', facet.facetId ?? facet.field);
       
       wrapper.appendChild(facet);
