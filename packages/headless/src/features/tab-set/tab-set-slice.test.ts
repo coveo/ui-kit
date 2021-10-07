@@ -27,17 +27,6 @@ describe('tab set slice', () => {
       expect(finalState).toEqual({[id]: initialTab});
     });
 
-    it(`when a registered tab is active, and the new tab is also active,
-    it disactivates the old tab and activates the new one`, () => {
-      const tabA = buildMockTabSlice({id: 'a', isActive: true});
-      const tabB = buildMockTabSlice({id: 'b', isActive: true});
-
-      const finalState = tabSetReducer({a: tabA}, registerTab(tabB));
-
-      expect(finalState.a.isActive).toBe(false);
-      expect(finalState.b.isActive).toBe(true);
-    });
-
     it(`when a registered tab is active, and the new tab is not active,
     it does not the new tab`, () => {
       const tabA = buildMockTabSlice({id: 'a', isActive: true});
@@ -60,14 +49,6 @@ describe('tab set slice', () => {
     it(`when the #expression has an incorrect type,
     the action detects an error`, () => {
       const tab = buildMockTabSlice({expression: 1 as unknown as string});
-      const action = registerTab(tab);
-
-      expect('error' in action).toBe(true);
-    });
-
-    it(`when the #isActive has an incorrect type,
-    the action detects an error`, () => {
-      const tab = buildMockTabSlice({isActive: 1 as unknown as boolean});
       const action = registerTab(tab);
 
       expect('error' in action).toBe(true);
