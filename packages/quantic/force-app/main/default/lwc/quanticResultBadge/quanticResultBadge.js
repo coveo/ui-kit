@@ -30,7 +30,7 @@ export default class QuanticResultBadge extends LightningElement {
   error;
 
   connectedCallback() {
-    if (!this.result && (!this.label || !this.icon)) {
+    if (!this.variant) {
       console.error(`The ${this.template.host.localName} requires the variant attribute to be set.`);
       this.error = `${this.template.host.localName} Error`;
     }
