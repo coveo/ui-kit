@@ -1,20 +1,8 @@
-import {
-    AnalyticsRequestClient,
-    VisitorIdProvider,
-    PreprocessAnalyticsRequest,
-    IAnalyticsRequestOptions,
-} from './analyticsRequestClient';
+import {AnalyticsRequestClient, IAnalyticsRequestOptions, IAnalyticsClientOptions} from './analyticsRequestClient';
 import {EventType, IRequestPayload} from '../events';
 
-export interface IAnalyticsBeaconClientOptions {
-    baseUrl: string;
-    token?: string;
-    visitorIdProvider: VisitorIdProvider;
-    preprocessRequest?: PreprocessAnalyticsRequest;
-}
-
 export class AnalyticsBeaconClient implements AnalyticsRequestClient {
-    constructor(private opts: IAnalyticsBeaconClientOptions) {}
+    constructor(private opts: IAnalyticsClientOptions) {}
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<void> {
         if (!navigator.sendBeacon) {
@@ -83,11 +71,5 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         return typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean'
             ? value
             : JSON.stringify(value);
-    }
-}
-
-export class NoopAnalyticsBeaconClient implements AnalyticsRequestClient {
-    public async sendEvent(_: EventType, __: IRequestPayload): Promise<void> {
-        return Promise.resolve();
     }
 }

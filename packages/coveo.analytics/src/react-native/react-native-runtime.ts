@@ -1,14 +1,15 @@
 import {WebStorage} from '../storage';
-import {AnalyticsFetchClient, IAnalyticsFetchClientOptions} from '../client/analyticsFetchClient';
+import {AnalyticsFetchClient} from '../client/analyticsFetchClient';
 import {ReactNativeStorage} from './react-native-storage';
 import {IRuntimeEnvironment} from '../client/runtimeEnvironment';
+import {IAnalyticsClientOptions} from '../client/analyticsRequestClient';
 
 export class ReactNativeRuntime implements IRuntimeEnvironment {
     public storage: WebStorage;
-    public beaconClient: AnalyticsFetchClient;
+    public client: AnalyticsFetchClient;
 
-    constructor(beaconOptions: IAnalyticsFetchClientOptions) {
+    constructor(clientOptions: IAnalyticsClientOptions) {
         this.storage = new ReactNativeStorage();
-        this.beaconClient = new AnalyticsFetchClient(beaconOptions);
+        this.client = new AnalyticsFetchClient(clientOptions);
     }
 }
