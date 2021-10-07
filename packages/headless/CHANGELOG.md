@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.27.0...@coveo/headless@1.28.0) (2021-10-07)
+
+
+### Features
+
+* **headless:** change default analytics endpoint URL ([#1289](https://github.com/coveo/ui-kit/issues/1289)) ([a3198d1](https://github.com/coveo/ui-kit/commit/a3198d14671d6a8af41c40f5b17c538b1adcf64c))
+
+
+
+
+
 # [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.26.0...@coveo/headless@1.27.0) (2021-10-07)
 
 
