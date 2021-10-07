@@ -11,7 +11,12 @@ import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
 import {createMockState} from '../../test';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {configuration, debug, search} from '../../app/reducers';
+import {configuration, debug, search, fields} from '../../app/reducers';
+import {
+  disableFetchAllFields,
+  enableFetchAllFields,
+  fetchFieldsDescription,
+} from '../../features/fields/fields-actions';
 
 describe('RelevanceInspector', () => {
   let engine: MockSearchEngine;
@@ -35,6 +40,7 @@ describe('RelevanceInspector', () => {
       debug,
       search,
       configuration,
+      fields,
     });
   });
 
@@ -88,6 +94,24 @@ describe('RelevanceInspector', () => {
     expect(engine.actions).toContainEqual(disableDebug());
   });
 
+  it(`when calling enableFieldsDebug()
+  it should dispatch an "enableFieldsDebug" action`, () => {
+    relevanceInspector.enableFetchAllFields();
+    expect(engine.actions).toContainEqual(enableFetchAllFields());
+  });
+
+  it(`when calling disableFieldsDebug()
+  it should dispatch an "disableFieldsDebug" action`, () => {
+    relevanceInspector.disableFetchAllFields();
+    expect(engine.actions).toContainEqual(disableFetchAllFields());
+  });
+
+  it(`when calling fetchFieldsDescription()
+  it should dispatch an "fetchFieldsDescription" action`, () => {
+    relevanceInspector.fetchFieldDescriptions();
+    expect(engine.findAsyncAction(fetchFieldsDescription.pending)).toBeTruthy();
+  });
+
   it('should return the right state when its disabled', () => {
     expect(relevanceInspector.state).toEqual({isEnabled: false});
   });
@@ -109,8 +133,10 @@ describe('RelevanceInspector', () => {
         advancedExpression: responseWithDebug.advancedExpression,
         constantExpression: responseWithDebug.constantExpression,
       },
+      fetchAllFields: false,
       userIdentities: responseWithDebug.userIdentities,
       rankingExpressions: responseWithDebug.rankingExpressions,
+      fieldsDescription: [],
     });
   });
 });

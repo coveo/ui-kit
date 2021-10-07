@@ -50,6 +50,14 @@ describe('search request', () => {
     expect(params.firstResult).toBe(state.pagination.firstResult);
   });
 
+  it('#searchRequest returns the state #dictionaryFieldContext.contextValues', () => {
+    const contextValues = {price: 'cad'};
+    state.dictionaryFieldContext.contextValues = contextValues;
+    const params = buildSearchRequest(state).request;
+
+    expect(params.dictionaryFieldContext).toBe(contextValues);
+  });
+
   it('#searchRequest returns the facets in the state #facetSet', () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = request;
@@ -148,5 +156,18 @@ describe('search request', () => {
     const originLevel3 = 'www.coveo.com';
     state.configuration.analytics.originLevel3 = originLevel3;
     expect(buildSearchRequest(state).request.referrer).toBe(originLevel3);
+  });
+
+  it('#searchRequest.fieldsToInclude holds the #fieldsToInclude', () => {
+    state.fields.fieldsToInclude = ['foo', 'bar'];
+    expect(buildSearchRequest(state).request.fieldsToInclude).toEqual(
+      expect.arrayContaining(['foo', 'bar'])
+    );
+  });
+
+  it('#searchRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', () => {
+    state.fields.fieldsToInclude = ['foo', 'bar'];
+    state.fields.fetchAllFields = true;
+    expect(buildSearchRequest(state).request.fieldsToInclude).not.toBeDefined();
   });
 });

@@ -1,4 +1,6 @@
-import {RouteAlias, setUpPage} from '../utils/setupComponent';
+import {TestFixture} from '../fixtures/test-fixture';
+import {addQuerySummary} from './query-summary-actions';
+import {QuerySummarySelectors} from './query-summary-selectors';
 import {getSearchInterface, setLanguage} from './search-interface-utils';
 
 describe('Search Interface Component', () => {
@@ -10,30 +12,24 @@ describe('Search Interface Component', () => {
 
   describe('with an automatic search', () => {
     beforeEach(() => {
-      setUpPage('<atomic-query-summary enable-duration>', true);
+      new TestFixture()
+        .with(addQuerySummary({'enable-duration': 'true'}))
+        .init();
     });
 
     it('should support changing language', () => {
       setLanguage('fr');
-      cy.get('atomic-query-summary')
-        .shadow()
-        .invoke('text')
-        .should('contain', 'Résultats');
+      QuerySummarySelectors.text().should('contain', 'Résultats');
 
       setLanguage('en');
-      cy.get('atomic-query-summary')
-        .shadow()
-        .invoke('text')
-        .should('contain', 'Results');
+      QuerySummarySelectors.text().should('contain', 'Results');
     });
 
     it('should support changing a translation value without overriding other strings', () => {
       setTranslation('fr', 'showing-results-of_plural', 'patate');
       setLanguage('fr');
 
-      cy.get('atomic-query-summary')
-        .shadow()
-        .invoke('text')
+      QuerySummarySelectors.text()
         .should('contain', 'patate')
         .should('contain', 'seconde');
     });
@@ -41,7 +37,10 @@ describe('Search Interface Component', () => {
 
   describe('without an automatic search', () => {
     beforeEach(() => {
-      setUpPage('<atomic-query-summary>', false);
+      new TestFixture()
+        .with(addQuerySummary())
+        .withoutFirstAutomaticSearch()
+        .init();
     });
 
     const execSearch = () =>
@@ -50,7 +49,7 @@ describe('Search Interface Component', () => {
     it('should set locale for search request', async () => {
       setLanguage('fr');
       execSearch();
-      cy.wait(RouteAlias.search).then((intercept) => {
+      cy.wait(TestFixture.interceptAliases.Search).then((intercept) => {
         expect(intercept.request.body.locale).to.be.eq('fr');
       });
     });
@@ -58,10 +57,20 @@ describe('Search Interface Component', () => {
     it('should set language for analytics request', async () => {
       setLanguage('fr');
       execSearch();
-      cy.wait(RouteAlias.analytics).then((intercept) => {
+      cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
         const analyticsBody = intercept.request.body;
         expect(analyticsBody).to.have.property('language', 'fr');
       });
+    });
+  });
+
+  describe('without analytics', () => {
+    beforeEach(() => {
+      new TestFixture().withoutAnalytics().init();
+    });
+
+    it('should not call the analytics server', () => {
+      cy.shouldBeCalled('analytics', 0);
     });
   });
 });

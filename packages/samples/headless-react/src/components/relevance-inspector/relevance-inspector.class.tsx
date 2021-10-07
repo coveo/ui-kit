@@ -52,6 +52,22 @@ export class RelevanceInspector extends Component<{}, RelevanceInspectorState> {
             }
           />
         </label>
+        <label>
+          Enable fetch all fields:{' '}
+          <input
+            type="checkbox"
+            checked={this.state.fetchAllFields}
+            onChange={() =>
+              this.state.fetchAllFields
+                ? this.controller.disableFetchAllFields()
+                : this.controller.enableFetchAllFields()
+            }
+          />
+        </label>
+        <button onClick={() => this.controller.fetchFieldDescriptions()}>
+          {' '}
+          Retrieve fields description
+        </button>
       </div>
     );
   }

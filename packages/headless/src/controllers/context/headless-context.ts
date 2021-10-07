@@ -22,9 +22,9 @@ export interface Context extends Controller {
   /**
    * Sets the context for the query. This replaces any existing context with the new one.
    *
-   *  @param ctx - The context to set for the query.
+   *  @param context - The context to set for the query.
    */
-  set(ctx: ContextPayload): void;
+  set(context: ContextPayload): void;
 
   /**
    * Adds (or, if one is already present, replaces) a new context key-value pair.
@@ -77,8 +77,8 @@ export function buildContext(engine: CoreEngine): Context {
       };
     },
 
-    set(ctx: ContextPayload) {
-      dispatch(setContext(ctx));
+    set(context: ContextPayload) {
+      dispatch(setContext(context));
     },
 
     add(contextKey: string, contextValue: ContextValue) {

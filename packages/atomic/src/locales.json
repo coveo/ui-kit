@@ -516,6 +516,10 @@
     "en": "No matches found for {{query}}",
     "fr": "Aucun résultat pour {{query}}"
   },
+  "recent-searches": {
+    "en": "Recent searches",
+    "fr": "Recherches récente"
+  },
   "cancel-last-action": {
     "en": "Cancel last action",
     "fr": "Annuler la dernière action",
@@ -700,32 +704,32 @@
     "fr": "Segments d'URI réduits"
   },
   "disconnected": {
-    "en": "Could not connect.",
-    "fr": "Impossible de se connecter."
+    "en": "No Internet access.",
+    "fr": "Pas d'accès internet."
   },
   "check-your-connection": {
     "en": "Your query couldn't be sent. Verify your internet connection.",
     "fr": "Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet."
   },
   "no-endpoints": {
-    "en": "The Coveo Organization has no registered endpoints.",
-    "fr": "L'organisation Coveo n'a pas de point de terminaison unique."
+    "en": "Your organization {{org}} has no available content.",
+    "fr": "Votre organisation {{org}} n'a pas contenu disponible."
   },
   "invalid-token": {
-    "en": "The token is invalid.",
-    "fr": "Le jeton d'identification est invalide."
+    "en": "Ensure that the token is valid.",
+    "fr": "Faites en sorte que le jeton d'identification soit valide."
   },
   "add-sources": {
-    "en": "You will need to add sources in your index, or wait for the created sources to finish indexing.",
-    "fr": "Vous devrez ajouter des sources à votre index, ou attendre la fin de l'indexation des sources créées."
+    "en": "Add content sources or wait for your newly created sources to finish indexing.",
+    "fr": "Ajoutez des sources de contenu ou attendez la fin de l'indexation de vos nouvelles sources."
   },
   "coveo-online-help": {
     "en": "Coveo Online Help",
     "fr": "Aide en ligne Coveo"
   },
   "cannot-access": {
-    "en": "The Coveo Organization cannot be accessed.",
-    "fr": "L'organisation Coveo est inaccessible."
+    "en": "Your organization {{org}} cannot be accessed.",
+    "fr": "Votre organisation {{org}} est inaccessible."
   },
   "something-went-wrong": {
     "en": "Something went wrong.",
@@ -778,7 +782,7 @@
     "zh-tw": "如果問題仍然存在，請連絡管理員。"
   },
   "more-info": {
-    "en": "More Information",
+    "en": "Learn more",
     "fr": "Plus d'information",
     "cs": "Více informací",
     "da": "Mere information",
@@ -1075,8 +1079,8 @@
     "fr": "Visualiser les résultats"
   },
   "organization-is-paused": {
-    "en": "Your Coveo organization is paused due to inactivity and search is currently unavailable.",
-    "fr": "Votre organisation Coveo est en pause pour cause d'inactivité et la recherche est présentement non disponible."
+    "en": "Your organization {{org}} is paused due to inactivity and search is currently unavailable.",
+    "fr": "Votre organisation {{org}} est en pause pour cause d'inactivité et la recherche est présentement non disponible."
   },
   "organization-will-resume": {
     "en": "Your organization is resuming and will be available shortly.",

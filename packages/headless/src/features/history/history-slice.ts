@@ -13,6 +13,7 @@ import {
   CurrentValues,
 } from '../facets/facet-api/request';
 import {arrayEqual} from '../../utils/compare-utils';
+import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -26,6 +27,10 @@ export const historyReducer = createReducer(
 const isEqual = (current: HistoryState, next: HistoryState) => {
   return (
     isContextEqual(current.context, next.context) &&
+    isDictionaryFieldContextEqual(
+      current.dictionaryFieldContext,
+      next.dictionaryFieldContext
+    ) &&
     isAdvancedSearchQueriesEqual(
       current.advancedSearchQueries,
       next.advancedSearchQueries
@@ -45,6 +50,12 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
 };
 
 const isContextEqual = (current: ContextState, next: ContextState) =>
+  JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
+
+const isDictionaryFieldContextEqual = (
+  current: DictionaryFieldContextState,
+  next: DictionaryFieldContextState
+) =>
   JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
 
 type FacetStateWithCurrentValues = Record<

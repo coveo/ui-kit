@@ -35,17 +35,17 @@ describe('platformUrl helper', () => {
     );
   });
 
-  it(`when the region is us-east-1
+  it(`when the region is us
   should not return it in the url e.g. https://platform.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'us-east-1'})).toBe(
+    expect(platformUrl({region: 'us'})).toBe(
       'https://platform.cloud.coveo.com'
     );
   });
 
-  it(`when the region is not us-east-1
-  should return it in the url e.g. https://platform-us-west-2.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'us-west-2'})).toBe(
-      'https://platform-us-west-2.cloud.coveo.com'
+  it(`when the region is not us
+  should return it in the url e.g. https://platform-eu.cloud.coveo.com`, () => {
+    expect(platformUrl({region: 'eu'})).toBe(
+      'https://platform-eu.cloud.coveo.com'
     );
   });
 });
@@ -135,6 +135,7 @@ describe('PlatformClient call', () => {
   it(`when the contentType is www-url-form-encoded and the #requestParams cannot be encoded,
   it sends an empty string`, async () => {
     await platformCall({
+      method: 'POST',
       contentType: 'application/x-www-form-urlencoded',
       requestParams: {q: {}},
     });
@@ -152,6 +153,58 @@ describe('PlatformClient call', () => {
     expect(mockFetch).toHaveBeenCalledWith(
       platformUrl(),
       expect.objectContaining({body: JSON.stringify(requestParams)})
+    );
+  });
+
+  it('when the method is POST, #body should be present', async () => {
+    await platformCall({
+      method: 'POST',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: 'q=hello&page=5'})
+    );
+  });
+
+  it('when the method is PUT, #body is used for body', async () => {
+    await platformCall({
+      method: 'PUT',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: 'q=hello&page=5'})
+    );
+  });
+
+  it('when the method is GET, #body should be absent', async () => {
+    await platformCall({
+      method: 'GET',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.not.objectContaining({body: expect.anything()})
+    );
+  });
+
+  it('when the method is DELETE, #body should be absent', async () => {
+    await platformCall({
+      method: 'DELETE',
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.not.objectContaining({body: expect.anything()})
     );
   });
 

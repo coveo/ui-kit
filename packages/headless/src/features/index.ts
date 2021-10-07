@@ -4,6 +4,7 @@ export * from './facets/facet-set/facet-set-actions-loader';
 export * from './configuration/configuration-actions-loader';
 export * from './configuration/search-configuration-actions-loader';
 export * from './context/context-actions-loader';
+export * from './dictionary-field-context/dictionary-field-context-actions-loader';
 export * from './debug/debug-actions-loader';
 export * from './facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './facet-options/facet-options-actions-loader';

@@ -3,6 +3,7 @@ import {getContextInitialState} from '../features/context/context-state';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {getProductRecommendationsInitialState} from '../features/product-recommendations/product-recommendations-state';
+import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
 
 export function buildMockProductRecommendationsState(
   config: Partial<ProductRecommendationsAppState> = {}
@@ -10,6 +11,7 @@ export function buildMockProductRecommendationsState(
   return {
     configuration: getConfigurationInitialState(),
     context: getContextInitialState(),
+    dictionaryFieldContext: getDictionaryFieldContextInitialState(),
     searchHub: getSearchHubInitialState(),
     productRecommendations: getProductRecommendationsInitialState(),
     version: 'unit-testing-version',

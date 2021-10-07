@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.71.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.1...@coveo/quantic@0.71.2) (2021-10-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.71.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.0...@coveo/quantic@0.71.1) (2021-10-06)
+
+
+### Bug Fixes
+
+* **quantic:** fixed filter number of results alignment ([#1284](https://github.com/coveo/ui-kit/issues/1284)) ([774b233](https://github.com/coveo/ui-kit/commit/774b233c6cc0aee016c3d30c7dfc2cbd1e4d52a7))
+
+
+
+
+
+# [0.71.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.70.2...@coveo/quantic@0.71.0) (2021-10-05)
+
+
+### Features
+
+* **quantic:** add pager end to end tests ([#1286](https://github.com/coveo/ui-kit/issues/1286)) ([0b5ce82](https://github.com/coveo/ui-kit/commit/0b5ce82f6c4fdc34597c40ba2c8db401dd957990))
+
+
+
+
+
+## [0.70.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.70.1...@coveo/quantic@0.70.2) (2021-10-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.70.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.70.0...@coveo/quantic@0.70.1) (2021-10-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.70.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.69.0...@coveo/quantic@0.70.0) (2021-10-04)
+
+
+### Bug Fixes
+
+* **quantic:** fixed clear filter button alignment ([#1282](https://github.com/coveo/ui-kit/issues/1282)) ([a897d4c](https://github.com/coveo/ui-kit/commit/a897d4c7da745a04b9f8ef5dace267e588f1de99))
+* **quantic:** update to breadcrumb style ([#1283](https://github.com/coveo/ui-kit/issues/1283)) ([57a7b3d](https://github.com/coveo/ui-kit/commit/57a7b3d7951b0b317bdde2e57d0d5652109c4e7d))
+
+
+### Features
+
+* **quantic:** added jsdoc generated documentation ([#1255](https://github.com/coveo/ui-kit/issues/1255)) ([a37a23f](https://github.com/coveo/ui-kit/commit/a37a23f6c93ccd3bd2929c49395cbc7c1e21a6bf)), closes [#1264](https://github.com/coveo/ui-kit/issues/1264)
+
+
+
+
+
 # [0.69.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.68.0...@coveo/quantic@0.69.0) (2021-10-04)
 
 

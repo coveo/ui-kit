@@ -94,6 +94,11 @@ export interface RecentQueriesState {
    * The maximum number of queries to retain in the list.
    */
   maxLength: number;
+  /**
+   * Whether analytics & tracking are enabled.
+   * In the case where it is disabled, it is recommended not to save recent queries.
+   */
+  analyticsEnabled: boolean;
 }
 
 export function validateRecentQueriesProps(
@@ -153,7 +158,10 @@ export function buildRecentQueriesList(
     get state() {
       const state = getState();
 
-      return state.recentQueries;
+      return {
+        ...state.recentQueries,
+        analyticsEnabled: state.configuration.analytics.enabled,
+      };
     },
 
     clear() {
