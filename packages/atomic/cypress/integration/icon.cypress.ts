@@ -1,5 +1,5 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {assertConsoleError} from './common-assertions';
+import * as CommonAssertions from './common-assertions';
 import {IconSelectors} from './icon-selectors';
 
 function getSvg(fileName: string) {
@@ -62,10 +62,7 @@ describe('Icon Test Suites', () => {
       setupIcon('http://localhost:1');
     });
 
-    it('should remove the component from the DOM', () => {
-      cy.get(IconSelectors.icon).should('not.exist');
-    });
-
-    assertConsoleError();
+    CommonAssertions.assertRemovesComponent(() => cy.get(IconSelectors.icon));
+    CommonAssertions.assertConsoleError();
   });
 });

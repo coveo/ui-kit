@@ -4,7 +4,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {assertConsoleError} from '../../common-assertions';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultTextComponent,
@@ -35,11 +35,8 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      cy.get(resultTextComponent).should('not.exist');
-    });
-
-    assertConsoleError();
+    CommonAssertions.assertRemovesComponent(ResultTextSelectors.shadow);
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field does not exist for the result but the "default" prop is set', () => {
@@ -70,9 +67,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      ResultTextSelectors.firstInResult().should('not.exist');
-    });
+    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
   });
 
   describe('when the field value is not a string', () => {
@@ -86,11 +81,8 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      ResultTextSelectors.firstInResult().should('not.exist');
-    });
-
-    assertConsoleError(false);
+    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
+    CommonAssertions.assertConsoleError(false);
   });
 
   describe('when the field value exists & is a string', () => {

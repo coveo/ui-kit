@@ -22,9 +22,9 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should be removed from the DOM', () => {
-      cy.get(resultPrintableUriComponent).should('not.exist');
-    });
+    CommonAssertions.assertRemovesComponent(() =>
+      cy.get(resultPrintableUriComponent)
+    );
     CommonAssertions.assertConsoleError();
   });
 
@@ -43,9 +43,9 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should be removed from the DOM', () => {
-      ResultPrintableUriSelectors.firstInResult().should('not.exist');
-    });
+    CommonAssertions.assertRemovesComponent(
+      ResultPrintableUriSelectors.firstInResult
+    );
     CommonAssertions.assertConsoleError();
   });
 
@@ -64,10 +64,9 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should be removed from the DOM', () => {
-      cy.get(resultPrintableUriComponent).should('not.exist');
-    });
-
+    CommonAssertions.assertRemovesComponent(() =>
+      cy.get(resultPrintableUriComponent)
+    );
     CommonAssertions.assertConsoleError();
   });
 

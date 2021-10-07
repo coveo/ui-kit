@@ -3,7 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {assertConsoleError} from '../../common-assertions';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultDateComponent,
@@ -33,11 +33,8 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      cy.get(resultDateComponent).should('not.exist');
-    });
-
-    assertConsoleError();
+    CommonAssertions.assertRemovesComponent(ResultDateSelectors.shadow);
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -47,11 +44,8 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      ResultDateSelectors.firstInResult().should('not.exist');
-    });
-
-    assertConsoleError(false);
+    CommonAssertions.assertRemovesComponent(ResultDateSelectors.firstInResult);
+    CommonAssertions.assertConsoleError(false);
   });
 
   describe('when the field value is not a date', () => {
@@ -65,11 +59,8 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      ResultDateSelectors.firstInResult().should('not.exist');
-    });
-
-    assertConsoleError();
+    CommonAssertions.assertRemovesComponent(ResultDateSelectors.firstInResult);
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field is valid', () => {
