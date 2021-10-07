@@ -14,6 +14,7 @@ import {
   getConfigurationInitialState,
 } from './configuration-state';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('configuration slice', () => {
   const url = platformUrl({environment: 'dev', region: 'eu'});
@@ -238,5 +239,27 @@ describe('configuration slice', () => {
 
     const finalState = configurationReducer(state, updateActiveTab('tab'));
     expect(finalState.analytics.originLevel2).toBe('tab');
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the #tab property is a non-empty string, it updates the originLevel2', () => {
+      const state = getConfigurationInitialState();
+      const finalState = configurationReducer(
+        state,
+        restoreSearchParameters({tab: 'All'})
+      );
+      expect(finalState.analytics.originLevel2).toBe('All');
+    });
+
+    it('when the #tab property is an empty string, it does nothing', () => {
+      const state = getConfigurationInitialState();
+      state.analytics.originLevel2 = 'default';
+
+      const finalState = configurationReducer(
+        state,
+        restoreSearchParameters({tab: ''})
+      );
+      expect(finalState.analytics.originLevel2).toBe('default');
+    });
   });
 });
