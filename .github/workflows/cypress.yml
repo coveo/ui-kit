@@ -8,7 +8,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup
-        working-directory: ./packages/atomic
         run: npm i && npm run build
       - name: Cypress run
         uses: cypress-io/github-action@v2
