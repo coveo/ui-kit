@@ -1,6 +1,6 @@
 name: End-to-end tests
 on:
-  workflow_dispatch:
+  [push]
 jobs:
   cypress-run:
     name: Cypress run
