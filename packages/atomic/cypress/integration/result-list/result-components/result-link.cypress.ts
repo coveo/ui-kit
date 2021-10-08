@@ -9,7 +9,6 @@ import {
   ResultLinkSelectors,
 } from './result-link-selectors';
 import * as CommonAssertions from '../../common-assertions';
-import {ResultTemplateSelectors} from '../../result-templates/result-template-selectors';
 
 interface ResultLinkProps {
   target?: '_self' | '_blank' | '_parent' | '_top';
