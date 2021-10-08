@@ -1,0 +1,13 @@
+.stencil {
+  opacity: .8;
+  animation: stencil-loading 1s linear infinite alternate;
+}
+
+@keyframes animation {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
