@@ -5,12 +5,12 @@ import {
   Result,
 } from '@coveo/headless';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
-import {filterProtocol} from '../../../utils/xss-utils';
 import {
   Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -31,7 +31,7 @@ export class AtomicResultLink implements InitializableComponent {
   @Element() private host!: HTMLElement;
 
   /**
-   * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    *
    * The following keywords have special meanings:
    *
@@ -57,16 +57,11 @@ export class AtomicResultLink implements InitializableComponent {
 
   public render() {
     return (
-      <a
-        part="result-link"
-        href={filterProtocol(this.result.clickUri)}
-        onClick={() => this.interactiveResult.select()}
-        onContextMenu={() => this.interactiveResult.select()}
-        onMouseDown={() => this.interactiveResult.select()}
-        onMouseUp={() => this.interactiveResult.select()}
-        onTouchStart={() => this.interactiveResult.beginDelayedSelect()}
-        onTouchEnd={() => this.interactiveResult.cancelPendingSelect()}
+      <LinkWithResultAnalytics
+        interactiveResult={this.interactiveResult}
+        href={this.result.clickUri}
         target={this.target}
+        part="result-link"
       >
         {this.hasSlot ? (
           <slot></slot>
@@ -76,7 +71,7 @@ export class AtomicResultLink implements InitializableComponent {
             default="no-title"
           ></atomic-result-text>
         )}
-      </a>
+      </LinkWithResultAnalytics>
     );
   }
 }

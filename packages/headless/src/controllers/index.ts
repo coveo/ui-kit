@@ -52,6 +52,8 @@ export {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from './facets/category-facet/headless-category-facet';
 
 export {
@@ -66,6 +68,8 @@ export {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
+  CoreFacet,
+  CoreFacetState,
 } from './facets/facet/headless-facet';
 
 export {

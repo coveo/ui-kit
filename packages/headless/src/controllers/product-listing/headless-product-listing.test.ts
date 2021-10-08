@@ -4,7 +4,7 @@ import {
 } from '../../test/mock-engine';
 import {
   buildProductListing,
-  ProductListingController,
+  ProductListing,
   ProductListingOptions,
 } from './headless-product-listing';
 import {Action} from 'redux';
@@ -17,10 +17,10 @@ import {
 } from '../../features/product-listing/product-listing-actions';
 
 describe('headless product-listing', () => {
-  let productListing: ProductListingController;
+  let productListing: ProductListing;
   let engine: MockProductListingEngine;
 
-  const baseOptions: Partial<ProductListingOptions> = {
+  const baseOptions: ProductListingOptions = {
     url: 'https://someurl.com',
   };
 

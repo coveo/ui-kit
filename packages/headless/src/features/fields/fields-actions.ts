@@ -54,7 +54,7 @@ export const fetchFieldsDescription = createAsyncThunk<
   const state = getState();
   const {accessToken, organizationId} = state.configuration;
   const {apiBaseUrl} = state.configuration.search;
-  const descriptions = await extra.searchAPIClient.fieldDescriptions({
+  const descriptions = await extra.apiClient.fieldDescriptions({
     accessToken,
     organizationId,
     url: apiBaseUrl,

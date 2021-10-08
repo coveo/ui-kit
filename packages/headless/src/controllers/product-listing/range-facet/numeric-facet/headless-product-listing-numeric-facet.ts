@@ -37,7 +37,7 @@ export {
 };
 
 /**
- * Creates a `NumericFacet` controller instance.
+ * Creates a `NumericFacet` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `NumericFacet` properties.
