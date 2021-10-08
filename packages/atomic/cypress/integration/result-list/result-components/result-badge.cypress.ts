@@ -3,6 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultBadgeComponent,
@@ -33,15 +34,10 @@ describe('Result Badge Component', () => {
           .init();
       });
 
-      it.skip('should remove the component from the DOM', () => {
-        cy.get(resultBadgeComponent).should('not.exist');
-      });
-
-      it.skip('should log a console error', () => {
-        ResultBadgeSelectors.shadow()
-          .find('atomic-component-error')
-          .should('exist');
-      });
+      CommonAssertions.assertRemovesComponent(() =>
+        cy.get(resultBadgeComponent)
+      );
+      CommonAssertions.assertConsoleError();
     });
   });
 
@@ -54,9 +50,9 @@ describe('Result Badge Component', () => {
             .init();
         });
 
-        it.skip('should remove the component from the DOM', () => {
-          ResultBadgeSelectors.firstInResult().should('not.exist');
-        });
+        CommonAssertions.assertRemovesComponent(
+          ResultBadgeSelectors.firstInResult
+        );
       });
 
       describe('when the field value is valid', () => {
@@ -76,9 +72,7 @@ describe('Result Badge Component', () => {
         });
 
         it('renders the localized text', () => {
-          ResultBadgeSelectors.firstInResult()
-            .find('atomic-result-text', {includeShadowDom: true})
-            .should('have.text', localizedText);
+          ResultBadgeSelectors.resultText().should('have.text', localizedText);
         });
       });
 
@@ -93,10 +87,7 @@ describe('Result Badge Component', () => {
         });
 
         it('renders the localized text', () => {
-          ResultBadgeSelectors.firstInResult()
-            .find('atomic-text', {includeShadowDom: true})
-            .shadow()
-            .should('have.text', localizedText);
+          ResultBadgeSelectors.text().should('have.text', localizedText);
         });
       });
     });
