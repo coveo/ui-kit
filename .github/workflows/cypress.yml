@@ -32,6 +32,7 @@ jobs:
           group: 'Atomic test runs'
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
+          install: false
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
