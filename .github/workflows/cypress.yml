@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Start dev server
         working-directory: ./packages/atomic
-        run: npm ci && npm run start:prod
+        run: npm i && npm run start:prod
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
