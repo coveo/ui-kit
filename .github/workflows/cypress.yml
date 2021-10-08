@@ -10,6 +10,7 @@ jobs:
       - name: Setup & Build
         run: |
           npm i
+          npx lerna boostrap
           cd packages/atomic && npm run build
       - name: Cypress run
         uses: cypress-io/github-action@v2
