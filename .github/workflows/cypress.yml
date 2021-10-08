@@ -16,15 +16,14 @@ jobs:
     env:
       NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: Setup & Build
         run: |
           npm ci
           npx lerna bootstrap
           npm run build
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
+      - uses: cypress-io/github-action@v2
+        name: Cypress tests
         with:
           working-directory: ./packages/atomic
           parallel: true
@@ -39,3 +38,14 @@ jobs:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      # Test run video was always captured, so this action uses "always()" condition
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
