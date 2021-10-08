@@ -7,12 +7,13 @@ import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
-import dts from "rollup-plugin-dts";
+import dts from 'rollup-plugin-dts';
 import {readFileSync} from 'fs';
 
 const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
+const ise2e = process.env.BUILD === 'e2e';
 
 /**
  * @returns {string}
@@ -24,7 +25,10 @@ function getPackageVersion() {
 function replace() {
   const env = isProduction ? 'production' : 'development';
   const version = getPackageVersion();
-  return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env), 'process.env.VERSION': JSON.stringify(version)});
+  return replacePlugin({
+    'process.env.NODE_ENV': JSON.stringify(env),
+    'process.env.VERSION': JSON.stringify(version),
+  });
 }
 
 function onWarn(warning, warn) {
@@ -42,7 +46,7 @@ function onWarn(warning, warn) {
  * @returns {boolean}
  */
 function matchesFilter(value) {
-  const filterIndex = process.argv.indexOf("--filter");
+  const filterIndex = process.argv.indexOf('--filter');
   if (filterIndex === -1) {
     return true;
   }
@@ -60,21 +64,23 @@ const nodejs = [
   },
   {
     input: 'src/case-assist.index.ts',
-    outDir: 'dist/case-assist'
+    outDir: 'dist/case-assist',
   },
   {
     input: 'src/recommendation.index.ts',
-    outDir: 'dist/recommendation'
+    outDir: 'dist/recommendation',
   },
   {
     input: 'src/product-recommendation.index.ts',
-    outDir: 'dist/product-recommendation'
+    outDir: 'dist/product-recommendation',
   },
   {
     input: 'src/product-listing.index.ts',
-    outDir: 'dist/product-listing'
+    outDir: 'dist/product-listing',
   },
-].filter(b => matchesFilter(b.input)).map(buildNodeConfiguration);
+]
+  .filter((b) => matchesFilter(b.input))
+  .map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
   return {
@@ -93,16 +99,7 @@ function buildNodeConfiguration({input, outDir}) {
       typescript(),
       replace(),
     ],
-    external: [
-      'os',
-      'https',
-      'http',
-      'stream',
-      'zlib',
-      'fs',
-      'vm',
-      'util',
-    ],
+    external: ['os', 'https', 'http', 'stream', 'zlib', 'fs', 'vm', 'util'],
     onwarn: onWarn,
   };
 }
@@ -114,38 +111,67 @@ const browser = [
     input: 'src/index.ts',
     output: [
       buildUmdOutput('dist/browser', 'CoveoHeadless'),
-      buildEsmOutput('dist/browser')
-    ]
+      buildEsmOutput('dist/browser'),
+    ],
   },
   {
     input: 'src/case-assist.index.ts',
     output: [
       buildUmdOutput('dist/browser/case-assist', 'CoveoHeadlessCaseAssist'),
-      buildEsmOutput('dist/browser/case-assist')
-    ]
+      buildEsmOutput('dist/browser/case-assist'),
+    ],
   },
   {
     input: 'src/recommendation.index.ts',
     output: [
-      buildUmdOutput('dist/browser/recommendation', 'CoveoHeadlessRecommendation'),
-      buildEsmOutput('dist/browser/recommendation')
-    ]
+      buildUmdOutput(
+        'dist/browser/recommendation',
+        'CoveoHeadlessRecommendation'
+      ),
+      buildEsmOutput('dist/browser/recommendation'),
+    ],
   },
   {
     input: 'src/product-recommendation.index.ts',
     output: [
-      buildUmdOutput('dist/browser/product-recommendation', 'CoveoHeadlessProductRecommendation'),
-      buildEsmOutput('dist/browser/product-recommendation')
-    ]
+      buildUmdOutput(
+        'dist/browser/product-recommendation',
+        'CoveoHeadlessProductRecommendation'
+      ),
+      buildEsmOutput('dist/browser/product-recommendation'),
+    ],
   },
   {
     input: 'src/product-listing.index.ts',
     output: [
-      buildUmdOutput('dist/browser/product-listing', 'CoveoHeadlessProductListing'),
-      buildEsmOutput('dist/browser/product-listing')
-    ]
+      buildUmdOutput(
+        'dist/browser/product-listing',
+        'CoveoHeadlessProductListing'
+      ),
+      buildEsmOutput('dist/browser/product-listing'),
+    ],
   },
-].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
+]
+  .filter((b) => matchesFilter(b.input))
+  .map(buildBrowserConfiguration);
+
+const e2e = [
+  {
+    input: 'src/index.ts',
+    output: [buildEsmOutput('dist/browser')],
+  },
+]
+  .filter((b) => matchesFilter(b.input))
+  .map(buildBrowserConfiguration);
+
+const e2eNode = [
+  {
+    input: 'src/index.ts',
+    outDir: 'dist',
+  },
+]
+  .filter((b) => matchesFilter(b.input))
+  .map(buildNodeConfiguration);
 
 function buildBrowserConfiguration({input, output}) {
   return {
@@ -167,8 +193,11 @@ function buildBrowserConfiguration({input, output}) {
           },
           {
             find: 'web-encoding',
-            replacement: pathResolve(__dirname, './node_modules/web-encoding/src/lib.js'),
-          }
+            replacement: pathResolve(
+              __dirname,
+              './node_modules/web-encoding/src/lib.js'
+            ),
+          },
         ],
       }),
       resolve({browser: true}),
@@ -178,7 +207,7 @@ function buildBrowserConfiguration({input, output}) {
       isProduction && sizeSnapshot(),
       isProduction && terser(),
     ],
-  }
+  };
 }
 
 function buildUmdOutput(outDir, name) {
@@ -186,8 +215,8 @@ function buildUmdOutput(outDir, name) {
     file: `${outDir}/headless.js`,
     format: 'umd',
     name,
-    sourcemap: isProduction
-  }
+    sourcemap: isProduction,
+  };
 }
 
 function buildEsmOutput(outDir) {
@@ -195,7 +224,7 @@ function buildEsmOutput(outDir) {
     file: `${outDir}/headless.esm.js`,
     format: 'es',
     sourcemap: isProduction,
-  }
+  };
 }
 
 // For Atomic's development purposes only
@@ -214,13 +243,17 @@ const dev = [
   },
   {
     input: 'src/product-recommendation.index.ts',
-    output: [buildEsmOutput('../atomic/src/external-builds/product-recommendation')],
+    output: [
+      buildEsmOutput('../atomic/src/external-builds/product-recommendation'),
+    ],
   },
   {
     input: 'src/product-listing.index.ts',
     output: [buildEsmOutput('../atomic/src/external-builds/product-listing')],
   },
-].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
+]
+  .filter((b) => matchesFilter(b.input))
+  .map(buildBrowserConfiguration);
 
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
 // can consume. When the api-extractor limitation is resolved, this step will not be necessary.
@@ -230,16 +263,20 @@ const typeDefinitions = [
   buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
   buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
   buildTypeDefinitionConfiguration('product-listing.index.d.ts'),
-].filter(b => matchesFilter(b.input));
+].filter((b) => matchesFilter(b.input));
 
 function buildTypeDefinitionConfiguration(entryFileName) {
   return {
     input: `./dist/definitions/${entryFileName}`,
-    output: [{file: `temp/${entryFileName}`, format: "es"}],
-    plugins: [dts()]
-  }
+    output: [{file: `temp/${entryFileName}`, format: 'es'}],
+    plugins: [dts()],
+  };
 }
 
-const config = isProduction ? [...nodejs, ...typeDefinitions, ...browser] : dev;
+const config = isProduction
+  ? [...nodejs, ...typeDefinitions, ...browser]
+  : ise2e
+  ? [...e2e, ...e2eNode]
+  : dev;
 
 export default config;

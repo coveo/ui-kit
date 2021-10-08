@@ -1,0 +1,40 @@
+name: Cypress tests Atomic pull master
+on:
+  push:
+    branches:
+      - master
+jobs:
+  cypress-run:
+    name: Cypress run
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3]
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup & Build
+        run: |
+          npm ci
+          npx lerna bootstrap
+          npm run build:e2e
+      - uses: cypress-io/github-action@v2
+        name: Cypress tests
+        with:
+          working-directory: ./packages/atomic
+          parallel: true
+          record: true
+          group: 'Atomic test runs'
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
+          install: false
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: packages/atomic/cypress/screenshots

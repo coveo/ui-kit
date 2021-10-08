@@ -1,0 +1,28 @@
+name: Cypress tests Atomic pull request
+on: [push]
+jobs:
+  cypress-run:
+    name: Cypress run
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup & Build
+        run: |
+          npm ci
+          npx lerna bootstrap
+          npm run build:e2e
+      - uses: cypress-io/github-action@v2
+        name: Cypress tests
+        with:
+          working-directory: ./packages/atomic
+          record: false
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
+          install: false
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: packages/atomic/cypress/screenshots
