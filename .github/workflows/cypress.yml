@@ -12,7 +12,7 @@ jobs:
       - name: Setup & Build
         run: |
           npm ci
-          npx lerna bootstrap --ci
+          npx lerna bootstrap
           npm run build
       - name: Cypress run
         uses: cypress-io/github-action@v2
@@ -20,3 +20,4 @@ jobs:
           working-directory: ./packages/atomic
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
+          install: false
