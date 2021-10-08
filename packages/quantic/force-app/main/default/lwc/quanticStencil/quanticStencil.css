@@ -43,37 +43,31 @@
   background-color: #F5F5F6;
 }
 
-.wrapper {
-  width: 0px;
-  animation: fullView 0.5s forwards linear;
-}
-
-@keyframes fullView {
-  100% {
-    width: 100%;
-  }
-}
-
 .stencil__animation {
-  animation : shimmer 2s infinite;
-  background: linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%);
-  background-size: 1000px 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.stencil__animation::before {
+  content: "";
+  position: absolute;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  animation: shimmer 1s infinite;
 }
 
 @keyframes shimmer {
   0% {
-    background-position: -1000px 0;
+    transform: translateX(-100%);
   }
   100% {
-    background-position: 1000px 0;
-  }
-}
-
-@keyframes stencil-loading {
-  0% {
-    background-color: rgba(236, 236, 236, .8);
-  }
-  100% {
-    background-color: rgba(211, 209, 209, .9)
+    transform: translateX(100%);
   }
 }
