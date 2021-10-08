@@ -21,10 +21,13 @@ import messageWhenRangeOverflow from '@salesforce/label/c.quantic_MessageWhenRan
 import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRangeUnderflow';
 
 /** @typedef {import("coveo").NumericFacetState} NumericFacetState */
+/** @typedef {import("coveo").NumericFilterState} NumericFilterState*/
 /** @typedef {import("coveo").NumericFacet} NumericFacet */
+/** @typedef {import("coveo").NumericFilter} NumericFilter */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
-/** @typedef {import("coveo").NumericFilterState} NumericFilterState*/
+
   
 
 /**
@@ -130,15 +133,15 @@ export default class QuanticNumericFacet extends LightningElement {
 
   /** @type {NumericFacet} */
   facet;
-  /**  @type {import("coveo").NumericFilter} */
+  /**  @type {NumericFilter} */
   numericFilter;
-  /**  @type {import("coveo").SearchStatus} */
+  /**  @type {SearchStatus} */
   searchStatus;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribe;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribeFilter;
-  /** @type {import("coveo").Unsubscribe} */
+  /** @type {Function} */
   unsubscribeSearchStatus;
   isSelected=true;
 
@@ -322,9 +325,7 @@ export default class QuanticNumericFacet extends LightningElement {
     this.resetValidityParameters();
     this.facet?.deselectAll();
     [...this.template.querySelectorAll('lightning-input')].forEach( input => {
-      // @ts-ignore
       input.checkValidity();
-      // @ts-ignore
       input.reportValidity();
     });
   }
@@ -344,7 +345,6 @@ export default class QuanticNumericFacet extends LightningElement {
 
     const allValid = [...this.template.querySelectorAll('lightning-input')]
       .reduce((validSoFar, inputCmp) => {
-        // @ts-ignore
         return validSoFar && inputCmp.reportValidity();
       }, true);
       
@@ -374,11 +374,11 @@ export default class QuanticNumericFacet extends LightningElement {
     return I18nUtils.format(this.labels.numberInputApply, this.label);
   }
 
-  get custumMessageOverflow() {
+  get customMessageOverflow() {
     return I18nUtils.format(this.labels.messageWhenRangeOverflow, this.end);
   }
   
-  get custumMessageUnderflow() {
+  get customMessageUnderflow() {
     return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.start);
   }
 }
