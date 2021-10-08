@@ -85,6 +85,7 @@ describe('Result Printable Uri Component', () => {
 
     it('should log one UA click event', () => {
       ResultPrintableUriSelectors.links().first().rightclick();
+      cy.wait(TestFixture.interceptAliases.UA);
       cy.shouldBeCalled(TestFixture.urlParts.UAClick, 1);
     });
   });

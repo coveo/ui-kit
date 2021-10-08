@@ -38,7 +38,9 @@ interface CypressRequest {
 
 // Only possible to filter on the url
 Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
-  cy.state('requests').forEach((call) => console.log(call.xhr.url));
+  cy.state('requests').forEach((call) =>
+    console.log('Should be called contains: ', call.xhr.url)
+  );
   expect(
     cy
       .state('requests')

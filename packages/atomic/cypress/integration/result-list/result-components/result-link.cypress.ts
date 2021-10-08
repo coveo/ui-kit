@@ -64,6 +64,7 @@ describe('Result Link Component', () => {
     it('should log one UA click event', () => {
       setupResultLink();
       ResultLinkSelectors.firstInResult().rightclick();
+      cy.wait(TestFixture.interceptAliases.UA);
       cy.shouldBeCalled(TestFixture.urlParts.UAClick, 1);
     });
 
