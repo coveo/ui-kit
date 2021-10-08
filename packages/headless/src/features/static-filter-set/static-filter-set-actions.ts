@@ -10,6 +10,17 @@ import {
   StaticFilterValueState,
 } from './static-filter-set-state';
 
+const staticFilterValueSchema = new RecordValue({
+  options: {required: true},
+  values: {
+    caption: requiredEmptyAllowedString,
+    expression: requiredEmptyAllowedString,
+    state: new StringValue<StaticFilterValueState>({
+      constrainTo: ['idle', 'selected'],
+    }),
+  },
+});
+
 interface RegisterStaticFilterActionCreatorPayload {
   /**
    * A unique identifier for the static filter.
@@ -29,16 +40,32 @@ export const registerStaticFilter = createAction(
       id: requiredNonEmptyString,
       values: new ArrayValue({
         required: true,
-        each: new RecordValue({
-          values: {
-            caption: requiredEmptyAllowedString,
-            expression: requiredEmptyAllowedString,
-            state: new StringValue<StaticFilterValueState>({
-              constrainTo: ['idle', 'selected'],
-            }),
-          },
-        }),
+        each: staticFilterValueSchema,
       }),
+    };
+
+    return validatePayload(payload, schema);
+  }
+);
+
+interface ToggleSelectStaticFilterValueActionCreatorPayload {
+  /**
+   * The unique identifier for the static filter.
+   */
+  id: string;
+
+  /**
+   * The target static filter value.
+   */
+  value: StaticFilterValue;
+}
+
+export const toggleSelectStaticFilterValue = createAction(
+  'staticFilter/toggleSelect',
+  (payload: ToggleSelectStaticFilterValueActionCreatorPayload) => {
+    const schema = {
+      id: requiredNonEmptyString,
+      value: staticFilterValueSchema,
     };
 
     return validatePayload(payload, schema);
