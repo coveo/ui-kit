@@ -71,14 +71,13 @@ export function buildProductListingEngine(
 
   const productListingClient = createProductListingClient(
     options.configuration,
-    logger
+    logger,
+    createSearchAPIClient(options.configuration, logger)
   );
-  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
   const thunkArguments: ProductListingThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
-    productListingClient,
-    searchAPIClient,
+    apiClient: productListingClient,
   };
 
   const augmentedOptions: EngineOptions<ProductListingEngineReducers> = {
@@ -131,10 +130,15 @@ function createSearchAPIClient(
 
 function createProductListingClient(
   configuration: ProductListingEngineConfiguration,
-  logger: Logger
+  logger: Logger,
+  searchAPIClient: SearchAPIClient
 ) {
-  return new ProductListingAPIClient({
-    logger,
-    preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-  });
+  return new ProductListingAPIClient(
+    {
+      logger,
+      preprocessRequest:
+        configuration.preprocessRequest || NoopPreprocessRequest,
+    },
+    searchAPIClient
+  );
 }

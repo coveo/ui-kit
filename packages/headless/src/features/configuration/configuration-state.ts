@@ -1,4 +1,4 @@
-import {platformUrl} from '../../api/platform-client';
+import {analyticsUrl, platformUrl} from '../../api/platform-client';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -99,7 +99,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   },
   analytics: {
     enabled: true,
-    apiBaseUrl: `${platformUrl()}${analyticsAPIEndpoint}`,
+    apiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
     originLevel2: 'default',
     originLevel3: 'default',
     anonymous: false,
