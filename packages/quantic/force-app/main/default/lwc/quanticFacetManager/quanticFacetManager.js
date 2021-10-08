@@ -1,10 +1,8 @@
 import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
-import { api, LightningElement, track } from 'lwc';
+import { api, LightningElement } from 'lwc';
 
 /** @typedef {import("coveo").FacetManager} FacetManager */
-/** @typedef {import("coveo").FacetManagerState} FacetManagerState */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
-/** @typedef {import("coveo").SearchStatusState} SearchStatusState */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 
@@ -27,10 +25,8 @@ export default class QuanticFacetManager extends LightningElement {
    */
   @api engineId;
 
-  /** @type {FacetManagerState} */
-  @track facetManagerState;
-  /** @type {SearchStatusState} */
-  @track searchStatusState;
+  /** @type {boolean} */
+  initialSearchExecuted = false;
 
   /** @type {FacetManager} */
   facetManager;
@@ -72,11 +68,18 @@ export default class QuanticFacetManager extends LightningElement {
   }
 
   updateFacetManagerState() {
+    this.host.classList.remove('facet-manager__host_ready');
     this.reorderFacets();
   }
 
   updateSearchStatusState() {
-    this.searchStatusState = this.searchStatus.state;
+    const isInitialSearchAlreadyExecuted = this.initialSearchExecuted;
+    this.initialSearchExecuted = !!this.searchStatus.state?.firstSearchExecuted;
+
+    // Make sure to reorder the facets once the facets are ready to be displayed
+    if (!isInitialSearchAlreadyExecuted && this.initialSearchExecuted && !this.searchStatus.state?.isLoading) {
+      this.reorderFacets();
+    }
   }
 
   moveFacetsToHost() {
@@ -85,6 +88,7 @@ export default class QuanticFacetManager extends LightningElement {
       const wrapper = this.itemTemplate.cloneNode(false);
       // @ts-ignore
       wrapper.setAttribute('data-facet-id', facet.facetId ?? facet.field);
+      wrapper.classList.add('facet-manager__item');
       
       wrapper.appendChild(facet);
       this.host.appendChild(wrapper);
@@ -93,7 +97,7 @@ export default class QuanticFacetManager extends LightningElement {
 
   resolveItemTemplate() {
     this.itemTemplate = document.createElement('div');
-    this.itemTemplate.className = 'slds-var-m-bottom_large';
+    this.itemTemplate.classList.add('slds-var-m-bottom_large');
 
     const slotElement = this.querySelector('*[slot="itemTemplate"]');
     if (slotElement) {
@@ -105,7 +109,7 @@ export default class QuanticFacetManager extends LightningElement {
   }
 
   reorderFacets() {
-    if (!this.searchStatusState?.firstSearchExecuted) {
+    if (!this.initialSearchExecuted) {
       return;
     }
 
@@ -115,6 +119,8 @@ export default class QuanticFacetManager extends LightningElement {
     sortedFacets.forEach((sortedFacet) => {
       this.host.appendChild(sortedFacet);
     });
+
+    this.host.classList.add('facet-manager__host_ready');
   }
 
   get facets() {
