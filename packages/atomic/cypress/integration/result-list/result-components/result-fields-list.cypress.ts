@@ -43,7 +43,7 @@ describe('Result Fields Component', () => {
       new TestFixture().with((e) => addTag(e, fieldsListComponent, {})).init();
     });
 
-    CommonAssertions.assertRemovesComponent(FieldsListSelectors.shadow);
+    CommonAssertions.assertRemovesComponent(() => cy.get(fieldsListComponent));
     CommonAssertions.assertConsoleError();
   });
 
