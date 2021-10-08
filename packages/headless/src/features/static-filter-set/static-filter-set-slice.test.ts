@@ -2,6 +2,7 @@ import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {registerStaticFilter} from './static-filter-set-actions';
 import {staticFilterSetReducer} from './static-filter-set-slice';
+import {StaticFilterValueState} from './static-filter-set-state';
 
 describe('static-filter-set slice', () => {
   it('initializes correctly', () => {
@@ -28,6 +29,38 @@ describe('static-filter-set slice', () => {
       const state = staticFilterSetReducer({[id]: filterA}, action);
 
       expect(state).toEqual({a: filterA});
+    });
+
+    it('when the id is an empty string, the action detects an error', () => {
+      const action = registerStaticFilter({id: '', values: []});
+      expect('error' in action).toBe(true);
+    });
+
+    it('when the #caption property in the #values array has the wrong type, the action detects an error', () => {
+      const value = buildMockStaticFilterValue({
+        caption: 1 as unknown as string,
+      });
+      const action = registerStaticFilter({id: 'a', values: [value]});
+
+      expect('error' in action).toBe(true);
+    });
+
+    it('when the #expression property in the #values array has the wrong type, the action detects an error', () => {
+      const value = buildMockStaticFilterValue({
+        expression: 1 as unknown as string,
+      });
+      const action = registerStaticFilter({id: 'a', values: [value]});
+
+      expect('error' in action).toBe(true);
+    });
+
+    it('when the #state property in the #values array has the wrong type, the action detects an error', () => {
+      const value = buildMockStaticFilterValue({
+        state: 'idle1' as unknown as StaticFilterValueState,
+      });
+      const action = registerStaticFilter({id: 'a', values: [value]});
+
+      expect('error' in action).toBe(true);
     });
   });
 });

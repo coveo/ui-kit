@@ -19,8 +19,10 @@ export interface StaticFilterValue {
   /**
    * The state of the static filter value.
    */
-  state: 'idle' | 'selected';
+  state: StaticFilterValueState;
 }
+
+export type StaticFilterValueState = 'idle' | 'selected';
 
 export function getStaticFilterSetInitialState(): StaticFilterSetState {
   return {};

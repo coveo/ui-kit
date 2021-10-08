@@ -1,5 +1,14 @@
+import {ArrayValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {StaticFilterValue} from './static-filter-set-state';
+import {
+  requiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
+import {
+  StaticFilterValue,
+  StaticFilterValueState,
+} from './static-filter-set-state';
 
 interface RegisterStaticFilterActionCreatorPayload {
   /**
@@ -15,5 +24,23 @@ interface RegisterStaticFilterActionCreatorPayload {
 
 export const registerStaticFilter = createAction(
   'staticFilter/register',
-  (payload: RegisterStaticFilterActionCreatorPayload) => ({payload})
+  (payload: RegisterStaticFilterActionCreatorPayload) => {
+    const schema = {
+      id: requiredNonEmptyString,
+      values: new ArrayValue({
+        required: true,
+        each: new RecordValue({
+          values: {
+            caption: requiredEmptyAllowedString,
+            expression: requiredEmptyAllowedString,
+            state: new StringValue<StaticFilterValueState>({
+              constrainTo: ['idle', 'selected'],
+            }),
+          },
+        }),
+      }),
+    };
+
+    return validatePayload(payload, schema);
+  }
 );
