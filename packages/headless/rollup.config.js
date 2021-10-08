@@ -12,7 +12,7 @@ import {readFileSync} from 'fs';
 
 const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
-const isProduction = process.env.BUILD === 'production';
+const isProduction = false;// process.env.BUILD === 'production';
 
 /**
  * @returns {string}
