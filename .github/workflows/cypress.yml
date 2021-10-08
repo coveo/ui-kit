@@ -1,6 +1,5 @@
 name: End-to-end tests
-on:
-  [push]
+on: [push]
 jobs:
   cypress-run:
     name: Cypress run
@@ -10,8 +9,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Start dev server
         working-directory: ./packages/atomic
-        run: npm i && npm run start:prod & npx wait-on http://localhost:3333'
+        run: npm i
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
           project: ./packages/atomic
