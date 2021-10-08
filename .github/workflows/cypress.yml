@@ -1,4 +1,4 @@
-name: End-to-end tests
+name: End-to-end tests Atomic
 on: [push]
 jobs:
   cypress-run:
@@ -7,13 +7,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup
+      - name: Setup & Build
         run: |
           npm i
-          npx lerna bootstrap
-          npm run build
+          cd packages/atomic && npm run build
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           working-directory: ./packages/atomic
-          start: npm run start:prod:background
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
