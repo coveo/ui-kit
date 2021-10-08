@@ -12,11 +12,6 @@
             <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">   
               <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
                 <div class="slds-m-bottom_large">
-                  <div class="slds-size_1-of-1">
-                    <c-quantic-stencil variant="card" number-of-rows="8"></c-quantic-stencil>
-                  </div>
-                </div>
-                <div class="slds-m-bottom_large">
                   <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
                 </div>
                 <div class="slds-m-bottom_large">
@@ -49,7 +44,7 @@
                 <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
                 <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
                 <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
-                <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  
+                <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>
                 <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
                 <div class="slds-var-m-vertical_medium">
                     <c-quantic-pager engine-id={engineId}></c-quantic-pager>

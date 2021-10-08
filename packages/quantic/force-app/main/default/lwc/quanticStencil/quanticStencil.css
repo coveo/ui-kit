@@ -25,14 +25,24 @@
   width: 100%;
 }
 
+.stencil__result-container {
+  min-width: 575px;
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+
 .stencil__result-header {
-  height: 40px;
+  height: 36px;
 }
 
 .stencil__result-image {
   width: 100px;
   height: 100px;
   border-radius: 7px;
+}
+
+.stencil__result-row {
+  width: 100%;
 }
 
 .grey {

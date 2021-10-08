@@ -1,9 +1,10 @@
 <template>
-  <div>
+    <template if:false={hasResults}>
+      <c-quantic-stencil variant="resultList" number-of-rows="10"></c-quantic-stencil>
+    </template>
     <template for:each={results} for:item="result">
       <c-quantic-result key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager} engine-id={engineId}>
         <p></p>
       </c-quantic-result>
     </template>
-  </div>
 </template>

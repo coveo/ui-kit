@@ -9,7 +9,7 @@ export default class QuanticStencil extends LightningElement {
   /**
    * The type of stencil to display.
    * @api
-   * @type {'card'|'result'}
+   * @type {'card'|'resultList'}
    */
   @api variant;
   /**
@@ -31,7 +31,7 @@ export default class QuanticStencil extends LightningElement {
     return this.variant === 'card';
   }
 
-  get isResultVariant() {
-    return this.variant === 'result';
+  get isResultListVariant() {
+    return this.variant === 'resultList';
   }
 }

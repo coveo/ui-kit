@@ -83,6 +83,10 @@ export default class QuanticResultList extends LightningElement {
     return this.fieldsToInclude.split(',').map((field) => field.trim());
   }
 
+  get hasResults() {
+    return !!this.results.length;
+  }
+
   get results() {
     return this.state?.results || [];
   }
