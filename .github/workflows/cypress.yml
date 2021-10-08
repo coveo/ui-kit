@@ -16,4 +16,3 @@ jobs:
           working-directory: ./packages/atomic
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
-          project: ./packages/atomic
