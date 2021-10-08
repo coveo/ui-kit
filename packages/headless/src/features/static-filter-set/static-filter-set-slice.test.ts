@@ -1,6 +1,7 @@
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {
+  deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
 } from './static-filter-set-actions';
@@ -110,6 +111,30 @@ describe('static-filter-set slice', () => {
         id: 'a',
         value: undefined as unknown as StaticFilterValue,
       });
+      expect('error' in action).toBe(true);
+    });
+  });
+
+  describe('#deselectAllStaticFilterValues', () => {
+    it('when the id exists, it sets all values to idle', () => {
+      const id = 'a';
+      const value = buildMockStaticFilterValue({state: 'selected'});
+      const filter = buildMockStaticFilterSlice({values: [value]});
+      const action = deselectAllStaticFilterValues(id);
+
+      const state = staticFilterSetReducer({[id]: filter}, action);
+      expect(state[id].values).toContainEqual({...value, state: 'idle'});
+    });
+
+    it('when the id does not exist, it does not throw', () => {
+      const id = 'a';
+      const action = deselectAllStaticFilterValues(id);
+
+      expect(() => staticFilterSetReducer({}, action)).not.toThrow();
+    });
+
+    it('when the id is an empty string, the action detects an error', () => {
+      const action = deselectAllStaticFilterValues('');
       expect('error' in action).toBe(true);
     });
   });

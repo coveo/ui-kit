@@ -71,3 +71,10 @@ export const toggleSelectStaticFilterValue = createAction(
     return validatePayload(payload, schema);
   }
 );
+
+export const deselectAllStaticFilterValues = createAction(
+  'staticFilter/deselectAll',
+  (payload: string) => {
+    return validatePayload(payload, requiredNonEmptyString);
+  }
+);

@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
+  deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
 } from './static-filter-set-actions';
@@ -35,5 +36,15 @@ export const staticFilterSetReducer = createReducer(
 
         const isSelected = target.state === 'selected';
         target.state = isSelected ? 'idle' : 'selected';
+      })
+      .addCase(deselectAllStaticFilterValues, (state, action) => {
+        const id = action.payload;
+        const filter = state[id];
+
+        if (!filter) {
+          return;
+        }
+
+        filter.values.forEach((v) => (v.state = 'idle'));
       })
 );
