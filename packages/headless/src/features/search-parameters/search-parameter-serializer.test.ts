@@ -133,6 +133,11 @@ describe('buildSearchParameterSerializer', () => {
         expect(result).toEqual('');
       });
     });
+
+    it('serializes the #tab parameter correctly', () => {
+      const result = serialize({tab: 'All'});
+      expect(result).toBe('tab=All');
+    });
   });
 
   describe('#deserialize', () => {
@@ -351,6 +356,11 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({
         df: {date: []},
       });
+    });
+
+    it('deserializes the #tab parameter correctly', () => {
+      const result = deserialize('tab=All');
+      expect(result).toEqual({tab: 'All'});
     });
   });
 
