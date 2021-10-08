@@ -14,5 +14,5 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: ./packages/atomic
-          start: npm run start:prod
+          start: npm run start:prod &
           wait-on: 'http://localhost:3333'
