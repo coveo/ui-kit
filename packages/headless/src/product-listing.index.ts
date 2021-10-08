@@ -83,6 +83,8 @@ export {
 } from './controllers/product-listing/facet/headless-product-listing-facet-manager';
 
 export {
+  CoreFacet,
+  CoreFacetState,
   Facet,
   FacetOptions,
   FacetProps,
@@ -97,6 +99,8 @@ export {
 } from './controllers/product-listing/facet/headless-product-listing-facet';
 
 export {
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
   CategoryFacet,
   CategoryFacetOptions,
   CategoryFacetProps,

@@ -95,10 +95,15 @@ type PlatformCombination =
 
 type PlatformEnvironment = PlatformCombination['env'];
 
-export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
+interface URLOptions<E extends PlatformEnvironment> {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];
-}) {
+}
+
+function coveoCloudURL<E extends PlatformEnvironment>(
+  subdomain: string,
+  options?: URLOptions<E>
+) {
   const urlEnv =
     !options || !options.environment || options.environment === 'prod'
       ? ''
@@ -108,7 +113,19 @@ export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
       ? ''
       : `-${options.region}`;
 
-  return `https://platform${urlEnv}${urlRegion}.cloud.coveo.com`;
+  return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
+}
+
+export function platformUrl<E extends PlatformEnvironment>(
+  options?: URLOptions<E>
+) {
+  return coveoCloudURL('platform', options);
+}
+
+export function analyticsUrl<E extends PlatformEnvironment = 'prod'>(
+  options?: URLOptions<E>
+) {
+  return coveoCloudURL('analytics', options);
 }
 
 function buildDefaultRequestOptions(
