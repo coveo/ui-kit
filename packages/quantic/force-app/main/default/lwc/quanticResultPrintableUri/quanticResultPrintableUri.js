@@ -16,7 +16,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
    */
   @api result;
   /**
-   * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
+   * The maximum number of URI parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
    * @api
    * @type {number}
    * @defaultValue `5`

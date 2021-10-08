@@ -10,10 +10,10 @@ const CHATTER='Chatter';
 /** @typedef {import("coveo").Result} Result */
 
 /**
- * The `QuanticResultLabel` component displays an icon and label for a result.
+ * The `QuanticResultLabel` component displays an [SLDS icon](https://www.lightningdesignsystem.com/icons/) and label for a result.
  * If the `Result` option is set this component can infer default label and icon based on the result properties. Otherwise the `label` and `icon` properties are required.
  * @example
- * <c-quantic-result-label label="My Result" icon="thisicon" size="medium"></c-quantic-result-label>
+ * <c-quantic-result-label label="Account" icon="standard:account" size="medium"></c-quantic-result-label>
  */
 export default class QuanticResultLabel extends LightningElement {
   /**
@@ -29,7 +29,7 @@ export default class QuanticResultLabel extends LightningElement {
    */
   @api label;
   /**
-   * The icon to display.
+   * The name of the [SLDS icon](https://www.lightningdesignsystem.com/icons/) to display.
    * @api
    * @type {string}
    */
@@ -193,13 +193,8 @@ export default class QuanticResultLabel extends LightningElement {
 
     const lower = sourceType.toLowerCase();
     switch (lower) {
-      case 'sharepoint':
-        return 'PDF';
       case 'youtube':
         return this.labels.video;
-      case 'web':
-      case 'sitemap':
-      case 'salesforce':
       case 'confluence2':
         return this.labels.documentation;
       default:
