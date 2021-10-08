@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
   updateBasicConfiguration,
@@ -91,5 +92,9 @@ export const configurationReducer = createReducer(
       })
       .addCase(updateActiveTab, (state, action) => {
         state.analytics.originLevel2 = action.payload;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        state.analytics.originLevel2 =
+          action.payload.tab || state.analytics.originLevel2;
       })
 );

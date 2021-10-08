@@ -1,4 +1,5 @@
 import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {registerTab, updateActiveTab} from './tab-set-actions';
 import {tabSetReducer} from './tab-set-slice';
 
@@ -86,6 +87,28 @@ describe('tab set slice', () => {
     the action detects an error`, () => {
       const action = updateActiveTab('');
       expect('error' in action).toBe(true);
+    });
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the #id exists, it sets #isActive to true', () => {
+      const id = 'a';
+      const tab = buildMockTabSlice({id, isActive: false});
+      const finalState = tabSetReducer(
+        {[id]: tab},
+        restoreSearchParameters({tab: id})
+      );
+
+      expect(finalState[id]).toEqual({...tab, isActive: true});
+    });
+
+    it('when the #id does not exists, it does nothing', () => {
+      const tab = buildMockTabSlice({id: 'a', isActive: true});
+      const finalState = tabSetReducer(
+        {a: tab},
+        restoreSearchParameters({tab: 'b'})
+      );
+      expect(finalState).toEqual({a: tab});
     });
   });
 });
