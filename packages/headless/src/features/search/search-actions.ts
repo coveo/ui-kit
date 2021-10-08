@@ -117,7 +117,7 @@ export const executeSearch = createAsyncThunk<
     const state = getState();
     addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
-      extra.searchAPIClient,
+      extra.apiClient,
       state,
       buildSearchRequest(state)
     );
@@ -141,7 +141,7 @@ export const executeSearch = createAsyncThunk<
     }
     const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
-      extra.searchAPIClient,
+      extra.apiClient,
       correctedQuery,
       getState,
       dispatch
@@ -185,13 +185,10 @@ export const fetchMoreResults = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchMoreResults',
-  async (
-    _,
-    {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
-  ) => {
+  async (_, {getState, dispatch, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const fetched = await fetchFromAPI(
-      searchAPIClient,
+      apiClient,
       state,
       buildFetchMoreRequest(state)
     );

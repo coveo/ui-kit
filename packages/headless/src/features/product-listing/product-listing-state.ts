@@ -2,7 +2,7 @@ import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-l
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response';
 
-export type ProductListingState = {
+export interface ProductListingState {
   url: string;
   clientId: string;
   additionalFields: string[];
@@ -16,7 +16,7 @@ export type ProductListingState = {
   error: ProductListingAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
-};
+}
 
 export const getProductListingInitialState = (): ProductListingState => ({
   url: '',

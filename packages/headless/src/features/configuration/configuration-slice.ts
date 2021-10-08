@@ -16,6 +16,16 @@ import {
   analyticsAPIEndpoint,
 } from './configuration-state';
 
+function analyticsUrlFromPlatformUrl(platformUrl: string) {
+  const isCoveoURL = platformUrl.match(
+    /^https:\/\/platform(dev|qa|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/
+  );
+  if (isCoveoURL) {
+    return platformUrl.replace(/^(https?:\/\/)platform/, '$1analytics');
+  }
+  return platformUrl;
+}
+
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),
   (builder) =>
@@ -30,7 +40,9 @@ export const configurationReducer = createReducer(
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = `${action.payload.platformUrl}${analyticsAPIEndpoint}`;
+          state.analytics.apiBaseUrl = `${analyticsUrlFromPlatformUrl(
+            action.payload.platformUrl
+          )}${analyticsAPIEndpoint}`;
         }
       })
       .addCase(updateSearchConfiguration, (state, action) => {

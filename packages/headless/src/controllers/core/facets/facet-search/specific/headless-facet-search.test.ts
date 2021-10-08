@@ -12,7 +12,6 @@ import {
   registerFacetSearch,
   selectFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {executeSearch} from '../../../../../features/search/search-actions';
 import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result';
 import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
@@ -35,6 +34,7 @@ describe('FacetSearch', () => {
   beforeEach(() => {
     props = {
       options: {facetId},
+      select: jest.fn(),
     };
 
     initEngine();
@@ -73,11 +73,8 @@ describe('FacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #executeSearch action', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+    it('calls the select prop #executeSearch action', () => {
+      expect(props.select).toHaveBeenCalled();
     });
   });
 
@@ -101,11 +98,8 @@ describe('FacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #executeSearch action', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
+    it('calls the select prop #executeSearch action', () => {
+      expect(props.select).toHaveBeenCalled();
     });
   });
 });

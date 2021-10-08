@@ -12,7 +12,7 @@ import {fetchProductListing} from '../../../features/product-listing/product-lis
 export {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 
 /**
- * Creates a `Pager` controller instance.
+ * Creates a `Pager` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Pager` properties.
