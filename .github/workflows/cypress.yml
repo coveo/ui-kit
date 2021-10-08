@@ -13,6 +13,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: cd packages/atomic && npm run start:prod
+          working-directory: ./packages/atomic
+          start: npm run start:prod
           wait-on: 'http://localhost:3333'
           project: ./packages/atomic
