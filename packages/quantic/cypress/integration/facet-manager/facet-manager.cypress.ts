@@ -1,71 +1,57 @@
+// eslint-disable-next-line node/no-unpublished-import
+import {Interception} from 'cypress/types/net-stubbing';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {configure} from '../../page-objects/configurator';
 import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {FacetManagerExpectations as Expect} from './facet-manager-expectations';
 
 describe('quantic-facet-manager', () => {
   const pageUrl = 's/quantic-facet-manager';
+  const responseFacetIdsAlias = '@responseFacetIds';
 
   function visit() {
     interceptSearch();
     cy.visit(pageUrl);
-    configure({});
+    return configure({});
+  }
+
+  function mockFacetOrder(facetIds: string[]) {
+    cy.intercept('POST', '**/rest/search/v2?*', (req) => {
+      req.continue((res) => {
+        const facets = res.body.facets;
+        const reordered: unknown[] = [];
+
+        facetIds.forEach((facetId, idx) => {
+          const facet = facets.find((f) => f.facetId === facetId);
+          if (facet) {
+            reordered.push({
+              ...facet,
+              indexScore: 1 - idx * 0.01,
+            });
+          }
+        });
+
+        res.body.facets = reordered;
+        res.send();
+      });
+    }).as(InterceptAliases.Search.substring(1));
+  }
+
+  function getFacetOrder(interception: Interception) {
+    const ids = interception.response?.body.facets.map((f) => f.facetId);
+    cy.wrap(ids).as(responseFacetIdsAlias.substring(1));
   }
 
   it('should load facets as expected', () => {
-    visit();
-
-    cy.wait(InterceptAliases.Search)
-      .then((interception) => {
-        const facetIds = interception.response?.body.facets.map(
-          (f) => f.facetId
-        );
-        cy.wrap(facetIds).as('responseFacetIds');
-      })
-      .get('.facet-manager__host_ready')
-      .get('.facet-manager__item')
-      .then(function (elements) {
-        const effectiveFacetIds = Cypress.$.makeArray(elements).map(
-          (element) => element.dataset.facetId
-        );
-
-        expect(effectiveFacetIds).to.deep.equal(this.responseFacetIds);
-      })
-      .intercept('POST', '**/rest/search/v2?*', (req) => {
-        req.continue((res) => {
-          const indexFacets = res.body.facets;
-
-          // Let's put the facets in the following order (with score): language, objecttype, date
-          const reorderedFacets = [
-            {
-              ...indexFacets.find((f) => f.facetId === 'language'),
-              indexScore: 0.9,
-            },
-            {
-              ...indexFacets.find((f) => f.facetId === 'objecttype'),
-              indexScore: 0.5,
-            },
-            {...indexFacets.find((f) => f.facetId === 'date'), indexScore: 0.3},
-          ];
-
-          res.body.facets = reorderedFacets;
-          res.send();
-        });
-      })
-      .as(InterceptAliases.Search.substring(1))
-      .get('c-action-perform-search button')
-      .click()
+    visit()
       .wait(InterceptAliases.Search)
-      .get('.facet-manager__host_ready')
-      .get('.facet-manager__item')
-      .then((elements) => {
-        const effectiveFacetIds = Cypress.$.makeArray(elements).map(
-          (element) => element.dataset.facetId
-        );
+      .then((interception) => getFacetOrder(interception));
+    Expect.containsFacets(responseFacetIdsAlias);
 
-        expect(effectiveFacetIds).to.deep.equal([
-          'language',
-          'objecttype',
-          'date',
-        ]);
-      });
+    mockFacetOrder(['language', 'objecttype', 'date']);
+    performSearch()
+      .wait(InterceptAliases.Search)
+      .then((interception) => getFacetOrder(interception));
+    Expect.containsFacets(responseFacetIdsAlias);
   });
 });
