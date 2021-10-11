@@ -17,7 +17,11 @@ export default class QuanticStencil extends LightningElement {
    * @api
    * @type {number}
    */
-  @api numberOfRows = 8;
+  @api numberOfRows;
+
+  get shouldDisplay() {
+    return !!this.variant && !!this.numberOfRows;
+  }
 
   get rows() {
     const rows = [];

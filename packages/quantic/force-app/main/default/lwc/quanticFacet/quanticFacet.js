@@ -21,6 +21,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetState} FacetState */
 /** @typedef {import("coveo").Facet} Facet */
 /** @typedef {import("coveo").FacetValue} FacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
@@ -134,8 +135,14 @@ export default class QuanticFacet extends LightningElement {
   
   /** @type {Facet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
   /** @type {HTMLInputElement} */
   input;
 
@@ -157,6 +164,11 @@ export default class QuanticFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -184,10 +196,12 @@ export default class QuanticFacet extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {

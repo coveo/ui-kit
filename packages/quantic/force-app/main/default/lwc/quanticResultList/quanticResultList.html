@@ -1,6 +1,6 @@
 <template>
-    <template if:false={hasResults}>
-      <c-quantic-stencil variant="resultList" number-of-rows="10"></c-quantic-stencil>
+    <template if:true={showPlaceholder}>
+      <c-quantic-stencil variant="resultList" number-of-rows={numberOfResults}></c-quantic-stencil>
     </template>
     <template for:each={results} for:item="result">
       <c-quantic-result key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager} engine-id={engineId}>
