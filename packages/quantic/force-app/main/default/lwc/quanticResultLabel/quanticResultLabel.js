@@ -118,7 +118,6 @@ export default class QuanticResultLabel extends LightningElement {
       'casecomment': 'standard:case_comment',
       'collaborationgroup': 'standard:team_member',
       'contentversion': 'standard:drafts',
-      'food': 'custom:custom51',
       'goal': 'standard:goals',
       'invoice': 'standard:partner_fund_claim',
       'doc': 'doctype:word',
