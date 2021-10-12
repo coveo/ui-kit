@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+    tags-ignore:
+      - '*'
 jobs:
   cypress-run:
     name: Cypress run

@@ -1,5 +1,12 @@
 name: Cypress tests Quantic
-on: [push]
+on:
+  pull_request:
+    
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - "*"
 jobs:
   cypress-run:
     name: Cypress run
@@ -11,6 +18,7 @@ jobs:
       BRANCH_NAME: ${{ github.ref }}
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+
 
     steps:
       - uses: actions/checkout@v2
