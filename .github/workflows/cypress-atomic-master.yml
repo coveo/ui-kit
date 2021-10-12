@@ -1,4 +1,4 @@
-name: Cypress tests Atomic pull master
+name: Cypress tests Atomic
 on:
   push:
     branches:

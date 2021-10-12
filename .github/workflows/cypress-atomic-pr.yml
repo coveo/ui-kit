@@ -1,5 +1,5 @@
-name: Cypress tests Atomic pull request
-on: [push]
+name: Cypress tests Atomic
+on: [pull_request]
 jobs:
   cypress-run:
     name: Cypress run

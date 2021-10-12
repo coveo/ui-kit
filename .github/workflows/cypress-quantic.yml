@@ -1,4 +1,4 @@
-name: Cypress tests Quantic pull request
+name: Cypress tests Quantic
 on: [push]
 jobs:
   cypress-run:
@@ -31,7 +31,7 @@ jobs:
         name: Cypress tests
         with:
           working-directory: ./packages/quantic
-          record: false
+          record: ${{ github.ref == 'refs/heads/master' && true ||  false }}
           install: false
 
       - uses: actions/upload-artifact@v1
