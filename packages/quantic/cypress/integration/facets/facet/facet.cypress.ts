@@ -6,6 +6,7 @@ import {
   extractFacetValues,
   InterceptAliases,
   interceptSearch,
+  interceptSearchIndefinitely,
 } from '../../../page-objects/search';
 import {
   checkFirstValue,
@@ -48,6 +49,24 @@ describe('Facet Test Suite', () => {
     configure(options);
   }
 
+  describe('when loading', () => {
+    function setupWithInterceptedSearch() {
+      interceptSearchIndefinitely();
+      cy.visit(pageUrl);
+      configure({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+      });
+    }
+
+    describe('verify rendering', () => {
+      before(setupWithInterceptedSearch);
+
+      Expect.displayPlaceholder(true);
+    });
+  });
+
   describe('with values', () => {
     const indexFacetValuesAlias = '@indexFacetValues';
     function aliasFacetValues() {
@@ -68,6 +87,7 @@ describe('Facet Test Suite', () => {
     describe('verify rendering', () => {
       before(setupWithValues);
 
+      Expect.displayPlaceholder(false);
       Expect.labelContains(defaultLabel);
       Expect.displayValues(true);
       Expect.numberOfSelectedCheckboxValues(0);
@@ -438,6 +458,7 @@ describe('Facet Test Suite', () => {
     describe('verify rendering', () => {
       before(setupWithLinkValues);
 
+      Expect.displayPlaceholder(false);
       Expect.labelContains(defaultLabel);
       Expect.displayValues(true);
       Expect.hasCheckbox(false);
