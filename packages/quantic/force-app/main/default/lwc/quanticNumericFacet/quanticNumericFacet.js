@@ -1,3 +1,4 @@
+//@ts-check
 import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
