@@ -1,5 +1,5 @@
 <template>
-  <template if:false={hasParentsOrValues}>
+  <template if:true={showPlaceholder}>
     <c-quantic-stencil variant="card" number-of-rows={numberOfValues}></c-quantic-stencil>
   </template>
   <template if:true={hasParentsOrValues}>

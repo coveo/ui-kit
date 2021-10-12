@@ -13,8 +13,9 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /** @typedef {import("coveo").NumericFacetState} NumericFacetState */
 /** @typedef {import("coveo").NumericFacet} NumericFacet */
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
@@ -105,8 +106,14 @@ export default class QuanticNumericFacet extends LightningElement {
 
   /** @type {NumericFacet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
 
   labels = {
     clearFilter,
@@ -127,6 +134,11 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
       options: {
         field: this.field,
@@ -142,10 +154,12 @@ export default class QuanticNumericFacet extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
