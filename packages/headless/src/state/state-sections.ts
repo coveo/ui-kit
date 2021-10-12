@@ -32,6 +32,7 @@ import {RecentQueriesState} from '../features/recent-queries/recent-queries-stat
 import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
 import {SortState} from '../features/sort/sort-state';
+import {TabSetState} from '../features/tab-set/tab-set-state';
 
 export interface QuerySection {
   /**
@@ -45,6 +46,13 @@ export interface AdvancedSearchQueriesSection {
    * The current advanced search parameters (e.g: aq and cq)
    */
   advancedSearchQueries: AdvancedSearchQueriesState;
+}
+
+export interface TabSection {
+  /**
+   * The set of tabs.
+   */
+  tabSet: TabSetState;
 }
 
 export interface FacetSection {

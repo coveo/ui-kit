@@ -1,14 +1,7 @@
 import {buildController, Controller} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
-import {
-  registerAdvancedSearchQueries,
-  updateAdvancedSearchQueries,
-} from '../../features/advanced-search-queries/advanced-search-queries-actions';
-import {
-  AdvancedSearchQueriesSection,
-  ConfigurationSection,
-} from '../../state/state-sections';
+import {ConfigurationSection, TabSection} from '../../state/state-sections';
 import {BooleanValue, Schema} from '@coveo/bueno';
 import {
   requiredEmptyAllowedString,
@@ -16,11 +9,14 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {advancedSearchQueries, configuration} from '../../app/reducers';
+import {configuration, tabSet} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {setOriginLevel2} from '../../features/configuration/configuration-actions';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  registerTab,
+  updateActiveTab,
+} from '../../features/tab-set/tab-set-actions';
 
 export interface TabOptions {
   /**
@@ -110,12 +106,7 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = validateOptions(
-    engine,
-    optionsSchema,
-    props.options,
-    'buildTab'
-  );
+  validateOptions(engine, optionsSchema, props.options, 'buildTab');
   const initialState = validateInitialState(
     engine,
     initialStateSchema,
@@ -123,27 +114,24 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
     'buildTab'
   );
 
-  if (initialState.isActive) {
-    const {id} = options;
+  const {id, expression} = props.options;
 
-    id && dispatch(setOriginLevel2({originLevel2: id}));
-    dispatch(registerAdvancedSearchQueries({cq: options.expression}));
+  dispatch(registerTab({id, expression}));
+
+  if (initialState.isActive) {
+    dispatch(updateActiveTab(id));
   }
 
   return {
     ...controller,
 
     select() {
-      const {id} = options;
-
-      id && dispatch(setOriginLevel2({originLevel2: id}));
-      dispatch(updateAdvancedSearchQueries({cq: options.expression}));
+      dispatch(updateActiveTab(id));
       dispatch(executeSearch(logInterfaceChange()));
     },
 
     get state() {
-      const isActive =
-        getState().advancedSearchQueries.cq === options.expression;
+      const isActive = getState().tabSet[id].isActive;
       return {
         isActive,
       };
@@ -153,8 +141,8 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
 
 function loadTabReducers(
   engine: SearchEngine
-): engine is SearchEngine<ConfigurationSection & AdvancedSearchQueriesSection> {
-  engine.addReducers({configuration, advancedSearchQueries});
+): engine is SearchEngine<ConfigurationSection & TabSection> {
+  engine.addReducers({configuration, tabSet});
   return true;
 }
 
