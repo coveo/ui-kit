@@ -1,0 +1,36 @@
+name: Cypress tests Quantic pull request
+on: [push]
+jobs:
+  cypress-run:
+    name: Cypress run
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
+      SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
+      SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+      BRANCH_NAME: ${{ github.ref }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup & Build
+        run: |
+          npm ci
+          npx lerna bootstrap
+          npm run build:e2e
+
+      - name: Setup Salesforce
+        working-directory: packages/quantic
+        run: |
+          ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid ${{ secrets.SFDX_AUTH_CLIENT_ID }} --jwtkeyfile ${{ secrets.SFDX_AUTH_JWT_KEY }} --username ${{ secrets.SFDX_AUTH_JWT_USERNAME }} --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} --setdefaultdevhubusername
+          ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci
+
+      - uses: cypress-io/github-action@v2
+        name: Cypress tests
+        with:
+          working-directory: ./packages/quantic
+          record: false
+          install: false
+
+      - name: Delete org
+        working-directory: packages/quantic
+        run: ./node_modules/.bin/ts-node scripts/build/delete-org.ts
