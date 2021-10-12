@@ -13,6 +13,8 @@ import {
   ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state';
+import {updateActiveTab} from '../tab-set/tab-set-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {allValidPlatformCombination} from '../../test/platform-url';
 
 describe('configuration slice', () => {
@@ -272,5 +274,35 @@ describe('configuration slice', () => {
       configurationReducer(state, setOriginLevel3({originLevel3})).analytics
         .originLevel3
     ).toBe(originLevel3);
+  });
+
+  it('#updateActiveTab updates the originLevel2 to the tab id', () => {
+    const state = getConfigurationInitialState();
+    state.analytics.originLevel2 = 'default';
+
+    const finalState = configurationReducer(state, updateActiveTab('tab'));
+    expect(finalState.analytics.originLevel2).toBe('tab');
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the #tab property is a non-empty string, it updates the originLevel2', () => {
+      const state = getConfigurationInitialState();
+      const finalState = configurationReducer(
+        state,
+        restoreSearchParameters({tab: 'All'})
+      );
+      expect(finalState.analytics.originLevel2).toBe('All');
+    });
+
+    it('when the #tab property is an empty string, it does nothing', () => {
+      const state = getConfigurationInitialState();
+      state.analytics.originLevel2 = 'default';
+
+      const finalState = configurationReducer(
+        state,
+        restoreSearchParameters({tab: ''})
+      );
+      expect(finalState.analytics.originLevel2).toBe('default');
+    });
   });
 });

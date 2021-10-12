@@ -11,6 +11,7 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice'
 import {getHistoryInitialState, HistoryState} from './history-state';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;
@@ -70,6 +71,7 @@ describe('history slice', () => {
     const expectedSnapshot: HistoryState = {
       context: {contextValues: {foo: 'bar'}},
       dictionaryFieldContext: {contextValues: {price: 'cad'}},
+      tabSet: {a: buildMockTabSlice({id: 'a'})},
       facetSet: {foo: buildMockFacetRequest()},
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
@@ -277,7 +279,38 @@ describe('history slice', () => {
       );
     });
 
-    it('should consider same snapshots for sane constant query values', () => {
+    it('when #tabSet has different active tabs, it creates different snaphots', () => {
+      const tabA = buildMockTabSlice({id: 'a'});
+      const tabB = buildMockTabSlice({id: 'b'});
+
+      const snapshot1 = getSnapshot({
+        tabSet: {
+          a: {...tabA, isActive: true},
+          b: {...tabB, isActive: false},
+        },
+      });
+
+      const snapshot2 = getSnapshot({
+        tabSet: {
+          a: {...tabA, isActive: false},
+          b: {...tabB, isActive: true},
+        },
+      });
+
+      expectHistoryToHaveCreatedDifferentSnapshots(snapshot1, snapshot2);
+    });
+
+    it('when #tabSet has the same active tab, it does not create different snaphots', () => {
+      const tabA = buildMockTabSlice({id: 'a', isActive: true});
+      const tabB = buildMockTabSlice({id: 'b', isActive: false});
+
+      const snapshot1 = getSnapshot({tabSet: {a: tabA}});
+      const snapshot2 = getSnapshot({tabSet: {a: tabA, b: tabB}});
+
+      expectHistoryNotToHaveCreatedDifferentSnapshots(snapshot1, snapshot2);
+    });
+
+    it('should consider same snapshots for same constant query values', () => {
       expectHistoryNotToHaveCreatedDifferentSnapshots(
         getSnapshot({
           advancedSearchQueries: buildMockAdvancedSearchQueriesState({

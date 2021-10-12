@@ -7,6 +7,7 @@ import {buildMockFacetOptions} from '../../../test/mock-facet-options';
 import {SearchAppState} from '../../../state/search-app-state';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildSearchRequest} from '../../../features/search/search-actions';
+import {buildMockTabSlice} from '../../../test/mock-tab-state';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -169,5 +170,35 @@ describe('search request', () => {
     state.fields.fieldsToInclude = ['foo', 'bar'];
     state.fields.fetchAllFields = true;
     expect(buildSearchRequest(state).request.fieldsToInclude).not.toBeDefined();
+  });
+
+  it('when there are no cq expressions in state, cq is undefined', () => {
+    expect(buildSearchRequest(state).request.cq).toBe(undefined);
+  });
+
+  it('when there is a cq expression, it sets the cq to the expression', () => {
+    state.advancedSearchQueries.cq = 'a';
+    expect(buildSearchRequest(state).request.cq).toBe('a');
+  });
+
+  it('when there is an active tab, it sets cq to the active tab expression', () => {
+    state.tabSet.a = buildMockTabSlice({expression: 'a', isActive: true});
+    expect(buildSearchRequest(state).request.cq).toBe('a');
+  });
+
+  it(`when there is cq and an active tab,
+  it sets the cq to a concatenated expression`, () => {
+    state.advancedSearchQueries.cq = 'a';
+    state.tabSet.b = buildMockTabSlice({expression: 'b', isActive: true});
+
+    expect(buildSearchRequest(state).request.cq).toBe('a AND b');
+  });
+
+  it(`when the cq and active tab expressions are surrounded by spaces,
+  it trims them before concatenating`, () => {
+    state.advancedSearchQueries.cq = ' a ';
+    state.tabSet.b = buildMockTabSlice({expression: ' b ', isActive: true});
+
+    expect(buildSearchRequest(state).request.cq).toBe('a AND b');
   });
 });
