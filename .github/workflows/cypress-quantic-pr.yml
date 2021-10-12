@@ -21,7 +21,8 @@ jobs:
       - name: Setup Salesforce
         working-directory: packages/quantic
         run: |
-          ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid ${{ secrets.SFDX_AUTH_CLIENT_ID }} --jwtkeyfile ${{ secrets.SFDX_AUTH_JWT_KEY }} --username ${{ env.SFDX_AUTH_JWT_USERNAME }} --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} --setdefaultdevhubusername
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > server.key
+          ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid ${{ secrets.SFDX_AUTH_CLIENT_ID }} --jwtkeyfile server.key --username ${{ env.SFDX_AUTH_JWT_USERNAME }} --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} --setdefaultdevhubusername
           ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci
 
       - uses: cypress-io/github-action@v2
@@ -30,6 +31,12 @@ jobs:
           working-directory: ./packages/quantic
           record: false
           install: false
+
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: packages/quantic/cypress/screenshots
 
       - name: Delete org
         if: always()
