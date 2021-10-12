@@ -25,6 +25,7 @@ import {validatePayload} from '../../utils/validate-payload';
 import {ArrayValue, StringValue} from '@coveo/bueno';
 import {SortBy} from '../sort/sort';
 import {ProductListingState} from './product-listing-state';
+import {logQueryError} from '../search/search-analytics-actions';
 
 export interface SetProductListingUrlPayload {
   /**
@@ -92,7 +93,7 @@ export const fetchProductListing = createAsyncThunk<
   AsyncThunkProductListingOptions<StateNeededByFetchProductListing>
 >(
   'productlisting/fetch',
-  async (_action, {getState, rejectWithValue, extra}) => {
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProducts(
@@ -100,7 +101,7 @@ export const fetchProductListing = createAsyncThunk<
     );
 
     if (isErrorResponse(fetched)) {
-      // TODO COM-1185: See if we need this: dispatch(logQueryError(fetched.response.error));
+      dispatch(logQueryError(fetched.error));
       return rejectWithValue(fetched.error);
     }
 
@@ -135,7 +136,6 @@ export const buildProductListingRequest = (
           advancedParameters: state.productListing.advancedParameters || {},
         }
       : {}),
-    // TODO COM-1185: properly implement facet options
     ...(facets.length && {
       facets: {
         requests: facets,

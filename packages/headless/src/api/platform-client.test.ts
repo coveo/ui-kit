@@ -2,6 +2,7 @@ import {
   platformUrl,
   PlatformClient,
   PlatformClientCallOptions,
+  analyticsUrl,
 } from './platform-client';
 import pino from 'pino';
 import * as BackOff from 'exponential-backoff';
@@ -13,40 +14,23 @@ import {
   PlatformRequestOptions,
 } from './preprocess-request';
 import {ExpiredTokenError} from '../utils/errors';
+import {allValidPlatformCombination} from '../test/platform-url';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
-describe('platformUrl helper', () => {
-  it('should return https://platform.cloud.coveo.com by default', () => {
-    expect(platformUrl()).toBe('https://platform.cloud.coveo.com');
+describe('url helper', () => {
+  it('return the correct #platformUrl()', () => {
+    allValidPlatformCombination().forEach((expectation) => {
+      expect(platformUrl(expectation)).toEqual(expectation.platform);
+    });
   });
 
-  it(`when the environment is prod
-  should not return it in the url e.g. https://platform.cloud.coveo.com`, () => {
-    expect(platformUrl({environment: 'prod'})).toBe(
-      'https://platform.cloud.coveo.com'
-    );
-  });
-
-  it(`when the environment is not prod
-  should return it in the url e.g. https://platformdev.cloud.coveo.com`, () => {
-    expect(platformUrl({environment: 'dev'})).toBe(
-      'https://platformdev.cloud.coveo.com'
-    );
-  });
-
-  it(`when the region is us
-  should not return it in the url e.g. https://platform.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'us'})).toBe(
-      'https://platform.cloud.coveo.com'
-    );
-  });
-
-  it(`when the region is not us
-  should return it in the url e.g. https://platform-eu.cloud.coveo.com`, () => {
-    expect(platformUrl({region: 'eu'})).toBe(
-      'https://platform-eu.cloud.coveo.com'
-    );
+  it('return the correct #analyticsUrl()', () => {
+    allValidPlatformCombination().forEach((expectation) => {
+      expect(analyticsUrl(expectation)).toEqual(
+        expectation.analytics.split('/rest')[0]
+      );
+    });
   });
 });
 

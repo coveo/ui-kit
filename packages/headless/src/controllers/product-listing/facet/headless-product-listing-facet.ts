@@ -9,6 +9,8 @@ import {
   FacetSearchOptions,
   FacetSearchState,
   FacetState,
+  CoreFacetState,
+  CoreFacet,
   FacetValue,
   SpecificFacetSearchResult,
 } from '../../core/facets/facet/headless-core-facet';
@@ -41,6 +43,8 @@ export {
   FacetProps,
   Facet,
   FacetState,
+  CoreFacetState,
+  CoreFacet,
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
@@ -48,7 +52,7 @@ export {
 };
 
 /**
- * Creates a `Facet` controller instance.
+ * Creates a `Facet` controller instance for the product listing.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.

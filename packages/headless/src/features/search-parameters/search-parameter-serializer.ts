@@ -205,6 +205,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
       nf: true,
       df: true,
       debug: true,
+      tab: true,
     };
 
   return key in supportedParameters;
