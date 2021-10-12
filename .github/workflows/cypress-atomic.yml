@@ -24,10 +24,11 @@ jobs:
           npm run build:e2e:atomic
       - uses: cypress-io/github-action@v2
         name: Cypress tests
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           working-directory: ./packages/atomic
           parallel: true
-          record:  ${{ github.ref == 'refs/heads/main' && true ||  false  }}
+          record: true
           group: 'Atomic test runs'
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
@@ -38,6 +39,15 @@ jobs:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: cypress-io/github-action@v2
+        name: Cypress tests
+        if: ${{ github.ref != 'refs/heads/main' }}
+        with:
+          working-directory: ./packages/atomic
+          record: false
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
+          install: false
       # after the test run completes
       # store videos and any screenshots
       # NOTE: screenshots will be generated only if E2E test failed
