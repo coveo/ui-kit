@@ -1,6 +1,5 @@
 node('linux && docker') {
-  def meta = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
-  def (version, commitHash) = meta.split('_')
+  def commitHash = params.packageName.substring(params.packageName.lastIndexOf('_') + 1)
 
   checkout([
     $class: 'GitSCM',
