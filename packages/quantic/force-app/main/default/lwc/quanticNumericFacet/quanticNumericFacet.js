@@ -1,4 +1,3 @@
-//@ts-check
 import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
@@ -326,7 +325,9 @@ export default class QuanticNumericFacet extends LightningElement {
     this.resetValidityParameters();
     this.facet?.deselectAll();
     [...this.template.querySelectorAll('lightning-input')].forEach( input => {
+      // @ts-ignore
       input.checkValidity();
+      // @ts-ignore
       input.reportValidity();
     });
   }
@@ -346,6 +347,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
     const allValid = [...this.template.querySelectorAll('lightning-input')]
       .reduce((validSoFar, inputCmp) => {
+        // @ts-ignore
         return validSoFar && inputCmp.reportValidity();
       }, true);
       
