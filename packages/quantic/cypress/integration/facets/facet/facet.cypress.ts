@@ -630,9 +630,15 @@ describe('Facet Test Suite', () => {
         });
 
         describe('when selecting a second search result', () => {
+          const secondQuery = 'Contact';
+          function selectOtherSearchResult() {
+            FacetSelectors.searchInput().type(secondQuery);
+            selectFirstLinkValue(FacetSelectors);
+          }
+
           function selectASecondSearchResult() {
             selectSearchResult();
-            selectSearchResult();
+            selectOtherSearchResult();
           }
 
           describe('verify rendering', () => {
@@ -640,6 +646,7 @@ describe('Facet Test Suite', () => {
 
             Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
             Expect.numberOfSelectedLinkValues(1);
+            Expect.selectedValuesContain(secondQuery);
             Expect.displayMoreMatchesFound(false);
             Expect.displayNoMatchesFound(false);
             Expect.displayShowMoreButton(true);
@@ -921,7 +928,7 @@ describe('Facet Test Suite', () => {
 
       Expect.numberOfSelectedCheckboxValues(1);
       Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
-      Expect.selectedCheckboxValuesContain(selectedValue);
+      Expect.selectedValuesContain(selectedValue);
     });
   });
 });
