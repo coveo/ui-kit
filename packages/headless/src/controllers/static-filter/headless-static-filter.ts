@@ -5,7 +5,7 @@ import {staticFilterSet} from '../../app/reducers';
 import {
   staticFilterIdSchema,
   staticFilterValuesSchema,
-} from '../../features/static-filter-set/static-filter-schema';
+} from '../../features/static-filter-set/static-filter-set-schema';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,

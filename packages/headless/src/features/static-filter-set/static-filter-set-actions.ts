@@ -4,7 +4,7 @@ import {
   staticFilterIdSchema,
   staticFilterValueSchema,
   staticFilterValuesSchema,
-} from './static-filter-schema';
+} from './static-filter-set-schema';
 import {StaticFilterValue} from './static-filter-set-state';
 
 interface RegisterStaticFilterActionCreatorPayload {
