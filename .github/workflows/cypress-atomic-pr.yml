@@ -1,5 +1,5 @@
 name: Cypress tests Atomic pull request
-on: [push]
+on: [pull_request]
 jobs:
   cypress-run:
     name: Cypress run
@@ -18,7 +18,6 @@ jobs:
         with:
           working-directory: ./packages/atomic
           record: false
-          group: 'Atomic test runs'
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
           install: false
