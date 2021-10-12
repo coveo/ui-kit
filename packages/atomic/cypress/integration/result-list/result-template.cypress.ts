@@ -196,7 +196,7 @@ describe('Result Template Component', () => {
       ResultTemplateAssertions.assertRendersTemplate(false);
     });
 
-    describe('when the field value does not matche', () => {
+    describe('when the field value does not match', () => {
       beforeEach(() => setupMustMatch('some other field value'));
 
       ResultTemplateAssertions.assertRendersTemplate(true);
