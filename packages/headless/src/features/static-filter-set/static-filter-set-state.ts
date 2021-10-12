@@ -1,7 +1,4 @@
-export type StaticFilterSetState = Record<
-  string,
-  StaticFilterSlice | undefined
->;
+export type StaticFilterSetState = Record<string, StaticFilterSlice>;
 
 export interface StaticFilterSlice {
   id: string;
