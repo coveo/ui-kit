@@ -1,18 +1,9 @@
 name: End-to-end tests Atomic
 on: [push]
 jobs:
-  cypress-run:
-    name: Cypress run
+  setup:
+    name: Setup and build
     runs-on: ubuntu-latest
-    strategy:
-      # when one test fails, DO NOT cancel the other
-      # containers, because this will kill Cypress processes
-      # leaving the Dashboard hanging ...
-      # https://github.com/cypress-io/github-action/issues/48
-      fail-fast: false
-      matrix:
-        # run 3 copies of the current job in parallel
-        containers: [1, 2, 3]
     env:
       NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
@@ -22,9 +13,23 @@ jobs:
           npm ci
           npx lerna bootstrap
           npm run build:e2e:atomic
+  cypress-run-atomic-master:
+    name: Cypress Atomic master
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: [setup]
+    strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving the Dashboard hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      fail-fast: false
+      matrix:
+        # run 3 copies of the current job in parallel
+        containers: [1, 2, 3]
+    steps:
       - uses: cypress-io/github-action@v2
         name: Cypress tests
-        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           working-directory: ./packages/atomic
           parallel: true
@@ -39,9 +44,26 @@ jobs:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # after the test run completes
+      # store videos and any screenshots
+      # NOTE: screenshots will be generated only if E2E test failed
+      # thus we store screenshots only on failures
+      # Alternative: create and commit an empty cypress/screenshots folder
+      # to always have something to upload
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: packages/atomic/cypress/screenshots
+
+  cypress-run-atomic-branch:
+    name: Cypress Atomic branch
+    runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/master' }}
+    needs: [setup]
+    steps:
       - uses: cypress-io/github-action@v2
         name: Cypress tests
-        if: ${{ github.ref != 'refs/heads/main' }}
         with:
           working-directory: ./packages/atomic
           record: false
