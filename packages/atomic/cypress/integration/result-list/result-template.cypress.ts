@@ -3,11 +3,11 @@ import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
   addResultList,
   buildTemplateWithoutSections,
-} from '../result-list/result-list-actions';
+} from './result-list-actions';
 import {
   resultListComponent,
   ResultListSelectors,
-} from '../result-list/result-list-selectors';
+} from './result-list-selectors';
 import {
   resultTemplateComponent,
   ResultTemplateSelectors,
