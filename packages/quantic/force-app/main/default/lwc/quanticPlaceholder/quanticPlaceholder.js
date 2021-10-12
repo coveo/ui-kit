@@ -1,7 +1,7 @@
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `quanticPlaceholder` component is used internally to display a loading stncil for certain components.
+ * The `quanticPlaceholder` component is used internally to display a loading stencil for certain components.
  * @example
  * <c-quantic-placeholder variant="card"></c-quantic-placeholder>
  */
@@ -13,7 +13,7 @@ export default class quanticPlaceholder extends LightningElement {
    */
   @api variant;
   /**
-   * Number of rows to render.
+   * Number of rows to display inside the placeholder.
    * @api
    * @type {number}
    */
