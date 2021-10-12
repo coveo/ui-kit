@@ -9,6 +9,8 @@ jobs:
       SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
       SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
       BRANCH_NAME: ${{ github.ref }}
+      SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+      SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
 
     steps:
       - uses: actions/checkout@v2
