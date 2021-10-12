@@ -61,13 +61,6 @@ describe('Result Link Component', () => {
         .init();
     }
 
-    it('should log one UA click event', () => {
-      setupResultLink();
-      ResultLinkSelectors.firstInResult().rightclick();
-      cy.wait(TestFixture.interceptAliases.UA);
-      cy.shouldBeCalled(TestFixture.urlParts.UAClick, 1);
-    });
-
     it('the "target" prop should set the target on the "a" tag', () => {
       setupResultLink('_parent');
       ResultLinkSelectors.firstInResult()
