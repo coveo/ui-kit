@@ -158,7 +158,10 @@ const browser = [
 const e2e = [
   {
     input: 'src/index.ts',
-    output: [buildEsmOutput('dist/browser')],
+    output: [
+      buildEsmOutput('dist/browser'),
+      buildUmdOutput('dist/browser', 'CoveoHeadless'),
+    ],
   },
 ]
   .filter((b) => matchesFilter(b.input))
