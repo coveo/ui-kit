@@ -50,7 +50,7 @@ describe('Facet Test Suite', () => {
   }
 
   describe('when loading', () => {
-    function setupWithInterceptedSearch() {
+    function setupWithPauseBeforeSearch() {
       interceptSearchIndefinitely();
       cy.visit(pageUrl);
       configure({
@@ -61,7 +61,7 @@ describe('Facet Test Suite', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupWithInterceptedSearch);
+      before(setupWithPauseBeforeSearch);
 
       Expect.displayPlaceholder(true);
     });

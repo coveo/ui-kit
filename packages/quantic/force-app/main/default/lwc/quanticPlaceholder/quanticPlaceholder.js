@@ -1,13 +1,13 @@
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `QuanticStencil` component is used internally to display a loading stncil for certain components.
+ * The `quanticPlaceholder` component is used internally to display a loading stncil for certain components.
  * @example
- * <c-quantic-stencil variant="card"></c-quantic-stencil>
+ * <c-quantic-placeholder variant="card"></c-quantic-placeholder>
  */
-export default class QuanticStencil extends LightningElement {
+export default class quanticPlaceholder extends LightningElement {
   /**
-   * The type of stencil to display.
+   * The type of placeholder to display.
    * @api
    * @type {'card'|'resultList'}
    */

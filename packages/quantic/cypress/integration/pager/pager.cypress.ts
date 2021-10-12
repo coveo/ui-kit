@@ -1,5 +1,9 @@
 import {configure} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  interceptSearchIndefinitely,
+} from '../../page-objects/search';
 import {PagerExpectations as Expect} from './pager-expectations';
 import {PagerActions as Actions} from './pager-actions';
 import {stubConsoleError} from '../console-selectors';
@@ -34,7 +38,23 @@ describe('quantic-pager', () => {
     cy.wait(InterceptAliases.Search);
   }
 
+  function setupWithPauseBeforeSearch() {
+    interceptSearchIndefinitely();
+    cy.visit(pageUrl);
+    configure({
+      numberOfPages: 5,
+    });
+  }
+
   describe('with default options', () => {
+    it('should not render before results have returned', () => {
+      setupWithPauseBeforeSearch();
+
+      Expect.displayPrevious(false);
+      Expect.displayNext(false);
+      Expect.numberOfPages(0);
+    });
+
     it('should work as expected', () => {
       visitPager({
         numberOfPages: 5,

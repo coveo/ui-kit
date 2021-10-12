@@ -1,47 +1,47 @@
-.stencil__facet-container {
+.placeholder__facet-container {
   min-width: 275px;
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
-.stencil__round {
+.placeholder__round {
   min-width: 13px;
   height: 13px;
   border-radius: 50%;
   display: inline-block;
 }
 
-.stencil__rounded {
+.placeholder__rounded {
   height: 13px;
   border-radius: 90px;
 }
 
-.stencil__facet-header {
+.placeholder__facet-header {
   height: 36px;
   border-radius: 90px;
 }
 
-.stencil__facet-row {
+.placeholder__facet-row {
   width: 100%;
 }
 
-.stencil__result-container {
+.placeholder__result-container {
   min-width: 575px;
   padding-top: 1.2rem;
   padding-bottom: 1.2rem;
 }
 
-.stencil__result-header {
+.placeholder__result-header {
   height: 36px;
 }
 
-.stencil__result-image {
+.placeholder__result-image {
   width: 100px;
   height: 100px;
   border-radius: 7px;
 }
 
-.stencil__result-row {
+.placeholder__result-row {
   width: 100%;
 }
 
@@ -53,12 +53,12 @@
   background-color: #F5F5F6;
 }
 
-.stencil__animation {
+.placeholder__animation {
   overflow: hidden;
   position: relative;
 }
 
-.stencil__animation::before {
+.placeholder__animation::before {
   content: "";
   position: absolute;
   background: linear-gradient(
