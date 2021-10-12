@@ -29,6 +29,7 @@ import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 import {doNotTrack} from '../donottrack';
+import {NullStorage} from '../storage';
 
 export const Version = 'v15';
 
@@ -126,7 +127,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         if (doNotTrack()) {
             this.clear();
-            this.runtime = new NoopRuntime();
+            this.runtime.storage = new NullStorage();
         }
     }
 

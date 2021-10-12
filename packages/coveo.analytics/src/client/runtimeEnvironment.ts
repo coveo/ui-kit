@@ -3,8 +3,6 @@ import {AnalyticsBeaconClient} from './analyticsBeaconClient';
 import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {AnalyticsRequestClient, IAnalyticsClientOptions, NoopAnalyticsClient} from './analyticsRequestClient';
 import {AnalyticsFetchClient} from './analyticsFetchClient';
-import {request} from 'http';
-import {EventType} from '../events';
 import {BufferedRequest} from './analytics';
 
 export interface IRuntimeEnvironment {
