@@ -1,6 +1,12 @@
 import {staticFilterSet} from '../../app/reducers';
-import {registerStaticFilter} from '../../features/static-filter-set/static-filter-set-actions';
+import {
+  deselectAllStaticFilterValues,
+  registerStaticFilter,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {
   buildStaticFilter,
   StaticFilter,
@@ -45,5 +51,77 @@ describe('Static Filter', () => {
     expect(() => initStaticFilter()).toThrow(
       'Check the options of buildStaticFilter'
     );
+  });
+
+  it('#toggleSelect dispatches #toggleStaticFilterValue', () => {
+    const value = buildMockStaticFilterValue();
+    filter.toggleSelect(value);
+
+    const action = toggleSelectStaticFilterValue({id: options.id, value});
+    expect(engine.actions).toContainEqual(action);
+  });
+
+  it('#deselectAll dispatches #deselectAllStaticFilterValues', () => {
+    filter.deselectAll();
+    const action = deselectAllStaticFilterValues(options.id);
+    expect(engine.actions).toContainEqual(action);
+  });
+
+  describe('#toggleSingleSelect', () => {
+    it('with an idle value, it deselects all values and toggle selects the value', () => {
+      const {id} = options;
+      const value = buildMockStaticFilterValue({state: 'idle'});
+      filter.toggleSingleSelect(value);
+
+      expect(engine.actions).toContainEqual(deselectAllStaticFilterValues(id));
+      expect(engine.actions).toContainEqual(
+        toggleSelectStaticFilterValue({id, value})
+      );
+    });
+
+    it('with an active value, it only toggle selects the value', () => {
+      const {id} = options;
+      const value = buildMockStaticFilterValue({state: 'selected'});
+      filter.toggleSingleSelect(value);
+
+      expect(engine.actions).not.toContainEqual(
+        deselectAllStaticFilterValues(id)
+      );
+      expect(engine.actions).toContainEqual(
+        toggleSelectStaticFilterValue({id, value})
+      );
+    });
+  });
+
+  it('#state.id exposes the id', () => {
+    expect(filter.state.id).toBe(options.id);
+  });
+
+  it('#state.values exposes the values from state', () => {
+    const id = options.id;
+    const value = buildMockStaticFilterValue({expression: 'a'});
+    const slice = buildMockStaticFilterSlice({values: [value]});
+    engine.state.staticFilterSet = {[id]: slice};
+
+    expect(filter.state.values).toEqual([value]);
+  });
+
+  describe('#state.hasActiveValues', () => {
+    it('when at least one value is selected, it is true', () => {
+      const id = options.id;
+      const value = buildMockStaticFilterValue({state: 'selected'});
+      const slice = buildMockStaticFilterSlice({values: [value]});
+      engine.state.staticFilterSet = {[id]: slice};
+
+      expect(filter.state.hasActiveValues).toBe(true);
+    });
+
+    it('when at there are no selected values, it is false', () => {
+      const id = options.id;
+      const slice = buildMockStaticFilterSlice({values: []});
+      engine.state.staticFilterSet = {[id]: slice};
+
+      expect(filter.state.hasActiveValues).toBe(false);
+    });
   });
 });

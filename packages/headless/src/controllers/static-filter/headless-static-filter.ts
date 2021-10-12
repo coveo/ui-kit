@@ -6,7 +6,11 @@ import {
   staticFilterIdSchema,
   staticFilterValuesSchema,
 } from '../../features/static-filter-set/static-filter-schema';
-import {registerStaticFilter} from '../../features/static-filter-set/static-filter-set-actions';
+import {
+  deselectAllStaticFilterValues,
+  registerStaticFilter,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
 import {StaticFilterSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -39,7 +43,51 @@ export interface StaticFilterOptions {
 /**
  * The `StaticFilter` controller manages a collection of filter values.
  * */
-export interface StaticFilter extends Controller {}
+export interface StaticFilter extends Controller {
+  /**
+   * Toggles the specified static filter value.
+   *
+   * @param value - The static filter value to toggle.
+   */
+  toggleSelect(value: StaticFilterValue): void;
+
+  /**
+   * Toggles the specified static filter value, deselecting others.
+   *
+   * @param value - The static filter value to toggle.
+   */
+  toggleSingleSelect(value: StaticFilterValue): void;
+
+  /**
+   * Deselects all static filter values.
+   * */
+  deselectAll(): void;
+
+  /**
+   * A state of the `StaticFilter` controller.
+   */
+  state: StaticFilterState;
+}
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `StaticFilter` controller.
+ */
+export interface StaticFilterState {
+  /**
+   * The static filter id.
+   */
+  id: string;
+
+  /**
+   * The static filter values.
+   */
+  values: StaticFilterValue[];
+
+  /**
+   * `true` if there is at least one non-idle value and `false` otherwise.
+   */
+  hasActiveValues: boolean;
+}
 
 /**
  * Creates a `Static Filter` controller instance.
@@ -60,10 +108,41 @@ export function buildStaticFilter(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
+  const {id} = props.options;
 
   dispatch(registerStaticFilter(props.options));
 
-  return {...controller};
+  return {
+    ...controller,
+
+    toggleSelect(value: StaticFilterValue) {
+      dispatch(toggleSelectStaticFilterValue({id, value}));
+    },
+
+    toggleSingleSelect(value: StaticFilterValue) {
+      if (value.state === 'idle') {
+        dispatch(deselectAllStaticFilterValues(id));
+      }
+
+      dispatch(toggleSelectStaticFilterValue({id, value}));
+    },
+
+    deselectAll() {
+      dispatch(deselectAllStaticFilterValues(id));
+    },
+
+    get state() {
+      const values = getState().staticFilterSet[id]?.values || [];
+      const hasActiveValues = values.some((value) => value.state !== 'idle');
+
+      return {
+        id,
+        values,
+        hasActiveValues,
+      };
+    },
+  };
 }
 
 function loadReducers(
