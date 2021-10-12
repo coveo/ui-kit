@@ -58,8 +58,8 @@ const browserConfig = {
     commonjs(),
     typescript(),
     replace(),
-    sizeSnapshot(),
-    terser(),
+    isProduction && sizeSnapshot(),
+    isProduction && terser(),
   ],
 };
 
