@@ -46,15 +46,15 @@ describe('quantic-pager', () => {
     });
   }
 
+  it('should not render before results have returned', () => {
+    setupWithPauseBeforeSearch();
+
+    Expect.displayPrevious(false);
+    Expect.displayNext(false);
+    Expect.numberOfPages(0);
+  });
+
   describe('with default options', () => {
-    it('should not render before results have returned', () => {
-      setupWithPauseBeforeSearch();
-
-      Expect.displayPrevious(false);
-      Expect.displayNext(false);
-      Expect.numberOfPages(0);
-    });
-
     it('should work as expected', () => {
       visitPager({
         numberOfPages: 5,

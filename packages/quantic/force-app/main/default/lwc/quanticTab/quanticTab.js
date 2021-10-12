@@ -83,11 +83,12 @@ export default class QuanticTab extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this._isActive = this.tab.state.isActive;
-    this.hasResults = this.searchStatus.state.hasResults;
+    this._isActive = this.tab?.state?.isActive;
+    this.hasResults = this.searchStatus?.state?.hasResults;
   }
 
   select() {
