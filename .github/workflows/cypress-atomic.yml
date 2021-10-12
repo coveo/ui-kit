@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: ${{ github.ref == 'refs/heads/master' && [1, 2, 3] || [1] }}
+        containers: [1, 2, 3]
     env:
       NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
@@ -19,7 +19,7 @@ jobs:
           npm run build:e2e:atomic
       - uses: cypress-io/github-action@v2
         name: Cypress tests
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           working-directory: ./packages/atomic
           parallel: true
@@ -36,10 +36,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: cypress-io/github-action@v2
         name: Cypress tests
-        if: ${{ github.ref != 'refs/heads/master' }}
+        if: ${{ github.ref != 'refs/heads/main' }}
         with:
           working-directory: ./packages/atomic
           record: false
+          parallel: true
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
           install: false
