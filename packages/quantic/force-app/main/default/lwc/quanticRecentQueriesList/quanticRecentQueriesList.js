@@ -60,6 +60,8 @@ export default class QuanticRecentQueriesList extends LightningElement {
   /** @type {RecentQueriesState} */
   @track state;
   
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {RecentQueriesList} */
   recentQueriesList;
   /** @type {Function} */
@@ -86,6 +88,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
       },
     });
     this.unsubscribe = this.recentQueriesList.subscribe(() => this.updateState());
+    this.showPlaceholder = false;
   }
 
   disconnectedCallback() {

@@ -76,6 +76,8 @@ export default class QuanticRecentResultsList extends LightningElement {
   /** @type {RecentResultsState} */
   @track state;
 
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {RecentResultsList} */
   recentResultsList;
   /** @type {Function} */
@@ -102,6 +104,7 @@ export default class QuanticRecentResultsList extends LightningElement {
       }
     });
     this.unsubscribe = this.recentResultsList.subscribe(() => this.updateState());
+    this.showPlaceholder = false;
   }
 
   disconnectedCallback() {

@@ -1,14 +1,14 @@
 <template>
   <template if:true={shouldDisplay}>
     <template if:true={isCardVariant}>
-      <div class="placeholder__facet-container slds-grid_vertical slds-p-horizontal_x-small">
+      <div class="placeholder__card-container slds-grid_vertical slds-p-horizontal_x-small">
         <div class="slds-col slds-m-bottom_large">
-          <div class="grey placeholder__facet-header placeholder__rounded placeholder__animation"></div>
+          <div class="grey placeholder__card-header placeholder__rounded placeholder__animation"></div>
         </div>
         <template for:each={rows} for:item="row">
           <div key={row.index} class="slds-col slds-grid slds-m-bottom_medium placeholder__animation">
             <div class="slds-m-right_x-small grey placeholder__round"></div>
-            <div class="slds-col grey placeholder__facet-row placeholder__rounded"></div>
+            <div class="slds-col grey placeholder__card-row placeholder__rounded"></div>
           </div>
         </template>
       </div>

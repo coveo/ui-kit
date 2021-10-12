@@ -1,4 +1,4 @@
-.placeholder__facet-container {
+.placeholder__card-container {
   min-width: 275px;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -16,12 +16,12 @@
   border-radius: 90px;
 }
 
-.placeholder__facet-header {
+.placeholder__card-header {
   height: 36px;
   border-radius: 90px;
 }
 
-.placeholder__facet-row {
+.placeholder__card-row {
   width: 100%;
 }
 
