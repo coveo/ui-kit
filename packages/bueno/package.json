@@ -22,7 +22,7 @@
     "start": "rollup -c -w",
     "build": "npm run clean && npm run build:prod",
     "build:prod": "rollup -c --environment BUILD:production",
-    "build:e2e:atomic": "rollup -c --environment BUILD:e2e",
+    "build:e2e": "rollup -c --environment BUILD:e2e",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",

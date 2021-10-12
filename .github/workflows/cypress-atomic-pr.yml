@@ -12,7 +12,7 @@ jobs:
         run: |
           npm ci
           npx lerna bootstrap
-          npm run build:e2e:atomic
+          npm run build:e2e
       - uses: cypress-io/github-action@v2
         name: Cypress tests
         with:
