@@ -27,6 +27,12 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
       });
     },
 
+    displayPlaceholder: (display: boolean) => {
+      it(`${should(display)} display the facet placeholder`, () => {
+        selector.placeholder().should(display ? 'be.visible' : 'not.exist');
+      });
+    },
+
     displayClearButton: (display: boolean) => {
       it(`${should(display)} display a clear filter button`, () => {
         selector.clearFilterButton().should(display ? 'exist' : 'not.exist');

@@ -1,7 +1,7 @@
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `QuanticStencil` component is used internally to display a deselectable button.
+ * The `QuanticStencil` component is used internally to display a loading stncil for certain components.
  * @example
  * <c-quantic-stencil variant="card"></c-quantic-stencil>
  */
