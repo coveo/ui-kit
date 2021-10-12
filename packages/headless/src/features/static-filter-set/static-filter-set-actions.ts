@@ -1,25 +1,11 @@
-import {ArrayValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {validatePayload} from '../../utils/validate-payload';
 import {
-  requiredEmptyAllowedString,
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload';
-import {
-  StaticFilterValue,
-  StaticFilterValueState,
-} from './static-filter-set-state';
-
-const staticFilterValueSchema = new RecordValue({
-  options: {required: true},
-  values: {
-    caption: requiredEmptyAllowedString,
-    expression: requiredEmptyAllowedString,
-    state: new StringValue<StaticFilterValueState>({
-      constrainTo: ['idle', 'selected'],
-    }),
-  },
-});
+  staticFilterIdSchema,
+  staticFilterValueSchema,
+  staticFilterValuesSchema,
+} from './static-filter-schema';
+import {StaticFilterValue} from './static-filter-set-state';
 
 interface RegisterStaticFilterActionCreatorPayload {
   /**
@@ -37,11 +23,8 @@ export const registerStaticFilter = createAction(
   'staticFilter/register',
   (payload: RegisterStaticFilterActionCreatorPayload) => {
     const schema = {
-      id: requiredNonEmptyString,
-      values: new ArrayValue({
-        required: true,
-        each: staticFilterValueSchema,
-      }),
+      id: staticFilterIdSchema,
+      values: staticFilterValuesSchema,
     };
 
     return validatePayload(payload, schema);
@@ -64,7 +47,7 @@ export const toggleSelectStaticFilterValue = createAction(
   'staticFilter/toggleSelect',
   (payload: ToggleSelectStaticFilterValueActionCreatorPayload) => {
     const schema = {
-      id: requiredNonEmptyString,
+      id: staticFilterIdSchema,
       value: staticFilterValueSchema,
     };
 
@@ -75,6 +58,6 @@ export const toggleSelectStaticFilterValue = createAction(
 export const deselectAllStaticFilterValues = createAction(
   'staticFilter/deselectAll',
   (payload: string) => {
-    return validatePayload(payload, requiredNonEmptyString);
+    return validatePayload(payload, staticFilterIdSchema);
   }
 );
