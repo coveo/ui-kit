@@ -228,4 +228,24 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+        <label>Documentation</label>
+        <name>quantic_Documentation</name>
+    </customLabels>
+    <customLabels>
+        <label>Message</label>
+        <name>quantic_Message</name>
+    </customLabels>
+    <customLabels>
+        <label>Vidéo</label>
+        <name>quantic_Video</name>
+    </customLabels>
+    <customLabels>
+        <label>Conseillé</label>
+        <name>quantic_Recommended</name>
+    </customLabels>
+    <customLabels>
+        <label>En vedette</label>
+        <name>quantic_Featured</name>
+    </customLabels>
 </Translations>

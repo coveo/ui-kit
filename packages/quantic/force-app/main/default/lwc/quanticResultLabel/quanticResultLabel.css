@@ -1,0 +1,7 @@
+.result__label {
+  font-size: .9em;
+}
+
+.error-message {
+  white-space: nowrap;
+}
