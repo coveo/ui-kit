@@ -64,6 +64,8 @@
     &.image-small,
     &.image-icon,
     &.image-none {
+      grid-row-gap: 1rem;
+
       @mixin atomic-list-with-cards;
     }
   }
@@ -77,14 +79,12 @@
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
     &.density-comfortable {
-      padding: 2rem 0.75rem;
       grid-row-gap: 4rem;
       grid-column-gap: 1.5rem;
     }
 
     &.density-normal,
     &.density-compact {
-      padding: 1.5rem 0.75rem;
       grid-row-gap: 3rem;
       grid-column-gap: 1.5rem;
     }
@@ -100,17 +100,11 @@
 
   @define-mixin atomic-grid-with-cards {
     @mixin atomic-list-with-cards;
-    grid-column-gap: 2.5rem;
-    grid-row-gap: 2.5rem;
-
-    atomic-result,
-    atomic-result-placeholder {
-      margin: -1rem;
-    }
+    grid-column-gap: 0.5rem;
+    grid-row-gap: 0.5rem;
   }
 
   @screen mobile-only {
-    padding: 2rem;
     &.image-large {
       @media not all and (min-width: 768px) {
         @mixin atomic-list-with-dividers;
