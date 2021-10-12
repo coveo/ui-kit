@@ -1,33 +1,9 @@
+import {SearchAppState} from '../../state/search-app-state';
 import {getVisitorID} from '../../api/analytics/analytics';
-import {
-  AdvancedSearchQueriesSection,
-  ConfigurationSection,
-  ContextSection,
-  DebugSection,
-  DictionaryFieldContextSection,
-  FieldsSection,
-  PipelineSection,
-  QuerySection,
-  SearchHubSection,
-  SearchSection,
-  SortSection,
-  TabSection,
-} from '../../state/state-sections';
+import {ConfigurationSection} from '../../state/state-sections';
 
-export type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
-  Partial<
-    QuerySection &
-      AdvancedSearchQueriesSection &
-      TabSection &
-      SortSection &
-      ContextSection &
-      DictionaryFieldContextSection &
-      FieldsSection &
-      PipelineSection &
-      SearchHubSection &
-      DebugSection &
-      SearchSection
-  >;
+type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
+  Partial<SearchAppState>;
 
 export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding
@@ -82,6 +58,23 @@ function buildConstantQuery(state: StateNeededByExecuteSearchAndFolding) {
     (tab) => tab.isActive
   );
   const tabExpression = activeTab?.expression.trim() || '';
+  const filterExpressions = getStaticFilterExpressions(state);
 
-  return [cq, tabExpression].filter((expression) => !!expression).join(' AND ');
+  return [cq, tabExpression, ...filterExpressions]
+    .filter((expression) => !!expression)
+    .join(' AND ');
+}
+
+function getStaticFilterExpressions(
+  state: StateNeededByExecuteSearchAndFolding
+) {
+  const filters = Object.values(state.staticFilterSet || {});
+  return filters.map((filter) => {
+    const selected = filter.values.filter(
+      (value) => value.state === 'selected' && !!value.expression.trim()
+    );
+
+    const expression = selected.map((value) => value.expression).join(' OR ');
+    return selected.length > 1 ? `(${expression})` : expression;
+  });
 }
