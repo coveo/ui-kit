@@ -338,7 +338,11 @@ export default class QuanticFacet extends LightningElement {
       count: evt.detail.numberOfResults,
     };
     if (this.isFacetSearchActive) {
-      this.facet.facetSearch.select(specificSearchResult);
+      if (this.isDisplayAsLink) {
+        this.facet.facetSearch.singleSelect(specificSearchResult);
+      } else {
+        this.facet.facetSearch.select(specificSearchResult);
+      }
     } else {
       this.onSelectClickHandler(evt.detail);
     }
