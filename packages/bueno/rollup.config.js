@@ -7,6 +7,7 @@ import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
+const ise2e = process.env.BUILD === 'e2e';
 
 function replace() {
   const env = isProduction ? 'production' : 'development';
@@ -63,6 +64,7 @@ const browserConfig = {
   ],
 };
 
-const config = isProduction ? [nodeConfig, browserConfig] : [nodeConfig];
+const config =
+  isProduction || ise2e ? [nodeConfig, browserConfig] : [nodeConfig];
 
 export default config;

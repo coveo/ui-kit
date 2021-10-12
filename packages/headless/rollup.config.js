@@ -164,6 +164,15 @@ const e2e = [
   .filter((b) => matchesFilter(b.input))
   .map(buildBrowserConfiguration);
 
+const e2eNode = [
+  {
+    input: 'src/index.ts',
+    outDir: 'dist',
+  },
+]
+  .filter((b) => matchesFilter(b.input))
+  .map(buildNodeConfiguration);
+
 function buildBrowserConfiguration({input, output}) {
   return {
     input,
@@ -267,7 +276,7 @@ function buildTypeDefinitionConfiguration(entryFileName) {
 const config = isProduction
   ? [...nodejs, ...typeDefinitions, ...browser]
   : ise2e
-  ? e2e
+  ? [...e2e, ...e2eNode]
   : dev;
 
 export default config;

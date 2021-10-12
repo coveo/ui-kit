@@ -27,7 +27,7 @@ jobs:
         with:
           working-directory: ./packages/atomic
           parallel: true
-          record: true
+          record:  ${{ github.ref == 'refs/heads/main' && true ||  false  }}
           group: 'Atomic test runs'
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
