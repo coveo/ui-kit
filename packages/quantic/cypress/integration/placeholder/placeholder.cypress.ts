@@ -44,7 +44,7 @@ describe('quantic-placeholder', () => {
     const numberOptions = [1, 5, 10];
 
     numberOptions.forEach((number) => {
-      it(`should display a resuilt list placeholder with ${number} rows`, () => {
+      it(`should display a result list placeholder with ${number} rows`, () => {
         visitPlaceholder({variant, numberOfRows: number});
 
         Expect.displayResultListPlaceholder(true);
