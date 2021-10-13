@@ -119,4 +119,8 @@ export default class QuanticSort extends LightningElement {
       },
     ];
   }
+
+  get value() {
+    return this.state?.sortCriteria;
+  }
 }
