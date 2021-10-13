@@ -180,6 +180,16 @@ export class TestFixture {
     };
   }
 
+  public static get urlParts() {
+    return {
+      UA: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics',
+      Search: 'https://cloud.coveo.com/rest/search/v2',
+      UAClick: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/click',
+      UASearch:
+        'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
+    };
+  }
+
   public get elementAliases() {
     return {
       SearchInterface: 'searchInterface',
