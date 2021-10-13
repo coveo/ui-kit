@@ -45,8 +45,20 @@
             "c/quanticResult": [
                 "quanticResult/quanticResult.js"
             ],
+            "c/quanticResultBadge": [
+                "quanticResultBadge/quanticResultBadge.js"
+            ],
+            "c/quanticResultLabel": [
+                "quanticResultLabel/quanticResultLabel.js"
+            ],
+            "c/quanticResultPrintableUri": [
+                "quanticResultPrintableUri/quanticResultPrintableUri.js"
+            ],
             "c/quanticResultList": [
                 "quanticResultList/quanticResultList.js"
+            ],
+            "c/quanticResultLink": [
+                "quanticResultLink/quanticResultLink.js"
             ],
             "c/quanticSort": [
                 "quanticSort/quanticSort.js"
@@ -62,6 +74,9 @@
             ],
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
+            ],
+            "c/quanticRecentQueriesList": [
+                "quanticRecentQueriesList/quanticRecentQueriesList.js"
             ],
             "c/quanticRecentResultsList": [
                 "quanticRecentResultsList/quanticRecentResultsList.js"

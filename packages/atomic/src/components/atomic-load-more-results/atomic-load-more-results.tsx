@@ -87,7 +87,7 @@ export class AtomicLoadMoreResults {
         class="relative w-72 h-1 my-2 rounded bg-neutral"
       >
         <div
-          class="progress-bar absolute h-full left-0 top-0 z-10 overflow-hidden rounded bg-gradient-to-r"
+          class="progress-bar absolute h-full left-0 top-0 z-1 overflow-hidden rounded bg-gradient-to-r"
           style={{width}}
         ></div>
       </div>

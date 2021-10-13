@@ -3,6 +3,7 @@ import {InterceptAliases, interceptSearch} from '../../page-objects/search';
 import {PagerExpectations as Expect} from './pager-expectations';
 import {PagerActions as Actions} from './pager-actions';
 import {stubConsoleError} from '../console-selectors';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 interface PagerOptions {
   numberOfPages: number;
@@ -27,11 +28,6 @@ describe('quantic-pager', () => {
     interceptSearch();
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
-  }
-
-  function performSearchQuery() {
-    cy.get('.configurator__perform-search').click();
-    cy.wait(InterceptAliases.Search);
   }
 
   describe('with default options', () => {
@@ -59,7 +55,7 @@ describe('quantic-pager', () => {
       Expect.logPageNumber(3);
       Expect.selectedPageContains(3);
 
-      performSearchQuery();
+      performSearch().wait(InterceptAliases.Search);
       Expect.selectedPageContains(1);
     });
   });

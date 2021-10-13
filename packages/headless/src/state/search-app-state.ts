@@ -32,6 +32,7 @@ import {
   RecentResultsSection,
   RecentQueriesSection,
   DictionaryFieldContextSection,
+  TabSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -40,6 +41,7 @@ export type SearchParametersState = FacetSection &
   CategoryFacetSection &
   FacetOptionsSection &
   QuerySection &
+  TabSection &
   AdvancedSearchQueriesSection &
   PaginationSection &
   SortSection &

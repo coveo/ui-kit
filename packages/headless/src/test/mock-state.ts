@@ -31,6 +31,7 @@ import {getStandaloneSearchBoxSetInitialState} from '../features/standalone-sear
 import {getRecentResultsInitialState} from '../features/recent-results/recent-results-state';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state';
 import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
+import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -48,6 +49,7 @@ export function createMockState(
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),
+    tabSet: getTabSetInitialState(),
     querySuggest: {},
     redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),

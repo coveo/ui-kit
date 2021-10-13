@@ -1,4 +1,4 @@
-import {Component, h, State, Element} from '@stencil/core';
+import {Component, h, State, Element, VNode} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -22,6 +22,7 @@ interface Breadcrumb {
   facetId: string;
   label: string;
   formattedValue: string[];
+  content?: VNode;
   deselect: () => void;
 }
 
@@ -153,14 +154,20 @@ export class AtomicBreadbox implements InitializableComponent {
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate with-colon text-neutral-dark mr-px group-hover:text-primary group-focus:text-primary"
+            class="max-w-snippet truncate with-colon text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
           >
             {breadcrumb.label}
           </span>
-          <span part="breadcrumb-value" class="max-w-snippet truncate">
-            {value}
+          <span
+            part="breadcrumb-value"
+            class={breadcrumb.content ? '' : 'max-w-snippet truncate'}
+          >
+            {breadcrumb.content ?? value}
           </span>
-          <atomic-icon class="w-2 ml-2" icon={CloseIcon}></atomic-icon>
+          <atomic-icon
+            class="w-2.5 h-2.5 ml-2 mt-px"
+            icon={CloseIcon}
+          ></atomic-icon>
         </Button>
       </li>
     );
@@ -270,6 +277,9 @@ export class AtomicBreadbox implements InitializableComponent {
         formattedValue: [
           this.bindings.store.state.numericFacets[facetId].format(value.value),
         ],
+        content: this.bindings.store.state.numericFacets[facetId].content?.(
+          value.value
+        ),
       }));
   }
 
