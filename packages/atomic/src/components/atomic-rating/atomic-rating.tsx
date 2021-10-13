@@ -40,12 +40,10 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
   };
 
   return (
-    <div class="inline-block relative left-0 top-0" part="value-rating">
-      <div class="relative left-0 top-0 z-0 flex items-center gap-0.5 pt-0.5 pb-0.5">
-        {emptyIconDisplay()}
-      </div>
+    <div class="relative" part="value-rating">
+      <div class="z-0 flex gap-0.5">{emptyIconDisplay()}</div>
       <div
-        class="absolute left-0 top-0 z-1 flex items-center gap-0.5 pt-0.5 pb-0.5 overflow-hidden"
+        class="absolute left-0 top-0 z-1 flex gap-0.5 overflow-hidden"
         style={{width}}
       >
         {filledIconDisplay()}

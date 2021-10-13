@@ -395,8 +395,18 @@
                 </atomic-result-fields-list>
               </atomic-result-section-bottom-metadata>
               <atomic-table-element label="Description">
-                <atomic-result-link field="title"></atomic-result-link>
-                <atomic-result-text field="excerpt"></atomic-result-text>
+                <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+                <atomic-result-section-title-metadata>
+                  <atomic-field-condition class="field" if-defined="snrating">
+                    <atomic-result-rating field="snrating"></atomic-result-rating>
+                  </atomic-field-condition>
+                  <atomic-field-condition class="field" if-not-defined="snrating">
+                    <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                  </atomic-field-condition>
+                </atomic-result-section-title-metadata>
+                <atomic-result-section-excerpt>
+                  <atomic-result-text field="excerpt"></atomic-result-text>
+                </atomic-result-section-excerpt>
               </atomic-table-element>
               <atomic-table-element label="author">
                 <atomic-result-text field="author"></atomic-result-text>
