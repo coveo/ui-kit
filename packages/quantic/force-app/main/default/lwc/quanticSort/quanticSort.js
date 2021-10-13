@@ -82,24 +82,7 @@ export default class QuanticSort extends LightningElement {
    * @param {CustomEvent<{value: string}>} e
    */
   handleChange(e) {
-    const selected = e.detail.value;
-
-    switch (selected) {
-      case 'relevancy':
-        this.sort.sortBy(this.relevance);
-        break;
-
-      case 'newest':
-        this.sort.sortBy(this.dateDescending);
-        break;
-
-      case 'oldest':
-        this.sort.sortBy(this.dateAscending);
-        break;
-
-      default:
-        break;
-    }
+    this.sort.sortBy(this.options.find((option) => option.value === e.detail.value).criterion);
   }
 
   get relevance() {
@@ -118,23 +101,22 @@ export default class QuanticSort extends LightningElement {
     );
   }
 
-  get largest() {
-    return CoveoHeadless.buildFieldSortCriterion(
-      'size',
-      CoveoHeadless.SortOrder.Descending
-    );
-  }
-
   get options() {
     return [
-      {label: this.labels.relevancy, value: 'relevancy'},
-      {label: this.labels.newest, value: 'newest'},
-      {label: this.labels.oldest, value: 'oldest'},
+      {
+        label: this.labels.relevancy,
+        value: CoveoHeadless.buildCriterionExpression(this.relevance),
+        criterion: this.relevance,
+      },
+      {
+        label: this.labels.newest,
+        value: CoveoHeadless.buildCriterionExpression(this.dateDescending),
+        criterion: this.dateDescending},
+      {
+        label: this.labels.oldest,
+        value: CoveoHeadless.buildCriterionExpression(this.dateAscending),
+        criterion: this.dateAscending,
+      },
     ];
-  }
-
-  get value() {
-    console.log(this.state);
-    return this.state?.sortCriteria || 'relevancy';
   }
 }
