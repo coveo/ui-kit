@@ -19,6 +19,7 @@ import {initialSearchParameterSelector} from '../../features/search-parameters/s
 import {executeSearch} from '../../features/search/search-actions';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 import {deepEqualAnyOrder} from '../../utils/compare-utils';
+import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
 
 export {SearchParameters};
 
@@ -231,14 +232,16 @@ function getStaticFilters(state: Partial<SearchParametersState>) {
 
   const sf = Object.entries(state.staticFilterSet)
     .map(([id, filter]) => {
-      const selectedValues = filter.values
-        .filter((v) => v.state === 'selected')
-        .map((v) => v.caption);
+      const selectedValues = getSelectedStaticFilterValues(filter.values);
       return selectedValues.length ? {[id]: selectedValues} : {};
     })
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(sf).length ? {sf} : {};
+}
+
+function getSelectedStaticFilterValues(values: StaticFilterValue[]) {
+  return values.filter((v) => v.state === 'selected').map((v) => v.caption);
 }
 
 function getFacets(state: Partial<SearchParametersState>) {
