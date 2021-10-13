@@ -131,6 +131,7 @@ function getActiveSearchParameters(engine: SearchEngine): SearchParameters {
     ...getEnableQuerySyntax(state),
     ...getAq(state),
     ...getCq(state),
+    ...getTab(state),
     ...getFirstResult(state),
     ...getNumberOfResults(state),
     ...getSortCriteria(state),
@@ -181,6 +182,14 @@ function getCq(state: Partial<SearchParametersState>) {
   const {cq, defaultFilters} = state.advancedSearchQueries;
   const shouldInclude = cq !== defaultFilters.cq;
   return shouldInclude ? {cq} : {};
+}
+
+function getTab(state: Partial<SearchParametersState>) {
+  const activeTab = Object.values(state.tabSet || {}).find(
+    (tab) => tab.isActive
+  );
+
+  return activeTab ? {tab: activeTab.id} : {};
 }
 
 function getFirstResult(state: Partial<SearchParametersState>) {

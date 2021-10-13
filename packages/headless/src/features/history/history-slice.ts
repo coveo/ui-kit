@@ -14,6 +14,7 @@ import {
 } from '../facets/facet-api/request';
 import {arrayEqual} from '../../utils/compare-utils';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
+import {TabSetState} from '../tab-set/tab-set-state';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -35,6 +36,7 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
       current.advancedSearchQueries,
       next.advancedSearchQueries
     ) &&
+    isTabSetEqual(current.tabSet, next.tabSet) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
@@ -57,6 +59,17 @@ const isDictionaryFieldContextEqual = (
   next: DictionaryFieldContextState
 ) =>
   JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
+
+const isTabSetEqual = (current: TabSetState, next: TabSetState) => {
+  const currentTab = findActiveTab(current);
+  const nextTab = findActiveTab(next);
+
+  return currentTab?.id === nextTab?.id;
+};
+
+const findActiveTab = (tabSet: TabSetState) => {
+  return Object.values(tabSet).find((tab) => tab.isActive);
+};
 
 type FacetStateWithCurrentValues = Record<
   string,
