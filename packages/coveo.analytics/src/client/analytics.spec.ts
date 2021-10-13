@@ -1,7 +1,7 @@
 import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
 import {IAnalyticsRequestOptions} from './analyticsRequestClient';
-import {CookieStorage} from '../storage';
+import {CookieAndLocalStorage, CookieStorage, NullStorage} from '../storage';
 import HistoryStore from '../history';
 import {mockFetch} from '../../tests/fetchMock';
 import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
@@ -431,6 +431,7 @@ describe('doNotTrack', () => {
         let client = new CoveoAnalyticsClient({});
 
         expect(client.runtime).toBeInstanceOf(BrowserRuntime);
+        expect(client.runtime.storage).toBeInstanceOf(CookieAndLocalStorage);
     });
 
     it('should honor doNotTrack', () => {
@@ -438,7 +439,8 @@ describe('doNotTrack', () => {
 
         let client = new CoveoAnalyticsClient({});
 
-        expect(client.runtime).toBeInstanceOf(NoopRuntime);
+        expect(client.runtime).toBeInstanceOf(BrowserRuntime);
+        expect(client.runtime.storage).toBeInstanceOf(NullStorage);
     });
 
     it('should clear existing cookies', async () => {

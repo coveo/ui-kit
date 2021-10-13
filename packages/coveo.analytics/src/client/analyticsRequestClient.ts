@@ -1,4 +1,4 @@
-import {AnyEventResponse, IRequestPayload} from '../events';
+import {AnyEventResponse, EventType, IRequestPayload} from '../events';
 
 export interface VisitorIdProvider {
     getCurrentVisitorId: () => Promise<string>;
@@ -7,6 +7,13 @@ export interface VisitorIdProvider {
 
 export interface AnalyticsRequestClient {
     sendEvent(eventType: string, payload: IRequestPayload): Promise<AnyEventResponse | void>;
+}
+
+export interface IAnalyticsClientOptions {
+    baseUrl: string;
+    token?: string;
+    visitorIdProvider: VisitorIdProvider;
+    preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
 export type AnalyticsClientOrigin = 'analyticsFetch' | 'analyticsBeacon';
@@ -18,4 +25,10 @@ export type PreprocessAnalyticsRequest = (
 
 export interface IAnalyticsRequestOptions extends RequestInit {
     url: string;
+}
+
+export class NoopAnalyticsClient implements AnalyticsRequestClient {
+    public async sendEvent(_: EventType, __: IRequestPayload): Promise<void> {
+        return Promise.resolve();
+    }
 }

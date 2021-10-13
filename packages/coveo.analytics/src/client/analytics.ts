@@ -1,5 +1,3 @@
-import {IAnalyticsBeaconClientOptions} from './analyticsBeaconClient';
-import {AnalyticsFetchClient, IAnalyticsFetchClientOptions} from './analyticsFetchClient';
 import {
     AnyEventResponse,
     ClickEventRequest,
@@ -16,7 +14,7 @@ import {
     IRequestPayload,
     VariableArgumentsPayload,
 } from '../events';
-import {PreprocessAnalyticsRequest, VisitorIdProvider} from './analyticsRequestClient';
+import {IAnalyticsClientOptions, PreprocessAnalyticsRequest, VisitorIdProvider} from './analyticsRequestClient';
 import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
@@ -31,6 +29,7 @@ import HistoryStore from '../history';
 import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 import {doNotTrack} from '../donottrack';
+import {NullStorage} from '../storage';
 
 export const Version = 'v15';
 
@@ -75,10 +74,9 @@ export interface AnalyticsClient {
     readonly currentVisitorId: string;
 }
 
-interface BufferedRequest {
+export interface BufferedRequest {
     eventType: EventType;
     payload: any;
-    handled: boolean;
 }
 
 type ProcessPayloadStep = (currentPayload: any) => any;
@@ -97,7 +95,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     public runtime: IRuntimeEnvironment;
     private visitorId: string;
-    private analyticsFetchClient: AnalyticsFetchClient;
     private bufferedRequests: BufferedRequest[];
     private beforeSendHooks: AnalyticsClientSendEventHook[];
     private afterSendHooks: AnalyticsClientSendEventHook[];
@@ -120,7 +117,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.afterSendHooks = this.options.afterSendHooks;
         this.eventTypeMapping = {};
 
-        const clientsOptions: IAnalyticsFetchClientOptions = {
+        const clientsOptions: IAnalyticsClientOptions = {
             baseUrl: this.baseUrl,
             token: this.options.token,
             visitorIdProvider: this,
@@ -130,22 +127,21 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         if (doNotTrack()) {
             this.clear();
-            this.runtime = new NoopRuntime();
+            this.runtime.storage = new NullStorage();
         }
-        this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
     }
 
-    private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
+    private initRuntime(clientsOptions: IAnalyticsClientOptions) {
         if (hasWindow() && hasDocument()) {
-            return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
+            return new BrowserRuntime(clientsOptions, () => {
+                const copy = [...this.bufferedRequests];
+                this.bufferedRequests = [];
+                return copy;
+            });
         } else if (isReactNative()) {
             console.warn(ReactNativeRuntimeWarning);
         }
         return new NodeJSRuntime(clientsOptions);
-    }
-
-    private get analyticsBeaconClient() {
-        return this.runtime.beaconClient;
     }
 
     private get storage() {
@@ -277,7 +273,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.bufferedRequests.push({
             eventType: eventTypeToSend,
             payload: payloadToSend,
-            handled: false,
         });
 
         await Promise.all(this.afterSendHooks.map((hook) => hook(eventType, parametersToSend)));
@@ -291,23 +286,12 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return new Promise((resolve) => setTimeout(resolve, 0));
     }
 
-    private flushBufferWithBeacon(): void {
-        while (this.hasPendingRequests()) {
-            const {eventType, payload} = this.bufferedRequests.pop() as BufferedRequest;
-            this.analyticsBeaconClient.sendEvent(eventType, payload);
-        }
-    }
-
     private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
         const popped = this.bufferedRequests.shift();
         if (popped) {
             const {eventType, payload} = popped;
-            return this.analyticsFetchClient.sendEvent(eventType, payload);
+            return this.runtime.client.sendEvent(eventType, payload);
         }
-    }
-
-    private hasPendingRequests(): boolean {
-        return this.bufferedRequests.length > 0;
     }
 
     public clear() {

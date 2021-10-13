@@ -1,19 +1,21 @@
 import {WebStorage, NullStorage, CookieAndLocalStorage} from '../storage';
-import {AnalyticsBeaconClient, IAnalyticsBeaconClientOptions, NoopAnalyticsBeaconClient} from './analyticsBeaconClient';
+import {AnalyticsBeaconClient} from './analyticsBeaconClient';
 import {hasLocalStorage, hasCookieStorage} from '../detector';
-import {AnalyticsRequestClient} from './analyticsRequestClient';
-import {AnalyticsFetchClient, IAnalyticsFetchClientOptions} from './analyticsFetchClient';
+import {AnalyticsRequestClient, IAnalyticsClientOptions, NoopAnalyticsClient} from './analyticsRequestClient';
+import {AnalyticsFetchClient} from './analyticsFetchClient';
+import {BufferedRequest} from './analytics';
 
 export interface IRuntimeEnvironment {
     storage: WebStorage;
-    beaconClient: AnalyticsRequestClient;
+    client: AnalyticsRequestClient;
 }
 
 export class BrowserRuntime implements IRuntimeEnvironment {
     public storage: WebStorage;
-    public beaconClient: AnalyticsBeaconClient;
+    public client: AnalyticsFetchClient;
+    private beaconClient: AnalyticsBeaconClient;
 
-    constructor(beaconOptions: IAnalyticsBeaconClientOptions, beforeUnload: () => void) {
+    constructor(clientOptions: IAnalyticsClientOptions, getUnprocessedRequests: () => Array<BufferedRequest>) {
         if (hasLocalStorage() && hasCookieStorage()) {
             this.storage = new CookieAndLocalStorage();
         } else if (hasLocalStorage()) {
@@ -22,23 +24,28 @@ export class BrowserRuntime implements IRuntimeEnvironment {
             console.warn('BrowserRuntime detected no valid storage available.', this);
             this.storage = new NullStorage();
         }
-
-        this.beaconClient = new AnalyticsBeaconClient(beaconOptions);
-        window.addEventListener('beforeunload', () => beforeUnload());
+        this.client = new AnalyticsFetchClient(clientOptions);
+        this.beaconClient = new AnalyticsBeaconClient(clientOptions);
+        window.addEventListener('beforeunload', () => {
+            const requests = getUnprocessedRequests();
+            for (let {eventType, payload} of requests) {
+                this.beaconClient.sendEvent(eventType, payload);
+            }
+        });
     }
 }
 
 export class NodeJSRuntime implements IRuntimeEnvironment {
     public storage: WebStorage;
-    public beaconClient: AnalyticsFetchClient;
+    public client: AnalyticsFetchClient;
 
-    constructor(beaconOptions: IAnalyticsFetchClientOptions, storage?: WebStorage) {
+    constructor(clientOptions: IAnalyticsClientOptions, storage?: WebStorage) {
         this.storage = storage || new NullStorage();
-        this.beaconClient = new AnalyticsFetchClient(beaconOptions);
+        this.client = new AnalyticsFetchClient(clientOptions);
     }
 }
 
 export class NoopRuntime implements IRuntimeEnvironment {
     public storage = new NullStorage();
-    public beaconClient = new NoopAnalyticsBeaconClient();
+    public client = new NoopAnalyticsClient();
 }

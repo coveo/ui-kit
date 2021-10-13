@@ -1,21 +1,9 @@
-import {
-    AnalyticsRequestClient,
-    VisitorIdProvider,
-    IAnalyticsRequestOptions,
-    PreprocessAnalyticsRequest,
-} from './analyticsRequestClient';
+import {AnalyticsRequestClient, IAnalyticsRequestOptions, IAnalyticsClientOptions} from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
 import {fetch} from 'cross-fetch';
 
-export interface IAnalyticsFetchClientOptions {
-    baseUrl: string;
-    token?: string;
-    visitorIdProvider: VisitorIdProvider;
-    preprocessRequest?: PreprocessAnalyticsRequest;
-}
-
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
-    constructor(private opts: IAnalyticsFetchClientOptions) {}
+    constructor(private opts: IAnalyticsClientOptions) {}
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
         const {baseUrl, visitorIdProvider, preprocessRequest} = this.opts;
