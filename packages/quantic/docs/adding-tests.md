@@ -111,9 +111,7 @@ sfdx force:mdapi:retrieve -u LWC -k quantic-examples-community/package.xml -r te
 
 Executing this command will download the community metadata from your org and save it as `temp/unpackaged.zip`.
 
-Finally, extract the `siteDotComSites/Quantic_Examples1.site` file, and overwrite the `quantic-examples-community/siteDotComSites/Quantic_Examples1.site` file.
-
-**Important** `Quantic_Examples1.site` is a binary file, so be careful not to lose changes when merging branches. If a conflict occurs, you need to manually include both community changes in a single scratch org, and then retrieve the community binary file. If you plan on adding tests for many new components, you might prefer to add all the example pages first (as a single batch), and then have separate branches for the end to end tests.
+Finally, extract the `experiences` folder, and overwrite the content of `quantic-examples-community/experiences`. You should see only your changes in the commit diff.
 
 ## Write Your Test Suite
 
@@ -146,3 +144,5 @@ describe('quantic greeting', () => {
 ```
 
 **Tip** As soon as you create the test file, run `npm run cypress:open` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
+
+**Tip** When writing a test, use `describe.only(...)` or `it.only(...)` to focus only on the test at hand. 
