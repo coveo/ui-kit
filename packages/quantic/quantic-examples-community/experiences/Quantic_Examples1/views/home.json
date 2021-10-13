@@ -1,0 +1,47 @@
+{
+  "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "id" : "89618a7c-6e1a-47b4-9362-a9d78c5d0713",
+  "label" : "Home",
+  "regions" : [ {
+    "id" : "d8091b67-36dc-4243-8dfc-4a68d001c402",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "richTextValue" : "<p><span style=\"font-size: 36px;\">Quantic Examples</span></p><p><br></p><p><span style=\"font-size: 24px;\">Typical Use Cases</span></p><p><br></p><ul><li><a href=\"full-search-example\" rel=\"noopener noreferrer\" target=\"_self\" style=\"font-size: 16px;\">Full Search</a></li></ul><p><br></p><p><span style=\"font-size: 24px;\">Quantic Components</span></p><ul><li><a href=\"quantic-facet\" rel=\"noopener noreferrer\" target=\"_self\" style=\"font-size: 16px;\">Quantic Facet</a></li><li><a href=\"quantic-facet-manager\" rel=\"noopener noreferrer\" target=\"_self\" style=\"font-size: 16px;\">Quantic Facet Manager</a></li><li><a href=\"quantic-pager\" rel=\"noopener noreferrer\" target=\"_self\" style=\"font-size: 16px;\">Quantic Pager</a></li></ul>"
+      },
+      "componentName" : "forceCommunity:richTextInline",
+      "id" : "1c5c28a3-9570-4c6c-abf9-52ad1b26582a",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "070a6d25-f7b3-4b09-87c7-a7e234337ef5",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "id" : "51b9de18-ffe2-4eeb-96b6-355df96ee543",
+    "regionName" : "footer",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Home"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "4b901ac4-6c75-488b-85de-38ce1fcd0047",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "831e107e-3173-4443-ae9f-70ea7cfef43c",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "home"
+}
