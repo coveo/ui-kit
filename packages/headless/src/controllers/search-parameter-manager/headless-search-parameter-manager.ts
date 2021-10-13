@@ -140,6 +140,7 @@ function getActiveSearchParameters(engine: SearchEngine): SearchParameters {
     ...getNumericFacets(state),
     ...getDateFacets(state),
     ...getDebug(state),
+    ...getStaticFilters(state),
   };
 }
 
@@ -221,6 +222,23 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   const sortCriteria = state.sortCriteria;
   const shouldInclude = sortCriteria !== getSortCriteriaInitialState();
   return shouldInclude ? {sortCriteria} : {};
+}
+
+function getStaticFilters(state: Partial<SearchParametersState>) {
+  if (state.staticFilterSet === undefined) {
+    return {};
+  }
+
+  const sf = Object.entries(state.staticFilterSet)
+    .map(([id, filter]) => {
+      const selectedValues = filter.values
+        .filter((v) => v.state === 'selected')
+        .map((v) => v.caption);
+      return selectedValues.length ? {[id]: selectedValues} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(sf).length ? {sf} : {};
 }
 
 function getFacets(state: Partial<SearchParametersState>) {
