@@ -14,7 +14,7 @@ export default class ExampleQuanticPlaceholder extends LightningElement {
     },
     {
       attribute: 'numberOfRows',
-      label: 'Number Of Rows',
+      label: 'Number of rows',
       description: 'Number of rows to display inside the placeholder',
     },
   ]
