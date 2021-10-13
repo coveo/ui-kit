@@ -7,12 +7,12 @@ export interface StaticFilterSlice {
 
 export interface StaticFilterValue {
   /**
-   * A human-readable caption for the expression.
+   * A human-readable caption for the expression (e.g., `Youtube`).
    */
   caption: string;
 
   /**
-   * The query filter expression to apply when the value is selected.
+   * The query filter expression to apply when the value is selected (e.g., `@filetype=="youtubevideo"`).
    */
   expression: string;
 
