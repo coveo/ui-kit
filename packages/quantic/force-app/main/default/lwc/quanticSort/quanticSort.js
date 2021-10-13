@@ -69,13 +69,13 @@ export default class QuanticSort extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.unsubscribeSearchStatus?.();
     this.unsubscribeSort?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.sort.state;
-    this.hasResults = this.searchStatus.state.hasResults;
+    this.state = this.sort?.state;
+    this.hasResults = this.searchStatus?.state?.hasResults;
   }
 
   /**
@@ -134,9 +134,7 @@ export default class QuanticSort extends LightningElement {
   }
 
   get value() {
-    if (!this.sort || !this.state?.sortCriteria) {
-      return 'relevancy';
-    }
-    return this.state?.sortCriteria;
+    console.log(this.state);
+    return this.state?.sortCriteria || 'relevancy';
   }
 }
