@@ -236,7 +236,7 @@ describe('Result Template Component', () => {
       ResultTemplateAssertions.assertRendersTemplate(false);
     });
 
-    describe('when all conditions aren\t fulfilled', () => {
+    describe("when all conditions aren't fulfilled", () => {
       beforeEach(() => setupCustomCondition([false, false, false]));
 
       ResultTemplateAssertions.assertRendersTemplate(false);
