@@ -12,6 +12,7 @@ import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
@@ -105,6 +106,22 @@ describe('search parameter manager', () => {
       engine.state.advancedSearchQueries.cq = 'abc';
       engine.state.advancedSearchQueries.defaultFilters.cq = 'abc';
       expect('cq' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.tab', () => {
+    it('when there is an active tab, it is included', () => {
+      const id = 'a';
+      const tab = buildMockTabSlice({id, isActive: true});
+      engine.state.tabSet = {[id]: tab};
+      expect(manager.state.parameters.tab).toBe(id);
+    });
+
+    it('when there is no active tab, it is not included', () => {
+      const id = 'a';
+      const tab = buildMockTabSlice({id, isActive: false});
+      engine.state.tabSet = {[id]: tab};
+      expect(manager.state.parameters.tab).toBe(undefined);
     });
   });
 
@@ -321,6 +338,9 @@ describe('search parameter manager', () => {
     engine.state.dateFacetSet = {
       created: buildMockDateFacetRequest({currentValues: dateRanges}),
     };
+
+    const tab = buildMockTabSlice({id: 'a', isActive: true});
+    engine.state.tabSet = {a: tab};
 
     engine.state.query.q = 'a';
     engine.state.query.enableQuerySyntax = true;

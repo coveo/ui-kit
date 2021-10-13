@@ -32,3 +32,11 @@ export function assertConsoleError() {
     cy.get(TestFixture.consoleAliases.error).should('be.called');
   });
 }
+
+export function assertRemovesComponent(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>
+) {
+  it('should remove the component from the DOM', () => {
+    selector().should('not.exist');
+  });
+}

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.5...@coveo/atomic@1.5.6) (2021-10-12)
+
+
+### Bug Fixes
+
+* **atomic:** make visited printable uri links the  --atomic-visited color ([#1312](https://github.com/coveo/ui-kit/issues/1312)) ([0d72162](https://github.com/coveo/ui-kit/commit/0d721620748378fcc50ab2e1856ebe0683a7e1b7))
+
+
+
+
+
+## [1.5.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.4...@coveo/atomic@1.5.5) (2021-10-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.5.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.3...@coveo/atomic@1.5.4) (2021-10-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.5.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.2...@coveo/atomic@1.5.3) (2021-10-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.5.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.1...@coveo/atomic@1.5.2) (2021-10-07)
 
 

@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.72.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.72.0...@coveo/quantic@0.72.1) (2021-10-12)
+
+
+### Bug Fixes
+
+* **quantic:** fixed link behaviour ([#1307](https://github.com/coveo/ui-kit/issues/1307)) ([3c30511](https://github.com/coveo/ui-kit/commit/3c3051188b232b20fc29f62753e481a870f8ef4b))
+
+
+
+
+
+# [0.72.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.4...@coveo/quantic@0.72.0) (2021-10-12)
+
+
+### Bug Fixes
+
+* **quantic:** align show more button ([#1308](https://github.com/coveo/ui-kit/issues/1308)) ([316968c](https://github.com/coveo/ui-kit/commit/316968cb7faf49dd25556aa9fabb6d922bb572c6))
+* **quantic:** Remove NumberOfSecond at the end of query summary message ([#1297](https://github.com/coveo/ui-kit/issues/1297)) ([681a881](https://github.com/coveo/ui-kit/commit/681a88138b4c8433cb00b01510aacee94058f51a))
+
+
+### Features
+
+* **quantic:** Improvements to default and example result templates ([#1300](https://github.com/coveo/ui-kit/issues/1300)) ([b02c8c9](https://github.com/coveo/ui-kit/commit/b02c8c98ec98d755178f438efc2cf178605be32a))
+
+
+
+
+
+## [0.71.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.3...@coveo/quantic@0.71.4) (2021-10-07)
+
+
+### Bug Fixes
+
+* **quantic:** fix alignement for sort when query is too long ([#1296](https://github.com/coveo/ui-kit/issues/1296)) ([9e00110](https://github.com/coveo/ui-kit/commit/9e00110c7dc37016066b1dc2925f0fdc69f3302c))
+
+
+
+
+
 ## [0.71.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.71.2...@coveo/quantic@0.71.3) (2021-10-07)
 
 **Note:** Version bump only for package @coveo/quantic
