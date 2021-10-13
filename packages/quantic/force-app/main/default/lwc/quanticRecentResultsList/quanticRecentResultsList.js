@@ -104,7 +104,6 @@ export default class QuanticRecentResultsList extends LightningElement {
       }
     });
     this.unsubscribe = this.recentResultsList.subscribe(() => this.updateState());
-    this.showPlaceholder = false;
   }
 
   disconnectedCallback() {
@@ -113,7 +112,10 @@ export default class QuanticRecentResultsList extends LightningElement {
 
   updateState() {
     this.state = {...this.recentResultsList.state};
-    setItemInLocalStorage(this.localStorageKey, this.state.results)
+    if (this.state?.results) {
+      setItemInLocalStorage(this.localStorageKey, this.state.results)
+      this.showPlaceholder = false;
+    }
   }
 
   toggleVisibility() {

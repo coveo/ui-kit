@@ -88,7 +88,6 @@ export default class QuanticRecentQueriesList extends LightningElement {
       },
     });
     this.unsubscribe = this.recentQueriesList.subscribe(() => this.updateState());
-    this.showPlaceholder = false;
   }
 
   disconnectedCallback() {
@@ -97,7 +96,10 @@ export default class QuanticRecentQueriesList extends LightningElement {
 
   updateState() {
     this.state = { ...this.recentQueriesList.state };
-    setItemInLocalStorage(this.localStorageKey, this.recentQueriesList.state.queries);
+    if (this.state?.queries) {
+      setItemInLocalStorage(this.localStorageKey, this.recentQueriesList.state.queries);
+      this.showPlaceholder = false;
+    }
   }
 
   executeQuery(e) {
