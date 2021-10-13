@@ -3,6 +3,7 @@ import {
   DateFacetValue,
   SortCriterion,
 } from '@coveo/headless';
+import {VNode} from '@stencil/core';
 import {ObservableMap} from '@stencil/store';
 
 interface FacetInfo {
@@ -11,6 +12,7 @@ interface FacetInfo {
 
 interface FacetValueFormat<ValueType> {
   format(facetValue: ValueType): string;
+  content?(facetValue: ValueType): VNode;
 }
 
 type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
