@@ -30,7 +30,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (key === 'f' || key === 'cf') {
+  if (key === 'f' || key === 'cf' || key === 'sf') {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -116,7 +116,13 @@ function deserialize(fragment: string): SearchParameters {
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
+    if (
+      key === 'f' ||
+      key === 'cf' ||
+      key === 'nf' ||
+      key === 'df' ||
+      key === 'sf'
+    ) {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -134,7 +140,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessFacetPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f|cf|nf|df)\[(.+)\]$/;
+  const facetKey = /^(f|cf|nf|df|sf)\[(.+)\]$/;
   const result = facetKey.exec(key);
 
   if (!result) {
@@ -205,6 +211,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
       nf: true,
       df: true,
       debug: true,
+      sf: true,
       tab: true,
     };
 
@@ -232,7 +239,13 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
+  if (
+    key === 'f' ||
+    key === 'cf' ||
+    key === 'nf' ||
+    key === 'df' ||
+    key === 'sf'
+  ) {
     return [key, castUnknownFacetObject(value)];
   }
 
