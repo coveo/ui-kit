@@ -15,6 +15,8 @@ import {StaticFilterValue} from '../../features/static-filter-set/static-filter-
 import {StaticFilterSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
+import {executeSearch} from '../../features/search/search-actions';
+import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
 
 const optionsSchema = new Schema<Required<StaticFilterOptions>>({
   id: staticFilterIdSchema,
@@ -118,6 +120,7 @@ export function buildStaticFilter(
 
     toggleSelect(value: StaticFilterValue) {
       dispatch(toggleSelectStaticFilterValue({id, value}));
+      dispatch(executeSearch(noopSearchAnalyticsAction()));
     },
 
     toggleSingleSelect(value: StaticFilterValue) {
@@ -126,10 +129,12 @@ export function buildStaticFilter(
       }
 
       dispatch(toggleSelectStaticFilterValue({id, value}));
+      dispatch(executeSearch(noopSearchAnalyticsAction()));
     },
 
     deselectAll() {
       dispatch(deselectAllStaticFilterValues(id));
+      dispatch(executeSearch(noopSearchAnalyticsAction()));
     },
 
     get state() {
