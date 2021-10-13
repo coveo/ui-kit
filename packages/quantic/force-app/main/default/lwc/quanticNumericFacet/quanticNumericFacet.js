@@ -254,7 +254,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get hasActiveValues() {
-    return this.state?.hasActiveValues || this.stateFilter?.range;
+    return this.state?.hasActiveValues || this.filterState?.range;
   }
 
   get actionButtonIcon() {
@@ -271,11 +271,11 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get numberOfSelectedValues() {
-    return this.stateFilter?.range ? 1 : this.state.values.filter(({state}) => state === 'selected').length;
+    return this.filterState?.range ? 1 : this.state.values.filter(({state}) => state === 'selected').length;
   }
 
   get showValues() {
-    return !this.searchStatus?.state?.hasError && (!this.usingManualRange || !this.stateFilter?.range) && !!this.values.length;
+    return !this.searchStatus?.state?.hasError && (!this.usingManualRange || !this.filterState?.range) && !!this.values.length;
   }
 
   get clearFilterLabel() {
@@ -318,7 +318,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   clearSelections() {
     this.usingManualRange = false;
-    if(this.stateFilter?.range) {
+    if(this.filterState?.range) {
       this.numericFilter.clear();
     }
     this.resetValidityParameters();
