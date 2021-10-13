@@ -147,14 +147,14 @@ export class AtomicBreadbox implements InitializableComponent {
       <li class="breadcrumb" key={value}>
         <Button
           part="breadcrumb-button"
-          style="outline-neutral"
-          class="py-2 px-3 flex items-center btn-pill"
+          style="outline-bg-neutral"
+          class="py-2 px-3 flex items-center btn-pill group"
           title={`${breadcrumb.label}: ${fullValue}`}
           onClick={() => breadcrumb.deselect()}
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate with-colon text-neutral-dark mr-0.5"
+            class="max-w-snippet truncate with-colon text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
           >
             {breadcrumb.label}
           </span>

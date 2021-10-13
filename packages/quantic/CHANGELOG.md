@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.73.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.72.1...@coveo/quantic@0.73.0) (2021-10-13)
+
+
+### Features
+
+* **quantic:** add facet manager component ([#1305](https://github.com/coveo/ui-kit/issues/1305)) ([4d9c1c9](https://github.com/coveo/ui-kit/commit/4d9c1c9a936a85cfa8efb23374378bf2116a23a5))
+
+
+
+
+
 ## [0.72.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.72.0...@coveo/quantic@0.72.1) (2021-10-12)
 
 

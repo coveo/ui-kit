@@ -24,6 +24,7 @@ import {
   getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
+import {containsSection} from '../../utils/result-section-utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -221,6 +222,7 @@ export class AtomicResultList implements InitializableComponent {
                   <atomic-table-cell
                     result={result}
                     content={column.innerHTML}
+                    useSections={containsSection(column)}
                   ></atomic-table-cell>
                 </td>
               ))}
