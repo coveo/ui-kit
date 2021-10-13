@@ -60,7 +60,7 @@ export default class QuanticResultList extends LightningElement {
    */
   initialize = (engine) => {
     this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine);
-    this.unsubscribeResultsPerPage = this.resultsPerPage.subscribe(() => this.updateState);
+    this.unsubscribeResultsPerPage = this.resultsPerPage.subscribe(() => this.updateState());
 
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>

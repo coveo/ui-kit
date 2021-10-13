@@ -20,8 +20,8 @@ describe('quantic-placeholder', () => {
 
       Expect.displayCardPlaceholder(false);
       Expect.displayCardRowPlaceholders(0);
-      Expect.displayCardPlaceholder(false);
-      Expect.displayCardRowPlaceholders(0);
+      Expect.displayResultListPlaceholder(false);
+      Expect.displayResultPlaceholders(0);
     });
   });
 
