@@ -3,6 +3,7 @@ import {InterceptAliases, interceptSearch} from '../../page-objects/search';
 import {ResultsPerPageExpectations as Expect} from './results-per-page-expectations';
 import {ResultsPerPageActions as Actions} from './results-per-page-actions';
 import {stubConsoleError} from '../console-selectors';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 interface ResultsPerPageOptions {
   initialChoice: number;
@@ -60,8 +61,8 @@ describe('quantic-result-per-page', () => {
       Expect.search.numberOfResults(nextChoice);
       Expect.logSelected(nextChoice);
 
-      // Perform search query
-      // TODO: check search still returning 25 results
+      performSearch();
+      Expect.search.numberOfResults(nextChoice);
     });
   });
 
@@ -138,7 +139,7 @@ describe('quantic-result-per-page', () => {
       });
     });
 
-    describe('with invalid choicesDisplayed', () => {
+    describe('with invalid choices displayed', () => {
       it('should not load component', () => {
         visitResultsPerPage(
           {
