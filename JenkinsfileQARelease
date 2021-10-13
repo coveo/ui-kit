@@ -1,5 +1,5 @@
 node('linux && docker') {
-  def commitHash = params.packageName.substring(params.packageName.lastIndexOf('_') + 1)
+  def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
 
   checkout([
     $class: 'GitSCM',
