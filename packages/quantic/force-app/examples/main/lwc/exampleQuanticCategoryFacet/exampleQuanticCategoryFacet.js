@@ -6,7 +6,7 @@ export default class ExampleQuanticFacet extends LightningElement {
     isConfigured = false;
 
     pageTitle = 'Quantic Category Facet';
-    pageDescription = 'The Quantic Category Facetis a list of values for a certain field occurring in the results, ordered using a configurable criterion.'
+    pageDescription = 'The Quantic Category Facet is a list of values for a certain field occurring in the results, displayed in a browsable, hierarchical fashion and ordered using a configurable criterion.'
     options = [
         {
             attribute: 'field',
@@ -22,7 +22,7 @@ export default class ExampleQuanticFacet extends LightningElement {
         },
         {
             attribute: 'basePath',
-            label: 'BasePath',
+            label: 'Base path',
             description: 'The base path shared by all facet values, separated by commas.',
             defaultValue: ''
         },
@@ -35,7 +35,7 @@ export default class ExampleQuanticFacet extends LightningElement {
         {
             attribute: 'noFilterFacetCount',
             label: 'No Filter Facet Count',
-            description: 'Whether not to exclude the parents of folded results when estimating the result count for each facet value.',
+            description: 'Whether to include the parents of folded results when estimating the result count for each facet value.',
             defaultValue: false
         },
         {
