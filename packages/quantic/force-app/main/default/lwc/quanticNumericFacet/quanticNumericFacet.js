@@ -28,8 +28,6 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 
-  
-
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
  * @example
@@ -126,7 +124,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {NumericFacetState} */
   @track state;
   /** @type {NumericFilterState} */
-  @track stateFilter = {
+  @track filterState = {
     isLoading: false,
     facetId: undefined
   }
@@ -143,7 +141,8 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeFilter;
   /** @type {Function} */
   unsubscribeSearchStatus;
-  isSelected=true;
+  /** @type {boolean} */
+  usingManualRange=false;
 
   /** @type {string} */
   start;
@@ -218,10 +217,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   updateState() {
-    this.state = this.facet.state;
-    this.stateFilter = this.numericFilter.state;
-    this.start = this.stateFilter?.range?.start?.toString();
-    this.end = this.stateFilter?.range?.end?.toString();
+    this.state = this.facet?.state;
+    this.filterState = this.numericFilter?.state;
+    this.start = this.filterState?.range?.start?.toString();
+    this.end = this.filterState?.range?.end?.toString();
   }
 
   get values() {
@@ -276,7 +275,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get showValues() {
-    return !this.searchStatus?.state?.hasError && (this.isSelected || !this.stateFilter?.range) && !!this.values.length;
+    return !this.searchStatus?.state?.hasError && (!this.usingManualRange || !this.stateFilter?.range) && !!this.values.length;
   }
 
   get clearFilterLabel() {
@@ -313,12 +312,12 @@ export default class QuanticNumericFacet extends LightningElement {
 
   /** @param {CustomEvent<NumericFacetValue>} evt */
   onSelect(evt) {
-    this.isSelected = true;
+    this.usingManualRange = false;
     this.facet.toggleSelect(evt.detail);
   }
 
   clearSelections() {
-    this.isSelected = true;
+    this.usingManualRange = false;
     if(this.stateFilter?.range) {
       this.numericFilter.clear();
     }
@@ -356,7 +355,7 @@ export default class QuanticNumericFacet extends LightningElement {
     if (!allValid) {
       return;
     }
-    this.isSelected = false;
+    this.usingManualRange = true;
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
     this.numericFilter.setRange({
