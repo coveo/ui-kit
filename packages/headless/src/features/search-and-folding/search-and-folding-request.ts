@@ -8,7 +8,6 @@ type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
 export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding
 ) => {
-  const cq = buildConstantQuery(state);
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -21,9 +20,13 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
-    ...(cq && {cq}),
-    ...(state.advancedSearchQueries && {
+    ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
+    }),
+    ...(state.advancedSearchQueries?.cq && {
+      cq: state.advancedSearchQueries.cq,
+    }),
+    ...(state.advancedSearchQueries?.lq && {
       lq: state.advancedSearchQueries.lq,
     }),
     ...(state.context && {
@@ -51,30 +54,3 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     }),
   };
 };
-
-function buildConstantQuery(state: StateNeededByExecuteSearchAndFolding) {
-  const cq = state.advancedSearchQueries?.cq.trim() || '';
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
-  const tabExpression = activeTab?.expression.trim() || '';
-  const filterExpressions = getStaticFilterExpressions(state);
-
-  return [cq, tabExpression, ...filterExpressions]
-    .filter((expression) => !!expression)
-    .join(' AND ');
-}
-
-function getStaticFilterExpressions(
-  state: StateNeededByExecuteSearchAndFolding
-) {
-  const filters = Object.values(state.staticFilterSet || {});
-  return filters.map((filter) => {
-    const selected = filter.values.filter(
-      (value) => value.state === 'selected' && !!value.expression.trim()
-    );
-
-    const expression = selected.map((value) => value.expression).join(' OR ');
-    return selected.length > 1 ? `(${expression})` : expression;
-  });
-}
