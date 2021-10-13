@@ -9,37 +9,7 @@
   @apply font-sans font-normal;
 }
 
-.cell-root {
-  &.with-sections {
-    @mixin result-with-sections;
-
-    &.display-list {
-      @screen desktop-only {
-        @mixin row-result-desktop;
-      }
-      @screen mobile-only {
-        @mixin row-result-mobile;
-      }
-    }
-    &.display-grid {
-      &.image-large {
-        @screen desktop-only {
-          @mixin cell-result-desktop;
-        }
-        @screen mobile-only {
-          @mixin row-result-mobile;
-        }
-      }
-      &.image-small,
-      &.image-icon,
-      &.image-none {
-        @screen desktop-only {
-          @mixin cell-result-desktop;
-        }
-        @screen mobile-only {
-          @mixin cell-result-mobile;
-        }
-      }
-    }
-  }
+.cell-root.with-sections {
+  @mixin result-with-sections;
+  @mixin row-result-desktop;
 }
