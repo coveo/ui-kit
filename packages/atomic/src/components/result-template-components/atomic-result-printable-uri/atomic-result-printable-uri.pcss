@@ -1,53 +1,52 @@
 atomic-result-printable-uri {
   max-width: 100%;
-}
 
-atomic-result-printable-uri ul {
-  display: flex;
-  flex-wrap: wrap;
-}
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-atomic-result-printable-uri li {
-  display: inline-flex;
-  align-items: center;
-  max-width: 100%;
-}
+  li {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
 
-atomic-result-printable-uri li a {
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 100%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
+    a,
+    button {
+      color: var(--atomic-primary);
 
-atomic-result-printable-uri li:last-child {
-  white-space: normal;
-}
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
-atomic-result-printable-uri li:last-child::after {
-  content: none;
-}
+    a {
+      display: inline-block;
+      vertical-align: middle;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
 
-.result-printable-uri-separator {
-  display: inline-block;
-  margin: 0 0.5rem;
-  vertical-align: middle;
-  width: 0.75rem;
-  height: 0.75rem;
-  color: var(--atomic-neutral-dark);
-}
+      a:visited {
+        color: var(--atomic-visited);
+      }
+    }
 
-atomic-result-printable-uri a,
-atomic-result-printable-uri button {
-  color: var(--atomic-primary);
-}
+    &:last-child {
+      white-space: normal;
 
-atomic-result-printable-uri a:hover,
-atomic-result-printable-uri button:hover {
-  text-decoration: underline;
-}
+      &::after {
+        content: none;
+      }
+    }
 
-atomic-result-printable-uri a:visited {
-  color: var(--atomic-visited);
+    .result-printable-uri-separator {
+      display: inline-block;
+      margin: 0 0.5rem;
+      vertical-align: middle;
+      width: 0.75rem;
+      height: 0.75rem;
+      color: var(--atomic-neutral-dark);
+    }
+  }
 }
