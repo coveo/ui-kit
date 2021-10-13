@@ -5,7 +5,7 @@ import {SearchAppState} from '../../../../state/search-app-state';
 import {buildCategoryFacetSearchRequest} from '../../../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
-import {buildSearchRequest} from '../../../../features/search/search-actions';
+import {buildSearchRequest} from '../../../../features/search/search-request';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   const id = '1';
