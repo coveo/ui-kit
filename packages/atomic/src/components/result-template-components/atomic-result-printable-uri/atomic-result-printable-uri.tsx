@@ -64,7 +64,7 @@ export class AtomicResultPrintableUri {
         maxNumberOfParts: new NumberValue({min: 3}),
       }).validate({maxNumberOfParts: this.maxNumberOfParts});
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
     }
   }
 
@@ -136,6 +136,7 @@ export class AtomicResultPrintableUri {
       <LinkWithResultAnalytics
         interactiveResult={this.interactiveResult}
         href={uri}
+        title={typeof content === 'string' ? content : undefined}
         part={'result-printable-uri-link'}
         target={this.target}
       >

@@ -1,10 +1,28 @@
+atomic-result-printable-uri {
+  max-width: 100%;
+}
+
+atomic-result-printable-uri ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 atomic-result-printable-uri li {
-  display: inline;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
 }
 
 atomic-result-printable-uri li a {
   display: inline-block;
   vertical-align: middle;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+atomic-result-printable-uri li:last-child {
+  white-space: normal;
 }
 
 atomic-result-printable-uri li:last-child::after {
