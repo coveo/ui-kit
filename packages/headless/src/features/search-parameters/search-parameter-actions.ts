@@ -69,7 +69,7 @@ export interface SearchParameters {
   sortCriteria?: string;
 
   /**
-   * A record of the static filters, where the key is the static filter id, and value is an array containing the selected static filter values.
+   * A record of the static filters, where the key is the static filter id, and value is an array containing the selected static filter captions.
    */
   sf?: Record<string, string[]>;
 

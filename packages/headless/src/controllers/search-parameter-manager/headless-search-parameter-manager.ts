@@ -232,15 +232,15 @@ function getStaticFilters(state: Partial<SearchParametersState>) {
 
   const sf = Object.entries(state.staticFilterSet)
     .map(([id, filter]) => {
-      const selectedValues = getSelectedStaticFilterValues(filter.values);
-      return selectedValues.length ? {[id]: selectedValues} : {};
+      const selectedCaptions = getSelectedStaticFilterCaptions(filter.values);
+      return selectedCaptions.length ? {[id]: selectedCaptions} : {};
     })
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(sf).length ? {sf} : {};
 }
 
-function getSelectedStaticFilterValues(values: StaticFilterValue[]) {
+function getSelectedStaticFilterCaptions(values: StaticFilterValue[]) {
   return values.filter((v) => v.state === 'selected').map((v) => v.caption);
 }
 
