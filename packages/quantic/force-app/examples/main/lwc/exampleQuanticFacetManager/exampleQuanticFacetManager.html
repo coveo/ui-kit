@@ -11,10 +11,11 @@
     </div>
 
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
-      <c-quantic-pager
-        engine-id={engineId}
-        number-of-pages={config.numberOfPages}>
-      </c-quantic-pager>
+      <c-quantic-facet-manager engine-id={engineId}>
+        <c-quantic-facet engine-id={engineId} field="language" label="Language"></c-quantic-facet>
+        <c-quantic-date-facet engine-id={engineId} field="date" label="Date"></c-quantic-date-facet>
+        <c-quantic-facet engine-id={engineId} field="objecttype" label="Type"></c-quantic-facet>
+      </c-quantic-facet-manager>
     </c-quantic-search-interface>
   </c-example-layout>
 </template>
