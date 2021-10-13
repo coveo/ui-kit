@@ -179,6 +179,8 @@ export default class QuanticResultLabel extends LightningElement {
         return lower.toUpperCase();
       case 'kb_knowledge':
         return this.labels.knowledge;
+      case 'youtubevideo':
+        return this.labels.video;
       default:
         return fileType;
     }
@@ -193,7 +195,7 @@ export default class QuanticResultLabel extends LightningElement {
     const lower = sourceType.toLowerCase();
     switch (lower) {
       case 'youtube':
-        return this.labels.video;
+        return 'YouTube';
       case 'confluence2':
         return this.labels.documentation;
       default:

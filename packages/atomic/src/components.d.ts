@@ -686,9 +686,25 @@ export namespace Components {
          */
         "content": string;
         /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image": ResultDisplayImageSize;
+        /**
           * The result item.
          */
         "result": Result;
+        /**
+          * Whether this result should use `atomic-result-section-*` components.
+         */
+        "useSections": boolean;
     }
     interface AtomicTableElement {
         /**
@@ -1864,9 +1880,25 @@ declare namespace LocalJSX {
          */
         "content": string;
         /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "image"?: ResultDisplayImageSize;
+        /**
           * The result item.
          */
         "result": Result;
+        /**
+          * Whether this result should use `atomic-result-section-*` components.
+         */
+        "useSections"?: boolean;
     }
     interface AtomicTableElement {
         /**

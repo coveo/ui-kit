@@ -1,0 +1,15 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}>
+  
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+    <c-quantic-placeholder
+      slot="preview"
+      variant={config.variant}
+      number-of-rows={config.numberOfRows}>
+    </c-quantic-placeholder>
+  </c-example-layout>
+</template>
