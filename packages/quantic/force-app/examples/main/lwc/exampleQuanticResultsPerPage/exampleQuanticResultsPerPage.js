@@ -6,7 +6,7 @@ export default class ExampleResultsPerPage extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Results Per Page';
-  pageDescription = 'The Quantic Results Per Page components allows users to modify the number of results that are displayed simultaneously in the result list.';
+  pageDescription = 'The Quantic Results Per Page component allows users to modify the number of results that are displayed simultaneously in the result list.';
   options = [
     {
       attribute: 'initialChoice',
