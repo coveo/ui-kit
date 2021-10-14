@@ -11,7 +11,7 @@ import {SearchExpectations} from '../search-expectations';
 describe('quantic-sort', () => {
   const sortUrl = 's/quantic-sort';
 
-  const sortOptions = ['relevance', 'date descending', 'date ascending'];
+  const sortOptions = ['relevancy', 'date descending', 'date ascending'];
   const sortOptionLabels = ['Relevancy', 'Newest', 'Oldest'];
 
   function visitSort(waitForSearch = true) {
@@ -47,6 +47,9 @@ describe('quantic-sort', () => {
 
       Expect.displaySortDropdown(true);
       Expect.displayLocalizedLabel('Sort by');
+
+      Actions.openDropdown();
+
       Expect.containsOptions(sortOptions);
       Expect.displayLocalizedOptionLabels(sortOptions, sortOptionLabels);
       Expect.selectedOption(sortOptions[0], true);
@@ -54,24 +57,23 @@ describe('quantic-sort', () => {
   });
 
   describe('when selecting a sort option', () => {
-    before(() => {
-      visitSort();
-    });
-
-    sortOptions.forEach((option) => {
+    sortOptions.slice(1).forEach((option) => {
       it(`should update the shown selected option to ${option}`, () => {
+        visitSort();
         Actions.selectOption(option);
 
         Expect.selectedOption(option, true);
       });
 
       it(`should execute a query with the ${option} sort order on selection`, () => {
+        visitSort();
         Actions.selectOption(option);
 
         SearchExpectations.sortedBy(option);
       });
 
       it(`should log ${option} analytics on selection`, () => {
+        visitSort();
         Actions.selectOption(option);
 
         Expect.logSortResults(option);
@@ -86,6 +88,9 @@ describe('quantic-sort', () => {
       const option = sortOptions[1];
 
       SearchExpectations.sortedBy(option);
+
+      Actions.openDropdown();
+
       Expect.displaySortDropdown(true);
       Expect.selectedOption(option, true);
     });
@@ -96,6 +101,9 @@ describe('quantic-sort', () => {
       const option = sortOptions[2];
 
       SearchExpectations.sortedBy(option);
+
+      Actions.openDropdown();
+
       Expect.displaySortDropdown(true);
       Expect.selectedOption(option, true);
     });

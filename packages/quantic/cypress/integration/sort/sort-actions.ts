@@ -2,7 +2,14 @@ import {SortSelector, SortSelectors} from './sort-selectors';
 
 function sortActions(selector: SortSelector) {
   return {
-    selectOption: (value: string) => selector.listbox().select(value),
+    openDropdown: () => {
+      selector.combobox().click();
+    },
+
+    selectOption: (value: string) => {
+      selector.combobox().click();
+      selector.option(value).click();
+    },
   };
 }
 
