@@ -85,7 +85,7 @@ export default class QuanticSort extends LightningElement {
     this.sort.sortBy(this.options.find((option) => option.value === e.detail.value).criterion);
   }
 
-  get relevance() {
+  get relevancy() {
     return CoveoHeadless.buildRelevanceSortCriterion();
   }
 
@@ -105,8 +105,8 @@ export default class QuanticSort extends LightningElement {
     return [
       {
         label: this.labels.relevancy,
-        value: CoveoHeadless.buildCriterionExpression(this.relevance),
-        criterion: this.relevance,
+        value: CoveoHeadless.buildCriterionExpression(this.relevancy),
+        criterion: this.relevancy,
       },
       {
         label: this.labels.newest,
