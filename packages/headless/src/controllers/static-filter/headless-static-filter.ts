@@ -11,12 +11,17 @@ import {
   registerStaticFilter,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
-import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
+import {
+  StaticFilterValue,
+  StaticFilterValueState,
+} from '../../features/static-filter-set/static-filter-set-state';
 import {StaticFilterSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {executeSearch} from '../../features/search/search-actions';
 import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
+
+export {StaticFilterValue, StaticFilterValueState};
 
 const optionsSchema = new Schema<Required<StaticFilterOptions>>({
   id: staticFilterIdSchema,
