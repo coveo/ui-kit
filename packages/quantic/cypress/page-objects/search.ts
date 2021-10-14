@@ -21,6 +21,7 @@ export const InterceptAliases = {
       Previous: uaAlias('pagerPrevious'),
       Next: uaAlias('pagerNext'),
       Number: uaAlias('pagerNumber'),
+      Resize: uaAlias('pagerResize'),
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',
