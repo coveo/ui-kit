@@ -14,10 +14,11 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
 /** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
@@ -126,8 +127,14 @@ export default class QuanticCategoryFacet extends LightningElement {
   
   /** @type {CategoryFacet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
   /** @type {string} */
   collapseIconName = 'utility:dash';
   /** @type {HTMLInputElement} */
@@ -158,12 +165,18 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   /**
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
@@ -183,7 +196,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {

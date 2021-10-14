@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
+// eslint-disable-next-line node/no-unpublished-require
+const waitOn = require('wait-on');
 
 interface Options {
   configFile: string;
@@ -263,6 +265,19 @@ async function updateCommunityConfigFile(
   log('Configuration file updated.');
 }
 
+async function waitForCommunity(
+  log: StepLogger,
+  communityUrl: string
+): Promise<void> {
+  log(`Waiting for community at URL: ${communityUrl} ...`);
+
+  await waitOn({
+    resources: [communityUrl],
+    timeout: 5 * 60 * 1000,
+  });
+  log('Community is now available');
+}
+
 async function deleteScratchOrg(
   log: StepLogger,
   options: Options
@@ -301,7 +316,8 @@ async function deleteScratchOrg(
       .add(
         async (log) =>
           await updateCommunityConfigFile(log, options, communityUrl)
-      );
+      )
+      .add(async (log) => await waitForCommunity(log, communityUrl));
 
     await runner.run();
 
