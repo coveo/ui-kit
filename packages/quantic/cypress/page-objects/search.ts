@@ -22,6 +22,9 @@ export const InterceptAliases = {
       Next: uaAlias('pagerNext'),
       Number: uaAlias('pagerNumber'),
     },
+    Sort: {
+      SortResults: uaAlias('sortResults'),
+    },
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',

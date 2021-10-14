@@ -3,16 +3,23 @@ import {ComponentSelector, CypressSelector} from '../common-selectors';
 export const sortComponent = 'c-quantic-sort';
 
 export interface SortSelector extends ComponentSelector {
+  label: () => CypressSelector;
   listbox: () => CypressSelector;
   options: () => CypressSelector;
   option: (value: string) => CypressSelector;
+  selectedOption: (value: string) => CypressSelector;
 }
 
 export const SortSelectors: SortSelector = {
   get: () => cy.get(sortComponent),
 
+  label: () => SortSelectors.get().find('.sort__header'),
   listbox: () => SortSelectors.get().find('.slds-listbox'),
   options: () => SortSelectors.get().find('.slds-listbox__option'),
   option: (value: string) =>
-    SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"`),
+    SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
+  selectedOption: (value: string) =>
+    SortSelectors.get().find(
+      `.slds-listbox__option[data-value="${value}"][aria-selected="true"]`
+    ),
 };
