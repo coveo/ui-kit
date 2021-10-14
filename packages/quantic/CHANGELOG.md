@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.75.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.1...@coveo/quantic@0.75.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** persist Salesforce examples community as code ([#1330](https://github.com/coveo/ui-kit/issues/1330)) ([ea6cec9](https://github.com/coveo/ui-kit/commit/ea6cec93c6cebb6ef3aeb55f65844e0db75df711))
+
+
+
+
+
 ## [0.74.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.0...@coveo/quantic@0.74.1) (2021-10-14)
 
 
