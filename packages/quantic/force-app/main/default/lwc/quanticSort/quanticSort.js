@@ -13,6 +13,13 @@ import oldest from '@salesforce/label/c.quantic_Oldest';
 /** @typedef {import("coveo").SortState} SortState */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SortCriterion} SortCriterion */
+/**
+ * @typedef SortOption
+ * @property {string} label
+ * @property {string} value
+ * @property {SortCriterion} criterion
+ */
 
 /**
  * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
@@ -40,6 +47,8 @@ export default class QuanticSort extends LightningElement {
   unsubscribeSort;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {Array.<SortOption>} */
+  options;
 
   labels = {
     sortBy,
@@ -60,6 +69,7 @@ export default class QuanticSort extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.options = this.buildOptions();
     this.sort = CoveoHeadless.buildSort(engine);
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
@@ -76,6 +86,25 @@ export default class QuanticSort extends LightningElement {
   updateState() {
     this.state = this.sort?.state;
     this.hasResults = this.searchStatus?.state?.hasResults;
+  }
+
+  buildOptions() {
+    return [
+      {
+        label: this.labels.relevancy,
+        value: CoveoHeadless.buildCriterionExpression(this.relevancy),
+        criterion: this.relevancy,
+      },
+      {
+        label: this.labels.newest,
+        value: CoveoHeadless.buildCriterionExpression(this.dateDescending),
+        criterion: this.dateDescending},
+      {
+        label: this.labels.oldest,
+        value: CoveoHeadless.buildCriterionExpression(this.dateAscending),
+        criterion: this.dateAscending,
+      },
+    ];
   }
 
   /**
@@ -99,25 +128,6 @@ export default class QuanticSort extends LightningElement {
     return CoveoHeadless.buildDateSortCriterion(
       CoveoHeadless.SortOrder.Ascending
     );
-  }
-
-  get options() {
-    return [
-      {
-        label: this.labels.relevancy,
-        value: CoveoHeadless.buildCriterionExpression(this.relevancy),
-        criterion: this.relevancy,
-      },
-      {
-        label: this.labels.newest,
-        value: CoveoHeadless.buildCriterionExpression(this.dateDescending),
-        criterion: this.dateDescending},
-      {
-        label: this.labels.oldest,
-        value: CoveoHeadless.buildCriterionExpression(this.dateAscending),
-        criterion: this.dateAscending,
-      },
-    ];
   }
 
   get value() {

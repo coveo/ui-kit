@@ -4,8 +4,11 @@ import {SortSelector, SortSelectors} from './sort-selectors';
 
 function sortExpectations(selector: SortSelector) {
   return {
-    selectedOption: (value: string, selected: boolean) => {
-      selector.selectedOption(value).should(selected ? 'exist' : 'not.exist');
+    selectedOption: (value: string) => {
+      selector
+        .selectedOption()
+        .invoke('attr', 'data-value')
+        .should('contain', value);
     },
 
     displaySortDropdown: (display: boolean) => {
@@ -18,13 +21,13 @@ function sortExpectations(selector: SortSelector) {
       });
     },
 
-    displayLocalizedLabel: (label: string) => {
+    labelContains: (label: string) => {
       selector.label().should('contain', label);
     },
 
-    displayLocalizedOptionLabels: (values: string[], labels: string[]) => {
-      values.forEach((value, index) => {
-        selector.option(value).should('contain', labels[index]);
+    optionsEqual: (options: {value: string; label: string}[]) => {
+      options.forEach((option) => {
+        selector.option(option.value).should('contain', option.label);
       });
     },
 

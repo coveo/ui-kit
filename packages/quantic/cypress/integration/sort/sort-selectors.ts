@@ -8,7 +8,7 @@ export interface SortSelector extends ComponentSelector {
   listbox: () => CypressSelector;
   options: () => CypressSelector;
   option: (value: string) => CypressSelector;
-  selectedOption: (value: string) => CypressSelector;
+  selectedOption: () => CypressSelector;
 }
 
 export const SortSelectors: SortSelector = {
@@ -20,8 +20,6 @@ export const SortSelectors: SortSelector = {
   options: () => SortSelectors.get().find('.slds-listbox__option'),
   option: (value: string) =>
     SortSelectors.get().find(`.slds-listbox__option[data-value="${value}"]`),
-  selectedOption: (value: string) =>
-    SortSelectors.get().find(
-      `.slds-listbox__option[data-value="${value}"][aria-checked="true"]`
-    ),
+  selectedOption: () =>
+    SortSelectors.get().find('.slds-listbox__option[aria-checked="true"]'),
 };
