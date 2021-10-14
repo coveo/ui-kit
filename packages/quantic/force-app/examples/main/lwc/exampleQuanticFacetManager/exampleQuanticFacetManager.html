@@ -1,0 +1,21 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}>
+  
+    <div slot="configuration">
+      <c-configurator options={options} ontryitnow={handleTryItNow}>
+        <c-action-perform-search slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-perform-search>
+      </c-configurator>
+    </div>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <c-quantic-facet-manager engine-id={engineId}>
+        <c-quantic-facet engine-id={engineId} field="language" label="Language"></c-quantic-facet>
+        <c-quantic-date-facet engine-id={engineId} field="date" label="Date"></c-quantic-date-facet>
+        <c-quantic-facet engine-id={engineId} field="objecttype" label="Type"></c-quantic-facet>
+      </c-quantic-facet-manager>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>

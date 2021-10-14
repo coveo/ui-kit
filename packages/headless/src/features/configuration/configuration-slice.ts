@@ -1,5 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -15,6 +17,16 @@ import {
   analyticsAPIEndpoint,
 } from './configuration-state';
 
+function analyticsUrlFromPlatformUrl(platformUrl: string) {
+  const isCoveoURL = platformUrl.match(
+    /^https:\/\/platform(dev|qa|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/
+  );
+  if (isCoveoURL) {
+    return platformUrl.replace(/^(https?:\/\/)platform/, '$1analytics');
+  }
+  return platformUrl;
+}
+
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),
   (builder) =>
@@ -29,7 +41,9 @@ export const configurationReducer = createReducer(
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = `${action.payload.platformUrl}${analyticsAPIEndpoint}`;
+          state.analytics.apiBaseUrl = `${analyticsUrlFromPlatformUrl(
+            action.payload.platformUrl
+          )}${analyticsAPIEndpoint}`;
         }
       })
       .addCase(updateSearchConfiguration, (state, action) => {
@@ -75,5 +89,12 @@ export const configurationReducer = createReducer(
       })
       .addCase(setOriginLevel3, (state, action) => {
         state.analytics.originLevel3 = action.payload.originLevel3;
+      })
+      .addCase(updateActiveTab, (state, action) => {
+        state.analytics.originLevel2 = action.payload;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        state.analytics.originLevel2 =
+          action.payload.tab || state.analytics.originLevel2;
       })
 );

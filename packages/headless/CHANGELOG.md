@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.28.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.0...@coveo/headless@1.28.1) (2021-10-12)
+
+
+### Bug Fixes
+
+* **headless:** create dedicated tab set ([#1301](https://github.com/coveo/ui-kit/issues/1301)) ([5f25b4a](https://github.com/coveo/ui-kit/commit/5f25b4a24c625af1bf71a04eda6150afa7a7790e))
+
+
+
+
+
+# [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.27.0...@coveo/headless@1.28.0) (2021-10-07)
+
+
+### Features
+
+* **headless:** change default analytics endpoint URL ([#1289](https://github.com/coveo/ui-kit/issues/1289)) ([a3198d1](https://github.com/coveo/ui-kit/commit/a3198d14671d6a8af41c40f5b17c538b1adcf64c))
+
+
+
+
+
+# [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.26.0...@coveo/headless@1.27.0) (2021-10-07)
+
+
+### Features
+
+* **core:** make facet search use generic interface ([#1259](https://github.com/coveo/ui-kit/issues/1259)) ([4fe68e3](https://github.com/coveo/ui-kit/commit/4fe68e31f53545c5ed3e4105e9c0a6a844364c45))
+* **productlisting:** Create documentation ([#1291](https://github.com/coveo/ui-kit/issues/1291)) ([34654e4](https://github.com/coveo/ui-kit/commit/34654e497ecd9952ccbdf802c05eacbe68179ae6))
+
+
+
+
+
 # [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.25.0...@coveo/headless@1.26.0) (2021-10-06)
 
 

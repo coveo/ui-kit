@@ -1,6 +1,7 @@
 // @ts-ignore
 import defaultTemplate from './quanticResult.html';
-import { LightningElement, api } from "lwc";
+import {LightningElement, api} from "lwc";
+import {TimeSpan} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
@@ -18,7 +19,7 @@ export default class QuanticResult extends LightningElement {
    */
   @api engineId;
   /**
-   * The result item.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
    * @api
    * @type {Result}
    */
@@ -30,51 +31,16 @@ export default class QuanticResult extends LightningElement {
    */
   @api resultTemplatesManager;
 
-  get icon() {
-    if (this.objectTypeIcon) {
-      return this.objectTypeIcon;
-    }
-    if (this.fileTypeIcon) {
-      return this.fileTypeIcon;
-    }
-
-    return 'doctype:unknown';
+  get videoThumbnail() {
+    return `http://img.youtube.com/vi/${this.result.raw.ytvideoid}/mqdefault.jpg`
   }
 
-  get objectTypeIcon() {
-    const objType = this.result.raw.objecttype;
-    if (!objType) {
-      return undefined;
-    }
-    switch (objType.toLowerCase()) {
-      case 'faq':
-        return 'standard:question_feed';
-      case 'message':
-        return 'standard:note';
-      case 'city':
-        return 'standard:household';
-      default:
-        return `standard:${objType.toLowerCase()}`;
-    }
+  get videoSourceId() {
+    return `https://www.youtube.com/embed/${this.result.raw.ytvideoid}?autoplay=0`;
   }
 
-  get fileTypeIcon() {
-    const fileType = this.result.raw.filetype;
-    if (!fileType) {
-      return undefined;
-    }
-
-    const lower = fileType.toLowerCase();
-    if (lower.indexOf('youtube') !== -1) {
-      return 'doctype:video';
-    }
-    if (lower.indexOf('doc')) {
-      return 'doctype:gdoc';
-    }
-    if (lower.indexOf('xls')) {
-      return 'doctype:excel';
-    }
-    return `dcotype:${lower}`;
+  get videoTimeSpan() {
+    return new TimeSpan(this.result.raw.ytvideoduration, false).getCleanHHMMSS();
   }
 
   render() {
@@ -82,7 +48,6 @@ export default class QuanticResult extends LightningElement {
     if (template) {
       return template;
     }
-
     return defaultTemplate;
   }
 }

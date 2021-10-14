@@ -21,6 +21,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetState} FacetState */
 /** @typedef {import("coveo").Facet} Facet */
 /** @typedef {import("coveo").FacetValue} FacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
@@ -134,8 +135,14 @@ export default class QuanticFacet extends LightningElement {
   
   /** @type {Facet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
   /** @type {HTMLInputElement} */
   input;
 
@@ -153,10 +160,24 @@ export default class QuanticFacet extends LightningElement {
     expandFacet,
   };
 
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+    this.input = this.template.querySelector('.facet__searchbox-input');
+  }
+
   /**
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -173,21 +194,14 @@ export default class QuanticFacet extends LightningElement {
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 
-  connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-  }
-
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
-    this.input = this.template.querySelector('.facet__searchbox-input');
-  }
-
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
@@ -324,7 +338,11 @@ export default class QuanticFacet extends LightningElement {
       count: evt.detail.numberOfResults,
     };
     if (this.isFacetSearchActive) {
-      this.facet.facetSearch.select(specificSearchResult);
+      if (this.isDisplayAsLink) {
+        this.facet.facetSearch.singleSelect(specificSearchResult);
+      } else {
+        this.facet.facetSearch.select(specificSearchResult);
+      }
     } else {
       this.onSelectClickHandler(evt.detail);
     }

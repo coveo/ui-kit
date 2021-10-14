@@ -11,21 +11,13 @@
           <div class="slds-col">
             <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">   
               <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
-                <div class="slds-m-bottom_large">
+                <c-quantic-facet-manager engine-id={engineId}>
                   <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
-                </div>
-                <div class="slds-m-bottom_large">
                   <c-quantic-facet display-values-as="link" field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
-                </div>
-                <div class="slds-m-bottom_large">
-                  <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-quantic-numeric-facet>
-                </div>
-                <div class="slds-m-bottom_large">
+                  <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" with-input="integer" engine-id={engineId}></c-quantic-numeric-facet>
                   <c-quantic-date-facet field="date" label="Date" engine-id={engineId}></c-quantic-date-facet>
-                </div>
-                <div class="slds-m-bottom_large">
                   <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
-                </div>
+                </c-quantic-facet-manager>
               </div>
               <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12">
                 <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
@@ -35,16 +27,16 @@
                   <c-quantic-tab label="Community" expression="@objecttype==&quot;Message&quot;" engine-id={engineId}></c-quantic-tab>
                   <c-quantic-tab label="Files" expression="@boxdocumenttype==File OR @spcontenttype==Document" engine-id={engineId}></c-quantic-tab>
                 </ul>
-                <div class="slds-grid slds-wrap slds-grid_vertical-align-center slds-m-vertical_small">
-                  <c-quantic-summary class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_7-of-12" engine-id={engineId}>
+                <div class="slds-grid slds-wrap slds-var-m-top_small">
+                  <c-quantic-summary class="slds-order_2 slds-var-m-vertical_x-small slds-medium-order_1 slds-size_1-of-1 slds-medium-size_7-of-12" engine-id={engineId}>
                   </c-quantic-summary>
-                  <c-quantic-sort class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_5-of-12" engine-id={engineId}>
+                  <c-quantic-sort class="slds-order_1 slds-var-m-vertical_xxx-small slds-medium-order_2 slds-size_1-of-1 slds-medium-size_5-of-12" engine-id={engineId}>
                   </c-quantic-sort>
                 </div>
                 <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
                 <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
                 <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
-                <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>  
+                <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>
                 <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
                 <div class="slds-var-m-vertical_medium">
                     <c-quantic-pager engine-id={engineId}></c-quantic-pager>

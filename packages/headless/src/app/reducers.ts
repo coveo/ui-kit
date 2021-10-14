@@ -37,6 +37,7 @@ import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
 import {sortReducer} from '../features/sort/sort-slice';
 import {dictionaryFieldContextReducer} from '../features/dictionary-field-context/dictionary-field-context-slice';
+import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -54,6 +55,7 @@ export const categoryFacetSearchSet = categoryFacetSearchSetReducer;
 export const query = queryReducer;
 export const advancedSearchQueries = advancedSearchQueriesReducer;
 export const querySet = querySetReducer;
+export const tabSet = tabSetReducer;
 /**
  * @deprecated - The `redirection` functionality is now handled by the `standaloneSearchBoxSet`.
  */
