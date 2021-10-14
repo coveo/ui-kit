@@ -78,11 +78,11 @@ export class PlatformClient {
 
       return response;
     } catch (error) {
-      if (error.message === 'Failed to fetch') {
+      if ((error as PlatformClientCallError).message === 'Failed to fetch') {
         return new DisconnectedError();
       }
 
-      return error;
+      return error as PlatformClientCallError;
     }
   }
 }
@@ -98,6 +98,7 @@ type PlatformEnvironment = PlatformCombination['env'];
 interface URLOptions<E extends PlatformEnvironment> {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];
+  orgDomain?: string;
 }
 
 function coveoCloudURL<E extends PlatformEnvironment>(
@@ -119,6 +120,10 @@ function coveoCloudURL<E extends PlatformEnvironment>(
 export function platformUrl<E extends PlatformEnvironment>(
   options?: URLOptions<E>
 ) {
+  if (options?.orgDomain) {
+    return `https://${options.orgDomain}.org.coveo.com`;
+  }
+
   return coveoCloudURL('platform', options);
 }
 

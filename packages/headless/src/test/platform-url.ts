@@ -7,6 +7,7 @@ export interface TestedPlatformURL {
   platform: string;
   search: string;
   analytics: string;
+  orgDomain?: string;
 }
 
 export const allValidPlatformCombination: () => TestedPlatformURL[] = () => [
@@ -121,5 +122,13 @@ export const allValidPlatformCombination: () => TestedPlatformURL[] = () => [
     platform: 'https://platformhipaa.cloud.coveo.com',
     search: 'https://platformhipaa.cloud.coveo.com/rest/search/v2',
     analytics: 'https://analyticshipaa.cloud.coveo.com/rest/ua',
+  },
+  {
+    region: undefined,
+    environment: undefined,
+    orgDomain: 'myorg',
+    platform: 'https://myorg.org.coveo.com',
+    search: 'https://myorg.org.coveo.com/rest/search/v2',
+    analytics: 'https://analytics.cloud.coveo.com/rest/ua',
   },
 ];
