@@ -26,5 +26,6 @@ export function initialSearchParameterSelector(
     nf: {},
     df: {},
     debug: getDebugInitialState(),
+    tab: '',
   };
 }

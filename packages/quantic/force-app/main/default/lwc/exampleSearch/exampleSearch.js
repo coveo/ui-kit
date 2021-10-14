@@ -1,7 +1,9 @@
 // @ts-ignore
-import template1 from './resultTemplates/template1.html';
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
-import template2 from './resultTemplates/template2.html';
+import caseTemplate from './resultTemplates/caseResultTemplate.html';
+// @ts-ignore
+import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
@@ -13,21 +15,35 @@ export default class ExampleSearch extends LightningElement {
 
     /** @type {import("coveo").ResultTemplatesManager} */
     const resultTemplatesManager = event.detail;
-
-    const isMessage = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+    
+    const isCase = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
       'objecttype',
-      ['Message']
+      ['Case']
     );
-    const fieldsMustBeDefined = CoveoHeadless.ResultTemplatesHelpers.fieldsMustBeDefined(
-      ['gdfiletitle']
+    const isYouTube = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'filetype',
+      ['YouTubeVideo']
+    );
+    const isChatter = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'objecttype',
+      ['FeedItem']
     );
     resultTemplatesManager.registerTemplates(
-      {content: template1, conditions: [isMessage]},
       {
-        content: template2,
-        conditions: [fieldsMustBeDefined],
-        fields: ['gdfiletitle'],
-      }
+        content: youtubeTemplate,
+        conditions: [isYouTube],
+        fields: ['ytvideoid', 'ytvideoduration']
+      },
+      {
+        content: caseTemplate,
+        conditions: [isCase],
+        fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber']
+      },
+      {
+        content: chatterTemplate,
+        conditions: [isChatter],
+        fields: ['sfcreatedbyname']
+      },
     );
   }
 }

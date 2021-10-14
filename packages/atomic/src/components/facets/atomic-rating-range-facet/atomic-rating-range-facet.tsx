@@ -141,6 +141,7 @@ export class AtomicRatingRangeFacet
       facetId: this.facetId!,
       element: this.host,
       format: (value) => this.formatFacetValue(value),
+      content: (value) => this.ratingContent(value),
     });
   }
 
@@ -172,6 +173,19 @@ export class AtomicRatingRangeFacet
       start: facetValue.start,
       end: facetValue.end,
     });
+  }
+
+  private ratingContent(facetValue: NumericFacetValue) {
+    return (
+      <div class="flex items-center">
+        <Rating
+          numberOfTotalIcons={this.maxValueInIndex}
+          numberOfActiveIcons={facetValue.start}
+          icon={this.icon}
+        ></Rating>
+        {this.renderLabelText(facetValue)}
+      </div>
+    );
   }
 
   private renderHeader() {
@@ -215,12 +229,7 @@ export class AtomicRatingRangeFacet
         i18n={this.bindings.i18n}
         onClick={onClick}
       >
-        <Rating
-          numberOfTotalIcons={this.maxValueInIndex}
-          numberOfActiveIcons={facetValue.start}
-          icon={this.icon}
-        ></Rating>
-        {this.renderLabelText(facetValue)}
+        {this.ratingContent(facetValue)}
       </FacetValueLink>
     );
   }

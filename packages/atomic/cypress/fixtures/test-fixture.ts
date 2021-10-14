@@ -32,7 +32,7 @@ export class TestFixture {
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private translations: Record<string, string> = {};
-  private responseModifier: SearchResponseModifierPredicate | null = null;
+  private responseModifiers: SearchResponseModifierPredicate[] = [];
 
   public with(feat: TestFeature) {
     feat(this);
@@ -88,7 +88,7 @@ export class TestFixture {
   }
 
   public withCustomResponse(predicate: SearchResponseModifierPredicate) {
-    this.responseModifier = predicate;
+    this.responseModifiers.push(predicate);
     return this;
   }
 
@@ -114,7 +114,7 @@ export class TestFixture {
         searchInterfaceComponent.setAttribute('analytics', 'false');
       }
 
-      if (this.responseModifier) {
+      if (this.responseModifiers.length) {
         cy.intercept(
           {
             method: 'POST',
@@ -122,8 +122,14 @@ export class TestFixture {
           },
           (request) => {
             request.reply((response) => {
-              const newResponse = this.responseModifier!(response.body);
-              response.send(200, newResponse ?? response.body);
+              let newResponse = response.body;
+              this.responseModifiers.forEach((modifier) => {
+                const returnedResponse = modifier(newResponse);
+                if (returnedResponse) {
+                  newResponse = returnedResponse;
+                }
+              });
+              response.send(200, newResponse);
             });
           }
         ).as(TestFixture.interceptAliases.Search.substring(1));
@@ -171,6 +177,16 @@ export class TestFixture {
       QuerySuggestions: '@coveoQuerySuggest',
       Search: '@coveoSearch',
       FacetSearch: '@coveoFacetSearch',
+    };
+  }
+
+  public static get urlParts() {
+    return {
+      UA: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics',
+      Search: 'https://cloud.coveo.com/rest/search/v2',
+      UAClick: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/click',
+      UASearch:
+        'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
     };
   }
 

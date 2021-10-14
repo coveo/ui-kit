@@ -67,6 +67,11 @@ export interface SearchParameters {
    * The sort expression to order returned results by.
    */
   sortCriteria?: string;
+
+  /**
+   * The active tab id.
+   */
+  tab?: string;
 }
 
 /** Restores search parameters from e.g. a url*/

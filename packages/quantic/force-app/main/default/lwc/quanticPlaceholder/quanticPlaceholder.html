@@ -1,0 +1,32 @@
+<template>
+  <template if:true={shouldDisplay}>
+    <template if:true={isCardVariant}>
+      <div class="placeholder__card-container slds-grid_vertical slds-p-horizontal_x-small">
+        <div class="slds-col slds-m-bottom_large">
+          <div class="grey placeholder__card-header placeholder__rounded placeholder__animation"></div>
+        </div>
+        <template for:each={rows} for:item="row">
+          <div key={row.index} class="slds-col slds-grid slds-m-bottom_medium placeholder__animation">
+            <div class="slds-m-right_x-small grey placeholder__round"></div>
+            <div class="slds-col grey placeholder__card-row placeholder__rounded"></div>
+          </div>
+        </template>
+      </div>
+    </template>
+    <template if:true={isResultListVariant}>
+      <template for:each={rows} for:item="row">
+        <div key={row.index} class="placeholder__result-container slds-grid slds-gutters slds-grid_vertical-align-start">
+          <div class="slds-col slds-m-bottom_large">
+            <div class="slds-col slds-size_1-of-1 grey placeholder__result-image placeholder__result-header placeholder__animation"></div>
+          </div>
+          <div class="slds-col placeholder__result-row slds-grid_vertical">
+            <div class="slds-col slds-m-bottom_medium slds-size_1-of-1 grey placeholder__result-header placeholder__rounded placeholder__animation"></div>
+            <div class="slds-col slds-m-bottom_medium slds-size_10-of-12 light-grey placeholder__rounded placeholder__animation"></div>
+            <div class="slds-col slds-m-bottom_medium slds-size_12-of-12 light-grey placeholder__rounded placeholder__animation"></div>
+            <div class="slds-col slds-m-bottom_medium slds-size_11-of-12 light-grey placeholder__rounded placeholder__animation"></div>
+          </div>
+        </div>
+      </template>
+    </template>
+  </template>
+</template>
