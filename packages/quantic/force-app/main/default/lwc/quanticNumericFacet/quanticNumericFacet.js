@@ -24,9 +24,9 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 /** @typedef {import("coveo").NumericFilterState} NumericFilterState*/
 /** @typedef {import("coveo").NumericFacet} NumericFacet */
 /** @typedef {import("coveo").NumericFilter} NumericFilter */
+/** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
-/** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
@@ -135,6 +135,8 @@ export default class QuanticNumericFacet extends LightningElement {
   numericFilter;
   /**  @type {SearchStatus} */
   searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
   /** @type {Function} */
@@ -179,6 +181,11 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
       options: {
         field: this.field,
@@ -218,6 +225,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
     this.filterState = this.numericFilter?.state;
     this.start = this.filterState?.range?.start?.toString();
     this.end = this.filterState?.range?.end?.toString();

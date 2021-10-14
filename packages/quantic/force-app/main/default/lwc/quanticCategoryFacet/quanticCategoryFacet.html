@@ -1,4 +1,7 @@
 <template>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
+  </template>
   <template if:true={hasParentsOrValues}>
     <c-quantic-card-container title={label}>
       <lightning-button-icon
