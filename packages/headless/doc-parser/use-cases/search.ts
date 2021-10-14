@@ -184,6 +184,17 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildStaticFilter',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/static-filter/static-filter.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/static-filter/static-filter.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildSearchStatus',
     samplePaths: {
       react_class: [
@@ -439,6 +450,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadStandaloneSearchBoxSetActions',
+  },
+  {
+    initializer: 'loadStaticFilterSetActions',
   },
 ];
 

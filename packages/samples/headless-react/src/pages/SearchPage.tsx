@@ -118,6 +118,7 @@ import {
   buildSmartSnippetQuestionsList,
   loadQueryActions,
   StandaloneSearchBoxAnalytics,
+  StaticFilterValue,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -125,6 +126,8 @@ import {relativeDateRanges} from '../components/relative-date-facet/relative-dat
 import {standaloneSearchBoxStorageKey} from '../components/standalone-search-box/standalone-search-box-storage-key';
 import {DictionaryFieldContext} from '../components/dictionary-field-context/dictionary-field-context.fn';
 import {Context} from '../components/context/context';
+import {StaticFilter as StaticFilterFn} from '../components/static-filter/static-filter.fn';
+import {StaticFilter} from '../components/static-filter/static-filter.class';
 
 declare global {
   interface Window {
@@ -382,6 +385,21 @@ export class SearchPage extends Component {
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
+  private get staticFilterValues(): StaticFilterValue[] {
+    return [
+      {
+        caption: 'Youtube',
+        expression: '@filetype==youtubevideo',
+        state: 'idle',
+      },
+      {
+        caption: 'Dropbox',
+        expression: '(@connectortype==DropboxCrawler AND @objecttype==File)',
+        state: 'idle',
+      },
+    ];
+  }
+
   render() {
     return (
       <div>
@@ -432,6 +450,10 @@ export class SearchPage extends Component {
           <Section title="query-summary">
             <QuerySummary />
             <QuerySummaryFn controller={this.querySummary} />
+          </Section>
+          <Section title="static filter">
+            <StaticFilter id="filetypes-a" values={this.staticFilterValues} />
+            <StaticFilterFn id="filetypes-b" values={this.staticFilterValues} />
           </Section>
           <Section title="facet">
             <FacetManager>
