@@ -42,11 +42,3 @@ export function assertRemovesComponent(
     selector().should('not.exist');
   });
 }
-
-export function assertRemovesComponent(
-  selector: () => Cypress.Chainable<JQuery<HTMLElement>>
-) {
-  it('should remove the component from the DOM', () => {
-    selector().should('not.exist');
-  });
-}
