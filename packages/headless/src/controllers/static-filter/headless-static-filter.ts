@@ -71,6 +71,14 @@ export interface StaticFilter extends Controller {
   deselectAll(): void;
 
   /**
+   * Checks whether the specified static filter value is selected.
+   *
+   * @param value - The static filter value to check.
+   * @returns Whether the specified static filter value is selected.
+   */
+  isValueSelected(value: StaticFilterValue): boolean;
+
+  /**
    * A state of the `StaticFilter` controller.
    */
   state: StaticFilterState;
@@ -140,6 +148,10 @@ export function buildStaticFilter(
     deselectAll() {
       dispatch(deselectAllStaticFilterValues(id));
       dispatch(executeSearch(noopSearchAnalyticsAction()));
+    },
+
+    isValueSelected(value: StaticFilterValue) {
+      return value.state === 'selected';
     },
 
     get state() {

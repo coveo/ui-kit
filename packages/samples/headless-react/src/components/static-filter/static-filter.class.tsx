@@ -46,7 +46,7 @@ export class StaticFilter extends Component<
             <li key={value.caption}>
               <input
                 type="checkbox"
-                checked={value.state === 'selected'}
+                checked={this.controller.isValueSelected(value)}
                 onChange={() => this.controller.toggleSelect(value)}
               />
               <span>{value.caption}</span>

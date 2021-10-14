@@ -120,6 +120,18 @@ describe('Static Filter', () => {
     });
   });
 
+  describe('#isValueSelected', () => {
+    it('when the value state is selected, it returns true', () => {
+      const value = buildMockStaticFilterValue({state: 'selected'});
+      expect(filter.isValueSelected(value)).toBe(true);
+    });
+
+    it('when the value state is idle, it returns false', () => {
+      const value = buildMockStaticFilterValue({state: 'idle'});
+      expect(filter.isValueSelected(value)).toBe(false);
+    });
+  });
+
   it('#state.id exposes the id', () => {
     expect(filter.state.id).toBe(options.id);
   });

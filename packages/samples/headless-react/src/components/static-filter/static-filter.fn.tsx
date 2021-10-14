@@ -16,7 +16,7 @@ export const StaticFilter: FunctionComponent<StaticFilterOptions> = (props) => {
           <li key={value.caption}>
             <input
               type="checkbox"
-              checked={value.state === 'selected'}
+              checked={controller.isValueSelected(value)}
               onChange={() => controller.toggleSelect(value)}
             />
             <span>{value.caption}</span>
