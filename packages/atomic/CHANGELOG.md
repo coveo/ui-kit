@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.0...@coveo/atomic@1.6.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* **atomic:** add hover state to breadcrumb label ([#1311](https://github.com/coveo/ui-kit/issues/1311)) ([c23a20c](https://github.com/coveo/ui-kit/commit/c23a20c1764f2fe4ccc146fb08b31596db212fa1))
+* **atomic:** evened out margin above and besides visual section ([#1328](https://github.com/coveo/ui-kit/issues/1328)) ([ab249cf](https://github.com/coveo/ui-kit/commit/ab249cfcdf54c226910312e97d1b2881af65a9b2))
+* **atomic:** fixed density and image size for table results ([#1326](https://github.com/coveo/ui-kit/issues/1326)) ([aa7df57](https://github.com/coveo/ui-kit/commit/aa7df572b11a374aa7b962271be251c27bfd8b4f))
+* **atomic:** removed margins outside results ([#1315](https://github.com/coveo/ui-kit/issues/1315)) ([ce22c27](https://github.com/coveo/ui-kit/commit/ce22c27cd497726ad68d683b77e7d62818fef04d))
+
+
+
+
+
+# [1.6.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.6...@coveo/atomic@1.6.0) (2021-10-13)
+
+
+### Bug Fixes
+
+* **atomic:** add margin-top to atomic-result-section-title-metadata ([#1321](https://github.com/coveo/ui-kit/issues/1321)) ([ce936e4](https://github.com/coveo/ui-kit/commit/ce936e46a521384d726a45765dde0c937b00c9c9))
+* **atomic:** changed color of arrow in printable uri ([#1316](https://github.com/coveo/ui-kit/issues/1316)) ([b101339](https://github.com/coveo/ui-kit/commit/b101339cf3495fe78b8900838268200062df9ae9))
+* **atomic:** evened out vertical margin on mobile list badge ([#1318](https://github.com/coveo/ui-kit/issues/1318)) ([e3743ca](https://github.com/coveo/ui-kit/commit/e3743ca9233ca2fccfd7c6c7a693c997a586b5ca))
+* **atomic:** fix atomic-result-section-badges height in comfortable mode ([#1320](https://github.com/coveo/ui-kit/issues/1320)) ([bd733a6](https://github.com/coveo/ui-kit/commit/bd733a6b1bdf6fb35eaf0df0b7bdd3c855add3c3))
+* **atomic:** fix double UA events on click ([#1304](https://github.com/coveo/ui-kit/issues/1304)) ([1ec7fe3](https://github.com/coveo/ui-kit/commit/1ec7fe3cdad4d501103f155fd8caad3d62f24166))
+
+
+### Features
+
+* **atomic:** added sections support to result tables ([#1309](https://github.com/coveo/ui-kit/issues/1309)) ([04cc83b](https://github.com/coveo/ui-kit/commit/04cc83b12f2d14179f712ef22de3227d3f84ec13))
+* **atomic:** allow rating icons in the breadcrumb ([#1314](https://github.com/coveo/ui-kit/issues/1314)) ([7478470](https://github.com/coveo/ui-kit/commit/747847077019e609e3bd1e53c210061d67d7b965))
+
+
+
+
+
 ## [1.5.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.5...@coveo/atomic@1.5.6) (2021-10-12)
 
 
