@@ -173,7 +173,6 @@ describe('search api client', () => {
         logger,
         requestParams: {
           q: state.query.q,
-          aq: '',
           debug: false,
           locale: state.configuration.search.locale,
           timezone: state.configuration.search.timezone,

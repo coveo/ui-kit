@@ -1,4 +1,5 @@
 import {staticFilterSet} from '../../app/reducers';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
@@ -52,19 +53,37 @@ describe('Static Filter', () => {
       'Check the options of buildStaticFilter'
     );
   });
+  describe('#toggleSelect', () => {
+    it('dispatches #toggleStaticFilterValue', () => {
+      const value = buildMockStaticFilterValue();
+      filter.toggleSelect(value);
 
-  it('#toggleSelect dispatches #toggleStaticFilterValue', () => {
-    const value = buildMockStaticFilterValue();
-    filter.toggleSelect(value);
+      const action = toggleSelectStaticFilterValue({id: options.id, value});
+      expect(engine.actions).toContainEqual(action);
+    });
 
-    const action = toggleSelectStaticFilterValue({id: options.id, value});
-    expect(engine.actions).toContainEqual(action);
+    it('dispatches #executeSearch', () => {
+      const value = buildMockStaticFilterValue();
+      filter.toggleSelect(value);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action).toBeTruthy();
+    });
   });
 
-  it('#deselectAll dispatches #deselectAllStaticFilterValues', () => {
-    filter.deselectAll();
-    const action = deselectAllStaticFilterValues(options.id);
-    expect(engine.actions).toContainEqual(action);
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllStaticFilterValues', () => {
+      filter.deselectAll();
+      const action = deselectAllStaticFilterValues(options.id);
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #executeSearch', () => {
+      filter.deselectAll();
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action).toBeTruthy();
+    });
   });
 
   describe('#toggleSingleSelect', () => {
@@ -90,6 +109,14 @@ describe('Static Filter', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectStaticFilterValue({id, value})
       );
+    });
+
+    it('dispatches #executeSearch', () => {
+      const value = buildMockStaticFilterValue();
+      filter.toggleSingleSelect(value);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action).toBeTruthy();
     });
   });
 
