@@ -1,6 +1,6 @@
 import {Schema} from '@coveo/bueno';
-import {buildController, Controller} from '..';
-import {SearchEngine} from '../..';
+import {buildController, Controller} from '../controller/headless-controller';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {staticFilterSet} from '../../app/reducers';
 import {
   staticFilterIdSchema,
