@@ -117,7 +117,7 @@ function deserialize(fragment: string): SearchParameters {
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (keyIsForObjectValue(key)) {
+    if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -232,7 +232,7 @@ function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
     return [key, parseInt(value)];
   }
 
-  if (keyIsForObjectValue(key)) {
+  if (keyHasObjectValue(key)) {
     return [key, castUnknownObject(value)];
   }
 
@@ -250,7 +250,7 @@ function castUnknownObject(value: string) {
   return ret;
 }
 
-function keyIsForObjectValue(
+function keyHasObjectValue(
   key: SearchParameterKey
 ): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' {
   const keys = ['f', 'cf', 'nf', 'df', 'sf'];
