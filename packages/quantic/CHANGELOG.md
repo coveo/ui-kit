@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.74.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.0...@coveo/quantic@0.74.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* **quantic:** wait for community to be ready ([#1331](https://github.com/coveo/ui-kit/issues/1331)) ([21807f9](https://github.com/coveo/ui-kit/commit/21807f96a9cfcfc1845d3c5234718847134a3e60))
+
+
+
+
+
+# [0.74.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.73.0...@coveo/quantic@0.74.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** Add custom filter functionality to numeric facets ([#1258](https://github.com/coveo/ui-kit/issues/1258)) ([3f61382](https://github.com/coveo/ui-kit/commit/3f613824bceb744b5e47456b62c17a495d0a4971))
+* **quantic:** added placeholder component ([#1319](https://github.com/coveo/ui-kit/issues/1319)) ([37751f3](https://github.com/coveo/ui-kit/commit/37751f3c3f832dce2de8796d13f473430b6493a1))
+
+
+
+
+
 # [0.73.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.72.1...@coveo/quantic@0.73.0) (2021-10-13)
 
 
