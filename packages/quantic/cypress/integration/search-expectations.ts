@@ -9,4 +9,13 @@ export const SearchExpectations = {
       )
     );
   },
+
+  constantExpressionEqual: (expression: string | undefined) => {
+    cy.wait(InterceptAliases.Search).then((interception) => {
+      expect(interception.request.body.cq).to.equal(
+        expression,
+        `search request constant query expression should be '${expression}'`
+      );
+    });
+  },
 };
