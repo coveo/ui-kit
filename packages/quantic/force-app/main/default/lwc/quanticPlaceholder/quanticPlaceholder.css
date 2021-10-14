@@ -1,5 +1,5 @@
 .placeholder__card-container {
-  min-width: 275px;
+  min-width: 212px;
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
@@ -26,7 +26,7 @@
 }
 
 .placeholder__result-container {
-  min-width: 575px;
+  min-width: 475px;
   padding-top: 1.2rem;
   padding-bottom: 1.2rem;
 }

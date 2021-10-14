@@ -182,7 +182,7 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch: {
+      facetSearch:  {
         numberOfValues: Number(this.numberOfValues)
       },
       facetId: this.facetId ?? this.field,
@@ -297,7 +297,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value !== '';
+    return !this.noSearch && this.input?.value?.length;
   }
 
   get isDisplayAsLink() {

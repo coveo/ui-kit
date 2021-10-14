@@ -292,7 +292,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return !!this.input?.value.length;
+    return this.withSearch && !!this.input?.value?.length;
   }
 
   getSearchValues() {
@@ -302,7 +302,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   /**
    * @param {CustomEvent<CategoryFacetValue>} evt
    */
-  onSelect(evt) {
+  onSelectValue(evt) {
     const specificSearchResult = {
       displayValue: evt.detail.value,
       rawValue: evt.detail.value,
