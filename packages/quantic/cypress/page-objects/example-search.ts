@@ -31,7 +31,7 @@ export const sortByDateDescending = () =>
     .click()
     .get(selectors.sort)
     .find('div[role="listbox"]')
-    .find('lightning-base-combobox-item[data-value="newest"]')
+    .find('lightning-base-combobox-item[data-value="date descending"]')
     .trigger('mouseover', {force: true})
     .click();
 
