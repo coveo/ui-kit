@@ -43,7 +43,10 @@ import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StaticFilterValue} from '..';
 import {StaticFilterSlice} from '../../features/static-filter-set/static-filter-set-state';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {
+  deselectAllStaticFilters,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
 
 /**
@@ -363,6 +366,7 @@ export function buildBreadcrumbManager(
 
     deselectAll: () => {
       dispatch(deselectAllFacets());
+      dispatch(deselectAllStaticFilters());
       dispatch(executeSearch(logClearBreadcrumbs()));
     },
 

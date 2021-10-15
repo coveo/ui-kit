@@ -48,7 +48,10 @@ import {
 } from '../../app/reducers';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {
+  deselectAllStaticFilters,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -388,13 +391,20 @@ describe('headless breadcrumb manager', () => {
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });
 
-  it('when calling deselectAll it dispatches the deselectAllFacets action', () => {
-    breadcrumbManager.deselectAll();
-    expect(engine.actions).toContainEqual(deselectAllFacets());
-  });
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllFacets', () => {
+      breadcrumbManager.deselectAll();
+      expect(engine.actions).toContainEqual(deselectAllFacets());
+    });
 
-  it('when calling deselectAll it dispatches the executeSearch action', () => {
-    breadcrumbManager.deselectAll();
-    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    it('dispatches #deselectAllStaticFilters', () => {
+      breadcrumbManager.deselectAll();
+      expect(engine.actions).toContainEqual(deselectAllStaticFilters());
+    });
+
+    it('dispatches #executeSearch', () => {
+      breadcrumbManager.deselectAll();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
   });
 });
