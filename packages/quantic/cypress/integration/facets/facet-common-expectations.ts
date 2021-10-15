@@ -27,6 +27,12 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
       });
     },
 
+    displayPlaceholder: (display: boolean) => {
+      it(`${should(display)} display the facet placeholder`, () => {
+        selector.placeholder().should(display ? 'be.visible' : 'not.exist');
+      });
+    },
+
     displayClearButton: (display: boolean) => {
       it(`${should(display)} display a clear filter button`, () => {
         selector.clearFilterButton().should(display ? 'exist' : 'not.exist');
@@ -99,7 +105,7 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
 
 export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
   return {
-    selectedCheckboxValuesContain: (value: string) => {
+    selectedValuesContain: (value: string) => {
       it(`${value} should be selected`, () => {
         selector.selectedValue().should('contain', value);
       });

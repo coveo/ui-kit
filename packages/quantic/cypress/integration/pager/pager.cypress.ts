@@ -1,8 +1,13 @@
 import {configure} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  interceptSearchIndefinitely,
+} from '../../page-objects/search';
 import {PagerExpectations as Expect} from './pager-expectations';
 import {PagerActions as Actions} from './pager-actions';
 import {stubConsoleError} from '../console-selectors';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 interface PagerOptions {
   numberOfPages: number;
@@ -29,10 +34,21 @@ describe('quantic-pager', () => {
     configure(options);
   }
 
-  function performSearchQuery() {
-    cy.get('.configurator__perform-search').click();
-    cy.wait(InterceptAliases.Search);
+  function setupWithPauseBeforeSearch() {
+    interceptSearchIndefinitely();
+    cy.visit(pageUrl);
+    configure({
+      numberOfPages: 5,
+    });
   }
+
+  it('should not render before results have returned', () => {
+    setupWithPauseBeforeSearch();
+
+    Expect.displayPrevious(false);
+    Expect.displayNext(false);
+    Expect.numberOfPages(0);
+  });
 
   describe('with default options', () => {
     it('should work as expected', () => {
@@ -59,7 +75,7 @@ describe('quantic-pager', () => {
       Expect.logPageNumber(3);
       Expect.selectedPageContains(3);
 
-      performSearchQuery();
+      performSearch().wait(InterceptAliases.Search);
       Expect.selectedPageContains(1);
     });
   });

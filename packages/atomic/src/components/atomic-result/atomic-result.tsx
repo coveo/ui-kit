@@ -1,6 +1,5 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {Result, SearchEngine} from '@coveo/headless';
-import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
@@ -61,8 +60,6 @@ export class AtomicResult {
     event.detail(this.result);
   }
 
-  private unbindLogDocumentOpen = () => {};
-
   private getClasses() {
     const classes = getResultDisplayClasses(
       this.display,
@@ -73,18 +70,6 @@ export class AtomicResult {
       classes.push('with-sections');
     }
     return classes;
-  }
-
-  public componentDidRender() {
-    this.unbindLogDocumentOpen = bindLogDocumentOpenOnResult(
-      this.engine,
-      this.result,
-      this.host.shadowRoot!
-    );
-  }
-
-  public disconnectedCallback() {
-    this.unbindLogDocumentOpen();
   }
 
   public render() {

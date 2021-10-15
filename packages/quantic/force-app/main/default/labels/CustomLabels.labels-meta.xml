@@ -462,4 +462,60 @@
         <protected>false</protected>
         <shortDescription>Featured</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_Min</fullName>
+        <value>Min</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Min</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Max</fullName>
+        <value>Max</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Max</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NumberInputMinimum</fullName>
+        <value>Enter a minimum numerical value for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter a minimum numerical value for the [component label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NumberInputMaximum</fullName>
+        <value>Enter a maximum numerical value for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter a maximum numerical value for the [component label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_Apply</fullName>
+        <value>Apply</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Apply</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NumberInputApply</fullName>
+        <value>Apply custom numerical values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Apply custom numerical values for the [component label] facet</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_MessageWhenRangeOverflow</fullName>
+        <value>This value must be less than or equal to {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>This value must be less than or equal to [value]</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_MessageWhenRangeUnderflow</fullName>
+        <value>This value must be greater than or equal to {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>This value must be greater than or equal to [value]</shortDescription>
+    </labels>
 </CustomLabels>
