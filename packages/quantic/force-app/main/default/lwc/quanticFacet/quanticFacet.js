@@ -182,7 +182,7 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch:  {
+      facetSearch: this.noSearch ? undefined : {
         numberOfValues: Number(this.numberOfValues)
       },
       facetId: this.facetId ?? this.field,
@@ -329,22 +329,24 @@ export default class QuanticFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<FacetValue>} evt
+   * @param {CustomEvent<string>} evt
    */
   onSelect(evt) {
-    const specificSearchResult = {
-      displayValue: evt.detail.value,
-      rawValue: evt.detail.value,
-      count: evt.detail.numberOfResults,
-    };
-    if (this.isFacetSearchActive) {
+    const item = this.values.find((value) => value.value === evt.detail)
+
+    if (item && this.isFacetSearchActive) {
+      const specificSearchResult = {
+        displayValue: item.value,
+        rawValue: item.value,
+        count: item.numberOfResults,
+      };
       if (this.isDisplayAsLink) {
         this.facet.facetSearch.singleSelect(specificSearchResult);
       } else {
         this.facet.facetSearch.select(specificSearchResult);
       }
     } else {
-      this.onSelectClickHandler(evt.detail);
+      this.onSelectClickHandler(item);
     }
     this.clearInput();
   }

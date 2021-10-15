@@ -205,7 +205,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get nonActiveParents() {
-    return this.state?.parents?.slice(0, -1) ?? [];
+    return this.state?.parents?.slice(0, -1).map(parent => parent) ?? [];
   }
 
   get activeParent() {
@@ -300,21 +300,26 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<CategoryFacetValue>} evt
+   * @param {CustomEvent<string>} evt
    */
   onSelectValue(evt) {
-    const specificSearchResult = {
-      displayValue: evt.detail.value,
-      rawValue: evt.detail.value,
-      count: evt.detail.numberOfResults,
-      path: evt.detail.path
-    };
-    if (this.isFacetSearchActive) {
-      this.facet.facetSearch.select(specificSearchResult);
+    const item = this.getItemFromValue(evt.detail);
+
+    if (item && this.isFacetSearchActive) {
+      this.facet.facetSearch.select({
+        displayValue: item.value,
+        rawValue: item.value,
+        count: item.numberOfResults,
+        path: item.path
+      });
     } else {
-      this.facet.toggleSelect(evt.detail);
+      this.facet.toggleSelect(item);
     }
     this.clearInput();
+  }
+
+  getItemFromValue(value) {
+    return this.values.find((item) => item.value === value) ?? this.nonActiveParents.find((item) => item.value === value);
   }
 
   preventDefault(evt) {
