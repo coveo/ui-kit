@@ -335,7 +335,7 @@ export default class QuanticFacet extends LightningElement {
   /**
    * @param {CustomEvent<string>} evt
    */
-  onSelect(evt) {
+  onSelectValue(evt) {
     const item = this.getItemFromValue(evt.detail);
 
     if (item && this.isFacetSearchActive) {

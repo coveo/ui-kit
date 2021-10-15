@@ -191,7 +191,7 @@ export default class QuanticDateFacet extends LightningElement {
   /**
    * @param {CustomEvent<string>} evt
    */
-  onSelect(evt) {
+   onSelectValue(evt) {
     const item = this.values.find((value) => this.formattingFunction(value) === evt.detail);
     this.facet.toggleSelect(item);
   }
