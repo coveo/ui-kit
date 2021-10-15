@@ -1,5 +1,6 @@
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
@@ -136,6 +137,35 @@ describe('static-filter-set slice', () => {
     it('when the id is an empty string, the action detects an error', () => {
       const action = deselectAllStaticFilterValues('');
       expect('error' in action).toBe(true);
+    });
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it(`when the #sf record contains a valid id and caption, and the caption in state is not selected,
+    it selects it`, () => {
+      const id = 'a';
+      const value = buildMockStaticFilterValue({caption: 'a', state: 'idle'});
+      const filter = buildMockStaticFilterSlice({values: [value]});
+
+      const action = restoreSearchParameters({sf: {[id]: [value.caption]}});
+      const state = staticFilterSetReducer({a: filter}, action);
+
+      expect(state[id].values).toEqual([{...value, state: 'selected'}]);
+    });
+
+    it(`when the #sf record is empty, and a caption in state is selected,
+    it sets it to idle`, () => {
+      const id = 'a';
+      const value = buildMockStaticFilterValue({
+        caption: 'a',
+        state: 'selected',
+      });
+      const filter = buildMockStaticFilterSlice({values: [value]});
+
+      const action = restoreSearchParameters({sf: {}});
+      const state = staticFilterSetReducer({a: filter}, action);
+
+      expect(state[id].values).toEqual([{...value, state: 'idle'}]);
     });
   });
 });

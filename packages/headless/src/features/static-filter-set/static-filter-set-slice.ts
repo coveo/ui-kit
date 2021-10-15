@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
@@ -46,5 +47,18 @@ export const staticFilterSetReducer = createReducer(
         }
 
         filter.values.forEach((v) => (v.state = 'idle'));
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        const sf = action.payload.sf || {};
+
+        Object.entries(state).forEach(([id, filter]) => {
+          const selected = sf[id] || [];
+
+          filter.values.forEach((value) => {
+            value.state = selected.includes(value.caption)
+              ? 'selected'
+              : 'idle';
+          });
+        });
       })
 );
