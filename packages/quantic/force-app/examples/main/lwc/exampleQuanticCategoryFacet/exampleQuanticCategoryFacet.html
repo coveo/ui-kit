@@ -1,0 +1,25 @@
+<template>
+    <c-example-layout
+        title={pageTitle}
+        description={pageDescription}
+        show-preview={isConfigured}>
+
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+            <c-quantic-category-facet
+                engine-id={engineId}
+                field={config.field}
+                label={config.label}
+                base-path={config.basePath}
+                no-filter-by-base-path={config.noFilterByBasePath}
+                no-filter-facet-count={config.noFilterFacetCount}
+                delimiting-character={config.delimitingCharacter}
+                number-of-values={config.numberOfValues}
+                sort-criteria={config.sortCriteria}
+                with-search={config.withSearch}
+                is-collapsed={config.isCollapsed}>
+            </c-quantic-category-facet>
+        </c-quantic-search-interface>
+    </c-example-layout>
+</template>
