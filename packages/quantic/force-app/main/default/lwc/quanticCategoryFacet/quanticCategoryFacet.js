@@ -205,7 +205,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get nonActiveParents() {
-    return this.state?.parents?.slice(0, -1).map(parent => parent) ?? [];
+    return this.state?.parents?.slice(0, -1) ?? [];
   }
 
   get activeParent() {

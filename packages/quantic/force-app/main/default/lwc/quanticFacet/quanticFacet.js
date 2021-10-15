@@ -297,7 +297,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return !this.noSearch && this.input?.value?.length;
+    return !this.noSearch && !!this.input?.value?.length;
   }
 
   get isDisplayAsLink() {
