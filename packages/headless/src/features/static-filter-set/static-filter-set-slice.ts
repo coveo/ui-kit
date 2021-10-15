@@ -1,6 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
+  deselectAllStaticFilters,
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
@@ -47,6 +48,11 @@ export const staticFilterSetReducer = createReducer(
         }
 
         filter.values.forEach((v) => (v.state = 'idle'));
+      })
+      .addCase(deselectAllStaticFilters, (state) => {
+        Object.values(state).forEach((filter) => {
+          filter.values.forEach((v) => (v.state = 'idle'));
+        });
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const sf = action.payload.sf || {};

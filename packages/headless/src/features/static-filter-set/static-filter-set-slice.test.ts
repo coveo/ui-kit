@@ -2,6 +2,7 @@ import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
+  deselectAllStaticFilters,
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
@@ -167,5 +168,25 @@ describe('static-filter-set slice', () => {
 
       expect(state[id].values).toEqual([{...value, state: 'idle'}]);
     });
+  });
+
+  it('#deselectAllStaticFilters selected values in all static filters to idle', () => {
+    const valueA = buildMockStaticFilterValue({
+      caption: 'a',
+      state: 'selected',
+    });
+    const valueB = buildMockStaticFilterValue({
+      caption: 'b',
+      state: 'selected',
+    });
+
+    const filterA = buildMockStaticFilterSlice({values: [valueA]});
+    const filterB = buildMockStaticFilterSlice({values: [valueB]});
+
+    const action = deselectAllStaticFilters();
+    const state = staticFilterSetReducer({a: filterA, b: filterB}, action);
+
+    expect(state.a.values).toEqual([{...valueA, state: 'idle'}]);
+    expect(state.b.values).toEqual([{...valueB, state: 'idle'}]);
   });
 });

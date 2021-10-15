@@ -7,6 +7,7 @@ import {
   toggleSelectStaticFilterValue,
   ToggleSelectStaticFilterValueActionCreatorPayload,
   deselectAllStaticFilterValues,
+  deselectAllStaticFilters,
 } from './static-filter-set-actions';
 
 export {
@@ -45,6 +46,13 @@ export interface StaticFilterSetActionCreators {
    * @returns A dispatchable action.
    */
   deselectAllStaticFilterValues(id: string): PayloadAction<string>;
+
+  /**
+   * Deselects all values in all static filters.
+   *
+   * @returns A dispatchable action.
+   */
+  deselectAllStaticFilters(): PayloadAction;
 }
 
 /**
@@ -62,5 +70,6 @@ export function loadStaticFilterSetActions(
     registerStaticFilter,
     toggleSelectStaticFilterValue,
     deselectAllStaticFilterValues,
+    deselectAllStaticFilters,
   };
 }
