@@ -14,10 +14,11 @@ import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
 /** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
@@ -126,8 +127,14 @@ export default class QuanticCategoryFacet extends LightningElement {
   
   /** @type {CategoryFacet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
   /** @type {string} */
   collapseIconName = 'utility:dash';
   /** @type {HTMLInputElement} */
@@ -158,12 +165,18 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   /**
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
@@ -183,7 +196,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
@@ -278,7 +292,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return !!this.input?.value.length;
+    return this.withSearch && !!this.input?.value?.length;
   }
 
   getSearchValues() {
@@ -286,21 +300,28 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<CategoryFacetValue>} evt
+   * @param {CustomEvent<{value: string}>} evt
    */
-  onSelect(evt) {
-    const specificSearchResult = {
-      displayValue: evt.detail.value,
-      rawValue: evt.detail.value,
-      count: evt.detail.numberOfResults,
-      path: evt.detail.path
-    };
-    if (this.isFacetSearchActive) {
-      this.facet.facetSearch.select(specificSearchResult);
+  onSelectValue(evt) {
+    const item = this.getItemFromValue(evt.detail.value);
+
+    if (item && this.isFacetSearchActive) {
+      this.facet.facetSearch.select({
+        displayValue: item.value,
+        rawValue: item.value,
+        count: item.numberOfResults,
+        path: item.path
+      });
     } else {
-      this.facet.toggleSelect(evt.detail);
+      this.facet.toggleSelect(item);
     }
     this.clearInput();
+  }
+
+  getItemFromValue(value) {
+    const facetValues = [...this.values, ...this.nonActiveParents];
+    // @ts-ignore
+    return (this.isFacetSearchActive ? this.facetSearchResults : facetValues).find((item) => item.value === value);
   }
 
   preventDefault(evt) {

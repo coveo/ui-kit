@@ -1,4 +1,7 @@
 <template>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
+  </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
@@ -30,7 +33,7 @@
             <template if:false={isFacetSearchActive}>
               <template for:each={values} for:item="v">
                 <c-quantic-facet-value 
-                  onselectvalue={onSelect} 
+                  onselectvalue={onSelectValue} 
                   key={v.value} 
                   item={v} 
                   is-checked={v.checked}
@@ -58,7 +61,7 @@
               <template if:true={hasSearchResults}>
                 <template for:each={facetSearchResults} for:item="result">
                   <c-quantic-facet-value 
-                    onselectvalue={onSelect} 
+                    onselectvalue={onSelectValue} 
                     key={result.value}
                     item={result}
                     is-checked={result.checked}

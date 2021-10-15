@@ -240,8 +240,11 @@ export class AtomicResultList implements InitializableComponent {
                 <td key={column.getAttribute('label')! + this.getId(result)}>
                   <atomic-table-cell
                     result={result}
-                    content={column.innerHTML}
+                    display={this.display}
+                    density={this.density}
+                    image={this.image}
                     useSections={containsSection(column)}
+                    content={column.innerHTML}
                   ></atomic-table-cell>
                 </td>
               ))}
