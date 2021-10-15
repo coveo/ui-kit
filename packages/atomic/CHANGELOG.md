@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.2...@coveo/atomic@1.6.3) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** adjusted number of columns for grid results ([#1334](https://github.com/coveo/ui-kit/issues/1334)) ([e4fba70](https://github.com/coveo/ui-kit/commit/e4fba70a9966c0ec394646fc63f592e5613062e1))
+
+
+
+
+
 ## [1.6.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.1...@coveo/atomic@1.6.2) (2021-10-14)
 
 **Note:** Version bump only for package @coveo/atomic
