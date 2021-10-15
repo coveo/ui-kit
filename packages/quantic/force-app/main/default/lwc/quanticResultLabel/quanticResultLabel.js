@@ -72,6 +72,9 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.icon) {
       return this.icon;
     }
+    if (this.isKnowledgeArticle) {
+      return 'standard:knowledge';
+    }
     if (this.objectTypeIcon) {
       return this.objectTypeIcon;
     }
@@ -85,6 +88,9 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.label) {
       return this.label;
     }
+    if (this.isKnowledgeArticle) {
+      return KNOWLEDGE;
+    }
     if (this.objectTypeLabel) {
       return this.objectTypeLabel;
     }
@@ -95,6 +101,10 @@ export default class QuanticResultLabel extends LightningElement {
       return this.sourceTypeLabel;
     }
     return this.labels.documentation;
+  }
+
+  get isKnowledgeArticle() {
+    return !!this.result.raw.sfknowledgearticleid;
   }
 
   get objectTypeIcon() {
