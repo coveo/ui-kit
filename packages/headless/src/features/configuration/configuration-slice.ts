@@ -29,14 +29,11 @@ function analyticsUrlFromPlatformUrl(
     return platformUrl.replace(/^(https:\/\/)platform/, '$1analytics');
   }
 
-  const isCoveoOrgDomainUrl = new RegExp(
-    `^https://${organizationId}\\.org\\.coveo\\.com`
-  ).test(platformUrl);
-  if (isCoveoOrgDomainUrl) {
-    return platformUrl.replace(
-      new RegExp(`^(https://)${organizationId}\\.org`),
-      '$1analytics.cloud'
-    );
+  const isCoveoOrgDomainUrlMatch = platformUrl.match(
+    new RegExp(`^https://(${organizationId}\\.org)\\.coveo.com`)
+  );
+  if (isCoveoOrgDomainUrlMatch) {
+    return platformUrl.replace(isCoveoOrgDomainUrlMatch[1], 'analytics.cloud');
   }
 
   return platformUrl;

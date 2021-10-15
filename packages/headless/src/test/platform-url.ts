@@ -7,7 +7,6 @@ export interface TestedPlatformURL {
   platform: string;
   search: string;
   analytics: string;
-  orgDomain?: string;
 }
 
 export const allValidPlatformCombination: () => TestedPlatformURL[] = () => [
