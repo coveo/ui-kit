@@ -138,6 +138,7 @@ export default class QuanticResultLabel extends LightningElement {
       'youtubevideo': 'custom:custom99',
       'youtubeplaylist': 'custom:custom99',
       'kb_knowledge': 'standard:knowledge',
+      'problem': 'standard:problem',
       'doc': 'doctype:word',
       'xls': 'doctype:excel',
     }
