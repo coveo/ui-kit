@@ -1,5 +1,9 @@
 import {configure} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  mockSearchNoResults,
+} from '../../page-objects/search';
 import {TabExpectations as Expect} from './tab-expectations';
 import {TabActions as Actions} from './tab-actions';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
@@ -44,7 +48,7 @@ describe('quantic-tab', () => {
   }
 
   describe('with active tab', () => {
-    it('should work as expected', () => {
+    beforeEach(() => {
       visitTab(
         {
           label: tabs.case.label,
@@ -53,11 +57,20 @@ describe('quantic-tab', () => {
         },
         false
       );
+    });
 
+    it('should not show tabs before search completes', () => {
+      Expect.displayTabs(false);
+
+      cy.wait(InterceptAliases.Search);
+      Expect.displayTabs(true);
+    });
+
+    it('should work as expected', () => {
+      Expect.search.constantExpressionEqual(tabs.case.expression);
       Expect.numberOfTabs(3);
       Expect.tabsEqual([tabs.all.label, tabs.case.label, tabs.knowledge.label]);
       Expect.activeTabContains(tabs.case.label);
-      Expect.search.constantExpressionEqual(tabs.case.expression);
 
       [tabs.all, tabs.knowledge].forEach((next) => {
         Actions.selectTab(next.label);
@@ -68,6 +81,12 @@ describe('quantic-tab', () => {
 
       performSearch();
       Expect.search.constantExpressionEqual(tabs.knowledge.expression);
+      Expect.displayTabs(true);
+
+      mockSearchNoResults();
+      performSearch();
+      cy.wait(InterceptAliases.Search);
+      Expect.displayTabs(false);
     });
   });
 

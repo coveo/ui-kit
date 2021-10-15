@@ -4,6 +4,10 @@ import {TabSelector, TabSelectors} from './tab-selectors';
 
 function tabExpectations(selector: TabSelector) {
   return {
+    displayTabs(displayed: boolean) {
+      selector.tab().should(displayed ? 'exist' : 'not.exist');
+    },
+
     numberOfTabs(value: number) {
       selector.tab().should('have.length', value);
     },
