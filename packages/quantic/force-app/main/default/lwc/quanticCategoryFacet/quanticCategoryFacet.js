@@ -319,7 +319,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   getItemFromValue(value) {
-    return this.values.find((item) => item.value === value) ?? this.nonActiveParents.find((item) => item.value === value);
+    const facetValues = [...this.values, ...this.nonActiveParents];
+    return (this.isFacetSearchActive ? this.facetSearchResults : facetValues).find((item) => item.value === value);
   }
 
   preventDefault(evt) {

@@ -328,11 +328,15 @@ export default class QuanticFacet extends LightningElement {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
 
+  getItemFromValue(value) {
+    return (this.isFacetSearchActive ? this.facetSearchResults : this.values).find((item) => item.value === value);
+  }
+
   /**
    * @param {CustomEvent<string>} evt
    */
   onSelect(evt) {
-    const item = this.values.find((value) => value.value === evt.detail)
+    const item = this.getItemFromValue(evt.detail);
 
     if (item && this.isFacetSearchActive) {
       const specificSearchResult = {
