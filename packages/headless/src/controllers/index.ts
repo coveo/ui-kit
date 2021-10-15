@@ -215,10 +215,12 @@ export {
   FacetBreadcrumb,
   DateFacetBreadcrumb,
   CategoryFacetBreadcrumb,
+  StaticFilterBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
   BreadcrumbManagerState,
   BreadcrumbManager,
+  DeselectableValue,
   buildBreadcrumbManager,
 } from './breadcrumb-manager/headless-breadcrumb-manager';
 

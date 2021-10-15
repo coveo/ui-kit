@@ -156,12 +156,7 @@ export interface StaticFilterBreadcrumb {
 /**
  * Represents a static filter breadcrumb value.
  */
-export interface StaticFilterBreadcrumbValue extends DeselectableValue {
-  /**
-   * The underlying static filter value linked to this breadcrumb.
-   */
-  value: StaticFilterValue;
-}
+type StaticFilterBreadcrumbValue = BreadcrumbValue<StaticFilterValue>;
 
 /**
  * Represents a generic breadcrumb type.
@@ -186,10 +181,9 @@ export interface Breadcrumb<T extends BaseFacetValue> {
 /**
  * Represents a generic breadcrumb value type.
  */
-export interface BreadcrumbValue<T extends BaseFacetValue>
-  extends DeselectableValue {
+export interface BreadcrumbValue<T> extends DeselectableValue {
   /**
-   * The underlying facet value linked to this breadcrumb.
+   * The underlying value linked to this breadcrumb.
    */
   value: T;
 }
