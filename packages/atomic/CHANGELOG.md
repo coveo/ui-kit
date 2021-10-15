@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.4...@coveo/atomic@1.6.5) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** add hover effect on grid + handle grid click  ([#1339](https://github.com/coveo/ui-kit/issues/1339)) ([129dfa2](https://github.com/coveo/ui-kit/commit/129dfa2f77c96a23fc285febd0d8558c4d547eaf))
+
+
+
+
+
 ## [1.6.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.3...@coveo/atomic@1.6.4) (2021-10-15)
 
 
