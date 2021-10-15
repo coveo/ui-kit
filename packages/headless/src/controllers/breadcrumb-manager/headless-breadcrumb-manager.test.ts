@@ -46,6 +46,9 @@ import {
   dateFacetSet,
   categoryFacetSet,
 } from '../../app/reducers';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -54,7 +57,8 @@ describe('headless breadcrumb manager', () => {
   let breadcrumbManager: BreadcrumbManager;
 
   function initController() {
-    engine = buildMockSearchAppEngine({state});
+    engine = buildMockSearchAppEngine();
+    engine.state = state;
     breadcrumbManager = buildBreadcrumbManager(engine);
   }
 
@@ -314,6 +318,59 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         deselectAllCategoryFacetValues(facetId)
       );
+    });
+  });
+
+  describe('static filter breadcrumbs', () => {
+    const id = 'a';
+    const idle = buildMockStaticFilterValue({caption: 'b', state: 'idle'});
+    const selected = buildMockStaticFilterValue({
+      caption: 'c',
+      state: 'selected',
+    });
+
+    beforeEach(() => {
+      state.staticFilterSet = {
+        [id]: buildMockStaticFilterSlice({id, values: [idle, selected]}),
+      };
+    });
+
+    it('#state gets static filter breadcrumbs correctly', () => {
+      const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+      const [firstFilter] = staticFilterBreadcrumbs;
+
+      expect(staticFilterBreadcrumbs.length).toBe(1);
+      expect(firstFilter.id).toBe(id);
+
+      const {values} = firstFilter;
+      expect(values.length).toBe(1);
+      expect(values[0].value.caption).toBe(selected.caption);
+    });
+
+    it('#state.hasBreadcrumbs returns true', () => {
+      expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
+    });
+
+    describe('#deselectBreadcrumb with a static filter breadcrumb value dispatches the correct actions', () => {
+      beforeEach(() => {
+        const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+        const [firstBreadcrumb] = staticFilterBreadcrumbs[0].values;
+
+        breadcrumbManager.deselectBreadcrumb(firstBreadcrumb);
+      });
+
+      it('dispatches #toggleSelectStaticFilterValue', () => {
+        const toggleSelect = toggleSelectStaticFilterValue({
+          id,
+          value: selected,
+        });
+        expect(engine.actions).toContainEqual(toggleSelect);
+      });
+
+      it('dispatches #executeSearch', () => {
+        const action = engine.findAsyncAction(executeSearch.pending);
+        expect(action).toBeTruthy();
+      });
     });
   });
 

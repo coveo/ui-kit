@@ -41,6 +41,10 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {StaticFilterValue} from '..';
+import {StaticFilterSlice} from '../../features/static-filter-set/static-filter-set-state';
+import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
@@ -52,12 +56,10 @@ export interface BreadcrumbManager extends Controller {
   deselectAll(): void;
 
   /**
-   * Deselects a facet breadcrumb value or category facet breadcrumb.
-   * @param value - The facet breadcrumb value or category facet breadcrumb to deselect.
+   * Deselects a the breadcrumb value.
+   * @param value - The breadcrumb value to deselect.
    */
-  deselectBreadcrumb(
-    value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
-  ): void;
+  deselectBreadcrumb(value: DeselectableValue): void;
 
   /**
    * The state of the `BreadcrumbManager` controller.
@@ -90,6 +92,11 @@ export interface BreadcrumbManagerState {
   dateFacetBreadcrumbs: DateFacetBreadcrumb[];
 
   /**
+   * The list of static filter breadcrumbs.
+   */
+  staticFilterBreadcrumbs: StaticFilterBreadcrumb[];
+
+  /**
    * Returns `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` if not.
    */
   hasBreadcrumbs: boolean;
@@ -113,7 +120,7 @@ export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
 /**
  * Represents a breadcrumb for a category facet.
  */
-export interface CategoryFacetBreadcrumb {
+export interface CategoryFacetBreadcrumb extends DeselectableValue {
   /**
    * The ID of the underlying facet.
    */
@@ -126,10 +133,31 @@ export interface CategoryFacetBreadcrumb {
    * The complete path to the underlying facet value.
    */
   path: CategoryFacetValue[];
+}
+
+/**
+ * Represents a breadcrumb for a static filter.
+ */
+export interface StaticFilterBreadcrumb {
   /**
-   * Deselects the corresponding facet value.
+   * The ID of the underlying static filter.
    */
-  deselect: () => void;
+  id: string;
+
+  /**
+   * The list of static filter values currently selected.
+   */
+  values: StaticFilterBreadcrumbValue[];
+}
+
+/**
+ * Represents a static filter breadcrumb value.
+ */
+export interface StaticFilterBreadcrumbValue extends DeselectableValue {
+  /**
+   * The underlying static filter value linked to this breadcrumb.
+   */
+  value: StaticFilterValue;
 }
 
 /**
@@ -155,15 +183,19 @@ export interface Breadcrumb<T extends BaseFacetValue> {
 /**
  * Represents a generic breadcrumb value type.
  */
-export interface BreadcrumbValue<T extends BaseFacetValue> {
+export interface BreadcrumbValue<T extends BaseFacetValue>
+  extends DeselectableValue {
   /**
    * The underlying facet value linked to this breadcrumb.
    */
   value: T;
+}
+
+export interface DeselectableValue {
   /**
-   * Deselects the corresponding facet value.
+   * A function that when called dispatches actions to deselect a breadcrumb value.
    */
-  deselect: () => void;
+  deselect(): void;
 }
 
 /**
@@ -276,12 +308,42 @@ export function buildBreadcrumbManager(
       .filter((breadcrumb) => breadcrumb.path.length);
   };
 
+  const getStaticFilterBreadcrumbs = (): StaticFilterBreadcrumb[] => {
+    const set = engine.state.staticFilterSet || {};
+    return Object.values(set).map(buildStaticFilterBreadcrumb);
+  };
+
+  const buildStaticFilterBreadcrumb = (
+    filter: StaticFilterSlice
+  ): StaticFilterBreadcrumb => {
+    const {id, values: filterValues} = filter;
+    const values = filterValues
+      .filter((value) => value.state === 'selected')
+      .map((value) => buildStaticFilterBreadcrumbValue(id, value));
+
+    return {id, values};
+  };
+
+  const buildStaticFilterBreadcrumbValue = (
+    id: string,
+    value: StaticFilterValue
+  ) => {
+    return {
+      value,
+      deselect: () => {
+        dispatch(toggleSelectStaticFilterValue({id, value}));
+        dispatch(executeSearch(noopSearchAnalyticsAction()));
+      },
+    };
+  };
+
   function hasBreadcrumbs() {
     return !![
       ...getFacetBreadcrumbs(),
       ...getNumericFacetBreadcrumbs(),
       ...getDateFacetBreadcrumbs(),
       ...getCategoryFacetBreadcrumbs(),
+      ...getStaticFilterBreadcrumbs(),
     ].length;
   }
 
@@ -294,6 +356,7 @@ export function buildBreadcrumbManager(
         categoryFacetBreadcrumbs: getCategoryFacetBreadcrumbs(),
         numericFacetBreadcrumbs: getNumericFacetBreadcrumbs(),
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
+        staticFilterBreadcrumbs: getStaticFilterBreadcrumbs(),
         hasBreadcrumbs: hasBreadcrumbs(),
       };
     },
@@ -303,9 +366,7 @@ export function buildBreadcrumbManager(
       dispatch(executeSearch(logClearBreadcrumbs()));
     },
 
-    deselectBreadcrumb(
-      value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
-    ) {
+    deselectBreadcrumb(value: DeselectableValue) {
       value.deselect();
     },
   };
