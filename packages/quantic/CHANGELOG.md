@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.76.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.75.0...@coveo/quantic@0.76.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** add tests for the QuanticResultsPerPage component ([#1329](https://github.com/coveo/ui-kit/issues/1329)) ([621ed70](https://github.com/coveo/ui-kit/commit/621ed70173fea19aeb22185683ae0be9a5d55e7e))
+
+
+
+
+
 # [0.75.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.1...@coveo/quantic@0.75.0) (2021-10-14)
 
 
