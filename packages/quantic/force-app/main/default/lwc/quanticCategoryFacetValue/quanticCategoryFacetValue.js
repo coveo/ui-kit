@@ -55,6 +55,11 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    */
   onSelect(evt) {
     evt.preventDefault();
-    this.dispatchEvent(new CustomEvent('selectvalue', {detail: (this.facetValue)}));
+    this.dispatchEvent(new CustomEvent(
+      'selectvalue', {
+      detail: {
+        value: this.facetValue
+      }
+    }));
   }
 }
