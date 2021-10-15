@@ -3,7 +3,7 @@ import {
   generateComponentHTML,
   TagProps,
 } from '../../fixtures/test-fixture';
-import {resultTemplateComponent} from '../result-templates/result-template-selectors';
+import {resultTemplateComponent} from './result-template-selectors';
 import {
   resultListComponent,
   ResultSection,
