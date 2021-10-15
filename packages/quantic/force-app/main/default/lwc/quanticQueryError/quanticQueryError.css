@@ -11,10 +11,4 @@
     border-radius: 4px;
 }
 
-.toolbar__background {
-    background: var(--lwc-colorBackgroundAlt, #FFFF);
-    border-top: 0;
-    width: var(--lwc-sizeXLarge, 40rem);
-}
-
 
