@@ -1,3 +1,4 @@
+import {ComponentSelector, CypressSelector} from '../../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithValuesSelector,
@@ -7,16 +8,23 @@ import {
 
 export const gategoryFacetComponent = 'c-quantic-category-facet';
 
+export interface CategoryFacetSelector extends ComponentSelector {
+  childValueOption: () => CypressSelector;
+  parentValueOption: () => CypressSelector;
+  numberOfResults: () => CypressSelector;
+}
+
 export type AllFacetSelectors = BaseFacetSelector &
-  FacetWithValuesSelector &
   FacetWithSearchSelector &
-  FacetWithShowMoreLessSelector;
+  FacetWithShowMoreLessSelector &
+  CategoryFacetSelector;
 
 export const CategoryFacetSelectors: AllFacetSelectors = {
   get: () => cy.get(gategoryFacetComponent),
 
   label: () => CategoryFacetSelectors.get().find('header h2 > span'),
-  values: () => CategoryFacetSelectors.get().find('c-quantic-facet-value'),
+  values: () =>
+    CategoryFacetSelectors.get().find('c-quantic-category-facet-value'),
   clearFilterButton: () =>
     CategoryFacetSelectors.get().find('.facet__clear-filter'),
   valueLabel: () =>
@@ -27,19 +35,12 @@ export const CategoryFacetSelectors: AllFacetSelectors = {
   expandButton: () => CategoryFacetSelectors.get().find('.facet__expand'),
   placeholder: () =>
     CategoryFacetSelectors.get().find('.placeholder__card-container'),
-
-  selectedCheckbox: () =>
-    CategoryFacetSelectors.get().find('input[type="checkbox"]:checked'),
-  idleCheckbox: () =>
-    CategoryFacetSelectors.get().find('input[type="checkbox"]:not(:checked)'),
-  selectedValue: () =>
-    CategoryFacetSelectors.get().find(
-      '.facet__value-text.facet__value_selected'
-    ),
-  idleValue: () =>
-    CategoryFacetSelectors.get().find('.facet__value-text.facet__value_idle'),
-  checkbox: () => CategoryFacetSelectors.get().find('.slds-checkbox'),
-
+  childValueOption: () =>
+    CategoryFacetSelectors.get().find('.facet__child-value-option'),
+  parentValueOption: () =>
+    CategoryFacetSelectors.get().find('.facet__parent-value-option'),
+  numberOfResults: () =>
+    CategoryFacetSelectors.get().find('.facet__number-of-results'),
   searchInput: () => CategoryFacetSelectors.get().find('input[type="search"]'),
   searchClearButton: () =>
     CategoryFacetSelectors.get().find('button[data-element-id="searchClear"]'),

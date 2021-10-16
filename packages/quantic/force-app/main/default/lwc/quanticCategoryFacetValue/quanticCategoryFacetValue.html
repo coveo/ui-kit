@@ -2,7 +2,7 @@
   <li class={categoryFacetLiClass}>  
     <div class="slds-size_1-of-1" onclick={onSelect}>
       <template if:true={nonActiveParent}>
-        <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+        <div class="facet__parent-value-option slds-size_1-of-1 slds-p-around_x-small">
           <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
           <span class="nowrap">{item.value}</span>
           <span class="facet__number-of-results">({item.numberOfResults})</span>
@@ -10,7 +10,7 @@
       </template>
       <template if:false={nonActiveParent}>
         <template if:false={isSearchResult}>
-          <div class="nowrap slds-text-color_default facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+          <div class="nowrap slds-text-color_default facet__child-value-option slds-size_1-of-1 slds-p-around_x-small">
             {item.value}
             <span class="facet__number-of-results">({item.numberOfResults})</span>
           </div>
