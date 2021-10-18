@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.28.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.1...@coveo/headless@1.28.2) (2021-10-18)
+
+
+### Bug Fixes
+
+* **headless:** handle custom Coveo domains in basic configuration ([#1340](https://github.com/coveo/ui-kit/issues/1340)) ([2b150db](https://github.com/coveo/ui-kit/commit/2b150db1f94750b9d5f618b860dd825398b60d9a))
+
+
+
+
+
 ## [1.28.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.0...@coveo/headless@1.28.1) (2021-10-12)
 
 
