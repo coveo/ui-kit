@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.77.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.0...@coveo/quantic@0.77.1) (2021-10-18)
+
+
+### Bug Fixes
+
+* **quantic:** removed some styling on quanticError to fix alignment ([#1345](https://github.com/coveo/ui-kit/issues/1345)) ([b80d54b](https://github.com/coveo/ui-kit/commit/b80d54b3883ea8eb63dba2763d071c118a117b1a))
+
+
+
+
+
 # [0.77.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.2...@coveo/quantic@0.77.0) (2021-10-18)
 
 
