@@ -183,7 +183,7 @@ describe('Facet Test Suite', () => {
           );
         });
 
-        describe('verify analytics', () => {
+        describe.skip('verify analytics', () => {
           before(selectLastFacetValue);
 
           Expect.logFacetSelect(defaultField, 1);
@@ -544,7 +544,7 @@ describe('Facet Test Suite', () => {
           Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
         });
 
-        describe('verify analytics', () => {
+        describe.skip('verify analytics', () => {
           before(selectLastFacetValue);
 
           Expect.logFacetSelect(defaultField, 0);
