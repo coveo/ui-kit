@@ -87,7 +87,7 @@ export class AtomicRatingFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of intervals to split the index into and display in the facet. This property will also change the number of rating icons if the `maxValueInIndex` is not assigned a value.
+   * The number of intervals to split the index into and display in the facet. This property will define the number of rating icons displayed if the `maxValueInIndex` isn't assigned a value.
    */
   @Prop() public numberOfIntervals = 5;
   /**
