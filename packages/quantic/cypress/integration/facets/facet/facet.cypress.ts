@@ -904,6 +904,8 @@ describe('Facet Test Suite', () => {
       before(setupNoSearch);
 
       Expect.displaySearchInput(false);
+      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+      Expect.numberOfSelectedCheckboxValues(0);
     });
   });
 

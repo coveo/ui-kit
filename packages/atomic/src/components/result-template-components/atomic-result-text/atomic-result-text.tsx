@@ -59,7 +59,7 @@ export class AtomicResultText implements InitializableComponent {
         .replace(new RegExp(closingDelimiter, 'g'), '</b>');
       return <Host innerHTML={innerHTML}></Host>;
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
     }
   }
 
@@ -81,15 +81,6 @@ export class AtomicResultText implements InitializableComponent {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
-
     const resultValue = this.resultValue;
     if (!resultValue && !this.default) {
       this.host.remove();

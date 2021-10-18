@@ -17,13 +17,25 @@ import {
   analyticsAPIEndpoint,
 } from './configuration-state';
 
-function analyticsUrlFromPlatformUrl(platformUrl: string) {
-  const isCoveoURL = platformUrl.match(
-    /^https:\/\/platform(dev|qa|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/
-  );
-  if (isCoveoURL) {
-    return platformUrl.replace(/^(https?:\/\/)platform/, '$1analytics');
+function analyticsUrlFromPlatformUrl(
+  platformUrl: string,
+  organizationId: string
+) {
+  const isCoveoPlatformURL =
+    /^https:\/\/platform(dev|qa|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
+      platformUrl
+    );
+  if (isCoveoPlatformURL) {
+    return platformUrl.replace(/^(https:\/\/)platform/, '$1analytics');
   }
+
+  const isCoveoOrgDomainUrlMatch = platformUrl.match(
+    new RegExp(`^https://(${organizationId}\\.org)\\.coveo.com`)
+  );
+  if (isCoveoOrgDomainUrlMatch) {
+    return platformUrl.replace(isCoveoOrgDomainUrlMatch[1], 'analytics.cloud');
+  }
+
   return platformUrl;
 }
 
@@ -42,7 +54,8 @@ export const configurationReducer = createReducer(
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
           state.analytics.apiBaseUrl = `${analyticsUrlFromPlatformUrl(
-            action.payload.platformUrl
+            action.payload.platformUrl,
+            state.organizationId
           )}${analyticsAPIEndpoint}`;
         }
       })

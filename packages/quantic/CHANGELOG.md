@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.77.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.2...@coveo/quantic@0.77.0) (2021-10-18)
+
+
+### Features
+
+* **quantic:** add tests for the Quantic Tab component ([#1341](https://github.com/coveo/ui-kit/issues/1341)) ([70ed75d](https://github.com/coveo/ui-kit/commit/70ed75dca37a615e434376a4cb49a9f65654987a))
+* **quantic:** added knowledge article detection to quanticLabel ([#1346](https://github.com/coveo/ui-kit/issues/1346)) ([3a22c07](https://github.com/coveo/ui-kit/commit/3a22c073a73dd47e5e6230be1d2361ef627a6374))
+
+
+
+
+
+## [0.76.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.1...@coveo/quantic@0.76.2) (2021-10-15)
+
+
+### Bug Fixes
+
+* **quantic:** replaced event detail content with primitive type ([#1342](https://github.com/coveo/ui-kit/issues/1342)) ([16c45bf](https://github.com/coveo/ui-kit/commit/16c45bf7e3432174197483272451f8fd4134570b))
+
+
+
+
+
 ## [0.76.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.0...@coveo/quantic@0.76.1) (2021-10-15)
 
 

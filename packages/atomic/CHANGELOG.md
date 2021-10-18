@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.6...@coveo/atomic@1.6.7) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** adjusted all result components to behave similarly ([#1298](https://github.com/coveo/ui-kit/issues/1298)) ([8f9041a](https://github.com/coveo/ui-kit/commit/8f9041ab091d31350243670812a6fdd2afb55667))
+* **atomic:** made printable uri not overflow horizontally ([#1333](https://github.com/coveo/ui-kit/issues/1333)) ([d087908](https://github.com/coveo/ui-kit/commit/d08790849fb37d0d812965ed908ecb5dd834aa96))
+
+
+
+
+
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.5...@coveo/atomic@1.6.6) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** fix margin right badge element to 8px ([#1327](https://github.com/coveo/ui-kit/issues/1327)) ([9489011](https://github.com/coveo/ui-kit/commit/94890119571320ce78669f34a6f114ffd60ccf4d))
+
+
+
+
+
+## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.4...@coveo/atomic@1.6.5) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** add hover effect on grid + handle grid click  ([#1339](https://github.com/coveo/ui-kit/issues/1339)) ([129dfa2](https://github.com/coveo/ui-kit/commit/129dfa2f77c96a23fc285febd0d8558c4d547eaf))
+
+
+
+
+
+## [1.6.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.3...@coveo/atomic@1.6.4) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** left aligned result table headers ([#1335](https://github.com/coveo/ui-kit/issues/1335)) ([4f34769](https://github.com/coveo/ui-kit/commit/4f347696612c171e19eefd0137d17ca6d15b4108))
+
+
+
+
+
 ## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.2...@coveo/atomic@1.6.3) (2021-10-15)
 
 
