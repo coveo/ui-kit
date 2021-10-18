@@ -98,7 +98,7 @@ type PlatformEnvironment = PlatformCombination['env'];
 interface URLOptions<E extends PlatformEnvironment> {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];
-  orgDomain?: string;
+  multiRegionSubDomain?: string;
 }
 
 function coveoCloudURL<E extends PlatformEnvironment>(
@@ -120,8 +120,8 @@ function coveoCloudURL<E extends PlatformEnvironment>(
 export function platformUrl<E extends PlatformEnvironment>(
   options?: URLOptions<E>
 ) {
-  if (options?.orgDomain) {
-    return `https://${options.orgDomain}.org.coveo.com`;
+  if (options?.multiRegionSubDomain) {
+    return `https://${options.multiRegionSubDomain}.org.coveo.com`;
   }
 
   return coveoCloudURL('platform', options);
