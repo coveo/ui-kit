@@ -136,6 +136,7 @@ export class AtomicResultPrintableUri {
       <LinkWithResultAnalytics
         interactiveResult={this.interactiveResult}
         href={uri}
+        title={typeof content === 'string' ? content : undefined}
         part={'result-printable-uri-link'}
         target={this.target}
       >
