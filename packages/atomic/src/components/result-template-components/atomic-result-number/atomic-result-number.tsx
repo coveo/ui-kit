@@ -36,6 +36,8 @@ export class AtomicResultNumber {
 
   @State() formatter: NumberFormatter = defaultNumberFormatter;
 
+  @State() valueToDisplay: string | null = null;
+
   @Listen('atomic/numberFormat')
   public setFormat(event: CustomEvent<NumberFormatter>) {
     event.preventDefault();
@@ -43,7 +45,7 @@ export class AtomicResultNumber {
     this.formatter = event.detail;
   }
 
-  private get value() {
+  private parseValue() {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
@@ -52,25 +54,40 @@ export class AtomicResultNumber {
       return null;
     }
     const valueAsNumber = parseFloat(`${value}`);
-    return Number.isNaN(valueAsNumber) ? null : valueAsNumber;
+    if (Number.isNaN(valueAsNumber)) {
+      this.error = new Error(
+        `Could not parse "${value}" from field "${this.field}" as a number.`
+      );
+      return null;
+    }
+    return valueAsNumber;
   }
 
   private formatValue(value: number) {
     try {
       return this.formatter(value, this.bindings.i18n.languages);
     } catch (error) {
-      this.error = error;
-      return value;
+      this.error = error as Error;
+      return value.toString();
     }
   }
 
-  public render() {
-    const value = this.value;
+  private updateValueToDisplay() {
+    const value = this.parseValue();
+    if (value !== null) {
+      this.valueToDisplay = this.formatValue(value);
+    }
+  }
 
-    if (value === null) {
+  componentWillRender() {
+    this.updateValueToDisplay();
+  }
+
+  public render() {
+    if (this.valueToDisplay === null) {
+      this.host.remove();
       return;
     }
-
-    return this.formatValue(value);
+    return this.valueToDisplay;
   }
 }

@@ -31,7 +31,7 @@ import {LinkWithResultAnalytics} from '../../result-link/result-link';
 export class AtomicResultPrintableUri {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
-  @Element() private host!: HTMLElement;
+  @Element() public host!: HTMLElement;
 
   @State() listExpanded = false;
   private strings = {
@@ -64,7 +64,7 @@ export class AtomicResultPrintableUri {
         maxNumberOfParts: new NumberValue({min: 3}),
       }).validate({maxNumberOfParts: this.maxNumberOfParts});
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
     }
   }
 
@@ -145,10 +145,6 @@ export class AtomicResultPrintableUri {
   }
 
   public render() {
-    if (this.error) {
-      this.host?.remove();
-      return;
-    }
     const parents = this.renderParents();
     if (parents.length) {
       const parts = `result-printable-uri-list${
