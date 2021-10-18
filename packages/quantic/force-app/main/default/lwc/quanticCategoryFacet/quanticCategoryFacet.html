@@ -23,14 +23,14 @@
           <template if:false={isFacetSearchActive}>
             <template if:true={hasParents}>
               <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
-                <div onclick={reset}>
-                  <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
+                <div class="slds-grid slds-grid_vertical-align-center" onclick={reset}>
+                  <lightning-icon class="slds-m-right_xx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
                   <span class="nowrap">{labels.allCategories}</span>
                 </div> 
               </li> 
             </template>
             <template for:each={nonActiveParents} for:item="v">
-              <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
+              <c-quantic-category-facet-value onselectvalue={onSelectValue} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
             </template>
             <template if:true={activeParent}>
               <li class="slds-grid slds-p-around_x-small">
@@ -42,7 +42,7 @@
               <ul class="slds-size_1-of-1">
                 <template for:each={values} for:item="v">
                   <c-quantic-category-facet-value
-                    onselectvalue={onSelect} 
+                    onselectvalue={onSelectValue} 
                     key={v.value} 
                     item={v}
                     active-parent={activeParent}>
@@ -55,7 +55,7 @@
             <template if:true={hasSearchResults}>
               <template for:each={facetSearchResults} for:item="result">
                 <c-quantic-category-facet-value 
-                  onselectvalue={onSelect} 
+                  onselectvalue={onSelectValue} 
                   key={result.index}  
                   item={result} 
                   is-search-result="true">

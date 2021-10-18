@@ -2,6 +2,10 @@
 @import './atomic-result-list-cards.pcss';
 @import './atomic-result-table.pcss';
 
+a[part='result-list-grid-clickable'] {
+  text-decoration: none;
+}
+
 .list-wrapper.placeholder {
   atomic-result {
     display: none;
@@ -77,6 +81,17 @@
 
   @screen desktop-only {
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+
+    atomic-result {
+      border: 1px solid transparent;
+      padding: 1rem;
+      border-radius: 1rem;
+      transition: all 0.12s ease-out;
+      &:hover {
+        border: 1px solid var(--atomic-neutral);
+        box-shadow: 0px 10px 25px var(--atomic-neutral);
+      }
+    }
 
     &.density-comfortable {
       grid-row-gap: 4rem;

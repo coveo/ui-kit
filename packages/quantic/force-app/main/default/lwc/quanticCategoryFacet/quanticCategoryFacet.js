@@ -292,7 +292,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return !!this.input?.value.length;
+    return this.withSearch && !!this.input?.value?.length;
   }
 
   getSearchValues() {
@@ -300,21 +300,28 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   /**
-   * @param {CustomEvent<CategoryFacetValue>} evt
+   * @param {CustomEvent<{value: string}>} evt
    */
-  onSelect(evt) {
-    const specificSearchResult = {
-      displayValue: evt.detail.value,
-      rawValue: evt.detail.value,
-      count: evt.detail.numberOfResults,
-      path: evt.detail.path
-    };
-    if (this.isFacetSearchActive) {
-      this.facet.facetSearch.select(specificSearchResult);
+  onSelectValue(evt) {
+    const item = this.getItemFromValue(evt.detail.value);
+
+    if (item && this.isFacetSearchActive) {
+      this.facet.facetSearch.select({
+        displayValue: item.value,
+        rawValue: item.value,
+        count: item.numberOfResults,
+        path: item.path
+      });
     } else {
-      this.facet.toggleSelect(evt.detail);
+      this.facet.toggleSelect(item);
     }
     this.clearInput();
+  }
+
+  getItemFromValue(value) {
+    const facetValues = [...this.values, ...this.nonActiveParents];
+    // @ts-ignore
+    return (this.isFacetSearchActive ? this.facetSearchResults : facetValues).find((item) => item.value === value);
   }
 
   preventDefault(evt) {
