@@ -182,7 +182,7 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch: {
+      facetSearch: this.noSearch ? undefined : {
         numberOfValues: Number(this.numberOfValues)
       },
       facetId: this.facetId ?? this.field,
@@ -297,7 +297,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value !== '';
+    return !this.noSearch && !!this.input?.value?.length;
   }
 
   get isDisplayAsLink() {
@@ -328,23 +328,29 @@ export default class QuanticFacet extends LightningElement {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
 
+  getItemFromValue(value) {
+    return (this.isFacetSearchActive ? this.facetSearchResults : this.values).find((item) => item.value === value);
+  }
+
   /**
-   * @param {CustomEvent<FacetValue>} evt
+   * @param {CustomEvent<{value: string}>} evt
    */
-  onSelect(evt) {
-    const specificSearchResult = {
-      displayValue: evt.detail.value,
-      rawValue: evt.detail.value,
-      count: evt.detail.numberOfResults,
-    };
-    if (this.isFacetSearchActive) {
+  onSelectValue(evt) {
+    const item = this.getItemFromValue(evt.detail.value);
+
+    if (item && this.isFacetSearchActive) {
+      const specificSearchResult = {
+        displayValue: item.value,
+        rawValue: item.value,
+        count: item.numberOfResults,
+      };
       if (this.isDisplayAsLink) {
         this.facet.facetSearch.singleSelect(specificSearchResult);
       } else {
         this.facet.facetSearch.select(specificSearchResult);
       }
     } else {
-      this.onSelectClickHandler(evt.detail);
+      this.onSelectClickHandler(item);
     }
     this.clearInput();
   }

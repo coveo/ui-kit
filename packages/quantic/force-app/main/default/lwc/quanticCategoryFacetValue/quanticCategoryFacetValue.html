@@ -2,8 +2,8 @@
   <li class={categoryFacetLiClass}>  
     <div class="slds-size_1-of-1" onclick={onSelect}>
       <template if:true={nonActiveParent}>
-        <div class="facet__parent-value-option slds-size_1-of-1 slds-p-around_x-small">
-          <lightning-button-icon  variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
+        <div class="facet__parent-value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small">
+          <lightning-icon class="slds-m-right_xx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
           <span class="nowrap">{item.value}</span>
           <span class="facet__number-of-results">({item.numberOfResults})</span>
         </div>

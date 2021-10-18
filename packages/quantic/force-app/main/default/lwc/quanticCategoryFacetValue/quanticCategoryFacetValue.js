@@ -43,16 +43,23 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   }
 
   get categoryFacetLiClass() {
-    if(this.activeParent) {
-      return "slds-var-m-left_large slds-grid facet__category-value";
-    }
-    return "slds-grid facet__category-value";
+    return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';
   }
+
+  get facetValue() {
+    return this.item.value;
+  }
+  
   /**
-   * @param {InputEvent} evt
+   * @param {Event} evt
    */
   onSelect(evt) {
     evt.preventDefault();
-    this.dispatchEvent(new CustomEvent('selectvalue', {detail: this.item}));
+    this.dispatchEvent(new CustomEvent(
+      'selectvalue', {
+      detail: {
+        value: this.facetValue
+      }
+    }));
   }
 }
