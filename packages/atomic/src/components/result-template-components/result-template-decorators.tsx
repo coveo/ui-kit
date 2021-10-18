@@ -38,7 +38,8 @@ export function ResultContext() {
         console.error(
           'Result component is in error and has been removed from the DOM',
           this.error,
-          this
+          this,
+          this.host
         );
         return;
       }

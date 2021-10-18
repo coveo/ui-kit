@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.76.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.1...@coveo/quantic@0.76.2) (2021-10-15)
+
+
+### Bug Fixes
+
+* **quantic:** replaced event detail content with primitive type ([#1342](https://github.com/coveo/ui-kit/issues/1342)) ([16c45bf](https://github.com/coveo/ui-kit/commit/16c45bf7e3432174197483272451f8fd4134570b))
+
+
+
+
+
+## [0.76.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.0...@coveo/quantic@0.76.1) (2021-10-15)
+
+
+### Bug Fixes
+
+* **quantic:** fixed sort value not being updating and added FT ([#1336](https://github.com/coveo/ui-kit/issues/1336)) ([be64989](https://github.com/coveo/ui-kit/commit/be64989692fdf033163d697fcaab6c3993442ddc))
+* **quantic:** missing wait for search request ([#1338](https://github.com/coveo/ui-kit/issues/1338)) ([32641ae](https://github.com/coveo/ui-kit/commit/32641ae03029101a33e4a82ecd889fd60c1f4d24))
+
+
+
+
+
+# [0.76.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.75.0...@coveo/quantic@0.76.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** add tests for the QuanticResultsPerPage component ([#1329](https://github.com/coveo/ui-kit/issues/1329)) ([621ed70](https://github.com/coveo/ui-kit/commit/621ed70173fea19aeb22185683ae0be9a5d55e7e))
+
+
+
+
+
 # [0.75.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.1...@coveo/quantic@0.75.0) (2021-10-14)
 
 

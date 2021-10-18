@@ -13,6 +13,13 @@ import oldest from '@salesforce/label/c.quantic_Oldest';
 /** @typedef {import("coveo").SortState} SortState */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SortCriterion} SortCriterion */
+/**
+ * @typedef SortOption
+ * @property {string} label
+ * @property {string} value
+ * @property {SortCriterion} criterion
+ */
 
 /**
  * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
@@ -40,6 +47,8 @@ export default class QuanticSort extends LightningElement {
   unsubscribeSort;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {Array.<SortOption>} */
+  options;
 
   labels = {
     sortBy,
@@ -60,6 +69,7 @@ export default class QuanticSort extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.options = this.buildOptions();
     this.sort = CoveoHeadless.buildSort(engine);
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
@@ -69,40 +79,42 @@ export default class QuanticSort extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.unsubscribeSearchStatus?.();
     this.unsubscribeSort?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.sort.state;
-    this.hasResults = this.searchStatus.state.hasResults;
+    this.state = this.sort?.state;
+    this.hasResults = this.searchStatus?.state?.hasResults;
+  }
+
+  buildOptions() {
+    return [
+      {
+        label: this.labels.relevancy,
+        value: CoveoHeadless.buildCriterionExpression(this.relevancy),
+        criterion: this.relevancy,
+      },
+      {
+        label: this.labels.newest,
+        value: CoveoHeadless.buildCriterionExpression(this.dateDescending),
+        criterion: this.dateDescending},
+      {
+        label: this.labels.oldest,
+        value: CoveoHeadless.buildCriterionExpression(this.dateAscending),
+        criterion: this.dateAscending,
+      },
+    ];
   }
 
   /**
    * @param {CustomEvent<{value: string}>} e
    */
   handleChange(e) {
-    const selected = e.detail.value;
-
-    switch (selected) {
-      case 'relevancy':
-        this.sort.sortBy(this.relevance);
-        break;
-
-      case 'newest':
-        this.sort.sortBy(this.dateDescending);
-        break;
-
-      case 'oldest':
-        this.sort.sortBy(this.dateAscending);
-        break;
-
-      default:
-        break;
-    }
+    this.sort.sortBy(this.options.find((option) => option.value === e.detail.value).criterion);
   }
 
-  get relevance() {
+  get relevancy() {
     return CoveoHeadless.buildRelevanceSortCriterion();
   }
 
@@ -118,25 +130,7 @@ export default class QuanticSort extends LightningElement {
     );
   }
 
-  get largest() {
-    return CoveoHeadless.buildFieldSortCriterion(
-      'size',
-      CoveoHeadless.SortOrder.Descending
-    );
-  }
-
-  get options() {
-    return [
-      {label: this.labels.relevancy, value: 'relevancy'},
-      {label: this.labels.newest, value: 'newest'},
-      {label: this.labels.oldest, value: 'oldest'},
-    ];
-  }
-
   get value() {
-    if (!this.sort || !this.state?.sortCriteria) {
-      return 'relevancy';
-    }
     return this.state?.sortCriteria;
   }
 }

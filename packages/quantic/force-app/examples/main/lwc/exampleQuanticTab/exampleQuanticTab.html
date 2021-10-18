@@ -1,0 +1,30 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+      <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+    </c-configurator>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <div class="slds-grid">
+        <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
+          <c-quantic-tab engine-id={engineId} label="All"></c-quantic-tab>
+          <c-quantic-tab
+            engine-id={engineId}
+            label={config.label}
+            expression={config.expression}
+            is-active={config.isActive}
+          ></c-quantic-tab>
+          <c-quantic-tab
+            engine-id={engineId}
+            label="Knowledge"
+            expression="@objecttype==Knowledge"
+          ></c-quantic-tab>
+        </ul> 
+      </div>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>

@@ -2,6 +2,11 @@ import {Component, h, Prop, Element} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {filterProtocol} from '../../../utils/xss-utils';
+import {
+  InitializeBindings,
+  Bindings,
+  InitializableComponent,
+} from '../../../utils/initialization-utils';
 
 /**
  * The `atomic-result-image` component renders an image from a result field.
@@ -12,7 +17,8 @@ import {filterProtocol} from '../../../utils/xss-utils';
   tag: 'atomic-result-image',
   shadow: false,
 })
-export class AtomicResultImage {
+export class AtomicResultImage implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
   @Element() private host!: HTMLElement;
 
@@ -21,6 +27,8 @@ export class AtomicResultImage {
    */
   @Prop() field!: string;
 
+  public error!: Error;
+
   public render() {
     const url = ResultTemplatesHelpers.getResultProperty(
       this.result,
@@ -28,6 +36,10 @@ export class AtomicResultImage {
     );
 
     if (typeof url !== 'string') {
+      this.bindings.engine.logger.error(
+        `Expected "${this.field}" to be a text field.`,
+        this.host
+      );
       this.host.remove();
       return;
     }

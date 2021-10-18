@@ -2,6 +2,10 @@
 @import './atomic-result-list-cards.pcss';
 @import './atomic-result-table.pcss';
 
+a[part='result-list-grid-clickable'] {
+  text-decoration: none;
+}
+
 .list-wrapper.placeholder {
   atomic-result {
     display: none;
@@ -78,6 +82,17 @@
   @screen desktop-only {
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
+    atomic-result {
+      border: 1px solid transparent;
+      padding: 1rem;
+      border-radius: 1rem;
+      transition: all 0.12s ease-out;
+      &:hover {
+        border: 1px solid var(--atomic-neutral);
+        box-shadow: 0px 10px 25px var(--atomic-neutral);
+      }
+    }
+
     &.density-comfortable {
       grid-row-gap: 4rem;
       grid-column-gap: 1.5rem;
@@ -94,7 +109,12 @@
     }
 
     &.image-small {
-      grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+      @media not all and (min-width: 1180px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media (min-width: 1180px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
   }
 
@@ -115,14 +135,19 @@
         grid-template-columns: 1fr 1fr;
       }
     }
-    &.image-small {
-      @mixin atomic-grid-with-cards;
-      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-    }
+    &.image-small,
     &.image-icon,
     &.image-none {
       @mixin atomic-grid-with-cards;
-      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+      @media not all and (min-width: 320px) {
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 320px) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
     }
   }
 }

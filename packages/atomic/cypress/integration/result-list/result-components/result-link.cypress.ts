@@ -3,6 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultLinkComponent,
@@ -36,10 +37,7 @@ describe('Result Link Component', () => {
         .init();
     });
 
-    it('should remove the component from the DOM', () => {
-      cy.get(resultLinkComponent).should('not.exist');
-    });
-
+    CommonAssertions.assertRemovesComponent(ResultLinkSelectors.shadow);
     CommonAssertions.assertConsoleError();
   });
 
