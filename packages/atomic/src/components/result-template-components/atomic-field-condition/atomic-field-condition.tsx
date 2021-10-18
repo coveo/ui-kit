@@ -14,6 +14,7 @@ import {MapProp} from '../../../utils/props-utils';
  */
 @Component({
   tag: 'atomic-field-condition',
+  styleUrl: 'atomic-field-condition.pcss',
   shadow: false,
 })
 export class AtomicFieldCondition {

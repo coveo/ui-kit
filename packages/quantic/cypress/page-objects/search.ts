@@ -26,6 +26,9 @@ export const InterceptAliases = {
     Sort: {
       SortResults: uaAlias('resultsSort'),
     },
+    Tab: {
+      InterfaceChange: uaAlias('interfaceChange'),
+    },
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -86,4 +89,15 @@ export function interceptIndefinitely(
 
 export function interceptSearchIndefinitely(): {sendResponse: () => void} {
   return interceptIndefinitely(routeMatchers.search);
+}
+
+export function mockSearchNoResults() {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.results = [];
+      res.body.totalCount = 0;
+      res.body.totalCountFiltered = 0;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }

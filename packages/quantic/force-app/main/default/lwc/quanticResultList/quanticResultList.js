@@ -25,9 +25,9 @@ export default class QuanticResultList extends LightningElement {
    * A list of fields to include in the query results, separated by commas.
    * @api
    * @type {string}
-   * @defaultValue `'date,author,source,language,filetype,parents'`
+   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
    */
-  @api fieldsToInclude = 'date,author,source,language,filetype,parents';
+  @api fieldsToInclude = 'date,author,source,language,filetype,parents,sfknowledgearticleid';
 
   /** @type {ResultListState}*/
   @track state;
