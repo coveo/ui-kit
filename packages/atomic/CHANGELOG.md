@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.5...@coveo/atomic@1.6.6) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** fix margin right badge element to 8px ([#1327](https://github.com/coveo/ui-kit/issues/1327)) ([9489011](https://github.com/coveo/ui-kit/commit/94890119571320ce78669f34a6f114ffd60ccf4d))
+
+
+
+
+
 ## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.4...@coveo/atomic@1.6.5) (2021-10-15)
 
 
