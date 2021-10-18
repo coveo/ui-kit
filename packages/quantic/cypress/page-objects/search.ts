@@ -68,7 +68,7 @@ export function interceptSearchWithError(
   type = '',
   executionReport: Array<Record<string, unknown>> = []
 ) {
-  cy.intercept('POST', routeMatchers.facetSearch, {
+  cy.intercept('POST', routeMatchers.search, {
     statusCode,
     body: {
       statusCode,
