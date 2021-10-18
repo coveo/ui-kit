@@ -13,19 +13,33 @@ export interface ResultLinkProps {
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   {href, interactiveResult, target, part, title},
   children
-) => (
-  <a
-    part={part}
-    href={filterProtocol(href)}
-    title={title}
-    onClick={() => interactiveResult.select()}
-    onContextMenu={() => interactiveResult.select()}
-    onMouseDown={() => interactiveResult.select()}
-    onMouseUp={() => interactiveResult.select()}
-    onTouchStart={() => interactiveResult.beginDelayedSelect()}
-    onTouchEnd={() => interactiveResult.cancelPendingSelect()}
-    target={target}
-  >
-    {children}
-  </a>
-);
+) => {
+  const stopPropagationAndProcess = (e: Event, process: () => void) => {
+    e.stopPropagation();
+    process();
+  };
+  return (
+    <a
+      part={part}
+      href={filterProtocol(href)}
+      title={title}
+      onClick={(e) => stopPropagationAndProcess(e, interactiveResult.select)}
+      onContextMenu={(e) =>
+        stopPropagationAndProcess(e, interactiveResult.select)
+      }
+      onMouseDown={(e) =>
+        stopPropagationAndProcess(e, interactiveResult.select)
+      }
+      onMouseUp={(e) => stopPropagationAndProcess(e, interactiveResult.select)}
+      onTouchStart={(e) =>
+        stopPropagationAndProcess(e, interactiveResult.beginDelayedSelect)
+      }
+      onTouchEnd={(e) =>
+        stopPropagationAndProcess(e, interactiveResult.cancelPendingSelect)
+      }
+      target={target}
+    >
+      {children}
+    </a>
+  );
+};
