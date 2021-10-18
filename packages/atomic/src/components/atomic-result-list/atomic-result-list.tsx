@@ -176,7 +176,7 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image={this.image}
+          image={template.image ?? this.image}
           useSections={template.usesSections}
           content={template.innerHTML}
         ></atomic-result>

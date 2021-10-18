@@ -6,10 +6,12 @@ import {
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 import {containsSection} from '../../utils/result-section-utils';
+import {ResultDisplayImageSize} from '../atomic-result/atomic-result-display-options';
 
 export interface TemplateContent {
   innerHTML: string;
   usesSections: boolean;
+  image?: ResultDisplayImageSize;
 }
 
 /**
@@ -25,6 +27,11 @@ export class AtomicResultTemplate {
   @Element() private host!: HTMLDivElement;
 
   @State() private error?: Error;
+
+  /**
+   * How large or small the visual section of results using this template should be.
+   */
+  @Prop() public image?: ResultDisplayImageSize;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -97,6 +104,7 @@ export class AtomicResultTemplate {
       content: {
         innerHTML: this.getContent(),
         usesSections: containsSection(this.getTemplateElement().content),
+        image: this.image,
       },
       priority: 1,
     };
