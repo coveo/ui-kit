@@ -318,10 +318,13 @@ export default class QuanticNumericFacet extends LightningElement {
     this.inputMax.required = false;
   }
 
-  /** @param {CustomEvent<NumericFacetValue>} evt */
-  onSelect(evt) {
+  /** 
+   * @param {CustomEvent<{value: string}>} evt
+   */
+  onSelectValue(evt) {
+    const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
+    this.facet.toggleSelect(item);
     this.usingManualRange = false;
-    this.facet.toggleSelect(evt.detail);
   }
 
   clearSelections() {

@@ -367,6 +367,7 @@ describe('Facet Test Suite', () => {
         describe('when clicking show more button again', () => {
           function showMoreValuesAgain() {
             showMoreValues();
+            cy.wait(InterceptAliases.Search);
             FacetSelectors.showMoreButton().click();
           }
 
@@ -903,6 +904,8 @@ describe('Facet Test Suite', () => {
       before(setupNoSearch);
 
       Expect.displaySearchInput(false);
+      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+      Expect.numberOfSelectedCheckboxValues(0);
     });
   });
 
