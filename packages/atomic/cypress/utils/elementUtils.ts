@@ -2,10 +2,13 @@ function isElement(node: Node): node is Element {
   return node.nodeType === 1;
 }
 
+function isTextNode(node: Node): node is Text {
+  return node.nodeType === 3;
+}
+
 export function getDeepText(node: Node): string {
-  if (node.nodeType === 3) {
-    // text node
-    return node.textContent ?? '';
+  if (isTextNode(node)) {
+    return node.wholeText;
   }
   if (isElement(node) && node.shadowRoot !== null) {
     return getDeepText(node.shadowRoot);
