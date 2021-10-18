@@ -89,6 +89,8 @@ describe('Facet Test Suite', () => {
     }
 
     describe('verify rendering', () => {
+      before(setupWithError);
+
       Expect.displayPlaceholder(false);
       Expect.displayValues(false);
       Expect.displayClearButton(false);
