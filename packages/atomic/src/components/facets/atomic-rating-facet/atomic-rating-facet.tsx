@@ -87,11 +87,11 @@ export class AtomicRatingFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of intervals to split the index for this facet.
+   * The number of intervals to split the index into and display in the facet. This property will also change the number of rating icons if the `maxValueInIndex` is not assigned a value.
    */
   @Prop() public numberOfIntervals = 5;
   /**
-   * The maximum value of the field. This value is also used as the number of icons to be displayed.
+   * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
@@ -109,6 +109,13 @@ export class AtomicRatingFacet
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
+   *
+   * When using a custom icon, at least part of your icon should have the colour set to `fill="currentColor"`.
+   * This part of the SVG will take on the colors set in the following variables:
+   *
+   * - `--atomic-rating-facet-icon-active-color`
+   * - `--atomic-rating-facet-icon-inactive-color`
+
    */
   @Prop() public icon = Star;
   /**
