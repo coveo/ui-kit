@@ -3,6 +3,7 @@ import {getDeepText} from '../../utils/elementUtils';
 import {resultTextComponent} from './result-components/result-text-selectors';
 import {addResultTable} from './result-table-actions';
 import {ResultTableSelectors} from './result-table-selectors';
+import * as CommonAssertions from '../common-assertions';
 
 describe('Result List (Table) Component', () => {
   describe('when no first search has yet been executed', () => {
@@ -25,7 +26,7 @@ describe('Result List (Table) Component', () => {
       new TestFixture().with(addResultTable([])).init();
     });
 
-    // CommonAssertions.assertConsoleError();
+    CommonAssertions.assertConsoleError();
   });
 
   describe('with two distinct columns', () => {
