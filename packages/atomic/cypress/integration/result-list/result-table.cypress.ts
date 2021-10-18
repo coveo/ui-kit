@@ -44,7 +44,7 @@ describe('Result List (Table) Component', () => {
       new TestFixture().with(addResultTable(columns)).init();
     });
 
-    it('renders labels in their corresponding header', () => {
+    it('should render labels in their corresponding header', () => {
       ResultTableSelectors.headers().then((elements) => {
         const actualHeaderText = Array.from(elements).map((element) =>
           getDeepText(element)
@@ -54,7 +54,7 @@ describe('Result List (Table) Component', () => {
       });
     });
 
-    it('renders columns in the correct order', () => {
+    it('should render columns in the correct order', () => {
       ResultTableSelectors.firstRowCellsContent().then((elements) => {
         const actualCellContent = Array.from(elements).map(
           (element) => element.innerHTML
@@ -83,7 +83,7 @@ describe('Result List (Table) Component', () => {
         .init();
     });
 
-    it('renders result template components', () => {
+    it('should render result template components', () => {
       ResultTableSelectors.firstRowCellsContent().then(([cell]) =>
         expect(getDeepText(cell)).to.contain(fieldValue)
       );
