@@ -7,6 +7,7 @@ import {
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
+  interceptSearchWithError,
 } from '../../../page-objects/search';
 import {
   checkFirstValue,
@@ -51,6 +52,13 @@ describe('Facet Test Suite', () => {
     configure(options);
   }
 
+  function aliasFacetValues() {
+    cy.wait(InterceptAliases.Search).then((interception) => {
+      const indexValues = extractFacetValues(interception.response);
+      cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
+    });
+  }
+
   describe('when loading', () => {
     function setupWithPauseBeforeSearch() {
       interceptSearchIndefinitely();
@@ -68,12 +76,27 @@ describe('Facet Test Suite', () => {
       Expect.displayPlaceholder(true);
     });
   });
-  function aliasFacetValues() {
-    cy.wait(InterceptAliases.Search).then((interception) => {
-      const indexValues = extractFacetValues(interception.response);
-      cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
+
+  describe('when search returns an error', () => {
+    function setupWithError() {
+      interceptSearchWithError();
+      cy.visit(pageUrl);
+      configure({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+      });
+    }
+
+    describe('verify rendering', () => {
+      Expect.displayPlaceholder(false);
+      Expect.displayValues(false);
+      Expect.displayClearButton(false);
+      Expect.displayShowMoreButton(false);
+      Expect.displayShowLessButton(false);
+      Expect.displaySearchInput(false);
     });
-  }
+  });
 
   describe('with values', () => {
     function setupWithValues() {
