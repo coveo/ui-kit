@@ -220,6 +220,13 @@ export class AtomicResultList implements InitializableComponent {
       ).querySelectorAll('atomic-table-element')
     );
 
+    if (fieldColumns.length === 0) {
+      this.bindings.engine.logger.error(
+        'atomic-table-element elements missing in the result template to display columns.',
+        this.host
+      );
+    }
+
     return (
       <table class={`list-root ${this.getClasses().join(' ')}`}>
         <thead>
