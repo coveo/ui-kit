@@ -1,5 +1,5 @@
-function createExpressionBuilder() {
-  const parts: string[] = [];
+function createExpressionBuilder(expression = '') {
+  const parts = expression ? [expression] : [];
 
   return {
     addStringFieldExpression(
