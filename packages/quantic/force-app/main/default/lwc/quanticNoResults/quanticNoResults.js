@@ -96,6 +96,7 @@ export default class QuanticNoResults extends LightningElement {
     this.unsubscribeQuerySummary?.();
     this.unsubscribeBreadcrumbsManager?.();
   }
+  
   updateState() {
     this.showNoResultsPanel = this.searchStatus.state.firstSearchExecuted && !this.searchStatus.state.isLoading && !this.searchStatus.state.hasResults && !this.searchStatus.state.hasError;
     this.showUndoButton = !this.disableCancelLastAction && this.historyManager.state.past.length;

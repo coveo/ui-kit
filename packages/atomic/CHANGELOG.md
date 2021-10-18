@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.5...@coveo/atomic@1.6.6) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** fix margin right badge element to 8px ([#1327](https://github.com/coveo/ui-kit/issues/1327)) ([9489011](https://github.com/coveo/ui-kit/commit/94890119571320ce78669f34a6f114ffd60ccf4d))
+
+
+
+
+
+## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.4...@coveo/atomic@1.6.5) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** add hover effect on grid + handle grid click  ([#1339](https://github.com/coveo/ui-kit/issues/1339)) ([129dfa2](https://github.com/coveo/ui-kit/commit/129dfa2f77c96a23fc285febd0d8558c4d547eaf))
+
+
+
+
+
+## [1.6.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.3...@coveo/atomic@1.6.4) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** left aligned result table headers ([#1335](https://github.com/coveo/ui-kit/issues/1335)) ([4f34769](https://github.com/coveo/ui-kit/commit/4f347696612c171e19eefd0137d17ca6d15b4108))
+
+
+
+
+
+## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.2...@coveo/atomic@1.6.3) (2021-10-15)
+
+
+### Bug Fixes
+
+* **atomic:** adjusted number of columns for grid results ([#1334](https://github.com/coveo/ui-kit/issues/1334)) ([e4fba70](https://github.com/coveo/ui-kit/commit/e4fba70a9966c0ec394646fc63f592e5613062e1))
+
+
+
+
+
+## [1.6.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.1...@coveo/atomic@1.6.2) (2021-10-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.6.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.0...@coveo/atomic@1.6.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* **atomic:** add hover state to breadcrumb label ([#1311](https://github.com/coveo/ui-kit/issues/1311)) ([c23a20c](https://github.com/coveo/ui-kit/commit/c23a20c1764f2fe4ccc146fb08b31596db212fa1))
+* **atomic:** evened out margin above and besides visual section ([#1328](https://github.com/coveo/ui-kit/issues/1328)) ([ab249cf](https://github.com/coveo/ui-kit/commit/ab249cfcdf54c226910312e97d1b2881af65a9b2))
+* **atomic:** fixed density and image size for table results ([#1326](https://github.com/coveo/ui-kit/issues/1326)) ([aa7df57](https://github.com/coveo/ui-kit/commit/aa7df572b11a374aa7b962271be251c27bfd8b4f))
+* **atomic:** removed margins outside results ([#1315](https://github.com/coveo/ui-kit/issues/1315)) ([ce22c27](https://github.com/coveo/ui-kit/commit/ce22c27cd497726ad68d683b77e7d62818fef04d))
+
+
+
+
+
 # [1.6.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.5.6...@coveo/atomic@1.6.0) (2021-10-13)
 
 
