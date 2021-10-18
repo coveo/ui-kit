@@ -180,7 +180,7 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image={template.image ?? this.image}
+          image={template.imageSize ?? this.image}
           useSections={template.usesSections}
           content={template.innerHTML}
         ></atomic-result>

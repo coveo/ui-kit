@@ -11,7 +11,7 @@ import {ResultDisplayImageSize} from '../atomic-result/atomic-result-display-opt
 export interface TemplateContent {
   innerHTML: string;
   usesSections: boolean;
-  image?: ResultDisplayImageSize;
+  imageSize?: ResultDisplayImageSize;
 }
 
 /**
@@ -27,11 +27,6 @@ export class AtomicResultTemplate {
   @Element() private host!: HTMLDivElement;
 
   @State() private error?: Error;
-
-  /**
-   * How large or small the visual section of results using this template should be.
-   */
-  @Prop() public image?: ResultDisplayImageSize;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -104,7 +99,7 @@ export class AtomicResultTemplate {
       content: {
         innerHTML: this.getContent(),
         usesSections: containsSection(this.getTemplateElement().content),
-        image: this.image,
+        imageSize: this.getImageSize() ?? undefined,
       },
       priority: 1,
     };
@@ -118,6 +113,18 @@ export class AtomicResultTemplate {
     return (
       this.host.querySelector('template') ?? document.createElement('template')
     );
+  }
+
+  private getImageSize() {
+    const visualSection = this.getTemplateElement().content.querySelector(
+      'atomic-result-section-visual'
+    );
+    if (visualSection) {
+      return visualSection.getAttribute(
+        'image-size'
+      ) as ResultDisplayImageSize | null;
+    }
+    return null;
   }
 
   private getContent() {

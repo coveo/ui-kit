@@ -563,6 +563,10 @@ export namespace Components {
     interface AtomicResultSectionTitleMetadata {
     }
     interface AtomicResultSectionVisual {
+        /**
+          * How large or small the visual section of results using this template should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
@@ -578,10 +582,6 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
-        /**
-          * How large or small the visual section of results using this template should be.
-         */
-        "image"?: ResultDisplayImageSize;
     }
     interface AtomicResultText {
         /**
@@ -1773,6 +1773,10 @@ declare namespace LocalJSX {
     interface AtomicResultSectionTitleMetadata {
     }
     interface AtomicResultSectionVisual {
+        /**
+          * How large or small the visual section of results using this template should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
@@ -1784,10 +1788,6 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: ResultTemplateCondition[];
-        /**
-          * How large or small the visual section of results using this template should be.
-         */
-        "image"?: ResultDisplayImageSize;
     }
     interface AtomicResultText {
         /**
