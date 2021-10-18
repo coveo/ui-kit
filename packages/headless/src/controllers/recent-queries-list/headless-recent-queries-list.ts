@@ -18,6 +18,8 @@ import {
   logClearRecentQueries,
   logRecentQueryClick,
 } from '../../features/recent-queries/recent-queries-analytics-actions';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {updatePage} from '../../features/pagination/pagination-actions';
 
 export interface RecentQueriesListProps {
   /**
@@ -178,7 +180,9 @@ export function buildRecentQueriesList(
       if (errorMessage) {
         throw new Error(errorMessage);
       }
+      dispatch(deselectAllFacets());
       dispatch(updateQuery({q: this.state.queries[index]}));
+      dispatch(updatePage(1));
       dispatch(executeSearch(logRecentQueryClick()));
     },
   };
