@@ -97,7 +97,7 @@ export default class QuanticResultList extends LightningElement {
   updateState() {
     this.state = this.resultList?.state;
     this.numberOfResults = this.resultsPerPage?.state?.numberOfResults;
-    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted && !!this.numberOfResults;
+    this.showPlaceholder = !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted && !!this.numberOfResults;
   }
 
   get fields() {
