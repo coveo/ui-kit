@@ -23,8 +23,8 @@ function createExpressionBuilder(expression = '') {
 
 const builder = createExpressionBuilder();
 builder.addStringFieldExpression('filetype', '==', ['pdf']);
-builder.addStringFieldExpression('author', '==', ['alice', 'bob']);
+builder.addStringFieldExpression('author', '!=', ['alice', 'bob']);
 const expression = builder.join('AND');
 
 console.log(expression);
-// (filetype==("pdf")) AND (author==("alice","bob"))
+// (filetype==("pdf")) AND (NOT author==("alice","bob"))
