@@ -34,8 +34,18 @@ const contextInformationMapping: {[key in keyof DefaultContextInformation]: stri
     time: 'tm',
 };
 
+/* Those are extension keys that are supported by the collect protocol. They will be forwarded as-is. */
+const coveoExtensionsKeys = ['contentId', 'contentIdKey', 'contentType'];
+
 export const baseMeasurementProtocolKeysMapping: {[name: string]: string} = {
     ...globalParamKeysMapping,
     ...eventKeysMapping,
     ...contextInformationMapping,
+    ...coveoExtensionsKeys.reduce(
+        (all, key) => ({
+            ...all,
+            [key]: key,
+        }),
+        {}
+    ),
 };
