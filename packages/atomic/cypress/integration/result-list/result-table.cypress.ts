@@ -1,21 +1,10 @@
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {getDeepText} from '../../utils/elementUtils';
-import * as CommonAssertions from '../common-assertions';
 import {resultTextComponent} from './result-components/result-text-selectors';
-import {ResultListSelectors} from './result-list-selectors';
 import {addResultTable} from './result-table-actions';
 import {ResultTableSelectors} from './result-table-selectors';
 
 describe('Result List (Table) Component', () => {
-  it('should load', () => {
-    new TestFixture()
-      .with(
-        addResultTable([{label: 'a', content: generateComponentHTML('span')}])
-      )
-      .init();
-    ResultTableSelectors.rows().should('have.length.above', 0);
-  });
-
   describe('when no first search has yet been executed', () => {
     beforeEach(() => {
       new TestFixture()
