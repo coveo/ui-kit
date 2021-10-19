@@ -11,11 +11,19 @@ export function hasDocument(): boolean {
 }
 
 export function hasLocalStorage(): boolean {
-    return typeof localStorage !== 'undefined';
+    try {
+        return typeof localStorage !== 'undefined';
+    } catch (error) {
+        return false;
+    }
 }
 
 export function hasSessionStorage(): boolean {
-    return typeof sessionStorage !== 'undefined';
+    try {
+        return typeof sessionStorage !== 'undefined';
+    } catch (error) {
+        return false;
+    }
 }
 
 export function hasCookieStorage(): boolean {
