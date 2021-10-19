@@ -36,6 +36,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  sourceMap: true,
   outputTargets: [
     {
       type: 'dist',
