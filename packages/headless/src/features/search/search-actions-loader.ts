@@ -5,12 +5,10 @@ import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {SearchAction} from '../analytics/analytics-utils';
-import {UpdateQueryActionCreatorPayload} from '../query/query-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchMoreResults,
-  prepareForSearchWithQuery,
   StateNeededByExecuteSearch,
 } from './search-actions';
 
@@ -57,20 +55,6 @@ export interface SearchActionCreators {
       ClientThunkExtraArguments<SearchAPIClient>
     >
   >;
-
-  /**
-   * Prepares the search state for a search with a query by setting the query string and resetting facet and pager states.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  prepareForSearchWithQuery(
-    payload: UpdateQueryActionCreatorPayload
-  ): AsyncThunkAction<
-    void,
-    UpdateQueryActionCreatorPayload,
-    AsyncThunkOptions<StateNeededByExecuteSearch>
-  >;
 }
 
 /**
@@ -84,6 +68,5 @@ export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
   return {
     executeSearch,
     fetchMoreResults,
-    prepareForSearchWithQuery,
   };
 }

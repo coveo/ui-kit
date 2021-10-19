@@ -108,10 +108,6 @@ const fetchFromAPI = async (
   return {response, duration, queryExecuted, requestExecuted: request};
 };
 
-/**
- * Prepares the search state for a search with a query by setting the query string and resetting facet and pager states.
- * @param payload - The action creator payload.
- */
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
   UpdateQueryActionCreatorPayload,
