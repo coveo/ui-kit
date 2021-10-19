@@ -3,6 +3,9 @@
   "edition": "Developer",
   "features": ["Communities"],
   "settings": {
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
     "communitiesSettings": {
       "enableNetworksEnabled": true
     },

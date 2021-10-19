@@ -9,10 +9,7 @@ import {
   ResultSection,
   resultSectionTags,
 } from './result-list-selectors';
-
-function toArray<T>(values: T | T[]): T[] {
-  return Array.isArray(values) ? values : [values];
-}
+import {toArray} from '../../utils/arrayUtils';
 
 export function buildTemplateWithoutSections(
   elements: HTMLElement | HTMLElement[],

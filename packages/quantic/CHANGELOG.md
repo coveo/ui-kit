@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.77.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.1...@coveo/quantic@0.77.2) (2021-10-18)
+
+
+### Bug Fixes
+
+* **quantic:** disable flaky facet test ([#1350](https://github.com/coveo/ui-kit/issues/1350)) ([e9943ee](https://github.com/coveo/ui-kit/commit/e9943eef1216f5609f95e3c62f8ec1e12edfb90e))
+
+
+
+
+
+## [0.77.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.0...@coveo/quantic@0.77.1) (2021-10-18)
+
+
+### Bug Fixes
+
+* **quantic:** removed some styling on quanticError to fix alignment ([#1345](https://github.com/coveo/ui-kit/issues/1345)) ([b80d54b](https://github.com/coveo/ui-kit/commit/b80d54b3883ea8eb63dba2763d071c118a117b1a))
+
+
+
+
+
+# [0.77.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.2...@coveo/quantic@0.77.0) (2021-10-18)
+
+
+### Features
+
+* **quantic:** add tests for the Quantic Tab component ([#1341](https://github.com/coveo/ui-kit/issues/1341)) ([70ed75d](https://github.com/coveo/ui-kit/commit/70ed75dca37a615e434376a4cb49a9f65654987a))
+* **quantic:** added knowledge article detection to quanticLabel ([#1346](https://github.com/coveo/ui-kit/issues/1346)) ([3a22c07](https://github.com/coveo/ui-kit/commit/3a22c073a73dd47e5e6230be1d2361ef627a6374))
+
+
+
+
+
+## [0.76.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.1...@coveo/quantic@0.76.2) (2021-10-15)
+
+
+### Bug Fixes
+
+* **quantic:** replaced event detail content with primitive type ([#1342](https://github.com/coveo/ui-kit/issues/1342)) ([16c45bf](https://github.com/coveo/ui-kit/commit/16c45bf7e3432174197483272451f8fd4134570b))
+
+
+
+
+
+## [0.76.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.0...@coveo/quantic@0.76.1) (2021-10-15)
+
+
+### Bug Fixes
+
+* **quantic:** fixed sort value not being updating and added FT ([#1336](https://github.com/coveo/ui-kit/issues/1336)) ([be64989](https://github.com/coveo/ui-kit/commit/be64989692fdf033163d697fcaab6c3993442ddc))
+* **quantic:** missing wait for search request ([#1338](https://github.com/coveo/ui-kit/issues/1338)) ([32641ae](https://github.com/coveo/ui-kit/commit/32641ae03029101a33e4a82ecd889fd60c1f4d24))
+
+
+
+
+
+# [0.76.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.75.0...@coveo/quantic@0.76.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** add tests for the QuanticResultsPerPage component ([#1329](https://github.com/coveo/ui-kit/issues/1329)) ([621ed70](https://github.com/coveo/ui-kit/commit/621ed70173fea19aeb22185683ae0be9a5d55e7e))
+
+
+
+
+
+# [0.75.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.1...@coveo/quantic@0.75.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** persist Salesforce examples community as code ([#1330](https://github.com/coveo/ui-kit/issues/1330)) ([ea6cec9](https://github.com/coveo/ui-kit/commit/ea6cec93c6cebb6ef3aeb55f65844e0db75df711))
+
+
+
+
+
+## [0.74.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.74.0...@coveo/quantic@0.74.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* **quantic:** wait for community to be ready ([#1331](https://github.com/coveo/ui-kit/issues/1331)) ([21807f9](https://github.com/coveo/ui-kit/commit/21807f96a9cfcfc1845d3c5234718847134a3e60))
+
+
+
+
+
+# [0.74.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.73.0...@coveo/quantic@0.74.0) (2021-10-14)
+
+
+### Features
+
+* **quantic:** Add custom filter functionality to numeric facets ([#1258](https://github.com/coveo/ui-kit/issues/1258)) ([3f61382](https://github.com/coveo/ui-kit/commit/3f613824bceb744b5e47456b62c17a495d0a4971))
+* **quantic:** added placeholder component ([#1319](https://github.com/coveo/ui-kit/issues/1319)) ([37751f3](https://github.com/coveo/ui-kit/commit/37751f3c3f832dce2de8796d13f473430b6493a1))
+
+
+
+
+
 # [0.73.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.72.1...@coveo/quantic@0.73.0) (2021-10-13)
 
 

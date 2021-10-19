@@ -13,8 +13,9 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /** @typedef {import("coveo").DateFacetState} DateFacetState */
 /** @typedef {import("coveo").DateFacet} DateFacet */
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * The `QuanticDateFacet` component displays facet values as date ranges.
@@ -87,8 +88,14 @@ export default class QuanticDateFacet extends LightningElement {
 
   /** @type {DateFacet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
 
   labels = {
     clearFilter,
@@ -109,6 +116,11 @@ export default class QuanticDateFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
         field: this.field,
@@ -122,10 +134,12 @@ export default class QuanticDateFacet extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
@@ -174,11 +188,12 @@ export default class QuanticDateFacet extends LightningElement {
     return '';
   }
 
-  /**
-   * @param {CustomEvent<DateFacetValue>} evt
+  /** 
+   * @param {CustomEvent<{value: string}>} evt
    */
-  onSelect(evt) {
-    this.facet.toggleSelect(evt.detail);
+   onSelectValue(evt) {
+    const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
+    this.facet.toggleSelect(item);
   }
 
   clearSelections() {

@@ -3,6 +3,7 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultNumberComponent,
@@ -37,15 +38,8 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
-      cy.get(resultNumberComponent).should('not.exist');
-    });
-
-    it.skip('should log a console error', () => {
-      cy.get(resultNumberComponent)
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    CommonAssertions.assertRemovesComponent(ResultNumberSelectors.shadow);
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -55,9 +49,10 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
-      ResultNumberSelectors.firstInResult().should('not.exist');
-    });
+    CommonAssertions.assertRemovesComponent(
+      ResultNumberSelectors.firstInResult
+    );
+    CommonAssertions.assertConsoleError(false);
   });
 
   describe('when the field value cannot be parsed to a number', () => {
@@ -71,9 +66,10 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
-      ResultNumberSelectors.firstInResult().should('not.exist');
-    });
+    CommonAssertions.assertRemovesComponent(
+      ResultNumberSelectors.firstInResult
+    );
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field value is valid', () => {

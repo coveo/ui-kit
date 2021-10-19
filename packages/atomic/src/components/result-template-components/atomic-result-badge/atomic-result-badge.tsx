@@ -1,4 +1,6 @@
-import {Component, Prop, h} from '@stencil/core';
+import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {Component, Element, Prop, h} from '@stencil/core';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-badge` element renders a badge containing a field.
@@ -12,6 +14,8 @@ import {Component, Prop, h} from '@stencil/core';
   shadow: true,
 })
 export class AtomicResultBadge {
+  @ResultContext() private result!: Result;
+  @Element() host!: HTMLElement;
   /**
    * The result field which the component should use.
    * This will look in the Result object first, and then in the Result.raw object for the fields.
@@ -49,7 +53,7 @@ export class AtomicResultBadge {
         {this.field ? (
           <atomic-result-text field={this.field}></atomic-result-text>
         ) : (
-          this.label
+          <atomic-text value={this.label ?? ''}></atomic-text>
         )}
       </span>
     );
@@ -59,7 +63,7 @@ export class AtomicResultBadge {
     return (
       <div
         part="result-badge-element"
-        class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full mr-3"
+        class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full mr-2"
       >
         {this.icon && this.renderIcon()}
         {(this.field || this.label) && this.renderText()}
@@ -67,16 +71,18 @@ export class AtomicResultBadge {
     );
   }
 
+  componentWillRender() {
+    if (this.field) {
+      const hasValue =
+        ResultTemplatesHelpers.getResultProperty(this.result, this.field) !==
+        null;
+      if (!hasValue) {
+        this.host.remove();
+      }
+    }
+  }
+
   render() {
-    return this.field ? (
-      <atomic-field-condition
-        ifDefined={this.field}
-        class="flex place-items-center h-full"
-      >
-        {this.renderBadge()}
-      </atomic-field-condition>
-    ) : (
-      this.renderBadge()
-    );
+    return this.renderBadge();
   }
 }

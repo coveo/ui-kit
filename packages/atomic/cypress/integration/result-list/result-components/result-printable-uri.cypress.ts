@@ -22,9 +22,30 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should be removed from the DOM', () => {
-      cy.get(resultPrintableUriComponent).should('not.exist');
+    CommonAssertions.assertRemovesComponent(() =>
+      cy.get(resultPrintableUriComponent)
+    );
+    CommonAssertions.assertConsoleError();
+  });
+
+  describe('when the "max-number-of-parts" prop is not a number', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML(resultPrintableUriComponent, {
+                'max-number-of-parts': 'yes',
+              }),
+            ])
+          )
+        )
+        .init();
     });
+
+    CommonAssertions.assertRemovesComponent(
+      ResultPrintableUriSelectors.firstInResult
+    );
     CommonAssertions.assertConsoleError();
   });
 
@@ -43,10 +64,9 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should be removed from the DOM', () => {
-      cy.get(resultPrintableUriComponent).should('not.exist');
-    });
-
+    CommonAssertions.assertRemovesComponent(() =>
+      cy.get(resultPrintableUriComponent)
+    );
     CommonAssertions.assertConsoleError();
   });
 
