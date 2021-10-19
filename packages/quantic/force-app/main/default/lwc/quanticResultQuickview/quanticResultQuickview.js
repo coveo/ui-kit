@@ -1,6 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 
+import close from '@salesforce/label/c.quantic_Close';
+
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
 /** @typedef {import("coveo").QuickviewState} QuickviewState */
@@ -40,6 +42,10 @@ export default class QuanticResultQuickview extends LightningElement {
   /** @type {Function} */
   unsubscribe;
 
+  labels = {
+    close
+  }
+
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
@@ -66,5 +72,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   updateState() {
     this.state = this.quickview?.state;
+    console.log(this.state?.resultHasPreview + ': ' + this.state?.content);
+  }
+
+  get backdropClass() {
+    return this.isOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
   }
 }

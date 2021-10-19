@@ -518,4 +518,11 @@
         <protected>false</protected>
         <shortDescription>This value must be greater than or equal to [value]</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_Close</fullName>
+        <value>Close</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Close</shortDescription>
+    </labels>
 </CustomLabels>

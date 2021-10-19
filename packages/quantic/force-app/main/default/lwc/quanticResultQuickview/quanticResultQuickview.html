@@ -1,3 +1,18 @@
 <template>
-  <div class="facet-manager__host" lwc:dom="manual"></div>
+  <div class="result-quickview__host" lwc:dom="manual">
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
+            <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
+          </button>
+          <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modal header</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class={backdropClass}></div>
 </template>

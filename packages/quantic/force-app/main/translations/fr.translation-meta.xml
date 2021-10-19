@@ -268,4 +268,8 @@
         <label>Cette valeur doit être supérieure ou égale à {{0}}</label>
         <name>quantic_MessageWhenRangeUnderflow</name>
     </customLabels>
+    <customLabels>
+        <label>Fermer</label>
+        <name>quantic_Close</name>
+    </customLabels>
 </Translations>
