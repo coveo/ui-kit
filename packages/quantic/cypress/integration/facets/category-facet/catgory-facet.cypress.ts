@@ -54,6 +54,7 @@ describe('quantic-category-facet', () => {
     setupWithDefaultSettings();
     Actions.selectChildValueAt(canadaHierarchyIndex[0]);
   }
+
   function setupGoDeeperTwoLevels() {
     setupWithDefaultSettings();
     Actions.selectChildValueAt(canadaHierarchyIndex[0]);
@@ -61,14 +62,30 @@ describe('quantic-category-facet', () => {
     Actions.selectChildValueAt(canadaHierarchyIndex[1]);
     interceptSearch();
   }
+
   function setupShowMore() {
+    setupWithDefaultSettings();
+
     setupGoDeeperOneLevel();
     Actions.clickShowMoreButton();
   }
+
   function setupShowLess() {
     setupShowMore();
     interceptSearch();
     Actions.clickShowLessButton();
+  }
+
+  function setupGoDeeperFourLevels() {
+    setupWithDefaultSettings();
+    Actions.selectChildValueAt(canadaHierarchyIndex[0]);
+    interceptSearch();
+    Actions.selectChildValueAt(canadaHierarchyIndex[1]);
+    interceptSearch();
+    Actions.selectChildValueAt(canadaHierarchyIndex[2]);
+    interceptSearch();
+    Actions.selectChildValueAt(canadaHierarchyIndex[3]);
+    interceptSearch();
   }
 
   describe('with default category facet', () => {
@@ -137,8 +154,9 @@ describe('quantic-category-facet', () => {
     describe('when selecting value on 4nd level of data', () => {
       describe('when selecting the third level', () => {
         it('should redirect user up 1 level of data set', () => {
-          // it should filter result
-          // it should log UA
+          setupGoDeeperFourLevels();
+          Expect.pathInUrl(canadaHierarchy);
+          //Expect.logCategoryFacetSelected(canadaHierarchy);
         });
       });
       describe('when selecting "All Categories"', () => {
