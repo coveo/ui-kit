@@ -11,9 +11,18 @@ describe('#isSearchApiDate', () => {
   });
 });
 
-it('formatDateForSearchApi returns the correct format', () => {
-  const date = 818035920000;
-  expect(formatDateForSearchApi(dayjs(date))).toBe(
-    dayjs(date).format('YYYY/MM/DD@HH:mm:ss')
-  );
+describe('#formatDateForSearchApi', () => {
+  it('returns the correct format', () => {
+    const date = 818035920000;
+    expect(formatDateForSearchApi(dayjs(date))).toBe(
+      dayjs(date).format('YYYY/MM/DD@HH:mm:ss')
+    );
+  });
+
+  it('enforces the minimum Epoch date', () => {
+    const date = -99999999999999;
+    expect(formatDateForSearchApi(dayjs(date))).toBe(
+      formatDateForSearchApi(dayjs(0))
+    );
+  });
 });

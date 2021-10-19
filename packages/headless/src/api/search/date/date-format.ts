@@ -2,9 +2,14 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
+const API_DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
+
 export function formatDateForSearchApi(date: dayjs.Dayjs) {
-  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-  return date.format(DATE_FORMAT);
+  if (dayjs(0).isAfter(date)) {
+    return dayjs(0).format(API_DATE_FORMAT);
+  }
+
+  return date.format(API_DATE_FORMAT);
 }
 
 export function isSearchApiDate(date: string) {
