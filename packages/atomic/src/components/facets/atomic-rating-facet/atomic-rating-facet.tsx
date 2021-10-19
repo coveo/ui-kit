@@ -110,7 +110,7 @@ export class AtomicRatingFacet
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    *
-   * When using a custom icon, at least part of your icon should have the colour set to `fill="currentColor"`.
+   * When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`.
    * This part of the SVG will take on the colors set in the following variables:
    *
    * - `--atomic-rating-facet-icon-active-color`
