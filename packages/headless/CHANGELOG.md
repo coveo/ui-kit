@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.2...@coveo/headless@1.29.0) (2021-10-19)
+
+
+### Features
+
+* **headless:** match recentquery select with searchbox behaviour ([#1358](https://github.com/coveo/ui-kit/issues/1358)) ([6769a05](https://github.com/coveo/ui-kit/commit/6769a05bb39080a1bdaa1808c2bc2a5c9cda75e1))
+
+
+
+
+
 ## [1.28.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.1...@coveo/headless@1.28.2) (2021-10-18)
 
 
