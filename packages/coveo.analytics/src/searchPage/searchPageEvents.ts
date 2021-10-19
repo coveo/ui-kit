@@ -98,6 +98,18 @@ export enum SearchPageEvents {
      */
     pagerScrolling = 'pagerScrolling',
     /**
+     * Identifies the search event that gets logged when the clearing all selected values of a static filter.
+     */
+    staticFilterClearAll = 'staticFilterClearAll',
+    /**
+     * Identifies the search event that gets logged when a static filter check box is selected and the query is updated.
+     */
+    staticFilterSelect = 'staticFilterSelect',
+    /**
+     * Identifies the search event that gets logged when a static filter check box is deselected and the query is updated.
+     */
+    staticFilterDeselect = 'staticFilterDeselect',
+    /**
      * Identifies the search event that gets logged when the Clear Facet button is selected.
      */
     facetClearAll = 'facetClearAll',
@@ -254,6 +266,19 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.recentResultClick]: 'recentlyClickedDocuments',
     [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
 };
+
+export interface StaticFilterMetadata {
+    staticFilterId: string;
+}
+
+export interface StaticFilterToggleValueMetadata extends StaticFilterMetadata {
+    staticFilterValue: StaticFilterValueMetadata;
+}
+
+interface StaticFilterValueMetadata {
+    caption: string;
+    expression: string;
+}
 
 export interface FacetMetadata {
     facetId: string;

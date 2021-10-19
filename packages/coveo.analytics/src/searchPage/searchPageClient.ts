@@ -22,6 +22,8 @@ import {
     FacetStateMetadata,
     SmartSnippetFeedbackReason,
     SmartSnippetSuggestionMeta,
+    StaticFilterMetadata,
+    StaticFilterToggleValueMetadata,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -76,6 +78,18 @@ export class CoveoSearchPageClient {
 
     public logRecommendationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.logClickEvent(SearchPageEvents.recommendationOpen, info, identifier);
+    }
+
+    public logStaticFilterClearAll(meta: StaticFilterMetadata) {
+        return this.logSearchEvent(SearchPageEvents.staticFilterClearAll, meta);
+    }
+
+    public logStaticFilterSelect(meta: StaticFilterToggleValueMetadata) {
+        return this.logSearchEvent(SearchPageEvents.staticFilterSelect, meta);
+    }
+
+    public logStaticFilterDeselect(meta: StaticFilterToggleValueMetadata) {
+        return this.logSearchEvent(SearchPageEvents.staticFilterDeselect, meta);
     }
 
     public logFetchMoreResults() {

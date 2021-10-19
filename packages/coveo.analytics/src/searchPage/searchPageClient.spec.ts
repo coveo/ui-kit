@@ -5,6 +5,7 @@ import {
     CustomEventsTypes,
     SmartSnippetFeedbackReason,
     OmniboxSuggestionsMetadata,
+    StaticFilterToggleValueMetadata,
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -290,6 +291,39 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling);
     });
 
+    it('should send the proper payload for #logStaticFilterClearAll', async () => {
+        const staticFilterId = 'filetypes';
+        await client.logStaticFilterClearAll({staticFilterId});
+
+        expectMatchPayload(SearchPageEvents.staticFilterClearAll, {staticFilterId});
+    });
+
+    it('should send the proper payload for #logStaticFilterSelect', async () => {
+        const meta: StaticFilterToggleValueMetadata = {
+            staticFilterId: 'filetypes',
+            staticFilterValue: {
+                caption: 'Youtube',
+                expression: '@filetype="youtubevideo"',
+            },
+        };
+        await client.logStaticFilterSelect(meta);
+
+        expectMatchPayload(SearchPageEvents.staticFilterSelect, meta);
+    });
+
+    it('should send the proper payload for #logStaticFilterDeselect', async () => {
+        const meta: StaticFilterToggleValueMetadata = {
+            staticFilterId: 'filetypes',
+            staticFilterValue: {
+                caption: 'Youtube',
+                expression: '@filetype="youtubevideo"',
+            },
+        };
+        await client.logStaticFilterDeselect(meta);
+
+        expectMatchPayload(SearchPageEvents.staticFilterDeselect, meta);
+    });
+
     it('should send proper payload for #logFacetSearch', async () => {
         const meta = {
             facetField: '@foo',
@@ -312,7 +346,7 @@ describe('SearchPageClient', () => {
         expectMatchPayload(SearchPageEvents.facetSelect, meta);
     });
 
-    it('should send proper payload for #logFacetSelect', async () => {
+    it('should send proper payload for #logFacetDeselect', async () => {
         const meta = {
             facetField: '@foo',
             facetId: 'bar',
