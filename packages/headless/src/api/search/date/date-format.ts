@@ -1,15 +1,14 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import minMax from 'dayjs/plugin/minMax';
+
 dayjs.extend(customParseFormat);
+dayjs.extend(minMax);
 
 const API_DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
 
 export function formatDateForSearchApi(date: dayjs.Dayjs) {
-  if (dayjs(0).isAfter(date)) {
-    return dayjs(0).format(API_DATE_FORMAT);
-  }
-
-  return date.format(API_DATE_FORMAT);
+  return dayjs.max([dayjs(new Date(0, 0, 0)), date]).format(API_DATE_FORMAT);
 }
 
 export function isSearchApiDate(date: string) {

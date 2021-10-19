@@ -22,7 +22,7 @@ describe('#formatDateForSearchApi', () => {
   it('enforces the minimum Epoch date', () => {
     const date = -99999999999999;
     expect(formatDateForSearchApi(dayjs(date))).toBe(
-      formatDateForSearchApi(dayjs(0))
+      formatDateForSearchApi(dayjs(new Date(0, 0, 0)))
     );
   });
 });
