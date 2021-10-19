@@ -24,7 +24,6 @@
 <defs>
 <filter id="filter0_b" x="20.5346" y="20.5346" width="271.166" height="271.166" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feGaussianBlur in="BackgroundImage" stdDeviation="1.83987"/>
 <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur" result="shape"/>
 </filter>
