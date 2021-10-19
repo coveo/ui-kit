@@ -1,13 +1,12 @@
 import {configure} from '../../../page-objects/configurator';
 
-import {CategoryFacetSelectors} from './category-facet-selectors';
 import {CategoryFacetExpectations as Expect} from './category-facet-expectations';
 import {
-  extractFacetValues,
-  InterceptAliases,
-  interceptSearch,
-  interceptSearchIndefinitely,
-} from '../../../page-objects/search';
+  canadaHierarchy,
+  canadaHierarchyIndex,
+  CategoryFacetActions as Actions,
+} from './category-facet-actions';
+import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
 
 interface CategoryFacetOptions {
   field: string;
@@ -22,518 +21,162 @@ interface CategoryFacetOptions {
   isCollapsed: boolean;
 }
 
-describe('Category Facet Test Suite', () => {
+describe('quantic-category-facet', () => {
   const pageUrl = 's/quantic-category-facet';
 
   const defaultField = 'geographicalhierarchy';
   const defaultLabel = 'Country';
   const defaultNumberOfValues = 8;
 
-  const indexFacetValuesAlias = '@indexFacetValues';
-
-  function visitFacetPage(options: Partial<CategoryFacetOptions> = {}) {
-    interceptSearch();
-
-    cy.visit(pageUrl);
-    configure(options);
-  }
-
-  function loadFromUrlHash(
+  function visitCategoryFacetPage(
     options: Partial<CategoryFacetOptions> = {},
-    urlHash: string
+    waitForSearch = true
   ) {
     interceptSearch();
-
-    cy.visit(`${pageUrl}#${urlHash}`);
+    cy.visit(pageUrl);
     configure(options);
-  }
-
-  describe('when loading', () => {
-    function setupWithPauseBeforeSearch() {
-      interceptSearchIndefinitely();
-      cy.visit(pageUrl);
-      configure({
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-      });
-    }
-
-    describe('verify rendering', () => {
-      before(setupWithPauseBeforeSearch);
-
-      Expect.displayPlaceholder(true);
-    });
-  });
-  function aliasFacetValues() {
-    cy.wait(InterceptAliases.Search).then((interception) => {
-      const indexValues = extractFacetValues(interception.response);
-      cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
-    });
-  }
-
-  describe('with values', () => {
-    function setupWithValues() {
-      visitFacetPage({
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-      });
-    }
-
-    describe('verify rendering', () => {
-      before(setupWithValues);
-
-      Expect.displayPlaceholder(false);
-      Expect.labelContains(defaultLabel);
-      Expect.displayValues(true);
-      Expect.numberOfParentValues(0);
-      Expect.numberOfChildValues(defaultNumberOfValues - 1);
-      Expect.displayClearButton(false);
-      Expect.displayShowMoreButton(false);
-      Expect.displayShowLessButton(false);
-      Expect.displaySearchInput(false);
-    });
-
-    describe('verify facet values ordering', () => {
-      before(() => {
-        setupWithValues();
-        aliasFacetValues();
-      });
-
-      Expect.facetValuesEqual(indexFacetValuesAlias);
-    });
-
-    describe('when selecting a value', () => {
-      function selectFirstFacetValue() {
-        setupWithValues();
-      }
-
-      function collapseFacet() {
-        CategoryFacetSelectors.collapseButton().click();
-      }
-
-      describe('verify rendering', () => {
-        before(selectFirstFacetValue);
-
-        Expect.clearFilterContains('Clear filter');
-        Expect.numberOfParentValues(1);
-        Expect.numberOfChildValues(defaultNumberOfValues - 1);
-      });
-
-      describe('verify analytics', () => {
-        before(selectFirstFacetValue);
-
-        //Expect.logFacetSelect(defaultField, 0);
-      });
-
-      describe('when collapsing the facet', () => {
-        before(() => {
-          selectFirstFacetValue();
-          collapseFacet();
-        });
-
-        describe('verify rendering', () => {
-          Expect.displayClearButton(true);
-          Expect.clearFilterContains('Clear filter');
-        });
-      });
-
-      describe('when selecting the "Clear" button', () => {
-        function clearSelectedValues() {
-          selectFirstFacetValue();
-          CategoryFacetSelectors.clearFilterButton().click();
-        }
-
-        describe('verify rendering', () => {
-          before(clearSelectedValues);
-
-          Expect.displayClearButton(false);
-          Expect.numberOfParentValues(0);
-          Expect.numberOfChildValues(defaultNumberOfValues - 1);
-        });
-
-        describe('verify analytics', () => {
-          before(clearSelectedValues);
-
-          Expect.logClearFacetValues(defaultField);
-        });
-      });
-
-      describe('when selecting a second value', () => {
-        const initialNumberOfSelectedValues = 2;
-        function selectLastFacetValue() {
-          selectFirstFacetValue();
-          cy.wait(InterceptAliases.UA.Facet.Select);
-        }
-
-        describe('verify rendering', () => {
-          before(selectLastFacetValue);
-
-          Expect.clearFilterContains('Clear 2 filters');
-          Expect.numberOfParentValues(initialNumberOfSelectedValues);
-          Expect.numberOfChildValues(
-            defaultNumberOfValues - initialNumberOfSelectedValues
-          );
-        });
-
-        describe('verify analytics', () => {
-          before(selectLastFacetValue);
-
-          //Expect.logFacetSelect(defaultField, 1);
-        });
-
-        describe('when collapsing the facet', () => {
-          before(() => {
-            selectLastFacetValue();
-            collapseFacet();
-          });
-
-          describe('verify rendering', () => {
-            Expect.displayClearButton(true);
-            Expect.clearFilterContains('Clear 2 filters');
-          });
-        });
-      });
-    });
-
-    describe('when searching for a value that returns results', () => {
-      const query = 'a';
-
-      function searchForValue() {
-        setupWithValues();
-        CategoryFacetSelectors.searchInput().type(query);
-      }
-
-      function searchForSingleValue() {
-        setupWithValues();
-        const singleValueQuery = 'account';
-        CategoryFacetSelectors.searchInput().type(singleValueQuery);
-        for (let i = 0; i < singleValueQuery.length; i++) {
-          cy.wait(InterceptAliases.FacetSearch);
-        }
-      }
-
-      describe('verify rendering', () => {
-        before(searchForValue);
-
-        Expect.numberOfChildValues(defaultNumberOfValues);
-        Expect.numberOfParentValues(0);
-        Expect.displayMoreMatchesFound(true);
-        Expect.displayNoMatchesFound(false);
-        Expect.moreMatchesFoundContainsQuery(query);
-        Expect.displayShowMoreButton(false);
-        Expect.displaySearchClearButton(true);
-        Expect.highlightsResults(query);
-      });
-
-      describe('verify analytics', () => {
-        before(searchForValue);
-
-        Expect.logFacetSearch(defaultField);
-      });
-
-      describe('when clearing the facet search results', () => {
-        function clearSearchInput() {
-          searchForValue();
-          CategoryFacetSelectors.searchClearButton().click();
-        }
-
-        describe('verify rendering', () => {
-          before(clearSearchInput);
-
-          Expect.numberOfChildValues(defaultNumberOfValues);
-          Expect.numberOfParentValues(0);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(false);
-          Expect.displayShowMoreButton(true);
-          Expect.displayShowLessButton(false);
-          Expect.searchInputEmpty();
-          Expect.displaySearchClearButton(false);
-        });
-      });
-
-      describe('when selecting a search result', () => {
-        function selectSearchResult() {
-          searchForSingleValue();
-        }
-
-        describe('verify rendering', () => {
-          before(selectSearchResult);
-
-          Expect.numberOfChildValues(defaultNumberOfValues - 1);
-          Expect.numberOfParentValues(1);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(false);
-          Expect.displayShowMoreButton(true);
-          Expect.displaySearchInput(true);
-          Expect.displaySearchClearButton(false);
-        });
-
-        describe('verify analytics', () => {
-          before(selectSearchResult);
-
-          //Expect.logFacetSelect(defaultField, 0);
-        });
-      });
-
-      describe('when searching for a value that returns a single result', () => {
-        describe('verify rendering', () => {
-          before(searchForSingleValue);
-
-          Expect.numberOfChildValues(1);
-          Expect.numberOfParentValues(0);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(false);
-          Expect.displaySearchClearButton(true);
-        });
-      });
-
-      describe('when searching for a value that returns no results', () => {
-        const query = 'this facet value does not exist';
-
-        function searchForInvalidValue() {
-          setupWithValues();
-          CategoryFacetSelectors.searchInput().type(query);
-        }
-
-        describe('verify rendering', () => {
-          before(searchForInvalidValue);
-
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(true);
-          Expect.noMatchesFoundContainsQuery(query);
-          Expect.displaySearchClearButton(true);
-        });
-      });
-    });
-
-    describe('show more/less values', () => {
-      describe('when facet has no more values', () => {
-        function showAllValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: 1000,
-          });
-          cy.wait(InterceptAliases.Search);
-        }
-
-        describe('verify rendering', () => {
-          before(showAllValues);
-
-          Expect.displayShowMoreButton(false);
-          Expect.displayShowLessButton(false);
-        });
-      });
-
-      describe('when clicking show more values', () => {
-        const smallNumberOfValues = 2;
-
-        function showMoreValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: smallNumberOfValues,
-          });
-          cy.wait(InterceptAliases.Search);
-          CategoryFacetSelectors.showMoreButton().click();
-        }
-
-        describe('verify rendering', () => {
-          before(showMoreValues);
-
-          Expect.numberOfValues(smallNumberOfValues * 2);
-        });
-
-        describe('verify facet values ordering', () => {
-          before(() => {
-            showMoreValues();
-            aliasFacetValues();
-          });
-
-          Expect.facetValuesEqual(indexFacetValuesAlias);
-        });
-
-        describe('when clicking show more button again', () => {
-          function showMoreValuesAgain() {
-            showMoreValues();
-            CategoryFacetSelectors.showMoreButton().click();
-          }
-
-          describe('verify rendering', () => {
-            before(showMoreValuesAgain);
-
-            Expect.numberOfValues(smallNumberOfValues * 3);
-          });
-
-          describe('verify facet values ordering', () => {
-            before(() => {
-              showMoreValuesAgain();
-              aliasFacetValues();
-            });
-
-            Expect.facetValuesEqual(indexFacetValuesAlias);
-          });
-
-          describe('when clicking show less button', () => {
-            function showLessValues() {
-              showMoreValuesAgain();
-              cy.wait(InterceptAliases.Search);
-              CategoryFacetSelectors.showLessButton().click();
-            }
-
-            describe('verify rendering', () => {
-              before(showLessValues);
-
-              Expect.numberOfValues(smallNumberOfValues);
-            });
-
-            describe('verify facet values ordering', () => {
-              before(() => {
-                showLessValues();
-                aliasFacetValues();
-              });
-
-              Expect.facetValuesEqual(indexFacetValuesAlias);
-            });
-          });
-        });
-      });
-    });
-
-    describe('when collapsing a facet', () => {
-      function collapseFacet() {
-        setupWithValues();
-        CategoryFacetSelectors.collapseButton().click();
-      }
-
-      describe('verify rendering', () => {
-        before(collapseFacet);
-
-        Expect.labelContains(defaultLabel);
-        Expect.displayExpandButton(true);
-        Expect.displaySearchInput(false);
-        Expect.displayShowMoreButton(false);
-      });
-
-      describe('when expanding a facet', () => {
-        function expandFacet() {
-          collapseFacet();
-          CategoryFacetSelectors.expandButton().click();
-        }
-
-        describe('verify rendering', () => {
-          before(expandFacet);
-
-          Expect.labelContains(defaultLabel);
-          Expect.displayCollapseButton(true);
-          Expect.displaySearchInput(true);
-          Expect.displayShowMoreButton(true);
-        });
-      });
-    });
-  });
-
-  describe('with custom field, label, and number of results', () => {
-    function setupCustomOptions() {
-      visitFacetPage({
-        field: 'language',
-        label: 'Language',
-        numberOfValues: 3,
-      });
-    }
-
-    describe('verify rendering', () => {
-      before(setupCustomOptions);
-
-      Expect.labelContains('Language');
-      Expect.facetValueContains('English');
-    });
-  });
-
-  describe('when field returns no results', () => {
-    before(() => {
-      visitFacetPage({
-        field: 'somethingthatdoesnotexist',
-      });
+    if (waitForSearch) {
       cy.wait(InterceptAliases.Search);
-    });
-
-    Expect.displayLabel(false);
-  });
-
-  describe('with custom sorting', () => {
-    ['alphanumeric', 'occurrences'].forEach((sorting) => {
-      it(`should use "${sorting}" sorting in the facet request`, () => {
-        visitFacetPage({
-          sortCriteria: sorting,
-        });
-        cy.wait(InterceptAliases.Search).then((interception) => {
-          const facetRequest = interception.request.body.facets[0];
-          expect(facetRequest.sortCriteria).to.eq(sorting);
-        });
-      });
-    });
-  });
-
-  describe('with invalid sorting', () => {
-    describe('verify rendering', () => {
-      before(() => {
-        visitFacetPage({
-          sortCriteria: 'invalid',
-        });
-      });
-
-      Expect.displayLabel(false);
-    });
-  });
-
-  describe('with no search', () => {
-    function setupNoSearch() {
-      visitFacetPage({
-        withSearch: true,
-      });
     }
+  }
+  function setupWithDefaultSettings() {
+    visitCategoryFacetPage(
+      {
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+      },
+      false
+    );
+  }
 
-    describe('verify rendering', () => {
-      before(setupNoSearch);
+  function setupGoDeeperOneLevel() {
+    setupWithDefaultSettings();
+    Actions.selectChildValueAt(canadaHierarchyIndex[0]);
+  }
+  function setupGoDeeperTwoLevels() {
+    setupWithDefaultSettings();
+    Actions.selectChildValueAt(canadaHierarchyIndex[0]);
+    interceptSearch();
+    Actions.selectChildValueAt(canadaHierarchyIndex[1]);
+    interceptSearch();
+  }
+  function setupShowMore() {
+    setupGoDeeperOneLevel();
+    Actions.clickShowMoreButton();
+  }
+  function setupShowLess() {
+    setupShowMore();
+    interceptSearch();
+    Actions.clickShowLessButton();
+  }
 
+  describe('with default category facet', () => {
+    it('should work as expected', () => {
+      setupWithDefaultSettings();
+
+      Expect.isAccesssible(true);
+      Expect.displayLabel(true);
+      Expect.displayFacetCount(true);
       Expect.displaySearchInput(false);
+      Expect.numberOfValues(7);
     });
-  });
 
-  describe('with is collapsed', () => {
-    function setupIsCollapsed() {
-      visitFacetPage({
-        isCollapsed: true,
+    describe('when selecting on the 1st level data set', () => {
+      it('should bold the selected parent level', () => {
+        const selectedPath = canadaHierarchy.slice(0, 1);
+        setupGoDeeperOneLevel();
+
+        Expect.numberOfParentValues(1);
+        Expect.parentValueLabel(selectedPath[0]);
+        Expect.numberOfChildValues(8);
+        Expect.pathInUrl(selectedPath);
+        Expect.logCategoryFacetSelected(selectedPath);
       });
-    }
+    });
 
-    describe('verify rendering', () => {
-      before(setupIsCollapsed);
+    describe('when selecting value subsequently to go next deeper level', () => {
+      it('should bold next child level', () => {
+        const selectedPath = canadaHierarchy.slice(0, 2);
+        setupGoDeeperTwoLevels();
 
-      Expect.labelContains(defaultLabel);
-      Expect.displayExpandButton(true);
-      Expect.displaySearchInput(false);
-      Expect.displayShowMoreButton(false);
+        Expect.numberOfParentValues(1);
+        Expect.pathInUrl(selectedPath);
+        // Expect.logCategoryFacetSelected(selectedPath);
+      });
+    });
+
+    describe('when selecting ShowMore button', () => {
+      it('should double the existing list of child level', () => {
+        const selectedPath = canadaHierarchy.slice(0, 1);
+        setupShowMore();
+
+        Expect.numberOfParentValues(1);
+        Expect.numberOfChildValues(16);
+        Expect.displayShowMoreButton(true);
+        Expect.displayShowLessButton(true);
+        Expect.pathInUrl(selectedPath);
+        Expect.logCategoryFacetSelected(selectedPath);
+      });
+    });
+
+    describe('when selecting ShowLess button', () => {
+      it('should collapsed the child list to default', () => {
+        const selectedPath = canadaHierarchy.slice(0, 1);
+        setupShowLess();
+
+        Expect.numberOfParentValues(1);
+        Expect.numberOfChildValues(8);
+        Expect.displayShowMoreButton(true);
+        Expect.displayShowLessButton(false);
+        Expect.pathInUrl(selectedPath);
+        Expect.logCategoryFacetSelected(selectedPath);
+      });
+    });
+
+    describe('when selecting value on 4nd level of data', () => {
+      describe('when selecting the third level', () => {
+        it('should redirect user up 1 level of data set', () => {
+          // it should filter result
+          // it should log UA
+        });
+      });
+      describe('when selecting "All Categories"', () => {
+        it('should redirect me to very first level of data set', () => {
+          // it should log UA
+        });
+      });
     });
   });
 
-  describe('with a selected value in the URL', () => {
-    const selectedValue = 'Account';
+  describe('with option search is enabled in category facet', () => {
+    describe('when typing into facet search input box', () => {
+      it('facet value should be filtered to match with the keywords', () => {
+        // it should highlight entered keyword
+        // it should display result parent patch on the second line
+      });
+    });
 
-    function loadWithSelectedValue() {
-      loadFromUrlHash(
-        {
-          field: defaultField,
-        },
-        `f[objecttype]=${selectedValue}`
-      );
-    }
+    describe('when selecting a value from the search result', () => {
+      it('should select that category facet level', () => {
+        // it should expand child list
+        // it should filter result
+        // it should log UA
+      });
+    });
+  });
 
-    describe('verify rendering', () => {
-      before(loadWithSelectedValue);
+  describe('setup with custom basePath', () => {
+    describe('when loading', () => {
+      it('should load the category facet component with data level start from custom basePath', () => {
+        // I can click on the 1st level data set level
+      });
+    });
+
+    describe('when typing into facet search box input', () => {
+      it('facet value should be filtered to match with the keywords', () => {
+        // it should only show results from the "North America" data level
+      });
     });
   });
 });
