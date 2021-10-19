@@ -45,6 +45,7 @@ describe('Result List (Table) Component', () => {
     });
 
     it('should render labels in their corresponding header', () => {
+      ResultTableSelectors.firstRow().should('exist');
       ResultTableSelectors.headers().then((elements) => {
         const actualHeaderText = Array.from(elements).map((element) =>
           getDeepText(element)
