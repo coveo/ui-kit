@@ -56,6 +56,7 @@ import {BooleanValue, StringValue} from '@coveo/bueno';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {updatePage} from '../pagination/pagination-actions';
 import {validatePayload} from '../../utils/validate-payload';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -115,7 +116,7 @@ const fetchFromAPI = async (
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
   UpdateQueryActionCreatorPayload,
-  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+  AsyncThunkOptions<StateNeededByExecuteSearch>
 >('search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
   validatePayload(payload, {
