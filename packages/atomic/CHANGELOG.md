@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.8...@coveo/atomic@1.6.9) (2021-10-19)
+
+
+### Bug Fixes
+
+* **atomic:** moved badges section above title ([#1357](https://github.com/coveo/ui-kit/issues/1357)) ([ab30814](https://github.com/coveo/ui-kit/commit/ab30814e84add95141df12dd1f6ac99b8446f0d2))
+
+
+
+
+
 ## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.7...@coveo/atomic@1.6.8) (2021-10-19)
 
 
