@@ -45,8 +45,7 @@ describe('Result List (Table) Component', () => {
     });
 
     it('should render labels in their corresponding header', () => {
-      ResultTableSelectors.firstRow().should('exist');
-      ResultTableSelectors.headers().then((elements) => {
+      ResultTableSelectors.headers().should((elements) => {
         const actualHeaderText = Array.from(elements).map((element) =>
           getDeepText(element)
         );
@@ -56,7 +55,7 @@ describe('Result List (Table) Component', () => {
     });
 
     it('should render columns in the correct order', () => {
-      ResultTableSelectors.firstRowCellsContent().then((elements) => {
+      ResultTableSelectors.firstRowCellsContent().should((elements) => {
         const actualCellContent = Array.from(elements).map(
           (element) => element.innerHTML
         );
@@ -85,7 +84,7 @@ describe('Result List (Table) Component', () => {
     });
 
     it('should render result template components', () => {
-      ResultTableSelectors.firstRowCellsContent().then(([cell]) =>
+      ResultTableSelectors.firstRowCellsContent().should(([cell]) =>
         expect(getDeepText(cell)).to.contain(fieldValue)
       );
     });
