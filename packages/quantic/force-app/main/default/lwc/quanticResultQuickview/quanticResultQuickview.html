@@ -1,6 +1,12 @@
 <template>
-  <div class="result-quickview__host" lwc:dom="manual">
-    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+  <lightning-button-icon
+    title="Open Quickview"
+    alternative-text="Open Quickview"
+    icon-name="utility:preview"
+    onclick={openQuickview}
+  ></lightning-button-icon>
+  <template if:true={isQuickviewOpen}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_large slds-fade-in-open">
       <div class="slds-modal__container">
         <header class="slds-modal__header">
           <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
@@ -8,11 +14,10 @@
           </button>
           <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modal header</h2>
         </header>
-        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-
+        <div class="quickview__content-container slds-modal__content slds-p-around_medium" id="quickview__content-container" lwc:dom="manual">
         </div>
       </div>
     </section>
-  </div>
-  <div class={backdropClass}></div>
+    <div class={backdropClass}></div>
+  </template>
 </template>

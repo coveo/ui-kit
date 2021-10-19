@@ -39,6 +39,8 @@ export default class QuanticResultQuickview extends LightningElement {
 
   /** @type {Quickview} */
   quickview;
+  /** @type {boolean} */
+  isQuickviewOpen = false;
   /** @type {Function} */
   unsubscribe;
 
@@ -72,10 +74,31 @@ export default class QuanticResultQuickview extends LightningElement {
 
   updateState() {
     this.state = this.quickview?.state;
-    console.log(this.state?.resultHasPreview + ': ' + this.state?.content);
+    if (this.contentContainer && this.state?.resultHasPreview) {
+      const iframe = document.createElement('iframe');
+      iframe.srcdoc = this.state.content;
+      iframe.width = '100%';
+      iframe.height = '100%';
+      iframe.setAttribute('frameborder', '0');
+
+      this.contentContainer.appendChild(iframe);
+    }
+  }
+
+  openQuickview() {
+    this.isQuickviewOpen = true;
+    this.quickview.fetchResultContent();
+  }
+
+  closeQuickview() {
+    this.isQuickviewOpen = false;
+  }
+
+  get contentContainer() {
+    return this.template.querySelector('.quickview__content-container');
   }
 
   get backdropClass() {
-    return this.isOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
+    return this.isQuickviewOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
   }
 }
