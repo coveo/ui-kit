@@ -13,6 +13,8 @@ import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
 import {NumberValue} from '@coveo/bueno';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {updatePage} from '../../features/pagination/pagination-actions';
 
 describe('recent queries list', () => {
   let engine: MockSearchEngine;
@@ -106,10 +108,12 @@ describe('recent queries list', () => {
       engine.state.recentQueries = {...testInitialState, ...testOptions};
       recentQueriesList.executeRecentQuery(0);
 
+      expect(engine.actions).toContainEqual(deselectAllFacets());
       expectContainAction(updateQuery);
       expect(engine.actions).toContainEqual(
         updateQuery({q: testInitialState.queries[0]})
       );
+      expect(engine.actions).toContainEqual(updatePage(1));
       expect(engine.findAsyncAction(executeSearch.pending)).toBeDefined();
     });
   });
