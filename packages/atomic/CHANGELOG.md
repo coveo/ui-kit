@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.7...@coveo/atomic@1.6.8) (2021-10-19)
+
+
+### Bug Fixes
+
+* **atomic:** added cypress tests for result table and added error to table ([#1343](https://github.com/coveo/ui-kit/issues/1343)) ([c3177f4](https://github.com/coveo/ui-kit/commit/c3177f423d88797b509d0fa3ab13435c40c8e7ad))
+* **atomic:** remove Gaussian Blur for SVG backgrounds ([#1363](https://github.com/coveo/ui-kit/issues/1363)) ([bd62b55](https://github.com/coveo/ui-kit/commit/bd62b55902907abdbb1398e4822d2d9d3e1ce962))
+* **atomic:** removed minimum height on result title section ([#1356](https://github.com/coveo/ui-kit/issues/1356)) ([89be45f](https://github.com/coveo/ui-kit/commit/89be45fd327c8d08c5afc15c2271f65d6243498a))
+
+
+
+
+
 ## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.6...@coveo/atomic@1.6.7) (2021-10-18)
 
 
