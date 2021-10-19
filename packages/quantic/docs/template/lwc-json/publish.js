@@ -88,7 +88,7 @@ function parseMember(element, parentNode) {
     description: element.description || '',
     required: !element.defaultvalue && !isTagDefined(element, 'optional'),
     defaultValue: element.defaultvalue || '',
-    type: element.type?.names?.[0] || '',
+    type: element.type?.names?.join('|') || '',
   }
   if (prop.type.name === 'function') {
     prop.type.params = element.params || '',

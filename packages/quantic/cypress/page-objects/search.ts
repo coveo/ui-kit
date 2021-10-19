@@ -62,6 +62,23 @@ export function interceptSearch() {
     .as(InterceptAliases.FacetSearch.substring(1));
 }
 
+export function interceptSearchWithError(
+  statusCode = 400,
+  message = '',
+  type = '',
+  executionReport: Array<Record<string, unknown>> = []
+) {
+  cy.intercept('POST', routeMatchers.search, {
+    statusCode,
+    body: {
+      statusCode,
+      message,
+      type,
+      executionReport,
+    },
+  });
+}
+
 export function extractFacetValues(
   response: CyHttpMessages.IncomingResponse | undefined
 ) {
