@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.9...@coveo/atomic@1.6.10) (2021-10-19)
+
+
+### Bug Fixes
+
+* **atomic:** made compact visual sections smaller ([#1355](https://github.com/coveo/ui-kit/issues/1355)) ([9ea5d06](https://github.com/coveo/ui-kit/commit/9ea5d0633d21b40826f21377775bee07f27c7218))
+
+
+
+
+
 ## [1.6.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.8...@coveo/atomic@1.6.9) (2021-10-19)
 
 
