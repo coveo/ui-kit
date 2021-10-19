@@ -62,6 +62,7 @@ export interface SearchActionCreators {
    * Prepares the search state for a search with a query by setting the query string and resetting facet and pager states.
    *
    * @param payload - The action creator payload.
+   * @returns A dispatchable action.
    */
   prepareForSearchWithQuery(
     payload: UpdateQueryActionCreatorPayload
