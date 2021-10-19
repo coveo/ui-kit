@@ -16,7 +16,6 @@ import {
   resultTemplateComponent,
   ResultTemplateSelectors,
 } from './result-template-selectors';
-import {Components} from '../../../src/components';
 
 function buildCustomTemplateContent(id = 'template-content') {
   const element = generateComponentHTML('span', {id});
@@ -74,30 +73,30 @@ describe('Result Template Component', () => {
     assertContainsComponentError(ResultTemplateSelectors, true);
   });
 
-  describe('with an image size', () => {
-    function setupPageWithTemplateImageSize(imageSize: string) {
+  describe('with an icon image size', () => {
+    const imageSize = 'icon';
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(buildTemplateWithoutSections([], {image: imageSize}))
         )
         .init();
-    }
-
-    function getResultImageSize() {
-      return ResultListSelectors.result()
-        .first()
-        .then(([result]) => (result as Components.AtomicResult).image);
-    }
-
-    it('enforces the icon image size on the result', () => {
-      setupPageWithTemplateImageSize('icon');
-      getResultImageSize().should('eq', 'icon');
     });
 
-    it('enforces the small image size on the result', () => {
-      setupPageWithTemplateImageSize('small');
-      getResultImageSize().should('eq', 'small');
+    ResultTemplateAssertions.assertResultImageSize(imageSize);
+  });
+
+  describe('with a small image size', () => {
+    const imageSize = 'small';
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addResultList(buildTemplateWithoutSections([], {image: imageSize}))
+        )
+        .init();
     });
+
+    ResultTemplateAssertions.assertResultImageSize(imageSize);
   });
 
   describe('without any conditions nor sections', () => {
