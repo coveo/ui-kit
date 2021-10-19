@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.77.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.1...@coveo/quantic@0.77.2) (2021-10-18)
+
+
+### Bug Fixes
+
+* **quantic:** disable flaky facet test ([#1350](https://github.com/coveo/ui-kit/issues/1350)) ([e9943ee](https://github.com/coveo/ui-kit/commit/e9943eef1216f5609f95e3c62f8ec1e12edfb90e))
+
+
+
+
+
+## [0.77.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.0...@coveo/quantic@0.77.1) (2021-10-18)
+
+
+### Bug Fixes
+
+* **quantic:** removed some styling on quanticError to fix alignment ([#1345](https://github.com/coveo/ui-kit/issues/1345)) ([b80d54b](https://github.com/coveo/ui-kit/commit/b80d54b3883ea8eb63dba2763d071c118a117b1a))
+
+
+
+
+
+# [0.77.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.2...@coveo/quantic@0.77.0) (2021-10-18)
+
+
+### Features
+
+* **quantic:** add tests for the Quantic Tab component ([#1341](https://github.com/coveo/ui-kit/issues/1341)) ([70ed75d](https://github.com/coveo/ui-kit/commit/70ed75dca37a615e434376a4cb49a9f65654987a))
+* **quantic:** added knowledge article detection to quanticLabel ([#1346](https://github.com/coveo/ui-kit/issues/1346)) ([3a22c07](https://github.com/coveo/ui-kit/commit/3a22c073a73dd47e5e6230be1d2361ef627a6374))
+
+
+
+
+
 ## [0.76.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.76.1...@coveo/quantic@0.76.2) (2021-10-15)
 
 

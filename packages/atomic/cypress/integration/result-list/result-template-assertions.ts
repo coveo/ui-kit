@@ -3,7 +3,7 @@ import {ResultTemplateSelectors} from './result-template-selectors';
 
 export function assertRendersTemplate(shouldBeRendered: boolean) {
   it(`${should(shouldBeRendered)} render the template`, () => {
-    ResultTemplateSelectors.customContent().should(
+    ResultTemplateSelectors.customContentInList().should(
       shouldBeRendered ? 'exist' : 'not.exist'
     );
   });

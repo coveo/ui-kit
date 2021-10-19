@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.6...@coveo/atomic@1.6.7) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** adjusted all result components to behave similarly ([#1298](https://github.com/coveo/ui-kit/issues/1298)) ([8f9041a](https://github.com/coveo/ui-kit/commit/8f9041ab091d31350243670812a6fdd2afb55667))
+* **atomic:** made printable uri not overflow horizontally ([#1333](https://github.com/coveo/ui-kit/issues/1333)) ([d087908](https://github.com/coveo/ui-kit/commit/d08790849fb37d0d812965ed908ecb5dd834aa96))
+
+
+
+
+
 ## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.5...@coveo/atomic@1.6.6) (2021-10-18)
 
 
