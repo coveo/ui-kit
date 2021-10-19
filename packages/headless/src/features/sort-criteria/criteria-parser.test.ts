@@ -40,7 +40,7 @@ describe('#parseCriterionExpression', () => {
 
   it('when SortByDate criterion has no order, should throw', () => {
     expect(() => parseCriterionExpression('date')).toThrowError(
-      'An order (ascending, descending) should be specified for a sort criterion sorted by "date"'
+      'An order (i.e., ascending or descending) should be specified for a sort criterion sorted by "date"'
     );
   });
 
@@ -58,7 +58,7 @@ describe('#parseCriterionExpression', () => {
 
   it('when SortByField criterion has no order, should throw', () => {
     expect(() => parseCriterionExpression('size')).toThrowError(
-      'An order (ascending, descending) should be specified for a sort criterion sorted by a field, such as "size"'
+      'An order (i.e., ascending or descending) should be specified for a sort criterion sorted by "date"'
     );
   });
 

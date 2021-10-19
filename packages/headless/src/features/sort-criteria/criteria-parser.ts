@@ -25,14 +25,14 @@ function parseCriterion(criterion: {
     case SortBy.Date:
       if (!order) {
         throw new Error(
-          'An order (ascending, descending) should be specified for a sort criterion sorted by "date"'
+          'An order (i.e., ascending or descending) should be specified for a sort criterion sorted by "date"'
         );
       }
       return buildDateSortCriterion(order);
     default:
       if (!order) {
         throw new Error(
-          `An order (ascending, descending) should be specified for a sort criterion sorted by a field, such as "${by}"`
+          `An order (i.e., ascending or descending) should be specified for a sort criterion sorted by by a field, such as "${by}"`
         );
       }
       return buildFieldSortCriterion(by, order);
