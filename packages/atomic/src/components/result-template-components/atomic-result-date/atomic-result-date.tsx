@@ -1,4 +1,4 @@
-import {Component, Prop, Element} from '@stencil/core';
+import {Component, Prop, Element, State} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
@@ -15,6 +15,8 @@ export class AtomicResultDate {
 
   @Element() host!: HTMLElement;
 
+  @State() public error!: Error;
+
   /**
    * The result field which the component should use.
    * This will look for the field in the Result object first, and then in the Result.raw object.
@@ -26,29 +28,40 @@ export class AtomicResultDate {
    */
   @Prop() format = 'D/M/YYYY';
 
-  private removeComponent() {
-    this.host.remove();
-  }
+  private dateToRender: string | null = null;
 
-  public render() {
+  private updateDateToRender() {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
     );
 
     if (value === null) {
-      return this.removeComponent();
+      this.dateToRender = null;
+      return;
     }
 
     const parsedValue = dayjs(value as never);
     if (!parsedValue.isValid()) {
-      return this.removeComponent();
+      this.error = new Error(
+        `Field "${this.field}" does not contain a valid date.`
+      );
+      this.dateToRender = null;
+      return;
     }
 
-    try {
-      return parsedValue.format(this.format);
-    } catch (error) {
-      return this.removeComponent();
+    this.dateToRender = parsedValue.format(this.format);
+  }
+
+  public componentWillRender() {
+    this.updateDateToRender();
+  }
+
+  public render() {
+    if (this.dateToRender === null) {
+      this.host.remove();
+      return;
     }
+    return this.dateToRender;
   }
 }
