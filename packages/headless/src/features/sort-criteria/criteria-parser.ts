@@ -32,7 +32,7 @@ function parseCriterion(criterion: {
     default:
       if (!order) {
         throw new Error(
-          `An order (i.e., ascending or descending) should be specified for a sort criterion sorted by by a field, such as "${by}"`
+          `An order (i.e., ascending or descending) should be specified for a sort criterion sorted by a field, such as "${by}"`
         );
       }
       return buildFieldSortCriterion(by, order);
