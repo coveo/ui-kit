@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {deselectAllFacets} from './facet-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {deselectAllFacets} from '../facets/generic/facet-actions';
 
 /**
  * The breadcrumb action creators.
