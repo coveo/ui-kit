@@ -14,6 +14,8 @@ export interface TemplateContent {
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
+ *
+ * A `script` tag inserted into a `template` element will not be executed when results are being rendered.
  */
 @Component({
   tag: 'atomic-result-template',
