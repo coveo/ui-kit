@@ -59,7 +59,7 @@ export interface BreadcrumbManager extends Controller {
   deselectAll(): void;
 
   /**
-   * Deselects a the breadcrumb value.
+   * Deselects a breadcrumb value.
    * @param value - The breadcrumb value to deselect.
    */
   deselectBreadcrumb(value: DeselectableValue): void;
