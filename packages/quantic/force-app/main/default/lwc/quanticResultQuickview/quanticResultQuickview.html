@@ -12,7 +12,9 @@
           <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
             <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
           </button>
-          <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modal header</h2>
+          <h2 id="modal-heading-01" class="slds-modal__title slds-truncate result__title">
+            <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+          </h2>
         </header>
         <div class="quickview__content-container slds-modal__content slds-p-around_medium" id="quickview__content-container" lwc:dom="manual">
         </div>

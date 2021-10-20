@@ -75,13 +75,8 @@ export default class QuanticResultQuickview extends LightningElement {
   updateState() {
     this.state = this.quickview?.state;
     if (this.contentContainer && this.state?.resultHasPreview) {
-      const iframe = document.createElement('iframe');
-      iframe.srcdoc = this.state.content;
-      iframe.width = '100%';
-      iframe.height = '100%';
-      iframe.setAttribute('frameborder', '0');
-
-      this.contentContainer.appendChild(iframe);
+      // eslint-disable-next-line @lwc/lwc/no-inner-html
+      this.contentContainer.innerHTML = this.state.content;
     }
   }
 
