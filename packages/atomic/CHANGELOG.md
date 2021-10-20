@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.11...@coveo/atomic@1.6.12) (2021-10-20)
+
+
+### Bug Fixes
+
+* **atomic:** add Clear Filter button to CategoryFacet when its collapsed ([#1361](https://github.com/coveo/ui-kit/issues/1361)) ([f610891](https://github.com/coveo/ui-kit/commit/f6108914447200edc4037013a9687df4185b0ae0))
+* **atomic:** ensure font weight & size is consistent with all elements ([#1364](https://github.com/coveo/ui-kit/issues/1364)) ([b37fe92](https://github.com/coveo/ui-kit/commit/b37fe9210f96813a927ce80dd9c5bf530a8e7485))
+
+
+
+
+
 ## [1.6.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.10...@coveo/atomic@1.6.11) (2021-10-19)
 
 **Note:** Version bump only for package @coveo/atomic
