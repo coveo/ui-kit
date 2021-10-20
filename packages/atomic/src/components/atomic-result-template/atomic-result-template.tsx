@@ -64,6 +64,13 @@ export class AtomicResultTemplate {
         'The "atomic-result-template" component has to contain a "template" element as a child.'
       );
     }
+
+    if (!this.host.querySelector('template script')) {
+      console.warn(
+        'The "script" tags inside the "template" elements are not supported and will not be executed when the results are rendered',
+        this.host
+      );
+    }
   }
 
   public componentWillLoad() {
