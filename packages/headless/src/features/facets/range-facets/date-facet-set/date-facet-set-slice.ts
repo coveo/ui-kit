@@ -24,6 +24,7 @@ import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helper
 import {getDateFacetSetInitialState} from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),
@@ -58,6 +59,11 @@ export const dateFacetSetReducer = createReducer(
         handleRangeFacetDeselectAll<DateFacetRequest>(state, action.payload);
       })
       .addCase(deselectAllFacets, (state) => {
+        Object.keys(state).forEach((facetId) => {
+          handleRangeFacetDeselectAll<DateFacetRequest>(state, facetId);
+        });
+      })
+      .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) => {
           handleRangeFacetDeselectAll<DateFacetRequest>(state, facetId);
         });

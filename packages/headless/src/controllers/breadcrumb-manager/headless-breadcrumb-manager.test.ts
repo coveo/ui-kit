@@ -24,7 +24,6 @@ import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-respo
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
-import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {getSearchInitialState} from '../../features/search/search-state';
@@ -48,10 +47,8 @@ import {
 } from '../../app/reducers';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {
-  deselectAllStaticFilters,
-  toggleSelectStaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-actions';
+import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -392,14 +389,9 @@ describe('headless breadcrumb manager', () => {
   });
 
   describe('#deselectAll', () => {
-    it('dispatches #deselectAllFacets', () => {
+    it('dispatches #deselectAllBreadcrumbs', () => {
       breadcrumbManager.deselectAll();
-      expect(engine.actions).toContainEqual(deselectAllFacets());
-    });
-
-    it('dispatches #deselectAllStaticFilters', () => {
-      breadcrumbManager.deselectAll();
-      expect(engine.actions).toContainEqual(deselectAllStaticFilters());
+      expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
     });
 
     it('dispatches #executeSearch', () => {
