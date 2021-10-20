@@ -15,13 +15,13 @@ export interface Message {
   content: string;
 }
 
-export interface Collector {
+export interface DetailedCollector {
   beginScope(title: string): void;
   endScope(): void;
   expectation(message: string): void;
 }
 
-class DetailedCollector implements Collector {
+class DetailedCollectorImpl implements DetailedCollector {
   static _instance: DetailedCollector;
 
   constructor() {}
@@ -56,22 +56,24 @@ class DetailedCollector implements Collector {
   }
 
   static getInstance() {
-    if (!DetailedCollector._instance) {
-      DetailedCollector._instance = new DetailedCollector();
+    if (!DetailedCollectorImpl._instance) {
+      DetailedCollectorImpl._instance = new DetailedCollectorImpl();
     }
 
-    return DetailedCollector._instance;
+    return DetailedCollectorImpl._instance;
   }
 }
 
-class VoidCollector implements Collector {
+class VoidDetailedCollector implements DetailedCollector {
   beginScope(title: string) {}
   endScope() {}
   expectation(message: string) {}
 }
 
-export function getCollector(enable: boolean): Collector {
-  return enable ? DetailedCollector.getInstance() : new VoidCollector();
+export function getCollector(enable: boolean): DetailedCollector {
+  return enable
+    ? DetailedCollectorImpl.getInstance()
+    : new VoidDetailedCollector();
 }
 
 export function registerDetailedReporterPlugin(

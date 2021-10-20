@@ -15,16 +15,26 @@ const {
   EVENT_RUN_END,
   EVENT_TEST_FAIL,
   EVENT_TEST_PASS,
+  EVENT_TEST_PENDING,
   EVENT_SUITE_BEGIN,
   EVENT_SUITE_END
 } = Mocha.Runner.constants;
 
 /** @typedef {import('./detailed-collector').Message} Message */
 
+/**
+ * The `DetailedReporter` class produces a detailed report listing
+ * all expectations that are being validated.
+ * 
+ * 
+ * Additional context is provided using the `scope` function.
+ * Details on a particular expectation are logged using the `logDetail` custom Cypress command.
+ * See `detailed-collector.ts` for more information.
+ */
 class DetailedReporter {
 
   /**
-   * 
+   * Creates a new instance of `DetailedReporter`.
    * @param {Mocha.Runner} runner 
    */
   constructor(runner) {
@@ -50,6 +60,7 @@ class DetailedReporter {
     .on(EVENT_SUITE_BEGIN, (suite) => self.handleBeginSuite(suite))
     .on(EVENT_TEST_PASS, (test) => self.handlePassedTest(test))
     .on(EVENT_TEST_FAIL, (test, err) => self.handleFailedTest(test, err))
+    .on(EVENT_TEST_PENDING, (test) => self.handlePendingTest(test))
     .on(EVENT_SUITE_END, () => self.handleEndSuite())
     .once(EVENT_RUN_END, () => {
       self.handleEndRun();
@@ -58,46 +69,45 @@ class DetailedReporter {
   }
 
   /**
-   * 
-   * @param {string} message 
-   * @returns 
+   * Parses the JSON message received from the collector.
+   * @param {string} jsonMessage The message containing the event sent from the test (e.g., scope begin, scope end, log expectation)
+   * @returns {Message}
    */
-  parseCollectorMessage(message) {
-    try {
-      return JSON.parse(message);
-    } catch (err) {
-      console.error(`Cannot parse data sent by the collector. ${err}`);
-    }
+  parseCollectorMessage(jsonMessage) {
+    return JSON.parse(jsonMessage);
   }
 
   /**
-   * 
-   * @param {Message} data 
+   * Handles a message received from the collector.
+   * @param {Message} message The message received from the collector.
    */
-  handleCollectorMessage(data) {
-    switch (data.type) {
+  handleCollectorMessage(message) {
+    switch (message.type) {
       case 'scope:begin':
-        this.handleBeginScope(data);
+        this.handleBeginScope(message);
         break;
       case 'scope:end':
         this.handleEndScope();
         break;
       case 'expectation':
-        this.handleExpectation(data);
+        this.handleExpectation(message);
         break;
       default:
-        console.warn(`unknown collector message type: ${data.type}`);
+        console.warn(`unknown collector message type: ${message.type}`);
         break;
     }
   }
 
+  /**
+   * Handles the `EVENT_RUN_BEGIN` event.
+   */
   handleBeginRun() {
     this._indent++;
   }
 
   /**
-   * 
-   * @param {Mocha.Suite} suite 
+   * Handles the `EVENT_SUITE_BEGIN` event.
+   * @param {Mocha.Suite} suite The suite instance.
    */
   handleBeginSuite(suite) {
     console.log(this.indent() + chalk.dim(suite.title));
@@ -105,64 +115,95 @@ class DetailedReporter {
   }
 
   /**
-   * 
-   * @param {Message} data 
+   * Handles the `scope:begin` message.
+   * @param {Message} message The message instance.
    */
-  handleBeginScope(data) {
-    this._logBuffer.push(this.scopeIndent() + chalk.dim(data.content));
+  handleBeginScope(message) {
+    this._logBuffer.push(this.scopeIndent() + chalk.dim(message.content));
     this._scopeIndent++;
   }
 
+  /**
+   * Handles the `scope:end` message.
+   */
   handleEndScope() {
     this._scopeIndent--;
   }
 
   /**
-   * 
-   * @param {Message} data 
+   * Handles the `expectation` message.
+   * @param {Message} message The message instance.
    */
-  handleExpectation(data) {
-    this._logBuffer.push(this.scopeIndent() + chalk.green('. ') + chalk.dim(data.content));
+  handleExpectation(message) {
+    this._logBuffer.push(this.scopeIndent() + chalk.green('. ') + chalk.dim(message.content));
   }
 
   /**
-   * 
-   * @param {Mocha.Test} test 
+   * Handles the `EVENT_TEST_PASS` event.
+   * @param {Mocha.Test} test The test instance.
    */
   handlePassedTest(test) {
     console.log(this.indent() + chalk.green('✓ ') + test.title);
-    this._logBuffer.splice(0).forEach((log) => {
-      console.log(this.indent() + '  ' + log);
-    });
+    this.flushTestLogs();
   }
 
   /**
-   * 
-   * @param {Mocha.Test} test 
-   * @param {Error} err 
+   * Handles the `EVENT_TEST_FAIL` event.
+   * @param {Mocha.Test} test The test instance.
+   * @param {Error} err The error that occurred.
    */
   handleFailedTest(test, err) {
     console.log(this.indent() + chalk.red('✗ ') + test.title);
-    this._logBuffer.splice(0).forEach((log) => {
-      console.log(this.indent() + '  ' + log);
-    });
+    this.flushTestLogs();
 
     console.log(`\nERROR:\n${err.stack}\n`);
   }
 
+  /**
+   * Handles the `EVENT_TEST_PENDING` event.
+   * @param {Mocha.Test} test The test instance.
+   */
+  handlePendingTest(test) {
+    console.log(this.indent() + chalk.cyan('- ' + test.title))
+  }
+
+  /**
+   * Handles the `EVENT_SUITE_END` event.
+   */
   handleEndSuite() {
     this._indent--;
     this._scopeIndent = 0;
   }
 
+  /**
+   * Handles the `EVENT_RUN_END` event.
+   */
   handleEndRun() {
     this._indent = 0;
   }
 
+  /**
+   * Prints the buffered events, and empty the buffer.
+   */
+  flushTestLogs() {
+    this._logBuffer.splice(0).forEach((log) => {
+      console.log(this.indent() + '  ' + log);
+    })
+  }
+
+  /**
+   * Gets a string to indent output to align with the test.
+   * @returns {string}
+   */
   indent() {
     return '  '.repeat(this._indent);
   }
 
+  /**
+   * Gets a string to indent scopes and expectations for a test.
+   * This indent is relative to the test.
+   * @returns {string}
+   */
   scopeIndent() {
     return '  '.repeat(this._scopeIndent);
   }
