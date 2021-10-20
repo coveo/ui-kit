@@ -1,5 +1,9 @@
 import {useEffect, useState, FunctionComponent, useContext} from 'react';
-import {StaticFilterOptions, buildStaticFilter} from '@coveo/headless';
+import {
+  StaticFilterOptions,
+  buildStaticFilter,
+  buildStaticFilterValue,
+} from '@coveo/headless';
 import {AppContext} from '../../context/engine';
 
 export const StaticFilter: FunctionComponent<StaticFilterOptions> = (props) => {
@@ -27,23 +31,16 @@ export const StaticFilter: FunctionComponent<StaticFilterOptions> = (props) => {
   );
 };
 
-// usage
+/* Usage
 
-/**
- * ```tsx
- * const values = [
- *  {
- *    caption: 'Youtube',
- *    expression: '@filetype==youtubevideo',
- *    state: 'idle'
- *  },
- *  {
- *     caption: 'Dropbox',
- *     expression: '@connectortype==DropboxCrawler AND @objecttype==File',
- *     state: 'idle'
- *  }
- * ]
- *
- * <StaticFilter id="fileType" values={values}>File Types</Tab>;
- * ```
- */
+const youtube = buildStaticFilterValue({
+  caption: 'Youtube',
+  expression: '@filetype==youtubevideo',
+})
+const dropbox = buildStaticFilterValue({
+  caption: 'Dropbox',
+  expression: '(@connectortype==DropboxCrawler AND @objecttype==File)',
+})
+
+<StaticFilter id="fileType" values={[youtube, dropbox]}/>;
+*/
