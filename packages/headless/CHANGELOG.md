@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.0...@coveo/headless@1.29.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* **headless:** improve sort criterion error messages ([#1367](https://github.com/coveo/ui-kit/issues/1367)) ([b75badc](https://github.com/coveo/ui-kit/commit/b75badc14e123e6090b5d9ab894018085ee76ba9))
+
+
+
+
+
 # [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.2...@coveo/headless@1.29.0) (2021-10-19)
 
 
