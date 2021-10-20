@@ -158,6 +158,7 @@ export class AtomicRatingFacet
       facetId: this.facetId!,
       element: this.host,
       format: (value) => this.formatFacetValue(value),
+      content: (value) => this.ratingContent(value),
     });
   }
 
@@ -191,6 +192,16 @@ export class AtomicRatingFacet
     });
   }
 
+  private ratingContent(facetValue: NumericFacetValue) {
+    return (
+      <Rating
+        numberOfTotalIcons={this.maxValueInIndex}
+        numberOfActiveIcons={facetValue.start}
+        icon={this.icon}
+      ></Rating>
+    );
+  }
+
   private renderHeader() {
     return (
       <FacetHeader
@@ -217,11 +228,7 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <Rating
-              numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.start}
-              icon={this.icon}
-            ></Rating>
+            {this.ratingContent(facetValue)}
           </FacetValueCheckbox>
         );
       case 'link':
@@ -233,11 +240,7 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <Rating
-              numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.start}
-              icon={this.icon}
-            ></Rating>
+            {this.ratingContent(facetValue)}
           </FacetValueLink>
         );
     }

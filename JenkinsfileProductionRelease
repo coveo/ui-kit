@@ -1,5 +1,12 @@
 node('linux && docker') {
-  checkout scm
+  def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
+
+  checkout([
+    $class: 'GitSCM',
+    branches: [[name: commitHash ]],
+    extensions: [],
+    userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/ui-kit']]
+  ])
 
   withDockerContainer(image: 'node:14', args: '-u=root') {
     stage('Setup') {

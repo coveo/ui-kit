@@ -5,17 +5,7 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
-
-const resultSectionTags = [
-  'atomic-result-section-visual',
-  'atomic-result-section-badges',
-  'atomic-result-section-actions',
-  'atomic-result-section-title',
-  'atomic-result-section-title-metadata',
-  'atomic-result-section-emphasized',
-  'atomic-result-section-excerpt',
-  'atomic-result-section-bottom-metadata',
-];
+import {containsSection} from '../../utils/result-section-utils';
 
 export interface TemplateContent {
   innerHTML: string;
@@ -106,7 +96,7 @@ export class AtomicResultTemplate {
       conditions: this.getConditions(),
       content: {
         innerHTML: this.getContent(),
-        usesSections: this.getTemplateHasSections(),
+        usesSections: containsSection(this.getTemplateElement().content),
       },
       priority: 1,
     };
@@ -119,12 +109,6 @@ export class AtomicResultTemplate {
   private getTemplateElement() {
     return (
       this.host.querySelector('template') ?? document.createElement('template')
-    );
-  }
-
-  private getTemplateHasSections() {
-    return Array.from(this.getTemplateElement().content.children).some(
-      (element) => resultSectionTags.includes(element.tagName.toLowerCase())
     );
   }
 
