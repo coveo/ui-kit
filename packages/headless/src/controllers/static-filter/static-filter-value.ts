@@ -20,6 +20,12 @@ export interface StaticFilterValueOptions {
   state?: StaticFilterValueState;
 }
 
+/**
+ * Creates a `StaticFilterValue`.
+ *
+ * @param config - The options with which to create a `StaticFilterValue`.
+ * @returns A new `StaticFilterValue`.
+ */
 export function buildStaticFilterValue(
   config: StaticFilterValueOptions
 ): StaticFilterValue {

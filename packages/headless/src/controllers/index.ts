@@ -185,6 +185,8 @@ export {
 } from './sort/headless-sort';
 
 export {
+  StaticFilterValueOptions,
+  buildStaticFilterValue,
   StaticFilter,
   StaticFilterOptions,
   StaticFilterProps,

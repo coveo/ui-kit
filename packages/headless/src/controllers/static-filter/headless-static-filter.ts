@@ -20,8 +20,17 @@ import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {executeSearch} from '../../features/search/search-actions';
 import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
+import {
+  buildStaticFilterValue,
+  StaticFilterValueOptions,
+} from './static-filter-value';
 
-export {StaticFilterValue, StaticFilterValueState};
+export {
+  StaticFilterValue,
+  StaticFilterValueState,
+  StaticFilterValueOptions,
+  buildStaticFilterValue,
+};
 
 const optionsSchema = new Schema<Required<StaticFilterOptions>>({
   id: staticFilterIdSchema,

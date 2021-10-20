@@ -193,6 +193,7 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/static-filter/static-filter.fn.tsx',
       ],
     },
+    utils: ['buildStaticFilterValue'],
   },
   {
     initializer: 'buildSearchStatus',
