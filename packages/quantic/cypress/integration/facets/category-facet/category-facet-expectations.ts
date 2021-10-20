@@ -23,7 +23,14 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
       selector.childValueOption().should('have.length', value);
     },
     numberOfParentValues: (value: number) => {
-      selector.parentValueOption().should('have.length', value);
+      selector
+        .activeParentValueOption()
+        .should(value > 0 ? 'be.visible' : 'not.exist');
+      if (value <= 1) {
+        selector.parentValueOption().should('not.exist');
+        return;
+      }
+      selector.parentValueOption().should('have.length', value - 1);
     },
     displaySearchInput: (display: boolean) => {
       selector.searchInput().should(display ? 'exist' : 'not.exist');
@@ -40,7 +47,7 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
     displayShowLessButton: (display: boolean) => {
       selector.showLessButton().should(display ? 'exist' : 'not.exist');
     },
-    pathInUrl: (path: string[]) => {
+    urlHashContains: (path: string[]) => {
       const categoryFacetListInUrl = path.join(',');
       const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
         categoryFacetListInUrl
@@ -78,7 +85,4 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
 };
 export const CategoryFacetExpectations = {
   ...categoryFacetExpectations(CategoryFacetSelectors),
-  search: {
-    ...SearchExpectations,
-  },
 };

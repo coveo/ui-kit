@@ -12,6 +12,7 @@ export interface CategoryFacetSelector extends ComponentSelector {
   values: () => CypressSelector;
   childValueOption: () => CypressSelector;
   parentValueOption: () => CypressSelector;
+  activeParentValueOption: () => CypressSelector;
   facetCount: () => CypressSelector;
   searchInput: () => CypressSelector;
   clearFilterButton: () => CypressSelector;
@@ -25,6 +26,7 @@ export interface CategoryFacetSelector extends ComponentSelector {
   showLessButton: () => CypressSelector;
   showMoreButton: () => CypressSelector;
   parentValueLabel: () => CypressSelector;
+  allCategories: () => CypressSelector;
 }
 
 export type AllFacetSelectors = BaseFacetSelector &
@@ -33,6 +35,7 @@ export type AllFacetSelectors = BaseFacetSelector &
   CategoryFacetSelector;
 
 export const categoryFacetComponent = 'quantic-category-facet';
+
 export const CategoryFacetSelectors: CategoryFacetSelector = {
   get: () => cy.get(gategoryFacetComponent),
 
@@ -46,6 +49,8 @@ export const CategoryFacetSelectors: CategoryFacetSelector = {
   clearFilterButton: () =>
     CategoryFacetSelectors.get().find('.facet__clear-filter'),
   parentValueOption: () =>
+    CategoryFacetSelectors.get().find('.facet__parent-value-option'),
+  activeParentValueOption: () =>
     CategoryFacetSelectors.get().find('.facet__active-parent'),
   parentValueLabel: () =>
     CategoryFacetSelectors.get().find('.facet__active-parent span'),
@@ -62,7 +67,8 @@ export const CategoryFacetSelectors: CategoryFacetSelector = {
     CategoryFacetSelectors.get().find('.facet__search-results_more-matches'),
   noMatches: () =>
     CategoryFacetSelectors.get().find('.facet__search-results_no-match'),
-
+  allCategories: () =>
+    CategoryFacetSelectors.get().find('.facet__allCategories'),
   showLessButton: () => CategoryFacetSelectors.get().find('.facet__show-less'),
   showMoreButton: () => CategoryFacetSelectors.get().find('.facet__show-more'),
 };

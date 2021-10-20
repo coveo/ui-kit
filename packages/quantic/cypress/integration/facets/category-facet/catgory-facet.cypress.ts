@@ -3,7 +3,6 @@ import {configure} from '../../../page-objects/configurator';
 import {CategoryFacetExpectations as Expect} from './category-facet-expectations';
 import {
   canadaHierarchy,
-  canadaHierarchyIndex,
   CategoryFacetActions as Actions,
 } from './category-facet-actions';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
@@ -52,40 +51,39 @@ describe('quantic-category-facet', () => {
 
   function setupGoDeeperOneLevel() {
     setupWithDefaultSettings();
-    Actions.selectChildValueAt(canadaHierarchyIndex[0]);
+    Actions.selectChildValue(canadaHierarchy[0]);
+    cy.wait(InterceptAliases.Search);
   }
 
   function setupGoDeeperTwoLevels() {
     setupWithDefaultSettings();
-    Actions.selectChildValueAt(canadaHierarchyIndex[0]);
-    interceptSearch();
-    Actions.selectChildValueAt(canadaHierarchyIndex[1]);
-    interceptSearch();
+    Actions.selectChildValue(canadaHierarchy[0]);
+    cy.wait(InterceptAliases.Search);
+    Actions.selectChildValue(canadaHierarchy[1]);
+    cy.wait(InterceptAliases.Search);
   }
 
   function setupShowMore() {
-    setupWithDefaultSettings();
-
     setupGoDeeperOneLevel();
     Actions.clickShowMoreButton();
   }
 
   function setupShowLess() {
     setupShowMore();
-    interceptSearch();
+    cy.wait(InterceptAliases.Search);
     Actions.clickShowLessButton();
   }
 
   function setupGoDeeperFourLevels() {
     setupWithDefaultSettings();
-    Actions.selectChildValueAt(canadaHierarchyIndex[0]);
-    interceptSearch();
-    Actions.selectChildValueAt(canadaHierarchyIndex[1]);
-    interceptSearch();
-    Actions.selectChildValueAt(canadaHierarchyIndex[2]);
-    interceptSearch();
-    Actions.selectChildValueAt(canadaHierarchyIndex[3]);
-    interceptSearch();
+    Actions.selectChildValue(canadaHierarchy[0]);
+    cy.wait(InterceptAliases.Search);
+    Actions.selectChildValue(canadaHierarchy[1]);
+    cy.wait(InterceptAliases.Search);
+    Actions.selectChildValue(canadaHierarchy[2]);
+    cy.wait(InterceptAliases.Search);
+    Actions.selectChildValue(canadaHierarchy[3]);
+    cy.wait(InterceptAliases.Search);
   }
 
   describe('with default category facet', () => {
@@ -96,7 +94,7 @@ describe('quantic-category-facet', () => {
       Expect.displayLabel(true);
       Expect.displayFacetCount(true);
       Expect.displaySearchInput(false);
-      Expect.numberOfValues(7);
+      Expect.numberOfValues(defaultNumberOfValues - 1);
     });
 
     describe('when selecting on the 1st level data set', () => {
@@ -106,8 +104,8 @@ describe('quantic-category-facet', () => {
 
         Expect.numberOfParentValues(1);
         Expect.parentValueLabel(selectedPath[0]);
-        Expect.numberOfChildValues(8);
-        Expect.pathInUrl(selectedPath);
+        Expect.numberOfChildValues(defaultNumberOfValues);
+        Expect.urlHashContains(selectedPath);
         Expect.logCategoryFacetSelected(selectedPath);
       });
     });
@@ -117,9 +115,10 @@ describe('quantic-category-facet', () => {
         const selectedPath = canadaHierarchy.slice(0, 2);
         setupGoDeeperTwoLevels();
 
-        Expect.numberOfParentValues(1);
-        Expect.pathInUrl(selectedPath);
-        // Expect.logCategoryFacetSelected(selectedPath);
+        Expect.numberOfParentValues(2);
+        Expect.parentValueLabel(selectedPath[1]);
+        Expect.urlHashContains(selectedPath);
+        Expect.logCategoryFacetSelected(selectedPath);
       });
     });
 
@@ -129,10 +128,11 @@ describe('quantic-category-facet', () => {
         setupShowMore();
 
         Expect.numberOfParentValues(1);
-        Expect.numberOfChildValues(16);
+        Expect.parentValueLabel(selectedPath[0]);
+        Expect.numberOfChildValues(defaultNumberOfValues * 2);
         Expect.displayShowMoreButton(true);
         Expect.displayShowLessButton(true);
-        Expect.pathInUrl(selectedPath);
+        Expect.urlHashContains(selectedPath);
         Expect.logCategoryFacetSelected(selectedPath);
       });
     });
@@ -143,10 +143,11 @@ describe('quantic-category-facet', () => {
         setupShowLess();
 
         Expect.numberOfParentValues(1);
-        Expect.numberOfChildValues(8);
+        Expect.parentValueLabel(selectedPath[0]);
+        Expect.numberOfChildValues(defaultNumberOfValues);
         Expect.displayShowMoreButton(true);
         Expect.displayShowLessButton(false);
-        Expect.pathInUrl(selectedPath);
+        Expect.urlHashContains(selectedPath);
         Expect.logCategoryFacetSelected(selectedPath);
       });
     });
@@ -154,14 +155,28 @@ describe('quantic-category-facet', () => {
     describe('when selecting value on 4nd level of data', () => {
       describe('when selecting the third level', () => {
         it('should redirect user up 1 level of data set', () => {
+          const selectedPath = canadaHierarchy.slice(0, 3);
           setupGoDeeperFourLevels();
-          Expect.pathInUrl(canadaHierarchy);
-          //Expect.logCategoryFacetSelected(canadaHierarchy);
+
+          Expect.numberOfParentValues(4);
+          Expect.parentValueLabel(canadaHierarchy[3]);
+          Expect.urlHashContains(canadaHierarchy);
+          Expect.logCategoryFacetSelected(canadaHierarchy);
+
+          Actions.selectChildValue(canadaHierarchy[3]);
+
+          Expect.numberOfParentValues(3);
+          Expect.parentValueLabel(canadaHierarchy[2]);
+          Expect.urlHashContains(selectedPath);
+          Expect.logCategoryFacetSelected(selectedPath);
         });
       });
       describe('when selecting "All Categories"', () => {
         it('should redirect me to very first level of data set', () => {
-          // it should log UA
+          setupGoDeeperFourLevels();
+          Actions.clickAllCategories();
+
+          Expect.numberOfValues(defaultNumberOfValues - 1);
         });
       });
     });

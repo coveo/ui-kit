@@ -9,18 +9,20 @@ export const canadaHierarchy = [
   'Quebec',
   'Montreal',
 ];
-export const canadaHierarchyIndex = [0, 1, 0, 4];
 
 function categoryFacetActions(selector: CategoryFacetSelector) {
   return {
-    selectChildValueAt(index: number) {
-      selector.childValueOption().eq(index).click({force: true});
+    selectChildValue(value: string) {
+      selector.childValueOption().contains(value).click({force: true});
     },
     clickShowMoreButton() {
       selector.showMoreButton().click();
     },
     clickShowLessButton() {
       selector.showLessButton().click();
+    },
+    clickAllCategories() {
+      selector.allCategories().click();
     },
   };
 }
