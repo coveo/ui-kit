@@ -70,7 +70,7 @@ describe('Search Interface Component', () => {
     });
 
     it('should not call the analytics server', () => {
-      cy.shouldBeCalled('analytics', 0);
+      cy.shouldBeCalled(TestFixture.urlParts.UA, 0);
     });
   });
 });

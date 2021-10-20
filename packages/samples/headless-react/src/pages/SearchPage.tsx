@@ -119,6 +119,7 @@ import {
   loadQueryActions,
   StandaloneSearchBoxAnalytics,
   StaticFilterValue,
+  buildStaticFilterValue,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -387,16 +388,14 @@ export class SearchPage extends Component {
 
   private get staticFilterValues(): StaticFilterValue[] {
     return [
-      {
+      buildStaticFilterValue({
         caption: 'Youtube',
         expression: '@filetype==youtubevideo',
-        state: 'idle',
-      },
-      {
+      }),
+      buildStaticFilterValue({
         caption: 'Dropbox',
         expression: '(@connectortype==DropboxCrawler AND @objecttype==File)',
-        state: 'idle',
-      },
+      }),
     ];
   }
 

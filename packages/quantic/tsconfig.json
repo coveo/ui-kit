@@ -8,7 +8,7 @@
         "baseUrl": "force-app/main/default/lwc",
         "target": "es2016",
         "module": "ESNext",
-        "lib": ["es2016", "dom", "ES2018.Intl", "ESNext.String"],
+        "lib": ["es2016", "dom", "ES2018.Intl", "ESNext.String", "dom.Iterable", "ES2018"],
         "paths": {
             "c/exampleSearch": [
                 "exampleSearch/exampleSearch"
@@ -42,6 +42,9 @@
             ],
             "c/quanticPager": [
                 "quanticPager/quanticPager.js"
+            ],
+            "c/quanticPlaceholder": [
+                "quanticPlaceholder/quanticPlaceholder.js"
             ],
             "c/quanticQueryError": [
                 "quanticQueryError/quanticQueryError.js"

@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -42,10 +42,15 @@ export default class QuanticTab extends LightningElement {
   }
   _isActive = false;
 
+  /** @type {boolean} */
+  @track hasResults;
+  
   /** @type {Tab} */
   tab;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -68,15 +73,22 @@ export default class QuanticTab extends LightningElement {
         isActive: this.isActive,
       }
     });
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+
     this.unsubscribe = this.tab.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
   }
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this._isActive = this.tab.state.isActive;
+    this._isActive = this.tab?.state?.isActive;
+    this.hasResults = this.searchStatus?.state?.hasResults;
   }
 
   select() {

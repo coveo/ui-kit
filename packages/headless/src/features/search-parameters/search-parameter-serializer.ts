@@ -10,7 +10,8 @@ const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
 
-type UnknownFacetObject = {[field: string]: unknown[]};
+type SearchParameterKey = keyof SearchParameters;
+type UnknownObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -109,20 +110,14 @@ function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessFacetPairs)
+    .map(preprocessObjectPairs)
     .filter(isValidPair)
     .map(cast);
 
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (
-      key === 'f' ||
-      key === 'cf' ||
-      key === 'nf' ||
-      key === 'df' ||
-      key === 'sf'
-    ) {
+    if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -138,25 +133,25 @@ function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-function preprocessFacetPairs(pair: string[]) {
+function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f|cf|nf|df|sf)\[(.+)\]$/;
-  const result = facetKey.exec(key);
+  const objectKey = /^(f|cf|nf|df|sf)\[(.+)\]$/;
+  const result = objectKey.exec(key);
 
   if (!result) {
     return pair;
   }
 
   const paramKey = result[1];
-  const facetId = result[2];
+  const id = result[2];
   const values = val.split(',');
-  const processedValues = processFacetValues(paramKey, values);
-  const obj = {[facetId]: processedValues};
+  const processedValues = processObjectValues(paramKey, values);
+  const obj = {[id]: processedValues};
 
   return [paramKey, JSON.stringify(obj)];
 }
 
-function processFacetValues(key: string, values: string[]) {
+function processObjectValues(key: string, values: string[]) {
   if (key === 'nf') {
     return buildNumericRanges(values);
   }
@@ -188,7 +183,7 @@ function buildDateRanges(ranges: string[]) {
     .map(([start, end]) => buildDateRange({start, end, state: 'selected'}));
 }
 
-function isValidPair<K extends keyof SearchParameters>(
+function isValidPair<K extends SearchParameterKey>(
   pair: string[]
 ): pair is [K, string] {
   const validKey = isValidKey(pair[0]);
@@ -196,7 +191,7 @@ function isValidPair<K extends keyof SearchParameters>(
   return validKey && lengthOfTwo;
 }
 
-function isValidKey(key: string): key is keyof SearchParameters {
+function isValidKey(key: string): key is SearchParameterKey {
   const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
     {
       q: true,
@@ -218,9 +213,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
   return key in supportedParameters;
 }
 
-function cast<K extends keyof SearchParameters>(
-  pair: [K, string]
-): [K, unknown] {
+function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
   const [key, value] = pair;
 
   if (key === 'enableQuerySyntax') {
@@ -239,26 +232,27 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (
-    key === 'f' ||
-    key === 'cf' ||
-    key === 'nf' ||
-    key === 'df' ||
-    key === 'sf'
-  ) {
-    return [key, castUnknownFacetObject(value)];
+  if (keyHasObjectValue(key)) {
+    return [key, castUnknownObject(value)];
   }
 
   return [key, decodeURIComponent(value)];
 }
 
-function castUnknownFacetObject(value: string) {
-  const jsonParsed = JSON.parse(value) as UnknownFacetObject;
-  const ret = {} as UnknownFacetObject;
+function castUnknownObject(value: string) {
+  const jsonParsed: UnknownObject = JSON.parse(value);
+  const ret: UnknownObject = {};
   Object.entries(jsonParsed).forEach((entry) => {
-    const [facetId, values] = entry;
-    ret[facetId] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
+    const [id, values] = entry;
+    ret[id] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
   });
 
   return ret;
+}
+
+function keyHasObjectValue(
+  key: SearchParameterKey
+): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' {
+  const keys = ['f', 'cf', 'nf', 'df', 'sf'];
+  return keys.includes(key);
 }
