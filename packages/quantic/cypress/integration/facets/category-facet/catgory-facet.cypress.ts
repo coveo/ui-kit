@@ -52,15 +52,6 @@ describe('quantic-category-facet', () => {
   function setupGoDeeperOneLevel() {
     setupWithDefaultSettings();
     Actions.selectChildValue(canadaHierarchy[0]);
-    cy.wait(InterceptAliases.Search);
-  }
-
-  function setupGoDeeperTwoLevels() {
-    setupWithDefaultSettings();
-    Actions.selectChildValue(canadaHierarchy[0]);
-    cy.wait(InterceptAliases.Search);
-    Actions.selectChildValue(canadaHierarchy[1]);
-    cy.wait(InterceptAliases.Search);
   }
 
   function setupShowMore() {
@@ -77,48 +68,38 @@ describe('quantic-category-facet', () => {
   function setupGoDeeperFourLevels() {
     setupWithDefaultSettings();
     Actions.selectChildValue(canadaHierarchy[0]);
-    cy.wait(InterceptAliases.Search);
+    cy.wait(InterceptAliases.UA.Facet.Select);
     Actions.selectChildValue(canadaHierarchy[1]);
-    cy.wait(InterceptAliases.Search);
+    cy.wait(InterceptAliases.UA.Facet.Select);
     Actions.selectChildValue(canadaHierarchy[2]);
-    cy.wait(InterceptAliases.Search);
+    cy.wait(InterceptAliases.UA.Facet.Select);
     Actions.selectChildValue(canadaHierarchy[3]);
-    cy.wait(InterceptAliases.Search);
   }
 
   describe('with default category facet', () => {
     it('should work as expected', () => {
       setupWithDefaultSettings();
 
-      Expect.isAccesssible(true);
+      Expect.isAccessible(true);
       Expect.displayLabel(true);
       Expect.displayFacetCount(true);
       Expect.displaySearchInput(false);
       Expect.numberOfValues(defaultNumberOfValues - 1);
     });
 
-    describe('when selecting on the 1st level data set', () => {
+    describe('when selecting on the level data set', () => {
       it('should bold the selected parent level', () => {
-        const selectedPath = canadaHierarchy.slice(0, 1);
-        setupGoDeeperOneLevel();
+        setupWithDefaultSettings();
+        canadaHierarchy.forEach((value, index) => {
+          const selectedPath = canadaHierarchy.slice(0, index + 1);
 
-        Expect.numberOfParentValues(1);
-        Expect.parentValueLabel(selectedPath[0]);
-        Expect.numberOfChildValues(defaultNumberOfValues);
-        Expect.urlHashContains(selectedPath);
-        Expect.logCategoryFacetSelected(selectedPath);
-      });
-    });
+          Actions.selectChildValue(value);
 
-    describe('when selecting value subsequently to go next deeper level', () => {
-      it('should bold next child level', () => {
-        const selectedPath = canadaHierarchy.slice(0, 2);
-        setupGoDeeperTwoLevels();
-
-        Expect.numberOfParentValues(2);
-        Expect.parentValueLabel(selectedPath[1]);
-        Expect.urlHashContains(selectedPath);
-        Expect.logCategoryFacetSelected(selectedPath);
+          Expect.logCategoryFacetSelected(selectedPath);
+          Expect.numberOfParentValues(index + 1);
+          Expect.parentValueLabel(value);
+          Expect.urlHashContains(selectedPath);
+        });
       });
     });
 
@@ -158,22 +139,21 @@ describe('quantic-category-facet', () => {
           const selectedPath = canadaHierarchy.slice(0, 3);
           setupGoDeeperFourLevels();
 
-          Expect.numberOfParentValues(4);
-          Expect.parentValueLabel(canadaHierarchy[3]);
-          Expect.urlHashContains(canadaHierarchy);
           Expect.logCategoryFacetSelected(canadaHierarchy);
+          Expect.numberOfParentValues(4);
 
-          Actions.selectChildValue(canadaHierarchy[3]);
+          Actions.selectParentValue(canadaHierarchy[2]);
 
+          Expect.logCategoryFacetSelected(selectedPath);
           Expect.numberOfParentValues(3);
           Expect.parentValueLabel(canadaHierarchy[2]);
           Expect.urlHashContains(selectedPath);
-          Expect.logCategoryFacetSelected(selectedPath);
         });
       });
       describe('when selecting "All Categories"', () => {
         it('should redirect me to very first level of data set', () => {
           setupGoDeeperFourLevels();
+
           Actions.clickAllCategories();
 
           Expect.numberOfValues(defaultNumberOfValues - 1);

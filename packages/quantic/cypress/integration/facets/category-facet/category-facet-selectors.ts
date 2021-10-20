@@ -16,7 +16,6 @@ export interface CategoryFacetSelector extends ComponentSelector {
   facetCount: () => CypressSelector;
   searchInput: () => CypressSelector;
   clearFilterButton: () => CypressSelector;
-  selectedValue: (value: string) => CypressSelector;
   placeholder: () => CypressSelector;
   collapseButton: () => CypressSelector;
   expandButton: () => CypressSelector;
@@ -42,8 +41,6 @@ export const CategoryFacetSelectors: CategoryFacetSelector = {
   label: () => CategoryFacetSelectors.get().find('header h2 > span'),
   values: () =>
     CategoryFacetSelectors.get().find('c-quantic-category-facet-value'),
-  selectedValue: (value: string) =>
-    CategoryFacetSelectors.get().find(`span:containes("${value}")`),
   placeholder: () =>
     CategoryFacetSelectors.get().find('.placeholder__card-container'),
   clearFilterButton: () =>

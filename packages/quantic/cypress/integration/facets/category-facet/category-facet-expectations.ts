@@ -7,8 +7,8 @@ import {
 const hierarchicalField = 'geographicalhierarchy';
 const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
   return {
-    isAccesssible: (accesible: boolean) => {
-      selector.get().should(accesible ? 'exist' : 'not.exist');
+    isAccessible: (accessible: boolean) => {
+      selector.get().should(accessible ? 'exist' : 'not.exist');
     },
     displayLabel: (display: boolean) => {
       selector.label().should(display ? 'exist' : 'not.exist');

@@ -15,6 +15,9 @@ function categoryFacetActions(selector: CategoryFacetSelector) {
     selectChildValue(value: string) {
       selector.childValueOption().contains(value).click({force: true});
     },
+    selectParentValue(value: string) {
+      selector.parentValueOption().contains(value).click({force: true});
+    },
     clickShowMoreButton() {
       selector.showMoreButton().click();
     },
