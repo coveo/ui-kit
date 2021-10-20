@@ -122,4 +122,12 @@ export const allValidPlatformCombination: () => TestedPlatformURL[] = () => [
     search: 'https://platformhipaa.cloud.coveo.com/rest/search/v2',
     analytics: 'https://analyticshipaa.cloud.coveo.com/rest/ua',
   },
+  {
+    region: undefined,
+    environment: undefined,
+    multiRegionSubDomain: 'myorg',
+    platform: 'https://myorg.org.coveo.com',
+    search: 'https://myorg.org.coveo.com/rest/search/v2',
+    analytics: 'https://analytics.cloud.coveo.com/rest/ua',
+  },
 ];

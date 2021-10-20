@@ -43,9 +43,7 @@ describe('Result Fields Component', () => {
       new TestFixture().with((e) => addTag(e, fieldsListComponent, {})).init();
     });
 
-    it('should be removed from the DOM', () => {
-      cy.get(fieldsListComponent).should('not.exist');
-    });
+    CommonAssertions.assertRemovesComponent(() => cy.get(fieldsListComponent));
     CommonAssertions.assertConsoleError();
   });
 
