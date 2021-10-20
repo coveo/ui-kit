@@ -19,10 +19,15 @@ describe('#formatDateForSearchApi', () => {
     );
   });
 
-  it('enforces the minimum Epoch date', () => {
-    const date = -99999999999999;
-    expect(formatDateForSearchApi(dayjs(date))).toBe(
-      formatDateForSearchApi(dayjs(new Date(0, 0, 0)))
-    );
+  it('when date is under the API/Index minimum, it should throw', () => {
+    expect(() =>
+      formatDateForSearchApi(dayjs().subtract(1000, 'year'))
+    ).toThrow('Date is before year 1401, which is unsupported by the index.');
+  });
+
+  it('throws when dayjs value is not valid', () => {
+    expect(() =>
+      formatDateForSearchApi(dayjs().subtract(1000000, 'year'))
+    ).toThrow('Date object is invalid.');
   });
 });

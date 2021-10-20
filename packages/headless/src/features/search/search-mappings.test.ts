@@ -76,6 +76,35 @@ describe('#mapSearchRequest', () => {
     expect(mappings).toEqual(getExpectedMappings());
     expect(request).toEqual(mappedRequest);
   });
+
+  it('should filter out invalid dateFacet values', () => {
+    const unmappedRequest = buildMockSearchRequest({
+      facets: [
+        buildMockDateFacetRequest({
+          facetId,
+          currentValues: [
+            {
+              start: 'past-1000000-year',
+              end: 'now',
+              state: 'idle',
+              endInclusive: false,
+            },
+          ],
+        }),
+      ],
+    });
+    const mappedRequest = buildMockSearchRequest({
+      facets: [
+        buildMockDateFacetRequest({
+          facetId,
+          currentValues: [],
+        }),
+      ],
+    });
+
+    const {request} = mapSearchRequest(unmappedRequest);
+    expect(request).toEqual(mappedRequest);
+  });
 });
 
 describe('#mapSearchResponse', () => {

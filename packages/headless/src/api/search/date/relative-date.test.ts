@@ -75,6 +75,13 @@ describe('#formatRelativeDateForSearchApi', () => {
     expect(
       isSearchApiDate(formatRelativeDateForSearchApi('next-100-quarter'))
     ).toBe(true));
+
+  it('should throw an error containing the original string when date is invalid', () => {
+    const invalidValue = 'next-10000000-quarter';
+    expect(() => formatRelativeDateForSearchApi(invalidValue)).toThrowError(
+      `The date string value "${invalidValue}" cannot be parsed for the SearchApi:`
+    );
+  });
 });
 
 describe('#isRelativeDateFormat', () => {

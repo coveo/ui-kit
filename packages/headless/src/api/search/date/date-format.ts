@@ -1,16 +1,27 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import minMax from 'dayjs/plugin/minMax';
-
 dayjs.extend(customParseFormat);
-dayjs.extend(minMax);
 
 const API_DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
 
 export function formatDateForSearchApi(date: dayjs.Dayjs) {
-  return dayjs.max([dayjs(new Date(0, 0, 0)), date]).format(API_DATE_FORMAT);
+  if (!date.isValid()) {
+    throw new Error('Date object is invalid.');
+  }
+
+  if (date.isBefore('1401-01-01')) {
+    throw new Error(
+      'Date is before year 1401, which is unsupported by the index.'
+    );
+  }
+
+  return date.format(API_DATE_FORMAT);
 }
 
 export function isSearchApiDate(date: string) {
-  return formatDateForSearchApi(dayjs(date)) === date;
+  try {
+    return formatDateForSearchApi(dayjs(date)) === date;
+  } catch (error) {
+    return false;
+  }
 }

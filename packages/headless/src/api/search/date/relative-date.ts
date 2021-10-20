@@ -88,18 +88,31 @@ export function serializeRelativeDate(relativeDate: RelativeDate) {
   }
 }
 
+/**
+ * Deserializes relative date string value into an API format date.
+ * Throws an error if the relative date is not valid.
+ * @param date The string serialized with the format "period-amount-unit"
+ * @returns The absolute API format date.
+ */
 export function formatRelativeDateForSearchApi(date: string) {
   const relativeDate = deserializeRelativeDate(date);
   const {period, amount, unit} = relativeDate;
-  switch (period) {
-    case 'past':
-      return formatDateForSearchApi(
-        dayjs().subtract(amount!, unit as QUnitType)
-      );
-    case 'next':
-      return formatDateForSearchApi(dayjs().add(amount!, unit as QUnitType));
-    case 'now':
-      return formatDateForSearchApi(dayjs());
+  try {
+    switch (period) {
+      case 'past':
+        return formatDateForSearchApi(
+          dayjs().subtract(amount!, unit as QUnitType)
+        );
+      case 'next':
+        return formatDateForSearchApi(dayjs().add(amount!, unit as QUnitType));
+      case 'now':
+        return formatDateForSearchApi(dayjs());
+    }
+  } catch (error) {
+    const errorMsg = (error as Error).message;
+    throw new Error(
+      `The date string value "${date}" cannot be parsed for the SearchApi: ${errorMsg}`
+    );
   }
 }
 
