@@ -7,7 +7,7 @@ import {
 } from './static-filter-set-schema';
 import {StaticFilterValue} from './static-filter-set-state';
 
-interface RegisterStaticFilterActionCreatorPayload {
+export interface RegisterStaticFilterActionCreatorPayload {
   /**
    * A unique identifier for the static filter.
    */
@@ -31,7 +31,7 @@ export const registerStaticFilter = createAction(
   }
 );
 
-interface ToggleSelectStaticFilterValueActionCreatorPayload {
+export interface ToggleSelectStaticFilterValueActionCreatorPayload {
   /**
    * The unique identifier for the static filter.
    */

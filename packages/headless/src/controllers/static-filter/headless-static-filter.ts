@@ -1,6 +1,6 @@
 import {Schema} from '@coveo/bueno';
-import {buildController, Controller} from '..';
-import {SearchEngine} from '../..';
+import {buildController, Controller} from '../controller/headless-controller';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {staticFilterSet} from '../../app/reducers';
 import {
   staticFilterIdSchema,
@@ -11,12 +11,26 @@ import {
   registerStaticFilter,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
-import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
+import {
+  StaticFilterValue,
+  StaticFilterValueState,
+} from '../../features/static-filter-set/static-filter-set-state';
 import {StaticFilterSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {executeSearch} from '../../features/search/search-actions';
 import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
+import {
+  buildStaticFilterValue,
+  StaticFilterValueOptions,
+} from './static-filter-value';
+
+export {
+  StaticFilterValue,
+  StaticFilterValueState,
+  StaticFilterValueOptions,
+  buildStaticFilterValue,
+};
 
 const optionsSchema = new Schema<Required<StaticFilterOptions>>({
   id: staticFilterIdSchema,
@@ -64,6 +78,14 @@ export interface StaticFilter extends Controller {
    * Deselects all static filter values.
    * */
   deselectAll(): void;
+
+  /**
+   * Checks whether the specified static filter value is selected.
+   *
+   * @param value - The static filter value to check.
+   * @returns Whether the specified static filter value is selected.
+   */
+  isValueSelected(value: StaticFilterValue): boolean;
 
   /**
    * A state of the `StaticFilter` controller.
@@ -135,6 +157,10 @@ export function buildStaticFilter(
     deselectAll() {
       dispatch(deselectAllStaticFilterValues(id));
       dispatch(executeSearch(noopSearchAnalyticsAction()));
+    },
+
+    isValueSelected(value: StaticFilterValue) {
+      return value.state === 'selected';
     },
 
     get state() {

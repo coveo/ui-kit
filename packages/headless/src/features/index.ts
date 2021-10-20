@@ -23,6 +23,7 @@ export * from './search/search-actions-loader';
 export * from './search-hub/search-hub-actions-loader';
 export * from './sort-criteria/sort-criteria-actions-loader';
 export * from './standalone-search-box-set/standalone-search-box-set-actions-loader';
+export * from './static-filter-set/static-filter-set-actions-loader';
 export * from './question-answering/question-answering-actions-loader';
 export * from './facets/generic/breadcrumb-actions-loader';
 export * from './recent-queries/recent-queries-actions-loader';
