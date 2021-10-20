@@ -61,7 +61,3 @@ export const deselectAllStaticFilterValues = createAction(
     return validatePayload(payload, staticFilterIdSchema);
   }
 );
-
-export const deselectAllStaticFilters = createAction(
-  'staticFilter/deselectAllFilters'
-);
