@@ -67,7 +67,7 @@ export class AtomicResultTemplate {
       );
     }
 
-    if (!this.host.querySelector('template script')) {
+    if (this.host.querySelector('template')?.content.querySelector('script')) {
       console.warn(
         'The "script" tags inside the "template" elements are not supported and will not be executed when the results are rendered',
         this.host
