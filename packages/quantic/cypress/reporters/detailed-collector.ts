@@ -1,3 +1,4 @@
+import {platform} from 'os';
 import * as path from 'path';
 import {Socket} from 'net';
 
@@ -23,8 +24,11 @@ export interface DetailedCollector {
 
 class DetailedCollectorImpl implements DetailedCollector {
   static _instance: DetailedCollector;
+  private _isWindows: boolean;
 
-  constructor() {}
+  constructor() {
+    this._isWindows = platform() === 'win32';
+  }
 
   beginScope(title: string) {
     this.sendToReporter({
@@ -49,10 +53,18 @@ class DetailedCollectorImpl implements DetailedCollector {
 
   sendToReporter(data: Message) {
     const client = new Socket();
-    client.connect(path.join(process.cwd(), 'ipc.sock'), () => {
+    client.connect(this.getServerPath(), () => {
       client.write(JSON.stringify(data));
       client.destroy();
     });
+  }
+
+  private getServerPath() {
+    // on Windows, the server path must be a named pipe.
+    // on other platforms, a file path is used to open a local socket.
+    return this._isWindows
+      ? '\\\\.\\pipe\\detailed-reporter'
+      : path.join(process.cwd(), 'ipc.sock');
   }
 
   static getInstance() {

@@ -17,7 +17,7 @@ const {
   EVENT_TEST_PASS,
   EVENT_TEST_PENDING,
   EVENT_SUITE_BEGIN,
-  EVENT_SUITE_END
+  EVENT_SUITE_END,
 } = Mocha.Runner.constants;
 
 /** @typedef {import('./detailed-collector').Message} Message */
@@ -25,20 +25,21 @@ const {
 /**
  * The `DetailedReporter` class produces a detailed report listing
  * all expectations that are being validated.
- * 
- * 
+ *
+ *
  * Additional context is provided using the `scope` function.
  * Details on a particular expectation are logged using the `logDetail` custom Cypress command.
  * See `detailed-collector.ts` for more information.
  */
 class DetailedReporter {
-
   /**
    * Creates a new instance of `DetailedReporter`.
-   * @param {Mocha.Runner} runner 
+   * @param {Mocha.Runner} runner
    */
   constructor(runner) {
     const self = this;
+    this._isWindows = require('os').platform() === 'win32';
+
     this._indent = 0;
     this._scopeIndent = 0;
 
@@ -46,26 +47,37 @@ class DetailedReporter {
     this._logBuffer = [];
 
     const server = net.createServer(function (socket) {
-      socket.on('data', function (data) {
+      socket
+        .on('data', function (data) {
+          self.handleCollectorMessage(
+            self.parseCollectorMessage(data.toString())
+          );
+        })
+        .on('error', function (error) {
+          console.error(`Error on custom reporter socket. ${error}`);
+        });
+    });
+    server.listen(this.getServerPath());
 
-        self.handleCollectorMessage(self.parseCollectorMessage(data.toString()));
-      })
-      .on('error', function (error) {
-        console.error(`Error on custom reporter socket. ${error}`);
+    runner
+      .once(EVENT_RUN_BEGIN, () => self.handleBeginRun())
+      .on(EVENT_SUITE_BEGIN, (suite) => self.handleBeginSuite(suite))
+      .on(EVENT_TEST_PASS, (test) => self.handlePassedTest(test))
+      .on(EVENT_TEST_FAIL, (test, err) => self.handleFailedTest(test, err))
+      .on(EVENT_TEST_PENDING, (test) => self.handlePendingTest(test))
+      .on(EVENT_SUITE_END, () => self.handleEndSuite())
+      .once(EVENT_RUN_END, () => {
+        self.handleEndRun();
+        server.close();
       });
-    });
-    server.listen(path.join(process.cwd(), 'ipc.sock'));
+  }
 
-    runner.once(EVENT_RUN_BEGIN, () => self.handleBeginRun())
-    .on(EVENT_SUITE_BEGIN, (suite) => self.handleBeginSuite(suite))
-    .on(EVENT_TEST_PASS, (test) => self.handlePassedTest(test))
-    .on(EVENT_TEST_FAIL, (test, err) => self.handleFailedTest(test, err))
-    .on(EVENT_TEST_PENDING, (test) => self.handlePendingTest(test))
-    .on(EVENT_SUITE_END, () => self.handleEndSuite())
-    .once(EVENT_RUN_END, () => {
-      self.handleEndRun();
-      server.close();
-    });
+  getServerPath() {
+    // on Windows, the server path must be a named pipe.
+    // on other platforms, a file path is used to open a local socket.
+    return this._isWindows
+      ? '\\\\.\\pipe\\detailed-reporter'
+      : path.join(process.cwd(), 'ipc.sock');
   }
 
   /**
@@ -135,7 +147,9 @@ class DetailedReporter {
    * @param {Message} message The message instance.
    */
   handleExpectation(message) {
-    this._logBuffer.push(this.scopeIndent() + chalk.green('. ') + chalk.dim(message.content));
+    this._logBuffer.push(
+      this.scopeIndent() + chalk.green('. ') + chalk.dim(message.content)
+    );
   }
 
   /**
@@ -143,7 +157,9 @@ class DetailedReporter {
    * @param {Mocha.Test} test The test instance.
    */
   handlePassedTest(test) {
-    console.log(this.indent() + chalk.green('✓ ') + test.title);
+    const symbol = this._isWindows ? '√' : '✓';
+
+    console.log(`${this.indent()}${chalk.green(symbol)} ${test.title}`);
     this.flushTestLogs();
   }
 
@@ -153,7 +169,9 @@ class DetailedReporter {
    * @param {Error} err The error that occurred.
    */
   handleFailedTest(test, err) {
-    console.log(this.indent() + chalk.red('✗ ') + test.title);
+    const symbol = this._isWindows ? 'x' : '✗';
+
+    console.log(`${this.indent()}${chalk.red(symbol)} ${test.title}`);
     this.flushTestLogs();
 
     console.log(`\nERROR:\n${err.stack}\n`);
@@ -164,7 +182,7 @@ class DetailedReporter {
    * @param {Mocha.Test} test The test instance.
    */
   handlePendingTest(test) {
-    console.log(this.indent() + chalk.cyan('- ' + test.title))
+    console.log(this.indent() + chalk.cyan('- ' + test.title));
   }
 
   /**
@@ -188,7 +206,7 @@ class DetailedReporter {
   flushTestLogs() {
     this._logBuffer.splice(0).forEach((log) => {
       console.log(this.indent() + '  ' + log);
-    })
+    });
   }
 
   /**
