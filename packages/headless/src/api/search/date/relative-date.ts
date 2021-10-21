@@ -65,6 +65,37 @@ const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   };
 };
 
+/**
+ * Validates a relative date and throws if it is invalid.
+ * @param relativeDate
+ */
+export function validateRelativeDate(date: RelativeDate | string) {
+  if (typeof date === 'string' && !isRelativeDateFormat(date)) {
+    throw new Error(
+      `The value "${date}" is not respecting the relative date format "period-amount-unit"`
+    );
+  }
+
+  const relativeDate =
+    typeof date === 'string' ? deserializeRelativeDate(date) : date;
+
+  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
+    relativeDate
+  );
+
+  const dayJsDate = relativeToAbsoluteDate(relativeDate);
+  const stringifiedDate = JSON.stringify(relativeDate);
+  if (!dayJsDate.isValid()) {
+    throw new Error(`Date is invalid: ${stringifiedDate}`);
+  }
+
+  if (dayJsDate.isBefore('1401-01-01')) {
+    throw new Error(
+      `Date is before year 1401, which is unsupported by the API: ${stringifiedDate}`
+    );
+  }
+}
+
 export function serializeRelativeDate(relativeDate: RelativeDate) {
   const {period, amount, unit} = relativeDate;
 
@@ -143,35 +174,4 @@ export function deserializeRelativeDate(date: string): RelativeDate {
           unit: unit ? (unit as RelativeDateUnit) : undefined,
         };
   return relativeDate;
-}
-
-/**
- * Validates a relative date and throws if it is invalid.
- * @param relativeDate
- */
-export function validateRelativeDate(date: RelativeDate | string) {
-  if (typeof date === 'string' && !isRelativeDateFormat(date)) {
-    throw new Error(
-      `The value "${date}" is not respecting the relative date format "period-amount-unit"`
-    );
-  }
-
-  const relativeDate =
-    typeof date === 'string' ? deserializeRelativeDate(date) : date;
-
-  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
-    relativeDate
-  );
-
-  const dayJsDate = relativeToAbsoluteDate(relativeDate);
-  const stringifiedDate = JSON.stringify(relativeDate);
-  if (!dayJsDate.isValid()) {
-    throw new Error(`Date is invalid: ${stringifiedDate}`);
-  }
-
-  if (dayJsDate.isBefore('1401-01-01')) {
-    throw new Error(
-      `Date is before year 1401, which is unsupported by the API: ${stringifiedDate}`
-    );
-  }
 }
