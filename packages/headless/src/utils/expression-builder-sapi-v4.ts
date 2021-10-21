@@ -1,7 +1,7 @@
-type QueryExpresion =
+type QueryExpression =
   | KeyWord
   | ExactMatch
-  | FieldExpresion
+  | FieldExpression
   | Near
   | Not
   | FieldExists
@@ -40,15 +40,15 @@ interface ExactMatch {
 
 interface And {
   type: 'and';
-  expressions: QueryExpresion[];
+  expressions: QueryExpression[];
 }
 
 interface Or {
   type: 'or';
-  expressions: QueryExpresion[];
+  expressions: QueryExpression[];
 }
 
-interface FieldExpresion {
+interface FieldExpression {
   type: 'fieldExpression';
   fieldName: string;
   operator:
@@ -79,7 +79,7 @@ interface OtherTerm {
 
 interface Not {
   type: 'not';
-  expression: QueryExpresion;
+  expression: QueryExpression;
 }
 
 interface FieldExists {
@@ -105,7 +105,7 @@ interface QueryExtensionInvocation {
 
 interface Argument {
   name: string;
-  value: QueryExpresion;
+  value: QueryExpression;
 }
 
 interface QuerySyntax {
@@ -113,16 +113,16 @@ interface QuerySyntax {
   value: string;
 }
 
-function createExpressionBuilderV4(expression?: QueryExpresion) {
-  const expressions: QueryExpresion[] = expression ? [expression] : [];
+function createExpressionBuilderV4(expression?: QueryExpression) {
+  const expressions: QueryExpression[] = expression ? [expression] : [];
 
   return {
-    addExpression(expression: QueryExpresion) {
+    addExpression(expression: QueryExpression) {
       expressions.push(expression);
       return this;
     },
 
-    build(delimiter: 'and' | 'or'): QueryExpresion {
+    build(delimiter: 'and' | 'or'): QueryExpression {
       return {
         type: delimiter,
         expressions,
