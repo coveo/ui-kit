@@ -3,7 +3,7 @@ import {
   deserializeRelativeDate,
   RelativeDate,
   serializeRelativeDate,
-  isRelativeDateObject,
+  isRelativeDate,
   isRelativeDateFormat,
   formatRelativeDateForSearchApi,
 } from './relative-date';
@@ -42,21 +42,21 @@ describe('#serializeRelativeDate', () => {
 
 describe('#isRelativeDate', () => {
   it('when using with a string, returns false', () =>
-    expect(isRelativeDateObject('hello')).toBe(false));
+    expect(isRelativeDate('hello')).toBe(false));
 
   it('when using with a Date, returns false', () =>
-    expect(isRelativeDateObject(new Date())).toBe(false));
+    expect(isRelativeDate(new Date())).toBe(false));
 
   it('when using with a number, returns false', () =>
-    expect(isRelativeDateObject(242324324)).toBe(false));
+    expect(isRelativeDate(242324324)).toBe(false));
 
   it('when using with an object without period, returns false', () =>
-    expect(isRelativeDateObject({hello: 'test'})).toBe(false));
+    expect(isRelativeDate({hello: 'test'})).toBe(false));
 
   it('when using with an object with period, returns true', () =>
-    expect(
-      isRelativeDateObject({period: 'past', amount: 2, unit: 'week'})
-    ).toBe(true));
+    expect(isRelativeDate({period: 'past', amount: 2, unit: 'week'})).toBe(
+      true
+    ));
 });
 
 describe('#formatRelativeDateForSearchApi', () => {

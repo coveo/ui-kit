@@ -5,7 +5,7 @@ import {FacetValueState} from '../../../../../features/facets/facet-api/value';
 import {formatDateForSearchApi} from '../../../../../api/search/date/date-format';
 import {
   serializeRelativeDate,
-  isRelativeDateObject,
+  isRelativeDate,
   isRelativeDateFormat,
   RelativeDate,
 } from '../../../../../api/search/date/relative-date';
@@ -82,7 +82,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat} = options;
-  if (isRelativeDateObject(rawDate)) {
+  if (isRelativeDate(rawDate)) {
     return serializeRelativeDate(rawDate);
   }
 
