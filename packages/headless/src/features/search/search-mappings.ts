@@ -37,23 +37,19 @@ function mapDateRangeRequest(
   facetId: string,
   mappings: SearchMappings
 ) {
-  try {
-    let start = value.start;
-    let end = value.end;
-    if (isRelativeDateFormat(start)) {
-      start = formatRelativeDateForSearchApi(start);
-      mappings.dateFacetValueMap[facetId][formatStartFacetValue(start)] =
-        value.start;
-    }
-    if (isRelativeDateFormat(end)) {
-      end = formatRelativeDateForSearchApi(end);
-      mappings.dateFacetValueMap[facetId][formatEndFacetValue(end)] = value.end;
-    }
-
-    return {...value, start, end};
-  } catch (error) {
-    return null;
+  let start = value.start;
+  let end = value.end;
+  if (isRelativeDateFormat(start)) {
+    start = formatRelativeDateForSearchApi(start);
+    mappings.dateFacetValueMap[facetId][formatStartFacetValue(start)] =
+      value.start;
   }
+  if (isRelativeDateFormat(end)) {
+    end = formatRelativeDateForSearchApi(end);
+    mappings.dateFacetValueMap[facetId][formatEndFacetValue(end)] = value.end;
+  }
+
+  return {...value, start, end};
 }
 
 function mapFacetRequest(
@@ -65,9 +61,9 @@ function mapFacetRequest(
     mappings.dateFacetValueMap[facetId] = {};
     return {
       ...facetRequest,
-      currentValues: currentValues
-        .map((value) => mapDateRangeRequest(value, facetId, mappings))
-        .filter((value): value is DateRangeRequest => !!value),
+      currentValues: currentValues.map((value) =>
+        mapDateRangeRequest(value, facetId, mappings)
+      ),
     };
   }
 

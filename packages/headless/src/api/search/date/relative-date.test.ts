@@ -3,8 +3,7 @@ import {
   deserializeRelativeDate,
   RelativeDate,
   serializeRelativeDate,
-  isRelativeDate,
-  RelativeDatePeriod,
+  isRelativeDateObject,
   isRelativeDateFormat,
   formatRelativeDateForSearchApi,
 } from './relative-date';
@@ -23,19 +22,9 @@ describe('#deserializeRelativeDate', () => {
     };
     expect(deserializeRelativeDate('next-100-quarter')).toEqual(expected);
   });
-
-  it('throws when invalid"', () => {
-    expect(() => deserializeRelativeDate('2018/01/01@00:00:00')).toThrow();
-  });
 });
 
 describe('#serializeRelativeDate', () => {
-  it('when putting a bad format, should throw', () => {
-    expect(() =>
-      serializeRelativeDate({period: 'nononono' as RelativeDatePeriod})
-    ).toThrow();
-  });
-
   it('formats to "now"', () => {
     expect(serializeRelativeDate({period: 'now'})).toEqual('now');
   });
@@ -53,21 +42,21 @@ describe('#serializeRelativeDate', () => {
 
 describe('#isRelativeDate', () => {
   it('when using with a string, returns false', () =>
-    expect(isRelativeDate('hello')).toBe(false));
+    expect(isRelativeDateObject('hello')).toBe(false));
 
   it('when using with a Date, returns false', () =>
-    expect(isRelativeDate(new Date())).toBe(false));
+    expect(isRelativeDateObject(new Date())).toBe(false));
 
   it('when using with a number, returns false', () =>
-    expect(isRelativeDate(242324324)).toBe(false));
+    expect(isRelativeDateObject(242324324)).toBe(false));
 
   it('when using with an object without period, returns false', () =>
-    expect(isRelativeDate({hello: 'test'})).toBe(false));
+    expect(isRelativeDateObject({hello: 'test'})).toBe(false));
 
   it('when using with an object with period, returns true', () =>
-    expect(isRelativeDate({period: 'past', amount: 2, unit: 'week'})).toBe(
-      true
-    ));
+    expect(
+      isRelativeDateObject({period: 'past', amount: 2, unit: 'week'})
+    ).toBe(true));
 });
 
 describe('#formatRelativeDateForSearchApi', () => {
@@ -75,13 +64,6 @@ describe('#formatRelativeDateForSearchApi', () => {
     expect(
       isSearchApiDate(formatRelativeDateForSearchApi('next-100-quarter'))
     ).toBe(true));
-
-  it('should throw an error containing the original string when date is invalid', () => {
-    const invalidValue = 'next-10000000-quarter';
-    expect(() => formatRelativeDateForSearchApi(invalidValue)).toThrowError(
-      `The date string value "${invalidValue}" cannot be parsed for the SearchApi:`
-    );
-  });
 });
 
 describe('#isRelativeDateFormat', () => {

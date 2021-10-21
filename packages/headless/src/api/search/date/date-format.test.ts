@@ -18,16 +18,4 @@ describe('#formatDateForSearchApi', () => {
       dayjs(date).format('YYYY/MM/DD@HH:mm:ss')
     );
   });
-
-  it('when date is under the API/Index minimum, it should throw', () => {
-    expect(() =>
-      formatDateForSearchApi(dayjs().subtract(1000, 'year'))
-    ).toThrow('Date is before year 1401, which is unsupported by the index.');
-  });
-
-  it('throws when dayjs value is not valid', () => {
-    expect(() =>
-      formatDateForSearchApi(dayjs().subtract(1000000, 'year'))
-    ).toThrow('Date object is invalid.');
-  });
 });
