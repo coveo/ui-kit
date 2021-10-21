@@ -65,10 +65,6 @@ const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   };
 };
 
-/**
- * Validates a relative date and throws if it is invalid.
- * @param relativeDate The relative date, either as a `RelativeDate` object or a string.
- */
 export function validateRelativeDate(date: RelativeDate | string) {
   if (typeof date === 'string' && !isRelativeDateFormat(date)) {
     throw new Error(

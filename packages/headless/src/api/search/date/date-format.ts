@@ -13,10 +13,6 @@ export function isSearchApiDate(date: string) {
   return formatDateForSearchApi(dayjs(date)) === date;
 }
 
-/**
- * Validates an absolute date and throws if it is invalid.
- * @param relativeDate The relative date, either as a `RelativeDate` object or a string.
- */
 export function validateAbsoluteDate(date: dayjs.Dayjs) {
   if (!date.isValid()) {
     throw new Error(`Date is invalid: ${date}`);
