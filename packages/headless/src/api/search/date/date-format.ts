@@ -13,12 +13,14 @@ export function isSearchApiDate(date: string) {
   return formatDateForSearchApi(dayjs(date)) === date;
 }
 
-export function validateAbsoluteDate(date: dayjs.Dayjs) {
-  if (!date.isValid()) {
+export function validateAbsoluteDate(date: string | number | Date) {
+  const dayJSDate = dayjs(date);
+
+  if (!dayJSDate.isValid()) {
     throw new Error(`Date is invalid: ${date}`);
   }
 
-  if (date.isBefore(API_DATE_MINIMUM)) {
+  if (dayJSDate.isBefore(API_DATE_MINIMUM)) {
     throw new Error(
       `Date is before year 1401, which is unsupported by the API: ${date}`
     );

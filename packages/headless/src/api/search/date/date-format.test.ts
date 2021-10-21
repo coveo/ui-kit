@@ -1,5 +1,9 @@
 import dayjs from 'dayjs';
-import {isSearchApiDate, formatDateForSearchApi} from './date-format';
+import {
+  isSearchApiDate,
+  formatDateForSearchApi,
+  validateAbsoluteDate,
+} from './date-format';
 
 describe('#isSearchApiDate', () => {
   it('when the string matches the search api format, it returns true', () => {
@@ -16,6 +20,22 @@ describe('#formatDateForSearchApi', () => {
     const date = 818035920000;
     expect(formatDateForSearchApi(dayjs(date))).toBe(
       dayjs(date).format('YYYY/MM/DD@HH:mm:ss')
+    );
+  });
+});
+
+describe('#validateAbsoluteDate', () => {
+  it('should not throw for a valid date', () => {
+    expect(() => validateAbsoluteDate(Date.now())).not.toThrow();
+  });
+
+  it('should throw for an invalid date', () => {
+    expect(() => validateAbsoluteDate('hi')).toThrowError('Date is invalid');
+  });
+
+  it('should throw for a valid date earlier than 1401', () => {
+    expect(() => validateAbsoluteDate(new Date(1111, 11, 11))).toThrowError(
+      'Date is before year 1401, which is unsupported by the API'
     );
   });
 });
