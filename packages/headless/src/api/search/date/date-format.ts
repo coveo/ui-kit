@@ -9,9 +9,5 @@ export function formatDateForSearchApi(date: dayjs.Dayjs) {
 }
 
 export function isSearchApiDate(date: string) {
-  try {
-    return formatDateForSearchApi(dayjs(date)) === date;
-  } catch (error) {
-    return false;
-  }
+  return formatDateForSearchApi(dayjs(date)) === date;
 }
