@@ -163,15 +163,15 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
  */
 export function deserializeRelativeDate(date: string): RelativeDate {
   const [period, amount, unit] = splitDate(date);
-  const relativeDate: RelativeDate =
-    period === 'now'
-      ? {
-          period: 'now',
-        }
-      : {
-          period: period as RelativeDatePeriod,
-          amount: amount ? parseInt(amount) : undefined,
-          unit: unit ? (unit as RelativeDateUnit) : undefined,
-        };
-  return relativeDate;
+  if (period === 'now') {
+    return {
+      period: 'now',
+    };
+  }
+
+  return {
+    period: period as RelativeDatePeriod,
+    amount: amount ? parseInt(amount) : undefined,
+    unit: unit ? (unit as RelativeDateUnit) : undefined,
+  };
 }
