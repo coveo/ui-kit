@@ -16,6 +16,7 @@ const {
   EVENT_TEST_FAIL,
   EVENT_TEST_PASS,
   EVENT_TEST_PENDING,
+  EVENT_TEST_RETRY,
   EVENT_SUITE_BEGIN,
   EVENT_SUITE_END,
 } = Mocha.Runner.constants;
@@ -65,6 +66,7 @@ class DetailedReporter {
       .on(EVENT_TEST_PASS, (test) => self.handlePassedTest(test))
       .on(EVENT_TEST_FAIL, (test, err) => self.handleFailedTest(test, err))
       .on(EVENT_TEST_PENDING, (test) => self.handlePendingTest(test))
+      .on(EVENT_TEST_RETRY, (test) => self.handleRetryTest(test))
       .on(EVENT_SUITE_END, () => self.handleEndSuite())
       .once(EVENT_RUN_END, () => {
         self.handleEndRun();
@@ -186,6 +188,16 @@ class DetailedReporter {
   }
 
   /**
+   * Handles the `EVENT_TEST_RETRY` event.
+   * @param {Mocha.Test} test The test instance.
+   */
+  handleRetryTest(test) {
+    const text = `! ${test.title} (retry)`;
+    console.log(`${this.indent()}${chalk.yellow(text)}`);
+    this.clearTestLogs();
+  }
+
+  /**
    * Handles the `EVENT_SUITE_END` event.
    */
   handleEndSuite() {
@@ -207,6 +219,15 @@ class DetailedReporter {
     this._logBuffer.splice(0).forEach((log) => {
       console.log(this.indent() + '  ' + log);
     });
+    this._scopeIndent = 0;
+  }
+
+  /**
+   * Clears the buffered events.
+   */
+  clearTestLogs() {
+    this._logBuffer.splice(0);
+    this._scopeIndent = 0;
   }
 
   /**
