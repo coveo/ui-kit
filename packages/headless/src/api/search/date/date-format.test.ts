@@ -30,7 +30,9 @@ describe('#validateAbsoluteDate', () => {
   });
 
   it('should throw for an invalid date', () => {
-    expect(() => validateAbsoluteDate('hi')).toThrowError('Date is invalid');
+    expect(() => validateAbsoluteDate('hi')).toThrowError(
+      'Could not parse the provided date'
+    );
   });
 
   it('should throw for a valid date earlier than 1401', () => {
