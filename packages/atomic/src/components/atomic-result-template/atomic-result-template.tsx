@@ -15,7 +15,7 @@ export interface TemplateContent {
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
  *
- * A `script` tag inserted into a `template` element will not be executed when results are being rendered.
+ * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
  */
 @Component({
   tag: 'atomic-result-template',
@@ -69,7 +69,7 @@ export class AtomicResultTemplate {
 
     if (this.host.querySelector('template')?.content.querySelector('script')) {
       console.warn(
-        'The "script" tags inside the "template" elements are not supported and will not be executed when the results are rendered',
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered',
         this.host
       );
     }
