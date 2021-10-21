@@ -1,6 +1,6 @@
 import dayjs, {QUnitType} from 'dayjs';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {formatDateForSearchApi} from './date-format';
+import {API_DATE_MINIMUM, formatDateForSearchApi} from './date-format';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 
 dayjs.extend(quarterOfYear);
@@ -67,7 +67,7 @@ const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
 
 /**
  * Validates a relative date and throws if it is invalid.
- * @param relativeDate
+ * @param relativeDate The relative date, either as a `RelativeDate` object or a string.
  */
 export function validateRelativeDate(date: RelativeDate | string) {
   if (typeof date === 'string' && !isRelativeDateFormat(date)) {
@@ -89,7 +89,7 @@ export function validateRelativeDate(date: RelativeDate | string) {
     throw new Error(`Date is invalid: ${stringifiedDate}`);
   }
 
-  if (dayJsDate.isBefore('1401-01-01')) {
+  if (dayJsDate.isBefore(API_DATE_MINIMUM)) {
     throw new Error(
       `Date is before year 1401, which is unsupported by the API: ${stringifiedDate}`
     );

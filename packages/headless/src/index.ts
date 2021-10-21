@@ -99,4 +99,6 @@ export {
   RelativeDatePeriod,
   RelativeDateUnit,
   deserializeRelativeDate,
+  validateRelativeDate,
 } from './api/search/date/relative-date';
+export {validateAbsoluteDate} from './api/search/date/date-format';
