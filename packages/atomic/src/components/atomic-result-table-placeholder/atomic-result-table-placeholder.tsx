@@ -18,11 +18,11 @@ const placeholderClasses = 'block bg-neutral rounded';
 })
 export class AtomicResultTablePlaceholder {
   @Prop() density!: ResultDisplayDensity;
-  @Prop() image!: ResultDisplayImageSize;
+  @Prop() imageSize!: ResultDisplayImageSize;
   @Prop() rows!: number;
 
   private getClasses() {
-    return getResultDisplayClasses('table', this.density, this.image);
+    return getResultDisplayClasses('table', this.density, this.imageSize);
   }
 
   public render() {

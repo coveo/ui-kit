@@ -442,9 +442,13 @@ export namespace Components {
          */
         "engine": SearchEngine;
         /**
-          * How large or small the visual section of results should be.
+          * @deprecated use `imageSize` instead.
          */
         "image": ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
@@ -495,13 +499,26 @@ export namespace Components {
         "target": string;
     }
     interface AtomicResultList {
+        /**
+          * How large or small results should be.
+         */
         "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
         "display": ResultDisplayLayout;
         /**
           * A list of fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        /**
+          * @deprecated use `imageSize` instead.
+         */
         "image": ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -522,7 +539,7 @@ export namespace Components {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -570,7 +587,7 @@ export namespace Components {
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {
@@ -700,7 +717,7 @@ export namespace Components {
         /**
           * How large or small the visual section of results should be.
          */
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         /**
           * The result item.
          */
@@ -1652,9 +1669,13 @@ declare namespace LocalJSX {
          */
         "engine": SearchEngine;
         /**
-          * How large or small the visual section of results should be.
+          * @deprecated use `imageSize` instead.
          */
         "image"?: ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
@@ -1705,13 +1726,26 @@ declare namespace LocalJSX {
         "target"?: string;
     }
     interface AtomicResultList {
+        /**
+          * How large or small results should be.
+         */
         "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
         "display"?: ResultDisplayLayout;
         /**
           * A list of fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
+        /**
+          * @deprecated use `imageSize` instead.
+         */
         "image"?: ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -1732,7 +1766,7 @@ declare namespace LocalJSX {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -1780,7 +1814,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {
@@ -1898,7 +1932,7 @@ declare namespace LocalJSX {
         /**
           * How large or small the visual section of results should be.
          */
-        "image"?: ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */

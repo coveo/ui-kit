@@ -68,10 +68,24 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop() public fieldsToInclude = '';
 
+  /**
+   * How results should be displayed.
+   */
   @Prop() display: ResultDisplayLayout = 'list';
 
+  /**
+   * How large or small results should be.
+   */
   @Prop() density: ResultDisplayDensity = 'normal';
 
+  /**
+   * How large or small the visual section of results should be.
+   */
+  @Prop() imageSize?: ResultDisplayImageSize;
+
+  /**
+   * @deprecated use `imageSize` instead.
+   */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   private listWrapperRef?: HTMLDivElement;
@@ -163,7 +177,7 @@ export class AtomicResultList implements InitializableComponent {
           key={`placeholder-${i}`}
           display={this.display}
           density={this.density}
-          image={this.image}
+          image-size={this.imageSize ?? this.image}
         ></atomic-result-placeholder>
       )
     );
@@ -180,7 +194,7 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image={template.imageSize ?? this.image}
+          image-size={template.imageSize ?? this.imageSize ?? this.image}
           useSections={template.usesSections}
           content={template.innerHTML}
         ></atomic-result>
@@ -207,7 +221,7 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <atomic-result-table-placeholder
         density={this.density}
-        image={this.image}
+        image-size={this.imageSize ?? this.image}
         rows={this.resultsPerPageState.numberOfResults}
       ></atomic-result-table-placeholder>
     );
@@ -249,7 +263,7 @@ export class AtomicResultList implements InitializableComponent {
                     result={result}
                     display={this.display}
                     density={this.density}
-                    image={this.image}
+                    image-size={this.imageSize ?? this.image}
                     useSections={containsSection(column)}
                     content={column.innerHTML}
                   ></atomic-table-cell>
