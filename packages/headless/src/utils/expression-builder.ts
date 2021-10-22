@@ -73,13 +73,17 @@ type NumericOperator =
   | 'greaterThan'
   | 'greaterThanOrEqual';
 
-interface StringFieldExpression {
+interface Negatable {
+  negate?: boolean;
+}
+
+interface StringFieldExpression extends Negatable {
   field: string;
   operator: StringOperator;
   values: string[];
 }
 
-interface NumericFieldExpression {
+interface NumericFieldExpression extends Negatable {
   field: string;
   operator: NumericOperator;
   value: number;
@@ -191,13 +195,13 @@ function buildStringFieldPart(config: StringFieldExpression): Part {
   return {
     toString() {
       const {field} = config;
+      const prefix = getNegationPrefix(config);
       const operator = getOperatorSymbol(config.operator);
       const processed = config.values.map((value) => `"${value}"`);
-
       const values =
         processed.length === 1 ? processed[0] : `(${processed.join(',')})`;
 
-      return `@${field}${operator}${values}`;
+      return `${prefix}@${field}${operator}${values}`;
     },
   };
 }
@@ -206,8 +210,10 @@ function buildNumericFieldPart(config: NumericFieldExpression): Part {
   return {
     toString() {
       const {field, value} = config;
+      const prefix = getNegationPrefix(config);
       const operator = getOperatorSymbol(config.operator);
-      return `@${field}${operator}${value}`;
+
+      return `${prefix}@${field}${operator}${value}`;
     },
   };
 }
@@ -238,4 +244,8 @@ function getOperatorSymbol(operator: Operator) {
   }
 
   return '';
+}
+
+function getNegationPrefix(config: Negatable) {
+  return config.negate ? 'NOT ' : '';
 }

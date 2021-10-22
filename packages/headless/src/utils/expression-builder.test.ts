@@ -34,7 +34,8 @@ describe('createExpressionBuilder', () => {
       expect(builder.toString()).toBe('@author=="alice"');
     });
 
-    it('#contains operator with multiple values', () => {
+    it(`#contains operator with multiple values,
+    #toString returns the expected syntax`, () => {
       builder.addStringField({
         field: 'author',
         operator: 'contains',
@@ -42,6 +43,18 @@ describe('createExpressionBuilder', () => {
       });
 
       expect(builder.toString()).toBe('@author=("al","alice")');
+    });
+
+    it(`#negate set to true,
+    #toString returns the expected syntax`, () => {
+      builder.addStringField({
+        field: 'author',
+        operator: 'contains',
+        values: ['al'],
+        negate: true,
+      });
+
+      expect(builder.toString()).toBe('NOT @author="al"');
     });
   });
 
@@ -84,6 +97,18 @@ describe('createExpressionBuilder', () => {
       });
 
       expect(builder.toString()).toBe('@size<=10');
+    });
+
+    it(`#negate set to true,
+    #toString returns the expected syntax`, () => {
+      builder.addNumericField({
+        field: 'size',
+        operator: 'lowerThanOrEqual',
+        value: 10,
+        negate: true,
+      });
+
+      expect(builder.toString()).toBe('NOT @size<=10');
     });
   });
 });
