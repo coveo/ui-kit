@@ -12,7 +12,7 @@ describe('createExpressionBuilder', () => {
   });
 
   describe('#addStringField', () => {
-    it(`#contains operator, one value,
+    it(`with one expression,
     #toString returns the expected syntax`, () => {
       builder.addStringField({
         field: 'author',
@@ -21,40 +21,6 @@ describe('createExpressionBuilder', () => {
       });
 
       expect(builder.toString()).toBe('@author="al"');
-    });
-
-    it(`#isExactly operator, one value,
-    #toString returns the expected syntax`, () => {
-      builder.addStringField({
-        field: 'author',
-        operator: 'isExactly',
-        values: ['alice'],
-      });
-
-      expect(builder.toString()).toBe('@author=="alice"');
-    });
-
-    it(`#contains operator with multiple values,
-    #toString returns the expected syntax`, () => {
-      builder.addStringField({
-        field: 'author',
-        operator: 'contains',
-        values: ['al', 'alice'],
-      });
-
-      expect(builder.toString()).toBe('@author=("al","alice")');
-    });
-
-    it(`#negate set to true,
-    #toString returns the expected syntax`, () => {
-      builder.addStringField({
-        field: 'author',
-        operator: 'contains',
-        values: ['al'],
-        negate: true,
-      });
-
-      expect(builder.toString()).toBe('NOT @author="al"');
     });
   });
 

@@ -1,3 +1,12 @@
+import {
+  buildNumericField,
+  NumericFieldExpression,
+} from './numeric-field/numeric-field';
+import {
+  buildStringField,
+  StringFieldExpression,
+} from './string-field/string-field';
+
 type QueryExpression =
   | KeyWord
   | ExactMatch
@@ -61,32 +70,6 @@ interface FieldExpression {
     | 'wildcardMatch'
     | 'differentThan';
   value: FieldValue;
-}
-
-type Operator = StringOperator | NumericOperator;
-
-type StringOperator = 'contains' | 'isExactly';
-type NumericOperator =
-  | 'isExactly'
-  | 'lowerThan'
-  | 'lowerThanOrEqual'
-  | 'greaterThan'
-  | 'greaterThanOrEqual';
-
-interface Negatable {
-  negate?: boolean;
-}
-
-interface StringFieldExpression extends Negatable {
-  field: string;
-  operator: StringOperator;
-  values: string[];
-}
-
-interface NumericFieldExpression extends Negatable {
-  field: string;
-  operator: NumericOperator;
-  value: number;
 }
 
 // Near expression
@@ -172,12 +155,12 @@ export function createExpressionBuilder(config: {
 
   return {
     addStringField(expression: StringFieldExpression) {
-      parts.push(buildStringFieldPart(expression));
+      parts.push(buildStringField(expression));
       return this;
     },
 
     addNumericField(expression: NumericFieldExpression) {
-      parts.push(buildNumericFieldPart(expression));
+      parts.push(buildNumericField(expression));
       return this;
     },
 
@@ -189,63 +172,4 @@ export function createExpressionBuilder(config: {
 
 interface Part {
   toString(): string;
-}
-
-function buildStringFieldPart(config: StringFieldExpression): Part {
-  return {
-    toString() {
-      const {field} = config;
-      const prefix = getNegationPrefix(config);
-      const operator = getOperatorSymbol(config.operator);
-      const processed = config.values.map((value) => `"${value}"`);
-      const values =
-        processed.length === 1 ? processed[0] : `(${processed.join(',')})`;
-
-      return `${prefix}@${field}${operator}${values}`;
-    },
-  };
-}
-
-function buildNumericFieldPart(config: NumericFieldExpression): Part {
-  return {
-    toString() {
-      const {field, value} = config;
-      const prefix = getNegationPrefix(config);
-      const operator = getOperatorSymbol(config.operator);
-
-      return `${prefix}@${field}${operator}${value}`;
-    },
-  };
-}
-
-function getOperatorSymbol(operator: Operator) {
-  if (operator === 'contains') {
-    return '=';
-  }
-
-  if (operator === 'isExactly') {
-    return '==';
-  }
-
-  if (operator === 'greaterThan') {
-    return '>';
-  }
-
-  if (operator === 'greaterThanOrEqual') {
-    return '>=';
-  }
-
-  if (operator === 'lowerThan') {
-    return '<';
-  }
-
-  if (operator === 'lowerThanOrEqual') {
-    return '<=';
-  }
-
-  return '';
-}
-
-function getNegationPrefix(config: Negatable) {
-  return config.negate ? 'NOT ' : '';
 }
