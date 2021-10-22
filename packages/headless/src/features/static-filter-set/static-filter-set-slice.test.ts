@@ -1,8 +1,8 @@
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
-  deselectAllStaticFilters,
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
@@ -170,7 +170,7 @@ describe('static-filter-set slice', () => {
     });
   });
 
-  it('#deselectAllStaticFilters selected values in all static filters to idle', () => {
+  it('#deselectAllBreadcrumbs sets selected values in all static filters to idle', () => {
     const valueA = buildMockStaticFilterValue({
       caption: 'a',
       state: 'selected',
@@ -183,7 +183,7 @@ describe('static-filter-set slice', () => {
     const filterA = buildMockStaticFilterSlice({values: [valueA]});
     const filterB = buildMockStaticFilterSlice({values: [valueB]});
 
-    const action = deselectAllStaticFilters();
+    const action = deselectAllBreadcrumbs();
     const state = staticFilterSetReducer({a: filterA, b: filterB}, action);
 
     expect(state.a.values).toEqual([{...valueA, state: 'idle'}]);

@@ -45,11 +45,11 @@ import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {MappedSearchRequest, mapSearchResponse} from './search-mappings';
 import {BooleanValue, StringValue} from '@coveo/bueno';
-import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {updatePage} from '../pagination/pagination-actions';
 import {validatePayload} from '../../utils/validate-payload';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -112,7 +112,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
     enableQuerySyntax: new BooleanValue(),
   });
 
-  dispatch(deselectAllFacets());
+  dispatch(deselectAllBreadcrumbs());
   dispatch(updateQuery(payload));
   dispatch(updatePage(1));
 });

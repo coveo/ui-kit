@@ -18,7 +18,6 @@ import {
 } from '../../state/state-sections';
 import {BaseFacetRequest} from '../../features/facets/facet-api/request';
 import {executeSearch} from '../../features/search/search-actions';
-import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {
@@ -44,10 +43,10 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StaticFilterValue} from '..';
 import {StaticFilterSlice} from '../../features/static-filter-set/static-filter-set-state';
 import {
-  deselectAllStaticFilters,
+  logStaticFilterDeselect,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
-import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
@@ -328,8 +327,14 @@ export function buildBreadcrumbManager(
     return {
       value,
       deselect: () => {
+        const {caption, expression} = value;
+        const analytics = logStaticFilterDeselect({
+          staticFilterId: id,
+          staticFilterValue: {caption, expression},
+        });
+
         dispatch(toggleSelectStaticFilterValue({id, value}));
-        dispatch(executeSearch(noopSearchAnalyticsAction()));
+        dispatch(executeSearch(analytics));
       },
     };
   };
@@ -359,8 +364,7 @@ export function buildBreadcrumbManager(
     },
 
     deselectAll: () => {
-      dispatch(deselectAllFacets());
-      dispatch(deselectAllStaticFilters());
+      dispatch(deselectAllBreadcrumbs());
       dispatch(executeSearch(logClearBreadcrumbs()));
     },
 
