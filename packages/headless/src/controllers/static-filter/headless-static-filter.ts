@@ -8,6 +8,9 @@ import {
 } from '../../features/static-filter-set/static-filter-set-schema';
 import {
   deselectAllStaticFilterValues,
+  logStaticFilterClearAll,
+  logStaticFilterDeselect,
+  logStaticFilterSelect,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
@@ -19,7 +22,6 @@ import {StaticFilterSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {executeSearch} from '../../features/search/search-actions';
-import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
 import {
   buildStaticFilterValue,
   StaticFilterValueOptions,
@@ -141,22 +143,28 @@ export function buildStaticFilter(
     ...controller,
 
     toggleSelect(value: StaticFilterValue) {
+      const analytics = getAnalyticsActionForToggledValue(id, value);
+
       dispatch(toggleSelectStaticFilterValue({id, value}));
-      dispatch(executeSearch(noopSearchAnalyticsAction()));
+      dispatch(executeSearch(analytics));
     },
 
     toggleSingleSelect(value: StaticFilterValue) {
+      const analytics = getAnalyticsActionForToggledValue(id, value);
+
       if (value.state === 'idle') {
         dispatch(deselectAllStaticFilterValues(id));
       }
 
       dispatch(toggleSelectStaticFilterValue({id, value}));
-      dispatch(executeSearch(noopSearchAnalyticsAction()));
+      dispatch(executeSearch(analytics));
     },
 
     deselectAll() {
+      const analytics = logStaticFilterClearAll({staticFilterId: id});
+
       dispatch(deselectAllStaticFilterValues(id));
-      dispatch(executeSearch(noopSearchAnalyticsAction()));
+      dispatch(executeSearch(analytics));
     },
 
     isValueSelected(value: StaticFilterValue) {
@@ -181,4 +189,18 @@ function loadReducers(
 ): engine is SearchEngine<StaticFilterSection> {
   engine.addReducers({staticFilterSet});
   return true;
+}
+
+function getAnalyticsActionForToggledValue(
+  id: string,
+  value: StaticFilterValue
+) {
+  const {caption, expression, state} = value;
+  const analytics =
+    state === 'idle' ? logStaticFilterSelect : logStaticFilterDeselect;
+
+  return analytics({
+    staticFilterId: id,
+    staticFilterValue: {caption, expression},
+  });
 }

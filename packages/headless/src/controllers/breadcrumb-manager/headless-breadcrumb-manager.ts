@@ -42,8 +42,10 @@ import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StaticFilterValue} from '..';
 import {StaticFilterSlice} from '../../features/static-filter-set/static-filter-set-state';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
-import {noopSearchAnalyticsAction} from '../../features/analytics/analytics-utils';
+import {
+  logStaticFilterDeselect,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 
 /**
@@ -325,8 +327,14 @@ export function buildBreadcrumbManager(
     return {
       value,
       deselect: () => {
+        const {caption, expression} = value;
+        const analytics = logStaticFilterDeselect({
+          staticFilterId: id,
+          staticFilterValue: {caption, expression},
+        });
+
         dispatch(toggleSelectStaticFilterValue({id, value}));
-        dispatch(executeSearch(noopSearchAnalyticsAction()));
+        dispatch(executeSearch(analytics));
       },
     };
   };
