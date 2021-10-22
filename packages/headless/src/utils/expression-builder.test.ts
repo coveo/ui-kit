@@ -31,4 +31,21 @@ describe('createExpressionBuilder', () => {
 
     expect(builder.toString()).toBe('@author=="alice"');
   });
+
+  it('#contains operator with multiple values', () => {
+    const builder = createExpressionBuilder({
+      delimiter: 'and',
+    });
+
+    builder.addStringFieldExpression({
+      fieldName: 'author',
+      operator: 'contains',
+      values: [
+        {type: 'keyword', value: 'al'},
+        {type: 'exactMatch', value: 'alice'},
+      ],
+    });
+
+    expect(builder.toString()).toBe('@author=(al,"alice")');
+  });
 });

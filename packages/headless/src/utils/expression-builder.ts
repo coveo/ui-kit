@@ -165,12 +165,13 @@ function buildStringFieldExpressionPart(config: StringFieldExpression): Part {
     toString() {
       const {fieldName} = config;
       const operator = config.operator === 'contains' ? '=' : '==';
-      const values = config.values
-        .map((v) => {
-          const {value, type} = v;
-          return type === 'keyword' ? value : `"${value}"`;
-        })
-        .join(';');
+      const processed = config.values.map((v) => {
+        const {value, type} = v;
+        return type === 'keyword' ? value : `"${value}"`;
+      });
+
+      const values =
+        processed.length === 1 ? processed[0] : `(${processed.join(',')})`;
 
       return `@${fieldName}${operator}${values}`;
     },
