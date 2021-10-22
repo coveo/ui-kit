@@ -26,6 +26,7 @@ export interface CategoryFacetSelector extends ComponentSelector {
   showMoreButton: () => CypressSelector;
   parentValueLabel: () => CypressSelector;
   allCategories: () => CypressSelector;
+  valueHighlight: () => CypressSelector;
 }
 
 export type AllFacetSelectors = BaseFacetSelector &
@@ -55,6 +56,10 @@ export const CategoryFacetSelectors: CategoryFacetSelector = {
   expandButton: () => CategoryFacetSelectors.get().find('.facet__expand'),
   childValueOption: () =>
     CategoryFacetSelectors.get().find('.facet__child-value-option'),
+  valueHighlight: () =>
+    CategoryFacetSelectors.get().find(
+      '.slds-rich-text-editor__output > span b'
+    ),
   facetCount: () =>
     CategoryFacetSelectors.get().find('.facet__number-of-results'),
   searchInput: () => CategoryFacetSelectors.get().find('input[type="search"]'),

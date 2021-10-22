@@ -48,6 +48,17 @@ describe('quantic-category-facet', () => {
       false
     );
   }
+  function setupWithSearchEnabled() {
+    visitCategoryFacetPage(
+      {
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        withSearch: true,
+      },
+      true
+    );
+  }
 
   function setupGoDeeperOneLevel() {
     setupWithDefaultSettings();
@@ -90,6 +101,7 @@ describe('quantic-category-facet', () => {
     describe('when selecting on the level data set', () => {
       it('should bold the selected parent level', () => {
         setupWithDefaultSettings();
+        // Verify all levels
         canadaHierarchy.forEach((value, index) => {
           const selectedPath = canadaHierarchy.slice(0, index + 1);
 
@@ -156,6 +168,7 @@ describe('quantic-category-facet', () => {
 
           Actions.clickAllCategories();
 
+          Expect.numberOfParentValues(0);
           Expect.numberOfValues(defaultNumberOfValues - 1);
         });
       });
@@ -165,7 +178,17 @@ describe('quantic-category-facet', () => {
   describe('with option search is enabled in category facet', () => {
     describe('when typing into facet search input box', () => {
       it('facet value should be filtered to match with the keywords', () => {
-        // it should highlight entered keyword
+        const query = 'mal';
+        const hierarchicalField = 'geographicalhierarchy';
+        setupWithSearchEnabled();
+
+        Actions.typeFacetSearchQuery(query);
+
+        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.isAccessible(true);
+        Expect.displayMoreMatchesFound(true);
+        Expect.moreMatchesFoundContainsQuery(query);
+        Expect.highlightsResults(query);
         // it should display result parent patch on the second line
       });
     });

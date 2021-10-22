@@ -54,6 +54,21 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
       )}`;
       cy.url().should('include', urlHash);
     },
+    displayNoMatchesFound: (display: boolean) => {
+      selector.noMatches().should(display ? 'exist' : 'not.exist');
+    },
+    displayMoreMatchesFound: (display: boolean) => {
+      selector.moreMatches().should(display ? 'exist' : 'not.exist');
+    },
+    moreMatchesFoundContainsQuery: (query: string) => {
+      selector.moreMatches().contains(query);
+    },
+    highlightsResults: (query: string) => {
+      selector.valueHighlight().each((element) => {
+        const text = element.text().toLowerCase();
+        expect(text).to.eq(query.toLowerCase());
+      });
+    },
     logCategoryFacetSelected: (path: string[]) => {
       cy.wait(InterceptAliases.UA.Facet.Select).then((interception) => {
         const analyticsBody = interception.request.body;
@@ -79,6 +94,13 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
           'facetType',
           'hierarchical'
         );
+      });
+    },
+    logCategoryFacetSearch: (field: string) => {
+      cy.wait(InterceptAliases.UA.Facet.Search).then((interception) => {
+        const analyticsBody = interception.request.body;
+        expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
+        expect(analyticsBody.customData).to.have.property('facetField', field);
       });
     },
   };

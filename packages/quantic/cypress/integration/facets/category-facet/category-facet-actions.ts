@@ -27,6 +27,9 @@ function categoryFacetActions(selector: CategoryFacetSelector) {
     clickAllCategories() {
       selector.allCategories().click();
     },
+    typeFacetSearchQuery(value: string) {
+      selector.searchInput().type(value);
+    },
   };
 }
 

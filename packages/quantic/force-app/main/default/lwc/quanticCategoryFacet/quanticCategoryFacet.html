@@ -22,7 +22,7 @@
           </template>
           <template if:false={isFacetSearchActive}>
             <template if:true={hasParents}>
-              <li class="facet__allCategories slds-size_1-of-1 slds-p-around_x-small">
+              <li class="facet__allCategories facet__value-option slds-size_1-of-1 slds-p-around_x-small">
                 <div class="slds-grid slds-grid_vertical-align-center" onclick={reset}>
                   <lightning-icon class="slds-m-right_xx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
                   <span class="nowrap">{labels.allCategories}</span>
