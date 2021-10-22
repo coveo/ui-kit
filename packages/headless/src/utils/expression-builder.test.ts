@@ -11,7 +11,7 @@ describe('createExpressionBuilder', () => {
     const builder = createExpressionBuilder({
       delimiter: 'and',
     }).addStringFieldExpression({
-      fieldName: 'author',
+      field: 'author',
       operator: 'contains',
       values: ['al'],
     });
@@ -24,7 +24,7 @@ describe('createExpressionBuilder', () => {
     const builder = createExpressionBuilder({
       delimiter: 'and',
     }).addStringFieldExpression({
-      fieldName: 'author',
+      field: 'author',
       operator: 'isExactly',
       values: ['alice'],
     });
@@ -38,7 +38,7 @@ describe('createExpressionBuilder', () => {
     });
 
     builder.addStringFieldExpression({
-      fieldName: 'author',
+      field: 'author',
       operator: 'contains',
       values: ['al', 'alice'],
     });

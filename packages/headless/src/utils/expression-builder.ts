@@ -64,7 +64,7 @@ interface FieldExpression {
 }
 
 interface StringFieldExpression {
-  fieldName: string;
+  field: string;
   operator: 'contains' | 'isExactly';
   values: string[];
 }
@@ -163,14 +163,14 @@ interface Part {
 function buildStringFieldExpressionPart(config: StringFieldExpression): Part {
   return {
     toString() {
-      const {fieldName} = config;
+      const {field} = config;
       const operator = config.operator === 'contains' ? '=' : '==';
       const processed = config.values.map((value) => `"${value}"`);
 
       const values =
         processed.length === 1 ? processed[0] : `(${processed.join(',')})`;
 
-      return `@${fieldName}${operator}${values}`;
+      return `@${field}${operator}${values}`;
     },
   };
 }
