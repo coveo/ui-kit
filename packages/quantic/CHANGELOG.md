@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.78.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.1...@coveo/quantic@0.78.2) (2021-10-20)
+
+
+### Bug Fixes
+
+* **quantic:** use object type ([#1368](https://github.com/coveo/ui-kit/issues/1368)) ([359ec24](https://github.com/coveo/ui-kit/commit/359ec2478d18b9378b1be8aa19df97c6dacf7456))
+
+
+
+
+
 ## [0.78.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.0...@coveo/quantic@0.78.1) (2021-10-20)
 
 **Note:** Version bump only for package @coveo/quantic

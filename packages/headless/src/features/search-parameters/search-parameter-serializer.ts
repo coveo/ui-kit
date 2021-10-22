@@ -1,6 +1,13 @@
 import {isString} from '@coveo/bueno';
-import {isSearchApiDate} from '../../api/search/date/date-format';
-import {isRelativeDateFormat} from '../../api/search/date/relative-date';
+import {
+  API_DATE_FORMAT,
+  isSearchApiDate,
+  validateAbsoluteDate,
+} from '../../api/search/date/date-format';
+import {
+  isRelativeDateFormat,
+  validateRelativeDate,
+} from '../../api/search/date/relative-date';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
@@ -170,15 +177,30 @@ function buildNumericRanges(ranges: string[]) {
     .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
 }
 
+function isValidDateRangeValue(date: string) {
+  try {
+    if (isSearchApiDate(date)) {
+      validateAbsoluteDate(date, API_DATE_FORMAT);
+      return true;
+    }
+    if (isRelativeDateFormat(date)) {
+      validateRelativeDate(date);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    return false;
+  }
+}
+
 function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => str.split(rangeDelimiter))
     .filter(
       (range) =>
         range.length === 2 &&
-        range.every(
-          (value) => isSearchApiDate(value) || isRelativeDateFormat(value)
-        )
+        range.every((value) => isValidDateRangeValue(value))
     )
     .map(([start, end]) => buildDateRange({start, end, state: 'selected'}));
 }
