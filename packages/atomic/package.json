@@ -35,7 +35,9 @@
     "cypress:test:firefox": "./node_modules/cypress/bin/cypress --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser firefox",
     "cypress:open": "./node_modules/cypress/bin/cypress open",
     "npm:publish": "node ../../scripts/deploy/publish.js",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.7",
@@ -51,6 +53,7 @@
     "tailwindcss": "^2.2.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.8",
     "@fullhuman/postcss-purgecss": "4.0.3",
     "@rollup/plugin-alias": "3.1.5",
     "@rollup/plugin-commonjs": "17.1.0",
@@ -59,6 +62,10 @@
     "@stencil/core": "2.9",
     "@stencil/postcss": "2.0.0",
     "@stencil/store": "1.4.1",
+    "@storybook/addon-actions": "^6.3.12",
+    "@storybook/addon-essentials": "^6.3.12",
+    "@storybook/addon-links": "^6.3.12",
+    "@storybook/html": "^6.3.12",
     "@types/dompurify": "2.2.3",
     "@types/escape-html": "1.0.1",
     "@types/jest": "26.0.24",
@@ -66,6 +73,7 @@
     "@types/puppeteer": "5.4.4",
     "autoprefixer": "10.3.2",
     "axe-core": "4.3.3",
+    "babel-loader": "^8.2.3",
     "cross-fetch": "3.1.4",
     "cypress": "8.2.0",
     "cypress-axe": "0.13.0",
