@@ -1,38 +1,13 @@
+import {SearchAppState} from '../../state/search-app-state';
 import {getVisitorID} from '../../api/analytics/analytics';
-import {
-  AdvancedSearchQueriesSection,
-  ConfigurationSection,
-  ContextSection,
-  DebugSection,
-  DictionaryFieldContextSection,
-  FieldsSection,
-  PipelineSection,
-  QuerySection,
-  SearchHubSection,
-  SearchSection,
-  SortSection,
-  TabSection,
-} from '../../state/state-sections';
+import {ConfigurationSection} from '../../state/state-sections';
 
-export type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
-  Partial<
-    QuerySection &
-      AdvancedSearchQueriesSection &
-      TabSection &
-      SortSection &
-      ContextSection &
-      DictionaryFieldContextSection &
-      FieldsSection &
-      PipelineSection &
-      SearchHubSection &
-      DebugSection &
-      SearchSection
-  >;
+type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
+  Partial<SearchAppState>;
 
 export const buildSearchAndFoldingLoadCollectionRequest = (
   state: StateNeededByExecuteSearchAndFolding
 ) => {
-  const cq = buildConstantQuery(state);
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -45,9 +20,13 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
-    ...(cq && {cq}),
-    ...(state.advancedSearchQueries && {
+    ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
+    }),
+    ...(state.advancedSearchQueries?.cq && {
+      cq: state.advancedSearchQueries.cq,
+    }),
+    ...(state.advancedSearchQueries?.lq && {
       lq: state.advancedSearchQueries.lq,
     }),
     ...(state.context && {
@@ -75,13 +54,3 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     }),
   };
 };
-
-function buildConstantQuery(state: StateNeededByExecuteSearchAndFolding) {
-  const cq = state.advancedSearchQueries?.cq.trim() || '';
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
-  const tabExpression = activeTab?.expression.trim() || '';
-
-  return [cq, tabExpression].filter((expression) => !!expression).join(' AND ');
-}

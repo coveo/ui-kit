@@ -15,6 +15,7 @@ import {getQuerySetInitialState} from '../query-set/query-set-state';
 import {getQueryInitialState} from '../query/query-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
+import {getStaticFilterSetInitialState} from '../static-filter-set/static-filter-set-state';
 import {getTabSetInitialState} from '../tab-set/tab-set-state';
 
 export interface HistoryState extends SearchParametersState {
@@ -40,6 +41,7 @@ export function extractHistory(state: Partial<HistoryState>): HistoryState {
     tabSet: state.tabSet || getTabSetInitialState(),
     advancedSearchQueries:
       state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
+    staticFilterSet: state.staticFilterSet || getStaticFilterSetInitialState(),
     querySet: state.querySet || getQuerySetInitialState(),
     sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
     pipeline: state.pipeline || getPipelineInitialState(),

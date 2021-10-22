@@ -38,25 +38,18 @@ import {
   historyStore,
   StateNeededByAnalyticsProvider,
 } from '../../api/analytics/analytics';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {getQueryInitialState} from '../query/query-state';
 import {SearchAction} from '../analytics/analytics-utils';
 import {extractHistory} from '../history/history-state';
-import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
-import {
-  MappedSearchRequest,
-  mapSearchRequest,
-  mapSearchResponse,
-} from './search-mappings';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/build-search-request';
+import {MappedSearchRequest, mapSearchResponse} from './search-mappings';
 import {BooleanValue, StringValue} from '@coveo/bueno';
-import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {updatePage} from '../pagination/pagination-actions';
 import {validatePayload} from '../../utils/validate-payload';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {buildSearchRequest} from './search-request';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -119,7 +112,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
     enableQuerySyntax: new BooleanValue(),
   });
 
-  dispatch(deselectAllFacets());
+  dispatch(deselectAllBreadcrumbs());
   dispatch(updateQuery(payload));
   dispatch(updatePage(1));
 });
@@ -290,33 +283,6 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-export const buildSearchRequest = (state: StateNeededByExecuteSearch) => {
-  const facets = getFacets(state);
-  const sharedWithFoldingRequest =
-    buildSearchAndFoldingLoadCollectionRequest(state);
-
-  return mapSearchRequest({
-    ...sharedWithFoldingRequest,
-    ...(state.didYouMean && {
-      enableDidYouMean: state.didYouMean.enableDidYouMean,
-    }),
-    ...(facets.length && {facets}),
-    ...(state.pagination && {
-      numberOfResults: state.pagination.numberOfResults,
-      firstResult: state.pagination.firstResult,
-    }),
-    ...(state.facetOptions && {
-      facetOptions: state.facetOptions,
-    }),
-    ...(state.folding?.enabled && {
-      filterField: state.folding.fields.collection,
-      childField: state.folding.fields.parent,
-      parentField: state.folding.fields.child,
-      filterFieldRange: state.folding.filterFieldRange,
-    }),
-  });
-};
-
 const buildFetchMoreRequest = (
   state: StateNeededByExecuteSearch
 ): MappedSearchRequest => {
@@ -329,29 +295,6 @@ const buildFetchMoreRequest = (
   };
   return mappedRequest;
 };
-
-function getFacets(state: StateNeededByExecuteSearch) {
-  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
-}
-
-function getAllFacets(state: StateNeededByExecuteSearch) {
-  return [
-    ...getFacetRequests(state.facetSet),
-    ...getFacetRequests(state.numericFacetSet),
-    ...getFacetRequests(state.dateFacetSet),
-    ...getCategoryFacetRequests(state.categoryFacetSet),
-  ];
-}
-
-function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => slice!.request);
-}
-
-function getFacetRequests<T extends AnyFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => requests[id]);
-}
 
 const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {

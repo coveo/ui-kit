@@ -62,6 +62,14 @@ import {
 } from '../question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  logStaticFilterSelect,
+  logStaticFilterDeselect,
+  logStaticFilterClearAll,
+  LogStaticFilterToggleValueActionCreatorPayload,
+  LogStaticFilterClearAllActionCreatorPayload,
+  StaticFilterValueMetadata,
+} from '../static-filter-set/static-filter-set-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -73,6 +81,9 @@ export {
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  LogStaticFilterToggleValueActionCreatorPayload,
+  LogStaticFilterClearAllActionCreatorPayload,
+  StaticFilterValueMetadata,
 };
 
 /**
@@ -525,6 +536,54 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when a static filter value is selected.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logStaticFilterSelect(
+    payload: LogStaticFilterToggleValueActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a static filter value is deselected.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logStaticFilterDeselect(
+    payload: LogStaticFilterToggleValueActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when all selected values of a static filter are deselected.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logStaticFilterClearAll(
+    payload: LogStaticFilterClearAllActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -571,5 +630,8 @@ export function loadSearchAnalyticsActions(
     logExpandSmartSnippetSuggestion,
     logCollapseSmartSnippetSuggestion,
     logNoResultsBack,
+    logStaticFilterSelect,
+    logStaticFilterDeselect,
+    logStaticFilterClearAll,
   };
 }
