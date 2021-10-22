@@ -1,17 +1,20 @@
-import {createExpressionBuilder} from './expression-builder';
+import {createExpressionBuilder, ExpressionBuilder} from './expression-builder';
 
 describe('createExpressionBuilder', () => {
+  let builder: ExpressionBuilder;
+
+  beforeEach(() => {
+    builder = createExpressionBuilder({delimiter: 'and'});
+  });
+
   it('builder with no expression, #toString returns an empty string', () => {
-    const builder = createExpressionBuilder({delimiter: 'and'});
     expect(builder.toString()).toBe('');
   });
 
   describe('#addStringField', () => {
     it(`#contains operator, one value,
     #toString returns the expected syntax`, () => {
-      const builder = createExpressionBuilder({
-        delimiter: 'and',
-      }).addStringField({
+      builder.addStringField({
         field: 'author',
         operator: 'contains',
         values: ['al'],
@@ -22,9 +25,7 @@ describe('createExpressionBuilder', () => {
 
     it(`#isExactly operator, one value,
     #toString returns the expected syntax`, () => {
-      const builder = createExpressionBuilder({
-        delimiter: 'and',
-      }).addStringField({
+      builder.addStringField({
         field: 'author',
         operator: 'isExactly',
         values: ['alice'],
@@ -34,10 +35,6 @@ describe('createExpressionBuilder', () => {
     });
 
     it('#contains operator with multiple values', () => {
-      const builder = createExpressionBuilder({
-        delimiter: 'and',
-      });
-
       builder.addStringField({
         field: 'author',
         operator: 'contains',
@@ -45,6 +42,48 @@ describe('createExpressionBuilder', () => {
       });
 
       expect(builder.toString()).toBe('@author=("al","alice")');
+    });
+  });
+
+  describe('#addNumericField', () => {
+    it('#greaterThan operator, #toString returns the expected syntax', () => {
+      builder.addNumericField({
+        field: 'size',
+        operator: 'greaterThan',
+        value: 10,
+      });
+
+      expect(builder.toString()).toBe('@size>10');
+    });
+
+    it('#greaterThanOrEqual operator, #toString returns the expected syntax', () => {
+      builder.addNumericField({
+        field: 'size',
+        operator: 'greaterThanOrEqual',
+        value: 10,
+      });
+
+      expect(builder.toString()).toBe('@size>=10');
+    });
+
+    it('#lowerThan operator, #toString returns the expected syntax', () => {
+      builder.addNumericField({
+        field: 'size',
+        operator: 'lowerThan',
+        value: 10,
+      });
+
+      expect(builder.toString()).toBe('@size<10');
+    });
+
+    it('#lowerThanOrEqual operator, #toString returns the expected syntax', () => {
+      builder.addNumericField({
+        field: 'size',
+        operator: 'lowerThanOrEqual',
+        value: 10,
+      });
+
+      expect(builder.toString()).toBe('@size<=10');
     });
   });
 });

@@ -63,10 +63,26 @@ interface FieldExpression {
   value: FieldValue;
 }
 
+type Operator = StringOperator | NumericOperator;
+
+type StringOperator = 'contains' | 'isExactly';
+type NumericOperator =
+  | 'isExactly'
+  | 'lowerThan'
+  | 'lowerThanOrEqual'
+  | 'greaterThan'
+  | 'greaterThanOrEqual';
+
 interface StringFieldExpression {
   field: string;
-  operator: 'contains' | 'isExactly';
+  operator: StringOperator;
   values: string[];
+}
+
+interface NumericFieldExpression {
+  field: string;
+  operator: NumericOperator;
+  value: number;
 }
 
 // Near expression
@@ -80,13 +96,6 @@ interface Near {
 interface OtherTerm {
   maxKeywordsFrom: number;
   endTerm: TextValue;
-}
-
-// Not
-
-interface Not {
-  type: 'not';
-  expression: QueryExpression;
 }
 
 // Field Exists
@@ -129,7 +138,7 @@ interface QuerySyntax {
   value: string;
 }
 
-// Junctions
+// Expression-Level Operators
 
 interface And {
   type: 'and';
@@ -141,12 +150,30 @@ interface Or {
   expressions: QueryExpression[];
 }
 
-export function createExpressionBuilder(config: {delimiter: 'and' | 'or'}) {
+interface Not {
+  type: 'not';
+  expression: QueryExpression;
+}
+
+export interface ExpressionBuilder {
+  addStringField(expression: StringFieldExpression): ExpressionBuilder;
+  addNumericField(expression: NumericFieldExpression): ExpressionBuilder;
+  toString(): string;
+}
+
+export function createExpressionBuilder(config: {
+  delimiter: 'and' | 'or';
+}): ExpressionBuilder {
   const parts: Part[] = [];
 
   return {
     addStringField(expression: StringFieldExpression) {
       parts.push(buildStringFieldPart(expression));
+      return this;
+    },
+
+    addNumericField(expression: NumericFieldExpression) {
+      parts.push(buildNumericFieldPart(expression));
       return this;
     },
 
@@ -164,7 +191,7 @@ function buildStringFieldPart(config: StringFieldExpression): Part {
   return {
     toString() {
       const {field} = config;
-      const operator = config.operator === 'contains' ? '=' : '==';
+      const operator = getOperatorSymbol(config.operator);
       const processed = config.values.map((value) => `"${value}"`);
 
       const values =
@@ -173,6 +200,44 @@ function buildStringFieldPart(config: StringFieldExpression): Part {
       return `@${field}${operator}${values}`;
     },
   };
+}
+
+function buildNumericFieldPart(config: NumericFieldExpression): Part {
+  return {
+    toString() {
+      const {field, value} = config;
+      const operator = getOperatorSymbol(config.operator);
+      return `@${field}${operator}${value}`;
+    },
+  };
+}
+
+function getOperatorSymbol(operator: Operator) {
+  if (operator === 'contains') {
+    return '=';
+  }
+
+  if (operator === 'isExactly') {
+    return '==';
+  }
+
+  if (operator === 'greaterThan') {
+    return '>';
+  }
+
+  if (operator === 'greaterThanOrEqual') {
+    return '>=';
+  }
+
+  if (operator === 'lowerThan') {
+    return '<';
+  }
+
+  if (operator === 'lowerThanOrEqual') {
+    return '<=';
+  }
+
+  return '';
 }
 
 // function createExpressionBuilder(expression = '') {
