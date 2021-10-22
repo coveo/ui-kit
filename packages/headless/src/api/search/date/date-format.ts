@@ -3,7 +3,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 export const API_DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-export const API_DATE_MINIMUM = '1401-01-01';
+const API_DATE_MINIMUM = '1401-01-01';
 
 export type AbsoluteDate = string | number | Date;
 
@@ -29,7 +29,11 @@ export function validateAbsoluteDate(date: AbsoluteDate, dateFormat?: string) {
     );
   }
 
-  if (dayJSDate.isBefore(API_DATE_MINIMUM)) {
+  assertDateAboveAPIMinimum(dayJSDate);
+}
+
+export function assertDateAboveAPIMinimum(date: dayjs.Dayjs) {
+  if (date.isBefore(API_DATE_MINIMUM)) {
     throw new Error(
       `Date is before year 1401, which is unsupported by the API: ${date}`
     );

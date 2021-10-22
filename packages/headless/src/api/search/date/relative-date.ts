@@ -1,6 +1,6 @@
 import dayjs, {QUnitType} from 'dayjs';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {API_DATE_MINIMUM, formatDateForSearchApi} from './date-format';
+import {assertDateAboveAPIMinimum, formatDateForSearchApi} from './date-format';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 
 dayjs.extend(quarterOfYear);
@@ -65,6 +65,10 @@ const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   };
 };
 
+/**
+ * Validates a relative date and throws if it's invalid.
+ * @param date The relative date, in `RelativeDate` or string format
+ */
 export function validateRelativeDate(date: RelativeDate | string) {
   if (typeof date === 'string' && !isRelativeDateFormat(date)) {
     throw new Error(
@@ -73,7 +77,7 @@ export function validateRelativeDate(date: RelativeDate | string) {
   }
 
   const relativeDate =
-    typeof date === 'string' ? deserializeRelativeDate(date) : date;
+    typeof date === 'string' ? parseRelativeDate(date) : date;
 
   new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
     relativeDate
@@ -85,11 +89,7 @@ export function validateRelativeDate(date: RelativeDate | string) {
     throw new Error(`Date is invalid: ${stringifiedDate}`);
   }
 
-  if (dayJsDate.isBefore(API_DATE_MINIMUM)) {
-    throw new Error(
-      `Date is before year 1401, which is unsupported by the API: ${stringifiedDate}`
-    );
-  }
+  assertDateAboveAPIMinimum(dayJsDate);
 }
 
 export function serializeRelativeDate(relativeDate: RelativeDate) {
@@ -118,7 +118,7 @@ function relativeToAbsoluteDate(relativeDate: RelativeDate) {
 
 export function formatRelativeDateForSearchApi(relativeDate: string) {
   return formatDateForSearchApi(
-    relativeToAbsoluteDate(deserializeRelativeDate(relativeDate))
+    relativeToAbsoluteDate(parseRelativeDate(relativeDate))
   );
 }
 
@@ -152,12 +152,7 @@ export function isRelativeDate(date: unknown): date is RelativeDate {
   return !!date && typeof date === 'object' && 'period' in date!;
 }
 
-/**
- * Deserializes a relative date string value into a valid `RelativeDate` object.
- * @param date The string serialized with the format "period-amount-unit"
- * @returns The parsed `RelativeDate` object.
- */
-export function deserializeRelativeDate(date: string): RelativeDate {
+function parseRelativeDate(date: string): RelativeDate {
   const [period, amount, unit] = splitDate(date);
   if (period === 'now') {
     return {
@@ -170,4 +165,15 @@ export function deserializeRelativeDate(date: string): RelativeDate {
     amount: amount ? parseInt(amount) : undefined,
     unit: unit ? (unit as RelativeDateUnit) : undefined,
   };
+}
+
+/**
+ * Deserializes a relative date string value into a valid `RelativeDate` object.
+ * Throws an error if the date is invalid.
+ * @param date The string serialized with the format "period-amount-unit"
+ * @returns The parsed `RelativeDate` object.
+ */
+export function deserializeRelativeDate(date: string) {
+  validateRelativeDate(date);
+  return parseRelativeDate(date);
 }
