@@ -38,6 +38,7 @@ import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/catego
 import {Action} from '@reduxjs/toolkit';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -270,6 +271,10 @@ describe('pagination slice', () => {
 
     it('when all facets are deselected, #firstResult is set to 0', () => {
       testResetPagination(deselectAllFacets);
+    });
+
+    it('when all breadcrumbs are deselected, #firstResult is set to 0', () => {
+      testResetPagination(deselectAllBreadcrumbs);
     });
 
     it('when numeric facet values are updated, #firstResult is set to 0', () => {
