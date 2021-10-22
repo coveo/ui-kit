@@ -7,7 +7,7 @@ describe('createExpressionBuilder', () => {
   });
 
   describe('#addStringField', () => {
-    it(`#contains operator, one keyword value,
+    it(`#contains operator, one value,
     #toString returns the expected syntax`, () => {
       const builder = createExpressionBuilder({
         delimiter: 'and',
@@ -20,7 +20,7 @@ describe('createExpressionBuilder', () => {
       expect(builder.toString()).toBe('@author="al"');
     });
 
-    it(`#isExactly operator, one exactMatch value,
+    it(`#isExactly operator, one value,
     #toString returns the expected syntax`, () => {
       const builder = createExpressionBuilder({
         delimiter: 'and',
