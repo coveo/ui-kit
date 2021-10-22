@@ -36,7 +36,7 @@
     "cypress:open": "./node_modules/cypress/bin/cypress open",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -s ./dist -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {

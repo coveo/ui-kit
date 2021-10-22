@@ -1,9 +1,15 @@
 import {h} from '@stencil/core';
+import FacetDoc from './atomic-facet.mdx';
 
-export const Default = () => {
-  return (
-    <div>
-      This is where we need to define the story (playground) for a facet
-    </div>
-  );
+export default {
+  title: 'Atomic/Facet',
+  parameters: {
+    docs: {
+      page: FacetDoc,
+    },
+  },
+};
+
+export const TheDefaultFacet = () => {
+  return <div>This is where we need to define the story for a facet</div>;
 };
