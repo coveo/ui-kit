@@ -30,6 +30,9 @@ function categoryFacetActions(selector: CategoryFacetSelector) {
     typeFacetSearchQuery(value: string) {
       selector.searchInput().type(value);
     },
+    selectSearchResult(value: string) {
+      selector.searchResults().contains(value).click({force: true});
+    },
   };
 }
 

@@ -27,6 +27,8 @@ export interface CategoryFacetSelector extends ComponentSelector {
   parentValueLabel: () => CypressSelector;
   allCategories: () => CypressSelector;
   valueHighlight: () => CypressSelector;
+  searchResultPath: () => CypressSelector;
+  searchResults: () => CypressSelector;
 }
 
 export type AllFacetSelectors = BaseFacetSelector &
@@ -60,6 +62,9 @@ export const CategoryFacetSelectors: CategoryFacetSelector = {
     CategoryFacetSelectors.get().find(
       '.slds-rich-text-editor__output > span b'
     ),
+  searchResultPath: () => CategoryFacetSelectors.get().find('.facet__path'),
+  searchResults: () =>
+    CategoryFacetSelectors.get().find('.slds-rich-text-editor__output'),
   facetCount: () =>
     CategoryFacetSelectors.get().find('.facet__number-of-results'),
   searchInput: () => CategoryFacetSelectors.get().find('input[type="search"]'),

@@ -20,6 +20,8 @@ interface CategoryFacetOptions {
   isCollapsed: boolean;
 }
 
+const hierarchicalField = 'geographicalhierarchy';
+
 describe('quantic-category-facet', () => {
   const pageUrl = 's/quantic-category-facet';
 
@@ -91,7 +93,7 @@ describe('quantic-category-facet', () => {
     it('should work as expected', () => {
       setupWithDefaultSettings();
 
-      Expect.isAccessible(true);
+      Expect.isRendered(true);
       Expect.displayLabel(true);
       Expect.displayFacetCount(true);
       Expect.displaySearchInput(false);
@@ -168,8 +170,10 @@ describe('quantic-category-facet', () => {
 
           Actions.clickAllCategories();
 
+          Expect.logCategoryFacetClearAll(hierarchicalField);
           Expect.numberOfParentValues(0);
           Expect.numberOfValues(defaultNumberOfValues - 1);
+          Expect.noUrlHash();
         });
       });
     });
@@ -179,25 +183,35 @@ describe('quantic-category-facet', () => {
     describe('when typing into facet search input box', () => {
       it('facet value should be filtered to match with the keywords', () => {
         const query = 'mal';
-        const hierarchicalField = 'geographicalhierarchy';
         setupWithSearchEnabled();
 
         Actions.typeFacetSearchQuery(query);
 
         Expect.logCategoryFacetSearch(hierarchicalField);
-        Expect.isAccessible(true);
+        Expect.isRendered(true);
+        Expect.displayNoMatchesFound(false);
         Expect.displayMoreMatchesFound(true);
         Expect.moreMatchesFoundContainsQuery(query);
         Expect.highlightsResults(query);
-        // it should display result parent patch on the second line
+        Expect.displaySearchResultsPath();
+        Expect.searchResults(defaultNumberOfValues);
       });
     });
 
     describe('when selecting a value from the search result', () => {
       it('should select that category facet level', () => {
-        // it should expand child list
-        // it should filter result
-        // it should log UA
+        const query = 'mont';
+        const selectedValue = 'Montreal';
+
+        setupWithSearchEnabled();
+
+        Actions.typeFacetSearchQuery(query);
+        Expect.logCategoryFacetSearch(hierarchicalField);
+
+        Actions.selectSearchResult(selectedValue);
+        Expect.logCategoryFacetSelected(canadaHierarchy);
+        Expect.numberOfParentValues(4);
+        Expect.urlHashContains(canadaHierarchy);
       });
     });
   });

@@ -1,5 +1,4 @@
 import {InterceptAliases} from '../../../page-objects/search';
-import {SearchExpectations} from '../../search-expectations';
 import {
   CategoryFacetSelectors,
   CategoryFacetSelector,
@@ -7,7 +6,7 @@ import {
 const hierarchicalField = 'geographicalhierarchy';
 const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
   return {
-    isAccessible: (accessible: boolean) => {
+    isRendered: (accessible: boolean) => {
       selector.get().should(accessible ? 'exist' : 'not.exist');
     },
     displayLabel: (display: boolean) => {
@@ -35,6 +34,9 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
     displaySearchInput: (display: boolean) => {
       selector.searchInput().should(display ? 'exist' : 'not.exist');
     },
+    displaySearchClearInput: (display: boolean) => {
+      selector.searchClearButton().should(display ? 'exist' : 'not.exist');
+    },
     numberOfValues: (value: number) => {
       selector.values().should('have.length', value);
     },
@@ -54,6 +56,9 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
       )}`;
       cy.url().should('include', urlHash);
     },
+    noUrlHash: () => {
+      cy.url().should('not.include', '#cf');
+    },
     displayNoMatchesFound: (display: boolean) => {
       selector.noMatches().should(display ? 'exist' : 'not.exist');
     },
@@ -68,6 +73,12 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
         const text = element.text().toLowerCase();
         expect(text).to.eq(query.toLowerCase());
       });
+    },
+    displaySearchResultsPath: () => {
+      selector.searchResultPath().should('exist');
+    },
+    searchResults: (value: number) => {
+      selector.searchResults().should('have.length', value);
     },
     logCategoryFacetSelected: (path: string[]) => {
       cy.wait(InterceptAliases.UA.Facet.Select).then((interception) => {
@@ -100,6 +111,13 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
       cy.wait(InterceptAliases.UA.Facet.Search).then((interception) => {
         const analyticsBody = interception.request.body;
         expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
+        expect(analyticsBody.customData).to.have.property('facetField', field);
+      });
+    },
+    logCategoryFacetClearAll: (field: string) => {
+      cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {
+        const analyticsBody = interception.request.body;
+        expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
         expect(analyticsBody.customData).to.have.property('facetField', field);
       });
     },
