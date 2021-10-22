@@ -65,6 +65,7 @@
     "@storybook/addon-actions": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
     "@storybook/addon-links": "^6.3.12",
+    "@storybook/api": "^6.3.12",
     "@storybook/html": "^6.3.12",
     "@types/dompurify": "2.2.3",
     "@types/escape-html": "1.0.1",
