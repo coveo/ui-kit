@@ -31,6 +31,7 @@ import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 5000;
@@ -117,6 +118,9 @@ export const paginationReducer = createReducer(
         handlePaginationReset(state);
       })
       .addCase(deselectAllFacets, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(deselectAllBreadcrumbs, (state) => {
         handlePaginationReset(state);
       })
       .addCase(updateDateFacetValues, (state) => {

@@ -63,7 +63,7 @@ export class AtomicResultBadge {
     return (
       <div
         part="result-badge-element"
-        class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full mr-3"
+        class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full mr-2"
       >
         {this.icon && this.renderIcon()}
         {(this.field || this.label) && this.renderText()}

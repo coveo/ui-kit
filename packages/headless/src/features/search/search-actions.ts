@@ -8,7 +8,10 @@ import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {updateQuery} from '../query/query-actions';
+import {
+  updateQuery,
+  UpdateQueryActionCreatorPayload,
+} from '../query/query-actions';
 import {
   AdvancedSearchQueriesSection,
   CategoryFacetSection,
@@ -41,7 +44,12 @@ import {extractHistory} from '../history/history-state';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {MappedSearchRequest, mapSearchResponse} from './search-mappings';
+import {BooleanValue, StringValue} from '@coveo/bueno';
+import {updatePage} from '../pagination/pagination-actions';
+import {validatePayload} from '../../utils/validate-payload';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -92,6 +100,22 @@ const fetchFromAPI = async (
   const queryExecuted = state.query?.q || '';
   return {response, duration, queryExecuted, requestExecuted: request};
 };
+
+export const prepareForSearchWithQuery = createAsyncThunk<
+  void,
+  UpdateQueryActionCreatorPayload,
+  AsyncThunkOptions<StateNeededByExecuteSearch>
+>('search/prepareForSearchWithQuery', (payload, thunk) => {
+  const {dispatch} = thunk;
+  validatePayload(payload, {
+    q: new StringValue(),
+    enableQuerySyntax: new BooleanValue(),
+  });
+
+  dispatch(deselectAllBreadcrumbs());
+  dispatch(updateQuery(payload));
+  dispatch(updatePage(1));
+});
 
 /**
  * Executes a search query.

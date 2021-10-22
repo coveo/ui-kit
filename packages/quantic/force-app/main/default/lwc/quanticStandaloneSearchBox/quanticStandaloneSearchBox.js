@@ -179,13 +179,17 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
       this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
-      return CLASS_WITH_SUBMIT;
+      return CLASS_WITHOUT_SUBMIT;
     }
     this.input?.setAttribute(
       'aria-labelledby',
       'fixed-text-label fixed-text-addon-post'
     );
-    return CLASS_WITHOUT_SUBMIT;
+    return CLASS_WITH_SUBMIT;
+  }
+
+  get searchBoxInputClass() {
+    return this.withoutSubmitButton ? 'slds-input searchbox__input' : 'slds-input searchbox__input searchbox__input-with-button';
   }
 
   showSuggestions() {

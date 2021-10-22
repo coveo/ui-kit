@@ -31,7 +31,7 @@ import {
   querySuggest,
   search,
 } from '../../app/reducers';
-import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -236,7 +236,7 @@ describe('headless searchBox', () => {
     it('it deselects all facets', () => {
       searchBox.submit();
 
-      expect(engine.actions).toContainEqual(deselectAllFacets());
+      expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
     });
 
     it('dispatches updateQuery with the correct parameters', () => {

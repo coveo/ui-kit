@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
   deselectAllStaticFilterValues,
@@ -47,6 +48,11 @@ export const staticFilterSetReducer = createReducer(
         }
 
         filter.values.forEach((v) => (v.state = 'idle'));
+      })
+      .addCase(deselectAllBreadcrumbs, (state) => {
+        Object.values(state).forEach((filter) => {
+          filter.values.forEach((v) => (v.state = 'idle'));
+        });
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const sf = action.payload.sf || {};

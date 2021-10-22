@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.0...@coveo/headless@1.29.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* **headless:** improve sort criterion error messages ([#1367](https://github.com/coveo/ui-kit/issues/1367)) ([b75badc](https://github.com/coveo/ui-kit/commit/b75badc14e123e6090b5d9ab894018085ee76ba9))
+
+
+
+
+
+# [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.2...@coveo/headless@1.29.0) (2021-10-19)
+
+
+### Features
+
+* **headless:** match recentquery select with searchbox behaviour ([#1358](https://github.com/coveo/ui-kit/issues/1358)) ([6769a05](https://github.com/coveo/ui-kit/commit/6769a05bb39080a1bdaa1808c2bc2a5c9cda75e1))
+
+
+
+
+
+## [1.28.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.1...@coveo/headless@1.28.2) (2021-10-18)
+
+
+### Bug Fixes
+
+* **headless:** handle custom Coveo domains in basic configuration ([#1340](https://github.com/coveo/ui-kit/issues/1340)) ([2b150db](https://github.com/coveo/ui-kit/commit/2b150db1f94750b9d5f618b860dd825398b60d9a))
+
+
+
+
+
 ## [1.28.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.0...@coveo/headless@1.28.1) (2021-10-12)
 
 

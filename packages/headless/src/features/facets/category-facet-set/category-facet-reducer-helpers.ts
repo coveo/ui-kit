@@ -1,7 +1,23 @@
+import {CategoryFacetSetState} from './category-facet-set-state';
 import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from './interfaces/request';
+
+export function handleCategoryFacetDeselectAll(
+  state: CategoryFacetSetState,
+  facetId: string
+) {
+  const slice = state[facetId];
+
+  if (!slice) {
+    return;
+  }
+
+  slice.request.numberOfValues = slice.initialNumberOfValues;
+  slice.request.currentValues = [];
+  slice.request.preventAutoSelect = true;
+}
 
 export function selectPath(
   request: CategoryFacetRequest,

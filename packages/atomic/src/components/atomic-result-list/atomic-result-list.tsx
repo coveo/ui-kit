@@ -9,6 +9,7 @@ import {
   buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
+  buildInteractiveResult,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -25,9 +26,12 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 import {containsSection} from '../../utils/result-section-utils';
+import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+ *
+ * @part result-list-grid-clickable - The clickable element on a result when displayed as a grid
  */
 @Component({
   tag: 'atomic-result-list',
@@ -169,7 +173,7 @@ export class AtomicResultList implements InitializableComponent {
     return this.resultListState.results.map((result) => {
       const template = this.getTemplate(result);
 
-      return (
+      const atomicResult = (
         <atomic-result
           key={this.getId(result)}
           result={result}
@@ -180,6 +184,21 @@ export class AtomicResultList implements InitializableComponent {
           useSections={template.usesSections}
           content={template.innerHTML}
         ></atomic-result>
+      );
+
+      return this.display === 'grid' ? (
+        <LinkWithResultAnalytics
+          part="result-list-grid-clickable"
+          interactiveResult={buildInteractiveResult(this.bindings.engine, {
+            options: {result},
+          })}
+          href={result.clickUri}
+          target="_self"
+        >
+          {atomicResult}
+        </LinkWithResultAnalytics>
+      ) : (
+        atomicResult
       );
     });
   }
@@ -200,6 +219,13 @@ export class AtomicResultList implements InitializableComponent {
         this.getTemplate(this.resultListState.results[0]).innerHTML
       ).querySelectorAll('atomic-table-element')
     );
+
+    if (fieldColumns.length === 0) {
+      this.bindings.engine.logger.error(
+        'atomic-table-element elements missing in the result template to display columns.',
+        this.host
+      );
+    }
 
     return (
       <table class={`list-root ${this.getClasses().join(' ')}`}>
