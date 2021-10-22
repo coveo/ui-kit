@@ -6,12 +6,12 @@ describe('createExpressionBuilder', () => {
     expect(builder.toString()).toBe('');
   });
 
-  describe('#addStringFieldExpression', () => {
+  describe('#addStringField', () => {
     it(`#contains operator, one keyword value,
     #toString returns the expected syntax`, () => {
       const builder = createExpressionBuilder({
         delimiter: 'and',
-      }).addStringFieldExpression({
+      }).addStringField({
         field: 'author',
         operator: 'contains',
         values: ['al'],
@@ -24,7 +24,7 @@ describe('createExpressionBuilder', () => {
     #toString returns the expected syntax`, () => {
       const builder = createExpressionBuilder({
         delimiter: 'and',
-      }).addStringFieldExpression({
+      }).addStringField({
         field: 'author',
         operator: 'isExactly',
         values: ['alice'],
@@ -38,7 +38,7 @@ describe('createExpressionBuilder', () => {
         delimiter: 'and',
       });
 
-      builder.addStringFieldExpression({
+      builder.addStringField({
         field: 'author',
         operator: 'contains',
         values: ['al', 'alice'],

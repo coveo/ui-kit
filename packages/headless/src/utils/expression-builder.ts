@@ -145,8 +145,8 @@ export function createExpressionBuilder(config: {delimiter: 'and' | 'or'}) {
   const parts: Part[] = [];
 
   return {
-    addStringFieldExpression(expression: StringFieldExpression) {
-      parts.push(buildStringFieldExpressionPart(expression));
+    addStringField(expression: StringFieldExpression) {
+      parts.push(buildStringFieldPart(expression));
       return this;
     },
 
@@ -160,7 +160,7 @@ interface Part {
   toString(): string;
 }
 
-function buildStringFieldExpressionPart(config: StringFieldExpression): Part {
+function buildStringFieldPart(config: StringFieldExpression): Part {
   return {
     toString() {
       const {field} = config;
