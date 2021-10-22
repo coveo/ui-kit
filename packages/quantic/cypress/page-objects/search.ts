@@ -16,6 +16,7 @@ export const InterceptAliases = {
       ClearAll: uaAlias('facetClearAll'),
       Search: uaAlias('facetSearch'),
       Select: uaAlias('facetSelect'),
+      Load: uaAlias('interfaceLoad'),
     },
     Pager: {
       Previous: uaAlias('pagerPrevious'),

@@ -4,6 +4,7 @@ import {CategoryFacetExpectations as Expect} from './category-facet-expectations
 import {
   canadaHierarchy,
   CategoryFacetActions as Actions,
+  togoHierarchy,
 } from './category-facet-actions';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
 
@@ -40,6 +41,17 @@ describe('quantic-category-facet', () => {
       cy.wait(InterceptAliases.Search);
     }
   }
+
+  function loadFromUrlHash(
+    options: Partial<CategoryFacetOptions> = {},
+    urlHash: string
+  ) {
+    interceptSearch();
+    cy.visit(`${pageUrl}#${urlHash}`);
+    configure(options);
+    cy.wait(InterceptAliases.Search);
+  }
+
   function setupWithDefaultSettings() {
     visitCategoryFacetPage(
       {
@@ -57,6 +69,18 @@ describe('quantic-category-facet', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
         withSearch: true,
+      },
+      true
+    );
+  }
+
+  function setupWithCustomBasePath() {
+    visitCategoryFacetPage(
+      {
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        basePath: togoHierarchy.slice(0, 2).join(','),
       },
       true
     );
@@ -177,6 +201,23 @@ describe('quantic-category-facet', () => {
         });
       });
     });
+    describe('when loading a path in the URL', () => {
+      it('should bold the parent and show the children values', () => {
+        const path = 'Africa,Togo';
+        loadFromUrlHash(
+          {
+            field: defaultField,
+            label: defaultLabel,
+            numberOfValues: defaultNumberOfValues,
+          },
+          `cf[geographicalhierarchy]=${path}`
+        );
+
+        Expect.logCategoryFacetLoad();
+        Expect.numberOfParentValues(2);
+        Expect.parentValueLabel('Togo');
+      });
+    });
   });
 
   describe('with option search is enabled in category facet', () => {
@@ -219,7 +260,13 @@ describe('quantic-category-facet', () => {
   describe('setup with custom basePath', () => {
     describe('when loading', () => {
       it('should load the category facet component with data level start from custom basePath', () => {
-        // I can click on the 1st level data set level
+        setupWithCustomBasePath();
+
+        Expect.firstChildContains(togoHierarchy[2]);
+        Expect.numberOfParentValues(0);
+
+        Actions.selectChildValue(togoHierarchy[2]);
+        Expect.logCategoryFacetSelected(togoHierarchy.slice(2, 3));
       });
     });
 

@@ -9,6 +9,7 @@ export const canadaHierarchy = [
   'Quebec',
   'Montreal',
 ];
+export const togoHierarchy = ['Africa', 'Togo', 'Lome'];
 
 function categoryFacetActions(selector: CategoryFacetSelector) {
   return {

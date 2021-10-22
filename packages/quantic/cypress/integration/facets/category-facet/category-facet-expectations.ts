@@ -21,6 +21,9 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
     numberOfChildValues: (value: number) => {
       selector.childValueOption().should('have.length', value);
     },
+    firstChildContains: (value: string) => {
+      selector.childValueOption().first().contains(value);
+    },
     numberOfParentValues: (value: number) => {
       selector
         .activeParentValueOption()
@@ -119,6 +122,12 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
         const analyticsBody = interception.request.body;
         expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
         expect(analyticsBody.customData).to.have.property('facetField', field);
+      });
+    },
+    logCategoryFacetLoad: () => {
+      cy.wait(InterceptAliases.UA.Facet.Load).then((interception) => {
+        const analyticsBody = interception.request.body;
+        expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
       });
     },
   };
