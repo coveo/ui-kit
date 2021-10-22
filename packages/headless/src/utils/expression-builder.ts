@@ -5,15 +5,30 @@ type QueryExpression =
   | Near
   | Not
   | FieldExists
+  | MatchAll
   | ObjectAccess
   | QueryExtensionInvocation
   | QuerySyntax
   | And
   | Or;
 
-type FieldValue = DateRange | Date | KeyWord | ExactMatch;
-
 type TextValue = KeyWord | ExactMatch;
+
+// Keyword
+
+interface KeyWord {
+  type: 'keyword';
+  value: string;
+}
+
+// Exact Match
+
+interface ExactMatch {
+  type: 'exactMatch';
+  value: string;
+}
+
+// field expression
 
 interface DateRange {
   type: 'dateRange';
@@ -28,25 +43,7 @@ interface Date {
   dateValue: string;
 }
 
-interface KeyWord {
-  type: 'keyword';
-  value: string;
-}
-
-interface ExactMatch {
-  type: 'exactMatch';
-  value: string;
-}
-
-interface And {
-  type: 'and';
-  expressions: QueryExpression[];
-}
-
-interface Or {
-  type: 'or';
-  expressions: QueryExpression[];
-}
+type FieldValue = DateRange | Date | KeyWord | ExactMatch;
 
 interface FieldExpression {
   type: 'fieldExpression';
@@ -63,8 +60,16 @@ interface FieldExpression {
     | 'regexMatch'
     | 'wildcardMatch'
     | 'differentThan';
-  value: FieldValue; // shouldn't this be an array?
+  value: FieldValue;
 }
+
+interface StringFieldExpression {
+  fieldName: string;
+  operator: 'contains' | 'isExactly';
+  values: TextValue[];
+}
+
+// Near expression
 
 interface Near {
   type: 'near';
@@ -77,10 +82,14 @@ interface OtherTerm {
   endTerm: TextValue;
 }
 
+// Not
+
 interface Not {
   type: 'not';
   expression: QueryExpression;
 }
+
+// Field Exists
 
 interface FieldExists {
   type: 'fieldExists';
@@ -90,12 +99,17 @@ interface FieldExists {
 // Not sure how to use this one.
 interface MatchAll {
   type: 'matchAll';
+  value: string;
 }
+
+// Object Access
 
 interface ObjectAccess {
   type: 'objectAccess';
   properties: string[];
 }
+
+// Query Extension
 
 interface QueryExtensionInvocation {
   type: 'queryExtensionInvocation';
@@ -108,83 +122,60 @@ interface Argument {
   value: QueryExpression;
 }
 
+// Query Syntax
+
 interface QuerySyntax {
   type: 'querySyntax';
   value: string;
 }
 
-function createExpressionBuilderV4(expression?: QueryExpression) {
-  const expressions: QueryExpression[] = expression ? [expression] : [];
+// Junctions
+
+interface And {
+  type: 'and';
+  expressions: QueryExpression[];
+}
+
+interface Or {
+  type: 'or';
+  expressions: QueryExpression[];
+}
+
+export function createExpressionBuilder(config: {delimiter: 'and' | 'or'}) {
+  const parts: Part[] = [];
 
   return {
-    addExpression(expression: QueryExpression) {
-      expressions.push(expression);
+    addStringFieldExpression(expression: StringFieldExpression) {
+      parts.push(buildStringFieldExpressionPart(expression));
       return this;
     },
 
-    build(delimiter: 'and' | 'or'): QueryExpression {
-      return {
-        type: delimiter,
-        expressions,
-      };
+    toString() {
+      return parts.join(config.delimiter);
     },
   };
 }
 
-const builderV4 = createExpressionBuilderV4();
+interface Part {
+  toString(): string;
+}
 
-builderV4
-  .addExpression({
-    type: 'fieldExpression',
-    fieldName: 'filetype',
-    operator: 'isExactly',
-    value: {
-      type: 'keyword',
-      value: 'pdf',
+function buildStringFieldExpressionPart(config: StringFieldExpression): Part {
+  return {
+    toString() {
+      const {fieldName} = config;
+      const operator = config.operator === 'contains' ? '=' : '==';
+      const values = config.values
+        .map((v) => {
+          const {value, type} = v;
+          return type === 'keyword' ? value : `"${value}"`;
+        })
+        .join(';');
+
+      return `@${fieldName}${operator}${values}`;
     },
-  })
-  .addExpression({
-    type: 'not',
-    expression: {
-      type: 'fieldExpression',
-      fieldName: 'author',
-      operator: 'isExactly',
-      value: {
-        type: 'keyword',
-        value: 'alice',
-      },
-    },
-  });
-
-const expressionV4 = builderV4.build('and');
-console.log(JSON.stringify(expressionV4, null, 2));
-
-// {
-//   "type": "and",
-//   "expressions": [
-//     {
-//       "type": "fieldExpression",
-//       "fieldName": "filetype",
-//       "operator": "isExactly",
-//       "value": {
-//         "type": "keyword",
-//         "value": "pdf"
-//       }
-//     },
-//     {
-//       "type": "not",
-//       "expression": {
-//         "type": "fieldExpression",
-//         "fieldName": "author",
-//         "operator": "isExactly",
-//         "value": {
-//           "type": "keyword",
-//           "value": "alice"
-//         }
-//       }
-//     }
-//   ]
-// }
+  };
+}
 
 // function createExpressionBuilder(expression = '') {
 //   const parts = expression ? [expression] : [];
