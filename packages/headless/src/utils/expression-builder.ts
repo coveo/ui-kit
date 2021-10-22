@@ -105,10 +105,10 @@ interface FieldExists {
   fieldName: string;
 }
 
-// Not sure how to use this one.
+// Matches all documents by adding @uri
+
 interface MatchAll {
   type: 'matchAll';
-  value: string;
 }
 
 // Object Access
