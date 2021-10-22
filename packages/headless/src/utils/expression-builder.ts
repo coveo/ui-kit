@@ -66,7 +66,7 @@ interface FieldExpression {
 interface StringFieldExpression {
   fieldName: string;
   operator: 'contains' | 'isExactly';
-  values: TextValue[];
+  values: string[];
 }
 
 // Near expression
@@ -165,10 +165,7 @@ function buildStringFieldExpressionPart(config: StringFieldExpression): Part {
     toString() {
       const {fieldName} = config;
       const operator = config.operator === 'contains' ? '=' : '==';
-      const processed = config.values.map((v) => {
-        const {value, type} = v;
-        return type === 'keyword' ? value : `"${value}"`;
-      });
+      const processed = config.values.map((value) => `"${value}"`);
 
       const values =
         processed.length === 1 ? processed[0] : `(${processed.join(',')})`;

@@ -13,10 +13,10 @@ describe('createExpressionBuilder', () => {
     }).addStringFieldExpression({
       fieldName: 'author',
       operator: 'contains',
-      values: [{type: 'keyword', value: 'al'}],
+      values: ['al'],
     });
 
-    expect(builder.toString()).toBe('@author=al');
+    expect(builder.toString()).toBe('@author="al"');
   });
 
   it(`#isExactly operator, one exactMatch value,
@@ -26,7 +26,7 @@ describe('createExpressionBuilder', () => {
     }).addStringFieldExpression({
       fieldName: 'author',
       operator: 'isExactly',
-      values: [{type: 'exactMatch', value: 'alice'}],
+      values: ['alice'],
     });
 
     expect(builder.toString()).toBe('@author=="alice"');
@@ -40,12 +40,9 @@ describe('createExpressionBuilder', () => {
     builder.addStringFieldExpression({
       fieldName: 'author',
       operator: 'contains',
-      values: [
-        {type: 'keyword', value: 'al'},
-        {type: 'exactMatch', value: 'alice'},
-      ],
+      values: ['al', 'alice'],
     });
 
-    expect(builder.toString()).toBe('@author=(al,"alice")');
+    expect(builder.toString()).toBe('@author=("al","alice")');
   });
 });
