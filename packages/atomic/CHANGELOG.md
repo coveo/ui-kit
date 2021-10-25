@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.7.0...@coveo/atomic@1.7.1) (2021-10-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.13...@coveo/atomic@1.7.0) (2021-10-25)
+
+
+### Bug Fixes
+
+* **atomic:** silently remove atomic-result-image when field not available ([#1376](https://github.com/coveo/ui-kit/issues/1376)) ([112c8d5](https://github.com/coveo/ui-kit/commit/112c8d540474d6aee8061bfff58d311d981e30e2))
+* **headless:** limit relative dates minimum ([#1366](https://github.com/coveo/ui-kit/issues/1366)) ([df47a10](https://github.com/coveo/ui-kit/commit/df47a102b0d959af4f50a3473d4b1b260c2d73d7))
+
+
+### Features
+
+* **atomic:** improve MapProp to support multiple word properties ([#1375](https://github.com/coveo/ui-kit/issues/1375)) ([9d80699](https://github.com/coveo/ui-kit/commit/9d80699e97a2453007a11bc0ed93aa8323713904))
+
+
+
+
+
 ## [1.6.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.12...@coveo/atomic@1.6.13) (2021-10-20)
 
 **Note:** Version bump only for package @coveo/atomic
