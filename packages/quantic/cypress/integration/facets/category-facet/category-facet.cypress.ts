@@ -2,7 +2,7 @@ import {configure} from '../../../page-objects/configurator';
 
 import {CategoryFacetExpectations as Expect} from './category-facet-expectations';
 import {
-  canadaHierarchy,
+  montrealHierarchy,
   CategoryFacetActions as Actions,
   togoHierarchy,
 } from './category-facet-actions';
@@ -29,6 +29,17 @@ describe('quantic-category-facet', () => {
   const defaultField = 'geographicalhierarchy';
   const defaultLabel = 'Country';
   const defaultNumberOfValues = 8;
+  const defaultSettings = {
+    field: defaultField,
+    label: defaultLabel,
+    numberOfValues: defaultNumberOfValues,
+  };
+  const searchEnabledSettings = {
+    field: defaultField,
+    label: defaultLabel,
+    numberOfValues: defaultNumberOfValues,
+    withSearch: true,
+  };
 
   function visitCategoryFacetPage(
     options: Partial<CategoryFacetOptions> = {},
@@ -52,28 +63,6 @@ describe('quantic-category-facet', () => {
     cy.wait(InterceptAliases.Search);
   }
 
-  function setupWithDefaultSettings() {
-    visitCategoryFacetPage(
-      {
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-      },
-      false
-    );
-  }
-  function setupWithSearchEnabled() {
-    visitCategoryFacetPage(
-      {
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-        withSearch: true,
-      },
-      true
-    );
-  }
-
   function setupWithCustomBasePath(hierarchy: string[], search?: boolean) {
     visitCategoryFacetPage(
       {
@@ -88,8 +77,8 @@ describe('quantic-category-facet', () => {
   }
 
   function setupGoDeeperOneLevel() {
-    setupWithDefaultSettings();
-    Actions.selectChildValue(canadaHierarchy[0]);
+    visitCategoryFacetPage(defaultSettings);
+    Actions.selectChildValue(montrealHierarchy[0]);
   }
 
   function setupShowMore() {
@@ -104,19 +93,19 @@ describe('quantic-category-facet', () => {
   }
 
   function setupGoDeeperFourLevels() {
-    setupWithDefaultSettings();
-    Actions.selectChildValue(canadaHierarchy[0]);
+    visitCategoryFacetPage(defaultSettings);
+    Actions.selectChildValue(montrealHierarchy[0]);
     cy.wait(InterceptAliases.UA.Facet.Select);
-    Actions.selectChildValue(canadaHierarchy[1]);
+    Actions.selectChildValue(montrealHierarchy[1]);
     cy.wait(InterceptAliases.UA.Facet.Select);
-    Actions.selectChildValue(canadaHierarchy[2]);
+    Actions.selectChildValue(montrealHierarchy[2]);
     cy.wait(InterceptAliases.UA.Facet.Select);
-    Actions.selectChildValue(canadaHierarchy[3]);
+    Actions.selectChildValue(montrealHierarchy[3]);
   }
 
   describe('with default category facet', () => {
     it('should work as expected', () => {
-      setupWithDefaultSettings();
+      visitCategoryFacetPage(defaultSettings);
 
       Expect.isRendered(true);
       Expect.displayLabel(true);
@@ -127,10 +116,10 @@ describe('quantic-category-facet', () => {
 
     describe('when selecting on the level data set', () => {
       it('should bold the selected parent level', () => {
-        setupWithDefaultSettings();
+        visitCategoryFacetPage(defaultSettings);
         // Verify all levels
-        canadaHierarchy.forEach((value, index) => {
-          const selectedPath = canadaHierarchy.slice(0, index + 1);
+        montrealHierarchy.forEach((value, index) => {
+          const selectedPath = montrealHierarchy.slice(0, index + 1);
 
           Actions.selectChildValue(value);
 
@@ -144,7 +133,7 @@ describe('quantic-category-facet', () => {
 
     describe('when selecting ShowMore button', () => {
       it('should double the existing list of child level', () => {
-        const selectedPath = canadaHierarchy.slice(0, 1);
+        const selectedPath = montrealHierarchy.slice(0, 1);
         setupShowMore();
 
         Expect.numberOfParentValues(1);
@@ -159,7 +148,7 @@ describe('quantic-category-facet', () => {
 
     describe('when selecting ShowLess button', () => {
       it('should collapsed the child list to default', () => {
-        const selectedPath = canadaHierarchy.slice(0, 1);
+        const selectedPath = montrealHierarchy.slice(0, 1);
         setupShowLess();
 
         Expect.numberOfParentValues(1);
@@ -175,17 +164,17 @@ describe('quantic-category-facet', () => {
     describe('when selecting value on 4nd level of data', () => {
       describe('when selecting the third level', () => {
         it('should redirect user up 1 level of data set', () => {
-          const selectedPath = canadaHierarchy.slice(0, 3);
+          const selectedPath = montrealHierarchy.slice(0, 3);
           setupGoDeeperFourLevels();
 
-          Expect.logCategoryFacetSelected(canadaHierarchy);
+          Expect.logCategoryFacetSelected(montrealHierarchy);
           Expect.numberOfParentValues(4);
 
-          Actions.selectParentValue(canadaHierarchy[2]);
+          Actions.selectParentValue(montrealHierarchy[2]);
 
           Expect.logCategoryFacetSelected(selectedPath);
           Expect.numberOfParentValues(3);
-          Expect.parentValueLabel(canadaHierarchy[2]);
+          Expect.parentValueLabel(montrealHierarchy[2]);
           Expect.urlHashContains(selectedPath);
         });
       });
@@ -225,7 +214,7 @@ describe('quantic-category-facet', () => {
     describe('when typing into facet search input box', () => {
       it('facet value should be filtered to match with the keywords', () => {
         const query = 'mal';
-        setupWithSearchEnabled();
+        visitCategoryFacetPage(searchEnabledSettings);
 
         Actions.typeFacetSearchQuery(query);
 
@@ -245,15 +234,15 @@ describe('quantic-category-facet', () => {
         const query = 'mont';
         const selectedValue = 'Montreal';
 
-        setupWithSearchEnabled();
+        visitCategoryFacetPage(searchEnabledSettings);
 
         Actions.typeFacetSearchQuery(query);
         Expect.logCategoryFacetSearch(hierarchicalField);
 
         Actions.selectSearchResult(selectedValue);
-        Expect.logCategoryFacetSelected(canadaHierarchy);
+        Expect.logCategoryFacetSelected(montrealHierarchy);
         Expect.numberOfParentValues(4);
-        Expect.urlHashContains(canadaHierarchy);
+        Expect.urlHashContains(montrealHierarchy);
       });
     });
   });

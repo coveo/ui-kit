@@ -46,6 +46,12 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     parentValueLabel: (value: string) => {
       selector.parentValueLabel().first().should('contain', value);
     },
+    displayShowMoreButton: (display: boolean) => {
+      selector.showMoreButton().should(display ? 'exist' : 'not.exist');
+    },
+    displayShowLessButton: (display: boolean) => {
+      selector.showLessButton().should(display ? 'exist' : 'not.exist');
+    },
     urlHashContains: (path: string[]) => {
       const categoryFacetListInUrl = path.join(',');
       const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
@@ -119,7 +125,7 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
       });
     },
     logCategoryFacetLoad: () => {
-      cy.wait(InterceptAliases.UA.Facet.Load).then((interception) => {
+      cy.wait(InterceptAliases.UA.Load).then((interception) => {
         const analyticsBody = interception.request.body;
         expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
       });

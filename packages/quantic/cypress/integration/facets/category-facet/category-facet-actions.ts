@@ -3,7 +3,7 @@ import {
   CategoryFacetSelectors,
 } from './category-facet-selectors';
 
-export const canadaHierarchy = [
+export const montrealHierarchy = [
   'North America',
   'Canada',
   'Quebec',
