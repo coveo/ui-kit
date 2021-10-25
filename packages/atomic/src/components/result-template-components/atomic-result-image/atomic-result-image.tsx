@@ -35,6 +35,10 @@ export class AtomicResultImage implements InitializableComponent {
       this.field
     );
 
+    if (!url) {
+      this.host.remove();
+    }
+
     if (typeof url !== 'string') {
       this.bindings.engine.logger.error(
         `Expected "${this.field}" to be a text field.`,
