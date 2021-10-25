@@ -18,3 +18,7 @@ export const decorators = [
     return '<div />';
   },
 ];
+
+export const parameters = {
+  controls: {expanded: true},
+};
