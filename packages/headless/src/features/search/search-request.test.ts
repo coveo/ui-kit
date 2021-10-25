@@ -1,13 +1,15 @@
-import {createMockState} from '../../../test/mock-state';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
-import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockFacetOptions} from '../../../test/mock-facet-options';
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildSearchRequest} from '../../../features/search/search-actions';
-import {buildMockTabSlice} from '../../../test/mock-tab-state';
+import {createMockState} from '../../test/mock-state';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockFacetOptions} from '../../test/mock-facet-options';
+import {SearchAppState} from '../../state/search-app-state';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+import {buildSearchRequest} from './search-request';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -200,5 +202,48 @@ describe('search request', () => {
     state.tabSet.b = buildMockTabSlice({expression: ' b ', isActive: true});
 
     expect(buildSearchRequest(state).request.cq).toBe('a AND b');
+  });
+
+  it('static filter with an active value, it sets cq to the active filter value expression', () => {
+    const value = buildMockStaticFilterValue({
+      expression: 'a',
+      state: 'selected',
+    });
+    state.staticFilterSet.a = buildMockStaticFilterSlice({values: [value]});
+    expect(buildSearchRequest(state).request.cq).toBe('a');
+  });
+
+  it(`static filter with two active values,
+  it concatenates the expressions with OR and wraps them with parentheses`, () => {
+    const valueA = buildMockStaticFilterValue({
+      expression: 'a',
+      state: 'selected',
+    });
+    const valueB = buildMockStaticFilterValue({
+      expression: 'b',
+      state: 'selected',
+    });
+
+    state.staticFilterSet.a = buildMockStaticFilterSlice({
+      values: [valueA, valueB],
+    });
+    expect(buildSearchRequest(state).request.cq).toBe('(a OR b)');
+  });
+
+  it(`static filter with two active values, one value has an empty space as an expression,
+  it filters off the empty expression`, () => {
+    const valueA = buildMockStaticFilterValue({
+      expression: 'a',
+      state: 'selected',
+    });
+    const valueB = buildMockStaticFilterValue({
+      expression: ' ',
+      state: 'selected',
+    });
+
+    state.staticFilterSet.a = buildMockStaticFilterSlice({
+      values: [valueA, valueB],
+    });
+    expect(buildSearchRequest(state).request.cq).toBe('a');
   });
 });

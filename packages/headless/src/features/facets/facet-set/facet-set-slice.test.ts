@@ -27,6 +27,7 @@ import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -247,14 +248,23 @@ describe('facet-set slice', () => {
   });
 
   it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
     state['1'] = buildMockFacetRequest();
     state['2'] = buildMockFacetRequest();
-    state['3'] = buildMockFacetRequest();
     facetSetReducer(state, deselectAllFacets());
 
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
+  });
+
+  it('dispatching #deselectAllBreadcrumbs calls #handleFacetDeselectAll for every facet', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+    state['1'] = buildMockFacetRequest();
+    state['2'] = buildMockFacetRequest();
+    facetSetReducer(state, deselectAllBreadcrumbs());
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
   });
 
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

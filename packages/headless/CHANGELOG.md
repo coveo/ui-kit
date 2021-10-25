@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.30.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.1...@coveo/headless@1.30.0) (2021-10-25)
+
+
+### Bug Fixes
+
+* **headless:** limit relative dates minimum ([#1366](https://github.com/coveo/ui-kit/issues/1366)) ([df47a10](https://github.com/coveo/ui-kit/commit/df47a102b0d959af4f50a3473d4b1b260c2d73d7))
+
+
+### Features
+
+* **atomic:** improve MapProp to support multiple word properties ([#1375](https://github.com/coveo/ui-kit/issues/1375)) ([9d80699](https://github.com/coveo/ui-kit/commit/9d80699e97a2453007a11bc0ed93aa8323713904))
+* **headless:** add StaticFilter ([#1322](https://github.com/coveo/ui-kit/issues/1322)) ([c28ddc5](https://github.com/coveo/ui-kit/commit/c28ddc50c9096d4fc3db91166e746353f8b2cba0))
+
+
+
+
+
 ## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.0...@coveo/headless@1.29.1) (2021-10-20)
 
 
