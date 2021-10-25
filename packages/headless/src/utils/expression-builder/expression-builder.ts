@@ -3,6 +3,10 @@ import {
   NumericFieldExpression,
 } from './numeric-field/numeric-field';
 import {
+  buildNumericRangeField,
+  NumericRangeFieldExpression,
+} from './numeric-range-field/numeric-range-field';
+import {
   buildStringField,
   StringFieldExpression,
 } from './string-field/string-field';
@@ -145,6 +149,9 @@ interface Not {
 export interface ExpressionBuilder {
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
   addNumericField(expression: NumericFieldExpression): ExpressionBuilder;
+  addNumericRangeField(
+    expression: NumericRangeFieldExpression
+  ): ExpressionBuilder;
   toString(): string;
 }
 
@@ -161,6 +168,11 @@ export function createExpressionBuilder(config: {
 
     addNumericField(expression: NumericFieldExpression) {
       parts.push(buildNumericField(expression));
+      return this;
+    },
+
+    addNumericRangeField(expression: NumericRangeFieldExpression) {
+      parts.push(buildNumericRangeField(expression));
       return this;
     },
 

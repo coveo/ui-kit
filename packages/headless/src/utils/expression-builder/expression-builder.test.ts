@@ -35,4 +35,16 @@ describe('createExpressionBuilder', () => {
       expect(builder.toString()).toBe('@size>10');
     });
   });
+
+  describe('#addNumericRangeField', () => {
+    it('with one expression, #toString returns the expected syntax', () => {
+      builder.addNumericRangeField({
+        field: 'size',
+        from: 10,
+        to: 20,
+      });
+
+      expect(builder.toString()).toBe('@size==10..20');
+    });
+  });
 });
