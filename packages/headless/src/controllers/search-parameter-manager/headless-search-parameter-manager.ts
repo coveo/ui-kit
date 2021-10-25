@@ -19,6 +19,7 @@ import {initialSearchParameterSelector} from '../../features/search-parameters/s
 import {executeSearch} from '../../features/search/search-actions';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 import {deepEqualAnyOrder} from '../../utils/compare-utils';
+import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
 
 export {SearchParameters};
 
@@ -140,6 +141,7 @@ function getActiveSearchParameters(engine: SearchEngine): SearchParameters {
     ...getNumericFacets(state),
     ...getDateFacets(state),
     ...getDebug(state),
+    ...getStaticFilters(state),
   };
 }
 
@@ -221,6 +223,25 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   const sortCriteria = state.sortCriteria;
   const shouldInclude = sortCriteria !== getSortCriteriaInitialState();
   return shouldInclude ? {sortCriteria} : {};
+}
+
+function getStaticFilters(state: Partial<SearchParametersState>) {
+  if (state.staticFilterSet === undefined) {
+    return {};
+  }
+
+  const sf = Object.entries(state.staticFilterSet)
+    .map(([id, filter]) => {
+      const selectedCaptions = getSelectedStaticFilterCaptions(filter.values);
+      return selectedCaptions.length ? {[id]: selectedCaptions} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(sf).length ? {sf} : {};
+}
+
+function getSelectedStaticFilterCaptions(values: StaticFilterValue[]) {
+  return values.filter((v) => v.state === 'selected').map((v) => v.caption);
 }
 
 function getFacets(state: Partial<SearchParametersState>) {

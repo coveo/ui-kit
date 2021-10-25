@@ -201,7 +201,7 @@ export default class QuanticFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = !this.searchStatus?.state?.firstSearchExecuted;
+    this.showPlaceholder = !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {

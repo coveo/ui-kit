@@ -7,10 +7,11 @@ export interface ResultLinkProps {
   href: string;
   target: string;
   part: string;
+  title?: string;
 }
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
-  {href, interactiveResult, target, part},
+  {href, interactiveResult, target, part, title},
   children
 ) => {
   const stopPropagationAndProcess = (e: Event, process: () => void) => {
@@ -21,6 +22,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     <a
       part={part}
       href={filterProtocol(href)}
+      title={title}
       onClick={(e) => stopPropagationAndProcess(e, interactiveResult.select)}
       onContextMenu={(e) =>
         stopPropagationAndProcess(e, interactiveResult.select)

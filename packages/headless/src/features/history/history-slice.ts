@@ -15,6 +15,10 @@ import {
 import {arrayEqual} from '../../utils/compare-utils';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
 import {TabSetState} from '../tab-set/tab-set-state';
+import {
+  StaticFilterSetState,
+  StaticFilterSlice,
+} from '../static-filter-set/static-filter-set-state';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -37,6 +41,7 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
       next.advancedSearchQueries
     ) &&
     isTabSetEqual(current.tabSet, next.tabSet) &&
+    isStaticFilterSetEqual(current.staticFilterSet, next.staticFilterSet) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
@@ -69,6 +74,30 @@ const isTabSetEqual = (current: TabSetState, next: TabSetState) => {
 
 const findActiveTab = (tabSet: TabSetState) => {
   return Object.values(tabSet).find((tab) => tab.isActive);
+};
+
+const isStaticFilterSetEqual = (
+  current: StaticFilterSetState,
+  next: StaticFilterSetState
+) => {
+  for (const [id, filter] of Object.entries(next)) {
+    if (!current[id]) {
+      return false;
+    }
+
+    const currentValues = getActiveStaticFilterValues(current[id]);
+    const nextValues = getActiveStaticFilterValues(filter);
+
+    if (JSON.stringify(currentValues) !== JSON.stringify(nextValues)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const getActiveStaticFilterValues = (filter: StaticFilterSlice) => {
+  return filter.values.filter((value) => value.state !== 'idle');
 };
 
 type FacetStateWithCurrentValues = Record<

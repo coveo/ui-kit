@@ -37,7 +37,7 @@ export default class QuanticResultLabel extends LightningElement {
   /**
    * Size of the icon and label to display.
    * @api
-   * @type {string}
+   * @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'}
    * @defaultValue `'small'`
    */
   @api size  ='small';
@@ -72,6 +72,9 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.icon) {
       return this.icon;
     }
+    if (this.isKnowledgeArticle) {
+      return 'standard:knowledge';
+    }
     if (this.objectTypeIcon) {
       return this.objectTypeIcon;
     }
@@ -85,6 +88,9 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.label) {
       return this.label;
     }
+    if (this.isKnowledgeArticle) {
+      return KNOWLEDGE;
+    }
     if (this.objectTypeLabel) {
       return this.objectTypeLabel;
     }
@@ -95,6 +101,10 @@ export default class QuanticResultLabel extends LightningElement {
       return this.sourceTypeLabel;
     }
     return this.labels.documentation;
+  }
+
+  get isKnowledgeArticle() {
+    return !!this.result.raw.sfknowledgearticleid;
   }
 
   get objectTypeIcon() {
@@ -138,6 +148,7 @@ export default class QuanticResultLabel extends LightningElement {
       'youtubevideo': 'custom:custom99',
       'youtubeplaylist': 'custom:custom99',
       'kb_knowledge': 'standard:knowledge',
+      'problem': 'standard:problem',
       'doc': 'doctype:word',
       'xls': 'doctype:excel',
     }
@@ -161,7 +172,7 @@ export default class QuanticResultLabel extends LightningElement {
       case 'knowledge':
         return this.labels.knowledge;
       default:
-        return undefined;
+        return objType;
     }
   }
 

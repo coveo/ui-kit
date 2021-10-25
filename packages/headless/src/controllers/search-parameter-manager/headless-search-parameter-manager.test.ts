@@ -12,6 +12,8 @@ import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {
   buildSearchParameterManager,
@@ -158,6 +160,28 @@ describe('search parameter manager', () => {
 
     it('when the parameter is equal to the default value, it is not included', () => {
       expect('numberOfResults' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.sf', () => {
+    it('when a static filter has a selected value, only selected values are included', () => {
+      const id = 'a';
+      const selected = buildMockStaticFilterValue({
+        caption: 'a',
+        state: 'selected',
+      });
+      const idle = buildMockStaticFilterValue({caption: 'b', state: 'idle'});
+      const filter = buildMockStaticFilterSlice({id, values: [selected, idle]});
+
+      engine.state.staticFilterSet = {[id]: filter};
+      expect(manager.state.parameters.sf).toEqual({[id]: [selected.caption]});
+    });
+
+    it('when no static filters have selected values, the #sf parameter is not included', () => {
+      const filter = buildMockStaticFilterSlice();
+
+      engine.state.staticFilterSet = {a: filter};
+      expect('sf' in manager.state.parameters).toBe(false);
     });
   });
 
@@ -337,6 +361,13 @@ describe('search parameter manager', () => {
     const dateRanges = [buildMockDateFacetValue({state: 'selected'})];
     engine.state.dateFacetSet = {
       created: buildMockDateFacetRequest({currentValues: dateRanges}),
+    };
+
+    const staticFilterValues = [
+      buildMockStaticFilterValue({state: 'selected'}),
+    ];
+    engine.state.staticFilterSet = {
+      a: buildMockStaticFilterSlice({id: 'a', values: staticFilterValues}),
     };
 
     const tab = buildMockTabSlice({id: 'a', isActive: true});

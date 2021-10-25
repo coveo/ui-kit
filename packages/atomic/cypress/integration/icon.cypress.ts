@@ -1,5 +1,5 @@
-import {generateComponentHTML} from '../fixtures/test-fixture';
-import {setUpPage} from '../utils/setupComponent';
+import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import * as CommonAssertions from './common-assertions';
 import {IconSelectors} from './icon-selectors';
 
 function getSvg(fileName: string) {
@@ -13,7 +13,9 @@ function shouldRenderIcon(icon: string) {
 
 describe('Icon Test Suites', () => {
   function setupIcon(icon: string) {
-    setUpPage(generateComponentHTML('atomic-icon', {icon}).outerHTML);
+    new TestFixture()
+      .withElement(generateComponentHTML('atomic-icon', {icon}))
+      .init();
   }
 
   it('should render an icon from the asset directory', () => {
@@ -53,5 +55,14 @@ describe('Icon Test Suites', () => {
     });
     setupIcon(url);
     cy.get(IconSelectors.icon).should('not.have.attr', 'xss');
+  });
+
+  describe('when the icon is invalid', () => {
+    beforeEach(() => {
+      setupIcon('http://localhost:1');
+    });
+
+    CommonAssertions.assertRemovesComponent(() => cy.get(IconSelectors.icon));
+    CommonAssertions.assertConsoleError();
   });
 });

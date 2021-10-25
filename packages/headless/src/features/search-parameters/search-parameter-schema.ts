@@ -22,5 +22,6 @@ export const searchParametersDefinition: SchemaDefinition<
   nf: new RecordValue(),
   df: new RecordValue(),
   debug: new BooleanValue(),
+  sf: new RecordValue(),
   tab: new StringValue(),
 };

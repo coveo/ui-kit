@@ -139,6 +139,13 @@ describe('result template helpers', () => {
       const result = buildResult('rowid', 12);
       expect(match(result)).toBe(true);
     });
+
+    it('should work with fields containing boolean value', () => {
+      const match = fieldMustMatch('isRecommendation', ['true']);
+      const result = buildMockResult();
+      result.isRecommendation = true;
+      expect(match(result)).toBe(true);
+    });
   });
 
   describe('fieldMustNotMatch', () => {

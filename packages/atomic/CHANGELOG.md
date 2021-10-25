@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.12...@coveo/atomic@1.6.13) (2021-10-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.6.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.11...@coveo/atomic@1.6.12) (2021-10-20)
+
+
+### Bug Fixes
+
+* **atomic:** add Clear Filter button to CategoryFacet when its collapsed ([#1361](https://github.com/coveo/ui-kit/issues/1361)) ([f610891](https://github.com/coveo/ui-kit/commit/f6108914447200edc4037013a9687df4185b0ae0))
+* **atomic:** ensure font weight & size is consistent with all elements ([#1364](https://github.com/coveo/ui-kit/issues/1364)) ([b37fe92](https://github.com/coveo/ui-kit/commit/b37fe9210f96813a927ce80dd9c5bf530a8e7485))
+
+
+
+
+
+## [1.6.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.10...@coveo/atomic@1.6.11) (2021-10-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.6.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.9...@coveo/atomic@1.6.10) (2021-10-19)
+
+
+### Bug Fixes
+
+* **atomic:** made compact visual sections smaller ([#1355](https://github.com/coveo/ui-kit/issues/1355)) ([9ea5d06](https://github.com/coveo/ui-kit/commit/9ea5d0633d21b40826f21377775bee07f27c7218))
+
+
+
+
+
+## [1.6.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.8...@coveo/atomic@1.6.9) (2021-10-19)
+
+
+### Bug Fixes
+
+* **atomic:** moved badges section above title ([#1357](https://github.com/coveo/ui-kit/issues/1357)) ([ab30814](https://github.com/coveo/ui-kit/commit/ab30814e84add95141df12dd1f6ac99b8446f0d2))
+
+
+
+
+
+## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.7...@coveo/atomic@1.6.8) (2021-10-19)
+
+
+### Bug Fixes
+
+* **atomic:** added cypress tests for result table and added error to table ([#1343](https://github.com/coveo/ui-kit/issues/1343)) ([c3177f4](https://github.com/coveo/ui-kit/commit/c3177f423d88797b509d0fa3ab13435c40c8e7ad))
+* **atomic:** remove Gaussian Blur for SVG backgrounds ([#1363](https://github.com/coveo/ui-kit/issues/1363)) ([bd62b55](https://github.com/coveo/ui-kit/commit/bd62b55902907abdbb1398e4822d2d9d3e1ce962))
+* **atomic:** removed minimum height on result title section ([#1356](https://github.com/coveo/ui-kit/issues/1356)) ([89be45f](https://github.com/coveo/ui-kit/commit/89be45fd327c8d08c5afc15c2271f65d6243498a))
+
+
+
+
+
+## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.6...@coveo/atomic@1.6.7) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** adjusted all result components to behave similarly ([#1298](https://github.com/coveo/ui-kit/issues/1298)) ([8f9041a](https://github.com/coveo/ui-kit/commit/8f9041ab091d31350243670812a6fdd2afb55667))
+* **atomic:** made printable uri not overflow horizontally ([#1333](https://github.com/coveo/ui-kit/issues/1333)) ([d087908](https://github.com/coveo/ui-kit/commit/d08790849fb37d0d812965ed908ecb5dd834aa96))
+
+
+
+
+
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.5...@coveo/atomic@1.6.6) (2021-10-18)
+
+
+### Bug Fixes
+
+* **atomic:** fix margin right badge element to 8px ([#1327](https://github.com/coveo/ui-kit/issues/1327)) ([9489011](https://github.com/coveo/ui-kit/commit/94890119571320ce78669f34a6f114ffd60ccf4d))
+
+
+
+
+
 ## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.4...@coveo/atomic@1.6.5) (2021-10-15)
 
 

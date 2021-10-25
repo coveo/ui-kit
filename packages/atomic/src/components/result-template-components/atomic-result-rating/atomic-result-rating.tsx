@@ -1,4 +1,4 @@
-import {Component, Prop, h} from '@stencil/core';
+import {Component, Element, Prop, h, State} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import Star from '../../../images/star.svg';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
@@ -16,6 +16,7 @@ import {Rating} from '../../atomic-rating/atomic-rating';
 })
 export class AtomicResultRating {
   @ResultContext() private result!: Result;
+  @Element() host!: HTMLElement;
 
   /**
    * The field whose values you want to display as a rating.
@@ -36,28 +37,44 @@ export class AtomicResultRating {
    */
   @Prop() public icon = Star;
 
-  private get numberOfStars() {
+  @State() public error?: Error;
+
+  @State() numberOfStars: number | null = null;
+
+  private updateNumberOfStars() {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
     );
     if (value === null) {
-      return null;
+      this.numberOfStars = null;
+      return;
     }
     const valueAsNumber = parseFloat(`${value}`);
-    return Number.isNaN(valueAsNumber) ? null : valueAsNumber;
+    if (Number.isNaN(valueAsNumber)) {
+      this.error = new Error(
+        `Could not parse "${value}" from field "${this.field}" as a number.`
+      );
+      this.numberOfStars = null;
+      return;
+    }
+    this.numberOfStars = valueAsNumber;
+  }
+
+  componentWillRender() {
+    this.updateNumberOfStars();
   }
 
   render() {
-    const value = this.numberOfStars;
-    if (value === null) {
+    if (this.numberOfStars === null) {
+      this.host.remove();
       return;
     }
     return (
       <Rating
         icon={this.icon}
         numberOfTotalIcons={this.maxValueInIndex}
-        numberOfActiveIcons={value}
+        numberOfActiveIcons={this.numberOfStars}
         iconSize={0.875}
       ></Rating>
     );

@@ -115,6 +115,10 @@ export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
   });
 };
 
+export const noopSearchAnalyticsAction = makeNoopAnalyticsAction(
+  AnalyticsType.Search
+);
+
 export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>
