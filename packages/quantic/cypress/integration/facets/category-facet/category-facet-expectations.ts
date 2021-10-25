@@ -1,10 +1,10 @@
 import {InterceptAliases} from '../../../page-objects/search';
 import {
   CategoryFacetSelectors,
-  CategoryFacetSelector,
+  AllFacetSelectors,
 } from './category-facet-selectors';
 const hierarchicalField = 'geographicalhierarchy';
-const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
+const categoryFacetExpectations = (selector: AllFacetSelectors) => {
   return {
     isRendered: (accessible: boolean) => {
       selector.get().should(accessible ? 'exist' : 'not.exist');
@@ -45,12 +45,6 @@ const categoryFacetExpectations = (selector: CategoryFacetSelector) => {
     },
     parentValueLabel: (value: string) => {
       selector.parentValueLabel().first().should('contain', value);
-    },
-    displayShowMoreButton: (display: boolean) => {
-      selector.showMoreButton().should(display ? 'exist' : 'not.exist');
-    },
-    displayShowLessButton: (display: boolean) => {
-      selector.showLessButton().should(display ? 'exist' : 'not.exist');
     },
     urlHashContains: (path: string[]) => {
       const categoryFacetListInUrl = path.join(',');
