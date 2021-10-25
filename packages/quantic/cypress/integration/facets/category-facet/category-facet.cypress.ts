@@ -74,13 +74,14 @@ describe('quantic-category-facet', () => {
     );
   }
 
-  function setupWithCustomBasePath() {
+  function setupWithCustomBasePath(hierarchy: string[], search?: boolean) {
     visitCategoryFacetPage(
       {
         field: defaultField,
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
-        basePath: togoHierarchy.slice(0, 2).join(','),
+        basePath: hierarchy.slice(0, 2).join(','),
+        withSearch: search ? search : false,
       },
       true
     );
@@ -260,7 +261,7 @@ describe('quantic-category-facet', () => {
   describe('setup with custom basePath', () => {
     describe('when loading', () => {
       it('should load the category facet component with data level start from custom basePath', () => {
-        setupWithCustomBasePath();
+        setupWithCustomBasePath(togoHierarchy);
 
         Expect.firstChildContains(togoHierarchy[2]);
         Expect.numberOfParentValues(0);
@@ -272,7 +273,12 @@ describe('quantic-category-facet', () => {
 
     describe('when typing into facet search box input', () => {
       it('facet value should be filtered to match with the keywords', () => {
-        // it should only show results from the "North America" data level
+        const basePath = ['North America'];
+        const query = 'mon';
+        setupWithCustomBasePath(basePath, true);
+
+        Actions.typeFacetSearchQuery(query);
+        Expect.logCategoryFacetSearch(hierarchicalField);
       });
     });
   });
