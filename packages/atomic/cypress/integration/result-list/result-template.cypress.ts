@@ -73,30 +73,38 @@ describe('Result Template Component', () => {
     assertContainsComponentError(ResultTemplateSelectors, true);
   });
 
-  describe('with an icon image size', () => {
-    const imageSize = 'icon';
-    beforeEach(() => {
+  describe('with a visual section', () => {
+    function setupVisualSection(imageSize: string) {
       new TestFixture()
         .with(
-          addResultList(buildTemplateWithoutSections([], {image: imageSize}))
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML('atomic-result-section-visual', {
+                'image-size': imageSize,
+              }),
+            ])
+          )
         )
         .init();
+    }
+
+    describe('with an icon image size', () => {
+      const imageSize = 'icon';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
     });
 
-    ResultTemplateAssertions.assertResultImageSize(imageSize);
-  });
+    describe('with a small image size', () => {
+      const imageSize = 'small';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
 
-  describe('with a small image size', () => {
-    const imageSize = 'small';
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addResultList(buildTemplateWithoutSections([], {image: imageSize}))
-        )
-        .init();
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
     });
-
-    ResultTemplateAssertions.assertResultImageSize(imageSize);
   });
 
   describe('without any conditions nor sections', () => {
@@ -213,6 +221,43 @@ describe('Result Template Component', () => {
           'font-size',
           textSize
         );
+      });
+    });
+
+    describe('in a result table with a visual section', () => {
+      function setupVisualSection(imageSize: string) {
+        new TestFixture()
+          .with(
+            addResultTable([
+              {
+                label: 'Author',
+                content: buildTemplateWithoutSections(
+                  generateComponentHTML('atomic-result-section-visual', {
+                    'image-size': imageSize,
+                  })
+                ),
+              },
+            ])
+          )
+          .init();
+      }
+
+      describe('with an icon image size', () => {
+        const imageSize = 'icon';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
+      });
+
+      describe('with a small image size', () => {
+        const imageSize = 'small';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
       });
     });
   });

@@ -257,18 +257,25 @@ export class AtomicResultList implements InitializableComponent {
         <tbody>
           {this.resultListState.results.map((result) => (
             <tr key={this.getId(result)}>
-              {fieldColumns.map((column) => (
-                <td key={column.getAttribute('label')! + this.getId(result)}>
-                  <atomic-table-cell
-                    result={result}
-                    display={this.display}
-                    density={this.density}
-                    image-size={this.imageSize ?? this.image}
-                    useSections={containsSection(column)}
-                    content={column.innerHTML}
-                  ></atomic-table-cell>
-                </td>
-              ))}
+              {fieldColumns.map((column) => {
+                const imageSize =
+                  this.getVisualSectionInChildren(column)?.getAttribute(
+                    'image-size'
+                  );
+
+                return (
+                  <td key={column.getAttribute('label')! + this.getId(result)}>
+                    <atomic-table-cell
+                      result={result}
+                      display={this.display}
+                      density={this.density}
+                      image-size={imageSize ?? this.imageSize ?? this.image}
+                      useSections={containsSection(column)}
+                      content={column.innerHTML}
+                    ></atomic-table-cell>
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
@@ -320,6 +327,12 @@ export class AtomicResultList implements InitializableComponent {
       classes.push('loading');
     }
     return classes;
+  }
+
+  private getVisualSectionInChildren(element: HTMLElement) {
+    return Array.from(element.children).find(
+      (child) => child.tagName === 'ATOMIC-RESULT-SECTION-VISUAL'
+    );
   }
 
   @Listen('scroll', {target: 'window'})
