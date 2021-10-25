@@ -194,7 +194,7 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image-size={template.imageSize ?? this.imageSize ?? this.image}
+          imageSize={template.imageSize ?? this.imageSize ?? this.image}
           useSections={template.usesSections}
           content={template.innerHTML}
         ></atomic-result>
@@ -221,7 +221,7 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <atomic-result-table-placeholder
         density={this.density}
-        image-size={this.imageSize ?? this.image}
+        imageSize={this.imageSize ?? this.image}
         rows={this.resultsPerPageState.numberOfResults}
       ></atomic-result-table-placeholder>
     );
