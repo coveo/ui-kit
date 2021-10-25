@@ -1,6 +1,14 @@
-type Operator = StringOperator | NumericOperator;
+type Operator = StringOperator | StringFacetFieldOperator | NumericOperator;
 
 export type StringOperator = 'contains' | 'isExactly';
+export type StringFacetFieldOperator =
+  | 'contains'
+  | 'isExactly'
+  | 'phoneticMatch'
+  | 'fuzzyMatch'
+  | 'wildcardMatch'
+  | 'differentThan';
+
 export type NumericOperator =
   | 'isExactly'
   | 'lowerThan'
@@ -31,6 +39,22 @@ export function getOperatorSymbol(operator: Operator) {
 
   if (operator === 'lowerThanOrEqual') {
     return '<=';
+  }
+
+  if (operator === 'fuzzyMatch') {
+    return '~=';
+  }
+
+  if (operator === 'wildcardMatch') {
+    return '*=';
+  }
+
+  if (operator === 'phoneticMatch') {
+    return '%=';
+  }
+
+  if (operator === 'differentThan') {
+    return '<>';
   }
 
   return '';
