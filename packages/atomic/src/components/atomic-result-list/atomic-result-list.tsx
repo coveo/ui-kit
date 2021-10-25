@@ -177,7 +177,7 @@ export class AtomicResultList implements InitializableComponent {
           key={`placeholder-${i}`}
           display={this.display}
           density={this.density}
-          image-size={this.imageSize ?? this.image}
+          imageSize={this.imageSize ?? this.image}
         ></atomic-result-placeholder>
       )
     );
