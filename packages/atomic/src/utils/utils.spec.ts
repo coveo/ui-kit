@@ -1,4 +1,4 @@
-import {once, camelToKebab, randomID} from './utils';
+import {once, camelToKebab, randomID, kebabToCamel} from './utils';
 
 describe('once', () => {
   it('should call the function only once', () => {
@@ -21,6 +21,20 @@ describe('camelToKebab', () => {
 
   it('works with an already kebab cased value', () => {
     expect(camelToKebab('fields-to-include')).toBe('fields-to-include');
+  });
+});
+
+describe('kebabToCamel', () => {
+  it('works with a kebab case value', () => {
+    expect(kebabToCamel('this-is-a-test')).toBe('thisIsATest');
+  });
+
+  it('works with a kebab case value with numerical characters', () => {
+    expect(kebabToCamel('cool-name2')).toBe('coolName2');
+  });
+
+  it('works with an already camel cased value', () => {
+    expect(kebabToCamel('fieldsToInclude')).toBe('fieldsToInclude');
   });
 });
 

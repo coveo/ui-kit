@@ -198,3 +198,11 @@ export function assertNumberOfFacetSearchResults(value: number) {
     CategoryFacetSelectors.searchResult().should('not.exist');
   });
 }
+
+export function assertDisplayAllCategoriesButton(display: boolean) {
+  it(`${should(display)} display an "All Categories" button`, () => {
+    CategoryFacetSelectors.allCategoriesButton().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}

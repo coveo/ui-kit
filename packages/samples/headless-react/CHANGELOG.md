@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.41.0](https://github.com/coveo/ui-kit/compare/headless-react@0.40.5...headless-react@0.41.0) (2021-10-25)
+
+
+### Features
+
+* **headless:** add StaticFilter ([#1322](https://github.com/coveo/ui-kit/issues/1322)) ([c28ddc5](https://github.com/coveo/ui-kit/commit/c28ddc50c9096d4fc3db91166e746353f8b2cba0))
+
+
+
+
+
+## [0.40.5](https://github.com/coveo/ui-kit/compare/headless-react@0.40.4...headless-react@0.40.5) (2021-10-20)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.40.4](https://github.com/coveo/ui-kit/compare/headless-react@0.40.3...headless-react@0.40.4) (2021-10-19)
 
 **Note:** Version bump only for package headless-react

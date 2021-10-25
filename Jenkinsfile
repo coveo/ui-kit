@@ -58,21 +58,24 @@ node('linux && docker') {
               sh 'cd packages/atomic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
             },
             'quantic': {
-              withCredentials([
-                string(credentialsId: 'sfdx-auth-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
-                file(credentialsId: 'sfdx-auth-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
-              ]) {
-                withEnv([
-                  "HOME=${env.WORKSPACE}/packages/quantic",
-                  "BRANCH_NAME=${env.BRANCH_NAME}",
-                  'SFDX_AUTH_JWT_INSTANCE_URL=https://login.salesforce.com',
-                  'SFDX_AUTH_JWT_USERNAME=rdaccess@coveo.com'
+              // Skip this stage until the certificate issue is resolved.
+              if (false) {
+                withCredentials([
+                  string(credentialsId: 'sfdx-auth-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
+                  file(credentialsId: 'sfdx-auth-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
                 ]) {
-                  sh 'cd packages/quantic && ./node_modules/cypress/bin/cypress install'
-                  sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile $SFDX_AUTH_JWT_KEY --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
-                  sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci'
-                  sh 'cd packages/quantic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --browser chrome --reporter cypress/reporters/detailed-reporter.js'
-                  sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/delete-org.ts'
+                  withEnv([
+                    "HOME=${env.WORKSPACE}/packages/quantic",
+                    "BRANCH_NAME=${env.BRANCH_NAME}",
+                    'SFDX_AUTH_JWT_INSTANCE_URL=https://login.salesforce.com',
+                    'SFDX_AUTH_JWT_USERNAME=rdaccess@coveo.com'
+                  ]) {
+                    sh 'cd packages/quantic && ./node_modules/cypress/bin/cypress install'
+                    sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile $SFDX_AUTH_JWT_KEY --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
+                    sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci'
+                    sh 'cd packages/quantic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --browser chrome --reporter cypress/reporters/detailed-reporter.js'
+                    sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/delete-org.ts'
+                  }
                 }
               }
             }

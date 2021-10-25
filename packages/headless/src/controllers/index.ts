@@ -185,6 +185,18 @@ export {
 } from './sort/headless-sort';
 
 export {
+  StaticFilterValueOptions,
+  buildStaticFilterValue,
+  StaticFilter,
+  StaticFilterOptions,
+  StaticFilterProps,
+  StaticFilterState,
+  StaticFilterValue,
+  StaticFilterValueState,
+  buildStaticFilter,
+} from './static-filter/headless-static-filter';
+
+export {
   TabInitialState,
   TabOptions,
   TabProps,
@@ -205,10 +217,12 @@ export {
   FacetBreadcrumb,
   DateFacetBreadcrumb,
   CategoryFacetBreadcrumb,
+  StaticFilterBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
   BreadcrumbManagerState,
   BreadcrumbManager,
+  DeselectableValue,
   buildBreadcrumbManager,
 } from './breadcrumb-manager/headless-breadcrumb-manager';
 
