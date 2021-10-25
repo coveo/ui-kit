@@ -12,6 +12,7 @@ import {change} from '../../history/history-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
+import * as CategoryFacetReducers from './category-facet-reducer-helpers';
 import {CategoryFacetSortCriterion} from './interfaces/request';
 import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
@@ -29,6 +30,7 @@ import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -321,30 +323,26 @@ describe('category facet slice', () => {
       });
     });
 
-    describe('#deselectAllFacets', () => {
-      let newState: CategoryFacetSetState;
-      beforeEach(() => {
-        newState = categoryFacetSetReducer(state, deselectAllFacets());
-      });
+    it('dispatching #deselectAllFacets calls #handleCategoryFacetDeselectAll for every facet', () => {
+      jest.spyOn(CategoryFacetReducers, 'handleCategoryFacetDeselectAll');
 
-      it('sets #currentValues to an empty array for all facets', () => {
-        expect(newState[facetId]?.request.currentValues).toEqual([]);
-        expect(newState[anotherFacetId]?.request.currentValues).toEqual([]);
-      });
+      categoryFacetSetReducer(state, deselectAllFacets());
 
-      it('sets #preventAutoSelect to true on the request for all facets', () => {
-        expect(newState[facetId]?.request.preventAutoSelect).toBe(true);
-        expect(newState[anotherFacetId]?.request.preventAutoSelect).toBe(true);
-      });
+      expect(
+        CategoryFacetReducers.handleCategoryFacetDeselectAll
+      ).toHaveBeenCalledTimes(2);
+    });
 
-      it('sets the request #numberOfValues to the initial number for all facets', () => {
-        expect(newState[facetId]?.request.numberOfValues).toBe(
-          initialNumberOfValues
-        );
-        expect(newState[anotherFacetId]?.request.numberOfValues).toBe(
-          initialNumberOfValues
-        );
-      });
+    it('dispatching #deselectAllBreadcrumbs calls #handleCategoryFacetDeselectAll for every facet', () => {
+      jest
+        .spyOn(CategoryFacetReducers, 'handleCategoryFacetDeselectAll')
+        .mockReset();
+
+      categoryFacetSetReducer(state, deselectAllBreadcrumbs());
+
+      expect(
+        CategoryFacetReducers.handleCategoryFacetDeselectAll
+      ).toHaveBeenCalledTimes(2);
     });
   });
 

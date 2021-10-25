@@ -1,6 +1,13 @@
 import {isString} from '@coveo/bueno';
-import {isSearchApiDate} from '../../api/search/date/date-format';
-import {isRelativeDateFormat} from '../../api/search/date/relative-date';
+import {
+  API_DATE_FORMAT,
+  isSearchApiDate,
+  validateAbsoluteDate,
+} from '../../api/search/date/date-format';
+import {
+  isRelativeDateFormat,
+  validateRelativeDate,
+} from '../../api/search/date/relative-date';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
@@ -10,7 +17,8 @@ const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
 
-type UnknownFacetObject = {[field: string]: unknown[]};
+type SearchParameterKey = keyof SearchParameters;
+type UnknownObject = {[field: string]: unknown[]};
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -30,7 +38,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (key === 'f' || key === 'cf') {
+  if (key === 'f' || key === 'cf' || key === 'sf') {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -109,14 +117,14 @@ function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessFacetPairs)
+    .map(preprocessObjectPairs)
     .filter(isValidPair)
     .map(cast);
 
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
+    if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -132,25 +140,25 @@ function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-function preprocessFacetPairs(pair: string[]) {
+function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f|cf|nf|df)\[(.+)\]$/;
-  const result = facetKey.exec(key);
+  const objectKey = /^(f|cf|nf|df|sf)\[(.+)\]$/;
+  const result = objectKey.exec(key);
 
   if (!result) {
     return pair;
   }
 
   const paramKey = result[1];
-  const facetId = result[2];
+  const id = result[2];
   const values = val.split(',');
-  const processedValues = processFacetValues(paramKey, values);
-  const obj = {[facetId]: processedValues};
+  const processedValues = processObjectValues(paramKey, values);
+  const obj = {[id]: processedValues};
 
   return [paramKey, JSON.stringify(obj)];
 }
 
-function processFacetValues(key: string, values: string[]) {
+function processObjectValues(key: string, values: string[]) {
   if (key === 'nf') {
     return buildNumericRanges(values);
   }
@@ -169,20 +177,35 @@ function buildNumericRanges(ranges: string[]) {
     .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
 }
 
+function isValidDateRangeValue(date: string) {
+  try {
+    if (isSearchApiDate(date)) {
+      validateAbsoluteDate(date, API_DATE_FORMAT);
+      return true;
+    }
+    if (isRelativeDateFormat(date)) {
+      validateRelativeDate(date);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    return false;
+  }
+}
+
 function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => str.split(rangeDelimiter))
     .filter(
       (range) =>
         range.length === 2 &&
-        range.every(
-          (value) => isSearchApiDate(value) || isRelativeDateFormat(value)
-        )
+        range.every((value) => isValidDateRangeValue(value))
     )
     .map(([start, end]) => buildDateRange({start, end, state: 'selected'}));
 }
 
-function isValidPair<K extends keyof SearchParameters>(
+function isValidPair<K extends SearchParameterKey>(
   pair: string[]
 ): pair is [K, string] {
   const validKey = isValidKey(pair[0]);
@@ -190,7 +213,7 @@ function isValidPair<K extends keyof SearchParameters>(
   return validKey && lengthOfTwo;
 }
 
-function isValidKey(key: string): key is keyof SearchParameters {
+function isValidKey(key: string): key is SearchParameterKey {
   const supportedParameters: Record<keyof Required<SearchParameters>, boolean> =
     {
       q: true,
@@ -205,15 +228,14 @@ function isValidKey(key: string): key is keyof SearchParameters {
       nf: true,
       df: true,
       debug: true,
+      sf: true,
       tab: true,
     };
 
   return key in supportedParameters;
 }
 
-function cast<K extends keyof SearchParameters>(
-  pair: [K, string]
-): [K, unknown] {
+function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
   const [key, value] = pair;
 
   if (key === 'enableQuerySyntax') {
@@ -232,20 +254,27 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
-    return [key, castUnknownFacetObject(value)];
+  if (keyHasObjectValue(key)) {
+    return [key, castUnknownObject(value)];
   }
 
   return [key, decodeURIComponent(value)];
 }
 
-function castUnknownFacetObject(value: string) {
-  const jsonParsed = JSON.parse(value) as UnknownFacetObject;
-  const ret = {} as UnknownFacetObject;
+function castUnknownObject(value: string) {
+  const jsonParsed: UnknownObject = JSON.parse(value);
+  const ret: UnknownObject = {};
   Object.entries(jsonParsed).forEach((entry) => {
-    const [facetId, values] = entry;
-    ret[facetId] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
+    const [id, values] = entry;
+    ret[id] = values.map((v) => (isString(v) ? decodeURIComponent(v) : v));
   });
 
   return ret;
+}
+
+function keyHasObjectValue(
+  key: SearchParameterKey
+): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' {
+  const keys = ['f', 'cf', 'nf', 'df', 'sf'];
+  return keys.includes(key);
 }

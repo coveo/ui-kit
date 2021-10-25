@@ -33,6 +33,7 @@ import {DictionaryFieldContextState} from '../features/dictionary-field-context/
 import {ProductListingState} from '../features/product-listing/product-listing-state';
 import {SortState} from '../features/sort/sort-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
+import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 
 export interface QuerySection {
   /**
@@ -46,6 +47,13 @@ export interface AdvancedSearchQueriesSection {
    * The current advanced search parameters (e.g: aq and cq)
    */
   advancedSearchQueries: AdvancedSearchQueriesState;
+}
+
+export interface StaticFilterSection {
+  /**
+   * The set of static filters.
+   */
+  staticFilterSet: StaticFilterSetState;
 }
 
 export interface TabSection {
