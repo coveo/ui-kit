@@ -47,4 +47,28 @@ describe('createExpressionBuilder', () => {
       expect(builder.toString()).toBe('@size==10..20');
     });
   });
+
+  describe('#addDateField', () => {
+    it('with one expression, #toString returns the expected syntax', () => {
+      builder.addNumericField({
+        field: 'size',
+        operator: 'greaterThan',
+        value: 10,
+      });
+
+      expect(builder.toString()).toBe('@size>10');
+    });
+  });
+
+  describe('#addDateRangeField', () => {
+    it('with one expression, #toString returns the expected syntax', () => {
+      builder.addNumericRangeField({
+        field: 'size',
+        from: 10,
+        to: 20,
+      });
+
+      expect(builder.toString()).toBe('@size==10..20');
+    });
+  });
 });

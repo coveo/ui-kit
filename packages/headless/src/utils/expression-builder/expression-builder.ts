@@ -1,3 +1,8 @@
+import {buildDateField, DateFieldExpression} from './date-field/date-field';
+import {
+  buildDateRangeField,
+  DateRangeFieldExpression,
+} from './date-range-field/date-range-field';
 import {
   buildNumericField,
   NumericFieldExpression,
@@ -152,6 +157,8 @@ export interface ExpressionBuilder {
   addNumericRangeField(
     expression: NumericRangeFieldExpression
   ): ExpressionBuilder;
+  addDateField(expression: DateFieldExpression): ExpressionBuilder;
+  addDateRangeField(expression: DateRangeFieldExpression): ExpressionBuilder;
   toString(): string;
 }
 
@@ -173,6 +180,16 @@ export function createExpressionBuilder(config: {
 
     addNumericRangeField(expression: NumericRangeFieldExpression) {
       parts.push(buildNumericRangeField(expression));
+      return this;
+    },
+
+    addDateField(expression: DateFieldExpression) {
+      parts.push(buildDateField(expression));
+      return this;
+    },
+
+    addDateRangeField(expression: DateRangeFieldExpression) {
+      parts.push(buildDateRangeField(expression));
       return this;
     },
 
