@@ -1,9 +1,13 @@
 .quickview__content-container {
-  height: 100%;
   overflow: auto;
 }
 
 .result__title {
   font-weight: 700;
   font-size: 1.1em;
+}
+
+.result__date {
+  color:#3E3E3C;
+  font-weight: normal;
 }

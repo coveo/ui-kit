@@ -43,7 +43,7 @@ export default class QuanticTab extends LightningElement {
   _isActive = false;
 
   /** @type {boolean} */
-  @track hasResults;
+  @track shouldDisplay;
   
   /** @type {Tab} */
   tab;
@@ -88,7 +88,7 @@ export default class QuanticTab extends LightningElement {
 
   updateState() {
     this._isActive = this.tab?.state?.isActive;
-    this.hasResults = this.searchStatus?.state?.hasResults;
+    this.shouldDisplay = this.searchStatus?.state?.firstSearchExecuted;
   }
 
   select() {

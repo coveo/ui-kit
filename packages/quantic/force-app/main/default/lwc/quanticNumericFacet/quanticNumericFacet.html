@@ -24,9 +24,9 @@
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-var-m-top_medium">
             <template if:true={withInput}>
-              <div>
-                <form onsubmit={onApply} class="slds-grid slds-var-p-bottom_small slds-var-p-top_small">
-                    <div class="slds-col slds-p-around_none">
+              <div class="slds-p-horizontal_x-small">
+                <form onsubmit={onApply} class="slds-grid slds-gutters_direct-x-small slds-var-p-bottom_small slds-var-p-top_small">
+                    <div class="slds-col">
                         <lightning-input 
                             type="number"
                             step={step}
@@ -60,7 +60,7 @@
                             onchange={onChangeMax}>
                         </lightning-input>
                     </div>
-                    <div class="slds-col slds-p-around_none">
+                    <div class="slds-col">
                         <lightning-button 
                             label={labels.apply} 
                             title={labels.apply} 

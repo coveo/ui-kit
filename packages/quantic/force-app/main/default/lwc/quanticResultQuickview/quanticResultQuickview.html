@@ -3,17 +3,28 @@
     title="Open Quickview"
     alternative-text="Open Quickview"
     icon-name="utility:preview"
+    size="small"
     onclick={openQuickview}
   ></lightning-button-icon>
   <template if:true={isQuickviewOpen}>
-    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_large slds-fade-in-open">
+    <section role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_medium slds-fade-in-open">
       <div class="slds-modal__container">
         <header class="slds-modal__header">
           <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
             <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
           </button>
-          <h2 id="modal-heading-01" class="slds-modal__title slds-truncate result__title">
-            <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+          <h2 id="quickview-modal-heading" class="slds-modal__title slds-truncate result__title slds-grid slds-grid_vertical-align-center">
+            <div class="slds-grid slds-grid_vertical-align-center slds-size_10-of-12 slds-text-align_left">
+              <div class="slds-m-right_small">
+                <c-quantic-result-label result={result} icon-only></c-quantic-result-label>
+              </div>
+              <h3 class="slds-truncate result__title">
+                <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+              </h3>
+            </div>
+            <div class="slds-truncate slds-text-align_right result__date slds-size_2-of-12">
+              <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+            </div>
           </h2>
         </header>
         <div class="quickview__content-container slds-modal__content slds-p-around_medium" id="quickview__content-container" lwc:dom="manual">

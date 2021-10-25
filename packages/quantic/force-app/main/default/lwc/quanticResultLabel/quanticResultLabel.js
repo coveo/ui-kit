@@ -41,6 +41,13 @@ export default class QuanticResultLabel extends LightningElement {
    * @defaultValue `'small'`
    */
   @api size  ='small';
+  /**
+   * Whether to just display the icon without the label.
+   * @api
+   * @type {boolean}
+   * @defaultValue `'false'`
+   */
+  @api iconOnly = false;
 
   labels = {
     documentation,
