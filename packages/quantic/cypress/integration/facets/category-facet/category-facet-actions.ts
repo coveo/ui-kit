@@ -1,5 +1,5 @@
 import {
-  CategoryFacetSelector,
+  AllFacetSelectors,
   CategoryFacetSelectors,
 } from './category-facet-selectors';
 
@@ -11,7 +11,7 @@ export const montrealHierarchy = [
 ];
 export const togoHierarchy = ['Africa', 'Togo', 'Lome'];
 
-function categoryFacetActions(selector: CategoryFacetSelector) {
+function categoryFacetActions(selector: AllFacetSelectors) {
   return {
     selectChildValue(value: string) {
       selector.childValueOption().contains(value).click({force: true});
