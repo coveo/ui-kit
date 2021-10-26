@@ -24,6 +24,18 @@ describe('createExpressionBuilder', () => {
     });
   });
 
+  describe('#addStringFacetField', () => {
+    it('with one expression, #toString returns the expected syntax', () => {
+      builder.addStringFacetField({
+        field: 'author',
+        operator: 'differentThan',
+        value: 'ehughes',
+      });
+
+      expect(builder.toString()).toBe('@author<>("ehughes")');
+    });
+  });
+
   describe('#addNumericField', () => {
     it('with one expression, #toString returns the expected syntax', () => {
       builder.addNumericField({

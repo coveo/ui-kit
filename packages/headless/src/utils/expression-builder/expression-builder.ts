@@ -12,6 +12,10 @@ import {
   NumericRangeFieldExpression,
 } from './numeric-range-field/numeric-range-field';
 import {
+  buildStringFacetField,
+  StringFacetFieldExpression,
+} from './string-facet-field/string-facet-field';
+import {
   buildStringField,
   StringFieldExpression,
 } from './string-field/string-field';
@@ -153,6 +157,9 @@ interface Not {
 
 export interface ExpressionBuilder {
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
+  addStringFacetField(
+    expression: StringFacetFieldExpression
+  ): ExpressionBuilder;
   addNumericField(expression: NumericFieldExpression): ExpressionBuilder;
   addNumericRangeField(
     expression: NumericRangeFieldExpression
@@ -170,6 +177,11 @@ export function createExpressionBuilder(config: {
   return {
     addStringField(expression: StringFieldExpression) {
       parts.push(buildStringField(expression));
+      return this;
+    },
+
+    addStringFacetField(expression: StringFacetFieldExpression) {
+      parts.push(buildStringFacetField(expression));
       return this;
     },
 
