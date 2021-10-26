@@ -51,5 +51,16 @@ describe('#buildStringFacetField', () => {
 
       expect(builder.toString()).toBe('@author/=("ehughe[a-z]+")');
     });
+
+    it('with #negate set to true', () => {
+      const builder = buildStringFacetField({
+        field: 'author',
+        operator: 'wildcardMatch',
+        value: '*hughes',
+        negate: true,
+      });
+
+      expect(builder.toString()).toBe('NOT @author*=("*hughes")');
+    });
   });
 });
