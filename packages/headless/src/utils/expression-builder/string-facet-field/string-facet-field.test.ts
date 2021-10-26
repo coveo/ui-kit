@@ -41,5 +41,15 @@ describe('#buildStringFacetField', () => {
 
       expect(builder.toString()).toBe('@author<>("ehughes")');
     });
+
+    it('#regexMatch operator', () => {
+      const builder = buildStringFacetField({
+        field: 'author',
+        operator: 'regexMatch',
+        value: 'ehughe[a-z]+',
+      });
+
+      expect(builder.toString()).toBe('@author/=("ehughe[a-z]+")');
+    });
   });
 });

@@ -7,7 +7,8 @@ export type StringFacetFieldOperator =
   | 'phoneticMatch'
   | 'fuzzyMatch'
   | 'wildcardMatch'
-  | 'differentThan';
+  | 'differentThan'
+  | 'regexMatch';
 
 export type NumericOperator =
   | 'isExactly'
@@ -55,6 +56,10 @@ export function getOperatorSymbol(operator: Operator) {
 
   if (operator === 'differentThan') {
     return '<>';
+  }
+
+  if (operator === 'regexMatch') {
+    return '/=';
   }
 
   return '';
