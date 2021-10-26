@@ -5,6 +5,7 @@ import {
 } from './date-range-field/date-range-field';
 import {buildExactMatch, ExactMatchExpression} from './exact-match/exact-match';
 import {buildKeyword, KeywordExpression} from './keyword/keyword';
+import {buildNear, NearExpression} from './near/near';
 import {
   buildNumericField,
   NumericFieldExpression,
@@ -159,6 +160,7 @@ interface Not {
 
 export interface ExpressionBuilder {
   addKeywordExpression(expression: KeywordExpression): ExpressionBuilder;
+  addNearExpression(expression: NearExpression): ExpressionBuilder;
   addExactMatch(expression: KeywordExpression): ExpressionBuilder;
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
   addStringFacetField(
@@ -181,6 +183,11 @@ export function createExpressionBuilder(config: {
   return {
     addKeywordExpression(expression: KeywordExpression) {
       parts.push(buildKeyword(expression));
+      return this;
+    },
+
+    addNearExpression(expression: NearExpression) {
+      parts.push(buildNear(expression));
       return this;
     },
 
