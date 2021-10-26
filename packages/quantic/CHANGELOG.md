@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.78.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.2...@coveo/quantic@0.78.3) (2021-10-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.78.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.1...@coveo/quantic@0.78.2) (2021-10-20)
+
+
+### Bug Fixes
+
+* **quantic:** use object type ([#1368](https://github.com/coveo/ui-kit/issues/1368)) ([359ec24](https://github.com/coveo/ui-kit/commit/359ec2478d18b9378b1be8aa19df97c6dacf7456))
+
+
+
+
+
+## [0.78.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.0...@coveo/quantic@0.78.1) (2021-10-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.78.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.2...@coveo/quantic@0.78.0) (2021-10-19)
+
+
+### Bug Fixes
+
+* **quantic:** added error condition on placeholder ([#1344](https://github.com/coveo/ui-kit/issues/1344)) ([6bb9766](https://github.com/coveo/ui-kit/commit/6bb9766ff3a0bbc9217955589a59a77b8ef97744))
+* **quantic:** css fixed for searchbox ([#1351](https://github.com/coveo/ui-kit/issues/1351)) ([d4637e2](https://github.com/coveo/ui-kit/commit/d4637e2a32acd8a1c6e9125ed5bcf89f7bef1f7a))
+* **quantic:** joining multiple types when parsing jsdoc ([#1353](https://github.com/coveo/ui-kit/issues/1353)) ([8a711c3](https://github.com/coveo/ui-kit/commit/8a711c383f4348358fb1061483357e9dba111f37))
+
+
+### Features
+
+* **quantic:** set default tab is-active ([#1354](https://github.com/coveo/ui-kit/issues/1354)) ([6b013c8](https://github.com/coveo/ui-kit/commit/6b013c82a8a11d82c5d06eb49dcddcb20e27cb96))
+
+
+
+
+
 ## [0.77.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.77.1...@coveo/quantic@0.77.2) (2021-10-18)
 
 

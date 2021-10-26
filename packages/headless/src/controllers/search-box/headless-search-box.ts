@@ -4,14 +4,15 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
-import {executeSearch} from '../../features/search/search-actions';
+import {
+  executeSearch,
+  prepareForSearchWithQuery,
+} from '../../features/search/search-actions';
 import {buildController, Controller} from '../controller/headless-controller';
-import {updatePage} from '../../features/pagination/pagination-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {
   ConfigurationSection,
@@ -43,7 +44,6 @@ import {
   search,
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
@@ -172,9 +172,7 @@ export function buildSearchBox(
   const performSearch = async (analytics: SearchAction) => {
     const {enableQuerySyntax} = options;
 
-    dispatch(deselectAllFacets());
-    dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
-    dispatch(updatePage(1));
+    dispatch(prepareForSearchWithQuery({q: getValue(), enableQuerySyntax}));
     await dispatch(executeSearch(analytics));
   };
 

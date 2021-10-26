@@ -12,6 +12,8 @@ import {getHistoryInitialState, HistoryState} from './history-state';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;
@@ -72,6 +74,7 @@ describe('history slice', () => {
       context: {contextValues: {foo: 'bar'}},
       dictionaryFieldContext: {contextValues: {price: 'cad'}},
       tabSet: {a: buildMockTabSlice({id: 'a'})},
+      staticFilterSet: {a: buildMockStaticFilterSlice({id: 'a'})},
       facetSet: {foo: buildMockFacetRequest()},
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
@@ -306,6 +309,44 @@ describe('history slice', () => {
 
       const snapshot1 = getSnapshot({tabSet: {a: tabA}});
       const snapshot2 = getSnapshot({tabSet: {a: tabA, b: tabB}});
+
+      expectHistoryNotToHaveCreatedDifferentSnapshots(snapshot1, snapshot2);
+    });
+
+    it('#staticFilterSet with different selected values creates different snapshots', () => {
+      const value = buildMockStaticFilterValue();
+
+      const snapshot1 = getSnapshot({
+        staticFilterSet: {
+          a: buildMockStaticFilterSlice({
+            values: [{...value, state: 'idle'}],
+          }),
+        },
+      });
+
+      const snapshot2 = getSnapshot({
+        staticFilterSet: {
+          a: buildMockStaticFilterSlice({
+            values: [{...value, state: 'selected'}],
+          }),
+        },
+      });
+
+      expectHistoryToHaveCreatedDifferentSnapshots(snapshot1, snapshot2);
+    });
+
+    it('#staticFilterSet with no difference in selected values does not create different snapshots', () => {
+      const snapshot1 = getSnapshot({
+        staticFilterSet: {
+          a: buildMockStaticFilterSlice(),
+        },
+      });
+
+      const snapshot2 = getSnapshot({
+        staticFilterSet: {
+          a: buildMockStaticFilterSlice(),
+        },
+      });
 
       expectHistoryNotToHaveCreatedDifferentSnapshots(snapshot1, snapshot2);
     });

@@ -179,7 +179,7 @@ export default class QuanticResultLabel extends LightningElement {
       case 'knowledge':
         return this.labels.knowledge;
       default:
-        return undefined;
+        return objType;
     }
   }
 

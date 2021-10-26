@@ -1,5 +1,6 @@
-import {Element, Component} from '@stencil/core';
+import {Element, Component, Prop} from '@stencil/core';
 import {containsVisualElement} from '../../../utils/utils';
+import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 
 /**
  * This section provides visual information about the item.
@@ -21,6 +22,11 @@ import {containsVisualElement} from '../../../utils/utils';
 })
 export class AtomicResultSectionVisual {
   @Element() private host!: HTMLElement;
+
+  /**
+   * How large or small the visual section of results using this template should be.
+   */
+  @Prop() public imageSize?: ResultDisplayImageSize;
 
   public componentDidRender() {
     this.host.classList.toggle('empty', !containsVisualElement(this.host));

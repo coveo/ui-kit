@@ -12,8 +12,10 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {executeSearch} from '../../features/search/search-actions';
-import {updateQuery} from '../../features/query/query-actions';
+import {
+  executeSearch,
+  prepareForSearchWithQuery,
+} from '../../features/search/search-actions';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
@@ -178,7 +180,7 @@ export function buildRecentQueriesList(
       if (errorMessage) {
         throw new Error(errorMessage);
       }
-      dispatch(updateQuery({q: this.state.queries[index]}));
+      dispatch(prepareForSearchWithQuery({q: this.state.queries[index]}));
       dispatch(executeSearch(logRecentQueryClick()));
     },
   };
