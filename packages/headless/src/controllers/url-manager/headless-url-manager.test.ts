@@ -129,22 +129,44 @@ describe('url manager', () => {
       expect(listener).not.toHaveBeenCalled();
     });
 
-    it('should call listener when a fragment value is added', () => {
+    it('should not call listener when only the requestId changes', () => {
       const listener = jest.fn();
       manager.subscribe(listener);
 
+      engine.state.search.requestId = 'abcde';
+      callListener();
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should not call listener when only a fragment value modified', () => {
+      const listener = jest.fn();
+      manager.subscribe(listener);
+
+      engine.state.query.q = 'albums';
+      callListener();
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should call listener when a fragment value is added and the requestId has changed', () => {
+      const listener = jest.fn();
+      manager.subscribe(listener);
+
+      engine.state.search.requestId = 'abcde';
       engine.state.query.q = 'books';
       callListener();
 
       expect(listener).toHaveBeenCalledTimes(1);
     });
 
-    it('should call listener when a fragment value is removed', () => {
+    it('should call listener when a fragment value is removed and the requestId has changed', () => {
       initUrlManager('q=movies');
 
       const listener = jest.fn();
       manager.subscribe(listener);
 
+      engine.state.search.requestId = 'abcde';
       engine.state.query.q = '';
       callListener();
 

@@ -13,6 +13,7 @@ export function buildMockSearchState(
     isLoading: false,
     results: [],
     searchResponseId: '',
+    requestId: '',
     ...config,
   };
 }

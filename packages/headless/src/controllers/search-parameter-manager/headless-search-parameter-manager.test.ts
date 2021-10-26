@@ -452,24 +452,32 @@ describe('search parameter manager', () => {
       expect(listener).not.toHaveBeenCalled();
     });
 
-    it('should call listener when a fragment value is added', () => {
+    it('should not call listener when only a parameter value has changed', () => {
       const listener = jest.fn();
       manager.subscribe(listener);
 
       engine.state.query.q = 'books';
       callListener();
 
-      expect(listener).toHaveBeenCalledTimes(1);
+      expect(listener).not.toHaveBeenCalled();
     });
 
-    it('should call listener when a fragment value is removed', () => {
-      props.initialState.parameters.q = 'books';
-      initSearchParameterManager();
-
+    it('should not call listener when the requestId has changed', () => {
       const listener = jest.fn();
       manager.subscribe(listener);
 
-      engine.state.query.q = '';
+      engine.state.search.requestId = 'abcde';
+      callListener();
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should call listener when a parameter value is modified and the requestId has changed', () => {
+      const listener = jest.fn();
+      manager.subscribe(listener);
+
+      engine.state.search.requestId = 'abcde';
+      engine.state.query.q = 'books';
       callListener();
 
       expect(listener).toHaveBeenCalledTimes(1);
