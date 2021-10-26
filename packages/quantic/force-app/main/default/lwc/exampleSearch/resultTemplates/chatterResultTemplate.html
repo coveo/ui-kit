@@ -16,7 +16,7 @@
             </template>
           </div>
           <div class="slds-col slds-m-vertical_xx-small slds-order_3 slds-text-align_right slds-col_bump-left">
-            <p class="slds-truncate result__date">
+            <p class="slds-truncate" style="font-weight: 400; font-size:12px; color:#3E3E3C">
               <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
             </p>
           </div>
@@ -25,7 +25,7 @@
           <div class="slds-p-right_x-small">
             <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
           </div>
-          <h3 class="slds-truncate result__title" style="font-size:1.1em; font-weight:700">
+          <h3 class="slds-truncate" style="font-size:1.1em; font-weight:700">
             <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
           </h3>
         </div>

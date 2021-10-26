@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
+import { getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
@@ -11,7 +11,7 @@ import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * The `QuanticResultQuickview` component renders a button/link which the end user can click to open a modal box containing certain information about a result.
+ * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
  * @example
  * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
  */
@@ -53,11 +53,11 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-  }
-
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
+    getHeadlessEnginePromise(this.engineId).then((engine) => {
+      this.initialize(engine);
+    }).catch((error) => {
+      console.error(error.message);
+    });
   }
 
   /**
