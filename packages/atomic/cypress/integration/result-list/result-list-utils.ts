@@ -7,7 +7,7 @@ export function withAnySectionnableResultList(assertions: () => void) {
       ['list', 'grid'].forEach((display) =>
         describe(`in a result ${display}`, () =>
           ['none', 'icon', 'small', 'large'].forEach((image) =>
-            describe(`with image="${image}"`, () =>
+            describe(`with image-size="${image}"`, () =>
               ['compact', 'normal', 'comfortable'].forEach((density) =>
                 describe(`with density="${density}"`, () => {
                   before(() => {
@@ -16,7 +16,7 @@ export function withAnySectionnableResultList(assertions: () => void) {
                     cy.get(resultListComponent).then((comp) => {
                       const resultList = comp.get()[0];
                       resultList.setAttribute('display', display);
-                      resultList.setAttribute('image', image);
+                      resultList.setAttribute('image-size', image);
                       resultList.setAttribute('density', density);
                     });
                   });

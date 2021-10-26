@@ -6,10 +6,12 @@ import {
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 import {containsSection} from '../../utils/result-section-utils';
+import {ResultDisplayImageSize} from '../atomic-result/atomic-result-display-options';
 
 export interface TemplateContent {
   innerHTML: string;
   usesSections: boolean;
+  imageSize?: ResultDisplayImageSize;
 }
 
 /**
@@ -106,6 +108,7 @@ export class AtomicResultTemplate {
       content: {
         innerHTML: this.getContent(),
         usesSections: containsSection(this.getTemplateElement().content),
+        imageSize: this.getImageSize() ?? undefined,
       },
       priority: 1,
     };
@@ -119,6 +122,18 @@ export class AtomicResultTemplate {
     return (
       this.host.querySelector('template') ?? document.createElement('template')
     );
+  }
+
+  private getImageSize() {
+    const visualSection = this.getTemplateElement().content.querySelector(
+      'atomic-result-section-visual'
+    );
+    if (visualSection) {
+      return visualSection.getAttribute(
+        'image-size'
+      ) as ResultDisplayImageSize | null;
+    }
+    return null;
   }
 
   private getContent() {
