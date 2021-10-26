@@ -31,7 +31,7 @@ export default class QuanticResultQuickview extends LightningElement {
   /**
   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
   * @api
-  * @type {string}
+  * @type {number}
   * @defaultValue `undefined`
   */
   @api maximumPreviewSize;
@@ -66,7 +66,7 @@ export default class QuanticResultQuickview extends LightningElement {
   initialize = (engine) => {
     const options = {
       result: this.result,
-      maximumPreviewSize: this.maximumPreviewSize,
+      maximumPreviewSize: Number(this.maximumPreviewSize),
     }
     this.quickview = CoveoHeadless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
