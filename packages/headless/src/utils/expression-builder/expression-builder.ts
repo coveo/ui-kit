@@ -3,10 +3,7 @@ import {
   buildDateRangeField,
   DateRangeFieldExpression,
 } from './date-range-field/date-range-field';
-import {
-  buildKeywordExpression,
-  KeywordExpression,
-} from './keyword-expression/keyword-expression';
+import {buildKeywordExpression, KeywordExpression} from './keyword/keyword';
 import {
   buildNumericField,
   NumericFieldExpression,

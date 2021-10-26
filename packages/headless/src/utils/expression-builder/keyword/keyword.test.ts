@@ -1,4 +1,4 @@
-import {buildKeywordExpression} from './keyword-expression';
+import {buildKeywordExpression} from './keyword';
 
 describe('#buildKeywordExpression', () => {
   describe('#toString', () => {
