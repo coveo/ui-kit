@@ -1,10 +1,9 @@
-import {debounce} from 'lodash';
 import {
+  getSampleSearchEngineConfiguration,
   SearchEngine,
-  EngineConfiguration,
-  buildSearchEngine,
   SearchEngineConfiguration,
 } from '@coveo/headless';
+import {debounce} from 'lodash';
 interface SearchInterface extends HTMLElement {
   initialize: (cfg: SearchEngineConfiguration) => Promise<void>;
   executeFirstSearch: () => Promise<void>;
@@ -12,8 +11,8 @@ interface SearchInterface extends HTMLElement {
 }
 
 const orgIdentifier = {
-  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-  organizationId: 'searchuisamples',
+  accessToken: getSampleSearchEngineConfiguration().accessToken,
+  organizationId: getSampleSearchEngineConfiguration().organizationId,
 };
 
 export const initializeInterfaceDebounced = (
