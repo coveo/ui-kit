@@ -1,3 +1,4 @@
+import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {debounce} from 'lodash';
 
 interface SearchInterface extends HTMLElement {
@@ -20,9 +21,10 @@ export const initializeInterfaceDebounced = (
       const childComponent = renderComponentFunction();
       clone.innerHTML = childComponent;
       searchInterface.replaceWith(clone);
+      const sampleConfig = getSampleSearchEngineConfiguration();
       await clone.initialize({
-        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-        organizationId: 'searchuisamples',
+        accessToken: sampleConfig.accessToken,
+        organizationId: sampleConfig.organizationId,
       });
       clone.executeFirstSearch();
     },
