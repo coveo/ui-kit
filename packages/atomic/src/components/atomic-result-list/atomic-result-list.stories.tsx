@@ -1,12 +1,11 @@
 import defaultStory from '../../../.storybook/default-story';
-import BreadboxDoc from './atomic-breadbox';
+import ResultListDoc from './atomic-result-list.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/Breadbox',
-  'atomic-breadbox',
+  'Atomic/ResultList',
+  'atomic-result-list',
   {},
-  BreadboxDoc
+  ResultListDoc
 );
-
 export default defaultModuleExport;
-export const DefaultBreadbox = exportedStory;
+export const DefaultResultList = exportedStory;
