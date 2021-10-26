@@ -9,6 +9,8 @@ import {
   resultListComponent,
   ResultListSelectors,
 } from './result-list-selectors';
+import {addResultTable} from './result-table-actions';
+import {ResultTableSelectors} from './result-table-selectors';
 import * as ResultTemplateAssertions from './result-template-assertions';
 import {
   resultTemplateComponent,
@@ -71,6 +73,40 @@ describe('Result Template Component', () => {
     assertContainsComponentError(ResultTemplateSelectors, true);
   });
 
+  describe('with a visual section', () => {
+    function setupVisualSection(imageSize: string) {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML('atomic-result-section-visual', {
+                'image-size': imageSize,
+              }),
+            ])
+          )
+        )
+        .init();
+    }
+
+    describe('with an icon image size', () => {
+      const imageSize = 'icon';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
+    });
+
+    describe('with a small image size', () => {
+      const imageSize = 'small';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
+    });
+  });
+
   describe('without any conditions nor sections', () => {
     const textSize = '128px';
     beforeEach(() => {
@@ -95,7 +131,7 @@ describe('Result Template Component', () => {
     });
 
     it('should not change the font size', () => {
-      ResultTemplateSelectors.customContent().should(
+      ResultTemplateSelectors.customContentInList().should(
         'have.css',
         'font-size',
         textSize
@@ -125,11 +161,104 @@ describe('Result Template Component', () => {
     });
 
     it('should change the font size', () => {
-      ResultTemplateSelectors.customContent().should(
+      ResultTemplateSelectors.customContentInList().should(
         'not.have.css',
         'font-size',
         textSize
       );
+    });
+  });
+
+  describe('with table elements', () => {
+    describe('in a result list', () => {
+      beforeEach(() => {
+        new TestFixture()
+          .with(
+            addResultTable([
+              {label: 'Anything', content: generateComponentHTML('span')},
+            ])
+          )
+          .init();
+        cy.get(resultListComponent).then(([el]) =>
+          el.setAttribute('display', 'list')
+        );
+      });
+
+      it('does not render table elements', () => {
+        ResultTemplateSelectors.tableElements()
+          .should('exist')
+          .should('not.be.visible');
+      });
+    });
+
+    describe('in a result table with sections', () => {
+      const textSize = '128px';
+      beforeEach(() => {
+        new TestFixture()
+          .with(
+            addResultTable([
+              {
+                label: 'Author',
+                content: buildTemplateWithSections({
+                  title: buildCustomTemplateContent(),
+                }),
+              },
+            ])
+          )
+          .with(addBaseTextSize(textSize))
+          .init();
+      });
+
+      it('should move result children', () => {
+        ResultTableSelectors.firstRowCellsContent()
+          .first()
+          .should('have.css', 'display', 'grid');
+      });
+
+      it('should change the font size', () => {
+        ResultTemplateSelectors.customContentIntable().should(
+          'not.have.css',
+          'font-size',
+          textSize
+        );
+      });
+    });
+
+    describe('in a result table with a visual section', () => {
+      function setupVisualSection(imageSize: string) {
+        new TestFixture()
+          .with(
+            addResultTable([
+              {
+                label: 'Author',
+                content: buildTemplateWithoutSections(
+                  generateComponentHTML('atomic-result-section-visual', {
+                    'image-size': imageSize,
+                  })
+                ),
+              },
+            ])
+          )
+          .init();
+      }
+
+      describe('with an icon image size', () => {
+        const imageSize = 'icon';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
+      });
+
+      describe('with a small image size', () => {
+        const imageSize = 'small';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
+      });
     });
   });
 

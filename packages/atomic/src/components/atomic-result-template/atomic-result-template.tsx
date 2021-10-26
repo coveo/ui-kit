@@ -6,14 +6,18 @@ import {
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 import {containsSection} from '../../utils/result-section-utils';
+import {ResultDisplayImageSize} from '../atomic-result/atomic-result-display-options';
 
 export interface TemplateContent {
   innerHTML: string;
   usesSections: boolean;
+  imageSize?: ResultDisplayImageSize;
 }
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
+ *
+ * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
  */
 @Component({
   tag: 'atomic-result-template',
@@ -64,6 +68,13 @@ export class AtomicResultTemplate {
         'The "atomic-result-template" component has to contain a "template" element as a child.'
       );
     }
+
+    if (this.host.querySelector('template')?.content.querySelector('script')) {
+      console.warn(
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered',
+        this.host
+      );
+    }
   }
 
   public componentWillLoad() {
@@ -97,6 +108,7 @@ export class AtomicResultTemplate {
       content: {
         innerHTML: this.getContent(),
         usesSections: containsSection(this.getTemplateElement().content),
+        imageSize: this.getImageSize() ?? undefined,
       },
       priority: 1,
     };
@@ -110,6 +122,18 @@ export class AtomicResultTemplate {
     return (
       this.host.querySelector('template') ?? document.createElement('template')
     );
+  }
+
+  private getImageSize() {
+    const visualSection = this.getTemplateElement().content.querySelector(
+      'atomic-result-section-visual'
+    );
+    if (visualSection) {
+      return visualSection.getAttribute(
+        'image-size'
+      ) as ResultDisplayImageSize | null;
+    }
+    return null;
   }
 
   private getContent() {

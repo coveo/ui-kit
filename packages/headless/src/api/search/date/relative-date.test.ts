@@ -4,9 +4,9 @@ import {
   RelativeDate,
   serializeRelativeDate,
   isRelativeDate,
-  RelativeDatePeriod,
   isRelativeDateFormat,
   formatRelativeDateForSearchApi,
+  validateRelativeDate,
 } from './relative-date';
 
 describe('#deserializeRelativeDate', () => {
@@ -23,19 +23,9 @@ describe('#deserializeRelativeDate', () => {
     };
     expect(deserializeRelativeDate('next-100-quarter')).toEqual(expected);
   });
-
-  it('throws when invalid"', () => {
-    expect(() => deserializeRelativeDate('2018/01/01@00:00:00')).toThrow();
-  });
 });
 
 describe('#serializeRelativeDate', () => {
-  it('when putting a bad format, should throw', () => {
-    expect(() =>
-      serializeRelativeDate({period: 'nononono' as RelativeDatePeriod})
-    ).toThrow();
-  });
-
   it('formats to "now"', () => {
     expect(serializeRelativeDate({period: 'now'})).toEqual('now');
   });
@@ -92,4 +82,28 @@ describe('#isRelativeDateFormat', () => {
 
   it('returns false on an invalid format', () =>
     expect(isRelativeDateFormat('2018/01/01@00:00:00')).toBe(false));
+});
+
+describe('#validateRelativeDate', () => {
+  it('should not throw for a valid date', () => {
+    expect(() => validateRelativeDate('now')).not.toThrow();
+  });
+
+  it('should throw for an invalid format', () => {
+    expect(() => validateRelativeDate('wow')).toThrowError(
+      'The value "wow" is not respecting the relative date format "period-amount-unit"'
+    );
+  });
+
+  it('should throw for an invalid date', () => {
+    expect(() => validateRelativeDate('past-100000000-year')).toThrowError(
+      'Date is invalid'
+    );
+  });
+
+  it('should throw for a valid date earlier than 1401', () => {
+    expect(() => validateRelativeDate('past-1000-year')).toThrowError(
+      'Date is before year 1401, which is unsupported by the API'
+    );
+  });
 });
