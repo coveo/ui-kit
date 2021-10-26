@@ -190,6 +190,16 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({aq: '@author==alice'});
     });
 
+    it('deserializes two static filters correctly', () => {
+      const result = deserialize('sf[author]=a,b&sf[filetype]=c,d');
+      expect(result).toEqual({
+        sf: {
+          author: ['a', 'b'],
+          filetype: ['c', 'd'],
+        },
+      });
+    });
+
     it('deserializes two facets correctly', () => {
       const result = deserialize('f[author]=a,b&f[filetype]=c,d');
       expect(result).toEqual({
@@ -379,7 +389,8 @@ describe('buildSearchParameterSerializer', () => {
         }),
       ],
     };
-    const parameters = buildMockSearchParameters({f, cf, nf, df});
+    const sf = {fileType: ['a', 'b']};
+    const parameters = buildMockSearchParameters({f, cf, nf, df, sf});
 
     const {serialize, deserialize} = buildSearchParameterSerializer();
     const serialized = serialize(parameters);

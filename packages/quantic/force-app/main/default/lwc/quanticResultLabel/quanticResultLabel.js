@@ -37,7 +37,7 @@ export default class QuanticResultLabel extends LightningElement {
   /**
    * Size of the icon and label to display.
    * @api
-   * @type {string}
+   * @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'}
    * @defaultValue `'small'`
    */
   @api size  ='small';
@@ -172,7 +172,7 @@ export default class QuanticResultLabel extends LightningElement {
       case 'knowledge':
         return this.labels.knowledge;
       default:
-        return undefined;
+        return objType;
     }
   }
 

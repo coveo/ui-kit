@@ -94,6 +94,8 @@ export class FacetDateInput {
           class={inputClasses}
           aria-label={startAria}
           required
+          // API/Index minimum supported date
+          min={this.formattedDateValue('1401-01-01')}
           max={this.formattedDateValue(this.end)}
           value={this.formattedDateValue(this.filterState.range?.start)}
           onInput={(e) =>

@@ -29,7 +29,7 @@ import {Hidden} from '../../common/hidden';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
+ * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
  * It only supports numeric fields.
  *
  * @part facet - The wrapper for the entire facet.
@@ -84,11 +84,11 @@ export class AtomicRatingRangeFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of intervals to split the index for this facet.
+   * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
   @Prop() public numberOfIntervals = 5;
   /**
-   * The maximum value of the field. This value is also used as the number of icons to be displayed.
+   * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
@@ -101,6 +101,12 @@ export class AtomicRatingRangeFacet
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
+   *
+   * When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`.
+   * This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):
+   *
+   * - `--atomic-rating-facet-icon-active-color`
+   * - `--atomic-rating-facet-icon-inactive-color`
    */
   @Prop() public icon = Star;
   /**

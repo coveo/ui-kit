@@ -68,10 +68,24 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop() public fieldsToInclude = '';
 
+  /**
+   * How results should be displayed.
+   */
   @Prop() display: ResultDisplayLayout = 'list';
 
+  /**
+   * How large or small results should be.
+   */
   @Prop() density: ResultDisplayDensity = 'normal';
 
+  /**
+   * How large or small the visual section of results should be.
+   */
+  @Prop() imageSize?: ResultDisplayImageSize;
+
+  /**
+   * @deprecated use `imageSize` instead.
+   */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   private listWrapperRef?: HTMLDivElement;
@@ -163,7 +177,7 @@ export class AtomicResultList implements InitializableComponent {
           key={`placeholder-${i}`}
           display={this.display}
           density={this.density}
-          image={this.image}
+          imageSize={this.imageSize ?? this.image}
         ></atomic-result-placeholder>
       )
     );
@@ -180,7 +194,7 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image={this.image}
+          imageSize={template.imageSize ?? this.imageSize ?? this.image}
           useSections={template.usesSections}
           content={template.innerHTML}
         ></atomic-result>
@@ -207,7 +221,7 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <atomic-result-table-placeholder
         density={this.density}
-        image={this.image}
+        imageSize={this.imageSize ?? this.image}
         rows={this.resultsPerPageState.numberOfResults}
       ></atomic-result-table-placeholder>
     );
@@ -219,6 +233,13 @@ export class AtomicResultList implements InitializableComponent {
         this.getTemplate(this.resultListState.results[0]).innerHTML
       ).querySelectorAll('atomic-table-element')
     );
+
+    if (fieldColumns.length === 0) {
+      this.bindings.engine.logger.error(
+        'atomic-table-element elements missing in the result template to display columns.',
+        this.host
+      );
+    }
 
     return (
       <table class={`list-root ${this.getClasses().join(' ')}`}>
@@ -236,18 +257,25 @@ export class AtomicResultList implements InitializableComponent {
         <tbody>
           {this.resultListState.results.map((result) => (
             <tr key={this.getId(result)}>
-              {fieldColumns.map((column) => (
-                <td key={column.getAttribute('label')! + this.getId(result)}>
-                  <atomic-table-cell
-                    result={result}
-                    display={this.display}
-                    density={this.density}
-                    image={this.image}
-                    useSections={containsSection(column)}
-                    content={column.innerHTML}
-                  ></atomic-table-cell>
-                </td>
-              ))}
+              {fieldColumns.map((column) => {
+                const imageSize =
+                  this.getVisualSectionInChildren(column)?.getAttribute(
+                    'image-size'
+                  );
+
+                return (
+                  <td key={column.getAttribute('label')! + this.getId(result)}>
+                    <atomic-table-cell
+                      result={result}
+                      display={this.display}
+                      density={this.density}
+                      image-size={imageSize ?? this.imageSize ?? this.image}
+                      useSections={containsSection(column)}
+                      content={column.innerHTML}
+                    ></atomic-table-cell>
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
@@ -299,6 +327,12 @@ export class AtomicResultList implements InitializableComponent {
       classes.push('loading');
     }
     return classes;
+  }
+
+  private getVisualSectionInChildren(element: HTMLElement) {
+    return Array.from(element.children).find(
+      (child) => child.tagName === 'ATOMIC-RESULT-SECTION-VISUAL'
+    );
   }
 
   @Listen('scroll', {target: 'window'})
