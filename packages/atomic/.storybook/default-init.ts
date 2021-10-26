@@ -28,9 +28,6 @@ export const initializeInterfaceDebounced = (
       const childComponent = renderComponentFunction();
       clone.innerHTML = childComponent;
       searchInterface.replaceWith(clone);
-      // TODO: Atomic need to expose *every* configuration option available on headless, not a subset.
-      // Or need to accept initializing from an already prebuilt engine.
-      // In the meantime, we have to initialize the engine twice, and re-assign it.
       await clone.initialize({
         ...orgIdentifier,
         ...engineConfig,
