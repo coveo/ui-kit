@@ -5,7 +5,7 @@ export interface KeywordExpression extends Negatable {
   expression: string;
 }
 
-export function buildKeywordExpression(config: KeywordExpression): Part {
+export function buildKeyword(config: KeywordExpression): Part {
   return {
     toString() {
       const {expression, negate} = config;

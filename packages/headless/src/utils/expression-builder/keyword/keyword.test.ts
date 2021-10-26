@@ -1,9 +1,9 @@
-import {buildKeywordExpression} from './keyword';
+import {buildKeyword} from './keyword';
 
-describe('#buildKeywordExpression', () => {
+describe('#buildKeyword', () => {
   describe('#toString', () => {
     it('with #negate not specified', () => {
-      const builder = buildKeywordExpression({
+      const builder = buildKeyword({
         expression: 'bbc news',
       });
 
@@ -11,7 +11,7 @@ describe('#buildKeywordExpression', () => {
     });
 
     it('with #negate set to true', () => {
-      const builder = buildKeywordExpression({
+      const builder = buildKeyword({
         expression: 'bbc news',
         negate: true,
       });

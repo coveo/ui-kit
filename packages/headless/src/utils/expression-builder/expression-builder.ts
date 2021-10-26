@@ -4,7 +4,7 @@ import {
   DateRangeFieldExpression,
 } from './date-range-field/date-range-field';
 import {buildExactMatch, ExactMatchExpression} from './exact-match/exact-match';
-import {buildKeywordExpression, KeywordExpression} from './keyword/keyword';
+import {buildKeyword, KeywordExpression} from './keyword/keyword';
 import {
   buildNumericField,
   NumericFieldExpression,
@@ -180,7 +180,7 @@ export function createExpressionBuilder(config: {
 
   return {
     addKeywordExpression(expression: KeywordExpression) {
-      parts.push(buildKeywordExpression(expression));
+      parts.push(buildKeyword(expression));
       return this;
     },
 
