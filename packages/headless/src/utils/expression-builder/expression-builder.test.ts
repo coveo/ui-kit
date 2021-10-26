@@ -21,6 +21,16 @@ describe('createExpressionBuilder', () => {
     });
   });
 
+  describe('#addExactMatchExpression', () => {
+    it('#toString returns the expected syntax', () => {
+      builder.addExactMatchExpression({
+        expression: 'bbc news',
+      });
+
+      expect(builder.toString()).toBe('"bbc news"');
+    });
+  });
+
   describe('#addStringField', () => {
     it(`with one expression,
     #toString returns the expected syntax`, () => {

@@ -3,6 +3,7 @@ import {
   buildDateRangeField,
   DateRangeFieldExpression,
 } from './date-range-field/date-range-field';
+import {buildExactMatch, ExactMatchExpression} from './exact-match/exact-match';
 import {buildKeywordExpression, KeywordExpression} from './keyword/keyword';
 import {
   buildNumericField,
@@ -158,6 +159,7 @@ interface Not {
 
 export interface ExpressionBuilder {
   addKeywordExpression(expression: KeywordExpression): ExpressionBuilder;
+  addExactMatchExpression(expression: KeywordExpression): ExpressionBuilder;
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
   addStringFacetField(
     expression: StringFacetFieldExpression
@@ -179,6 +181,11 @@ export function createExpressionBuilder(config: {
   return {
     addKeywordExpression(expression: KeywordExpression) {
       parts.push(buildKeywordExpression(expression));
+      return this;
+    },
+
+    addExactMatchExpression(expression: ExactMatchExpression) {
+      parts.push(buildExactMatch(expression));
       return this;
     },
 
