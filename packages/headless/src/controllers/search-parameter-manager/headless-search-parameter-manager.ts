@@ -116,11 +116,13 @@ export function buildSearchParameterManager(
         return;
       }
 
-      const allOldParams = enrichParameters(engine, activeParams);
-      const allNewParams = enrichParameters(engine, parameters);
+      const enrichedOldParams = enrichParameters(engine, activeParams);
+      const enrichedNewParams = enrichParameters(engine, parameters);
 
-      dispatch(restoreSearchParameters(allNewParams));
-      dispatch(executeSearch(logParametersChange(allOldParams, allNewParams)));
+      dispatch(restoreSearchParameters(enrichedNewParams));
+      dispatch(
+        executeSearch(logParametersChange(enrichedOldParams, enrichedNewParams))
+      );
     },
 
     get state() {
