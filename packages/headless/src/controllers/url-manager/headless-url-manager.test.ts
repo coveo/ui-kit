@@ -114,4 +114,41 @@ describe('url manager', () => {
       testExecuteSearch();
     });
   });
+
+  describe('#subscribe', () => {
+    function callListener() {
+      return (engine.subscribe as jest.Mock).mock.calls.map(
+        (args) => args[0]
+      )[0]();
+    }
+
+    it('should not call listener when initially subscribing', () => {
+      const listener = jest.fn();
+      manager.subscribe(listener);
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should call listener when a fragment value is added', () => {
+      const listener = jest.fn();
+      manager.subscribe(listener);
+
+      engine.state.query.q = 'books';
+      callListener();
+
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call listener when a fragment value is removed', () => {
+      initUrlManager('q=movies');
+
+      const listener = jest.fn();
+      manager.subscribe(listener);
+
+      engine.state.query.q = '';
+      callListener();
+
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+  });
 });

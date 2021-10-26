@@ -7,7 +7,6 @@ import {buildSearchParameterSerializer} from '../../features/search-parameters/s
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
 import {configuration} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {deepEqualAnyOrder} from '../../utils/compare-utils';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface UrlManagerProps {
@@ -76,27 +75,16 @@ export function buildUrlManager(
   );
 
   const controller = buildController(engine);
-  let previousFragment = props.initialState.fragment;
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
-      parameters: deserializeFragment(previousFragment),
+      parameters: deserializeFragment(props.initialState.fragment),
     },
   });
 
   return {
     ...controller,
 
-    subscribe(listener: () => void) {
-      const strictListener = () => {
-        const newFragment = this.state.fragment;
-        if (!areFragmentsEquivalent(previousFragment, newFragment)) {
-          previousFragment = newFragment;
-          listener();
-        }
-      };
-      strictListener();
-      return engine.subscribe(strictListener);
-    },
+    subscribe: (listener) => searchParameterManager.subscribe(listener),
 
     get state() {
       return {
@@ -107,22 +95,10 @@ export function buildUrlManager(
     },
 
     synchronize(fragment: string) {
-      previousFragment = fragment;
-
       const parameters = deserializeFragment(fragment);
       searchParameterManager.synchronize(parameters);
     },
   };
-}
-
-function areFragmentsEquivalent(fragment1: string, fragment2: string) {
-  if (fragment1 === fragment2) {
-    return true;
-  }
-
-  const params1 = deserializeFragment(fragment1);
-  const params2 = deserializeFragment(fragment2);
-  return deepEqualAnyOrder(params1, params2);
 }
 
 function deserializeFragment(fragment: string) {

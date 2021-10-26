@@ -90,22 +90,37 @@ export function buildSearchParameterManager(
     props.initialState,
     'buildSearchParameterManager'
   );
-  dispatch(restoreSearchParameters(props.initialState.parameters));
+  let oldParams = props.initialState.parameters;
+  dispatch(restoreSearchParameters(oldParams));
 
   return {
     ...controller,
 
-    synchronize(parameters: SearchParameters) {
-      const activeParams = getActiveSearchParameters(engine);
-      const oldParams = enrichParameters(engine, activeParams);
-      const newParams = enrichParameters(engine, parameters);
+    subscribe(listener: () => void) {
+      const strictListener = () => {
+        const newParams = this.state.parameters;
+        if (!areParamsEquivalent(oldParams, newParams, engine)) {
+          oldParams = newParams;
+          listener();
+        }
+      };
+      strictListener();
+      return engine.subscribe(strictListener);
+    },
 
-      if (deepEqualAnyOrder(oldParams, newParams)) {
+    synchronize(parameters: SearchParameters) {
+      oldParams = parameters;
+
+      const activeParams = getActiveSearchParameters(engine);
+      if (areParamsEquivalent(parameters, activeParams, engine)) {
         return;
       }
 
-      dispatch(restoreSearchParameters(newParams));
-      dispatch(executeSearch(logParametersChange(oldParams, newParams)));
+      const allOldParams = enrichParameters(engine, activeParams);
+      const allNewParams = enrichParameters(engine, parameters);
+
+      dispatch(restoreSearchParameters(allNewParams));
+      dispatch(executeSearch(logParametersChange(allOldParams, allNewParams)));
     },
 
     get state() {
@@ -113,6 +128,17 @@ export function buildSearchParameterManager(
       return {parameters};
     },
   };
+}
+
+function areParamsEquivalent(
+  params1: SearchParameters,
+  params2: SearchParameters,
+  engine: SearchEngine
+) {
+  return deepEqualAnyOrder(
+    enrichParameters(engine, params1),
+    enrichParameters(engine, params2)
+  );
 }
 
 function enrichParameters(
