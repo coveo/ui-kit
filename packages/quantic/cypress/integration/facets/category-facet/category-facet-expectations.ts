@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {SearchExpectations} from '../../search-expectations';
 import {
   CategoryFacetSelectors,
   AllFacetSelectors,
@@ -37,8 +38,8 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     displaySearchInput: (display: boolean) => {
       selector.searchInput().should(display ? 'exist' : 'not.exist');
     },
-    displaySearchClearInput: (display: boolean) => {
-      selector.searchClearButton().should(display ? 'exist' : 'not.exist');
+    searchInputContains: (value: string) => {
+      selector.searchInput().should('contain', value);
     },
     numberOfValues: (value: number) => {
       selector.values().should('have.length', value);
@@ -71,6 +72,12 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     moreMatchesFoundContainsQuery: (query: string) => {
       selector.moreMatches().contains(query);
     },
+    displayNoMatches: (display: boolean) => {
+      selector.noMatches().should(display ? 'exist' : 'not.exist');
+    },
+    noMatchesFoundContainsQuery: (query: string) => {
+      selector.noMatches().contains(query);
+    },
     highlightsResults: (query: string) => {
       selector.valueHighlight().each((element) => {
         const text = element.text().toLowerCase();
@@ -80,8 +87,14 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     displaySearchResultsPath: () => {
       selector.searchResultPath().should('exist');
     },
+    searchResultsPathContains: (value: string) => {
+      selector.searchResultPath().contains(value);
+    },
     searchResults: (value: number) => {
       selector.searchResults().should('have.length', value);
+    },
+    displaySearchClearButton: (display: boolean) => {
+      selector.searchClearButton().should(display ? 'exist' : 'not.exist');
     },
     logCategoryFacetSelected: (path: string[]) => {
       cy.wait(InterceptAliases.UA.Facet.Select).then((interception) => {
@@ -134,4 +147,7 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
 };
 export const CategoryFacetExpectations = {
   ...categoryFacetExpectations(CategoryFacetSelectors),
+  search: {
+    ...SearchExpectations,
+  },
 };

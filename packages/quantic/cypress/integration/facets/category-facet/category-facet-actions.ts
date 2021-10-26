@@ -34,6 +34,9 @@ function categoryFacetActions(selector: AllFacetSelectors) {
     selectSearchResult(value: string) {
       selector.searchResults().contains(value).click({force: true});
     },
+    clickSearchClearButton() {
+      selector.searchClearButton().click();
+    },
   };
 }
 

@@ -40,6 +40,13 @@ describe('quantic-category-facet', () => {
     numberOfValues: defaultNumberOfValues,
     withSearch: true,
   };
+  const customBasePathWithFilterByBasePathSettings = {
+    field: defaultField,
+    label: defaultLabel,
+    numberOfValues: defaultNumberOfValues,
+    basePath: togoHierarchy.slice(0, 2).join(','),
+    noFilterByBasePath: true,
+  };
 
   function visitCategoryFacetPage(
     options: Partial<CategoryFacetOptions> = {},
@@ -71,6 +78,18 @@ describe('quantic-category-facet', () => {
         numberOfValues: defaultNumberOfValues,
         basePath: hierarchy.slice(0, 2).join(','),
         withSearch: search ? search : false,
+      },
+      false
+    );
+  }
+
+  function setupWithCustomDelimitingCharacter() {
+    visitCategoryFacetPage(
+      {
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        delimitingCharacter: '/',
       },
       true
     );
@@ -194,6 +213,7 @@ describe('quantic-category-facet', () => {
     describe('when loading a path in the URL', () => {
       it('should bold the parent and show the children values', () => {
         const path = 'Africa,Togo';
+        const togo = 'Togo';
         loadFromUrlHash(
           {
             field: defaultField,
@@ -205,7 +225,7 @@ describe('quantic-category-facet', () => {
 
         Expect.logCategoryFacetLoad();
         Expect.numberOfParentValues(2);
-        Expect.parentValueLabel('Togo');
+        Expect.parentValueLabel(togo);
       });
     });
   });
@@ -245,6 +265,39 @@ describe('quantic-category-facet', () => {
         Expect.urlHashContains(montrealHierarchy);
       });
     });
+
+    describe('when clearing the facet search results', () => {
+      it('should clear the search input', () => {
+        const query = 'mont';
+
+        visitCategoryFacetPage(searchEnabledSettings);
+
+        Actions.typeFacetSearchQuery(query);
+        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.searchResults(8);
+
+        Actions.clickSearchClearButton();
+        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.numberOfValues(defaultNumberOfValues - 1);
+        Expect.searchInputContains('');
+      });
+    });
+
+    describe('when searching for a random value', () => {
+      it('should return no results', () => {
+        const query = 'something';
+
+        visitCategoryFacetPage(searchEnabledSettings);
+
+        Actions.typeFacetSearchQuery(query);
+
+        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.displayNoMatchesFound(true);
+        Expect.noMatchesFoundContainsQuery(query);
+        Expect.displaySearchClearButton(true);
+        Expect.searchResults(0);
+      });
+    });
   });
 
   describe('setup with custom basePath', () => {
@@ -254,6 +307,7 @@ describe('quantic-category-facet', () => {
 
         Expect.firstChildContains(togoHierarchy[2]);
         Expect.numberOfParentValues(0);
+        Expect.search.numberOfResults(1);
 
         Actions.selectChildValue(togoHierarchy[2]);
         Expect.logCategoryFacetSelected(togoHierarchy.slice(2, 3));
@@ -263,12 +317,45 @@ describe('quantic-category-facet', () => {
     describe('when typing into facet search box input', () => {
       it('facet value should be filtered to match with the keywords', () => {
         const basePath = ['North America'];
-        const query = 'mon';
+        const query = 'can';
+        const allCategories = 'All Categories';
         setupWithCustomBasePath(basePath, true);
 
         Actions.typeFacetSearchQuery(query);
         Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.searchResults(2);
+        Expect.searchResultsPathContains(allCategories);
       });
+    });
+    describe('when setting filterByBasePath to false', () => {
+      it('should display more than one result', () => {
+        visitCategoryFacetPage(
+          customBasePathWithFilterByBasePathSettings,
+          false
+        );
+
+        Expect.search.numberOfResults(10);
+      });
+    });
+  });
+  describe('setup with custom delimiter', () => {
+    it('should show all path in children value', () => {
+      const northamericaPath = 'North America';
+      const canadaPath = 'North America;Canada';
+      setupWithCustomDelimitingCharacter();
+
+      Actions.selectChildValue(northamericaPath);
+      Expect.logCategoryFacetSelected(northamericaPath.split(';'));
+      Expect.numberOfChildValues(0);
+      Expect.numberOfParentValues(1);
+
+      Actions.clickAllCategories();
+      Expect.logCategoryFacetClearAll(hierarchicalField);
+
+      Actions.selectChildValue(canadaPath);
+      Expect.logCategoryFacetSelected(canadaPath.split(';'));
+      Expect.numberOfChildValues(0);
+      Expect.numberOfParentValues(1);
     });
   });
 });
