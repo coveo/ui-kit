@@ -29,6 +29,7 @@ describe('quantic-category-facet', () => {
   const defaultField = 'geographicalhierarchy';
   const defaultLabel = 'Country';
   const defaultNumberOfValues = 8;
+  const customNumberOfValues = 4;
   const defaultSettings = {
     field: defaultField,
     label: defaultLabel,
@@ -46,6 +47,11 @@ describe('quantic-category-facet', () => {
     numberOfValues: defaultNumberOfValues,
     basePath: togoHierarchy.slice(0, 2).join(','),
     noFilterByBasePath: true,
+  };
+  const customNumberOfValuesSettings = {
+    field: defaultField,
+    label: defaultLabel,
+    numberOfValues: customNumberOfValues,
   };
 
   function visitCategoryFacetPage(
@@ -120,6 +126,7 @@ describe('quantic-category-facet', () => {
     Actions.selectChildValue(montrealHierarchy[2]);
     cy.wait(InterceptAliases.UA.Facet.Select);
     Actions.selectChildValue(montrealHierarchy[3]);
+    cy.wait(InterceptAliases.UA.Facet.Select);
   }
 
   describe('with default category facet', () => {
@@ -181,22 +188,24 @@ describe('quantic-category-facet', () => {
     });
 
     describe('when selecting value on 4nd level of data', () => {
-      describe('when selecting the third level', () => {
-        it('should redirect user up 1 level of data set', () => {
-          const selectedPath = montrealHierarchy.slice(0, 3);
-          setupGoDeeperFourLevels();
+      it('should redirect user up to parent level', () => {
+        setupGoDeeperFourLevels();
 
-          Expect.logCategoryFacetSelected(montrealHierarchy);
-          Expect.numberOfParentValues(4);
+        montrealHierarchy
+          .slice(0, 3)
+          .reverse()
+          .forEach((value, index) => {
+            const selectedPath = montrealHierarchy.slice(0, 3 - index);
 
-          Actions.selectParentValue(montrealHierarchy[2]);
+            Actions.selectParentValue(value);
 
-          Expect.logCategoryFacetSelected(selectedPath);
-          Expect.numberOfParentValues(3);
-          Expect.parentValueLabel(montrealHierarchy[2]);
-          Expect.urlHashContains(selectedPath);
-        });
+            Expect.logCategoryFacetSelected(selectedPath);
+            Expect.numberOfParentValues(3 - index);
+            Expect.parentValueLabel(value);
+            Expect.urlHashContains(selectedPath);
+          });
       });
+
       describe('when selecting "All Categories"', () => {
         it('should redirect me to very first level of data set', () => {
           setupGoDeeperFourLevels();
@@ -356,6 +365,14 @@ describe('quantic-category-facet', () => {
       Expect.logCategoryFacetSelected(canadaPath.split(';'));
       Expect.numberOfChildValues(0);
       Expect.numberOfParentValues(1);
+    });
+  });
+  describe('setup with custom numberOfValues', () => {
+    it('should show custom number of values', () => {
+      visitCategoryFacetPage(customNumberOfValuesSettings);
+
+      Expect.numberOfValues(customNumberOfValues);
+      Expect.displayShowMoreButton(true);
     });
   });
 });
