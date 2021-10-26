@@ -159,7 +159,7 @@ interface Not {
 
 export interface ExpressionBuilder {
   addKeywordExpression(expression: KeywordExpression): ExpressionBuilder;
-  addExactMatchExpression(expression: KeywordExpression): ExpressionBuilder;
+  addExactMatch(expression: KeywordExpression): ExpressionBuilder;
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
   addStringFacetField(
     expression: StringFacetFieldExpression
@@ -184,7 +184,7 @@ export function createExpressionBuilder(config: {
       return this;
     },
 
-    addExactMatchExpression(expression: ExactMatchExpression) {
+    addExactMatch(expression: ExactMatchExpression) {
       parts.push(buildExactMatch(expression));
       return this;
     },

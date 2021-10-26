@@ -21,9 +21,9 @@ describe('createExpressionBuilder', () => {
     });
   });
 
-  describe('#addExactMatchExpression', () => {
+  describe('#addExactMatch', () => {
     it('#toString returns the expected syntax', () => {
-      builder.addExactMatchExpression({
+      builder.addExactMatch({
         expression: 'bbc news',
       });
 
