@@ -102,7 +102,7 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get backdropClass() {
-    return this.isQuickviewOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
+    return `slds-backdrop ${this.isQuickviewOpen ? 'slds-backdrop_open' : ''}`;
   }
 
   get buttonLabel() {
