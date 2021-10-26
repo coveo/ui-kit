@@ -20,10 +20,10 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
 export class AtomicResultPlaceholder {
   @Prop() display!: ResultDisplayLayout;
   @Prop() density!: ResultDisplayDensity;
-  @Prop() image!: ResultDisplayImageSize;
+  @Prop() imageSize!: ResultDisplayImageSize;
 
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.image);
+    return getResultDisplayClasses(this.display, this.density, this.imageSize);
   }
 
   private renderExcerptLine(width: string) {
