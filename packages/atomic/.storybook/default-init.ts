@@ -1,13 +1,11 @@
 import {
   getSampleSearchEngineConfiguration,
-  SearchEngine,
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {debounce} from 'lodash';
 interface SearchInterface extends HTMLElement {
   initialize: (cfg: SearchEngineConfiguration) => Promise<void>;
   executeFirstSearch: () => Promise<void>;
-  engine: SearchEngine;
 }
 
 const orgIdentifier = {
