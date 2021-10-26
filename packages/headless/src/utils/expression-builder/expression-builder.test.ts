@@ -11,6 +11,16 @@ describe('createExpressionBuilder', () => {
     expect(builder.toString()).toBe('');
   });
 
+  describe('#addKeywordExpression', () => {
+    it('#toString returns the expected syntax', () => {
+      builder.addKeywordExpression({
+        expression: 'bbc news',
+      });
+
+      expect(builder.toString()).toBe('bbc news');
+    });
+  });
+
   describe('#addStringField', () => {
     it(`with one expression,
     #toString returns the expected syntax`, () => {
