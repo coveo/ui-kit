@@ -4,6 +4,10 @@ import {
   DateRangeFieldExpression,
 } from './date-range-field/date-range-field';
 import {
+  buildKeywordExpression,
+  KeywordExpression,
+} from './keyword-expression/keyword-expression';
+import {
   buildNumericField,
   NumericFieldExpression,
 } from './numeric-field/numeric-field';
@@ -156,6 +160,7 @@ interface Not {
 }
 
 export interface ExpressionBuilder {
+  addKeywordExpression(expression: KeywordExpression): ExpressionBuilder;
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
   addStringFacetField(
     expression: StringFacetFieldExpression
@@ -175,6 +180,11 @@ export function createExpressionBuilder(config: {
   const parts: Part[] = [];
 
   return {
+    addKeywordExpression(expression: KeywordExpression) {
+      parts.push(buildKeywordExpression(expression));
+      return this;
+    },
+
     addStringField(expression: StringFieldExpression) {
       parts.push(buildStringField(expression));
       return this;
