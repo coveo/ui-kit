@@ -43,6 +43,16 @@ describe('createExpressionBuilder', () => {
     });
   });
 
+  describe('#addFieldExists', () => {
+    it('#toString returns the expected syntax', () => {
+      builder.addFieldExists({
+        field: 'author',
+      });
+
+      expect(builder.toString()).toBe('@author');
+    });
+  });
+
   describe('#addStringField', () => {
     it(`with one expression,
     #toString returns the expected syntax`, () => {
