@@ -272,4 +272,12 @@
         <label>Fermer</label>
         <name>quantic_Close</name>
     </customLabels>
+    <customLabels>
+        <label>Ouvrir aperçu</label>
+        <name>quantic_OpenPreview</name>
+    </customLabels>
+    <customLabels>
+        <label>Aperçu non disponible</label>
+        <name>quantic_NoPreviewAvailable</name>
+    </customLabels>
 </Translations>

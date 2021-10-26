@@ -2,6 +2,8 @@ import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
 
 import close from '@salesforce/label/c.quantic_Close';
+import openPreview from '@salesforce/label/c.quantic_OpenPreview';
+import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -45,7 +47,9 @@ export default class QuanticResultQuickview extends LightningElement {
   unsubscribe;
 
   labels = {
-    close
+    close,
+    openPreview,
+    noPreview
   }
 
   connectedCallback() {
@@ -89,11 +93,19 @@ export default class QuanticResultQuickview extends LightningElement {
     this.isQuickviewOpen = false;
   }
 
+  get hasNoPreview() {
+    return !this.state?.resultHasPreview;
+  }
+
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
 
   get backdropClass() {
     return this.isQuickviewOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
+  }
+
+  get buttonLabel() {
+    return this.hasNoPreview ? this.labels.noPreview : this.labels.openPreview;
   }
 }

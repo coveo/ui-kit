@@ -12,9 +12,7 @@
             </div>
           </template>
           <template if:true={result.isTopResult}>
-            <div>
-              <c-quantic-result-badge variant="featured"></c-quantic-result-badge>
-            </div>
+            <c-quantic-result-badge variant="featured"></c-quantic-result-badge>
           </template>
         </div>
         <div class="slds-col slds-m-vertical_xx-small slds-order_3 slds-text-align_right slds-col_bump-left">
@@ -24,15 +22,15 @@
         </div>
       </div>
       <div class="slds-grid slds-grid_vertical-align-center slds-m-vertical_x-small">
-        <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
-        <h3 class="slds-truncate result__title slds-m-left_x-small">
+        <div class="slds-p-right_x-small">
+          <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
+        </div>
+        <h3 class="slds-truncate result__title">
           <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
         </h3>
       </div>
-      <div class="slds-grid slds-wrap slds-m-top_x-small ">
-        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left">
-          {result.Excerpt}
-        </div>
+      <div class="slds-grid slds-wrap slds-m-top_x-small slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left">
+        {result.Excerpt}
       </div>
       <div class="slds-col slds-wrap slds-m-top_x-small ">
         <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>

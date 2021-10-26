@@ -1,9 +1,10 @@
 <template>
   <lightning-button-icon
-    title="Open Quickview"
-    alternative-text="Open Quickview"
+    title={buttonLabel}
+    alternative-text={buttonLabel}
     icon-name="utility:preview"
     size="small"
+    disabled={hasNoPreview}
     onclick={openQuickview}
   ></lightning-button-icon>
   <template if:true={isQuickviewOpen}>

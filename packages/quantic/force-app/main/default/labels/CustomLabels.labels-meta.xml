@@ -525,4 +525,18 @@
         <protected>false</protected>
         <shortDescription>Close</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_OpenPreview</fullName>
+        <value>Open preview</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Open preview</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NoPreviewAvailable</fullName>
+        <value>No preview available</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No preview available</shortDescription>
+    </labels>
 </CustomLabels>
