@@ -8,10 +8,7 @@ interface SearchInterface extends HTMLElement {
   executeFirstSearch: () => Promise<void>;
 }
 
-const orgIdentifier = {
-  accessToken: getSampleSearchEngineConfiguration().accessToken,
-  organizationId: getSampleSearchEngineConfiguration().organizationId,
-};
+const orgIdentifier = getSampleSearchEngineConfiguration();
 
 export const initializeInterfaceDebounced = (
   renderComponentFunction: () => string,
