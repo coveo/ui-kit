@@ -3,11 +3,11 @@ import {Placeholder} from '@storybook/components';
 import {useParameter, useArgs} from '@storybook/api';
 import {getDocumentationFromTag} from '../map-props-to-args';
 
-export const PARAM_KEY = 'shadowParts';
+const ADDON_PARAMETER_KEY = 'shadowParts';
 import './shadow-parts-panel.css';
 
 export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
-  const componentTag = useParameter(PARAM_KEY, null);
+  const componentTag = useParameter(ADDON_PARAMETER_KEY, null);
   const [_, updateArgs] = useArgs();
   const componentDocumentation = getDocumentationFromTag(componentTag);
   const [open, setOpen] = useState({});
@@ -22,7 +22,7 @@ export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
         <tr>
           <th>Name</th>
           <th>Description</th>
-          <th>Edit</th>
+          <th>Edit CSS Statements</th>
         </tr>
       </thead>
       <tbody>
@@ -42,7 +42,9 @@ export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
                 <textarea
                   style={{display: isOpened ? 'block' : 'none'}}
                   onChange={(v) => {
-                    updateArgs({[`shadow-parts:${part.name}`]: v.target.value});
+                    updateArgs({
+                      [`${ADDON_PARAMETER_KEY}:${part.name}`]: v.target.value,
+                    });
                   }}
                 ></textarea>
               </td>
