@@ -17,17 +17,12 @@ export default class ExampleSearch extends LightningElement {
   @api disableStateInUrl = false;
   /** @type {boolean} */
   @api skipFirstSearch = false;
-
-  renderedCallback() {
-    console.log(this.searchHub);
-  }
-
   
   handleResultTemplateRegistration(event) {
     event.stopPropagation();
 
     const resultTemplatesManager = event.detail;
-    
+
     const isCase = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
       'objecttype',
       ['Case']
