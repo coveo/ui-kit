@@ -226,3 +226,76 @@ export function fromSearchApiDate(dateString) {
     .replaceAll('/', '-')
     .replaceAll('@', 'T');
 }
+
+/** @typedef {import("coveo").RelativeDate} RelativeDate */
+
+import pastHour from '@salesforce/label/c.quantic_PastHour';
+import pastHour_plural from '@salesforce/label/c.quantic_PastHour_plural';
+import pastDay from '@salesforce/label/c.quantic_PastDay';
+import pastDay_plural from '@salesforce/label/c.quantic_PastDay_plural';
+import pastWeek from '@salesforce/label/c.quantic_PastWeek';
+import pastWeek_plural from '@salesforce/label/c.quantic_PastWeek_plural';
+import pastMonth from '@salesforce/label/c.quantic_PastMonth';
+import pastMonth_plural from '@salesforce/label/c.quantic_PastMonth_plural';
+import pastQuarter from '@salesforce/label/c.quantic_PastQuarter';
+import pastQuarter_plural from '@salesforce/label/c.quantic_PastQuarter_plural';
+import pastYear from '@salesforce/label/c.quantic_PastYear';
+import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
+import nextHour from '@salesforce/label/c.quantic_NextHour';
+import nextHour_plural from '@salesforce/label/c.quantic_NextHour_plural';
+import nextDay from '@salesforce/label/c.quantic_NextDay';
+import nextDay_plural from '@salesforce/label/c.quantic_NextDay_plural';
+import nextWeek from '@salesforce/label/c.quantic_NextWeek';
+import nextWeek_plural from '@salesforce/label/c.quantic_NextWeek_plural';
+import nextMonth from '@salesforce/label/c.quantic_NextMonth';
+import nextMonth_plural from '@salesforce/label/c.quantic_NextMonth_plural';
+import nextQuarter from '@salesforce/label/c.quantic_NextQuarter';
+import nextQuarter_plural from '@salesforce/label/c.quantic_NextQuarter_plural';
+import nextYear from '@salesforce/label/c.quantic_NextYear';
+import nextYear_plural from '@salesforce/label/c.quantic_NextYear_plural';
+
+export class RelativeDateFormatter {
+  constructor() {
+    this.singularIndex = 0;
+    this.pluralIndex = 1;
+
+    this.labels = {
+      'past-hour': [pastHour, pastHour_plural],
+      'past-day': [pastDay, pastDay_plural],
+      'past-week': [pastWeek, pastWeek_plural],
+      'past-month': [pastMonth, pastMonth_plural],
+      'past-quarter': [pastQuarter, pastQuarter_plural],
+      'past-year': [pastYear, pastYear_plural],
+      'next-hour': [nextHour, nextHour_plural],
+      'next-day': [nextDay, nextDay_plural],
+      'next-week': [nextWeek, nextWeek_plural],
+      'next-month': [nextMonth, nextMonth_plural],
+      'next-quarter': [nextQuarter, nextQuarter_plural],
+      'next-year': [nextYear, nextYear_plural],
+    };
+  }
+
+  /**
+   * 
+   * @param {RelativeDate} begin 
+   * @param {RelativeDate} end 
+   * @returns {string}
+   */
+  formatRange(begin, end) {
+    const isPastRange = begin.period === 'past' && end.period === 'now';
+    const isNextRange = begin.period === 'now' && end.period === 'next';
+
+    if (!isPastRange && !isNextRange) {
+      throw new Error('The provided relative date range is invalid. Either "begin" or "end" must have the "period" set to "now".');
+    }
+
+    const relativeDate = isPastRange ? begin : end;
+    const label = this.labels[`${relativeDate.period}-${relativeDate.unit}`][
+      I18nUtils.isSingular(relativeDate.amount)
+        ? this.singularIndex
+        : this.pluralIndex
+    ];
+
+    return I18nUtils.format(label, relativeDate.amount);
+  }
+}

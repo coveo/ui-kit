@@ -2,7 +2,7 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
-import { I18nUtils } from 'c/quanticUtils';
+import { I18nUtils, RelativeDateFormatter } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
@@ -90,9 +90,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   formatFacetValue = (facetValue) => {
     const startDate = CoveoHeadless.deserializeRelativeDate(facetValue.start);
+    const endDate = CoveoHeadless.deserializeRelativeDate(facetValue.end);
+
     const relativeDate = startDate.period === 'past'
       ? startDate
-      : CoveoHeadless.deserializeRelativeDate(facetValue.end);
+      : endDate;
 
     const timeframe = this.timeframes?.find((tf) => tf.period === relativeDate.period && tf.unit === relativeDate.unit && tf.amount === relativeDate.amount);
 
@@ -101,7 +103,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
       return timeframe.label;
     }
 
-    return `${relativeDate.period} ${relativeDate.amount} ${relativeDate.unit}`;
+    return new RelativeDateFormatter().formatRange(startDate, endDate);
   }
 
   onSelectValue(evt) {
