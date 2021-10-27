@@ -23,7 +23,7 @@ describe('#buildQueryExtension', () => {
 
       const modifierExpression = createExpressionBuilder({
         delimiter: 'or',
-      }).addKeywordExpression({expression: '100'});
+      }).addKeyword({expression: '100'});
 
       const builder = buildQueryExtension({
         name: 'qre',

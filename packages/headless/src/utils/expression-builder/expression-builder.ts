@@ -167,8 +167,8 @@ interface Not {
 }
 
 export interface ExpressionBuilder {
-  addKeywordExpression(expression: KeywordExpression): ExpressionBuilder;
-  addNearExpression(expression: NearExpression): ExpressionBuilder;
+  addKeyword(expression: KeywordExpression): ExpressionBuilder;
+  addNear(expression: NearExpression): ExpressionBuilder;
   addExactMatch(expression: KeywordExpression): ExpressionBuilder;
   addFieldExists(expression: FieldExistsExpression): ExpressionBuilder;
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
@@ -191,12 +191,12 @@ export function createExpressionBuilder(config: {
   const parts: Part[] = [];
 
   return {
-    addKeywordExpression(expression: KeywordExpression) {
+    addKeyword(expression: KeywordExpression) {
       parts.push(buildKeyword(expression));
       return this;
     },
 
-    addNearExpression(expression: NearExpression) {
+    addNear(expression: NearExpression) {
       parts.push(buildNear(expression));
       return this;
     },

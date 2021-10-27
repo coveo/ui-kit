@@ -11,9 +11,9 @@ describe('createExpressionBuilder', () => {
     expect(builder.toString()).toBe('');
   });
 
-  describe('#addKeywordExpression', () => {
+  describe('#addKeyword', () => {
     it('#toString returns the expected syntax', () => {
-      builder.addKeywordExpression({
+      builder.addKeyword({
         expression: 'bbc news',
       });
 
@@ -21,9 +21,9 @@ describe('createExpressionBuilder', () => {
     });
   });
 
-  describe('#addNearExpression', () => {
+  describe('#addNear', () => {
     it('#toString returns the expected syntax', () => {
-      builder.addNearExpression({
+      builder.addNear({
         startTerm: 'keep calm',
         otherTerms: [
           {
