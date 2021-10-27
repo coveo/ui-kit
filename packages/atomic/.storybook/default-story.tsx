@@ -5,6 +5,7 @@ import {codeSample} from './code-sample';
 import {initializeInterfaceDebounced} from './default-init';
 import {mapPropsToArgTypes} from './map-props-to-args';
 import {camelToKebab} from '../src/utils/utils';
+import {SearchEngineConfiguration} from '@coveo/headless';
 
 function renderArgsToHTMLString(componentTag: string, args: Args) {
   const el = document.createElement(componentTag);
@@ -14,11 +15,16 @@ function renderArgsToHTMLString(componentTag: string, args: Args) {
   return el.outerHTML;
 }
 
+export interface DefaultStoryAdvancedConfig {
+  engineConfig?: Partial<SearchEngineConfiguration>;
+}
+
 export default function defaultStory(
   title: string,
   componentTag: string,
   defaultArgs: Args,
-  docPage: typeof DocsPage
+  docPage: typeof DocsPage,
+  advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
   let currentArgs = {};
 
@@ -52,8 +58,9 @@ export default function defaultStory(
     );
   };
 
-  const defaultLoader = initializeInterfaceDebounced(() =>
-    renderArgsToHTMLString(componentTag, currentArgs)
+  const defaultLoader = initializeInterfaceDebounced(
+    () => renderArgsToHTMLString(componentTag, currentArgs),
+    advancedConfig.engineConfig
   );
 
   exportedStory.loaders = [defaultLoader];
