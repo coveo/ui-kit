@@ -12,9 +12,17 @@
     <targetConfigs>
         <targetConfig targets="lightningCommunity__Default">
             <property name="engineId" type="String" default="example-search" label="Enter Coveo Headless engine ID"/>
+            <property name="searchHub" type="String" default="default" label="The search interface search hub"/>
+            <property name="pipeline" type="String" default="default" label="The search interface query pipeline"/>
+            <property name="disableStateInUrl" type="boolean" default="false" label="Disable state in url"/>
+            <property name="skipFirstSearch" type="boolean" default="false" label="Skip first search"/>
         </targetConfig>
         <targetConfig targets="lightning__AppPage, lightning__RecordPage, lightning__HomePage">
             <property name="engineId" type="String" default="example-search" label="Enter Coveo Headless engine ID"/>
+            <property name="searchHub" type="String" default="default" label="The search interface search hub"/>
+            <property name="pipeline" type="String" default="default" label="The search interface query pipeline"/>
+            <property name="disableStateInUrl" type="boolean" default="false" label="Disable state in url"/>
+            <property name="skipFirstSearch" type="boolean" default="false" label="Skip first search"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

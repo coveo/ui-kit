@@ -9,11 +9,23 @@ import {LightningElement, api} from 'lwc';
 export default class ExampleSearch extends LightningElement {
   /** @type {String} */
   @api engineId = 'example-search';
+  /** @type {String} */
+  @api searchHub = 'default';
+  /** @type {String} */
+  @api pipeline = 'default';
+  /** @type {String} */
+  @api disableStateInUrl = false;
+  /** @type {boolean} */
+  @api skipFirstSearch = false;
+
+  renderedCallback() {
+    console.log(this.searchHub);
+  }
+
   
   handleResultTemplateRegistration(event) {
     event.stopPropagation();
 
-    /** @type {import("coveo").ResultTemplatesManager} */
     const resultTemplatesManager = event.detail;
     
     const isCase = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
