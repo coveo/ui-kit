@@ -60,6 +60,13 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
+  renderedCallback() {
+    if (this.contentContainer && this.state?.resultHasPreview) {
+      // eslint-disable-next-line @lwc/lwc/no-inner-html
+      this.contentContainer.innerHTML = this.state.content;
+    }
+  }
+
   /**
    * @param {SearchEngine} engine
    */
@@ -78,10 +85,6 @@ export default class QuanticResultQuickview extends LightningElement {
 
   updateState() {
     this.state = this.quickview?.state;
-    if (this.contentContainer && this.state?.resultHasPreview) {
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      this.contentContainer.innerHTML = this.state.content;
-    }
   }
 
   openQuickview() {
@@ -91,6 +94,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   closeQuickview() {
     this.isQuickviewOpen = false;
+  }
+
+  get isLoading() {
+    return this.state?.isLoading;
   }
 
   get hasNoPreview() {

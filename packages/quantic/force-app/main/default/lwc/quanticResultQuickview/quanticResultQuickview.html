@@ -28,7 +28,14 @@
             </div>
           </h2>
         </header>
-        <div class="quickview__content-container slds-modal__content slds-p-around_large" id="quickview__content-container" lwc:dom="manual"></div>
+        <template if:true={isLoading}>-->
+          <div class="spinner-container slds-modal__content slds-p-around_large slds-is-relative">
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+          </div>
+        </template>
+        <template if:false={isLoading}>
+          <div class="quickview__content-container slds-modal__content slds-p-around_large" id="quickview__content-container" lwc:dom="manual"></div>
+        </template>
       </div>
     </section>
     <div class={backdropClass}></div>

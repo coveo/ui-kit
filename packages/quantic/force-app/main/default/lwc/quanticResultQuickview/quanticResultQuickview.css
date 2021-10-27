@@ -11,3 +11,8 @@
   color:#3E3E3C;
   font-weight: normal;
 }
+
+.spinner-container {
+  width: 100%;
+  height: 50%;
+}
