@@ -36,7 +36,7 @@ function renderShadowPartsToStyleString(componentTag: string, args: Args) {
     })
     .join('\n');
 
-  const rulesTextNode = document.createTextNode(`\n\t\t${styleRules}\n`);
+  const rulesTextNode = document.createTextNode(`\n\t\t${styleRules}\n\n`);
   styleElement.appendChild(rulesTextNode);
   return styleElement.outerHTML;
 }

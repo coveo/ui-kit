@@ -19,8 +19,9 @@
 }
 
 .shadow-parts-table textarea {
-  min-height: 200px;
-  min-width: 200px;
+  height: 200px;
+  width: 200px;
+  resize: none;
 }
 
 .shadow-parts-table button {
