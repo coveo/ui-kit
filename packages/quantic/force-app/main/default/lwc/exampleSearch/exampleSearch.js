@@ -7,13 +7,13 @@ import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
-  /** @type {String} */
+  /** @type {string} */
   @api engineId = 'example-search';
-  /** @type {String} */
+  /** @type {string} */
   @api searchHub = 'default';
-  /** @type {String} */
+  /** @type {string} */
   @api pipeline = 'default';
-  /** @type {String} */
+  /** @type {boolean} */
   @api disableStateInUrl = false;
   /** @type {boolean} */
   @api skipFirstSearch = false;
