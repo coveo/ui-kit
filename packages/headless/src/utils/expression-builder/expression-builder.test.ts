@@ -129,4 +129,15 @@ describe('createExpressionBuilder', () => {
       expect(builder.toString()).toBe('@size==10..20');
     });
   });
+
+  describe('#addQueryExtension', () => {
+    it('#toString returns the expected syntax', () => {
+      builder.addQueryExtension({
+        name: 'q',
+        parameters: [],
+      });
+
+      expect(builder.toString()).toBe('$q()');
+    });
+  });
 });

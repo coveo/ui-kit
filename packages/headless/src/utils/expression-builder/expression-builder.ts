@@ -19,6 +19,10 @@ import {
   NumericRangeFieldExpression,
 } from './numeric-range-field/numeric-range-field';
 import {
+  buildQueryExtension,
+  QueryExtensionExpression,
+} from './query-extension/query-extension';
+import {
   buildStringFacetField,
   StringFacetFieldExpression,
 } from './string-facet-field/string-facet-field';
@@ -177,6 +181,7 @@ export interface ExpressionBuilder {
   ): ExpressionBuilder;
   addDateField(expression: DateFieldExpression): ExpressionBuilder;
   addDateRangeField(expression: DateRangeFieldExpression): ExpressionBuilder;
+  addQueryExtension(expression: QueryExtensionExpression): ExpressionBuilder;
   toString(): string;
 }
 
@@ -233,6 +238,11 @@ export function createExpressionBuilder(config: {
 
     addDateRangeField(expression: DateRangeFieldExpression) {
       parts.push(buildDateRangeField(expression));
+      return this;
+    },
+
+    addQueryExtension(expression: QueryExtensionExpression) {
+      parts.push(buildQueryExtension(expression));
       return this;
     },
 
