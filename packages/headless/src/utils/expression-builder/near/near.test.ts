@@ -2,21 +2,33 @@ import {buildNear} from './near';
 
 describe('#buildNear', () => {
   describe('#toString', () => {
-    it('with #negate not specified', () => {
+    it('with multiple terms', () => {
       const builder = buildNear({
         startTerm: 'keep calm',
-        endTerm: 'carry on',
-        maxKeywordsBetween: 5,
+        otherTerms: [
+          {
+            endTerm: 'and',
+            maxKeywordsBetween: 1,
+          },
+          {
+            endTerm: 'carry on',
+            maxKeywordsBetween: 5,
+          },
+        ],
       });
 
-      expect(builder.toString()).toBe('keep calm near:5 carry on');
+      expect(builder.toString()).toBe('keep calm near:1 and near:5 carry on');
     });
 
     it('with #negate set to true', () => {
       const builder = buildNear({
         startTerm: 'keep calm',
-        endTerm: 'carry on',
-        maxKeywordsBetween: 5,
+        otherTerms: [
+          {
+            endTerm: 'carry on',
+            maxKeywordsBetween: 5,
+          },
+        ],
         negate: true,
       });
 

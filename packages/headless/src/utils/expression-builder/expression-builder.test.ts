@@ -25,8 +25,12 @@ describe('createExpressionBuilder', () => {
     it('#toString returns the expected syntax', () => {
       builder.addNearExpression({
         startTerm: 'keep calm',
-        endTerm: 'carry on',
-        maxKeywordsBetween: 5,
+        otherTerms: [
+          {
+            endTerm: 'carry on',
+            maxKeywordsBetween: 5,
+          },
+        ],
       });
 
       expect(builder.toString()).toBe('keep calm near:5 carry on');
