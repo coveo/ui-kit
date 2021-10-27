@@ -1,8 +1,8 @@
-# Detailed Reporting
+# Detailed reporting
 
 The Quantic package provides a custom Cypress reporter that can produce a detailed report, listing all the validated expectations.
 
-## Running tests with detailed report
+## Running tests with detailed reports
 
 To use the detailed report, run:
 
@@ -10,13 +10,15 @@ To use the detailed report, run:
 npm run cypress:test:detailed
 ```
 
-It invokes Cypress with the `--reporter cypress/reporters/detailed-reporter.js` argument to output the results using the custom reporter.
+This command invokes Cypress with the `--reporter cypress/reporters/detailed-reporter.js` argument to output the results using the custom reporter.
 
 ## Adding details to tests
 
-In order to print the expectation detail, and additional context, you need to provide the information in the test.
+In order to print the expectation details, and additional context, you must provide the information in the test.
 
-To provide details regarding an expectation, you should use the `logDetail` custom Cypress command after the actual expectation is verified. This way, the reporter can list all expectations that passed. If one expectation fails, then the reporter will display the error message as usual.
+To provide expectation details, we recommend using the `logDetail` custom Cypress command after the actual expectation is verified. This way, the reporter can list all the expectations that passed. If an expectation fails, an error message will be displayed.
+
+For example, if you enter:
 
 ```javascript
 cy.get('#greeting')
@@ -24,15 +26,17 @@ cy.get('#greeting')
   .logDetail('The greeting element should contain "Hello"');
 ```
 
-The reporter will then output this line. The leading dot indicates an expectation.
+The reporter will output the following line. The leading dot indicates an expectation.
 
 ```bash
   . The greeting element should contain "hello"
 ```
 
-A single Cypress test validates many expectations and can contain a sequence of many actions. Printing lots of expectations for a single test can be confusing. The `scope` function allows to group expectations to put them into context. You can also nest calls to `scope` if needed.
+A single Cypress test validates many expectations and can contain a sequence of many actions. Printing several expectations for a single test can be confusing. The `scope` function allows you to group expectations and put them in context. If necessary, you can also nest calls using the `scope` function.
 
-The `scope` function is imported from [detailed-collector.ts](../cypress/reporters/detailed-collector.ts)
+The `scope` function is imported from [detailed-collector.ts](../cypress/reporters/detailed-collector.ts).
+
+For example, if you enter:
 
 ```javascript
 describe('example', () => {
@@ -59,7 +63,7 @@ describe('example', () => {
 });
 ```
 
-The reporter output would look like this.
+The reporter will output the following:
 
 ```bash
 example

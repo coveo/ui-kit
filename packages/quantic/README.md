@@ -99,7 +99,7 @@ To run Cypress tests directly in your console, run:
 npm run cypress:test
 ```
 
-or to get the [detailed report](./docs/detailed-reporting.md):
+To get the [detailed report](./docs/detailed-reporting.md), run:
 
 ```bash
 npm run cypress:test:detailed
