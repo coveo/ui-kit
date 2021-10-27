@@ -12,8 +12,6 @@ import {containsVisualElement} from '../../../utils/utils';
  * ** You should ensure that elements inside of it take the available space.
  * ** You may use `atomic-size-condition` to display child elements if this section meets the defined size constraints.
  * * Always has a 1:1 aspect ratio.
- * * Has rounded corners, hiding anything that overflows beyond them.
- * * Has a gray background when the image size is `small` or `large`.
  */
 @Component({
   tag: 'atomic-result-section-visual',
