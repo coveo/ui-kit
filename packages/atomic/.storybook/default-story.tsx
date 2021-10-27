@@ -1,17 +1,44 @@
 import {h} from '@stencil/core';
-import {Args} from '@storybook/api';
+import {Args, useStorybookApi} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-import {codeSample} from './code-sample';
+import {codeSample} from './code-sample/code-sample';
 import {initializeInterfaceDebounced} from './default-init';
 import {mapPropsToArgTypes} from './map-props-to-args';
 import {camelToKebab} from '../src/utils/utils';
+import {doc} from '@stencil/core/internal/client';
+
+const shadowPartsArgsDelimiter = 'shadow-parts';
 
 function renderArgsToHTMLString(componentTag: string, args: Args) {
   const el = document.createElement(componentTag);
-  Object.keys(args).forEach((arg) => {
-    el.setAttribute(camelToKebab(arg), args[arg]);
-  });
+  Object.keys(args)
+    .filter((arg) => arg.indexOf(shadowPartsArgsDelimiter) === -1)
+    .forEach((arg) => {
+      el.setAttribute(camelToKebab(arg), args[arg]);
+    });
   return el.outerHTML;
+}
+
+function renderShadowPartsToStyleString(componentTag: string, args: Args) {
+  const styleElement = document.createElement('style');
+  const styleRules = Object.keys(args)
+    .filter((arg) => arg.indexOf(shadowPartsArgsDelimiter) !== -1)
+    .map((arg) => {
+      const shadowPartName = arg.split(`${shadowPartsArgsDelimiter}:`)[1];
+      const rulesForPartWithoutEmptyLines = (
+        args[arg].split('\n') as string[]
+      ).filter((rule) => rule != '');
+      const rulesFormattedByLine = `\t${rulesForPartWithoutEmptyLines.join(
+        '\n\t'
+      )}`;
+
+      return `\n${componentTag}::part(${shadowPartName}) {\n${rulesFormattedByLine}\n}`;
+    })
+    .join('\n');
+
+  const rulesTextNode = document.createTextNode(`\n\t\t${styleRules}\n`);
+  styleElement.appendChild(rulesTextNode);
+  return styleElement.outerHTML;
 }
 
 export default function defaultStory(
@@ -33,6 +60,7 @@ export default function defaultStory(
       docs: {
         page: docPage,
       },
+      shadowParts: componentTag,
     },
   };
 
@@ -41,12 +69,23 @@ export default function defaultStory(
     return '';
   };
 
-  const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
+  const defaultDecorator = (
+    Story: () => JSX.Element,
+    params: {args: Args},
+    foo
+  ) => {
     updateCurrentArgs(params.args);
+
     const htmlString = renderArgsToHTMLString(componentTag, currentArgs);
+    const styleString = renderShadowPartsToStyleString(
+      componentTag,
+      currentArgs
+    );
     return (
       <div>
         <Story />
+        <div innerHTML={styleString}></div>
+        {codeSample(styleString)}
         {codeSample(htmlString)}
       </div>
     );
