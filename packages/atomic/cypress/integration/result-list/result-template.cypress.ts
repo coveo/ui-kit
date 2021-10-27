@@ -73,6 +73,40 @@ describe('Result Template Component', () => {
     assertContainsComponentError(ResultTemplateSelectors, true);
   });
 
+  describe('with a visual section', () => {
+    function setupVisualSection(imageSize: string) {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML('atomic-result-section-visual', {
+                'image-size': imageSize,
+              }),
+            ])
+          )
+        )
+        .init();
+    }
+
+    describe('with an icon image size', () => {
+      const imageSize = 'icon';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
+    });
+
+    describe('with a small image size', () => {
+      const imageSize = 'small';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
+    });
+  });
+
   describe('without any conditions nor sections', () => {
     const textSize = '128px';
     beforeEach(() => {
@@ -187,6 +221,43 @@ describe('Result Template Component', () => {
           'font-size',
           textSize
         );
+      });
+    });
+
+    describe('in a result table with a visual section', () => {
+      function setupVisualSection(imageSize: string) {
+        new TestFixture()
+          .with(
+            addResultTable([
+              {
+                label: 'Author',
+                content: buildTemplateWithoutSections(
+                  generateComponentHTML('atomic-result-section-visual', {
+                    'image-size': imageSize,
+                  })
+                ),
+              },
+            ])
+          )
+          .init();
+      }
+
+      describe('with an icon image size', () => {
+        const imageSize = 'icon';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
+      });
+
+      describe('with a small image size', () => {
+        const imageSize = 'small';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
       });
     });
   });

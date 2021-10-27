@@ -51,6 +51,11 @@ export class AtomicResult {
   /**
    * How large or small the visual section of results should be.
    */
+  @Prop() imageSize?: ResultDisplayImageSize;
+
+  /**
+   * @deprecated use `imageSize` instead.
+   */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   @Listen('atomic/resolveResult')
@@ -64,7 +69,7 @@ export class AtomicResult {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
-      this.image
+      this.imageSize ?? this.image
     );
     if (this.useSections) {
       classes.push('with-sections');
