@@ -350,6 +350,7 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
 
     this.setValidityParameters();
+    // @ts-ignore
     const allValid = this.allInputs.reduce((validSoFar, inputCmp) => validSoFar && inputCmp.reportValidity(), true);
     this.resetValidityParameters();
 
@@ -366,7 +367,9 @@ export default class QuanticNumericFacet extends LightningElement {
 
   resetValidationErrors() {
     this.allInputs.forEach((input) => {
+      // @ts-ignore
       input.setCustomValidity('');
+      // @ts-ignore
       input.reportValidity();
     });
   }
