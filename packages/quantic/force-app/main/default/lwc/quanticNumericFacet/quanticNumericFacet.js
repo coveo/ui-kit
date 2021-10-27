@@ -225,7 +225,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
     this.filterState = this.numericFilter?.state;
     this.start = this.filterState?.range?.start?.toString();
     this.end = this.filterState?.range?.end?.toString();
