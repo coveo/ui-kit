@@ -1,3 +1,4 @@
+import {Part} from './common/part';
 import {buildDateField, DateFieldExpression} from './date-field/date-field';
 import {
   buildDateRangeField,
@@ -185,9 +186,15 @@ export interface ExpressionBuilder {
   toString(): string;
 }
 
-export function createExpressionBuilder(config: {
-  delimiter: 'and' | 'or';
-}): ExpressionBuilder {
+type Delimiter = 'and' | 'or';
+
+interface ExpressionBuilderOptions {
+  delimiter: Delimiter;
+}
+
+export function createExpressionBuilder(
+  config: ExpressionBuilderOptions
+): ExpressionBuilder {
   const parts: Part[] = [];
 
   return {
@@ -247,11 +254,14 @@ export function createExpressionBuilder(config: {
     },
 
     toString() {
-      return parts.join(config.delimiter);
+      const symbol = getDelimiterSymbol(config.delimiter);
+      const expression = parts.join(`) ${symbol} (`);
+
+      return parts.length <= 1 ? expression : `(${expression})`;
     },
   };
 }
 
-interface Part {
-  toString(): string;
+function getDelimiterSymbol(delimiter: Delimiter) {
+  return delimiter === 'and' ? 'AND' : 'OR';
 }

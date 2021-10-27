@@ -118,4 +118,36 @@ describe('createExpressionBuilder', () => {
 
     expect(builder.toString()).toBe('$q()');
   });
+
+  it('#delimiter is #and, with two expressions, #toString joins them correctly', () => {
+    const builder = createExpressionBuilder({delimiter: 'and'})
+      .addStringField({
+        field: 'author',
+        operator: 'contains',
+        values: ['ehughes'],
+      })
+      .addNumericField({
+        field: 'size',
+        operator: 'greaterThan',
+        value: 100,
+      });
+
+    expect(builder.toString()).toBe('(@author="ehughes") AND (@size>100)');
+  });
+
+  it('#delimiter is #or, with two expressions, #toString joins them correctly', () => {
+    const builder = createExpressionBuilder({delimiter: 'or'})
+      .addStringField({
+        field: 'author',
+        operator: 'contains',
+        values: ['ehughes'],
+      })
+      .addNumericField({
+        field: 'size',
+        operator: 'greaterThan',
+        value: 100,
+      });
+
+    expect(builder.toString()).toBe('(@author="ehughes") OR (@size>100)');
+  });
 });
