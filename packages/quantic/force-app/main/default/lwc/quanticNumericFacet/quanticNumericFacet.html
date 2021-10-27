@@ -29,10 +29,7 @@
                   <lightning-input 
                     type="number"
                     step={step}
-                    required
                     value={start}
-                    min={minSafeValue}
-                    max={end}
                     message-when-range-overflow={customMessageOverflow}
                     class="numeric__input-min" 
                     label={labels.min} 
@@ -46,10 +43,7 @@
                   <lightning-input 
                     type="number"
                     step={step}
-                    required
                     value={end}
-                    min={start}
-                    max={maxSafeValue}
                     message-when-range-underflow={customMessageUnderflow}
                     class="numeric__input-max"
                     label={labels.max} 
@@ -65,7 +59,8 @@
                     title={labels.apply} 
                     aria-label={numberInputApplyLabel}
                     type="submit"
-                    class="slds-size_small">
+                    class="slds-size_small"
+                    onblur={resetValidationErrors}>
                   </lightning-button>
                 </div>
               </form>

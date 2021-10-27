@@ -330,7 +330,7 @@ export default class QuanticNumericFacet extends LightningElement {
     }
     this.resetValidityParameters();
     this.facet?.deselectAll();
-    [...this.template.querySelectorAll('lightning-input')].forEach( input => {
+    this.allInputs.forEach((input) => {
       // @ts-ignore
       input.checkValidity();
       // @ts-ignore
@@ -350,13 +350,7 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
 
     this.setValidityParameters();
-
-    const allValid = [...this.template.querySelectorAll('lightning-input')]
-      .reduce((validSoFar, inputCmp) => {
-        // @ts-ignore
-        return validSoFar && inputCmp.reportValidity();
-      }, true);
-      
+    const allValid = this.allInputs.reduce((validSoFar, inputCmp) => validSoFar && inputCmp.reportValidity(), true);
     this.resetValidityParameters();
 
     if (!allValid) {
@@ -368,6 +362,17 @@ export default class QuanticNumericFacet extends LightningElement {
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined
     });
+  }
+
+  resetValidationErrors() {
+    this.allInputs.forEach((input) => {
+      input.setCustomValidity('');
+      input.reportValidity();
+    });
+  }
+
+  get allInputs() {
+    return [...this.template.querySelectorAll('lightning-input')];
   }
 
   get numberInputMinimumLabel() {
