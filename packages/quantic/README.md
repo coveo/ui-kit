@@ -93,6 +93,18 @@ To open Cypress in browser mode, run:
 npm run cypress:open
 ```
 
+To run Cypress tests directly in your console, run:
+
+```bash
+npm run cypress:test
+```
+
+or to get the [detailed report](./docs/detailed-reporting.md):
+
+```bash
+npm run cypress:test:detailed
+```
+
 ## Use Quantic From Source
 
 After you have cloned the repository and have run `npm install`, run the following commands:

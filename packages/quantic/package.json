@@ -25,6 +25,7 @@
     "test:typings": "tsc",
     "cypress:open": "npx cypress open",
     "cypress:test": "npx cypress run --browser chrome",
+    "cypress:test:detailed": "npx cypress run --browser chrome --headless --reporter cypress/reporters/detailed-reporter.js",
     "setup:examples": "node_modules/.bin/ts-node scripts/build/deploy-community.ts",
     "deploy:main": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/main",
     "deploy:examples": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples",
