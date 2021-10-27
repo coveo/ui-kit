@@ -1,61 +1,69 @@
 import {configure} from '../../../page-objects/configurator';
 
-import {FacetSelectors} from './numeric-facet-selectors';
-import {FacetExpectations as Expect} from './numeric-facet-expectations';
-import {
-  extractFacetValues,
-  InterceptAliases,
-  interceptSearch,
-  interceptSearchIndefinitely,
-  interceptSearchWithError,
-} from '../../../page-objects/search';
-import {
-  checkFirstValue,
-  checkLastValue,
-  selectFirstLinkValue,
-  selectLastLinkValue,
-} from './numeric-facet-actions';
+import {NumericFacetExpectations as Expect} from './numeric-facet-expectations';
+import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
 
-interface FacetOptions {
+interface NumericFacetOptions {
   field: string;
   label: string;
   numberOfValues: number;
   sortCriteria: string;
-  noSearch: boolean;
+  rangeAlgorithm: string;
+  withInput: string;
   isCollapsed: boolean;
-  displayValuesAs: string;
 }
 
 describe('Numeric Facet Test Suite', () => {
   const pageUrl = 's/quantic-numeric-facet';
 
-  const defaultField = 'ytlikecounty';
+  const defaultField = 'ytlikecount';
   const defaultLabel = 'Youtube Likes';
   const defaultNumberOfValues = 8;
 
-  const indexFacetValuesAlias = '@indexFacetValues';
+  const defaultSettings = {
+    field: defaultField,
+    label: defaultLabel,
+    numberOfValues: defaultNumberOfValues,
+  };
 
-  function visitFacetPage(options: Partial<FacetOptions> = {}) {
+  function visitNumericFacetPage(
+    options: Partial<NumericFacetOptions> = {},
+    waitForSearch = true
+  ) {
     interceptSearch();
-
     cy.visit(pageUrl);
     configure(options);
+    if (waitForSearch) {
+      cy.wait(InterceptAliases.Search);
+    }
   }
 
   function loadFromUrlHash(
-    options: Partial<FacetOptions> = {},
+    options: Partial<NumericFacetOptions> = {},
     urlHash: string
   ) {
     interceptSearch();
-
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
+    cy.wait(InterceptAliases.Search);
   }
 
-  function aliasFacetValues() {
-    cy.wait(InterceptAliases.Search).then((interception) => {
-      const indexValues = extractFacetValues(interception.response);
-      cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
+  describe('with default numeric facet', () => {
+    it('should work as expected', () => {
+      visitNumericFacetPage(defaultSettings);
+
+      Expect.logNumericFacetLoad();
+      Expect.isRendered(true);
+      Expect.displayLabel(true);
+      Expect.displaySearchForm(false);
+      Expect.displayClearFilterButton(false);
+      Expect.numberOfValues(defaultNumberOfValues);
+      Expect.numberOfSelectedCheckboxValues(0);
     });
-  }
+    describe('when selecting a value', () => {
+      it('should', () => {
+        visitNumericFacetPage(defaultSettings);
+      });
+    });
+  });
 });

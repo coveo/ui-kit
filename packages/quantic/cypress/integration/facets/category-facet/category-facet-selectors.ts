@@ -4,7 +4,7 @@ import {
   FacetWithShowMoreLessSelector,
 } from '../facet-common-selectors';
 
-export const gategoryFacetComponent = 'c-quantic-category-facet';
+export const categoryFacetComponent = 'c-quantic-category-facet';
 
 export interface CategoryFacetSelector extends ComponentSelector {
   label: () => CypressSelector;
@@ -27,10 +27,8 @@ export type AllFacetSelectors = FacetWithSearchSelector &
   FacetWithShowMoreLessSelector &
   CategoryFacetSelector;
 
-export const categoryFacetComponent = 'quantic-category-facet';
-
 export const CategoryFacetSelectors: AllFacetSelectors = {
-  get: () => cy.get(gategoryFacetComponent),
+  get: () => cy.get(categoryFacetComponent),
 
   label: () => CategoryFacetSelectors.get().find('header h2 > span'),
   values: () =>

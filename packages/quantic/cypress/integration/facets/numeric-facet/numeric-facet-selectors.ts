@@ -1,49 +1,50 @@
+import {ComponentSelector, CypressSelector} from '../../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithValuesSelector,
-  FacetWithSearchSelector,
-  FacetWithShowMoreLessSelector,
 } from '../facet-common-selectors';
 
-export const facetComponent = 'c-quantic-numeric-facet';
+export const numericFacetComponent = 'c-quantic-numeric-facet';
+
+export interface NumericFacetSelector extends ComponentSelector {
+  inputMin: () => CypressSelector;
+  inputMax: () => CypressSelector;
+  applyButton: () => CypressSelector;
+  searchForm: () => CypressSelector;
+}
 
 export type AllFacetSelectors = BaseFacetSelector &
   FacetWithValuesSelector &
-  FacetWithSearchSelector &
-  FacetWithShowMoreLessSelector;
+  NumericFacetSelector;
 
-export const FacetSelectors: AllFacetSelectors = {
-  get: () => cy.get(facetComponent),
+export const NumericFacetSelectors: AllFacetSelectors = {
+  get: () => cy.get(numericFacetComponent),
 
-  label: () => FacetSelectors.get().find('header h2 > span'),
-  values: () => FacetSelectors.get().find('c-quantic-facet-value'),
-  clearFilterButton: () => FacetSelectors.get().find('.facet__clear-filter'),
-  valueLabel: () => FacetSelectors.get().find('.facet__value-text span'),
+  label: () => NumericFacetSelectors.get().find('header h2 > span'),
+  values: () => NumericFacetSelectors.get().find('c-quantic-facet-value'),
+  inputMin: () => NumericFacetSelectors.get().find('.numeric__input-min'),
+  inputMax: () => NumericFacetSelectors.get().find('.numeric__input-max'),
+  applyButton: () => NumericFacetSelectors.get().find('button[type="submit"]'),
+  searchForm: () => NumericFacetSelectors.get().find('.facet__search-form'),
+  clearFilterButton: () =>
+    NumericFacetSelectors.get().find('.facet__clear-filter'),
+  valueLabel: () => NumericFacetSelectors.get().find('.facet__value-text span'),
   facetValueLabelAtIndex: (index: number) =>
-    FacetSelectors.valueLabel().eq(index),
-  collapseButton: () => FacetSelectors.get().find('.facet__collapse'),
-  expandButton: () => FacetSelectors.get().find('.facet__expand'),
-  placeholder: () => FacetSelectors.get().find('.placeholder__card-container'),
+    NumericFacetSelectors.valueLabel().eq(index),
+  collapseButton: () => NumericFacetSelectors.get().find('.facet__collapse'),
+  expandButton: () => NumericFacetSelectors.get().find('.facet__expand'),
+  placeholder: () =>
+    NumericFacetSelectors.get().find('.placeholder__card-container'),
 
   selectedCheckbox: () =>
-    FacetSelectors.get().find('input[type="checkbox"]:checked'),
+    NumericFacetSelectors.get().find('input[type="checkbox"]:checked'),
   idleCheckbox: () =>
-    FacetSelectors.get().find('input[type="checkbox"]:not(:checked)'),
+    NumericFacetSelectors.get().find('input[type="checkbox"]:not(:checked)'),
   selectedValue: () =>
-    FacetSelectors.get().find('.facet__value-text.facet__value_selected'),
+    NumericFacetSelectors.get().find(
+      '.facet__value-text.facet__value_selected'
+    ),
   idleValue: () =>
-    FacetSelectors.get().find('.facet__value-text.facet__value_idle'),
-  checkbox: () => FacetSelectors.get().find('.slds-checkbox'),
-
-  searchInput: () => FacetSelectors.get().find('input[type="search"]'),
-  searchClearButton: () =>
-    FacetSelectors.get().find('button[data-element-id="searchClear"]'),
-  moreMatches: () =>
-    FacetSelectors.get().find('.facet__search-results_more-matches'),
-  noMatches: () => FacetSelectors.get().find('.facet__search-results_no-match'),
-  valueHighlight: () =>
-    FacetSelectors.get().find('.facet__search-result_highlight'),
-
-  showLessButton: () => FacetSelectors.get().find('.facet__show-less'),
-  showMoreButton: () => FacetSelectors.get().find('.facet__show-more'),
+    NumericFacetSelectors.get().find('.facet__value-text.facet__value_idle'),
+  checkbox: () => NumericFacetSelectors.get().find('.slds-checkbox'),
 };
