@@ -14,7 +14,7 @@ describe('#buildQueryExtension', () => {
 
     it('with multiple parameters', () => {
       const fieldExpression = createExpressionBuilder({
-        delimiter: 'or',
+        operator: 'or',
       }).addStringField({
         field: 'documenttype',
         operator: 'isExactly',
@@ -22,7 +22,7 @@ describe('#buildQueryExtension', () => {
       });
 
       const modifierExpression = createExpressionBuilder({
-        delimiter: 'or',
+        operator: 'or',
       }).addKeyword({expression: '100'});
 
       const builder = buildQueryExtension({

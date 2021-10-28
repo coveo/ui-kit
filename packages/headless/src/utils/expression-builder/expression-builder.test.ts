@@ -4,7 +4,7 @@ describe('createExpressionBuilder', () => {
   let builder: ExpressionBuilder;
 
   beforeEach(() => {
-    builder = createExpressionBuilder({delimiter: 'and'});
+    builder = createExpressionBuilder({operator: 'and'});
   });
 
   it('builder with no expression, #toString returns an empty string', () => {
@@ -119,8 +119,8 @@ describe('createExpressionBuilder', () => {
     expect(builder.toString()).toBe('$q()');
   });
 
-  it('#delimiter is #and, with two expressions, #toString joins them correctly', () => {
-    const builder = createExpressionBuilder({delimiter: 'and'})
+  it('#operator is #and, with two expressions, #toString joins them correctly', () => {
+    const builder = createExpressionBuilder({operator: 'and'})
       .addStringField({
         field: 'author',
         operator: 'contains',
@@ -135,8 +135,8 @@ describe('createExpressionBuilder', () => {
     expect(builder.toString()).toBe('(@author="ehughes") AND (@size>100)');
   });
 
-  it('#delimiter is #or, with two expressions, #toString joins them correctly', () => {
-    const builder = createExpressionBuilder({delimiter: 'or'})
+  it('#operator is #or, with two expressions, #toString joins them correctly', () => {
+    const builder = createExpressionBuilder({operator: 'or'})
       .addStringField({
         field: 'author',
         operator: 'contains',

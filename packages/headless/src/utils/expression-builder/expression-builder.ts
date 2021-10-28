@@ -32,6 +32,9 @@ import {
   StringFieldExpression,
 } from './string-field/string-field';
 
+/**
+ * A utility to help build query expressions.
+ */
 export interface ExpressionBuilder {
   addKeyword(expression: KeywordExpression): ExpressionBuilder;
   addNear(expression: NearExpression): ExpressionBuilder;
@@ -51,12 +54,24 @@ export interface ExpressionBuilder {
   toString(): string;
 }
 
-type Delimiter = 'and' | 'or';
+type BooleanOperator = 'and' | 'or';
 
-interface ExpressionBuilderOptions {
-  delimiter: Delimiter;
+/**
+ * The expression builder options.
+ */
+export interface ExpressionBuilderOptions {
+  /**
+   * The boolean operator to join individual expressions with.
+   */
+  operator: BooleanOperator;
 }
 
+/**
+ * Creates an `ExpressionBuilder` instance.
+ *
+ * @param config - The expression builder options.
+ * @returns An `ExpressionBuilder` instance.
+ */
 export function createExpressionBuilder(
   config: ExpressionBuilderOptions
 ): ExpressionBuilder {
@@ -119,7 +134,7 @@ export function createExpressionBuilder(
     },
 
     toString() {
-      const symbol = getDelimiterSymbol(config.delimiter);
+      const symbol = getBooleanOperatorSymbol(config.operator);
       const expression = parts.join(`) ${symbol} (`);
 
       return parts.length <= 1 ? expression : `(${expression})`;
@@ -127,6 +142,6 @@ export function createExpressionBuilder(
   };
 }
 
-function getDelimiterSymbol(delimiter: Delimiter) {
-  return delimiter === 'and' ? 'AND' : 'OR';
+function getBooleanOperatorSymbol(operator: BooleanOperator) {
+  return operator === 'and' ? 'AND' : 'OR';
 }
