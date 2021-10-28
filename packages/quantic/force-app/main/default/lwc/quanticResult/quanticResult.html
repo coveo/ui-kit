@@ -22,9 +22,11 @@
         </div>
       </div>
       <div class="slds-grid slds-grid_vertical-align-center slds-m-vertical_x-small">
-        <div class="slds-p-right_x-small">
-          <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
-        </div>
+        <template if:true={resultHasPreview}>
+          <div class="slds-p-right_x-small">
+            <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
+          </div>
+        </template>
         <h3 class="slds-truncate result__title">
           <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
         </h3>

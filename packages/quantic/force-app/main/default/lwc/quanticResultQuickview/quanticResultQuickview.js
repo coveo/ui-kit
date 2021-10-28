@@ -1,5 +1,5 @@
-import { LightningElement, api, track } from 'lwc';
-import { getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
+import {LightningElement, api, track} from 'lwc';
+import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
@@ -12,6 +12,7 @@ import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 
 /**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
+ * @fires CustomEvent#haspreview
  * @example
  * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
  */
@@ -77,6 +78,8 @@ export default class QuanticResultQuickview extends LightningElement {
     }
     this.quickview = CoveoHeadless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
+
+    this.dispatchHasPreview(this.quickview.state.resultHasPreview);
   }
 
   disconnectedCallback() {
@@ -90,10 +93,32 @@ export default class QuanticResultQuickview extends LightningElement {
   openQuickview() {
     this.isQuickviewOpen = true;
     this.quickview.fetchResultContent();
+    this.addRecentResult();
+  }
+
+  addRecentResult() {
+    getHeadlessEnginePromise(this.engineId).then((engine) => {
+      const {pushRecentResult} = CoveoHeadless.loadRecentResultsActions(engine);
+      engine.dispatch(pushRecentResult(JSON.parse(JSON.stringify(this.result))));
+    });
   }
 
   closeQuickview() {
     this.isQuickviewOpen = false;
+  }
+
+  stopPropagation(evt) {
+    evt.stopPropagation();
+  }
+  
+  dispatchHasPreview(hasPreview) {
+    this.dispatchEvent(new CustomEvent('haspreview', {
+      detail: {
+        hasPreview
+      },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   get isLoading() {

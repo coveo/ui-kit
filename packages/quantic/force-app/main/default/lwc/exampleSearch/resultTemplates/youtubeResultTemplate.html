@@ -28,9 +28,11 @@
         <div class="slds-col slds-p-left_x-small slds-order_2 slds-large-order_2 slds-size_1-of-1 slds-large-size_9-of-12 slds-text-align_left">
           <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-grid_vertical-align-center slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 700;">
-              <div class="slds-p-right_x-small">
-                <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
-              </div>
+              <template if:true={resultHasPreview}>
+                <div class="slds-p-right_x-small">
+                  <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
+                </div>
+              </template>
               <h3 class="slds-truncate" style="font-size:1.1em; font-weight:700">
                 <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
               </h3>
