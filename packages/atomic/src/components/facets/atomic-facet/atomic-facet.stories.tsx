@@ -1,23 +1,12 @@
-import {h} from '@stencil/core';
+import defaultStory from '../../../../.storybook/default-story';
 import FacetDoc from './atomic-facet.mdx';
-import {Args} from '@storybook/api';
-import {mapPropsToArgTypes} from '../../../../.storybook/map-props-to-args';
 
-export default {
-  title: 'Atomic/Facet',
-  argTypes: mapPropsToArgTypes('atomic-facet'),
-  parameters: {
-    docs: {
-      page: FacetDoc,
-    },
-  },
-};
+const {defaultModuleExport, exportedStory} = defaultStory(
+  'Atomic/Facet',
+  'atomic-facet',
+  {field: 'objecttype'},
+  FacetDoc
+);
 
-export const TheDefaultFacet = (args: Args) => {
-  return (
-    <div>
-      <div>This is where we need to define the story for a facet</div>
-      <code>Current args: {JSON.stringify(args)}</code>
-    </div>
-  );
-};
+export default defaultModuleExport;
+export const DefaultFacet = exportedStory;

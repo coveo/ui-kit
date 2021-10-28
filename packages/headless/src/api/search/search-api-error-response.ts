@@ -11,11 +11,13 @@ export interface SearchAPIErrorWithExceptionInBody {
   exception: QueryException;
 }
 
-function buildDisconnectedError(): SearchAPIErrorWithStatusCode {
+function buildDisconnectedError(
+  error: DisconnectedError
+): SearchAPIErrorWithStatusCode {
   return {
-    statusCode: 0,
-    type: 'Disconnected',
-    message: 'Could not connect',
+    statusCode: error.statusCode,
+    type: error.name,
+    message: error.message,
   };
 }
 
@@ -23,7 +25,7 @@ export function buildAPIResponseFromErrorOrThrow(error: Error): {
   error: SearchAPIErrorWithStatusCode;
 } {
   if (error instanceof DisconnectedError) {
-    return {error: buildDisconnectedError()};
+    return {error: buildDisconnectedError(error)};
   }
   throw error;
 }
