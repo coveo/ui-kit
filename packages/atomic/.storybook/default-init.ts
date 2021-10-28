@@ -1,16 +1,18 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+import {
+  getSampleSearchEngineConfiguration,
+  SearchEngineConfiguration,
+} from '@coveo/headless';
 import {debounce} from 'lodash';
-
 interface SearchInterface extends HTMLElement {
-  initialize: (cfg: {
-    accessToken: string;
-    organizationId: string;
-  }) => Promise<void>;
+  initialize: (cfg: SearchEngineConfiguration) => Promise<void>;
   executeFirstSearch: () => Promise<void>;
 }
 
+const orgIdentifier = getSampleSearchEngineConfiguration();
+
 export const initializeInterfaceDebounced = (
-  renderComponentFunction: () => string
+  renderComponentFunction: () => string,
+  engineConfig: Partial<SearchEngineConfiguration> = {}
 ) => {
   return debounce(
     async () => {
@@ -21,12 +23,12 @@ export const initializeInterfaceDebounced = (
       const childComponent = renderComponentFunction();
       clone.innerHTML = childComponent;
       searchInterface.replaceWith(clone);
-      const sampleConfig = getSampleSearchEngineConfiguration();
       await clone.initialize({
-        accessToken: sampleConfig.accessToken,
-        organizationId: sampleConfig.organizationId,
+        ...orgIdentifier,
+        ...engineConfig,
       });
-      clone.executeFirstSearch();
+
+      await clone.executeFirstSearch();
     },
     1000,
     {trailing: true}

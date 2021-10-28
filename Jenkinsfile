@@ -71,7 +71,7 @@ node('linux && docker') {
                   sh 'cd packages/quantic && ./node_modules/cypress/bin/cypress install'
                   sh 'cd packages/quantic && ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid $SFDX_AUTH_CLIENT_ID --jwtkeyfile $SFDX_AUTH_JWT_KEY --username $SFDX_AUTH_JWT_USERNAME --instanceurl $SFDX_AUTH_JWT_INSTANCE_URL --setdefaultdevhubusername'
                   sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci'
-                  sh 'cd packages/quantic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --browser chrome'
+                  sh 'cd packages/quantic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --browser chrome --reporter cypress/reporters/detailed-reporter.js'
                   sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/delete-org.ts'
                 }
               }
