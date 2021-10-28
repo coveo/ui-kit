@@ -1,18 +1,18 @@
-import {BaseFacetSelector} from '../facet-common-selectors';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
 
 const valueCheckbox = 'input[type="checkbox"]';
+export const field = 'ytlikecount';
 
-export function checkFirstValue(selector: BaseFacetSelector) {
-  selector.values().first().find(valueCheckbox).check({force: true});
-}
 const numericFacetActions = (selector: AllFacetSelectors) => {
   return {
-    checkFirstValue() {
-      selector.values().first().find(valueCheckbox).check({force: true});
+    checkValueAt: (index: number) => {
+      selector.values().eq(index).find(valueCheckbox).check({force: true});
+    },
+    clickClearFilter: () => {
+      selector.clearFilterButton().click();
     },
   };
 };

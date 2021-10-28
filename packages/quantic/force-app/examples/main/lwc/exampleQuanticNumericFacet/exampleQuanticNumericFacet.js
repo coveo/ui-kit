@@ -1,4 +1,5 @@
 import {api, LightningElement, track} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class ExampleQuanticNumericFacet extends LightningElement {
     @api engineId = 'quantic-numeric-facet-engine';
@@ -51,6 +52,11 @@ export default class ExampleQuanticNumericFacet extends LightningElement {
             defaultValue: false
         }
     ]
+    formattingFunction = (item) => `${new Intl.NumberFormat(LOCALE).format(
+        item.start
+      )} - ${new Intl.NumberFormat(LOCALE).format(
+        item.end
+    )}`;
 
     handleTryItNow(evt) {
         this.config = evt.detail;

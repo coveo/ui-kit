@@ -2,6 +2,7 @@ import {configure} from '../../../page-objects/configurator';
 
 import {NumericFacetExpectations as Expect} from './numeric-facet-expectations';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {field, NumericFacetActions as Actions} from './numeric-facet-actions';
 
 interface NumericFacetOptions {
   field: string;
@@ -59,10 +60,33 @@ describe('Numeric Facet Test Suite', () => {
       Expect.displayClearFilterButton(false);
       Expect.numberOfValues(defaultNumberOfValues);
       Expect.numberOfSelectedCheckboxValues(0);
+      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
     });
     describe('when selecting a value', () => {
-      it('should', () => {
+      it('should work as expected', () => {
+        const min = 0;
+        const max = 8000;
         visitNumericFacetPage(defaultSettings);
+
+        Actions.checkValueAt(0);
+        Expect.displayClearFilterButton(true);
+        Expect.numberOfSelectedCheckboxValues(1);
+        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+        Expect.urlHashContains(`${min}..${max}`);
+        //Expect.logNumericFacetSelect(field, 0);
+      });
+    });
+    describe('when clearing the selection', () => {
+      it('should deselect all values', () => {
+        visitNumericFacetPage(defaultSettings);
+
+        Actions.checkValueAt(0);
+        Expect.displayClearFilterButton(true);
+
+        Actions.clickClearFilter();
+        Expect.logNumericFacetClearAll(field);
+        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+        Expect.numberOfSelectedCheckboxValues(0);
       });
     });
   });

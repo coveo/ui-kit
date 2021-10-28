@@ -28,7 +28,7 @@ export const NumericFacetSelectors: AllFacetSelectors = {
   searchForm: () => NumericFacetSelectors.get().find('.facet__search-form'),
   clearFilterButton: () =>
     NumericFacetSelectors.get().find('.facet__clear-filter'),
-  valueLabel: () => NumericFacetSelectors.get().find('.facet__value-text span'),
+  valueLabel: () => NumericFacetSelectors.get().find('.facet__value-text'),
   facetValueLabelAtIndex: (index: number) =>
     NumericFacetSelectors.valueLabel().eq(index),
   collapseButton: () => NumericFacetSelectors.get().find('.facet__collapse'),
