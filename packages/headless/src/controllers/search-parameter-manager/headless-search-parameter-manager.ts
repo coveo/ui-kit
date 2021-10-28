@@ -83,15 +83,6 @@ export function buildSearchParameterManager(
 ): SearchParameterManager {
   const {dispatch} = engine;
   const controller = buildController(engine);
-  let lastRequestId: string;
-
-  function updateLastRequestId() {
-    lastRequestId = engine.state.search.requestId;
-  }
-
-  function hasRequestIdChanged() {
-    return lastRequestId !== engine.state.search.requestId;
-  }
 
   validateInitialState(
     engine,
@@ -99,32 +90,12 @@ export function buildSearchParameterManager(
     props.initialState,
     'buildSearchParameterManager'
   );
-  let oldParams = props.initialState.parameters;
-  updateLastRequestId();
-  dispatch(restoreSearchParameters(oldParams));
+  dispatch(restoreSearchParameters(props.initialState.parameters));
 
   return {
     ...controller,
 
-    subscribe(listener: () => void) {
-      const strictListener = () => {
-        const newParams = this.state.parameters;
-        if (
-          !areParamsEquivalent(oldParams, newParams, engine) &&
-          hasRequestIdChanged()
-        ) {
-          oldParams = newParams;
-          listener();
-        }
-        updateLastRequestId();
-      };
-      strictListener();
-      return engine.subscribe(strictListener);
-    },
-
     synchronize(parameters: SearchParameters) {
-      oldParams = parameters;
-
       const activeParams = getActiveSearchParameters(engine);
       if (areParamsEquivalent(parameters, activeParams, engine)) {
         return;
