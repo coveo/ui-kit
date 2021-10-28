@@ -2,12 +2,26 @@ import {Part} from '../common/part';
 import {ExpressionBuilder} from '../expression-builder';
 
 export interface QueryExtensionExpression {
+  /**
+   * The query extension name without the leading $ sign. See [Standard Query Extensions](https://docs.coveo.com/en/1462/build-a-search-ui/standard-query-extensions) for examples.
+   */
   name: string;
-  parameters: Parameter[];
+
+  /**
+   * The query extension parameters where applicable.
+   */
+  parameters: QueryExtensionParameter[];
 }
 
-interface Parameter {
+export interface QueryExtensionParameter {
+  /**
+   * The parameter name.
+   */
   name: string;
+
+  /**
+   * The parameter value.
+   */
   value: ExpressionBuilder;
 }
 
@@ -21,7 +35,7 @@ export function buildQueryExtension(config: QueryExtensionExpression): Part {
   };
 }
 
-function buildParameters(params: Parameter[]) {
+function buildParameters(params: QueryExtensionParameter[]) {
   return params
     .map((param) => {
       const {name, value} = param;

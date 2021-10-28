@@ -37,7 +37,7 @@ import {
  */
 export interface ExpressionBuilder {
   /**
-   * Adds an expression to match. Terms can be in any order, and may also be expanded with stemming.
+   * Adds an expression containing terms to match. Terms can be in any order, and may also be expanded with stemming.
    *
    * @param expression - A keyword expression.
    * @returns The `ExpressionBuilder` instance.
@@ -53,12 +53,12 @@ export interface ExpressionBuilder {
   addNear(expression: NearExpression): ExpressionBuilder;
 
   /**
-   * Adds an expression that must appear in its entirety at least once in an item for that item to be returned.
+   * Adds an expression that must appear in its entirety at least once for an item to be returned.
    *
    * @param expression - An exact match expression.
    * @returns The `ExpressionBuilder` instance.
    */
-  addExactMatch(expression: KeywordExpression): ExpressionBuilder;
+  addExactMatch(expression: ExactMatchExpression): ExpressionBuilder;
 
   /**
    * Adds an expression returning all items where the defined field exists.
@@ -69,7 +69,7 @@ export interface ExpressionBuilder {
   addFieldExists(expression: FieldExistsExpression): ExpressionBuilder;
 
   /**
-   * Adds an expression that uses an `operator` to compare a string `field` to a `value`.
+   * Adds an expression that uses an `operator` to compare a string `field` against certain `values`.
    * Returns all of the items for which the expression evaluates to true.
    *
    * @param expression - A string field expression.

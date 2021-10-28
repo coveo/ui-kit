@@ -3,8 +3,19 @@ import {getOperatorSymbol, NumericOperator} from '../common/operator';
 import {Part} from '../common/part';
 
 export interface DateFieldExpression extends Negatable {
+  /**
+   * The field name.
+   */
   field: string;
+
+  /**
+   * The operator to use to compare the `field` and `value`.
+   */
   operator: NumericOperator;
+
+  /**
+   * The value to match against the field. For absolute dates, please use form YYYY/MM/DD. For relative dates, please refer to the supported [date/time operators](https://docs.coveo.com/en/1814/searching-with-coveo/search-prefixes-and-operators#datetime-operators).
+   */
   value: string;
 }
 

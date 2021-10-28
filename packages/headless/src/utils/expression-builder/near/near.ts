@@ -2,12 +2,26 @@ import {getNegationPrefix, Negatable} from '../common/negatable';
 import {Part} from '../common/part';
 
 export interface NearExpression extends Negatable {
+  /**
+   * The reference term.
+   */
   startTerm: string;
+
+  /**
+   * The other terms to check against the reference term.
+   */
   otherTerms: OtherTerm[];
 }
 
 interface OtherTerm {
+  /**
+   * The term to check against the reference term.
+   */
   endTerm: string;
+
+  /**
+   * The maximum number of keywords that should exist between the current term and the reference term.
+   */
   maxKeywordsBetween: number;
 }
 

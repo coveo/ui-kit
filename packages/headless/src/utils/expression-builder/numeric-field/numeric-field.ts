@@ -3,8 +3,19 @@ import {getOperatorSymbol, NumericOperator} from '../common/operator';
 import {Part} from '../common/part';
 
 export interface NumericFieldExpression extends Negatable {
+  /**
+   * The field name.
+   */
   field: string;
+
+  /**
+   * The operator to use to compare the `field` and `value`.
+   */
   operator: NumericOperator;
+
+  /**
+   * The value to match against the field.
+   */
   value: number;
 }
 
