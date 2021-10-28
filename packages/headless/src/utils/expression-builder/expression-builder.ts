@@ -1,7 +1,20 @@
+import {buildDateField, DateFieldExpression} from './date-field/date-field';
+import {
+  buildDateRangeField,
+  DateRangeFieldExpression,
+} from './date-range-field/date-range-field';
 import {
   buildNumericField,
   NumericFieldExpression,
 } from './numeric-field/numeric-field';
+import {
+  buildNumericRangeField,
+  NumericRangeFieldExpression,
+} from './numeric-range-field/numeric-range-field';
+import {
+  buildStringFacetField,
+  StringFacetFieldExpression,
+} from './string-facet-field/string-facet-field';
 import {
   buildStringField,
   StringFieldExpression,
@@ -144,7 +157,15 @@ interface Not {
 
 export interface ExpressionBuilder {
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
+  addStringFacetField(
+    expression: StringFacetFieldExpression
+  ): ExpressionBuilder;
   addNumericField(expression: NumericFieldExpression): ExpressionBuilder;
+  addNumericRangeField(
+    expression: NumericRangeFieldExpression
+  ): ExpressionBuilder;
+  addDateField(expression: DateFieldExpression): ExpressionBuilder;
+  addDateRangeField(expression: DateRangeFieldExpression): ExpressionBuilder;
   toString(): string;
 }
 
@@ -159,8 +180,28 @@ export function createExpressionBuilder(config: {
       return this;
     },
 
+    addStringFacetField(expression: StringFacetFieldExpression) {
+      parts.push(buildStringFacetField(expression));
+      return this;
+    },
+
     addNumericField(expression: NumericFieldExpression) {
       parts.push(buildNumericField(expression));
+      return this;
+    },
+
+    addNumericRangeField(expression: NumericRangeFieldExpression) {
+      parts.push(buildNumericRangeField(expression));
+      return this;
+    },
+
+    addDateField(expression: DateFieldExpression) {
+      parts.push(buildDateField(expression));
+      return this;
+    },
+
+    addDateRangeField(expression: DateRangeFieldExpression) {
+      parts.push(buildDateRangeField(expression));
       return this;
     },
 
