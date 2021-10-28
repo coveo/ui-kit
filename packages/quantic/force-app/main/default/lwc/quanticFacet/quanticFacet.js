@@ -211,7 +211,7 @@ export default class QuanticFacet extends LightningElement {
         ...v,
         checked: v.state === 'selected',
         highlightedResult: v.value,
-      })) || []
+      })) || [];
   }
 
   get query() {
