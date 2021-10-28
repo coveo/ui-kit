@@ -704,12 +704,12 @@
     "fr": "Segments d'URI réduits"
   },
   "disconnected": {
-    "en": "No Internet access.",
-    "fr": "Pas d'accès internet."
+    "en": "No access.",
+    "fr": "Pas d'accès."
   },
   "check-your-connection": {
-    "en": "Your query couldn't be sent. Verify your internet connection.",
-    "fr": "Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet."
+    "en": "Your query couldn't be sent to the following URL: {{url}}. Verify your connection.",
+    "fr": "Votre requête n'a pas plus être envoyée a l'URL: {{url}}. Veuillez vérifier votre connection."
   },
   "no-endpoints": {
     "en": "Your organization {{org}} has no available content.",

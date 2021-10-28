@@ -10,9 +10,7 @@ export const ResultTableSelectors = {
   firstRowCells: () =>
     ResultTableSelectors.rows().first().find('atomic-table-cell'),
   firstRowCellsContent: () =>
-    ResultTableSelectors.firstRowCells().then((cells) =>
-      Array.from(cells).map(
-        (cell) => cell.shadowRoot!.querySelector('.cell-root')!
-      )
-    ),
+    ResultTableSelectors.rows()
+      .first()
+      .find('.cell-root', {includeShadowDom: true}),
 };

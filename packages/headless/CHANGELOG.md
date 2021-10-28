@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.30.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.0...@coveo/headless@1.30.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* **atomic,headless:** handle 404s and other fetch errors ([#1391](https://github.com/coveo/ui-kit/issues/1391)) ([a3b5f65](https://github.com/coveo/ui-kit/commit/a3b5f650e95cbcfee9f1c08b33c742d4c15a15af))
+* **headless:** don't append /rest/ua to proxy urls ([#1394](https://github.com/coveo/ui-kit/issues/1394)) ([1ffbcf9](https://github.com/coveo/ui-kit/commit/1ffbcf9fc8ce2d803d12846bb11d8aa7aab7d394))
+* **headless:** only update search parameter & url manager when a search is executed ([#1388](https://github.com/coveo/ui-kit/issues/1388)) ([85e44b8](https://github.com/coveo/ui-kit/commit/85e44b8699eda3ccf347a122666fe887c4d1beab))
+
+
+
+
+
 # [1.30.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.1...@coveo/headless@1.30.0) (2021-10-25)
 
 

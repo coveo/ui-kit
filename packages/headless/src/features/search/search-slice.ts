@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {createReducer, PayloadAction} from '@reduxjs/toolkit';
 import {executeSearch, fetchMoreResults} from './search-actions';
 import {getSearchInitialState, SearchState} from './search-state';
 
@@ -29,8 +29,18 @@ function handleFulfilledSearch(
   state.isLoading = false;
 }
 
-function handlePendingSearch(state: SearchState) {
+function handlePendingSearch(
+  state: SearchState,
+  action: PayloadAction<
+    void,
+    string,
+    {
+      requestId: string;
+    }
+  >
+) {
   state.isLoading = true;
+  state.requestId = action.meta.requestId;
 }
 
 export const searchReducer = createReducer(
