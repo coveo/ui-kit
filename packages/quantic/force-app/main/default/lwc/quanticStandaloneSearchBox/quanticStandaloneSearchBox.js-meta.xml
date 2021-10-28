@@ -11,7 +11,7 @@
             <property name="engineId" type="String" default="example-search" label="The Coveo Headless engine ID"/>
             <property name="placeholder" type="String" label="Placeholder"/>
             <property name="redirectUrl" type="String" default="/global-search/%40uri" label="Redirect URL"/>
-            <property name="numberOfSuggestions" type="Integer" default="5" label="Max number of suggestions"/>
+            <property name="numberOfSuggestions" type="Integer" default="5" label="Maximum number of suggestions"/>
             <property name="withoutSubmitButton" type="Boolean" default="false" label="Display without submit button"/>
         </targetConfig>
     </targetConfigs>
