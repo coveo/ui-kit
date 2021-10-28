@@ -279,5 +279,9 @@
     <customLabels>
         <label>Aperçu non disponible</label>
         <name>quantic_NoPreviewAvailable</name>
+    </customLabels>quantic_Colon
+    <customLabels>
+        <label> :</label>
+        <name>quantic_Colon</name>
     </customLabels>
 </Translations>

@@ -2,17 +2,18 @@
   overflow: auto;
 }
 
-.result__title {
+.quickview__result-title {
   font-weight: 700;
-  font-size: 1.1em;
+  font-size: 15px;
 }
 
-.result__date {
+.quickview__result-date {
   color:#3E3E3C;
   font-weight: normal;
+  font-size: 15px;
 }
 
-.spinner-container {
+.quickview__spinner-container {
   width: 100%;
   height: 50%;
 }

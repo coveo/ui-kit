@@ -14,22 +14,22 @@
           <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
             <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
           </button>
-          <h2 id="quickview-modal-heading" class="slds-modal__title slds-truncate result__title slds-grid slds-grid_vertical-align-center">
-            <div class="slds-grid slds-grid_vertical-align-center slds-size_10-of-12 slds-text-align_left">
+          <h3 id="quickview-modal-heading" class="slds-modal__title slds-truncate slds-grid slds-grid_vertical-align-center">
+            <div class="slds-grid slds-grid_vertical-align-center slds-text-align_left">
               <div class="slds-m-right_small">
                 <c-quantic-result-label result={result} icon-only></c-quantic-result-label>
               </div>
-              <h3 class="slds-truncate result__title">
+              <div class="slds-truncate quickview__result-title">
                 <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
-              </h3>
+              </div>
             </div>
-            <div class="slds-truncate slds-text-align_right result__date slds-size_2-of-12">
+            <div class="slds-truncate slds-text-align_right quickview__result-date slds-col_bump-left">
               <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
             </div>
-          </h2>
+          </h3>
         </header>
-        <template if:true={isLoading}>-->
-          <div class="spinner-container slds-modal__content slds-p-around_large slds-is-relative">
+        <template if:true={isLoading}>
+          <div class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative">
             <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
           </div>
         </template>

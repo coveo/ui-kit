@@ -539,4 +539,11 @@
         <protected>false</protected>
         <shortDescription>No preview available</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_Colon</fullName>
+        <value>:</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>:</shortDescription>
+    </labels>
 </CustomLabels>
