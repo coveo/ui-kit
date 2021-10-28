@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.79.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.4...@coveo/quantic@0.79.0) (2021-10-27)
+
+
+### Features
+
+* **quantic:** add detailed reporter for Cypress tests ([#1372](https://github.com/coveo/ui-kit/issues/1372)) ([43fed34](https://github.com/coveo/ui-kit/commit/43fed34b7684a383372839ce299e11b48846ab3c))
+
+
+
+
+
+## [0.78.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.3...@coveo/quantic@0.78.4) (2021-10-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [0.78.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.2...@coveo/quantic@0.78.3) (2021-10-25)
 
 **Note:** Version bump only for package @coveo/quantic

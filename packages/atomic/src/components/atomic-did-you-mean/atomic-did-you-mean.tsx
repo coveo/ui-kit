@@ -29,16 +29,6 @@ export class AtomicDidYouMean implements InitializableComponent {
   @State()
   private didYouMeanState!: DidYouMeanState;
   @State() public error!: Error;
-  private strings = {
-    withQuery: (
-      key: 'no-results-for' | 'query-auto-corrected-to' | 'did-you-mean',
-      query: string
-    ) =>
-      this.bindings.i18n.t(key, {
-        interpolation: {escapeValue: false},
-        query: `<b part="highlight">${escape(query)}</b>`,
-      }),
-  };
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine);
@@ -48,12 +38,22 @@ export class AtomicDidYouMean implements InitializableComponent {
     this.didYouMean.applyCorrection();
   }
 
+  private withQuery(
+    key: 'no-results-for' | 'query-auto-corrected-to' | 'did-you-mean',
+    query: string
+  ) {
+    return this.bindings.i18n.t(key, {
+      interpolation: {escapeValue: false},
+      query: `<b part="highlight">${escape(query)}</b>`,
+    });
+  }
+
   private renderAutomaticallyCorrected() {
-    const noResults = this.strings.withQuery(
+    const noResults = this.withQuery(
       'no-results-for',
       this.didYouMeanState.originalQuery
     );
-    const queryAutoCorrectedTo = this.strings.withQuery(
+    const queryAutoCorrectedTo = this.withQuery(
       'query-auto-corrected-to',
       this.didYouMeanState.wasCorrectedTo
     );
@@ -72,13 +72,14 @@ export class AtomicDidYouMean implements InitializableComponent {
   }
 
   private renderCorrection() {
-    const didYouMean = this.strings.withQuery(
+    const didYouMean = this.withQuery(
       'did-you-mean',
       this.didYouMeanState.queryCorrection.correctedQuery
     );
     return (
       <button
-        class="text-primary"
+        class="link py-1"
+        part="correction-btn"
         onClick={() => this.applyCorrection()}
         innerHTML={didYouMean}
       ></button>

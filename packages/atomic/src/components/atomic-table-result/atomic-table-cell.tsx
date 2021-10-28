@@ -44,7 +44,7 @@ export class AtomicTableCell {
   /**
    * How large or small the visual section of results should be.
    */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   @Listen('atomic/resolveResult')
   public resolveResult(event: CustomEvent) {
@@ -57,7 +57,7 @@ export class AtomicTableCell {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
-      this.image
+      this.imageSize
     );
     if (this.useSections) {
       classes.push('with-sections');
