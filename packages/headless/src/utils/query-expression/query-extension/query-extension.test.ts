@@ -6,7 +6,7 @@ describe('#buildQueryExtension', () => {
     it('with no parameters', () => {
       const builder = buildQueryExtension({
         name: 'q',
-        parameters: [],
+        parameters: {},
       });
 
       expect(builder.toString()).toBe('$q()');
@@ -21,22 +21,12 @@ describe('#buildQueryExtension', () => {
         values: ['Book'],
       });
 
-      const modifierExpression = buildQueryExpression({
-        operator: 'or',
-      }).addKeyword({expression: '100'});
-
       const builder = buildQueryExtension({
         name: 'qre',
-        parameters: [
-          {
-            name: 'expression',
-            value: fieldExpression,
-          },
-          {
-            name: 'modifier',
-            value: modifierExpression,
-          },
-        ],
+        parameters: {
+          expression: fieldExpression,
+          modifier: '100',
+        },
       });
 
       expect(builder.toString()).toBe(

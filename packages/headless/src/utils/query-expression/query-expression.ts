@@ -23,7 +23,6 @@ import {
 import {
   buildQueryExtension,
   QueryExtensionExpression,
-  QueryExtensionParameter,
 } from './query-extension/query-extension';
 import {
   buildStringFacetField,
@@ -47,7 +46,6 @@ export {
   DateFieldExpression,
   DateRangeFieldExpression,
   QueryExtensionExpression,
-  QueryExtensionParameter,
   Negatable,
 };
 

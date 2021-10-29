@@ -10,20 +10,10 @@ export interface QueryExtensionExpression {
   /**
    * The query extension parameters where applicable.
    */
-  parameters: QueryExtensionParameter[];
+  parameters: QueryExtensionParameters;
 }
 
-export interface QueryExtensionParameter {
-  /**
-   * The parameter name.
-   */
-  name: string;
-
-  /**
-   * The parameter value.
-   */
-  value: QueryExpression;
-}
+type QueryExtensionParameters = Record<string, string | QueryExpression>;
 
 export function buildQueryExtension(config: QueryExtensionExpression): Part {
   return {
@@ -35,10 +25,10 @@ export function buildQueryExtension(config: QueryExtensionExpression): Part {
   };
 }
 
-function buildParameters(params: QueryExtensionParameter[]) {
-  return params
-    .map((param) => {
-      const {name, value} = param;
+function buildParameters(params: QueryExtensionParameters) {
+  return Object.entries(params)
+    .map((entry) => {
+      const [name, value] = entry;
       return `${name}: ${value.toString()}`;
     })
     .join(', ');
