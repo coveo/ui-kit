@@ -1,22 +1,16 @@
+import {baseFacetActions} from '../facet-common-actions';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
 
-const valueCheckbox = 'input[type="checkbox"]';
 export const field = 'ytlikecount';
 
 const numericFacetActions = (selector: AllFacetSelectors) => {
-  return {
-    checkValueAt: (index: number) => {
-      selector.values().eq(index).find(valueCheckbox).check({force: true});
-    },
-    clickClearFilter: () => {
-      selector.clearFilterButton().click();
-    },
-  };
+  return {};
 };
 
 export const NumericFacetActions = {
   ...numericFacetActions(NumericFacetSelectors),
+  ...baseFacetActions(NumericFacetSelectors),
 };

@@ -328,14 +328,17 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.filterState?.range) {
       this.numericFilter.clear();
     }
-    this.resetValidityParameters();
     this.facet?.deselectAll();
+    if(this.withInput) {
+      this.resetValidityParameters();
+    
     this.allInputs.forEach((input) => {
       // @ts-ignore
       input.checkValidity();
       // @ts-ignore
       input.reportValidity();
     });
+    }
   }
 
   toggleFacetVisibility() {

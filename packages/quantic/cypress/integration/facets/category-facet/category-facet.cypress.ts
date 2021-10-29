@@ -245,7 +245,7 @@ describe('quantic-category-facet', () => {
         const query = 'mal';
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
 
         Expect.logCategoryFacetSearch(hierarchicalField);
         Expect.isRendered(true);
@@ -265,7 +265,7 @@ describe('quantic-category-facet', () => {
 
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
         Expect.logCategoryFacetSearch(hierarchicalField);
 
         Actions.selectSearchResult(selectedValue);
@@ -281,7 +281,7 @@ describe('quantic-category-facet', () => {
 
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
         Expect.logCategoryFacetSearch(hierarchicalField);
         Expect.searchResults(8);
 
@@ -298,7 +298,7 @@ describe('quantic-category-facet', () => {
 
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
 
         Expect.logCategoryFacetSearch(hierarchicalField);
         Expect.displayNoMatchesFound(true);
@@ -330,7 +330,7 @@ describe('quantic-category-facet', () => {
         const allCategories = 'All Categories';
         setupWithCustomBasePath(basePath, true);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
         Expect.logCategoryFacetSearch(hierarchicalField);
         Expect.searchResults(2);
         Expect.searchResultsPathContains(allCategories);

@@ -1,5 +1,6 @@
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
+import {baseFacetExpectations} from '../facet-common-expectations';
 import {field} from './numeric-facet-actions';
 import {
   AllFacetSelectors,
@@ -138,5 +139,6 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
   };
 };
 export const NumericFacetExpectations = {
+  ...baseFacetExpectations(NumericFacetSelectors),
   ...numericFacetExpectations(NumericFacetSelectors),
 };
