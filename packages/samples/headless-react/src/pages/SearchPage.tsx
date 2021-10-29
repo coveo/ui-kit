@@ -120,6 +120,7 @@ import {
   StandaloneSearchBoxAnalytics,
   StaticFilterValue,
   buildStaticFilterValue,
+  buildQueryExpression,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -210,14 +211,13 @@ export class SearchPage extends Component {
       messages: buildTab(this.engine, {
         options: {
           id: 'messages',
-          expression: '@objecttype==Message',
+          expression: this.messageExpression,
         },
       }),
       confluence: buildTab(this.engine, {
         options: {
           id: 'confluence',
-          expression:
-            '@connectortype==Confluence2Crawler AND NOT @documenttype==Space',
+          expression: this.confluenceExpression,
         },
       }),
     };
@@ -356,6 +356,34 @@ export class SearchPage extends Component {
     this.unsubscribeExecuteTrigger();
   }
 
+  private get messageExpression() {
+    return buildQueryExpression({
+      operator: 'and',
+    })
+      .addStringField({
+        field: 'objecttype',
+        operator: 'isExactly',
+        values: ['Message'],
+      })
+      .toString();
+  }
+
+  private get confluenceExpression() {
+    return buildQueryExpression({operator: 'and'})
+      .addStringField({
+        field: 'connectortype',
+        operator: 'isExactly',
+        values: ['Confluence2Crawler'],
+      })
+      .addStringField({
+        field: 'documenttype',
+        operator: 'isExactly',
+        values: ['Space'],
+        negate: true,
+      })
+      .toString();
+  }
+
   private executeInitialSearch() {
     if (isServerSideRendered) {
       const {logInterfaceLoad} = loadSearchAnalyticsActions(this.engine);
@@ -387,14 +415,37 @@ export class SearchPage extends Component {
   }
 
   private get staticFilterValues(): StaticFilterValue[] {
+    const youtubeExpression = buildQueryExpression({
+      operator: 'and',
+    })
+      .addStringField({
+        field: 'filetype',
+        operator: 'isExactly',
+        values: ['youtubevideo'],
+      })
+      .toString();
+
+    const dropboxExpression = buildQueryExpression({operator: 'and'})
+      .addStringField({
+        field: 'connectortype',
+        operator: 'isExactly',
+        values: ['DropboxCrawler'],
+      })
+      .addStringField({
+        field: 'objecttype',
+        operator: 'isExactly',
+        values: ['File'],
+      })
+      .toString();
+
     return [
       buildStaticFilterValue({
         caption: 'Youtube',
-        expression: '@filetype==youtubevideo',
+        expression: youtubeExpression,
       }),
       buildStaticFilterValue({
         caption: 'Dropbox',
-        expression: '(@connectortype==DropboxCrawler AND @objecttype==File)',
+        expression: dropboxExpression,
       }),
     ];
   }
@@ -410,13 +461,10 @@ export class SearchPage extends Component {
               <Tab id="all" expression="" active>
                 All
               </Tab>
-              <Tab id="messages" expression="@objecttype==Message">
+              <Tab id="messages" expression={this.messageExpression}>
                 Messages
               </Tab>
-              <Tab
-                id="confluence"
-                expression="@connectortype==Confluence2Crawler AND NOT @documenttype==Space"
-              >
+              <Tab id="confluence" expression={this.confluenceExpression}>
                 Confluence
               </Tab>
             </nav>
