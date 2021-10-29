@@ -1,3 +1,4 @@
+import {Negatable} from './common/negatable';
 import {Part} from './common/part';
 import {buildDateField, DateFieldExpression} from './date-field/date-field';
 import {
@@ -10,7 +11,7 @@ import {
   FieldExistsExpression,
 } from './field-exists/field-exists';
 import {buildKeyword, KeywordExpression} from './keyword/keyword';
-import {buildNear, NearExpression} from './near/near';
+import {buildNear, NearExpression, OtherTerm} from './near/near';
 import {
   buildNumericField,
   NumericFieldExpression,
@@ -22,6 +23,7 @@ import {
 import {
   buildQueryExtension,
   QueryExtensionExpression,
+  QueryExtensionParameter,
 } from './query-extension/query-extension';
 import {
   buildStringFacetField,
@@ -31,6 +33,23 @@ import {
   buildStringField,
   StringFieldExpression,
 } from './string-field/string-field';
+
+export {
+  KeywordExpression,
+  NearExpression,
+  OtherTerm,
+  ExactMatchExpression,
+  FieldExistsExpression,
+  StringFieldExpression,
+  StringFacetFieldExpression,
+  NumericFieldExpression,
+  NumericRangeFieldExpression,
+  DateFieldExpression,
+  DateRangeFieldExpression,
+  QueryExtensionExpression,
+  QueryExtensionParameter,
+  Negatable,
+};
 
 /**
  * A utility to help build query expressions.

@@ -13,7 +13,7 @@ export interface NearExpression extends Negatable {
   otherTerms: OtherTerm[];
 }
 
-interface OtherTerm {
+export interface OtherTerm {
   /**
    * The term to check against the reference term.
    */

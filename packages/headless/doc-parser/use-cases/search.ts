@@ -182,6 +182,7 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/tab/tab.fn.tsx',
       ],
     },
+    utils: ['createExpressionBuilder'],
   },
   {
     initializer: 'buildStaticFilter',
