@@ -9,10 +9,10 @@
             </div>
           </div>
           <div class="slds-col">
-            <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">   
+            <div class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center">   
               <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
                 
-                <c-quantic-timeframe-facet engine-id={engineId} facet-id="date-timeframe" field="date" label="Timeframe">
+                <c-quantic-timeframe-facet engine-id={engineId} facet-id="date-timeframe" field="date" label="Timeframe" with-date-picker>
                   <c-quantic-timeframe unit="day" label="Yesterday"></c-quantic-timeframe>
                   <c-quantic-timeframe unit="month" label="A month old"></c-quantic-timeframe>
                   <c-quantic-timeframe unit="year"></c-quantic-timeframe>

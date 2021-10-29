@@ -2,7 +2,7 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
-import { I18nUtils, RelativeDateFormatter } from 'c/quanticUtils';
+import { fromSearchApiDate, I18nUtils, RelativeDateFormatter, toSearchApiDate } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
@@ -28,11 +28,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
   @api injectionDepth = 1000;
 
   @track state;
+  @track dateFilterState;
 
   searchStatus;
   unsubscribeSearchStatus;
   facet;
   unsubscribe;
+  dateFilter;
+  unsubscribeDateFilter;
 
   showPlaceholder = true;
 
@@ -70,6 +73,16 @@ export default class QuanticTimeframeFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+
+    this.dateFilter = CoveoHeadless.buildDateFilter(engine, {
+      options: {
+        field: this.field,
+        facetId: this.facetId || this.field,
+        filterFacetCount: !this.noFilterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
+    });
+    this.unsubscribeDateFilter = this.dateFilter.subscribe(() => this.updateDateFilterState());
   };
 
   disconnectedCallback() {
@@ -84,26 +97,42 @@ export default class QuanticTimeframeFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
   }
 
+  updateDateFilterState() {
+    this.dateFilterState = this.dateFilter.state;
+  }
+
   /**
    * 
    * @param {DateFacetValue} facetValue 
    */
   formatFacetValue = (facetValue) => {
-    const startDate = CoveoHeadless.deserializeRelativeDate(facetValue.start);
-    const endDate = CoveoHeadless.deserializeRelativeDate(facetValue.end);
+    try {
+      const startDate = CoveoHeadless.deserializeRelativeDate(facetValue.start);
+      const endDate = CoveoHeadless.deserializeRelativeDate(facetValue.end);
 
-    const relativeDate = startDate.period === 'past'
-      ? startDate
-      : endDate;
+      const relativeDate = startDate.period === 'past'
+        ? startDate
+        : endDate;
 
-    const timeframe = this.timeframes?.find((tf) => tf.period === relativeDate.period && tf.unit === relativeDate.unit && tf.amount === relativeDate.amount);
+      const timeframe = this.timeframes?.find((tf) => tf.period === relativeDate.period && tf.unit === relativeDate.unit && tf.amount === relativeDate.amount);
 
-    // TODO: Improve localization of the labels and/or pluralization
-    if (timeframe?.label) {
-      return timeframe.label;
+      // TODO: Improve localization of the labels and/or pluralization
+      if (timeframe?.label) {
+        return timeframe.label;
+      }
+
+      return new RelativeDateFormatter().formatRange(startDate, endDate);
+    } catch {
+      // The facet value is not a relative date. Handle it as a fixed size
     }
 
-    return new RelativeDateFormatter().formatRange(startDate, endDate);
+    const start = fromSearchApiDate(facetValue.start);
+    const startDate = I18nUtils.formatDate(new Date(Date.parse(start)));
+
+    const end = fromSearchApiDate(facetValue.end);
+    const endDate = I18nUtils.formatDate(new Date(Date.parse(end)));
+
+    return `${startDate} - ${endDate}`;
   }
 
   onSelectValue(evt) {
@@ -201,5 +230,48 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   get clearFilterLabel() {
     return I18nUtils.format(this.labels.clearFilter);
+  }
+
+  get datepickerFormat() {
+    return I18nUtils.getShortDatePattern();
+  }
+
+  get startDatepicker() {
+    return this.withDatePicker
+      ? this.template.querySelector('.timeframe-facet__start-input')
+      : null;
+  }
+
+  get endDatepicker() {
+    return this.withDatePicker
+      ? this.template.querySelector('.timeframe-facet__end-input')
+      : null;
+  }
+
+  handleApply() {
+    // TODO: We'll have to validate cases where dates aren't set properly
+
+    const start = this.startDatepicker.value;
+    const end = this.endDatepicker.value;
+
+    if (!start || !end) {
+      return;
+    }
+
+    const startDate = new Date(Date.parse(start));
+    startDate.setHours(0, 0, 0);
+    const endDate = new Date(Date.parse(end));
+    endDate.setHours(23, 59, 59);
+
+    if (endDate < startDate) {
+      console.error('The start date should occur before the end date');
+      return;
+    }
+
+    this.facet.deselectAll();
+    this.dateFilter.setRange(CoveoHeadless.buildDateRange({
+      start: toSearchApiDate(startDate),
+      end: toSearchApiDate(endDate),
+    }));
   }
 }

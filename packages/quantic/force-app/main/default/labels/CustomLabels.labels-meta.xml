@@ -686,4 +686,25 @@
         <protected>false</protected>
         <shortDescription>Next N years</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_DatePatternDay</fullName>
+        <value>d</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Day component of the date pattern</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DatePatternMonth</fullName>
+        <value>m</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Month component of the date pattern</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DatePatternYear</fullName>
+        <value>y</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Year component of the date pattern</shortDescription>
+    </labels>
 </CustomLabels>

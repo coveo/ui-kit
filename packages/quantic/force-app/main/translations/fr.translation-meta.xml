@@ -364,4 +364,16 @@
         <label>{{0}} années prochaines</label>
         <name>quantic_NextYear_plural</name>
     </customLabels>
+    <customLabels>
+        <label>j</label>
+        <name>quantic_DatePatternDay</name>
+    </customLabels>
+    <customLabels>
+        <label>m</label>
+        <name>quantic_DatePatternMonth</name>
+    </customLabels>
+    <customLabels>
+        <label>a</label>
+        <name>quantic_DatePatternYear</name>
+    </customLabels>
 </Translations>

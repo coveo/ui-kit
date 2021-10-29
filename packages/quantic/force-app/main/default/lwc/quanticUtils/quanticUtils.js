@@ -1,5 +1,9 @@
 import LOCALE from '@salesforce/i18n/locale';
 
+import dayPattern from '@salesforce/label/c.quantic_DatePatternDay';
+import monthPattern from '@salesforce/label/c.quantic_DatePatternMonth';
+import yearPattern from '@salesforce/label/c.quantic_DatePatternYear';
+
 export class Debouncer {
   _timeout;
 
@@ -128,6 +132,28 @@ export class I18nUtils {
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
       (formattingArguments[index] === undefined ? '' : `${formattingArguments[index]}`));
   }
+
+  static getShortDatePattern() {
+    const date = new Date(2000, 11, 31); // month is zero-based
+    const dateAsString = I18nUtils.formatDate(date);
+
+    const day = I18nUtils.format(dayPattern);
+    const month = I18nUtils.format(monthPattern);
+    const year = I18nUtils.format(yearPattern);
+
+    return dateAsString.replace('2000', year.repeat(4))
+      .replace('00', year.repeat(2)) // to account for 2-digits year
+      .replace('12', month.repeat(2))
+      .replace('31', day.repeat(2));
+  }
+
+  /**
+   * 
+   * @param {Date} date 
+   */
+  static formatDate(date) {
+    return (new Intl.DateTimeFormat(LOCALE)).format(date);
+  }
 }
 
 export const STANDALONE_SEARCH_BOX_STORAGE_KEY = 'coveo-standalone-search-box';
@@ -225,6 +251,22 @@ export function fromSearchApiDate(dateString) {
   return dateString
     .replaceAll('/', '-')
     .replaceAll('@', 'T');
+}
+
+/**
+ * 
+ * @param {Date} date 
+ * @returns 
+ */
+export function toSearchApiDate(date) {
+  const year = date.getFullYear().toString().padStart(4, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = (date.getDate() + 1).toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
 }
 
 /** @typedef {import("coveo").RelativeDate} RelativeDate */
