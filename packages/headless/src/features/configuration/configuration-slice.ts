@@ -26,14 +26,20 @@ function analyticsUrlFromPlatformUrl(
       platformUrl
     );
   if (isCoveoPlatformURL) {
-    return platformUrl.replace(/^(https:\/\/)platform/, '$1analytics');
+    return (
+      platformUrl.replace(/^(https:\/\/)platform/, '$1analytics') +
+      analyticsAPIEndpoint
+    );
   }
 
   const isCoveoOrgDomainUrlMatch = platformUrl.match(
     new RegExp(`^https://(${organizationId}\\.org)\\.coveo.com`)
   );
   if (isCoveoOrgDomainUrlMatch) {
-    return platformUrl.replace(isCoveoOrgDomainUrlMatch[1], 'analytics.cloud');
+    return (
+      platformUrl.replace(isCoveoOrgDomainUrlMatch[1], 'analytics.cloud') +
+      analyticsAPIEndpoint
+    );
   }
 
   return platformUrl;
@@ -53,10 +59,10 @@ export const configurationReducer = createReducer(
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
-          state.analytics.apiBaseUrl = `${analyticsUrlFromPlatformUrl(
+          state.analytics.apiBaseUrl = analyticsUrlFromPlatformUrl(
             action.payload.platformUrl,
             state.organizationId
-          )}${analyticsAPIEndpoint}`;
+          );
         }
       })
       .addCase(updateSearchConfiguration, (state, action) => {

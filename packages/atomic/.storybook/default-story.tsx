@@ -42,7 +42,6 @@ function renderShadowPartsToStyleString(componentTag: string, args: Args) {
   styleElement.appendChild(rulesTextNode);
   return styleElement.outerHTML;
 }
-
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
   additionalMarkup?: () => TemplateResult;
@@ -85,11 +84,9 @@ export default function defaultStory(
       componentTag,
       currentArgs
     );
-
     return (
       <div>
         <Story />
-
         <div innerHTML={styleString}></div>
         {codeSample(styleString)}
         {codeSample(htmlString)}

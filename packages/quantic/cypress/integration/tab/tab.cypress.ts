@@ -86,7 +86,7 @@ describe('quantic-tab', () => {
       mockSearchNoResults();
       performSearch();
       cy.wait(InterceptAliases.Search);
-      Expect.displayTabs(false);
+      Expect.displayTabs(true);
     });
   });
 

@@ -264,6 +264,18 @@ describe('search-slice', () => {
     expect(finalState.isLoading).toBe(true);
   });
 
+  it('update the requestId during executeSearch.pending', () => {
+    const pendingAction = executeSearch.pending('asd', logSearchboxSubmit());
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.requestId).toBe(pendingAction.meta.requestId);
+  });
+
+  it('update the requestId during fetchMoreResults.pending', () => {
+    const pendingAction = fetchMoreResults.pending('asd');
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.requestId).toBe(pendingAction.meta.requestId);
+  });
+
   describe('when did you mean is enabled and a search is executed', () => {
     let e: MockSearchEngine;
 

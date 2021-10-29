@@ -7,8 +7,8 @@ import {buildSearchParameterSerializer} from '../../features/search-parameters/s
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
 import {configuration} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {deepEqualAnyOrder} from '../../utils/compare-utils';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
 
 export interface UrlManagerProps {
   /**
@@ -64,6 +64,16 @@ export function buildUrlManager(
   engine: SearchEngine,
   props: UrlManagerProps
 ): UrlManager {
+  let lastRequestId: string;
+
+  function updateLastRequestId() {
+    lastRequestId = engine.state.search.requestId;
+  }
+
+  function hasRequestIdChanged() {
+    return lastRequestId !== engine.state.search.requestId;
+  }
+
   if (!loadUrlManagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -77,6 +87,8 @@ export function buildUrlManager(
 
   const controller = buildController(engine);
   let previousFragment = props.initialState.fragment;
+  updateLastRequestId();
+
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
       parameters: deserializeFragment(previousFragment),
@@ -89,10 +101,14 @@ export function buildUrlManager(
     subscribe(listener: () => void) {
       const strictListener = () => {
         const newFragment = this.state.fragment;
-        if (!areFragmentsEquivalent(previousFragment, newFragment)) {
+        if (
+          !areFragmentsEquivalent(previousFragment, newFragment) &&
+          hasRequestIdChanged()
+        ) {
           previousFragment = newFragment;
           listener();
         }
+        updateLastRequestId();
       };
       strictListener();
       return engine.subscribe(strictListener);
