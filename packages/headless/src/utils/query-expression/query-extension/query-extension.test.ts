@@ -2,14 +2,14 @@ import {buildQueryExpression} from '../query-expression';
 import {buildQueryExtension} from './query-extension';
 
 describe('#buildQueryExtension', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with no parameters', () => {
       const builder = buildQueryExtension({
         name: 'q',
         parameters: {},
       });
 
-      expect(builder.toString()).toBe('$q()');
+      expect(builder.toQuerySyntax()).toBe('$q()');
     });
 
     it('with multiple parameters', () => {
@@ -29,7 +29,7 @@ describe('#buildQueryExtension', () => {
         },
       });
 
-      expect(builder.toString()).toBe(
+      expect(builder.toQuerySyntax()).toBe(
         '$qre(expression: @documenttype=="Book", modifier: 100)'
       );
     });

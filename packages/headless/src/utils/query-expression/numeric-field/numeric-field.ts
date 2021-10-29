@@ -21,7 +21,7 @@ export interface NumericFieldExpression extends Negatable {
 
 export function buildNumericField(config: NumericFieldExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const {field, value} = config;
       const prefix = getNegationPrefix(config);
       const operator = getOperatorSymbol(config.operator);

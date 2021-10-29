@@ -21,7 +21,7 @@ export interface StringFieldExpression extends Negatable {
 
 export function buildStringField(config: StringFieldExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const {field} = config;
       const prefix = getNegationPrefix(config);
       const operator = getOperatorSymbol(config.operator);

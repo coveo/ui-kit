@@ -1,7 +1,7 @@
 import {buildDateRangeField} from './date-range-field';
 
 describe('#buildDateRangeField', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with #negate not specified', () => {
       const builder = buildDateRangeField({
         field: 'date',
@@ -9,7 +9,7 @@ describe('#buildDateRangeField', () => {
         to: '2021/06/21',
       });
 
-      expect(builder.toString()).toBe('@date==2021/01/21..2021/06/21');
+      expect(builder.toQuerySyntax()).toBe('@date==2021/01/21..2021/06/21');
     });
 
     it('with #negate set to true', () => {
@@ -20,7 +20,7 @@ describe('#buildDateRangeField', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @date==2021/01/21..2021/06/21');
+      expect(builder.toQuerySyntax()).toBe('NOT @date==2021/01/21..2021/06/21');
     });
   });
 });

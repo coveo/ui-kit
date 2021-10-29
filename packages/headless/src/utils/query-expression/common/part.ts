@@ -1,3 +1,3 @@
 export interface Part {
-  toString(): string;
+  toQuerySyntax(): string;
 }

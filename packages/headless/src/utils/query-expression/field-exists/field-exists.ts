@@ -10,7 +10,7 @@ export interface FieldExistsExpression extends Negatable {
 
 export function buildFieldExists(config: FieldExistsExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const prefix = getNegationPrefix(config);
       const {field} = config;
       return `${prefix}@${field}`;

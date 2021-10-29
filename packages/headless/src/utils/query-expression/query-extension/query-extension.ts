@@ -17,7 +17,7 @@ type QueryExtensionParameters = Record<string, string | QueryExpression>;
 
 export function buildQueryExtension(config: QueryExtensionExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const {name, parameters} = config;
       const argumentExpression = buildParameters(parameters);
       return `$${name}(${argumentExpression})`;
@@ -29,7 +29,9 @@ function buildParameters(params: QueryExtensionParameters) {
   return Object.entries(params)
     .map((entry) => {
       const [name, value] = entry;
-      return `${name}: ${value.toString()}`;
+      const formatted =
+        typeof value === 'string' ? value : value.toQuerySyntax();
+      return `${name}: ${formatted}`;
     })
     .join(', ');
 }

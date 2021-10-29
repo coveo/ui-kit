@@ -21,7 +21,7 @@ export interface DateFieldExpression extends Negatable {
 
 export function buildDateField(config: DateFieldExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const {field, value} = config;
       const operator = getOperatorSymbol(config.operator);
       const prefix = getNegationPrefix(config);

@@ -1,7 +1,7 @@
 import {buildStringFacetField} from './string-facet-field';
 
 describe('#buildStringFacetField', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('#fuzzyMatch operator', () => {
       const builder = buildStringFacetField({
         field: 'author',
@@ -9,7 +9,9 @@ describe('#buildStringFacetField', () => {
         value: 'hughes',
       });
 
-      expect(builder.toString()).toBe('@author~= $quoteVar(value: hughes)');
+      expect(builder.toQuerySyntax()).toBe(
+        '@author~= $quoteVar(value: hughes)'
+      );
     });
 
     it('#wildcardMatch operator', () => {
@@ -19,7 +21,7 @@ describe('#buildStringFacetField', () => {
         value: '*hughes',
       });
 
-      expect(builder.toString()).toBe('@author*=("*hughes")');
+      expect(builder.toQuerySyntax()).toBe('@author*=("*hughes")');
     });
 
     it('#phoneticMatch operator', () => {
@@ -29,7 +31,7 @@ describe('#buildStringFacetField', () => {
         value: 'Omer',
       });
 
-      expect(builder.toString()).toBe('@author%=("Omer")');
+      expect(builder.toQuerySyntax()).toBe('@author%=("Omer")');
     });
 
     it('#differentThan operator', () => {
@@ -39,7 +41,7 @@ describe('#buildStringFacetField', () => {
         value: 'ehughes',
       });
 
-      expect(builder.toString()).toBe('@author<>("ehughes")');
+      expect(builder.toQuerySyntax()).toBe('@author<>("ehughes")');
     });
 
     it('#regexMatch operator', () => {
@@ -49,7 +51,7 @@ describe('#buildStringFacetField', () => {
         value: 'ehughe[a-z]+',
       });
 
-      expect(builder.toString()).toBe('@author/=("ehughe[a-z]+")');
+      expect(builder.toQuerySyntax()).toBe('@author/=("ehughe[a-z]+")');
     });
 
     it('with #negate set to true', () => {
@@ -60,7 +62,7 @@ describe('#buildStringFacetField', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @author*=("*hughes")');
+      expect(builder.toQuerySyntax()).toBe('NOT @author*=("*hughes")');
     });
   });
 });

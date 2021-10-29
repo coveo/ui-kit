@@ -10,7 +10,7 @@ export interface KeywordExpression extends Negatable {
 
 export function buildKeyword(config: KeywordExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const {expression, negate} = config;
       return negate ? `NOT (${expression})` : expression;
     },

@@ -1,13 +1,13 @@
 import {buildExactMatch} from './exact-match';
 
 describe('#buildExactMatch', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with #negate not specified', () => {
       const builder = buildExactMatch({
         expression: 'bbc news',
       });
 
-      expect(builder.toString()).toBe('"bbc news"');
+      expect(builder.toQuerySyntax()).toBe('"bbc news"');
     });
 
     it('with #negate set to true', () => {
@@ -16,7 +16,7 @@ describe('#buildExactMatch', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT "bbc news"');
+      expect(builder.toQuerySyntax()).toBe('NOT "bbc news"');
     });
   });
 });

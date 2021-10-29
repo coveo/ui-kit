@@ -1,7 +1,7 @@
 import {buildNumericField} from './numeric-field';
 
 describe('#buildNumericField', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('#greaterThan operator', () => {
       const builder = buildNumericField({
         field: 'size',
@@ -9,7 +9,7 @@ describe('#buildNumericField', () => {
         value: 10,
       });
 
-      expect(builder.toString()).toBe('@size>10');
+      expect(builder.toQuerySyntax()).toBe('@size>10');
     });
 
     it('#greaterThanOrEqual operator', () => {
@@ -19,7 +19,7 @@ describe('#buildNumericField', () => {
         value: 10,
       });
 
-      expect(builder.toString()).toBe('@size>=10');
+      expect(builder.toQuerySyntax()).toBe('@size>=10');
     });
 
     it('#lowerThan operator', () => {
@@ -29,7 +29,7 @@ describe('#buildNumericField', () => {
         value: 10,
       });
 
-      expect(builder.toString()).toBe('@size<10');
+      expect(builder.toQuerySyntax()).toBe('@size<10');
     });
 
     it('#lowerThanOrEqual operator', () => {
@@ -39,7 +39,7 @@ describe('#buildNumericField', () => {
         value: 10,
       });
 
-      expect(builder.toString()).toBe('@size<=10');
+      expect(builder.toQuerySyntax()).toBe('@size<=10');
     });
 
     it('#negate set to true', () => {
@@ -50,7 +50,7 @@ describe('#buildNumericField', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @size<=10');
+      expect(builder.toQuerySyntax()).toBe('NOT @size<=10');
     });
   });
 });

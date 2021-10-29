@@ -10,7 +10,7 @@ export interface ExactMatchExpression extends Negatable {
 
 export function buildExactMatch(config: ExactMatchExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const prefix = getNegationPrefix(config);
       const {expression} = config;
 

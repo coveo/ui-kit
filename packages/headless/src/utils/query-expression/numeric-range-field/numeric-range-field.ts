@@ -23,7 +23,7 @@ export function buildNumericRangeField(
   config: NumericRangeFieldExpression
 ): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const prefix = getNegationPrefix(config);
       const {field, from, to} = config;
       const operator = getOperatorSymbol('isExactly');

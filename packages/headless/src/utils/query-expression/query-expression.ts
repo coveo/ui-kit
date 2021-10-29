@@ -152,7 +152,7 @@ export interface QueryExpression {
    *
    * @returns A string representation of the configured expressions.
    */
-  toString(): string;
+  toQuerySyntax(): string;
 }
 
 type BooleanOperator = 'and' | 'or';
@@ -234,9 +234,11 @@ export function buildQueryExpression(
       return this;
     },
 
-    toString() {
+    toQuerySyntax() {
       const symbol = getBooleanOperatorSymbol(config.operator);
-      const expression = parts.join(`) ${symbol} (`);
+      const expression = parts
+        .map((part) => part.toQuerySyntax())
+        .join(`) ${symbol} (`);
 
       return parts.length <= 1 ? expression : `(${expression})`;
     },
