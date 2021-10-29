@@ -68,7 +68,8 @@ export function containsVisualElement(node: Node) {
 }
 
 export function parseAssetURL(url: string) {
-  const [, protocol, remainder] = url.match(/^([a-z]+):\/\/(.*)$/) || [];
+  const [, protocol, remainder] =
+    url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
     if (url.startsWith('./') || url.startsWith('../')) {
       return url;

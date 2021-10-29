@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.4...@coveo/atomic@1.9.0) (2021-10-29)
+
+
+### Features
+
+* **atomic:** made result image take full size ([#1389](https://github.com/coveo/ui-kit/issues/1389)) ([48d1e0e](https://github.com/coveo/ui-kit/commit/48d1e0e6abd1a5f0ec0a8461da0c1c0ba5149ec7))
+
+
+
+
+
+## [1.8.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.3...@coveo/atomic@1.8.4) (2021-10-29)
+
+
+### Bug Fixes
+
+* **atomic:** support both icon assets with or without .svg ([#1398](https://github.com/coveo/ui-kit/issues/1398)) ([644d6ee](https://github.com/coveo/ui-kit/commit/644d6eedd002ec3ad2f09eb8f1d9fc0bacb94185))
+
+
+
+
+
 ## [1.8.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.2...@coveo/atomic@1.8.3) (2021-10-28)
 
 
