@@ -113,7 +113,7 @@ describe('buildQueryExpression', () => {
   it('#addQueryExtension, #toString returns the expected syntax', () => {
     builder.addQueryExtension({
       name: 'q',
-      parameters: [],
+      parameters: {},
     });
 
     expect(builder.toString()).toBe('$q()');
