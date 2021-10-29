@@ -2,6 +2,7 @@
   <lightning-button-icon
     title={buttonLabel}
     alternative-text={buttonLabel}
+    tooltip={buttonLabel}
     icon-name="utility:preview"
     size="small"
     disabled={hasNoPreview}
@@ -34,7 +35,7 @@
           </div>
         </template>
         <template if:false={isLoading}>
-          <div class="quickview__content-container slds-modal__content slds-p-around_large" id="quickview__content-container" lwc:dom="manual"></div>
+          <div class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" id="quickview__content-container" lwc:dom="manual"></div>
         </template>
       </div>
     </section>
