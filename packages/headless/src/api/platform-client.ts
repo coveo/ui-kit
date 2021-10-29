@@ -69,9 +69,14 @@ export class PlatformClient {
           return shouldRetry;
         },
       });
+
       if (response.status === 419) {
         logger.info('Platform renewing token');
         throw new ExpiredTokenError();
+      }
+
+      if (response.status === 404) {
+        throw new DisconnectedError(url, response.status);
       }
 
       logger.info({response, requestInfo}, 'Platform response');
@@ -79,7 +84,7 @@ export class PlatformClient {
       return response;
     } catch (error) {
       if ((error as PlatformClientCallError).message === 'Failed to fetch') {
-        return new DisconnectedError();
+        return new DisconnectedError(url);
       }
 
       return error as PlatformClientCallError;

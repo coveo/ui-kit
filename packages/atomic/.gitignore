@@ -31,3 +31,5 @@ src/components/atomic-search-interface/lang/
 
 cypress/screenshots/*
 
+storybook-static/
+

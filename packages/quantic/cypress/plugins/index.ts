@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import {registerDetailedReporterPlugin} from '../reporters/detailed-collector';
+
 interface CommunityConfig {
   baseUrl?: string;
   env?: {
@@ -30,13 +32,20 @@ async function getCommunityConfigFile(): Promise<CommunityConfig> {
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = async () => {
+module.exports = async (
+  on: Cypress.PluginEvents,
+  config: Cypress.PluginConfigOptions
+) => {
   const baseConfig = await getCommunityConfigFile();
 
-  const config = JSON.parse(JSON.stringify(baseConfig)) as CommunityConfig;
+  const communityConfig = JSON.parse(
+    JSON.stringify(baseConfig)
+  ) as CommunityConfig;
   if (!baseConfig.baseUrl && baseConfig?.env?.examplesUrl) {
-    config.baseUrl = baseConfig?.env?.examplesUrl;
+    communityConfig.baseUrl = baseConfig?.env?.examplesUrl;
   }
 
-  return config;
+  registerDetailedReporterPlugin(on, config);
+
+  return communityConfig;
 };
