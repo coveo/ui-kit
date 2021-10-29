@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CspTrustedSite xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Used for Quantic component callout to the Coveo platform.</description>
-    <endpointUrl>https://platform.cloud.coveo.com</endpointUrl>
+    <description>Coveo Cloud Platform</description>
+    <endpointUrl>https://*.coveo.com</endpointUrl>
     <isActive>true</isActive>
     <isApplicableToConnectSrc>true</isApplicableToConnectSrc>
-    <isApplicableToFrameSrc>true</isApplicableToFrameSrc>
     <context>All</context>
 </CspTrustedSite>
