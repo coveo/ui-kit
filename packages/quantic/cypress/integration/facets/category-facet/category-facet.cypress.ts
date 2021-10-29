@@ -6,7 +6,11 @@ import {
   CategoryFacetActions as Actions,
   togoHierarchy,
 } from './category-facet-actions';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  mockSliceFacetValues,
+} from '../../../page-objects/search';
 
 interface CategoryFacetOptions {
   field: string;
@@ -129,6 +133,17 @@ describe('quantic-category-facet', () => {
     cy.wait(InterceptAliases.UA.Facet.Select);
   }
 
+  function setupWithSlicedValues(expectedNumberOfValues: number) {
+    mockSliceFacetValues(defaultField, expectedNumberOfValues);
+    cy.visit(pageUrl);
+    configure({
+      field: defaultField,
+      label: defaultLabel,
+      numberOfValues: defaultNumberOfValues,
+      withSearch: true,
+    });
+  }
+
   describe('with default category facet', () => {
     it('should work as expected', () => {
       visitCategoryFacetPage(defaultSettings);
@@ -240,6 +255,28 @@ describe('quantic-category-facet', () => {
   });
 
   describe('with option search is enabled in category facet', () => {
+    describe('with fewer values than maximum', () => {
+      const expectedNumberOfValues = defaultNumberOfValues - 1;
+      function setupWithSlicedValues() {
+        mockSliceFacetValues(defaultField, expectedNumberOfValues);
+        cy.visit(pageUrl);
+        configure({
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+          withSearch: true,
+        });
+      }
+
+      it('verify rendering', () => {
+        setupWithSlicedValues();
+
+        Expect.displayPlaceholder(false);
+        Expect.numberOfValues(expectedNumberOfValues);
+        Expect.displaySearchInput(false);
+      });
+    });
+
     describe('when typing into facet search input box', () => {
       it('facet value should be filtered to match with the keywords', () => {
         const query = 'mal';

@@ -8,6 +8,7 @@ import {
   interceptSearch,
   interceptSearchIndefinitely,
   interceptSearchWithError,
+  mockSliceFacetValues,
 } from '../../../page-objects/search';
 import {
   checkFirstValue,
@@ -121,6 +122,33 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('with fewer values than maximum', () => {
+      const expectedNumberOfValues = defaultNumberOfValues - 1;
+      function setupWithSlicedValues() {
+        mockSliceFacetValues(defaultField, expectedNumberOfValues);
+        cy.visit(pageUrl);
+        configure({
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+        });
+      }
+
+      describe('verify rendering', () => {
+        before(setupWithSlicedValues);
+
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.numberOfSelectedCheckboxValues(0);
+        Expect.numberOfIdleCheckboxValues(expectedNumberOfValues);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(true);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(false);
+      });
     });
 
     describe('verify facet values ordering', () => {
@@ -494,6 +522,35 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('with fewer values than maximum', () => {
+      const expectedNumberOfValues = defaultNumberOfValues - 1;
+      function setupWithSlicedValues() {
+        mockSliceFacetValues(defaultField, expectedNumberOfValues);
+        cy.visit(pageUrl);
+        configure({
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+          displayValuesAs: 'link',
+        });
+      }
+
+      describe('verify rendering', () => {
+        before(setupWithSlicedValues);
+
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.hasCheckbox(false);
+        Expect.numberOfSelectedLinkValues(0);
+        Expect.numberOfIdleLinkValues(expectedNumberOfValues);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(true);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(false);
+      });
     });
 
     describe('when selecting a value', () => {

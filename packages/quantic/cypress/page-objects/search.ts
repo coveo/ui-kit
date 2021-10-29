@@ -80,6 +80,27 @@ export function interceptSearchWithError(
   });
 }
 
+export function mockSliceFacetValues(
+  field: string,
+  numberOfFacetResults: number
+) {
+  return cy
+    .intercept('POST', routeMatchers.search, (request) => {
+      request.continue((res) => {
+        const targetFacet = res.body.facets.find(
+          (facet) => facet.field === field
+        );
+        const targetFacetIndex = res.body.facets.indexOf(targetFacet);
+
+        res.body.facets[targetFacetIndex].values = [
+          ...targetFacet.values.slice(0, numberOfFacetResults),
+        ];
+        res.send();
+      });
+    })
+    .as(InterceptAliases.Search.substring(1));
+}
+
 export function extractFacetValues(
   response: CyHttpMessages.IncomingResponse | undefined
 ) {
