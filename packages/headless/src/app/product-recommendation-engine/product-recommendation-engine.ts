@@ -74,7 +74,7 @@ export function buildProductRecommendationEngine(
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
-    searchAPIClient,
+    apiClient: searchAPIClient,
   };
 
   const augmentedOptions: EngineOptions<ProductRecommendationEngineReducers> = {
