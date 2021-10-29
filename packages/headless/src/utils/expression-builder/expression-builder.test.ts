@@ -11,41 +11,144 @@ describe('createExpressionBuilder', () => {
     expect(builder.toString()).toBe('');
   });
 
-  describe('#addStringField', () => {
-    it(`with one expression,
+  it('#addKeyword, #toString returns the expected syntax', () => {
+    builder.addKeyword({
+      expression: 'bbc news',
+    });
+
+    expect(builder.toString()).toBe('bbc news');
+  });
+
+  it('#addNear, #toString returns the expected syntax', () => {
+    builder.addNear({
+      startTerm: 'keep calm',
+      otherTerms: [
+        {
+          endTerm: 'carry on',
+          maxKeywordsBetween: 5,
+        },
+      ],
+    });
+
+    expect(builder.toString()).toBe('keep calm near:5 carry on');
+  });
+
+  it('#addExactMatch, #toString returns the expected syntax', () => {
+    builder.addExactMatch({
+      expression: 'bbc news',
+    });
+
+    expect(builder.toString()).toBe('"bbc news"');
+  });
+
+  it('#addFieldExists, #toString returns the expected syntax', () => {
+    builder.addFieldExists({
+      field: 'author',
+    });
+
+    expect(builder.toString()).toBe('@author');
+  });
+
+  it(`#addStringField, with one expression,
     #toString returns the expected syntax`, () => {
-      builder.addStringField({
+    builder.addStringField({
+      field: 'author',
+      operator: 'contains',
+      values: ['al'],
+    });
+
+    expect(builder.toString()).toBe('@author="al"');
+  });
+
+  it('#addStringFacetField, with one expression, #toString returns the expected syntax', () => {
+    builder.addStringFacetField({
+      field: 'author',
+      operator: 'differentThan',
+      value: 'ehughes',
+    });
+
+    expect(builder.toString()).toBe('@author<>("ehughes")');
+  });
+
+  it('#addNumericField, with one expression, #toString returns the expected syntax', () => {
+    builder.addNumericField({
+      field: 'size',
+      operator: 'greaterThan',
+      value: 10,
+    });
+
+    expect(builder.toString()).toBe('@size>10');
+  });
+
+  it('#addNumericRangeField, with one expression, #toString returns the expected syntax', () => {
+    builder.addNumericRangeField({
+      field: 'size',
+      from: 10,
+      to: 20,
+    });
+
+    expect(builder.toString()).toBe('@size==10..20');
+  });
+
+  it('#addDateField, with one expression, #toString returns the expected syntax', () => {
+    builder.addNumericField({
+      field: 'size',
+      operator: 'greaterThan',
+      value: 10,
+    });
+
+    expect(builder.toString()).toBe('@size>10');
+  });
+
+  it('#addDateRangeField, with one expression, #toString returns the expected syntax', () => {
+    builder.addNumericRangeField({
+      field: 'size',
+      from: 10,
+      to: 20,
+    });
+
+    expect(builder.toString()).toBe('@size==10..20');
+  });
+
+  it('#addQueryExtension, #toString returns the expected syntax', () => {
+    builder.addQueryExtension({
+      name: 'q',
+      parameters: [],
+    });
+
+    expect(builder.toString()).toBe('$q()');
+  });
+
+  it('#delimiter is #and, with two expressions, #toString joins them correctly', () => {
+    const builder = createExpressionBuilder({delimiter: 'and'})
+      .addStringField({
         field: 'author',
         operator: 'contains',
-        values: ['al'],
-      });
-
-      expect(builder.toString()).toBe('@author="al"');
-    });
-  });
-
-  describe('#addStringFacetField', () => {
-    it('with one expression, #toString returns the expected syntax', () => {
-      builder.addStringFacetField({
-        field: 'author',
-        operator: 'differentThan',
-        value: 'ehughes',
-      });
-
-      expect(builder.toString()).toBe('@author<>("ehughes")');
-    });
-  });
-
-  describe('#addNumericField', () => {
-    it('with one expression, #toString returns the expected syntax', () => {
-      builder.addNumericField({
+        values: ['ehughes'],
+      })
+      .addNumericField({
         field: 'size',
         operator: 'greaterThan',
-        value: 10,
+        value: 100,
       });
 
-      expect(builder.toString()).toBe('@size>10');
-    });
+    expect(builder.toString()).toBe('(@author="ehughes") AND (@size>100)');
+  });
+
+  it('#delimiter is #or, with two expressions, #toString joins them correctly', () => {
+    const builder = createExpressionBuilder({delimiter: 'or'})
+      .addStringField({
+        field: 'author',
+        operator: 'contains',
+        values: ['ehughes'],
+      })
+      .addNumericField({
+        field: 'size',
+        operator: 'greaterThan',
+        value: 100,
+      });
+
+    expect(builder.toString()).toBe('(@author="ehughes") OR (@size>100)');
   });
 
   describe('#addNumericRangeField', () => {

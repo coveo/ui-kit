@@ -1,8 +1,16 @@
+import {Part} from './common/part';
 import {buildDateField, DateFieldExpression} from './date-field/date-field';
 import {
   buildDateRangeField,
   DateRangeFieldExpression,
 } from './date-range-field/date-range-field';
+import {buildExactMatch, ExactMatchExpression} from './exact-match/exact-match';
+import {
+  buildFieldExists,
+  FieldExistsExpression,
+} from './field-exists/field-exists';
+import {buildKeyword, KeywordExpression} from './keyword/keyword';
+import {buildNear, NearExpression} from './near/near';
 import {
   buildNumericField,
   NumericFieldExpression,
@@ -11,6 +19,10 @@ import {
   buildNumericRangeField,
   NumericRangeFieldExpression,
 } from './numeric-range-field/numeric-range-field';
+import {
+  buildQueryExtension,
+  QueryExtensionExpression,
+} from './query-extension/query-extension';
 import {
   buildStringFacetField,
   StringFacetFieldExpression,
@@ -156,6 +168,10 @@ interface Not {
 }
 
 export interface ExpressionBuilder {
+  addKeyword(expression: KeywordExpression): ExpressionBuilder;
+  addNear(expression: NearExpression): ExpressionBuilder;
+  addExactMatch(expression: KeywordExpression): ExpressionBuilder;
+  addFieldExists(expression: FieldExistsExpression): ExpressionBuilder;
   addStringField(expression: StringFieldExpression): ExpressionBuilder;
   addStringFacetField(
     expression: StringFacetFieldExpression
@@ -166,15 +182,42 @@ export interface ExpressionBuilder {
   ): ExpressionBuilder;
   addDateField(expression: DateFieldExpression): ExpressionBuilder;
   addDateRangeField(expression: DateRangeFieldExpression): ExpressionBuilder;
+  addQueryExtension(expression: QueryExtensionExpression): ExpressionBuilder;
   toString(): string;
 }
 
-export function createExpressionBuilder(config: {
-  delimiter: 'and' | 'or';
-}): ExpressionBuilder {
+type Delimiter = 'and' | 'or';
+
+interface ExpressionBuilderOptions {
+  delimiter: Delimiter;
+}
+
+export function createExpressionBuilder(
+  config: ExpressionBuilderOptions
+): ExpressionBuilder {
   const parts: Part[] = [];
 
   return {
+    addKeyword(expression: KeywordExpression) {
+      parts.push(buildKeyword(expression));
+      return this;
+    },
+
+    addNear(expression: NearExpression) {
+      parts.push(buildNear(expression));
+      return this;
+    },
+
+    addExactMatch(expression: ExactMatchExpression) {
+      parts.push(buildExactMatch(expression));
+      return this;
+    },
+
+    addFieldExists(expression: FieldExistsExpression) {
+      parts.push(buildFieldExists(expression));
+      return this;
+    },
+
     addStringField(expression: StringFieldExpression) {
       parts.push(buildStringField(expression));
       return this;
@@ -205,12 +248,20 @@ export function createExpressionBuilder(config: {
       return this;
     },
 
+    addQueryExtension(expression: QueryExtensionExpression) {
+      parts.push(buildQueryExtension(expression));
+      return this;
+    },
+
     toString() {
-      return parts.join(config.delimiter);
+      const symbol = getDelimiterSymbol(config.delimiter);
+      const expression = parts.join(`) ${symbol} (`);
+
+      return parts.length <= 1 ? expression : `(${expression})`;
     },
   };
 }
 
-interface Part {
-  toString(): string;
+function getDelimiterSymbol(delimiter: Delimiter) {
+  return delimiter === 'and' ? 'AND' : 'OR';
 }

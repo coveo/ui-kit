@@ -18,49 +18,19 @@ export type NumericOperator =
   | 'greaterThanOrEqual';
 
 export function getOperatorSymbol(operator: Operator) {
-  if (operator === 'contains') {
-    return '=';
-  }
+  const dictionary: Record<Operator, string> = {
+    contains: '=',
+    differentThan: '<>',
+    fuzzyMatch: '~=',
+    greaterThan: '>',
+    greaterThanOrEqual: '>=',
+    isExactly: '==',
+    lowerThan: '<',
+    lowerThanOrEqual: '<=',
+    phoneticMatch: '%=',
+    regexMatch: '/=',
+    wildcardMatch: '*=',
+  };
 
-  if (operator === 'isExactly') {
-    return '==';
-  }
-
-  if (operator === 'greaterThan') {
-    return '>';
-  }
-
-  if (operator === 'greaterThanOrEqual') {
-    return '>=';
-  }
-
-  if (operator === 'lowerThan') {
-    return '<';
-  }
-
-  if (operator === 'lowerThanOrEqual') {
-    return '<=';
-  }
-
-  if (operator === 'fuzzyMatch') {
-    return '~=';
-  }
-
-  if (operator === 'wildcardMatch') {
-    return '*=';
-  }
-
-  if (operator === 'phoneticMatch') {
-    return '%=';
-  }
-
-  if (operator === 'differentThan') {
-    return '<>';
-  }
-
-  if (operator === 'regexMatch') {
-    return '/=';
-  }
-
-  return '';
+  return dictionary[operator];
 }
