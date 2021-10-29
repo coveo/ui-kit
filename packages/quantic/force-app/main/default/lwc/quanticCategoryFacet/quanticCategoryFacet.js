@@ -295,10 +295,6 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.withSearch && !!this.input?.value?.length;
   }
 
-  get displaySearch() {
-    return this.withSearch && this.values.length >= this.numberOfValues;
-  }
-
   getSearchValues() {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
