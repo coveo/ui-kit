@@ -15,6 +15,7 @@ import {
  */
 @Component({
   tag: 'atomic-result-image',
+  styleUrl: 'atomic-result-image.pcss',
   shadow: false,
 })
 export class AtomicResultImage implements InitializableComponent {
