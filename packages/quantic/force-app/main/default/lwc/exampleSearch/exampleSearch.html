@@ -9,7 +9,7 @@
             </div>
           </div>
           <div class="slds-col">
-            <div class="slds-grid slds-gutters slds-wrap main slds-grid_align-center">
+            <div class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center">   
               <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
                 <c-quantic-facet-manager engine-id={engineId}>
                   <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
@@ -27,10 +27,10 @@
                   <c-quantic-tab label="Community" expression="@objecttype==&quot;Message&quot;" engine-id={engineId}></c-quantic-tab>
                   <c-quantic-tab label="Files" expression="@boxdocumenttype==File OR @spcontenttype==Document" engine-id={engineId}></c-quantic-tab>
                 </ul>
-                <div class="slds-grid slds-wrap slds-var-m-top_small">
-                  <c-quantic-summary class="slds-order_2 slds-var-m-vertical_x-small slds-medium-order_1 slds-size_1-of-1 slds-medium-size_7-of-12" engine-id={engineId}>
+                <div class="slds-grid slds-var-m-top_small">
+                  <c-quantic-summary class="slds-var-m-vertical_x-small slds-medium-size_7-of-12" engine-id={engineId}>
                   </c-quantic-summary>
-                  <c-quantic-sort class="slds-order_1 slds-var-m-vertical_xxx-small slds-medium-order_2 slds-size_1-of-1 slds-medium-size_5-of-12" engine-id={engineId}>
+                  <c-quantic-sort class="slds-var-m-vertical_xxx-small slds-medium-size_5-of-12 slds-col_bump-left" engine-id={engineId}>
                   </c-quantic-sort>
                 </div>
                 <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>

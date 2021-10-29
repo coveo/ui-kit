@@ -1,6 +1,7 @@
 import {h} from '@stencil/core';
 import hljs from 'highlight.js';
-import 'highlight.js/styles/monokai-sublime.css';
+import 'highlight.js/styles/monokai.css';
+import './code-sample.css';
 
 export function codeSample(htmlString: string) {
   return (

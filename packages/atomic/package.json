@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -36,7 +36,7 @@
     "cypress:open": "./node_modules/cypress/bin/cypress open",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
-    "storybook": "start-storybook -s ./dist -p 6006",
+    "storybook": "rm -r node_modules/.cache/storybook/ && start-storybook -s ./dist -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
@@ -89,6 +89,7 @@
     "postcss-mixins": "8.1.0",
     "postcss-nested": "5.0.6",
     "puppeteer": "9.1.1",
+    "react": "^16.14.0",
     "rollup": "2.56.3",
     "rollup-plugin-html": "0.2.1",
     "rollup-plugin-typescript2": "0.30.0"
