@@ -14,10 +14,10 @@
 
 .parent-text__bold {
   font-weight: var(--font-weight-bold, 700);
-  margin-left: 1.1rem;
+  margin-left: var(--lwc-varSpacingHorizontalMedium, 1rem);
 }
 
 .facet__number-of-results {
   color: #8E959D;
-  margin-left: 0.5rem;
+  margin-left: var(--lwc-spacingXSmall, 0.5rem);
 }
