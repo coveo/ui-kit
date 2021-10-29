@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.80.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.2...@coveo/quantic@0.80.0) (2021-10-29)
+
+
+### Features
+
+* **quantic:** added quickview component ([#1382](https://github.com/coveo/ui-kit/issues/1382)) ([39e0902](https://github.com/coveo/ui-kit/commit/39e090235485bed0966a686a8e24877cda4c48ab))
+
+
+
+
+
 ## [0.79.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.1...@coveo/quantic@0.79.2) (2021-10-28)
 
 **Note:** Version bump only for package @coveo/quantic
