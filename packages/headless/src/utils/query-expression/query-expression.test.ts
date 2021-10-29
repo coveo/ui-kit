@@ -1,7 +1,7 @@
-import {buildQueryExpression, ExpressionBuilder} from './expression-builder';
+import {buildQueryExpression, QueryExpression} from './query-expression';
 
 describe('buildQueryExpression', () => {
-  let builder: ExpressionBuilder;
+  let builder: QueryExpression;
 
   beforeEach(() => {
     builder = buildQueryExpression({operator: 'and'});

@@ -102,4 +102,4 @@ export {
   validateRelativeDate,
 } from './api/search/date/relative-date';
 
-export * from './utils/expression-builder/expression-builder';
+export * from './utils/query-expression/query-expression';

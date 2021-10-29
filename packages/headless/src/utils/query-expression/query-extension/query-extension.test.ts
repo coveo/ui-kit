@@ -1,4 +1,4 @@
-import {buildQueryExpression} from '../expression-builder';
+import {buildQueryExpression} from '../query-expression';
 import {buildQueryExtension} from './query-extension';
 
 describe('#buildQueryExtension', () => {

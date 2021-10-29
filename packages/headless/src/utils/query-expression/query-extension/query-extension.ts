@@ -1,5 +1,5 @@
 import {Part} from '../common/part';
-import {ExpressionBuilder} from '../expression-builder';
+import {QueryExpression} from '../query-expression';
 
 export interface QueryExtensionExpression {
   /**
@@ -22,7 +22,7 @@ export interface QueryExtensionParameter {
   /**
    * The parameter value.
    */
-  value: ExpressionBuilder;
+  value: QueryExpression;
 }
 
 export function buildQueryExtension(config: QueryExtensionExpression): Part {
