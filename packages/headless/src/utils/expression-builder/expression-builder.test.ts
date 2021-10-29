@@ -1,10 +1,10 @@
-import {createExpressionBuilder, ExpressionBuilder} from './expression-builder';
+import {buildQueryExpression, ExpressionBuilder} from './expression-builder';
 
-describe('createExpressionBuilder', () => {
+describe('buildQueryExpression', () => {
   let builder: ExpressionBuilder;
 
   beforeEach(() => {
-    builder = createExpressionBuilder({operator: 'and'});
+    builder = buildQueryExpression({operator: 'and'});
   });
 
   it('builder with no expression, #toString returns an empty string', () => {
@@ -120,7 +120,7 @@ describe('createExpressionBuilder', () => {
   });
 
   it('#operator is #and, with two expressions, #toString joins them correctly', () => {
-    const builder = createExpressionBuilder({operator: 'and'})
+    const builder = buildQueryExpression({operator: 'and'})
       .addStringField({
         field: 'author',
         operator: 'contains',
@@ -136,7 +136,7 @@ describe('createExpressionBuilder', () => {
   });
 
   it('#operator is #or, with two expressions, #toString joins them correctly', () => {
-    const builder = createExpressionBuilder({operator: 'or'})
+    const builder = buildQueryExpression({operator: 'or'})
       .addStringField({
         field: 'author',
         operator: 'contains',

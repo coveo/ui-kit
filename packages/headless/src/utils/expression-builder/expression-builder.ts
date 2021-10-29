@@ -177,7 +177,7 @@ export interface ExpressionBuilderOptions {
  * @param config - The expression builder options.
  * @returns An `ExpressionBuilder` instance.
  */
-export function createExpressionBuilder(
+export function buildQueryExpression(
   config: ExpressionBuilderOptions
 ): ExpressionBuilder {
   const parts: Part[] = [];

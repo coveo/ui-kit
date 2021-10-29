@@ -1,4 +1,4 @@
-import {createExpressionBuilder} from '../expression-builder';
+import {buildQueryExpression} from '../expression-builder';
 import {buildQueryExtension} from './query-extension';
 
 describe('#buildQueryExtension', () => {
@@ -13,7 +13,7 @@ describe('#buildQueryExtension', () => {
     });
 
     it('with multiple parameters', () => {
-      const fieldExpression = createExpressionBuilder({
+      const fieldExpression = buildQueryExpression({
         operator: 'or',
       }).addStringField({
         field: 'documenttype',
@@ -21,7 +21,7 @@ describe('#buildQueryExtension', () => {
         values: ['Book'],
       });
 
-      const modifierExpression = createExpressionBuilder({
+      const modifierExpression = buildQueryExpression({
         operator: 'or',
       }).addKeyword({expression: '100'});
 
