@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.2...@coveo/atomic@1.8.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* **atomic,headless:** handle 404s and other fetch errors ([#1391](https://github.com/coveo/ui-kit/issues/1391)) ([a3b5f65](https://github.com/coveo/ui-kit/commit/a3b5f650e95cbcfee9f1c08b33c742d4c15a15af))
+
+
+
+
+
+## [1.8.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.1...@coveo/atomic@1.8.2) (2021-10-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.8.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.0...@coveo/atomic@1.8.1) (2021-10-27)
 
 **Note:** Version bump only for package @coveo/atomic

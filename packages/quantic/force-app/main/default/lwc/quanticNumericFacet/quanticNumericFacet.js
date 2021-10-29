@@ -143,8 +143,6 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeFilter;
   /** @type {Function} */
   unsubscribeSearchStatus;
-  /** @type {boolean} */
-  usingManualRange=false;
 
   /** @type {string} */
   start;
@@ -283,7 +281,7 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get showValues() {
-    return !this.searchStatus?.state?.hasError && (!this.usingManualRange || !this.filterState?.range) && !!this.values.length;
+    return !this.searchStatus?.state?.hasError && !this.filterState?.range && !!this.values.length;
   }
 
   get clearFilterLabel() {
@@ -324,17 +322,15 @@ export default class QuanticNumericFacet extends LightningElement {
   onSelectValue(evt) {
     const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
     this.facet.toggleSelect(item);
-    this.usingManualRange = false;
   }
 
   clearSelections() {
-    this.usingManualRange = false;
     if(this.filterState?.range) {
       this.numericFilter.clear();
     }
     this.resetValidityParameters();
     this.facet?.deselectAll();
-    [...this.template.querySelectorAll('lightning-input')].forEach( input => {
+    this.allInputs.forEach((input) => {
       // @ts-ignore
       input.checkValidity();
       // @ts-ignore
@@ -354,25 +350,32 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
 
     this.setValidityParameters();
-
-    const allValid = [...this.template.querySelectorAll('lightning-input')]
-      .reduce((validSoFar, inputCmp) => {
-        // @ts-ignore
-        return validSoFar && inputCmp.reportValidity();
-      }, true);
-      
+    // @ts-ignore
+    const allValid = this.allInputs.reduce((validSoFar, inputCmp) => validSoFar && inputCmp.reportValidity(), true);
     this.resetValidityParameters();
 
     if (!allValid) {
       return;
     }
-    this.usingManualRange = true;
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
     this.numericFilter.setRange({
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined
     });
+  }
+
+  resetValidationErrors() {
+    this.allInputs.forEach((input) => {
+      // @ts-ignore
+      input.setCustomValidity('');
+      // @ts-ignore
+      input.reportValidity();
+    });
+  }
+
+  get allInputs() {
+    return [...this.template.querySelectorAll('lightning-input')];
   }
 
   get numberInputMinimumLabel() {

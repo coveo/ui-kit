@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.79.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.1...@coveo/quantic@0.79.2) (2021-10-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.79.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.0...@coveo/quantic@0.79.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* **quantic:** improvements to numeric facet input validation ([#1396](https://github.com/coveo/ui-kit/issues/1396)) ([2c203cf](https://github.com/coveo/ui-kit/commit/2c203cf35696a5f1faeed95549184c85e93ccbed))
+
+
+
+
+
 # [0.79.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.4...@coveo/quantic@0.79.0) (2021-10-27)
 
 

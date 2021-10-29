@@ -108,7 +108,7 @@ describe('configuration slice', () => {
       );
 
       expect(newState.search.apiBaseUrl).toBe('/foo/rest/search/v2');
-      expect(newState.analytics.apiBaseUrl).toBe('/foo/rest/ua');
+      expect(newState.analytics.apiBaseUrl).toBe('/foo');
     });
 
     it('setting platformUrl to a non relative URL pointing to a non Coveo platform keep search and analytics url in sync', () => {
@@ -122,9 +122,7 @@ describe('configuration slice', () => {
       expect(newState.search.apiBaseUrl).toBe(
         'https://my.domain.com/rest/search/v2'
       );
-      expect(newState.analytics.apiBaseUrl).toBe(
-        'https://my.domain.com/rest/ua'
-      );
+      expect(newState.analytics.apiBaseUrl).toBe('https://my.domain.com');
     });
   });
 
