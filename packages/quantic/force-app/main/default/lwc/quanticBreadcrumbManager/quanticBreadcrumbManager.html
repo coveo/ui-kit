@@ -5,8 +5,8 @@
         <ul>
           <template for:each={facetBreadcrumbValues} for:item="breadcrumb">
             <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
-              <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumb.field} : </span>
-              <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
+              <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.field}{labels.colon} </span>
+              <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value.value} class="breadcrumb__container">
                     <c-quantic-pill label={breadcrumbValue.value.value} alt-text={breadcrumbValue.value.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
@@ -22,8 +22,8 @@
           </template>
           <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
             <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
-              <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumb.field} : </span>
-              <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
+              <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.field}{labels.colon} </span>
+              <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value} class="breadcrumb__container">
                     <c-quantic-pill label={breadcrumbValue.value} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
@@ -39,8 +39,8 @@
           </template>
           <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumbValue">
             <li key={breadcrumbValue.facetId} class="slds-list_horizontal breadcrumb-manager__line">
-              <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumbValue.field} : </span>
-              <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
+              <span class="slds-col breadcrumb-manager__field-name">{breadcrumbValue.field}{labels.colon} </span>
+              <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <li class="breadcrumb__container">
                   <c-quantic-pill label={breadcrumbValue.value} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
                 </li>
@@ -49,8 +49,8 @@
           </template>
           <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
             <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
-              <span class="slds-col slds-gutters breadcrumb-manager__field-name">{breadcrumb.field} : </span>
-              <ul class="slds-col slds-truncate slds-gutters slds-list_horizontal slds-grid slds-wrap">
+              <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.field}{labels.colon} </span>
+              <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value} class="breadcrumb__container">
                     <c-quantic-pill label={breadcrumbValue.value} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>

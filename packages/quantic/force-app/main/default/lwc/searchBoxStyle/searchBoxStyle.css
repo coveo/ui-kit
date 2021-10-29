@@ -20,6 +20,7 @@
 .searchbox__input-with-button {
   border-bottom-right-radius: 0rem;
   border-top-right-radius: 0rem;
+  border-right: none;
 }
 
 .searchbox__submit-button {
