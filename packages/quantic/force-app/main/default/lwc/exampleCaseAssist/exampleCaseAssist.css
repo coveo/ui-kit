@@ -1,0 +1,9 @@
+.CaseAssist__grid {
+  background: #fff;
+}
+
+@media screen {
+    .CaseAssist__grid {
+        min-width: 1200px;
+    }
+}
