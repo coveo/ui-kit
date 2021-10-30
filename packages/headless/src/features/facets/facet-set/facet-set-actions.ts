@@ -24,9 +24,7 @@ export interface RegisterFacetActionCreatorPayload {
   field: string;
 
   /**
-   * The character that separates values of a multi-value field.
-   *
-   * @defaultValue `>`
+   * @deprecated This option has no effect.
    */
   delimitingCharacter?: string;
 
@@ -68,6 +66,7 @@ export interface RegisterFacetActionCreatorPayload {
 const facetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: new StringValue({required: true, emptyAllowed: true}),
+  // TODO: Remove on next major version
   delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
