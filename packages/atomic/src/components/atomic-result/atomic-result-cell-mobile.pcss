@@ -20,7 +20,7 @@
     atomic-result-section-badges {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-bottom: 1rem;
       height: 2rem;
@@ -29,7 +29,7 @@
     atomic-result-section-actions {
       --font-size: var(--atomic-text-base);
       font-size: var(--font-size);
-      --line-height: 1.25rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 1.25rem;
       height: 2rem;
@@ -38,7 +38,7 @@
     atomic-result-section-title {
       --font-size: var(--atomic-text-lg);
       font-size: var(--font-size);
-      --line-height: 1.5rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       max-height: 3rem;
       @mixin line-clamp 2;
@@ -47,7 +47,7 @@
     atomic-result-section-title-metadata {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 1rem;
     }
@@ -56,14 +56,14 @@
       font-weight: 500;
       --font-size: var(--atomic-text-2xl);
       font-size: var(--font-size);
-      --line-height: 2rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
     }
 
     atomic-result-section-excerpt {
       --font-size: var(--atomic-text-base);
       font-size: var(--font-size);
-      --line-height: 1.25rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 1.25rem;
       max-height: 2.5rem;
@@ -73,7 +73,7 @@
     atomic-result-section-bottom-metadata {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1.5rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 1rem;
       max-height: 3rem;
@@ -88,7 +88,7 @@
     atomic-result-section-badges {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-bottom: 1rem;
       height: 2rem;
@@ -97,7 +97,7 @@
     atomic-result-section-actions {
       --font-size: var(--atomic-text-base);
       font-size: var(--font-size);
-      --line-height: 1.25rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 1rem;
       height: 2rem;
@@ -106,7 +106,7 @@
     atomic-result-section-title {
       --font-size: var(--atomic-text-lg);
       font-size: var(--font-size);
-      --line-height: 1.5rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       max-height: 3rem;
       @mixin line-clamp 2;
@@ -115,7 +115,7 @@
     atomic-result-section-title-metadata {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 0.75rem;
     }
@@ -124,14 +124,14 @@
       font-weight: 500;
       --font-size: var(--atomic-text-2xl);
       font-size: var(--font-size);
-      --line-height: 2rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
     }
 
     atomic-result-section-excerpt {
       --font-size: var(--atomic-text-base);
       font-size: var(--font-size);
-      --line-height: 1.25rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 1rem;
       max-height: 2.5rem;
@@ -141,7 +141,7 @@
     atomic-result-section-bottom-metadata {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1.5rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 0.75rem;
       max-height: 3rem;
@@ -156,7 +156,7 @@
     atomic-result-section-badges {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-bottom: 1rem;
       height: 2rem;
@@ -165,7 +165,7 @@
     atomic-result-section-actions {
       --font-size: var(--atomic-text-base);
       font-size: var(--font-size);
-      --line-height: 1.25rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 0.75rem;
       height: 2rem;
@@ -174,7 +174,7 @@
     atomic-result-section-title {
       --font-size: var(--atomic-text-lg);
       font-size: var(--font-size);
-      --line-height: 1.5rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       max-height: 3rem;
       @mixin line-clamp 2;
@@ -183,7 +183,7 @@
     atomic-result-section-title-metadata {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 0.5rem;
     }
@@ -192,14 +192,14 @@
       font-weight: 500;
       --font-size: var(--atomic-text-2xl);
       font-size: var(--font-size);
-      --line-height: 2rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
     }
 
     atomic-result-section-excerpt {
       --font-size: var(--atomic-text-base);
       font-size: var(--font-size);
-      --line-height: 1.25rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 0.75rem;
       max-height: 1.25rem;
@@ -209,7 +209,7 @@
     atomic-result-section-bottom-metadata {
       --font-size: var(--atomic-text-sm);
       font-size: var(--font-size);
-      --line-height: 1.5rem;
+      --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
       line-height: var(--line-height);
       margin-top: 0.5rem;
       max-height: 3rem;
