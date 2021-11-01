@@ -420,7 +420,7 @@ export namespace Components {
         /**
           * The result content to display.
          */
-        "content": string;
+        "content": ParentNode;
         /**
           * How large or small results should be.
          */
@@ -1606,7 +1606,7 @@ declare namespace LocalJSX {
         /**
           * The result content to display.
          */
-        "content": string;
+        "content": ParentNode;
         /**
           * How large or small results should be.
          */

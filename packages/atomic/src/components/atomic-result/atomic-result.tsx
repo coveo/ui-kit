@@ -31,7 +31,7 @@ export class AtomicResult {
   /**
    * The result content to display.
    */
-  @Prop() content!: string;
+  @Prop() content!: ParentNode;
 
   /**
    * Whether this result should use `atomic-result-section-*` components.
@@ -77,11 +77,17 @@ export class AtomicResult {
     return classes;
   }
 
+  private getContentHTML() {
+    return Array.from(this.content.children)
+      .map((child) => child.outerHTML)
+      .join('');
+  }
+
   public render() {
     return (
       <div
         class={`result-root ${this.getClasses().join(' ')}`}
-        innerHTML={this.content}
+        innerHTML={this.getContentHTML()}
       ></div>
     );
   }
