@@ -8,7 +8,7 @@ export interface NearExpression extends Negatable {
   startTerm: string;
 
   /**
-   * The other terms to check against the reference term.
+   * The other terms to check against the reference term. See [NEAR](https://docs.coveo.com/en/1814/#near) for an example.
    */
   otherTerms: OtherTerm[];
 }

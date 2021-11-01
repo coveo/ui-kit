@@ -54,6 +54,14 @@ export {
  */
 export interface QueryExpression {
   /**
+   * Adds a `QueryExpression` to the current instance.
+   *
+   * @param expression - The query expression instance to add.
+   * @returns The `QueryExpression` instance.
+   */
+  addExpression(expression: QueryExpression): QueryExpression;
+
+  /**
    * Adds an expression containing terms to match. Terms can be in any order, and may also be expanded with stemming.
    *
    * @param expression - A keyword expression.
@@ -70,7 +78,7 @@ export interface QueryExpression {
   addNear(expression: NearExpression): QueryExpression;
 
   /**
-   * Adds an expression that must appear in its entirety at least once for an item to be returned.
+   * Adds an expression that must appear in its entirety, at least once, for an item to be returned.
    *
    * @param expression - An exact match expression.
    * @returns The `QueryExpression` instance.
@@ -148,6 +156,14 @@ export interface QueryExpression {
   addQueryExtension(expression: QueryExtensionExpression): QueryExpression;
 
   /**
+   * Allows specifying a boolean operator join expressions with. Possible values are `and` and `or`.
+   *
+   * @param operator - The boolean operator to join individual expressions with.
+   * @returns The `QueryExpression` instance.
+   */
+  joinUsing(operator: BooleanOperator): QueryExpression;
+
+  /**
    * Joins all expressions using the configured boolean operator.
    *
    * @returns A string representation of the configured expressions.
@@ -158,27 +174,21 @@ export interface QueryExpression {
 type BooleanOperator = 'and' | 'or';
 
 /**
- * The expression builder options.
- */
-export interface QueryExpressionOptions {
-  /**
-   * The boolean operator to join individual expressions with.
-   */
-  operator: BooleanOperator;
-}
-
-/**
  * Creates an `QueryExpression` instance.
  *
  * @param config - The expression builder options.
  * @returns An `QueryExpression` instance.
  */
-export function buildQueryExpression(
-  config: QueryExpressionOptions
-): QueryExpression {
+export function buildQueryExpression(): QueryExpression {
   const parts: Part[] = [];
+  let booleanOperator: BooleanOperator = 'and';
 
   return {
+    addExpression(expression: QueryExpression) {
+      parts.push(expression);
+      return this;
+    },
+
     addKeyword(expression: KeywordExpression) {
       parts.push(buildKeyword(expression));
       return this;
@@ -234,8 +244,13 @@ export function buildQueryExpression(
       return this;
     },
 
+    joinUsing(operator: BooleanOperator) {
+      booleanOperator = operator;
+      return this;
+    },
+
     toQuerySyntax() {
-      const symbol = getBooleanOperatorSymbol(config.operator);
+      const symbol = getBooleanOperatorSymbol(booleanOperator);
       const expression = parts
         .map((part) => part.toQuerySyntax())
         .join(`) ${symbol} (`);

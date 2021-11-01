@@ -3,7 +3,7 @@ import {QueryExpression} from '../query-expression';
 
 export interface QueryExtensionExpression {
   /**
-   * The query extension name without the leading $ sign. See [Standard Query Extensions](https://docs.coveo.com/en/1462/build-a-search-ui/standard-query-extensions) for examples.
+   * The query extension name without the leading $ sign. See [Standard Query Extensions](https://docs.coveo.com/en/1462) for examples.
    */
   name: string;
 

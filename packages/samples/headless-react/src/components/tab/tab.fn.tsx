@@ -20,7 +20,7 @@ export const Tab: FunctionComponent<TabProps> = (props) => {
 
 /* Usage
 
-const messageExpression = buildQueryExpression({operator: 'and'})
+const messageExpression = buildQueryExpression()
   .addStringField({
     field: 'objecttype',
     operator: 'isExactly',

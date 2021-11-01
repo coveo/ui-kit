@@ -9,7 +9,7 @@ export interface StringFieldExpression extends Negatable {
   field: string;
 
   /**
-   * The operator to compare the `field` and `values`.
+   * The operator to use when comparing `field` and `values`.
    */
   operator: StringOperator;
 

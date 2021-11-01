@@ -357,9 +357,7 @@ export class SearchPage extends Component {
   }
 
   private get messageExpression() {
-    return buildQueryExpression({
-      operator: 'and',
-    })
+    return buildQueryExpression()
       .addStringField({
         field: 'objecttype',
         operator: 'isExactly',
@@ -369,7 +367,7 @@ export class SearchPage extends Component {
   }
 
   private get confluenceExpression() {
-    return buildQueryExpression({operator: 'and'})
+    return buildQueryExpression()
       .addStringField({
         field: 'connectortype',
         operator: 'isExactly',
@@ -415,9 +413,7 @@ export class SearchPage extends Component {
   }
 
   private get staticFilterValues(): StaticFilterValue[] {
-    const youtubeExpression = buildQueryExpression({
-      operator: 'and',
-    })
+    const youtubeExpression = buildQueryExpression()
       .addStringField({
         field: 'filetype',
         operator: 'isExactly',
@@ -425,7 +421,7 @@ export class SearchPage extends Component {
       })
       .toString();
 
-    const dropboxExpression = buildQueryExpression({operator: 'and'})
+    const dropboxExpression = buildQueryExpression()
       .addStringField({
         field: 'connectortype',
         operator: 'isExactly',
