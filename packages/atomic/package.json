@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -36,12 +36,13 @@
     "cypress:open": "./node_modules/cypress/bin/cypress open",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
-    "storybook": "rm -r node_modules/.cache/storybook/ && start-storybook -s ./dist -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
+    "build-storybook": "npm run storybook:lit-analyze && build-storybook",
+    "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx"
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.7",
-    "@coveo/headless": "^1.30.2",
+    "@coveo/headless": "^1.30.3",
     "@salesforce-ux/design-system": "^2.16.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
@@ -84,6 +85,8 @@
     "html-loader-jest": "0.2.1",
     "jest": "26.6.3",
     "jest-cli": "26.6.3",
+    "lit-analyzer": "^1.2.1",
+    "lit-html": "^2.0.1",
     "lodash": "^4.17.21",
     "postcss-import": "14.0.2",
     "postcss-mixins": "8.1.0",
