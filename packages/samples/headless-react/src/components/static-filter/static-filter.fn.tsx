@@ -29,7 +29,7 @@ export const StaticFilter: FunctionComponent<StaticFilterOptions> = (props) => {
 
 /* Usage
 
-const youtubeExpression = buildQueryExpression({operator: 'and'})
+const youtubeExpression = buildQueryExpression()
   .addStringField({
     field: 'filetype',
     operator: 'isExactly',
@@ -37,7 +37,7 @@ const youtubeExpression = buildQueryExpression({operator: 'and'})
   })
   .toString();
 
-const dropboxExpression = buildQueryExpression({operator: 'and'})
+const dropboxExpression = buildQueryExpression()
   .addStringField({
     field: 'connectortype',
     operator: 'isExactly',
