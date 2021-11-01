@@ -70,7 +70,7 @@ export interface QueryExpression {
   addNear(expression: NearExpression): QueryExpression;
 
   /**
-   * Adds an expression that must appear in its entirety at least once for an item to be returned.
+   * Adds an expression that must appear in its entirety, at least once, for an item to be returned.
    *
    * @param expression - An exact match expression.
    * @returns The `QueryExpression` instance.
