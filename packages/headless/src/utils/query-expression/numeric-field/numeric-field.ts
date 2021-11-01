@@ -9,7 +9,7 @@ export interface NumericFieldExpression extends Negatable {
   field: string;
 
   /**
-   * The operator to use to compare the `field` and `value`.
+   * The operator to use when comparing `field` and `value`.
    */
   operator: NumericOperator;
 
