@@ -24,7 +24,6 @@ import {
   getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
-import {containsSection, getImageSize} from '../../utils/result-section-utils';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
@@ -188,8 +187,6 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          imageSize={getImageSize(template) ?? this.imageSize ?? this.image}
-          useSections={containsSection(template)}
           content={template}
         ></atomic-result>
       );
@@ -259,10 +256,6 @@ export class AtomicResultList implements InitializableComponent {
                       result={result}
                       display={this.display}
                       density={this.density}
-                      image-size={
-                        getImageSize(column) ?? this.imageSize ?? this.image
-                      }
-                      useSections={containsSection(column)}
                       content={column}
                     ></atomic-result>
                   </td>

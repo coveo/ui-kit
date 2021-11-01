@@ -438,17 +438,13 @@ export namespace Components {
          */
         "image": ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
         "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections": boolean;
     }
     interface AtomicResultBadge {
         /**
@@ -1624,17 +1620,13 @@ declare namespace LocalJSX {
          */
         "image"?: ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
         "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections"?: boolean;
     }
     interface AtomicResultBadge {
         /**
