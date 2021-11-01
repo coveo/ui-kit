@@ -88,9 +88,13 @@ export class AtomicResult {
   }
 
   private getImageSizeFromSections() {
-    return (this.getSection('atomic-result-section-visual')?.getAttribute(
-      'image-size'
-    ) ?? undefined) as ResultDisplayImageSize | undefined;
+    const imageSize = this.getSection(
+      'atomic-result-section-visual'
+    )?.getAttribute('image-size');
+    if (!imageSize) {
+      return undefined;
+    }
+    return imageSize as ResultDisplayImageSize;
   }
 
   private getClasses() {

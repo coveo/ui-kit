@@ -8,9 +8,9 @@ export const ResultTableSelectors = {
   rows: () => ResultTableSelectors.shadow().find('tbody tr'),
   firstRow: () => ResultTableSelectors.rows().first(),
   firstRowCells: () =>
-    ResultTableSelectors.rows().first().find('atomic-table-cell'),
+    ResultTableSelectors.rows().first().find('atomic-result'),
   firstRowCellsContent: () =>
     ResultTableSelectors.rows()
       .first()
-      .find('.cell-root', {includeShadowDom: true}),
+      .find('.result-root', {includeShadowDom: true}),
 };
