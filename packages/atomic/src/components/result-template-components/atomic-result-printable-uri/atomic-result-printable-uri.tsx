@@ -80,7 +80,10 @@ export class AtomicResultPrintableUri {
         <button
           part="result-printable-uri-list-ellipsis"
           aria-label={this.strings.collapsedUriParts()}
-          onClick={() => (this.listExpanded = true)}
+          onClick={(e) => {
+            e.preventDefault();
+            this.listExpanded = true;
+          }}
         >
           ...
         </button>

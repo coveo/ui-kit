@@ -5,7 +5,9 @@
     </template>
     <template if:false={error}>
       <lightning-icon icon-name={iconToDisplay} size={size}></lightning-icon>
-      <span class="result-label__label slds-m-left_x-small">{labelToDisplay}</span>
+      <template if:false={iconOnly}>
+        <span class="result-label__label slds-m-left_x-small">{labelToDisplay}</span>
+      </template> 
     </template>
   </div>
 </template>

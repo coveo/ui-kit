@@ -13,7 +13,7 @@ const CHATTER='Chatter';
  * The `QuanticResultLabel` component displays an [SLDS icon](https://www.lightningdesignsystem.com/icons/) and label for a result.
  * If the `Result` option is set this component can infer default label and icon based on the result properties. Otherwise the `label` and `icon` properties are required.
  * @example
- * <c-quantic-result-label label="Account" icon="standard:account" size="medium"></c-quantic-result-label>
+ * <c-quantic-result-label label="Account" icon="standard:account" size="medium" icon-only></c-quantic-result-label>
  */
 export default class QuanticResultLabel extends LightningElement {
   /**
@@ -41,6 +41,13 @@ export default class QuanticResultLabel extends LightningElement {
    * @defaultValue `'small'`
    */
   @api size  ='small';
+  /**
+   * Whether to only display the icon without the label.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api iconOnly = false;
 
   labels = {
     documentation,

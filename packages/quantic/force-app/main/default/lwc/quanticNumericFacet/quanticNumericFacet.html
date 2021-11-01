@@ -24,46 +24,48 @@
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-var-m-top_medium">
             <template if:true={withInput}>
-              <form onsubmit={onApply} class="slds-grid slds-var-p-bottom_small slds-var-p-top_small">
-                <div class="slds-col slds-p-around_none">
-                  <lightning-input 
-                    type="number"
-                    step={step}
-                    value={start}
-                    message-when-range-overflow={customMessageOverflow}
-                    class="numeric__input-min" 
-                    label={labels.min} 
-                    variant="label-hidden"
-                    placeholder={labels.min}
-                    aria-label={numberInputMinimumLabel}
-                    onchange={onChangeMin}>
-                  </lightning-input>
-                </div>
-                <div class="slds-col">
-                  <lightning-input 
-                    type="number"
-                    step={step}
-                    value={end}
-                    message-when-range-underflow={customMessageUnderflow}
-                    class="numeric__input-max"
-                    label={labels.max} 
-                    variant="label-hidden" 
-                    placeholder={labels.max}
-                    aria-label={numberInputMaximumLabel}
-                    onchange={onChangeMax}>
-                  </lightning-input>
-                </div>
-                <div class="slds-col slds-p-around_none">
-                  <lightning-button 
-                    label={labels.apply} 
-                    title={labels.apply} 
-                    aria-label={numberInputApplyLabel}
-                    type="submit"
-                    class="slds-size_small"
-                    onblur={resetValidationErrors}>
-                  </lightning-button>
-                </div>
-              </form>
+              <div class="slds-p-horizontal_x-small">
+                <form onsubmit={onApply} class="slds-grid slds-gutters slds-var-p-bottom_small slds-var-p-top_small">
+                  <div class="slds-col slds-p-right_none">
+                    <lightning-input 
+                      type="number"
+                      step={step}
+                      value={start}
+                      message-when-range-overflow={customMessageOverflow}
+                      class="numeric__input-min" 
+                      label={labels.min} 
+                      variant="label-hidden"
+                      placeholder={labels.min}
+                      aria-label={numberInputMinimumLabel}
+                      onchange={onChangeMin}>
+                    </lightning-input>
+                  </div>
+                  <div class="slds-col">
+                    <lightning-input 
+                      type="number"
+                      step={step}
+                      value={end}
+                      message-when-range-underflow={customMessageUnderflow}
+                      class="numeric__input-max"
+                      label={labels.max} 
+                      variant="label-hidden" 
+                      placeholder={labels.max}
+                      aria-label={numberInputMaximumLabel}
+                      onchange={onChangeMax}>
+                    </lightning-input>
+                  </div>
+                  <div class="slds-col slds-p-left_none">
+                    <lightning-button 
+                      label={labels.apply} 
+                      title={labels.apply} 
+                      aria-label={numberInputApplyLabel}
+                      type="submit"
+                      class="slds-size_small"
+                      onblur={resetValidationErrors}>
+                    </lightning-button>
+                  </div>
+                </form>
+              </div>
             </template>
             <template if:true={showValues}>
                <template for:each={values} for:item="v">
