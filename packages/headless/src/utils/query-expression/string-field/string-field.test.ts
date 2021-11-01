@@ -1,7 +1,7 @@
 import {buildStringField} from './string-field';
 
 describe('#buildStringField', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('#contains operator, one value', () => {
       const builder = buildStringField({
         field: 'author',
@@ -9,7 +9,7 @@ describe('#buildStringField', () => {
         values: ['al'],
       });
 
-      expect(builder.toString()).toBe('@author="al"');
+      expect(builder.toQuerySyntax()).toBe('@author="al"');
     });
 
     it('#isExactly operator, one value', () => {
@@ -19,7 +19,7 @@ describe('#buildStringField', () => {
         values: ['alice'],
       });
 
-      expect(builder.toString()).toBe('@author=="alice"');
+      expect(builder.toQuerySyntax()).toBe('@author=="alice"');
     });
 
     it('#contains operator with multiple values', () => {
@@ -29,7 +29,7 @@ describe('#buildStringField', () => {
         values: ['al', 'alice'],
       });
 
-      expect(builder.toString()).toBe('@author=("al","alice")');
+      expect(builder.toQuerySyntax()).toBe('@author=("al","alice")');
     });
 
     it('#negate set to true', () => {
@@ -40,7 +40,7 @@ describe('#buildStringField', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @author="al"');
+      expect(builder.toQuerySyntax()).toBe('NOT @author="al"');
     });
   });
 });

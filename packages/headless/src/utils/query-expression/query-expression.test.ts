@@ -7,19 +7,19 @@ describe('buildQueryExpression', () => {
     builder = buildQueryExpression();
   });
 
-  it('builder with no expression, #toString returns an empty string', () => {
-    expect(builder.toString()).toBe('');
+  it('builder with no expression, #toQuerySyntax returns an empty string', () => {
+    expect(builder.toQuerySyntax()).toBe('');
   });
 
-  it('#addKeyword, #toString returns the expected syntax', () => {
+  it('#addKeyword, #toQuerySyntax returns the expected syntax', () => {
     builder.addKeyword({
       expression: 'bbc news',
     });
 
-    expect(builder.toString()).toBe('bbc news');
+    expect(builder.toQuerySyntax()).toBe('bbc news');
   });
 
-  it('#addNear, #toString returns the expected syntax', () => {
+  it('#addNear, #toQuerySyntax returns the expected syntax', () => {
     builder.addNear({
       startTerm: 'keep calm',
       otherTerms: [
@@ -30,96 +30,96 @@ describe('buildQueryExpression', () => {
       ],
     });
 
-    expect(builder.toString()).toBe('keep calm near:5 carry on');
+    expect(builder.toQuerySyntax()).toBe('keep calm near:5 carry on');
   });
 
-  it('#addExactMatch, #toString returns the expected syntax', () => {
+  it('#addExactMatch, #toQuerySyntax returns the expected syntax', () => {
     builder.addExactMatch({
       expression: 'bbc news',
     });
 
-    expect(builder.toString()).toBe('"bbc news"');
+    expect(builder.toQuerySyntax()).toBe('"bbc news"');
   });
 
-  it('#addFieldExists, #toString returns the expected syntax', () => {
+  it('#addFieldExists, #toQuerySyntax returns the expected syntax', () => {
     builder.addFieldExists({
       field: 'author',
     });
 
-    expect(builder.toString()).toBe('@author');
+    expect(builder.toQuerySyntax()).toBe('@author');
   });
 
   it(`#addStringField, with one expression,
-    #toString returns the expected syntax`, () => {
+    #toQuerySyntax returns the expected syntax`, () => {
     builder.addStringField({
       field: 'author',
       operator: 'contains',
       values: ['al'],
     });
 
-    expect(builder.toString()).toBe('@author="al"');
+    expect(builder.toQuerySyntax()).toBe('@author="al"');
   });
 
-  it('#addStringFacetField, with one expression, #toString returns the expected syntax', () => {
+  it('#addStringFacetField, with one expression, #toQuerySyntax returns the expected syntax', () => {
     builder.addStringFacetField({
       field: 'author',
       operator: 'differentThan',
       value: 'ehughes',
     });
 
-    expect(builder.toString()).toBe('@author<>("ehughes")');
+    expect(builder.toQuerySyntax()).toBe('@author<>("ehughes")');
   });
 
-  it('#addNumericField, with one expression, #toString returns the expected syntax', () => {
+  it('#addNumericField, with one expression, #toQuerySyntax returns the expected syntax', () => {
     builder.addNumericField({
       field: 'size',
       operator: 'greaterThan',
       value: 10,
     });
 
-    expect(builder.toString()).toBe('@size>10');
+    expect(builder.toQuerySyntax()).toBe('@size>10');
   });
 
-  it('#addNumericRangeField, with one expression, #toString returns the expected syntax', () => {
+  it('#addNumericRangeField, with one expression, #toQuerySyntax returns the expected syntax', () => {
     builder.addNumericRangeField({
       field: 'size',
       from: 10,
       to: 20,
     });
 
-    expect(builder.toString()).toBe('@size==10..20');
+    expect(builder.toQuerySyntax()).toBe('@size==10..20');
   });
 
-  it('#addDateField, with one expression, #toString returns the expected syntax', () => {
+  it('#addDateField, with one expression, #toQuerySyntax returns the expected syntax', () => {
     builder.addNumericField({
       field: 'size',
       operator: 'greaterThan',
       value: 10,
     });
 
-    expect(builder.toString()).toBe('@size>10');
+    expect(builder.toQuerySyntax()).toBe('@size>10');
   });
 
-  it('#addDateRangeField, with one expression, #toString returns the expected syntax', () => {
+  it('#addDateRangeField, with one expression, #toQuerySyntax returns the expected syntax', () => {
     builder.addNumericRangeField({
       field: 'size',
       from: 10,
       to: 20,
     });
 
-    expect(builder.toString()).toBe('@size==10..20');
+    expect(builder.toQuerySyntax()).toBe('@size==10..20');
   });
 
-  it('#addQueryExtension, #toString returns the expected syntax', () => {
+  it('#addQueryExtension, #toQuerySyntax returns the expected syntax', () => {
     builder.addQueryExtension({
       name: 'q',
       parameters: {},
     });
 
-    expect(builder.toString()).toBe('$q()');
+    expect(builder.toQuerySyntax()).toBe('$q()');
   });
 
-  it('#operator is #and, with two expressions, #toString joins them correctly', () => {
+  it('#operator is #and, with two expressions, #toQuerySyntax joins them correctly', () => {
     const builder = buildQueryExpression()
       .addStringField({
         field: 'author',
@@ -133,10 +133,10 @@ describe('buildQueryExpression', () => {
       })
       .joinUsing('and');
 
-    expect(builder.toString()).toBe('(@author="ehughes") AND (@size>100)');
+    expect(builder.toQuerySyntax()).toBe('(@author="ehughes") AND (@size>100)');
   });
 
-  it('#operator is #or, with two expressions, #toString joins them correctly', () => {
+  it('#operator is #or, with two expressions, #toQuerySyntax joins them correctly', () => {
     const builder = buildQueryExpression()
       .addStringField({
         field: 'author',
@@ -150,7 +150,7 @@ describe('buildQueryExpression', () => {
       })
       .joinUsing('or');
 
-    expect(builder.toString()).toBe('(@author="ehughes") OR (@size>100)');
+    expect(builder.toQuerySyntax()).toBe('(@author="ehughes") OR (@size>100)');
   });
 
   it('#addNumericRangeFieldwith one expression, #toString returns the expected syntax', () => {
@@ -160,7 +160,7 @@ describe('buildQueryExpression', () => {
       to: 20,
     });
 
-    expect(builder.toString()).toBe('@size==10..20');
+    expect(builder.toQuerySyntax()).toBe('@size==10..20');
   });
 
   it('#addDateField with one expression, #toString returns the expected syntax', () => {
@@ -170,7 +170,7 @@ describe('buildQueryExpression', () => {
       value: 10,
     });
 
-    expect(builder.toString()).toBe('@size>10');
+    expect(builder.toQuerySyntax()).toBe('@size>10');
   });
 
   it('#addDateRangeField with one expression, #toString returns the expected syntax', () => {
@@ -180,7 +180,7 @@ describe('buildQueryExpression', () => {
       to: 20,
     });
 
-    expect(builder.toString()).toBe('@size==10..20');
+    expect(builder.toQuerySyntax()).toBe('@size==10..20');
   });
 
   it('concatenates multiple query expressions correctly', () => {
@@ -191,6 +191,6 @@ describe('buildQueryExpression', () => {
     builder.addExpression(expression2);
     builder.addKeyword({expression: 'c'});
 
-    expect(builder.toString()).toBe('(a) AND (b) AND (c)');
+    expect(builder.toQuerySyntax()).toBe('(a) AND (b) AND (c)');
   });
 });

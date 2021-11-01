@@ -1,7 +1,7 @@
 import {buildDateField} from './date-field';
 
 describe('#buildDateField', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with #negate not specified', () => {
       const builder = buildDateField({
         field: 'date',
@@ -9,7 +9,7 @@ describe('#buildDateField', () => {
         value: '2021/01/21',
       });
 
-      expect(builder.toString()).toBe('@date>2021/01/21');
+      expect(builder.toQuerySyntax()).toBe('@date>2021/01/21');
     });
 
     it('with #negate set to true', () => {
@@ -20,7 +20,7 @@ describe('#buildDateField', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @date>2021/01/21');
+      expect(builder.toQuerySyntax()).toBe('NOT @date>2021/01/21');
     });
   });
 });

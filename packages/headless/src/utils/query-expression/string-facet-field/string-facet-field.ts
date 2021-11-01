@@ -23,7 +23,7 @@ export function buildStringFacetField(
   config: StringFacetFieldExpression
 ): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const prefix = getNegationPrefix(config);
       const {field, operator, value} = config;
       const symbol = getOperatorSymbol(operator);

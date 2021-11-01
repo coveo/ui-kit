@@ -1,13 +1,13 @@
 import {buildFieldExists} from './field-exists';
 
 describe('#buildFieldExists', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with #negate not specified', () => {
       const builder = buildFieldExists({
         field: 'author',
       });
 
-      expect(builder.toString()).toBe('@author');
+      expect(builder.toQuerySyntax()).toBe('@author');
     });
 
     it('with #negate set to true', () => {
@@ -16,7 +16,7 @@ describe('#buildFieldExists', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @author');
+      expect(builder.toQuerySyntax()).toBe('NOT @author');
     });
   });
 });

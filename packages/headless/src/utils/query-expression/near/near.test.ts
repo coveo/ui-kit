@@ -1,7 +1,7 @@
 import {buildNear} from './near';
 
 describe('#buildNear', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with multiple terms', () => {
       const builder = buildNear({
         startTerm: 'keep calm',
@@ -17,7 +17,9 @@ describe('#buildNear', () => {
         ],
       });
 
-      expect(builder.toString()).toBe('keep calm near:1 and near:5 carry on');
+      expect(builder.toQuerySyntax()).toBe(
+        'keep calm near:1 and near:5 carry on'
+      );
     });
 
     it('with #negate set to true', () => {
@@ -32,7 +34,7 @@ describe('#buildNear', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT (keep calm near:5 carry on)');
+      expect(builder.toQuerySyntax()).toBe('NOT (keep calm near:5 carry on)');
     });
   });
 });

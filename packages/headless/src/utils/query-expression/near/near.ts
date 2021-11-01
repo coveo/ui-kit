@@ -27,7 +27,7 @@ export interface OtherTerm {
 
 export function buildNear(config: NearExpression): Part {
   return {
-    toString() {
+    toQuerySyntax() {
       const prefix = getNegationPrefix(config);
       const {startTerm, otherTerms} = config;
       const otherTermsExpression = buildOtherTerms(otherTerms);

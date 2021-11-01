@@ -1,7 +1,7 @@
 import {buildNumericRangeField} from './numeric-range-field';
 
 describe('#buildNumericRangeField', () => {
-  describe('#toString', () => {
+  describe('#toQuerySyntax', () => {
     it('with #negate not specified', () => {
       const builder = buildNumericRangeField({
         field: 'size',
@@ -9,7 +9,7 @@ describe('#buildNumericRangeField', () => {
         to: 20,
       });
 
-      expect(builder.toString()).toBe('@size==10..20');
+      expect(builder.toQuerySyntax()).toBe('@size==10..20');
     });
 
     it('with #negate set to true', () => {
@@ -20,7 +20,7 @@ describe('#buildNumericRangeField', () => {
         negate: true,
       });
 
-      expect(builder.toString()).toBe('NOT @size==10..20');
+      expect(builder.toQuerySyntax()).toBe('NOT @size==10..20');
     });
   });
 });
