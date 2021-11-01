@@ -13,9 +13,7 @@ describe('#buildQueryExtension', () => {
     });
 
     it('with multiple parameters', () => {
-      const fieldExpression = buildQueryExpression({
-        operator: 'or',
-      }).addStringField({
+      const fieldExpression = buildQueryExpression().addStringField({
         field: 'documenttype',
         operator: 'isExactly',
         values: ['Book'],

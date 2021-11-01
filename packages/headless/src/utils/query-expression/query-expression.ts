@@ -148,6 +148,14 @@ export interface QueryExpression {
   addQueryExtension(expression: QueryExtensionExpression): QueryExpression;
 
   /**
+   * Allows specifying a boolean operator join expressions with. Possible values are `and` and `or`.
+   *
+   * @param operator - The boolean operator to join individual expressions with.
+   * @returns The `QueryExpression` instance.
+   */
+  joinUsing(operator: BooleanOperator): QueryExpression;
+
+  /**
    * Joins all expressions using the configured boolean operator.
    *
    * @returns A string representation of the configured expressions.
@@ -158,25 +166,14 @@ export interface QueryExpression {
 type BooleanOperator = 'and' | 'or';
 
 /**
- * The expression builder options.
- */
-export interface QueryExpressionOptions {
-  /**
-   * The boolean operator to join individual expressions with.
-   */
-  operator: BooleanOperator;
-}
-
-/**
  * Creates an `QueryExpression` instance.
  *
  * @param config - The expression builder options.
  * @returns An `QueryExpression` instance.
  */
-export function buildQueryExpression(
-  config: QueryExpressionOptions
-): QueryExpression {
+export function buildQueryExpression(): QueryExpression {
   const parts: Part[] = [];
+  let booleanOperator: BooleanOperator = 'and';
 
   return {
     addKeyword(expression: KeywordExpression) {
@@ -234,8 +231,13 @@ export function buildQueryExpression(
       return this;
     },
 
+    joinUsing(operator: BooleanOperator) {
+      booleanOperator = operator;
+      return this;
+    },
+
     toString() {
-      const symbol = getBooleanOperatorSymbol(config.operator);
+      const symbol = getBooleanOperatorSymbol(booleanOperator);
       const expression = parts.join(`) ${symbol} (`);
 
       return parts.length <= 1 ? expression : `(${expression})`;

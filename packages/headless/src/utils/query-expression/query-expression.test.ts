@@ -4,7 +4,7 @@ describe('buildQueryExpression', () => {
   let builder: QueryExpression;
 
   beforeEach(() => {
-    builder = buildQueryExpression({operator: 'and'});
+    builder = buildQueryExpression();
   });
 
   it('builder with no expression, #toString returns an empty string', () => {
@@ -120,7 +120,7 @@ describe('buildQueryExpression', () => {
   });
 
   it('#operator is #and, with two expressions, #toString joins them correctly', () => {
-    const builder = buildQueryExpression({operator: 'and'})
+    const builder = buildQueryExpression()
       .addStringField({
         field: 'author',
         operator: 'contains',
@@ -130,13 +130,14 @@ describe('buildQueryExpression', () => {
         field: 'size',
         operator: 'greaterThan',
         value: 100,
-      });
+      })
+      .joinUsing('and');
 
     expect(builder.toString()).toBe('(@author="ehughes") AND (@size>100)');
   });
 
   it('#operator is #or, with two expressions, #toString joins them correctly', () => {
-    const builder = buildQueryExpression({operator: 'or'})
+    const builder = buildQueryExpression()
       .addStringField({
         field: 'author',
         operator: 'contains',
@@ -146,7 +147,8 @@ describe('buildQueryExpression', () => {
         field: 'size',
         operator: 'greaterThan',
         value: 100,
-      });
+      })
+      .joinUsing('or');
 
     expect(builder.toString()).toBe('(@author="ehughes") OR (@size>100)');
   });
