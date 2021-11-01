@@ -68,10 +68,6 @@ export namespace Components {
     }
     interface AtomicColorFacet {
         /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter": string;
-        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs": 'checkbox' | 'box';
@@ -119,10 +115,6 @@ export namespace Components {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter": string;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
@@ -1292,10 +1284,6 @@ declare namespace LocalJSX {
     }
     interface AtomicColorFacet {
         /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter"?: string;
-        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs"?: 'checkbox' | 'box';
@@ -1343,10 +1331,6 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter"?: string;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */

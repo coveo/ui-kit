@@ -132,10 +132,6 @@ export class AtomicFacet
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
-   * The character that separates values of a multi-value field.
-   */
-  @Prop() public delimitingCharacter = '>';
-  /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop() public filterFacetCount = true;
@@ -166,7 +162,6 @@ export class AtomicFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      delimitingCharacter: this.delimitingCharacter,
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
     };
