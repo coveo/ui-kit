@@ -7,16 +7,16 @@
   /* == Density styles == */
   &.density-comfortable {
     atomic-result-section-visual {
-      margin-right: * var(--atomic-line-height-ratio) rem;
+      margin-right: 1.5rem;
     }
 
     atomic-result-section-badges {
-      margin-bottom: * var(--atomic-line-height-ratio) rem;
+      margin-bottom: 1.5rem;
       height: 2rem;
     }
 
     atomic-result-section-actions {
-      margin-bottom: * var(--atomic-line-height-ratio) rem;
+      margin-bottom: 1.5rem;
       height: 2.5rem;
     }
 
@@ -199,16 +199,10 @@ atomic-result-section-actions {
 
 atomic-result-section-title-metadata {
   @mixin set-font-size var(--atomic-text-sm);
-  font-size: var(--font-size);
-  --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
-  line-height: var(--line-height);
 }
 
 atomic-result-section-emphasized {
   font-weight: 500;
   @mixin set-font-size var(--atomic-text-2xl);
-  font-size: var(--font-size);
-  --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
-  line-height: var(--line-height);
   margin-top: 0.5rem;
 }
