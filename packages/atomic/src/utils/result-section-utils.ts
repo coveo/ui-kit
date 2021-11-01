@@ -1,3 +1,5 @@
+import {containsVisualElement} from './utils';
+
 const resultSectionTags = [
   'atomic-result-section-visual',
   'atomic-result-section-badges',
@@ -13,4 +15,8 @@ export function containsSection(element: ParentNode) {
   return Array.from(element.children).some((child) =>
     resultSectionTags.includes(child.tagName.toLowerCase())
   );
+}
+
+export function hideEmptySection(element: HTMLElement) {
+  element.style.display = containsVisualElement(element) ? '' : 'none';
 }

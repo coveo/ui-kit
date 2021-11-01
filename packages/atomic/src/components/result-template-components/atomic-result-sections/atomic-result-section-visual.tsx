@@ -1,5 +1,5 @@
 import {Element, Component, Prop} from '@stencil/core';
-import {containsVisualElement} from '../../../utils/utils';
+import {hideEmptySection} from '../../../utils/result-section-utils';
 import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 
 /**
@@ -26,6 +26,6 @@ export class AtomicResultSectionVisual {
   @Prop() public imageSize?: ResultDisplayImageSize;
 
   public componentDidRender() {
-    this.host.classList.toggle('empty', !containsVisualElement(this.host));
+    hideEmptySection(this.host);
   }
 }
