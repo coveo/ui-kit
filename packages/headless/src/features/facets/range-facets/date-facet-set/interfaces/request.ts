@@ -13,7 +13,7 @@ export interface DateRangeRequest {
   start: string;
 
   /**
-   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the [Relative Date](https://docs.coveo.com/en/headless/latest/reference/controllers/date-facet/relative-date-format/) format "period-amount-unit"
+   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the [Relative Date](https://docs.coveo.com/en/headless/latest/reference/controllers/date-facet/relative-date-format/) format "period-amount-unit".
    */
   end: string;
 
