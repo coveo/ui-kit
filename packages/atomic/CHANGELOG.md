@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.0...@coveo/atomic@1.9.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** register filters to store when ranges are not defined (numeric & timeframe facets) ([#1399](https://github.com/coveo/ui-kit/issues/1399)) ([268ad66](https://github.com/coveo/ui-kit/commit/268ad66359ea2b8c46cebedbcbec59dfe4106fb3))
+
+
+
+
+
 # [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.4...@coveo/atomic@1.9.0) (2021-10-29)
 
 
