@@ -4,7 +4,7 @@ import {LightningElement, api, track} from 'lwc';
 
 export default class EventListener extends LightningElement {
   /** @type {string[]} */
-  @api expectedEvents;
+  @api expectedEvents = [];
 
   /** @type {ExpectedEvent[]} */
   @track events = [];
@@ -33,6 +33,6 @@ export default class EventListener extends LightningElement {
   }
 
   get expectsEvents() {
-    return !this.expectedEvents.length;
+    return !!this.expectedEvents.length;
   }
 }

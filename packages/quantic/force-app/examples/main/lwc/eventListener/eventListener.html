@@ -1,34 +1,23 @@
 <template>
   <template if:true={expectsEvents}>
-    <lightning-card title="Events">
-      <template for:each={events} for:item="event">
-        <div key={event.type} class="slds-card__body_inner">
-          <template if:true={event.received}>
-            <div class="grid slds-grid_vertical-align-start">
-              <lightning-icon icon-name="utility:check" alternative-text="Received" title="Recevied" variant="success" size="xx-small"></lightning-icon>
-              {event.type}
+    <div class="slds-m-bottom_small">
+      <lightning-card title="Events">
+        <template for:each={events} for:item="event">
+          <div key={event.type} class="slds-card__body_inner">
+            <div class="grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+              <template if:true={event.received}>
+                <lightning-icon icon-name="utility:check" alternative-text="Received" title="Received" variant="success" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                {event.type}
+              </template>
+              <template if:false={event.received}>
+                <lightning-icon icon-name="utility:dash" alternative-text="Received" title="Received" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                {event.type}
+              </template>
             </div>
-            <lightning-accordion allow-multiple-sections-open>
-              <lightning-accordion-section name="Event Detail" label="Event Detail">
-                <div class="slds-rich-text-editor__textarea slds-grid">
-                  <div class="slds-rich-text-area__content slds-text-color_weak slds-grow">
-                    <pre>
-                      <code>{event.detail}</code>
-                    </pre>
-                  </div>
-                </div>
-              </lightning-accordion-section>
-            </lightning-accordion>
-          </template>
-          <template if:false={event.received}>
-            <div class="grid slds-grid_vertical-align-start">
-              <lightning-icon icon-name="utility:dash" alternative-text="Received" title="Recevied" size="xx-small"></lightning-icon>
-              {event.type}
-            </div>
-          </template>
-        </div>
-      </template>
-    </lightning-card>
+          </div>
+        </template>
+      </lightning-card>
+    </div>
   </template>
 
   <slot></slot>
