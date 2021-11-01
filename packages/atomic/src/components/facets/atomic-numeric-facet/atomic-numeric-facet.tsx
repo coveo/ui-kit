@@ -163,6 +163,7 @@ export class AtomicNumericFacet
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.numberOfValues && this.initializeFacet();
     this.withInput && this.initializeFilter();
+    this.registerFacetToStore();
   }
 
   private initializeFacet() {
@@ -180,12 +181,6 @@ export class AtomicNumericFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'numericFacets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-      format: (value) => this.formatFacetValue(value),
-    });
   }
 
   private initializeFilter() {
@@ -195,8 +190,24 @@ export class AtomicNumericFacet
         field: this.field,
       },
     });
-    this.bindings.store.state.numericFacets[this.filter.state.facetId] =
-      this.bindings.store.state.numericFacets[this.facetId!];
+
+    if (!this.facetId) {
+      this.facetId = this.filter.state.facetId;
+    }
+  }
+
+  private registerFacetToStore() {
+    registerFacetToStore(this.bindings.store, 'numericFacets', {
+      label: this.label,
+      facetId: this.facetId!,
+      element: this.host,
+      format: (value) => this.formatFacetValue(value),
+    });
+
+    if (this.filter) {
+      this.bindings.store.state.numericFacets[this.filter.state.facetId] =
+        this.bindings.store.state.numericFacets[this.facetId!];
+    }
   }
 
   @Listen('atomic/numberFormat')
