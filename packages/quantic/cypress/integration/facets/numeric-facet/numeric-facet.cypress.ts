@@ -3,7 +3,6 @@ import {configure} from '../../../page-objects/configurator';
 import {NumericFacetExpectations as Expect} from './numeric-facet-expectations';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
 import {field, NumericFacetActions as Actions} from './numeric-facet-actions';
-import {NumericFacetSelectors} from './numeric-facet-selectors';
 
 interface NumericFacetOptions {
   field: string;
@@ -60,7 +59,7 @@ describe('Numeric Facet Test Suite', () => {
     it('should work as expected', () => {
       visitNumericFacetPage(defaultSettings);
 
-      Expect.logNumericFacetLoad();
+      Expect.logFacetLoad();
       Expect.displayFacet(true);
       Expect.displayLabel(true);
       Expect.displaySearchForm(false);
@@ -143,6 +142,21 @@ describe('Numeric Facet Test Suite', () => {
         Expect.search.numberOfResults(10);
         Expect.urlHashContains(`${min}..${max}`, true);
         Expect.displayClearButton(true);
+        Expect.clearFilterContains('Clear filter');
+      });
+
+      it('should verify input form', () => {
+        visitNumericFacetPage(customWithInputSettings);
+
+        Actions.submitManualRange();
+        Expect.displayInputWarning(1);
+        Expect.inputWarningContains();
+
+        Actions.inputMinValue(100);
+        Actions.submitManualRange();
+
+        Expect.displayInputWarning(1);
+        Expect.inputWarningContains();
       });
     });
   });

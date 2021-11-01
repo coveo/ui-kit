@@ -42,23 +42,25 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
         .should('be.empty')
         .logDetail('the max input should be empty');
     },
+    displayInputWarning: (length: number) => {
+      selector
+        .inputInvalid()
+        .should('have.length', length)
+        .logDetail(
+          'should display the correct warning when user click Apply button'
+        );
+    },
+    inputWarningContains: (message?: string) => {
+      selector
+        .helpMessage()
+        .should('contain', message ? message : 'Complete this field.');
+    },
     urlHashContains: (value: string, fromInput = false) => {
       const input = fromInput ? '_input' : '';
       const urlHash = `#nf[${field.toLowerCase()}${input}]=${encodeURI(value)}`;
       cy.url()
         .should('include', urlHash)
         .logDetail('should display range value on UrlHash');
-    },
-    logNumericFacetLoad: () => {
-      cy.wait(InterceptAliases.UA.Load)
-        .then((interception) => {
-          const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property(
-            'actionCause',
-            'interfaceLoad'
-          );
-        })
-        .logDetail("should log the 'InterfaceLoad' UA event");
     },
     logNumericFacetSelect: (field: string, index: number) => {
       cy.wait(InterceptAliases.UA.Facet.Select)

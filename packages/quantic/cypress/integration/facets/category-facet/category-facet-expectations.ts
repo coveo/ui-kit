@@ -1,5 +1,11 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {should} from '../../common-selectors';
 import {SearchExpectations} from '../../search-expectations';
+import {
+  baseFacetExpectations,
+  facetWithSearchExpectations,
+  facetWithShowMoreLessExpectations,
+} from '../facet-common-expectations';
 import {
   CategoryFacetSelectors,
   AllFacetSelectors,
@@ -7,82 +13,62 @@ import {
 const hierarchicalField = 'geographicalhierarchy';
 const categoryFacetExpectations = (selector: AllFacetSelectors) => {
   return {
-    isRendered: (accessible: boolean) => {
-      selector.get().should(accessible ? 'exist' : 'not.exist');
-    },
-    displayLabel: (display: boolean) => {
-      selector.label().should(display ? 'exist' : 'not.exist');
-    },
-    displayPlaceholder: (display: boolean) => {
-      selector.placeholder().should(display ? 'exist' : 'not.exist');
-    },
     displayFacetCount: (display: boolean) => {
-      selector.facetCount().should(display ? 'exist' : 'not.exist');
+      selector
+        .facetCount()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the facet count`);
     },
     numberOfChildValues: (value: number) => {
-      selector.childValueOption().should('have.length', value);
+      selector
+        .childValueOption()
+        .should('have.length', value)
+        .logDetail(`should display ${value} child values`);
     },
     firstChildContains: (value: string) => {
-      selector.childValueOption().first().contains(value);
+      selector
+        .childValueOption()
+        .first()
+        .contains(value)
+        .logDetail(`should contain "${value}" child value`);
     },
     numberOfParentValues: (value: number) => {
       selector
         .activeParentValueOption()
-        .should(value > 0 ? 'be.visible' : 'not.exist');
+        .should(value > 0 ? 'be.visible' : 'not.exist')
+        .logDetail(
+          `${should(value > 0)} display the active parent value option`
+        );
       if (value <= 1) {
-        selector.parentValueOption().should('not.exist');
+        selector
+          .parentValueOption()
+          .should('not.exist')
+          .logDetail('should not display parent value option');
         return;
       }
-      selector.parentValueOption().should('have.length', value - 1);
-    },
-    displaySearchInput: (display: boolean) => {
-      selector.searchInput().should(display ? 'exist' : 'not.exist');
-    },
-    searchInputContains: (value: string) => {
-      selector.searchInput().should('contain', value);
-    },
-    numberOfValues: (value: number) => {
-      selector.values().should('have.length', value);
+      selector
+        .parentValueOption()
+        .should('have.length', value - 1)
+        .logDetail(`should display ${value} parent values`);
     },
     parentValueLabel: (value: string) => {
-      selector.parentValueLabel().first().should('contain', value);
-    },
-    displayShowMoreButton: (display: boolean) => {
-      selector.showMoreButton().should(display ? 'exist' : 'not.exist');
-    },
-    displayShowLessButton: (display: boolean) => {
-      selector.showLessButton().should(display ? 'exist' : 'not.exist');
+      selector
+        .parentValueLabel()
+        .first()
+        .should('contain', value)
+        .logDetail(`should contain "${value}" parent value`);
     },
     urlHashContains: (path: string[]) => {
       const categoryFacetListInUrl = path.join(',');
       const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
         categoryFacetListInUrl
       )}`;
-      cy.url().should('include', urlHash);
+      cy.url()
+        .should('include', urlHash)
+        .logDetail('should contain path in the url');
     },
     noUrlHash: () => {
       cy.url().should('not.include', '#cf');
-    },
-    displayNoMatchesFound: (display: boolean) => {
-      selector.noMatches().should(display ? 'exist' : 'not.exist');
-    },
-    displayMoreMatchesFound: (display: boolean) => {
-      selector.moreMatches().should(display ? 'exist' : 'not.exist');
-    },
-    moreMatchesFoundContainsQuery: (query: string) => {
-      selector.moreMatches().contains(query);
-    },
-    displayNoMatches: (display: boolean) => {
-      selector.noMatches().should(display ? 'exist' : 'not.exist');
-    },
-    noMatchesFoundContainsQuery: (query: string) => {
-      selector.noMatches().contains(query);
-    },
-    highlightsResults: (query: string) => {
-      selector.valueHighlight().each((element) => {
-        const text = element.text().toLowerCase();
-        expect(text).to.eq(query.toLowerCase());
-      });
     },
     displaySearchResultsPath: () => {
       selector.searchResultPath().should('exist');
@@ -92,9 +78,6 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     },
     searchResults: (value: number) => {
       selector.searchResults().should('have.length', value);
-    },
-    displaySearchClearButton: (display: boolean) => {
-      selector.searchClearButton().should(display ? 'exist' : 'not.exist');
     },
     logCategoryFacetSelected: (path: string[]) => {
       cy.wait(InterceptAliases.UA.Facet.Select).then((interception) => {
@@ -123,30 +106,13 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
         );
       });
     },
-    logCategoryFacetSearch: (field: string) => {
-      cy.wait(InterceptAliases.UA.Facet.Search).then((interception) => {
-        const analyticsBody = interception.request.body;
-        expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
-        expect(analyticsBody.customData).to.have.property('facetField', field);
-      });
-    },
-    logCategoryFacetClearAll: (field: string) => {
-      cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {
-        const analyticsBody = interception.request.body;
-        expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
-        expect(analyticsBody.customData).to.have.property('facetField', field);
-      });
-    },
-    logCategoryFacetLoad: () => {
-      cy.wait(InterceptAliases.UA.Load).then((interception) => {
-        const analyticsBody = interception.request.body;
-        expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
-      });
-    },
   };
 };
 export const CategoryFacetExpectations = {
   ...categoryFacetExpectations(CategoryFacetSelectors),
+  ...baseFacetExpectations(CategoryFacetSelectors),
+  ...facetWithShowMoreLessExpectations(CategoryFacetSelectors),
+  ...facetWithSearchExpectations(CategoryFacetSelectors),
   search: {
     ...SearchExpectations,
   },

@@ -116,6 +116,17 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
         })
         .logDetail('should log the facet clear all to UA');
     },
+    logFacetLoad: () => {
+      cy.wait(InterceptAliases.UA.Load)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property(
+            'actionCause',
+            'interfaceLoad'
+          );
+        })
+        .logDetail('should log the "InterfaceLoad" UA event');
+    },
   };
 }
 

@@ -133,7 +133,7 @@ describe('quantic-category-facet', () => {
     it('should work as expected', () => {
       visitCategoryFacetPage(defaultSettings);
 
-      Expect.isRendered(true);
+      Expect.displayFacet(true);
       Expect.displayLabel(true);
       Expect.displayFacetCount(true);
       Expect.displaySearchInput(false);
@@ -212,7 +212,7 @@ describe('quantic-category-facet', () => {
 
           Actions.clickAllCategories();
 
-          Expect.logCategoryFacetClearAll(hierarchicalField);
+          Expect.logClearFacetValues(hierarchicalField);
           Expect.numberOfParentValues(0);
           Expect.numberOfValues(defaultNumberOfValues - 1);
           Expect.noUrlHash();
@@ -232,7 +232,7 @@ describe('quantic-category-facet', () => {
           `cf[geographicalhierarchy]=${path}`
         );
 
-        Expect.logCategoryFacetLoad();
+        Expect.logFacetLoad();
         Expect.numberOfParentValues(2);
         Expect.parentValueLabel(togo);
       });
@@ -247,8 +247,8 @@ describe('quantic-category-facet', () => {
 
         Actions.typeQueryInSearchInput(query);
 
-        Expect.logCategoryFacetSearch(hierarchicalField);
-        Expect.isRendered(true);
+        Expect.logFacetSearch(hierarchicalField);
+        Expect.displayFacet(true);
         Expect.displayNoMatchesFound(false);
         Expect.displayMoreMatchesFound(true);
         Expect.moreMatchesFoundContainsQuery(query);
@@ -266,7 +266,7 @@ describe('quantic-category-facet', () => {
         visitCategoryFacetPage(searchEnabledSettings);
 
         Actions.typeQueryInSearchInput(query);
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
 
         Actions.selectSearchResult(selectedValue);
         Expect.logCategoryFacetSelected(montrealHierarchy);
@@ -282,13 +282,13 @@ describe('quantic-category-facet', () => {
         visitCategoryFacetPage(searchEnabledSettings);
 
         Actions.typeQueryInSearchInput(query);
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.searchResults(8);
 
         Actions.clickSearchClearButton();
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.numberOfValues(defaultNumberOfValues - 1);
-        Expect.searchInputContains('');
+        Expect.searchInputEmpty();
       });
     });
 
@@ -300,7 +300,7 @@ describe('quantic-category-facet', () => {
 
         Actions.typeQueryInSearchInput(query);
 
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.displayNoMatchesFound(true);
         Expect.noMatchesFoundContainsQuery(query);
         Expect.displaySearchClearButton(true);
@@ -331,7 +331,7 @@ describe('quantic-category-facet', () => {
         setupWithCustomBasePath(basePath, true);
 
         Actions.typeQueryInSearchInput(query);
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.searchResults(2);
         Expect.searchResultsPathContains(allCategories);
       });
@@ -359,7 +359,7 @@ describe('quantic-category-facet', () => {
       Expect.numberOfParentValues(1);
 
       Actions.clickAllCategories();
-      Expect.logCategoryFacetClearAll(hierarchicalField);
+      Expect.logClearFacetValues(hierarchicalField);
 
       Actions.selectChildValue(canadaPath);
       Expect.logCategoryFacetSelected(canadaPath.split(';'));

@@ -1,5 +1,6 @@
 import {ComponentSelector, CypressSelector} from '../../common-selectors';
 import {
+  BaseFacetSelector,
   FacetWithSearchSelector,
   FacetWithShowMoreLessSelector,
 } from '../facet-common-selectors';
@@ -7,23 +8,18 @@ import {
 export const categoryFacetComponent = 'c-quantic-category-facet';
 
 export interface CategoryFacetSelector extends ComponentSelector {
-  label: () => CypressSelector;
-  values: () => CypressSelector;
   childValueOption: () => CypressSelector;
   parentValueOption: () => CypressSelector;
   activeParentValueOption: () => CypressSelector;
   facetCount: () => CypressSelector;
-  clearFilterButton: () => CypressSelector;
-  placeholder: () => CypressSelector;
-  collapseButton: () => CypressSelector;
-  expandButton: () => CypressSelector;
   parentValueLabel: () => CypressSelector;
   allCategories: () => CypressSelector;
   searchResultPath: () => CypressSelector;
   searchResults: () => CypressSelector;
 }
 
-export type AllFacetSelectors = FacetWithSearchSelector &
+export type AllFacetSelectors = BaseFacetSelector &
+  FacetWithSearchSelector &
   FacetWithShowMoreLessSelector &
   CategoryFacetSelector;
 

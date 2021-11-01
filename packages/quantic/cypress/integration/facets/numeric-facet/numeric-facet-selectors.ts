@@ -11,6 +11,8 @@ export interface NumericFacetSelector extends ComponentSelector {
   inputMax: () => CypressSelector;
   applyButton: () => CypressSelector;
   searchForm: () => CypressSelector;
+  inputInvalid: () => CypressSelector;
+  helpMessage: () => CypressSelector;
 }
 
 export type AllFacetSelectors = BaseFacetSelector &
@@ -47,4 +49,8 @@ export const NumericFacetSelectors: AllFacetSelectors = {
   idleValue: () =>
     NumericFacetSelectors.get().find('.facet__value-text.facet__value_idle'),
   checkbox: () => NumericFacetSelectors.get().find('.slds-checkbox'),
+  inputInvalid: () =>
+    NumericFacetSelectors.searchForm().find('input[aria-invalid="true"]'),
+  helpMessage: () =>
+    NumericFacetSelectors.searchForm().find('div.slds-form-element__help'),
 };
