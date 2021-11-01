@@ -6,6 +6,7 @@ import {initializeInterfaceDebounced} from './default-init';
 import {mapPropsToArgTypes} from './map-props-to-args';
 import {camelToKebab} from '../src/utils/utils';
 import {SearchEngineConfiguration} from '@coveo/headless';
+import {TemplateResult} from 'lit-html';
 
 const ADDON_PARAMETER_KEY = 'shadowParts';
 
@@ -43,6 +44,7 @@ function renderShadowPartsToStyleString(componentTag: string, args: Args) {
 }
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
+  additionalMarkup?: () => TemplateResult;
 }
 
 export default function defaultStory(
@@ -93,7 +95,18 @@ export default function defaultStory(
   };
 
   const defaultLoader = initializeInterfaceDebounced(
-    () => renderArgsToHTMLString(componentTag, currentArgs),
+    () => {
+      const argsToHTMLString = renderArgsToHTMLString(
+        componentTag,
+        currentArgs
+      );
+      const additionalMarkupString = advancedConfig.additionalMarkup
+        ? advancedConfig.additionalMarkup().strings.join('')
+        : '';
+
+      return argsToHTMLString + additionalMarkupString;
+    },
+
     advancedConfig.engineConfig
   );
 
