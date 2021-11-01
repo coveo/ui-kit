@@ -317,7 +317,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get displaySearch() {
-    return !this.noSearch && this.values.length >= this.numberOfValues;
+    return !this.noSearch && this.state.canShowMoreValues;
   }
 
   onSelectClickHandler(value) {

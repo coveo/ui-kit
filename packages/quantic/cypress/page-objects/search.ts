@@ -80,21 +80,13 @@ export function interceptSearchWithError(
   });
 }
 
-export function mockSliceFacetValues(
-  field: string,
-  numberOfFacetResults: number
-) {
+export function mockNoMoreFacetValues(field: string) {
   return cy
     .intercept('POST', routeMatchers.search, (request) => {
       request.continue((res) => {
-        const targetFacet = res.body.facets.find(
+        res.body.facets.find(
           (facet) => facet.field === field
-        );
-        const targetFacetIndex = res.body.facets.indexOf(targetFacet);
-
-        res.body.facets[targetFacetIndex].values = [
-          ...targetFacet.values.slice(0, numberOfFacetResults),
-        ];
+        ).moreValuesAvailable = false;
         res.send();
       });
     })
