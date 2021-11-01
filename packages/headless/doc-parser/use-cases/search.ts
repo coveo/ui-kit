@@ -182,6 +182,7 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/tab/tab.fn.tsx',
       ],
     },
+    utils: ['buildQueryExpression'],
   },
   {
     initializer: 'buildStaticFilter',
@@ -193,7 +194,7 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/static-filter/static-filter.fn.tsx',
       ],
     },
-    utils: ['buildStaticFilterValue'],
+    utils: ['buildStaticFilterValue', 'buildQueryExpression'],
   },
   {
     initializer: 'buildSearchStatus',
