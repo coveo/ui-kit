@@ -9,7 +9,7 @@ export interface DateFieldExpression extends Negatable {
   field: string;
 
   /**
-   * The operator to use to compare the `field` and `value`.
+   * The operator to use when comparing `field` and `value`. Options for the operator are: `"isExactly" | "lowerThan" | "lowerThanOrEqual" | "greaterThan" | "greaterThanOrEqual"`.
    */
   operator: NumericOperator;
 
