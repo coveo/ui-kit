@@ -12,6 +12,12 @@ function timeframeFacetActions(selector: TimeframeFacetSelector) {
 
     collapse: () => selector.collapseButton().click(),
     expand: () => selector.expandButton().click(),
+
+    applyRange: (start: string, end: string) => {
+      selector.startInput().type(start);
+      selector.endInput().type(end);
+      selector.applyButton().click();
+    },
   };
 }
 

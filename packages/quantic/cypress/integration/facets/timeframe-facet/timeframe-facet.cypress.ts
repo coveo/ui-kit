@@ -1,9 +1,15 @@
 import {configure} from '../../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  routeMatchers,
+} from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 
 import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
+import {TimeframeFacetSelectors} from './timeframe-facet-selectors';
+import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
 
 interface TimeframeFacetOptions {
   field: string;
@@ -50,16 +56,7 @@ describe('quantic-timeframe-facet', () => {
         Expect.displayCollapseButton(true);
         Expect.displayExpandButton(false);
         Expect.displayClearButton(false);
-
-        scope('validate timeframe values and ordering', () => {
-          Expect.valuesEqual([
-            'Next year',
-            'Past 2 weeks',
-            'Past month',
-            'Past year',
-            'Last decade',
-          ]);
-        });
+        Expect.displayValues(true);
       });
 
       scope('when selecting a value', () => {
@@ -158,28 +155,109 @@ describe('quantic-timeframe-facet', () => {
     });
   });
 
+  function mockSearchEmptyTimeframes() {
+    cy.intercept(routeMatchers.search, (req) => {
+      req.continue((res) => {
+        const facetValues = res.body.facets[0].values;
+        for (let i = 0; i < facetValues.length; i++) {
+          // Set all timeframes as empty, except the first one
+          facetValues[i].numberOfResults = i === 0 ? 100 : 0;
+        }
+        res.send();
+      });
+    }).as(InterceptAliases.Search.substring(1));
+  }
+
+  function mockSearchWithAllTimeframes() {
+    cy.intercept(routeMatchers.search, (req) => {
+      req.continue((res) => {
+        const facetValues = res.body.facets[0].values;
+        for (let i = 0; i < facetValues.length; i++) {
+          facetValues[i].numberOfResults = 100;
+        }
+        res.send();
+      });
+    }).as(InterceptAliases.Search.substring(1));
+  }
+
+  describe('with empty timeframes', () => {
+    it('should display non-empty timeframes only', () => {
+      mockSearchEmptyTimeframes();
+      cy.visit(pageUrl);
+      configure({});
+      cy.wait(InterceptAliases.Search);
+
+      scope('with one non-empty timeframe', () => {
+        Expect.numberOfValues(1);
+      });
+    });
+  });
+
+  describe('with non-empty timeframes', () => {
+    it('should display timeframes in the right order', () => {
+      mockSearchWithAllTimeframes();
+      cy.visit(pageUrl);
+      configure({});
+      cy.wait(InterceptAliases.Search);
+
+      Expect.valuesEqual([
+        'Next year',
+        'Past 2 weeks',
+        'Past month',
+        'Past year',
+        'Last decade',
+      ]);
+    });
+  });
+
   describe('with with-date-picker', () => {
     it('should activate manual range', () => {
       visitTimeframeFacet({
         withDatePicker: true,
       });
 
-      // - input fields are present
-      // - min/max validations
+      scope('validate initial rendering', () => {
+        Expect.displayLabel(true);
+        Expect.displayCollapseButton(true);
+        Expect.displayStartInput(true);
+        Expect.displayEndInput(true);
+        Expect.displayApplyButton(true);
+        Expect.displayValues(true);
+      });
 
-      // specify a range
-      // - search request sent with the correct range
-      // - values not displayed
-      // - clear button displayed
-      // - range in URL hash
-      // - log UA event
+      scope('when collapsing the facet', () => {
+        Actions.collapse();
 
-      // clear filter
-      // - input fields are empty
-      // - values are displayed
-      // - no range in URL hash
-      // - clear button not displayed
-      // - log UA event
+        Expect.displayStartInput(false);
+        Expect.displayEndInput(false);
+        Expect.displayApplyButton(false);
+
+        Actions.expand();
+      });
+
+      scope('when specifying a range', () => {
+        Actions.applyRange('2000-12-31', '2001-03-15');
+
+        cy.wait(InterceptAliases.Search);
+
+        const range = '2000/12/31@00:00:00..2001/03/15@23:59:59';
+        Expect.urlHashContains('Date_input', range);
+        Expect.logSelectedValue('Date', range);
+
+        Expect.displayValues(false);
+        Expect.displayClearButton(true);
+      });
+
+      scope('when clearing filter', () => {
+        Actions.clearFilter();
+
+        cy.wait(InterceptAliases.Search);
+
+        Expect.displayClearButton(false);
+        Expect.displayValues(true);
+        Expect.urlHashIsEmpty();
+        Expect.logClearFilter('Date');
+      });
     });
   });
 });

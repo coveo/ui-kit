@@ -31,7 +31,7 @@
                 <span class="timeframe-facet__input-label">Start:</span>
               </div>
               <div class="slds-col slds-size_4-of-5">
-                <lightning-input class="timeframe-facet__start-input" type="date" label="Start" variant="label-hidden" date-style="short" placeholder={datepickerFormat}></lightning-input>
+                <lightning-input class="timeframe-facet__start-input" type="date" label="Start" variant="label-hidden" date-style="short" placeholder={datepickerFormat} value={startDate}></lightning-input>
               </div>
             </div>
             <div class="slds-col slds-grid slds-grid_vertical-align-center slds-p-top_x-small">
@@ -39,28 +39,30 @@
                 <span class="timeframe-facet__input-label">End:</span>
               </div>
               <div class="slds-col slds-size_4-of-5">
-                <lightning-input class="timeframe-facet__end-input" type="date" label="End" variant="label-hidden" date-style="short" placeholder={datepickerFormat}></lightning-input>
+                <lightning-input class="timeframe-facet__end-input" type="date" label="End" variant="label-hidden" date-style="short" placeholder={datepickerFormat} value={endDate}></lightning-input>
               </div>  
             </div>
             <div class="slds-col slds-p-top_x-small">
-              <button class="slds-button slds-button_neutral slds-button_stretch" onclick={handleApply}>Apply</button>
+              <button class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply" onclick={handleApply}>Apply</button>
             </div>
           </div>
         </template>
 
-        <ul class="slds-has-dividers_around-space slds-m-top_medium">
-          <template for:each={formattedValues} for:item="v">
-            <c-quantic-facet-value
-              key={v.key}
-              item={v}
-              is-checked={v.selected}
-              onselectvalue={onSelectValue}
-              formatting-function={formatFacetValue}
-              display-as-link
-            >
-            </c-quantic-facet-value>
-          </template>
-        </ul>
+        <template if:true={showValues}>
+          <ul class="slds-has-dividers_around-space slds-m-top_medium">
+            <template for:each={formattedValues} for:item="v">
+              <c-quantic-facet-value
+                key={v.key}
+                item={v}
+                is-checked={v.selected}
+                onselectvalue={onSelectValue}
+                formatting-function={formatFacetValue}
+                display-as-link
+              >
+              </c-quantic-facet-value>
+            </template>
+          </ul>
+        </template>
       </template>
     </c-quantic-card-container>
   </template>

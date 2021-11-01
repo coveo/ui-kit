@@ -152,7 +152,10 @@ export class I18nUtils {
    * @param {Date} date 
    */
   static formatDate(date) {
-    return (new Intl.DateTimeFormat(LOCALE)).format(date);
+    const result = (new Intl.DateTimeFormat(LOCALE)).format(date);
+    console.log(`formatDate: ${result}`);
+
+    return result;
   }
 }
 

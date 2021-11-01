@@ -1,3 +1,4 @@
+import {ComponentSelector, CypressSelector} from '../../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithValuesSelector,
@@ -6,7 +7,14 @@ import {
 export const timeframeFacetComponent = 'c-quantic-timeframe-facet';
 
 export type TimeframeFacetSelector = BaseFacetSelector &
-  FacetWithValuesSelector;
+  FacetWithValuesSelector &
+  WithDateRangeSelector;
+
+export interface WithDateRangeSelector extends ComponentSelector {
+  startInput: () => CypressSelector;
+  endInput: () => CypressSelector;
+  applyButton: () => CypressSelector;
+}
 
 export const TimeframeFacetSelectors: TimeframeFacetSelector = {
   get: () => cy.get(timeframeFacetComponent),
@@ -39,4 +47,11 @@ export const TimeframeFacetSelectors: TimeframeFacetSelector = {
   checkbox: () => {
     throw new Error('Selector not supported by the timeframe facet.');
   },
+
+  startInput: () =>
+    TimeframeFacetSelectors.get().find('.timeframe-facet__start-input input'),
+  endInput: () =>
+    TimeframeFacetSelectors.get().find('.timeframe-facet__end-input input'),
+  applyButton: () =>
+    TimeframeFacetSelectors.get().find('.timeframe-facet__apply'),
 };

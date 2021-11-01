@@ -1,8 +1,14 @@
 import {
+  getHeadlessBindings,
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
-import { fromSearchApiDate, I18nUtils, RelativeDateFormatter, toSearchApiDate } from 'c/quanticUtils';
+import {
+  fromSearchApiDate,
+  I18nUtils,
+  RelativeDateFormatter,
+  toSearchApiDate,
+} from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
@@ -40,6 +46,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
   showPlaceholder = true;
 
   _isCollapsed;
+  _showValues = true;
+
+  startDate;
+  endDate;
 
   labels = {
     collapseFacet,
@@ -64,7 +74,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
         field: this.field,
-        currentValues: this.currentValues,
+        currentValues: JSON.parse(JSON.stringify(this.currentValues)),
         generateAutomaticRanges: false,
         sortCriteria: 'descending',
         filterFacetCount: !this.noFilterFacetCount,
@@ -74,15 +84,19 @@ export default class QuanticTimeframeFacet extends LightningElement {
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
 
+    const dateFilterId = (this.facetId || this.field) + '_input';
+
     this.dateFilter = CoveoHeadless.buildDateFilter(engine, {
       options: {
         field: this.field,
-        facetId: this.facetId || this.field,
+        facetId: dateFilterId,
         filterFacetCount: !this.noFilterFacetCount,
         injectionDepth: this.injectionDepth,
       },
     });
-    this.unsubscribeDateFilter = this.dateFilter.subscribe(() => this.updateDateFilterState());
+    this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
+      this.updateDateFilterState()
+    );
   };
 
   disconnectedCallback() {
@@ -99,22 +113,50 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   updateDateFilterState() {
     this.dateFilterState = this.dateFilter.state;
+
+    if (this.dateFilterState.range) {
+      const startDateAsApi = this.dateFilterState.range.start;
+      const endDateAsApi = this.dateFilterState.range.end;
+
+      try {
+        // If start and end are fixed dates, let's update `startDate` and `endDate` accordingly.
+        const start = new Date(Date.parse(fromSearchApiDate(startDateAsApi)));
+        const end = new Date(Date.parse(fromSearchApiDate(endDateAsApi)));
+
+        this.startDate = start.toISOString();
+        this.endDate = end.toISOString();
+
+        // We're passing in manual mode, so hide the timeframes.
+        this._showValues = false;
+      } catch (err) {
+        // These are most likely relative dates, we can just skip.
+      }
+    } else {
+      if (this.startDate || this.endDate) {
+        this.startDate = '';
+        this.endDate = '';
+      }
+      this._showValues = true;
+    }
   }
 
   /**
-   * 
-   * @param {DateFacetValue} facetValue 
+   *
+   * @param {DateFacetValue} facetValue
    */
   formatFacetValue = (facetValue) => {
     try {
       const startDate = CoveoHeadless.deserializeRelativeDate(facetValue.start);
       const endDate = CoveoHeadless.deserializeRelativeDate(facetValue.end);
 
-      const relativeDate = startDate.period === 'past'
-        ? startDate
-        : endDate;
+      const relativeDate = startDate.period === 'past' ? startDate : endDate;
 
-      const timeframe = this.timeframes?.find((tf) => tf.period === relativeDate.period && tf.unit === relativeDate.unit && tf.amount === relativeDate.amount);
+      const timeframe = this.timeframes?.find(
+        (tf) =>
+          tf.period === relativeDate.period &&
+          tf.unit === relativeDate.unit &&
+          tf.amount === relativeDate.amount
+      );
 
       // TODO: Improve localization of the labels and/or pluralization
       if (timeframe?.label) {
@@ -133,10 +175,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
     const endDate = I18nUtils.formatDate(new Date(Date.parse(end)));
 
     return `${startDate} - ${endDate}`;
-  }
+  };
 
   onSelectValue(evt) {
-    const item = this.formattedValues.find((value) => value.label === evt.detail.value);
+    const item = this.formattedValues.find(
+      (value) => value.label === evt.detail.value
+    );
     this.facet.toggleSingleSelect(item);
   }
 
@@ -151,9 +195,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
   get timeframes() {
     return Array.from(this.querySelectorAll('c-quantic-timeframe')).map(
       (el) => {
-        const amount = typeof(el.amount) === 'string'
-          ? parseInt(el.amount, 10)
-          : el.amount;
+        const amount =
+          typeof el.amount === 'string' ? parseInt(el.amount, 10) : el.amount;
 
         return {
           period: el.period,
@@ -199,12 +242,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   get formattedValues() {
-    return this.values.map((value) => ({
-      ...value,
-      label: this.formatFacetValue(value),
-      key: JSON.stringify([value.start, value.end]),
-      selected: value.state === 'selected'
-    }));
+    return this.values
+      .filter((value) => value.numberOfResults > 0)
+      .map((value) => ({
+        ...value,
+        label: this.formatFacetValue(value),
+        key: JSON.stringify([value.start, value.end]),
+        selected: value.state === 'selected',
+      }));
   }
 
   get actionButtonIcon() {
@@ -216,16 +261,25 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   get actionButtonLabel() {
-    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
+    const label = this.isCollapsed
+      ? this.labels.expandFacet
+      : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
   get hasActiveValues() {
-    return this.formattedValues.some((v) => v.selected);
+    return (
+      this.formattedValues.some((v) => v.selected) || this.dateFilterState.range
+    );
   }
 
   clearSelections() {
+    if (this.withDatePicker) {
+      this.dateFilter.clear();
+    }
     this.facet.deselectAll();
+
+    this._showValues = true;
   }
 
   get clearFilterLabel() {
@@ -268,10 +322,19 @@ export default class QuanticTimeframeFacet extends LightningElement {
       return;
     }
 
-    this.facet.deselectAll();
-    this.dateFilter.setRange(CoveoHeadless.buildDateRange({
-      start: toSearchApiDate(startDate),
-      end: toSearchApiDate(endDate),
-    }));
+    // TODO: I guess we should do it that way to avoir triggering 2 search requests.
+    const engine = getHeadlessBindings(this.engineId).engine;
+    engine.dispatch(CoveoHeadless.loadDateFacetSetActions(engine).deselectAllDateFacetValues(this.facet.state.facetId));
+
+    this.dateFilter.setRange(
+      CoveoHeadless.buildDateRange({
+        start: toSearchApiDate(startDate),
+        end: toSearchApiDate(endDate),
+      })
+    );
+  }
+
+  get showValues() {
+    return this._showValues;
   }
 }

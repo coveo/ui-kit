@@ -7,6 +7,7 @@ import {
 import {
   TimeframeFacetSelector,
   TimeframeFacetSelectors,
+  WithDateRangeSelector,
 } from './timeframe-facet-selectors';
 
 function baseTimeframeFacetExpectations(selector: BaseFacetSelector) {
@@ -61,6 +62,12 @@ function baseTimeframeFacetExpectations(selector: BaseFacetSelector) {
         .values()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`The facet values ${should(display)} be displayed.`),
+
+    numberOfValues: (value: number) =>
+      selector
+        .values()
+        .should('have.length', value)
+        .logDetail(`The facet should have ${value} values.`),
 
     displayClearButton: (display: boolean) =>
       selector
@@ -128,7 +135,30 @@ function timeframeFacetWithValuesExpectations(
   };
 }
 
+function timeframeWithRangeExpectations(selector: WithDateRangeSelector) {
+  return {
+    displayStartInput: (display: boolean) =>
+      selector
+        .startInput()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`The start input ${should(display)} be displayed.`),
+
+    displayEndInput: (display: boolean) =>
+      selector
+        .endInput()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`The end input ${should(display)} be displayed.`),
+
+    displayApplyButton: (display: boolean) =>
+      selector
+        .applyButton()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`The apply button ${should(display)} be displayed.`),
+  };
+}
+
 export const TimeframeFacetExpectations = {
   ...baseTimeframeFacetExpectations(TimeframeFacetSelectors),
   ...timeframeFacetWithValuesExpectations(TimeframeFacetSelectors),
+  ...timeframeWithRangeExpectations(TimeframeFacetSelectors),
 };
