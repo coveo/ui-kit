@@ -153,39 +153,44 @@ describe('buildQueryExpression', () => {
     expect(builder.toString()).toBe('(@author="ehughes") OR (@size>100)');
   });
 
-  describe('#addNumericRangeField', () => {
-    it('with one expression, #toString returns the expected syntax', () => {
-      builder.addNumericRangeField({
-        field: 'size',
-        from: 10,
-        to: 20,
-      });
-
-      expect(builder.toString()).toBe('@size==10..20');
+  it('#addNumericRangeFieldwith one expression, #toString returns the expected syntax', () => {
+    builder.addNumericRangeField({
+      field: 'size',
+      from: 10,
+      to: 20,
     });
+
+    expect(builder.toString()).toBe('@size==10..20');
   });
 
-  describe('#addDateField', () => {
-    it('with one expression, #toString returns the expected syntax', () => {
-      builder.addNumericField({
-        field: 'size',
-        operator: 'greaterThan',
-        value: 10,
-      });
-
-      expect(builder.toString()).toBe('@size>10');
+  it('#addDateField with one expression, #toString returns the expected syntax', () => {
+    builder.addNumericField({
+      field: 'size',
+      operator: 'greaterThan',
+      value: 10,
     });
+
+    expect(builder.toString()).toBe('@size>10');
   });
 
-  describe('#addDateRangeField', () => {
-    it('with one expression, #toString returns the expected syntax', () => {
-      builder.addNumericRangeField({
-        field: 'size',
-        from: 10,
-        to: 20,
-      });
-
-      expect(builder.toString()).toBe('@size==10..20');
+  it('#addDateRangeField with one expression, #toString returns the expected syntax', () => {
+    builder.addNumericRangeField({
+      field: 'size',
+      from: 10,
+      to: 20,
     });
+
+    expect(builder.toString()).toBe('@size==10..20');
+  });
+
+  it('concatenates multiple query expressions correctly', () => {
+    const expression1 = buildQueryExpression().addKeyword({expression: 'a'});
+    const expression2 = buildQueryExpression().addKeyword({expression: 'b'});
+
+    builder.addExpression(expression1);
+    builder.addExpression(expression2);
+    builder.addKeyword({expression: 'c'});
+
+    expect(builder.toString()).toBe('(a) AND (b) AND (c)');
   });
 });

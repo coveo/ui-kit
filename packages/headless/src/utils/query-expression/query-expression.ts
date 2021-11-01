@@ -54,6 +54,14 @@ export {
  */
 export interface QueryExpression {
   /**
+   * Adds a `QueryExpression` to the current instance.
+   *
+   * @param expression - The query expression instance to add.
+   * @returns The `QueryExpression` instance.
+   */
+  addExpression(expression: QueryExpression): QueryExpression;
+
+  /**
    * Adds an expression containing terms to match. Terms can be in any order, and may also be expanded with stemming.
    *
    * @param expression - A keyword expression.
@@ -176,6 +184,11 @@ export function buildQueryExpression(): QueryExpression {
   let booleanOperator: BooleanOperator = 'and';
 
   return {
+    addExpression(expression: QueryExpression) {
+      parts.push(expression);
+      return this;
+    },
+
     addKeyword(expression: KeywordExpression) {
       parts.push(buildKeyword(expression));
       return this;
