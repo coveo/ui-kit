@@ -50,6 +50,7 @@ export class AtomicBreadbox implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   private resizeObserver!: ResizeObserver;
   private showMore!: HTMLButtonElement;
+  private showLess!: HTMLButtonElement;
   facetManager!: FacetManager;
 
   @Element() private host!: HTMLElement;
@@ -105,12 +106,21 @@ export class AtomicBreadbox implements InitializableComponent {
     this.updateShowMoreValue(hiddenBreadcrumbs);
   }
 
+  private updateShowLessDisplay() {
+    this.show(this.showLess);
+    if (this.showLess.offsetTop === 0) {
+      this.hide(this.showLess);
+    }
+  }
+
   private adaptBreadcrumbs() {
     if (!this.breadcrumbs.length) {
       return;
     }
     this.showAllBreadcrumbs();
+
     if (!this.isCollapsed) {
+      this.updateShowLessDisplay();
       return;
     }
 
@@ -210,6 +220,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li key="show-less">
         <Button
+          ref={(ref) => (this.showLess = ref!)}
           part="show-less"
           style="outline-primary"
           text={this.bindings.i18n.t('show-less')}

@@ -319,7 +319,6 @@ describe('search api client', () => {
             numberOfValues: facetSearchState.options.numberOfValues,
             query: newQuery,
             field: facetState.field,
-            delimitingCharacter: facetState.delimitingCharacter,
             ignoreValues: [],
             searchContext: {
               ...buildSearchRequest(state).request,

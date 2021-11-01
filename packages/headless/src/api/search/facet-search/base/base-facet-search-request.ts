@@ -17,7 +17,6 @@ export interface BaseFacetSearchRequest
     BaseParam {
   field: string;
   searchContext: SearchRequest;
-  delimitingCharacter: string;
 }
 
 export interface FacetSearchType<T extends 'specific' | 'hierarchical'> {
