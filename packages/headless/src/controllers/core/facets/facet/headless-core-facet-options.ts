@@ -20,9 +20,7 @@ export interface FacetOptions {
   field: string;
 
   /**
-   * The character that separates values of a multi-value field.
-   *
-   * @defaultValue `>`
+   * @deprecated This option has no effect.
    */
   delimitingCharacter?: string;
 
@@ -93,6 +91,7 @@ export interface FacetSearchOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
+  // TODO: Remove on next major version
   delimitingCharacter,
   filterFacetCount,
   injectionDepth,
