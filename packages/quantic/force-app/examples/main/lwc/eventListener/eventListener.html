@@ -1,0 +1,35 @@
+<template>
+  <template if:true={expectsEvents}>
+    <lightning-card title="Events">
+      <template for:each={events} for:item="event">
+        <div key={event.type} class="slds-card__body_inner">
+          <template if:true={event.received}>
+            <div class="grid slds-grid_vertical-align-start">
+              <lightning-icon icon-name="utility:check" alternative-text="Received" title="Recevied" variant="success" size="xx-small"></lightning-icon>
+              {event.type}
+            </div>
+            <lightning-accordion allow-multiple-sections-open>
+              <lightning-accordion-section name="Event Detail" label="Event Detail">
+                <div class="slds-rich-text-editor__textarea slds-grid">
+                  <div class="slds-rich-text-area__content slds-text-color_weak slds-grow">
+                    <pre>
+                      <code>{event.detail}</code>
+                    </pre>
+                  </div>
+                </div>
+              </lightning-accordion-section>
+            </lightning-accordion>
+          </template>
+          <template if:false={event.received}>
+            <div class="grid slds-grid_vertical-align-start">
+              <lightning-icon icon-name="utility:dash" alternative-text="Received" title="Recevied" size="xx-small"></lightning-icon>
+              {event.type}
+            </div>
+          </template>
+        </div>
+      </template>
+    </lightning-card>
+  </template>
+
+  <slot></slot>
+</template>
