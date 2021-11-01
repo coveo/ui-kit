@@ -9,6 +9,12 @@ import {
 
 export function baseFacetExpectations(selector: BaseFacetSelector) {
   return {
+    displayFacet: (display: boolean) => {
+      selector
+        .get()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the facet`);
+    },
     displayLabel: (display: boolean) => {
       selector
         .label()

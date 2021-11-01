@@ -7,7 +7,17 @@ import {
 export const field = 'ytlikecount';
 
 const numericFacetActions = (selector: AllFacetSelectors) => {
-  return {};
+  return {
+    inputMinValue: (value: number | string) => {
+      selector.inputMin().type(value.toString(), {force: true});
+    },
+    inputMaxValue: (value: number | string) => {
+      selector.inputMax().type(value.toString(), {force: true});
+    },
+    submitManualRange: () => {
+      selector.searchForm().submit();
+    },
+  };
 };
 
 export const NumericFacetActions = {

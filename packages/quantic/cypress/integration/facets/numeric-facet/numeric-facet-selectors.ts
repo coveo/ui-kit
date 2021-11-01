@@ -22,8 +22,8 @@ export const NumericFacetSelectors: AllFacetSelectors = {
 
   label: () => NumericFacetSelectors.get().find('header h2 > span'),
   values: () => NumericFacetSelectors.get().find('c-quantic-facet-value'),
-  inputMin: () => NumericFacetSelectors.get().find('.numeric__input-min'),
-  inputMax: () => NumericFacetSelectors.get().find('.numeric__input-max'),
+  inputMin: () => NumericFacetSelectors.get().find('.numeric__input-min input'),
+  inputMax: () => NumericFacetSelectors.get().find('.numeric__input-max input'),
   applyButton: () => NumericFacetSelectors.get().find('button[type="submit"]'),
   searchForm: () => NumericFacetSelectors.get().find('.facet__search-form'),
   clearFilterButton: () =>

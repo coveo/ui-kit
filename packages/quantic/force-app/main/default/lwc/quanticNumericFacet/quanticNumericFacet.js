@@ -332,12 +332,12 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.withInput) {
       this.resetValidityParameters();
     
-    this.allInputs.forEach((input) => {
-      // @ts-ignore
-      input.checkValidity();
-      // @ts-ignore
-      input.reportValidity();
-    });
+      this.allInputs.forEach((input) => {
+        // @ts-ignore
+        input.checkValidity();
+        // @ts-ignore
+        input.reportValidity();
+      });
     }
   }
 
@@ -349,6 +349,9 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
   }
 
+  /**
+   * @param {{ preventDefault: () => void; }} evt
+   */
   onApply(evt) {
     evt.preventDefault();
 

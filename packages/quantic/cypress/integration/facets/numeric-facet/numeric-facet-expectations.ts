@@ -1,6 +1,10 @@
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
-import {baseFacetExpectations} from '../facet-common-expectations';
+import {SearchExpectations} from '../../search-expectations';
+import {
+  baseFacetExpectations,
+  facetWithValuesExpectations,
+} from '../facet-common-expectations';
 import {field} from './numeric-facet-actions';
 import {
   AllFacetSelectors,
@@ -18,68 +22,29 @@ const formatDefaultNumericFacetValue = (value: string) => {
 
 const numericFacetExpectations = (selector: AllFacetSelectors) => {
   return {
-    isRendered: (accessible: boolean) => {
-      selector
-        .get()
-        .should(accessible ? 'exist' : 'not.exist')
-        .logDetail(
-          `${should(accessible)} display the 'Numeric Facet' component`
-        );
-    },
-    displayLabel: (display: boolean) => {
-      selector
-        .label()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the 'Label'`);
-    },
-    displayClearFilterButton: (display: boolean) => {
-      selector
-        .clearFilterButton()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the 'Clear filter' button`);
-    },
     displaySearchForm: (display: boolean) => {
       selector
         .searchForm()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the 'Manual range' form`);
     },
-    numberOfValues: (value: number) => {
+    inputMinEmpty: () => {
       selector
-        .values()
-        .should('have.length', value)
-        .logDetail(`should display ${value} number of idle checkbox values`);
+        .inputMin()
+        .invoke('val')
+        .should('be.empty')
+        .logDetail('the min input should be empty');
     },
-    numberOfIdleCheckboxValues: (value: number) => {
-      if (value > 0) {
-        selector
-          .idleCheckbox()
-          .should('have.length', value)
-          .logDetail(`should display ${value} number of idle checkbox values`);
-      } else {
-        selector
-          .idleCheckbox()
-          .should('not.exist')
-          .logDetail('should display no idle checkbox value');
-      }
+    inputMaxEmpty: () => {
+      selector
+        .inputMax()
+        .invoke('val')
+        .should('be.empty')
+        .logDetail('the max input should be empty');
     },
-    numberOfSelectedCheckboxValues: (value: number) => {
-      if (value > 0) {
-        selector
-          .selectedCheckbox()
-          .should('have.length', value)
-          .logDetail(
-            `should display ${value} number of selected checkbox values`
-          );
-      } else {
-        selector
-          .selectedCheckbox()
-          .should('not.exist')
-          .logDetail('should display no selected checkbox value');
-      }
-    },
-    urlHashContains: (value: string) => {
-      const urlHash = `#nf[${field.toLowerCase()}]=${encodeURI(value)}`;
+    urlHashContains: (value: string, fromInput = false) => {
+      const input = fromInput ? '_input' : '';
+      const urlHash = `#nf[${field.toLowerCase()}${input}]=${encodeURI(value)}`;
       cy.url()
         .should('include', urlHash)
         .logDetail('should display range value on UrlHash');
@@ -121,24 +86,13 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
         })
         .logDetail("should log the 'NumericFacetSelect' UA event");
     },
-    logNumericFacetClearAll: (field: string) => {
-      cy.wait(InterceptAliases.UA.Facet.ClearAll)
-        .then((interception) => {
-          const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property(
-            'actionCause',
-            'facetClearAll'
-          );
-          expect(analyticsBody.customData).to.have.property(
-            'facetField',
-            field
-          );
-        })
-        .logDetail("should log the 'NumericFacetClearAll' UA event");
-    },
   };
 };
 export const NumericFacetExpectations = {
   ...baseFacetExpectations(NumericFacetSelectors),
   ...numericFacetExpectations(NumericFacetSelectors),
+  ...facetWithValuesExpectations(NumericFacetSelectors),
+  search: {
+    ...SearchExpectations,
+  },
 };
