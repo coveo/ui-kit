@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.1...@coveo/atomic@1.9.2) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** allowed printable uri to be expanded on grid results ([#1405](https://github.com/coveo/ui-kit/issues/1405)) ([0e27070](https://github.com/coveo/ui-kit/commit/0e270707a21777a0a451b766078231040a8c56ee))
+* **atomic:** hide show less when on first row ([#1411](https://github.com/coveo/ui-kit/issues/1411)) ([d6d072b](https://github.com/coveo/ui-kit/commit/d6d072b3039728a70c90e8bce21d881ca8fa01b2))
+* **atomic:** re-added divider in large grid on mobile ([#1406](https://github.com/coveo/ui-kit/issues/1406)) ([f03d2dd](https://github.com/coveo/ui-kit/commit/f03d2ddae28d0698389246c96d498dcdd2e3d905))
+* **atomic:** reduced margin above title metadata section ([#1404](https://github.com/coveo/ui-kit/issues/1404)) ([561d1d8](https://github.com/coveo/ui-kit/commit/561d1d85d89c2a575df0ac76786ea15c74dce674))
+
+
+
+
+
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.0...@coveo/atomic@1.9.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** register filters to store when ranges are not defined (numeric & timeframe facets) ([#1399](https://github.com/coveo/ui-kit/issues/1399)) ([268ad66](https://github.com/coveo/ui-kit/commit/268ad66359ea2b8c46cebedbcbec59dfe4106fb3))
+
+
+
+
+
 # [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.4...@coveo/atomic@1.9.0) (2021-10-29)
 
 

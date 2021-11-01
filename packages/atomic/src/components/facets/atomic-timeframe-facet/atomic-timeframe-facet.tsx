@@ -120,6 +120,7 @@ export class AtomicTimeframeFacet
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.manualTimeframes.length && this.initializeFacet();
     this.withDatePicker && this.initializeFilter();
+    this.registerFacetToStore();
   }
 
   private initializeFacet() {
@@ -134,12 +135,6 @@ export class AtomicTimeframeFacet
     };
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'dateFacets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-      format: (value) => this.formatFacetValue(value),
-    });
   }
 
   private initializeFilter() {
@@ -149,8 +144,24 @@ export class AtomicTimeframeFacet
         field: this.field,
       },
     });
-    this.bindings.store.state.dateFacets[this.filter.state.facetId] =
-      this.bindings.store.state.dateFacets[this.facetId!];
+
+    if (!this.facetId) {
+      this.facetId = this.filter.state.facetId;
+    }
+  }
+
+  private registerFacetToStore() {
+    registerFacetToStore(this.bindings.store, 'dateFacets', {
+      label: this.label,
+      facetId: this.facetId!,
+      element: this.host,
+      format: (value) => this.formatFacetValue(value),
+    });
+
+    if (this.filter) {
+      this.bindings.store.state.dateFacets[this.filter.state.facetId] =
+        this.bindings.store.state.dateFacets[this.facetId!];
+    }
   }
 
   private getManualTimeframes(): Timeframe[] {
