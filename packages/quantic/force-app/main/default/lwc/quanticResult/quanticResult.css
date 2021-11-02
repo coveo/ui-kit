@@ -6,4 +6,5 @@
 .result__date {
   font-size: .9em;
   color:#3E3E3C;
+  min-width: 80px;
 }

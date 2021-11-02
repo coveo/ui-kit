@@ -17,3 +17,13 @@
   width: 100%;
   height: 50%;
 }
+
+.quickview__button {
+  color: var(--color-text-link-active, #0f2d5d);
+  border-radius: 0.25rem;
+}
+
+.quickview__button:hover {
+  background-color: #f6f7f9;
+  box-shadow: 0 0 0px 0.25rem #f6f7f9;
+}
