@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.6...@coveo/atomic@1.9.7) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
 ## [1.9.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.5...@coveo/atomic@1.9.6) (2021-11-02)
 
 
