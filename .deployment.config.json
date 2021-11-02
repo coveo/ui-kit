@@ -85,7 +85,10 @@
       "id": "invalidate_cache",
       "team_jenkins": {
         "job_name": "ui-kit-cloudfront-invalidation",
-        "disabled": false
+        "disabled": true,
+        "prd": {
+          "disabled": false
+        }
       }
     },
     {
