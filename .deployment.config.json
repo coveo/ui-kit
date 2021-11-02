@@ -82,16 +82,6 @@
       }
     },
     {
-      "id": "invalidate_cache",
-      "team_jenkins": {
-        "job_name": "ui-kit-cloudfront-invalidation",
-        "disabled": true,
-        "prd": {
-          "disabled": false
-        }
-      }
-    },
-    {
       "id": "qa-release",
       "team_jenkins": {
         "disabled": true,
