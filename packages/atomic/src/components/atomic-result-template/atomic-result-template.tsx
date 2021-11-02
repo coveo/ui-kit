@@ -5,14 +5,8 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
-import {containsSection} from '../../utils/result-section-utils';
-import {ResultDisplayImageSize} from '../atomic-result/atomic-result-display-options';
 
-export interface TemplateContent {
-  innerHTML: string;
-  usesSections: boolean;
-  imageSize?: ResultDisplayImageSize;
-}
+export type TemplateContent = DocumentFragment;
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
@@ -105,11 +99,7 @@ export class AtomicResultTemplate {
 
     return {
       conditions: this.getConditions(),
-      content: {
-        innerHTML: this.getContent(),
-        usesSections: containsSection(this.getTemplateElement().content),
-        imageSize: this.getImageSize() ?? undefined,
-      },
+      content: this.getContent(),
       priority: 1,
     };
   }
@@ -124,20 +114,8 @@ export class AtomicResultTemplate {
     );
   }
 
-  private getImageSize() {
-    const visualSection = this.getTemplateElement().content.querySelector(
-      'atomic-result-section-visual'
-    );
-    if (visualSection) {
-      return visualSection.getAttribute(
-        'image-size'
-      ) as ResultDisplayImageSize | null;
-    }
-    return null;
-  }
-
   private getContent() {
-    return this.getTemplateElement().innerHTML;
+    return this.getTemplateElement().content;
   }
 
   public render() {

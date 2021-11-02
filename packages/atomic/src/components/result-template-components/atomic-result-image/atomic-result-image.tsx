@@ -38,6 +38,7 @@ export class AtomicResultImage implements InitializableComponent {
 
     if (!url) {
       this.host.remove();
+      return;
     }
 
     if (typeof url !== 'string') {

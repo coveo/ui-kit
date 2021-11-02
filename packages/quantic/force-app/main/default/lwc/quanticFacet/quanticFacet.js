@@ -314,6 +314,10 @@ export default class QuanticFacet extends LightningElement {
     return '';
   }
 
+  get displaySearch() {
+    return !this.noSearch && this.state.canShowMoreValues;
+  }
+
   onSelectClickHandler(value) {
     if (this.isDisplayAsLink) {
       this.facet.toggleSingleSelect(value);

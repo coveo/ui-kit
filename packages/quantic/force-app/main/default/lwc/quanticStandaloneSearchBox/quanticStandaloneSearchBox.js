@@ -134,7 +134,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   initialize = (engine) => {
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
-        numberOfSuggestions: this.numberOfSuggestions,
+        numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
           notMatchDelimiters: {
             open: '<b>',
