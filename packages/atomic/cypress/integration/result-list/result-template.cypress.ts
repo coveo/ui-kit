@@ -174,20 +174,18 @@ describe('Result Template Component', () => {
       beforeEach(() => {
         new TestFixture()
           .with(
-            addResultTable([
-              {label: 'Anything', content: generateComponentHTML('span')},
-            ])
+            addResultTable(
+              [{label: 'Anything', content: generateComponentHTML('span')}],
+              {display: 'list'}
+            )
           )
           .init();
-        cy.get(resultListComponent).then(([el]) =>
-          el.setAttribute('display', 'list')
-        );
       });
 
       it('does not render table elements', () => {
         ResultTemplateSelectors.tableElements()
           .should('exist')
-          .should('not.be.visible');
+          .and('not.be.visible');
       });
     });
 
