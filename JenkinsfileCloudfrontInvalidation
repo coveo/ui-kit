@@ -1,0 +1,26 @@
+node('linux && docker') {
+  def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
+
+  checkout([
+    $class: 'GitSCM',
+    branches: [[name: commitHash ]],
+    extensions: [],
+    userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/ui-kit']]
+  ])
+
+  withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+
+    withCredentials([
+      [
+        $class: "AmazonWebServicesCredentialsBinding",
+        credentialsId: "CloudfrontCacheInvalidation",
+      ]
+    ]) {
+      stage('Cloudfront invalidation') {
+        sh 'npm ci';
+        sh 'node ./scripts/invalidate-cloudfront.js'
+      }
+
+    }
+  }
+}
