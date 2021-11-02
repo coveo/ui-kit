@@ -1,11 +1,13 @@
+import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
-import {resultListSelector, resultListSelectors} from './resultList-selectors';
+import {EventExpectations} from '../event-expectations';
+import {ResultListSelector, ResultListSelectors} from './result-list-selectors';
 
-function resultListExpectations(selector: resultListSelector) {
+function resultListExpectations(selector: ResultListSelector) {
   return {
     displayPlaceholder: (display: boolean) => {
       selector
-        .resultListresultList()
+        .placeholder()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the placeholder`);
     },
@@ -15,15 +17,36 @@ function resultListExpectations(selector: resultListSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display results`);
     },
-    fieldsIncluded: (display: boolean) => {
-      selector
-        .resultListresultList()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display `);
+    resultsEqual: (resultsAlias: string) => {
+      cy.get(resultsAlias).then((results) => {
+        selector
+          .resultLinks()
+          .then((elements) => {
+            return Cypress.$.makeArray(elements).map(
+              (element) => element.innerText
+            );
+          })
+          .should(
+            'deep.equal',
+            results.map((result) => result.Title)
+          )
+          .logDetail('should render the received results');
+      });
+    },
+    requestFields: (expectedFieldsToInclude: string[]) => {
+      cy.wait(InterceptAliases.Search)
+        .then((interception) => {
+          const fieldsToInclude = interception.request.body.fieldsToInclude;
+          expect(fieldsToInclude).to.deep.equal(expectedFieldsToInclude);
+        })
+        .logDetail('fields to include should be in the request');
     },
   };
 }
 
-export const resultListExpectations = {
-  ...resultListExpectations(resultListSelectors),
+export const ResultListExpectations = {
+  ...resultListExpectations(ResultListSelectors),
+  events: {
+    ...EventExpectations,
+  },
 };

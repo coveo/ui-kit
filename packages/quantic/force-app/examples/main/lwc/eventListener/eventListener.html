@@ -6,12 +6,16 @@
           <div key={event.type} class="slds-card__body_inner">
             <div class="grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
               <template if:true={event.received}>
-                <lightning-icon icon-name="utility:check" alternative-text="Received" title="Received" variant="success" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
-                {event.type}
+                <div class="event__received grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                  <lightning-icon icon-name="utility:check" alternative-text="Received" title="Received" variant="success" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                  {event.type}
+                </div>
               </template>
               <template if:false={event.received}>
-                <lightning-icon icon-name="utility:dash" alternative-text="Received" title="Received" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
-                {event.type}
+                <div class="event__not-received grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                  <lightning-icon icon-name="utility:dash" alternative-text="Received" title="Received" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                  {event.type}
+                </div>
               </template>
             </div>
           </div>
