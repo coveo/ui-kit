@@ -29,13 +29,34 @@ export const StaticFilter: FunctionComponent<StaticFilterOptions> = (props) => {
 
 /* Usage
 
+const youtubeExpression = buildQueryExpression()
+  .addStringField({
+    field: 'filetype',
+    operator: 'isExactly',
+    values: ['youtubevideo'],
+  })
+  .toString();
+
+const dropboxExpression = buildQueryExpression()
+  .addStringField({
+    field: 'connectortype',
+    operator: 'isExactly',
+    values: ['DropboxCrawler'],
+  })
+  .addStringField({
+    field: 'objecttype',
+    operator: 'isExactly',
+    values: ['File'],
+  })
+  .toString();
+
 const youtube = buildStaticFilterValue({
   caption: 'Youtube',
-  expression: '@filetype==youtubevideo',
+  expression: youtubeExpression,
 })
 const dropbox = buildStaticFilterValue({
   caption: 'Dropbox',
-  expression: '(@connectortype==DropboxCrawler AND @objecttype==File)',
+  expression: dropboxExpression,
 })
 
 <StaticFilter id="fileType" values={[youtube, dropbox]}/>;
