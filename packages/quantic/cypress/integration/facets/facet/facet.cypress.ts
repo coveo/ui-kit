@@ -130,8 +130,8 @@ describe('Facet Test Suite', () => {
     });
 
     describe('with no more facet values to show', () => {
-      describe('verify rendering', () => {
-        before(setupWithNoMoreValues);
+      it('should render correctly', () => {
+        setupWithNoMoreValues();
 
         Expect.displayPlaceholder(false);
         Expect.labelContains(defaultLabel);
@@ -485,8 +485,8 @@ describe('Facet Test Suite', () => {
     });
 
     describe('with no more facet values to show', () => {
-      describe('verify rendering', () => {
-        before(setupWithNoMoreValues);
+      it('should render correctly', () => {
+        setupWithNoMoreValues();
 
         Expect.displayPlaceholder(false);
         Expect.labelContains(defaultLabel);
