@@ -97,6 +97,7 @@ export class AtomicQueryError implements InitializableComponent {
           title: this.bindings.i18n.t('disconnected'),
           description: this.bindings.i18n.t('check-your-connection', {
             url: this.url,
+            interpolation: {escapeValue: false},
           }),
         };
       case noEndpointsException:
