@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.5...@coveo/atomic@1.9.6) (2021-11-02)
+
+
+### Bug Fixes
+
+* **atomic:** add util to hide sections using inline styling ([#1418](https://github.com/coveo/ui-kit/issues/1418)) ([c79e025](https://github.com/coveo/ui-kit/commit/c79e025ad2e7c18b62034a7603453b659cda2bee))
+* **atomic:** assign color to printable uri links ([#1420](https://github.com/coveo/ui-kit/issues/1420)) ([75003a3](https://github.com/coveo/ui-kit/commit/75003a3273af4497f35c5082542dd7dd4fbfd2d8))
+
+
+
+
+
 ## [1.9.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.4...@coveo/atomic@1.9.5) (2021-11-02)
 
 **Note:** Version bump only for package @coveo/atomic

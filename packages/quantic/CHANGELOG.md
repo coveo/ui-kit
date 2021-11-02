@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.80.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.5...@coveo/quantic@0.80.6) (2021-11-02)
+
+
+### Bug Fixes
+
+* **quantic:** changed quickview style and placement ([#1407](https://github.com/coveo/ui-kit/issues/1407)) ([19b62c1](https://github.com/coveo/ui-kit/commit/19b62c1bd8a618ffdbd96e863c7079140cf9161e))
+* **quantic:** wrap number props ([#1422](https://github.com/coveo/ui-kit/issues/1422)) ([7aa18e9](https://github.com/coveo/ui-kit/commit/7aa18e90c91bc9d6985efbb776dd40d1ebbf460b))
+
+
+
+
+
 ## [0.80.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.4...@coveo/quantic@0.80.5) (2021-11-02)
 
 
