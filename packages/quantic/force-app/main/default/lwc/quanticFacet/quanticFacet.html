@@ -24,7 +24,7 @@
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
             
-            <template if:false={noSearch}>
+            <template if:true={displaySearch}>
               <div onchange={handleKeyUp} class="slds-size_1-of-1">
                 <lightning-input class="facet__searchbox-input slds-p-horizontal_x-small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
               </div>
