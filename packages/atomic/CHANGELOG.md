@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.3...@coveo/atomic@1.9.4) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** make result template line-height relative to font-size ([#1413](https://github.com/coveo/ui-kit/issues/1413)) ([38ef536](https://github.com/coveo/ui-kit/commit/38ef53666e6f1550d26171a7ad7ad96b56cf2384))
+
+
+
+
+
+## [1.9.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.2...@coveo/atomic@1.9.3) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.9.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.1...@coveo/atomic@1.9.2) (2021-11-01)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.31.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.3...@coveo/headless@1.31.0) (2021-11-01)
+
+
+### Features
+
+* expression builder poc using v4 structure ([#1369](https://github.com/coveo/ui-kit/issues/1369)) ([c622999](https://github.com/coveo/ui-kit/commit/c62299921f58354de09c196b354f918b20c15a7c))
+
+
+
+
+
+## [1.30.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.2...@coveo/headless@1.30.3) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.30.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.1...@coveo/headless@1.30.2) (2021-11-01)
 
 **Note:** Version bump only for package @coveo/headless
