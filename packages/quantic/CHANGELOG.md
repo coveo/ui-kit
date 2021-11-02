@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.80.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.4...@coveo/quantic@0.80.5) (2021-11-02)
+
+
+### Bug Fixes
+
+* **quantic:** hide facet search when there are fewer values than max ([#1402](https://github.com/coveo/ui-kit/issues/1402)) ([40f5903](https://github.com/coveo/ui-kit/commit/40f5903d94bcc005de6eb2ff5fa0a474fdd6223b))
+
+
+
+
+
 ## [0.80.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.3...@coveo/quantic@0.80.4) (2021-11-01)
 
 **Note:** Version bump only for package @coveo/quantic
