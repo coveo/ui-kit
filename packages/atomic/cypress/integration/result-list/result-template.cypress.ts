@@ -1,6 +1,7 @@
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {assertContainsComponentError} from '../common-assertions';
 import {
+  addFieldValueInResponse,
   addResultList,
   buildTemplateWithoutSections,
   buildTemplateWithSections,
@@ -38,19 +39,6 @@ const addBaseTextSize = (size: string) => (fixture: TestFixture) => {
   `;
   fixture.withElement(element);
 };
-
-const addFieldValueInResponse =
-  (field: string, fieldValue: string | null) => (fixture: TestFixture) => {
-    fixture.withCustomResponse((response) =>
-      response.results.forEach((result) => {
-        if (fieldValue === null) {
-          delete result.raw[field];
-        } else {
-          result.raw[field] = fieldValue;
-        }
-      })
-    );
-  };
 
 describe('Result Template Component', () => {
   describe(`when not a child of an "${resultListComponent}" component`, () => {
