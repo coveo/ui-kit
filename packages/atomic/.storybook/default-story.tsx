@@ -10,7 +10,7 @@ import {TemplateResult} from 'lit-html';
 
 const ADDON_PARAMETER_KEY = 'shadowParts';
 
-function renderArgsToHTMLString(componentTag: string, args: Args) {
+export function renderArgsToHTMLString(componentTag: string, args: Args) {
   const el = document.createElement(componentTag);
   Object.keys(args)
     .filter((arg) => arg.indexOf(ADDON_PARAMETER_KEY) === -1)
@@ -42,9 +42,11 @@ function renderShadowPartsToStyleString(componentTag: string, args: Args) {
   styleElement.appendChild(rulesTextNode);
   return styleElement.outerHTML;
 }
+
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
   additionalMarkup?: () => TemplateResult;
+  wrapperElement?: HTMLElement;
 }
 
 export default function defaultStory(
@@ -106,8 +108,8 @@ export default function defaultStory(
 
       return argsToHTMLString + additionalMarkupString;
     },
-
-    advancedConfig.engineConfig
+    advancedConfig.engineConfig,
+    advancedConfig.wrapperElement
   );
 
   exportedStory.loaders = [defaultLoader];
