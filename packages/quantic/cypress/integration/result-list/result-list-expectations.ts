@@ -37,7 +37,9 @@ function resultListExpectations(selector: ResultListSelector) {
       cy.wait(InterceptAliases.Search)
         .then((interception) => {
           const fieldsToInclude = interception.request.body.fieldsToInclude;
-          expect(fieldsToInclude).to.deep.equal(expectedFieldsToInclude);
+          expectedFieldsToInclude.forEach((field) =>
+            expect(fieldsToInclude).to.include(field)
+          );
         })
         .logDetail('fields to include should be in the request');
     },

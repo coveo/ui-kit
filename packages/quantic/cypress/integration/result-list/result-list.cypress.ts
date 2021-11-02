@@ -7,6 +7,7 @@ import {
 } from '../../page-objects/search';
 import {ResultListExpectations as Expect} from './result-list-expectations';
 import {getNextResults} from '../../page-objects/actions/action-get-next-results';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
 
 interface ResultListOptions {
@@ -22,16 +23,10 @@ describe('quantic-resultlist', () => {
 
   const indexResultsAlias = '@indexResults';
 
-  function visitResultList(
-    options: Partial<ResultListOptions>,
-    waitForSearch = true
-  ) {
+  function visitResultList(options: Partial<ResultListOptions>) {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
-    if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
-    }
   }
 
   function setupWithPauseBeforeSearch() {
@@ -64,24 +59,28 @@ describe('quantic-resultlist', () => {
         Expect.events.receivedEvent(true, registerResultTemplatesEvent);
         Expect.displayResults(true);
         Expect.resultsEqual(indexResultsAlias);
+
+        performSearch();
         Expect.requestFields(defaultFieldsToInclude.split(','));
       });
 
       scope('when getting different results', () => {
-        aliasResultValues();
         getNextResults();
 
         Expect.displayResults(true);
         Expect.resultsEqual(indexResultsAlias);
+
+        performSearch();
         Expect.requestFields(defaultFieldsToInclude.split(','));
       });
     });
   });
 
   describe('with custom options', () => {
+    const customFieldsToInclude =
+      'source,language,sfcasestatus,sfcreatedbyname';
+
     it('should display the right number of pages', () => {
-      const customFieldsToInclude =
-        'source,language,sfcasestatus,sfcreatedbyname';
       visitResultList({
         fieldsToInclude: customFieldsToInclude,
       });

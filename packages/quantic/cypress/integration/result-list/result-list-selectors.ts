@@ -1,6 +1,6 @@
 import {ComponentSelector, CypressSelector} from '../common-selectors';
 
-export const resultlistComponent = 'c-quantic-resultlist';
+export const resultlistComponent = 'c-quantic-result-list';
 
 export interface ResultListSelector extends ComponentSelector {
   placeholder: () => CypressSelector;
