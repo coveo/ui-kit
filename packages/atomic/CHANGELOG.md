@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.7...@coveo/atomic@1.9.8) (2021-11-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.9.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.6...@coveo/atomic@1.9.7) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [1.9.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.5...@coveo/atomic@1.9.6) (2021-11-02)
+
+
+### Bug Fixes
+
+* **atomic:** add util to hide sections using inline styling ([#1418](https://github.com/coveo/ui-kit/issues/1418)) ([c79e025](https://github.com/coveo/ui-kit/commit/c79e025ad2e7c18b62034a7603453b659cda2bee))
+* **atomic:** assign color to printable uri links ([#1420](https://github.com/coveo/ui-kit/issues/1420)) ([75003a3](https://github.com/coveo/ui-kit/commit/75003a3273af4497f35c5082542dd7dd4fbfd2d8))
+
+
+
+
+
+## [1.9.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.4...@coveo/atomic@1.9.5) (2021-11-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.9.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.3...@coveo/atomic@1.9.4) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** make result template line-height relative to font-size ([#1413](https://github.com/coveo/ui-kit/issues/1413)) ([38ef536](https://github.com/coveo/ui-kit/commit/38ef53666e6f1550d26171a7ad7ad96b56cf2384))
+
+
+
+
+
+## [1.9.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.2...@coveo/atomic@1.9.3) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.9.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.1...@coveo/atomic@1.9.2) (2021-11-01)
 
 

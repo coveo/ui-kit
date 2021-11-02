@@ -1,5 +1,5 @@
 import {Element, Component} from '@stencil/core';
-import {containsVisualElement} from '../../../utils/utils';
+import {hideEmptySection} from '../../../utils/result-section-utils';
 
 /**
  * This section contains an informative summary of the item's content.
@@ -18,6 +18,6 @@ export class AtomicResultSectionExcerpt {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {
-    this.host.classList.toggle('empty', !containsVisualElement(this.host));
+    hideEmptySection(this.host);
   }
 }

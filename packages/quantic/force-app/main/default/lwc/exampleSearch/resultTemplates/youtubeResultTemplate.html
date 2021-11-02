@@ -5,7 +5,7 @@
         <div class="slds-col slds-m-vertical_xx-small slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
           <c-quantic-result-label result={result}></c-quantic-result-label>
         </div>
-        <div class="slds-col slds-grid slds-order_1 slds-size_1-of-1 slds-medium-size_5-of-12 slds-large-size_6-of-12 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-vertical_xx-small slds-m-right_small">
+        <div class="slds-col slds-grid slds-order_1 slds-size_1-of-1 slds-medium-size_5-of-12 slds-large-size_5-of-12 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-vertical_xx-small slds-m-right_small">
           <template if:true={result.isRecommendation}>
             <div class="slds-m-right_xx-small">
               <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
@@ -15,8 +15,15 @@
               <c-quantic-result-badge variant="featured"></c-quantic-result-badge>
           </template>
         </div>
-        <div class="slds-col slds-m-vertical_xx-small slds-order_3 slds-text-align_right slds-col_bump-left">
-          <p class="slds-truncate" style="font-weight: 400; font-size:12px; color:#3E3E3C">
+        <div class="slds-col slds-m-vertical_xx-small slds-order_3 slds-col_bump-left">
+          <template if:true={resultHasPreview}>
+            <div class="slds-p-right_xx-small">
+              <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
+            </div>
+          </template>
+        </div>
+        <div class="slds-col slds-m-vertical_xx-small slds-order_4 slds-text-align_right">
+          <p class="slds-truncate" style="font-weight: 400; font-size:12px; color:#3E3E3C; min-width: 80px;">
             <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
           </p>
         </div>
@@ -28,11 +35,6 @@
         <div class="slds-col slds-p-left_x-small slds-order_2 slds-large-order_2 slds-size_1-of-1 slds-large-size_9-of-12 slds-text-align_left">
           <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-grid_vertical-align-center slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 700;">
-              <template if:true={resultHasPreview}>
-                <div class="slds-p-right_x-small">
-                  <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
-                </div>
-              </template>
               <h3 class="slds-truncate" style="font-size:1.1em; font-weight:700">
                 <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
               </h3>

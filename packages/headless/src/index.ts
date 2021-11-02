@@ -101,3 +101,5 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date';
+
+export * from './utils/query-expression/query-expression';
