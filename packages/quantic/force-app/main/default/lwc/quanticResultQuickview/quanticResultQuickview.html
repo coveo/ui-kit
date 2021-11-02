@@ -1,17 +1,18 @@
 <template>
-  <lightning-button-icon
-    title={buttonLabel}
-    alternative-text={buttonLabel}
-    tooltip={buttonLabel}
-    icon-name="utility:preview"
-    size="small"
-    disabled={hasNoPreview}
-    onclick={openQuickview}
-  ></lightning-button-icon>
+  <button class="quickview__button slds-button" onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
+    <lightning-icon 
+      size="x-small"
+      icon-name="utility:preview"
+      title={buttonLabel}
+      alternative-text={buttonLabel}
+      class="slds-current-color">
+    </lightning-icon>
+  </button>
+
   <template if:true={isQuickviewOpen}>
     <section onclick={closeQuickview} role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_medium slds-fade-in-open">
-      <div class="slds-modal__container" onclick={stopPropagation}>
-        <header class="slds-modal__header">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header" onclick={stopPropagation}>
           <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
             <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
           </button>
@@ -30,12 +31,12 @@
           </h3>
         </header>
         <template if:true={isLoading}>
-          <div class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative">
+          <div onclick={stopPropagation} class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative">
             <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
           </div>
         </template>
         <template if:false={isLoading}>
-          <div class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" id="quickview__content-container" lwc:dom="manual"></div>
+          <div onclick={stopPropagation} class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" id="quickview__content-container" lwc:dom="manual"></div>
         </template>
       </div>
     </section>
