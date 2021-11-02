@@ -26,6 +26,7 @@ import {
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
+ * @part wrapper - The search box wrapper.
  * @part input - The search box input.
  * @part loading - The search box loading animation.
  * @part clear-button - The button to clear the search box of input.
@@ -402,6 +403,7 @@ export class AtomicSearchBox {
   public render() {
     return [
       <div
+        part="wrapper"
         class={`relative flex bg-background h-full w-full border border-neutral rounded-md ${
           this.isExpanded ? 'border-primary ring ring-ring-primary' : ''
         }`}

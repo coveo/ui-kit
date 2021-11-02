@@ -8,6 +8,7 @@ import {
   interceptSearch,
   interceptSearchIndefinitely,
   interceptSearchWithError,
+  mockNoMoreFacetValues,
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 
@@ -104,6 +105,16 @@ describe('Facet Test Suite', () => {
       });
     }
 
+    function setupWithNoMoreValues() {
+      mockNoMoreFacetValues(defaultField);
+      cy.visit(pageUrl);
+      configure({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+      });
+    }
+
     it('should render correctly', () => {
       setupWithValues();
 
@@ -116,6 +127,21 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('with no more facet values to show', () => {
+      describe('verify rendering', () => {
+        before(setupWithNoMoreValues);
+
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.numberOfSelectedCheckboxValues(0);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(false);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(false);
+      });
     });
 
     it('should verify facet values ordering', () => {
@@ -310,17 +336,8 @@ describe('Facet Test Suite', () => {
 
     describe('show more/less values', () => {
       describe('when facet has no more values', () => {
-        function showAllValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: 1000,
-          });
-          cy.wait(InterceptAliases.Search);
-        }
-
         it('should render correctly', () => {
-          showAllValues();
+          setupWithNoMoreValues();
 
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
@@ -441,6 +458,17 @@ describe('Facet Test Suite', () => {
       });
     }
 
+    function setupWithNoMoreValues() {
+      mockNoMoreFacetValues(defaultField);
+      cy.visit(pageUrl);
+      configure({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        displayValuesAs: 'link',
+      });
+    }
+
     it('should render correctly', () => {
       setupWithLinkValues();
 
@@ -454,6 +482,20 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('with no more facet values to show', () => {
+      describe('verify rendering', () => {
+        before(setupWithNoMoreValues);
+
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(false);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(false);
+      });
     });
 
     describe('when selecting a value', () => {
@@ -666,17 +708,8 @@ describe('Facet Test Suite', () => {
 
     describe('show more/less values', () => {
       describe('when facet has no more values', () => {
-        function showAllValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: 1000,
-          });
-          cy.wait(InterceptAliases.Search);
-        }
-
         it('should render correctly', () => {
-          showAllValues();
+          setupWithNoMoreValues();
 
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);

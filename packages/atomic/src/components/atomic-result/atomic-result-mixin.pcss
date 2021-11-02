@@ -1,0 +1,9 @@
+/*
+ * Sets a font size & its line height relative to it
+ */
+@define-mixin set-font-size $font-size {
+  --font-size: $font-size;
+  font-size: var(--font-size);
+  --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
+  line-height: var(--line-height);
+}

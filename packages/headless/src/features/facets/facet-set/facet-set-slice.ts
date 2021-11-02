@@ -209,6 +209,7 @@ function mutateStateFromFacetResponse(
 }
 
 export const defaultFacetOptions: FacetOptionalParameters = {
+  // TODO: Remove on next major version
   delimitingCharacter: '>',
   filterFacetCount: true,
   injectionDepth: 1000,

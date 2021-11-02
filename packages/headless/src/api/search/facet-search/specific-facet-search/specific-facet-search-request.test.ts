@@ -50,13 +50,6 @@ describe('#buildSpecificFacetSearchRequest', () => {
     expect(buildParams().field).toBe(field);
   });
 
-  it('retrieves the #delimitingCharacter from the facetSet', () => {
-    const char = '|';
-    state.facetSet[id].delimitingCharacter = char;
-
-    expect(buildParams().delimitingCharacter).toBe(char);
-  });
-
   it('builds the #ignoreValues from the facetSet non-idle #currentValues', () => {
     const idle = buildMockFacetValueRequest({value: 'A'});
     const selected = buildMockFacetValueRequest({

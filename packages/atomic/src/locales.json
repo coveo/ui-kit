@@ -500,8 +500,8 @@
     "zh-tw": "沒有找到與 {{query}} 相關的結果"
   },
   "search-tips": {
-    "en": "You may want to try using different keywords, or checking for spelling mistakes.",
-    "fr": "Essayez différents mots-clés ou vérifiez l'orthographe de vos mots-clés."
+    "en": "You may want to try using different keywords, deselecting filters, or checking for spelling mistakes.",
+    "fr": "Essayez différents mots-clés, déselectionnez des filtres ou vérifiez l'orthographe de vos mots-clés."
   },
   "no-results": {
     "en": "No results",
