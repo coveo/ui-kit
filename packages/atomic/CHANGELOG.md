@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.8...@coveo/atomic@1.9.9) (2021-11-02)
+
+
+### Bug Fixes
+
+* **atomic:** removed atomic-result-image error when field is missing & added cypress tests ([#1425](https://github.com/coveo/ui-kit/issues/1425)) ([12d494d](https://github.com/coveo/ui-kit/commit/12d494d4b1bf8df5796f5bfc2161de5ebe10e4bf))
+
+
+
+
+
 ## [1.9.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.7...@coveo/atomic@1.9.8) (2021-11-02)
 
 **Note:** Version bump only for package @coveo/atomic
