@@ -77,7 +77,7 @@ export function interceptSearchWithError(
       type,
       executionReport,
     },
-  });
+  }).as(InterceptAliases.Search.substring(1));
 }
 
 export function mockNoMoreFacetValues(field: string) {
