@@ -1,12 +1,11 @@
 import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
-import ResultLinkDoc from './atomic-result-link.mdx';
+import ResultDateDoc from './atomic-result-date.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultLink',
-  'atomic-result-link',
+  'Atomic/ResultList/ResultDate',
+  'atomic-result-date',
   {},
-  ResultLinkDoc
+  ResultDateDoc
 );
-
 export default defaultModuleExport;
-export const DefaultResultLink = exportedStory;
+export const DefaultResultDate = exportedStory;

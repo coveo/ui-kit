@@ -1,12 +1,12 @@
 import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
-import ResultLinkDoc from './atomic-result-link.mdx';
+import ResultIconDoc from './atomic-result-icon.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
-  'Atomic/ResultList/ResultLink',
-  'atomic-result-link',
+  'Atomic/ResultList/ResultIcon',
+  'atomic-result-icon',
   {},
-  ResultLinkDoc
+  ResultIconDoc
 );
 
 export default defaultModuleExport;
-export const DefaultResultLink = exportedStory;
+export const DefaultResultIcon = exportedStory;
