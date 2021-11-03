@@ -45,7 +45,7 @@ export class AtomicResultPrintableUri {
   @Prop() maxNumberOfParts = 5;
 
   /**
-   * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).
    *
    * The following keywords have special meanings:
    *
