@@ -8,8 +8,6 @@ import {scope} from '../../../reporters/detailed-collector';
 
 import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
-import {TimeframeFacetSelectors} from './timeframe-facet-selectors';
-import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
 
 interface TimeframeFacetOptions {
   field: string;
@@ -60,13 +58,13 @@ describe('quantic-timeframe-facet', () => {
       });
 
       scope('when selecting a value', () => {
-        Actions.selectValue('Next year');
+        Actions.selectValue('Past year');
 
         Expect.numberOfSelectedValues(1);
-        Expect.selectedValueContains('Next year');
-        Expect.urlHashContains('Date', 'now..next-1-year');
+        Expect.selectedValueContains('Past year');
+        Expect.urlHashContains('Date', 'past-1-year..now');
         Expect.displayClearButton(true);
-        Expect.logSelectedValue('Date', 'now..next-1-year');
+        Expect.logSelectedValue('Date', 'past-1-year..now');
       });
 
       scope('when selecting another value', () => {
@@ -109,7 +107,7 @@ describe('quantic-timeframe-facet', () => {
         });
 
         scope('when a value is selected', () => {
-          Actions.selectValue('Next year');
+          Actions.selectValue('Past year');
 
           scope('collapse the facet', () => {
             Actions.collapse();
@@ -257,6 +255,44 @@ describe('quantic-timeframe-facet', () => {
         Expect.displayValues(true);
         Expect.urlHashIsEmpty();
         Expect.logClearFilter('Date');
+      });
+
+      scope('when entering an invalid range', () => {
+        scope('invalid start date format', () => {
+          Actions.applyRange('bad start date', '2000-01-01');
+
+          Expect.validationError(
+            'Your entry does not match the allowed format yyyy-MM-dd.'
+          );
+        });
+
+        scope('invalid end date format', () => {
+          Actions.applyRange('2000-01-01', 'bad end date');
+
+          Expect.validationError(
+            'Your entry does not match the allowed format yyyy-MM-dd.'
+          );
+        });
+
+        scope('end date smaller than start date', () => {
+          Actions.applyRange('2000-12-31', '2000-01-01');
+
+          Expect.validationError('Value must be 2000-01-01 or earlier.');
+          Expect.urlHashIsEmpty();
+          Expect.displayValues(true);
+        });
+      });
+
+      scope('when entering a valid range', () => {
+        Actions.applyRange('2000-01-01', '2000-12-31');
+
+        Expect.noValidationError();
+        Expect.urlHashContains(
+          'Date_input',
+          '2000/01/01@00:00:00..2000/12/31@23:59:59'
+        );
+        Expect.displayClearButton(true);
+        Expect.displayValues(false);
       });
     });
   });

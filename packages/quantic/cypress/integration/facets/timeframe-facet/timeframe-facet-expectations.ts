@@ -154,6 +154,18 @@ function timeframeWithRangeExpectations(selector: WithDateRangeSelector) {
         .applyButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`The apply button ${should(display)} be displayed.`),
+
+    validationError: (message: string) =>
+      selector
+        .validationError()
+        .should('contain', message)
+        .logDetail(`should display validation error "${message}"`),
+
+    noValidationError: () =>
+      selector
+        .validationError()
+        .should('not.exist')
+        .logDetail('should display no validation error'),
   };
 }
 

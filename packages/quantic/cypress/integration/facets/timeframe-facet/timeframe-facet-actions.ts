@@ -14,9 +14,9 @@ function timeframeFacetActions(selector: TimeframeFacetSelector) {
     expand: () => selector.expandButton().click(),
 
     applyRange: (start: string, end: string) => {
-      selector.startInput().type(start);
-      selector.endInput().type(end);
-      selector.applyButton().click();
+      selector.startInput().clear().type(start);
+      selector.endInput().clear().type(end);
+      selector.form().submit();
     },
   };
 }

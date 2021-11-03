@@ -14,6 +14,8 @@ export interface WithDateRangeSelector extends ComponentSelector {
   startInput: () => CypressSelector;
   endInput: () => CypressSelector;
   applyButton: () => CypressSelector;
+  form: () => CypressSelector;
+  validationError: () => CypressSelector;
 }
 
 export const TimeframeFacetSelectors: TimeframeFacetSelector = {
@@ -54,4 +56,6 @@ export const TimeframeFacetSelectors: TimeframeFacetSelector = {
     TimeframeFacetSelectors.get().find('.timeframe-facet__end-input input'),
   applyButton: () =>
     TimeframeFacetSelectors.get().find('.timeframe-facet__apply'),
+  form: () => TimeframeFacetSelectors.get().find('form'),
+  validationError: () => TimeframeFacetSelectors.form().find('.slds-has-error'),
 };
