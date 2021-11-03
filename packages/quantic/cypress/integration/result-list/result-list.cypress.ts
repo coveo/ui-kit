@@ -46,6 +46,7 @@ describe('quantic-resultlist', () => {
     setupWithPauseBeforeSearch();
 
     Expect.displayPlaceholder(true);
+    Expect.displayResults(false);
   });
 
   describe('with default options', () => {
@@ -57,20 +58,20 @@ describe('quantic-resultlist', () => {
 
       scope('when loading the page', () => {
         Expect.events.receivedEvent(true, registerResultTemplatesEvent);
-        Expect.displayResults(true);
         Expect.resultsEqual(indexResultsAlias);
 
         performSearch();
+
         Expect.requestFields(defaultFieldsToInclude.split(','));
       });
 
       scope('when getting different results', () => {
         getNextResults();
 
-        Expect.displayResults(true);
         Expect.resultsEqual(indexResultsAlias);
 
         performSearch();
+
         Expect.requestFields(defaultFieldsToInclude.split(','));
       });
     });
@@ -80,10 +81,15 @@ describe('quantic-resultlist', () => {
     const customFieldsToInclude =
       'source,language,sfcasestatus,sfcreatedbyname';
 
-    it('should display the right number of pages', () => {
+    it('should work as expected', () => {
       visitResultList({
         fieldsToInclude: customFieldsToInclude,
       });
+      aliasResultValues();
+
+      Expect.resultsEqual(indexResultsAlias);
+
+      performSearch();
 
       Expect.requestFields(customFieldsToInclude.split(','));
     });
