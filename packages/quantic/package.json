@@ -29,7 +29,7 @@
     "setup:examples": "node_modules/.bin/ts-node scripts/build/deploy-community.ts",
     "deploy:main": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/main",
     "deploy:examples": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples",
-    "doc:generate": "jsdoc -c jsdoc-config.json > docs/out/docs.json"
+    "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json"
   },
   "dependencies": {
     "@coveo/headless": "^1.31.2"
