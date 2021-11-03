@@ -13,7 +13,6 @@ export const ADDON_PARAMETER_KEY = 'shadowParts';
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
   additionalMarkup?: () => TemplateResult;
-  wrapperElement?: HTMLElement;
 }
 
 export function renderArgsToHTMLString(componentTag: string, args: Args) {

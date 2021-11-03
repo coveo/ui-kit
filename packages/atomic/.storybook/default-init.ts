@@ -12,8 +12,7 @@ const orgIdentifier = getSampleSearchEngineConfiguration();
 
 export const initializeInterfaceDebounced = (
   renderComponentFunction: () => string,
-  engineConfig: Partial<SearchEngineConfiguration> = {},
-  wrapperElement: HTMLElement = document.createElement('div')
+  engineConfig: Partial<SearchEngineConfiguration> = {}
 ) => {
   return debounce(
     async () => {
@@ -21,10 +20,8 @@ export const initializeInterfaceDebounced = (
         'atomic-search-interface'
       ) as HTMLElement;
       const clone = searchInterface.cloneNode(false) as SearchInterface;
-      clone.appendChild(wrapperElement);
-
       const childComponent = renderComponentFunction();
-      wrapperElement.innerHTML = childComponent;
+      clone.innerHTML = childComponent;
       searchInterface.replaceWith(clone);
       await clone.initialize({
         ...orgIdentifier,

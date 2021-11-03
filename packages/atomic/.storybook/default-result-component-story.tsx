@@ -52,19 +52,15 @@ export default function defaultResultComponentStory(
     );
   };
 
-  const defaultLoader = initializeInterfaceDebounced(
-    () => {
-      return `${renderArgsToResultTemplate(
-        renderArgsToHTMLString(componentTag, getArgs())
-      )}${
-        advancedConfig.additionalMarkup
-          ? advancedConfig.additionalMarkup().strings.join('')
-          : ''
-      }`;
-    },
-    advancedConfig.engineConfig,
-    advancedConfig.wrapperElement
-  );
+  const defaultLoader = initializeInterfaceDebounced(() => {
+    return `${renderArgsToResultTemplate(
+      renderArgsToHTMLString(componentTag, getArgs())
+    )}${
+      advancedConfig.additionalMarkup
+        ? advancedConfig.additionalMarkup().strings.join('')
+        : ''
+    }`;
+  }, advancedConfig.engineConfig);
 
   exportedStory.loaders = [defaultLoader];
   exportedStory.decorators = [defaultDecorator];

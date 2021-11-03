@@ -25,18 +25,14 @@ export default function defaultStory(
       advancedConfig
     );
 
-  const defaultLoader = initializeInterfaceDebounced(
-    () => {
-      const argsToHTMLString = renderArgsToHTMLString(componentTag, getArgs());
-      const additionalMarkupString = advancedConfig.additionalMarkup
-        ? advancedConfig.additionalMarkup().strings.join('')
-        : '';
+  const defaultLoader = initializeInterfaceDebounced(() => {
+    const argsToHTMLString = renderArgsToHTMLString(componentTag, getArgs());
+    const additionalMarkupString = advancedConfig.additionalMarkup
+      ? advancedConfig.additionalMarkup().strings.join('')
+      : '';
 
-      return argsToHTMLString + additionalMarkupString;
-    },
-    advancedConfig.engineConfig,
-    advancedConfig.wrapperElement
-  );
+    return argsToHTMLString + additionalMarkupString;
+  }, advancedConfig.engineConfig);
 
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
