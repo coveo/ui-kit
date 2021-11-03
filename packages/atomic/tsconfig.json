@@ -4,24 +4,25 @@
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "es2020"
-    ],
+    "lib": ["dom", "es2020"],
     "moduleResolution": "node",
     "module": "esnext",
     "target": "es2020",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true,
+        "rules": {
+          "no-missing-import": "off",
+          "no-unknown-attribute": "off"
+        }
+      }
+    ]
   },
-  "include": [
-    "src",
-    "types/jsx.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/external-builds"
-  ]
+  "include": ["src", "types/jsx.d.ts"],
+  "exclude": ["node_modules", "src/external-builds", "**/*.stories.tsx"]
 }

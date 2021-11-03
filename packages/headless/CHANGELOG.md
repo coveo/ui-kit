@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.31.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.1...@coveo/headless@1.31.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [1.31.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.0...@coveo/headless@1.31.1) (2021-11-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.31.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.3...@coveo/headless@1.31.0) (2021-11-01)
+
+
+### Features
+
+* expression builder poc using v4 structure ([#1369](https://github.com/coveo/ui-kit/issues/1369)) ([c622999](https://github.com/coveo/ui-kit/commit/c62299921f58354de09c196b354f918b20c15a7c))
+
+
+
+
+
+## [1.30.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.2...@coveo/headless@1.30.3) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.30.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.1...@coveo/headless@1.30.2) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.30.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.30.0...@coveo/headless@1.30.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* **atomic,headless:** handle 404s and other fetch errors ([#1391](https://github.com/coveo/ui-kit/issues/1391)) ([a3b5f65](https://github.com/coveo/ui-kit/commit/a3b5f650e95cbcfee9f1c08b33c742d4c15a15af))
+* **headless:** don't append /rest/ua to proxy urls ([#1394](https://github.com/coveo/ui-kit/issues/1394)) ([1ffbcf9](https://github.com/coveo/ui-kit/commit/1ffbcf9fc8ce2d803d12846bb11d8aa7aab7d394))
+* **headless:** only update search parameter & url manager when a search is executed ([#1388](https://github.com/coveo/ui-kit/issues/1388)) ([85e44b8](https://github.com/coveo/ui-kit/commit/85e44b8699eda3ccf347a122666fe887c4d1beab))
+
+
+
+
+
+# [1.30.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.1...@coveo/headless@1.30.0) (2021-10-25)
+
+
+### Bug Fixes
+
+* **headless:** limit relative dates minimum ([#1366](https://github.com/coveo/ui-kit/issues/1366)) ([df47a10](https://github.com/coveo/ui-kit/commit/df47a102b0d959af4f50a3473d4b1b260c2d73d7))
+
+
+### Features
+
+* **atomic:** improve MapProp to support multiple word properties ([#1375](https://github.com/coveo/ui-kit/issues/1375)) ([9d80699](https://github.com/coveo/ui-kit/commit/9d80699e97a2453007a11bc0ed93aa8323713904))
+* **headless:** add StaticFilter ([#1322](https://github.com/coveo/ui-kit/issues/1322)) ([c28ddc5](https://github.com/coveo/ui-kit/commit/c28ddc50c9096d4fc3db91166e746353f8b2cba0))
+
+
+
+
+
+## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.29.0...@coveo/headless@1.29.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* **headless:** improve sort criterion error messages ([#1367](https://github.com/coveo/ui-kit/issues/1367)) ([b75badc](https://github.com/coveo/ui-kit/commit/b75badc14e123e6090b5d9ab894018085ee76ba9))
+
+
+
+
+
 # [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.28.2...@coveo/headless@1.29.0) (2021-10-19)
 
 

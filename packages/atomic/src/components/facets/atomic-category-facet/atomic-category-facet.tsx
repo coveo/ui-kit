@@ -200,19 +200,17 @@ export class AtomicCategoryFacet
     return !!this.facetState.parents.length;
   }
 
-  private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
-  }
-
   private renderHeader() {
     return (
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfSelectedValues={
+          this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0
+        }
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        onClearFilters={() => this.facet.deselectAll()}
       ></FacetHeader>
     );
   }

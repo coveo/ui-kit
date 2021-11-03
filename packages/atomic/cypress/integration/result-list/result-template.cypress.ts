@@ -1,6 +1,7 @@
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {assertContainsComponentError} from '../common-assertions';
 import {
+  addFieldValueInResponse,
   addResultList,
   buildTemplateWithoutSections,
   buildTemplateWithSections,
@@ -39,19 +40,6 @@ const addBaseTextSize = (size: string) => (fixture: TestFixture) => {
   fixture.withElement(element);
 };
 
-const addFieldValueInResponse =
-  (field: string, fieldValue: string | null) => (fixture: TestFixture) => {
-    fixture.withCustomResponse((response) =>
-      response.results.forEach((result) => {
-        if (fieldValue === null) {
-          delete result.raw[field];
-        } else {
-          result.raw[field] = fieldValue;
-        }
-      })
-    );
-  };
-
 describe('Result Template Component', () => {
   describe(`when not a child of an "${resultListComponent}" component`, () => {
     beforeEach(() => {
@@ -71,6 +59,40 @@ describe('Result Template Component', () => {
     });
 
     assertContainsComponentError(ResultTemplateSelectors, true);
+  });
+
+  describe('with a visual section', () => {
+    function setupVisualSection(imageSize: string) {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML('atomic-result-section-visual', {
+                'image-size': imageSize,
+              }),
+            ])
+          )
+        )
+        .init();
+    }
+
+    describe('with an icon image size', () => {
+      const imageSize = 'icon';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
+    });
+
+    describe('with a small image size', () => {
+      const imageSize = 'small';
+      beforeEach(() => {
+        setupVisualSection(imageSize);
+      });
+
+      ResultTemplateAssertions.assertResultImageSize(imageSize);
+    });
   });
 
   describe('without any conditions nor sections', () => {
@@ -140,20 +162,18 @@ describe('Result Template Component', () => {
       beforeEach(() => {
         new TestFixture()
           .with(
-            addResultTable([
-              {label: 'Anything', content: generateComponentHTML('span')},
-            ])
+            addResultTable(
+              [{label: 'Anything', content: generateComponentHTML('span')}],
+              {display: 'list'}
+            )
           )
           .init();
-        cy.get(resultListComponent).then(([el]) =>
-          el.setAttribute('display', 'list')
-        );
       });
 
       it('does not render table elements', () => {
         ResultTemplateSelectors.tableElements()
           .should('exist')
-          .should('not.be.visible');
+          .and('not.be.visible');
       });
     });
 
@@ -187,6 +207,43 @@ describe('Result Template Component', () => {
           'font-size',
           textSize
         );
+      });
+    });
+
+    describe('in a result table with a visual section', () => {
+      function setupVisualSection(imageSize: string) {
+        new TestFixture()
+          .with(
+            addResultTable([
+              {
+                label: 'Author',
+                content: buildTemplateWithoutSections(
+                  generateComponentHTML('atomic-result-section-visual', {
+                    'image-size': imageSize,
+                  })
+                ),
+              },
+            ])
+          )
+          .init();
+      }
+
+      describe('with an icon image size', () => {
+        const imageSize = 'icon';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
+      });
+
+      describe('with a small image size', () => {
+        const imageSize = 'small';
+        beforeEach(() => {
+          setupVisualSection(imageSize);
+        });
+
+        ResultTemplateAssertions.assertCellImageSize(imageSize);
       });
     });
   });

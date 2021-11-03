@@ -3,6 +3,219 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.8...@coveo/atomic@1.9.9) (2021-11-02)
+
+
+### Bug Fixes
+
+* **atomic:** removed atomic-result-image error when field is missing & added cypress tests ([#1425](https://github.com/coveo/ui-kit/issues/1425)) ([12d494d](https://github.com/coveo/ui-kit/commit/12d494d4b1bf8df5796f5bfc2161de5ebe10e4bf))
+
+
+
+
+
+## [1.9.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.7...@coveo/atomic@1.9.8) (2021-11-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.9.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.6...@coveo/atomic@1.9.7) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [1.9.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.5...@coveo/atomic@1.9.6) (2021-11-02)
+
+
+### Bug Fixes
+
+* **atomic:** add util to hide sections using inline styling ([#1418](https://github.com/coveo/ui-kit/issues/1418)) ([c79e025](https://github.com/coveo/ui-kit/commit/c79e025ad2e7c18b62034a7603453b659cda2bee))
+* **atomic:** assign color to printable uri links ([#1420](https://github.com/coveo/ui-kit/issues/1420)) ([75003a3](https://github.com/coveo/ui-kit/commit/75003a3273af4497f35c5082542dd7dd4fbfd2d8))
+
+
+
+
+
+## [1.9.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.4...@coveo/atomic@1.9.5) (2021-11-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.9.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.3...@coveo/atomic@1.9.4) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** make result template line-height relative to font-size ([#1413](https://github.com/coveo/ui-kit/issues/1413)) ([38ef536](https://github.com/coveo/ui-kit/commit/38ef53666e6f1550d26171a7ad7ad96b56cf2384))
+
+
+
+
+
+## [1.9.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.2...@coveo/atomic@1.9.3) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.9.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.1...@coveo/atomic@1.9.2) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** allowed printable uri to be expanded on grid results ([#1405](https://github.com/coveo/ui-kit/issues/1405)) ([0e27070](https://github.com/coveo/ui-kit/commit/0e270707a21777a0a451b766078231040a8c56ee))
+* **atomic:** hide show less when on first row ([#1411](https://github.com/coveo/ui-kit/issues/1411)) ([d6d072b](https://github.com/coveo/ui-kit/commit/d6d072b3039728a70c90e8bce21d881ca8fa01b2))
+* **atomic:** re-added divider in large grid on mobile ([#1406](https://github.com/coveo/ui-kit/issues/1406)) ([f03d2dd](https://github.com/coveo/ui-kit/commit/f03d2ddae28d0698389246c96d498dcdd2e3d905))
+* **atomic:** reduced margin above title metadata section ([#1404](https://github.com/coveo/ui-kit/issues/1404)) ([561d1d8](https://github.com/coveo/ui-kit/commit/561d1d85d89c2a575df0ac76786ea15c74dce674))
+
+
+
+
+
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.0...@coveo/atomic@1.9.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* **atomic:** register filters to store when ranges are not defined (numeric & timeframe facets) ([#1399](https://github.com/coveo/ui-kit/issues/1399)) ([268ad66](https://github.com/coveo/ui-kit/commit/268ad66359ea2b8c46cebedbcbec59dfe4106fb3))
+
+
+
+
+
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.4...@coveo/atomic@1.9.0) (2021-10-29)
+
+
+### Features
+
+* **atomic:** made result image take full size ([#1389](https://github.com/coveo/ui-kit/issues/1389)) ([48d1e0e](https://github.com/coveo/ui-kit/commit/48d1e0e6abd1a5f0ec0a8461da0c1c0ba5149ec7))
+
+
+
+
+
+## [1.8.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.3...@coveo/atomic@1.8.4) (2021-10-29)
+
+
+### Bug Fixes
+
+* **atomic:** support both icon assets with or without .svg ([#1398](https://github.com/coveo/ui-kit/issues/1398)) ([644d6ee](https://github.com/coveo/ui-kit/commit/644d6eedd002ec3ad2f09eb8f1d9fc0bacb94185))
+
+
+
+
+
+## [1.8.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.2...@coveo/atomic@1.8.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* **atomic,headless:** handle 404s and other fetch errors ([#1391](https://github.com/coveo/ui-kit/issues/1391)) ([a3b5f65](https://github.com/coveo/ui-kit/commit/a3b5f650e95cbcfee9f1c08b33c742d4c15a15af))
+
+
+
+
+
+## [1.8.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.1...@coveo/atomic@1.8.2) (2021-10-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.8.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.8.0...@coveo/atomic@1.8.1) (2021-10-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.7.1...@coveo/atomic@1.8.0) (2021-10-27)
+
+
+### Bug Fixes
+
+* **atomic:** add spacing for did you mean ([#1387](https://github.com/coveo/ui-kit/issues/1387)) ([974ac37](https://github.com/coveo/ui-kit/commit/974ac372cb2ccfdbfbf8fb115da0ec8ef6cd99ee))
+* **atomic:** allow to configure headless engine entirely at initialization ([#1385](https://github.com/coveo/ui-kit/issues/1385)) ([1f6a897](https://github.com/coveo/ui-kit/commit/1f6a897392e525d0a7ee0d9a6197ee8e24976c69))
+
+
+### Features
+
+* **atomic:** added image size to result template ([#1349](https://github.com/coveo/ui-kit/issues/1349)) ([ce8c61c](https://github.com/coveo/ui-kit/commit/ce8c61c1f3919ef759040dee790303b89471bd29))
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.7.0...@coveo/atomic@1.7.1) (2021-10-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.13...@coveo/atomic@1.7.0) (2021-10-25)
+
+
+### Bug Fixes
+
+* **atomic:** silently remove atomic-result-image when field not available ([#1376](https://github.com/coveo/ui-kit/issues/1376)) ([112c8d5](https://github.com/coveo/ui-kit/commit/112c8d540474d6aee8061bfff58d311d981e30e2))
+* **headless:** limit relative dates minimum ([#1366](https://github.com/coveo/ui-kit/issues/1366)) ([df47a10](https://github.com/coveo/ui-kit/commit/df47a102b0d959af4f50a3473d4b1b260c2d73d7))
+
+
+### Features
+
+* **atomic:** improve MapProp to support multiple word properties ([#1375](https://github.com/coveo/ui-kit/issues/1375)) ([9d80699](https://github.com/coveo/ui-kit/commit/9d80699e97a2453007a11bc0ed93aa8323713904))
+
+
+
+
+
+## [1.6.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.12...@coveo/atomic@1.6.13) (2021-10-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.6.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.11...@coveo/atomic@1.6.12) (2021-10-20)
+
+
+### Bug Fixes
+
+* **atomic:** add Clear Filter button to CategoryFacet when its collapsed ([#1361](https://github.com/coveo/ui-kit/issues/1361)) ([f610891](https://github.com/coveo/ui-kit/commit/f6108914447200edc4037013a9687df4185b0ae0))
+* **atomic:** ensure font weight & size is consistent with all elements ([#1364](https://github.com/coveo/ui-kit/issues/1364)) ([b37fe92](https://github.com/coveo/ui-kit/commit/b37fe9210f96813a927ce80dd9c5bf530a8e7485))
+
+
+
+
+
+## [1.6.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.10...@coveo/atomic@1.6.11) (2021-10-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.6.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.6.9...@coveo/atomic@1.6.10) (2021-10-19)
 
 

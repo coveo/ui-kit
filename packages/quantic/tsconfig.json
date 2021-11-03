@@ -82,6 +82,9 @@
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
             ],
+            "c/quanticResultQuickview": [
+                "quanticResultQuickview/quanticResultQuickview.js"
+            ],
             "c/quanticRecentQueriesList": [
                 "quanticRecentQueriesList/quanticRecentQueriesList.js"
             ],

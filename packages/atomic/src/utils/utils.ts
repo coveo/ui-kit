@@ -19,6 +19,10 @@ export function camelToKebab(value: string) {
   return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
 
+export function kebabToCamel(value: string) {
+  return value.replace(/-./g, (x) => x[1].toUpperCase());
+}
+
 export function snakeToCamel(value: string) {
   return value
     .toLowerCase()
@@ -64,7 +68,8 @@ export function containsVisualElement(node: Node) {
 }
 
 export function parseAssetURL(url: string) {
-  const [, protocol, remainder] = url.match(/^([a-z]+):\/\/(.*)$/) || [];
+  const [, protocol, remainder] =
+    url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
     if (url.startsWith('./') || url.startsWith('../')) {
       return url;

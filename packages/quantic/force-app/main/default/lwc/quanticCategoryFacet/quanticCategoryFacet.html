@@ -23,8 +23,8 @@
           <template if:false={isFacetSearchActive}>
             <template if:true={hasParents}>
               <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
-                <div class="slds-grid slds-grid_vertical-align-center" onclick={reset}>
-                  <lightning-icon class="slds-m-right_xx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
+                <div class="facet__allCategories slds-grid slds-grid_vertical-align-center" onclick={reset}>
+                  <lightning-icon class="slds-m-right_xxx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
                   <span class="nowrap">{labels.allCategories}</span>
                 </div> 
               </li> 
@@ -33,7 +33,7 @@
               <c-quantic-category-facet-value onselectvalue={onSelectValue} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
             </template>
             <template if:true={activeParent}>
-              <li class="slds-grid slds-p-around_x-small">
+              <li class="facet__active-parent slds-grid slds-p-around_x-small">
                 <span class="nowrap parent-text__bold">{activeParent.value}</span>
                 <span class="facet__number-of-results parent-text__bold">({activeParent.numberOfResults})</span>
               </li>  

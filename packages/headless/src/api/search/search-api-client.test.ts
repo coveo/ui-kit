@@ -24,7 +24,6 @@ import pino from 'pino';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {Response} from 'cross-fetch';
@@ -34,6 +33,7 @@ import {SearchResponseSuccess} from './search/search-response';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {QuestionsAnswers} from './search/question-answering';
 import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
+import {buildSearchRequest} from '../../features/search/search-request';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -173,7 +173,6 @@ describe('search api client', () => {
         logger,
         requestParams: {
           q: state.query.q,
-          aq: '',
           debug: false,
           locale: state.configuration.search.locale,
           timezone: state.configuration.search.timezone,
@@ -320,7 +319,6 @@ describe('search api client', () => {
             numberOfValues: facetSearchState.options.numberOfValues,
             query: newQuery,
             field: facetState.field,
-            delimitingCharacter: facetState.delimitingCharacter,
             ignoreValues: [],
             searchContext: {
               ...buildSearchRequest(state).request,

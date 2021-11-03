@@ -7,6 +7,17 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 
+const resultSectionTags = [
+  'atomic-result-section-visual',
+  'atomic-result-section-badges',
+  'atomic-result-section-actions',
+  'atomic-result-section-title',
+  'atomic-result-section-title-metadata',
+  'atomic-result-section-emphasized',
+  'atomic-result-section-excerpt',
+  'atomic-result-section-bottom-metadata',
+] as const;
+
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
  */
@@ -31,12 +42,7 @@ export class AtomicResult {
   /**
    * The result content to display.
    */
-  @Prop() content!: string;
-
-  /**
-   * Whether this result should use `atomic-result-section-*` components.
-   */
-  @Prop() useSections = true;
+  @Prop() content!: ParentNode;
 
   /**
    * How results should be displayed.
@@ -50,6 +56,13 @@ export class AtomicResult {
 
   /**
    * How large or small the visual section of results should be.
+   *
+   * This may be overwritten if an image size is defined in the result content.
+   */
+  @Prop() imageSize?: ResultDisplayImageSize;
+
+  /**
+   * @deprecated use `imageSize` instead.
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
@@ -60,23 +73,53 @@ export class AtomicResult {
     event.detail(this.result);
   }
 
+  private containsSections() {
+    return Array.from(this.content.children).some((child) =>
+      (resultSectionTags as readonly string[]).includes(
+        child.tagName.toLowerCase()
+      )
+    );
+  }
+
+  private getSection(section: typeof resultSectionTags[number]) {
+    return Array.from(this.content.children).find(
+      (element) => element.tagName.toLowerCase() === section
+    );
+  }
+
+  private getImageSizeFromSections() {
+    const imageSize = this.getSection(
+      'atomic-result-section-visual'
+    )?.getAttribute('image-size');
+    if (!imageSize) {
+      return undefined;
+    }
+    return imageSize as ResultDisplayImageSize;
+  }
+
   private getClasses() {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
-      this.image
+      this.getImageSizeFromSections() ?? this.imageSize ?? this.image
     );
-    if (this.useSections) {
+    if (this.containsSections()) {
       classes.push('with-sections');
     }
     return classes;
+  }
+
+  private getContentHTML() {
+    return Array.from(this.content.children)
+      .map((child) => child.outerHTML)
+      .join('');
   }
 
   public render() {
     return (
       <div
         class={`result-root ${this.getClasses().join(' ')}`}
-        innerHTML={this.content}
+        innerHTML={this.getContentHTML()}
       ></div>
     );
   }

@@ -68,10 +68,6 @@ export namespace Components {
     }
     interface AtomicColorFacet {
         /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter": string;
-        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs": 'checkbox' | 'box';
@@ -119,10 +115,6 @@ export namespace Components {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter": string;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
@@ -343,7 +335,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon": string;
         /**
@@ -359,7 +351,7 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+          * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
          */
         "maxValueInIndex": number;
         /**
@@ -367,7 +359,7 @@ export namespace Components {
          */
         "minValueInIndex": number;
         /**
-          * The number of intervals to split the index for this facet.
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
     }
@@ -385,7 +377,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon": string;
         /**
@@ -401,7 +393,7 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+          * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
          */
         "maxValueInIndex": number;
         /**
@@ -409,7 +401,7 @@ export namespace Components {
          */
         "minValueInIndex": number;
         /**
-          * The number of intervals to split the index for this facet.
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
     }
@@ -428,7 +420,7 @@ export namespace Components {
         /**
           * The result content to display.
          */
-        "content": string;
+        "content": ParentNode;
         /**
           * How large or small results should be.
          */
@@ -442,17 +434,17 @@ export namespace Components {
          */
         "engine": SearchEngine;
         /**
-          * How large or small the visual section of results should be.
+          * @deprecated use `imageSize` instead.
          */
         "image": ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
         "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections": boolean;
     }
     interface AtomicResultBadge {
         /**
@@ -495,13 +487,26 @@ export namespace Components {
         "target": string;
     }
     interface AtomicResultList {
+        /**
+          * How large or small results should be.
+         */
         "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
         "display": ResultDisplayLayout;
         /**
           * A list of fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        /**
+          * @deprecated use `imageSize` instead.
+         */
         "image": ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -522,7 +527,7 @@ export namespace Components {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -563,10 +568,14 @@ export namespace Components {
     interface AtomicResultSectionTitleMetadata {
     }
     interface AtomicResultSectionVisual {
+        /**
+          * How large or small the visual section of results using this template should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {
@@ -679,32 +688,6 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
-    }
-    interface AtomicTableCell {
-        /**
-          * The result content to display.
-         */
-        "content": string;
-        /**
-          * How large or small results should be.
-         */
-        "density": ResultDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display": ResultDisplayLayout;
-        /**
-          * How large or small the visual section of results should be.
-         */
-        "image": ResultDisplayImageSize;
-        /**
-          * The result item.
-         */
-        "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections": boolean;
     }
     interface AtomicTableElement {
         /**
@@ -1120,12 +1103,6 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
-    interface HTMLAtomicTableCellElement extends Components.AtomicTableCell, HTMLStencilElement {
-    }
-    var HTMLAtomicTableCellElement: {
-        prototype: HTMLAtomicTableCellElement;
-        new (): HTMLAtomicTableCellElement;
-    };
     interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
     }
     var HTMLAtomicTableElementElement: {
@@ -1209,7 +1186,6 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
-        "atomic-table-cell": HTMLAtomicTableCellElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -1271,10 +1247,6 @@ declare namespace LocalJSX {
     }
     interface AtomicColorFacet {
         /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter"?: string;
-        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs"?: 'checkbox' | 'box';
@@ -1322,10 +1294,6 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        /**
-          * The character that separates values of a multi-value field.
-         */
-        "delimitingCharacter"?: string;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
@@ -1549,7 +1517,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon"?: string;
         /**
@@ -1565,7 +1533,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+          * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
          */
         "maxValueInIndex"?: number;
         /**
@@ -1573,7 +1541,7 @@ declare namespace LocalJSX {
          */
         "minValueInIndex"?: number;
         /**
-          * The number of intervals to split the index for this facet.
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
     }
@@ -1591,7 +1559,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon"?: string;
         /**
@@ -1607,7 +1575,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+          * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
          */
         "maxValueInIndex"?: number;
         /**
@@ -1615,7 +1583,7 @@ declare namespace LocalJSX {
          */
         "minValueInIndex"?: number;
         /**
-          * The number of intervals to split the index for this facet.
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
     }
@@ -1634,7 +1602,7 @@ declare namespace LocalJSX {
         /**
           * The result content to display.
          */
-        "content": string;
+        "content": ParentNode;
         /**
           * How large or small results should be.
          */
@@ -1648,17 +1616,17 @@ declare namespace LocalJSX {
          */
         "engine": SearchEngine;
         /**
-          * How large or small the visual section of results should be.
+          * @deprecated use `imageSize` instead.
          */
         "image"?: ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
         "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections"?: boolean;
     }
     interface AtomicResultBadge {
         /**
@@ -1701,13 +1669,26 @@ declare namespace LocalJSX {
         "target"?: string;
     }
     interface AtomicResultList {
+        /**
+          * How large or small results should be.
+         */
         "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
         "display"?: ResultDisplayLayout;
         /**
           * A list of fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
+        /**
+          * @deprecated use `imageSize` instead.
+         */
         "image"?: ResultDisplayImageSize;
+        /**
+          * How large or small the visual section of results should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -1728,7 +1709,7 @@ declare namespace LocalJSX {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -1769,10 +1750,14 @@ declare namespace LocalJSX {
     interface AtomicResultSectionTitleMetadata {
     }
     interface AtomicResultSectionVisual {
+        /**
+          * How large or small the visual section of results using this template should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "image": ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {
@@ -1873,32 +1858,6 @@ declare namespace LocalJSX {
           * The non-localized label to display for this expression.
          */
         "label": string;
-    }
-    interface AtomicTableCell {
-        /**
-          * The result content to display.
-         */
-        "content": string;
-        /**
-          * How large or small results should be.
-         */
-        "density"?: ResultDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display"?: ResultDisplayLayout;
-        /**
-          * How large or small the visual section of results should be.
-         */
-        "image"?: ResultDisplayImageSize;
-        /**
-          * The result item.
-         */
-        "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections"?: boolean;
     }
     interface AtomicTableElement {
         /**
@@ -2023,7 +1982,6 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
-        "atomic-table-cell": AtomicTableCell;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -2092,7 +2050,6 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            "atomic-table-cell": LocalJSX.AtomicTableCell & JSXBase.HTMLAttributes<HTMLAtomicTableCellElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;

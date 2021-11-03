@@ -17,6 +17,7 @@ export const InterceptAliases = {
       Search: uaAlias('facetSearch'),
       Select: uaAlias('facetSelect'),
     },
+    Load: uaAlias('interfaceLoad'),
     Pager: {
       Previous: uaAlias('pagerPrevious'),
       Next: uaAlias('pagerNext'),
@@ -77,6 +78,19 @@ export function interceptSearchWithError(
       executionReport,
     },
   });
+}
+
+export function mockNoMoreFacetValues(field: string) {
+  return cy
+    .intercept('POST', routeMatchers.search, (request) => {
+      request.continue((res) => {
+        res.body.facets.find(
+          (facet) => facet.field === field
+        ).moreValuesAvailable = false;
+        res.send();
+      });
+    })
+    .as(InterceptAliases.Search.substring(1));
 }
 
 export function extractFacetValues(

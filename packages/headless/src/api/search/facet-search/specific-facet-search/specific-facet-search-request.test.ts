@@ -4,7 +4,7 @@ import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {buildSpecificFacetSearchRequest} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
-import {buildSearchRequest} from '../../../../features/search/search-actions';
+import {buildSearchRequest} from '../../../../features/search/search-request';
 
 describe('#buildSpecificFacetSearchRequest', () => {
   const id = '1';
@@ -48,13 +48,6 @@ describe('#buildSpecificFacetSearchRequest', () => {
     state.facetSet[id].field = field;
 
     expect(buildParams().field).toBe(field);
-  });
-
-  it('retrieves the #delimitingCharacter from the facetSet', () => {
-    const char = '|';
-    state.facetSet[id].delimitingCharacter = char;
-
-    expect(buildParams().delimitingCharacter).toBe(char);
   });
 
   it('builds the #ignoreValues from the facetSet non-idle #currentValues', () => {

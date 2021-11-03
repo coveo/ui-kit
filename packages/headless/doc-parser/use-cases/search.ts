@@ -182,6 +182,19 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/tab/tab.fn.tsx',
       ],
     },
+    utils: ['buildQueryExpression'],
+  },
+  {
+    initializer: 'buildStaticFilter',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/static-filter/static-filter.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/static-filter/static-filter.fn.tsx',
+      ],
+    },
+    utils: ['buildStaticFilterValue', 'buildQueryExpression'],
   },
   {
     initializer: 'buildSearchStatus',
@@ -439,6 +452,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadStandaloneSearchBoxSetActions',
+  },
+  {
+    initializer: 'loadStaticFilterSetActions',
   },
 ];
 

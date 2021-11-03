@@ -1,0 +1,29 @@
+.quickview__content-container {
+  overflow: auto;
+}
+
+.quickview__result-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.quickview__result-date {
+  color:#3E3E3C;
+  font-weight: normal;
+  font-size: 15px;
+}
+
+.quickview__spinner-container {
+  width: 100%;
+  height: 50%;
+}
+
+.quickview__button {
+  color: var(--color-text-link-active, #0f2d5d);
+  border-radius: 0.25rem;
+}
+
+.quickview__button:hover {
+  background-color: #f6f7f9;
+  box-shadow: 0 0 0px 0.25rem #f6f7f9;
+}

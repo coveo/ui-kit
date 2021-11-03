@@ -15,6 +15,7 @@ import {
  */
 @Component({
   tag: 'atomic-result-image',
+  styleUrl: 'atomic-result-image.pcss',
   shadow: false,
 })
 export class AtomicResultImage implements InitializableComponent {
@@ -34,6 +35,11 @@ export class AtomicResultImage implements InitializableComponent {
       this.result,
       this.field
     );
+
+    if (!url) {
+      this.host.remove();
+      return;
+    }
 
     if (typeof url !== 'string') {
       this.bindings.engine.logger.error(

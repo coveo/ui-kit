@@ -1,5 +1,6 @@
-import {Element, Component} from '@stencil/core';
-import {containsVisualElement} from '../../../utils/utils';
+import {Element, Component, Prop} from '@stencil/core';
+import {hideEmptySection} from '../../../utils/result-section-utils';
+import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 
 /**
  * This section provides visual information about the item.
@@ -10,10 +11,7 @@ import {containsVisualElement} from '../../../utils/utils';
  * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
  * ** When the image size is set to `icon`, this section stays very small.
  * ** You should ensure that elements inside of it take the available space.
- * ** You may use `atomic-size-condition` to display child elements if this section meets the defined size constraints.
  * * Always has a 1:1 aspect ratio.
- * * Has rounded corners, hiding anything that overflows beyond them.
- * * Has a gray background when the image size is `small` or `large`.
  */
 @Component({
   tag: 'atomic-result-section-visual',
@@ -22,7 +20,12 @@ import {containsVisualElement} from '../../../utils/utils';
 export class AtomicResultSectionVisual {
   @Element() private host!: HTMLElement;
 
+  /**
+   * How large or small the visual section of results using this template should be.
+   */
+  @Prop() public imageSize?: ResultDisplayImageSize;
+
   public componentDidRender() {
-    this.host.classList.toggle('empty', !containsVisualElement(this.host));
+    hideEmptySection(this.host);
   }
 }

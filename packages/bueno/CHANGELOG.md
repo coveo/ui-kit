@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.8](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.32.7...@coveo/bueno@0.32.8) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
 ## [0.32.7](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.32.6...@coveo/bueno@0.32.7) (2021-09-20)
 
 **Note:** Version bump only for package @coveo/bueno

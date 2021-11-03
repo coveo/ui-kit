@@ -1,34 +1,39 @@
 <template>
     <div class="lgc-bg slds-border_bottom slds-p-vertical_medium">
       <lightning-tile>
-        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small ">
-          <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_left">
+        <div class="slds-grid slds-wrap slds-col slds-grid_vertical-align-center slds-size_1-of-1 slds-text-align_left slds-m-bottom_x-small">
+          <div class="slds-col slds-m-vertical_xx-small slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
             <c-quantic-result-label result={result}></c-quantic-result-label>
           </div>
-          <div class="slds-col slds-grid slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle slds-large-order_2">
+          <div class="slds-col slds-grid slds-order_1 slds-size_1-of-1 slds-medium-size_5-of-12 slds-large-size_5-of-12 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-vertical_xx-small slds-m-right_small">
             <template if:true={result.isRecommendation}>
               <div class="slds-m-right_xx-small">
                 <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
               </div>
             </template>
             <template if:true={result.isTopResult}>
-              <div class="slds-m-right_xx-small">
                 <c-quantic-result-badge variant="featured"></c-quantic-result-badge>
+            </template>
+          </div>
+          <div class="slds-col slds-m-vertical_xx-small slds-order_3 slds-col_bump-left">
+            <template if:true={resultHasPreview}>
+              <div class="slds-p-right_xx-small">
+                <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
               </div>
             </template>
           </div>
-          <div class="slds-col slds-order_3 slds-large-order_3 slds-size_1-of-1 slds-large-size_3-of-12 slds-text-align_right" style="font-weight: 400; font-size:12px; color:#3E3E3C">
-            <p class="slds-truncate">
+          <div class="slds-col slds-m-vertical_xx-small slds-order_4 slds-text-align_right">
+            <p class="slds-truncate" style="font-weight: 400; font-size:12px; color:#3E3E3C; min-width: 80px;">
               <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
             </p>
           </div>
         </div>
-        <div class="slds-grid slds-gutters slds-wrap slds-m-vertical_x-small ">
-          <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left" style="font-weight: 700;">
-            <h3 class="slds-truncate" style="font-size:1.1em; font-weight:700"><c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link></h3>
-          </div>
+        <div class="slds-grid slds-grid_vertical-align-center slds-m-vertical_x-small">
+          <h3 class="slds-truncate" style="font-size:1.1em; font-weight:700">
+            <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+          </h3>
         </div>
-        <div class="slds-grid slds-gutters slds-wrap slds-m-top_x-small ">
+        <div class="slds-grid slds-wrap slds-m-top_x-small ">
           <div class="slds-col slds-order_1 slds-large-order_1 slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left slds-p-bottom_xx-small" style="font-weight: 400;">
             <span class="slds-text-body_small" style="color:#3E3E3C">From: {result.raw.sfcreatedbyname}</span>
           </div>
@@ -36,7 +41,7 @@
             {result.Excerpt}
           </div>
         </div>
-        <div class="slds-col slds-gutters slds-wrap slds-m-top_x-small ">
+        <div class="slds-col slds-wrap slds-m-top_x-small ">
           <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
         </div>
       </lightning-tile>

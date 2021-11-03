@@ -184,6 +184,10 @@
         align-items: center;
       }
 
+      atomic-did-you-mean {
+        margin-bottom: var(--spacing);
+      }
+
       .results {
         grid-area: results;
       }
@@ -288,6 +292,17 @@
       <div class="results">
         <atomic-did-you-mean></atomic-did-you-mean>
         <atomic-result-list fields-to-include="snrating,sncost">
+          <atomic-result-template must-match-sourcetype="YouTube">
+            <template>
+              <atomic-result-section-visual image-size="small">
+                <img src="https://picsum.photos/350" class="thumbnail" />
+              </atomic-result-section-visual>
+              <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+              <atomic-result-section-excerpt
+                ><atomic-result-text field="excerpt"></atomic-result-text
+              ></atomic-result-section-excerpt>
+            </template>
+          </atomic-result-template>
           <atomic-result-template>
             <template>
               <style>
@@ -321,6 +336,11 @@
                   display: inline-block;
                 }
 
+                .result-root.image-small atomic-result-section-visual,
+                .result-root.image-large atomic-result-section-visual {
+                  border-radius: var(--atomic-border-radius-xl);
+                }
+
                 atomic-result-section-badges {
                   display: flex;
                 }
@@ -347,6 +367,12 @@
                   field="language"
                   icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
                 ></atomic-result-badge>
+                <atomic-field-condition must-match-is-recommendation="true">
+                  <atomic-result-badge label="Recommended"></atomic-result-badge>
+                </atomic-field-condition>
+                <atomic-field-condition must-match-is-top-result="true">
+                  <atomic-result-badge label="Top Result"></atomic-result-badge>
+                </atomic-field-condition>
               </atomic-result-section-badges>
               <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
               <atomic-result-section-title-metadata>

@@ -17,7 +17,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {parseHTML} from '../../utils/utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
@@ -25,7 +24,6 @@ import {
   getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
-import {containsSection} from '../../utils/result-section-utils';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
@@ -78,6 +76,10 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The expected size of the image displayed in the results.
    */
+  @Prop() imageSize?: ResultDisplayImageSize;
+  /**
+   * @deprecated use `imageSize` instead.
+   */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   private listWrapperRef?: HTMLDivElement;
@@ -126,11 +128,11 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
+    const content = document.createDocumentFragment();
+    const linkEl = document.createElement('atomic-result-link');
+    content.appendChild(linkEl);
     this.resultTemplatesManager.registerTemplates({
-      content: {
-        innerHTML: '<atomic-result-link></atomic-result-link>',
-        usesSections: false,
-      },
+      content,
       conditions: [],
     });
   }
@@ -149,12 +151,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private getTemplate(result: Result): TemplateContent {
-    return (
-      this.resultTemplatesManager.selectTemplate(result) ?? {
-        innerHTML: '',
-        usesSections: false,
-      }
-    );
+    return this.resultTemplatesManager.selectTemplate(result)!;
   }
 
   private getId(result: Result) {
@@ -169,7 +166,7 @@ export class AtomicResultList implements InitializableComponent {
           key={`placeholder-${i}`}
           display={this.display}
           density={this.density}
-          image={this.image}
+          imageSize={this.imageSize ?? this.image}
         ></atomic-result-placeholder>
       )
     );
@@ -186,9 +183,8 @@ export class AtomicResultList implements InitializableComponent {
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image={this.image}
-          useSections={template.usesSections}
-          content={template.innerHTML}
+          imageSize={this.imageSize ?? this.image}
+          content={template}
         ></atomic-result>
       );
 
@@ -213,7 +209,7 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <atomic-result-table-placeholder
         density={this.density}
-        image={this.image}
+        imageSize={this.imageSize ?? this.image}
         rows={this.resultsPerPageState.numberOfResults}
       ></atomic-result-table-placeholder>
     );
@@ -221,9 +217,9 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildTable() {
     const fieldColumns = Array.from(
-      parseHTML(
-        this.getTemplate(this.resultListState.results[0]).innerHTML
-      ).querySelectorAll('atomic-table-element')
+      this.getTemplate(this.resultListState.results[0]).querySelectorAll(
+        'atomic-table-element'
+      )
     );
 
     if (fieldColumns.length === 0) {
@@ -249,18 +245,20 @@ export class AtomicResultList implements InitializableComponent {
         <tbody>
           {this.resultListState.results.map((result) => (
             <tr key={this.getId(result)}>
-              {fieldColumns.map((column) => (
-                <td key={column.getAttribute('label')! + this.getId(result)}>
-                  <atomic-table-cell
-                    result={result}
-                    display={this.display}
-                    density={this.density}
-                    image={this.image}
-                    useSections={containsSection(column)}
-                    content={column.innerHTML}
-                  ></atomic-table-cell>
-                </td>
-              ))}
+              {fieldColumns.map((column) => {
+                return (
+                  <td key={column.getAttribute('label')! + this.getId(result)}>
+                    <atomic-result
+                      engine={this.bindings.engine}
+                      result={result}
+                      display={this.display}
+                      density={this.density}
+                      image-size={this.imageSize ?? this.image}
+                      content={column}
+                    ></atomic-result>
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

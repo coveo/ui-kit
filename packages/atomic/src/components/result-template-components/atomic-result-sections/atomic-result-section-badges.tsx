@@ -1,5 +1,5 @@
 import {Element, Component} from '@stencil/core';
-import {containsVisualElement} from '../../../utils/utils';
+import {hideEmptySection} from '../../../utils/result-section-utils';
 
 /**
  * This section provides badges that highlight special features of the item.
@@ -18,6 +18,6 @@ export class AtomicResultSectionBadges {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {
-    this.host.classList.toggle('empty', !containsVisualElement(this.host));
+    hideEmptySection(this.host);
   }
 }

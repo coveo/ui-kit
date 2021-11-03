@@ -2,28 +2,32 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../../features/facets/facet-api/value';
-import {formatDateForSearchApi} from '../../../../../api/search/date/date-format';
+import {
+  formatDateForSearchApi,
+  AbsoluteDate,
+  validateAbsoluteDate,
+} from '../../../../../api/search/date/date-format';
 import {
   serializeRelativeDate,
   isRelativeDate,
   isRelativeDateFormat,
   RelativeDate,
+  validateRelativeDate,
 } from '../../../../../api/search/date/relative-date';
 import {isUndefined} from '@coveo/bueno';
 
 dayjs.extend(customParseFormat);
 
-type AbsoluteDate = string | number | Date;
 export type DateRangeInput = AbsoluteDate | RelativeDate;
 
 export interface DateRangeOptions {
   /**
-   * The starting value for the date range. A date range can be either absolute or relative.
+   * The starting value for the date range. A date range can be either absolute or [relative](https://docs.coveo.com/en/headless/latest/reference/controllers/date-facet/relative-date-format/).
    */
   start: DateRangeInput;
 
   /**
-   * The ending value for the date range. A date range can be either absolute or relative.
+   * The ending value for the date range. A date range can be either absolute or [relative](https://docs.coveo.com/en/headless/latest/reference/controllers/date-facet/relative-date-format/).
    */
   end: DateRangeInput;
 
@@ -83,23 +87,15 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat} = options;
   if (isRelativeDate(rawDate)) {
+    validateRelativeDate(rawDate);
     return serializeRelativeDate(rawDate);
   }
 
   if (typeof rawDate === 'string' && isRelativeDateFormat(rawDate)) {
+    validateRelativeDate(rawDate);
     return rawDate;
   }
 
-  const date = dayjs(rawDate, dateFormat);
-
-  if (!date.isValid()) {
-    throw new Error(
-      `Could not parse the provided date "${rawDate}".
-      Please provide a dateFormat string in the configuration options.
-      See https://day.js.org/docs/en/parse/string-format for more information.
-       `
-    );
-  }
-
-  return formatDateForSearchApi(date);
+  validateAbsoluteDate(rawDate, dateFormat);
+  return formatDateForSearchApi(dayjs(rawDate, dateFormat));
 }
