@@ -201,19 +201,17 @@ export default class QuanticFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
-    return (
-      this.state?.values
-        .filter((value) => value.numberOfResults || value.state === 'selected')
-        .map((v) => ({
-          ...v,
-          checked: v.state === 'selected',
-          highlightedResult: v.value,
-        })) || []
-    );
+    return this.state?.values
+      .filter((value) => value.numberOfResults || value.state === 'selected')
+      .map((v) => ({
+        ...v,
+        checked: v.state === 'selected',
+        highlightedResult: v.value,
+      })) || [];
   }
 
   get query() {
@@ -317,7 +315,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get displaySearch() {
-    return !this.noSearch && this.state.canShowMoreValues;
+    return !this.noSearch && this.state?.canShowMoreValues;
   }
 
   onSelectClickHandler(value) {
