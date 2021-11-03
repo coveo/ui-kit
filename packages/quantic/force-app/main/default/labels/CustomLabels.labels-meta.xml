@@ -695,7 +695,7 @@
     </labels>
     <labels>
         <fullName>quantic_DatePatternMonth</fullName>
-        <value>m</value>
+        <value>M</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Month component of the date pattern</shortDescription>

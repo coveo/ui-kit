@@ -134,7 +134,7 @@ export class I18nUtils {
   }
 
   static getShortDatePattern() {
-    const date = new Date(2000, 11, 31); // month is zero-based
+    const date = new Date(2000, 2, 4); // month is zero-based
     const dateAsString = I18nUtils.formatDate(date);
 
     const day = I18nUtils.format(dayPattern);
@@ -142,9 +142,11 @@ export class I18nUtils {
     const year = I18nUtils.format(yearPattern);
 
     return dateAsString.replace('2000', year.repeat(4))
-      .replace('00', year.repeat(2)) // to account for 2-digits year
-      .replace('12', month.repeat(2))
-      .replace('31', day.repeat(2));
+      .replace('00', year.repeat(2)) // for 2-digits year
+      .replace('03', month.repeat(2))
+      .replace('3', month) // for single-digit month
+      .replace('04', day.repeat(2))
+      .replace('4', day);
   }
 
   /**
@@ -264,12 +266,28 @@ export function fromSearchApiDate(dateString) {
 export function toSearchApiDate(date) {
   const year = date.getFullYear().toString().padStart(4, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = (date.getDate() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
   const seconds = date.getSeconds().toString().padStart(2, '0');
 
   return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
+}
+
+export function toLocalIsoDate(date) {
+  const year = date.getFullYear().toString().padStart(4, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}T00:00:00`;
+}
+
+export function fromLocalIsoDate(dateString, time) {
+  if (dateString.indexOf('T') === -1) {
+    return new Date(dateString + 'T' + time);
+  }
+
+  return new Date(dateString);
 }
 
 /** @typedef {import("coveo").RelativeDate} RelativeDate */

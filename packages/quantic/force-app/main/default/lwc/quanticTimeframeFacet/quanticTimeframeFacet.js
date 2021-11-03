@@ -4,9 +4,11 @@ import {
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
 import {
+  fromLocalIsoDate,
   fromSearchApiDate,
   I18nUtils,
   RelativeDateFormatter,
+  toLocalIsoDate,
   toSearchApiDate,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
@@ -119,12 +121,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
       const endDateAsApi = this.dateFilterState.range.end;
 
       try {
-        // If start and end are fixed dates, let's update `startDate` and `endDate` accordingly.
         const start = new Date(Date.parse(fromSearchApiDate(startDateAsApi)));
         const end = new Date(Date.parse(fromSearchApiDate(endDateAsApi)));
 
-        this.startDate = start.toISOString();
-        this.endDate = end.toISOString();
+        this.startDate = toLocalIsoDate(start);
+        this.endDate = toLocalIsoDate(end);
 
         // We're passing in manual mode, so hide the timeframes.
         this._showValues = false;
@@ -276,6 +277,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
   clearSelections() {
     if (this.withDatePicker) {
       this.dateFilter.clear();
+
+      this.startDatepicker.max = '';
+      this.endDatepicker.min = '';
+      this.startDatepicker.required = false;
+      this.endDatepicker.required = false;
+
+      this.startDatepicker.reportValidity();
+      this.endDatepicker.reportValidity();
     }
     this.facet.deselectAll();
 
@@ -302,20 +311,42 @@ export default class QuanticTimeframeFacet extends LightningElement {
       : null;
   }
 
-  handleApply() {
+  handleStartDateChange(evt) {
+    evt.preventDefault();
+    this.endDatepicker.min = this.startDatepicker.value;
+  }
+
+  handleEndDateChange(evt) {
+    evt.preventDefault();
+    this.startDatepicker.max = this.endDatepicker.value;
+  }
+
+  handleApply(evt) {
+    evt.preventDefault();
+
     // TODO: We'll have to validate cases where dates aren't set properly
 
-    const start = this.startDatepicker.value;
-    const end = this.endDatepicker.value;
+    const start = this.startDatepicker.value; // local date (with no time indication)
+    const end = this.endDatepicker.value; // local date (with no time indication)
 
-    if (!start || !end) {
+    // Let's validate the input fields
+    // 1. enable validations on the input fields
+    this.startDatepicker.required = true;
+    this.endDatepicker.required = true;
+
+    // 2. perform the actual validation
+    if (!this.startDatepicker.reportValidity() || !this.endDatepicker.reportValidity()) {
+      // some values are not valid.
+      console.log('some values are invalid');
       return;
     }
 
-    const startDate = new Date(Date.parse(start));
-    startDate.setHours(0, 0, 0);
-    const endDate = new Date(Date.parse(end));
-    endDate.setHours(23, 59, 59);
+    // 3. reset field validations
+    this.startDatepicker.required = false;
+    this.endDatepicker.required = false;
+
+    const startDate = fromLocalIsoDate(start, '00:00:00');
+    const endDate = fromLocalIsoDate(end, '23:59:59');
 
     if (endDate < startDate) {
       console.error('The start date should occur before the end date');
