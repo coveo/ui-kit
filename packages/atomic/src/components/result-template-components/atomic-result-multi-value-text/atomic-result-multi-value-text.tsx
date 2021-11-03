@@ -13,8 +13,6 @@ import {
 } from '../../../utils/initialization-utils';
 import {titleToKebab} from '../../../utils/utils';
 
-const listItemClasses = 'inline-block';
-
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
  * @part result-multi-value-text-separator - The separator to display between each of the field values.
@@ -127,11 +125,7 @@ export class AtomicResultMultiText {
     const label = getFieldValueCaption(this.field, value, this.bindings.i18n);
     const kebabValue = titleToKebab(value);
     return (
-      <li
-        key={value}
-        part="result-multi-value-text-value"
-        class={listItemClasses}
-      >
+      <li key={value} part="result-multi-value-text-value">
         <slot name={`result-multi-value-text-value-${kebabValue}`}>
           {label}
         </slot>
@@ -145,18 +139,14 @@ export class AtomicResultMultiText {
         role="separator"
         part="result-multi-value-text-separator"
         key={`${beforeValue}~${afterValue}`}
-        class={`separator ${listItemClasses}`}
+        class={'separator'}
       ></li>
     );
   }
 
   private renderMoreLabel(value: number) {
     return (
-      <li
-        key="more-field-values"
-        part="result-multi-value-text-value-more"
-        class={listItemClasses}
-      >
+      <li key="more-field-values" part="result-multi-value-text-value-more">
         {this.bindings.i18n.t('n-more', {value})}
       </li>
     );
@@ -193,10 +183,6 @@ export class AtomicResultMultiText {
       this.host.remove();
       return;
     }
-    return (
-      <ul class="flex list-none">
-        {...this.renderListItems(this.sortedValues)}
-      </ul>
-    );
+    return <ul>{...this.renderListItems(this.sortedValues)}</ul>;
   }
 }
