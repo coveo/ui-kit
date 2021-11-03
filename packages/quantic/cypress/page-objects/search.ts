@@ -81,16 +81,14 @@ export function interceptSearchWithError(
 }
 
 export function mockNoMoreFacetValues(field: string) {
-  return cy
-    .intercept('POST', routeMatchers.search, (request) => {
-      request.continue((res) => {
-        res.body.facets.find(
-          (facet) => facet.field === field
-        ).moreValuesAvailable = false;
-        res.send();
-      });
-    })
-    .as(InterceptAliases.Search.substring(1));
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.facets.find(
+        (facet) => facet.field === field
+      ).moreValuesAvailable = false;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }
 
 export function extractFacetValues(
