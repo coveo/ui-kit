@@ -22,7 +22,7 @@
     "docs/"
   ],
   "scripts": {
-    "build": "npm run build:locales && npm run build:stencil && npm run build:utils",
+    "build": "npm run build:locales && npm run build:stencil && npm run build:utils && npm run build:storybook",
     "build:utils": "node --max-old-space-size=4096 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
@@ -37,7 +37,7 @@
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
-    "build-storybook": "npm run storybook:lit-analyze && build-storybook",
+    "build:storybook": "npm run storybook:lit-analyze && build-storybook",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx"
   },
   "dependencies": {
