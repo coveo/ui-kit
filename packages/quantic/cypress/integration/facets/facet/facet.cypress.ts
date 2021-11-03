@@ -87,6 +87,7 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
+      cy.wait(InterceptAliases.Search);
     }
 
     describe('verify rendering', () => {
