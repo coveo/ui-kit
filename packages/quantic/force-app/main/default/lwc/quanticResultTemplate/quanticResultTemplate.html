@@ -1,0 +1,29 @@
+<template>
+  <div class="lgc-bg slds-border_bottom slds-p-vertical_medium">
+    <lightning-tile>
+      <div class="slds-grid slds-wrap slds-col slds-grid_vertical-align-center slds-size_1-of-1 slds-text-align_left slds-m-bottom_x-small">
+        <div class="slds-col slds-m-vertical_xx-small slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
+          <slot name="label"></slot>
+        </div>
+        <div class="slds-col slds-order_1 slds-size_1-of-1 slds-medium-size_5-of-12 slds-large-size_5-of-12 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-vertical_xx-small slds-m-right_small">
+          <slot name="badges"></slot>
+        </div>
+        <div class="slds-col slds-m-vertical_xx-small slds-order_3 slds-col_bump-left">
+          <slot name="actions"></slot>
+        </div>
+        <div class="slds-col slds-m-vertical_xx-small slds-order_4 slds-text-align_right">
+          <slot name="date"></slot>
+        </div>
+      </div>
+      <div class="slds-m-vertical_x-small">
+        <slot name="title"></slot>
+      </div>
+      <div class="slds-wrap slds-m-top_x-small slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left">
+        <slot name="excerpt"></slot>
+      </div>
+      <div class="slds-wrap slds-m-top_x-small ">
+        <slot name="footer"></slot>
+      </div>
+    </lightning-tile>
+  </div>
+</template>
