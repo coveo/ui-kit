@@ -87,6 +87,7 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
+      cy.wait(InterceptAliases.Search);
     }
 
     describe('verify rendering', () => {
@@ -118,6 +119,7 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
+      cy.wait(InterceptAliases.Search);
     }
 
     describe('verify rendering', () => {
@@ -373,6 +375,7 @@ describe('Facet Test Suite', () => {
         describe('verify rendering', () => {
           before(setupWithNoMoreValues);
 
+          Expect.displayValues(true);
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
         });
@@ -507,6 +510,7 @@ describe('Facet Test Suite', () => {
         numberOfValues: defaultNumberOfValues,
         displayValuesAs: 'link',
       });
+      cy.wait(InterceptAliases.Search);
     }
 
     describe('verify rendering', () => {

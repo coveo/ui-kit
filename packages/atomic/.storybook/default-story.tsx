@@ -4,9 +4,12 @@ import {DocsPage} from '@storybook/addon-docs';
 import {codeSample} from './code-sample/code-sample';
 import {initializeInterfaceDebounced} from './default-init';
 import {mapPropsToArgTypes} from './map-props-to-args';
-import {camelToKebab} from '../src/utils/utils';
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {TemplateResult} from 'lit-html';
+
+function camelToKebab(value: string) {
+  return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+}
 
 const ADDON_PARAMETER_KEY = 'shadowParts';
 
