@@ -420,7 +420,7 @@ export namespace Components {
         /**
           * The result content to display.
          */
-        "content": string;
+        "content": ParentNode;
         /**
           * How large or small results should be.
          */
@@ -438,17 +438,13 @@ export namespace Components {
          */
         "image": ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
         "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections": boolean;
     }
     interface AtomicResultBadge {
         /**
@@ -486,7 +482,7 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target": string;
     }
@@ -539,7 +535,7 @@ export namespace Components {
          */
         "maxNumberOfParts": number;
         /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target": string;
     }
@@ -692,32 +688,6 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
-    }
-    interface AtomicTableCell {
-        /**
-          * The result content to display.
-         */
-        "content": string;
-        /**
-          * How large or small results should be.
-         */
-        "density": ResultDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display": ResultDisplayLayout;
-        /**
-          * How large or small the visual section of results should be.
-         */
-        "imageSize": ResultDisplayImageSize;
-        /**
-          * The result item.
-         */
-        "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections": boolean;
     }
     interface AtomicTableElement {
         /**
@@ -1133,12 +1103,6 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
-    interface HTMLAtomicTableCellElement extends Components.AtomicTableCell, HTMLStencilElement {
-    }
-    var HTMLAtomicTableCellElement: {
-        prototype: HTMLAtomicTableCellElement;
-        new (): HTMLAtomicTableCellElement;
-    };
     interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
     }
     var HTMLAtomicTableElementElement: {
@@ -1222,7 +1186,6 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
-        "atomic-table-cell": HTMLAtomicTableCellElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -1639,7 +1602,7 @@ declare namespace LocalJSX {
         /**
           * The result content to display.
          */
-        "content": string;
+        "content": ParentNode;
         /**
           * How large or small results should be.
          */
@@ -1657,17 +1620,13 @@ declare namespace LocalJSX {
          */
         "image"?: ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
           * The result item.
          */
         "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections"?: boolean;
     }
     interface AtomicResultBadge {
         /**
@@ -1705,7 +1664,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target"?: string;
     }
@@ -1758,7 +1717,7 @@ declare namespace LocalJSX {
          */
         "maxNumberOfParts"?: number;
         /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target"?: string;
     }
@@ -1900,32 +1859,6 @@ declare namespace LocalJSX {
          */
         "label": string;
     }
-    interface AtomicTableCell {
-        /**
-          * The result content to display.
-         */
-        "content": string;
-        /**
-          * How large or small results should be.
-         */
-        "density"?: ResultDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display"?: ResultDisplayLayout;
-        /**
-          * How large or small the visual section of results should be.
-         */
-        "imageSize"?: ResultDisplayImageSize;
-        /**
-          * The result item.
-         */
-        "result": Result;
-        /**
-          * Whether this result should use `atomic-result-section-*` components.
-         */
-        "useSections"?: boolean;
-    }
     interface AtomicTableElement {
         /**
           * The label to display in the header of this column.
@@ -2049,7 +1982,6 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
-        "atomic-table-cell": AtomicTableCell;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -2118,7 +2050,6 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            "atomic-table-cell": LocalJSX.AtomicTableCell & JSXBase.HTMLAttributes<HTMLAtomicTableCellElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
