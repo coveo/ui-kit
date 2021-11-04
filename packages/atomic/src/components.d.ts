@@ -510,7 +510,7 @@ export namespace Components {
     }
     interface AtomicResultMultiValueText {
         /**
-          * If the field isn't indexed as a multi value field, values are going to be split using this delimiter.
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
          */
         "delimiter": string | null;
         /**
