@@ -124,7 +124,7 @@ describe('Facet Test Suite', () => {
       }
     }
     it('should work as expected', () => {
-      scope('when returning values', () => {
+      scope('when loading', () => {
         setupWithValues();
         Expect.displayPlaceholder(false);
         Expect.labelContains(defaultLabel);
@@ -394,19 +394,20 @@ describe('Facet Test Suite', () => {
     }
 
     it('should work as expected', () => {
-      setupWithLinkValues();
+      scope('when loading', () => {
+        setupWithLinkValues();
 
-      Expect.displayPlaceholder(false);
-      Expect.labelContains(defaultLabel);
-      Expect.displayValues(true);
-      Expect.hasCheckbox(false);
-      Expect.numberOfSelectedLinkValues(0);
-      Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-      Expect.displayClearButton(false);
-      Expect.displayShowMoreButton(true);
-      Expect.displayShowLessButton(false);
-      Expect.displaySearchInput(true);
-
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.hasCheckbox(false);
+        Expect.numberOfSelectedLinkValues(0);
+        Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(true);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(true);
+      });
       scope('when selecting a value', () => {
         function selectFirstFacetValue() {
           setupWithLinkValues();
@@ -590,32 +591,26 @@ describe('Facet Test Suite', () => {
           setupWithLinkValues();
           Actions.clickCollapseButton();
         }
+        collapseFacet();
 
-        it('should render correctly', () => {
-          collapseFacet();
-
-          Expect.labelContains(defaultLabel);
-          Expect.displayExpandButton(true);
-          Expect.displaySearchInput(false);
-          Expect.numberOfIdleLinkValues(0);
-          Expect.displayShowMoreButton(false);
-        });
+        Expect.labelContains(defaultLabel);
+        Expect.displayExpandButton(true);
+        Expect.displaySearchInput(false);
+        Expect.numberOfIdleLinkValues(0);
+        Expect.displayShowMoreButton(false);
 
         describe('when expanding a facet', () => {
           function expandFacet() {
             collapseFacet();
             Actions.clickExpandButton();
           }
+          expandFacet();
 
-          it('should render correctly', () => {
-            expandFacet();
-
-            Expect.labelContains(defaultLabel);
-            Expect.displayCollapseButton(true);
-            Expect.displaySearchInput(true);
-            Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-            Expect.displayShowMoreButton(true);
-          });
+          Expect.labelContains(defaultLabel);
+          Expect.displayCollapseButton(true);
+          Expect.displaySearchInput(true);
+          Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+          Expect.displayShowMoreButton(true);
         });
       });
       scope('show more/less values', () => {

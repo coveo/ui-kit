@@ -34,6 +34,18 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
         .should('be.empty')
         .logDetail('the max input should be empty');
     },
+    inputMinContains: (value: string) => {
+      selector
+        .inputMin()
+        .should('contain', value)
+        .logDetail(`the input min should contain "${value}"`);
+    },
+    inputMaxContains: (value: string) => {
+      selector
+        .inputMax()
+        .should('contain', value)
+        .logDetail(`the input max should contain "${value}"`);
+    },
     displayInputWarning: (length: number) => {
       selector
         .inputInvalid()
@@ -45,7 +57,12 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
     inputWarningContains: (message?: string) => {
       selector
         .helpMessage()
-        .should('contain', message ? message : 'Complete this field.');
+        .should('contain', message ? message : 'Complete this field.')
+        .logDetail(
+          `the input warning should contain "${
+            message ? message : 'Complete this field.'
+          }"`
+        );
     },
     urlHashContains: (value: string, fromInput = false) => {
       const input = fromInput ? '_input' : '';

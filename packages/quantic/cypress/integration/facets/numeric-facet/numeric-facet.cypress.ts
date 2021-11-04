@@ -56,7 +56,7 @@ describe('Numeric Facet Test Suite', () => {
     interceptSearch();
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
-    cy.wait(InterceptAliases.Search);
+    // cy.wait(InterceptAliases.Search);
   }
 
   describe('with default numeric facet', () => {
@@ -147,6 +147,7 @@ describe('Numeric Facet Test Suite', () => {
         Expect.urlHashContains(`${min}..${max}`, true);
         Expect.displayClearButton(true);
         Expect.clearFilterContains('Clear filter');
+        Expect.logNumericFacetSelect(`${min}..${max}`);
       });
 
       scope('when selecting a empty range', () => {
@@ -161,6 +162,39 @@ describe('Numeric Facet Test Suite', () => {
 
         Expect.displayInputWarning(1);
         Expect.inputWarningContains();
+        Expect.displayValues(true);
+      });
+      scope('when min input is bigger than max input', () => {
+        visitNumericFacetPage(customWithInputSettings);
+
+        Actions.inputMinValue(100);
+        Actions.inputMaxValue(80);
+        Actions.submitManualRange();
+
+        Expect.displayInputWarning(1);
+        Expect.inputWarningContains(
+          'This value must be less than or equal to 80'
+        );
+        Expect.displayValues(true);
+      });
+      scope('when selecting from values', () => {
+        visitNumericFacetPage(customWithInputSettings);
+
+        Actions.checkValueAt(2);
+        Expect.displayClearButton(true);
+        Expect.clearFilterContains('Clear filter');
+        Expect.numberOfSelectedCheckboxValues(1);
+        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+        Expect.inputMaxEmpty();
+        Expect.inputMinEmpty();
+      });
+      scope('with a selected path in the URL', () => {
+        const min = 120;
+        const max = 8000;
+        loadFromUrlHash(defaultSettings, `nf[${field}_input]=${min}..${max}`);
+
+        Expect.displayFacet(true);
+        Expect.inputMaxContains(max.toString());
       });
     });
   });
