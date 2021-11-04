@@ -42,7 +42,7 @@ export default function defaultStory(
     return (
       <div>
         <Story />
-        <div className="inline-style" innerHTML={styleString}></div>
+        <div innerHTML={styleString}></div>
         {codeSample(styleString)}
         {codeSample(htmlString)}
       </div>

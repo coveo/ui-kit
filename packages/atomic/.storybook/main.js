@@ -10,6 +10,9 @@ module.exports = {
   webpack: (config) => {
     return {
       ...config,
+      performance: {
+        hints: false,
+      },
       module: {
         ...config.module,
         rules: [
