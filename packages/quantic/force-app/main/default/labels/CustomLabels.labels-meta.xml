@@ -707,4 +707,18 @@
         <protected>false</protected>
         <shortDescription>Year component of the date pattern</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_StartLabel</fullName>
+        <value>Start:</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Timeframe facet start label</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_EndLabel</fullName>
+        <value>End:</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Timeframe facet end label</shortDescription>
+    </labels>
 </CustomLabels>

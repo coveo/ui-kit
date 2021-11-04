@@ -376,4 +376,12 @@
         <label>a</label>
         <name>quantic_DatePatternYear</name>
     </customLabels>
+    <customLabels>
+        <label>Début :</label>
+        <name>quantic_StartLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Fin :</label>
+        <name>quantic_EndLabel</name>
+    </customLabels>
 </Translations>

@@ -47,11 +47,11 @@ export class Debouncer {
 export class Deferred {
   constructor() {
     this.promise = new Promise((resolve, reject) => {
-      this.isResolved = false
+      this.isResolved = false;
       this.resolve = (value) => {
         resolve(value);
         this.isResolved = true;
-      }
+      };
       this.reject = reject;
     });
   }
@@ -59,23 +59,22 @@ export class Deferred {
 
 export class ResultUtils {
   /**
-     * Binds the logging of document
-     * @returns An unbind function for the events
-     * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
-     * @param {import("coveo").Result} result The result object
-     * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
-     * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
-     */
+   * Binds the logging of document
+   * @returns An unbind function for the events
+   * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
+   * @param {import("coveo").Result} result The result object
+   * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
+   * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
+   */
   static bindClickEventsOnResult(
     engine,
     result,
     resultElement,
     controllerBuilder,
-    selector = undefined,
+    selector = undefined
   ) {
-
     const interactiveResult = controllerBuilder(engine, {
-      options: { result: JSON.parse(JSON.stringify(result)) },
+      options: {result: JSON.parse(JSON.stringify(result))},
     });
 
     const eventsMap = {
@@ -128,9 +127,13 @@ export class I18nUtils {
   }
 
   static format(stringToFormat, ...formattingArguments) {
-    if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
+    if (typeof stringToFormat !== 'string')
+      throw new Error("'stringToFormat' must be a String");
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
-      (formattingArguments[index] === undefined ? '' : `${formattingArguments[index]}`));
+      formattingArguments[index] === undefined
+        ? ''
+        : `${formattingArguments[index]}`
+    );
   }
 
   static getShortDatePattern() {
@@ -141,7 +144,8 @@ export class I18nUtils {
     const month = I18nUtils.format(monthPattern);
     const year = I18nUtils.format(yearPattern);
 
-    return dateAsString.replace('2000', year.repeat(4))
+    return dateAsString
+      .replace('2000', year.repeat(4))
       .replace('00', year.repeat(2)) // for 2-digits year
       .replace('03', month.repeat(2))
       .replace('3', month) // for single-digit month
@@ -150,11 +154,11 @@ export class I18nUtils {
   }
 
   /**
-   * 
-   * @param {Date} date 
+   *
+   * @param {Date} date
    */
   static formatDate(date) {
-    const result = (new Intl.DateTimeFormat(LOCALE)).format(date);
+    const result = new Intl.DateTimeFormat(LOCALE).format(date);
     console.log(`formatDate: ${result}`);
 
     return result;
@@ -234,9 +238,15 @@ export class TimeSpan {
     } else {
       hoursString = hours < 10 ? '0' + hours.toString() : hours.toString();
     }
-    minutesString = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
-    secondsString = seconds < 10 ? '0' + seconds.toString() : seconds.toString();
-    const hhmmss = (hoursString !== '' ? hoursString + ':' : '') + minutesString + ':' + secondsString;
+    minutesString =
+      minutes < 10 ? '0' + minutes.toString() : minutes.toString();
+    secondsString =
+      seconds < 10 ? '0' + seconds.toString() : seconds.toString();
+    const hhmmss =
+      (hoursString !== '' ? hoursString + ':' : '') +
+      minutesString +
+      ':' +
+      secondsString;
     return hhmmss;
   }
 
@@ -249,21 +259,19 @@ export class TimeSpan {
  * Converts a date string from the Coveo Search API format to the ISO-8601 format.
  * Replace `/` characters in date string with `-`.
  * Replace `@` characters in date string with `T`.
- * @param {string} dateString 
+ * @param {string} dateString
  * @returns {string}
  */
 export function fromSearchApiDate(dateString) {
-  return dateString
-    .replaceAll('/', '-')
-    .replaceAll('@', 'T');
+  return dateString.replaceAll('/', '-').replaceAll('@', 'T');
 }
 
 /**
- * 
- * @param {Date} date 
- * @returns 
+ * Converts a date object to the Search API format (`yyyy/MM/dd@hh:mm:ss`), using local time.
+ * @param {Date} date The date object to convert.
+ * @returns {string} The formatted date string.
  */
-export function toSearchApiDate(date) {
+export function toLocalSearchApiDate(date) {
   const year = date.getFullYear().toString().padStart(4, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
@@ -274,6 +282,11 @@ export function toSearchApiDate(date) {
   return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
 }
 
+/**
+ * Converts a date to the ISO formatted local date.
+ * @param {Date} date The date to convert.
+ * @returns {string} The formatted date string.
+ */
 export function toLocalIsoDate(date) {
   const year = date.getFullYear().toString().padStart(4, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -282,11 +295,40 @@ export function toLocalIsoDate(date) {
   return `${year}-${month}-${day}T00:00:00`;
 }
 
-export function fromLocalIsoDate(dateString, time) {
-  const timeIdx = dateString.indexOf('T');
-  const withoutTime = (timeIdx !== -1) ? dateString.substring(0, timeIdx) : dateString;
+/**
+ * Parses an ISO-formatted date string to a date object, using the specified local time.
+ * @param {string} dateString The ISO formatted date string.
+ * @param {number} hours The local hours to set on the date.
+ * @param {number} minutes The local minutes to set on the date.
+ * @param {number} seconds The local seconds to set on the date.
+ * @returns {Date} The parsed date.
+ */
+export function fromLocalIsoDate(dateString, hours, minutes, seconds) {
+  const isTimeValid =
+    hours >= 0 &&
+    hours <= 23 &&
+    minutes >= 0 &&
+    minutes <= 59 &&
+    seconds >= 0 &&
+    seconds <= 59;
+  if (!isTimeValid) {
+    throw new Error(
+      'The specified time is invalid. It must be between 00:00:00 and 23:59:59.'
+    );
+  }
 
-  return new Date(withoutTime + 'T' + time);
+  const timeIdx = dateString.indexOf('T');
+  const withoutTime =
+    timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
+
+  const time =
+    hours.toString().padStart(2, '0') +
+    ':' +
+    minutes.toString().padStart(2, '0') +
+    ':' +
+    seconds.toString().padStart(2, '0');
+
+  return new Date(`${withoutTime}T${time}`);
 }
 
 /** @typedef {import("coveo").RelativeDate} RelativeDate */
@@ -338,9 +380,9 @@ export class RelativeDateFormatter {
   }
 
   /**
-   * 
-   * @param {RelativeDate} begin 
-   * @param {RelativeDate} end 
+   *
+   * @param {RelativeDate} begin
+   * @param {RelativeDate} end
    * @returns {string}
    */
   formatRange(begin, end) {
@@ -348,15 +390,18 @@ export class RelativeDateFormatter {
     const isNextRange = begin.period === 'now' && end.period === 'next';
 
     if (!isPastRange && !isNextRange) {
-      throw new Error('The provided relative date range is invalid. Either "begin" or "end" must have the "period" set to "now".');
+      throw new Error(
+        'The provided relative date range is invalid. Either "begin" or "end" must have the "period" set to "now".'
+      );
     }
 
     const relativeDate = isPastRange ? begin : end;
-    const label = this.labels[`${relativeDate.period}-${relativeDate.unit}`][
-      I18nUtils.isSingular(relativeDate.amount)
-        ? this.singularIndex
-        : this.pluralIndex
-    ];
+    const label =
+      this.labels[`${relativeDate.period}-${relativeDate.unit}`][
+        I18nUtils.isSingular(relativeDate.amount)
+          ? this.singularIndex
+          : this.pluralIndex
+      ];
 
     return I18nUtils.format(label, relativeDate.amount);
   }
