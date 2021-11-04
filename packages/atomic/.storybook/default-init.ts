@@ -19,7 +19,7 @@ export const initializeInterfaceDebounced = (
       const searchInterface = document.querySelector(
         'atomic-search-interface'
       ) as HTMLElement;
-      const clone = searchInterface.cloneNode(false) as SearchInterface;
+      const clone = searchInterface.cloneNode() as SearchInterface;
       const childComponent = renderComponentFunction();
       clone.innerHTML = childComponent;
       searchInterface.replaceWith(clone);
