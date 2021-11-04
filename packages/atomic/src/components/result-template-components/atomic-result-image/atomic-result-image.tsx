@@ -10,8 +10,6 @@ import {
 
 /**
  * The `atomic-result-image` component renders an image from a result field.
- *
- *  @part result-image - The img element.
  */
 @Component({
   tag: 'atomic-result-image',
@@ -50,12 +48,6 @@ export class AtomicResultImage implements InitializableComponent {
       return;
     }
 
-    return (
-      <img
-        part="result-image"
-        alt={`${this.field} image`}
-        src={filterProtocol(url)}
-      />
-    );
+    return <img alt={`${this.field} image`} src={filterProtocol(url)} />;
   }
 }

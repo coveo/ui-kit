@@ -14,7 +14,6 @@ import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
- * @part result-link - The result link
  * @slot default - Allow to display alternative content inside the link
  */
 @Component({
@@ -61,7 +60,6 @@ export class AtomicResultLink implements InitializableComponent {
         interactiveResult={this.interactiveResult}
         href={this.result.clickUri}
         target={this.target}
-        part="result-link"
       >
         {this.hasSlot ? (
           <slot></slot>
