@@ -1,8 +1,12 @@
 import {configure} from '../../../page-objects/configurator';
 
-import {NumericFacetExpectations as Expect} from './numeric-facet-expectations';
+import {
+  field,
+  NumericFacetExpectations as Expect,
+} from './numeric-facet-expectations';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
-import {field, NumericFacetActions as Actions} from './numeric-facet-actions';
+import {NumericFacetActions as Actions} from './numeric-facet-actions';
+import {scope} from '../../../reporters/detailed-collector';
 
 interface NumericFacetOptions {
   field: string;
@@ -59,19 +63,20 @@ describe('Numeric Facet Test Suite', () => {
     it('should work as expected', () => {
       visitNumericFacetPage(defaultSettings);
 
-      Expect.logFacetLoad();
-      Expect.displayFacet(true);
-      Expect.displayLabel(true);
-      Expect.displaySearchForm(false);
-      Expect.displayClearButton(false);
-      Expect.displayValues(true);
-      Expect.labelContains(defaultLabel);
-      Expect.numberOfValues(defaultNumberOfValues);
-      Expect.numberOfSelectedCheckboxValues(0);
-      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-    });
-    describe('when selecting a value', () => {
-      it('should work as expected', () => {
+      scope('on initial load', () => {
+        Expect.logFacetLoad();
+        Expect.displayFacet(true);
+        Expect.displayLabel(true);
+        Expect.displaySearchForm(false);
+        Expect.displayClearButton(false);
+        Expect.displayValues(true);
+        Expect.labelContains(defaultLabel);
+        Expect.numberOfValues(defaultNumberOfValues);
+        Expect.numberOfSelectedCheckboxValues(0);
+        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+      });
+
+      scope('when selecting a value', () => {
         const min = 0;
         const max = 8000;
 
@@ -83,11 +88,10 @@ describe('Numeric Facet Test Suite', () => {
         Expect.numberOfSelectedCheckboxValues(1);
         Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
         Expect.urlHashContains(`${min}..${max}`);
-        //Expect.logNumericFacetSelect(field, 0);
+        Expect.logNumericFacetSelect(`${min}..${max}`);
       });
-    });
-    describe('when selecting multiple values', () => {
-      it('should work as expected', () => {
+
+      scope('when selecting multiple values', () => {
         visitNumericFacetPage(defaultSettings);
         Actions.checkValueAt(0);
 
@@ -102,9 +106,8 @@ describe('Numeric Facet Test Suite', () => {
           );
         }
       });
-    });
-    describe('when clearing the selection', () => {
-      it('should deselect all values', () => {
+
+      scope('when clearing the selection', () => {
         visitNumericFacetPage(defaultSettings);
 
         Actions.checkValueAt(0);
@@ -123,13 +126,14 @@ describe('Numeric Facet Test Suite', () => {
     it('should work as expected', () => {
       visitNumericFacetPage(customWithInputSettings);
 
-      Expect.displayFacet(true);
-      Expect.displaySearchForm(true);
-      Expect.inputMaxEmpty();
-      Expect.inputMinEmpty();
-    });
-    describe('when select a valid range', () => {
-      it('should render correctly', () => {
+      scope('on initial load', () => {
+        Expect.displayFacet(true);
+        Expect.displaySearchForm(true);
+        Expect.inputMaxEmpty();
+        Expect.inputMinEmpty();
+      });
+
+      scope('when selecting a valid range', () => {
         const min = 120;
         const max = 8000;
         visitNumericFacetPage(customWithInputSettings);
@@ -145,7 +149,7 @@ describe('Numeric Facet Test Suite', () => {
         Expect.clearFilterContains('Clear filter');
       });
 
-      it('should verify input form', () => {
+      scope('when selecting a empty range', () => {
         visitNumericFacetPage(customWithInputSettings);
 
         Actions.submitManualRange();

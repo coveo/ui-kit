@@ -350,8 +350,8 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {{ preventDefault: () => void; }} evt
-   */
+   * @param {Event} evt
+  */
   onApply(evt) {
     evt.preventDefault();
 

@@ -114,7 +114,7 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
             field
           );
         })
-        .logDetail('should log the facet clear all to UA');
+        .logDetail('should log the "facetClearAll" UA event');
     },
     logFacetLoad: () => {
       cy.wait(InterceptAliases.UA.Load)
@@ -125,7 +125,7 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
             'interfaceLoad'
           );
         })
-        .logDetail('should log the "InterfaceLoad" UA event');
+        .logDetail('should log the "interfaceLoad" UA event');
     },
   };
 }
@@ -175,8 +175,8 @@ export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
     },
 
     logFacetSelect: (field: string, selectedValueIndex: number) => {
-      it('should log the facet select results to UA ', () => {
-        cy.wait(InterceptAliases.UA.Facet.Select).then((intercept) => {
+      cy.wait(InterceptAliases.UA.Facet.Select)
+        .then((intercept) => {
           const analyticsBody = intercept.request.body;
           expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
           expect(analyticsBody.customData).to.have.property(
@@ -199,8 +199,8 @@ export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
                 txt
               );
             });
-        });
-      });
+        })
+        .logDetail('should log the "facetSelect" UA event');
     },
   };
 }
@@ -259,7 +259,7 @@ export function facetWithSearchExpectations(selector: FacetWithSearchSelector) {
       selector
         .moreMatches()
         .contains(query)
-        .logDetail(`"More matches for" label should have the query ${query}`);
+        .logDetail(`"More matches for" label should have the query "${query}"`);
     },
 
     noMatchesFoundContainsQuery: (query: string) => {
@@ -267,7 +267,7 @@ export function facetWithSearchExpectations(selector: FacetWithSearchSelector) {
         .noMatches()
         .contains(query)
         .logDetail(
-          `"No matches found for" label should have the query ${query}`
+          `"No matches found for" label should have the query "${query}"`
         );
     },
 
@@ -281,7 +281,7 @@ export function facetWithSearchExpectations(selector: FacetWithSearchSelector) {
             field
           );
         })
-        .logDetail('should log the facet search to UA');
+        .logDetail('should log the "facetSearch" UA event');
     },
   };
 }

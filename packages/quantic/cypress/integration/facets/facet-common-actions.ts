@@ -1,4 +1,3 @@
-import {selectors} from '../../page-objects/example-search';
 import {
   BaseFacetSelector,
   FacetWithSearchSelector,
@@ -16,16 +15,16 @@ export const baseFacetActions = (selector: BaseFacetSelector) => {
     clickClearFilter: () => {
       selector.clearFilterButton().click();
     },
-    checkFirstValue() {
+    checkFirstValue: () => {
       selector.values().first().find(valueCheckbox).check({force: true});
     },
-    checkLastValue() {
+    checkLastValue: () => {
       selector.values().last().find(valueCheckbox).check({force: true});
     },
-    selectFirstLinkValue() {
+    selectFirstLinkValue: () => {
       selector.values().first().find(valueLink).click({force: true});
     },
-    selectLastLinkValue() {
+    selectLastLinkValue: () => {
       selector.values().last().find(valueLink).click({force: true});
     },
     clickCollapseButton: () => {

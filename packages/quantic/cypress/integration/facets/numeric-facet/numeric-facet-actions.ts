@@ -4,8 +4,6 @@ import {
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
 
-export const field = 'ytlikecount';
-
 const numericFacetActions = (selector: AllFacetSelectors) => {
   return {
     inputMinValue: (value: number | string) => {

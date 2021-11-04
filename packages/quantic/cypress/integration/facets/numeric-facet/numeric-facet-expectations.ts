@@ -5,20 +5,12 @@ import {
   baseFacetExpectations,
   facetWithValuesExpectations,
 } from '../facet-common-expectations';
-import {field} from './numeric-facet-actions';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
 
-const formatDefaultNumericFacetValue = (value: string) => {
-  value = value.trim();
-  const valueSeparator = '-';
-  const splitByValue = ` ${valueSeparator} `;
-  const start = value.split(splitByValue)[0].replace(/,/g, '');
-  const end = value.split(splitByValue)[1].replace(/,/g, '');
-  return `${start}..${end}`;
-};
+export const field = 'ytlikecount';
 
 const numericFacetExpectations = (selector: AllFacetSelectors) => {
   return {
@@ -60,9 +52,9 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
       const urlHash = `#nf[${field.toLowerCase()}${input}]=${encodeURI(value)}`;
       cy.url()
         .should('include', urlHash)
-        .logDetail('should display range value on UrlHash');
+        .logDetail(`the URL hash should contain the range "${value}"`);
     },
-    logNumericFacetSelect: (field: string, index: number) => {
+    logNumericFacetSelect: (value: string) => {
       cy.wait(InterceptAliases.UA.Facet.Select)
         .then((interception) => {
           const analyticsBody = interception.request.body;
@@ -77,16 +69,12 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
           );
           expect(analyticsBody.facetState[0]).to.have.property('field', field);
 
-          NumericFacetSelectors.facetValueLabelAtIndex(index)
-            .invoke('text')
-            .then((txt: string) => {
-              expect(analyticsBody.customData).to.have.property(
-                'facetValue',
-                formatDefaultNumericFacetValue(txt)
-              );
-            });
+          expect(analyticsBody.customData).to.have.property(
+            'facetValue',
+            value
+          );
         })
-        .logDetail("should log the 'NumericFacetSelect' UA event");
+        .logDetail('should log the "facetSelect" UA event');
     },
   };
 };

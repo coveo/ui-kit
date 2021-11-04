@@ -30,7 +30,7 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
         .childValueOption()
         .first()
         .contains(value)
-        .logDetail(`should contain "${value}" child value`);
+        .logDetail(`first child value should contain "${value}"`);
     },
     numberOfParentValues: (value: number) => {
       selector
@@ -65,46 +65,59 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
       )}`;
       cy.url()
         .should('include', urlHash)
-        .logDetail('should contain path in the url');
+        .logDetail(`URL hash should contain "${urlHash}"`);
     },
     noUrlHash: () => {
-      cy.url().should('not.include', '#cf');
+      cy.url()
+        .should('not.include', '#cf')
+        .logDetail('URL hash should be empty');
     },
     displaySearchResultsPath: () => {
-      selector.searchResultPath().should('exist');
+      selector
+        .searchResultPath()
+        .should('exist')
+        .logDetail('Result path should exist');
     },
     searchResultsPathContains: (value: string) => {
-      selector.searchResultPath().contains(value);
+      selector
+        .searchResultPath()
+        .contains(value)
+        .logDetail(`Result path should contain "${value}"`);
     },
     searchResults: (value: number) => {
-      selector.searchResults().should('have.length', value);
+      selector
+        .searchResults()
+        .should('have.length', value)
+        .logDetail(`should display ${value} search results`);
     },
     logCategoryFacetSelected: (path: string[]) => {
-      cy.wait(InterceptAliases.UA.Facet.Select).then((interception) => {
-        const analyticsBody = interception.request.body;
-        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
-        expect(analyticsBody.customData).to.have.property(
-          'facetValue',
-          path.join(';')
-        );
-        expect(analyticsBody.customData).to.have.property(
-          'facetField',
-          hierarchicalField
-        );
+      cy.wait(InterceptAliases.UA.Facet.Select)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+          expect(analyticsBody.customData).to.have.property(
+            'facetValue',
+            path.join(';')
+          );
+          expect(analyticsBody.customData).to.have.property(
+            'facetField',
+            hierarchicalField
+          );
 
-        expect(analyticsBody.facetState[0]).to.have.property(
-          'state',
-          'selected'
-        );
-        expect(analyticsBody.facetState[0]).to.have.property(
-          'field',
-          hierarchicalField
-        );
-        expect(analyticsBody.facetState[0]).to.have.property(
-          'facetType',
-          'hierarchical'
-        );
-      });
+          expect(analyticsBody.facetState[0]).to.have.property(
+            'state',
+            'selected'
+          );
+          expect(analyticsBody.facetState[0]).to.have.property(
+            'field',
+            hierarchicalField
+          );
+          expect(analyticsBody.facetState[0]).to.have.property(
+            'facetType',
+            'hierarchical'
+          );
+        })
+        .logDetail('should log the "facetSelect" UA event');
     },
   };
 };
