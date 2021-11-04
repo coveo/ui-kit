@@ -509,6 +509,7 @@ export namespace Components {
         "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
+        "delimiter": string | null;
         /**
           * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
@@ -1691,6 +1692,7 @@ declare namespace LocalJSX {
         "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
+        "delimiter"?: string | null;
         /**
           * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
