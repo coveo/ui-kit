@@ -283,11 +283,10 @@ export function toLocalIsoDate(date) {
 }
 
 export function fromLocalIsoDate(dateString, time) {
-  if (dateString.indexOf('T') === -1) {
-    return new Date(dateString + 'T' + time);
-  }
+  const timeIdx = dateString.indexOf('T');
+  const withoutTime = (timeIdx !== -1) ? dateString.substring(0, timeIdx) : dateString;
 
-  return new Date(dateString);
+  return new Date(withoutTime + 'T' + time);
 }
 
 /** @typedef {import("coveo").RelativeDate} RelativeDate */

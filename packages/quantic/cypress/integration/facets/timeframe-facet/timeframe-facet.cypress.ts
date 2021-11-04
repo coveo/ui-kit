@@ -33,6 +33,15 @@ describe('quantic-timeframe-facet', () => {
     }
   }
 
+  function loadFromUrlHash(
+    options: Partial<TimeframeFacetOptions> = {},
+    urlHash: string
+  ) {
+    interceptSearch();
+    cy.visit(`${pageUrl}#${urlHash}`);
+    configure(options);
+  }
+
   it('should show placeholder before search completes', () => {
     visitTimeframeFacet({}, false);
 
@@ -293,6 +302,63 @@ describe('quantic-timeframe-facet', () => {
         );
         Expect.displayClearButton(true);
         Expect.displayValues(false);
+
+        scope(
+          'submitting the range form again should use the same range',
+          () => {
+            Actions.submitForm();
+
+            Expect.urlHashContains(
+              'Date_input',
+              '2000/01/01@00:00:00..2000/12/31@23:59:59'
+            );
+          }
+        );
+      });
+    });
+  });
+
+  describe('when loading range from URL', () => {
+    describe('with selected timeframe', () => {
+      it('should load the facet correctly', () => {
+        loadFromUrlHash(
+          {
+            field: 'Date',
+          },
+          'df[Date]=past-1-year..now'
+        );
+
+        Expect.displayLabel(true);
+        Expect.displayCollapseButton(true);
+        Expect.displayClearButton(true);
+        Expect.displayValues(true);
+        Expect.numberOfSelectedValues(1);
+        Expect.selectedValueContains('Past year');
+      });
+    });
+
+    describe('with custom range', () => {
+      it('should load the facet correctly', () => {
+        loadFromUrlHash(
+          {
+            field: 'Date',
+            withDatePicker: true,
+          },
+          'df[Date_input]=2000/01/01@00:00:00..2000/12/31@23:59:59'
+        );
+
+        Expect.displayLabel(true);
+        Expect.displayCollapseButton(true);
+        Expect.displayClearButton(true);
+        Expect.displayStartInput(true);
+        Expect.displayEndInput(true);
+        Expect.displayApplyButton(true);
+        Expect.displayValues(false);
+
+        scope('fills datepickers with correct dates', () => {
+          Expect.startInputContains('2000-01-01');
+          Expect.endInputContains('2000-12-31');
+        });
       });
     });
   });

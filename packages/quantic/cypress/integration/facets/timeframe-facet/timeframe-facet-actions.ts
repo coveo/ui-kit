@@ -18,6 +18,8 @@ function timeframeFacetActions(selector: TimeframeFacetSelector) {
       selector.endInput().clear().type(end);
       selector.form().submit();
     },
+
+    submitForm: () => selector.form().submit(),
   };
 }
 

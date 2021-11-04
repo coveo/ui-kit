@@ -19,6 +19,30 @@ import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 
 /** @typedef {import("coveo").DateRangeRequest} DateRangeRequest */
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
+/** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
+/** @typedef {import("coveo").RelativeDateUnit} RelativeDateUnit */
+/**
+ * @typedef {Object} DatepickerElement
+ * @property {string} min
+ * @property {string} max
+ * @property {string} value
+ * @property {boolean} required
+ * @property {() => boolean} reportValidity
+ */
+/**
+ * @typedef {Object} TimeframeElement
+ * @property {RelativeDatePeriod} period
+ * @property {RelativeDateUnit} unit
+ * @property {(string|number)} amount
+ * @property {string} label
+ */
+/**
+ * @typedef {Object} Timeframe
+ * @property {RelativeDatePeriod} period
+ * @property {RelativeDateUnit} unit
+ * @property {number} amount
+ * @property {string} label
+ */
 
 export default class QuanticTimeframeFacet extends LightningElement {
   @api engineId;
@@ -193,8 +217,19 @@ export default class QuanticTimeframeFacet extends LightningElement {
     evt.preventDefault();
   }
 
+  /**
+   * @returns {TimeframeElement[]}
+   */
+  get timeframeElements() {
+    // @ts-ignore
+    return Array.from(this.querySelectorAll('c-quantic-timeframe'));
+  }
+
+  /**
+   * @returns {Timeframe[]}
+   */
   get timeframes() {
-    return Array.from(this.querySelectorAll('c-quantic-timeframe')).map(
+    return this.timeframeElements.map(
       (el) => {
         const amount =
           typeof el.amount === 'string' ? parseInt(el.amount, 10) : el.amount;
@@ -210,7 +245,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
-   * @type {DateRangeRequest[]}
+   * @returns {DateRangeRequest[]}
    */
   get currentValues() {
     return this.timeframes.map((timeframe) => {
@@ -299,13 +334,21 @@ export default class QuanticTimeframeFacet extends LightningElement {
     return I18nUtils.getShortDatePattern();
   }
 
+  /**
+   * @returns {DatepickerElement|null}
+   */
   get startDatepicker() {
+    // @ts-ignore
     return this.withDatePicker
       ? this.template.querySelector('.timeframe-facet__start-input')
       : null;
   }
 
+  /**
+   * @returns {DatepickerElement|null}
+   */
   get endDatepicker() {
+    // @ts-ignore
     return this.withDatePicker
       ? this.template.querySelector('.timeframe-facet__end-input')
       : null;
@@ -324,8 +367,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
   handleApply(evt) {
     evt.preventDefault();
 
-    // TODO: We'll have to validate cases where dates aren't set properly
-
     const start = this.startDatepicker.value; // local date (with no time indication)
     const end = this.endDatepicker.value; // local date (with no time indication)
 
@@ -336,8 +377,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     // 2. perform the actual validation
     if (!this.startDatepicker.reportValidity() || !this.endDatepicker.reportValidity()) {
-      // some values are not valid.
-      console.log('some values are invalid');
       return;
     }
 
@@ -348,12 +387,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
     const startDate = fromLocalIsoDate(start, '00:00:00');
     const endDate = fromLocalIsoDate(end, '23:59:59');
 
-    if (endDate < startDate) {
-      console.error('The start date should occur before the end date');
-      return;
-    }
-
-    // TODO: I guess we should do it that way to avoir triggering 2 search requests.
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(CoveoHeadless.loadDateFacetSetActions(engine).deselectAllDateFacetValues(this.facet.state.facetId));
 

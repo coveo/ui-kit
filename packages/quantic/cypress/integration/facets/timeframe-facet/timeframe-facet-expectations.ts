@@ -143,11 +143,25 @@ function timeframeWithRangeExpectations(selector: WithDateRangeSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`The start input ${should(display)} be displayed.`),
 
+    startInputContains: (value: string) =>
+      selector
+        .startInput()
+        .invoke('val')
+        .then((text) => expect(text).to.be.equal(value))
+        .logDetail(`start input should contain "${value}"`),
+
     displayEndInput: (display: boolean) =>
       selector
         .endInput()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`The end input ${should(display)} be displayed.`),
+
+    endInputContains: (value: string) =>
+      selector
+        .endInput()
+        .invoke('val')
+        .then((text) => expect(text).to.be.equal(value))
+        .logDetail(`end input should contain "${value}"`),
 
     displayApplyButton: (display: boolean) =>
       selector
