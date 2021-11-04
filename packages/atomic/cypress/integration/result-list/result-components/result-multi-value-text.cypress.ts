@@ -15,10 +15,7 @@ import {
   assertDisplaysXMoreLabel,
   assertDoesNotDisplayXMoreLabel,
 } from './result-multi-value-text-assertions';
-import {
-  resultMultiValueTextComponent,
-  ResultMultiValueTextSelectors,
-} from './result-multi-value-text-selectors';
+import {resultMultiValueTextComponent} from './result-multi-value-text-selectors';
 import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
 import {
   assertAccessibility,
