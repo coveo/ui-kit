@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.81.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.7...@coveo/quantic@0.81.0) (2021-11-03)
+
+
+### Features
+
+* **quantic:** component metadata changes ([#1393](https://github.com/coveo/ui-kit/issues/1393)) ([e076bba](https://github.com/coveo/ui-kit/commit/e076bbad1b52b2cf102a9f409fd2fad1dfb6acfe))
+
+
+
+
+
+## [0.80.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.6...@coveo/quantic@0.80.7) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [0.80.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.5...@coveo/quantic@0.80.6) (2021-11-02)
+
+
+### Bug Fixes
+
+* **quantic:** changed quickview style and placement ([#1407](https://github.com/coveo/ui-kit/issues/1407)) ([19b62c1](https://github.com/coveo/ui-kit/commit/19b62c1bd8a618ffdbd96e863c7079140cf9161e))
+* **quantic:** wrap number props ([#1422](https://github.com/coveo/ui-kit/issues/1422)) ([7aa18e9](https://github.com/coveo/ui-kit/commit/7aa18e90c91bc9d6985efbb776dd40d1ebbf460b))
+
+
+
+
+
+## [0.80.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.4...@coveo/quantic@0.80.5) (2021-11-02)
+
+
+### Bug Fixes
+
+* **quantic:** hide facet search when there are fewer values than max ([#1402](https://github.com/coveo/ui-kit/issues/1402)) ([40f5903](https://github.com/coveo/ui-kit/commit/40f5903d94bcc005de6eb2ff5fa0a474fdd6223b))
+
+
+
+
+
+## [0.80.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.3...@coveo/quantic@0.80.4) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.80.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.2...@coveo/quantic@0.80.3) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.80.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.1...@coveo/quantic@0.80.2) (2021-11-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.80.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.0...@coveo/quantic@0.80.1) (2021-10-29)
+
+
+### Bug Fixes
+
+* **quantic:** category facet parent alignment ([#1400](https://github.com/coveo/ui-kit/issues/1400)) ([0d3b2d4](https://github.com/coveo/ui-kit/commit/0d3b2d4e45ddb7e0e3fc2f3263f216b75f1d076d))
+
+
+
+
+
+# [0.80.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.2...@coveo/quantic@0.80.0) (2021-10-29)
+
+
+### Features
+
+* **quantic:** added quickview component ([#1382](https://github.com/coveo/ui-kit/issues/1382)) ([39e0902](https://github.com/coveo/ui-kit/commit/39e090235485bed0966a686a8e24877cda4c48ab))
+
+
+
+
+
+## [0.79.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.1...@coveo/quantic@0.79.2) (2021-10-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.79.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.79.0...@coveo/quantic@0.79.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* **quantic:** improvements to numeric facet input validation ([#1396](https://github.com/coveo/ui-kit/issues/1396)) ([2c203cf](https://github.com/coveo/ui-kit/commit/2c203cf35696a5f1faeed95549184c85e93ccbed))
+
+
+
+
+
 # [0.79.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.78.4...@coveo/quantic@0.79.0) (2021-10-27)
 
 

@@ -16,18 +16,14 @@ export function assertRendersTemplate(shouldBeRendered: boolean) {
 
 export function assertResultImageSize(size: ResultDisplayImageSize) {
   it(`enforces the "${size}" image size on the result`, () => {
-    ResultListSelectors.result()
-      .first()
-      .should(([result]) =>
-        expect((result as Components.AtomicResult).imageSize).to.eq(size)
-      );
+    ResultListSelectors.firstResultRoot().should('have.class', `image-${size}`);
   });
 }
 
 export function assertCellImageSize(size: ResultDisplayImageSize) {
   it(`enforces the "${size}" image size on the result`, () => {
-    ResultTableSelectors.firstRowCells()
+    ResultTableSelectors.firstRowCellsContent()
       .first()
-      .should(([cell]) => expect(cell.imageSize).to.eq(size));
+      .should('have.class', `image-${size}`);
   });
 }

@@ -8,4 +8,5 @@ export interface CategoryFacetSearchRequest
     FacetSearchType<'hierarchical'> {
   basePath: string[];
   ignorePaths: string[][];
+  delimitingCharacter: string;
 }

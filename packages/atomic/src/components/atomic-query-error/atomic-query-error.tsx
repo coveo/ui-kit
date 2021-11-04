@@ -81,6 +81,10 @@ export class AtomicQueryError implements InitializableComponent {
     return this.bindings.engine.state.configuration.organizationId;
   }
 
+  private get url() {
+    return this.bindings.engine.state.configuration.platformUrl;
+  }
+
   private get errorType() {
     return this.queryErrorState.error!.type;
   }
@@ -91,7 +95,10 @@ export class AtomicQueryError implements InitializableComponent {
         return {
           icon: NoConnection,
           title: this.bindings.i18n.t('disconnected'),
-          description: this.bindings.i18n.t('check-your-connection'),
+          description: this.bindings.i18n.t('check-your-connection', {
+            url: this.url,
+            interpolation: {escapeValue: false},
+          }),
         };
       case noEndpointsException:
         return {

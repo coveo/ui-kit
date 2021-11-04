@@ -21,33 +21,26 @@
     }
 
     atomic-result-section-title {
-      --font-size: var(--atomic-text-xl);
-      font-size: var(--font-size);
-      --line-height: 1.5rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-xl);
     }
 
     atomic-result-section-excerpt {
       margin-top: 1.25rem;
-      --font-size: var(--atomic-text-base);
-      font-size: var(--font-size);
-      --line-height: 1.25rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-base);
+
       max-height: 2.5rem;
       @mixin line-clamp 2;
     }
 
     atomic-result-section-bottom-metadata {
       margin-top: 0.75rem;
-      --font-size: var(--atomic-text-sm);
-      font-size: var(--font-size);
-      --line-height: 2rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-sm);
+
       max-height: 4rem;
     }
 
     atomic-result-section-title-metadata {
-      margin-top: 0.75rem;
+      margin-top: 0.475rem;
     }
   }
 
@@ -67,33 +60,26 @@
     }
 
     atomic-result-section-title {
-      --font-size: var(--atomic-text-xl);
-      font-size: var(--font-size);
-      --line-height: 1.5rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-xl);
     }
 
     atomic-result-section-excerpt {
       margin-top: 1rem;
-      --font-size: var(--atomic-text-base);
-      font-size: var(--font-size);
-      --line-height: 1.25rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-base);
+
       max-height: 2.5rem;
       @mixin line-clamp 2;
     }
 
     atomic-result-section-bottom-metadata {
       margin-top: 0.625rem;
-      --font-size: var(--atomic-text-sm);
-      font-size: var(--font-size);
-      --line-height: 1.75rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-sm);
+
       max-height: 3.5rem;
     }
 
     atomic-result-section-title-metadata {
-      margin-top: 0.625rem;
+      margin-top: 0.475rem;
     }
   }
 
@@ -113,33 +99,26 @@
     }
 
     atomic-result-section-title {
-      --font-size: var(--atomic-text-xl);
-      font-size: var(--font-size);
-      --line-height: 1.5rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-xl);
     }
 
     atomic-result-section-excerpt {
       margin-top: 0.75rem;
-      --font-size: var(--atomic-text-base);
-      font-size: var(--font-size);
-      --line-height: 1.25rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-base);
+
       max-height: 1.25rem;
       @mixin line-clamp 1;
     }
 
     atomic-result-section-bottom-metadata {
       margin-top: 0.4375rem;
-      --font-size: var(--atomic-text-sm);
-      font-size: var(--font-size);
-      --line-height: 1.625rem;
-      line-height: var(--line-height);
+      @mixin set-font-size var(--atomic-text-sm);
+
       max-height: 3.25rem;
     }
 
     atomic-result-section-title-metadata {
-      margin-top: 0.4375rem;
+      margin-top: 0.475rem;
     }
   }
 
@@ -234,15 +213,11 @@ atomic-result-section-actions {
 }
 
 atomic-result-section-title-metadata {
-  --font-size: var(--atomic-text-sm);
-  font-size: var(--font-size);
+  @mixin set-font-size var(--atomic-text-sm);
 }
 
 atomic-result-section-emphasized {
   font-weight: 500;
-  --font-size: var(--atomic-text-2xl);
-  font-size: var(--font-size);
-  --line-height: 2rem;
-  line-height: var(--line-height);
+  @mixin set-font-size var(--atomic-text-2xl);
   margin-top: 0.5rem;
 }

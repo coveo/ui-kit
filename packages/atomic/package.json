@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.8.1",
+  "version": "1.9.10",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -22,7 +22,7 @@
     "docs/"
   ],
   "scripts": {
-    "build": "npm run build:locales && npm run build:stencil && npm run build:utils",
+    "build": "npm run build:locales && npm run build:stencil && npm run build:utils && npm run build:storybook",
     "build:utils": "node --max-old-space-size=4096 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
@@ -36,12 +36,13 @@
     "cypress:open": "./node_modules/cypress/bin/cypress open",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
-    "storybook": "start-storybook -s ./dist -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
+    "build:storybook": "npm run storybook:lit-analyze && build-storybook",
+    "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.32.7",
-    "@coveo/headless": "^1.30.0",
+    "@coveo/bueno": "^0.32.8",
+    "@coveo/headless": "^1.31.2",
     "@salesforce-ux/design-system": "^2.16.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
@@ -84,11 +85,14 @@
     "html-loader-jest": "0.2.1",
     "jest": "26.6.3",
     "jest-cli": "26.6.3",
+    "lit-analyzer": "^1.2.1",
+    "lit-html": "^2.0.1",
     "lodash": "^4.17.21",
     "postcss-import": "14.0.2",
     "postcss-mixins": "8.1.0",
     "postcss-nested": "5.0.6",
     "puppeteer": "9.1.1",
+    "react": "^16.14.0",
     "rollup": "2.56.3",
     "rollup-plugin-html": "0.2.1",
     "rollup-plugin-typescript2": "0.30.0"

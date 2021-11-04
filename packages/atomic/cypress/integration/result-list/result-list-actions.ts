@@ -39,6 +39,19 @@ export function buildTemplateWithSections(
   return buildTemplateWithoutSections(sectionsEls, props);
 }
 
+export const addFieldValueInResponse =
+  (field: string, fieldValue: string | null) => (fixture: TestFixture) => {
+    fixture.withCustomResponse((response) =>
+      response.results.forEach((result) => {
+        if (fieldValue === null) {
+          delete result.raw[field];
+        } else {
+          result.raw[field] = fieldValue;
+        }
+      })
+    );
+  };
+
 export const addResultList =
   (template?: HTMLElement) => (fixture: TestFixture) => {
     const resultList = generateComponentHTML(resultListComponent);

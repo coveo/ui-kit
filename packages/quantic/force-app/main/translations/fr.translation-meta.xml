@@ -269,6 +269,22 @@
         <name>quantic_MessageWhenRangeUnderflow</name>
     </customLabels>
     <customLabels>
+        <label>Fermer</label>
+        <name>quantic_Close</name>
+    </customLabels>
+    <customLabels>
+        <label>Ouvrir aperçu</label>
+        <name>quantic_OpenPreview</name>
+    </customLabels>
+    <customLabels>
+        <label>Aperçu non disponible</label>
+        <name>quantic_NoPreviewAvailable</name>
+    </customLabels>quantic_Colon
+    <customLabels>
+        <label> :</label>
+        <name>quantic_Colon</name>
+    </customLabels>
+    <customLabels>
         <label>Heure passée</label>
         <name>quantic_PastHour</name>
     </customLabels>

@@ -1,23 +1,13 @@
 import {h} from '@stencil/core';
 import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-import {codeSample} from './code-sample';
+import {codeSample} from './code-sample/code-sample';
 import {initializeInterfaceDebounced} from './default-init';
-import {mapPropsToArgTypes} from './map-props-to-args';
-import {camelToKebab} from '../src/utils/utils';
-import {SearchEngineConfiguration} from '@coveo/headless';
-
-function renderArgsToHTMLString(componentTag: string, args: Args) {
-  const el = document.createElement(componentTag);
-  Object.keys(args).forEach((arg) => {
-    el.setAttribute(camelToKebab(arg), args[arg]);
-  });
-  return el.outerHTML;
-}
-
-export interface DefaultStoryAdvancedConfig {
-  engineConfig?: Partial<SearchEngineConfiguration>;
-}
+import sharedDefaultStory, {
+  DefaultStoryAdvancedConfig,
+  renderArgsToHTMLString,
+  renderShadowPartsToStyleString,
+} from './default-story-shared';
 
 export default function defaultStory(
   title: string,
@@ -26,42 +16,38 @@ export default function defaultStory(
   docPage: typeof DocsPage,
   advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
-  let currentArgs = {};
+  const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
+    sharedDefaultStory(
+      title,
+      componentTag,
+      defaultArgs,
+      docPage,
+      advancedConfig
+    );
 
-  const updateCurrentArgs = (args: Args) => {
-    currentArgs = {...defaultArgs, ...args};
-  };
+  const defaultLoader = initializeInterfaceDebounced(() => {
+    const argsToHTMLString = renderArgsToHTMLString(componentTag, getArgs());
+    const additionalMarkupString = advancedConfig.additionalMarkup
+      ? advancedConfig.additionalMarkup().strings.join('')
+      : '';
 
-  const defaultModuleExport = {
-    title,
-    argTypes: mapPropsToArgTypes(componentTag),
-    parameters: {
-      docs: {
-        page: docPage,
-      },
-    },
-  };
-
-  const exportedStory = (args: Args) => {
-    updateCurrentArgs(args);
-    return '';
-  };
+    return argsToHTMLString + additionalMarkupString;
+  }, advancedConfig.engineConfig);
 
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
-    const htmlString = renderArgsToHTMLString(componentTag, currentArgs);
+
+    const htmlString = renderArgsToHTMLString(componentTag, getArgs());
+    const styleString = renderShadowPartsToStyleString(componentTag, getArgs());
     return (
       <div>
         <Story />
+        <div innerHTML={styleString}></div>
+        {codeSample(styleString)}
         {codeSample(htmlString)}
       </div>
     );
   };
-
-  const defaultLoader = initializeInterfaceDebounced(
-    () => renderArgsToHTMLString(componentTag, currentArgs),
-    advancedConfig.engineConfig
-  );
 
   exportedStory.loaders = [defaultLoader];
   exportedStory.decorators = [defaultDecorator];

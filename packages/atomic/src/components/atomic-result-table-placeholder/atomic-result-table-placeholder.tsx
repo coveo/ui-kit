@@ -48,12 +48,6 @@ export class AtomicResultTablePlaceholder {
                 style={{width: '6.5rem'}}
               ></div>
             </th>
-            <th>
-              <div
-                class={`h-8 mt-2 ${placeholderClasses}`}
-                style={{width: '11rem'}}
-              ></div>
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -83,12 +77,6 @@ export class AtomicResultTablePlaceholder {
                 <div
                   class={`h-5 mt-1.5 ${placeholderClasses}`}
                   style={{width: '4.875rem'}}
-                ></div>
-              </td>
-              <td>
-                <div
-                  class={`h-5 mt-1.5 ${placeholderClasses}`}
-                  style={{width: '9.5rem'}}
                 ></div>
               </td>
             </tr>

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.6](https://github.com/coveo/ui-kit/compare/coveo-atomic-example-070-alpha33@0.33.5...coveo-atomic-example-070-alpha33@0.33.6) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
 ## [0.33.5](https://github.com/coveo/ui-kit/compare/coveo-atomic-example-070-alpha33@0.33.4...coveo-atomic-example-070-alpha33@0.33.5) (2021-09-03)
 
 

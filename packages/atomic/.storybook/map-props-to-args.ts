@@ -23,11 +23,14 @@ const availableControlType = [
 
 type ControlType = typeof availableControlType[number];
 
-export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
-  const componentDocumentation = (
-    AtomicDocumentation as JsonDocs
-  ).components.find((componentDoc) => componentDoc.tag === componentTag);
+export const getDocumentationFromTag = (componentTag: string) => {
+  return (AtomicDocumentation as JsonDocs).components.find(
+    (componentDoc) => componentDoc.tag === componentTag
+  );
+};
 
+export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
+  const componentDocumentation = getDocumentationFromTag(componentTag);
   if (!componentDocumentation) {
     return {};
   }

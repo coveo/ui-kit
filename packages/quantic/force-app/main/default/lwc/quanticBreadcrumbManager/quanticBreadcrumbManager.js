@@ -11,6 +11,7 @@ import {I18nUtils, RelativeDateFormatter} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
+import colon from '@salesforce/label/c.quantic_Colon';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -66,7 +67,8 @@ export default class QuanticBreadcrumbManager extends LightningElement {
 
   labels = {
     nMore,
-    clearAllFilters
+    clearAllFilters,
+    colon
   }
 
   connectedCallback() {

@@ -77,7 +77,18 @@ export function interceptSearchWithError(
       type,
       executionReport,
     },
-  });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockNoMoreFacetValues(field: string) {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.facets.find(
+        (facet) => facet.field === field
+      ).moreValuesAvailable = false;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }
 
 export function extractFacetValues(

@@ -18,18 +18,23 @@ export const Tab: FunctionComponent<TabProps> = (props) => {
   );
 };
 
-// usage
+/* Usage
 
-/**
- * ```tsx
- * const controller = buildTab(engine, {
- *   initialState: {isActive: true},
- *   options: {
- *     id: 'messages',
- *     expression: '@objecttype==Message',
- *   },
- * });
- *
- * <Tab controller={controller}>Messages</Tab>;
- * ```
- */
+const messageExpression = buildQueryExpression()
+  .addStringField({
+    field: 'objecttype',
+    operator: 'isExactly',
+    values: ['Message'],
+  })
+  .toString();
+
+const controller = buildTab(engine, {
+  initialState: {isActive: true},
+  options: {
+    id: 'messages',
+    expression: messageExpression,
+  },
+});
+
+<Tab controller={controller}>Messages</Tab>;
+*/

@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.2](https://github.com/coveo/ui-kit/compare/headless-react@0.42.1...headless-react@0.42.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [0.42.1](https://github.com/coveo/ui-kit/compare/headless-react@0.42.0...headless-react@0.42.1) (2021-11-02)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.42.0](https://github.com/coveo/ui-kit/compare/headless-react@0.41.3...headless-react@0.42.0) (2021-11-01)
+
+
+### Features
+
+* expression builder poc using v4 structure ([#1369](https://github.com/coveo/ui-kit/issues/1369)) ([c622999](https://github.com/coveo/ui-kit/commit/c62299921f58354de09c196b354f918b20c15a7c))
+
+
+
+
+
+## [0.41.3](https://github.com/coveo/ui-kit/compare/headless-react@0.41.2...headless-react@0.41.3) (2021-11-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.41.2](https://github.com/coveo/ui-kit/compare/headless-react@0.41.1...headless-react@0.41.2) (2021-11-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.41.1](https://github.com/coveo/ui-kit/compare/headless-react@0.41.0...headless-react@0.41.1) (2021-10-28)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 # [0.41.0](https://github.com/coveo/ui-kit/compare/headless-react@0.40.5...headless-react@0.41.0) (2021-10-25)
 
 

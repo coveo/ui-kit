@@ -1,6 +1,7 @@
 // @ts-ignore
 import defaultTemplate from './quanticResult.html';
-import {LightningElement, api} from "lwc";
+
+import {LightningElement, api, track} from "lwc";
 import {TimeSpan} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
@@ -31,6 +32,16 @@ export default class QuanticResult extends LightningElement {
    */
   @api resultTemplatesManager;
 
+  @track resultHasPreview = true;
+
+  connectedCallback() {
+    this.template.addEventListener('haspreview', this.onHasPreview);
+  }
+
+  disconnectedCallback() {
+    this.template.removeEventListener('haspreview', this.onHasPreview);
+  }
+
   get videoThumbnail() {
     return `http://img.youtube.com/vi/${this.result.raw.ytvideoid}/mqdefault.jpg`
   }
@@ -42,6 +53,11 @@ export default class QuanticResult extends LightningElement {
   get videoTimeSpan() {
     return new TimeSpan(this.result.raw.ytvideoduration, false).getCleanHHMMSS();
   }
+
+  onHasPreview = (evt) => {
+    this.resultHasPreview = evt.detail.hasPreview;
+    evt.stopPropagation();
+  };
 
   render() {
     const template = this.resultTemplatesManager.selectTemplate(this.result);

@@ -8,6 +8,7 @@ import {
   interceptSearch,
   interceptSearchIndefinitely,
   interceptSearchWithError,
+  mockNoMoreFacetValues,
 } from '../../../page-objects/search';
 import {
   checkFirstValue,
@@ -86,6 +87,7 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
+      cy.wait(InterceptAliases.Search);
     }
 
     describe('verify rendering', () => {
@@ -109,6 +111,17 @@ describe('Facet Test Suite', () => {
       });
     }
 
+    function setupWithNoMoreValues() {
+      mockNoMoreFacetValues(defaultField);
+      cy.visit(pageUrl);
+      configure({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+      });
+      cy.wait(InterceptAliases.Search);
+    }
+
     describe('verify rendering', () => {
       before(setupWithValues);
 
@@ -121,6 +134,21 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('with no more facet values to show', () => {
+      describe('verify rendering', () => {
+        before(setupWithNoMoreValues);
+
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.numberOfSelectedCheckboxValues(0);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(false);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(false);
+      });
     });
 
     describe('verify facet values ordering', () => {
@@ -344,18 +372,10 @@ describe('Facet Test Suite', () => {
 
     describe('show more/less values', () => {
       describe('when facet has no more values', () => {
-        function showAllValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: 1000,
-          });
-          cy.wait(InterceptAliases.Search);
-        }
-
         describe('verify rendering', () => {
-          before(showAllValues);
+          before(setupWithNoMoreValues);
 
+          Expect.displayValues(true);
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
         });
@@ -481,6 +501,18 @@ describe('Facet Test Suite', () => {
       });
     }
 
+    function setupWithNoMoreValues() {
+      mockNoMoreFacetValues(defaultField);
+      cy.visit(pageUrl);
+      configure({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        displayValuesAs: 'link',
+      });
+      cy.wait(InterceptAliases.Search);
+    }
+
     describe('verify rendering', () => {
       before(setupWithLinkValues);
 
@@ -494,6 +526,20 @@ describe('Facet Test Suite', () => {
       Expect.displayShowMoreButton(true);
       Expect.displayShowLessButton(false);
       Expect.displaySearchInput(true);
+    });
+
+    describe('with no more facet values to show', () => {
+      describe('verify rendering', () => {
+        before(setupWithNoMoreValues);
+
+        Expect.displayPlaceholder(false);
+        Expect.labelContains(defaultLabel);
+        Expect.displayValues(true);
+        Expect.displayClearButton(false);
+        Expect.displayShowMoreButton(false);
+        Expect.displayShowLessButton(false);
+        Expect.displaySearchInput(false);
+      });
     });
 
     describe('when selecting a value', () => {
@@ -736,17 +782,8 @@ describe('Facet Test Suite', () => {
 
     describe('show more/less values', () => {
       describe('when facet has no more values', () => {
-        function showAllValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: 1000,
-          });
-          cy.wait(InterceptAliases.Search);
-        }
-
         describe('verify rendering', () => {
-          before(showAllValues);
+          before(setupWithNoMoreValues);
 
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
