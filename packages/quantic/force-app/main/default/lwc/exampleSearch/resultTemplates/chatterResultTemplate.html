@@ -1,15 +1,11 @@
 <template>
   <c-quantic-result-template>
     <c-quantic-result-label slot="label" result={result}></c-quantic-result-label>
-    <div slot="badges">
-      <template if:true={result.isRecommendation}>
-        <div class="slds-m-right_xx-small">
-          <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
-        </div>
-      </template>
-      <template if:true={result.isTopResult}>
-        <c-quantic-result-badge variant="featured"></c-quantic-result-badge>
-      </template>
+    <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
+      <div class="slds-m-right_xx-small">
+        <c-quantic-result-badge variant="recommended" result={result}></c-quantic-result-badge>
+      </div>
+      <c-quantic-result-badge variant="featured" result={result}></c-quantic-result-badge>
     </div>
     <template if:true={resultHasPreview}>
       <div slot="actions" class="slds-p-right_xx-small">
