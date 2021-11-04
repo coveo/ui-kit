@@ -73,6 +73,6 @@ export default class QuanticResultBadge extends LightningElement {
   }
 
   get shouldDisplayBadge() {
-    return true //!this.error && this.variants[this.variant].condition(this.result);
+    return !this.error && this.variants[this.variant].condition(this.result);
   }
 }
