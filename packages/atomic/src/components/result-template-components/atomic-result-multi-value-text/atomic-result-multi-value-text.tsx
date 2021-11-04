@@ -51,7 +51,7 @@ export class AtomicResultMultiText {
   @Prop() public maxValuesToDisplay = 3;
 
   /**
-   * If the field isn't indexed as a multi value field, values are going to be split using this delimiter.
+   * The delimiter used to separate values when the field isn't indexed as a multi value field.
    */
   @Prop() public delimiter: string | null = null;
 
