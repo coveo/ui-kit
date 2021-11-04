@@ -9,16 +9,10 @@
 
   atomic-result-section-badges {
     grid-area: badges;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
   }
 
   atomic-result-section-actions {
     grid-area: actions;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
 
     atomic-result-quickview {
       display: inline-block;
@@ -46,6 +40,15 @@
   atomic-result-section-bottom-metadata {
     grid-area: bottom-metadata;
     color: var(--atomic-neutral-dark);
+  }
+
+  atomic-result-section-badges,
+  atomic-result-section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    line-height: var(--row-height, 2rem);
+    max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
   }
 
   atomic-result-section-visual,
