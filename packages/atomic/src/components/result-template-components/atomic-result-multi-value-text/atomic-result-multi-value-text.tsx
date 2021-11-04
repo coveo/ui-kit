@@ -139,7 +139,7 @@ export class AtomicResultMultiText {
         role="separator"
         part="result-multi-value-text-separator"
         key={`${beforeValue}~${afterValue}`}
-        class={'separator'}
+        class="separator"
       ></li>
     );
   }
