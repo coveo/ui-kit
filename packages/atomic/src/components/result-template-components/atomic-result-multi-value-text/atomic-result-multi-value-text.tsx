@@ -20,7 +20,7 @@ const listItemClasses = 'inline-block';
  * @part result-multi-value-text-separator - The separator to display between each of the field values.
  * @part result-multi-value-text-value - A field value.
  * @part result-multi-value-text-value-more - A label indicating some values were omitted.
- * @slot result-multi-value-text-value-* - Lets you specify a custom caption value for a given part of a mutli-text field value. (e.g., if you want to use `Sweet!` as a caption value for `sweet` in `salty;sweet;sour`, you'd use  `<span slot="result-multi-value-text-value-sweet">Sweet!</span>`).
+ * @slot result-multi-value-text-value-* - Lets you specify a custom caption value for a given part of a mutli-text field value. (e.g., if you want to use `Off-Campus Resident` as a caption value for `Off-campus apartment` in `Off-campus apartment;On-campus apartment`, you'd use  `<span slot="result-multi-value-text-value-off-campus-apartment">Off-Campus Resident</span>`). The suffix of this slot corresponds with the lowercase field value with all spaces replaced with hyphens.
  */
 @Component({
   tag: 'atomic-result-multi-value-text',
