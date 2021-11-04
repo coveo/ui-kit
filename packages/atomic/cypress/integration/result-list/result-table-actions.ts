@@ -1,4 +1,8 @@
-import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
+import {
+  generateComponentHTML,
+  TagProps,
+  TestFixture,
+} from '../../fixtures/test-fixture';
 import {toArray} from '../../utils/arrayUtils';
 import {buildTemplateWithoutSections} from './result-list-actions';
 import {resultListComponent} from './result-list-selectors';
@@ -27,9 +31,11 @@ function buildTableElement(column: ResultTableColumn) {
 }
 
 export const addResultTable =
-  (columns: ResultTableColumn[]) => (fixture: TestFixture) => {
+  (columns: ResultTableColumn[], props: TagProps = {}) =>
+  (fixture: TestFixture) => {
     const resultList = generateComponentHTML(resultListComponent, {
       display: 'table',
+      ...props,
     });
     resultList.appendChild(
       buildTemplateWithoutSections(

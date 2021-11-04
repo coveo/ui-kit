@@ -1,15 +1,8 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
+import * as IconAssertions from './icon-assertions';
 import {IconSelectors} from './icon-selectors';
-
-function getSvg(fileName: string) {
-  const file = cy.readFile(`./www/build/assets/${fileName}.svg`);
-  return file;
-}
-
-function shouldRenderIcon(icon: string) {
-  cy.get(IconSelectors.svg).should('be.visible', icon);
-}
+import {getSvg} from './icon-utils';
 
 describe('Icon Test Suites', () => {
   function setupIcon(icon: string) {
@@ -18,27 +11,39 @@ describe('Icon Test Suites', () => {
       .init();
   }
 
-  it('should render an icon from the asset directory', () => {
-    setupIcon('assets://attachment');
-    shouldRenderIcon('attachment');
-  });
-
-  it('should render an icon from a SVG string', () => {
-    getSvg('custom').then((icon) => {
-      setupIcon(icon);
-      shouldRenderIcon('custom');
+  describe('with assets://attachment', () => {
+    beforeEach(() => {
+      setupIcon('assets://attachment');
     });
+
+    IconAssertions.assertRendersIcon(
+      () => cy.get(IconSelectors.svg),
+      'attachment'
+    );
   });
 
-  it('should render an icon from a URL', () => {
-    getSvg('email').then((icon) => {
-      const url = 'https://some-website-with-icons.com/my-icon.svg';
-      cy.intercept(url, {
-        body: icon,
+  describe('with the contents of the custom.svg icon', () => {
+    beforeEach(() => {
+      getSvg('custom').then((icon) => {
+        setupIcon(icon);
       });
-      setupIcon(url);
-      shouldRenderIcon('email');
     });
+
+    IconAssertions.assertRendersIcon(() => cy.get(IconSelectors.svg), 'custom');
+  });
+
+  describe('with a url to email.svg', () => {
+    beforeEach(() => {
+      getSvg('email').then((icon) => {
+        const url = 'https://some-website-with-icons.com/my-icon.svg';
+        cy.intercept(url, {
+          body: icon,
+        });
+        setupIcon(url);
+      });
+    });
+
+    IconAssertions.assertRendersIcon(() => cy.get(IconSelectors.svg), 'email');
   });
 
   it('should not be vulnerable to XSS injections in an SVG string', () => {

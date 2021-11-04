@@ -79,6 +79,7 @@ describe('Facet Test Suite', () => {
             label: defaultLabel,
             numberOfValues: defaultNumberOfValues,
           });
+          cy.wait(InterceptAliases.Search);
         }
         setupWithError();
 
@@ -107,6 +108,7 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
+      cy.wait(InterceptAliases.Search);
     }
     function searchForValue(query: string) {
       setupWithValues();
@@ -350,9 +352,9 @@ describe('Facet Test Suite', () => {
         scope('when facet has no more values', () => {
           setupWithNoMoreValues();
 
+          Expect.displayValues(true);
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
-          interceptSearchIndefinitely();
         });
       });
       scope('when there is no more facet values to show', () => {
@@ -388,6 +390,7 @@ describe('Facet Test Suite', () => {
         numberOfValues: defaultNumberOfValues,
         displayValuesAs: 'link',
       });
+      cy.wait(InterceptAliases.Search);
     }
 
     it('should work as expected', () => {
@@ -665,6 +668,7 @@ describe('Facet Test Suite', () => {
         scope('when facet has no more values', () => {
           setupWithNoMoreValues();
 
+          Expect.displayValues(true);
           Expect.displayShowMoreButton(false);
           Expect.displayShowLessButton(false);
         });

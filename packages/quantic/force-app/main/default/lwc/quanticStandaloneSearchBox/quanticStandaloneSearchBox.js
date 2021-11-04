@@ -51,7 +51,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   * @type {string}
   * @defaultValue 'Search...'
   */
-  @api placeholder = `${this.labels.search}...`;
+  @api placeholder = `${this.labels.search}`;
   /**
   * Whether not to render a submit button.
   * @api
@@ -134,7 +134,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   initialize = (engine) => {
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
-        numberOfSuggestions: this.numberOfSuggestions,
+        numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
           notMatchDelimiters: {
             open: '<b>',

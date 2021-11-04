@@ -1,7 +1,7 @@
 <template>
   <div onregisterresulttemplates={handleResultTemplateRegistration}>
     <div class="search__grid">
-      <c-quantic-search-interface engine-id={engineId}>
+      <c-quantic-search-interface engine-id={engineId} search-hub={searchHub} pipeline={pipeline} disable-state-in-url={disableStateInUrl} skip-first-search={skipFirstSearch}>
         <div class="slds-grid slds-grid_vertical slds-grid_align-center">
           <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-align-middle">
             <div class="slds-m-vertical_small">

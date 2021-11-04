@@ -8,7 +8,7 @@ node('linux && docker') {
     userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/ui-kit']]
   ])
 
-  withDockerContainer(image: 'node:14', args: '-u=root') {
+  withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     
     stage('Npm publish') {
       withCredentials([

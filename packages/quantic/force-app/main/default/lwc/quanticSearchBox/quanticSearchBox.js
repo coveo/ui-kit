@@ -73,7 +73,7 @@ export default class QuanticSearchBox extends LightningElement {
   initialize = (engine) => {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
       options: {
-        numberOfSuggestions: this.numberOfSuggestions,
+        numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
           notMatchDelimiters: {
             open: '<b>',

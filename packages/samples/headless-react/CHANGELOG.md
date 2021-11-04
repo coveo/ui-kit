@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.2](https://github.com/coveo/ui-kit/compare/headless-react@0.42.1...headless-react@0.42.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [0.42.1](https://github.com/coveo/ui-kit/compare/headless-react@0.42.0...headless-react@0.42.1) (2021-11-02)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 # [0.42.0](https://github.com/coveo/ui-kit/compare/headless-react@0.41.3...headless-react@0.42.0) (2021-11-01)
 
 

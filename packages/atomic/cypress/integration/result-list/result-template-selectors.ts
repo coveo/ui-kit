@@ -10,5 +10,5 @@ export const ResultTemplateSelectors = {
   customContentIntable: () =>
     ResultTableSelectors.firstRowCellsContent().find('#template-content'),
   tableElements: () =>
-    ResultListSelectors.firstResult().find('atomic-table-element'),
+    ResultListSelectors.firstResultRoot().find('atomic-table-element'),
 };
