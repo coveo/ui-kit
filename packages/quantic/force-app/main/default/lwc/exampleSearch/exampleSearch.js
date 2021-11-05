@@ -7,15 +7,22 @@ import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
-  /** @type {String} */
+  /** @type {string} */
   @api engineId = 'example-search';
+  /** @type {string} */
+  @api searchHub = 'default';
+  /** @type {string} */
+  @api pipeline = 'default';
+  /** @type {boolean} */
+  @api disableStateInUrl = false;
+  /** @type {boolean} */
+  @api skipFirstSearch = false;
   
   handleResultTemplateRegistration(event) {
     event.stopPropagation();
 
-    /** @type {import("coveo").ResultTemplatesManager} */
     const resultTemplatesManager = event.detail;
-    
+
     const isCase = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
       'objecttype',
       ['Case']

@@ -96,8 +96,7 @@ describe('Result Printable Uri Component', () => {
         .should('exist')
         .should('have.text', 'a printable uri');
 
-      ResultPrintableUriSelectors.firstInResult()
-        .find('a[part="result-printable-uri-link"]')
+      ResultPrintableUriSelectors.links()
         .should('exist')
         .should('have.attr', 'href', 'https://coveo.com')
         .should('have.attr', 'target', '_self');
@@ -165,9 +164,9 @@ describe('Result Printable Uri Component', () => {
       });
 
       it('should add an ellipsis before the last part', () => {
-        ResultPrintableUriSelectors.uriListElements()
-          .eq(2)
-          .find('button[part="result-printable-uri-list-ellipsis"]')
+        ResultPrintableUriSelectors.uriListElements().eq(2);
+
+        ResultPrintableUriSelectors.ellipsisButton()
           .should('exist')
           .should('have.text', '...');
       });

@@ -5,27 +5,32 @@ import {
 } from '../../../fixtures/test-fixture';
 import {addFacet} from '../../facets/facet/facet-actions';
 import {FacetSelectors} from '../../facets/facet/facet-selectors';
-import {addResultList, buildTemplateWithSections} from '../result-list-actions';
+import {
+  addFieldValueInResponse,
+  addResultList,
+  buildTemplateWithSections,
+} from '../result-list-actions';
 import {
   assertShouldRenderValues,
   assertDisplaysXMoreLabel,
   assertDoesNotDisplayXMoreLabel,
 } from './result-multi-value-text-assertions';
-import {
-  resultMultiValueTextComponent,
-  ResultMultiValueTextSelectors,
-} from './result-multi-value-text-selectors';
+import {resultMultiValueTextComponent} from './result-multi-value-text-selectors';
 import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
 import {
   assertAccessibility,
   assertConsoleError,
   assertRemovesComponent,
 } from '../../common-assertions';
-import {resultListComponent} from '../result-list-selectors';
+import {
+  resultListComponent,
+  ResultListSelectors,
+} from '../result-list-selectors';
 
 export interface MultiValueTextProps {
   field?: string | number;
   'max-values-to-display'?: number;
+  delimiter?: string;
 }
 
 const addMultiValueText = (
@@ -79,7 +84,7 @@ describe('Result MultiValueText Component', () => {
         .init();
     });
 
-    assertRemovesComponent(ResultMultiValueTextSelectors.shadow);
+    assertRemovesComponent(() => cy.get(resultMultiValueTextComponent));
     assertConsoleError();
   });
 
@@ -91,24 +96,29 @@ describe('Result MultiValueText Component', () => {
           .init();
       });
 
-      assertRemovesComponent(ResultMultiValueTextSelectors.firstInResult);
+      assertRemovesComponent(() =>
+        ResultListSelectors.firstResult().find(resultMultiValueTextComponent)
+      );
     });
 
     describe('when the field value is not a string nor a string array', () => {
       beforeEach(() => {
         new TestFixture()
           .with(addMultiValueText({field: 'hello'}))
-          .withCustomResponse((response) => {
-            response.results.forEach((result) => (result.raw['hello'] = 420));
-          })
+          .with(addFieldValueInResponse('hello', 420))
           .init();
       });
 
-      assertRemovesComponent(ResultMultiValueTextSelectors.firstInResult);
+      assertRemovesComponent(() =>
+        ResultListSelectors.firstResult().find(resultMultiValueTextComponent)
+      );
       assertConsoleError();
     });
 
-    describe('when the field value exists & is a string array', () => {
+    function testWithValidFieldValue(
+      getFieldValues: (valuesToTest: string[]) => string | string[],
+      delimiter?: string
+    ) {
       const field = 'hello_world';
       function prepareValuesWithMaximum(
         valuesAndCaptions: Record<string, string>,
@@ -118,15 +128,20 @@ describe('Result MultiValueText Component', () => {
         return new TestFixture()
           .with(
             addMultiValueText(
-              {field, 'max-values-to-display': maxValuesToDisplay},
+              {
+                field,
+                'max-values-to-display': maxValuesToDisplay,
+                ...(delimiter ? {delimiter} : {}),
+              },
               slot
             )
           )
-          .withCustomResponse((response) => {
-            response.results.forEach((result) => {
-              result.raw[field] = Object.keys(valuesAndCaptions);
-            });
-          })
+          .with(
+            addFieldValueInResponse(
+              field,
+              getFieldValues(Object.keys(valuesAndCaptions))
+            )
+          )
           .withFieldCaptions(field, valuesAndCaptions)
           .withTranslation({'n-more': '{{value}} more'});
       }
@@ -288,6 +303,19 @@ describe('Result MultiValueText Component', () => {
           assertDoesNotDisplayXMoreLabel();
         });
       });
+    }
+
+    describe('when the field value exists & is a string array', () => {
+      testWithValidFieldValue((valuesToTest) =>
+        valuesToTest.map((value) => ` ${value} `)
+      );
+    });
+
+    describe('when the field value exists & is a string', () => {
+      testWithValidFieldValue(
+        (valuesToTest) => valuesToTest.map((value) => ` ${value} `).join(';'),
+        ';'
+      );
     });
   });
 });

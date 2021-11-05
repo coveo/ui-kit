@@ -28,5 +28,17 @@ node('linux && docker') {
         sh 'npm run notify:docs'
       }
     }
+
+    stage('Cloudfront invalidation') {
+      withCredentials([
+        [
+          $class: "AmazonWebServicesCredentialsBinding",
+          credentialsId: "CloudfrontCacheInvalidation",
+        ]
+      ]) {
+          sh 'npm ci';
+          sh 'node ./scripts/invalidate-cloudfront.js'
+      }
+    }
   }
 }

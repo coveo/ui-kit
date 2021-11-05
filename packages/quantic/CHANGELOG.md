@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.81.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.7...@coveo/quantic@0.81.0) (2021-11-03)
+
+
+### Features
+
+* **quantic:** component metadata changes ([#1393](https://github.com/coveo/ui-kit/issues/1393)) ([e076bba](https://github.com/coveo/ui-kit/commit/e076bbad1b52b2cf102a9f409fd2fad1dfb6acfe))
+
+
+
+
+
 ## [0.80.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.6...@coveo/quantic@0.80.7) (2021-11-02)
 
 

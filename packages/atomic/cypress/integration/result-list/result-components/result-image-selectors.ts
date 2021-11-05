@@ -6,6 +6,5 @@ export const ResultImageSelectors = {
   shadow: () => cy.get(resultImageComponent),
   firstInResult: () =>
     ResultListSelectors.firstResult().find(resultImageComponent),
-  resultImage: () =>
-    ResultImageSelectors.firstInResult().find('[part="result-image"]'),
+  resultImage: () => ResultImageSelectors.firstInResult().find('img'),
 };
