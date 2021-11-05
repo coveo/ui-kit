@@ -15,14 +15,17 @@
           <slot name="date"></slot>
         </div>
       </div>
-      <div class="slds-m-vertical_x-small">
-        <slot name="title"></slot>
-      </div>
-      <div class="slds-wrap slds-m-top_x-small slds-size_1-of-1 slds-large-size_12-of-12 slds-text-align_left">
-        <slot name="excerpt"></slot>
-      </div>
-      <div class="slds-wrap slds-m-top_x-small ">
-        <slot name="footer"></slot>
+      <div class="slds-grid slds-size_1-of-1">
+        <slot class="slds-col" name="visual"></slot>
+        <div class="slds-col slds-grid slds-grid_vertical min-width__none">
+          <div class="slds-grid slds-m-bottom_x-small">
+            <slot name="title"></slot>
+          </div>
+          <slot name="metadata"></slot>
+          <slot name="emphasized"></slot>
+          <slot class="slds-wrap slds-text-align_left" name="excerpt"></slot>
+          <slot class="slds-wrap" name="bottom-metadata"></slot>
+        </div>
       </div>
     </lightning-tile>
   </div>

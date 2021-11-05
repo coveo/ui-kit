@@ -21,6 +21,8 @@
     <div slot="excerpt">
       {result.Excerpt}
     </div>
-    <c-quantic-result-printable-uri slot="footer" result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+    <div slot="bottom-metadata" class="slds-m-top_x-small">
+      <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+    </div>
   </c-quantic-result-template>
 </template>

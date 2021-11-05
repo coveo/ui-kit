@@ -18,10 +18,12 @@
     <h3 slot="title" class="slds-truncate result__title" style="font-size:1.1em; font-weight:700">
       <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
     </h3>
+    <p slot="metadata" class="slds-text-body_small" style="color:#3E3E3C">From: {result.raw.sfcreatedbyname}</p>
     <div slot="excerpt" class="slds-col slds-text-align_left slds-p-bottom_xx-small" style="font-weight: 400;">
-      <p class="slds-text-body_small slds-m-bottom_xx-small" style="color:#3E3E3C">From: {result.raw.sfcreatedbyname}</p>
       {result.Excerpt}
     </div>
-    <c-quantic-result-printable-uri slot="footer" result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+    <div slot="bottom-metadata" class="slds-m-top_x-small">
+      <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
+    </div>
   </c-quantic-result-template>
 </template>
