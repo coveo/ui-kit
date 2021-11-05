@@ -126,7 +126,8 @@ export default function defaultResultComponentStory(
 
     const htmlString = renderArgsToHTMLString(
       componentTag,
-      argsFilteredOnResultComponentArgs
+      argsFilteredOnResultComponentArgs,
+      advancedConfig
     );
     return (
       <div>
@@ -140,7 +141,7 @@ export default function defaultResultComponentStory(
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     return `${renderArgsToResultTemplate(
-      renderArgsToHTMLString(componentTag, getArgs()),
+      renderArgsToHTMLString(componentTag, getArgs(), advancedConfig),
       getArgs,
       true
     )}${

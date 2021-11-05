@@ -26,7 +26,11 @@ export default function defaultStory(
     );
 
   const defaultLoader = initializeInterfaceDebounced(() => {
-    const argsToHTMLString = renderArgsToHTMLString(componentTag, getArgs());
+    const argsToHTMLString = renderArgsToHTMLString(
+      componentTag,
+      getArgs(),
+      advancedConfig
+    );
     const additionalMarkupString = advancedConfig.additionalMarkup
       ? advancedConfig.additionalMarkup().strings.join('')
       : '';
@@ -37,7 +41,11 @@ export default function defaultStory(
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
 
-    const htmlString = renderArgsToHTMLString(componentTag, getArgs());
+    const htmlString = renderArgsToHTMLString(
+      componentTag,
+      getArgs(),
+      advancedConfig
+    );
     const styleString = renderShadowPartsToStyleString(componentTag, getArgs());
     return (
       <div>
