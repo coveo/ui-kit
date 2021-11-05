@@ -4,12 +4,10 @@ import {
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
 import {
-  fromLocalIsoDate,
+  DateUtils,
   fromSearchApiDate,
   I18nUtils,
   RelativeDateFormatter,
-  toLocalIsoDate,
-  toLocalSearchApiDate,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
@@ -55,8 +53,6 @@ import apply from '@salesforce/label/c.quantic_Apply';
 
 /**
  * The `QuanticTimeframeFacet` component displays dates as relative ranges.
- * 
- * 
  * @example
  * <c-quantic-timeframe-facet engine-id={engineId} field="Date" label="Indexed Date" is-collapsed with-date-picker>
  *   <c-quantic-timeframe period="past" unit="year" amount="10" label="Past decade"></c-quantic-timeframe>
@@ -162,6 +158,20 @@ export default class QuanticTimeframeFacet extends LightningElement {
     endLabel,
     apply,
   };
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  disconnectedCallback() {
+    this.unsubscribeFacet?.();
+    this.unsubscribeSearchStatus?.();
+    this.unsubscribeDateFilter?.();
+  }
 
   /**
    * Gets whether to show the facet values.
@@ -284,14 +294,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
       : null;
   }
 
-  connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-  }
-
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
-  }
-
   /**
    * @param {SearchEngine} engine 
    */
@@ -322,7 +324,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
         generateAutomaticRanges: false,
         sortCriteria: 'descending',
         filterFacetCount: !this.noFilterFacetCount,
-        injectionDepth: this.injectionDepth,
+        injectionDepth: Number(this.injectionDepth),
         facetId: this.facetId ?? this.field,
       },
     });
@@ -340,18 +342,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
         field: this.field,
         facetId: dateFilterId,
         filterFacetCount: !this.noFilterFacetCount,
-        injectionDepth: this.injectionDepth,
+        injectionDepth: Number(this.injectionDepth),
       },
     });
     this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
       this.updateDateFilterState()
     );
-  }
-
-  disconnectedCallback() {
-    this.unsubscribeFacet?.();
-    this.unsubscribeSearchStatus?.();
-    this.unsubscribeDateFilter?.();
   }
 
   updateSearchStatusState() {
@@ -388,8 +384,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
       const start = new Date(fromSearchApiDate(apiStartDate));
       const end = new Date(fromSearchApiDate(apiEndDate));
 
-      this.startDate = toLocalIsoDate(start);
-      this.endDate = toLocalIsoDate(end);
+      this.startDate = DateUtils.toLocalIsoDate(start);
+      this.endDate = DateUtils.toLocalIsoDate(end);
     } catch (err) {
       // These are most likely relative dates, we can just skip.
     }
@@ -496,8 +492,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     this.enableRangeValidation(false);
 
-    const startDate = fromLocalIsoDate(this.startDatepicker.value, 0, 0, 0);
-    const endDate = fromLocalIsoDate(this.endDatepicker.value, 23, 59, 59);
+    const startDate = DateUtils.fromLocalIsoDate(this.startDatepicker.value, 0, 0, 0);
+    const endDate = DateUtils.fromLocalIsoDate(this.endDatepicker.value, 23, 59, 59);
 
     this.updateRangeInHeadless(startDate, endDate);
   }
@@ -522,8 +518,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     this.dateFilter.setRange(
       CoveoHeadless.buildDateRange({
-        start: toLocalSearchApiDate(startDate),
-        end: toLocalSearchApiDate(endDate),
+        start: DateUtils.toLocalSearchApiDate(startDate),
+        end: DateUtils.toLocalSearchApiDate(endDate),
       })
     );
   }

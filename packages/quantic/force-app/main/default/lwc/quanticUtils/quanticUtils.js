@@ -253,6 +253,84 @@ export class TimeSpan {
   }
 }
 
+export class DateUtils {
+  /**
+   * Converts a date string from the Coveo Search API format to the ISO-8601 format.
+   * Replace `/` characters in date string with `-`.
+   * Replace `@` characters in date string with `T`.
+   * @param {string} dateString
+   * @returns {string}
+   */  
+  static fromSearchApiDate(dateString) {
+    return dateString.replaceAll('/', '-').replaceAll('@', 'T');
+  }
+
+  /**
+   * Converts a date object to the Search API format (`yyyy/MM/dd@hh:mm:ss`), using local time.
+   * @param {Date} date The date object to convert.
+   * @returns {string} The formatted date string.
+   */
+  static toLocalSearchApiDate(date) {
+    const year = date.getFullYear().toString().padStart(4, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+    return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
+  }
+
+  /**
+   * Converts a date to the ISO formatted local date.
+   * @param {Date} date The date to convert.
+   * @returns {string} The formatted date string.
+   */
+  static toLocalIsoDate(date) {
+    const year = date.getFullYear().toString().padStart(4, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+  
+    return `${year}-${month}-${day}T00:00:00`;
+  }
+
+  /**
+   * Parses an ISO-formatted date string to a date object, using the specified local time.
+   * @param {string} dateString The ISO formatted date string.
+   * @param {number} hours The local hours to set on the date.
+   * @param {number} minutes The local minutes to set on the date.
+   * @param {number} seconds The local seconds to set on the date.
+   * @returns {Date} The parsed date.
+   */
+  static fromLocalIsoDate(dateString, hours, minutes, seconds) {
+    const isTimeValid =
+      hours >= 0 &&
+      hours <= 23 &&
+      minutes >= 0 &&
+      minutes <= 59 &&
+      seconds >= 0 &&
+      seconds <= 59;
+    if (!isTimeValid) {
+      throw new Error(
+        'The specified time is invalid. It must be between 00:00:00 and 23:59:59.'
+      );
+    }
+  
+    const timeIdx = dateString.indexOf('T');
+    const withoutTime =
+      timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
+  
+    const time =
+      hours.toString().padStart(2, '0') +
+      ':' +
+      minutes.toString().padStart(2, '0') +
+      ':' +
+      seconds.toString().padStart(2, '0');
+  
+    return new Date(`${withoutTime}T${time}`);
+  }
+}
+
 /**
  * Converts a date string from the Coveo Search API format to the ISO-8601 format.
  * Replace `/` characters in date string with `-`.
@@ -261,72 +339,7 @@ export class TimeSpan {
  * @returns {string}
  */
 export function fromSearchApiDate(dateString) {
-  return dateString.replaceAll('/', '-').replaceAll('@', 'T');
-}
-
-/**
- * Converts a date object to the Search API format (`yyyy/MM/dd@hh:mm:ss`), using local time.
- * @param {Date} date The date object to convert.
- * @returns {string} The formatted date string.
- */
-export function toLocalSearchApiDate(date) {
-  const year = date.getFullYear().toString().padStart(4, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  const seconds = date.getSeconds().toString().padStart(2, '0');
-
-  return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
-}
-
-/**
- * Converts a date to the ISO formatted local date.
- * @param {Date} date The date to convert.
- * @returns {string} The formatted date string.
- */
-export function toLocalIsoDate(date) {
-  const year = date.getFullYear().toString().padStart(4, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-
-  return `${year}-${month}-${day}T00:00:00`;
-}
-
-/**
- * Parses an ISO-formatted date string to a date object, using the specified local time.
- * @param {string} dateString The ISO formatted date string.
- * @param {number} hours The local hours to set on the date.
- * @param {number} minutes The local minutes to set on the date.
- * @param {number} seconds The local seconds to set on the date.
- * @returns {Date} The parsed date.
- */
-export function fromLocalIsoDate(dateString, hours, minutes, seconds) {
-  const isTimeValid =
-    hours >= 0 &&
-    hours <= 23 &&
-    minutes >= 0 &&
-    minutes <= 59 &&
-    seconds >= 0 &&
-    seconds <= 59;
-  if (!isTimeValid) {
-    throw new Error(
-      'The specified time is invalid. It must be between 00:00:00 and 23:59:59.'
-    );
-  }
-
-  const timeIdx = dateString.indexOf('T');
-  const withoutTime =
-    timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
-
-  const time =
-    hours.toString().padStart(2, '0') +
-    ':' +
-    minutes.toString().padStart(2, '0') +
-    ':' +
-    seconds.toString().padStart(2, '0');
-
-  return new Date(`${withoutTime}T${time}`);
+  return DateUtils.fromSearchApiDate(dateString);
 }
 
 /** @typedef {import("coveo").RelativeDate} RelativeDate */

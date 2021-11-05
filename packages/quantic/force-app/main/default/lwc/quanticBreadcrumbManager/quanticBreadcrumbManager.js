@@ -148,9 +148,6 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
-
-    console.log(['formatDateRangeBreadcrumbValue', JSON.stringify(breadcrumb)]);
-
     return {
       ...breadcrumb,
       values: breadcrumb.values.map(range => ({

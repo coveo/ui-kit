@@ -19,6 +19,17 @@ interface TimeframeFacetOptions {
 describe('quantic-timeframe-facet', () => {
   const pageUrl = 's/quantic-timeframe-facet';
 
+  const validRange = {
+    start: '2000-01-01',
+    end: '2000-12-31',
+    filter: '2000/01/01@00:00:00..2000/12/31@23:59:59',
+  };
+  const invalidRange = {
+    start: '2000-12-31',
+    end: '2000-01-01',
+    filter: '2000/12/31@00:00:00..2000/01/01@23:59:59',
+  };
+
   function visitTimeframeFacet(
     options: Partial<TimeframeFacetOptions>,
     waitForSearch = true
@@ -243,13 +254,12 @@ describe('quantic-timeframe-facet', () => {
       });
 
       scope('when specifying a range', () => {
-        Actions.applyRange('2000-12-31', '2001-03-15');
+        Actions.applyRange(validRange.start, validRange.end);
 
         cy.wait(InterceptAliases.Search);
 
-        const range = '2000/12/31@00:00:00..2001/03/15@23:59:59';
-        Expect.urlHashContains('Date_input', range);
-        Expect.logSelectedValue('Date', range);
+        Expect.urlHashContains('Date_input', validRange.filter);
+        Expect.logSelectedValue('Date', validRange.filter);
 
         Expect.displayValues(false);
         Expect.displayClearButton(true);
@@ -268,7 +278,7 @@ describe('quantic-timeframe-facet', () => {
 
       scope('when entering an invalid range', () => {
         scope('invalid start date format', () => {
-          Actions.applyRange('bad start date', '2000-01-01');
+          Actions.applyRange('bad start date', validRange.end);
 
           Expect.validationError(
             'Your entry does not match the allowed format yyyy-MM-dd.'
@@ -276,7 +286,7 @@ describe('quantic-timeframe-facet', () => {
         });
 
         scope('invalid end date format', () => {
-          Actions.applyRange('2000-01-01', 'bad end date');
+          Actions.applyRange(validRange.start, 'bad end date');
 
           Expect.validationError(
             'Your entry does not match the allowed format yyyy-MM-dd.'
@@ -284,22 +294,21 @@ describe('quantic-timeframe-facet', () => {
         });
 
         scope('end date smaller than start date', () => {
-          Actions.applyRange('2000-12-31', '2000-01-01');
+          Actions.applyRange(invalidRange.start, invalidRange.end);
 
-          Expect.validationError('Value must be 2000-01-01 or earlier.');
+          Expect.validationError(
+            `Value must be ${invalidRange.end} or earlier.`
+          );
           Expect.urlHashIsEmpty();
           Expect.displayValues(true);
         });
       });
 
       scope('when entering a valid range', () => {
-        Actions.applyRange('2000-01-01', '2000-12-31');
+        Actions.applyRange(validRange.start, validRange.end);
 
         Expect.noValidationError();
-        Expect.urlHashContains(
-          'Date_input',
-          '2000/01/01@00:00:00..2000/12/31@23:59:59'
-        );
+        Expect.urlHashContains('Date_input', validRange.filter);
         Expect.displayClearButton(true);
         Expect.displayValues(false);
 
@@ -308,10 +317,7 @@ describe('quantic-timeframe-facet', () => {
           () => {
             Actions.submitForm();
 
-            Expect.urlHashContains(
-              'Date_input',
-              '2000/01/01@00:00:00..2000/12/31@23:59:59'
-            );
+            Expect.urlHashContains('Date_input', validRange.filter);
           }
         );
       });
@@ -344,7 +350,7 @@ describe('quantic-timeframe-facet', () => {
             field: 'Date',
             withDatePicker: true,
           },
-          'df[Date_input]=2000/01/01@00:00:00..2000/12/31@23:59:59'
+          'df[Date_input]=' + validRange.filter
         );
 
         Expect.displayLabel(true);
@@ -356,8 +362,8 @@ describe('quantic-timeframe-facet', () => {
         Expect.displayValues(false);
 
         scope('fills datepickers with correct dates', () => {
-          Expect.startInputContains('2000-01-01');
-          Expect.endInputContains('2000-12-31');
+          Expect.startInputContains(validRange.start);
+          Expect.endInputContains(validRange.end);
         });
       });
     });
