@@ -20,6 +20,12 @@ import startLabel from '@salesforce/label/c.quantic_StartLabel';
 import endLabel from '@salesforce/label/c.quantic_EndLabel';
 import apply from '@salesforce/label/c.quantic_Apply';
 
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").DateFacet} DateFacet */
+/** @typedef {import("coveo").DateFacetState} DateFacetState */
+/** @typedef {import("coveo").DateFilter} DateFilter */
+/** @typedef {import("coveo").DateFilterState} DateFilterState */
 /** @typedef {import("coveo").DateRangeRequest} DateRangeRequest */
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
@@ -47,32 +53,98 @@ import apply from '@salesforce/label/c.quantic_Apply';
  * @property {string} label
  */
 
+/**
+ * The `QuanticTimeframeFacet` component displays dates as relative ranges.
+ * 
+ * 
+ * @example
+ * <c-quantic-timeframe-facet engine-id={engineId} field="Date" label="Indexed Date" is-collapsed with-date-picker>
+ *   <c-quantic-timeframe period="past" unit="year" amount="10" label="Past decade"></c-quantic-timeframe>
+ * </c-quantic-timeframe-facet>
+ */
 export default class QuanticTimeframeFacet extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
+  /**
+   * A unique identifier for the facet.
+   * @api
+   * @type {string}
+   * @defaultValue Defaults to the `field` value.
+   */
   @api facetId;
+  /**
+   * Specifies the index field whose values the facet should use.
+   * @api
+   * @type {string}
+   */
   @api field;
+  /**
+   * The non-localized label for the facet. This label is displayed in the facet header.
+   * @api
+   * @type {string}
+   */
   @api label = 'no-label';
+  /**
+   * Whether the facet should display custom range inputs.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api withDatePicker = false;
+  /**
+   * Whether the facet is collapsed.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api get isCollapsed() {
     return this._isCollapsed;
   }
   set isCollapsed(collapsed) {
     this._isCollapsed = collapsed;
   }
+  /**
+   * Whether not to exclude the parents of folded results when estimating the result count for each facet value.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
   @api noFilterFacetCount = false;
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   * @api
+   * @type {number}
+   * @defaultValue `1000`
+   */
   @api injectionDepth = 1000;
 
+  /** @type {DateFacetState} */
   @track facetState;
+  /** @type {DateFilterState} */
   @track dateFilterState;
   showPlaceholder = true;
+  /** @type {string} */
   startDate;
+  /** @type {string} */
   endDate;
 
+  /** @type {SearchStatus} */
   searchStatus;
+  /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {DateFacet} */
   facet;
+  /** @type {Function} */
   unsubscribeFacet;
+  /** @type {DateFilter} */
   dateFilter;
+  /** @type {Function} */
   unsubscribeDateFilter;
 
   _isCollapsed = false;
@@ -216,12 +288,18 @@ export default class QuanticTimeframeFacet extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
+  /**
+   * @param {SearchEngine} engine 
+   */
   initialize = (engine) => {
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
     this.initializeDateFilterController(engine);
   };
 
+  /**
+   * @param {SearchEngine} engine 
+   */
   initializeSearchStatusController(engine) {
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
@@ -229,6 +307,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
     );
   }
 
+  /**
+   * @param {SearchEngine} engine 
+   */
   initializeFacetController(engine) {
     this.facet = CoveoHeadless.buildDateFacet(engine, {
       options: {
@@ -244,6 +325,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeFacet = this.facet.subscribe(() => this.updateFacetState());
   }
 
+  /**
+   * @param {SearchEngine} engine 
+   */
   initializeDateFilterController(engine) {
     const dateFilterId = (this.facetId || this.field) + '_input';
 
@@ -308,8 +392,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
-   *
-   * @param {DateFacetValue} facetValue
+   * Formats the specified date range. The range could use fixed or relative dates.
+   * @param {DateFacetValue} facetValue The date facet value.
+   * @returns {string} The formatted date range.
    */
   formatFacetValue = (facetValue) => {
     try {
@@ -343,6 +428,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
     return `${startDate} - ${endDate}`;
   };
 
+  /**
+   * @param {CustomEvent<{value: string}>} evt 
+   */
   onSelectValue(evt) {
     const item = this.formattedValues.find(
       (value) => value.label === evt.detail.value
@@ -354,6 +442,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this._isCollapsed = !this.isCollapsed;
   }
 
+  /**
+   * @param {Event} evt 
+   */
   preventDefault(evt) {
     evt.preventDefault();
   }
@@ -373,7 +464,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
-   *
    * @param {Event} evt
    */
   handleStartDateChange(evt) {
@@ -382,7 +472,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
-   *
    * @param {Event} evt
    */
   handleEndDateChange(evt) {
@@ -391,7 +480,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
-   *
    * @param {Event} evt
    */
   handleApply(evt) {

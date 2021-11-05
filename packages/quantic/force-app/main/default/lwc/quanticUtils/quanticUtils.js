@@ -159,8 +159,6 @@ export class I18nUtils {
    */
   static formatDate(date) {
     const result = new Intl.DateTimeFormat(LOCALE).format(date);
-    console.log(`formatDate: ${result}`);
-
     return result;
   }
 }
