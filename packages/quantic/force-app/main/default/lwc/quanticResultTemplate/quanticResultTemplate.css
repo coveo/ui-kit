@@ -11,7 +11,7 @@
     align-items: flex-start;
   }
 
-  .main-content {
+  .main-content, .badge__container {
     width: 100%;
   }
 }
