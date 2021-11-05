@@ -719,21 +719,21 @@
         <value>d</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Day component of the date pattern</shortDescription>
+        <shortDescription>Day part of the date pattern</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_DatePatternMonth</fullName>
         <value>M</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Month component of the date pattern</shortDescription>
+        <shortDescription>Month part of the date pattern</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_DatePatternYear</fullName>
         <value>y</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Year component of the date pattern</shortDescription>
+        <shortDescription>Year part of the date pattern</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_StartLabel</fullName>

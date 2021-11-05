@@ -77,7 +77,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   @api facetId;
   /**
-   * Specifies the index field whose values the facet should use.
+   * The index field whose values the facet should use.
    * @api
    * @type {string}
    */
@@ -116,7 +116,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
   @api noFilterFacetCount = false;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * 
+   * 
    * Note: A high injectionDepth may negatively impact the facet request performance.
+   * 
+   * 
    * Minimum: `0`
    * @api
    * @type {number}

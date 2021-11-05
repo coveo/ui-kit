@@ -23,13 +23,13 @@ export default class ExampleQuanticTimeframeFacet extends LightningElement {
     {
       attribute: 'withDatePicker',
       label: 'With date picker',
-      description: 'Indicates whether the date interval can be specified manually.',
+      description: 'Whether the date interval can be specified manually.',
       defaultValue: false
     },
     {
       attribute: 'isCollapsed',
       label: 'Is collapsed',
-      description: 'Indicates whether the facet is initially collapsed.',
+      description: 'Whether the facet is initially collapsed.',
       defaultValue: false
     }
   ];

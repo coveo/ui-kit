@@ -1,31 +1,35 @@
 import { api, LightningElement} from 'lwc';
 
+/**
+ * The `QuanticTimeframe` component defines a timeframe of a `c-quantic-timeframe-facet`, and therefore must be defined within a `c-quantic-timeframe-facet` component.
+ * 
+ * 
+ * A timeframe is a span of time from now to a specific time in the past, or the future.
+ */
 export default class QuanticTimeframe extends LightningElement {
   /**
-   * The relative period of time to now.
+   * The relative period of time.
    * @api
    * @type {'past'|'next'}
-   * @defaultValue Defaults to the `past` value.
+   * @defaultValue `'past'`
    */
   @api period = 'past';
 
   /**
    * The unit used to define:
-   * - the start date of the timeframe, if the period is `past`
+   * - the start date of the timeframe, if the period is `past`.
    * - the end date of the timeframe, if the period is `next`.
    * @api
    * @type {'minute'|'hour'|'day'|'week'|'month'|'quarter'|'year'}
-   * @defaultValue Defaults to `day`.
+   * @defaultValue `'day'`
    */
   @api unit = 'day';
 
   /**
-   * The amount of units from which to count.
-   * 
-   * E.g., 10 days, 1 year, etc.
+   * The amount of the `unit` of time (e.g., `10 days`, `1 year`, etc.).
    * @api
    * @type {number}
-   * @defaultValue Defaults to `1`
+   * @defaultValue `1`
    */
   @api amount = 1;
 
