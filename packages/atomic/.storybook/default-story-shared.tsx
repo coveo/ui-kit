@@ -5,8 +5,6 @@ import {DocsPage} from '@storybook/addon-docs';
 import {TemplateResult} from 'lit-html';
 import {camelToKebab} from '../src/utils/utils';
 import {mapPropsToArgTypes} from './map-props-to-args';
-import {codeSample} from './code-sample/code-sample';
-import {update} from 'lodash';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
 

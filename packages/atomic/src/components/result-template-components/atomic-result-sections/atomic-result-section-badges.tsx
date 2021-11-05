@@ -5,10 +5,10 @@ import {hideEmptySection} from '../../../utils/result-section-utils';
  * This section provides badges that highlight special features of the item.
  *
  * Behavior:
- * * Has a fixed height that depends on the layout, the density, and the screen size.
- * ** You should ensure that elements inside of it have `height: 100%`.
+ * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
+ * ** You should ensure that elements inside of it have `height: var(--line-height)`.
+ * * Is a wrapping flexbox with a gap.
  * * May appear over, next to, or beneath the visual section.
- * * May become horizontally scrollable on mobile.
  */
 @Component({
   tag: 'atomic-result-section-badges',
