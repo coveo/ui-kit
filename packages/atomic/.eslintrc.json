@@ -10,7 +10,8 @@
     "dist/**/*",
     "www/**/*",
     "loader/**/*",
-    "docs/**/*"
+    "docs/**/*",
+    "storybook-static/**/*"
   ],
   "overrides": [
     {"files": "**/*.config.js", "parserOptions": {"sourceType": "module"}}

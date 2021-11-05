@@ -6,7 +6,7 @@ export interface ResultLinkProps {
   interactiveResult: InteractiveResult;
   href: string;
   target: string;
-  part: string;
+  part?: string;
   title?: string;
 }
 
