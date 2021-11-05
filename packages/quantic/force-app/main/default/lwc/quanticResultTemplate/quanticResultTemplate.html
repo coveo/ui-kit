@@ -15,10 +15,10 @@
           <slot name="date"></slot>
         </div>
       </div>
-      <div class="slds-grid slds-size_1-of-1">
-        <slot class="slds-col" name="visual"></slot>
-        <div class="slds-col slds-grid slds-grid_vertical min-width__none">
-          <div class="slds-grid slds-m-bottom_x-small">
+      <div class="slds-grid slds-size_1-of-1 main-content__container">
+        <slot class="slds-col slds-order_1" name="visual"></slot>
+        <div class="slds-col slds-order_2 slds-grid slds-grid_vertical main-content">
+          <div class="slds-m-bottom_x-small">
             <slot name="title"></slot>
           </div>
           <slot name="metadata"></slot>

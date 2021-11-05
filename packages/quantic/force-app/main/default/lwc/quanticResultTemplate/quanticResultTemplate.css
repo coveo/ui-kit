@@ -1,3 +1,17 @@
-.min-width__none {
+.main-content {
   min-width: 0;
+}
+
+/* max-width value comes from SLDS definition of `slds-medium-size`. "See https://www.lightningdesignsystem.com/utilities/grid/#Responsive-Layout-Options.*/
+@media only screen and (max-width: 768px) {
+  .main-content__container {
+    flex-wrap: wrap;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+  }
+
+  .main-content {
+    width: 100%;
+  }
 }
