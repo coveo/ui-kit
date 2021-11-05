@@ -3,6 +3,8 @@ import {LightningElement, api} from "lwc";
 import recommended from '@salesforce/label/c.quantic_Recommended';
 import featured from '@salesforce/label/c.quantic_Featured';
 
+/** @typedef {import("coveo").Result} Result */
+
 /**
  * The `QuanticResultBadge` component displays a badge to be used in result templates.
  * @example
