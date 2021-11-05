@@ -178,7 +178,7 @@ export const fileTypeIcons = {
   spmicrofeedpost: 'standard:picklist_type',
   spmicrofeedlist: 'standard:picklist_type',
   splistfolder: 'standard:folder',
-  youtubevideo: 'standard:video',
-  youtubeplaylistitem: 'standard:video',
-  youtubeplaylist: 'standard:video',
+  youtubevideo: 'custom:custom99',
+  youtubeplaylistitem: 'custom:custom99',
+  youtubeplaylist: 'custom:custom99',
 };
