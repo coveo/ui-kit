@@ -43,13 +43,13 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
     inputMinContains: (value: string) => {
       selector
         .inputMin()
-        .should('contain', value)
+        .should('have.value', Number(value).toLocaleString())
         .logDetail(`the input min should contain "${value}"`);
     },
     inputMaxContains: (value: string) => {
       selector
         .inputMax()
-        .should('contain', value)
+        .should('have.value', Number(value).toLocaleString())
         .logDetail(`the input max should contain "${value}"`);
     },
     displayInputWarning: (length: number) => {

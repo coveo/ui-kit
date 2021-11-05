@@ -1,4 +1,4 @@
-import {configure} from '../../../page-objects/configurator';
+import {configure, reset} from '../../../page-objects/configurator';
 
 import {
   field,
@@ -236,6 +236,8 @@ describe('Numeric Facet Test Suite', () => {
         Expect.numberOfSelectedCheckboxValues(1);
         Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
       });
+
+      reset();
 
       scope('with input', () => {
         loadFromUrlHash(
