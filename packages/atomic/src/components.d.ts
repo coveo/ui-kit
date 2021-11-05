@@ -163,6 +163,10 @@ export namespace Components {
         "label": string;
     }
     interface AtomicFacetManager {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicFacetNumberInput {
         "bindings": Bindings;
@@ -1347,6 +1351,10 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicFacetNumberInput {
         "bindings": Bindings;

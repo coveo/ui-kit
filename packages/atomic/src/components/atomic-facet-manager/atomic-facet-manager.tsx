@@ -1,4 +1,4 @@
-import {Component, h, Element, State} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
@@ -43,6 +43,15 @@ export class AtomicFacetManager implements InitializableComponent {
   public facetManagerState!: FacetManagerState;
   @State() public error!: Error;
 
+  /**
+   * The number of expanded facets inside the manager.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   * Using the value `-1` disables the feature and keeps all facets expanded.
+   */
+  @Prop() public collapseFacetsAfter = 4;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
@@ -57,9 +66,23 @@ export class AtomicFacetManager implements InitializableComponent {
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
+    this.updateCollapsedState(sortedFacets);
 
     this.host.append(...sortedFacets);
   };
+
+  private updateCollapsedState(facets: FacetElement[]) {
+    if (this.collapseFacetsAfter === -1) {
+      return;
+    }
+
+    facets.forEach((facet, index) => {
+      facet.setAttribute(
+        'is-collapsed',
+        index + 1 > this.collapseFacetsAfter ? 'true' : 'false'
+      );
+    });
+  }
 
   private get facets() {
     const facets: FacetElement[] = [];
