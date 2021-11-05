@@ -40,7 +40,8 @@ export function buildTemplateWithSections(
 }
 
 export const addFieldValueInResponse =
-  (field: string, fieldValue: string | null) => (fixture: TestFixture) => {
+  (field: string, fieldValue: string | number | string[] | null) =>
+  (fixture: TestFixture) => {
     fixture.withCustomResponse((response) =>
       response.results.forEach((result) => {
         if (fieldValue === null) {

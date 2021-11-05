@@ -48,6 +48,11 @@ export class AtomicResultMultiText {
    */
   @Prop() public maxValuesToDisplay = 3;
 
+  /**
+   * The delimiter used to separate values when the field isn't indexed as a multi value field.
+   */
+  @Prop() public delimiter: string | null = null;
+
   private sortedValues: string[] | null = null;
 
   public initialize() {
@@ -65,7 +70,7 @@ export class AtomicResultMultiText {
     }
 
     if (Array.isArray(value)) {
-      return value.map((v) => `${v}`);
+      return value.map((v) => `${v}`.trim());
     }
 
     if (typeof value !== 'string' || value.trim() === '') {
@@ -75,7 +80,9 @@ export class AtomicResultMultiText {
       return null;
     }
 
-    return [value];
+    return this.delimiter
+      ? value.split(this.delimiter).map((value) => value.trim())
+      : [value];
   }
 
   private get facetSelectedValues() {
