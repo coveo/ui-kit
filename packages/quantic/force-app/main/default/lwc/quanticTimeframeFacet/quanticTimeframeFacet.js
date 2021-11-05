@@ -30,7 +30,7 @@ import apply from '@salesforce/label/c.quantic_Apply';
  * @property {string} max
  * @property {string} value
  * @property {boolean} required
- * @property {() => boolean} reportValidity
+ * @property {Function} reportValidity
  */
 /**
  * @typedef {Object} TimeframeElement
@@ -393,7 +393,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
   /**
    *
    * @param {Event} evt
-   * @returns
    */
   handleApply(evt) {
     evt.preventDefault();
