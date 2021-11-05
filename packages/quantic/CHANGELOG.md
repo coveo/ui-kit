@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.82.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.81.0...@coveo/quantic@0.82.0) (2021-11-05)
+
+
+### Features
+
+* **quantic:** added ResultList E2E tests ([#1428](https://github.com/coveo/ui-kit/issues/1428)) ([211af9b](https://github.com/coveo/ui-kit/commit/211af9bb2d56444c8e013f456fe70eeebb6a1a21))
+
+
+
+
+
 # [0.81.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.80.7...@coveo/quantic@0.81.0) (2021-11-03)
 
 
