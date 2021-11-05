@@ -48,7 +48,7 @@ export class AtomicFacetManager implements InitializableComponent {
    * Remaining facets are automatically collapsed.
    *
    * Using the value `0` collapses all facets.
-   * Using the value `-1` disables the feature and keeps all facets expanded.
+   * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
    */
   @Prop() public collapseFacetsAfter = 4;
 
