@@ -201,7 +201,7 @@ describe('Numeric Facet Test Suite', () => {
       Expect.displayLabel(false);
     });
   });
-  describe('with is collapsed', () => {
+  describe('with isCollapsed', () => {
     function setupIsCollapsed() {
       visitNumericFacetPage({
         field: defaultField,
@@ -254,11 +254,14 @@ describe('Numeric Facet Test Suite', () => {
   describe('with custom #rangeAlgorithm', () => {
     it('should render correctly', () => {
       function setupWithRangeAlgorithm(rangeAlgorithm: string) {
-        visitNumericFacetPage({
-          field: defaultField,
-          label: defaultLabel,
-          rangeAlgorithm: rangeAlgorithm,
-        });
+        visitNumericFacetPage(
+          {
+            field: defaultField,
+            label: defaultLabel,
+            rangeAlgorithm: rangeAlgorithm,
+          },
+          false
+        );
       }
 
       scope('with #even value option', () => {
