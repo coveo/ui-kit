@@ -222,8 +222,8 @@ describe('Numeric Facet Test Suite', () => {
     });
   });
   describe('with a selected range in the URL', () => {
-    const min = '120';
-    const max = '8000';
+    const min = 120;
+    const max = 8000;
 
     it('should render correctly', () => {
       scope('without input', () => {
@@ -246,8 +246,8 @@ describe('Numeric Facet Test Suite', () => {
         );
 
         Expect.displayFacet(true);
-        Expect.inputMaxContains(max.toString());
-        Expect.inputMinContains(min.toString());
+        Expect.inputMaxContains(max);
+        Expect.inputMinContains(min);
         Expect.displayValues(false);
         Expect.search.numberOfResults(10);
       });
@@ -277,6 +277,22 @@ describe('Numeric Facet Test Suite', () => {
         setupWithRangeAlgorithm('equiprobable');
 
         Expect.displayFacet(true);
+      });
+    });
+  });
+  describe('with custom sorting', () => {
+    ['ascending', 'descending'].forEach((sorting) => {
+      it(`should use "${sorting}" sorting in the facet request`, () => {
+        visitNumericFacetPage(
+          {
+            sortCriteria: sorting,
+          },
+          false
+        );
+        cy.wait(InterceptAliases.Search).then((interception) => {
+          const facetRequest = interception.request.body.facets[0];
+          expect(facetRequest.sortCriteria).to.eq(sorting);
+        });
       });
     });
   });

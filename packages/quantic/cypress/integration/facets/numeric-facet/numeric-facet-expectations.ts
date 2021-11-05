@@ -40,16 +40,16 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
         .should('be.empty')
         .logDetail('the max input should be empty');
     },
-    inputMinContains: (value: string) => {
+    inputMinContains: (value: number) => {
       selector
         .inputMin()
-        .should('have.value', Number(value).toLocaleString())
+        .should('have.value', value.toLocaleString())
         .logDetail(`the input min should contain "${value}"`);
     },
-    inputMaxContains: (value: string) => {
+    inputMaxContains: (value: number) => {
       selector
         .inputMax()
-        .should('have.value', Number(value).toLocaleString())
+        .should('have.value', value.toLocaleString())
         .logDetail(`the input max should contain "${value}"`);
     },
     displayInputWarning: (length: number) => {
