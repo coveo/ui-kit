@@ -12,6 +12,12 @@ import {
 
 export const field = 'ytlikecount';
 
+const getEvenRangeValue = (value: string) => {
+  const start = Number(value.split(' - ')[0].trim());
+  const end = Number(value.split(' - ')[1].trim());
+  return end - start;
+};
+
 const numericFacetExpectations = (selector: AllFacetSelectors) => {
   return {
     displaySearchForm: (display: boolean) => {
@@ -70,6 +76,11 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
       cy.url()
         .should('include', urlHash)
         .logDetail(`the URL hash should contain the range "${value}"`);
+    },
+    displayEqualRange: () => {
+      selector.valueLabel().then((originalValues) => {
+        console.log(getEvenRangeValue(originalValues[0].outerText));
+      });
     },
     logNumericFacetSelect: (value: string) => {
       cy.wait(InterceptAliases.UA.Facet.Select)

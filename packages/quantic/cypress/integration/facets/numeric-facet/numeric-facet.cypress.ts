@@ -56,7 +56,7 @@ describe('Numeric Facet Test Suite', () => {
     interceptSearch();
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
-    // cy.wait(InterceptAliases.Search);
+    cy.wait(InterceptAliases.Search);
   }
 
   describe('with default numeric facet', () => {
@@ -188,13 +188,90 @@ describe('Numeric Facet Test Suite', () => {
         Expect.inputMaxEmpty();
         Expect.inputMinEmpty();
       });
-      scope('with a selected path in the URL', () => {
-        const min = 120;
-        const max = 8000;
-        loadFromUrlHash(defaultSettings, `nf[${field}_input]=${min}..${max}`);
+    });
+  });
+  describe('with field returns no results', () => {
+    before(() => {
+      visitNumericFacetPage({
+        field: 'somethingthatdoesnotexist',
+      });
+    });
+
+    it('should render correctly', () => {
+      Expect.displayLabel(false);
+    });
+  });
+  describe('with is collapsed', () => {
+    function setupIsCollapsed() {
+      visitNumericFacetPage({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        isCollapsed: true,
+      });
+    }
+
+    it('should render correctly', () => {
+      setupIsCollapsed();
+
+      Expect.displayFacet(true);
+      Expect.labelContains(defaultLabel);
+      Expect.displaySearchForm(false);
+      Expect.displayValues(false);
+      Expect.displayExpandButton(true);
+    });
+  });
+  describe('with a selected range in the URL', () => {
+    const min = '120';
+    const max = '8000';
+
+    it('should render correctly', () => {
+      scope('without input', () => {
+        loadFromUrlHash(
+          {
+            field: defaultField,
+          },
+          `nf[${field}]=${min}..${max}`
+        );
+        Expect.numberOfSelectedCheckboxValues(1);
+        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+      });
+
+      scope('with input', () => {
+        loadFromUrlHash(
+          customWithInputSettings,
+          `nf[${field}_input]=${min}..${max}`
+        );
 
         Expect.displayFacet(true);
         Expect.inputMaxContains(max.toString());
+        Expect.inputMinContains(min.toString());
+        Expect.displayValues(false);
+        Expect.search.numberOfResults(10);
+      });
+    });
+  });
+  describe('with custom #rangeAlgorithm', () => {
+    it('should render correctly', () => {
+      function setupWithRangeAlgorithm(rangeAlgorithm: string) {
+        visitNumericFacetPage({
+          field: defaultField,
+          label: defaultLabel,
+          rangeAlgorithm: rangeAlgorithm,
+        });
+      }
+
+      scope('with #even value option', () => {
+        setupWithRangeAlgorithm('even');
+
+        Expect.displayFacet(true);
+        Expect.displayEqualRange();
+      });
+
+      scope('with #equiprobable value option', () => {
+        setupWithRangeAlgorithm('equiprobable');
+
+        Expect.displayFacet(true);
       });
     });
   });
