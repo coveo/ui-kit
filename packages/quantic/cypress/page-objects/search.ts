@@ -80,6 +80,15 @@ export function interceptSearchWithError(
   }).as(InterceptAliases.Search.substring(1));
 }
 
+export function extractResults(
+  response: CyHttpMessages.IncomingResponse | undefined
+) {
+  if (!response || !response.body) {
+    throw new Error('A search response was expected');
+  }
+  return response.body.results;
+}
+
 export function mockNoMoreFacetValues(field: string) {
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {
