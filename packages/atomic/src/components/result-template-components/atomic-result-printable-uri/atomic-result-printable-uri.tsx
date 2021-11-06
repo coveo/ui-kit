@@ -16,12 +16,6 @@ import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
- * @part result-printable-uri-list - A list of results as printable URIs.
- * @part result-printable-uri-list-expanded - The expanded list of printable URIs.
- * @part result-printable-uri-list-element - An element in the list of printable URIs.
- * @part result-printable-uri-link - A clickable link in a printable URI result.
- * @part result-printable-uri-list-ellipsis - The clickable ellipsis of a result URI.
- * @part result-printable-uri-list-separator - The visual separator between each part of the URI.
  */
 @Component({
   tag: 'atomic-result-printable-uri',
@@ -45,7 +39,7 @@ export class AtomicResultPrintableUri {
   @Prop() maxNumberOfParts = 5;
 
   /**
-   * Where to open the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).
    *
    * The following keywords have special meanings:
    *
@@ -76,9 +70,8 @@ export class AtomicResultPrintableUri {
 
   private renderEllipsis() {
     return (
-      <li part="result-printable-uri-list-element">
+      <li>
         <button
-          part="result-printable-uri-list-ellipsis"
           aria-label={this.strings.collapsedUriParts()}
           onClick={(e) => {
             e.preventDefault();
@@ -99,7 +92,7 @@ export class AtomicResultPrintableUri {
       const name = parent.getAttribute('name');
       const uri = parent.getAttribute('uri')!;
       return (
-        <li part="result-printable-uri-list-element">
+        <li>
           {this.renderLink(name, uri)}
           {i === parents.length - 1 ? null : this.renderSeparator()}
         </li>
@@ -110,7 +103,6 @@ export class AtomicResultPrintableUri {
   private renderSeparator() {
     return (
       <atomic-icon
-        part="result-printable-uri-list-separator"
         class="result-printable-uri-separator"
         icon={Arrow}
       ></atomic-icon>
@@ -140,7 +132,6 @@ export class AtomicResultPrintableUri {
         interactiveResult={this.interactiveResult}
         href={uri}
         title={typeof content === 'string' ? content : undefined}
-        part={'result-printable-uri-link'}
         target={this.target}
       >
         {content}
@@ -151,11 +142,7 @@ export class AtomicResultPrintableUri {
   public render() {
     const parents = this.renderParents();
     if (parents.length) {
-      const parts = `result-printable-uri-list${
-        this.listExpanded ? ' result-printable-uri-list-expanded' : ''
-      }`;
-
-      return <ul part={parts}>{parents}</ul>;
+      return <ul>{parents}</ul>;
     }
 
     return this.renderLink(

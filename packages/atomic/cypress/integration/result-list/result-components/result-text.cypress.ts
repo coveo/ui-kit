@@ -124,9 +124,7 @@ describe('Result Text Component', () => {
 
       it('should render the highlighted text', () => {
         ResultTextSelectors.firstInResult().should('have.text', rawValue);
-        ResultTextSelectors.firstInResult()
-          .find('[part="highlight"]')
-          .should('have.text', highlightedValue);
+        ResultTextSelectors.highlight().should('have.text', highlightedValue);
       });
     });
 
@@ -137,9 +135,7 @@ describe('Result Text Component', () => {
 
       it('should render text value with localization', () => {
         ResultTextSelectors.firstInResult().should('have.text', localizedValue);
-        ResultTextSelectors.firstInResult()
-          .find('[part="highlight"]')
-          .should('not.exist');
+        ResultTextSelectors.highlight().should('not.exist');
       });
 
       it('should render text value with localization', () => {
