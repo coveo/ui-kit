@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.83.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.83.0...@coveo/quantic@0.83.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* **quantic:** fix facet manager issue in local dev server ([#1450](https://github.com/coveo/ui-kit/issues/1450)) ([7f0349e](https://github.com/coveo/ui-kit/commit/7f0349e6323f5bd61f115f5093b566d4686bd2c2))
+
+
+
+
+
 # [0.83.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.82.0...@coveo/quantic@0.83.0) (2021-11-08)
 
 
