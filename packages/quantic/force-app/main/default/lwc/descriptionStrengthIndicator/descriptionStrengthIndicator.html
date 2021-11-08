@@ -1,0 +1,19 @@
+<template>
+    <div class="slds-grid">
+        <div class="slds-col slds-p-top_x-small">
+            <lightning-progress-ring size="large" value={progression} variant={variant}></lightning-progress-ring>
+        </div>
+        <div class="slds-col">
+            <h3 class="slds-text-heading_small slds-p-left_small h3_heading">{message}</h3>
+            <lightning-accordion allow-multiple-sections-open class="accordion">
+                <lightning-accordion-section label={helpLabel}>
+                    <p class="slds-m-left_large">
+                        Since when is this problem affecting you?<br />
+                        Is it the first time it is affecting you?<br />
+                        What is it preventing you to achieve?
+                    </p>
+                </lightning-accordion-section>
+            </lightning-accordion>
+        </div>
+    </div>
+</template>
