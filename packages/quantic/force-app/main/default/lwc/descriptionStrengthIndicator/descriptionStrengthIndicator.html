@@ -7,11 +7,13 @@
             <h3 class="slds-text-heading_small slds-p-left_small h3_heading">{message}</h3>
             <lightning-accordion allow-multiple-sections-open class="accordion">
                 <lightning-accordion-section label={helpLabel}>
-                    <p class="slds-m-left_large">
-                        Since when is this problem affecting you?<br />
-                        Is it the first time it is affecting you?<br />
-                        What is it preventing you to achieve?
-                    </p>
+                    <div class="slds-m-left_large">
+                        <slot name="content">
+                            Since when is this problem affecting you?<br />
+                            Is it the first time it is affecting you?<br />
+                            What is it preventing you to achieve?
+                        </slot>
+                    </div>
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
