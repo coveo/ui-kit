@@ -375,4 +375,40 @@ describe('quantic-category-facet', () => {
       Expect.displayShowMoreButton(true);
     });
   });
+  describe('with custom sorting', () => {
+    ['alphanumeric', 'occurrences'].forEach((sorting) => {
+      it(`should use "${sorting}" sorting in the facet request`, () => {
+        visitCategoryFacetPage(
+          {
+            sortCriteria: sorting,
+          },
+          false
+        );
+        cy.wait(InterceptAliases.Search).then((interception) => {
+          const facetRequest = interception.request.body.facets[0];
+          expect(facetRequest.sortCriteria).to.eq(sorting);
+        });
+      });
+    });
+  });
+  describe('with isCollapsed', () => {
+    function setupIsCollapsed() {
+      visitCategoryFacetPage({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        isCollapsed: true,
+      });
+    }
+
+    it('should render correctly', () => {
+      setupIsCollapsed();
+
+      Expect.displayFacet(true);
+      Expect.labelContains(defaultLabel);
+      Expect.displaySearchInput(false);
+      Expect.displayValues(false);
+      Expect.displayExpandButton(true);
+    });
+  });
 });
