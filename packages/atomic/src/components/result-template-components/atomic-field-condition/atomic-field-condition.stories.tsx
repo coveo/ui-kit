@@ -8,7 +8,13 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {},
   FieldConditionDoc,
   {
-    additionalChildMarkup: () => html` Hello world `,
+    additionalChildMarkup: () =>
+      html`
+        <div>
+          This text visibility can be controlled by the field conditions
+          component
+        </div>
+      `,
     additionalMarkup: () =>
       html`
         <div style="margin:20px 0">
