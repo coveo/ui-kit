@@ -546,4 +546,207 @@
         <protected>false</protected>
         <shortDescription>:</shortDescription>
     </labels>
+    <labels>
+        <fullName>quantic_PastHour</fullName>
+        <value>Past hour</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past hour</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastHour_plural</fullName>
+        <value>Past {{0}} hours</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past N hours</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastDay</fullName>
+        <value>Past day</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past day</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastDay_plural</fullName>
+        <value>Past {{0}} days</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past N days</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastWeek</fullName>
+        <value>Past week</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past week</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastWeek_plural</fullName>
+        <value>Past {{0}} weeks</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past N weeks</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastMonth</fullName>
+        <value>Past month</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past month</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastMonth_plural</fullName>
+        <value>Past {{0}} months</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past N months</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastQuarter</fullName>
+        <value>Past quarter</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past quarter</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastQuarter_plural</fullName>
+        <value>Past {{0}} quarters</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past N quarters</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastYear</fullName>
+        <value>Past year</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past year</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_PastYear_plural</fullName>
+        <value>Past {{0}} years</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Past N years</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextHour</fullName>
+        <value>Next hour</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next hour</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextHour_plural</fullName>
+        <value>Next {{0}} hours</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next N hours</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextDay</fullName>
+        <value>Next day</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next day</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextDay_plural</fullName>
+        <value>Next {{0}} days</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next N days</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextWeek</fullName>
+        <value>Next week</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next week</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextWeek_plural</fullName>
+        <value>Next {{0}} weeks</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next N weeks</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextMonth</fullName>
+        <value>Next month</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next month</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextMonth_plural</fullName>
+        <value>Next {{0}} months</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next N months</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextQuarter</fullName>
+        <value>Next quarter</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next quarter</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextQuarter_plural</fullName>
+        <value>Next {{0}} quarters</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next N quarters</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextYear</fullName>
+        <value>Next year</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next year</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextYear_plural</fullName>
+        <value>Next {{0}} years</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next N years</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DatePatternDay</fullName>
+        <value>d</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Day part of the date pattern</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DatePatternMonth</fullName>
+        <value>M</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Month part of the date pattern</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_DatePatternYear</fullName>
+        <value>y</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Year part of the date pattern</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_StartLabel</fullName>
+        <value>Start:</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Timeframe facet start label</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_EndLabel</fullName>
+        <value>End:</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Timeframe facet end label</shortDescription>
+    </labels>
 </CustomLabels>

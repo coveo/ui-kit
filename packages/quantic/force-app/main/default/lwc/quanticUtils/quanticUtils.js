@@ -1,5 +1,9 @@
 import LOCALE from '@salesforce/i18n/locale';
 
+import dayPattern from '@salesforce/label/c.quantic_DatePatternDay';
+import monthPattern from '@salesforce/label/c.quantic_DatePatternMonth';
+import yearPattern from '@salesforce/label/c.quantic_DatePatternYear';
+
 export class Debouncer {
   _timeout;
 
@@ -43,11 +47,11 @@ export class Debouncer {
 export class Deferred {
   constructor() {
     this.promise = new Promise((resolve, reject) => {
-      this.isResolved = false
+      this.isResolved = false;
       this.resolve = (value) => {
         resolve(value);
         this.isResolved = true;
-      }
+      };
       this.reject = reject;
     });
   }
@@ -55,23 +59,22 @@ export class Deferred {
 
 export class ResultUtils {
   /**
-     * Binds the logging of document
-     * @returns An unbind function for the events
-     * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
-     * @param {import("coveo").Result} result The result object
-     * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
-     * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
-     */
+   * Binds the logging of document
+   * @returns An unbind function for the events
+   * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
+   * @param {import("coveo").Result} result The result object
+   * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
+   * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
+   */
   static bindClickEventsOnResult(
     engine,
     result,
     resultElement,
     controllerBuilder,
-    selector = undefined,
+    selector = undefined
   ) {
-
     const interactiveResult = controllerBuilder(engine, {
-      options: { result: JSON.parse(JSON.stringify(result)) },
+      options: {result: JSON.parse(JSON.stringify(result))},
     });
 
     const eventsMap = {
@@ -124,9 +127,39 @@ export class I18nUtils {
   }
 
   static format(stringToFormat, ...formattingArguments) {
-    if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
+    if (typeof stringToFormat !== 'string')
+      throw new Error("'stringToFormat' must be a String");
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
-      (formattingArguments[index] === undefined ? '' : `${formattingArguments[index]}`));
+      (formattingArguments[index] === undefined
+        ? ''
+        : `${formattingArguments[index]}`)
+    );
+  }
+
+  static getShortDatePattern() {
+    const date = new Date(2000, 2, 4); // month is zero-based
+    const dateAsString = I18nUtils.formatDate(date);
+
+    const day = I18nUtils.format(dayPattern);
+    const month = I18nUtils.format(monthPattern);
+    const year = I18nUtils.format(yearPattern);
+
+    return dateAsString
+      .replace('2000', year.repeat(4))
+      .replace('00', year.repeat(2)) // for 2-digits year
+      .replace('03', month.repeat(2))
+      .replace('3', month) // for single-digit month
+      .replace('04', day.repeat(2))
+      .replace('4', day);
+  }
+
+  /**
+   *
+   * @param {Date} date
+   */
+  static formatDate(date) {
+    const result = new Intl.DateTimeFormat(LOCALE).format(date);
+    return result;
   }
 }
 
@@ -203,9 +236,15 @@ export class TimeSpan {
     } else {
       hoursString = hours < 10 ? '0' + hours.toString() : hours.toString();
     }
-    minutesString = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
-    secondsString = seconds < 10 ? '0' + seconds.toString() : seconds.toString();
-    const hhmmss = (hoursString !== '' ? hoursString + ':' : '') + minutesString + ':' + secondsString;
+    minutesString =
+      minutes < 10 ? '0' + minutes.toString() : minutes.toString();
+    secondsString =
+      seconds < 10 ? '0' + seconds.toString() : seconds.toString();
+    const hhmmss =
+      (hoursString !== '' ? hoursString + ':' : '') +
+      minutesString +
+      ':' +
+      secondsString;
     return hhmmss;
   }
 
@@ -214,15 +253,167 @@ export class TimeSpan {
   }
 }
 
+export class DateUtils {
+  /**
+   * Converts a date string from the Coveo Search API format to the ISO-8601 format.
+   * Replace `/` characters in date string with `-`.
+   * Replace `@` characters in date string with `T`.
+   * @param {string} dateString
+   * @returns {string}
+   */  
+  static fromSearchApiDate(dateString) {
+    return dateString.replaceAll('/', '-').replaceAll('@', 'T');
+  }
+
+  /**
+   * Converts a date object to the Search API format (`yyyy/MM/dd@hh:mm:ss`), using local time.
+   * @param {Date} date The date object to convert.
+   * @returns {string} The formatted date string.
+   */
+  static toLocalSearchApiDate(date) {
+    const year = date.getFullYear().toString().padStart(4, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+    return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
+  }
+
+  /**
+   * Converts a date to the ISO formatted local date.
+   * @param {Date} date The date to convert.
+   * @returns {string} The formatted date string.
+   */
+  static toLocalIsoDate(date) {
+    const year = date.getFullYear().toString().padStart(4, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+  
+    return `${year}-${month}-${day}T00:00:00`;
+  }
+
+  /**
+   * Parses an ISO-formatted date string to a date object, using the specified local time.
+   * @param {string} dateString The ISO formatted date string.
+   * @param {number} hours The local hours to set on the date.
+   * @param {number} minutes The local minutes to set on the date.
+   * @param {number} seconds The local seconds to set on the date.
+   * @returns {Date} The parsed date.
+   */
+  static fromLocalIsoDate(dateString, hours, minutes, seconds) {
+    const isTimeValid =
+      hours >= 0 &&
+      hours <= 23 &&
+      minutes >= 0 &&
+      minutes <= 59 &&
+      seconds >= 0 &&
+      seconds <= 59;
+    if (!isTimeValid) {
+      throw new Error(
+        'The specified time is invalid. It must be between 00:00:00 and 23:59:59.'
+      );
+    }
+  
+    const timeIdx = dateString.indexOf('T');
+    const withoutTime =
+      timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
+  
+    const time =
+      hours.toString().padStart(2, '0') +
+      ':' +
+      minutes.toString().padStart(2, '0') +
+      ':' +
+      seconds.toString().padStart(2, '0');
+  
+    return new Date(`${withoutTime}T${time}`);
+  }
+}
+
 /**
  * Converts a date string from the Coveo Search API format to the ISO-8601 format.
  * Replace `/` characters in date string with `-`.
  * Replace `@` characters in date string with `T`.
- * @param {string} dateString 
+ * @param {string} dateString
  * @returns {string}
  */
 export function fromSearchApiDate(dateString) {
-  return dateString
-    .replaceAll('/', '-')
-    .replaceAll('@', 'T');
+  return DateUtils.fromSearchApiDate(dateString);
+}
+
+/** @typedef {import("coveo").RelativeDate} RelativeDate */
+
+import pastHour from '@salesforce/label/c.quantic_PastHour';
+import pastHour_plural from '@salesforce/label/c.quantic_PastHour_plural';
+import pastDay from '@salesforce/label/c.quantic_PastDay';
+import pastDay_plural from '@salesforce/label/c.quantic_PastDay_plural';
+import pastWeek from '@salesforce/label/c.quantic_PastWeek';
+import pastWeek_plural from '@salesforce/label/c.quantic_PastWeek_plural';
+import pastMonth from '@salesforce/label/c.quantic_PastMonth';
+import pastMonth_plural from '@salesforce/label/c.quantic_PastMonth_plural';
+import pastQuarter from '@salesforce/label/c.quantic_PastQuarter';
+import pastQuarter_plural from '@salesforce/label/c.quantic_PastQuarter_plural';
+import pastYear from '@salesforce/label/c.quantic_PastYear';
+import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
+import nextHour from '@salesforce/label/c.quantic_NextHour';
+import nextHour_plural from '@salesforce/label/c.quantic_NextHour_plural';
+import nextDay from '@salesforce/label/c.quantic_NextDay';
+import nextDay_plural from '@salesforce/label/c.quantic_NextDay_plural';
+import nextWeek from '@salesforce/label/c.quantic_NextWeek';
+import nextWeek_plural from '@salesforce/label/c.quantic_NextWeek_plural';
+import nextMonth from '@salesforce/label/c.quantic_NextMonth';
+import nextMonth_plural from '@salesforce/label/c.quantic_NextMonth_plural';
+import nextQuarter from '@salesforce/label/c.quantic_NextQuarter';
+import nextQuarter_plural from '@salesforce/label/c.quantic_NextQuarter_plural';
+import nextYear from '@salesforce/label/c.quantic_NextYear';
+import nextYear_plural from '@salesforce/label/c.quantic_NextYear_plural';
+
+export class RelativeDateFormatter {
+  constructor() {
+    this.singularIndex = 0;
+    this.pluralIndex = 1;
+
+    this.labels = {
+      'past-hour': [pastHour, pastHour_plural],
+      'past-day': [pastDay, pastDay_plural],
+      'past-week': [pastWeek, pastWeek_plural],
+      'past-month': [pastMonth, pastMonth_plural],
+      'past-quarter': [pastQuarter, pastQuarter_plural],
+      'past-year': [pastYear, pastYear_plural],
+      'next-hour': [nextHour, nextHour_plural],
+      'next-day': [nextDay, nextDay_plural],
+      'next-week': [nextWeek, nextWeek_plural],
+      'next-month': [nextMonth, nextMonth_plural],
+      'next-quarter': [nextQuarter, nextQuarter_plural],
+      'next-year': [nextYear, nextYear_plural],
+    };
+  }
+
+  /**
+   *
+   * @param {RelativeDate} begin
+   * @param {RelativeDate} end
+   * @returns {string}
+   */
+  formatRange(begin, end) {
+    const isPastRange = begin.period === 'past' && end.period === 'now';
+    const isNextRange = begin.period === 'now' && end.period === 'next';
+
+    if (!isPastRange && !isNextRange) {
+      throw new Error(
+        'The provided relative date range is invalid. Either "begin" or "end" must have the "period" set to "now".'
+      );
+    }
+
+    const relativeDate = isPastRange ? begin : end;
+    const label =
+      this.labels[`${relativeDate.period}-${relativeDate.unit}`][
+        I18nUtils.isSingular(relativeDate.amount)
+          ? this.singularIndex
+          : this.pluralIndex
+      ];
+
+    return I18nUtils.format(label, relativeDate.amount);
+  }
 }
