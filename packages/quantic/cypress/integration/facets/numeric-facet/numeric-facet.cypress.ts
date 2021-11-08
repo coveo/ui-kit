@@ -95,7 +95,7 @@ describe('Numeric Facet Test Suite', () => {
         visitNumericFacetPage(defaultSettings);
         Actions.checkValueAt(0);
 
-        for (let index = 1; index < 8; index++) {
+        for (let index = 1; index < defaultNumberOfValues; index++) {
           const filterLabel = `Clear ${index + 1} filters`;
           Actions.checkValueAt(index);
           Expect.displayClearButton(true);
