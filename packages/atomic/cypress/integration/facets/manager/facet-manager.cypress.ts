@@ -1,7 +1,7 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import {addFacetManager} from './facet-manager-actions';
 import {
-  assertFacetsNoIsCollapsedState,
+  assertFacetsNoCollapsedAttribute,
   assertHasNumberOfExpandedFacets,
 } from './facet-manager-assertions';
 
@@ -22,6 +22,6 @@ describe('Facet Manager Test Suite', () => {
     new TestFixture()
       .with(addFacetManager({'collapse-facets-after': -1}))
       .init();
-    assertFacetsNoIsCollapsedState();
+    assertFacetsNoCollapsedAttribute();
   });
 });

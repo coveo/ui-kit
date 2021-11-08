@@ -14,7 +14,7 @@ export function assertHasNumberOfExpandedFacets(
     });
 }
 
-export function assertFacetsNoIsCollapsedState() {
+export function assertFacetsNoCollapsedAttribute() {
   cy.get(facetManagerComponent)
     .children()
     .each(($child) => {
