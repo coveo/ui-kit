@@ -48,7 +48,6 @@ export default class QuanticFacetManager extends LightningElement {
   itemTemplate;
 
   hostReadyClass = 'facet-manager__host_ready';
-  tagName = 'c-quantic-facet-manager';
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -103,8 +102,9 @@ export default class QuanticFacetManager extends LightningElement {
   }
 
   getFacetsFromSlot() {
+    const isFacetManager = (tagName) => /-quantic-facet-manager$/i.test(tagName);
     return Array.from(this.querySelectorAll('*'))
-      .filter((element) => element.parentElement.tagName.toLowerCase() === this.tagName);
+      .filter((element) => isFacetManager(element.parentElement.tagName));
   }
 
   moveFacetsToHost() {
