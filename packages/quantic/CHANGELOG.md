@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.83.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.82.0...@coveo/quantic@0.83.0) (2021-11-08)
+
+
+### Bug Fixes
+
+* **quantic:** support facet with child elements in facet manager ([#1443](https://github.com/coveo/ui-kit/issues/1443)) ([9842a2e](https://github.com/coveo/ui-kit/commit/9842a2ea3e61a0184db6622e008e1ce8f89c3964))
+
+
+### Features
+
+* **quantic:** add timeframe facet ([#1438](https://github.com/coveo/ui-kit/issues/1438)) ([d31aab6](https://github.com/coveo/ui-kit/commit/d31aab692230899bc1601ac16bc40ce4e5d6caba))
+
+
+
+
+
 # [0.82.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.81.0...@coveo/quantic@0.82.0) (2021-11-05)
 
 
