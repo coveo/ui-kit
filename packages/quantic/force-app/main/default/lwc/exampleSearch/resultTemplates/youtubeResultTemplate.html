@@ -1,30 +1,28 @@
 <template>
   <c-quantic-result-template>
     <c-quantic-result-label slot="label" result={result}></c-quantic-result-label>
-    <div slot="badges" class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xx-small slds-m-right_small">
+    <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
       <div class="slds-m-right_xx-small">
         <c-quantic-result-badge variant="recommended" result={result}></c-quantic-result-badge>
       </div>
       <c-quantic-result-badge variant="featured" result={result}></c-quantic-result-badge>
     </div>
     <template if:true={resultHasPreview}>
-      <div slot="actions" class="slds-p-right_xx-small">
-        <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
-      </div>
+      <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
     </template>
-    <p slot="date" class="slds-truncate" style="font-weight: 400; font-size:12px; color:#3E3E3C; min-width: 80px;">
+    <p slot="date" class="slds-size_xx-small">
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
-    <h3 slot="title" class="slds-truncate" style="font-size:1.1em; font-weight:700; line-height: 1.1em;">
+    <h3 slot="title">
       <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
     </h3>
     <div slot="visual" class="slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_1-of-4 slds-p-right_x-small slds-m-bottom_x-small">
       <img style="border-radius: 4px; border: none;" src={videoThumbnail}></img>
     </div>
-    <div slot="excerpt" class="slds-grid slds-wrap">
+    <div slot="excerpt">
       {result.Excerpt}
     </div>
-    <div slot="bottom-metadata" class="slds-grid slds-text-align_left slds-m-top_xx-small" style="font-weight: 400; font-size: 10px">
+    <div slot="bottom-metadata" class="slds-grid slds-text-align_left slds-m-top_xx-small" style="font-size: 10px">
       <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
       <span class="slds-m-left_xxx-small">{videoTimeSpan}</span>
     </div>

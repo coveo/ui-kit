@@ -8,14 +8,12 @@
       <c-quantic-result-badge variant="featured" result={result}></c-quantic-result-badge>
     </div>
     <template if:true={resultHasPreview}>
-      <div slot="actions" class="slds-p-right_xx-small">
-        <c-quantic-result-quickview engine-id={engineId} result={result}></c-quantic-result-quickview>
-      </div>
+      <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
     </template>
-    <p slot="date" class="slds-truncate result__date">
+    <p slot="date" class="slds-size_xx-small">
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
-    <h3 slot="title" class="slds-truncate result__title">
+    <h3 slot="title">
       <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
     </h3>
     <div slot="excerpt">
