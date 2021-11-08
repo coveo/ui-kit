@@ -7,10 +7,6 @@
   min-width: 0;
 }
 
-.result-parenturi__container a {
-  white-space: nowrap;
-}
-
 .result-parenturi__container:last-child .result-parenturi__separator {
   display: none;
 }
