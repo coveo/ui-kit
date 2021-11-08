@@ -2,6 +2,7 @@ import {configure} from '../../../page-objects/configurator';
 import {
   InterceptAliases,
   interceptSearch,
+  interceptSearchIndefinitely,
   routeMatchers,
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
@@ -44,6 +45,12 @@ describe('quantic-timeframe-facet', () => {
     }
   }
 
+  function setupWithPauseBeforeSearch() {
+    interceptSearchIndefinitely();
+    cy.visit(pageUrl);
+    configure({});
+  }
+
   function loadFromUrlHash(
     options: Partial<TimeframeFacetOptions> = {},
     urlHash: string
@@ -54,14 +61,9 @@ describe('quantic-timeframe-facet', () => {
   }
 
   it('should show placeholder before search completes', () => {
-    visitTimeframeFacet({}, false);
+    setupWithPauseBeforeSearch();
 
     Expect.displayPlaceholder(true);
-
-    scope('when search request completes', () => {
-      cy.wait(InterceptAliases.Search);
-      Expect.displayPlaceholder(false);
-    });
   });
 
   describe('with default options', () => {

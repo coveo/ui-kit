@@ -5,10 +5,37 @@ import {
   FacetWithValuesSelector,
 } from '../facet-common-selectors';
 import {
-  TimeframeFacetSelector,
   TimeframeFacetSelectors,
   WithDateRangeSelector,
 } from './timeframe-facet-selectors';
+
+function validateUaEvent(
+  requestAlias: string,
+  uaEvent: string,
+  bodyData: Record<string, string | number | boolean>,
+  customData?: Record<string, string | number | boolean>
+) {
+  return cy
+    .wait(requestAlias)
+    .then((interception) => {
+      const analyticsBody = interception.request.body;
+
+      Object.keys(bodyData).forEach((key: string) => {
+        expect(analyticsBody).to.have.property(key, bodyData[key]);
+      });
+
+      if (customData) {
+        expect(analyticsBody).to.have.property('customData');
+        Object.keys(customData).forEach((key) => {
+          expect(analyticsBody.customData).to.have.property(
+            key,
+            customData[key]
+          );
+        });
+      }
+    })
+    .logDetail(`should log the "${uaEvent}" UA event`);
+}
 
 function baseTimeframeFacetExpectations(selector: BaseFacetSelector) {
   return {
@@ -104,34 +131,20 @@ function timeframeFacetWithValuesExpectations(
         .logDetail(`The selected value should be "${value}".`),
 
     logSelectedValue: (field: string, range: string) =>
-      cy
-        .wait(InterceptAliases.UA.Facet.Select)
-        .then((interceptor) => {
-          const analyticsBody = interceptor.request.body;
-
-          expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
-          expect(analyticsBody).to.have.property('customData');
-          const customData = analyticsBody.customData;
-          expect(customData).to.have.property('facetField', field);
-          expect(customData).to.have.property('facetValue', range);
-        })
-        .logDetail('Should log the "facetSelect" UA event.'),
+      validateUaEvent(
+        InterceptAliases.UA.Facet.Select,
+        'facetSelect',
+        {actionCause: 'facetSelect'},
+        {facetField: field, facetValue: range}
+      ),
 
     logClearFilter: (field: string) =>
-      cy
-        .wait(InterceptAliases.UA.Facet.ClearAll)
-        .then((interceptor) => {
-          const analyticsBody = interceptor.request.body;
-
-          expect(analyticsBody).to.have.property(
-            'actionCause',
-            'facetClearAll'
-          );
-          expect(analyticsBody).to.have.property('customData');
-          const customData = analyticsBody.customData;
-          expect(customData).to.have.property('facetField', field);
-        })
-        .logDetail('Should log the "facetClearAll" UA event.'),
+      validateUaEvent(
+        InterceptAliases.UA.Facet.ClearAll,
+        'facetClearAll',
+        {actionCause: 'facetClearAll'},
+        {facetField: field}
+      ),
   };
 }
 
