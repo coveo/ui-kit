@@ -1,0 +1,17 @@
+.h2_heading{
+    font-weight: 600;
+}
+.input_count{
+    top: 0;
+    right: 0.75rem;
+    height: 100%;
+    width: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-weight: 200;
+}
+ .slds-input{
+    padding-right: 4.375rem;
+    height: 2.5rem;
+}
