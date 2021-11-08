@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {logUaEvent} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {
   BaseFacetSelector,
@@ -8,34 +9,6 @@ import {
   TimeframeFacetSelectors,
   WithDateRangeSelector,
 } from './timeframe-facet-selectors';
-
-function validateUaEvent(
-  requestAlias: string,
-  uaEvent: string,
-  bodyData: Record<string, string | number | boolean>,
-  customData?: Record<string, string | number | boolean>
-) {
-  return cy
-    .wait(requestAlias)
-    .then((interception) => {
-      const analyticsBody = interception.request.body;
-
-      Object.keys(bodyData).forEach((key: string) => {
-        expect(analyticsBody).to.have.property(key, bodyData[key]);
-      });
-
-      if (customData) {
-        expect(analyticsBody).to.have.property('customData');
-        Object.keys(customData).forEach((key) => {
-          expect(analyticsBody.customData).to.have.property(
-            key,
-            customData[key]
-          );
-        });
-      }
-    })
-    .logDetail(`should log the "${uaEvent}" UA event`);
-}
 
 function baseTimeframeFacetExpectations(selector: BaseFacetSelector) {
   return {
@@ -131,7 +104,7 @@ function timeframeFacetWithValuesExpectations(
         .logDetail(`The selected value should be "${value}".`),
 
     logSelectedValue: (field: string, range: string) =>
-      validateUaEvent(
+      logUaEvent(
         InterceptAliases.UA.Facet.Select,
         'facetSelect',
         {actionCause: 'facetSelect'},
@@ -139,7 +112,7 @@ function timeframeFacetWithValuesExpectations(
       ),
 
     logClearFilter: (field: string) =>
-      validateUaEvent(
+      logUaEvent(
         InterceptAliases.UA.Facet.ClearAll,
         'facetClearAll',
         {actionCause: 'facetClearAll'},
