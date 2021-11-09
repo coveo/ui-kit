@@ -36,7 +36,8 @@
                       label={labels.min} 
                       variant="label-hidden"
                       placeholder={labels.min}
-                      aria-label={numberInputMinimumLabel}>
+                      aria-label={numberInputMinimumLabel}
+                      onchange={onChangeMin}>
                     </lightning-input>
                   </div>
                   <div class="slds-col">
@@ -49,7 +50,8 @@
                       label={labels.max} 
                       variant="label-hidden" 
                       placeholder={labels.max}
-                      aria-label={numberInputMaximumLabel}>
+                      aria-label={numberInputMaximumLabel}
+                      onchange={onChangeMax}>
                     </lightning-input>
                   </div>
                   <div class="slds-col slds-p-left_none">
