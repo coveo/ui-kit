@@ -96,14 +96,16 @@ describe('Numeric Facet Test Suite', () => {
         Actions.checkValueAt(0);
 
         for (let index = 1; index < defaultNumberOfValues; index++) {
-          const filterLabel = `Clear ${index + 1} filters`;
-          Actions.checkValueAt(index);
-          Expect.displayClearButton(true);
-          Expect.clearFilterContains(filterLabel);
-          Expect.numberOfSelectedCheckboxValues(index + 1);
-          Expect.numberOfIdleCheckboxValues(
-            defaultNumberOfValues - (index + 1)
-          );
+          scope(`when selecting ${index + 1} values`, () => {
+            const filterLabel = `Clear ${index + 1} filters`;
+            Actions.checkValueAt(index);
+            Expect.displayClearButton(true);
+            Expect.clearFilterContains(filterLabel);
+            Expect.numberOfSelectedCheckboxValues(index + 1);
+            Expect.numberOfIdleCheckboxValues(
+              defaultNumberOfValues - (index + 1)
+            );
+          });
         }
       });
 

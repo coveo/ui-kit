@@ -126,6 +126,7 @@ describe('Facet Test Suite', () => {
         cy.wait(InterceptAliases.FacetSearch);
       }
     }
+
     it('should work as expected', () => {
       setupWithValues();
 
