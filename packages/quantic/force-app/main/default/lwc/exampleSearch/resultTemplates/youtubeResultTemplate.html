@@ -13,10 +13,10 @@
     <p slot="date" class="slds-size_xx-small">
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
-    <h3 slot="title" class="slds-truncate" style="line-height: 1.1em;">
+    <h3 slot="title" class="slds-truncate">
       <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
     </h3>
-    <div slot="visual" class="slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_1-of-4 slds-p-right_x-small slds-m-bottom_x-small">
+    <div slot="visual" class="slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_1-of-4 slds-p-right_x-small slds-m-top_xx-small slds-m-bottom_x-small">
       <img style="border-radius: 4px; border: none;" src={videoThumbnail}></img>
     </div>
     <div slot="excerpt">
