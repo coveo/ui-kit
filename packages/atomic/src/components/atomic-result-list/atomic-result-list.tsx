@@ -65,22 +65,18 @@ export class AtomicResultList implements InitializableComponent {
    * A list of fields to include in the query results, separated by commas.
    */
   @Prop() public fieldsToInclude = '';
-
   /**
-   * How results should be displayed.
+   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
   @Prop() display: ResultDisplayLayout = 'list';
-
   /**
-   * How large or small results should be.
+   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
   @Prop() density: ResultDisplayDensity = 'normal';
-
   /**
-   * How large or small the visual section of results should be.
+   * The expected size of the image displayed in the results.
    */
   @Prop() imageSize?: ResultDisplayImageSize;
-
   /**
    * @deprecated use `imageSize` instead.
    */
