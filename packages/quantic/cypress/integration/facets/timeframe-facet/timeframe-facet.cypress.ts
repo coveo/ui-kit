@@ -9,7 +9,6 @@ import {scope} from '../../../reporters/detailed-collector';
 
 import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
-import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
 
 interface TimeframeFacetOptions {
   field: string;
