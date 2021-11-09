@@ -63,7 +63,10 @@
                 </div>  
               </div>
               <div class="slds-col slds-p-top_x-small">
-                <button class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply" type="submit">{labels.apply}</button>
+                <button
+                  class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply"
+                  type="submit"
+                  onblur={resetValidationErrors}>{labels.apply}</button>
               </div>
             </div>
           </form>

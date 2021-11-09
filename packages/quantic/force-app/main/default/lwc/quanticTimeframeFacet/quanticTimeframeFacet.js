@@ -34,7 +34,9 @@ import apply from '@salesforce/label/c.quantic_Apply';
  * @property {string} max
  * @property {string} value
  * @property {boolean} required
+ * @property {Function} checkValidity
  * @property {Function} reportValidity
+ * @property {Function} setCustomValidity
  */
 /**
  * @typedef {Object} TimeframeElement
@@ -290,6 +292,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
       : null;
   }
 
+  get datepickerOverflowMessage() {
+    return `The start date should be earlier than ${this.endDatepicker?.value}`;
+  }
+
   /**
    * @param {SearchEngine} engine 
    */
@@ -449,10 +455,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
     if (this.withDatePicker) {
       this.dateFilter.clear();
 
-      this.startDatepicker.max = '';
-      this.endDatepicker.min = '';
-      this.enableRangeValidation(false);
-      this.isRangeValid();
+      this.disableRangeValidation();
+      this.validateRange();
     }
     this.facet.deselectAll();
 
@@ -464,7 +468,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   handleStartDateChange(evt) {
     evt.preventDefault();
-    this.endDatepicker.min = this.startDatepicker.value;
   }
 
   /**
@@ -472,7 +475,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   handleEndDateChange(evt) {
     evt.preventDefault();
-    this.startDatepicker.max = this.endDatepicker.value;
+
+    // Make sure to remove the time part so the validator can work properly.
+    this.startDatepicker.max = DateUtils.trimIsoTime(this.endDatepicker.value || '');
   }
 
   /**
@@ -481,12 +486,13 @@ export default class QuanticTimeframeFacet extends LightningElement {
   handleApply(evt) {
     evt.preventDefault();
 
-    this.enableRangeValidation(true);
-    if (!this.isRangeValid()) {
+    this.enableRangeValidation();
+    const isRangeValid = this.validateRange();
+    this.disableRangeValidation();
+
+    if (!isRangeValid) {
       return;
     }
-
-    this.enableRangeValidation(false);
 
     const startDate = DateUtils.fromLocalIsoDate(this.startDatepicker.value, 0, 0, 0);
     const endDate = DateUtils.fromLocalIsoDate(this.endDatepicker.value, 23, 59, 59);
@@ -494,14 +500,32 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.updateRangeInHeadless(startDate, endDate);
   }
 
-  enableRangeValidation(enable) {
-    this.startDatepicker.required = enable;
-    this.endDatepicker.required = enable;
+  resetValidationErrors() {
+    this.disableRangeValidation();
+    this.validateRange();
   }
 
-  isRangeValid() {
-    return this.startDatepicker.reportValidity() &&
-      this.endDatepicker.reportValidity();
+  enableRangeValidation() {
+    this.startDatepicker.max = this.endDatepicker.value;
+    this.startDatepicker.required = true;
+    this.endDatepicker.required = true;
+  }
+
+  disableRangeValidation() {
+    this.startDatepicker.setCustomValidity('');
+    this.startDatepicker.required = false;
+
+    this.endDatepicker.required = false;
+  }
+
+  validateRange() {
+    return [
+      this.startDatepicker,
+      this.endDatepicker
+    ].reduce((validSoFar, inputCmp) => {
+      inputCmp.reportValidity();
+      return validSoFar && inputCmp.checkValidity();
+    }, true);
   }
 
   updateRangeInHeadless(startDate, endDate) {

@@ -282,6 +282,7 @@ describe('quantic-timeframe-facet', () => {
         scope('invalid start date format', () => {
           Actions.applyRange('bad start date', validRange.end);
 
+          Expect.numberOfValidationErrors(1);
           Expect.validationError(
             'Your entry does not match the allowed format yyyy-MM-dd.'
           );
@@ -290,6 +291,7 @@ describe('quantic-timeframe-facet', () => {
         scope('invalid end date format', () => {
           Actions.applyRange(validRange.start, 'bad end date');
 
+          Expect.numberOfValidationErrors(1);
           Expect.validationError(
             'Your entry does not match the allowed format yyyy-MM-dd.'
           );
@@ -298,6 +300,7 @@ describe('quantic-timeframe-facet', () => {
         scope('end date smaller than start date', () => {
           Actions.applyRange(invalidRange.start, invalidRange.end);
 
+          Expect.numberOfValidationErrors(1);
           Expect.validationError(
             `Value must be ${invalidRange.end} or earlier.`
           );
@@ -309,7 +312,7 @@ describe('quantic-timeframe-facet', () => {
       scope('when entering a valid range', () => {
         Actions.applyRange(validRange.start, validRange.end);
 
-        Expect.noValidationError();
+        Expect.numberOfValidationErrors(0);
         Expect.urlHashContains('Date_input', validRange.filter);
         Expect.displayClearButton(true);
         Expect.displayValues(false);
