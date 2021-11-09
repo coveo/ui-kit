@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.0...@coveo/atomic@1.11.1) (2021-11-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.10...@coveo/atomic@1.11.0) (2021-11-08)
+
+
+### Bug Fixes
+
+* **atomic:** made badges wrap on small screens ([#1434](https://github.com/coveo/ui-kit/issues/1434)) ([b73650f](https://github.com/coveo/ui-kit/commit/b73650f709e6d2b4714b729b0e406acd3d42c9b6))
+* **atomic:** made table results more responsive ([#1433](https://github.com/coveo/ui-kit/issues/1433)) ([ac6db47](https://github.com/coveo/ui-kit/commit/ac6db47a56a8315f7742691abbdf640c199c7aa6))
+* **atomic:** removed tailwindcss/base from result-multi-value-text component ([#1432](https://github.com/coveo/ui-kit/issues/1432)) ([21798bf](https://github.com/coveo/ui-kit/commit/21798bf9bffaebe13cb3e713dedc3394f340ce88))
+* **atomic:** stop escaping platform URL for query error ([#1426](https://github.com/coveo/ui-kit/issues/1426)) ([b7986d4](https://github.com/coveo/ui-kit/commit/b7986d4f7612782bb9011d24306caa2a23e21c81))
+
+
+### Features
+
+* **atomic:** added preprocessing for field values in atomic-result-multi-value-text ([#1436](https://github.com/coveo/ui-kit/issues/1436)) ([197ece1](https://github.com/coveo/ui-kit/commit/197ece1e8a6d3b62631eb4f0c55ef324e3c583fc))
+* **atomic:** dynamically collapse facets in facet manager ([#1440](https://github.com/coveo/ui-kit/issues/1440)) ([3b1bb4f](https://github.com/coveo/ui-kit/commit/3b1bb4f0061b194e013cd536704895681ee68786))
+
+
+
+
+
 ## [1.10.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.10.1...@coveo/atomic@1.10.2) (2021-11-05)
 
 **Note:** Version bump only for package @coveo/atomic

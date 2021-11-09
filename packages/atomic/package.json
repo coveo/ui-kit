@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.10.2",
+  "version": "1.11.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -37,7 +37,7 @@
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
-    "build:storybook": "npm run storybook:lit-analyze && build-storybook",
+    "build:storybook": "npm run storybook:lit-analyze && build-storybook && cp -r dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx"
   },
   "dependencies": {
@@ -63,9 +63,10 @@
     "@stencil/core": "2.9",
     "@stencil/postcss": "2.0.0",
     "@stencil/store": "1.4.1",
-    "@storybook/addon-actions": "^6.3.12",
+    "@storybook/addon-controls": "^6.3.12",
+    "@storybook/addon-docs": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
-    "@storybook/addon-links": "^6.3.12",
+    "@storybook/addon-viewport": "^6.3.12",
     "@storybook/api": "^6.3.12",
     "@storybook/html": "^6.3.12",
     "@types/dompurify": "^2.3.1",

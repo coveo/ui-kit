@@ -1,5 +1,6 @@
 const selectors = {
   try: 'lightning-button[data-cy="cfg-try"]',
+  reset: 'lightning-button[data-cy="cfg-reset"]',
 };
 
 const getInputSelector = (field: string): string =>
@@ -20,3 +21,5 @@ export const configure = (
     .click()
     .get('slot[name="preview"]', {timeout: 30000});
 };
+
+export const reset = () => cy.get(selectors.reset).click();
