@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.84.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.83.2...@coveo/quantic@0.84.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* **quantic:** hide timeframe facet when results do not match the specified timeframes ([#1459](https://github.com/coveo/ui-kit/issues/1459)) ([eebf443](https://github.com/coveo/ui-kit/commit/eebf44305d928eaca82928c146d98084668e1988))
+
+
+### Features
+
+* **quantic:** removed delimitingCharacter ([#1458](https://github.com/coveo/ui-kit/issues/1458)) ([67c5f91](https://github.com/coveo/ui-kit/commit/67c5f91170e3713193c3c8bcae3ba99f47dde80f))
+
+
+
+
+
 ## [0.83.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.83.1...@coveo/quantic@0.83.2) (2021-11-09)
 
 
