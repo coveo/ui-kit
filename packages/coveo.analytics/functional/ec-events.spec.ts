@@ -848,6 +848,11 @@ describe('ec events', () => {
                 contentId: 123,
                 contentIdKey: 'bloup',
                 contentType: 'fish',
+                searchHub: 'searchhub',
+                tab: 'tab',
+                searchUid: 'searchuid',
+                permanentId: 'somethingsomething',
+                contentLocale: 'en-us',
                 invalidOne: 'nope',
             });
 
@@ -859,6 +864,11 @@ describe('ec events', () => {
                 contentId: 123,
                 contentIdKey: 'bloup',
                 contentType: 'fish',
+                searchHub: 'searchhub',
+                tab: 'tab',
+                searchUid: 'searchuid',
+                permanentId: 'somethingsomething',
+                contentLocale: 'en-us',
             });
         });
     });

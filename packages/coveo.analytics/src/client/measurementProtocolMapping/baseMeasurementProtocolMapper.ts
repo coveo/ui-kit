@@ -34,8 +34,17 @@ const contextInformationMapping: {[key in keyof DefaultContextInformation]: stri
     time: 'tm',
 };
 
-/* Those are extension keys that are supported by the collect protocol. They will be forwarded as-is. */
-const coveoExtensionsKeys = ['contentId', 'contentIdKey', 'contentType'];
+/* Those are extension keys that are supported by the Coveo collect protocol (but not Google's protocol). They will be forwarded as-is. */
+const coveoExtensionsKeys = [
+    'contentId',
+    'contentIdKey',
+    'contentType',
+    'searchHub',
+    'tab',
+    'searchUid',
+    'permanentId',
+    'contentLocale',
+];
 
 export const baseMeasurementProtocolKeysMapping: {[name: string]: string} = {
     ...globalParamKeysMapping,
