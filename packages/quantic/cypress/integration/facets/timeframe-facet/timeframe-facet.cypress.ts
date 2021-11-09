@@ -9,6 +9,7 @@ import {scope} from '../../../reporters/detailed-collector';
 
 import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
+import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
 
 interface TimeframeFacetOptions {
   field: string;
@@ -370,6 +371,49 @@ describe('quantic-timeframe-facet', () => {
           Expect.startInputContains(validRange.start);
           Expect.endInputContains(validRange.end);
         });
+      });
+    });
+  });
+
+  describe('when no results match the timeframe facet', () => {
+    function interceptNoResultsForFacet() {
+      cy.intercept(routeMatchers.search, (req) => {
+        req.continue((res) => {
+          const facet = res.body.facets.find((f) => f.facetId === 'Date');
+          if (facet) {
+            facet.values.forEach((v) => {
+              v.numberOfResults = 0;
+            });
+          }
+          res.send();
+        });
+      }).as(InterceptAliases.Search.substring(1));
+    }
+
+    function setupWithNoResultsMatchingFacet(
+      options: Partial<TimeframeFacetOptions>
+    ) {
+      interceptNoResultsForFacet();
+      cy.visit(pageUrl);
+      configure(options);
+      cy.wait(InterceptAliases.Search);
+    }
+
+    describe('when with-date-picker is false', () => {
+      it('should hide the facet', () => {
+        setupWithNoResultsMatchingFacet({});
+
+        Expect.displayLabel(false);
+      });
+    });
+
+    describe('when with-date-picker is true', () => {
+      it('should show the facet', () => {
+        setupWithNoResultsMatchingFacet({
+          withDatePicker: true,
+        });
+
+        Expect.displayLabel(true);
       });
     });
   });

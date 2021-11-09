@@ -176,7 +176,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * Gets whether to show the facet.
    */
   get showFacet() {
-    return this.hasResults || this.hasActiveValues || !!this.dateFilterState.range;
+    const facetIsActivated = this.hasActiveValues || !!this.dateFilterState.range;
+    const canRefineWithCustomRange = this.hasResults && this.withDatePicker;
+    const canRefineWithTimeframes = this.hasResults && this.formattedValues.length > 0;
+
+    return facetIsActivated || canRefineWithCustomRange || canRefineWithTimeframes;
   }
 
   /**
