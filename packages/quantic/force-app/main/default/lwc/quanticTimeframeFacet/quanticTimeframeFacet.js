@@ -127,6 +127,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   /** @type {DateFilterState} */
   @track dateFilterState;
   showPlaceholder = true;
+  hasResults = false;
   /** @type {string} */
   startDate;
   /** @type {string} */
@@ -169,6 +170,13 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeFacet?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeDateFilter?.();
+  }
+
+  /**
+   * Gets whether to show the facet.
+   */
+  get showFacet() {
+    return this.hasResults || this.hasActiveValues || !!this.dateFilterState.range;
   }
 
   /**
@@ -234,7 +242,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     const values = this.facetState?.values || [];
 
     return values
-      .filter((value) => value.numberOfResults > 0)
+      .filter((value) => value.numberOfResults > 0 || value.state === 'selected')
       .map((value) => ({
         ...value,
         label: this.formatFacetValue(value),
@@ -290,10 +298,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
     return this.withDatePicker
       ? this.template.querySelector('.timeframe-facet__end-input')
       : null;
-  }
-
-  get datepickerOverflowMessage() {
-    return `The start date should be earlier than ${this.endDatepicker?.value}`;
   }
 
   /**
@@ -356,6 +360,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.showPlaceholder =
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+
+    this.hasResults = this.searchStatus.state.hasResults;
   }
 
   updateFacetState() {
@@ -506,7 +512,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   enableRangeValidation() {
-    this.startDatepicker.max = this.endDatepicker.value;
+    this.startDatepicker.max = DateUtils.trimIsoTime(this.endDatepicker.value || '');
     this.startDatepicker.required = true;
     this.endDatepicker.required = true;
   }

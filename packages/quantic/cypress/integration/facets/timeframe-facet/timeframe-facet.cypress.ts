@@ -373,4 +373,82 @@ describe('quantic-timeframe-facet', () => {
       });
     });
   });
+
+  describe('when no results found', () => {
+    function interceptNoSearchResults() {
+      cy.intercept(routeMatchers.search, (req) => {
+        req.continue((res) => {
+          res.body.results = [];
+          res.body.totalCount = 0;
+          res.body.totalCountFiltered = 0;
+
+          const facet = res.body.facets.find((f) => f.facetId === 'Date');
+          if (facet) {
+            facet.values.forEach((v) => {
+              const range = validRange.filter.split('..');
+              v.numberOfResults = 0;
+
+              if (v.start === range[0] && v.end === range[1]) {
+                v.state = 'selected';
+              }
+            });
+          }
+
+          res.send();
+        });
+      }).as(InterceptAliases.Search.substring(1));
+    }
+
+    function setupWithNoResults(options: Partial<TimeframeFacetOptions>) {
+      interceptNoSearchResults();
+      cy.visit(pageUrl);
+      configure(options);
+      cy.wait(InterceptAliases.Search);
+    }
+
+    function loadFromUrlHashWithNoResults(
+      options: Partial<TimeframeFacetOptions>,
+      urlHash: string
+    ) {
+      interceptNoSearchResults();
+      cy.visit(`${pageUrl}#${urlHash}`);
+      configure(options);
+      cy.wait(InterceptAliases.Search);
+    }
+
+    it('should not display facet', () => {
+      setupWithNoResults({
+        withDatePicker: true,
+      });
+
+      Expect.displayPlaceholder(false);
+      Expect.displayLabel(false);
+    });
+
+    it('should display facet if custom range is specified', () => {
+      loadFromUrlHashWithNoResults(
+        {
+          withDatePicker: true,
+        },
+        `df[Date_input]=${validRange.filter}`
+      );
+
+      Expect.displayPlaceholder(false);
+      Expect.displayLabel(true);
+      Expect.displayStartInput(true);
+      Expect.displayEndInput(true);
+      Expect.displayApplyButton(true);
+      Expect.displayValues(false);
+    });
+
+    it('should display facet if timeframe is specified', () => {
+      loadFromUrlHashWithNoResults({}, 'df[Date]=past-1-year..now');
+
+      Expect.displayPlaceholder(false);
+      Expect.displayLabel(true);
+      Expect.displayValues(true);
+      Expect.numberOfSelectedValues(1);
+      Expect.numberOfValues(1);
+    });
+  });
 });
