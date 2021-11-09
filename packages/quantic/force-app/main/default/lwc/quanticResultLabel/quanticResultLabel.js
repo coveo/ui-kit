@@ -4,6 +4,9 @@ import documentation from '@salesforce/label/c.quantic_Documentation';
 import message from '@salesforce/label/c.quantic_Message';
 import video from '@salesforce/label/c.quantic_Video';
 
+import {objectTypeIcons} from './icons/objectTypeIcons';
+import {fileTypeIcons} from './icons/fileTypeIcons';
+
 const KNOWLEDGE='Knowledge';
 const CHATTER='Chatter';
 
@@ -116,52 +119,12 @@ export default class QuanticResultLabel extends LightningElement {
 
   get objectTypeIcon() {
     const objType = this.result.raw.objecttype?.toLowerCase();
-    if (!objType) {
-      return undefined;
-    }
-
-    const defaultIcon = `standard:${objType}`;
-    const iconMap = {
-      'feeditem': 'standard:post',
-      'how_to': 'standard:question_feed',
-      'message': 'standard:note',
-      'city': 'standard:address',
-      'continent': 'standard:location',
-      'kb_knowledge': 'standard:knowledge',
-      'item': 'standard:feed',
-      'blogpost': 'standard:news',
-      'attachment': 'doctype:attachment',
-      'board': 'standard:dashboard_ea',
-      'casecomment': 'standard:case_comment',
-      'collaborationgroup': 'standard:team_member',
-      'contentversion': 'standard:drafts',
-      'goal': 'standard:goals',
-      'invoice': 'standard:partner_fund_claim',
-      'doc': 'doctype:word',
-    };
-
-    const icon = iconMap[objType];
-    return icon ?? defaultIcon;
+    return objectTypeIcons[objType];
   }
 
   get fileTypeIcon() {
     const fileType = this.result.raw.filetype?.toLowerCase();
-    if (!fileType) {
-      return undefined;
-    }
-
-    const defaultIcon = `doctype:${fileType}`;
-    const iconMap = {
-      'youtubevideo': 'custom:custom99',
-      'youtubeplaylist': 'custom:custom99',
-      'kb_knowledge': 'standard:knowledge',
-      'problem': 'standard:problem',
-      'doc': 'doctype:word',
-      'xls': 'doctype:excel',
-    }
-
-    const icon = iconMap[fileType];
-    return icon ?? defaultIcon;
+    return fileTypeIcons[fileType];
   }
 
   get objectTypeLabel() {
