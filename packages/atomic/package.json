@@ -37,7 +37,7 @@
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
-    "build:storybook": "npm run storybook:lit-analyze && build-storybook && cp -r dist/ storybook-static/",
+    "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx"
   },
   "dependencies": {
@@ -89,6 +89,7 @@
     "lit-analyzer": "^1.2.1",
     "lit-html": "^2.0.1",
     "lodash": "^4.17.21",
+    "ncp": "^2.0.0",
     "postcss-import": "14.0.2",
     "postcss-mixins": "8.1.0",
     "postcss-nested": "5.0.6",
