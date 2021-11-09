@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.83.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.83.1...@coveo/quantic@0.83.2) (2021-11-09)
+
+
+### Bug Fixes
+
+* **quantic:** added result-template sections and icon maps ([#1442](https://github.com/coveo/ui-kit/issues/1442)) ([40ffb83](https://github.com/coveo/ui-kit/commit/40ffb838f76808ea1e12c6699fbeaa02d72916bd))
+* **quantic:** added truncate and removed placeholder min-width ([#1452](https://github.com/coveo/ui-kit/issues/1452)) ([4beeec4](https://github.com/coveo/ui-kit/commit/4beeec487eb9f2bce6aec157606afd5240b00da6))
+* **quantic:** fixed validation bug with numeric facet ([#1457](https://github.com/coveo/ui-kit/issues/1457)) ([d1bca6e](https://github.com/coveo/ui-kit/commit/d1bca6e5b36374ae425e4c850b45967d79536dab))
+* **quantic:** remove timeframe facet from community builder ([#1451](https://github.com/coveo/ui-kit/issues/1451)) ([ddc9c6c](https://github.com/coveo/ui-kit/commit/ddc9c6c79aebd9b2f204712d4ce220732b9c5314))
+* **quantic:** removed onchange handlers causing error ([#1454](https://github.com/coveo/ui-kit/issues/1454)) ([aebb895](https://github.com/coveo/ui-kit/commit/aebb895b2dfdc90ddb11dc379bede7399033e776))
+* **quantic:** various timeframe facet issues ([#1456](https://github.com/coveo/ui-kit/issues/1456)) ([9df126c](https://github.com/coveo/ui-kit/commit/9df126c167f3b8b54f621dff5512bc8acfc4b85d))
+
+
+
+
+
 ## [0.83.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.83.0...@coveo/quantic@0.83.1) (2021-11-08)
 
 
