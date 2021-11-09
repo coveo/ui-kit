@@ -44,7 +44,7 @@ export default class DescriptionStrengthIndicator extends LightningElement {
      */
     @api
     set progression(progression) {
-        this._progression = progression;
+        this._progression = progression <= 100 ? progression : 100;
     }
     /**
      * Returns the progression
@@ -61,6 +61,6 @@ export default class DescriptionStrengthIndicator extends LightningElement {
      */
     @api
     progress() {
-        this._progression = (this._progression < 100) ? this._progression + 25 : this._progression;
+        this._progression = (this._progression <= 75) ? this._progression + 25 : 100;
     }
 }
