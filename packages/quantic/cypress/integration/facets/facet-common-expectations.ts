@@ -9,69 +9,85 @@ import {
 
 export function baseFacetExpectations(selector: BaseFacetSelector) {
   return {
+    displayFacet: (display: boolean) => {
+      selector
+        .get()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the facet`);
+    },
     displayLabel: (display: boolean) => {
-      it(`${should(display)} display the facet`, () => {
-        selector.label().should(display ? 'exist' : 'not.exist');
-      });
+      selector
+        .label()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the facet`);
     },
 
     labelContains: (label: string) => {
-      it(`should have the label "${label}"`, () => {
-        selector.label().contains(label);
-      });
+      selector
+        .label()
+        .contains(label)
+        .logDetail(`should have the label "${label}"`);
     },
 
     displayValues: (display: boolean) => {
-      it(`${should(display)} display facet values`, () => {
-        selector.values().should(display ? 'exist' : 'not.exist');
-      });
+      selector
+        .values()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display facet values`);
     },
 
     displayPlaceholder: (display: boolean) => {
-      it(`${should(display)} display the facet placeholder`, () => {
-        selector.placeholder().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .placeholder()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display the facet placeholder`);
     },
 
     displayClearButton: (display: boolean) => {
-      it(`${should(display)} display a clear filter button`, () => {
-        selector.clearFilterButton().should(display ? 'exist' : 'not.exist');
-      });
+      selector
+        .clearFilterButton()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display a clear filter button`);
     },
 
     clearFilterContains: (value: string) => {
-      it(`should display a clear filter button with text "${value}"`, () => {
-        selector.clearFilterButton().should('contain', value);
-      });
+      selector
+        .clearFilterButton()
+        .should('contain', value)
+        .logDetail(`should display a clear filter button with text "${value}"`);
     },
 
     facetValueContains: (value: string) => {
-      it(`should contain "${value}" facet value`, () => {
-        selector.valueLabel().contains(value);
-      });
+      selector
+        .valueLabel()
+        .contains(value)
+        .logDetail(`should contain "${value}" facet value`);
     },
 
     displayCollapseButton: (display: boolean) => {
-      it(`${should(display)} display the collapse button`, () => {
-        selector.collapseButton().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .collapseButton()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display the collapse button`);
     },
 
     displayExpandButton: (display: boolean) => {
-      it(`${should(display)} display the expand button`, () => {
-        selector.expandButton().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .expandButton()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display the expand button`);
     },
 
     numberOfValues: (value: number) => {
-      it(`should display ${value} facet values`, () => {
-        selector.values().should('have.length', value);
-      });
+      selector
+        .values()
+        .should('have.length', value)
+        .logDetail(`should display ${value} facet values`);
     },
 
     facetValuesEqual: (responseValuesAlias: string) => {
-      it('should contain facet values in specific order', () => {
-        cy.get(responseValuesAlias).then((responseValues) => {
+      cy.get(responseValuesAlias)
+        .then((responseValues) => {
           selector
             .valueLabel()
             .should('have.length', responseValues.length)
@@ -81,13 +97,13 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
               );
             })
             .should('deep.equal', responseValues);
-        });
-      });
+        })
+        .logDetail('should contain facet values in specific order');
     },
 
     logClearFacetValues: (field: string) => {
-      it('should log the facet clear all to UA', () => {
-        cy.wait(InterceptAliases.UA.Facet.ClearAll).then((interception) => {
+      cy.wait(InterceptAliases.UA.Facet.ClearAll)
+        .then((interception) => {
           const analyticsBody = interception.request.body;
           expect(analyticsBody).to.have.property(
             'actionCause',
@@ -97,8 +113,19 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
             'facetField',
             field
           );
-        });
-      });
+        })
+        .logDetail('should log the "facetClearAll" UA event');
+    },
+    logFacetLoad: () => {
+      cy.wait(InterceptAliases.UA.Load)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property(
+            'actionCause',
+            'interfaceLoad'
+          );
+        })
+        .logDetail('should log the "interfaceLoad" UA event');
     },
   };
 }
@@ -106,44 +133,50 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
 export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
   return {
     selectedValuesContain: (value: string) => {
-      it(`${value} should be selected`, () => {
-        selector.selectedValue().should('contain', value);
-      });
+      selector
+        .selectedValue()
+        .should('contain', value)
+        .logDetail(`${value} should be selected`);
     },
 
     numberOfSelectedCheckboxValues: (value: number) => {
-      it(`should display ${value} selected checkbox values`, () => {
-        selector.selectedCheckbox().should('have.length', value);
-      });
+      selector
+        .selectedCheckbox()
+        .should('have.length', value)
+        .logDetail(`should display ${value} selected checkbox values`);
     },
 
     numberOfIdleCheckboxValues: (value: number) => {
-      it(`should display ${value} idle checkbox values`, () => {
-        selector.idleCheckbox().should('have.length', value);
-      });
+      selector
+        .idleCheckbox()
+        .should('have.length', value)
+        .logDetail(`should display ${value} idle checkbox values`);
     },
 
     hasCheckbox: (display: boolean) => {
-      it(`${should(display)} display facet values with checkboxes`, () => {
-        selector.checkbox().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .checkbox()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display facet values with checkboxes`);
     },
 
     numberOfSelectedLinkValues: (value: number) => {
-      it(`should display ${value} selected link values`, () => {
-        selector.selectedValue().should('have.length', value);
-      });
+      selector
+        .selectedValue()
+        .should('have.length', value)
+        .logDetail(`should display ${value} selected link values`);
     },
 
     numberOfIdleLinkValues: (value: number) => {
-      it(`should display ${value} idle link values`, () => {
-        selector.idleValue().should('have.length', value);
-      });
+      selector
+        .idleValue()
+        .should('have.length', value)
+        .logDetail(`should display ${value} idle link values`);
     },
 
     logFacetSelect: (field: string, selectedValueIndex: number) => {
-      it('should log the facet select results to UA ', () => {
-        cy.wait(InterceptAliases.UA.Facet.Select).then((intercept) => {
+      cy.wait(InterceptAliases.UA.Facet.Select)
+        .then((intercept) => {
           const analyticsBody = intercept.request.body;
           expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
           expect(analyticsBody.customData).to.have.property(
@@ -166,8 +199,8 @@ export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
                 txt
               );
             });
-        });
-      });
+        })
+        .logDetail('should log the "facetSelect" UA event');
     },
   };
 }
@@ -175,69 +208,80 @@ export function facetWithValuesExpectations(selector: FacetWithValuesSelector) {
 export function facetWithSearchExpectations(selector: FacetWithSearchSelector) {
   return {
     displaySearchInput: (display: boolean) => {
-      it(`${should(display)} display the facet search input`, () => {
-        selector.searchInput().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .searchInput()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display the facet search input`);
     },
 
     displaySearchClearButton: (display: boolean) => {
-      it(`${should(display)} display the facet search clear button`, () => {
-        selector
-          .searchClearButton()
-          .should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .searchClearButton()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display the facet search clear button`);
     },
 
     highlightsResults: (query: string) => {
-      it(`should highlight the results with the query "${query}"`, () => {
-        selector.valueHighlight().each((element) => {
+      selector
+        .valueHighlight()
+        .each((element) => {
           const text = element.text().toLowerCase();
           expect(text).to.eq(query.toLowerCase());
-        });
-      });
+        })
+        .logDetail(`should highlight the results with the query "${query}"`);
     },
 
     searchInputEmpty: () => {
-      it('the search input should be empty', () => {
-        selector.searchInput().invoke('val').should('be.empty');
-      });
+      selector
+        .searchInput()
+        .invoke('val')
+        .should('be.empty')
+        .logDetail('the search input should be empty');
     },
 
     displayMoreMatchesFound: (display: boolean) => {
-      it(`${should(display)} display the "More matches for" label`, () => {
-        selector.moreMatches().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .moreMatches()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display the "More matches for" label`);
     },
 
     displayNoMatchesFound: (display: boolean) => {
-      it(`${should(display)} display the "No matches found for" label`, () => {
-        selector.noMatches().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .noMatches()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(
+          `${should(display)} display the "No matches found for" label`
+        );
     },
 
     moreMatchesFoundContainsQuery: (query: string) => {
-      it(`"More matches for" label should have the query ${query}`, () => {
-        selector.moreMatches().contains(query);
-      });
+      selector
+        .moreMatches()
+        .contains(query)
+        .logDetail(`"More matches for" label should have the query "${query}"`);
     },
 
     noMatchesFoundContainsQuery: (query: string) => {
-      it(`"No matches found for" label should have the query ${query}`, () => {
-        selector.noMatches().contains(query);
-      });
+      selector
+        .noMatches()
+        .contains(query)
+        .logDetail(
+          `"No matches found for" label should have the query "${query}"`
+        );
     },
 
     logFacetSearch: (field: string) => {
-      it('should log the facet search to UA', () => {
-        cy.wait(InterceptAliases.UA.Facet.Search).then((interception) => {
+      cy.wait(InterceptAliases.UA.Facet.Search)
+        .then((interception) => {
           const analyticsBody = interception.request.body;
           expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
           expect(analyticsBody.customData).to.have.property(
             'facetField',
             field
           );
-        });
-      });
+        })
+        .logDetail('should log the "facetSearch" UA event');
     },
   };
 }
@@ -247,15 +291,17 @@ export function facetWithShowMoreLessExpectations(
 ) {
   return {
     displayShowMoreButton: (display: boolean) => {
-      it(`${should(display)} display a "Show more" button`, () => {
-        selector.showMoreButton().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .showMoreButton()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display a "Show more" button`);
     },
 
     displayShowLessButton: (display: boolean) => {
-      it(`${should(display)} display a "Show less" button`, () => {
-        selector.showLessButton().should(display ? 'be.visible' : 'not.exist');
-      });
+      selector
+        .showLessButton()
+        .should(display ? 'be.visible' : 'not.exist')
+        .logDetail(`${should(display)} display a "Show less" button`);
     },
   };
 }

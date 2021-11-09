@@ -124,9 +124,9 @@ export class AtomicCategoryFacet
   @Prop() public withSearch = false;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
-   * TODO: add automatic (occurences when not expanded, alphanumeric when expanded)
+   * Possible values are 'alphanumeric' and 'occurrences'.
    */
+  // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
   /**
    * The character that separates values of a multi-value field.

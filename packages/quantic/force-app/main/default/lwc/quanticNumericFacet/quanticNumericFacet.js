@@ -206,13 +206,13 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initializeFilter(engine) {
-     this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
+    this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
       options: {
         field: this.field,
         facetId: this.facet.state.facetId ? `${this.facet.state.facetId}_input` : undefined
       }
     });
-    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateState());
+    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateFilterState());
   }
 
   disconnectedCallback() {
@@ -224,6 +224,9 @@ export default class QuanticNumericFacet extends LightningElement {
   updateState() {
     this.state = this.facet?.state;
     this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+  }
+
+  updateFilterState() {
     this.filterState = this.numericFilter?.state;
     this.start = this.filterState?.range?.start?.toString();
     this.end = this.filterState?.range?.end?.toString();
@@ -292,16 +295,6 @@ export default class QuanticNumericFacet extends LightningElement {
     return '';
   }
 
-  onChangeMin(evt) {
-    evt.preventDefault();
-    this.start = evt.target.value;
-  }
-
-  onChangeMax(evt) {
-    evt.preventDefault();
-    this.end = evt.target.value;
-  }
-
   setValidityParameters() {
     this.inputMin.max = this.end || this.maxSafeValue.toString();
     this.inputMax.min = this.start || this.minSafeValue.toString();
@@ -328,14 +321,17 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.filterState?.range) {
       this.numericFilter.clear();
     }
-    this.resetValidityParameters();
     this.facet?.deselectAll();
-    this.allInputs.forEach((input) => {
-      // @ts-ignore
-      input.checkValidity();
-      // @ts-ignore
-      input.reportValidity();
-    });
+    if(this.withInput) {
+      this.resetValidityParameters();
+    
+      this.allInputs.forEach((input) => {
+        // @ts-ignore
+        input.checkValidity();
+        // @ts-ignore
+        input.reportValidity();
+      });
+    }
   }
 
   toggleFacetVisibility() {
@@ -346,6 +342,9 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
   }
 
+  /**
+   * @param {Event} evt
+  */
   onApply(evt) {
     evt.preventDefault();
 
