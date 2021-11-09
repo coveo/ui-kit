@@ -12,8 +12,12 @@ export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
   const componentDocumentation = getDocumentationFromTag(componentTag);
   const [open, setOpen] = useState({});
 
-  if (!componentDocumentation) {
-    return <Placeholder>No Shadow parts found for this component.</Placeholder>;
+  if (!componentDocumentation || componentDocumentation.parts.length === 0) {
+    return (
+      <Placeholder>
+        This component does not expose any shadow parts.
+      </Placeholder>
+    );
   }
 
   return (
