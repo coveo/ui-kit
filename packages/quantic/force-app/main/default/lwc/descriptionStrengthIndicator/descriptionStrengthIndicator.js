@@ -27,7 +27,7 @@ export default class DescriptionStrengthIndicator extends LightningElement {
     }
 
     /**
-     * Tells if the progression indicator is full
+     * Tells if the progression indicator is full.
      * @api
      * @returns {boolean}
      */
