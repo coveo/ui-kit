@@ -23,13 +23,16 @@ export const addTimeframeFacet =
   (env: TestFixture) => {
     const e = generateComponentHTML('atomic-timeframe-facet', props);
     if (units) {
-      units.forEach((u: UnitRange) => {
-        const rangeHTML = generateComponentHTML('atomic-timeframe', u);
-        e.append(rangeHTML);
-      });
+      e.append(...createTimeframeElements(units));
     }
     env.withElement(e);
   };
+
+export function createTimeframeElements(units: UnitRange[] = unitFrames) {
+  return units.map((u: UnitRange) => {
+    return generateComponentHTML('atomic-timeframe', u);
+  });
+}
 
 export function inputStartDate(value: number | string) {
   TimeframeFacetSelectors.startDate().type(value.toString(), {force: true});
