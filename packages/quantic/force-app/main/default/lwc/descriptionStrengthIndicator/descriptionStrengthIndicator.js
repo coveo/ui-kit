@@ -10,7 +10,7 @@ export default class DescriptionStrengthIndicator extends LightningElement {
      * The message to be shown to the user.
      * @api
      * @type {string}
-     * @defaultValue 'Don’t know what to write?'
+     * @defaultValue `'Don’t know what to write?'`
      */
     @api
     helpLabel = "Don’t know what to write?";
