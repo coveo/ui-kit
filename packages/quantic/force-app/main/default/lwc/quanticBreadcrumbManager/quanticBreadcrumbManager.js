@@ -6,7 +6,7 @@ import {
 import {
   registerComponentForInit,
   initializeWithHeadless,
-  getHeadlessStore
+  getFromStore
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, RelativeDateFormatter} from 'c/quanticUtils';
 
@@ -104,29 +104,26 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     this.breadcrumbManager.deselectAll();
     this.expandedBreadcrumbFieldsState = [];
   }
-  
-  formatNumber(numberValue) {
-    return new Intl.NumberFormat(LOCALE).format(numberValue);
-  }
 
   formatRangeBreadcrumbValue(breadcrumb) {
-    const store = getHeadlessStore(this.engineId);
+    const data = getFromStore(this.engineId, 'numericFacets');
     // @ts-ignore
-    breadcrumb.label = store.numericFacets[breadcrumb.field]?.label;
+    breadcrumb.label = data[breadcrumb.field]?.label;
     console.log(breadcrumb);
     return {
       ...breadcrumb,
       values: (breadcrumb.values.map(range => ({
         ...range,
-        value: `${range.value.start} - ${range.value.end}`
+        value: `${range.value.start} - ${range.value.end}`,
+        formattedValue: data[breadcrumb.field]?.format(range),
       })))
     };
   }
 
   formatCategoryBreadcrumbValue(breadcrumb) {
-    const store = getHeadlessStore(this.engineId);
+    const data = getFromStore(this.engineId, 'categoryFacets');
     // @ts-ignore
-    breadcrumb.label = store.categoryFacets[breadcrumb.field]?.label;
+    breadcrumb.label = data[breadcrumb.field]?.label;
     if (breadcrumb.path.length <= 3) {
       return breadcrumb.path.map((breadcrumbValue) => breadcrumbValue.value);
     }
@@ -160,9 +157,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
-    const store = getHeadlessStore(this.engineId);
+    const data = getFromStore(this.engineId, 'dateFacets');
     // @ts-ignore
-    breadcrumb.label = store.dateFacets[breadcrumb.field]?.label;
+    breadcrumb.label = data[breadcrumb.field]?.label;
     return {
       ...breadcrumb,
       values: breadcrumb.values.map(range => ({
@@ -201,9 +198,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   getBreadcrumbValues(breadcrumb) {
-    const store = getHeadlessStore(this.engineId);
+    const data = getFromStore(this.engineId, 'facets');
     // @ts-ignore
-    breadcrumb.label = store.facets[breadcrumb.facetId]?.label;
+    breadcrumb.label = data[breadcrumb.facetId]?.label;
     return (this.getShouldCollapseBreadcrumbValues(breadcrumb) ?
       this.getBreadcrumbValuesCollapsed(breadcrumb) :
       breadcrumb);

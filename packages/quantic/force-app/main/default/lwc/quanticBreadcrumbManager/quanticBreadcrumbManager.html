@@ -26,7 +26,7 @@
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value} class="breadcrumb__container">
-                    <c-quantic-pill label={breadcrumbValue.value} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
+                    <c-quantic-pill label={breadcrumbValue.formattedValue} alt-text={breadcrumbValue.formattedValue} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
