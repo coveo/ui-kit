@@ -421,10 +421,6 @@ export class RelativeDateFormatter {
 }
 
 export class Store {
-  facets;
-  numericFacets;
-  dateFacets;
-  categoryFacets;
 
   static initialize() {
     return { 

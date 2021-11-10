@@ -252,6 +252,7 @@ function destroyEngine(engineId) {
  */
 function registerToStore(engineId, facetType, data) {
   const store = getHeadlessStore(engineId);
+  console.log(store);
   Store.registerFacetToStore(store, facetType, data);
 }
 

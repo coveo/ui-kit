@@ -197,7 +197,8 @@ export default class QuanticDateFacet extends LightningElement {
     this.facet.toggleSelect(item);
     registerToStore(this.engineId, 'dateFacets', {
       label: this.label,
-      facetId: this.facetId ?? this.field
+      facetId: this.facetId ?? this.field,
+      format: this.formattingFunction,
     })
   }
 
