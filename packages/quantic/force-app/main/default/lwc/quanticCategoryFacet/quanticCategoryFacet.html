@@ -33,7 +33,7 @@
               <c-quantic-category-facet-value onselectvalue={onSelectValue} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
             </template>
             <template if:true={activeParent}>
-              <li class="facet__active-parent slds-grid slds-p-around_x-small slds-m-left_medium">
+              <li class="facet__active-parent slds-grid slds-grid_vertical-align-center slds-p-around_x-small slds-m-left_medium">
                 <span class="nowrap parent-text__bold">{activeParent.value}</span>
                 <span class="facet__number-of-results parent-text__bold slds-var-m-left_xx-small">({activeParent.numberOfResults})</span>
               </li>  
