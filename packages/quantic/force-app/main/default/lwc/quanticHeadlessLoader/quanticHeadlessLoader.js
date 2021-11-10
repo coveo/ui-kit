@@ -2,7 +2,7 @@ import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 // @ts-ignore
-import {Debouncer, Deferred} from 'c/quanticUtils';
+import {Debouncer, Deferred, Store} from 'c/quanticUtils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
@@ -117,6 +117,18 @@ async function initEngine(engineId) {
 }
 
 /**
+ * initialize coveoHeadless Store object 
+ * @param {string} engineId The id of the engine.
+ */
+const initStore = (engineId) => {
+  try {
+    window.coveoHeadless[engineId].bindings.store = Store.initialize();
+  } catch (error) {
+    throw new Error('Fatal error: unable to initialize Coveo Headless Store: ' + error);
+  }
+}
+
+/**
  * Sets the options passed to engine constructor for given engine ID.
  * @param options The Headless options for the specified engine ID.
  * @param {(options: unknown) => unknown} engineConstructor Th engine constructor.
@@ -195,6 +207,14 @@ function getHeadlessBindings(engineId) {
 }
 
 /**
+ * Returns Store object for specified engineId.
+ * @param {string} engineId The id of the engine.
+ */
+function getHeadlessStore(engineId) {
+ return window.coveoHeadless?.[engineId]?.bindings?.store;
+}
+
+/**
  * Initializes a component with Coveo Headless.
  * @param element The LightningElement component to initialize.
  * @param {string} engineId The id of the engine.
@@ -207,6 +227,8 @@ async function initializeWithHeadless(element, engineId, initialize) {
   try {
     initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
+    initStore(engineId);
+    
   } catch (error) {
     console.error('Fatal error: unable to initialize component', error);
   }
@@ -222,6 +244,27 @@ function destroyEngine(engineId) {
   }
 }
 
+/**
+ * Register facet in the store.
+ * @param {string} engineId The id of the engine.
+ * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets'} facetType
+ * @param {{ label: string; facetId: string; format?: function}} data
+ */
+function registerToStore(engineId, facetType, data) {
+  const store = getHeadlessStore(engineId);
+  Store.registerFacetToStore(store, facetType, data);
+}
+
+/**
+ * get facet data from store.
+ * @param {string} engineId The id of the engine.
+ * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets'} facetType
+ */
+function getFromStore(engineId, facetType) {
+  const store = getHeadlessStore(engineId);
+  return Store.getFromStore(store, facetType);
+}
+
 export {
   loadDependencies,
   setInitializedCallback,
@@ -232,4 +275,6 @@ export {
   getHeadlessBindings,
   initializeWithHeadless,
   destroyEngine,
+  registerToStore,
+  getFromStore,
 }
