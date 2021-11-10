@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.31.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.3...@coveo/headless@1.31.4) (2021-11-10)
+
+
+### Bug Fixes
+
+* **headless): fix(headless:** remove ca.js/src import ([#1466](https://github.com/coveo/ui-kit/issues/1466)) ([84f4ad4](https://github.com/coveo/ui-kit/commit/84f4ad479eb77223f1e6a3a3c552584ef812462f))
+
+
+
+
+
 ## [1.31.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.2...@coveo/headless@1.31.3) (2021-11-09)
 
 
