@@ -4,6 +4,7 @@ import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
 import {TemplateResult} from 'lit-html';
 import {mapPropsToArgTypes} from './map-props-to-args';
+import {resultComponentArgTypes} from './map-result-list-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
 export interface DefaultStoryAdvancedConfig {
@@ -24,11 +25,18 @@ export function renderArgsToHTMLString(
 ) {
   const {additionalChildMarkup, parentElement} = advancedConfig;
   const el = document.createElement(componentTag);
-  Object.keys(args)
-    .filter((arg) => arg.indexOf(ADDON_PARAMETER_KEY) === -1)
-    .forEach((arg) => {
-      el.setAttribute(camelToKebab(arg), args[arg]);
-    });
+
+  const argsFilteredOnProps = Object.keys(args)
+    .filter(
+      (key) =>
+        Object.keys(resultComponentArgTypes).indexOf(key) === -1 &&
+        key.indexOf(ADDON_PARAMETER_KEY) === -1
+    )
+    .reduce((res, key) => ((res[key] = args[key]), res), {});
+
+  Object.keys(argsFilteredOnProps).forEach((arg) => {
+    el.setAttribute(camelToKebab(arg), args[arg]);
+  });
 
   // TODO: KIT-1203
   // This is a hack
