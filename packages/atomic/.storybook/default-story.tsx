@@ -26,7 +26,11 @@ export default function defaultStory(
     );
 
   const defaultLoader = initializeInterfaceDebounced(() => {
-    const argsToHTMLString = renderArgsToHTMLString(componentTag, getArgs());
+    const argsToHTMLString = renderArgsToHTMLString(
+      componentTag,
+      getArgs(),
+      advancedConfig
+    );
     const additionalMarkupString = advancedConfig.additionalMarkup
       ? advancedConfig.additionalMarkup().strings.join('')
       : '';

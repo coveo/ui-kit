@@ -148,9 +148,10 @@ export default class QuanticNumericFacet extends LightningElement {
   start;
   /** @type {string} */
   end;
-
-  minSafeValue = Number.MIN_VALUE;
-  maxSafeValue = Number.MAX_VALUE;
+  /** @type {string} */
+  min;
+  /** @type {string} */
+  max;
 
   labels = {
     clearFilter,
@@ -296,15 +297,15 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   setValidityParameters() {
-    this.inputMin.max = this.end || this.maxSafeValue.toString();
-    this.inputMax.min = this.start || this.minSafeValue.toString();
+    this.inputMin.max = this.max || Number.MAX_VALUE.toString();
+    this.inputMax.min = this.min || Number.MIN_VALUE.toString();
     this.inputMin.required = true;
     this.inputMax.required = true;
   }
 
   resetValidityParameters() {
-    this.inputMin.max = this.maxSafeValue.toString();
-    this.inputMax.min = this.minSafeValue.toString();
+    this.inputMin.max = Number.MAX_VALUE.toString();
+    this.inputMax.min = Number.MIN_VALUE.toString();
     this.inputMin.required = false;
     this.inputMax.required = false;
   }
@@ -364,6 +365,14 @@ export default class QuanticNumericFacet extends LightningElement {
     });
   }
 
+  onChangeMin(evt) {
+    this.min = evt.target.value;
+  }
+
+  onChangeMax(evt) {
+    this.max = evt.target.value;
+  }
+
   resetValidationErrors() {
     this.allInputs.forEach((input) => {
       // @ts-ignore
@@ -390,10 +399,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get customMessageOverflow() {
-    return I18nUtils.format(this.labels.messageWhenRangeOverflow, this.end);
+    return I18nUtils.format(this.labels.messageWhenRangeOverflow, this.max);
   }
   
   get customMessageUnderflow() {
-    return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.start);
+    return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.min);
   }
 }

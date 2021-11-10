@@ -129,7 +129,7 @@ export default function defaultResultComponentStory(
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     return `${renderArgsToResultTemplate(
-      renderArgsToHTMLString(componentTag, getArgs()),
+      renderArgsToHTMLString(componentTag, getArgs(), advancedConfig),
       getArgs,
       true
     )}${
