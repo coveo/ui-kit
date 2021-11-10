@@ -29,9 +29,15 @@ export function renderArgsToHTMLString(
     .forEach((arg) => {
       el.setAttribute(camelToKebab(arg), args[arg]);
     });
-  el.innerHTML = additionalChildMarkup
-    ? additionalChildMarkup().strings.join('') + '\n'
-    : '';
+
+  // TODO: KIT-1203
+  // This is a hack
+  if (typeof additionalChildMarkup === 'function') {
+    el.innerHTML = additionalChildMarkup().strings.join('');
+  }
+  if (typeof additionalChildMarkup === 'string') {
+    el.innerHTML = additionalChildMarkup;
+  }
 
   if (parentElement) {
     const parent = parentElement();
@@ -97,7 +103,20 @@ export default function sharedDefaultStory(
       docs: {
         page: docPage,
       },
-      [ADDON_PARAMETER_KEY]: {componentTag, isResultComponent},
+      [ADDON_PARAMETER_KEY]: {
+        componentTag,
+        isResultComponent,
+        // TODO: KIT-1203
+        // This is a hack
+        advancedConfig: {
+          ...advancedConfig,
+          ...{
+            additionalChildMarkup: advancedConfig.additionalChildMarkup
+              ? advancedConfig.additionalChildMarkup().strings.join('')
+              : '',
+          },
+        },
+      },
     },
   };
 

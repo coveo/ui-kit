@@ -1,11 +1,18 @@
 import React, {useRef} from 'react';
 import {useArgs, useParameter} from '@storybook/api';
 import {
+  DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from '../default-story-shared';
 import MonacoEditor from '@monaco-editor/react';
 import {renderArgsToResultTemplate} from '../default-result-component-story';
+import {delay} from 'lodash';
+interface StoryParameters {
+  componentTag: string;
+  isResultComponent: boolean;
+  advancedConfig: DefaultStoryAdvancedConfig;
+}
 
 const addSpacingBetweenStylingAndHTML = (
   htmlString: string,
@@ -18,21 +25,25 @@ const addSpacingBetweenStylingAndHTML = (
 };
 
 export const CodeSamplePanel = () => {
-  const componentTag = useParameter('shadowParts', null)?.componentTag;
-  const isResultComponent = useParameter(
-    'shadowParts',
-    null
-  )?.isResultComponent;
+  const storyParameters = useParameter('shadowParts', null);
   const [args, _] = useArgs();
+  const monacoEditorRef = useRef(null);
+
+  if (!storyParameters) {
+    return '';
+  }
+  const {componentTag, isResultComponent, advancedConfig} =
+    storyParameters as StoryParameters;
+
   const styleString = renderShadowPartsToStyleString(componentTag, args);
   const htmlString = isResultComponent
     ? renderArgsToResultTemplate(
-        renderArgsToHTMLString(componentTag, args),
+        renderArgsToHTMLString(componentTag, args, advancedConfig),
         () => args,
         false
       )
-    : renderArgsToHTMLString(componentTag, args);
-  const editorRef = useRef(null);
+    : renderArgsToHTMLString(componentTag, args, advancedConfig);
+
   return (
     <div
       style={{
@@ -52,20 +63,20 @@ export const CodeSamplePanel = () => {
         defaultLanguage="html"
         options={{
           theme: 'vs-dark',
-          readOnly: false,
           minimap: {
             enabled: false,
           },
         }}
         onMount={(editor, _) => {
-          editorRef.current = editor;
+          monacoEditorRef.current = editor;
+          const format = () =>
+            editor.getAction('editor.action.formatDocument').run();
+          delay(format, 100);
           editor.onDidFocusEditorText(() => {
             editor.setScrollTop(0);
             editor.updateOptions({readOnly: true});
           });
-          editor.onDidChangeModelContent(() => {
-            editor.getAction('editor.action.formatDocument').run();
-          });
+          editor.onDidChangeModelContent(format);
         }}
       />
       <button
@@ -82,7 +93,7 @@ export const CodeSamplePanel = () => {
           cursor: 'copy',
         }}
         onClick={() => {
-          navigator.clipboard.writeText(editorRef.current.getValue());
+          navigator.clipboard.writeText(monacoEditorRef.current.getValue());
         }}
       >
         Copy
