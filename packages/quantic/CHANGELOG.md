@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.84.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.84.0...@coveo/quantic@0.84.1) (2021-11-10)
+
+
+### Bug Fixes
+
+* **quantic:** text truncating class returned to container in template ([#1464](https://github.com/coveo/ui-kit/issues/1464)) ([5c4a0af](https://github.com/coveo/ui-kit/commit/5c4a0af951effadbab934a7c1e480abfc15db2d7))
+
+
+
+
+
 # [0.84.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.83.2...@coveo/quantic@0.84.0) (2021-11-09)
 
 
