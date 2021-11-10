@@ -161,11 +161,11 @@ function timeframeWithRangeExpectations(selector: WithDateRangeSelector) {
         .should('contain', message)
         .logDetail(`should display validation error "${message}"`),
 
-    noValidationError: () =>
+    numberOfValidationErrors: (value: number) =>
       selector
         .validationError()
-        .should('not.exist')
-        .logDetail('should display no validation error'),
+        .should('have.length', value)
+        .logDetail(`should display ${value} validation errors`),
   };
 }
 

@@ -22,5 +22,5 @@ export const decorators = [
 ];
 
 export const parameters = {
-  controls: {expanded: true},
+  controls: {expanded: true, hideNoControlsWarning: true},
 };
