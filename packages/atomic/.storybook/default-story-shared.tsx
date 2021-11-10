@@ -10,19 +10,36 @@ export const ADDON_PARAMETER_KEY = 'shadowParts';
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
   additionalMarkup?: () => TemplateResult;
+  additionalChildMarkup?: () => TemplateResult;
+  parentElement?: () => HTMLElement;
 }
 
 function camelToKebab(value: string) {
   return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
 
-export function renderArgsToHTMLString(componentTag: string, args: Args) {
+export function renderArgsToHTMLString(
+  componentTag: string,
+  args: Args,
+  advancedConfig: DefaultStoryAdvancedConfig
+) {
+  const {additionalChildMarkup, parentElement} = advancedConfig;
   const el = document.createElement(componentTag);
   Object.keys(args)
     .filter((arg) => arg.indexOf(ADDON_PARAMETER_KEY) === -1)
     .forEach((arg) => {
       el.setAttribute(camelToKebab(arg), args[arg]);
     });
+  el.innerHTML = additionalChildMarkup
+    ? additionalChildMarkup().strings.join('') + '\n'
+    : '';
+
+  if (parentElement) {
+    const parent = parentElement();
+    parent.innerHTML = `\n\t${el.outerHTML}\n`;
+    return parent.outerHTML;
+  }
+
   return el.outerHTML;
 }
 
