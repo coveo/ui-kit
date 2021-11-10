@@ -3,7 +3,6 @@ import {SearchEngineConfiguration} from '@coveo/headless';
 import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
 import {TemplateResult} from 'lit-html';
-import {camelToKebab} from '../src/utils/utils';
 import {mapPropsToArgTypes} from './map-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
@@ -13,6 +12,10 @@ export interface DefaultStoryAdvancedConfig {
   additionalMarkup?: () => TemplateResult;
   additionalChildMarkup?: () => TemplateResult;
   parentElement?: () => HTMLElement;
+}
+
+function camelToKebab(value: string) {
+  return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 export function renderArgsToHTMLString(
