@@ -18,7 +18,7 @@
     <p slot="date" class="slds-size_xx-small">
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
-    <h3 slot="title">
+    <h3 slot="title" class="slds-truncate">
       <span style="color: #157E19">{result.raw.sfstatus} |</span>
       <span class="slds-m-left_xx-small">
         <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
