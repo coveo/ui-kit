@@ -266,7 +266,7 @@ export class AtomicRefineModal implements InitializableComponent {
               ? 'animate-scaleUpRefineModal'
               : 'animate-scaleDownRefineModal'
           }`}
-          aria-modal={isOpened}
+          aria-modal={isOpened.toString()}
         >
           <div class="px-6">{this.renderHeader()}</div>
           <hr class="border-neutral"></hr>
