@@ -3,14 +3,16 @@ import {SearchEngineConfiguration} from '@coveo/headless';
 import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
 import {TemplateResult} from 'lit-html';
-import {camelToKebab} from '../src/utils/utils';
 import {mapPropsToArgTypes} from './map-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
-
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
   additionalMarkup?: () => TemplateResult;
+}
+
+export function camelToKebab(value: string) {
+  return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 export function renderArgsToHTMLString(componentTag: string, args: Args) {
@@ -20,6 +22,7 @@ export function renderArgsToHTMLString(componentTag: string, args: Args) {
     .forEach((arg) => {
       el.setAttribute(camelToKebab(arg), args[arg]);
     });
+
   return el.outerHTML;
 }
 
@@ -27,8 +30,16 @@ export function renderShadowPartsToStyleString(
   componentTag: string,
   args: Args
 ) {
+  const argsFilteredOnStyleRules = Object.keys(args).filter(
+    (arg) => arg.indexOf(ADDON_PARAMETER_KEY) !== -1
+  );
+
+  if (!argsFilteredOnStyleRules.length) {
+    return '';
+  }
+
   const styleElement = document.createElement('style');
-  const styleRules = Object.keys(args)
+  const styleRules = argsFilteredOnStyleRules
     .filter((arg) => arg.indexOf(ADDON_PARAMETER_KEY) !== -1)
     .map((arg) => {
       const shadowPartName = arg.split(`${ADDON_PARAMETER_KEY}:`)[1];
@@ -37,10 +48,10 @@ export function renderShadowPartsToStyleString(
       ).filter((rule) => rule != '');
 
       const rulesFormattedByLine = `\t${rulesForPartWithoutEmptyLines.join(
-        '\n\t'
+        ''
       )}`;
 
-      return `\n${componentTag}::part(${shadowPartName}) {\n${rulesFormattedByLine}\n}`;
+      return `\n${componentTag}::part(${shadowPartName}) {${rulesFormattedByLine}}`;
     })
     .join('\n');
 
@@ -54,6 +65,7 @@ export default function sharedDefaultStory(
   componentTag: string,
   defaultArgs: Args,
   docPage: typeof DocsPage,
+  isResultComponent: boolean,
   advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
   let currentArgs = {};
@@ -69,7 +81,7 @@ export default function sharedDefaultStory(
       docs: {
         page: docPage,
       },
-      [ADDON_PARAMETER_KEY]: componentTag,
+      [ADDON_PARAMETER_KEY]: {componentTag, isResultComponent},
     },
   };
 

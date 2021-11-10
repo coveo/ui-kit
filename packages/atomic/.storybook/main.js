@@ -1,5 +1,4 @@
 const path = require('path');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
@@ -10,7 +9,6 @@ module.exports = {
     './preset.js',
   ],
   webpack: (config) => {
-    console.log(config.module.rules)
     return {
       ...config,
       performance: {
@@ -20,26 +18,13 @@ module.exports = {
         ...config.module,
         rules: [
           ...config.module.rules,
-
           {
             test: /\.(tsx)$/,
             exclude: /shadow-parts-addon/,
             loader: path.resolve('./.storybook/loader.js'),
           },
-          {
-            test: /monaco-editor\/.*\.css$/,
-            use: ['style-loader', 'css-loader']
-          },
-          {
-            test: /monaco-editor\/.*\.ttf$/,
-            use: ['file-loader']
-          }
         ],
       },
-      plugins: [
-        ...config.plugins,
-        new MonacoWebpackPlugin({languages: ['html']}),
-      ],
     };
   },
   babelDefault: (config) => {
