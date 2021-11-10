@@ -18,6 +18,7 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
+  DeferUntilRender,
 } from '../../utils/initialization-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFacetElements, SortDropdownOption} from '../../utils/store';
@@ -49,6 +50,7 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   private facetManager!: FacetManager;
+  private closeButton?: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -64,6 +66,8 @@ export class AtomicRefineModal implements InitializableComponent {
   @State() @BindStateToController('sort') public sortState!: SortState;
   @State() public error!: Error;
 
+  @Prop({mutable: true}) openButton?: HTMLElement;
+
   @Prop({reflect: true, mutable: true}) modalStatus!: ModalStatus;
   @Watch('modalStatus')
   watchEnabled(modalStatus: ModalStatus) {
@@ -73,12 +77,25 @@ export class AtomicRefineModal implements InitializableComponent {
       case 'opened':
         document.body.classList.add(modalOpenedClass);
         this.duplicateFacetElements();
+        this.focusOnCloseButton();
         break;
       case 'closed':
         document.body.classList.remove(modalOpenedClass);
         this.flushFacetElements();
+        this.focusOnOpenButton();
         break;
     }
+  }
+
+  @DeferUntilRender()
+  private focusOnCloseButton() {
+    this.closeButton?.focus();
+  }
+
+  @DeferUntilRender()
+  private focusOnOpenButton() {
+    console.log(this.openButton);
+    this.openButton?.focus();
   }
 
   public initialize() {
@@ -127,6 +144,7 @@ export class AtomicRefineModal implements InitializableComponent {
           class="grid place-items-center"
           part="close-button"
           onClick={() => this.dismiss()}
+          ref={(closeButton) => (this.closeButton = closeButton)}
         >
           <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
         </Button>
@@ -237,27 +255,32 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
 
+    const isOpened = this.modalStatus === 'opened';
+
     return (
-      <div
-        part="container"
-        class={`w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10 ${
-          this.modalStatus === 'opened'
-            ? 'animate-scaleUpRefineModal'
-            : 'animate-scaleDownRefineModal'
-        }`}
-      >
-        <div class="px-6">{this.renderHeader()}</div>
-        <hr class="border-neutral"></hr>
-        <div class="overflow-auto px-6 flex-grow">
-          <div class="adjust-for-scroll-bar">
-            <div class="centered">
-              {this.renderSort()}
-              {this.renderFilters()}
+      <atomic-focus-trap active={isOpened}>
+        <div
+          part="container"
+          class={`w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10 ${
+            isOpened
+              ? 'animate-scaleUpRefineModal'
+              : 'animate-scaleDownRefineModal'
+          }`}
+          aria-modal={isOpened}
+        >
+          <div class="px-6">{this.renderHeader()}</div>
+          <hr class="border-neutral"></hr>
+          <div class="overflow-auto px-6 flex-grow">
+            <div class="adjust-for-scroll-bar">
+              <div class="centered">
+                {this.renderSort()}
+                {this.renderFilters()}
+              </div>
             </div>
           </div>
+          {this.renderFooter()}
         </div>
-        {this.renderFooter()}
-      </div>
+      </atomic-focus-trap>
     );
   }
 }

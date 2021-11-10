@@ -67,6 +67,7 @@ export class AtomicRefineToggle implements InitializableComponent {
         class="p-3"
         onClick={() => this.enableModal()}
         text={this.bindings.i18n.t('sort-and-filter')}
+        ref={(button) => (this.modalRef!.openButton = button)}
       ></Button>
     );
   }
