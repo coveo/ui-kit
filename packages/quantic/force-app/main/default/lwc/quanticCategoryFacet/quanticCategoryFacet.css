@@ -16,7 +16,10 @@
   font-weight: var(--font-weight-bold, 700);
 }
 
+.facet__active-parent {
+  font-size: 13px;
+}
+
 .facet__number-of-results {
   color: #8E959D;
-  font-size: 11px;
 }
