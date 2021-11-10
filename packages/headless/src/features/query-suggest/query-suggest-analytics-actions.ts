@@ -1,4 +1,4 @@
-import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
+import type {OmniboxSuggestionsMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAppState} from '../../state/search-app-state';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
