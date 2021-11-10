@@ -20,7 +20,3 @@
 .facet__value:hover {
   color: var(--sds-c-color-gray-8, #8E959D);
 }
-
-.facet__value-container {
-  font-size: 13px;
-}
