@@ -69,14 +69,18 @@ export const CodeSamplePanel = () => {
         }}
         onMount={(editor, _) => {
           monacoEditorRef.current = editor;
-          const format = () =>
-            editor.getAction('editor.action.formatDocument').run();
-          delay(format, 100);
+
+          delay(
+            () => editor.getAction('editor.action.formatDocument').run(),
+            100
+          );
           editor.onDidFocusEditorText(() => {
             editor.setScrollTop(0);
             editor.updateOptions({readOnly: true});
           });
-          editor.onDidChangeModelContent(format);
+          editor.onDidChangeModelContent(() =>
+            editor.getAction('editor.action.formatDocument').run()
+          );
         }}
       />
       <button
