@@ -428,6 +428,7 @@ export class Store {
         facets: {},
         numericFacets: {},
         dateFacets: {},
+        timeFrameFacets: {},
         categoryFacets: {},
       }}
   }

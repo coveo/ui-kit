@@ -122,7 +122,9 @@ async function initEngine(engineId) {
  */
 const initStore = (engineId) => {
   try {
-    window.coveoHeadless[engineId].bindings.store = Store.initialize();
+     if(!window.coveoHeadless[engineId]?.bindings?.store) {
+       window.coveoHeadless[engineId].bindings.store = Store.initialize();
+     }
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless Store: ' + error);
   }
@@ -247,7 +249,7 @@ function destroyEngine(engineId) {
 /**
  * Register facet in the store.
  * @param {string} engineId The id of the engine.
- * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets'} facetType
+ * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets' | 'timeFrameFacets' } facetType
  * @param {{ label: string; facetId: string; format?: function}} data
  */
 function registerToStore(engineId, facetType, data) {
@@ -259,7 +261,7 @@ function registerToStore(engineId, facetType, data) {
 /**
  * get facet data from store.
  * @param {string} engineId The id of the engine.
- * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets'} facetType
+ * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets' | 'timeFrameFacets'} facetType
  */
 function getFromStore(engineId, facetType) {
   const store = getHeadlessStore(engineId);

@@ -153,7 +153,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
-    const data = getFromStore(this.engineId, 'dateFacets');
+    const data = getFromStore(this.engineId, 'timeFrameFacets');
     return {
       ...breadcrumb,
       label: data[breadcrumb.field]?.label,

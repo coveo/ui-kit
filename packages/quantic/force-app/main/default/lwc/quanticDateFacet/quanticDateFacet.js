@@ -131,6 +131,11 @@ export default class QuanticDateFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    registerToStore(this.engineId, 'dateFacets', {
+      label: this.label,
+      facetId: this.facetId ?? this.field,
+      format: this.formattingFunction,
+    });
   }
 
   disconnectedCallback() {
@@ -195,11 +200,6 @@ export default class QuanticDateFacet extends LightningElement {
    onSelectValue(evt) {
     const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
     this.facet.toggleSelect(item);
-    registerToStore(this.engineId, 'dateFacets', {
-      label: this.label,
-      facetId: this.facetId ?? this.field,
-      format: this.formattingFunction,
-    })
   }
 
   clearSelections() {

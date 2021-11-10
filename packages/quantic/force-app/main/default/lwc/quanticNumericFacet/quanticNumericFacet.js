@@ -202,6 +202,11 @@ export default class QuanticNumericFacet extends LightningElement {
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
+    registerToStore(this.engineId, 'numericFacets', {
+      label: this.label,
+      facetId: this.facetId ?? this.field,
+      format: this.formattingFunction,
+    });
   }
 
   /**
@@ -238,9 +243,10 @@ export default class QuanticNumericFacet extends LightningElement {
     return (
       this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
-        .map((value) => {
+        .map((value, index) => {
           return {
             ...value,
+            index: index,
             checked: value.state === 'selected',
           };
         }) || []
@@ -317,11 +323,6 @@ export default class QuanticNumericFacet extends LightningElement {
   onSelectValue(evt) {
     const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
     this.facet.toggleSelect(item);
-    registerToStore(this.engineId, 'numericFacets', {
-      label: this.label,
-      facetId: this.facetId ?? this.field,
-      format: this.formattingFunction,
-    });
   }
 
   clearSelections() {

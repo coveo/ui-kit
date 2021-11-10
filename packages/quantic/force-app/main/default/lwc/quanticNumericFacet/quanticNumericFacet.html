@@ -71,7 +71,7 @@
                <template for:each={values} for:item="v">
                 <c-quantic-facet-value 
                   onselectvalue={onSelectValue} 
-                  key={v.start} 
+                  key={v.index} 
                   item={v} 
                   is-checked={v.checked}
                   formatting-function={formattingFunction}>
