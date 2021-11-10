@@ -284,4 +284,120 @@
         <label> :</label>
         <name>quantic_Colon</name>
     </customLabels>
+    <customLabels>
+        <label>Heure passée</label>
+        <name>quantic_PastHour</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} heures passées</label>
+        <name>quantic_PastHour_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Jour passé</label>
+        <name>quantic_PastDay</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} jours passés</label>
+        <name>quantic_PastDay_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Semaine passée</label>
+        <name>quantic_PastWeek</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} semaines passées</label>
+        <name>quantic_PastWeek_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Mois passé</label>
+        <name>quantic_PastMonth</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} mois passés</label>
+        <name>quantic_PastMonth_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Trimestre passé</label>
+        <name>quantic_PastQuarter</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} trimestre passés</label>
+        <name>quantic_PastQuarter_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Année passée</label>
+        <name>quantic_PastYear</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} années passées</label>
+        <name>quantic_PastYear_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Heure prochaine</label>
+        <name>quantic_NextHour</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} heures prochaines</label>
+        <name>quantic_NextHour_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Jour prochain</label>
+        <name>quantic_NextDay</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} jours prochains</label>
+        <name>quantic_NextDay_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Semaine prochaine</label>
+        <name>quantic_NextWeek</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} semaines prochaines</label>
+        <name>quantic_NextWeek_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Mois prochain</label>
+        <name>quantic_NextMonth</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} mois prochains</label>
+        <name>quantic_NextMonth_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Trimestre prochain</label>
+        <name>quantic_NextQuarter</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} trimestre prochains</label>
+        <name>quantic_NextQuarter_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>Année prochaine</label>
+        <name>quantic_NextYear</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} années prochaines</label>
+        <name>quantic_NextYear_plural</name>
+    </customLabels>
+    <customLabels>
+        <label>j</label>
+        <name>quantic_DatePatternDay</name>
+    </customLabels>
+    <customLabels>
+        <label>m</label>
+        <name>quantic_DatePatternMonth</name>
+    </customLabels>
+    <customLabels>
+        <label>a</label>
+        <name>quantic_DatePatternYear</name>
+    </customLabels>
+    <customLabels>
+        <label>Début :</label>
+        <name>quantic_StartLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Fin :</label>
+        <name>quantic_EndLabel</name>
+    </customLabels>
 </Translations>

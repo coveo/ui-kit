@@ -149,9 +149,10 @@ export default class QuanticNumericFacet extends LightningElement {
   start;
   /** @type {string} */
   end;
-
-  minSafeValue = Number.MIN_VALUE;
-  maxSafeValue = Number.MAX_VALUE;
+  /** @type {string} */
+  min;
+  /** @type {string} */
+  max;
 
   labels = {
     clearFilter,
@@ -207,13 +208,13 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initializeFilter(engine) {
-     this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
+    this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
       options: {
         field: this.field,
         facetId: this.facet.state.facetId ? `${this.facet.state.facetId}_input` : undefined
       }
     });
-    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateState());
+    this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateFilterState());
   }
 
   disconnectedCallback() {
@@ -225,6 +226,9 @@ export default class QuanticNumericFacet extends LightningElement {
   updateState() {
     this.state = this.facet?.state;
     this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+  }
+
+  updateFilterState() {
     this.filterState = this.numericFilter?.state;
     this.start = this.filterState?.range?.start?.toString();
     this.end = this.filterState?.range?.end?.toString();
@@ -293,26 +297,16 @@ export default class QuanticNumericFacet extends LightningElement {
     return '';
   }
 
-  onChangeMin(evt) {
-    evt.preventDefault();
-    this.start = evt.target.value;
-  }
-
-  onChangeMax(evt) {
-    evt.preventDefault();
-    this.end = evt.target.value;
-  }
-
   setValidityParameters() {
-    this.inputMin.max = this.end || this.maxSafeValue.toString();
-    this.inputMax.min = this.start || this.minSafeValue.toString();
+    this.inputMin.max = this.max || Number.MAX_VALUE.toString();
+    this.inputMax.min = this.min || Number.MIN_VALUE.toString();
     this.inputMin.required = true;
     this.inputMax.required = true;
   }
 
   resetValidityParameters() {
-    this.inputMin.max = this.maxSafeValue.toString();
-    this.inputMax.min = this.minSafeValue.toString();
+    this.inputMin.max = Number.MAX_VALUE.toString();
+    this.inputMax.min = Number.MIN_VALUE.toString();
     this.inputMin.required = false;
     this.inputMax.required = false;
   }
@@ -334,14 +328,17 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.filterState?.range) {
       this.numericFilter.clear();
     }
-    this.resetValidityParameters();
     this.facet?.deselectAll();
-    this.allInputs.forEach((input) => {
-      // @ts-ignore
-      input.checkValidity();
-      // @ts-ignore
-      input.reportValidity();
-    });
+    if(this.withInput) {
+      this.resetValidityParameters();
+    
+      this.allInputs.forEach((input) => {
+        // @ts-ignore
+        input.checkValidity();
+        // @ts-ignore
+        input.reportValidity();
+      });
+    }
   }
 
   toggleFacetVisibility() {
@@ -352,6 +349,9 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
   }
 
+  /**
+   * @param {Event} evt
+  */
   onApply(evt) {
     evt.preventDefault();
 
@@ -369,6 +369,14 @@ export default class QuanticNumericFacet extends LightningElement {
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined
     });
+  }
+
+  onChangeMin(evt) {
+    this.min = evt.target.value;
+  }
+
+  onChangeMax(evt) {
+    this.max = evt.target.value;
   }
 
   resetValidationErrors() {
@@ -397,10 +405,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   get customMessageOverflow() {
-    return I18nUtils.format(this.labels.messageWhenRangeOverflow, this.end);
+    return I18nUtils.format(this.labels.messageWhenRangeOverflow, this.max);
   }
   
   get customMessageUnderflow() {
-    return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.start);
+    return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.min);
   }
 }
