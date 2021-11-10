@@ -125,6 +125,7 @@ export class I18nUtils {
 
   static format(stringToFormat, ...formattingArguments) {
     if (typeof stringToFormat !== 'string') throw new Error('\'stringToFormat\' must be a String');
+    // @ts-ignore
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
       (formattingArguments[index] === undefined ? '' : `${formattingArguments[index]}`));
   }
@@ -223,6 +224,43 @@ export class TimeSpan {
  */
 export function fromSearchApiDate(dateString) {
   return dateString
+    // @ts-ignore
     .replaceAll('/', '-')
     .replaceAll('@', 'T');
+}
+
+export class Store {
+  facets;
+  numericFacets;
+  dateFacets;
+  categoryFacets;
+
+  static initialize() {
+    return { 
+      state : { 
+        facets: {},
+        numericFacets: {},
+        dateFacets: {},
+        categoryFacets: {},
+      }}
+  }
+  /**
+   * @param {Record<String, unknown>} store
+   * @param {string} facetType
+   * @param {{ label?: string; facetId: any; format?: Function;}} data
+   */
+  static registerFacetToStore(store, facetType, data) {
+    if(store.state[facetType][data.facetId]) {
+      return;
+    }
+    store.state[facetType][data.facetId] = data;
+  }
+
+  /**
+   * @param {Record<String, unknown>} store
+   * @param {string} facetType
+   */
+  static getFromStore(store, facetType) {
+    return store.state[facetType];
+  }
 }

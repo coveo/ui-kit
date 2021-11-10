@@ -3,6 +3,7 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  registerToStore,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode} from 'c/quanticUtils';
 
@@ -355,6 +356,10 @@ export default class QuanticFacet extends LightningElement {
       this.onSelectClickHandler(item);
     }
     this.clearInput();
+    registerToStore(this.engineId, 'facets', {
+      label: this.label,
+      facetId: this.facetId ?? this.field
+    });
   }
 
   showMore() {

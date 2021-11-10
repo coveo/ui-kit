@@ -2,6 +2,7 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  registerToStore,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, fromSearchApiDate} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
@@ -194,6 +195,10 @@ export default class QuanticDateFacet extends LightningElement {
    onSelectValue(evt) {
     const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
     this.facet.toggleSelect(item);
+    registerToStore(this.engineId, 'dateFacets', {
+      label: this.label,
+      facetId: this.facetId ?? this.field
+    })
   }
 
   clearSelections() {

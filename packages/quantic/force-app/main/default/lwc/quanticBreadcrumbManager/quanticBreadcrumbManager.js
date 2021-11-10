@@ -5,9 +5,11 @@ import {
 } from 'lwc';
 import {
   registerComponentForInit,
-  initializeWithHeadless
+  initializeWithHeadless,
+  getHeadlessStore
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
+import LOCALE from '@salesforce/i18n/locale';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
@@ -102,8 +104,16 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     this.breadcrumbManager.deselectAll();
     this.expandedBreadcrumbFieldsState = [];
   }
+  
+  formatNumber(numberValue) {
+    return new Intl.NumberFormat(LOCALE).format(numberValue);
+  }
 
   formatRangeBreadcrumbValue(breadcrumb) {
+    const store = getHeadlessStore(this.engineId);
+    // @ts-ignore
+    breadcrumb.label = store.numericFacets[breadcrumb.field]?.label;
+    console.log(breadcrumb);
     return {
       ...breadcrumb,
       values: (breadcrumb.values.map(range => ({
@@ -114,6 +124,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatCategoryBreadcrumbValue(breadcrumb) {
+    const store = getHeadlessStore(this.engineId);
+    // @ts-ignore
+    breadcrumb.label = store.categoryFacets[breadcrumb.field]?.label;
     if (breadcrumb.path.length <= 3) {
       return breadcrumb.path.map((breadcrumbValue) => breadcrumbValue.value);
     }
@@ -131,6 +144,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
+    const store = getHeadlessStore(this.engineId);
+    // @ts-ignore
+    breadcrumb.label = store.dateFacets[breadcrumb.field]?.label;
     return {
       ...breadcrumb,
       values: breadcrumb.values.map(range => ({
@@ -169,6 +185,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   getBreadcrumbValues(breadcrumb) {
+    const store = getHeadlessStore(this.engineId);
+    // @ts-ignore
+    breadcrumb.label = store.facets[breadcrumb.facetId]?.label;
     return (this.getShouldCollapseBreadcrumbValues(breadcrumb) ?
       this.getBreadcrumbValuesCollapsed(breadcrumb) :
       breadcrumb);

@@ -2,7 +2,8 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
-  getHeadlessBindings
+  getHeadlessBindings,
+  registerToStore
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
@@ -322,6 +323,11 @@ export default class QuanticNumericFacet extends LightningElement {
   onSelectValue(evt) {
     const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
     this.facet.toggleSelect(item);
+    registerToStore(this.engineId, 'numericFacets', {
+      label: this.label,
+      facetId: this.facetId ?? this.field,
+      format: this.formattingFunction,
+    });
   }
 
   clearSelections() {

@@ -1,5 +1,5 @@
 import {api, LightningElement, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {registerComponentForInit, initializeWithHeadless, registerToStore} from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode} from 'c/quanticUtils';
 
 import clear from '@salesforce/label/c.quantic_Clear';
@@ -316,6 +316,10 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.toggleSelect(item);
     }
     this.clearInput();
+    registerToStore(this.engineId, 'categoryFacets', {
+      label: this.label,
+      facetId: this.facetId ?? this.field
+    });
   }
 
   getItemFromValue(value) {
