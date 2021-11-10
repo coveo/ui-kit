@@ -83,7 +83,6 @@
     "cypress": "8.2.0",
     "cypress-axe": "0.13.0",
     "eslint-plugin-cypress": "2.11.3",
-    "highlight.js": "^10.7.3",
     "html-loader-jest": "0.2.1",
     "jest": "26.6.3",
     "jest-cli": "26.6.3",
@@ -97,7 +96,6 @@
     "postcss-nested": "5.0.6",
     "puppeteer": "9.1.1",
     "react": "^16.14.0",
-    "react-monaco-editor": "^0.40.0",
     "rollup": "2.56.3",
     "rollup-plugin-html": "0.2.1",
     "rollup-plugin-typescript2": "0.30.0"
