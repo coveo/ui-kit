@@ -6,6 +6,10 @@ li {
   text-overflow: ellipsis;
 }
 
+.facet__value-container {
+  font-size: 12px;
+}
+
 .facet__number-of-results {
   color: #8e959d;
   font-size: 11px;
