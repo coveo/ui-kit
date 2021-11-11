@@ -61,7 +61,7 @@ export class AtomicAriaLive {
     return (
       <Host
         role="status"
-        aria-live="polite" // redundant, but recommended in Mozilla's doc
+        aria-live="polite"
         style={{position: 'absolute', right: '10000px'}}
       >
         {this.searchSummary}
