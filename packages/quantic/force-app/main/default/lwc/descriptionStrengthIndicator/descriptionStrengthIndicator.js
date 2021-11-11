@@ -66,13 +66,12 @@ export default class DescriptionStrengthIndicator extends LightningElement {
   }
 
   get message() {
-    switch (true) {
-      case (this._progress === 100):
-        return this.finalMessage;
-      case (this.keepGoingThreshold > 0 && this._progress >= this.keepGoingThreshold):
-        return this.keepGoingMessage;
-      default:
-        return this.initialMesssage;
+    if(this._progress === 100) {
+      return this.finalMessage;
+    } else if (this.keepGoingThreshold > 0 && this._progress >= this.keepGoingThreshold) {
+      return this.keepGoingMessage;
+    } else {
+      return this.initialMesssage;
     }
   }
 
