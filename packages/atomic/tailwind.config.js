@@ -91,17 +91,18 @@ module.exports = {
       ringColor: ['focus-visible'],
       ringWidth: ['focus-visible'],
       outline: ['focus-visible'],
+      outlineColor: ['focus-visible'],
     },
   },
   plugins: [
-    plugin(function ({addUtilities, theme}) {
+    plugin(function ({addUtilities, theme, variants}) {
       addUtilities(
         {
           '.outline-color': {
             outlineColor: theme('colors.primary-light'),
           },
         },
-        {variants: ['focus']}
+        variants('outlineColor')
       );
     }),
   ],
