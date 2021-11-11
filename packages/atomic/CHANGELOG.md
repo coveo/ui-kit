@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.4...@coveo/atomic@1.11.5) (2021-11-10)
+
+
+### Bug Fixes
+
+* **atomic:** fix storybook build for windows user ([#1460](https://github.com/coveo/ui-kit/issues/1460)) ([48d11f0](https://github.com/coveo/ui-kit/commit/48d11f0f1454c6c747548628f1fa6b2e17cb673e))
+
+
+
+
+
+## [1.11.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.3...@coveo/atomic@1.11.4) (2021-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.2...@coveo/atomic@1.11.3) (2021-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.1...@coveo/atomic@1.11.2) (2021-11-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.0...@coveo/atomic@1.11.1) (2021-11-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.10...@coveo/atomic@1.11.0) (2021-11-08)
 
 
