@@ -1,4 +1,9 @@
 import { LightningElement, api } from 'lwc';
+import thankYou from '@salesforce/label/c.cookbook_ThankYou';
+import provideDetails from '@salesforce/label/c.cookbook_ProvideDetails';
+import provideMoreDetails from '@salesforce/label/c.cookbook_ProvideMoreDetails';
+import dontKnowWhatToWrite from '@salesforce/label/c.cookbook_DontKnowWhatToWrite';
+
 
 /**
  * The `descriptionStrengthIndicator` component is a dynamic indicator that shows the user if their case description has enough details so far. It also give hints to the user as to what information they show include in the description. 
@@ -6,13 +11,20 @@ import { LightningElement, api } from 'lwc';
  * <c-description-strength-indicator></c-description-strength-indicator>
  */
 export default class DescriptionStrengthIndicator extends LightningElement {
+  labels = {
+    thankYou,
+    provideDetails,
+    provideMoreDetails,
+    dontKnowWhatToWrite
+  }
+  
   /**
    * The label to be shown to the user.
    * @api
    * @type {string}
    * @defaultValue `'Don’t know what to write?'`
    */
-  @api helpLabel = 'Don’t know what to write?';
+  @api helpLabel = this.labels.dontKnowWhatToWrite;
 
   /**
    * The initial message to be shown to the user.
@@ -20,7 +32,7 @@ export default class DescriptionStrengthIndicator extends LightningElement {
    * @type {string}
    * @defaultValue `'Provide details'`
    */
-  @api initialMesssage = 'Provide details';
+  @api initialMesssage = this.labels.provideDetails;
 
   /**
    * The message to be shown to encourage the user to keep going.
@@ -28,7 +40,7 @@ export default class DescriptionStrengthIndicator extends LightningElement {
    * @type {string}
    * @defaultValue `'Provide more details'`
    */
-  @api keepGoingMessage = 'Provide more details';
+  @api keepGoingMessage = this.labels.provideMoreDetails;
 
   /**
    * The progress value from where the keepGoingMessage will be shown.
@@ -44,7 +56,7 @@ export default class DescriptionStrengthIndicator extends LightningElement {
    * @type {string}
    * @defaultValue `'Thank you!'`
    */
-  @api finalMessage = "Thank you!";
+  @api finalMessage = this.labels.thankYou;
 
   /** @type {number} */
   _progress = 0;

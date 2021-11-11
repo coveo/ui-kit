@@ -228,4 +228,20 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+      <label>Donnez des détails</label>
+      <name>cookbook_ProvideDetails</name>
+    </customLabels>
+    <customLabels>
+      <label>Donnez plus de détails</label>
+      <name>cookbook_ProvideMoreDetails</name>
+    </customLabels>
+    <customLabels>
+      <label>Merci!</label>
+      <name>cookbook_ThankYou</name>
+    </customLabels>
+    <customLabels>
+      <label>Vous ne savez pas quoi écrire?</label>
+      <name>ccookbook_DontKnowWhatToWrite</name>
+    </customLabels>
 </Translations>

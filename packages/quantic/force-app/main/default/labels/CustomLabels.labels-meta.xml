@@ -448,4 +448,32 @@
         <protected>false</protected>
         <shortDescription>Expand [component label]</shortDescription>
     </labels>
+    <labels>
+      <fullName>cookbook_ProvideDetails</fullName>
+      <value>Provide details</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Provide details</shortDescription>
+    </labels>
+    <labels>
+      <fullName>cookbook_ProvideMoreDetails</fullName>
+      <value>Provide more details</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Provide more details</shortDescription>
+    </labels>
+    <labels>
+      <fullName>cookbook_ThankYou</fullName>
+      <value>Thank you!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Thank you!</shortDescription>
+    </labels>
+    <labels>
+      <fullName>cookbook_DontKnowWhatToWrite</fullName>
+      <value>Don’t know what to write?</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Don’t know what to write?</shortDescription>
+    </labels>
 </CustomLabels>
