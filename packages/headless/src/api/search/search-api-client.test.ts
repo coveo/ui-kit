@@ -89,7 +89,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = buildSearchRequest(state).request;
+      const req = (await buildSearchRequest(state)).request;
       const res = await searchAPIClient.search(req);
       if (!isErrorResponse(res)) {
         expect(res.success.searchUid).toEqual(newId);
@@ -117,7 +117,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = buildQuerySuggestRequest('test', state);
+      const req = await buildQuerySuggestRequest('test', state);
       const res = await searchAPIClient.querySuggest(req);
       if (!isErrorResponse(res)) {
         expect(res.success.completions).toEqual(completions);
@@ -145,7 +145,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = buildSpecificFacetSearchRequest('test', state);
+      const req = await buildSpecificFacetSearchRequest('test', state);
       const res = await searchAPIClient.facetSearch(req);
       expect(res.moreValuesAvailable).toEqual(true);
     });
@@ -158,8 +158,8 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.search
-    should call PlatformClient.call with the right options`, () => {
-      const req = buildSearchRequest(state).request;
+    should call PlatformClient.call with the right options`, async () => {
+      const req = (await buildSearchRequest(state)).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -195,9 +195,9 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.search multiple times
-    should abort the previous pending requests`, () => {
+    should abort the previous pending requests`, async () => {
       mockPlatformResponse(() => buildMockSearchEndpointResponse(), 3);
-      const req = buildSearchRequest(state).request;
+      const req = (await buildSearchRequest(state)).request;
       searchAPIClient.search(req);
       searchAPIClient.search(req);
       searchAPIClient.search(req);
@@ -210,8 +210,8 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.plan
-    should call PlatformClient.call with the right options`, () => {
-      const req = buildPlanRequest(state);
+    should call PlatformClient.call with the right options`, async () => {
+      const req = await buildPlanRequest(state);
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -230,6 +230,7 @@ describe('search api client', () => {
           searchHub: state.searchHub,
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
+          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
       };
@@ -238,12 +239,12 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.querySuggest
-    should call PlatformClient.call with the right options`, () => {
+    should call PlatformClient.call with the right options`, async () => {
       const id = 'someid123';
       const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
       state.querySuggest[id] = qs;
 
-      const req = buildQuerySuggestRequest(id, state);
+      const req = await buildQuerySuggestRequest(id, state);
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -264,6 +265,7 @@ describe('search api client', () => {
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
+          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
       };
@@ -272,7 +274,7 @@ describe('search api client', () => {
     });
 
     describe('SearchAPIClient.facetSearch', () => {
-      it('it calls Platform.call with the right options', () => {
+      it('it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
         const facetState = buildMockFacetRequest();
@@ -280,7 +282,7 @@ describe('search api client', () => {
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
 
-        const req = buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state);
         searchAPIClient.facetSearch(req);
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -296,14 +298,14 @@ describe('search api client', () => {
       });
 
       it(`when the id is on the facetSearchSet,
-      it calls PlatformClient.call with the facet search params`, () => {
+      it calls PlatformClient.call with the facet search params`, async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
         const facetState = buildMockFacetRequest();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
-        const req = buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state);
 
         searchAPIClient.facetSearch(req);
 
@@ -321,7 +323,7 @@ describe('search api client', () => {
             field: facetState.field,
             ignoreValues: [],
             searchContext: {
-              ...buildSearchRequest(state).request,
+              ...(await buildSearchRequest(state)).request,
               visitorId: expect.any(String),
             },
           },
@@ -329,7 +331,7 @@ describe('search api client', () => {
       });
 
       it(`when the id is on the categoryFacetSearchSet,
-      it calls PlatformClient.call with the category facet search params`, () => {
+      it calls PlatformClient.call with the category facet search params`, async () => {
         const id = '1';
         const categoryFacetSearch = buildMockCategoryFacetSearch();
         const categoryFacet = buildMockCategoryFacetRequest();
@@ -339,7 +341,7 @@ describe('search api client', () => {
           request: categoryFacet,
         });
 
-        const req = buildCategoryFacetSearchRequest(id, state);
+        const req = await buildCategoryFacetSearchRequest(id, state);
 
         searchAPIClient.facetSearch(req);
 
@@ -359,7 +361,7 @@ describe('search api client', () => {
             delimitingCharacter: categoryFacet.delimitingCharacter,
             ignorePaths: [],
             searchContext: {
-              ...buildSearchRequest(state).request,
+              ...(await buildSearchRequest(state)).request,
               visitorId: expect.any(String),
             },
           },
@@ -368,7 +370,7 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.recommendations
-      should call PlatformClient.call with the right options`, () => {
+      should call PlatformClient.call with the right options`, async () => {
       const originLevel2 = 'tab';
       const originLevel3 = 'referrer';
       const analytics = buildMockAnalyticsState({
@@ -383,7 +385,7 @@ describe('search api client', () => {
         contextValues: {price: 'fr'},
       };
 
-      const req = buildRecommendationRequest(recommendationState);
+      const req = await buildRecommendationRequest(recommendationState);
 
       searchAPIClient.recommendations(req);
 
@@ -409,6 +411,7 @@ describe('search api client', () => {
           actionsHistory: expect.any(Array),
           tab: originLevel2,
           referrer: originLevel3,
+          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
       };
@@ -418,7 +421,7 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.productRecommendations
-      should call PlatformClient.call with the right options`, () => {
+      should call PlatformClient.call with the right options`, async () => {
       const productRecommendationsState = buildMockProductRecommendationsState({
         productRecommendations: {
           ...getProductRecommendationsInitialState(),
@@ -434,7 +437,7 @@ describe('search api client', () => {
         contextValues: {price: 'fr'},
       };
 
-      const req = buildProductRecommendationsRequest(
+      const req = await buildProductRecommendationsRequest(
         productRecommendationsState
       );
 
@@ -495,7 +498,7 @@ describe('search api client', () => {
         const response = new Response(payload, {headers});
         PlatformClient.call = () => Promise.resolve(response);
 
-        const req = buildResultPreviewRequest(state, {uniqueId: '1'});
+        const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
         const res = await searchAPIClient.html(req);
 
         expect(res.success).toBe('hello');
@@ -512,7 +515,9 @@ describe('search api client', () => {
 
       PlatformClient.call = () => Promise.resolve(response);
       const res = await searchAPIClient.search(
-        buildSearchRequest(state).request
+        (
+          await buildSearchRequest(state)
+        ).request
       );
       if (isErrorResponse(res)) {
         fail(
