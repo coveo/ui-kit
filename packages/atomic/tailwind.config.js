@@ -81,22 +81,28 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['visited', 'group-focus', 'disabled'],
-      border: ['disabled'],
+      textColor: ['visited', 'group-focus', 'disabled', 'focus-visible'],
+      borderColor: ['disabled', 'focus-visible'],
       cursor: ['disabled'],
-      backgroundColor: ['group-focus'],
+      borderWidth: ['focus-visible'],
+      backgroundColor: ['group-focus', 'focus-visible'],
       borderRadius: ['first', 'last'],
+      textDecoration: ['focus-visible'],
+      ringColor: ['focus-visible'],
+      ringWidth: ['focus-visible'],
+      outline: ['focus-visible'],
+      outlineColor: ['focus-visible'],
     },
   },
   plugins: [
-    plugin(function ({addUtilities, theme}) {
+    plugin(function ({addUtilities, theme, variants}) {
       addUtilities(
         {
           '.outline-color': {
             outlineColor: theme('colors.primary-light'),
           },
         },
-        {variants: ['focus']}
+        variants('outlineColor')
       );
     }),
   ],
