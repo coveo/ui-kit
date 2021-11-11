@@ -5,6 +5,7 @@ import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
 import {AtomicStore} from './store';
 import {Hidden} from '../components/common/hidden';
+import {UpdateLiveRegionEventArgs} from '../components/atomic-search-interface/atomic-aria-live';
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -209,6 +210,26 @@ export function BindStateToController(
       !getElement(this).isConnected && unsubscribeController();
       disconnectedCallback && disconnectedCallback.call(this);
     };
+  };
+}
+
+export function AriaRegion(regionName: string) {
+  function setMessage(message: string) {
+    document.dispatchEvent(
+      buildCustomEvent<UpdateLiveRegionEventArgs>(
+        'atomic/accessibility/updateLiveRegion',
+        {
+          region: regionName,
+          message,
+        }
+      )
+    );
+  }
+
+  return (component: InitializableComponent, setterName: string) => {
+    Object.defineProperty(component, setterName, {
+      set: (message) => setMessage(message),
+    });
   };
 }
 

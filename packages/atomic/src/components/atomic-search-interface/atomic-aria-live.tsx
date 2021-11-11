@@ -1,17 +1,9 @@
-import {
-  buildQuerySummary,
-  buildSearchStatus,
-  QuerySummary,
-  QuerySummaryState,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
-import {Component, h, Host, State} from '@stencil/core';
-import {
-  Bindings,
-  BindStateToController,
-  InitializeBindings,
-} from '../../utils/initialization-utils';
+import {Component, h, Host, Listen, State} from '@stencil/core';
+
+export interface UpdateLiveRegionEventArgs {
+  region: string;
+  message: string;
+}
 
 /**
  * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -22,49 +14,27 @@ import {
   shadow: false,
 })
 export class AtomicAriaLive {
-  @InitializeBindings() public bindings!: Bindings;
-  @State() public error!: Error;
+  @State() public regions: Record<string, string> = {};
 
-  protected searchStatus!: SearchStatus;
-  @BindStateToController('searchStatus')
-  @State()
-  private searchStatusState!: SearchStatusState;
-  protected querySummary!: QuerySummary;
-  @BindStateToController('querySummary')
-  @State()
-  private querySummaryState!: QuerySummaryState;
-
-  private get searchSummary() {
-    if (!this.searchStatusState.firstSearchExecuted) {
-      return '';
-    }
-    if (this.searchStatusState.isLoading) {
-      return this.bindings.i18n.t('loading-results');
-    }
-    if (!this.searchStatusState.hasResults) {
-      return this.bindings.i18n.t('no-results');
-    }
-    return this.bindings.i18n.t('showing-results-of', {
-      count: this.querySummaryState.lastResult,
-      first: this.querySummaryState.firstResult.toLocaleString(),
-      last: this.querySummaryState.lastResult.toLocaleString(),
-      total: this.querySummaryState.total.toLocaleString(),
-    });
-  }
-
-  public initialize() {
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.querySummary = buildQuerySummary(this.bindings.engine);
+  @Listen('atomic/accessibility/updateLiveRegion', {target: 'document'})
+  protected updateMessage({
+    detail: {message, region},
+  }: CustomEvent<UpdateLiveRegionEventArgs>) {
+    this.regions = {...this.regions, [region]: message};
   }
 
   public render() {
     return (
-      <Host
-        role="status"
-        aria-live="polite"
-        style={{position: 'absolute', right: '10000px'}}
-      >
-        {this.searchSummary}
+      <Host style={{position: 'absolute', right: '10000px'}}>
+        {Object.entries(this.regions).map(([region, message]) => (
+          <div
+            role="status"
+            aria-live="polite"
+            id={`atomic-aria-region-${region}`}
+          >
+            {message}
+          </div>
+        ))}
       </Host>
     );
   }

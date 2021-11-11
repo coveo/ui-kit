@@ -11,6 +11,7 @@ import {
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
 import {
+  AriaRegion,
   Bindings,
   BindStateToController,
   InitializeBindings,
@@ -49,6 +50,9 @@ export class AtomicNoResults {
   private querySummaryState!: QuerySummaryState;
   @State() public error!: Error;
 
+  @AriaRegion('no-results')
+  protected ariaMessage!: string;
+
   /**
    * Whether to display a button which cancels the last available action.
    */
@@ -71,6 +75,15 @@ export class AtomicNoResults {
         class="my-6 flex flex-col items-center w-1/2"
       ></atomic-icon>
     );
+  }
+
+  private get summary() {
+    return this.querySummaryState.hasQuery
+      ? this.bindings.i18n.t('no-results-for', {
+          interpolation: {escapeValue: false},
+          query: this.querySummaryState.query,
+        })
+      : this.bindings.i18n.t('no-results');
   }
 
   private renderNoResults() {
@@ -121,6 +134,8 @@ export class AtomicNoResults {
     ) {
       return;
     }
+
+    this.ariaMessage = this.summary;
 
     return [
       <div class="flex flex-col items-center h-full w-full text-on-background">
