@@ -7,7 +7,7 @@ const ADDON_PARAMETER_KEY = 'shadowParts';
 import './shadow-parts-panel.css';
 
 export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
-  const componentTag = useParameter(ADDON_PARAMETER_KEY, null);
+  const componentTag = useParameter(ADDON_PARAMETER_KEY, null)?.componentTag;
   const [_, updateArgs] = useArgs();
   const componentDocumentation = getDocumentationFromTag(componentTag);
   const [open, setOpen] = useState({});

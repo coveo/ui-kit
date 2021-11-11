@@ -4,9 +4,9 @@ import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
 import {TemplateResult} from 'lit-html';
 import {mapPropsToArgTypes} from './map-props-to-args';
+import {resultComponentArgTypes} from './map-result-list-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
-
 export interface DefaultStoryAdvancedConfig {
   engineConfig?: Partial<SearchEngineConfiguration>;
   additionalMarkup?: () => TemplateResult;
@@ -25,14 +25,27 @@ export function renderArgsToHTMLString(
 ) {
   const {additionalChildMarkup, parentElement} = advancedConfig;
   const el = document.createElement(componentTag);
-  Object.keys(args)
-    .filter((arg) => arg.indexOf(ADDON_PARAMETER_KEY) === -1)
-    .forEach((arg) => {
-      el.setAttribute(camelToKebab(arg), args[arg]);
-    });
-  el.innerHTML = additionalChildMarkup
-    ? additionalChildMarkup().strings.join('') + '\n'
-    : '';
+
+  const argsFilteredOnProps = Object.keys(args)
+    .filter(
+      (key) =>
+        Object.keys(resultComponentArgTypes).indexOf(key) === -1 &&
+        key.indexOf(ADDON_PARAMETER_KEY) === -1
+    )
+    .reduce((res, key) => ((res[key] = args[key]), res), {});
+
+  Object.keys(argsFilteredOnProps).forEach((arg) => {
+    el.setAttribute(camelToKebab(arg), args[arg]);
+  });
+
+  // TODO: KIT-1203
+  // This is a hack
+  if (typeof additionalChildMarkup === 'function') {
+    el.innerHTML = additionalChildMarkup().strings.join('');
+  }
+  if (typeof additionalChildMarkup === 'string') {
+    el.innerHTML = additionalChildMarkup;
+  }
 
   if (parentElement) {
     const parent = parentElement();
@@ -47,8 +60,16 @@ export function renderShadowPartsToStyleString(
   componentTag: string,
   args: Args
 ) {
+  const argsFilteredOnStyleRules = Object.keys(args).filter(
+    (arg) => arg.indexOf(ADDON_PARAMETER_KEY) !== -1
+  );
+
+  if (!argsFilteredOnStyleRules.length) {
+    return '';
+  }
+
   const styleElement = document.createElement('style');
-  const styleRules = Object.keys(args)
+  const styleRules = argsFilteredOnStyleRules
     .filter((arg) => arg.indexOf(ADDON_PARAMETER_KEY) !== -1)
     .map((arg) => {
       const shadowPartName = arg.split(`${ADDON_PARAMETER_KEY}:`)[1];
@@ -57,10 +78,10 @@ export function renderShadowPartsToStyleString(
       ).filter((rule) => rule != '');
 
       const rulesFormattedByLine = `\t${rulesForPartWithoutEmptyLines.join(
-        '\n\t'
+        ''
       )}`;
 
-      return `\n${componentTag}::part(${shadowPartName}) {\n${rulesFormattedByLine}\n}`;
+      return `\n${componentTag}::part(${shadowPartName}) {${rulesFormattedByLine}}`;
     })
     .join('\n');
 
@@ -74,6 +95,7 @@ export default function sharedDefaultStory(
   componentTag: string,
   defaultArgs: Args,
   docPage: typeof DocsPage,
+  isResultComponent: boolean,
   advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
   let currentArgs = {};
@@ -89,7 +111,20 @@ export default function sharedDefaultStory(
       docs: {
         page: docPage,
       },
-      [ADDON_PARAMETER_KEY]: componentTag,
+      [ADDON_PARAMETER_KEY]: {
+        componentTag,
+        isResultComponent,
+        // TODO: KIT-1203
+        // This is a hack
+        advancedConfig: {
+          ...advancedConfig,
+          ...{
+            additionalChildMarkup: advancedConfig.additionalChildMarkup
+              ? advancedConfig.additionalChildMarkup().strings.join('')
+              : '',
+          },
+        },
+      },
     },
   };
 
