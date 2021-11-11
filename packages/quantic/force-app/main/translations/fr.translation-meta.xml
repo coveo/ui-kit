@@ -228,4 +228,8 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+      <label>Écrivez un titre descriptif</label>
+      <name>cookbook_WriteDescriptiveTitle</name>
+    </customLabels>
 </Translations>

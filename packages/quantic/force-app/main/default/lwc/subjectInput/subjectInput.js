@@ -1,20 +1,56 @@
 import { LightningElement, api } from 'lwc';
+import writeDescriptiveTitle from '@salesforce/label/c.cookbook_WriteDescriptiveTitle';
 
+/**
+ * The `subjectInput` component is an input for the subject of the case. 
+ * @example
+ * <c-subject-input></c-subject-input>
+ */
 export default class SubjectInput extends LightningElement {
-    @api label = "Write a descriptive title";
-    @api maxLength = 100;
-    value = '';
-    length = this.value.length;
+  labels = {
+    writeDescriptiveTitle
+  }
+  /**
+   * The label of the input.
+   * @api
+   * @type {string}
+   * @defaultValue `'Write a descriptive title'`
+   */
+  @api label = this.labels.writeDescriptiveTitle;
 
-    handleChange = (e) => {
-        this.value = e.target.value;
-        this.length = e.target.value.length;
-    }
+  /**
+   * The maximum length of the string to be written in the input.
+   * @api
+   * @type {number}
+   * @defaultValue `100`
+   */
+  @api maxLength = 100;
 
-    @api getValue() {
-        return this.value;
-    }
-    @api getLength() {
-        return this.length;
-    }
+  /** @type {string} */
+  _value = '';
+
+  /** @type {number} */
+  _length = this._value.length;
+
+  handleChange = (e) => {
+    this._value = e.target.value;
+    this._length = e.target.value.length;
+  }
+
+  /**
+   * Returns the value of the input.
+   * @api
+   * @returns {string}
+   */
+  @api get value() {
+    return this._value;
+  }
+
+  /**
+   * Returns the length of the value of the input.
+   * @returns {number}
+   */
+  get length() {
+    return this._length;
+  }
 }
