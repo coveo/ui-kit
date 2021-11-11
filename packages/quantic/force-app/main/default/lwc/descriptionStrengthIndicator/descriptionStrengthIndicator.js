@@ -7,56 +7,88 @@ import { LightningElement, api } from 'lwc';
  */
 export default class DescriptionStrengthIndicator extends LightningElement {
   /**
-   * The message to be shown to the user.
+   * The label to be shown to the user.
    * @api
    * @type {string}
    * @defaultValue `'Don’t know what to write?'`
    */
   @api helpLabel = 'Don’t know what to write?';
 
+  /**
+   * The initial message to be shown to the user.
+   * @api
+   * @type {string}
+   * @defaultValue `'Provide details'`
+   */
+  @api initialMesssage = 'Provide details';
+
+  /**
+   * The message to be shown to encourage the user to keep going.
+   * @api
+   * @type {string}
+   * @defaultValue `'Provide more details'`
+   */
+  @api keepGoingMessage = 'Provide more details';
+
+  /**
+   * The progress value from where the keepGoingMessage will be shown.
+   * @api
+   * @type {number}
+   * @defaultValue `75`
+   */
+  @api keepGoingThreshold = 75;
+
+  /**
+   * The final message to be shown to the user when the progress indicator is full.
+   * @api
+   * @type {string}
+   * @defaultValue `'Thank you!'`
+   */
+  @api finalMessage = "Thank you!";
+
   /** @type {number} */
-  _progression = 0;
+  _progress = 0;
 
   get variant() {
-    return this._progression < 100 ? 'warning' : 'base-autocomplete';
+    return this._progress < 100 ? 'warning' : 'base-autocomplete';
   }
 
   get message() {
-    return this._progression === 0 ? 'Provide details' : this._progression < 100 ? 'Provide more details' : 'Thank you!';
+    switch (true) {
+      case (this._progress === 100):
+        return this.finalMessage;
+      case (this.keepGoingThreshold > 0 && this._progress >= this.keepGoingThreshold):
+        return this.keepGoingMessage;
+      default:
+        return this.initialMesssage;
+    }
   }
 
   /**
-   * Tells if the progression indicator is full.
+   * Tells if the progress indicator is full.
    * @api
    * @returns {boolean}
    */
   @api isFull() {
-    return this._progression >= 100;
+    return this._progress >= 100;
   }
 
   /**
-   * Set the progression.
+   * Set the progress value.
    * @api
-   * @param {number} progression - the progression to be set.
+   * @param {number} progress - the progress value to be set.
    * @returns {void}
    */
-  @api set progression(progression) {
-    this._progression = progression <= 100 ? progression : 100;
+  @api set progress(progress) {
+    this._progress = Math.max(Math.min(progress, 100), 0);
   }
+
   /**
-   * Returns the progression.
+   * Returns the progress value.
    * @api
    * @returns {number}
    */
-  get progression() {
-    return this._progression;
-  }
-
-  /**
-   * Increases the progression by 25%.
-   * @returns {void}
-   */
-  @api increaseProgress() {
-    this._progression = (this._progression <= 75) ? this._progression + 25 : 100;
+  get progress() {
+    return this._progress;
   }
 }
