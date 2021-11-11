@@ -20,7 +20,7 @@ async function main() {
     InvalidationBatch: {
       CallerReference: new Date().getTime().toString(),
       Paths: {
-        Quantity: 1,
+        Quantity: pathsToInvalidate.length,
         Items: pathsToInvalidate,
       },
     },
