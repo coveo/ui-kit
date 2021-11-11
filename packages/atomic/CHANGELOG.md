@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.6...@coveo/atomic@1.12.0) (2021-11-11)
+
+
+### Features
+
+* **atomic:** add support for focus-visible ([#1463](https://github.com/coveo/ui-kit/issues/1463)) ([7601409](https://github.com/coveo/ui-kit/commit/7601409bdde34269bc34fd037be4d61f798d8e5f))
+
+
+
+
+
 ## [1.11.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.5...@coveo/atomic@1.11.6) (2021-11-11)
 
 **Note:** Version bump only for package @coveo/atomic
