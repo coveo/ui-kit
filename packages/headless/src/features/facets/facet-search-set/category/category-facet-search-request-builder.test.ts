@@ -2,10 +2,10 @@ import {createMockState} from '../../../../test/mock-state';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildCategoryFacetSearchRequest} from '../../../../features/facets/facet-search-set/category/category-facet-search-request-builder';
+import {buildCategoryFacetSearchRequest} from './category-facet-search-request-builder';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
-import {buildSearchRequest} from '../../../../features/search/search-request';
+import {buildSearchRequest} from '../../../search/search-request';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   const id = '1';
@@ -58,6 +58,13 @@ describe('#buildCategoryFacetSearchRequest', () => {
     state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
     expect((await buildParams()).field).toBe(field);
+  });
+
+  it('retrieves #filterFacetCount from the categoryFacetSet', async () => {
+    const request = buildMockCategoryFacetRequest({filterFacetCount: true});
+    state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
+
+    expect((await buildParams()).filterFacetCount).toBe(true);
   });
 
   it('retrieves the #delimitingCharacter from the categoryFacetSet', async () => {

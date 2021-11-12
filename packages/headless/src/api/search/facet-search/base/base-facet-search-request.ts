@@ -18,6 +18,7 @@ export interface BaseFacetSearchRequest
     VisitorIDParam {
   field: string;
   searchContext: SearchRequest;
+  filterFacetCount: boolean;
 }
 
 export interface FacetSearchType<T extends 'specific' | 'hierarchical'> {
