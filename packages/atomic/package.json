@@ -19,7 +19,8 @@
   "files": [
     "dist/",
     "loader/",
-    "docs/"
+    "docs/",
+    "licenses/"
   ],
   "scripts": {
     "build": "npm run build:locales && npm run build:stencil && npm run build:utils && npm run build:storybook",
@@ -52,7 +53,7 @@
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
     "stencil-inline-svg": "^1.0.1",
-    "tailwindcss": "^2.2.2"
+    "tailwindcss": "^2.2.19"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
