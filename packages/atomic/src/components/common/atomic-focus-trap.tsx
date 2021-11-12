@@ -73,7 +73,7 @@ export class AtomicFocusTrap {
     }
   }
 
-  isolate(element: Element | ShadowRoot) {
+  hideSiblingsRecursively(element: Element | ShadowRoot) {
     const parent = getParent(element);
     if (parent === null) {
       return;
@@ -88,13 +88,13 @@ export class AtomicFocusTrap {
       this.hide(sibling);
     });
     if (parent !== document.body) {
-      this.isolate(parent);
+      this.hideSiblingsRecursively(parent);
     }
   }
 
   @Watch('active')
   activeChanged(active: boolean) {
-    active ? this.isolate(this.host) : this.showAll();
+    active ? this.hideSiblingsRecursively(this.host) : this.showAll();
   }
 
   @Listen('focusin', {target: 'document'})
