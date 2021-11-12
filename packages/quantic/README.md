@@ -3,7 +3,7 @@
 ## Using The Library
 [How to use the Coveo Quantic Library](https://docs.coveo.com/en/quantic/latest/)
 
-[Install Coveo Quantic as a Salesforce unlocked package](https://docs.coveo.com/en/quantic/1.0.0/usage/#install-quantic)
+[Install Coveo Quantic as a Salesforce unlocked package](https://docs.coveo.com/en/quantic/latest/usage/#install-quantic)
 
 
 ## Contributing
