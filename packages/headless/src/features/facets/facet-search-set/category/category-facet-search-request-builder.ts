@@ -11,7 +11,8 @@ export const buildCategoryFacetSearchRequest = (
   const categoryFacet = state.categoryFacetSet[id]!.request;
 
   const {captions, query, numberOfValues} = options;
-  const {field, delimitingCharacter, basePath} = categoryFacet;
+  const {field, delimitingCharacter, basePath, filterFacetCount} =
+    categoryFacet;
   const searchContext = buildSearchRequest(state).request;
   const path = getPathToSelectedCategoryFacetItem(categoryFacet);
   const ignorePaths = path.length ? [path] : [];
@@ -29,6 +30,7 @@ export const buildCategoryFacetSearchRequest = (
     delimitingCharacter,
     ignorePaths,
     searchContext,
+    filterFacetCount,
     type: 'hierarchical',
   };
 };

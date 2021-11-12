@@ -3,8 +3,8 @@ import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-requ
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildSpecificFacetSearchRequest} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
-import {buildSearchRequest} from '../../../../features/search/search-request';
+import {buildSpecificFacetSearchRequest} from './specific-facet-search-request-builder';
+import {buildSearchRequest} from '../../../search/search-request';
 
 describe('#buildSpecificFacetSearchRequest', () => {
   const id = '1';
@@ -48,6 +48,12 @@ describe('#buildSpecificFacetSearchRequest', () => {
     state.facetSet[id].field = field;
 
     expect(buildParams().field).toBe(field);
+  });
+
+  it('retrieves #filterFacetCount from the facetSet', () => {
+    state.facetSet[id].filterFacetCount = true;
+
+    expect(buildParams().filterFacetCount).toBe(true);
   });
 
   it('builds the #ignoreValues from the facetSet non-idle #currentValues', () => {
