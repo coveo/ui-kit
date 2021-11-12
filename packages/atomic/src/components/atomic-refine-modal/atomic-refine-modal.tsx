@@ -94,7 +94,6 @@ export class AtomicRefineModal implements InitializableComponent {
 
   @DeferUntilRender()
   private focusOnOpenButton() {
-    console.log(this.openButton);
     this.openButton?.focus();
   }
 
