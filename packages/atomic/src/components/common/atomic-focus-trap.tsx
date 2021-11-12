@@ -46,6 +46,9 @@ function getFirstFocusableDescendant(element: Element) {
   ) as HTMLElement | null;
 }
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-focus-trap',
   shadow: false,
