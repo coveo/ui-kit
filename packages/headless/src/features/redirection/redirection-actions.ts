@@ -45,7 +45,7 @@ export const checkForRedirection = createAsyncThunk<
         emptyAllowed: false,
       }),
     });
-    const response = await apiClient.plan(buildPlanRequest(getState()));
+    const response = await apiClient.plan(await buildPlanRequest(getState()));
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
     }
