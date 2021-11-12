@@ -7,9 +7,8 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getFromStore,
-  getHeadlessBindings
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, RelativeDateFormatter} from 'c/quanticUtils';
+import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
@@ -107,7 +106,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatRangeBreadcrumbValue(breadcrumb) {
-    const data = getFromStore(this.engineId, 'numericFacets');
+    const data = getFromStore(this.engineId, Store.facetTypes.NUMERICFACETS);
     return {
       ...breadcrumb,
       label: data[breadcrumb.field]?.label,
@@ -153,19 +152,19 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
-    const data = getFromStore(this.engineId, 'timeFrameFacets');
+    const data = getFromStore(this.engineId, Store.facetTypes.DATEFACETS);
     return {
       ...breadcrumb,
       label: data[breadcrumb.field]?.label,
       values: breadcrumb.values.map(range => ({
         ...range,
-        value: this.formatDateRange(range.value),
+        value: data[breadcrumb.field]?.format(range.value),
       }))
     };
   }
   
   formatFacetBreadcrumbValue(breadcrumb) {
-    const data = getFromStore(this.engineId, 'facets');
+    const data = getFromStore(this.engineId, Store.facetTypes.FACETS);
     return {
       ...breadcrumb,
       label: data[breadcrumb.field]?.label,
@@ -217,7 +216,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   get categoryFacetBreadcrumbsValues() {
-    const data = getFromStore(this.engineId, 'categoryFacets');
+    const data = getFromStore(this.engineId, Store.facetTypes.CATEGORYFACETS);
     return this.categoryFacetBreadcrumbs.map(breadcrumb => {
       const breadcrumbValues = this.formatCategoryBreadcrumbValue(breadcrumb);
       return {

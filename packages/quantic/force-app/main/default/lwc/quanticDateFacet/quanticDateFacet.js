@@ -4,7 +4,7 @@ import {
   initializeWithHeadless,
   registerToStore,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, fromSearchApiDate} from 'c/quanticUtils';
+import {I18nUtils, fromSearchApiDate, Store} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
@@ -131,7 +131,7 @@ export default class QuanticDateFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-    registerToStore(this.engineId, 'dateFacets', {
+    registerToStore(this.engineId, Store.facetTypes.DATEFACETS, {
       label: this.label,
       facetId: this.facetId ?? this.field,
       format: this.formattingFunction,

@@ -7,9 +7,11 @@ import {
   getHeadlessEnginePromise,
   initializeWithHeadless,
   destroyEngine,
+  registerToStore,
+  getFromStore,
 } from '../quanticHeadlessLoader';
 import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
-import { Deferred } from '../../quanticUtils/quanticUtils';
+import { Deferred, Store } from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
   const testOptions = {
@@ -43,6 +45,14 @@ describe('c/quanticHeadlessLoader', () => {
       element,
       initialized: true
     });
+  }
+
+  /**
+   * @param {string | number} [id]
+   * @param {Record<String, unknown>} [store]
+   */
+  function initQuanticeStoreTest(id,store) {
+    window.coveoHeadless[id].bindings.store = store;
   }
 
   beforeEach(() => {
@@ -419,5 +429,85 @@ describe('c/quanticHeadlessLoader', () => {
 
       expect(window.coveoHeadless[testId]).toEqual({});
     });
+  });
+
+  describe('registerToStore', () => {
+    beforeEach(() => {
+      window.coveoHeadless = {
+        [testId]: {
+          bindings: {}
+        }
+      }
+    });
+    
+    it('should return error when store is undefined', () => {
+      initQuanticeStoreTest(testId, undefined);
+      registerToStore(testId, 'someFacets', { label: '', facetId: ''});
+
+      expect(window.coveoHeadless[testId].bindings.store).not.toBeDefined();
+      expect(mockedConsoleError.mock.calls.length).toBe(1);
+    });
+    
+    it('should return error when store is empty', () => {
+      initQuanticeStoreTest(testId, {});
+      registerToStore(testId, 'someFacets', { label: '', facetId: ''});
+
+      expect(window.coveoHeadless[testId].bindings.store).toStrictEqual({});
+      expect(mockedConsoleError.mock.calls.length).toBe(1);
+    });
+
+    it('should register the facet data in the store', () => {
+      initQuanticeStoreTest(testId, { state: { someFacets: {}}});
+      registerToStore(testId, 'someFacets', { label: '', facetId: ''});
+
+      expect(window.coveoHeadless[testId].bindings.store.state.someFacets).toBeDefined();
+      expect(mockedConsoleError.mock.calls.length).toBe(0);
+    });
+
+    it('should not update store with same facetId with new data', () => {
+      initQuanticeStoreTest(testId, { state: { someFacets: {}}});
+
+      registerToStore(testId, 'someFacets', { label: 'some label', facetId: 'facetId'});
+      expect(window.coveoHeadless[testId].bindings.store.state.someFacets.facetId.label).toBe('some label');
+
+      registerToStore(testId, 'someFacets', { label: 'a new label', facetId: 'facetId'});
+      expect(window.coveoHeadless[testId].bindings.store.state.someFacets.facetId.label).toBe('some label');
+    });
+  });
+
+  describe('getFromStore', () => {
+    beforeEach(() => {
+      window.coveoHeadless = {
+        [testId]: {
+          bindings: {}
+        }
+      }
+    });
+
+    it('should return error when store is empty', () => {
+      initQuanticeStoreTest(testId, {});
+      const data = getFromStore(testId, 'someFacets');
+
+      expect(data).not.toBeDefined();
+      expect(mockedConsoleError.mock.calls.length).toBe(1);
+    });
+
+    it('should return undefined when facetType does not exist in store ', () => {
+      initQuanticeStoreTest(testId, { state: { 'someOtherFacet': { label: 'label', facetId: 'facetId'}}});
+      const data = getFromStore(testId, 'someFacets');
+
+      expect(data).not.toBeDefined();
+      expect(mockedConsoleError.mock.calls.length).toBe(0);
+    });
+
+    it('should return data from store', () => {
+      initQuanticeStoreTest(testId, { state: { 'someFacets': { label: 'label', facetId: 'facetId'}}});
+      const data = getFromStore(testId, 'someFacets');
+
+      expect(data).toBeDefined();
+      expect(data.label).toBe('label');
+      expect(data.facetId).toBe('facetId');
+    });
   })
 });
+

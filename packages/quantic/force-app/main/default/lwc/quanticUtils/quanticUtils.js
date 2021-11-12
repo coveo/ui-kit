@@ -422,13 +422,18 @@ export class RelativeDateFormatter {
 
 export class Store {
 
+  static facetTypes = {
+    FACETS: 'facets' , 
+    NUMERICFACETS: 'numericFacets' , 
+    DATEFACETS: 'dateFacets' , 
+    CATEGORYFACETS: 'categoryFacets' 
+  }
   static initialize() {
     return { 
       state : { 
         facets: {},
         numericFacets: {},
         dateFacets: {},
-        timeFrameFacets: {},
         categoryFacets: {},
       }}
   }

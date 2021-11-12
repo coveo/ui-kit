@@ -9,6 +9,7 @@ import {
   fromSearchApiDate,
   I18nUtils,
   RelativeDateFormatter,
+  Store,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
@@ -312,9 +313,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
     this.initializeDateFilterController(engine);
-    registerToStore(this.engineId, 'timeFrameFacets', {
+    registerToStore(this.engineId, Store.facetTypes.DATEFACETS, {
       label: this.label,
       facetId: this.facetId ?? this.field,
+      format: this.formatFacetValue,
     });
   };
 

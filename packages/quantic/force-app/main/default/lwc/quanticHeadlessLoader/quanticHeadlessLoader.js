@@ -120,13 +120,13 @@ async function initEngine(engineId) {
  * initialize coveoHeadless Store object 
  * @param {string} engineId The id of the engine.
  */
-const initStore = (engineId) => {
+const initQuanticStore = (engineId) => {
   try {
      if(!window.coveoHeadless[engineId]?.bindings?.store) {
        window.coveoHeadless[engineId].bindings.store = Store.initialize();
      }
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Coveo Headless Store: ' + error);
+    throw new Error('Fatal error: unable to initialize quantic Store: ' + error);
   }
 }
 
@@ -212,7 +212,7 @@ function getHeadlessBindings(engineId) {
  * Returns Store object for specified engineId.
  * @param {string} engineId The id of the engine.
  */
-function getHeadlessStore(engineId) {
+function getQuanticStore(engineId) {
  return window.coveoHeadless?.[engineId]?.bindings?.store;
 }
 
@@ -229,7 +229,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
   try {
     initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
-    initStore(engineId);
+    initQuanticStore(engineId);
     
   } catch (error) {
     console.error('Fatal error: unable to initialize component', error);
@@ -249,22 +249,31 @@ function destroyEngine(engineId) {
 /**
  * Register facet in the store.
  * @param {string} engineId The id of the engine.
- * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets' | 'timeFrameFacets' } facetType
+ * @param {string} facetType
  * @param {{ label: string; facetId: string; format?: function}} data
  */
 function registerToStore(engineId, facetType, data) {
-  const store = getHeadlessStore(engineId);
-  Store.registerFacetToStore(store, facetType, data);
+  const store = getQuanticStore(engineId);
+  try {
+    Store.registerFacetToStore(store, facetType, data);
+  } catch (error) {
+    console.error('Fatal error: unable to register in store', error);
+  }
 }
 
 /**
  * get facet data from store.
  * @param {string} engineId The id of the engine.
- * @param {'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets' | 'timeFrameFacets'} facetType
+ * @param {string} facetType
  */
 function getFromStore(engineId, facetType) {
-  const store = getHeadlessStore(engineId);
+  const store = getQuanticStore(engineId);
+  try {
   return Store.getFromStore(store, facetType);
+  } catch (error) {
+    console.error('Fatal error: unable to get data from store', error);
+    return undefined;
+  }
 }
 
 export {

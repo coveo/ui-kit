@@ -5,7 +5,7 @@ import {
   initializeWithHeadless,
   registerToStore,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode} from 'c/quanticUtils';
+import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
 
 import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
@@ -184,6 +184,10 @@ export default class QuanticFacet extends LightningElement {
     };
     this.facet = CoveoHeadless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    registerToStore(this.engineId, Store.facetTypes.FACETS, {
+      label: this.label,
+      facetId: this.facetId ?? this.field
+    });
   }
 
   disconnectedCallback() {
@@ -347,10 +351,6 @@ export default class QuanticFacet extends LightningElement {
       this.onSelectClickHandler(item);
     }
     this.clearInput();
-    registerToStore(this.engineId, 'facets', {
-      label: this.label,
-      facetId: this.facetId ?? this.field
-    });
   }
 
   showMore() {
