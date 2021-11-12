@@ -3,7 +3,7 @@ import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 
 export function AriaLiveRegion(regionName: string) {
-  function setMessage(message: string) {
+  function dispatchMessage(message: string) {
     document.dispatchEvent(
       buildCustomEvent<UpdateLiveRegionEventArgs>(
         'atomic/accessibility/updateLiveRegion',
@@ -17,7 +17,7 @@ export function AriaLiveRegion(regionName: string) {
 
   return (component: InitializableComponent, setterName: string) => {
     Object.defineProperty(component, setterName, {
-      set: (message) => setMessage(message),
+      set: (message) => dispatchMessage(message),
     });
   };
 }
