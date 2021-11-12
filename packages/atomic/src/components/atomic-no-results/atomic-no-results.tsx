@@ -18,7 +18,7 @@ import {
 import MagnifyingGlass from '../../images/magnifying-glass.svg';
 import escape from 'escape-html';
 import {Button} from '../common/button';
-import {AriaRegion} from '../../utils/accessibility-utils';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -50,7 +50,7 @@ export class AtomicNoResults {
   private querySummaryState!: QuerySummaryState;
   @State() public error!: Error;
 
-  @AriaRegion('no-results')
+  @AriaLiveRegion('no-results')
   protected ariaMessage!: string;
 
   /**

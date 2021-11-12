@@ -2,7 +2,7 @@ import {UpdateLiveRegionEventArgs} from '../components/atomic-search-interface/a
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 
-export function AriaRegion(regionName: string) {
+export function AriaLiveRegion(regionName: string) {
   function setMessage(message: string) {
     document.dispatchEvent(
       buildCustomEvent<UpdateLiveRegionEventArgs>(

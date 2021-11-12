@@ -12,7 +12,7 @@ import SomethingWrong from '../../images/something-wrong.svg';
 import SearchInactive from '../../images/search-inactive.svg';
 import NoConnection from '../../images/no-connection.svg';
 import Indexing from '../../images/indexing.svg';
-import {AriaRegion} from '../../utils/accessibility-utils';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 const disconnectedException = 'Disconnected';
 const noEndpointsException = 'NoEndpointsException';
@@ -51,7 +51,7 @@ export class AtomicQueryError implements InitializableComponent {
   @State() public error!: Error;
   @State() showMoreInfo = false;
 
-  @AriaRegion('query-error')
+  @AriaLiveRegion('query-error')
   protected ariaMessage!: string;
 
   public initialize() {

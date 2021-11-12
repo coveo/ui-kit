@@ -11,7 +11,7 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import escape from 'escape-html';
-import {AriaRegion} from '../../utils/accessibility-utils';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -44,7 +44,7 @@ export class AtomicQuerySummary implements InitializableComponent {
    */
   @Prop() enableDuration = false;
 
-  @AriaRegion('query-summary')
+  @AriaLiveRegion('query-summary')
   protected ariaMessage!: string;
 
   public initialize() {
