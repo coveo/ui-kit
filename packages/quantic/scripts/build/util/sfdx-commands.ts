@@ -49,7 +49,7 @@ export interface AuthorizeOrgArguments {
   jwtKeyFile: string;
 }
 
-async function authorizeOrg(args: AuthorizeOrgArguments) {
+export async function authorizeOrg(args: AuthorizeOrgArguments) {
   const instanceUrl = `https://${
     args.isScratchOrg ? 'test' : 'login'
   }.salesforce.com`;
