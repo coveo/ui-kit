@@ -213,24 +213,4 @@ export function BindStateToController(
   };
 }
 
-export function AriaRegion(regionName: string) {
-  function setMessage(message: string) {
-    document.dispatchEvent(
-      buildCustomEvent<UpdateLiveRegionEventArgs>(
-        'atomic/accessibility/updateLiveRegion',
-        {
-          region: regionName,
-          message,
-        }
-      )
-    );
-  }
-
-  return (component: InitializableComponent, setterName: string) => {
-    Object.defineProperty(component, setterName, {
-      set: (message) => setMessage(message),
-    });
-  };
-}
-
 export type I18nState = Record<string, (variables?: TOptions) => string>;
