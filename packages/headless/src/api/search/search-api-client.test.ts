@@ -376,6 +376,7 @@ describe('search api client', () => {
       const analytics = buildMockAnalyticsState({
         originLevel2,
         originLevel3,
+        enabled: true,
       });
 
       const recommendationState = createMockRecommendationState();
