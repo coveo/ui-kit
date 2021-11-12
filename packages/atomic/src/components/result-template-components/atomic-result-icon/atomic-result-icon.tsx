@@ -16,6 +16,9 @@ import {snakeToCamel} from '../../../utils/utils';
   shadow: true,
 })
 export class AtomicResultIcon {
+  public license =
+    "Salesforce's specific icons originally from lightning design system (https://www.lightningdesignsystem.com/icons/). Icons licensed under Creative Commons Attribution-NoDerivatives 4.0 (https://github.com/salesforce-ux/design-system).";
+
   @ResultContext() private result!: Result;
 
   @Element() host!: HTMLElement;
