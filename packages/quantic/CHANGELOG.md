@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.85.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.84.2...@coveo/quantic@0.85.0) (2021-11-10)
+
+
+### Features
+
+* **quantic:** fixed facet count alignment ([#1467](https://github.com/coveo/ui-kit/issues/1467)) ([ae83e54](https://github.com/coveo/ui-kit/commit/ae83e54386c0c04940323dbb9ad2d8a89cf9d2c8))
+
+
+
+
+
 ## [0.84.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.84.1...@coveo/quantic@0.84.2) (2021-11-10)
 
 **Note:** Version bump only for package @coveo/quantic

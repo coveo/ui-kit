@@ -29,7 +29,15 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
+ * @part result-list - The element containing every results of a result list
  * @part result-list-grid-clickable - The clickable element on a result when displayed as a grid
+ * @part result-table - The element of the result table containing a heading and a body
+ * @part result-table-heading - The element containing the row of cells in the result table's heading
+ * @part result-table-heading-row - The element containing cells of the result table's heading
+ * @part result-table-heading-cell - The element representing a cell of the result table's heading
+ * @part result-table-body - The element containing the rows of the result table's body
+ * @part result-table-row - The element containing the cells of a row in the result table's body
+ * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
   tag: 'atomic-result-list',
@@ -230,11 +238,14 @@ export class AtomicResultList implements InitializableComponent {
     }
 
     return (
-      <table class={`list-root ${this.getClasses().join(' ')}`}>
-        <thead>
-          <tr>
+      <table
+        class={`list-root ${this.getClasses().join(' ')}`}
+        part="result-table"
+      >
+        <thead part="result-table-heading">
+          <tr part="result-table-heading-row">
             {fieldColumns.map((column) => (
-              <th>
+              <th part="result-table-heading-cell">
                 <atomic-text
                   value={column.getAttribute('label')!}
                 ></atomic-text>
@@ -242,12 +253,15 @@ export class AtomicResultList implements InitializableComponent {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody part="result-table-body">
           {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result)}>
+            <tr key={this.getId(result)} part="result-table-row">
               {fieldColumns.map((column) => {
                 return (
-                  <td key={column.getAttribute('label')! + this.getId(result)}>
+                  <td
+                    key={column.getAttribute('label')! + this.getId(result)}
+                    part="result-table-cell"
+                  >
                     <atomic-result
                       engine={this.bindings.engine}
                       result={result}
@@ -268,7 +282,10 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildList() {
     return (
-      <div class={`list-root ${this.getClasses().join(' ')}`}>
+      <div
+        class={`list-root ${this.getClasses().join(' ')}`}
+        part="result-list"
+      >
         {this.buildListPlaceholders()}
         {this.resultListState.results.length ? this.buildListResults() : null}
       </div>

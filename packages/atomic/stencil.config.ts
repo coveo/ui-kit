@@ -8,6 +8,7 @@ import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import postcssNesting from 'postcss-nested';
 import atImport from 'postcss-import';
+import focusVisible from 'postcss-focus-visible';
 import autoprefixer from 'autoprefixer';
 import replacePlugin from '@rollup/plugin-replace';
 import mixins from 'postcss-mixins';
@@ -37,6 +38,7 @@ export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
+  globalScript: 'node_modules/focus-visible/dist/focus-visible.min.js',
   outputTargets: [
     {
       type: 'dist',
@@ -84,6 +86,7 @@ export const config: Config = {
         atImport(),
         mixins(),
         tailwind(),
+        focusVisible(),
         postcssNesting(),
         autoprefixer(),
       ],
