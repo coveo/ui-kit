@@ -5,7 +5,6 @@ import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
 import {AtomicStore} from './store';
 import {Hidden} from '../components/common/hidden';
-import {UpdateLiveRegionEventArgs} from '../components/atomic-search-interface/atomic-aria-live';
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
