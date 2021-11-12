@@ -243,10 +243,10 @@ export default class QuanticNumericFacet extends LightningElement {
     return (
       this.state?.values
         .filter((value) => value.numberOfResults || value.state === 'selected')
-        .map((value, index) => {
+        .map((value) => {
           return {
             ...value,
-            index: index,
+            key: ,
             checked: value.state === 'selected',
           };
         }) || []
