@@ -15,9 +15,17 @@ const main = async () => {
       './force-app/main/default/staticresources/coveoheadless/browser/',
       {recursive: true}
     );
+    await mkdir(
+      './force-app/main/default/staticresources/coveoheadless/definitions/',
+      {recursive: true}
+    );
     await copy(
       './node_modules/@coveo/headless/dist/browser/headless.js',
       './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
+    );
+    await copy(
+      './node_modules/@coveo/headless/dist/definitions',
+      './force-app/main/default/staticresources/coveoheadless/definitions'
     );
   } catch (error) {
     console.info(error);
