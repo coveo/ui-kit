@@ -11,8 +11,8 @@ const main = async () => {
 
   try {
     await copy(
-      './node_modules/@coveo/headless/dist',
-      './force-app/main/default/staticresources/coveoheadless'
+      './node_modules/@coveo/headless/dist/browser/headless.js',
+      './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
     );
   } catch (error) {
     console.info(error);
