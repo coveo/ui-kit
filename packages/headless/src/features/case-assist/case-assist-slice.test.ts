@@ -2,7 +2,7 @@ import {setCaseAssistId} from './case-assist-actions';
 import {caseAssistReducer} from './case-assist-slice';
 import {getCaseAssistInitialState, CaseAssistState} from './case-assist-state';
 
-describe('caseassist slice', () => {
+describe('case assist slice', () => {
   let state: CaseAssistState;
   beforeEach(() => {
     state = getCaseAssistInitialState();
@@ -13,13 +13,13 @@ describe('caseassist slice', () => {
     );
   });
 
-  it('should have a default case assist id', () => {
+  it('should have a default case assist ID', () => {
     expect(caseAssistReducer(undefined, {type: 'foo'}).caseAssistId).toEqual(
       'CaseAssist'
     );
   });
 
-  it('should allow to set the case assist id', () => {
+  it('should allow to set the case assist ID', () => {
     expect(
       caseAssistReducer(state, setCaseAssistId({id: 'foo'})).caseAssistId
     ).toEqual('foo');
