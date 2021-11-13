@@ -1,48 +1,52 @@
-# Setup with Salesforce
+# Coveo Quantic
 
-## Reference documentation
+## Using The Library
+[How to use the Coveo Quantic Library](https://docs.coveo.com/en/quantic/latest/)
 
-[Useful reference documentation to setup "from scratch"](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.get_started_local_dev_setup)
+[Install Coveo Quantic as a Salesforce unlocked package](https://docs.coveo.com/en/quantic/latest/usage/#install-quantic)
 
-## Create a salesforce developer organization
 
-- [Signup](https://developer.salesforce.com/signup)
+## Contributing
+
+### Create a salesforce developer organization
+
+- [Sign up](https://developer.salesforce.com/signup)
 - Use your @coveo.com email account. The username can be anything.
 
-## Setup SFDX cli
+### Setup SFDX cli
 
 [SFDX cli](https://developer.salesforce.com/tools/sfdxcli)
 
-## Update SFDX cli plugins
+### Update SFDX cli plugins
 
 - Run `sfdx plugins:install @salesforce/lwc-dev-server`
 - Run `sfdx plugins:update`
 
-## Install vscode extension
+### Install vscode extension
 
 [vscode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode)
 
 **Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the entension to work properly.
 
-## Enable Dev Hub in your Salesforce organization
+### Enable Dev Hub in your Salesforce organization
 
 - Connect to your salesforce developer organization [login](http://login.salesforce.com/)
 - From Setup, enter Dev Hub in the Quick Find box and select Dev Hub.
 - To enable Dev Hub, click Enable
 
-## Authorize Your Dev Hub
+### Authorize Your Dev Hub
 
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Authorize a Dev Hub.
 - You can also run this command from the command line. `sfdx force:auth:web:login -d -a LWC-Hub`
 - Running this command opens a browser to the Salesforce login page. Enter your Salesforce username and password. Authorize only once, not every time you work on your project.
 
-## Create a Default Scratch Org
+### Create a Default Scratch Org
 
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create a Default Scratch Org.
 - You can also run this command from the command line. `sfdx force:org:create -s -f config/project-scratch-def.json -a "LWC"`
 - `LWC` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
 
-## Start the Local Development Server
+### Start the Local Development Server
 
 Start the server.
 
@@ -50,7 +54,10 @@ Start the server.
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3334/.
 
-## Deploy the Quantic Examples Community
+
+## Testing
+
+### Deploy the Quantic Examples Community
 
 Example components are available as a Salesforce community (Digital Experience) allowing you to experiment with Quantic components.
 
@@ -79,7 +86,7 @@ npm run deploy:main
 npm run deploy:examples
 ```
 
-## Run Cypress for Quantic Components
+### Run Cypress for Quantic Components
 
 **Note** Before attempting to run [Cypress](https://docs.cypress.io) tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
 
