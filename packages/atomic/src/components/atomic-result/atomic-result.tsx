@@ -6,6 +6,7 @@ import {
   ResultDisplayImageSize,
   getResultDisplayClasses,
 } from './atomic-result-display-options';
+import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -122,5 +123,9 @@ export class AtomicResult {
         innerHTML={this.getContentHTML()}
       ></div>
     );
+  }
+
+  public componentDidLoad() {
+    applyFocusVisiblePolyfill(this.host);
   }
 }

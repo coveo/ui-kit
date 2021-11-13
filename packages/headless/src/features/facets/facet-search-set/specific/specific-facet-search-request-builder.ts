@@ -7,7 +7,7 @@ export const buildSpecificFacetSearchRequest = (
   state: StateNeededForSpecificFacetSearch
 ): SpecificFacetSearchRequest => {
   const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
-  const {field, currentValues} = state.facetSet[id];
+  const {field, currentValues, filterFacetCount} = state.facetSet[id];
   const searchContext = buildSearchRequest(state).request;
   const ignoreValues = currentValues
     .filter((v) => v.state !== 'idle')
@@ -24,6 +24,7 @@ export const buildSpecificFacetSearchRequest = (
     field,
     ignoreValues,
     searchContext,
+    filterFacetCount,
     type: 'specific',
   };
 };

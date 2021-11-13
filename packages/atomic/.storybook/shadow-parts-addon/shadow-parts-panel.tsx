@@ -7,13 +7,17 @@ const ADDON_PARAMETER_KEY = 'shadowParts';
 import './shadow-parts-panel.css';
 
 export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
-  const componentTag = useParameter(ADDON_PARAMETER_KEY, null);
+  const componentTag = useParameter(ADDON_PARAMETER_KEY, null)?.componentTag;
   const [_, updateArgs] = useArgs();
   const componentDocumentation = getDocumentationFromTag(componentTag);
   const [open, setOpen] = useState({});
 
-  if (!componentDocumentation) {
-    return <Placeholder>No Shadow parts found for this component.</Placeholder>;
+  if (!componentDocumentation || componentDocumentation.parts.length === 0) {
+    return (
+      <Placeholder>
+        This component does not expose any shadow parts.
+      </Placeholder>
+    );
   }
 
   return (

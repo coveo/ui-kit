@@ -1,7 +1,6 @@
 import {h} from '@stencil/core';
 import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-import {codeSample} from './code-sample/code-sample';
 import {initializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
@@ -22,11 +21,16 @@ export default function defaultStory(
       componentTag,
       defaultArgs,
       docPage,
+      false,
       advancedConfig
     );
 
   const defaultLoader = initializeInterfaceDebounced(() => {
-    const argsToHTMLString = renderArgsToHTMLString(componentTag, getArgs());
+    const argsToHTMLString = renderArgsToHTMLString(
+      componentTag,
+      getArgs(),
+      advancedConfig
+    );
     const additionalMarkupString = advancedConfig.additionalMarkup
       ? advancedConfig.additionalMarkup().strings.join('')
       : '';
@@ -37,14 +41,11 @@ export default function defaultStory(
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
 
-    const htmlString = renderArgsToHTMLString(componentTag, getArgs());
     const styleString = renderShadowPartsToStyleString(componentTag, getArgs());
     return (
       <div>
         <Story />
         <div innerHTML={styleString}></div>
-        {codeSample(styleString)}
-        {codeSample(htmlString)}
       </div>
     );
   };
