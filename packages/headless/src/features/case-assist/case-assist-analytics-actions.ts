@@ -1,7 +1,6 @@
-import {Result} from '../../api/search/search/result';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
-export const logCaseStart = (result: Result) =>
+export const logCaseStart = () =>
   makeAnalyticsAction(
     'analytics/caseAssist/case/start',
     AnalyticsType.CaseAssist,

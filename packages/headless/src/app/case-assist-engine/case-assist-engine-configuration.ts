@@ -3,6 +3,7 @@ import {nonEmptyString} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
+  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
 /**
@@ -20,3 +21,15 @@ export const caseAssistEngineConfigurationSchema =
     ...engineConfigurationDefinitions,
     caseAssistId: nonEmptyString,
   });
+
+/**
+ * Creates a sample case assist engine configuration.
+ *
+ * @returns The sample case assist engine configuration.
+ */
+export function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
+  return {
+    ...getSampleEngineConfiguration(),
+    caseAssistId: 'sample-case-assist-id',
+  };
+}

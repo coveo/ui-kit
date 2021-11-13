@@ -6,7 +6,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {debug, caseInputs} from '../reducers';
+import {debug, caseAssist} from '../reducers';
 import {
   CaseAssistEngineConfiguration,
   caseAssistEngineConfigurationSchema,
