@@ -1,6 +1,6 @@
 # Coveo Quantic
 
-## Using The Library
+## Using the Library
 [How to use the Coveo Quantic Library](https://docs.coveo.com/en/quantic/latest/)
 
 [Install Coveo Quantic as a Salesforce unlocked package](https://docs.coveo.com/en/quantic/latest/usage/#install-quantic)
@@ -8,27 +8,27 @@
 
 ## Contributing
 
-### Create a salesforce developer organization
+### Create a Salesforce Developer Organization
 
 - [Sign up](https://developer.salesforce.com/signup)
 - Use your @coveo.com email account. The username can be anything.
 
-### Setup SFDX cli
+### Setup SFDX CLI
 
 [SFDX cli](https://developer.salesforce.com/tools/sfdxcli)
 
-### Update SFDX cli plugins
+### Update SFDX CLI Plugins
 
 - Run `sfdx plugins:install @salesforce/lwc-dev-server`
 - Run `sfdx plugins:update`
 
-### Install vscode extension
+### Install VSCode Extension
 
 [vscode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode)
 
 **Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the entension to work properly.
 
-### Enable Dev Hub in your Salesforce organization
+### Enable Dev Hub in Your Salesforce Organization
 
 - Connect to your salesforce developer organization [login](http://login.salesforce.com/)
 - From Setup, enter Dev Hub in the Quick Find box and select Dev Hub.
@@ -119,12 +119,12 @@ After you have cloned the repository and have run `npm install`, run the followi
 - `npm run copy:staticresources`
 - `sfdx force:source:deploy -m LightningComponentBundle`
 
-## Other useful commands
+## Other Useful Commands
 
 - `-m LightningComponentBundle` can be changed for different types of "resources". To know which name, check the related `meta.xml` file for each type of resource.
 - Create new web components. In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create Lightning Web Component.
 
-## Learn about LWC
+## Learn About LWC
 
 - [lwc.dev](https://lwc.dev/)
 - [Components reference](https://developer.salesforce.com/docs/component-library/overview/components). Make sure you stay in the "Lightning web components section". Aura does not apply. Aura is the older UI library that is being deprecated by Salesforce.
