@@ -6,6 +6,12 @@ export interface SfdxOrg {
   status: string;
 }
 
+export interface JWTAuth {
+  clientId: string;
+  keyFile: string;
+  username: string;
+}
+
 export interface SfdxListOrgsResponse extends SfdxResponse {
   result: {
     nonScratchOrgs: Array<SfdxOrg>;
@@ -28,6 +34,21 @@ export interface SfdxCreateOrgResponse extends SfdxResponse {
 export interface SfdxPublishCommunityResponse extends SfdxResponse {
   result: {
     url: string;
+  };
+}
+
+export interface SfdxCreatePackageVersionResponse extends SfdxResponse {
+  result: {
+    Id: string;
+    Status: string;
+    Package2Id: string;
+    Package2VersionId: string;
+    SubscriberPackageVersionId: string;
+    Tag?: string;
+    Branch?: string;
+    Error: string[];
+    CreatedDate: string;
+    HasMetadataRemoved: boolean;
   };
 }
 
@@ -179,4 +200,30 @@ export async function publishCommunity(
 
 export async function setAlias(alias: string, value: string) {
   await sfdx(`alias:set ${alias}="${value}"`);
+}
+
+export interface CreatePackageVersionArguments {
+  packageId: string;
+  packageVersion: string;
+  timeout: number;
+}
+
+export async function createPackageVersion(
+  args: CreatePackageVersionArguments
+): Promise<SfdxCreatePackageVersionResponse> {
+  return await sfdx<SfdxCreatePackageVersionResponse>(
+    `sfdx force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout} --json`
+  );
+}
+
+export interface PromotePackageVersionArguments {
+  packageVersionId: string;
+}
+
+export async function promotePackageVersion(
+  args: PromotePackageVersionArguments
+) {
+  return await sfdx(
+    `sfdx force:package:version:promote --package ${args.packageVersionId}`
+  );
 }
