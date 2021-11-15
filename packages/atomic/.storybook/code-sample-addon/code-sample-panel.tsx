@@ -35,19 +35,20 @@ export const CodeSamplePanel = () => {
   const {componentTag, isResultComponent, advancedConfig} =
     storyParameters as StoryParameters;
 
+  const componentToHTML = renderArgsToHTMLString(
+    componentTag,
+    args,
+    advancedConfig
+  );
+  const stylingToHTML = renderShadowPartsToStyleString(componentTag, args);
+  const htmlCodeWithSpacing = addSpacingBetweenStylingAndHTML(
+    componentToHTML,
+    stylingToHTML
+  );
+
   const codeString = isResultComponent
-    ? renderArgsToResultTemplate(
-        addSpacingBetweenStylingAndHTML(
-          renderArgsToHTMLString(componentTag, args, advancedConfig),
-          renderShadowPartsToStyleString(componentTag, args)
-        ),
-        () => args,
-        false
-      )
-    : addSpacingBetweenStylingAndHTML(
-        renderArgsToHTMLString(componentTag, args, advancedConfig),
-        renderShadowPartsToStyleString(componentTag, args)
-      );
+    ? renderArgsToResultTemplate(htmlCodeWithSpacing, () => args, false)
+    : htmlCodeWithSpacing;
 
   return (
     <div
