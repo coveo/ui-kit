@@ -14,6 +14,8 @@ import { TemplateContent } from "./components/atomic-result-template/atomic-resu
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
+    interface AtomicAriaLive {
+    }
     interface AtomicBreadbox {
     }
     interface AtomicCategoryFacet {
@@ -763,6 +765,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicAriaLiveElement extends Components.AtomicAriaLive, HTMLStencilElement {
+    }
+    var HTMLAtomicAriaLiveElement: {
+        prototype: HTMLAtomicAriaLiveElement;
+        new (): HTMLAtomicAriaLiveElement;
+    };
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
     var HTMLAtomicBreadboxElement: {
@@ -1136,6 +1144,7 @@ declare global {
         new (): HTMLAtomicTimeframeFacetElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
@@ -1201,6 +1210,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AtomicAriaLive {
+    }
     interface AtomicBreadbox {
     }
     interface AtomicCategoryFacet {
@@ -1940,6 +1951,7 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface IntrinsicElements {
+        "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-color-facet": AtomicColorFacet;
@@ -2008,6 +2020,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;

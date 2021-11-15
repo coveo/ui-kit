@@ -1,4 +1,5 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
@@ -39,6 +40,23 @@ export function assertRemovesComponent(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>
 ) {
   it('should remove the component from the DOM', () => {
+    selector().should('not.exist');
+  });
+}
+
+export function assertAriaLiveMessage(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  message: string
+) {
+  it(`screen readers should read out "${message}".`, () => {
+    selector().should('contain.text', message);
+  });
+}
+
+export function assertNoAriaLiveMessage(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>
+) {
+  it('screen readers should not read out anything.', () => {
     selector().should('not.exist');
   });
 }
