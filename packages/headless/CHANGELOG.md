@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.31.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.5...@coveo/headless@1.31.6) (2021-11-15)
+
+
+### Bug Fixes
+
+* **headless:** fix visitorID parameter retrieved from coveo.analytics ([#1478](https://github.com/coveo/ui-kit/issues/1478)) ([c6adb69](https://github.com/coveo/ui-kit/commit/c6adb69310c785b4e60dc6f7eb6a6f9fcfba2a42))
+
+
+
+
+
 ## [1.31.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.4...@coveo/headless@1.31.5) (2021-11-12)
 
 
