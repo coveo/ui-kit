@@ -1,12 +1,13 @@
+@import '../../global/polyfills.pcss';
+
 atomic-icon {
   display: inline-block;
   fill: currentColor;
-  aspect-ratio: 1 / 1;
+  @mixin aspect-ratio-h 1 / 1, auto;
 
   > svg {
     width: 100%;
-    height: auto;
     max-height: 100%;
-    aspect-ratio: 1 / 1;
+    @mixin aspect-ratio-h 1 / 1, auto;
   }
 }

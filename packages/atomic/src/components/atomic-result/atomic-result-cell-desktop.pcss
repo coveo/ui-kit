@@ -1,3 +1,5 @@
+@import '../../global/polyfills.pcss';
+
 @define-mixin cell-result-desktop {
   grid-template-areas:
     'badges'
@@ -210,9 +212,8 @@
   /* == Image styles == */
   &.image-large {
     atomic-result-section-visual {
-      aspect-ratio: 1 / 1;
+      @mixin aspect-ratio-h 1 / 1, 19.75rem;
       width: 100%;
-      height: auto;
     }
 
     atomic-result-section-badges {
@@ -222,9 +223,8 @@
 
   &.image-small {
     atomic-result-section-visual {
-      aspect-ratio: 1 / 1;
+      @mixin aspect-ratio-h 1 / 1, 14rem;
       width: 100%;
-      height: auto;
     }
   }
 
