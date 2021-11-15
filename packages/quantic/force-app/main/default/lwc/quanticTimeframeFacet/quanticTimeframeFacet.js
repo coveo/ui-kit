@@ -36,8 +36,6 @@ import apply from '@salesforce/label/c.quantic_Apply';
  * @property {boolean} required
  * @property {Function} checkValidity
  * @property {Function} reportValidity
- * @property {Function} setCustomValidity
- * @property {{valid: boolean}} validity
  */
 /**
  * @typedef {Object} TimeframeElement
