@@ -228,4 +228,8 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+      <label>Quel produit est lié à votre problème ?</label>
+      <name>cookbook_SectionTitle</name>
+    </customLabels>
 </Translations>

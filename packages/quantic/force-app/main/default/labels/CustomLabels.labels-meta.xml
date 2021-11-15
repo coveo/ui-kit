@@ -448,4 +448,11 @@
         <protected>false</protected>
         <shortDescription>Expand [component label]</shortDescription>
     </labels>
+    <labels>
+      <fullName>cookbook_SectionTitle</fullName>
+      <value>Which product is related to your problem?</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Which product is related to your problem?</shortDescription>
+  </labels>
 </CustomLabels>
