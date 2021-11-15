@@ -150,40 +150,19 @@ export default function defaultResultComponentStory(
 const buildConfigWithDefaultValues = (
   advancedConfig: DefaultStoryAdvancedConfig
 ) => {
-  let defaultConfig = forceOnlyOneResultInConfig(advancedConfig);
-  defaultConfig = forceMaxWidth(defaultConfig);
-  return defaultConfig;
+  return {
+    ...advancedConfig,
+    additionalMarkup: buildConfigAdditionalMarkup(advancedConfig),
+    engineConfig: {
+      ...advancedConfig.engineConfig,
+      preprocessRequest: buildConfigPreprocessRequest(advancedConfig),
+    },
+  };
 };
 
-const forceOnlyOneResultInConfig = (
-  originalConfig: DefaultStoryAdvancedConfig
+const buildConfigAdditionalMarkup = (
+  advancedConfig: DefaultStoryAdvancedConfig
 ) => {
-  const preprocessRequestForOneResult = (r) => {
-    const bodyParsed = JSON.parse(r.body as string);
-    bodyParsed.numberOfResults = 1;
-    r.body = JSON.stringify(bodyParsed);
-    return r;
-  };
-
-  let copyConfig: DefaultStoryAdvancedConfig = {
-    ...originalConfig,
-    engineConfig: {preprocessRequest: preprocessRequestForOneResult},
-  };
-
-  if (originalConfig.engineConfig?.preprocessRequest) {
-    copyConfig.engineConfig.preprocessRequest = (request, origin) => {
-      const modified = originalConfig.engineConfig.preprocessRequest(
-        request,
-        origin
-      );
-      return preprocessRequestForOneResult(modified);
-    };
-  }
-
-  return copyConfig;
-};
-
-const forceMaxWidth = (originalConfig: DefaultStoryAdvancedConfig) => {
   const templateForMaxWidth = html`
     <style>
       atomic-search-interface,
@@ -195,17 +174,34 @@ const forceMaxWidth = (originalConfig: DefaultStoryAdvancedConfig) => {
     </style>
   `;
 
-  let copyConfig: DefaultStoryAdvancedConfig = {
-    ...originalConfig,
-    additionalMarkup: () => templateForMaxWidth,
+  if (advancedConfig.additionalMarkup) {
+    return () =>
+      html`${templateForMaxWidth}${advancedConfig.additionalMarkup()}`;
+  }
+  return () => templateForMaxWidth;
+};
+
+const buildConfigPreprocessRequest = (
+  advancedConfig: DefaultStoryAdvancedConfig
+) => {
+  const preprocessRequestForOneResult = (r) => {
+    const bodyParsed = JSON.parse(r.body as string);
+    bodyParsed.numberOfResults = 1;
+    r.body = JSON.stringify(bodyParsed);
+    return r;
   };
 
-  if (originalConfig.additionalMarkup) {
-    copyConfig.additionalMarkup = () =>
-      html`${templateForMaxWidth}${originalConfig.additionalMarkup()}`;
+  if (advancedConfig.engineConfig?.preprocessRequest) {
+    return (request, origin) => {
+      const modified = advancedConfig.engineConfig.preprocessRequest(
+        request,
+        origin
+      );
+      return preprocessRequestForOneResult(modified);
+    };
   }
 
-  return copyConfig;
+  return preprocessRequestForOneResult;
 };
 
 const renderAdditionalMarkup = (additionalMarkup: () => TemplateResult) => {
