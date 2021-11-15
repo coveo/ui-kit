@@ -11,7 +11,7 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
     additionalChildMarkup: () =>
       html`
         <div>
-          This text visibility can be controlled by the field conditions
+          The visibility of this text can be controlled by the field conditions
           component
         </div>
       `,
