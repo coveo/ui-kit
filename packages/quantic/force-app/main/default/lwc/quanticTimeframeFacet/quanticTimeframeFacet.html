@@ -26,51 +26,51 @@
 
         <template if:false={isCollapsed}>
           <template if:true={withDatePicker}>
-            <form onsubmit={handleApply}>
-              <div class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small">
-                <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center">
-                  <div class="slds-col slds-size_1-of-5">
-                    <span class="timeframe-facet__input-label">{labels.startLabel}</span>
-                  </div>
-                  <div class="slds-col slds-size_4-of-5">
-                    <lightning-input
-                      type="date"
-                      class="timeframe-facet__start-input"
-                      label="Start"
-                      variant="label-hidden"
-                      date-style="short"
-                      min="1401-01-01"
-                      placeholder={datepickerFormat}
-                      value={startDate}
-                      onchange={handleStartDateChange}>
-                    </lightning-input>
-                  </div>
+            <div class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small">
+              <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center">
+                <div class="slds-col slds-size_1-of-5">
+                  <span class="timeframe-facet__input-label">{labels.startLabel}</span>
                 </div>
-                <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center slds-p-top_x-small">
-                  <div class="slds-col slds-size_1-of-5">
-                    <span class="timeframe-facet__input-label">{labels.endLabel}</span>
-                  </div>
-                  <div class="slds-col slds-size_4-of-5">
-                    <lightning-input
-                      type="date"
-                      class="timeframe-facet__end-input"
-                      label="End"
-                      variant="label-hidden"
-                      date-style="short"
-                      placeholder={datepickerFormat}
-                      value={endDate}
-                      onchange={handleEndDateChange}>
-                    </lightning-input>
-                  </div>  
-                </div>
-                <div class="slds-col slds-p-top_x-small">
-                  <button
-                    class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply"
-                    type="submit"
-                    onblur={resetValidationErrors}>{labels.apply}</button>
+                <div class="slds-col slds-size_4-of-5">
+                  <lightning-input
+                    type="date"
+                    class="timeframe-facet__start-input"
+                    label="Start"
+                    variant="label-hidden"
+                    date-style="short"
+                    min="1401-01-01"
+                    placeholder={datepickerFormat}
+                    value={startDateNoTime}
+                    onchange={handleStartDateChange}
+                    onblur={handleStartDateBlur}>
+                  </lightning-input>
                 </div>
               </div>
-            </form>
+              <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center slds-p-top_x-small">
+                <div class="slds-col slds-size_1-of-5">
+                  <span class="timeframe-facet__input-label">{labels.endLabel}</span>
+                </div>
+                <div class="slds-col slds-size_4-of-5">
+                  <lightning-input
+                    type="date"
+                    class="timeframe-facet__end-input"
+                    label="End"
+                    variant="label-hidden"
+                    date-style="short"
+                    placeholder={datepickerFormat}
+                    value={endDateNoTime}
+                    onchange={handleEndDateChange}
+                    onblur={handleEndDateBlur}>
+                  </lightning-input>
+                </div>  
+              </div>
+              <div class="slds-col slds-p-top_x-small">
+                <button
+                  class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply"
+                  onclick={handleApply}
+                  onblur={resetRangeValidations}>{labels.apply}</button>
+              </div>
+            </div>
           </template>
 
           <template if:true={showValues}>
