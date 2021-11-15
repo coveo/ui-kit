@@ -11,7 +11,7 @@ import {
   getFromStore,
 } from '../quanticHeadlessLoader';
 import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
-import { Deferred, Store } from '../../quanticUtils/quanticUtils';
+import { Deferred } from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
   const testOptions = {
