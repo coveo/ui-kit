@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.13.2...@coveo/atomic@1.14.0) (2021-11-15)
+
+
+### Bug Fixes
+
+* **atomic:** added focus trap to refine modal ([#1468](https://github.com/coveo/ui-kit/issues/1468)) ([cb9dc15](https://github.com/coveo/ui-kit/commit/cb9dc159f3cd340a521cd05ce8d18f623c863643))
+* **atomic:** fixed atomic-result-image size on chrome and safari 15 ([#1471](https://github.com/coveo/ui-kit/issues/1471)) ([38e1c68](https://github.com/coveo/ui-kit/commit/38e1c68be973a11455cf2693f533510a4d9b5409))
+
+
+### Features
+
+* **atomic:** added live region for screen readers ([#1476](https://github.com/coveo/ui-kit/issues/1476)) ([0aeda1d](https://github.com/coveo/ui-kit/commit/0aeda1d38c74fd949e56bbc792d611765b910c94))
+
+
+
+
+
 ## [1.13.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.13.1...@coveo/atomic@1.13.2) (2021-11-15)
 
 **Note:** Version bump only for package @coveo/atomic
