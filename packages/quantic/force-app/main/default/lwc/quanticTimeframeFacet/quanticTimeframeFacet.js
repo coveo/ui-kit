@@ -397,7 +397,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     if (this.dateFilterState.range) {
       this.tryUpdateFilterRange(this.dateFilterState.range.start, this.dateFilterState.range.end);
-      this.enableRangeValidations();
+      this.enableRangeValidations(false);
       this._showValues = false;
     } else {
       this.startDate = '';
@@ -494,8 +494,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.enableRangeValidations(false);
   }
 
-  handleStartDateBlur(evt) {
-    // Wait for both fields to be filled or empty to update messages automatically.
+  handleStartDateBlur() {
+    // The inputs are validated on the blur event so the validation error
+    // messages contain the updated datepicker value.
+
     const isFilled = this.startDatepicker.value && this.endDatepicker.value;
     const isEmpty = !this.startDatepicker.value && !this.endDatepicker.value;
 
@@ -512,7 +514,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.enableRangeValidations(false);
   }
 
-  handleEndDateBlur(evt) {
+  handleEndDateBlur() {
+    // The inputs are validated on the blur event so the validation error
+    // messages contain the updated datepicker value.
+
     const isFilled = this.startDatepicker.value && this.endDatepicker.value;
     const isEmpty = !this.startDatepicker.value && !this.endDatepicker.value;
 
@@ -528,12 +533,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     // This is required to prevent a full postback of the page.
     evt.preventDefault();
 
+    // The required fields validation is forced because we want the form
+    // to show up as invalid when empty.
     this.enableRangeValidations(true);
     if (!this.validateRange()) {
-      return;
-    }
-    if (!this.startDatepicker.value || !this.endDatepicker.value) {
-      // The empty form is considered valid even though we can't generate a range
       return;
     }
 
@@ -574,7 +577,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     }
   }
 
-  resetRangeValidations(evt) {
+  resetRangeValidations() {
     this.disableRangeRequirement();
     this.validateRange();
   }
@@ -583,23 +586,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.startDatepicker.reportValidity();
     this.endDatepicker.reportValidity();
 
-    const startValid = this.startDatepicker.checkValidity();
-    const endValid = this.endDatepicker.checkValidity();
-
-    return startValid && endValid;
-  }
-
-  updateRangeRequired() {
-    const hasStartDate = Boolean(this.startDatepicker?.value);
-    const hasEndDate = Boolean(this.endDatepicker?.value);
-    const isRequired = hasStartDate || hasEndDate;
-
-    if (this.startDatepicker) {
-      this.startDatepicker.required = isRequired;
-    }
-    if (this.endDatepicker) {
-      this.endDatepicker.required = isRequired;
-    }
+    return this.startDatepicker.checkValidity() && this.endDatepicker.checkValidity();
   }
 
   updateRangeInHeadless(startDate, endDate) {
