@@ -1,4 +1,4 @@
-import {BaseParam} from '../../platform-service-params';
+import {BaseParam, VisitorIDParam} from '../../platform-service-params';
 
 export interface HtmlRequestOptions {
   uniqueId: string;
@@ -6,7 +6,8 @@ export interface HtmlRequestOptions {
 }
 
 export type HtmlRequest = BaseParam &
-  HtmlRequestOptions & {
+  HtmlRequestOptions &
+  VisitorIDParam & {
     enableNavigation: boolean;
     requestedOutputSize: number;
     q: string;

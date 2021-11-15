@@ -29,7 +29,15 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
- * @part result-list-grid-clickable - The clickable element on a result when displayed as a grid
+ * @part result-list - The element containing every result of a result list
+ * @part result-list-grid-clickable - The clickable result when results are displayed as a grid
+ * @part result-table - The element of the result table containing a heading and a body
+ * @part result-table-heading - The element containing the row of cells in the result table's heading
+ * @part result-table-heading-row - The element containing cells of the result table's heading
+ * @part result-table-heading-cell - The element representing a cell of the result table's heading
+ * @part result-table-body - The element containing the rows of the result table's body
+ * @part result-table-row - The element containing the cells of a row in the result table's body
+ * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
   tag: 'atomic-result-list',
@@ -65,22 +73,18 @@ export class AtomicResultList implements InitializableComponent {
    * A list of fields to include in the query results, separated by commas.
    */
   @Prop() public fieldsToInclude = '';
-
   /**
-   * How results should be displayed.
+   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
   @Prop() display: ResultDisplayLayout = 'list';
-
   /**
-   * How large or small results should be.
+   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
   @Prop() density: ResultDisplayDensity = 'normal';
-
   /**
-   * How large or small the visual section of results should be.
+   * The expected size of the image displayed in the results.
    */
   @Prop() imageSize?: ResultDisplayImageSize;
-
   /**
    * @deprecated use `imageSize` instead.
    */
@@ -234,11 +238,14 @@ export class AtomicResultList implements InitializableComponent {
     }
 
     return (
-      <table class={`list-root ${this.getClasses().join(' ')}`}>
-        <thead>
-          <tr>
+      <table
+        class={`list-root ${this.getClasses().join(' ')}`}
+        part="result-table"
+      >
+        <thead part="result-table-heading">
+          <tr part="result-table-heading-row">
             {fieldColumns.map((column) => (
-              <th>
+              <th part="result-table-heading-cell">
                 <atomic-text
                   value={column.getAttribute('label')!}
                 ></atomic-text>
@@ -246,12 +253,15 @@ export class AtomicResultList implements InitializableComponent {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody part="result-table-body">
           {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result)}>
+            <tr key={this.getId(result)} part="result-table-row">
               {fieldColumns.map((column) => {
                 return (
-                  <td key={column.getAttribute('label')! + this.getId(result)}>
+                  <td
+                    key={column.getAttribute('label')! + this.getId(result)}
+                    part="result-table-cell"
+                  >
                     <atomic-result
                       engine={this.bindings.engine}
                       result={result}
@@ -272,7 +282,10 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildList() {
     return (
-      <div class={`list-root ${this.getClasses().join(' ')}`}>
+      <div
+        class={`list-root ${this.getClasses().join(' ')}`}
+        part="result-list"
+      >
         {this.buildListPlaceholders()}
         {this.resultListState.results.length ? this.buildListResults() : null}
       </div>

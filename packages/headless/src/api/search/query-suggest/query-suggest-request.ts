@@ -2,6 +2,7 @@ import {
   BaseParam,
   ContextParam,
   LocaleParam,
+  VisitorIDParam,
 } from '../../platform-service-params';
 import {
   ActionsHistoryParam,
@@ -18,6 +19,7 @@ export type QuerySuggestRequest = BaseParam &
   SearchHubParam &
   LocaleParam &
   TimezoneParam &
-  ActionsHistoryParam & {
+  ActionsHistoryParam &
+  VisitorIDParam & {
     count: number;
   };

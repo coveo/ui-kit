@@ -55,9 +55,6 @@ export default class QuanticFacetManager extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-
-    this.resolveItemTemplate();
-    this.moveFacetsToHost();
   }
 
   disconnectedCallback() {
@@ -69,6 +66,9 @@ export default class QuanticFacetManager extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.resolveItemTemplate();
+    this.moveFacetsToHost();
+
     this.facetManager = CoveoHeadless.buildFacetManager(engine);
     this.unsubscribeFacetManager = this.facetManager.subscribe(() =>
       this.updateFacetManagerState()
@@ -101,8 +101,14 @@ export default class QuanticFacetManager extends LightningElement {
     }
   }
 
+  getFacetsFromSlot() {
+    const isFacetManager = (tagName) => /-quantic-facet-manager$/i.test(tagName);
+    return Array.from(this.querySelectorAll('*'))
+      .filter((element) => isFacetManager(element.parentElement.tagName));
+  }
+
   moveFacetsToHost() {
-    const facets = this.querySelectorAll('*');
+    const facets = this.getFacetsFromSlot();
     facets.forEach((facet) => {
       const wrapper = this.itemTemplate.cloneNode(false);
       // @ts-ignore

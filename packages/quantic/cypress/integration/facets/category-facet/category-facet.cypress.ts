@@ -133,7 +133,7 @@ describe('quantic-category-facet', () => {
     it('should work as expected', () => {
       visitCategoryFacetPage(defaultSettings);
 
-      Expect.isRendered(true);
+      Expect.displayFacet(true);
       Expect.displayLabel(true);
       Expect.displayFacetCount(true);
       Expect.displaySearchInput(false);
@@ -212,7 +212,7 @@ describe('quantic-category-facet', () => {
 
           Actions.clickAllCategories();
 
-          Expect.logCategoryFacetClearAll(hierarchicalField);
+          Expect.logClearFacetValues(hierarchicalField);
           Expect.numberOfParentValues(0);
           Expect.numberOfValues(defaultNumberOfValues - 1);
           Expect.noUrlHash();
@@ -232,7 +232,7 @@ describe('quantic-category-facet', () => {
           `cf[geographicalhierarchy]=${path}`
         );
 
-        Expect.logCategoryFacetLoad();
+        Expect.logFacetLoad();
         Expect.numberOfParentValues(2);
         Expect.parentValueLabel(togo);
       });
@@ -245,10 +245,10 @@ describe('quantic-category-facet', () => {
         const query = 'mal';
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
 
-        Expect.logCategoryFacetSearch(hierarchicalField);
-        Expect.isRendered(true);
+        Expect.logFacetSearch(hierarchicalField);
+        Expect.displayFacet(true);
         Expect.displayNoMatchesFound(false);
         Expect.displayMoreMatchesFound(true);
         Expect.moreMatchesFoundContainsQuery(query);
@@ -265,8 +265,8 @@ describe('quantic-category-facet', () => {
 
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Actions.typeQueryInSearchInput(query);
+        Expect.logFacetSearch(hierarchicalField);
 
         Actions.selectSearchResult(selectedValue);
         Expect.logCategoryFacetSelected(montrealHierarchy);
@@ -281,14 +281,14 @@ describe('quantic-category-facet', () => {
 
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Actions.typeQueryInSearchInput(query);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.searchResults(8);
 
         Actions.clickSearchClearButton();
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.numberOfValues(defaultNumberOfValues - 1);
-        Expect.searchInputContains('');
+        Expect.searchInputEmpty();
       });
     });
 
@@ -298,9 +298,9 @@ describe('quantic-category-facet', () => {
 
         visitCategoryFacetPage(searchEnabledSettings);
 
-        Actions.typeFacetSearchQuery(query);
+        Actions.typeQueryInSearchInput(query);
 
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.displayNoMatchesFound(true);
         Expect.noMatchesFoundContainsQuery(query);
         Expect.displaySearchClearButton(true);
@@ -330,8 +330,8 @@ describe('quantic-category-facet', () => {
         const allCategories = 'All Categories';
         setupWithCustomBasePath(basePath, true);
 
-        Actions.typeFacetSearchQuery(query);
-        Expect.logCategoryFacetSearch(hierarchicalField);
+        Actions.typeQueryInSearchInput(query);
+        Expect.logFacetSearch(hierarchicalField);
         Expect.searchResults(2);
         Expect.searchResultsPathContains(allCategories);
       });
@@ -359,7 +359,7 @@ describe('quantic-category-facet', () => {
       Expect.numberOfParentValues(1);
 
       Actions.clickAllCategories();
-      Expect.logCategoryFacetClearAll(hierarchicalField);
+      Expect.logClearFacetValues(hierarchicalField);
 
       Actions.selectChildValue(canadaPath);
       Expect.logCategoryFacetSelected(canadaPath.split(';'));
@@ -373,6 +373,42 @@ describe('quantic-category-facet', () => {
 
       Expect.numberOfValues(customNumberOfValues);
       Expect.displayShowMoreButton(true);
+    });
+  });
+  describe('with custom sorting', () => {
+    ['alphanumeric', 'occurrences'].forEach((sorting) => {
+      it(`should use "${sorting}" sorting in the facet request`, () => {
+        visitCategoryFacetPage(
+          {
+            sortCriteria: sorting,
+          },
+          false
+        );
+        cy.wait(InterceptAliases.Search).then((interception) => {
+          const facetRequest = interception.request.body.facets[0];
+          expect(facetRequest.sortCriteria).to.eq(sorting);
+        });
+      });
+    });
+  });
+  describe('with isCollapsed', () => {
+    function setupIsCollapsed() {
+      visitCategoryFacetPage({
+        field: defaultField,
+        label: defaultLabel,
+        numberOfValues: defaultNumberOfValues,
+        isCollapsed: true,
+      });
+    }
+
+    it('should render correctly', () => {
+      setupIsCollapsed();
+
+      Expect.displayFacet(true);
+      Expect.labelContains(defaultLabel);
+      Expect.displaySearchInput(false);
+      Expect.displayValues(false);
+      Expect.displayExpandButton(true);
     });
   });
 });

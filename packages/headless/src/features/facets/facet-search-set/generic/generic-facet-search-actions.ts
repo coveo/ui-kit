@@ -40,9 +40,9 @@ export const executeFacetSearch = createAsyncThunk<
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
     validatePayload(facetId, requiredNonEmptyString);
     if (isSpecificFacetSearchState(state, facetId)) {
-      req = buildSpecificFacetSearchRequest(facetId, state);
+      req = await buildSpecificFacetSearchRequest(facetId, state);
     } else {
-      req = buildCategoryFacetSearchRequest(
+      req = await buildCategoryFacetSearchRequest(
         facetId,
         state as StateNeededForCategoryFacetSearch
       );

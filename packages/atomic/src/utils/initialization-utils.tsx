@@ -6,6 +6,12 @@ import {buildCustomEvent} from './event-utils';
 import {AtomicStore} from './store';
 import {Hidden} from '../components/common/hidden';
 
+declare global {
+  interface Window {
+    applyFocusVisiblePolyfill?: (shadowRoot: ShadowRoot) => void;
+  }
+}
+
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
  */
@@ -54,6 +60,12 @@ export interface InitializableComponent extends ComponentInterface {
   error: Error;
 }
 
+export function applyFocusVisiblePolyfill(element: HTMLElement) {
+  if (window.applyFocusVisiblePolyfill && element.shadowRoot) {
+    window.applyFocusVisiblePolyfill(element.shadowRoot);
+  }
+}
+
 /**
  * Utility that automatically fetches the `Bindings` from the parent `AtomicSearchInterface` component.
  * Once a component is bound, the `initialize` method is called, if defined.
@@ -98,7 +110,7 @@ export function InitializeBindings() {
             // In this case, we have to manually trigger it.
             this.initialize ? this.initialize() : forceUpdate(this);
           } catch (e) {
-            this.error = e;
+            this.error = e as Error;
           }
         }
       );
@@ -152,7 +164,9 @@ export function InitializeBindings() {
       }
     };
 
-    component.componentDidLoad = function () {};
+    component.componentDidLoad = function () {
+      applyFocusVisiblePolyfill(getElement(this));
+    };
   };
 }
 
