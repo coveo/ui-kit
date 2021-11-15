@@ -4,7 +4,7 @@
       <div class="slds-col slds-truncate slds-col_bump-right breadcrumb-manager__column">
         <ul>
           <template for:each={facetBreadcrumbValues} for:item="breadcrumb">
-            <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+            <li key={breadcrumb.facetId} class="slds-list_horizontal facetBreadcrumb__list breadcrumb-manager__line">
               <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
@@ -21,7 +21,7 @@
             </li>
           </template>
           <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
-            <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+            <li key={breadcrumb.facetId} class="slds-list_horizontal numericFacetBreadcrumb__list breadcrumb-manager__line">
               <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
@@ -38,7 +38,7 @@
             </li>
           </template>
           <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumbValue">
-            <li key={breadcrumbValue.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+            <li key={breadcrumbValue.facetId} class="slds-list_horizontal categoryFacetBreadcrumb__list breadcrumb-manager__line">
               <span class="slds-col breadcrumb-manager__field-name">{breadcrumbValue.label}{labels.colon} </span>
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <li class="breadcrumb__container">
@@ -48,7 +48,7 @@
             </li>
           </template>
           <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
-            <li key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__line">
+            <li key={breadcrumb.facetId} class="slds-list_horizontal dateFacetBreadcrumb__list breadcrumb-manager__line">
               <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">

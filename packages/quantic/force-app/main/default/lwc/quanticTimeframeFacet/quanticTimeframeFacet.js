@@ -315,7 +315,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.initializeDateFilterController(engine);
     registerToStore(this.engineId, Store.facetTypes.DATEFACETS, {
       label: this.label,
-      facetId: this.facetId ?? this.field,
+      facetId: this.facet.state.facetId,
       format: this.formatFacetValue,
     });
   };

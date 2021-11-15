@@ -10,10 +10,9 @@
     </div>
 
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
-      <div class="slds-grid">
-        <div class="slds-col">
+      <div class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center">
+        <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_6-of-12">
           <c-quantic-facet-manager engine-id={engineId}>
-            <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
             <c-quantic-facet display-values-as="link" field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
             <c-quantic-numeric-facet field="ytlikecount" label="Youtube Likes" with-input="integer" engine-id={engineId}></c-quantic-numeric-facet>
             <c-quantic-timeframe-facet engine-id={engineId} field="date" label="Date">
@@ -25,7 +24,7 @@
             <c-quantic-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-quantic-category-facet>
           </c-quantic-facet-manager>
         </div>
-        <div class="slds-col">
+        <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12">
           <c-quantic-breadcrumb-manager
             engine-id={engineId}
             category-divider={config.categoryDivider}
