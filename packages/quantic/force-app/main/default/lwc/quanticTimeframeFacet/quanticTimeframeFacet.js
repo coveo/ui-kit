@@ -397,12 +397,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     if (this.dateFilterState.range) {
       this.tryUpdateFilterRange(this.dateFilterState.range.start, this.dateFilterState.range.end);
-      this.enableRangeValidations(false);
+      this.enableRangeValidation(false);
       this._showValues = false;
     } else {
       this.startDate = '';
       this.endDate = '';
-      this.disableAllRangeValidations();
+      this.disableRangeValidation();
       this._showValues = true;
     }
   }
@@ -479,7 +479,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   clearSelections() {
     if (this.withDatePicker) {
       this.dateFilter.clear();
-      this.disableAllRangeValidations();
+      this.disableRangeValidation();
     }
     this.facet.deselectAll();
 
@@ -491,7 +491,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   handleStartDateChange(evt) {
     evt.preventDefault();
-    this.enableRangeValidations(false);
+    this.enableRangeValidation(false);
   }
 
   handleStartDateBlur() {
@@ -511,7 +511,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   handleEndDateChange(evt) {
     evt.preventDefault();
-    this.enableRangeValidations(false);
+    this.enableRangeValidation(false);
   }
 
   handleEndDateBlur() {
@@ -535,7 +535,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     // The required fields validation is forced because we want the form
     // to show up as invalid when empty.
-    this.enableRangeValidations(true);
+    this.enableRangeValidation(true);
     if (!this.validateRange()) {
       return;
     }
@@ -546,7 +546,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.updateRangeInHeadless(startDate, endDate);
   }
 
-  enableRangeValidations(forceRequired) {
+  enableRangeValidation(forceRequired) {
     if (!this.startDatepicker || !this.endDatepicker) {
       return;
     }
@@ -569,7 +569,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.endDatepicker.required = false;
   }
 
-  disableAllRangeValidations() {
+  disableRangeValidation() {
     this.disableRangeRequirement();
 
     if (this.startDatepicker) {
@@ -577,7 +577,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     }
   }
 
-  resetRangeValidations() {
+  resetRangeValidation() {
     this.disableRangeRequirement();
     this.validateRange();
   }
