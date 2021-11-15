@@ -84,6 +84,9 @@ export const CodeSamplePanel = () => {
             editor.setScrollTop(0);
             editor.updateOptions({readOnly: true});
           });
+          editor.onDidBlurEditorText(() => {
+            editor.updateOptions({readOnly: false});
+          });
           editor.onDidChangeModelContent(() =>
             editor.getAction('editor.action.formatDocument').run()
           );
