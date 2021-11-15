@@ -1,4 +1,8 @@
 import {
+  facetWithSearchActions,
+  facetWithShowMoreLessActions,
+} from '../facet-common-actions';
+import {
   AllFacetSelectors,
   CategoryFacetSelectors,
 } from './category-facet-selectors';
@@ -19,27 +23,17 @@ function categoryFacetActions(selector: AllFacetSelectors) {
     selectParentValue(value: string) {
       selector.parentValueOption().contains(value).click({force: true});
     },
-    clickShowMoreButton() {
-      selector.showMoreButton().click();
-    },
-    clickShowLessButton() {
-      selector.showLessButton().click();
-    },
     clickAllCategories() {
       selector.allCategories().click();
     },
-    typeFacetSearchQuery(value: string) {
-      selector.searchInput().type(value);
-    },
     selectSearchResult(value: string) {
       selector.searchResults().contains(value).click({force: true});
-    },
-    clickSearchClearButton() {
-      selector.searchClearButton().click();
     },
   };
 }
 
 export const CategoryFacetActions = {
   ...categoryFacetActions(CategoryFacetSelectors),
+  ...facetWithShowMoreLessActions(CategoryFacetSelectors),
+  ...facetWithSearchActions(CategoryFacetSelectors),
 };

@@ -1,0 +1,27 @@
+.main-content {
+  min-width: 0;
+}
+
+.title__container {
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.date__container{
+  font-size: .9em;
+  color:#3E3E3C;
+}
+
+/* max-width value comes from SLDS definition of `slds-medium-size`. "See https://www.lightningdesignsystem.com/utilities/grid/#Responsive-Layout-Options.*/
+@media only screen and (max-width: 768px) {
+  .main-content__container {
+    flex-wrap: wrap;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+  }
+
+  .main-content, .badge__container {
+    width: 100%;
+  }
+}

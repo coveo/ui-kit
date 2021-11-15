@@ -176,6 +176,7 @@ export const configureAnalytics = ({
   return client;
 };
 
-export const getVisitorID = () => new CoveoAnalyticsClient({}).currentVisitorId;
+export const getVisitorID = () =>
+  new CoveoAnalyticsClient({}).getCurrentVisitorId();
 
 export const historyStore = new history.HistoryStore();

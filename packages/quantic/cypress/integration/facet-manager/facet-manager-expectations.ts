@@ -6,15 +6,20 @@ import {
 const facetManagerExpectations = (selector: FacetManagerSelector) => {
   return {
     containsFacets: (indexFacetIdsAlias: string) => {
-      selector.item().then((elements) => {
-        const effectiveFacetIds = Cypress.$.makeArray(elements).map(
-          (element) => element.dataset.facetId
-        );
+      cy.get(indexFacetIdsAlias).then((facetIds) => {
+        const expectedFacetIds = Cypress.$.makeArray(facetIds);
 
-        cy.get(indexFacetIdsAlias).then((facetIds) => {
-          const expectedFacetIds = Cypress.$.makeArray(facetIds);
-          expect(effectiveFacetIds).to.deep.equal(expectedFacetIds);
-        });
+        selector
+          .item()
+          .then((elements) => {
+            const facetElements = Cypress.$.makeArray(elements);
+            const effectiveFacetIds = facetElements.map(
+              (element) => element.dataset.facetId
+            );
+
+            expect(effectiveFacetIds).to.deep.equal(expectedFacetIds);
+          })
+          .logDetail(`should contain facets: ${expectedFacetIds.join(', ')}`);
       });
     },
   };

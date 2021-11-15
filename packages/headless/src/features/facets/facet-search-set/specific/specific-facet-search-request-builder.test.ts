@@ -3,8 +3,8 @@ import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-requ
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildSpecificFacetSearchRequest} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
-import {buildSearchRequest} from '../../../../features/search/search-request';
+import {buildSpecificFacetSearchRequest} from './specific-facet-search-request-builder';
+import {buildSearchRequest} from '../../../search/search-request';
 
 describe('#buildSpecificFacetSearchRequest', () => {
   const id = '1';
@@ -22,35 +22,41 @@ describe('#buildSpecificFacetSearchRequest', () => {
 
   beforeEach(() => setupState());
 
-  it('retrieves the #captions from the facetSearchSet', () => {
+  it('retrieves the #captions from the facetSearchSet', async () => {
     const captions = {a: 'A'};
     state.facetSearchSet[id].options.captions = captions;
 
-    expect(buildParams().captions).toEqual(captions);
+    expect((await buildParams()).captions).toEqual(captions);
   });
 
-  it('retrieves the #numberOfValues from the facetSearchSet', () => {
+  it('retrieves the #numberOfValues from the facetSearchSet', async () => {
     const numberOfValues = 5;
     state.facetSearchSet[id].options.numberOfValues = numberOfValues;
 
-    expect(buildParams().numberOfValues).toEqual(numberOfValues);
+    expect((await buildParams()).numberOfValues).toEqual(numberOfValues);
   });
 
-  it('retrieves the #query from the facetSearchSet', () => {
+  it('retrieves the #query from the facetSearchSet', async () => {
     const query = 'hello';
     state.facetSearchSet[id].options.query = query;
 
-    expect(buildParams().query).toEqual(`*${query}*`);
+    expect((await buildParams()).query).toEqual(`*${query}*`);
   });
 
-  it('retrieves the #field from the facetSet', () => {
+  it('retrieves the #field from the facetSet', async () => {
     const field = 'author';
     state.facetSet[id].field = field;
 
-    expect(buildParams().field).toBe(field);
+    expect((await buildParams()).field).toBe(field);
   });
 
-  it('builds the #ignoreValues from the facetSet non-idle #currentValues', () => {
+  it('retrieves #filterFacetCount from the facetSet', async () => {
+    state.facetSet[id].filterFacetCount = true;
+
+    expect((await buildParams()).filterFacetCount).toBe(true);
+  });
+
+  it('builds the #ignoreValues from the facetSet non-idle #currentValues', async () => {
     const idle = buildMockFacetValueRequest({value: 'A'});
     const selected = buildMockFacetValueRequest({
       value: 'B',
@@ -58,14 +64,17 @@ describe('#buildSpecificFacetSearchRequest', () => {
     });
     state.facetSet[id].currentValues = [idle, selected];
 
-    expect(buildParams().ignoreValues).toEqual([selected.value]);
+    expect((await buildParams()).ignoreValues).toEqual([selected.value]);
   });
 
-  it('sets the #searchContext to the search request params', () => {
+  it('sets the #searchContext to the search request params', async () => {
     const facet = state.facetSet[id];
-    const request = {...buildSearchRequest(state).request, facets: [facet]};
+    const request = {
+      ...(await buildSearchRequest(state)).request,
+      facets: [facet],
+    };
 
-    expect(buildParams().searchContext).toEqual({
+    expect((await buildParams()).searchContext).toEqual({
       ...request,
       visitorId: expect.any(String),
     });

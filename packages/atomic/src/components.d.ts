@@ -60,7 +60,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'. TODO: add automatic (occurences when not expanded, alphanumeric when expanded)
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
@@ -165,6 +165,10 @@ export namespace Components {
         "label": string;
     }
     interface AtomicFacetManager {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicFacetNumberInput {
         "bindings": Bindings;
@@ -490,11 +494,11 @@ export namespace Components {
     }
     interface AtomicResultList {
         /**
-          * How large or small results should be.
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density": ResultDisplayDensity;
         /**
-          * How results should be displayed.
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display": ResultDisplayLayout;
         /**
@@ -506,11 +510,15 @@ export namespace Components {
          */
         "image": ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.
+          * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter": string | null;
         /**
           * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */
@@ -1248,7 +1256,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'. TODO: add automatic (occurences when not expanded, alphanumeric when expanded)
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
@@ -1354,6 +1362,10 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicFacetNumberInput {
         "bindings": Bindings;
@@ -1681,11 +1693,11 @@ declare namespace LocalJSX {
     }
     interface AtomicResultList {
         /**
-          * How large or small results should be.
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density"?: ResultDisplayDensity;
         /**
-          * How results should be displayed.
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display"?: ResultDisplayLayout;
         /**
@@ -1697,11 +1709,15 @@ declare namespace LocalJSX {
          */
         "image"?: ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.
+          * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter"?: string | null;
         /**
           * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
          */

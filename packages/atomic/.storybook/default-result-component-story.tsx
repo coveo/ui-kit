@@ -7,8 +7,83 @@ import sharedDefaultStory, {
   renderArgsToHTMLString,
 } from './default-story-shared';
 import {initializeInterfaceDebounced} from './default-init';
-import {codeSample} from './code-sample/code-sample';
 import {html} from 'lit-html';
+import {
+  resultComponentArgTypes,
+  resultSections,
+  ResultSectionWithHighlights,
+} from './map-result-list-props-to-args';
+
+const renderInsideResultList = (content: string, getArgs: () => Args) => {
+  const layoutMode = getArgs()['resultListLayout'];
+  const densityMode = getArgs()['resultListDensity'];
+  const imageSizeMode = getArgs()['resultListImageSize'];
+
+  let resultListAttributes = '';
+  if (layoutMode) {
+    resultListAttributes += ` display=${layoutMode}`;
+  }
+  if (densityMode) {
+    resultListAttributes += ` density=${densityMode}`;
+  }
+  if (imageSizeMode) {
+    resultListAttributes += ` image-size=${imageSizeMode}`;
+  }
+
+  return `<atomic-result-list${resultListAttributes}>\n\t${content}\n</atomic-result-list>`;
+};
+
+const renderInsideTemplate = (content: string) => {
+  return `<atomic-result-template>\n\t\t<template>\n\t\t\t${content}\n\t\t</template>\n\t</atomic-result-template>`;
+};
+
+const renderSectionHighlight = (section: ResultSectionWithHighlights) => {
+  return `style="border:2px dashed ${section.highlightColor}; box-shadow: 0px 5px 10px #e5e8e8; color: ${section.highlightColor};"`;
+};
+
+const renderInsideResultSection = (
+  content: string,
+  getArgs: () => Args,
+  includeHighlightStyling: boolean
+) => {
+  const currentTemplateSection = getArgs()['resultSection'];
+
+  return resultSections
+    .map((section) => {
+      const isCurrentSection = section.name === currentTemplateSection;
+      return `<${section.name} ${
+        includeHighlightStyling && !isCurrentSection
+          ? renderSectionHighlight(section)
+          : ''
+      }>${
+        section.name === currentTemplateSection
+          ? `\n\t\t\t\t${content}\n\t\t\t`
+          : `${section.name}`
+      }</${section.name}>`;
+    })
+    .join('\n\t\t\t');
+};
+
+export const renderArgsToResultTemplate = (
+  content: string,
+  getArgs: () => Args,
+  includeHighlightStyling: boolean
+) => {
+  const currentTemplateSection = getArgs()['resultSection'];
+  const isInATemplateSection =
+    currentTemplateSection && currentTemplateSection !== 'none';
+
+  if (!isInATemplateSection) {
+    return renderInsideResultList(renderInsideTemplate(content), getArgs);
+  }
+
+  return renderInsideResultList(
+    renderInsideTemplate(
+      renderInsideResultSection(content, getArgs, includeHighlightStyling)
+    ),
+    getArgs
+  );
+};
 
 export default function defaultResultComponentStory(
   title: string,
@@ -33,28 +108,30 @@ export default function defaultResultComponentStory(
       componentTag,
       defaultArgs,
       docPage,
+      true,
       advancedConfig
     );
 
-  const renderArgsToResultTemplate = (content: string) => {
-    return `<atomic-result-list>\n\t<atomic-result-template>\n\t\t<template>\n\t\t\t${content}\n\t\t</template>\n\t</atomic-result-template>\n</atomic-result-list>`;
+  defaultModuleExport.argTypes = {
+    ...resultComponentArgTypes,
+    ...defaultModuleExport.argTypes,
   };
 
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
 
-    const htmlString = renderArgsToHTMLString(componentTag, getArgs());
     return (
       <div>
         <Story />
-        {codeSample(renderArgsToResultTemplate(`${htmlString}`))}
       </div>
     );
   };
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     return `${renderArgsToResultTemplate(
-      renderArgsToHTMLString(componentTag, getArgs())
+      renderArgsToHTMLString(componentTag, getArgs(), advancedConfig),
+      getArgs,
+      true
     )}${
       advancedConfig.additionalMarkup
         ? advancedConfig.additionalMarkup().strings.join('')

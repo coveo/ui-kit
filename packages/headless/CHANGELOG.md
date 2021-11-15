@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.31.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.4...@coveo/headless@1.31.5) (2021-11-12)
+
+
+### Bug Fixes
+
+* **headless:** load sourcemaps from CDN ([#1462](https://github.com/coveo/ui-kit/issues/1462)) ([34c386e](https://github.com/coveo/ui-kit/commit/34c386edf23176db1e25842db394ed34fb748d35))
+* **headless:** send filterFacetCount param with facet search request ([#1475](https://github.com/coveo/ui-kit/issues/1475)) ([f83e143](https://github.com/coveo/ui-kit/commit/f83e143c44a455abaefd25d78c9413cee494afcd))
+
+
+
+
+
+## [1.31.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.3...@coveo/headless@1.31.4) (2021-11-10)
+
+
+### Bug Fixes
+
+* **headless): fix(headless:** remove ca.js/src import ([#1466](https://github.com/coveo/ui-kit/issues/1466)) ([84f4ad4](https://github.com/coveo/ui-kit/commit/84f4ad479eb77223f1e6a3a3c552584ef812462f))
+
+
+
+
+
+## [1.31.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.2...@coveo/headless@1.31.3) (2021-11-09)
+
+
+### Bug Fixes
+
+* **headless:** remove ca.js/src import ([#1461](https://github.com/coveo/ui-kit/issues/1461)) ([9204769](https://github.com/coveo/ui-kit/commit/9204769f48e8658d527a1cb6171f4b095c54687d))
+
+
+
+
+
 ## [1.31.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.1...@coveo/headless@1.31.2) (2021-11-02)
 
 

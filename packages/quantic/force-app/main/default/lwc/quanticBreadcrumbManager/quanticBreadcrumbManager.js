@@ -7,7 +7,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, RelativeDateFormatter} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
@@ -20,6 +20,7 @@ import colon from '@salesforce/label/c.quantic_Colon';
 /** @typedef {import("coveo").NumericFacetBreadcrumb} NumericFacetBreadcrumb */
 /** @typedef {import("coveo").DateFacetBreadcrumb} DateFacetBreadcrumb */
 /** @typedef {import("coveo").BreadcrumbValue} BreadcrumbValue */
+/** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 
 /**
  * The `QuanticBreadcrumbManager` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -125,6 +126,22 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
   }
 
+  /**
+   * 
+   * @param {DateFacetValue} dateRange 
+   */
+  formatDateRange(dateRange) {
+    try {
+      const startDate = CoveoHeadless.deserializeRelativeDate(dateRange.start);
+      const endDate = CoveoHeadless.deserializeRelativeDate(dateRange.end);
+      
+      return new RelativeDateFormatter().formatRange(startDate, endDate);
+    } catch (err) {
+      // handle it as a fixed date range
+      return `${this.formatDate(dateRange.start)} - ${this.formatDate(dateRange.end)}`;
+    }
+  }
+
   formatDate(dateValue) {
     const date = new Date(dateValue);
     return date.toLocaleDateString();
@@ -135,7 +152,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
       ...breadcrumb,
       values: breadcrumb.values.map(range => ({
         ...range,
-        value: `${this.formatDate(range.value.start)} - ${this.formatDate(range.value.end)}`
+        value: this.formatDateRange(range.value),
       }))
     };
   }

@@ -1,5 +1,5 @@
 import {ArrayValue} from '@coveo/bueno';
-import {CategoryFacetMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
+import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   requiredNonEmptyString,
