@@ -77,7 +77,7 @@ export const CodeSamplePanel = () => {
 
           delay(
             () => editor.getAction('editor.action.formatDocument').run(),
-            200
+            100
           );
           editor.onDidFocusEditorText(() => {
             editor.setScrollTop(0);
