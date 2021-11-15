@@ -35,14 +35,19 @@ export const CodeSamplePanel = () => {
   const {componentTag, isResultComponent, advancedConfig} =
     storyParameters as StoryParameters;
 
-  const styleString = renderShadowPartsToStyleString(componentTag, args);
-  const htmlString = isResultComponent
+  const codeString = isResultComponent
     ? renderArgsToResultTemplate(
-        renderArgsToHTMLString(componentTag, args, advancedConfig),
+        addSpacingBetweenStylingAndHTML(
+          renderArgsToHTMLString(componentTag, args, advancedConfig),
+          renderShadowPartsToStyleString(componentTag, args)
+        ),
         () => args,
         false
       )
-    : renderArgsToHTMLString(componentTag, args, advancedConfig);
+    : addSpacingBetweenStylingAndHTML(
+        renderArgsToHTMLString(componentTag, args, advancedConfig),
+        renderShadowPartsToStyleString(componentTag, args)
+      );
 
   return (
     <div
@@ -59,7 +64,7 @@ export const CodeSamplePanel = () => {
         height="800px"
         theme="vs-dark"
         defaultValue={''}
-        value={addSpacingBetweenStylingAndHTML(htmlString, styleString)}
+        value={codeString}
         defaultLanguage="html"
         options={{
           theme: 'vs-dark',
@@ -72,7 +77,7 @@ export const CodeSamplePanel = () => {
 
           delay(
             () => editor.getAction('editor.action.formatDocument').run(),
-            100
+            200
           );
           editor.onDidFocusEditorText(() => {
             editor.setScrollTop(0);
