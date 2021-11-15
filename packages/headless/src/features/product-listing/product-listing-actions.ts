@@ -97,7 +97,7 @@ export const fetchProductListing = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProducts(
-      buildProductListingRequest(state)
+      await buildProductListingRequest(state)
     );
 
     if (isErrorResponse(fetched)) {
@@ -111,11 +111,11 @@ export const fetchProductListing = createAsyncThunk<
   }
 );
 
-export const buildProductListingRequest = (
+export const buildProductListingRequest = async (
   state: StateNeededByFetchProductListing
-): ProductListingRequest => {
+): Promise<ProductListingRequest> => {
   const facets = getFacets(state);
-  const visitorId = getVisitorID();
+  const visitorId = await getVisitorID();
 
   return {
     accessToken: state.configuration.accessToken,
@@ -123,7 +123,7 @@ export const buildProductListingRequest = (
     platformUrl: state.configuration.platformUrl,
     url: state.productListing?.url,
     ...(state.configuration.analytics.enabled && visitorId
-      ? {clientId: getVisitorID()}
+      ? {clientId: visitorId}
       : {}),
     ...(state.productListing.additionalFields?.length
       ? {
