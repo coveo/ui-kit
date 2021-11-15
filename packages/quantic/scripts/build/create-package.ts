@@ -21,11 +21,10 @@ interface Options {
 
 function ensureEnvVariables() {
   [
-    'BRANCH_NAME',
+    'GITHUB_TOKEN',
     'SFDX_AUTH_CLIENT_ID',
     'SFDX_AUTH_JWT_KEY',
     'SFDX_AUTH_JWT_USERNAME',
-    'GITHUB_TOKEN',
   ].forEach((v) => {
     if (!process.env[v]) {
       throw new Error(`The environment variable ${v} must be defined.`);
