@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
-import {JWTAuth} from './util/sfdx-commands';
+import {SfdxJWTAuth} from './util/sfdx-commands';
 // eslint-disable-next-line node/no-unpublished-require
 const waitOn = require('wait-on');
 
@@ -15,7 +15,7 @@ interface Options {
   };
   deleteOldOrgs: boolean;
   deleteOrgOnError: boolean;
-  jwt: JWTAuth;
+  jwt: SfdxJWTAuth;
   scratchOrg: {
     alias: string;
     defFile: string;

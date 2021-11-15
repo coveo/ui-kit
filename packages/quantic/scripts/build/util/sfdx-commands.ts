@@ -6,7 +6,7 @@ export interface SfdxOrg {
   status: string;
 }
 
-export interface JWTAuth {
+export interface SfdxJWTAuth {
   clientId: string;
   keyFile: string;
   username: string;
@@ -50,6 +50,41 @@ export interface SfdxCreatePackageVersionResponse extends SfdxResponse {
     CreatedDate: string;
     HasMetadataRemoved: boolean;
   };
+}
+
+export interface SfdxPackageDetails {
+  Package2Id: string;
+  Branch?: string;
+  Tag?: string;
+  MajorVersion: number;
+  MinorVersion: number;
+  PatchVersion: number;
+  BuildNumber: number;
+  Id: string;
+  SubscriberPackageVersionId: string;
+  Name: string;
+  NamespacePrefix?: string;
+  Package2Name: string;
+  Description: string;
+  Version: string;
+  IsPasswordProtected: boolean;
+  IsReleased: boolean;
+  CreatedDate: string;
+  LastModifiedDate: string;
+  InstallUrl: string;
+  CodeCoverage: string;
+  ValidationSkipped: boolean;
+  AncestorId: string;
+  AncestorVersion: string;
+  Alias: string;
+  IsOrgDependent: string;
+  ReleaseVersion: string;
+  BuildDurationInSeconds: string;
+  HasMetadataRemoved: string;
+}
+
+export interface SfdxGetPackageListResponse extends SfdxResponse {
+  result: SfdxPackageDetails[];
 }
 
 export async function getActiveScratchOrgUsernames(
@@ -225,5 +260,11 @@ export async function promotePackageVersion(
 ) {
   return await sfdx(
     `sfdx force:package:version:promote --package ${args.packageVersionId}`
+  );
+}
+
+export async function getPackageVersionList(): Promise<SfdxGetPackageListResponse> {
+  return await sfdx<SfdxGetPackageListResponse>(
+    'sfdx force:package:version:list --json'
   );
 }

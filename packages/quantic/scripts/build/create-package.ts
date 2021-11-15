@@ -1,10 +1,12 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 import * as fs from 'fs';
+// eslint-disable-next-line node/no-extraneous-import
+import {Octokit} from '@octokit/rest';
 import * as sfdx from './util/sfdx-commands';
 import {StepLogger, StepsRunner} from './util/log';
 import {
   authorizeOrg,
-  JWTAuth,
+  SfdxJWTAuth,
   SfdxCreatePackageVersionResponse,
 } from './util/sfdx-commands';
 import * as pack from '../../package.json';
@@ -14,7 +16,7 @@ interface Options {
   packageId: string;
   promote: boolean;
   removeTranslations: boolean;
-  jwt: JWTAuth;
+  jwt: SfdxJWTAuth;
 }
 
 function ensureEnvVariables() {
@@ -23,6 +25,7 @@ function ensureEnvVariables() {
     'SFDX_AUTH_CLIENT_ID',
     'SFDX_AUTH_JWT_KEY',
     'SFDX_AUTH_JWT_USERNAME',
+    'GITHUB_TOKEN',
   ].forEach((v) => {
     if (!process.env[v]) {
       throw new Error(`The environment variable ${v} must be defined.`);
@@ -101,7 +104,27 @@ async function promotePackage(log: StepLogger, packageVersionId: string) {
   log(`Quantic package ${packageVersionId} published.`);
 }
 
-async function createGithubRelease(log: StepLogger, options: Options) {}
+async function createGithubRelease(log: StepLogger, packageVersionId: string) {
+  const token = process.env.GITHUB_TOKEN || '';
+  const github = new Octokit({auth: token});
+
+  const packageDetails = (await sfdx.getPackageVersionList()).result.find(
+    (pack) => pack.SubscriberPackageVersionId === packageVersionId
+  );
+  const releaseName = `${
+    packageDetails.Package2Name
+  } v${getLatestPackageVersion()}`;
+
+  log('Creating Github release...');
+  await github.repos.createRelease({
+    owner: 'coveo',
+    repo: 'ui-kit',
+    tag_name: releaseName,
+    name: releaseName,
+    body: `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`,
+  });
+  log('Creating Github release...');
+}
 
 (async function () {
   const options = await buildOptions();
@@ -120,7 +143,7 @@ async function createGithubRelease(log: StepLogger, options: Options) {}
         ).result.Package2VersionId;
       })
       .add(async (log) => await promotePackage(log, packageVersionId))
-      .add(async (log) => await createGithubRelease(log, options));
+      .add(async (log) => await createGithubRelease(log, packageVersionId));
 
     await runner.run();
   } catch (error) {
