@@ -1,3 +1,5 @@
+import {baseFacetActions} from '../facets/facet-common-actions';
+import {FacetSelectors} from '../facets/facet/facet-selectors';
 import {
   BreadcrumbManagerSelector,
   BreadcrumbManagerSelectors,
@@ -9,4 +11,5 @@ function breadcrumbManagerActions(selector: BreadcrumbManagerSelector) {
 
 export const SortActions = {
   ...breadcrumbManagerActions(BreadcrumbManagerSelectors),
+  ...baseFacetActions(FacetSelectors),
 };

@@ -204,7 +204,7 @@ export default class QuanticNumericFacet extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
     registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
       label: this.label,
-      facetId: this.facetId ?? this.field,
+      facetId: this.facet.state.facetId,
       format: this.formattingFunction,
     });
   }

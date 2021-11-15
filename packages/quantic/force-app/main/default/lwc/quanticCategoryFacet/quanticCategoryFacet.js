@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 import {registerComponentForInit, initializeWithHeadless, registerToStore} from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode} from 'c/quanticUtils';
+import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
 
 import clear from '@salesforce/label/c.quantic_Clear';
 import showMore from '@salesforce/label/c.quantic_ShowMore';
@@ -193,6 +193,10 @@ export default class QuanticCategoryFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    registerToStore(this.engineId, Store.facetTypes.CATEGORYFACETS, {
+      label: this.label,
+      facetId: this.facet.state.facetId
+    });
   }
 
   updateState() {
@@ -316,10 +320,6 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.toggleSelect(item);
     }
     this.clearInput();
-    registerToStore(this.engineId, 'categoryFacets', {
-      label: this.label,
-      facetId: this.facetId ?? this.field
-    });
   }
 
   getItemFromValue(value) {

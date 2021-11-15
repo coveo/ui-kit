@@ -186,7 +186,7 @@ export default class QuanticFacet extends LightningElement {
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
     registerToStore(this.engineId, Store.facetTypes.FACETS, {
       label: this.label,
-      facetId: this.facetId ?? this.field
+      facetId: this.facet.state.facetId
     });
   }
 
