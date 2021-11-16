@@ -1,6 +1,6 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 import * as fs from 'fs';
-// eslint-disable-next-line node/no-extraneous-import
+/* eslint-disable-next-line node/no-extraneous-import */
 import {Octokit} from '@octokit/rest';
 import * as sfdx from './util/sfdx-commands';
 import {StepLogger, StepsRunner} from './util/log';
