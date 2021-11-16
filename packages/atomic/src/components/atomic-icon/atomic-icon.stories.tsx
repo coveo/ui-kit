@@ -31,6 +31,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
             border-top: 2px dashed black;
             padding-top: 20px;
           }
+          .asset-container {
+            text-align: center;
+          }
           .assets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -52,7 +55,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
               const backgroundColor =
                 bgIcons[snakeToCamel(asset.replace('.svg', ''))] ||
                 'transparent';
-              return html`<div>
+              return html`<div class="asset-container">
                 <div>
                   <atomic-icon
                     icon="${assetReference}"
