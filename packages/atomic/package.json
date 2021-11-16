@@ -23,7 +23,7 @@
     "licenses/"
   ],
   "scripts": {
-    "build": "npm run build:locales && npm run build:stencil && npm run build:utils && npm run build:storybook && npm run doc:listassets",
+    "build": "npm run build:locales && npm run build:stencil && npm run build:utils && npm run doc:listassets && npm run build:storybook",
     "build:utils": "node --max-old-space-size=4096 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
