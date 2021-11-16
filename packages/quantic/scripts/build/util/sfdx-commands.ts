@@ -247,7 +247,7 @@ export async function createPackageVersion(
   args: CreatePackageVersionArguments
 ): Promise<SfdxCreatePackageVersionResponse> {
   return await sfdx<SfdxCreatePackageVersionResponse>(
-    `sfdx force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout} --json`
+    `sfdx force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout}`
   );
 }
 
@@ -265,6 +265,6 @@ export async function promotePackageVersion(
 
 export async function getPackageVersionList(): Promise<SfdxGetPackageListResponse> {
   return await sfdx<SfdxGetPackageListResponse>(
-    'sfdx force:package:version:list --json'
+    'sfdx force:package:version:list'
   );
 }
