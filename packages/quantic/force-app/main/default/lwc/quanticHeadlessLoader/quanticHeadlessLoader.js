@@ -122,7 +122,7 @@ async function initEngine(engineId) {
  */
 const initQuanticStore = (engineId) => {
   try {
-     if(!window.coveoHeadless[engineId]?.bindings?.store) {
+     if(!window.coveoHeadless[engineId].bindings.store) {
        window.coveoHeadless[engineId].bindings.store = Store.initialize();
      }
   } catch (error) {
@@ -227,9 +227,9 @@ async function initializeWithHeadless(element, engineId, initialize) {
     return;
   }
   try {
+    initQuanticStore(engineId);
     initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
-    initQuanticStore(engineId);
     
   } catch (error) {
     console.error('Fatal error: unable to initialize component', error);

@@ -45,11 +45,11 @@ function baseBreadcrumbManagerExpectations(
         .should('have.length', value)
         .logDetail(`should display ${value} ${name} breadcrumb values`);
     },
-    breadcrumbValueLabelAtIndexContains: (index: number, value: string) => {
+    breadcrumbValueLabelAtIndexContains: (value: string) => {
       selector
-        .breadcrumbValueLabelAtIndex(index)
+        .breadcrumbValueLabelAtIndex(0)
         .contains(value)
-        .logDetail(`should have the value "${value}" at ${index} value`);
+        .logDetail(`should have the value "${value}" at first value`);
     },
     displayShowMore: (display: boolean) => {
       selector

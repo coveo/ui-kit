@@ -443,7 +443,7 @@ export class Store {
    * @param {{ label?: string; facetId: any; format?: Function;}} data
    */
   static registerFacetToStore(store, facetType, data) {
-    if(store.state[facetType][data.facetId]) {
+    if(store?.state[facetType][data.facetId]) {
       return;
     }
     store.state[facetType][data.facetId] = data;

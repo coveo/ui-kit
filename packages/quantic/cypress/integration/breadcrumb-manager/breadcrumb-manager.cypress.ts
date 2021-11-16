@@ -78,10 +78,7 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.dateFacet.displayLabel(true);
         Expect.dateFacet.labelContains('Date');
         Expect.dateFacet.numberOfValues(1);
-        Expect.dateFacet.breadcrumbValueLabelAtIndexContains(
-          0,
-          'Past 6 months'
-        );
+        Expect.dateFacet.breadcrumbValueLabelAtIndexContains('Past 6 months');
 
         Actions.timeFrameFacet.selectValue('Past year');
         cy.wait(InterceptAliases.Search);
@@ -89,7 +86,7 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.dateFacet.displayBreadcrumb(true);
         Expect.dateFacet.displayLabel(true);
         Expect.dateFacet.numberOfValues(1);
-        Expect.dateFacet.breadcrumbValueLabelAtIndexContains(0, 'Past year');
+        Expect.dateFacet.breadcrumbValueLabelAtIndexContains('Past year');
       });
 
       scope('when clearing all filters', () => {
@@ -110,7 +107,6 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.categoryFacet.displayValues(true);
         Expect.categoryFacet.numberOfValues(1);
         Expect.categoryFacet.breadcrumbValueLabelAtIndexContains(
-          0,
           'North America'
         );
 
@@ -119,7 +115,6 @@ describe('quantic-breadcrumb-manager', () => {
 
         Expect.categoryFacet.numberOfValues(1);
         Expect.categoryFacet.breadcrumbValueLabelAtIndexContains(
-          0,
           'North America / C'
         );
 
@@ -128,7 +123,6 @@ describe('quantic-breadcrumb-manager', () => {
 
         Expect.categoryFacet.numberOfValues(1);
         Expect.categoryFacet.breadcrumbValueLabelAtIndexContains(
-          0,
           'North America / C'
         );
       });
@@ -142,12 +136,15 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.facet.labelContains('File Type');
         Expect.facet.displayValues(true);
         Expect.facet.numberOfValues(1);
-        Expect.facet.breadcrumbValueLabelAtIndexContains(0, 'txt');
+        Expect.facet.breadcrumbValueLabelAtIndexContains('txt');
+
+        Actions.facet.clickShowMoreButton();
+        cy.wait(InterceptAliases.Search);
 
         Actions.facet.selectLastLinkValue();
         cy.wait(InterceptAliases.Search);
 
-        Expect.facet.numberOfValues(2);
+        Expect.facet.numberOfValues(1);
       });
     });
   });
@@ -184,24 +181,20 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.facet.labelContains('File Type');
         Expect.facet.displayValues(true);
         Expect.facet.numberOfValues(1);
-        Expect.facet.breadcrumbValueLabelAtIndexContains(0, 'txt');
+        Expect.facet.breadcrumbValueLabelAtIndexContains('txt');
 
         Expect.dateFacet.displayBreadcrumb(true);
         Expect.dateFacet.displayLabel(true);
         Expect.dateFacet.labelContains('Date');
         Expect.dateFacet.displayValues(true);
         Expect.dateFacet.numberOfValues(1);
-        Expect.dateFacet.breadcrumbValueLabelAtIndexContains(
-          0,
-          'Past 6 months'
-        );
+        Expect.dateFacet.breadcrumbValueLabelAtIndexContains('Past 6 months');
         Expect.categoryFacet.displayBreadcrumb(true);
         Expect.categoryFacet.displayLabel(true);
         Expect.categoryFacet.labelContains('Country');
         Expect.categoryFacet.displayValues(true);
         Expect.categoryFacet.numberOfValues(1);
         Expect.categoryFacet.breadcrumbValueLabelAtIndexContains(
-          0,
           'North America / C'
         );
 
