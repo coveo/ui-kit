@@ -41,6 +41,25 @@ function define() {
   });
 }
 
+function getFileName(data) {
+  const name = data.chunk.name;
+  return name === 'headless' ? name : `${name}/headless`;
+}
+
+function browserAlias() {
+  return {
+    'coveo.analytics': path.resolve(
+      __dirname,
+      './node_modules/coveo.analytics/dist/library.es.js'
+    ),
+    'cross-fetch': path.resolve(__dirname, './fetch-ponyfill.js'),
+    'web-encoding': path.resolve(
+      __dirname,
+      './node_modules/web-encoding/src/lib.js'
+    ),
+  };
+}
+
 const browserBase = {
   ...base,
   devtool: 'source-map',
@@ -57,7 +76,7 @@ const browserUmd = {
     path: path.resolve(__dirname, 'dist/browser'),
     library: {
       type: 'umd',
-      name: 'CoveoHeadless',
+      name: 'CoveoHeadless', // different use-cases need different global name.
     },
   },
   resolve: {
@@ -82,25 +101,6 @@ const browserEsm = {
     alias: browserAlias(),
   },
 };
-
-function getFileName(data) {
-  const name = data.chunk.name;
-  return name === 'headless' ? name : `${name}/headless`;
-}
-
-function browserAlias() {
-  return {
-    'coveo.analytics': path.resolve(
-      __dirname,
-      './node_modules/coveo.analytics/dist/library.es.js'
-    ),
-    'cross-fetch': path.resolve(__dirname, './fetch-ponyfill.js'),
-    'web-encoding': path.resolve(
-      __dirname,
-      './node_modules/web-encoding/src/lib.js'
-    ),
-  };
-}
 
 const nodeBase = {
   ...base,
