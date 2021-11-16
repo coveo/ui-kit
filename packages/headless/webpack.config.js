@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const ReplacePlugin = require('webpack-plugin-replace');
+const TerserPlugin = require('terser-webpack-plugin');
 
 
 const base = {
@@ -25,6 +26,9 @@ const base = {
     extensions: ['.ts', '.js'],
   },
   devtool: 'source-map',
+  optimization: {
+    minimizer: [new TerserPlugin({extractComments: false})],
+  },
   // plugins: [
   //   replace(),
   // ]
@@ -34,7 +38,7 @@ const browserUmd = {
   ...base,
   target: 'web',
   output: {
-    filename: '[name].js',
+    filename: (data) => `${getFileName(data)}.js`,
     path: path.resolve(__dirname, 'dist/browser'),
     library: {
       type: 'umd',
@@ -51,7 +55,7 @@ const browserEsm = {
   ...base,
   target: 'web',
   output: {
-    filename: '[name].esm.js',
+    filename: (data) => `${getFileName(data)}.esm.js`,
     path: path.resolve(__dirname, 'dist/browser'),
     library: {type: 'module'},
   },
@@ -62,6 +66,11 @@ const browserEsm = {
     ...base.resolve,
     alias: browserAlias()
   }
+}
+
+function getFileName(data) {
+  const name = data.chunk.name;
+  return name === 'headless' ? name : `${name}/headless`;
 }
 
 function browserAlias() {
@@ -88,7 +97,7 @@ const nodeCjs = {
   target: 'node',
   mode: 'development',
   output: {
-    filename: '[name].js',
+    filename: (data) => `${getFileName(data)}.js`,
     path: path.resolve(__dirname, 'dist/'),
     library: {type: 'commonjs'},
   },
@@ -99,7 +108,7 @@ const nodeEsm = {
   target: 'node14',
   mode: 'development',
   output: {
-    filename: '[name].esm.js',
+    filename: (data) => `${getFileName(data)}.esm.js`,
     path: path.resolve(__dirname, 'dist/'),
     library: {type: 'module'},
   },
