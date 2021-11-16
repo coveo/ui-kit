@@ -16,7 +16,7 @@ import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_Showin
 /** @typedef {import("coveo").QuerySummaryState} QuerySummaryState */
 
 /**
- * The `QuanticSummary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+ * The `QuanticSummary` component displays information about the current range of results (e.g., "Results 1-10 of 123").
  * @example
  * <c-quantic-summary engine-id={engineId}></c-quantic-summary>
  */
