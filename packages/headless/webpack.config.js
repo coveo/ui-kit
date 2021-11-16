@@ -102,6 +102,15 @@ const browserEsm = {
   },
 };
 
+const browserEsmDev = {
+  ...browserEsm,
+  output: {
+    ...browserEsm.output,
+    path: path.resolve(__dirname, '../atomic/src/external-builds/')
+  },
+  watch: true,
+}
+
 const nodeBase = {
   ...base,
   optimization: {
@@ -132,4 +141,6 @@ const nodeEsm = {
   },
 };
 
-module.exports = [browserUmd, browserEsm, nodeCjs, nodeEsm];
+const isProduction = getMode() === 'production';
+
+module.exports = isProduction ? [browserUmd, browserEsm, nodeCjs, nodeEsm] : [browserEsmDev];
