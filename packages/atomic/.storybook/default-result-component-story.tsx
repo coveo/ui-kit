@@ -5,6 +5,7 @@ import {DocsPage} from '@storybook/addon-docs';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
+  renderShadowPartsToStyleString,
 } from './default-story-shared';
 import {initializeInterfaceDebounced} from './default-init';
 import {html, TemplateResult} from 'lit-html';
@@ -135,7 +136,8 @@ export default function defaultResultComponentStory(
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     return `${renderArgsToResultTemplate(
-      renderArgsToHTMLString(componentTag, getArgs(), config),
+      renderArgsToHTMLString(componentTag, getArgs(), config) +
+        renderShadowPartsToStyleString(componentTag, getArgs()),
       getArgs,
       true
     )}${renderAdditionalMarkup(config.additionalMarkup)}`;
