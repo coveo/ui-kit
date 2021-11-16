@@ -45,6 +45,20 @@ function baseBreadcrumbManagerExpectations(
         .should('have.length', value)
         .logDetail(`should display ${value} ${name} breadcrumb values`);
     },
+    breadcrumbValueLabelAtIndexContains: (index: number, value: string) => {
+      selector
+        .breadcrumbValueLabelAtIndex(index)
+        .contains(value)
+        .logDetail(`should have the value "${value}" at ${index} value`);
+    },
+    displayShowMore: (display: boolean) => {
+      selector
+        .showMoreButton()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(
+          `${should(display)} display the show more button ${name} breadcrumb`
+        );
+    },
   };
 }
 
@@ -67,7 +81,7 @@ function breadcrumbManagerExpectations(selector: BreadcrumbManagerSelector) {
 
 export const BreadcrumbManagerExpectations = {
   ...breadcrumbManagerExpectations(BreadcrumbManagerSelectors),
-  facert: {
+  facet: {
     ...baseBreadcrumbManagerExpectations(
       BreadcrumbManagerSelectors.facet(),
       'facet'

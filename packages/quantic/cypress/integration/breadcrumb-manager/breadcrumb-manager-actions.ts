@@ -1,19 +1,43 @@
-import {baseFacetActions} from '../facets/facet-common-actions';
-import {FacetSelectors} from '../facets/facet/facet-selectors';
-import {NumericFacetSelectors} from '../facets/numeric-facet/numeric-facet-selectors';
+import {TimeframeFacetActions} from '../facets/timeframe-facet/timeframe-facet-actions';
 import {
   BreadcrumbManagerSelector,
   BreadcrumbManagerSelectors,
 } from './breadcrumb-manager-selectors';
+import {CategoryFacetActions} from '../facets/category-facet/category-facet-actions';
+import {NumericFacetActions} from '../facets/numeric-facet/numeric-facet-actions';
+import {FacetActions} from '../facets/facet/facet-actions';
 
 function breadcrumbManagerActions(selector: BreadcrumbManagerSelector) {
-  return {};
+  return {
+    clickShowMoreNumericFacetBreadcrumb: () => {
+      selector.numericFacet().showMoreButton().click();
+    },
+    clickFirstValueNumericFacetBreadcrumb: () => {
+      selector
+        .numericFacet()
+        .values()
+        .first()
+        .find('.pill__container')
+        .click({force: true});
+    },
+    clickClearFilters: () => {
+      selector.clearFilters().click();
+    },
+  };
 }
 
 export const BreadcrumbManagerActions = {
   ...breadcrumbManagerActions(BreadcrumbManagerSelectors),
-  ...baseFacetActions(FacetSelectors),
+  facet: {
+    ...FacetActions,
+  },
   numerciFacet: {
-    ...baseFacetActions(NumericFacetSelectors),
+    ...NumericFacetActions,
+  },
+  timeFrameFacet: {
+    ...TimeframeFacetActions,
+  },
+  categoryFacet: {
+    ...CategoryFacetActions,
   },
 };
