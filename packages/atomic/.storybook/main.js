@@ -18,7 +18,6 @@ module.exports = {
         ...config.module,
         rules: [
           ...config.module.rules,
-
           {
             test: /\.(tsx)$/,
             exclude: /shadow-parts-addon/,

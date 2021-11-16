@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.85.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.3...@coveo/quantic@0.85.4) (2021-11-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.2...@coveo/quantic@0.85.3) (2021-11-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.1...@coveo/quantic@0.85.2) (2021-11-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.0...@coveo/quantic@0.85.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* **quantic:** copy only main headless browser file ([#1480](https://github.com/coveo/ui-kit/issues/1480)) ([11a1549](https://github.com/coveo/ui-kit/commit/11a15498f337f99fd6f2191608312a2387aeaa6c))
+
+
+
+
+
 # [0.85.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.84.2...@coveo/quantic@0.85.0) (2021-11-10)
 
 

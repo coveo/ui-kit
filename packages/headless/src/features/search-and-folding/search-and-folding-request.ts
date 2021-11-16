@@ -5,7 +5,7 @@ import {ConfigurationSection} from '../../state/state-sections';
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
 
-export const buildSearchAndFoldingLoadCollectionRequest = (
+export const buildSearchAndFoldingLoadCollectionRequest = async (
   state: StateNeededByExecuteSearchAndFolding
 ) => {
   return {
@@ -18,7 +18,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     referrer: state.configuration.analytics.originLevel3,
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
-      visitorId: getVisitorID(),
+      visitorId: await getVisitorID(),
     }),
     ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,

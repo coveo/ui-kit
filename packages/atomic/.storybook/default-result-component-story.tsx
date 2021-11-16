@@ -5,9 +5,9 @@ import {DocsPage} from '@storybook/addon-docs';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
+  renderShadowPartsToStyleString,
 } from './default-story-shared';
 import {initializeInterfaceDebounced} from './default-init';
-import {codeSample} from './code-sample/code-sample';
 import {html} from 'lit-html';
 import {
   resultComponentArgTypes,
@@ -65,7 +65,7 @@ const renderInsideResultSection = (
     .join('\n\t\t\t');
 };
 
-const renderArgsToResultTemplate = (
+export const renderArgsToResultTemplate = (
   content: string,
   getArgs: () => Args,
   includeHighlightStyling: boolean
@@ -109,6 +109,7 @@ export default function defaultResultComponentStory(
       componentTag,
       defaultArgs,
       docPage,
+      true,
       advancedConfig
     );
 
@@ -119,29 +120,18 @@ export default function defaultResultComponentStory(
 
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
-    const currentArgs = getArgs();
-    const argsFilteredOnResultComponentArgs = Object.keys(currentArgs)
-      .filter((key) => Object.keys(resultComponentArgTypes).indexOf(key) === -1)
-      .reduce((res, key) => ((res[key] = currentArgs[key]), res), {});
 
-    const htmlString = renderArgsToHTMLString(
-      componentTag,
-      argsFilteredOnResultComponentArgs,
-      advancedConfig
-    );
     return (
       <div>
         <Story />
-        {codeSample(
-          renderArgsToResultTemplate(`${htmlString}`, getArgs, false)
-        )}
       </div>
     );
   };
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     return `${renderArgsToResultTemplate(
-      renderArgsToHTMLString(componentTag, getArgs(), advancedConfig),
+      renderArgsToHTMLString(componentTag, getArgs(), advancedConfig) +
+        renderShadowPartsToStyleString(componentTag, getArgs()),
       getArgs,
       true
     )}${
