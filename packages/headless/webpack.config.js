@@ -3,7 +3,6 @@ const fs = require('fs');
 const ReplacePlugin = require('webpack-plugin-replace');
 const TerserPlugin = require('terser-webpack-plugin');
 
-
 const base = {
   mode: 'production',
   entry: {
@@ -42,14 +41,14 @@ const browserUmd = {
     path: path.resolve(__dirname, 'dist/browser'),
     library: {
       type: 'umd',
-      name: 'CoveoHeadless'
+      name: 'CoveoHeadless',
     },
   },
   resolve: {
     ...base.resolve,
-    alias: browserAlias()
-  }
-}
+    alias: browserAlias(),
+  },
+};
 
 const browserEsm = {
   ...base,
@@ -64,9 +63,9 @@ const browserEsm = {
   },
   resolve: {
     ...base.resolve,
-    alias: browserAlias()
-  }
-}
+    alias: browserAlias(),
+  },
+};
 
 function getFileName(data) {
   const name = data.chunk.name;
@@ -75,10 +74,16 @@ function getFileName(data) {
 
 function browserAlias() {
   return {
-    'coveo.analytics': path.resolve(__dirname, './node_modules/coveo.analytics/dist/library.es.js'),
+    'coveo.analytics': path.resolve(
+      __dirname,
+      './node_modules/coveo.analytics/dist/library.es.js'
+    ),
     'cross-fetch': path.resolve(__dirname, './fetch-ponyfill.js'),
-    'web-encoding': path.resolve(__dirname, './node_modules/web-encoding/src/lib.js'),
-  }
+    'web-encoding': path.resolve(
+      __dirname,
+      './node_modules/web-encoding/src/lib.js'
+    ),
+  };
 }
 
 function replace() {
@@ -86,11 +91,10 @@ function replace() {
   return new ReplacePlugin({
     values: {
       'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.VERSION': JSON.stringify(version)
-    }
-  })
+      'process.env.VERSION': JSON.stringify(version),
+    },
+  });
 }
-
 
 const nodeCjs = {
   ...base,
@@ -101,7 +105,7 @@ const nodeCjs = {
     path: path.resolve(__dirname, 'dist/'),
     library: {type: 'commonjs'},
   },
-}
+};
 
 const nodeEsm = {
   ...base,
@@ -115,6 +119,6 @@ const nodeEsm = {
   experiments: {
     outputModule: true,
   },
-}
+};
 
-module.exports =  [browserUmd, browserEsm, nodeCjs, nodeEsm]
+module.exports = [browserUmd, browserEsm, nodeCjs, nodeEsm];
