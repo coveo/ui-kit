@@ -1,10 +1,10 @@
 const path = require('path');
 const fs = require('fs');
-const ReplacePlugin = require('webpack-plugin-replace');
+const {DefinePlugin} = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const base = {
-  mode: 'production',
+  mode: getMode(),
   entry: {
     headless: './src/index.ts',
     recommendation: './src/recommendation.index.ts',
@@ -24,17 +24,33 @@ const base = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
+  plugins: [
+    define(),
+  ]
+};
+
+function getMode() {
+  return process.env.BUILD === 'production' ? 'production' : 'development';
+}
+
+function define() {
+  const version = JSON.parse(fs.readFileSync('package.json', 'utf-8')).version;
+  return new DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(getMode()),
+    'process.env.VERSION': JSON.stringify(version),
+  });
+}
+
+const browserBase = {
+  ...base,
   devtool: 'source-map',
   optimization: {
     minimizer: [new TerserPlugin({extractComments: false})],
   },
-  // plugins: [
-  //   replace(),
-  // ]
-};
+}
 
 const browserUmd = {
-  ...base,
+  ...browserBase,
   target: 'web',
   output: {
     filename: (data) => `${getFileName(data)}.js`,
@@ -51,7 +67,7 @@ const browserUmd = {
 };
 
 const browserEsm = {
-  ...base,
+  ...browserBase,
   target: 'web',
   output: {
     filename: (data) => `${getFileName(data)}.esm.js`,
@@ -86,20 +102,16 @@ function browserAlias() {
   };
 }
 
-function replace() {
-  const version = JSON.parse(fs.readFileSync('package.json', 'utf-8')).version;
-  return new ReplacePlugin({
-    values: {
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.VERSION': JSON.stringify(version),
-    },
-  });
+const nodeBase = {
+  ...base,
+  optimization: {
+    minimize: false,
+  }
 }
 
 const nodeCjs = {
-  ...base,
+  ...nodeBase,
   target: 'node',
-  mode: 'development',
   output: {
     filename: (data) => `${getFileName(data)}.js`,
     path: path.resolve(__dirname, 'dist/'),
@@ -108,9 +120,8 @@ const nodeCjs = {
 };
 
 const nodeEsm = {
-  ...base,
+  ...nodeBase,
   target: 'node14',
-  mode: 'development',
   output: {
     filename: (data) => `${getFileName(data)}.esm.js`,
     path: path.resolve(__dirname, 'dist/'),
