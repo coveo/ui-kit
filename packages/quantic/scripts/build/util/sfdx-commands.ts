@@ -110,7 +110,7 @@ export async function authorizeOrg(args: AuthorizeOrgArguments) {
     args.isScratchOrg ? 'test' : 'login'
   }.salesforce.com`;
   await sfdx(
-    `force:auth:jwt:grant --clientid ${args.jwtClientId} --jwtkeyfile "${args.jwtKeyFile}" --username ${args.username} --instanceurl ${instanceUrl}`
+    `force:auth:jwt:grant --clientid ${args.jwtClientId} --jwtkeyfile "${args.jwtKeyFile}" --username ${args.username} --instanceurl ${instanceUrl} --setdefaultdevhubusername`
   );
 }
 
@@ -247,7 +247,7 @@ export async function createPackageVersion(
   args: CreatePackageVersionArguments
 ): Promise<SfdxCreatePackageVersionResponse> {
   return await sfdx<SfdxCreatePackageVersionResponse>(
-    `sfdx force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout}`
+    `force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout}`
   );
 }
 
@@ -259,12 +259,10 @@ export async function promotePackageVersion(
   args: PromotePackageVersionArguments
 ) {
   return await sfdx(
-    `sfdx force:package:version:promote --package ${args.packageVersionId}`
+    `force:package:version:promote --package ${args.packageVersionId} --noprompt`
   );
 }
 
 export async function getPackageVersionList(): Promise<SfdxGetPackageListResponse> {
-  return await sfdx<SfdxGetPackageListResponse>(
-    'sfdx force:package:version:list'
-  );
+  return await sfdx<SfdxGetPackageListResponse>('force:package:version:list');
 }

@@ -3,6 +3,7 @@ import * as fs from 'fs';
 /* eslint-disable-next-line node/no-extraneous-import */
 import {Octokit} from '@octokit/rest';
 import * as sfdx from './util/sfdx-commands';
+import * as path from 'path';
 import {StepLogger, StepsRunner} from './util/log';
 import {
   authorizeOrg,
@@ -10,6 +11,8 @@ import {
   SfdxCreatePackageVersionResponse,
 } from './util/sfdx-commands';
 import * as pack from '../../package.json';
+
+require('dotenv').config();
 
 interface Options {
   packageVersion: string;
@@ -36,8 +39,15 @@ function isCi() {
   return process.argv.some((arg) => arg === '--ci');
 }
 
-function getLatestPackageVersion(): string {
-  return pack.version;
+async function getLatestPackageVersion(): Promise<string> {
+  const versionNumber = pack.version;
+  const matchingPatchVersion = (await sfdx.getPackageVersionList()).result.find(
+    (pkg) => pkg.Version.slice(0, -2) === versionNumber
+  );
+  const buildNumber = matchingPatchVersion
+    ? Number(matchingPatchVersion.Version.split('.').pop()) + 1
+    : 0;
+  return `${versionNumber}.${buildNumber}`;
 }
 
 async function buildOptions(): Promise<Options> {
@@ -48,7 +58,7 @@ async function buildOptions(): Promise<Options> {
   }
 
   return {
-    packageVersion: getLatestPackageVersion(),
+    packageVersion: await getLatestPackageVersion(),
     packageId: '0Ho6g000000k9g8CAA',
     promote: true,
     removeTranslations: true,
@@ -72,9 +82,14 @@ async function authorizePublishingOrg(log: StepLogger, options: Options) {
 }
 
 async function removeTranslations(log: StepLogger) {
+  const translationDir = path.resolve('force-app/main/translations/');
   await fs.promises
-    .readdir('force-app/main/translations/')
-    .then((f) => Promise.all(f.map((e) => fs.promises.unlink(e))));
+    .readdir(translationDir)
+    .then((f) =>
+      Promise.all(
+        f.map((e) => fs.promises.unlink(path.resolve(translationDir, e)))
+      )
+    );
   log('Removed translation files');
 }
 
@@ -82,7 +97,7 @@ async function createPackage(
   log: StepLogger,
   options: Options
 ): Promise<SfdxCreatePackageVersionResponse> {
-  log('Deploying community metadata...');
+  log(`Creating Quantic package version ${options.packageVersion}...`);
 
   const response = await sfdx.createPackageVersion({
     packageId: options.packageId,
@@ -90,12 +105,12 @@ async function createPackage(
     timeout: 30,
   });
 
-  log('Community metadata deployed.');
+  log('Quantic package created.');
   return response;
 }
 
 async function promotePackage(log: StepLogger, packageVersionId: string) {
-  log(`Promoting package ${packageVersionId} to released status...`);
+  log(`Promoting Quantic package ${packageVersionId} to released status...`);
 
   await sfdx.promotePackageVersion({
     packageVersionId,
@@ -115,14 +130,14 @@ async function createGithubRelease(log: StepLogger, packageVersionId: string) {
   } v${getLatestPackageVersion()}`;
 
   log('Creating Github release...');
-  await github.repos.createRelease({
+  await github.rest.repos.createRelease({
     owner: 'coveo',
     repo: 'ui-kit',
     tag_name: releaseName,
     name: releaseName,
     body: `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`,
   });
-  log('Creating Github release...');
+  log('Github release created.');
 }
 
 (async function () {
@@ -139,7 +154,7 @@ async function createGithubRelease(log: StepLogger, packageVersionId: string) {
       .add(async (log) => {
         packageVersionId = await (
           await createPackage(log, options)
-        ).result.Package2VersionId;
+        ).result.SubscriberPackageVersionId;
       })
       .add(async (log) => await promotePackage(log, packageVersionId))
       .add(async (log) => await createGithubRelease(log, packageVersionId));
