@@ -4,6 +4,7 @@ import {DocsPage} from '@storybook/addon-docs';
 import {initializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
+  renderAdditionalMarkup,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from './default-story-shared';
@@ -32,7 +33,7 @@ export default function defaultStory(
       advancedConfig
     );
     const additionalMarkupString = advancedConfig.additionalMarkup
-      ? advancedConfig.additionalMarkup().strings.join('')
+      ? renderAdditionalMarkup(advancedConfig.additionalMarkup)
       : '';
 
     return argsToHTMLString + additionalMarkupString;

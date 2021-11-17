@@ -4,6 +4,7 @@ import {DocsPage} from '@storybook/addon-docs';
 
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
+  renderAdditionalMarkup,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from './default-story-shared';
@@ -204,14 +205,4 @@ const buildConfigPreprocessRequest = (
   }
 
   return preprocessRequestForOneResult;
-};
-
-const renderAdditionalMarkup = (additionalMarkup: () => TemplateResult) => {
-  const rendered = additionalMarkup();
-  if (rendered.values.length > 0) {
-    return (rendered.values as TemplateResult[])
-      .map((value) => value.strings.join(''))
-      .join('');
-  }
-  return rendered.strings.join('');
 };
