@@ -13,6 +13,11 @@ function timeframeFacetActions(selector: TimeframeFacetSelector) {
     collapse: () => selector.collapseButton().click(),
     expand: () => selector.expandButton().click(),
 
+    typeStartDate: (dateString: string) =>
+      selector.startInput().clear().type(dateString),
+    typeEndDate: (dateString: string) =>
+      selector.endInput().clear().type(dateString),
+
     applyRange: (start: string, end: string) => {
       selector.startInput().clear().type(start);
       selector.endInput().clear().type(end);
