@@ -30,7 +30,7 @@ const base = {
 };
 
 function getMode() {
-  return process.env.BUILD === 'production' ? 'production' : 'development';
+  return process.env.NODE_ENV === 'production' ? 'production' : 'development';
 }
 
 function define() {
