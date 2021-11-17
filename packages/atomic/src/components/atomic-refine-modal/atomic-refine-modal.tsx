@@ -177,9 +177,9 @@ export class AtomicRefineModal implements InitializableComponent {
     }
 
     return [
-      <div part="section-title" class="text-2xl font-bold truncate mb-3 mt-8">
+      <h1 part="section-title" class="text-2xl font-bold truncate mb-3 mt-8">
         {this.bindings.i18n.t('sort')}
-      </div>,
+      </h1>,
       <div class="relative">
         <select
           class="btn-outline-neutral w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg px-6 py-5"
@@ -203,9 +203,9 @@ export class AtomicRefineModal implements InitializableComponent {
 
     return [
       <div class="w-full flex justify-between mt-8 mb-3">
-        <span part="section-title" class="text-2xl font-bold truncate">
+        <h1 part="section-title" class="text-2xl font-bold truncate">
           {this.bindings.i18n.t('filters')}
-        </span>
+        </h1>
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
