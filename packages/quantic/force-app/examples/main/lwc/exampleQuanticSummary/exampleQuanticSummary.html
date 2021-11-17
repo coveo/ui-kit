@@ -11,8 +11,10 @@
     </div>
 
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
-      <c-quantic-summary engine-id={engineId}>
-      </c-quantic-summary>
+      <div class="slds-grid">
+        <div><c-quantic-summary engine-id={engineId}></c-quantic-summary></div>
+        <div><c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page></div>
+      </div>
     </c-quantic-search-interface>
   </c-example-layout>
 </template>
