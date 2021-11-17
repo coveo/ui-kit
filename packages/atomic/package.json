@@ -23,7 +23,7 @@
     "licenses/"
   ],
   "scripts": {
-    "build": "npm run build:locales && npm run build:stencil && npm run build:storybook",
+    "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
@@ -38,7 +38,8 @@
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
-    "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx"
+    "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",
+    "doc:list-assets": "node scripts/list-assets.js"
   },
   "dependencies": {
     "@coveo/bueno": "^0.32.8",
