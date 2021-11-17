@@ -68,22 +68,50 @@ const browserBase = {
   },
 }
 
-const browserUmd = {
-  ...browserBase,
-  target: 'web',
-  output: {
-    filename: (data) => `${getFileName(data)}.js`,
-    path: path.resolve(__dirname, 'dist/browser'),
-    library: {
-      type: 'umd',
-      name: 'CoveoHeadless', // different use-cases need different global name.
+function buildBrowserUmd(entry) {
+  const [entryName, entryPath] = entry;
+  const umdGlobalName = getUmdGlobalName(entryName);
+
+  return {
+    ...browserBase,
+    entry: {
+      [entryName]: entryPath,
     },
-  },
-  resolve: {
-    ...base.resolve,
-    alias: browserAlias(),
-  },
+    target: 'web',
+    output: {
+      filename: (data) => `${getFileName(data)}.js`,
+      path: path.resolve(__dirname, 'dist/browser'),
+      library: {
+        type: 'umd',
+        name: umdGlobalName,
+      },
+    },
+    resolve: {
+      ...base.resolve,
+      alias: browserAlias(),
+    },
+  }
 };
+
+function getUmdGlobalName(entryName) {
+  const map = {
+    headless: 'CoveoHeadless',
+    recommendation: 'CoveoHeadlessRecommendation',
+    'case-assist': 'CoveoHeadlessCaseAssist',
+    'product-recommendation': 'CoveoHeadlessProductRecommendation',
+    'product-listing': 'CoveoHeadlessProductListing',
+  }
+
+  const globalName = map[entryName];
+
+  if (globalName) {
+    return globalName;
+  }
+
+  throw new Error(`Please configure a UMD global name for the "${entryName}" entry.`)
+}
+
+const browserUmds = Object.entries(base.entry).map(buildBrowserUmd)
 
 const browserEsm = {
   ...browserBase,
@@ -143,4 +171,4 @@ const nodeEsm = {
 
 const isProduction = getMode() === 'production';
 
-module.exports = isProduction ? [browserUmd, browserEsm, nodeCjs, nodeEsm] : [browserEsmDev];
+module.exports = isProduction ? [...browserUmds, browserEsm, nodeCjs, nodeEsm] : [browserEsmDev];
