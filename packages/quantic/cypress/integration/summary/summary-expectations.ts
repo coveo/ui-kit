@@ -1,6 +1,4 @@
-import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
-import {SearchExpectations} from '../search-expectations';
 import {SummarySelectors, SummarytSelector} from './summary-selectors';
 
 function summarytExpectations(selector: SummarytSelector) {
@@ -15,7 +13,7 @@ function summarytExpectations(selector: SummarytSelector) {
       selector
         .range()
         .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the number page`);
+        .logDetail(`${should(display)} display the range`);
     },
     displayTotal: (display: boolean) => {
       selector
@@ -23,18 +21,33 @@ function summarytExpectations(selector: SummarytSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the total results of search`);
     },
+    displayQuery: (display: boolean) => {
+      selector
+        .query()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the query`);
+    },
     rangeContains: (value: string) => {
       selector
         .range()
         .contains(value)
         .logDetail(`range value should contain "${value}"`);
     },
+    totalContains: (value: string) => {
+      selector
+        .total()
+        .contains(value)
+        .logDetail(`total value should contain "${value}"`);
+    },
+    queryContains: (value: string) => {
+      selector
+        .query()
+        .contains(value)
+        .logDetail(`query value should contain "${value}"`);
+    },
   };
 }
 
 export const SummaryExpectations = {
   ...summarytExpectations(SummarySelectors),
-  search: {
-    ...SearchExpectations,
-  },
 };
