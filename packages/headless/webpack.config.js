@@ -24,9 +24,7 @@ const base = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  plugins: [
-    define(),
-  ]
+  plugins: [define()],
 };
 
 function getMode() {
@@ -66,7 +64,7 @@ const browserBase = {
   optimization: {
     minimizer: [new TerserPlugin({extractComments: false})],
   },
-}
+};
 
 function buildBrowserUmd(entry) {
   const [entryName, entryPath] = entry;
@@ -90,8 +88,8 @@ function buildBrowserUmd(entry) {
       ...base.resolve,
       alias: browserAlias(),
     },
-  }
-};
+  };
+}
 
 function getUmdGlobalName(entryName) {
   const map = {
@@ -100,7 +98,7 @@ function getUmdGlobalName(entryName) {
     'case-assist': 'CoveoHeadlessCaseAssist',
     'product-recommendation': 'CoveoHeadlessProductRecommendation',
     'product-listing': 'CoveoHeadlessProductListing',
-  }
+  };
 
   const globalName = map[entryName];
 
@@ -108,10 +106,12 @@ function getUmdGlobalName(entryName) {
     return globalName;
   }
 
-  throw new Error(`Please configure a UMD global name for the "${entryName}" entry.`)
+  throw new Error(
+    `Please configure a UMD global name for the "${entryName}" entry.`
+  );
 }
 
-const browserUmds = Object.entries(base.entry).map(buildBrowserUmd)
+const browserUmds = Object.entries(base.entry).map(buildBrowserUmd);
 
 const browserEsm = {
   ...browserBase,
@@ -134,17 +134,17 @@ const browserEsmDev = {
   ...browserEsm,
   output: {
     ...browserEsm.output,
-    path: path.resolve(__dirname, '../atomic/src/external-builds/')
+    path: path.resolve(__dirname, '../atomic/src/external-builds/'),
   },
   watch: true,
-}
+};
 
 const nodeBase = {
   ...base,
   optimization: {
     minimize: false,
-  }
-}
+  },
+};
 
 const nodeCjs = {
   ...nodeBase,
@@ -171,4 +171,6 @@ const nodeEsm = {
 
 const isProduction = getMode() === 'production';
 
-module.exports = isProduction ? [...browserUmds, browserEsm, nodeCjs, nodeEsm] : [browserEsmDev];
+module.exports = isProduction
+  ? [...browserUmds, browserEsm, nodeCjs, nodeEsm]
+  : [browserEsmDev];
