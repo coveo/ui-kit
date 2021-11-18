@@ -39,13 +39,18 @@ function isCi() {
   return process.argv.some((arg) => arg === '--ci');
 }
 
-async function getLatestPackageVersion(): Promise<string> {
+async function getPackageVersion(): Promise<string> {
   const versionNumber = pack.version;
-  const matchingPatchVersion = (await sfdx.getPackageVersionList()).result.find(
+  const matchingVersion = (await sfdx.getPackageVersionList()).result.find(
     (pkg) => pkg.Version.slice(0, -2) === versionNumber
   );
-  const buildNumber = matchingPatchVersion
-    ? Number(matchingPatchVersion.Version.split('.').pop()) + 1
+  if (matchingVersion?.IsReleased) {
+    throw new Error(
+      `Deployment Failed: Package version ${matchingVersion.Version} is already published.`
+    );
+  }
+  const buildNumber = matchingVersion
+    ? Number(matchingVersion.Version.split('.').pop()) + 1
     : 0;
   return `${versionNumber}.${buildNumber}`;
 }
@@ -58,7 +63,7 @@ async function buildOptions(): Promise<Options> {
   }
 
   return {
-    packageVersion: await getLatestPackageVersion(),
+    packageVersion: await getPackageVersion(),
     packageId: '0Ho6g000000k9g8CAA',
     promote: true,
     removeTranslations: true,
@@ -118,16 +123,18 @@ async function promotePackage(log: StepLogger, packageVersionId: string) {
   log(`Quantic package ${packageVersionId} published.`);
 }
 
-async function createGithubRelease(log: StepLogger, packageVersionId: string) {
+async function createGithubRelease(
+  log: StepLogger,
+  options: Options,
+  packageVersionId: string
+) {
   const token = process.env.GITHUB_TOKEN || '';
   const github = new Octokit({auth: token});
 
   const packageDetails = (await sfdx.getPackageVersionList()).result.find(
     (pack) => pack.SubscriberPackageVersionId === packageVersionId
   );
-  const releaseName = `${
-    packageDetails.Package2Name
-  } v${getLatestPackageVersion()}`;
+  const releaseName = `${packageDetails.Package2Name}v${options.packageVersion}`;
 
   log('Creating Github release...');
   await github.rest.repos.createRelease({
@@ -157,7 +164,9 @@ async function createGithubRelease(log: StepLogger, packageVersionId: string) {
         ).result.SubscriberPackageVersionId;
       })
       .add(async (log) => await promotePackage(log, packageVersionId))
-      .add(async (log) => await createGithubRelease(log, packageVersionId));
+      .add(
+        async (log) => await createGithubRelease(log, options, packageVersionId)
+      );
 
     await runner.run();
   } catch (error) {
