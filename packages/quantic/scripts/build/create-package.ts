@@ -39,16 +39,20 @@ function isCi() {
   return process.argv.some((arg) => arg === '--ci');
 }
 
-async function getPackageVersion(): Promise<string> {
-  const versionNumber = pack.version;
-  const matchingVersion = (await sfdx.getPackageVersionList()).result.find(
+async function getMatchingPackageVersion(versionNumber: string) {
+  return (await sfdx.getPackageVersionList()).result.find(
     (pkg) => pkg.Version.slice(0, -2) === versionNumber
   );
-  if (matchingVersion?.IsReleased) {
-    throw new Error(
-      `Deployment Failed: Package version ${matchingVersion.Version} is already published.`
-    );
-  }
+}
+
+async function isPublished(): Promise<boolean> {
+  const matchingVersion = await getMatchingPackageVersion(pack.version);
+  return matchingVersion?.IsReleased;
+}
+
+async function getPackageVersion(): Promise<string> {
+  const versionNumber = pack.version;
+  const matchingVersion = await getMatchingPackageVersion(pack.version);
   const buildNumber = matchingVersion
     ? Number(matchingVersion.Version.split('.').pop()) + 1
     : 0;
@@ -62,11 +66,14 @@ async function buildOptions(): Promise<Options> {
     ensureEnvVariables();
   }
 
+  const promote = process.argv.includes('--promote');
+  const removeTranslations = process.argv.includes('--remove-translations');
+
   return {
     packageVersion: await getPackageVersion(),
     packageId: '0Ho6g000000k9g8CAA',
-    promote: true,
-    removeTranslations: true,
+    promote: !!promote,
+    removeTranslations: !!removeTranslations,
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,
       keyFile: process.env.SFDX_AUTH_JWT_KEY,
@@ -153,6 +160,13 @@ async function createGithubRelease(
   const runner = new StepsRunner();
 
   let packageVersionId: string;
+
+  if (this.options.promote && (await isPublished())) {
+    console.info(
+      `Skipped publishing ${options.packageVersion} since this patch version is already published.`
+    );
+    return;
+  }
 
   try {
     runner
