@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.85.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.4...@coveo/quantic@0.85.5) (2021-11-17)
+
+
+### Bug Fixes
+
+* **quantic:** update timeframe facet range validations ([#1488](https://github.com/coveo/ui-kit/issues/1488)) ([a52c9fe](https://github.com/coveo/ui-kit/commit/a52c9fe58b2caab753f6e215d1687f1e13302d6e))
+
+
+
+
+
 ## [0.85.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.3...@coveo/quantic@0.85.4) (2021-11-15)
 
 **Note:** Version bump only for package @coveo/quantic
