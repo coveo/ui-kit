@@ -34,6 +34,7 @@ import apply from '@salesforce/label/c.quantic_Apply';
  * @property {string} max
  * @property {string} value
  * @property {boolean} required
+ * @property {Function} checkValidity
  * @property {Function} reportValidity
  */
 /**
@@ -125,6 +126,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   /** @type {DateFilterState} */
   @track dateFilterState;
   showPlaceholder = true;
+  hasResults = false;
   /** @type {string} */
   startDate;
   /** @type {string} */
@@ -170,11 +172,34 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   /**
+   * Gets whether to show the facet.
+   */
+  get showFacet() {
+    const facetIsActivated = this.hasActiveValues || !!this.dateFilterState.range;
+    const canRefineWithCustomRange = this.hasResults && this.withDatePicker;
+    const canRefineWithTimeframes = this.hasResults && this.formattedValues.length > 0;
+
+    return facetIsActivated || canRefineWithCustomRange || canRefineWithTimeframes;
+  }
+
+  /**
    * Gets whether to show the facet values.
    * @returns {boolean}
    */
   get showValues() {
     return this._showValues;
+  }
+
+  get startDateNoTime() {
+    return this.startDate
+      ? DateUtils.trimIsoTime(this.startDate)
+      : '';
+  }
+
+  get endDateNoTime() {
+    return this.endDate
+      ? DateUtils.trimIsoTime(this.endDate)
+      : '';
   }
 
   /**
@@ -232,7 +257,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     const values = this.facetState?.values || [];
 
     return values
-      .filter((value) => value.numberOfResults > 0)
+      .filter((value) => value.numberOfResults > 0 || value.state === 'selected')
       .map((value) => ({
         ...value,
         label: this.formatFacetValue(value),
@@ -288,6 +313,13 @@ export default class QuanticTimeframeFacet extends LightningElement {
     return this.withDatePicker
       ? this.template.querySelector('.timeframe-facet__end-input')
       : null;
+  }
+
+  /**
+   * @param {Event} evt 
+   */
+   preventDefault(evt) {
+    evt.preventDefault();
   }
 
   /**
@@ -350,6 +382,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.showPlaceholder =
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+
+    this.hasResults = this.searchStatus.state.hasResults;
   }
 
   updateFacetState() {
@@ -361,10 +395,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     if (this.dateFilterState.range) {
       this.tryUpdateFilterRange(this.dateFilterState.range.start, this.dateFilterState.range.end);
+      this.enableRangeValidation(false);
       this._showValues = false;
     } else {
       this.startDate = '';
       this.endDate = '';
+      this.disableRangeValidation();
       this._showValues = true;
     }
   }
@@ -438,21 +474,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this._isCollapsed = !this.isCollapsed;
   }
 
-  /**
-   * @param {Event} evt 
-   */
-  preventDefault(evt) {
-    evt.preventDefault();
-  }
-
   clearSelections() {
     if (this.withDatePicker) {
       this.dateFilter.clear();
-
-      this.startDatepicker.max = '';
-      this.endDatepicker.min = '';
-      this.enableRangeValidation(false);
-      this.isRangeValid();
+      this.disableRangeValidation();
     }
     this.facet.deselectAll();
 
@@ -464,7 +489,19 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   handleStartDateChange(evt) {
     evt.preventDefault();
-    this.endDatepicker.min = this.startDatepicker.value;
+    this.enableRangeValidation(false);
+  }
+
+  handleStartDateBlur() {
+    // The inputs are validated on the blur event so the validation error
+    // messages contain the updated datepicker value.
+
+    const isFilled = this.startDatepicker.value && this.endDatepicker.value;
+    const isEmpty = !this.startDatepicker.value && !this.endDatepicker.value;
+
+    if (isFilled || isEmpty) {
+      this.validateRange();
+    }
   }
 
   /**
@@ -472,21 +509,34 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   handleEndDateChange(evt) {
     evt.preventDefault();
-    this.startDatepicker.max = this.endDatepicker.value;
+    this.enableRangeValidation(false);
+  }
+
+  handleEndDateBlur() {
+    // The inputs are validated on the blur event so the validation error
+    // messages contain the updated datepicker value.
+
+    const isFilled = this.startDatepicker.value && this.endDatepicker.value;
+    const isEmpty = !this.startDatepicker.value && !this.endDatepicker.value;
+
+    if (isFilled || isEmpty) {
+      this.validateRange();
+    }
   }
 
   /**
    * @param {Event} evt
    */
   handleApply(evt) {
+    // This is required to prevent a full postback of the page.
     evt.preventDefault();
 
+    // The required fields validation is forced because we want the form
+    // to show up as invalid when empty.
     this.enableRangeValidation(true);
-    if (!this.isRangeValid()) {
+    if (!this.validateRange()) {
       return;
     }
-
-    this.enableRangeValidation(false);
 
     const startDate = DateUtils.fromLocalIsoDate(this.startDatepicker.value, 0, 0, 0);
     const endDate = DateUtils.fromLocalIsoDate(this.endDatepicker.value, 23, 59, 59);
@@ -494,14 +544,47 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.updateRangeInHeadless(startDate, endDate);
   }
 
-  enableRangeValidation(enable) {
-    this.startDatepicker.required = enable;
-    this.endDatepicker.required = enable;
+  enableRangeValidation(forceRequired) {
+    if (!this.startDatepicker || !this.endDatepicker) {
+      return;
+    }
+
+    const hasStartDate = Boolean(this.startDatepicker?.value);
+    const hasEndDate = Boolean(this.endDatepicker?.value);
+    const shouldValidate = forceRequired || hasStartDate || hasEndDate;
+
+    this.startDatepicker.required = shouldValidate;
+    this.endDatepicker.required = shouldValidate;
+    this.startDatepicker.max = shouldValidate && hasEndDate ? DateUtils.trimIsoTime(this.endDatepicker.value) : '';
   }
 
-  isRangeValid() {
-    return this.startDatepicker.reportValidity() &&
-      this.endDatepicker.reportValidity();
+  disableRangeRequirement() {
+    if (!this.startDatepicker || !this.endDatepicker) {
+      return;
+    }
+
+    this.startDatepicker.required = false;
+    this.endDatepicker.required = false;
+  }
+
+  disableRangeValidation() {
+    this.disableRangeRequirement();
+
+    if (this.startDatepicker) {
+      this.startDatepicker.max = '';
+    }
+  }
+
+  resetRangeValidation() {
+    this.disableRangeRequirement();
+    this.validateRange();
+  }
+
+  validateRange() {
+    this.startDatepicker.reportValidity();
+    this.endDatepicker.reportValidity();
+
+    return this.startDatepicker.checkValidity() && this.endDatepicker.checkValidity();
   }
 
   updateRangeInHeadless(startDate, endDate) {

@@ -1,29 +1,68 @@
-import {TestFixture} from '../fixtures/test-fixture';
+import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {addQuerySummary} from './query-summary-actions';
 import {QuerySummarySelectors} from './query-summary-selectors';
+import * as CommonAssertions from './common-assertions';
+
+const addResultsPerPage = (count: number) => (fixture: TestFixture) => {
+  fixture.withElement(
+    generateComponentHTML('atomic-results-per-page', {
+      'choices-displayed': count.toString(),
+      'initial-choice': count,
+    })
+  );
+};
 
 describe('Query Summary Test Suites', () => {
   function contentShouldMatch(content: RegExp | string) {
     QuerySummarySelectors.text().should('match', content);
   }
 
-  it('when search has not been executed, placeholder should be displayed', () => {
-    new TestFixture()
-      .with(addQuerySummary())
-      .withoutFirstAutomaticSearch()
-      .init();
-    QuerySummarySelectors.placeholder().should('be.visible');
+  describe('when search has not been executed', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addQuerySummary())
+        .withoutFirstAutomaticSearch()
+        .init();
+    });
+
+    CommonAssertions.assertNoAriaLiveMessage(QuerySummarySelectors.liveRegion);
+
+    it('placeholder should be displayed', () => {
+      QuerySummarySelectors.placeholder().should('be.visible');
+    });
   });
 
-  it('when search yields no results, container should be empty', () => {
-    new TestFixture()
-      .with(addQuerySummary({'enable-duration': 'true'}))
-      .with(addSearchBox())
-      .withHash('q=nowaythisquerywillevereverevertreturnanythingitsimpossible')
-      .init();
+  describe('when search yields no results', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addQuerySummary({'enable-duration': 'true'}))
+        .with(addSearchBox())
+        .withHash(
+          'q=nowaythisquerywillevereverevertreturnanythingitsimpossible'
+        )
+        .init();
+    });
 
-    QuerySummarySelectors.container().should('be.empty');
+    CommonAssertions.assertNoAriaLiveMessage(QuerySummarySelectors.liveRegion);
+
+    it('container should be empty', () => {
+      QuerySummarySelectors.container().should('be.empty');
+    });
+  });
+
+  describe('when search yields 27 results', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addQuerySummary())
+        .with(addResultsPerPage(27))
+        .init();
+    });
+
+    CommonAssertions.assertAriaLiveMessage(
+      QuerySummarySelectors.liveRegion,
+      '27'
+    );
   });
 
   describe('should match text content', () => {

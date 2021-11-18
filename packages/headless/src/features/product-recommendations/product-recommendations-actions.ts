@@ -145,7 +145,7 @@ export const getProductRecommendations = createAsyncThunk<
     const state = getState();
     const startedAt = new Date().getTime();
     const fetched = await apiClient.productRecommendations(
-      buildProductRecommendationsRequest(state)
+      await buildProductRecommendationsRequest(state)
     );
     const duration = new Date().getTime() - startedAt;
     if (isErrorResponse(fetched)) {
@@ -202,9 +202,9 @@ const mapResultToProductResult = (
   };
 };
 
-export const buildProductRecommendationsRequest = (
+export const buildProductRecommendationsRequest = async (
   s: StateNeededByGetProductRecommendations
-): ProductRecommendationsRequest => {
+): Promise<ProductRecommendationsRequest> => {
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
@@ -212,7 +212,7 @@ export const buildProductRecommendationsRequest = (
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     ...(s.configuration.analytics.enabled && {
-      visitorId: getVisitorID(),
+      visitorId: await getVisitorID(),
     }),
     recommendation: s.productRecommendations.id,
     numberOfResults: s.productRecommendations.maxNumberOfRecommendations,

@@ -22,9 +22,9 @@ describe('ResultPreviewRequestBuilder', () => {
     };
   });
 
-  it('when the #options.requestedeOutputSize is set to undefined, it initializes the result preview request correctly with requestedOutputSize set to 0', () => {
+  it('when the #options.requestedeOutputSize is set to undefined, it initializes the result preview request correctly with requestedOutputSize set to 0', async () => {
     options.requestedOutputSize = undefined;
-    const finalRequest = buildResultPreviewRequest(state, options);
+    const finalRequest = await buildResultPreviewRequest(state, options);
     expect(finalRequest).toEqual({
       accessToken: '',
       enableNavigation: false,
@@ -33,6 +33,7 @@ describe('ResultPreviewRequestBuilder', () => {
       requestedOutputSize: 0,
       uniqueId: '1',
       url: 'https://platform.cloud.coveo.com/rest/search/v2',
+      visitorId: expect.any(String),
     });
   });
 });

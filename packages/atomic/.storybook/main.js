@@ -3,8 +3,9 @@ const path = require('path');
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
+    '@storybook/addon-docs',
+    '@storybook/addon-controls',
+    '@storybook/addon-viewport',
     './preset.js',
   ],
   webpack: (config) => {
@@ -17,7 +18,6 @@ module.exports = {
         ...config.module,
         rules: [
           ...config.module.rules,
-
           {
             test: /\.(tsx)$/,
             exclude: /shadow-parts-addon/,

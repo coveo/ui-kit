@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {historyStore} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,
@@ -60,7 +60,7 @@ export const getRecommendations = createAsyncThunk<
     const state = getState();
     const startedAt = new Date().getTime();
     const fetched = await apiClient.recommendations(
-      buildRecommendationRequest(state)
+      await buildRecommendationRequest(state)
     );
     const duration = new Date().getTime() - startedAt;
     if (isErrorResponse(fetched)) {
@@ -75,9 +75,9 @@ export const getRecommendations = createAsyncThunk<
   }
 );
 
-export const buildRecommendationRequest = (
+export const buildRecommendationRequest = async (
   s: StateNeededByGetRecommendations
-): RecommendationRequest => ({
+): Promise<RecommendationRequest> => ({
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
   url: s.configuration.search.apiBaseUrl,
@@ -107,5 +107,8 @@ export const buildRecommendationRequest = (
   }),
   ...(s.fields && {
     fieldsToInclude: s.fields.fieldsToInclude,
+  }),
+  ...(s.configuration.analytics.enabled && {
+    visitorId: await getVisitorID(),
   }),
 });

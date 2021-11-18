@@ -316,10 +316,7 @@ export class DateUtils {
       );
     }
   
-    const timeIdx = dateString.indexOf('T');
-    const withoutTime =
-      timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
-  
+    const withoutTime = DateUtils.trimIsoTime(dateString);
     const time =
       hours.toString().padStart(2, '0') +
       ':' +
@@ -328,6 +325,11 @@ export class DateUtils {
       seconds.toString().padStart(2, '0');
   
     return new Date(`${withoutTime}T${time}`);
+  }
+
+  static trimIsoTime(dateString) {
+    const timeIdx = dateString.indexOf('T');
+    return timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
   }
 }
 

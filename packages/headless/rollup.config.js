@@ -6,9 +6,9 @@ import replacePlugin from '@rollup/plugin-replace';
 import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
-import {resolve as pathResolve} from 'path';
-import dts from "rollup-plugin-dts";
+import * as path from 'path';
 import {readFileSync} from 'fs';
+import copy from 'rollup-plugin-copy'
 
 const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
@@ -156,18 +156,18 @@ function buildBrowserConfiguration({input, output}) {
         entries: [
           {
             find: 'coveo.analytics',
-            replacement: pathResolve(
+            replacement: path.resolve(
               __dirname,
               './node_modules/coveo.analytics/dist/library.es.js'
             ),
           },
           {
             find: 'cross-fetch',
-            replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
+            replacement: path.resolve(__dirname, './fetch-ponyfill.js'),
           },
           {
             find: 'web-encoding',
-            replacement: pathResolve(__dirname, './node_modules/web-encoding/src/lib.js'),
+            replacement: path.resolve(__dirname, './node_modules/web-encoding/src/lib.js'),
           }
         ],
       }),
@@ -177,6 +177,7 @@ function buildBrowserConfiguration({input, output}) {
       replace(),
       isProduction && sizeSnapshot(),
       isProduction && terser(),
+      copy({targets: [{ src: 'src/', dest: 'dist/browser/' }]}),
     ],
   }
 }
@@ -186,7 +187,7 @@ function buildUmdOutput(outDir, name) {
     file: `${outDir}/headless.js`,
     format: 'umd',
     name,
-    sourcemap: isProduction
+    ...sourceMapConfig()
   }
 }
 
@@ -194,7 +195,16 @@ function buildEsmOutput(outDir) {
   return {
     file: `${outDir}/headless.esm.js`,
     format: 'es',
+    ...sourceMapConfig(),
+  }
+}
+
+function sourceMapConfig() {
+  return {
     sourcemap: isProduction,
+    sourcemapPathTransform: (relativeSourcePath) => {
+      return path.join('dist/browser/', relativeSourcePath)
+    }
   }
 }
 
@@ -222,24 +232,6 @@ const dev = [
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
-// Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
-// can consume. When the api-extractor limitation is resolved, this step will not be necessary.
-// [https://github.com/microsoft/rushstack/issues/1050]
-const typeDefinitions = [
-  buildTypeDefinitionConfiguration('index.d.ts'),
-  buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
-  buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
-  buildTypeDefinitionConfiguration('product-listing.index.d.ts'),
-].filter(b => matchesFilter(b.input));
-
-function buildTypeDefinitionConfiguration(entryFileName) {
-  return {
-    input: `./dist/definitions/${entryFileName}`,
-    output: [{file: `temp/${entryFileName}`, format: "es"}],
-    plugins: [dts()]
-  }
-}
-
-const config = isProduction ? [...nodejs, ...typeDefinitions, ...browser] : dev;
+const config = isProduction ? [...nodejs, ...browser] : dev;
 
 export default config;

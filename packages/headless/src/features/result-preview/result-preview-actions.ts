@@ -22,7 +22,7 @@ export const fetchResultContent = createAsyncThunk<
   'resultPreview/fetchResultContent',
   async (options: HtmlRequestOptions, {extra, getState, rejectWithValue}) => {
     const state = getState();
-    const req = buildResultPreviewRequest(state, options);
+    const req = await buildResultPreviewRequest(state, options);
     const res = await extra.apiClient.html(req);
 
     if (isErrorResponse(res)) {

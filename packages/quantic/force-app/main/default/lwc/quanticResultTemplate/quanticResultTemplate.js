@@ -2,6 +2,7 @@ import {LightningElement} from 'lwc';
 
 /**
  * The `QuanticResultTemplate` component is used to construct result templates using predefined and formatted [slots](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_slots).
+ * See [Use the Result Template Component](https://docs.coveo.com/en/quantic/latest/usage/result-template-usage/).
  * @example
  * <c-quantic-result-template>
  *   <div slot="label"></div>

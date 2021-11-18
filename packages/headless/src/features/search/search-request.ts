@@ -9,11 +9,11 @@ import {mapSearchRequest} from './search-mappings';
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;
 
-export const buildSearchRequest = (state: StateNeededBySearchRequest) => {
+export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
   const cq = buildConstantQuery(state);
   const facets = getFacets(state);
   const sharedWithFoldingRequest =
-    buildSearchAndFoldingLoadCollectionRequest(state);
+    await buildSearchAndFoldingLoadCollectionRequest(state);
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,

@@ -4,18 +4,23 @@ import {DocsPage} from '@storybook/addon-docs';
 
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
+  renderAdditionalMarkup,
   renderArgsToHTMLString,
+  renderShadowPartsToStyleString,
 } from './default-story-shared';
 import {initializeInterfaceDebounced} from './default-init';
-import {codeSample} from './code-sample/code-sample';
-import {html} from 'lit-html';
+import {html, TemplateResult} from 'lit-html';
 import {
   resultComponentArgTypes,
   resultSections,
   ResultSectionWithHighlights,
 } from './map-result-list-props-to-args';
 
-const renderInsideResultList = (content: string, getArgs: () => Args) => {
+const renderInsideResultList = (
+  content: string,
+  getArgs: () => Args,
+  includeHighlightStyling: boolean
+) => {
   const layoutMode = getArgs()['resultListLayout'];
   const densityMode = getArgs()['resultListDensity'];
   const imageSizeMode = getArgs()['resultListImageSize'];
@@ -31,11 +36,23 @@ const renderInsideResultList = (content: string, getArgs: () => Args) => {
     resultListAttributes += ` image-size=${imageSizeMode}`;
   }
 
-  return `<atomic-result-list${resultListAttributes}>\n\t${content}\n</atomic-result-list>`;
+  const containerOpeningTag = includeHighlightStyling
+    ? '<div style="position: relative; margin-top: 20px;">'
+    : '';
+
+  const highlightContainerStyle = includeHighlightStyling
+    ? ' style="border: 2px dashed black; padding:20px; position: relative;"'
+    : '';
+
+  const containerClosingTag = includeHighlightStyling
+    ? '<div style="position: absolute; top: -20px; right: 0;">Template</div></div>'
+    : '';
+
+  return `${containerOpeningTag}<atomic-result-list${resultListAttributes}${highlightContainerStyle}>${content}</atomic-result-list>${containerClosingTag}`;
 };
 
 const renderInsideTemplate = (content: string) => {
-  return `<atomic-result-template>\n\t\t<template>\n\t\t\t${content}\n\t\t</template>\n\t</atomic-result-template>`;
+  return `<atomic-result-template><template>${content}</template></atomic-result-template>`;
 };
 
 const renderSectionHighlight = (section: ResultSectionWithHighlights) => {
@@ -65,7 +82,7 @@ const renderInsideResultSection = (
     .join('\n\t\t\t');
 };
 
-const renderArgsToResultTemplate = (
+export const renderArgsToResultTemplate = (
   content: string,
   getArgs: () => Args,
   includeHighlightStyling: boolean
@@ -75,14 +92,19 @@ const renderArgsToResultTemplate = (
     currentTemplateSection && currentTemplateSection !== 'none';
 
   if (!isInATemplateSection) {
-    return renderInsideResultList(renderInsideTemplate(content), getArgs);
+    return renderInsideResultList(
+      renderInsideTemplate(content),
+      getArgs,
+      includeHighlightStyling
+    );
   }
 
   return renderInsideResultList(
     renderInsideTemplate(
       renderInsideResultSection(content, getArgs, includeHighlightStyling)
     ),
-    getArgs
+    getArgs,
+    includeHighlightStyling
   );
 };
 
@@ -91,26 +113,12 @@ export default function defaultResultComponentStory(
   componentTag: string,
   defaultArgs: Args,
   docPage: typeof DocsPage,
-  advancedConfig: DefaultStoryAdvancedConfig = {
-    additionalMarkup: () => html`
-      <style>
-        atomic-result-list {
-          max-width: 1024px;
-          display: block;
-          margin: auto;
-        }
-      </style>
-    `,
-  }
+  advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
+  const config = buildConfigWithDefaultValues(advancedConfig);
+
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
-    sharedDefaultStory(
-      title,
-      componentTag,
-      defaultArgs,
-      docPage,
-      advancedConfig
-    );
+    sharedDefaultStory(title, componentTag, defaultArgs, docPage, true, config);
 
   defaultModuleExport.argTypes = {
     ...resultComponentArgTypes,
@@ -119,39 +127,82 @@ export default function defaultResultComponentStory(
 
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
-    const currentArgs = getArgs();
-    const argsFilteredOnResultComponentArgs = Object.keys(currentArgs)
-      .filter((key) => Object.keys(resultComponentArgTypes).indexOf(key) === -1)
-      .reduce((res, key) => ((res[key] = currentArgs[key]), res), {});
 
-    const htmlString = renderArgsToHTMLString(
-      componentTag,
-      argsFilteredOnResultComponentArgs
-    );
     return (
       <div>
         <Story />
-        {codeSample(
-          renderArgsToResultTemplate(`${htmlString}`, getArgs, false)
-        )}
       </div>
     );
   };
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     return `${renderArgsToResultTemplate(
-      renderArgsToHTMLString(componentTag, getArgs()),
+      renderArgsToHTMLString(componentTag, getArgs(), config) +
+        renderShadowPartsToStyleString(componentTag, getArgs()),
       getArgs,
       true
-    )}${
-      advancedConfig.additionalMarkup
-        ? advancedConfig.additionalMarkup().strings.join('')
-        : ''
-    }`;
-  }, advancedConfig.engineConfig);
+    )}${renderAdditionalMarkup(config.additionalMarkup)}`;
+  }, config.engineConfig);
 
   exportedStory.loaders = [defaultLoader];
   exportedStory.decorators = [defaultDecorator];
 
   return {defaultModuleExport, exportedStory};
 }
+
+const buildConfigWithDefaultValues = (
+  advancedConfig: DefaultStoryAdvancedConfig
+) => {
+  return {
+    ...advancedConfig,
+    additionalMarkup: buildConfigAdditionalMarkup(advancedConfig),
+    engineConfig: {
+      ...advancedConfig.engineConfig,
+      preprocessRequest: buildConfigPreprocessRequest(advancedConfig),
+    },
+  };
+};
+
+const buildConfigAdditionalMarkup = (
+  advancedConfig: DefaultStoryAdvancedConfig
+) => {
+  const templateForMaxWidth = html`
+    <style>
+      atomic-search-interface,
+      atomic-result-list {
+        max-width: 1024px;
+        display: block;
+        margin: auto;
+      }
+    </style>
+  `;
+
+  if (advancedConfig.additionalMarkup) {
+    return () =>
+      html`${templateForMaxWidth}${advancedConfig.additionalMarkup()}`;
+  }
+  return () => templateForMaxWidth;
+};
+
+const buildConfigPreprocessRequest = (
+  advancedConfig: DefaultStoryAdvancedConfig
+) => {
+  const preprocessRequestForOneResult = (r) => {
+    const bodyParsed = JSON.parse(r.body as string);
+    bodyParsed.numberOfResults = 1;
+    r.body = JSON.stringify(bodyParsed);
+    return r;
+  };
+
+  if (advancedConfig.engineConfig?.preprocessRequest) {
+    return (request, origin) => {
+      const modified = advancedConfig.engineConfig.preprocessRequest(
+        request,
+        origin
+      );
+      return preprocessRequestForOneResult(modified);
+    };
+  }
+
+  return preprocessRequestForOneResult;
+};

@@ -1,6 +1,6 @@
 {
   "extends": "./base.json",
-  "mainEntryPointFilePath": "<projectFolder>/temp/product-recommendation.index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/definitions/product-recommendation.index.d.ts",
   "docModel": {
     "enabled": true,
     "apiJsonFilePath": "<projectFolder>/temp/product-recommendation.api.json"

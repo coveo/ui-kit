@@ -3,6 +3,155 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.4...@coveo/atomic@1.14.5) (2021-11-18)
+
+
+### Bug Fixes
+
+* **atomic:** improved result components & added accessibility testing pages ([#1492](https://github.com/coveo/ui-kit/issues/1492)) ([57a4ef8](https://github.com/coveo/ui-kit/commit/57a4ef8a61013d7c83677baa8c4e0d5eaf864074))
+
+
+
+
+
+## [1.14.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.3...@coveo/atomic@1.14.4) (2021-11-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.14.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.2...@coveo/atomic@1.14.3) (2021-11-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.14.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.1...@coveo/atomic@1.14.2) (2021-11-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.14.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.0...@coveo/atomic@1.14.1) (2021-11-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.13.2...@coveo/atomic@1.14.0) (2021-11-15)
+
+
+### Bug Fixes
+
+* **atomic:** added focus trap to refine modal ([#1468](https://github.com/coveo/ui-kit/issues/1468)) ([cb9dc15](https://github.com/coveo/ui-kit/commit/cb9dc159f3cd340a521cd05ce8d18f623c863643))
+* **atomic:** fixed atomic-result-image size on chrome and safari 15 ([#1471](https://github.com/coveo/ui-kit/issues/1471)) ([38e1c68](https://github.com/coveo/ui-kit/commit/38e1c68be973a11455cf2693f533510a4d9b5409))
+
+
+### Features
+
+* **atomic:** added live region for screen readers ([#1476](https://github.com/coveo/ui-kit/issues/1476)) ([0aeda1d](https://github.com/coveo/ui-kit/commit/0aeda1d38c74fd949e56bbc792d611765b910c94))
+
+
+
+
+
+## [1.13.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.13.1...@coveo/atomic@1.13.2) (2021-11-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.13.0...@coveo/atomic@1.13.1) (2021-11-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.13.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.12.0...@coveo/atomic@1.13.0) (2021-11-12)
+
+
+### Features
+
+* **atomic:** added table parts to result list ([#1473](https://github.com/coveo/ui-kit/issues/1473)) ([40c97c9](https://github.com/coveo/ui-kit/commit/40c97c94d413b7b2068f48ad9af34dcd8dcdd28c))
+
+
+
+
+
+# [1.12.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.6...@coveo/atomic@1.12.0) (2021-11-11)
+
+
+### Features
+
+* **atomic:** add support for focus-visible ([#1463](https://github.com/coveo/ui-kit/issues/1463)) ([7601409](https://github.com/coveo/ui-kit/commit/7601409bdde34269bc34fd037be4d61f798d8e5f))
+
+
+
+
+
+## [1.11.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.5...@coveo/atomic@1.11.6) (2021-11-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.4...@coveo/atomic@1.11.5) (2021-11-10)
+
+
+### Bug Fixes
+
+* **atomic:** fix storybook build for windows user ([#1460](https://github.com/coveo/ui-kit/issues/1460)) ([48d11f0](https://github.com/coveo/ui-kit/commit/48d11f0f1454c6c747548628f1fa6b2e17cb673e))
+
+
+
+
+
+## [1.11.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.3...@coveo/atomic@1.11.4) (2021-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.2...@coveo/atomic@1.11.3) (2021-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.1...@coveo/atomic@1.11.2) (2021-11-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.11.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.11.0...@coveo/atomic@1.11.1) (2021-11-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.9.10...@coveo/atomic@1.11.0) (2021-11-08)
 
 

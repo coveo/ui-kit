@@ -2,13 +2,13 @@ import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/sp
 import {buildSearchRequest} from '../../../search/search-request';
 import {StateNeededForSpecificFacetSearch} from '../generic/generic-facet-search-state';
 
-export const buildSpecificFacetSearchRequest = (
+export const buildSpecificFacetSearchRequest = async (
   id: string,
   state: StateNeededForSpecificFacetSearch
-): SpecificFacetSearchRequest => {
+): Promise<SpecificFacetSearchRequest> => {
   const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
-  const {field, currentValues} = state.facetSet[id];
-  const searchContext = buildSearchRequest(state).request;
+  const {field, currentValues, filterFacetCount} = state.facetSet[id];
+  const searchContext = (await buildSearchRequest(state)).request;
   const ignoreValues = currentValues
     .filter((v) => v.state !== 'idle')
     .map((facetValue) => facetValue.value);
@@ -24,6 +24,7 @@ export const buildSpecificFacetSearchRequest = (
     field,
     ignoreValues,
     searchContext,
+    filterFacetCount,
     type: 'specific',
   };
 };

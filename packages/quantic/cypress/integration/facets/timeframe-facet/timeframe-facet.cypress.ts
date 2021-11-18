@@ -255,7 +255,7 @@ describe('quantic-timeframe-facet', () => {
         Actions.expand();
       });
 
-      scope('when specifying a range', () => {
+      scope('when specifying a valid range', () => {
         Actions.applyRange(validRange.start, validRange.end);
 
         cy.wait(InterceptAliases.Search);
@@ -279,9 +279,34 @@ describe('quantic-timeframe-facet', () => {
       });
 
       scope('when entering an invalid range', () => {
+        scope('with empty start and end dates', () => {
+          Actions.submitForm();
+
+          Expect.numberOfValidationErrors(2);
+          Expect.validationError('Complete this field.');
+        });
+
+        scope('when entering then erasing dates', () => {
+          Actions.typeStartDate(validRange.start);
+          Actions.submitForm();
+
+          Expect.numberOfValidationErrors(1);
+          Expect.validationError('Complete this field.');
+
+          Actions.typeEndDate(validRange.end);
+          Actions.submitForm();
+          cy.wait(InterceptAliases.Search);
+
+          Expect.numberOfValidationErrors(0);
+
+          Actions.clearFilter();
+          cy.wait(InterceptAliases.Search);
+        });
+
         scope('invalid start date format', () => {
           Actions.applyRange('bad start date', validRange.end);
 
+          Expect.numberOfValidationErrors(1);
           Expect.validationError(
             'Your entry does not match the allowed format yyyy-MM-dd.'
           );
@@ -290,6 +315,7 @@ describe('quantic-timeframe-facet', () => {
         scope('invalid end date format', () => {
           Actions.applyRange(validRange.start, 'bad end date');
 
+          Expect.numberOfValidationErrors(1);
           Expect.validationError(
             'Your entry does not match the allowed format yyyy-MM-dd.'
           );
@@ -298,6 +324,7 @@ describe('quantic-timeframe-facet', () => {
         scope('end date smaller than start date', () => {
           Actions.applyRange(invalidRange.start, invalidRange.end);
 
+          Expect.numberOfValidationErrors(1);
           Expect.validationError(
             `Value must be ${invalidRange.end} or earlier.`
           );
@@ -309,7 +336,7 @@ describe('quantic-timeframe-facet', () => {
       scope('when entering a valid range', () => {
         Actions.applyRange(validRange.start, validRange.end);
 
-        Expect.noValidationError();
+        Expect.numberOfValidationErrors(0);
         Expect.urlHashContains('Date_input', validRange.filter);
         Expect.displayClearButton(true);
         Expect.displayValues(false);
@@ -368,6 +395,127 @@ describe('quantic-timeframe-facet', () => {
           Expect.endInputContains(validRange.end);
         });
       });
+    });
+  });
+
+  describe('when no results match the timeframe facet', () => {
+    function interceptNoResultsForFacet() {
+      cy.intercept(routeMatchers.search, (req) => {
+        req.continue((res) => {
+          const facet = res.body.facets.find((f) => f.facetId === 'Date');
+          if (facet) {
+            facet.values.forEach((v) => {
+              v.numberOfResults = 0;
+            });
+          }
+          res.send();
+        });
+      }).as(InterceptAliases.Search.substring(1));
+    }
+
+    function setupWithNoResultsMatchingFacet(
+      options: Partial<TimeframeFacetOptions>
+    ) {
+      interceptNoResultsForFacet();
+      cy.visit(pageUrl);
+      configure(options);
+      cy.wait(InterceptAliases.Search);
+    }
+
+    describe('when with-date-picker is false', () => {
+      it('should hide the facet', () => {
+        setupWithNoResultsMatchingFacet({});
+
+        Expect.displayLabel(false);
+      });
+    });
+
+    describe('when with-date-picker is true', () => {
+      it('should show the facet', () => {
+        setupWithNoResultsMatchingFacet({
+          withDatePicker: true,
+        });
+
+        Expect.displayLabel(true);
+      });
+    });
+  });
+
+  describe('when no results found', () => {
+    function interceptNoSearchResults() {
+      cy.intercept(routeMatchers.search, (req) => {
+        req.continue((res) => {
+          res.body.results = [];
+          res.body.totalCount = 0;
+          res.body.totalCountFiltered = 0;
+
+          const facet = res.body.facets.find((f) => f.facetId === 'Date');
+          if (facet) {
+            facet.values.forEach((v) => {
+              const range = validRange.filter.split('..');
+              v.numberOfResults = 0;
+
+              if (v.start === range[0] && v.end === range[1]) {
+                v.state = 'selected';
+              }
+            });
+          }
+
+          res.send();
+        });
+      }).as(InterceptAliases.Search.substring(1));
+    }
+
+    function setupWithNoResults(options: Partial<TimeframeFacetOptions>) {
+      interceptNoSearchResults();
+      cy.visit(pageUrl);
+      configure(options);
+      cy.wait(InterceptAliases.Search);
+    }
+
+    function loadFromUrlHashWithNoResults(
+      options: Partial<TimeframeFacetOptions>,
+      urlHash: string
+    ) {
+      interceptNoSearchResults();
+      cy.visit(`${pageUrl}#${urlHash}`);
+      configure(options);
+      cy.wait(InterceptAliases.Search);
+    }
+
+    it('should not display facet', () => {
+      setupWithNoResults({
+        withDatePicker: true,
+      });
+
+      Expect.displayPlaceholder(false);
+      Expect.displayLabel(false);
+    });
+
+    it('should display facet if custom range is specified', () => {
+      loadFromUrlHashWithNoResults(
+        {
+          withDatePicker: true,
+        },
+        `df[Date_input]=${validRange.filter}`
+      );
+
+      Expect.displayPlaceholder(false);
+      Expect.displayLabel(true);
+      Expect.displayStartInput(true);
+      Expect.displayEndInput(true);
+      Expect.displayApplyButton(true);
+      Expect.displayValues(false);
+    });
+
+    it('should display facet if timeframe is specified', () => {
+      loadFromUrlHashWithNoResults({}, 'df[Date]=past-1-year..now');
+
+      Expect.displayPlaceholder(false);
+      Expect.displayLabel(true);
+      Expect.displayValues(true);
+      Expect.numberOfSelectedValues(1);
+      Expect.numberOfValues(1);
     });
   });
 });

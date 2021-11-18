@@ -1,3 +1,6 @@
+import * as TestUtils from './test';
+import * as HighlightUtils from './utils/highlight';
+
 // 3rd Party Libraries
 export {
   Unsubscribe,
@@ -54,6 +57,7 @@ export * from './features/index';
 export * from './features/analytics/index';
 
 // Types & Helpers
+export {TestUtils, HighlightUtils};
 export {Result} from './api/search/search/result';
 export {FieldDescription} from './api/search/fields/fields-response';
 export {Raw} from './api/search/search/raw';
@@ -79,7 +83,6 @@ export {
   ResultTemplate,
   ResultTemplateCondition,
 } from './features/result-templates/result-templates';
-export * as TestUtils from './test';
 export {platformUrl, analyticsUrl} from './api/platform-client';
 export {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
 export {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
@@ -91,7 +94,6 @@ export {
   RangeFacetRangeAlgorithm,
 } from './features/facets/range-facets/generic/interfaces/request';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
-export * as HighlightUtils from './utils/highlight';
 export {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';
 export {

@@ -13,7 +13,7 @@
     <p slot="date" class="slds-size_xx-small">
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
-    <h3 slot="title">
+    <h3 slot="title" class="slds-truncate">
       <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
     </h3>
     <p slot="metadata" class="slds-text-body_small slds-m-bottom_xx-small" style="color:#3E3E3C">From: {result.raw.sfcreatedbyname}</p>

@@ -1,3 +1,4 @@
+import {getVisitorID} from '../../api/analytics/analytics';
 import {
   HtmlRequest,
   HtmlRequestOptions,
@@ -12,11 +13,11 @@ export type StateNeededByHtmlEndpoint = ConfigurationSection &
   ResultPreviewSection &
   Partial<QuerySection>;
 
-export function buildResultPreviewRequest(
+export async function buildResultPreviewRequest(
   state: StateNeededByHtmlEndpoint,
   options: HtmlRequestOptions
-): HtmlRequest {
-  const {search, accessToken, organizationId} = state.configuration;
+): Promise<HtmlRequest> {
+  const {search, accessToken, organizationId, analytics} = state.configuration;
   const q = state.query?.q || '';
 
   return {
@@ -24,6 +25,9 @@ export function buildResultPreviewRequest(
     accessToken,
     organizationId,
     enableNavigation: false,
+    ...(analytics.enabled && {
+      visitorId: await getVisitorID(),
+    }),
     q,
     ...options,
     requestedOutputSize: options.requestedOutputSize || 0,

@@ -37,7 +37,7 @@ node('linux && docker') {
         ]
       ]) {
           sh 'npm ci';
-          sh 'node ./scripts/invalidate-cloudfront.js'
+          sh 'node ./scripts/deploy/invalidate-cloudfront.js'
       }
     }
   }
