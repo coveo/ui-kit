@@ -41,11 +41,13 @@ function isCi() {
 
 async function getMatchingPackageVersion(versionNumber: string) {
   return (await sfdx.getPackageVersionList()).result.find(
-    (pkg) => pkg.Version.slice(0, -2) === versionNumber
+    (pkg) =>
+      pkg.Version === versionNumber ||
+      pkg.Version.slice(0, -2) === versionNumber
   );
 }
 
-async function isPublished(): Promise<boolean> {
+async function getIsPublished(): Promise<boolean> {
   const matchingVersion = await getMatchingPackageVersion(pack.version);
   return matchingVersion?.IsReleased;
 }
@@ -161,7 +163,7 @@ async function createGithubRelease(
 
   let packageVersionId: string;
 
-  if (this.options.promote && (await isPublished())) {
+  if (options.promote && (await getIsPublished())) {
     console.info(
       `Skipped publishing ${options.packageVersion} since this patch version is already published.`
     );
@@ -169,18 +171,23 @@ async function createGithubRelease(
   }
 
   try {
-    runner
-      .add(async (log) => await authorizePublishingOrg(log, options))
-      .add(async (log) => await removeTranslations(log))
-      .add(async (log) => {
-        packageVersionId = await (
-          await createPackage(log, options)
-        ).result.SubscriberPackageVersionId;
-      })
-      .add(async (log) => await promotePackage(log, packageVersionId))
-      .add(
-        async (log) => await createGithubRelease(log, options, packageVersionId)
-      );
+    runner.add(async (log) => await authorizePublishingOrg(log, options));
+    options.removeTranslations &&
+      runner.add(async (log) => await removeTranslations(log));
+    runner.add(async (log) => {
+      packageVersionId = await (
+        await createPackage(log, options)
+      ).result.SubscriberPackageVersionId;
+      !options.promote &&
+        console.log(await getMatchingPackageVersion(options.packageVersion));
+    });
+    options.promote &&
+      runner
+        .add(async (log) => await promotePackage(log, packageVersionId))
+        .add(
+          async (log) =>
+            await createGithubRelease(log, options, packageVersionId)
+        );
 
     await runner.run();
   } catch (error) {
