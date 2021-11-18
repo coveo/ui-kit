@@ -58,11 +58,25 @@ function browserAlias() {
   };
 }
 
+function nodeAlias() {
+  return {
+    'web-encoding': path.resolve(__dirname, './node_modules/web-encoding/src/lib.cjs'),
+    'coveo.analytics': path.resolve(
+      __dirname,
+      './node_modules/coveo.analytics/dist/library.js'
+    )
+  }
+}
+
 const browserBase = {
   ...base,
   devtool: 'source-map',
   optimization: {
     minimizer: [new TerserPlugin({extractComments: false})],
+  },
+  resolve: {
+    ...base.resolve,
+    alias: browserAlias(),
   },
 };
 
@@ -83,10 +97,6 @@ function buildBrowserUmd(entry) {
         type: 'umd',
         name: umdGlobalName,
       },
-    },
-    resolve: {
-      ...base.resolve,
-      alias: browserAlias(),
     },
   };
 }
@@ -124,10 +134,6 @@ const browserEsm = {
   experiments: {
     outputModule: true,
   },
-  resolve: {
-    ...base.resolve,
-    alias: browserAlias(),
-  },
 };
 
 const browserEsmDev = {
@@ -143,6 +149,10 @@ const nodeBase = {
   ...base,
   optimization: {
     minimize: false,
+  },
+  resolve: {
+    ...base.resolve,
+    alias: nodeAlias(),
   },
 };
 
