@@ -1,11 +1,18 @@
-import {Args} from '@storybook/api';
-import {mapPropsToArgTypes} from '../../../.storybook/map-props-to-args';
+import SearchInterfaceDoc from './atomic-search-interface.mdx';
 
 export default {
   title: 'Atomic/SearchInterface',
-  argTypes: mapPropsToArgTypes('atomic-search-interface'),
+  parameters: {
+    previewTabs: {
+      canvas: {
+        hidden: true,
+      },
+    },
+    viewMode: 'docs',
+    docs: {
+      page: SearchInterfaceDoc,
+    },
+  },
 };
 
-export const DefaultSearchInterface = (args: Args) => {
-  return `<atomic-search-interface></atomic-search-interface>`;
-};
+export const DefaultSearchInterface = () => {};
