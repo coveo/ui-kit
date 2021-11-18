@@ -3,7 +3,6 @@ import {getDocumentationFromTag} from './map-props-to-args';
 import {renderArgsToHTMLString} from './default-story-shared';
 
 function generateSampleValue(property: JsonDocsProp) {
-  console.log(property.type);
   if (property.default) {
     return property.default.replace(/'/g, '');
   }
