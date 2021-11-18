@@ -109,7 +109,7 @@ describe('CaseAssistClient', () => {
         }
     };
 
-    it('should not send events when #enabled option is #false', async () => {
+    it('should not send events when #enableAnalytics option is #false', async () => {
         client = new CaseAssistClient({
             enableAnalytics: false,
         });
