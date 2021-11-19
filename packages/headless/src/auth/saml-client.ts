@@ -30,9 +30,9 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
 
   return {
     async authenticate() {
-      const hasToken = !!getHandshakeToken(location);
+      const token = getHandshakeToken(location);
 
-      if (hasToken) {
+      if (token) {
         return await this.exchangeToken();
       }
 
