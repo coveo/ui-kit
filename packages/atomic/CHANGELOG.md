@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.5...@coveo/atomic@1.14.6) (2021-11-19)
+
+
+### Bug Fixes
+
+* **atomic:** reuse result links :hover styling for :focus-visible, remove outline ([#1498](https://github.com/coveo/ui-kit/issues/1498)) ([89aa6fc](https://github.com/coveo/ui-kit/commit/89aa6fcca131e768f416adfaae57cd269da6e6d3))
+
+
+
+
+
 ## [1.14.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.4...@coveo/atomic@1.14.5) (2021-11-18)
 
 
