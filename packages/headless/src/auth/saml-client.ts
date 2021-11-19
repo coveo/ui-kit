@@ -9,7 +9,7 @@ export interface SamlOptions {
 }
 
 export interface SamlClient {
-  exchangeToken(token: string): Promise<string>;
+  exchangeToken(): Promise<string>;
   login(): Promise<boolean>;
 }
 
@@ -35,11 +35,12 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
       }
     },
 
-    async exchangeToken(token) {
+    async exchangeToken() {
+      const handshakeToken = getHandshakeToken(location);
       try {
         const response = await request(`${api}/login/handshake/token`, {
           method: 'POST',
-          body: JSON.stringify({token}),
+          body: JSON.stringify({handshakeToken}),
         });
         const data = await response.json();
         return data.token;
@@ -56,4 +57,16 @@ function buildOptions(config: SamlOptions): Required<SamlOptions> {
     request: fetch,
     ...config,
   };
+}
+
+function getHandshakeToken(location: IsomorphicLocation): string {
+  const params = location.hash.slice(1);
+  const handshakeParam = params.split('&').find(isHandshakeTokenParam);
+
+  return handshakeParam ? handshakeParam.split('=')[1] : '';
+}
+
+function isHandshakeTokenParam(param: string) {
+  const [key] = param.split('=');
+  return key === 'handshake_token';
 }

@@ -2,24 +2,23 @@ import {getIsomorphicLocation} from './isomorphic-location';
 import {buildSamlClient, SamlClient, SamlOptions} from './saml-client';
 
 describe('buildSamlClient', () => {
-  let options: SamlOptions;
+  let options: Required<SamlOptions>;
   let request: jest.Mock<any, any>;
   let client: SamlClient;
 
   function initSamlClient() {
-    client = buildSamlClient({
-      ...options,
-      request,
-    });
+    client = buildSamlClient(options);
   }
 
   beforeEach(() => {
+    request = jest.fn();
+
     options = {
       organizationId: '',
       provider: '',
+      location: getIsomorphicLocation(),
+      request,
     };
-
-    request = jest.fn();
 
     initSamlClient();
   });
@@ -29,19 +28,15 @@ describe('buildSamlClient', () => {
     // TODO: url environments
 
     it('sends the expected request and returns true', async () => {
-      const location = getIsomorphicLocation();
-      location.href = 'http://localhost:8080/#t=All&sort=relevancy';
-
-      options = {
-        organizationId: 'org',
-        provider: 'okta',
-        location,
-      };
+      options.organizationId = 'org';
+      options.provider = 'okta';
+      options.location.href = 'http://localhost:8080/#t=All&sort=relevancy';
 
       initSamlClient();
+
       const res = await client.login();
 
-      const redirectUri = encodeURIComponent(location.href);
+      const redirectUri = encodeURIComponent(options.location.href);
       const url = `https://platform.cloud.coveo.com/rest/search/v2/login/okta?organizationId=org&redirectUri=${redirectUri}`;
 
       expect(res).toBe(true);
@@ -56,33 +51,50 @@ describe('buildSamlClient', () => {
   });
 
   describe('#exchangeToken', () => {
-    it('sends a request with the token', () => {
-      const token = 'handshakeToken';
-      client.exchangeToken(token);
+    describe('url hash contains handshake token', () => {
+      const handshakeToken = 'token';
 
-      expect(request).toHaveBeenCalledWith(
-        'https://platform.cloud.coveo.com/rest/search/login/handshake/token',
-        {
-          method: 'POST',
-          body: JSON.stringify({token}),
-        }
-      );
-    });
-
-    it('returns the accesstoken in the response', async () => {
-      request.mockResolvedValue({
-        json: () => ({token: 'access token'}),
+      beforeEach(() => {
+        options.location.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
       });
 
-      const result = await client.exchangeToken('token');
-      expect(result).toBe('access token');
-    });
+      it('sends a request with the token', () => {
+        client.exchangeToken();
 
-    it('when the request errors, it returns an empty string', async () => {
-      request.mockRejectedValue('error');
+        expect(request).toHaveBeenCalledWith(
+          'https://platform.cloud.coveo.com/rest/search/login/handshake/token',
+          {
+            method: 'POST',
+            body: JSON.stringify({handshakeToken}),
+          }
+        );
+      });
 
-      const result = await client.exchangeToken('token');
-      expect(result).toBe('');
+      it('token at start of hash, it finds and sends the token', () => {
+        options.location.hash = `#handshake_token=${handshakeToken}`;
+        client.exchangeToken();
+
+        expect(request).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.objectContaining({body: JSON.stringify({handshakeToken})})
+        );
+      });
+
+      it('returns the access token', async () => {
+        request.mockResolvedValue({
+          json: () => ({token: 'access token'}),
+        });
+
+        const result = await client.exchangeToken();
+        expect(result).toBe('access token');
+      });
+
+      it('when the request errors, it returns an empty string', async () => {
+        request.mockRejectedValue('error');
+
+        const result = await client.exchangeToken();
+        expect(result).toBe('');
+      });
     });
   });
 });
