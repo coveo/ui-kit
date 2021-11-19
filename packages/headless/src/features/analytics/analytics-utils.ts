@@ -15,9 +15,15 @@ import {Raw} from '../../api/search/search/raw';
 import {
   AnalyticsProvider,
   configureAnalytics,
+  configureCaseAssistAnalytics,
   StateNeededByAnalyticsProvider,
+  StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/analytics';
-import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
+import {
+  CoveoSearchPageClient,
+  SearchPageClientProvider,
+  CaseAssistClient,
+} from 'coveo.analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
@@ -29,6 +35,7 @@ import {
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {ResultWithFolding} from '../folding/folding-slice';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils';
+import {CaseAssistAppState} from '../../state/case-assist-app-state';
 
 export enum AnalyticsType {
   Search,
@@ -118,6 +125,40 @@ export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
 export const noopSearchAnalyticsAction = makeNoopAnalyticsAction(
   AnalyticsType.Search
 );
+
+export const makeCaseAssistAnalyticsAction = (
+  prefix: string,
+  log: (
+    client: CaseAssistClient,
+    state: ConfigurationSection & Partial<CaseAssistAppState>
+  ) => Promise<void | SearchEventResponse> | void
+) => {
+  return createAsyncThunk<
+    {},
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
+  >(
+    prefix,
+    async (
+      _,
+      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
+    ) => {
+      const state = getState();
+      const client = configureCaseAssistAnalytics({
+        state,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+      });
+      const response = await log(client, state);
+      logger.info(
+        {client: client.coveoAnalyticsClient, response},
+        'Analytics response'
+      );
+      return {};
+    }
+  );
+};
 
 export const partialDocumentInformation = (
   result: Result,
