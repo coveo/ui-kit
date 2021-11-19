@@ -1,5 +1,5 @@
 import AtomicDocumentation from '../../../docs/atomic-docs.json';
-import {Meta} from '@storybook/addon-docs';
+import {Meta, Source} from '@storybook/addon-docs';
 import {mapPropsToArgTypes, getDocumentationFromTag} from '../../../.storybook/map-props-to-args';
 import {renderArgsToHTMLString} from '../../../.storybook/default-story-shared';
 import {
@@ -7,6 +7,7 @@ import {
   SearchInterfaceDocumentation,
   propertyToCodeSample,
 } from '../../../.storybook/atomic-search-interface-storybook-helper';
+import StoryStyle from './atomic-search-interface.stories.css';
 
 <Meta title="Atomic/SearchInterface" />
 
@@ -16,14 +17,7 @@ import {
 
 ## Properties available
 
-<table
-  style={{
-    textAlign: 'left',
-    fontSize: '13px',
-    borderCollapse: 'collapse',
-    lineHeight: '3rem',
-  }}
->
+<table className="search-interface-props-table">
   <thead>
     <tr key="header">
       <th>Name</th>
@@ -44,11 +38,11 @@ import {
             {values
               .map((v) => v.value || v.type)
               .filter((v) => v !== 'undefined')
-              .join(',')}
+              .join(' ')}
           </td>
           <td>{prop.default}</td>
           <td>
-            <code>{propertyToCodeSample(prop)}</code>
+            <Source code={propertyToCodeSample(prop)} language="html" />
           </td>
         </tr>
       );
