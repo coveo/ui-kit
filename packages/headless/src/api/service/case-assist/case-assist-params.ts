@@ -5,8 +5,14 @@ export interface CaseAssistIdParam {
   caseAssistId: string;
 }
 
+export interface CaseFields {
+  [fieldName: string]: {
+    value: string;
+  };
+}
+
 export interface FieldsParam {
-  fields: Record<string, string>;
+  fields: CaseFields;
 }
 
 export type CaseAssistParam = BaseParam & CaseAssistIdParam;
@@ -42,20 +48,8 @@ export const baseCaseAssistRequest = (
   };
 };
 
-export const prepareSuggestionRequestFields = (
-  fields: Record<string, string>
-) =>
-  Object.keys(fields)
-    .filter((fieldName) => fields[fieldName] !== '')
-    .reduce(
-      (result, fieldName) => ({
-        ...result,
-        [fieldName]: {
-          value: fields[fieldName],
-        },
-      }),
-      {} as Record<string, unknown>
-    );
+export const prepareSuggestionRequestFields = (fields: CaseFields) =>
+  Object.keys(fields).filter((fieldName) => fields[fieldName].value !== '');
 
 const validateCaseAssistRequestParams = (req: CaseAssistParam) => {
   if (!req.url) {

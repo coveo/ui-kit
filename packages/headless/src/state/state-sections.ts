@@ -36,6 +36,7 @@ import {TabSetState} from '../features/tab-set/tab-set-state';
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
 import {CaseFieldsState} from '../features/case-fields/case-fields-state';
+import {CaseInputsState} from '../features/case-inputs/case-inputs-state';
 
 export interface QuerySection {
   /**
@@ -317,6 +318,13 @@ export interface CaseAssistConfigurationSection {
    * The case assist engine configuration
    */
   caseAssistConfiguration: CaseAssistConfigurationState;
+}
+
+export interface CaseInputsSection {
+  /**
+   * The case inputs.
+   */
+  caseInputs: CaseInputsState;
 }
 
 export interface CaseFieldsSection {

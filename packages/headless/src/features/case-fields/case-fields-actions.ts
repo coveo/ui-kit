@@ -94,5 +94,5 @@ export const buildFetchClassificationRequest = (
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
   debug: state.debug,
-  fields: {}, //TODO: get real fields
+  fields: state.caseFields.fields,
 });
