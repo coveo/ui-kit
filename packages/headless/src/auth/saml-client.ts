@@ -1,4 +1,5 @@
 import {fetch} from 'cross-fetch';
+import {getIsomorphicHistory, IsomorphicHistory} from './isomorphic-history';
 import {getIsomorphicLocation, IsomorphicLocation} from './isomorphic-location';
 
 export interface SamlOptions {
@@ -6,6 +7,7 @@ export interface SamlOptions {
   provider: string;
   request?: Fetch;
   location?: IsomorphicLocation;
+  history?: IsomorphicHistory;
 }
 
 export interface SamlClient {
@@ -18,8 +20,11 @@ type Fetch = (
   init?: RequestInit | undefined
 ) => Promise<Response>;
 
+const handshakeTokenParamName = 'handshake_token';
+
 export function buildSamlClient(config: SamlOptions): SamlClient {
-  const {request, organizationId, provider, location} = buildOptions(config);
+  const {request, organizationId, provider, location, history} =
+    buildOptions(config);
   const api = 'https://platform.cloud.coveo.com/rest/search';
 
   return {
@@ -37,6 +42,8 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
 
     async exchangeToken() {
       const handshakeToken = getHandshakeToken(location);
+      removeHandshakeTokenFromUrl(location, history);
+
       try {
         const response = await request(`${api}/login/handshake/token`, {
           method: 'POST',
@@ -54,6 +61,7 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
 function buildOptions(config: SamlOptions): Required<SamlOptions> {
   return {
     location: getIsomorphicLocation(),
+    history: getIsomorphicHistory(),
     request: fetch,
     ...config,
   };
@@ -69,11 +77,33 @@ function getHandshakeToken(location: IsomorphicLocation): string {
 
 function getHashAfterAdjustingForAngular(location: IsomorphicLocation) {
   const hash = location.hash;
-  const isAngular = hash.indexOf('#/') === 0;
-  return isAngular ? `#${hash.slice(2)}` : hash;
+  return isAngularHash(location) ? `#${hash.slice(2)}` : hash;
+}
+
+function isAngularHash(location: IsomorphicLocation) {
+  const hash = location.hash;
+  return hash.indexOf('#/') === 0;
 }
 
 function isHandshakeTokenParam(param: string) {
   const [key] = param.split('=');
-  return key === 'handshake_token';
+  return key === handshakeTokenParamName;
+}
+
+function removeHandshakeTokenFromUrl(
+  location: IsomorphicLocation,
+  history: IsomorphicHistory
+) {
+  const delimiter = '&';
+  const hash = getHashAfterAdjustingForAngular(location);
+  const token = getHandshakeToken(location);
+  const handshakeEntry = `${handshakeTokenParamName}=${token}`;
+
+  const entries = hash.substr(1).split(delimiter);
+  const newHash = entries
+    .filter((param) => param !== handshakeEntry)
+    .join(delimiter);
+  const adjustedHash = isAngularHash(location) ? `/${newHash}` : newHash;
+
+  history.replaceState(null, '', `#${adjustedHash}`);
 }

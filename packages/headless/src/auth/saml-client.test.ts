@@ -1,4 +1,5 @@
-import {getIsomorphicLocation} from './isomorphic-location';
+import {IsomorphicHistory} from './isomorphic-history';
+import {IsomorphicLocation} from './isomorphic-location';
 import {buildSamlClient, SamlClient, SamlOptions} from './saml-client';
 
 describe('buildSamlClient', () => {
@@ -10,13 +11,22 @@ describe('buildSamlClient', () => {
     client = buildSamlClient(options);
   }
 
+  function buildMockLocation(): IsomorphicLocation {
+    return {hash: '', href: ''};
+  }
+
+  function buildMockHistory(): IsomorphicHistory {
+    return {replaceState: jest.fn()};
+  }
+
   beforeEach(() => {
     request = jest.fn();
 
     options = {
       organizationId: '',
       provider: '',
-      location: getIsomorphicLocation(),
+      location: buildMockLocation(),
+      history: buildMockHistory(),
       request,
     };
 
@@ -100,6 +110,15 @@ describe('buildSamlClient', () => {
 
         const result = await client.exchangeToken();
         expect(result).toBe('access token');
+      });
+
+      it('it removes the handshake token from the hash', () => {
+        client.exchangeToken();
+        expect(options.history.replaceState).toHaveBeenCalledWith(
+          null,
+          '',
+          '#t=All&sort=relevancy'
+        );
       });
 
       it('when the request errors, it returns an empty string', async () => {
