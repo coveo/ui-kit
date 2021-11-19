@@ -42,7 +42,7 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
 
     async exchangeToken() {
       const handshakeToken = getHandshakeToken(location);
-      removeHandshakeTokenFromUrl(location, history);
+      removeHandshakeToken(location, history);
 
       try {
         const response = await request(`${api}/login/handshake/token`, {
@@ -90,7 +90,7 @@ function isHandshakeTokenParam(param: string) {
   return key === handshakeTokenParamName;
 }
 
-function removeHandshakeTokenFromUrl(
+function removeHandshakeToken(
   location: IsomorphicLocation,
   history: IsomorphicHistory
 ) {

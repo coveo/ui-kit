@@ -3,6 +3,7 @@ import {IsomorphicLocation} from './isomorphic-location';
 import {buildSamlClient, SamlClient, SamlOptions} from './saml-client';
 
 describe('buildSamlClient', () => {
+  const handshakeToken = 'token';
   let options: Required<SamlOptions>;
   let request: jest.Mock<any, any>;
   let client: SamlClient;
@@ -17,6 +18,13 @@ describe('buildSamlClient', () => {
 
   function buildMockHistory(): IsomorphicHistory {
     return {replaceState: jest.fn()};
+  }
+
+  function assertHandshakeTokenSent() {
+    expect(request).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({body: JSON.stringify({handshakeToken})})
+    );
   }
 
   beforeEach(() => {
@@ -62,15 +70,6 @@ describe('buildSamlClient', () => {
 
   describe('#exchangeToken', () => {
     describe('url hash contains handshake token', () => {
-      const handshakeToken = 'token';
-
-      function assertHandshakeTokenSent() {
-        expect(request).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.objectContaining({body: JSON.stringify({handshakeToken})})
-        );
-      }
-
       beforeEach(() => {
         options.location.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
       });
@@ -89,15 +88,6 @@ describe('buildSamlClient', () => {
 
       it('url hash starts with handshake token param, it exchanges the token', () => {
         options.location.hash = `#handshake_token=${handshakeToken}`;
-        client.exchangeToken();
-
-        assertHandshakeTokenSent();
-      });
-
-      it(`url hash starts with / followed by handshake token param,
-      it exchanges the token`, () => {
-        // Angular by default adds a / between the hash and the hash parameters.
-        options.location.hash = `#/handshake_token=${handshakeToken}`;
         client.exchangeToken();
 
         assertHandshakeTokenSent();
@@ -127,6 +117,21 @@ describe('buildSamlClient', () => {
         const result = await client.exchangeToken();
         expect(result).toBe('');
       });
+    });
+  });
+
+  describe('url hash starts with / followed by handshake token param (Angular bug)', () => {
+    beforeEach(() => {
+      options.location.hash = `#/handshake_token=${handshakeToken}`;
+      client.exchangeToken();
+    });
+
+    it('exchanges the token', () => {
+      assertHandshakeTokenSent();
+    });
+
+    it('removes the handshake token from the url but keeps the slash', () => {
+      expect(options.history.replaceState).toHaveBeenCalledWith(null, '', '#/');
     });
   });
 });
