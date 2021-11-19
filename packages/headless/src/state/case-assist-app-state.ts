@@ -1,9 +1,9 @@
 import {
-  CaseAssistSection,
+  CaseAssistConfigurationSection,
   ConfigurationSection,
   DebugSection,
 } from './state-sections';
 
 export type CaseAssistAppState = ConfigurationSection &
-  CaseAssistSection &
+  CaseAssistConfigurationSection &
   DebugSection;

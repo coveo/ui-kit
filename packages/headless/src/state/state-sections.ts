@@ -34,7 +34,7 @@ import {ProductListingState} from '../features/product-listing/product-listing-s
 import {SortState} from '../features/sort/sort-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
-import {CaseAssistState} from '../features/case-assist/case-assist-state';
+import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
 
 export interface QuerySection {
   /**
@@ -311,9 +311,9 @@ export interface RecentQueriesSection {
   recentQueries: RecentQueriesState;
 }
 
-export interface CaseAssistSection {
+export interface CaseAssistConfigurationSection {
   /**
-   * The information related to the case assist endpoint.
+   * The case assist engine configuration
    */
-  caseAssist: CaseAssistState;
+  caseAssistConfiguration: CaseAssistConfigurationState;
 }

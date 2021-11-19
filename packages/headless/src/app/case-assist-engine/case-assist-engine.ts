@@ -18,7 +18,7 @@ import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments';
-import {setCaseAssistId} from '../../features/case-assist/case-assist-actions';
+import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
 
 export {CaseAssistEngineConfiguration};
 
@@ -80,10 +80,15 @@ export function buildCaseAssistEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {caseAssistId} = options.configuration;
+  const {caseAssistId, locale} = options.configuration;
 
   if (!isNullOrUndefined(caseAssistId)) {
-    engine.dispatch(setCaseAssistId({id: caseAssistId}));
+    engine.dispatch(
+      setCaseAssistConfiguration({
+        caseAssistId,
+        locale,
+      })
+    );
   }
 
   return {
