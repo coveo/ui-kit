@@ -4,8 +4,7 @@ import {
 } from '@coveo/headless';
 import {debounce} from 'lodash';
 import {addons} from '@storybook/addons';
-import { A11Y_EXTENSION_EVENTS } from './register';
-
+import {A11Y_EXTENSION_EVENTS} from './register';
 
 interface SearchInterface extends HTMLElement {
   initialize: (cfg: SearchEngineConfiguration) => Promise<void>;
