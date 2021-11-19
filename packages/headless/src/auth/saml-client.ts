@@ -11,6 +11,7 @@ export interface SamlOptions {
 }
 
 export interface SamlClient {
+  authenticate(): Promise<string>;
   exchangeToken(): Promise<string>;
   login(): void;
 }
@@ -28,6 +29,17 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
   const api = 'https://platform.cloud.coveo.com/rest/search';
 
   return {
+    async authenticate() {
+      const hasToken = !!getHandshakeToken(location);
+
+      if (hasToken) {
+        return await this.exchangeToken();
+      }
+
+      this.login();
+      return '';
+    },
+
     login() {
       const redirectUri = encodeURIComponent(location.href);
       const params = `organizationId=${organizationId}&redirectUri=${redirectUri}`;

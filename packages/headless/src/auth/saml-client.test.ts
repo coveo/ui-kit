@@ -41,6 +41,28 @@ describe('buildSamlClient', () => {
     initSamlClient();
   });
 
+  describe('#authenticate', () => {
+    it('hash does not contain token, it calls #login', () => {
+      options.location.hash = '';
+      const spy = spyOn(client, 'login');
+
+      client.authenticate();
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('hash contains token, it calls #exchangeToken and returns an access token', async () => {
+      options.location.hash = '#handshake_token=token';
+
+      const spy = spyOn(client, 'exchangeToken');
+      spy.and.returnValue('access token');
+
+      const res = await client.authenticate();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(res).toBe('access token');
+    });
+  });
+
   describe('#login', () => {
     // TODO: test POST to avoid writing to url.
     // TODO: url environments
