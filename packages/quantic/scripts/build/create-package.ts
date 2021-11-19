@@ -95,6 +95,14 @@ async function authorizePublishingOrg(log: StepLogger, options: Options) {
   log('Authorization successful');
 }
 
+async function ensurePackageNotPublished(log: StepLogger, options: Options) {
+  if (await getIsPublished()) {
+    log(
+      `Skipped publishing ${options.packageVersion} since this patch version is already published.`
+    );
+  }
+}
+
 async function removeTranslations(log: StepLogger) {
   const translationDir = path.resolve('force-app/main/translations/');
   await fs.promises
@@ -163,15 +171,10 @@ async function createGithubRelease(
 
   let packageVersionId: string;
 
-  if (options.promote && (await getIsPublished())) {
-    console.info(
-      `Skipped publishing ${options.packageVersion} since this patch version is already published.`
-    );
-    return;
-  }
-
   try {
     runner.add(async (log) => await authorizePublishingOrg(log, options));
+    options.promote &&
+      runner.add(async (log) => await ensurePackageNotPublished(log, options));
     options.removeTranslations &&
       runner.add(async (log) => await removeTranslations(log));
     runner.add(async (log) => {
@@ -179,7 +182,13 @@ async function createGithubRelease(
         await createPackage(log, options)
       ).result.SubscriberPackageVersionId;
       !options.promote &&
-        console.log(await getMatchingPackageVersion(options.packageVersion));
+        log(
+          JSON.stringify(
+            await getMatchingPackageVersion(options.packageVersion),
+            null,
+            2
+          )
+        );
     });
     options.promote &&
       runner

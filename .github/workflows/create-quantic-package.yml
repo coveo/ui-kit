@@ -1,7 +1,6 @@
 name: Create Quantic Package
 
 env:
-  SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
   SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com
   SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}
   SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_PACKAGE_CLIENT_ID }}

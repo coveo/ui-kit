@@ -21,6 +21,19 @@ node('linux && docker') {
       }
     }
 
+    stage('Quantic publish') {
+      withCredentials([
+        usernamePassword(credentialsId: 'github-coveobot-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
+        string(credentialsId: 'sfdx-auth-pkg-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
+        file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
+      ]) {
+        withEnv([
+          'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
+        ]) {
+          sh 'npm run package:create:promote --prefix packages/quantic'
+        }
+    }
+
     stage('Notify Docs') {
       withCredentials([
         usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
