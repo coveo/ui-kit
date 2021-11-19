@@ -21,7 +21,12 @@
     "loader/",
     "docs/",
     "licenses/",
-    "headless/"
+    "headless/package.json",
+    "headless/LICENSE",
+    "headless/dist/",
+    "headless/recommendation/",
+    "headless/product-recommendation/",
+    "headless/product-listing/"
   ],
   "scripts": {
     "clean": "rimraf -f -r dist/* headless/*",
