@@ -6,7 +6,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {debug, caseAssist} from '../reducers';
+import {debug, caseAssistConfiguration} from '../reducers';
 import {
   CaseAssistEngineConfiguration,
   caseAssistEngineConfigurationSchema,
@@ -24,7 +24,7 @@ export {CaseAssistEngineConfiguration};
 
 const caseassistEngineReducers = {
   debug,
-  caseAssist,
+  caseAssist: caseAssistConfiguration,
 };
 type CaseAssistEngineReducers = typeof caseassistEngineReducers;
 type CaseAssistEngineState =
