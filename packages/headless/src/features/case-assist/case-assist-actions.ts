@@ -1,17 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
 import {
-  ConfigurationSection,
-  CaseAssistSection,
-} from '../../state/state-sections';
-import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
-
-export type StateNeededByGetRecommendations = ConfigurationSection &
-  CaseAssistSection &
-  Partial<CaseAssistAppState>;
 
 export interface SetCaseAssistIdActionCreatorPayload {
   /**

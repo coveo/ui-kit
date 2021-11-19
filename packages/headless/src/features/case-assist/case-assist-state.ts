@@ -4,8 +4,8 @@ export const getCaseAssistInitialState = (): CaseAssistState => ({
 
 export interface CaseAssistState {
   /**
-   * Specifies the ID of the recommendation interface.
-   * @defaultValue `Recommendation`
+   * Specifies the ID of the case assist configuration.
+   * @defaultValue `CaseAssist`
    */
   caseAssistId: string;
 }
