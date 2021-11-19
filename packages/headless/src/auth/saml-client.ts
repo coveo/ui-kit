@@ -60,10 +60,17 @@ function buildOptions(config: SamlOptions): Required<SamlOptions> {
 }
 
 function getHandshakeToken(location: IsomorphicLocation): string {
-  const params = location.hash.slice(1);
+  const hash = getHashAfterAdjustingForAngular(location);
+  const params = hash.slice(1);
   const handshakeParam = params.split('&').find(isHandshakeTokenParam);
 
   return handshakeParam ? handshakeParam.split('=')[1] : '';
+}
+
+function getHashAfterAdjustingForAngular(location: IsomorphicLocation) {
+  const hash = location.hash;
+  const isAngular = hash.indexOf('#/') === 0;
+  return isAngular ? `#${hash.slice(2)}` : hash;
 }
 
 function isHandshakeTokenParam(param: string) {

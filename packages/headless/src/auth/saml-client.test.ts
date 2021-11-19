@@ -54,6 +54,13 @@ describe('buildSamlClient', () => {
     describe('url hash contains handshake token', () => {
       const handshakeToken = 'token';
 
+      function assertHandshakeTokenSent() {
+        expect(request).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.objectContaining({body: JSON.stringify({handshakeToken})})
+        );
+      }
+
       beforeEach(() => {
         options.location.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
       });
@@ -70,14 +77,20 @@ describe('buildSamlClient', () => {
         );
       });
 
-      it('token at start of hash, it finds and sends the token', () => {
+      it('url hash starts with handshake token param, it exchanges the token', () => {
         options.location.hash = `#handshake_token=${handshakeToken}`;
         client.exchangeToken();
 
-        expect(request).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.objectContaining({body: JSON.stringify({handshakeToken})})
-        );
+        assertHandshakeTokenSent();
+      });
+
+      it(`url hash starts with / followed by handshake token param,
+      it exchanges the token`, () => {
+        // Angular by default adds a / between the hash and the hash parameters.
+        options.location.hash = `#/handshake_token=${handshakeToken}`;
+        client.exchangeToken();
+
+        assertHandshakeTokenSent();
       });
 
       it('returns the access token', async () => {
