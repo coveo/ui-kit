@@ -1,3 +1,4 @@
+import {getIsomorphicLocation} from './isomorphic-location';
 import {buildSamlClient, SamlClient, SamlOptions} from './saml-client';
 
 describe('buildSamlClient', () => {
@@ -6,7 +7,10 @@ describe('buildSamlClient', () => {
   let client: SamlClient;
 
   function initSamlClient() {
-    client = buildSamlClient(options, request);
+    client = buildSamlClient({
+      ...options,
+      request,
+    });
   }
 
   beforeEach(() => {
@@ -20,18 +24,35 @@ describe('buildSamlClient', () => {
     initSamlClient();
   });
 
-  it('#getRedirectUrl returns the expected url', () => {
-    options = {
-      organizationId: 'org',
-      provider: 'okta',
-    };
+  describe('#login', () => {
+    // TODO: test POST to avoid writing to url.
+    // TODO: url environments
 
-    initSamlClient();
+    it('sends the expected request and returns true', async () => {
+      const location = getIsomorphicLocation();
+      location.href = 'http://localhost:8080/#t=All&sort=relevancy';
 
-    const url = client.getRedirectUrl();
-    expect(url).toBe(
-      'https://platform.cloud.coveo.com/rest/search/v2/login/okta?organization=org'
-    );
+      options = {
+        organizationId: 'org',
+        provider: 'okta',
+        location,
+      };
+
+      initSamlClient();
+      const res = await client.login();
+
+      const redirectUri = encodeURIComponent(location.href);
+      const url = `https://platform.cloud.coveo.com/rest/search/v2/login/okta?organizationId=org&redirectUri=${redirectUri}`;
+
+      expect(res).toBe(true);
+      expect(request).toHaveBeenCalledWith(url);
+    });
+
+    it('when the request errors, it returns false', async () => {
+      request.mockRejectedValue('');
+      const res = await client.login();
+      expect(res).toBe(false);
+    });
   });
 
   describe('#exchangeToken', () => {

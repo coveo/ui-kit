@@ -1,13 +1,16 @@
 import {fetch} from 'cross-fetch';
+import {getIsomorphicLocation, IsomorphicLocation} from './isomorphic-location';
 
 export interface SamlOptions {
   organizationId: string;
   provider: string;
+  request?: Fetch;
+  location?: IsomorphicLocation;
 }
 
 export interface SamlClient {
   exchangeToken(token: string): Promise<string>;
-  getRedirectUrl(): string;
+  login(): Promise<boolean>;
 }
 
 type Fetch = (
@@ -15,13 +18,23 @@ type Fetch = (
   init?: RequestInit | undefined
 ) => Promise<Response>;
 
-export function buildSamlClient(
-  config: SamlOptions,
-  request: Fetch
-): SamlClient {
+export function buildSamlClient(config: SamlOptions): SamlClient {
+  const {request, organizationId, provider, location} = buildOptions(config);
   const api = 'https://platform.cloud.coveo.com/rest/search';
 
   return {
+    async login() {
+      const redirectUri = encodeURIComponent(location.href);
+      const params = `organizationId=${organizationId}&redirectUri=${redirectUri}`;
+
+      try {
+        await request(`${api}/v2/login/${provider}?${params}`);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+
     async exchangeToken(token) {
       try {
         const response = await request(`${api}/login/handshake/token`, {
@@ -34,30 +47,13 @@ export function buildSamlClient(
         return '';
       }
     },
-
-    getRedirectUrl() {
-      const {organizationId, provider} = config;
-      return `${api}/v2/login/${provider}?organization=${organizationId}`;
-    },
   };
 }
 
-export function buildBrowserSamlClient(
-  config: SamlOptions,
-  location = window.location
-) {
-  const client = buildSamlClient(config, fetch);
-
+function buildOptions(config: SamlOptions): Required<SamlOptions> {
   return {
-    redirect() {
-      const url = client.getRedirectUrl();
-      location.href = url;
-    },
-
-    async exchangeHandshakeToken() {
-      const url = window.location.href;
-      const token = url;
-      return await client.exchangeToken(token);
-    },
+    location: getIsomorphicLocation(),
+    request: fetch,
+    ...config,
   };
 }
