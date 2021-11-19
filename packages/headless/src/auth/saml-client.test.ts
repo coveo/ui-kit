@@ -45,26 +45,20 @@ describe('buildSamlClient', () => {
     // TODO: test POST to avoid writing to url.
     // TODO: url environments
 
-    it('sends the expected request and returns true', async () => {
+    it('redirects to the expected url', () => {
+      const initialLocation = 'http://localhost:8080/#t=All&sort=relevancy';
       options.organizationId = 'org';
       options.provider = 'okta';
-      options.location.href = 'http://localhost:8080/#t=All&sort=relevancy';
+      options.location.href = initialLocation;
 
       initSamlClient();
 
-      const res = await client.login();
+      client.login();
 
-      const redirectUri = encodeURIComponent(options.location.href);
+      const redirectUri = encodeURIComponent(initialLocation);
       const url = `https://platform.cloud.coveo.com/rest/search/v2/login/okta?organizationId=org&redirectUri=${redirectUri}`;
 
-      expect(res).toBe(true);
-      expect(request).toHaveBeenCalledWith(url);
-    });
-
-    it('when the request errors, it returns false', async () => {
-      request.mockRejectedValue('');
-      const res = await client.login();
-      expect(res).toBe(false);
+      expect(options.location.href).toBe(url);
     });
   });
 

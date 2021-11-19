@@ -12,7 +12,7 @@ export interface SamlOptions {
 
 export interface SamlClient {
   exchangeToken(): Promise<string>;
-  login(): Promise<boolean>;
+  login(): void;
 }
 
 type Fetch = (
@@ -28,16 +28,11 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
   const api = 'https://platform.cloud.coveo.com/rest/search';
 
   return {
-    async login() {
+    login() {
       const redirectUri = encodeURIComponent(location.href);
       const params = `organizationId=${organizationId}&redirectUri=${redirectUri}`;
 
-      try {
-        await request(`${api}/v2/login/${provider}?${params}`);
-        return true;
-      } catch (e) {
-        return false;
-      }
+      location.href = `${api}/v2/login/${provider}?${params}`;
     },
 
     async exchangeToken() {
