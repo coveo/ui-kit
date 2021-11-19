@@ -2,7 +2,10 @@ import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/an
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {SVCPlugin} from '../plugins/svc';
 import {
+    CaseAssistActions,
+    CaseAssistEvents,
     CaseCancelledMetadata,
+    CaseCancelledReasons,
     CaseCreatedMetadata,
     CaseSolvedMetadata,
     EnterInterfaceMetadata,
@@ -22,7 +25,7 @@ export class CaseAssistClient {
     private svc: SVCPlugin;
 
     constructor(private options: Partial<CaseAssistClientOptions>) {
-        this.client = options.enableAnalytics === false ? new NoopAnalytics() : new CoveoAnalyticsClient(options);
+        this.client = options.enableAnalytics ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
         this.svc = new SVCPlugin({client: this.client});
     }
 
@@ -40,13 +43,13 @@ export class CaseAssistClient {
     }
 
     public logEnterInterface(meta: EnterInterfaceMetadata) {
-        this.svc.setAction('ticket_create_start');
+        this.svc.setAction(CaseAssistActions.enterInterface);
         this.svc.setTicket(meta.ticket);
         return this.sendFlowStartEvent();
     }
 
     public logUpdateCaseField(meta: UpdateCaseFieldMetadata) {
-        this.svc.setAction('ticket_field_update', {
+        this.svc.setAction(CaseAssistActions.fieldUpdate, {
             fieldName: meta.fieldName,
         });
         this.svc.setTicket(meta.ticket);
@@ -54,19 +57,19 @@ export class CaseAssistClient {
     }
 
     public logSelectFieldSuggestion(meta: SelectFieldSuggestionMetadata) {
-        this.svc.setAction('ticket_classification_click', meta.suggestion);
+        this.svc.setAction(CaseAssistActions.fieldSuggestionClick, meta.suggestion);
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
 
     public logSelectDocumentSuggestion(meta: SelectDocumentSuggestionMetadata) {
-        this.svc.setAction('suggestion_click', meta.suggestion);
+        this.svc.setAction(CaseAssistActions.suggestionClick, meta.suggestion);
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
 
     public logRateDocumentSuggestion(meta: RateDocumentSuggestionMetadata) {
-        this.svc.setAction('suggestion_rate', {
+        this.svc.setAction(CaseAssistActions.suggestionRate, {
             rate: meta.rating,
             ...meta.suggestion,
         });
@@ -75,38 +78,38 @@ export class CaseAssistClient {
     }
 
     public logMoveToNextCaseStep(meta: MoveToNextCaseStepMetadata) {
-        this.svc.setAction('ticket_next_stage');
+        this.svc.setAction(CaseAssistActions.nextCaseStep);
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
 
     public logCaseCancelled(meta: CaseCancelledMetadata) {
-        this.svc.setAction('ticket_cancel', {
-            reason: 'Quit',
+        this.svc.setAction(CaseAssistActions.caseCancelled, {
+            reason: CaseCancelledReasons.quit,
         });
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
 
     public logCaseSolved(meta: CaseSolvedMetadata) {
-        this.svc.setAction('ticket_cancel', {
-            reason: 'Solved',
+        this.svc.setAction(CaseAssistActions.caseSolved, {
+            reason: CaseCancelledReasons.solved,
         });
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
 
     public logCaseCreated(meta: CaseCreatedMetadata) {
-        this.svc.setAction('ticket_create');
+        this.svc.setAction(CaseAssistActions.caseCreated);
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
 
     private sendFlowStartEvent() {
-        return this.client.sendEvent('event', 'svc', 'flowStart');
+        return this.client.sendEvent('event', 'svc', CaseAssistEvents.flowStart);
     }
 
     private sendClickEvent() {
-        return this.client.sendEvent('event', 'svc', 'click');
+        return this.client.sendEvent('event', 'svc', CaseAssistEvents.click);
     }
 }

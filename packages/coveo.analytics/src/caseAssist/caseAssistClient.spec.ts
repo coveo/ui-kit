@@ -1,5 +1,11 @@
 import {CaseAssistClient} from './caseAssistClient';
-import {CaseAssistActions, DocumentSuggestion, FieldSuggestion} from './caseAssistActions';
+import {
+    CaseAssistActions,
+    CaseAssistEvents,
+    CaseCancelledReasons,
+    DocumentSuggestion,
+    FieldSuggestion,
+} from './caseAssistActions';
 
 import {mockFetch} from '../../tests/fetchMock';
 import {TicketProperties} from '../plugins/svc';
@@ -83,7 +89,8 @@ describe('CaseAssistClient', () => {
         expectMatchProperty(content, 'svc_action', actionName);
         expectMatchProperty(content, 'svc_action_data', actionData);
 
-        const expectedEvent = actionName === CaseAssistActions.enterInterface ? 'flowStart' : 'click';
+        const expectedEvent =
+            actionName === CaseAssistActions.enterInterface ? CaseAssistEvents.flowStart : CaseAssistEvents.click;
         expectMatchProperty(content, 'ea', expectedEvent);
     };
 
@@ -215,7 +222,7 @@ describe('CaseAssistClient', () => {
         expectMatchPayload(
             CaseAssistActions.caseCancelled,
             {
-                reason: 'Quit',
+                reason: CaseCancelledReasons.quit,
             },
             fakeTicket
         );
@@ -229,7 +236,7 @@ describe('CaseAssistClient', () => {
         expectMatchPayload(
             CaseAssistActions.caseSolved,
             {
-                reason: 'Solved',
+                reason: CaseCancelledReasons.solved,
             },
             fakeTicket
         );

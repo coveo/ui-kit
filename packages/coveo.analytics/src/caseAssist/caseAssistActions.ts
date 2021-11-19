@@ -1,5 +1,10 @@
 import {TicketProperties} from '../plugins/svc';
 
+export enum CaseAssistEvents {
+    click = 'click',
+    flowStart = 'flowStart',
+}
+
 export enum CaseAssistActions {
     enterInterface = 'ticket_create_start',
     fieldUpdate = 'ticket_field_update',
@@ -10,6 +15,11 @@ export enum CaseAssistActions {
     caseCancelled = 'ticket_cancel',
     caseSolved = 'ticket_cancel',
     caseCreated = 'ticket_create',
+}
+
+export enum CaseCancelledReasons {
+    quit = 'Quit',
+    solved = 'Solved',
 }
 
 export interface EnterInterfaceMetadata {
