@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "start": "rollup -c -w",
-    "build": "npm run clean && npm run build:prod",
+    "build": "npm run build:prod",
     "build:prod": "rollup -c --environment BUILD:production",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
