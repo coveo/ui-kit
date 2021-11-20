@@ -11,7 +11,7 @@ export interface SamlProviderOptions {
 }
 
 export interface SamlProvider {
-  exchangeToken(): Promise<string>;
+  exchangeHandshakeToken(): Promise<string>;
   handshakeTokenAvailable: boolean;
   login(): void;
 }
@@ -36,7 +36,7 @@ export function buildSamlProvider(config: SamlProviderOptions): SamlProvider {
       location.href = `${api}/v2/login/${provider}?${params}`;
     },
 
-    async exchangeToken() {
+    async exchangeHandshakeToken() {
       const {location, history, request} = options;
       const handshakeToken = getHandshakeToken(location);
       removeHandshakeToken(location, history);

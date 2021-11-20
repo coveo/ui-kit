@@ -66,7 +66,7 @@ describe('buildSamlProvider', () => {
     });
   });
 
-  describe('#exchangeToken', () => {
+  describe('#exchangeHandshakeToken', () => {
     // TODO: api key should not be required.
 
     describe('url hash contains handshake token', () => {
@@ -75,7 +75,7 @@ describe('buildSamlProvider', () => {
       });
 
       it('sends a request with the token', () => {
-        provider.exchangeToken();
+        provider.exchangeHandshakeToken();
 
         expect(request).toHaveBeenCalledWith(
           'https://platform.cloud.coveo.com/rest/search/login/handshake/token',
@@ -88,7 +88,7 @@ describe('buildSamlProvider', () => {
 
       it('url hash starts with handshake token param, it exchanges the token', () => {
         options.location.hash = `#handshake_token=${handshakeToken}`;
-        provider.exchangeToken();
+        provider.exchangeHandshakeToken();
 
         assertHandshakeTokenSent();
       });
@@ -98,12 +98,12 @@ describe('buildSamlProvider', () => {
           json: () => ({token: 'access token'}),
         });
 
-        const result = await provider.exchangeToken();
+        const result = await provider.exchangeHandshakeToken();
         expect(result).toBe('access token');
       });
 
       it('it removes the handshake token from the hash', () => {
-        provider.exchangeToken();
+        provider.exchangeHandshakeToken();
         expect(options.history.replaceState).toHaveBeenCalledWith(
           null,
           '',
@@ -114,7 +114,7 @@ describe('buildSamlProvider', () => {
       it('when the request errors, it returns an empty string', async () => {
         request.mockRejectedValue('error');
 
-        const result = await provider.exchangeToken();
+        const result = await provider.exchangeHandshakeToken();
         expect(result).toBe('');
       });
     });
@@ -135,7 +135,7 @@ describe('buildSamlProvider', () => {
   describe('url hash starts with / followed by handshake token param (Angular bug)', () => {
     beforeEach(() => {
       options.location.hash = '#/handshake_token=token';
-      provider.exchangeToken();
+      provider.exchangeHandshakeToken();
     });
 
     it('exchanges the token', () => {
