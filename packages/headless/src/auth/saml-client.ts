@@ -24,12 +24,12 @@ type Fetch = (
 const handshakeTokenParamName = 'handshake_token';
 
 export function buildSamlClient(config: SamlOptions): SamlClient {
-  const {request, organizationId, provider, location, history} =
-    buildOptions(config);
+  const options = buildOptions(config);
   const api = 'https://platform.cloud.coveo.com/rest/search';
 
   return {
     async authenticate() {
+      const {location} = options;
       const token = getHandshakeToken(location);
 
       if (token) {
@@ -41,6 +41,7 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
     },
 
     login() {
+      const {organizationId, provider, location} = options;
       const redirectUri = encodeURIComponent(location.href);
       const params = `organizationId=${organizationId}&redirectUri=${redirectUri}`;
 
@@ -48,6 +49,7 @@ export function buildSamlClient(config: SamlOptions): SamlClient {
     },
 
     async exchangeToken() {
+      const {location, history, request} = options;
       const handshakeToken = getHandshakeToken(location);
       removeHandshakeToken(location, history);
 
