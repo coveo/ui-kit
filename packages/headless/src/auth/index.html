@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script type="module">
+      import {buildSamlClient} from './saml-client';
+
+      const organizationId = 'pvnh4ja7n5y7lmgstt3fpwy2bzq';
+
+      const client = buildSamlClient({
+        organizationId,
+        provider: 'oktaA323aab78b9f1-45b5-a095-a1f0fa09ddd5',
+      });
+
+      async function main() {
+        const accessToken = await client.authenticate();
+
+        console.log(token);
+
+        buildSearchEngine({
+          configuration: {
+            organizationId,
+            accessToken,
+            renewAccessToken: () => {
+              client.login();
+              return Promise.resolve('');
+            },
+          },
+        });
+      }
+
+      main();
+    </script>
+  </head>
+</html>

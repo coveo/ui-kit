@@ -42,6 +42,8 @@ describe('buildSamlClient', () => {
   });
 
   describe('#authenticate', () => {
+    // TODO: prevent infinite loops in case search api goes down?
+
     it('hash does not contain token, it calls #login', () => {
       options.location.hash = '';
       const spy = spyOn(client, 'login');
@@ -85,6 +87,8 @@ describe('buildSamlClient', () => {
   });
 
   describe('#exchangeToken', () => {
+    // TODO: api key should not be required.
+
     describe('url hash contains handshake token', () => {
       beforeEach(() => {
         options.location.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
