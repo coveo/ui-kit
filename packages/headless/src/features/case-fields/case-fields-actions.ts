@@ -46,10 +46,6 @@ export const disableCaseClassifications = createAction(
   'caseAssist/classifications/disable'
 );
 
-export const fetchCaseClassifications = createAction(
-  'caseAssist/classifications/fetch'
-);
-
 export interface FetchClassificationsThunkReturn {
   /** The successful classifications response. */
   response: GetCaseClassificationsResponse;
@@ -60,7 +56,7 @@ export type StateNeededByFetchClassifications = ConfigurationSection &
   CaseFieldsSection &
   DebugSection;
 
-export const fetchClassifications = createAsyncThunk<
+export const fetchCaseClassifications = createAsyncThunk<
   FetchClassificationsThunkReturn,
   void,
   AsyncThunkCaseAssistOptions<StateNeededByFetchClassifications>

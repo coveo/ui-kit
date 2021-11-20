@@ -41,6 +41,7 @@ import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 import {staticFilterSetReducer} from '../features/static-filter-set/static-filter-set-slice';
 import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
 import {caseInputsReducer} from '../features/case-inputs/case-inputs-slice';
+import {caseFieldsReducer} from '../features/case-fields/case-fields-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -96,3 +97,4 @@ export const sort = sortReducer;
 
 export const caseAssist = caseAssistConfigurationReducer;
 export const caseInputs = caseInputsReducer;
+export const caseFields = caseFieldsReducer;

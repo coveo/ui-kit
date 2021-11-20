@@ -4,11 +4,7 @@ export const getCaseFieldsInitialState = (): CaseFieldsState => ({
   enabled: false,
   status: {
     loading: false,
-    error: {
-      statusCode: 0,
-      message: '',
-      type: '',
-    },
+    error: null,
     lastResponseId: '',
   },
   fields: {},
@@ -22,7 +18,7 @@ export interface CaseFieldsStatus {
   /**
    * The Case Assist API error response.
    */
-  error: CaseAssistAPIErrorStatusResponse;
+  error: CaseAssistAPIErrorStatusResponse | null;
   /**
    * The ID of the response.
    */

@@ -28,6 +28,8 @@ export * from './question-answering/question-answering-actions-loader';
 export * from './breadcrumb/breadcrumb-actions-loader';
 export * from './recent-queries/recent-queries-actions-loader';
 export * from './recent-results/recent-results-actions-loader';
+export * from './case-fields/case-fields-actions-loader';
+export * from './case-inputs/case-inputs-actions-loader';
 
 export {
   ResultTemplatesManager,

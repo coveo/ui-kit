@@ -1,26 +1,59 @@
-import {PayloadAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {caseAssist} from '../../app/reducers';
+import {caseFields} from '../../app/reducers';
 import {
-  setCaseAssistId,
-  SetCaseAssistIdActionCreatorPayload,
+  disableCaseClassifications,
+  enableCaseClassifications,
+  fetchCaseClassifications,
+  FetchClassificationsThunkReturn,
+  setCaseField,
+  SetCaseFieldActionCreatorPayload,
+  StateNeededByFetchClassifications,
 } from './case-fields-actions';
 
-export {SetCaseAssistIdActionCreatorPayload};
+export {SetCaseFieldActionCreatorPayload};
 
 /**
- * The case assist action creators.
+ * The case fields action creators.
  */
 export interface CaseAssistActionCreators {
   /**
-   * Updates the case assist identifier.
+   * Adds or updates the state caseFields with the specified field and value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setCaseAssistId(
-    payload: SetCaseAssistIdActionCreatorPayload
-  ): PayloadAction<SetCaseAssistIdActionCreatorPayload>;
+  setCaseField(
+    payload: SetCaseFieldActionCreatorPayload
+  ): PayloadAction<SetCaseFieldActionCreatorPayload>;
+
+  /**
+   * Enables case classifications to be updated when case information changes.
+   *
+   * @returns A dispatchable action.
+   */
+  enableCaseClassifications(): PayloadAction;
+
+  /**
+   * Disables case classifications from being updated when case information changes.
+   *
+   * @returns A dispatchable action.
+   */
+  disableCaseClassifications(): PayloadAction;
+
+  /**
+   * Retrieves the case classifications from the platform.
+   * A single call retrieves classifications for all fields specified in the Case Assist configuration.
+   * Case classifications are retrieved based on the case information entered so far.
+   *
+   * @returns A dispatchable action.
+   */
+  fetchCaseClassifications(): AsyncThunkAction<
+    FetchClassificationsThunkReturn,
+    void,
+    AsyncThunkCaseAssistOptions<StateNeededByFetchClassifications>
+  >;
 }
 
 /**
@@ -29,12 +62,15 @@ export interface CaseAssistActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadCaseAssistActions(
+export function loadCaseFieldsActions(
   engine: CaseAssistEngine
 ): CaseAssistActionCreators {
-  engine.addReducers({caseAssist});
+  engine.addReducers({caseFields});
 
   return {
-    setCaseAssistId,
+    setCaseField,
+    enableCaseClassifications,
+    disableCaseClassifications,
+    fetchCaseClassifications,
   };
 }
