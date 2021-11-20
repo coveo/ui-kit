@@ -10,10 +10,10 @@ describe('buildSamlProvider', () => {
   const handshakeToken = 'token';
   let options: Required<SamlProviderOptions>;
   let request: jest.Mock<any, any>;
-  let client: SamlProvider;
+  let provider: SamlProvider;
 
   function initSamlProvider() {
-    client = buildSamlProvider(options);
+    provider = buildSamlProvider(options);
   }
 
   function buildMockLocation(): IsomorphicLocation {
@@ -45,30 +45,6 @@ describe('buildSamlProvider', () => {
     initSamlProvider();
   });
 
-  describe('#authenticate', () => {
-    // TODO: prevent infinite loops in case search api goes down?
-
-    it('hash does not contain token, it calls #login', () => {
-      options.location.hash = '';
-      const spy = spyOn(client, 'login');
-
-      client.authenticate();
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('hash contains token, it calls #exchangeToken and returns an access token', async () => {
-      options.location.hash = '#handshake_token=token';
-
-      const spy = spyOn(client, 'exchangeToken');
-      spy.and.returnValue('access token');
-
-      const res = await client.authenticate();
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(res).toBe('access token');
-    });
-  });
-
   describe('#login', () => {
     // TODO: test POST to avoid writing to url.
     // TODO: url environments
@@ -81,7 +57,7 @@ describe('buildSamlProvider', () => {
 
       initSamlProvider();
 
-      client.login();
+      provider.login();
 
       const redirectUri = encodeURIComponent(initialLocation);
       const url = `https://platform.cloud.coveo.com/rest/search/v2/login/okta?organizationId=org&redirectUri=${redirectUri}`;
@@ -99,7 +75,7 @@ describe('buildSamlProvider', () => {
       });
 
       it('sends a request with the token', () => {
-        client.exchangeToken();
+        provider.exchangeToken();
 
         expect(request).toHaveBeenCalledWith(
           'https://platform.cloud.coveo.com/rest/search/login/handshake/token',
@@ -112,7 +88,7 @@ describe('buildSamlProvider', () => {
 
       it('url hash starts with handshake token param, it exchanges the token', () => {
         options.location.hash = `#handshake_token=${handshakeToken}`;
-        client.exchangeToken();
+        provider.exchangeToken();
 
         assertHandshakeTokenSent();
       });
@@ -122,12 +98,12 @@ describe('buildSamlProvider', () => {
           json: () => ({token: 'access token'}),
         });
 
-        const result = await client.exchangeToken();
+        const result = await provider.exchangeToken();
         expect(result).toBe('access token');
       });
 
       it('it removes the handshake token from the hash', () => {
-        client.exchangeToken();
+        provider.exchangeToken();
         expect(options.history.replaceState).toHaveBeenCalledWith(
           null,
           '',
@@ -138,16 +114,28 @@ describe('buildSamlProvider', () => {
       it('when the request errors, it returns an empty string', async () => {
         request.mockRejectedValue('error');
 
-        const result = await client.exchangeToken();
+        const result = await provider.exchangeToken();
         expect(result).toBe('');
       });
     });
   });
 
+  describe('#handshakeTokenAvailable', () => {
+    it('hash contains handshake token, it returns true', () => {
+      options.location.hash = '#handshake_token=token';
+      expect(provider.handshakeTokenAvailable).toBe(true);
+    });
+
+    it('hash does not contain handshake token, it returns false', () => {
+      options.location.hash = '';
+      expect(provider.handshakeTokenAvailable).toBe(false);
+    });
+  });
+
   describe('url hash starts with / followed by handshake token param (Angular bug)', () => {
     beforeEach(() => {
-      options.location.hash = `#/handshake_token=${handshakeToken}`;
-      client.exchangeToken();
+      options.location.hash = '#/handshake_token=token';
+      provider.exchangeToken();
     });
 
     it('exchanges the token', () => {
