@@ -13,16 +13,11 @@
       async function main() {
         const accessToken = await client.authenticate();
 
-        console.log(token);
-
         buildSearchEngine({
           configuration: {
             organizationId,
             accessToken,
-            renewAccessToken: () => {
-              client.login();
-              return Promise.resolve('');
-            },
+            renewAccessToken: () => client.authenticate(),
           },
         });
       }
