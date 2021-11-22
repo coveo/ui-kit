@@ -1,7 +1,4 @@
-export interface IsomorphicLocation {
-  href: string;
-  hash: string;
-}
+export type IsomorphicLocation = Pick<Location, 'href' | 'hash'>;
 
 export function getIsomorphicLocation(): IsomorphicLocation {
   const isBrowser = typeof window !== 'undefined';

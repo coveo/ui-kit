@@ -1,10 +1,4 @@
-export interface IsomorphicHistory {
-  replaceState(
-    data: any,
-    unused: string,
-    url?: string | null | undefined
-  ): void;
-}
+export type IsomorphicHistory = Pick<History, 'replaceState'>;
 
 export function getIsomorphicHistory(): IsomorphicHistory {
   const isBrowser = typeof window !== 'undefined';
