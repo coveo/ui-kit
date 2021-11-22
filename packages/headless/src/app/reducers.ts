@@ -95,6 +95,6 @@ export const productRecommendations = productRecommendationsReducer;
 export const productListing = productListingReducer;
 export const sort = sortReducer;
 
-export const caseAssist = caseAssistConfigurationReducer;
+export const caseAssistConfiguration = caseAssistConfigurationReducer;
 export const caseInputs = caseInputsReducer;
 export const caseFields = caseFieldsReducer;

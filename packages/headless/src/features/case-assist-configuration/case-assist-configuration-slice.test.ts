@@ -18,13 +18,7 @@ describe('case assist slice', () => {
     );
   });
 
-  it('should have a default case assist ID', () => {
-    expect(
-      caseAssistConfigurationReducer(undefined, {type: 'foo'}).caseAssistId
-    ).toEqual('CaseAssist');
-  });
-
-  it('should allow to set the case assist ID', () => {
+  it('should allow to set the case assist configuration', () => {
     const testId = 'foo';
     const testLocale = 'bar';
     const modifiedState = caseAssistConfigurationReducer(

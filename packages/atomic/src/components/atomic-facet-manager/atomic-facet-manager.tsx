@@ -13,6 +13,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {NumberValue, Schema} from '@coveo/bueno';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
@@ -53,6 +54,7 @@ export class AtomicFacetManager implements InitializableComponent {
   @Prop() public collapseFacetsAfter = 4;
 
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
@@ -81,6 +83,14 @@ export class AtomicFacetManager implements InitializableComponent {
         'is-collapsed',
         index + 1 > this.collapseFacetsAfter ? 'true' : 'false'
       );
+    });
+  }
+
+  private validateProps() {
+    new Schema({
+      collapseFacetAfter: new NumberValue({min: -1, required: true}),
+    }).validate({
+      collapseFacetAfter: this.collapseFacetsAfter,
     });
   }
 
