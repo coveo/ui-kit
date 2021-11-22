@@ -1,5 +1,6 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {getVisitorID} from '../../api/analytics/analytics';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {PlanRequest} from '../../api/search/plan/plan-request';
 import {
@@ -93,8 +94,8 @@ export const fetchRedirectUrl = createAsyncThunk<
     {dispatch, getState, rejectWithValue, extra: {apiClient, validatePayload}}
   ) => {
     validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
-
-    const response = await apiClient.plan(buildPlanRequest(getState()));
+    const request = await buildPlanRequest(getState());
+    const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
     }
@@ -116,9 +117,9 @@ const logRedirect = (url: string) =>
     (client) => client.logTriggerRedirect({redirectedTo: url})
   )();
 
-export const buildPlanRequest = (
+export const buildPlanRequest = async (
   state: StateNeededForRedirect
-): PlanRequest => {
+): Promise<PlanRequest> => {
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -129,5 +130,8 @@ export const buildPlanRequest = (
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
+    ...(state.configuration.analytics.enabled && {
+      visitorId: await getVisitorID(),
+    }),
   };
 };

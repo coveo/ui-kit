@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/accessible.css" />
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('#search');
+
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        searchInterface.executeFirstSearch();
+
+        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
+          '.html': 'html',
+        });
+      })();
+    </script>
+    <style>
+      atomic-color-facet::part(value-dynamicscrmitem) {
+        background-image: url('/build/assets/email.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgb(149, 174, 197);
+      }
+
+      atomic-color-facet::part(value-lithiumuser) {
+        background-image: url('/build/assets/folder.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgb(139, 154, 227);
+      }
+
+      atomic-color-facet::part(value-YouTubeVideo) {
+        background-image: url('build/assets/video.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgb(176, 112, 230);
+      }
+
+      atomic-color-facet::part(value-lithiummessage) {
+        background-image: url('build/assets/knowledge.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgb(236, 148, 237);
+      }
+
+      atomic-color-facet::part(value-lithiumthread) {
+        background-image: url('build/assets/post.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-image: rgb(101, 202, 228);
+      }
+
+      atomic-color-facet::part(value-html) {
+        background-image: url('build/assets/html.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: transparent;
+      }
+    </style>
+    <style>
+      :root {
+        --spacing: 16px;
+        --spacing-col: 32px;
+        --search-box-width: 648px;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      body.atomic-modal-opened {
+        overflow-y: hidden;
+      }
+
+      atomic-search-interface {
+        display: grid;
+        grid-template-columns: var(--spacing) 1fr var(--spacing);
+        grid-template-areas:
+          '. search      .'
+          '. status      .'
+          '. breadbox    .'
+          '. topbar      .'
+          '. results     .'
+          '. pagination  .'
+          '. .           .';
+      }
+
+      .header-bg {
+        background-color: var(--atomic-neutral-light);
+        grid-area: 1 / -1 / 1 / 1;
+      }
+
+      atomic-facet-manager {
+        display: none;
+      }
+
+      atomic-sort-dropdown {
+        display: none;
+      }
+
+      .search {
+        grid-area: search;
+        margin: var(--spacing) 0;
+        max-width: var(--search-box-width);
+      }
+
+      .status {
+        grid-area: status;
+      }
+
+      atomic-facet-manager {
+        grid-area: facets;
+        margin-top: var(--spacing);
+      }
+
+      atomic-facet-manager > * {
+        margin-bottom: var(--spacing);
+      }
+
+      atomic-breadbox {
+        grid-area: breadbox;
+        margin-top: var(--spacing);
+        padding-bottom: var(--spacing);
+        border-bottom: 1px solid var(--atomic-neutral);
+      }
+
+      .topbar {
+        grid-area: topbar;
+        margin: var(--spacing) 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      atomic-did-you-mean {
+        margin-bottom: var(--spacing);
+      }
+
+      .results {
+        grid-area: results;
+      }
+
+      .pagination {
+        grid-area: pagination;
+        margin: var(--spacing) 0;
+      }
+
+      .atomic-search-interface-no-results .topbar,
+      .atomic-search-interface-no-results .results,
+      .atomic-search-interface-no-results .pagination {
+        display: none;
+      }
+
+      .accessibility-header {
+        height: 0;
+        overflow: hidden;
+        margin: 0;
+      }
+
+      @media only screen and (min-width: 1024px) {
+        atomic-search-interface {
+          column-gap: var(--spacing-col);
+          grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
+          grid-template-areas:
+            '. .      search      .'
+            '. facets breadbox .'
+            '. facets topbar      .'
+            '. facets results     .'
+            '. facets pagination  .'
+            '. facets status      .'
+            '. facets .           .';
+        }
+
+        atomic-facet-manager {
+          display: block;
+        }
+
+        atomic-refine-toggle {
+          display: none;
+        }
+
+        atomic-sort-dropdown {
+          display: block;
+        }
+
+        .status {
+          max-width: var(--search-box-width);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <atomic-search-interface id="search">
+      <div class="header-bg"></div>
+      <div class="search">
+        <h1 class="accessibility-header">Search</h1>
+        <atomic-search-box></atomic-search-box>
+      </div>
+      <atomic-facet-manager>
+        <h1 class="accessibility-header">Filters</h1>
+        <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search> </atomic-category-facet>
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+        <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
+        <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
+        <atomic-timeframe-facet label="Timeframe">
+          <atomic-timeframe unit="hour"></atomic-timeframe>
+          <atomic-timeframe unit="day"></atomic-timeframe>
+          <atomic-timeframe unit="week"></atomic-timeframe>
+          <atomic-timeframe unit="month"></atomic-timeframe>
+          <atomic-timeframe unit="quarter"></atomic-timeframe>
+          <atomic-timeframe unit="year"></atomic-timeframe>
+          <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
+        </atomic-timeframe-facet>
+        <atomic-color-facet
+          field="filetype"
+          label="Files"
+          number-of-values="6"
+          sort-criteria="occurrences"
+        ></atomic-color-facet>
+      </atomic-facet-manager>
+      <atomic-breadbox></atomic-breadbox>
+      <div class="topbar">
+        <atomic-query-summary enable-duration="false"></atomic-query-summary>
+        <atomic-refine-toggle></atomic-refine-toggle>
+        <atomic-sort-dropdown>
+          <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+          <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
+        </atomic-sort-dropdown>
+      </div>
+      <div class="results">
+        <h1 class="accessibility-header">Results</h1>
+        <atomic-did-you-mean></atomic-did-you-mean>
+        <atomic-result-list fields-to-include="snrating,sncost">
+          <atomic-result-template>
+            <template>
+              <style>
+                .field {
+                  display: inline-flex;
+                  white-space: nowrap;
+                  align-items: center;
+                }
+
+                .field-label {
+                  font-weight: bold;
+                  margin-right: 0.25rem;
+                }
+
+                .thumbnail {
+                  display: none;
+                  width: 100%;
+                  height: 100%;
+                }
+
+                .icon {
+                  display: none;
+                }
+
+                .result-root.image-small .thumbnail,
+                .result-root.image-large .thumbnail {
+                  display: inline-block;
+                }
+
+                .result-root.image-icon .icon {
+                  display: inline-block;
+                }
+
+                .result-root.image-small atomic-result-section-visual,
+                .result-root.image-large atomic-result-section-visual {
+                  border-radius: var(--atomic-border-radius-xl);
+                }
+
+                .salesforce-badge::part(result-badge-element) {
+                  background-color: #44a1da;
+                  color: white;
+                }
+              </style>
+              <atomic-result-section-visual>
+                <atomic-result-icon class="icon"></atomic-result-icon>
+                <img src="https://picsum.photos/350" class="thumbnail" />
+              </atomic-result-section-visual>
+              <atomic-result-section-badges>
+                <atomic-field-condition must-match-sourcetype="Salesforce">
+                  <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
+                </atomic-field-condition>
+                <atomic-result-badge
+                  field="language"
+                  icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
+                ></atomic-result-badge>
+                <atomic-field-condition must-match-is-recommendation="true">
+                  <atomic-result-badge label="Recommended"></atomic-result-badge>
+                </atomic-field-condition>
+                <atomic-field-condition must-match-is-top-result="true">
+                  <atomic-result-badge label="Top Result"></atomic-result-badge>
+                </atomic-field-condition>
+              </atomic-result-section-badges>
+              <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+              <atomic-result-section-title-metadata>
+                <atomic-field-condition class="field" if-defined="snrating">
+                  <atomic-result-rating field="snrating"></atomic-result-rating>
+                </atomic-field-condition>
+                <atomic-field-condition class="field" if-not-defined="snrating">
+                  <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                </atomic-field-condition>
+              </atomic-result-section-title-metadata>
+              <atomic-result-section-excerpt
+                ><atomic-result-text field="excerpt"></atomic-result-text
+              ></atomic-result-section-excerpt>
+              <atomic-result-section-bottom-metadata>
+                <atomic-result-fields-list>
+                  <atomic-field-condition class="field" if-defined="author">
+                    <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+                    <atomic-result-text field="author"></atomic-result-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="source">
+                    <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
+                    <atomic-result-text field="source"></atomic-result-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="language">
+                    <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
+                    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="filetype">
+                    <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
+                    <atomic-result-text field="filetype"></atomic-result-text>
+                  </atomic-field-condition>
+
+                  <atomic-field-condition class="field" if-defined="sncost">
+                    <span class="field-label">Cost:</span>
+                    <atomic-result-number field="sncost">
+                      <atomic-format-currency currency="CAD"></atomic-format-currency>
+                    </atomic-result-number>
+                  </atomic-field-condition>
+
+                  <span class="field">
+                    <span class="field-label">Date:</span>
+                    <atomic-result-date></atomic-result-date>
+                  </span>
+                </atomic-result-fields-list>
+              </atomic-result-section-bottom-metadata>
+            </template>
+          </atomic-result-template>
+        </atomic-result-list>
+      </div>
+      <div class="pagination">
+        <h1 class="accessibility-header">Pagination</h1>
+        <atomic-load-more-results></atomic-load-more-results>
+      </div>
+      <div class="status">
+        <atomic-query-error></atomic-query-error>
+        <atomic-no-results></atomic-no-results>
+      </div>
+    </atomic-search-interface>
+  </body>
+</html>

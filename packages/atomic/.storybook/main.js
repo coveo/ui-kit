@@ -6,6 +6,7 @@ module.exports = {
     '@storybook/addon-docs',
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
+    '@storybook/addon-a11y',
     './preset.js',
   ],
   webpack: (config) => {

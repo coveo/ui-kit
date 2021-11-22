@@ -5,8 +5,14 @@ atomic-result-printable-uri {
   button {
     color: var(--atomic-primary);
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       text-decoration: underline;
+      color: var(--atomic-primary);
+    }
+
+    &:focus {
+      outline: none;
     }
 
     &:visited {

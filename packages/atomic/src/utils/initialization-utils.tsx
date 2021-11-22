@@ -226,4 +226,31 @@ export function BindStateToController(
   };
 }
 
+interface DeferredExecution {
+  args: unknown[];
+}
+
+export function DeferUntilRender() {
+  return (component: ComponentInterface, methodName: string) => {
+    const {componentDidRender, connectedCallback} = component;
+    const originalMethod = component[methodName] as Function;
+    let deferredExecutions: DeferredExecution[] = [];
+
+    component.connectedCallback = function () {
+      this[methodName] = function (...args: unknown[]) {
+        deferredExecutions.push({args});
+      };
+      connectedCallback && connectedCallback.call(this);
+    };
+
+    component.componentDidRender = function () {
+      deferredExecutions.forEach(({args}) =>
+        originalMethod.call(this, ...args)
+      );
+      deferredExecutions = [];
+      componentDidRender && componentDidRender.call(this);
+    };
+  };
+}
+
 export type I18nState = Record<string, (variables?: TOptions) => string>;

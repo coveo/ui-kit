@@ -1,7 +1,7 @@
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `quanticPlaceholder` component is used internally to display a loading placeholder for certain components.
+ * The `QuanticPlaceholder` component is used internally to display a loading placeholder for certain components.
  * @example
  * <c-quantic-placeholder variant="card"></c-quantic-placeholder>
  */

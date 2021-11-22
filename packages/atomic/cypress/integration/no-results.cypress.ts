@@ -2,6 +2,8 @@ import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {getAnalyticsAt} from '../utils/network';
 import {generateAliasForSearchBox} from './search-box-selectors';
+import * as CommonAssertions from './common-assertions';
+import {NoResultsSelectors} from './no-results-selectors';
 
 describe('No Results Test Suites', () => {
   const tag = 'atomic-no-results';
@@ -14,22 +16,38 @@ describe('No Results Test Suites', () => {
       .withElement(generateComponentHTML(tag));
   });
 
-  it('should not be visible when there are results', () => {
-    env.init();
-    cy.get(tag).should('not.be.visible');
+  describe('when there are results', () => {
+    beforeEach(() => {
+      env.init();
+    });
+
+    CommonAssertions.assertNoAriaLiveMessage(NoResultsSelectors.liveRegion);
+
+    it('should not be visible', () => {
+      cy.get(tag).should('not.be.visible');
+    });
   });
 
-  it('should be visible when there are no results', () => {
-    env.withHash('q=gahaiusdhgaiuewjfsf').init();
-    cy.get(tag).should('be.visible');
-  });
+  describe('when there are no results', () => {
+    beforeEach(() => {
+      env.withHash('q=gahaiusdhgaiuewjfsf').init();
+    });
 
-  it('text content should match when there are no results', () => {
-    env.withHash('q=dsmndkndjnj').init();
-    cy.get(tag)
-      .shadow()
-      .find('[part="no-results"] .quotations')
-      .should('contain.text', 'dsmndkndjnj');
+    CommonAssertions.assertAriaLiveMessage(
+      NoResultsSelectors.liveRegion,
+      "couldn't find anything"
+    );
+
+    it('should be visible', () => {
+      cy.get(tag).should('be.visible');
+    });
+
+    it('text content should match', () => {
+      cy.get(tag)
+        .shadow()
+        .find('[part="no-results"] .quotations')
+        .should('contain.text', 'gahaiusdhgaiuewjfsf');
+    });
   });
 
   it('cancel button should not be visible when there is no history', () => {
