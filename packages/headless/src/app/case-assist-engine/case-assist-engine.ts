@@ -6,7 +6,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {debug, caseAssist} from '../reducers';
+import {debug, caseAssistConfiguration} from '../reducers';
 import {
   CaseAssistEngineConfiguration,
   caseAssistEngineConfigurationSchema,
@@ -18,13 +18,13 @@ import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments';
-import {setCaseAssistId} from '../../features/case-assist/case-assist-actions';
+import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
 
 export {CaseAssistEngineConfiguration};
 
 const caseassistEngineReducers = {
   debug,
-  caseAssist,
+  caseAssist: caseAssistConfiguration,
 };
 type CaseAssistEngineReducers = typeof caseassistEngineReducers;
 type CaseAssistEngineState =
@@ -80,10 +80,15 @@ export function buildCaseAssistEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {caseAssistId} = options.configuration;
+  const {caseAssistId, locale} = options.configuration;
 
   if (!isNullOrUndefined(caseAssistId)) {
-    engine.dispatch(setCaseAssistId({id: caseAssistId}));
+    engine.dispatch(
+      setCaseAssistConfiguration({
+        caseAssistId,
+        locale,
+      })
+    );
   }
 
   return {
