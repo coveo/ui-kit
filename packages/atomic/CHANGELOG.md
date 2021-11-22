@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.15.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.9...@coveo/atomic@1.15.0) (2021-11-22)
+
+
+### Features
+
+* **atomic:** expose headless as a subpackage ([#1500](https://github.com/coveo/ui-kit/issues/1500)) ([4ac4b05](https://github.com/coveo/ui-kit/commit/4ac4b05f62ecd78fa08739cecb185fc611e2a2d6))
+
+
+
+
+
 ## [1.14.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.14.8...@coveo/atomic@1.14.9) (2021-11-22)
 
 **Note:** Version bump only for package @coveo/atomic
