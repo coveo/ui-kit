@@ -66,7 +66,7 @@ export const fetchCaseClassifications = createAsyncThunk<
     const state = getState();
 
     const fetched = await apiClient.getCaseClassifications(
-      buildFetchClassificationRequest(state)
+      await buildFetchClassificationRequest(state)
     );
 
     if (isErrorResponse(fetched)) {
@@ -79,15 +79,15 @@ export const fetchCaseClassifications = createAsyncThunk<
   }
 );
 
-export const buildFetchClassificationRequest = (
+export const buildFetchClassificationRequest = async (
   state: StateNeededByFetchClassifications
-): GetCaseClassificationsRequest => ({
+): Promise<GetCaseClassificationsRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
   url: state.configuration.platformUrl,
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
-    visitorId: getVisitorID(),
+    visitorId: await getVisitorID(),
   }),
   fields: state.caseFields.fields,
   locale: state.caseAssistConfiguration.locale,
