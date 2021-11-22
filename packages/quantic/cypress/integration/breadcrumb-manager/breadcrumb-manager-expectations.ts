@@ -86,7 +86,7 @@ export const BreadcrumbManagerExpectations = {
       'facet'
     ),
   },
-  numerciFacetBreadcrumb: {
+  numericFacetBreadcrumb: {
     ...baseBreadcrumbManagerExpectations(
       BreadcrumbManagerSelectors.numericFacet(),
       'numeric facet'

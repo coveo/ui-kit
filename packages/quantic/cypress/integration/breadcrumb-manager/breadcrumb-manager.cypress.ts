@@ -27,44 +27,44 @@ describe('quantic-breadcrumb-manager', () => {
       visitBreadcrumbManager();
 
       scope('when selecting values in numeric facet', () => {
-        Expect.numerciFacetBreadcrumb.displayBreadcrumb(false);
+        Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
         Expect.displayClearFilters(false);
 
         Actions.numericFacet.checkFirstValue();
 
         Expect.displayClearFilters(true);
-        Expect.numerciFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.numerciFacetBreadcrumb.displayLabel(true);
-        Expect.numerciFacetBreadcrumb.labelContains('Youtube Likes');
-        Expect.numerciFacetBreadcrumb.displayValues(true);
-        Expect.numerciFacetBreadcrumb.numberOfValues(1);
+        Expect.numericFacetBreadcrumb.displayBreadcrumb(true);
+        Expect.numericFacetBreadcrumb.displayLabel(true);
+        Expect.numericFacetBreadcrumb.labelContains('Youtube Likes');
+        Expect.numericFacetBreadcrumb.displayValues(true);
+        Expect.numericFacetBreadcrumb.numberOfValues(1);
 
         scope('when selecting more values', () => {
           for (let index = 1; index <= 4; index++) {
             Actions.numericFacet.checkValueAt(index);
 
-            Expect.numerciFacetBreadcrumb.displayValues(true);
-            Expect.numerciFacetBreadcrumb.numberOfValues(index + 1);
-            Expect.numerciFacetBreadcrumb.displayShowMore(false);
+            Expect.numericFacetBreadcrumb.displayValues(true);
+            Expect.numericFacetBreadcrumb.numberOfValues(index + 1);
+            Expect.numericFacetBreadcrumb.displayShowMore(false);
           }
 
           Actions.numericFacet.checkValueAt(5);
 
-          Expect.numerciFacetBreadcrumb.displayValues(true);
-          Expect.numerciFacetBreadcrumb.numberOfValues(5);
-          Expect.numerciFacetBreadcrumb.displayShowMore(true);
+          Expect.numericFacetBreadcrumb.displayValues(true);
+          Expect.numericFacetBreadcrumb.numberOfValues(5);
+          Expect.numericFacetBreadcrumb.displayShowMore(true);
 
           Actions.clickShowMoreNumericFacetBreadcrumb();
 
-          Expect.numerciFacetBreadcrumb.numberOfValues(6);
-          Expect.numerciFacetBreadcrumb.displayShowMore(false);
+          Expect.numericFacetBreadcrumb.numberOfValues(6);
+          Expect.numericFacetBreadcrumb.displayShowMore(false);
         });
 
         scope('when clearing a value', () => {
           Actions.clickFirstValueNumericFacetBreadcrumb();
           cy.wait(InterceptAliases.Search);
 
-          Expect.numerciFacetBreadcrumb.numberOfValues(5);
+          Expect.numericFacetBreadcrumb.numberOfValues(5);
         });
       });
 
@@ -98,7 +98,7 @@ describe('quantic-breadcrumb-manager', () => {
       scope('when clearing all filters', () => {
         Actions.clickClearFilters();
 
-        Expect.numerciFacetBreadcrumb.displayBreadcrumb(false);
+        Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
         Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
       });
 
@@ -167,7 +167,7 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.categoryFacetBreadcrumb.labelContains('Country');
         Expect.categoryFacetBreadcrumb.displayValues(true);
         Expect.categoryFacetBreadcrumb.numberOfValues(1);
-        Expect.numerciFacetBreadcrumb.displayBreadcrumb(false);
+        Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
         Expect.facetBreadcrumb.displayBreadcrumb(false);
         Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
         Expect.displayClearFilters(true);
