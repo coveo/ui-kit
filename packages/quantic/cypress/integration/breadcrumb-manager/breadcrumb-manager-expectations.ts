@@ -1,5 +1,4 @@
 import {should} from '../common-selectors';
-import {SearchExpectations} from '../search-expectations';
 import {
   BreadcrumbManagerSelector,
   BreadcrumbManagerSelectors,
@@ -45,9 +44,9 @@ function baseBreadcrumbManagerExpectations(
         .should('have.length', value)
         .logDetail(`should display ${value} ${name} breadcrumb values`);
     },
-    breadcrumbValueLabelAtIndexContains: (value: string) => {
+    firstbreadcrumbValueLabelContains: (value: string) => {
       selector
-        .breadcrumbValueLabelAtIndex(0)
+        .firstbreadcrumbValueLabel()
         .contains(value)
         .logDetail(`should have the value "${value}" at first value`);
     },
@@ -81,31 +80,28 @@ function breadcrumbManagerExpectations(selector: BreadcrumbManagerSelector) {
 
 export const BreadcrumbManagerExpectations = {
   ...breadcrumbManagerExpectations(BreadcrumbManagerSelectors),
-  facet: {
+  facetBreadcrumb: {
     ...baseBreadcrumbManagerExpectations(
       BreadcrumbManagerSelectors.facet(),
       'facet'
     ),
   },
-  numerciFacet: {
+  numerciFacetBreadcrumb: {
     ...baseBreadcrumbManagerExpectations(
       BreadcrumbManagerSelectors.numericFacet(),
       'numeric facet'
     ),
   },
-  categoryFacet: {
+  categoryFacetBreadcrumb: {
     ...baseBreadcrumbManagerExpectations(
       BreadcrumbManagerSelectors.categoryFacet(),
       'category facet'
     ),
   },
-  dateFacet: {
+  dateFacetBreadcrumb: {
     ...baseBreadcrumbManagerExpectations(
       BreadcrumbManagerSelectors.dateFacet(),
       'date facet'
     ),
-  },
-  search: {
-    ...SearchExpectations,
   },
 };

@@ -109,7 +109,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     const data = getFromStore(this.engineId, Store.facetTypes.NUMERICFACETS);
     return {
       ...breadcrumb,
-      label: data[breadcrumb.field]?.label,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
       values: (breadcrumb.values.map(range => ({
         ...range,
         value: `${range.value.start} - ${range.value.end}`,
@@ -155,7 +155,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     const data = getFromStore(this.engineId, Store.facetTypes.DATEFACETS);
     return {
       ...breadcrumb,
-      label: data[breadcrumb.field]?.label,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
       values: breadcrumb.values.map(range => ({
         ...range,
         value: data[breadcrumb.field]?.format(range.value),
@@ -167,7 +167,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     const data = getFromStore(this.engineId, Store.facetTypes.FACETS);
     return {
       ...breadcrumb,
-      label: data[breadcrumb.field]?.label,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
     };
   }
 
@@ -206,7 +206,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   get facetBreadcrumbValues() {
-    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs.map(breadcrumb =>this.formatFacetBreadcrumbValue(breadcrumb)) || [];
+    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs?.map(breadcrumb =>this.formatFacetBreadcrumbValue(breadcrumb)) || [];
     return facetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
@@ -222,7 +222,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
       return {
         facetId: breadcrumb.facetId,
         field: breadcrumb.field,
-        label: data[breadcrumb.field]?.label,
+        label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
         deselect: breadcrumb.deselect,
         value: breadcrumbValues.join(` ${this.categoryDivider} `)
       };

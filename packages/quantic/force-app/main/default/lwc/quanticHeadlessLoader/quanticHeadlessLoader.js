@@ -117,8 +117,8 @@ async function initEngine(engineId) {
 }
 
 /**
- * initialize coveoHeadless Store object 
- * @param {string} engineId The id of the engine.
+ * Initialize coveoHeadless Store object 
+ * @param {string} engineId The ID of the engine.
  */
 const initQuanticStore = (engineId) => {
   try {
@@ -126,7 +126,7 @@ const initQuanticStore = (engineId) => {
        window.coveoHeadless[engineId].bindings.store = Store.initialize();
      }
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize quantic Store: ' + error);
+    throw new Error('Fatal error: unable to initialize Quantic Store: ' + error);
   }
 }
 
@@ -209,8 +209,8 @@ function getHeadlessBindings(engineId) {
 }
 
 /**
- * Returns Store object for specified engineId.
- * @param {string} engineId The id of the engine.
+ * Returns store object for specified engineId.
+ * @param {string} engineId The engine ID.
  */
 function getQuanticStore(engineId) {
  return window.coveoHeadless?.[engineId]?.bindings?.store;
@@ -230,7 +230,6 @@ async function initializeWithHeadless(element, engineId, initialize) {
     initQuanticStore(engineId);
     initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
-    
   } catch (error) {
     console.error('Fatal error: unable to initialize component', error);
   }
@@ -247,8 +246,8 @@ function destroyEngine(engineId) {
 }
 
 /**
- * Register facet in the store.
- * @param {string} engineId The id of the engine.
+ * Register a facet in the store.
+ * @param {string} engineId The engine ID.
  * @param {string} facetType
  * @param {{ label: string; facetId: string; format?: function}} data
  */
@@ -262,14 +261,14 @@ function registerToStore(engineId, facetType, data) {
 }
 
 /**
- * get facet data from store.
- * @param {string} engineId The id of the engine.
+ * Get facet data from store.
+ * @param {string} engineId The engine ID.
  * @param {string} facetType
  */
 function getFromStore(engineId, facetType) {
   const store = getQuanticStore(engineId);
   try {
-  return Store.getFromStore(store, facetType);
+    return Store.getFromStore(store, facetType);
   } catch (error) {
     console.error('Fatal error: unable to get data from store', error);
     return undefined;

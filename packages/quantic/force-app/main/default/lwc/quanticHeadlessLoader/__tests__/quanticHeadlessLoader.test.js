@@ -48,10 +48,10 @@ describe('c/quanticHeadlessLoader', () => {
   }
 
   /**
-   * @param {string | number} [id]
-   * @param {Record<String, unknown>} [store]
+   * @param {string | number} id
+   * @param {Record<String, unknown>} store
    */
-  function initQuanticeStoreTest(id,store) {
+  function initQuanticStoreTest(id,store) {
     window.coveoHeadless[id].bindings.store = store;
   }
 
@@ -440,16 +440,16 @@ describe('c/quanticHeadlessLoader', () => {
       }
     });
     
-    it('should return error when store is undefined', () => {
-      initQuanticeStoreTest(testId, undefined);
+    it('should log an error when store is undefined', () => {
+      initQuanticStoreTest(testId, undefined);
       registerToStore(testId, 'someFacets', { label: '', facetId: ''});
 
       expect(window.coveoHeadless[testId].bindings.store).not.toBeDefined();
       expect(mockedConsoleError.mock.calls.length).toBe(1);
     });
     
-    it('should return error when store is empty', () => {
-      initQuanticeStoreTest(testId, {});
+    it('should log an error when store is empty', () => {
+      initQuanticStoreTest(testId, {});
       registerToStore(testId, 'someFacets', { label: '', facetId: ''});
 
       expect(window.coveoHeadless[testId].bindings.store).toStrictEqual({});
@@ -457,7 +457,7 @@ describe('c/quanticHeadlessLoader', () => {
     });
 
     it('should register the facet data in the store', () => {
-      initQuanticeStoreTest(testId, { state: { someFacets: {}}});
+      initQuanticStoreTest(testId, { state: { someFacets: {}}});
       registerToStore(testId, 'someFacets', { label: '', facetId: ''});
 
       expect(window.coveoHeadless[testId].bindings.store.state.someFacets).toBeDefined();
@@ -465,7 +465,7 @@ describe('c/quanticHeadlessLoader', () => {
     });
 
     it('should not update store with same facetId with new data', () => {
-      initQuanticeStoreTest(testId, { state: { someFacets: {}}});
+      initQuanticStoreTest(testId, { state: { someFacets: {}}});
 
       registerToStore(testId, 'someFacets', { label: 'some label', facetId: 'facetId'});
       expect(window.coveoHeadless[testId].bindings.store.state.someFacets.facetId.label).toBe('some label');
@@ -484,8 +484,8 @@ describe('c/quanticHeadlessLoader', () => {
       }
     });
 
-    it('should return error when store is empty', () => {
-      initQuanticeStoreTest(testId, {});
+    it('should log an error and return undefined when store is empty', () => {
+      initQuanticStoreTest(testId, {});
       const data = getFromStore(testId, 'someFacets');
 
       expect(data).not.toBeDefined();
@@ -493,7 +493,7 @@ describe('c/quanticHeadlessLoader', () => {
     });
 
     it('should return undefined when facetType does not exist in store ', () => {
-      initQuanticeStoreTest(testId, { state: { 'someOtherFacet': { label: 'label', facetId: 'facetId'}}});
+      initQuanticStoreTest(testId, { state: { 'someOtherFacet': { label: 'label', facetId: 'facetId'}}});
       const data = getFromStore(testId, 'someFacets');
 
       expect(data).not.toBeDefined();
@@ -501,7 +501,7 @@ describe('c/quanticHeadlessLoader', () => {
     });
 
     it('should return data from store', () => {
-      initQuanticeStoreTest(testId, { state: { 'someFacets': { label: 'label', facetId: 'facetId'}}});
+      initQuanticStoreTest(testId, { state: { 'someFacets': { label: 'label', facetId: 'facetId'}}});
       const data = getFromStore(testId, 'someFacets');
 
       expect(data).toBeDefined();

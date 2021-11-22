@@ -10,18 +10,26 @@ import {FacetActions} from '../facets/facet/facet-actions';
 function breadcrumbManagerActions(selector: BreadcrumbManagerSelector) {
   return {
     clickShowMoreNumericFacetBreadcrumb: () => {
-      selector.numericFacet().showMoreButton().click();
+      selector
+        .numericFacet()
+        .showMoreButton()
+        .click()
+        .logAction(
+          'when clicking the button show more numeric facet breadcrumb'
+        );
     },
     clickFirstValueNumericFacetBreadcrumb: () => {
       selector
         .numericFacet()
-        .values()
-        .first()
-        .find('.pill__container')
-        .click({force: true});
+        .firstbreadcrumbValueLabel()
+        .click({force: true})
+        .logAction('when clicking the first value numeric facet breadcrumb');
     },
     clickClearFilters: () => {
-      selector.clearFilters().click();
+      selector
+        .clearFilters()
+        .click()
+        .logAction('when clicking "Clear All Filters"');
     },
   };
 }
@@ -31,10 +39,10 @@ export const BreadcrumbManagerActions = {
   facet: {
     ...FacetActions,
   },
-  numerciFacet: {
+  numericFacet: {
     ...NumericFacetActions,
   },
-  timeFrameFacet: {
+  timeframeFacet: {
     ...TimeframeFacetActions,
   },
   categoryFacet: {

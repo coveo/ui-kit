@@ -6,7 +6,7 @@ export interface BreadcrumbSelector extends ComponentSelector {
   label: () => CypressSelector;
   values: () => CypressSelector;
   showMoreButton: () => CypressSelector;
-  breadcrumbValueLabelAtIndex: (index: number) => CypressSelector;
+  firstbreadcrumbValueLabel: () => CypressSelector;
 }
 
 interface BreadcrumbManagerSelector extends ComponentSelector {
@@ -18,27 +18,25 @@ interface BreadcrumbManagerSelector extends ComponentSelector {
 }
 
 const FacetBreadcrumbSelectors: BreadcrumbSelector = {
-  get: () => cy.get('.facetBreadcrumb__list'),
+  get: () => cy.get('.breadcrumb-manager__facet-list'),
   label: () =>
     FacetBreadcrumbSelectors.get().find('.breadcrumb-manager__field-name'),
   values: () => FacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  breadcrumbValueLabelAtIndex: (index: number) =>
-    FacetBreadcrumbSelectors.get().find('.pill__text-container').eq(index),
+  firstbreadcrumbValueLabel: () =>
+    FacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
   showMoreButton: () =>
     FacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
 
 const NumericFacetBreadcrumbSelectors: BreadcrumbSelector = {
-  get: () => cy.get('.numericFacetBreadcrumb__list'),
+  get: () => cy.get('.breadcrumb-manager__numeric-facet-list'),
   label: () =>
     NumericFacetBreadcrumbSelectors.get().find(
       '.breadcrumb-manager__field-name'
     ),
   values: () => NumericFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  breadcrumbValueLabelAtIndex: (index: number) =>
-    NumericFacetBreadcrumbSelectors.get()
-      .find('.pill__text-container')
-      .eq(index),
+  firstbreadcrumbValueLabel: () =>
+    NumericFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
   showMoreButton: () =>
     NumericFacetBreadcrumbSelectors.get().find(
       '.breadcrumb-manager__more-button'
@@ -46,25 +44,25 @@ const NumericFacetBreadcrumbSelectors: BreadcrumbSelector = {
 };
 
 const CategoryFacetBreadcrumbSelectors: BreadcrumbSelector = {
-  get: () => cy.get('.categoryFacetBreadcrumb__list'),
+  get: () => cy.get('.breadcrumb-manager__category-facet-list'),
   label: () =>
     CategoryFacetBreadcrumbSelectors.get().find(
       '.breadcrumb-manager__field-name'
     ),
   values: () => CategoryFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  breadcrumbValueLabelAtIndex: (index: number) =>
+  firstbreadcrumbValueLabel: () =>
     CategoryFacetBreadcrumbSelectors.get()
       .find('.pill__text-container')
-      .eq(index),
+      .first(),
 };
 
 const DateFacetBreadcrumbSelectors: BreadcrumbSelector = {
-  get: () => cy.get('.dateFacetBreadcrumb__list'),
+  get: () => cy.get('.breadcrumb-manager__date-facet-list'),
   label: () =>
     DateFacetBreadcrumbSelectors.get().find('.breadcrumb-manager__field-name'),
   values: () => DateFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  breadcrumbValueLabelAtIndex: (index: number) =>
-    DateFacetBreadcrumbSelectors.get().find('.pill__text-container').eq(index),
+  firstbreadcrumbValueLabel: () =>
+    DateFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
   showMoreButton: () =>
     DateFacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
