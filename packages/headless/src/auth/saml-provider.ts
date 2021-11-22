@@ -45,6 +45,9 @@ export function buildSamlProvider(config: SamlProviderOptions): SamlProvider {
         const response = await request(`${api}/login/handshake/token`, {
           method: 'POST',
           body: JSON.stringify({handshakeToken}),
+          headers: {
+            'content-type': 'application/json; charset=UTF-8',
+          },
         });
         const data = await response.json();
         return data.token;

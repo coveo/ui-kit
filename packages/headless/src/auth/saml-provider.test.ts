@@ -82,6 +82,9 @@ describe('buildSamlProvider', () => {
           {
             method: 'POST',
             body: JSON.stringify({handshakeToken}),
+            headers: {
+              'content-type': 'application/json; charset=UTF-8',
+            },
           }
         );
       });
