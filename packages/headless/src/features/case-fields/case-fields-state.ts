@@ -53,7 +53,8 @@ export interface CaseField {
 
 export interface CaseFieldsState {
   /**
-   * Specifies if the automatic update of case field classifications should be enabled. By default the feature is disabled.
+   * Specifies if the automatic update of case field classifications should be enabled.
+   * By default the feature is disabled.
    */
   enabled: boolean;
   /**

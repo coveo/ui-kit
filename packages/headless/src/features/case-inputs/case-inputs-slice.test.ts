@@ -20,6 +20,7 @@ describe('case inputs slice', () => {
   it('should allow to set a new case input entry', () => {
     expect(
       caseInputsReducer(state, setCaseInput(testMapping))[testMapping.fieldName]
+        .value
     ).toEqual(testMapping.fieldValue);
   });
 
@@ -32,7 +33,7 @@ describe('case inputs slice', () => {
       caseInputsReducer(
         state,
         setCaseInput({fieldName: testMapping.fieldName, fieldValue: newValue})
-      )[testMapping.fieldName]
+      )[testMapping.fieldName].value
     ).toEqual(newValue);
   });
 });

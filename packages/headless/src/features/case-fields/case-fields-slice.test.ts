@@ -120,6 +120,12 @@ describe('case fields slice', () => {
 
     it('when a fetchCaseClassifications fulfilled is received, it updates the state to the received payload', () => {
       const response = buildMockCaseClassificationResponse(testField.fieldName);
+      state.fields = {
+        [testField.fieldName]: {
+          value: testField.fieldValue,
+          suggestions: [],
+        },
+      };
       const action = fetchCaseClassifications.fulfilled(
         {
           response: response,
@@ -141,10 +147,8 @@ describe('case fields slice', () => {
         statusCode: 500,
         type: 'type',
       };
-      const action = {
-        type: 'caseAssist/classifications/fetch',
-        payload: err,
-      };
+      const action = fetchCaseClassifications.rejected(null, '');
+      action.payload = err;
       const finalState = caseFieldsReducer(state, action);
       expect(finalState.status.error).toEqual(err);
       expect(finalState.status.loading).toBe(false);

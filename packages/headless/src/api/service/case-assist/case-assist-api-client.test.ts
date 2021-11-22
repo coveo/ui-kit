@@ -48,7 +48,9 @@ describe('case assist api client', () => {
     it('should call the platform endpoint with the correct arguments', async () => {
       const request = buildGetCaseClassificationsRequest({
         fields: {
-          subject: 'some case subject',
+          subject: {
+            value: 'some case subject',
+          },
         },
       });
 
@@ -164,7 +166,9 @@ describe('case assist api client', () => {
     it('should call the platform endpoint with the correct arguments', async () => {
       const request = buildGetDocumentSuggestionsRequest({
         fields: {
-          subject: 'some case subject',
+          subject: {
+            value: 'some case subject',
+          },
         },
         context: {
           occupation: 'marketer',
