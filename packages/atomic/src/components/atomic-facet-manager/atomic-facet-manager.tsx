@@ -13,7 +13,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {NumberValue, Schema} from '@coveo/bueno';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
