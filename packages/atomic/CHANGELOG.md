@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.1...@coveo/atomic@1.15.2) (2021-11-22)
+
+
+### Bug Fixes
+
+* **atomic:** validate collapse-facets-after property for facet manager component ([#1508](https://github.com/coveo/ui-kit/issues/1508)) ([2d126ac](https://github.com/coveo/ui-kit/commit/2d126ac3f9ab7dd5e4fc0795f355b3f7b259e429))
+
+
+
+
+
 ## [1.15.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.0...@coveo/atomic@1.15.1) (2021-11-22)
 
 **Note:** Version bump only for package @coveo/atomic
