@@ -82,19 +82,15 @@ export const fetchCaseClassifications = createAsyncThunk<
 
 export const buildFetchClassificationRequest = (
   state: StateNeededByFetchClassifications
-): GetCaseClassificationsRequest => {
-  const visitorId = getVisitorID();
-  return {
-    accessToken: state.configuration.accessToken,
-    organizationId: state.configuration.organizationId,
-    url: state.configuration.platformUrl,
-    caseAssistId: state.caseAssistConfiguration.caseAssistId,
-    ...(state.configuration.analytics.enabled &&
-      visitorId && {
-        visitorId: visitorId as string,
-      }),
-    fields: state.caseFields.fields,
-    locale: state.caseAssistConfiguration.locale,
-    debug: state.debug,
-  };
-};
+): GetCaseClassificationsRequest => ({
+  accessToken: state.configuration.accessToken,
+  organizationId: state.configuration.organizationId,
+  url: state.configuration.platformUrl,
+  caseAssistId: state.caseAssistConfiguration.caseAssistId,
+  ...(state.configuration.analytics.enabled && {
+    visitorId: getVisitorID(),
+  }),
+  fields: state.caseFields.fields,
+  locale: state.caseAssistConfiguration.locale,
+  debug: state.debug,
+});
