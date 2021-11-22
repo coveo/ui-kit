@@ -1,5 +1,9 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {addFacetManager} from './facet-manager-actions';
+import {
+  assertConsoleError,
+  assertContainsComponentError,
+} from '../../common-assertions';
+import {addFacetManager, facetManagerComponent} from './facet-manager-actions';
 import {
   assertFacetsNoCollapsedAttribute,
   assertHasNumberOfExpandedFacets,
@@ -23,5 +27,18 @@ describe('Facet Manager Test Suite', () => {
       .with(addFacetManager({'collapse-facets-after': -1}))
       .init();
     assertFacetsNoCollapsedAttribute();
+  });
+
+  it('should throw an error when collapseFacetsAfter property is invalid', () => {
+    new TestFixture()
+      .with(addFacetManager({'collapse-facets-after': 'potato'}))
+      .init();
+    assertConsoleError();
+    assertContainsComponentError(
+      {
+        shadow: () => cy.get(facetManagerComponent).shadow(),
+      },
+      true
+    );
   });
 });
