@@ -71,11 +71,7 @@ describe('case assist api client', () => {
         requestParams: {
           visitorId: request.visitorId,
           locale: request.locale,
-          fields: {
-            subject: {
-              value: request.fields.subject,
-            },
-          },
+          fields: request.fields,
         },
       });
     });
@@ -192,11 +188,7 @@ describe('case assist api client', () => {
         requestParams: {
           visitorId: request.visitorId,
           locale: request.locale,
-          fields: {
-            subject: {
-              value: request.fields.subject,
-            },
-          },
+          fields: request.fields,
           context: {
             occupation: request.context?.occupation,
           },

@@ -48,8 +48,18 @@ export const baseCaseAssistRequest = (
   };
 };
 
-export const prepareSuggestionRequestFields = (fields: CaseFields) =>
-  Object.keys(fields).filter((fieldName) => fields[fieldName].value !== '');
+export const prepareSuggestionRequestFields = (
+  fields: CaseFields
+): CaseFields =>
+  Object.keys(fields)
+    .filter((fieldName) => fields[fieldName].value !== '')
+    .reduce(
+      (obj: CaseFields, fieldName) => ({
+        ...obj,
+        [fieldName]: fields[fieldName],
+      }),
+      {}
+    );
 
 const validateCaseAssistRequestParams = (req: CaseAssistParam) => {
   if (!req.url) {
