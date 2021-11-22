@@ -6,7 +6,6 @@ import {
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
-  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
 /**
@@ -16,7 +15,7 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
   /**
    * Specifies the unique identifier of the target case assist configuration. See [Retrieving a Case Assist ID](https://docs.coveo.com/en/3328/service/manage-case-assist-configurations#retrieving-a-case-assist-id).
    */
-  caseAssistId?: string;
+  caseAssistId: string;
   /**
    * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    *
@@ -33,15 +32,3 @@ export const caseAssistEngineConfigurationSchema =
     caseAssistId: requiredNonEmptyString,
     locale: nonEmptyString,
   });
-
-/**
- * Creates a sample case assist engine configuration.
- *
- * @returns The sample case assist engine configuration.
- */
-export function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
-  return {
-    ...getSampleEngineConfiguration(),
-    caseAssistId: 'sample-case-assist-id',
-  };
-}

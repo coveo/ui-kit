@@ -1,10 +1,18 @@
-import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
+import {getSampleEngineConfiguration} from '../engine-configuration';
 import {
   buildCaseAssistEngine,
   CaseAssistEngine,
   CaseAssistEngineOptions,
 } from './case-assist-engine';
-import {getSampleCaseAssistEngineConfiguration} from './case-assist-engine-configuration';
+import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration';
+
+function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
+  return {
+    ...getSampleEngineConfiguration(),
+    caseAssistId: 'sample-case-assist-id',
+    locale: 'fr-CA',
+  };
+}
 
 describe('buildCaseAssistEngine', () => {
   let options: CaseAssistEngineOptions;
@@ -17,7 +25,6 @@ describe('buildCaseAssistEngine', () => {
   beforeEach(() => {
     options = {
       configuration: getSampleCaseAssistEngineConfiguration(),
-      loggerOptions: {level: 'silent'},
     };
 
     initEngine();
@@ -28,16 +35,15 @@ describe('buildCaseAssistEngine', () => {
     expect(initEngine).toThrow();
   });
 
-  it('#engine.state retrieves the updated state', () => {
-    const initialCaseAssistConfiguration = {
-      caseAssistID: '',
-      locale: 'en-US',
-    };
-    engine.dispatch(
-      setCaseAssistConfiguration({caseAssistId: 'newID', locale: 'fr-CA'})
+  it('sets the case assist ID correctly', () => {
+    expect(engine.state.caseAssistConfiguration?.caseAssistId).toEqual(
+      options.configuration.caseAssistId
     );
-    expect(engine.state.caseAssistConfiguration).not.toBe(
-      initialCaseAssistConfiguration
+  });
+
+  it('sets the locale correclty', () => {
+    expect(engine.state.caseAssistConfiguration?.locale).toEqual(
+      options.configuration.locale
     );
   });
 });
