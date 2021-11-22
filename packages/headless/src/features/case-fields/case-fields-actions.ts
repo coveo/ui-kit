@@ -62,9 +62,8 @@ export const fetchCaseClassifications = createAsyncThunk<
   AsyncThunkCaseAssistOptions<StateNeededByFetchClassifications>
 >(
   'caseAssist/classifications/fetch',
-  async (_, {getState, rejectWithValue, extra}) => {
+  async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
-    const {apiClient} = extra;
 
     const fetched = await apiClient.getCaseClassifications(
       buildFetchClassificationRequest(state)
