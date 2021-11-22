@@ -5,19 +5,28 @@
 
       const organizationId = 'pvnh4ja7n5y7lmgstt3fpwy2bzq';
 
-      const client = buildSamlClient({
+      const saml = buildSamlClient({
         organizationId,
         provider: 'oktaA323aab78b9f1-45b5-a095-a1f0fa09ddd5',
       });
 
       async function main() {
-        const accessToken = await client.authenticate();
+        const accessToken = await saml.authenticate();
 
         buildSearchEngine({
           configuration: {
             organizationId,
             accessToken,
-            renewAccessToken: () => client.authenticate(),
+            renewAccessToken: () => saml.authenticate(),
+          },
+        });
+
+        // another engine
+        buildSearchEngine({
+          configuration: {
+            organizationId,
+            accessToken,
+            renewAccessToken: () => saml.authenticate(),
           },
         });
       }
