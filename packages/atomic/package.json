@@ -20,12 +20,15 @@
     "dist/",
     "loader/",
     "docs/",
-    "licenses/"
+    "licenses/",
+    "headless/"
   ],
   "scripts": {
+    "clean": "rimraf -f -r dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
-    "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
+    "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
+    "copy:headless": "node scripts/copy-headless.js",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
     "start:prod": "npx serve www -l 3333",
     "test": "stencil test --spec",
