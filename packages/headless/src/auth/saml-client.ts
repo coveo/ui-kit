@@ -1,9 +1,8 @@
-import {buildSamlProvider, SamlProvider} from './saml-provider';
+import {buildSamlProvider} from './saml-provider';
 
 export interface SamlClientOptions {
   organizationId: string;
   provider: string;
-  samlProvider?: SamlProvider;
 }
 
 export interface SamlClient {
@@ -11,7 +10,7 @@ export interface SamlClient {
 }
 
 export function buildSamlClient(config: SamlClientOptions): SamlClient {
-  const provider = config.samlProvider || buildSamlProvider(config);
+  const provider = buildSamlProvider(config);
 
   return {
     async authenticate() {

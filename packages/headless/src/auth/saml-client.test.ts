@@ -1,11 +1,12 @@
 import {buildSamlClient, SamlClient, SamlClientOptions} from './saml-client';
-import {SamlProvider} from './saml-provider';
+import * as SamlProvider from './saml-provider';
 
 describe('buildSamlClient', () => {
   let options: Required<SamlClientOptions>;
   let client: SamlClient;
+  let samlProvider: SamlProvider.SamlProvider;
 
-  function buildMockSamlProvider(): SamlProvider {
+  function buildMockSamlProvider(): SamlProvider.SamlProvider {
     return {
       exchangeHandshakeToken: jest.fn().mockResolvedValue(''),
       handshakeTokenAvailable: false,
@@ -14,10 +15,12 @@ describe('buildSamlClient', () => {
   }
 
   beforeEach(() => {
+    samlProvider = buildMockSamlProvider();
+    jest.spyOn(SamlProvider, 'buildSamlProvider').mockReturnValue(samlProvider);
+
     options = {
       organizationId: '',
       provider: '',
-      samlProvider: buildMockSamlProvider(),
     };
 
     client = buildSamlClient(options);
@@ -27,7 +30,6 @@ describe('buildSamlClient', () => {
     // TODO: prevent infinite loops in case search api goes down?
 
     it('handshake token not available, it calls #login', () => {
-      const {samlProvider} = options;
       samlProvider.handshakeTokenAvailable = false;
 
       client.authenticate();
@@ -36,7 +38,6 @@ describe('buildSamlClient', () => {
 
     it('handshake token available, it calls #exchangeHandshakeToken and returns an access token', async () => {
       const accessToken = 'access token';
-      const {samlProvider} = options;
       samlProvider.handshakeTokenAvailable = true;
       samlProvider.exchangeHandshakeToken = jest
         .fn()
