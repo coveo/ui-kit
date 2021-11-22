@@ -103,9 +103,11 @@ describe('quantic-breadcrumb-manager', () => {
       });
 
       scope('when selecting values in category facet', () => {
+        const path = ['North America', 'Canada', 'British Columbia'];
+
         Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
 
-        Actions.categoryFacet.selectChildValue('North America');
+        Actions.categoryFacet.selectChildValue(path[0]);
 
         Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
         Expect.categoryFacetBreadcrumb.displayLabel(true);
@@ -113,23 +115,23 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.categoryFacetBreadcrumb.displayValues(true);
         Expect.categoryFacetBreadcrumb.numberOfValues(1);
         Expect.categoryFacetBreadcrumb.firstbreadcrumbValueLabelContains(
-          'North America'
+          path[0]
         );
 
-        Actions.categoryFacet.selectChildValue('Canada');
+        Actions.categoryFacet.selectChildValue(path[1]);
         cy.wait(InterceptAliases.Search);
 
         Expect.categoryFacetBreadcrumb.numberOfValues(1);
         Expect.categoryFacetBreadcrumb.firstbreadcrumbValueLabelContains(
-          'North America / C'
+          path.slice(0, 1).join(' / ')
         );
 
-        Actions.categoryFacet.selectChildValue('British Columbia');
+        Actions.categoryFacet.selectChildValue(path[2]);
         cy.wait(InterceptAliases.Search);
 
         Expect.categoryFacetBreadcrumb.numberOfValues(1);
         Expect.categoryFacetBreadcrumb.firstbreadcrumbValueLabelContains(
-          'North America / C'
+          path.join(' / ')
         );
       });
 
@@ -203,7 +205,7 @@ describe('quantic-breadcrumb-manager', () => {
         Expect.categoryFacetBreadcrumb.displayValues(true);
         Expect.categoryFacetBreadcrumb.numberOfValues(1);
         Expect.categoryFacetBreadcrumb.firstbreadcrumbValueLabelContains(
-          'North America / C'
+          path.split(',').join(' / ')
         );
 
         Expect.displayClearFilters(true);

@@ -164,7 +164,7 @@ class DetailedReporter {
    */
   handleAction(message) {
     this._logBuffer.push(
-      this.scopeIndent() + chalk.blue('* ')+ chalk.dim(message.content)
+      this.scopeIndent() + chalk.blue('-> ')+ chalk.dim(message.content)
     )
   }
 

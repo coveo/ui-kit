@@ -126,7 +126,7 @@ const initQuanticStore = (engineId) => {
        window.coveoHeadless[engineId].bindings.store = Store.initialize();
      }
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Quantic Store: ' + error);
+    throw new Error('Fatal error: unable to initialize Quantic store: ' + error);
   }
 }
 
