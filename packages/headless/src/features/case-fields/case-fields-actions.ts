@@ -91,7 +91,7 @@ export const buildFetchClassificationRequest = (
     caseAssistId: state.caseAssistConfiguration.caseAssistId,
     ...(state.configuration.analytics.enabled &&
       visitorId && {
-        visitorId: visitorId,
+        visitorId: visitorId as string,
       }),
     fields: state.caseFields.fields,
     locale: state.caseAssistConfiguration.locale,
