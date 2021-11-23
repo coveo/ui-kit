@@ -30,6 +30,7 @@ const {
  *
  * Additional context is provided using the `scope` function.
  * Details on a particular expectation are logged using the `logDetail` custom Cypress command.
+ * Details on a particular action are logged using `logAction` custom Cypress command.
  * See `detailed-collector.ts` for more information.
  */
 class DetailedReporter {
@@ -106,6 +107,9 @@ class DetailedReporter {
       case 'expectation':
         this.handleExpectation(message);
         break;
+      case 'action':
+        this.handleAction(message);
+        break;
       default:
         console.warn(`unknown collector message type: ${message.type}`);
         break;
@@ -151,6 +155,17 @@ class DetailedReporter {
   handleExpectation(message) {
     this._logBuffer.push(
       this.scopeIndent() + chalk.green('. ') + chalk.dim(message.content)
+    );
+  }
+
+  /**
+   * Handles the `action` message.
+   * @param {Message} message The message instance.
+   */
+  handleAction(message) {
+    const symbol = this._isWindows ? '>' : '→';
+    this._logBuffer.push(
+      `${this.scopeIndent()}${chalk.blue(symbol)} ${chalk.dim(message.content)}`
     );
   }
 
