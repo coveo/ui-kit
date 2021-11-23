@@ -2,7 +2,7 @@
   "name": "@coveo/auth",
   "version": "1.0.0",
   "description": "Functions to faciliate authentication with Coveo platform.",
-  "main": "index.js",
+  "main": "dist/auth.js",
   "module": "dist/auth.esm.js",
   "scripts": {
     "build": "npm run ts:check & node esbuild.js",

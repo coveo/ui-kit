@@ -1,9 +1,13 @@
 const {build} = require('esbuild')
 
+const base = {
+  entryPoints: ['src/auth.ts'],
+  bundle: true,
+}
+
 function browser() {
   return build({
-    entryPoints: ['src/auth.ts'],
-    bundle: true,
+    ...base,
     outfile: 'dist/browser/auth.js',
     format: 'iife',
     minify: true,
@@ -13,15 +17,22 @@ function browser() {
 
 function browserEsm() {
   return build({
-    entryPoints: ['src/auth.ts'],
-    bundle: true,
+    ...base,
     outfile: 'dist/auth.esm.js',
     format: 'esm',
   });
 }
 
+function node() {
+  return build({
+    ...base,
+    outfile: 'dist/auth.js',
+    format: 'cjs',
+  });
+}
+
 async function main() {
-  await Promise.all([browser(), browserEsm()]);
+  await Promise.all([browser(), browserEsm(), node()]);
 }
 
 main();
