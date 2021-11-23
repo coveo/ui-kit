@@ -8,7 +8,8 @@
   "scripts": {
     "build": "npm run typedefinitions & node esbuild.js",
     "test": "jest",
-    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions"
+    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "clean": "rimraf -f -r dist/*"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "@types/jest": "^27.0.3",
     "esbuild": "^0.13.15",
     "jest": "^27.3.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^27.0.7"
   }
 }
