@@ -116,6 +116,9 @@ export namespace Components {
     }
     interface AtomicDidYouMean {
     }
+    interface AtomicExternal {
+        "selector": string;
+    }
     interface AtomicFacet {
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
@@ -805,6 +808,12 @@ declare global {
         prototype: HTMLAtomicDidYouMeanElement;
         new (): HTMLAtomicDidYouMeanElement;
     };
+    interface HTMLAtomicExternalElement extends Components.AtomicExternal, HTMLStencilElement {
+    }
+    var HTMLAtomicExternalElement: {
+        prototype: HTMLAtomicExternalElement;
+        new (): HTMLAtomicExternalElement;
+    };
     interface HTMLAtomicFacetElement extends Components.AtomicFacet, HTMLStencilElement {
     }
     var HTMLAtomicFacetElement: {
@@ -1160,6 +1169,7 @@ declare global {
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
+        "atomic-external": HTMLAtomicExternalElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-date-input": HTMLAtomicFacetDateInputElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
@@ -1322,6 +1332,9 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicDidYouMean {
+    }
+    interface AtomicExternal {
+        "selector"?: string;
     }
     interface AtomicFacet {
         /**
@@ -1972,6 +1985,7 @@ declare namespace LocalJSX {
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
+        "atomic-external": AtomicExternal;
         "atomic-facet": AtomicFacet;
         "atomic-facet-date-input": AtomicFacetDateInput;
         "atomic-facet-manager": AtomicFacetManager;
@@ -2042,6 +2056,7 @@ declare module "@stencil/core" {
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
+            "atomic-external": LocalJSX.AtomicExternal & JSXBase.HTMLAttributes<HTMLAtomicExternalElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
