@@ -33,3 +33,4 @@ cypress/screenshots/*
 
 storybook-static/
 
+headless/

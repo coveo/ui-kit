@@ -7,7 +7,6 @@ import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import * as path from 'path';
-import dts from "rollup-plugin-dts";
 import {readFileSync} from 'fs';
 import copy from 'rollup-plugin-copy'
 
@@ -233,24 +232,6 @@ const dev = [
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
-// Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
-// can consume. When the api-extractor limitation is resolved, this step will not be necessary.
-// [https://github.com/microsoft/rushstack/issues/1050]
-const typeDefinitions = [
-  buildTypeDefinitionConfiguration('index.d.ts'),
-  buildTypeDefinitionConfiguration('recommendation.index.d.ts'),
-  buildTypeDefinitionConfiguration('product-recommendation.index.d.ts'),
-  buildTypeDefinitionConfiguration('product-listing.index.d.ts'),
-].filter(b => matchesFilter(b.input));
-
-function buildTypeDefinitionConfiguration(entryFileName) {
-  return {
-    input: `./dist/definitions/${entryFileName}`,
-    output: [{file: `temp/${entryFileName}`, format: "es"}],
-    plugins: [dts()]
-  }
-}
-
-const config = isProduction ? [...nodejs, ...typeDefinitions, ...browser] : dev;
+const config = isProduction ? [...nodejs, ...browser] : dev;
 
 export default config;

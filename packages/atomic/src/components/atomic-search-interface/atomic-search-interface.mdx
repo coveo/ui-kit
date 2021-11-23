@@ -1,0 +1,51 @@
+import AtomicDocumentation from '../../../docs/atomic-docs.json';
+import {Meta, Source} from '@storybook/addon-docs';
+import {mapPropsToArgTypes, getDocumentationFromTag} from '../../../.storybook/map-props-to-args';
+import {renderArgsToHTMLString} from '../../../.storybook/default-story-shared';
+import {
+  typeToSampleValue,
+  SearchInterfaceDocumentation,
+  propertyToCodeSample,
+} from '../../../.storybook/atomic-search-interface-storybook-helper';
+import StoryStyle from './atomic-search-interface.stories.css';
+
+<Meta title="Atomic/SearchInterface" />
+
+# Search Interface
+
+<p>{SearchInterfaceDocumentation.docs}</p>
+
+## Properties available
+
+<table className="search-interface-props-table">
+  <thead>
+    <tr key="header">
+      <th>Name</th>
+      <th>Description</th>
+      <th>Type</th>
+      <th>Default value</th>
+      <th>Code sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    {SearchInterfaceDocumentation.props.map((prop) => {
+      const {name, docs, values, type} = prop;
+      return (
+        <tr key={name}>
+          <td>{name}</td>
+          <td>{docs}</td>
+          <td>
+            {values
+              .map((v) => v.value || v.type)
+              .filter((v) => v !== 'undefined')
+              .join(' ')}
+          </td>
+          <td>{prop.default}</td>
+          <td>
+            <Source code={propertyToCodeSample(prop)} language="html" />
+          </td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
