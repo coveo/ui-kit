@@ -34,7 +34,7 @@
     "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote"
   },
   "dependencies": {
-    "@coveo/headless": "^1.31.7"
+    "@coveo/headless": "^1.33.0"
   },
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "^25.4.4",

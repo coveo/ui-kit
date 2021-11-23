@@ -2,9 +2,10 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
-  getHeadlessBindings
+  getHeadlessBindings,
+  registerToStore
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, Store} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
 
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
@@ -201,6 +202,11 @@ export default class QuanticNumericFacet extends LightningElement {
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
+    registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
+      label: this.label,
+      facetId: this.facet.state.facetId,
+      format: this.formattingFunction,
+    });
   }
 
   /**
@@ -240,6 +246,7 @@ export default class QuanticNumericFacet extends LightningElement {
         .map((value) => {
           return {
             ...value,
+            key: `${value.start}..${value.end}`,
             checked: value.state === 'selected',
           };
         }) || []

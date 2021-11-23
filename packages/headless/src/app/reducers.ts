@@ -39,6 +39,7 @@ import {sortReducer} from '../features/sort/sort-slice';
 import {dictionaryFieldContextReducer} from '../features/dictionary-field-context/dictionary-field-context-slice';
 import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 import {staticFilterSetReducer} from '../features/static-filter-set/static-filter-set-slice';
+import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -91,3 +92,5 @@ export const recommendation = recommendationReducer;
 export const productRecommendations = productRecommendationsReducer;
 export const productListing = productListingReducer;
 export const sort = sortReducer;
+
+export const caseAssistConfiguration = caseAssistConfigurationReducer;

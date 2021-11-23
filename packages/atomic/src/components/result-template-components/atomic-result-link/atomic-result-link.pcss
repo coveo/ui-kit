@@ -2,9 +2,14 @@ atomic-result-link {
   a {
     color: var(--atomic-on-background);
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       text-decoration: underline;
       color: var(--atomic-primary);
+    }
+
+    &:focus {
+      outline: none;
     }
 
     &:visited {

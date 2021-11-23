@@ -15,7 +15,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.31.7",
+  "version": "1.33.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
-    "build": "npm run clean && npm run build:prod --",
+    "build": "npm run build:prod --",
     "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",
@@ -43,7 +43,7 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.32.8",
+    "@coveo/bueno": "^0.33.0",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/pino": "^6.3.4",
     "@types/redux-mock-store": "^1.0.2",

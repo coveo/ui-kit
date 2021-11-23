@@ -5,7 +5,7 @@
     "setup": "npm i && husky install && lerna bootstrap && npm run lockLernaDependencies",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
-    "build": "lerna run build",
+    "build": "lerna run clean && lerna run build",
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
     "lint:check": "eslint .",
@@ -67,7 +67,7 @@
     "**/*.ts?(x)": [
       "npm run lint:fix"
     ],
-    "**/*.{scss,css,pcss,html}": [
+    "**/*.{scss,css,pcss,html,mdx}": [
       "prettier --print-width 120 --write"
     ]
   },

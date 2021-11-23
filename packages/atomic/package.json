@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.14.5",
+  "version": "1.15.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -20,12 +20,15 @@
     "dist/",
     "loader/",
     "docs/",
-    "licenses/"
+    "licenses/",
+    "headless/"
   ],
   "scripts": {
+    "clean": "rimraf -f -r dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
-    "build:stencil": "node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
+    "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
+    "copy:headless": "node scripts/copy-headless.js",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
     "start:prod": "npx serve www -l 3333",
     "test": "stencil test --spec",
@@ -42,8 +45,8 @@
     "doc:list-assets": "node scripts/list-assets.js"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.32.8",
-    "@coveo/headless": "^1.31.7",
+    "@coveo/bueno": "^0.33.0",
+    "@coveo/headless": "^1.33.0",
     "@salesforce-ux/design-system": "^2.16.1",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
@@ -64,6 +67,7 @@
     "@stencil/core": "^2.10.0",
     "@stencil/postcss": "^2.1.0",
     "@stencil/store": "^1.5.0",
+    "@storybook/addon-a11y": "^6.3.12",
     "@storybook/addon-controls": "^6.3.12",
     "@storybook/addon-docs": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",

@@ -93,6 +93,14 @@ export class TestFixture {
     return this;
   }
 
+  public withNoResults() {
+    return this.withCustomResponse((r) => {
+      r.results = [];
+      r.totalCountFiltered = 0;
+      return r;
+    });
+  }
+
   public withError() {
     this.returnError = true;
     return this;
