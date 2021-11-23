@@ -138,7 +138,6 @@ describe('Numeric Facet Test Suite', () => {
       scope('when selecting a valid range', () => {
         const min = 120;
         const max = 8000;
-        visitNumericFacetPage(customWithInputSettings);
 
         Actions.inputMinValue(min);
         Actions.inputMaxValue(max);
@@ -153,7 +152,8 @@ describe('Numeric Facet Test Suite', () => {
       });
 
       scope('when selecting a empty range', () => {
-        visitNumericFacetPage(customWithInputSettings);
+        Actions.clickClearFilter();
+        cy.wait(InterceptAliases.UA.Facet.ClearAll);
 
         Actions.submitManualRange();
         Expect.displayInputWarning(1);
@@ -166,6 +166,7 @@ describe('Numeric Facet Test Suite', () => {
         Expect.inputWarningContains();
         Expect.displayValues(true);
       });
+
       scope('when min input is bigger than max input', () => {
         visitNumericFacetPage(customWithInputSettings);
 
@@ -179,6 +180,7 @@ describe('Numeric Facet Test Suite', () => {
         );
         Expect.displayValues(true);
       });
+
       scope('when selecting from values', () => {
         visitNumericFacetPage(customWithInputSettings);
 
@@ -189,6 +191,24 @@ describe('Numeric Facet Test Suite', () => {
         Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
         Expect.inputMaxEmpty();
         Expect.inputMinEmpty();
+      });
+
+      scope('when selecting range with no search results', () => {
+        const min = 1;
+        const max = 10000000000;
+
+        visitNumericFacetPage(customWithInputSettings);
+
+        Actions.inputMinValue(min);
+        Actions.inputMaxValue(max);
+        Actions.submitManualRange();
+
+        Expect.displayValues(false);
+        Expect.search.numberOfResults(0);
+        Expect.urlHashContains(`${min}..${max}`, true);
+        Expect.displayClearButton(true);
+        Expect.clearFilterContains('Clear filter');
+        Expect.logNumericFacetSelect(`${min}..${max}`);
       });
     });
   });

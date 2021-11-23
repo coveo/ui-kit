@@ -276,10 +276,6 @@ export default class QuanticNumericFacet extends LightningElement {
     return this.template.querySelector('.numeric__input-max');
   }
 
-  get hasValues() {
-    return this.values.length !== 0;
-  }
-
   get hasActiveValues() {
     return this.state?.hasActiveValues || this.filterState?.range;
   }
@@ -311,6 +307,23 @@ export default class QuanticNumericFacet extends LightningElement {
       return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
     }
     return '';
+  }
+
+  get shouldRenderInput() {
+    if(!this.withInput) {
+      return false;
+    }
+
+    return this.searchStatus?.state?.hasResults || !!this.filterState?.range;
+  }
+
+  get shouldRenderValues() {
+    const hasInputRange = !!this.filterState?.range;
+    return !hasInputRange && !!this.values.length;
+  }
+
+  get shouldRenderFacet() {
+    return this.shouldRenderInput || this.shouldRenderValues;
   }
 
   setValidityParameters() {
