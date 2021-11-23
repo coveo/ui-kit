@@ -2,7 +2,7 @@ import {fetch} from 'cross-fetch';
 import {getIsomorphicHistory, IsomorphicHistory} from './isomorphic-history';
 import {getIsomorphicLocation, IsomorphicLocation} from './isomorphic-location';
 
-export interface SamlProviderOptions {
+export interface SamlFlowOptions {
   organizationId: string;
   provider: string;
   request?: Fetch;
@@ -10,7 +10,7 @@ export interface SamlProviderOptions {
   history?: IsomorphicHistory;
 }
 
-export interface SamlProvider {
+export interface SamlFlow {
   exchangeHandshakeToken(): Promise<string>;
   handshakeTokenAvailable: boolean;
   login(): void;
@@ -23,7 +23,7 @@ type Fetch = (
 
 const handshakeTokenParamName = 'handshake_token';
 
-export function buildSamlProvider(config: SamlProviderOptions): SamlProvider {
+export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
   const options = buildOptions(config);
   const api = 'https://platform.cloud.coveo.com/rest/search';
 
@@ -62,9 +62,7 @@ export function buildSamlProvider(config: SamlProviderOptions): SamlProvider {
   };
 }
 
-function buildOptions(
-  config: SamlProviderOptions
-): Required<SamlProviderOptions> {
+function buildOptions(config: SamlFlowOptions): Required<SamlFlowOptions> {
   return {
     location: getIsomorphicLocation(),
     history: getIsomorphicHistory(),

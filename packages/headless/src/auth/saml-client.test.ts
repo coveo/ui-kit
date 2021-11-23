@@ -1,12 +1,12 @@
 import {buildSamlClient, SamlClient, SamlClientOptions} from './saml-client';
-import * as SamlProvider from './saml-provider';
+import * as SamlFlow from './saml-flow';
 
 describe('buildSamlClient', () => {
   let options: Required<SamlClientOptions>;
   let client: SamlClient;
-  let samlProvider: SamlProvider.SamlProvider;
+  let samlFlow: SamlFlow.SamlFlow;
 
-  function buildMockSamlProvider(): SamlProvider.SamlProvider {
+  function buildMockSamlFlow(): SamlFlow.SamlFlow {
     return {
       exchangeHandshakeToken: jest.fn().mockResolvedValue(''),
       handshakeTokenAvailable: false,
@@ -15,8 +15,8 @@ describe('buildSamlClient', () => {
   }
 
   beforeEach(() => {
-    samlProvider = buildMockSamlProvider();
-    jest.spyOn(SamlProvider, 'buildSamlProvider').mockReturnValue(samlProvider);
+    samlFlow = buildMockSamlFlow();
+    jest.spyOn(SamlFlow, 'buildSamlFlow').mockReturnValue(samlFlow);
 
     options = {
       organizationId: '',
@@ -30,22 +30,22 @@ describe('buildSamlClient', () => {
     // TODO: prevent infinite loops in case search api goes down?
 
     it('handshake token not available, it calls #login', () => {
-      samlProvider.handshakeTokenAvailable = false;
+      samlFlow.handshakeTokenAvailable = false;
 
       client.authenticate();
-      expect(samlProvider.login).toHaveBeenCalledTimes(1);
+      expect(samlFlow.login).toHaveBeenCalledTimes(1);
     });
 
     it('handshake token available, it calls #exchangeHandshakeToken and returns an access token', async () => {
       const accessToken = 'access token';
-      samlProvider.handshakeTokenAvailable = true;
-      samlProvider.exchangeHandshakeToken = jest
+      samlFlow.handshakeTokenAvailable = true;
+      samlFlow.exchangeHandshakeToken = jest
         .fn()
         .mockResolvedValue(accessToken);
 
       const res = await client.authenticate();
 
-      expect(samlProvider.exchangeHandshakeToken).toHaveBeenCalledTimes(1);
+      expect(samlFlow.exchangeHandshakeToken).toHaveBeenCalledTimes(1);
       expect(res).toBe(accessToken);
     });
   });

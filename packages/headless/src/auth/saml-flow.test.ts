@@ -1,19 +1,15 @@
 import {IsomorphicHistory} from './isomorphic-history';
 import {IsomorphicLocation} from './isomorphic-location';
-import {
-  buildSamlProvider,
-  SamlProvider,
-  SamlProviderOptions,
-} from './saml-provider';
+import {buildSamlFlow, SamlFlow, SamlFlowOptions} from './saml-flow';
 
-describe('buildSamlProvider', () => {
+describe('buildSamlFlow', () => {
   const handshakeToken = 'token';
-  let options: Required<SamlProviderOptions>;
+  let options: Required<SamlFlowOptions>;
   let request: jest.Mock<any, any>;
-  let provider: SamlProvider;
+  let provider: SamlFlow;
 
-  function initSamlProvider() {
-    provider = buildSamlProvider(options);
+  function initSamlFlow() {
+    provider = buildSamlFlow(options);
   }
 
   function buildMockLocation(): IsomorphicLocation {
@@ -42,7 +38,7 @@ describe('buildSamlProvider', () => {
       request,
     };
 
-    initSamlProvider();
+    initSamlFlow();
   });
 
   describe('#login', () => {
@@ -55,7 +51,7 @@ describe('buildSamlProvider', () => {
       options.provider = 'okta';
       options.location.href = initialLocation;
 
-      initSamlProvider();
+      initSamlFlow();
 
       provider.login();
 
