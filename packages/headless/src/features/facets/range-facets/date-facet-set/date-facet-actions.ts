@@ -157,7 +157,7 @@ export const registerDateFacet = createAction(
       validateManualDateRanges(payload);
       return {payload, error: null};
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
 );
@@ -218,7 +218,7 @@ export const updateDateFacetValues = createAction(
       validateManualDateRanges({currentValues: payload.values});
       return {payload, error: null};
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
 );
