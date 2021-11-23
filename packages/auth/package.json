@@ -4,10 +4,11 @@
   "description": "Functions to faciliate authentication with Coveo platform.",
   "main": "dist/auth.js",
   "module": "dist/auth.esm.js",
+  "types": "./dist/definitions/auth.d.ts",
   "scripts": {
-    "build": "npm run ts:check & node esbuild.js",
+    "build": "npm run typedefinitions & node esbuild.js",
     "test": "jest",
-    "ts:check": "tsc --noEmit"
+    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions"
   },
   "repository": {
     "type": "git",
