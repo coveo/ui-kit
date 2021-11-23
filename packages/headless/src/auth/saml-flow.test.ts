@@ -70,8 +70,6 @@ describe('buildSamlFlow', () => {
   });
 
   describe('#exchangeHandshakeToken', () => {
-    // TODO: api key should not be required.
-
     describe('url hash contains handshake token', () => {
       beforeEach(() => {
         options.location!.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;

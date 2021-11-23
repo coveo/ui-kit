@@ -12,23 +12,7 @@
 
       async function main() {
         const accessToken = await saml.authenticate();
-
-        buildSearchEngine({
-          configuration: {
-            organizationId,
-            accessToken,
-            renewAccessToken: () => saml.authenticate(),
-          },
-        });
-
-        // another engine
-        buildSearchEngine({
-          configuration: {
-            organizationId,
-            accessToken,
-            renewAccessToken: () => saml.authenticate(),
-          },
-        });
+        console.log(accessToken);
       }
 
       main();
