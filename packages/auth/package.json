@@ -5,8 +5,9 @@
   "main": "index.js",
   "module": "dist/auth.esm.js",
   "scripts": {
-    "build": "node esbuild.js",
-    "test": "jest"
+    "build": "npm run ts:check & node esbuild.js",
+    "test": "jest",
+    "ts:check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
