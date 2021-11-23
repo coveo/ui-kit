@@ -3,6 +3,7 @@ import {buildSamlFlow} from './saml-flow';
 export interface SamlClientOptions {
   organizationId: string;
   provider: string;
+  platformOrigin?: string;
 }
 
 export interface SamlClient {

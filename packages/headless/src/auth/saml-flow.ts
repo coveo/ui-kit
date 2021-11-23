@@ -5,6 +5,7 @@ import {getIsomorphicLocation, IsomorphicLocation} from './isomorphic-location';
 export interface SamlFlowOptions {
   organizationId: string;
   provider: string;
+  platformOrigin?: string;
   request?: Fetch;
   location?: IsomorphicLocation;
   history?: IsomorphicHistory;
@@ -25,7 +26,7 @@ const handshakeTokenParamName = 'handshake_token';
 
 export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
   const options = buildOptions(config);
-  const api = 'https://platform.cloud.coveo.com/rest/search';
+  const api = `${options.platformOrigin}/rest/search`;
 
   return {
     login() {
@@ -67,6 +68,7 @@ function buildOptions(config: SamlFlowOptions): Required<SamlFlowOptions> {
     location: getIsomorphicLocation(),
     history: getIsomorphicHistory(),
     request: fetch,
+    platformOrigin: 'https://platform.cloud.coveo.com',
     ...config,
   };
 }

@@ -2,7 +2,7 @@ import {buildSamlClient, SamlClient, SamlClientOptions} from './saml-client';
 import * as SamlFlow from './saml-flow';
 
 describe('buildSamlClient', () => {
-  let options: Required<SamlClientOptions>;
+  let options: SamlClientOptions;
   let client: SamlClient;
   let samlFlow: SamlFlow.SamlFlow;
 

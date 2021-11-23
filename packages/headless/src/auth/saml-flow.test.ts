@@ -4,7 +4,7 @@ import {buildSamlFlow, SamlFlow, SamlFlowOptions} from './saml-flow';
 
 describe('buildSamlFlow', () => {
   const handshakeToken = 'token';
-  let options: Required<SamlFlowOptions>;
+  let options: SamlFlowOptions;
   let request: jest.Mock<any, any>;
   let provider: SamlFlow;
 
@@ -42,14 +42,11 @@ describe('buildSamlFlow', () => {
   });
 
   describe('#login', () => {
-    // TODO: test POST to avoid writing to url.
-    // TODO: url environments
-
     it('redirects to the expected url', () => {
       const initialLocation = 'http://localhost:8080/#t=All&sort=relevancy';
       options.organizationId = 'org';
       options.provider = 'okta';
-      options.location.href = initialLocation;
+      options.location!.href = initialLocation;
 
       initSamlFlow();
 
@@ -58,7 +55,17 @@ describe('buildSamlFlow', () => {
       const redirectUri = encodeURIComponent(initialLocation);
       const url = `https://platform.cloud.coveo.com/rest/search/v2/login/okta?organizationId=org&redirectUri=${redirectUri}`;
 
-      expect(options.location.href).toBe(url);
+      expect(options.location!.href).toBe(url);
+    });
+
+    it('when an origin is specified, the url starts with the origin', () => {
+      options.platformOrigin = 'https://platformdev.cloud.coveo.com';
+      initSamlFlow();
+
+      provider.login();
+
+      const url = options.location!.href;
+      expect(url.startsWith(options.platformOrigin)).toBe(true);
     });
   });
 
@@ -67,7 +74,7 @@ describe('buildSamlFlow', () => {
 
     describe('url hash contains handshake token', () => {
       beforeEach(() => {
-        options.location.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
+        options.location!.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
       });
 
       it('sends a request with the token', () => {
@@ -86,7 +93,7 @@ describe('buildSamlFlow', () => {
       });
 
       it('url hash starts with handshake token param, it exchanges the token', () => {
-        options.location.hash = `#handshake_token=${handshakeToken}`;
+        options.location!.hash = `#handshake_token=${handshakeToken}`;
         provider.exchangeHandshakeToken();
 
         assertHandshakeTokenSent();
@@ -103,7 +110,7 @@ describe('buildSamlFlow', () => {
 
       it('it removes the handshake token from the hash', () => {
         provider.exchangeHandshakeToken();
-        expect(options.history.replaceState).toHaveBeenCalledWith(
+        expect(options.history!.replaceState).toHaveBeenCalledWith(
           null,
           '',
           '#t=All&sort=relevancy'
@@ -121,19 +128,19 @@ describe('buildSamlFlow', () => {
 
   describe('#handshakeTokenAvailable', () => {
     it('hash contains handshake token, it returns true', () => {
-      options.location.hash = '#handshake_token=token';
+      options.location!.hash = '#handshake_token=token';
       expect(provider.handshakeTokenAvailable).toBe(true);
     });
 
     it('hash does not contain handshake token, it returns false', () => {
-      options.location.hash = '';
+      options.location!.hash = '';
       expect(provider.handshakeTokenAvailable).toBe(false);
     });
   });
 
   describe('url hash starts with / followed by handshake token param (Angular bug)', () => {
     beforeEach(() => {
-      options.location.hash = '#/handshake_token=token';
+      options.location!.hash = '#/handshake_token=token';
       provider.exchangeHandshakeToken();
     });
 
@@ -142,7 +149,11 @@ describe('buildSamlFlow', () => {
     });
 
     it('removes the handshake token from the url but keeps the slash', () => {
-      expect(options.history.replaceState).toHaveBeenCalledWith(null, '', '#/');
+      expect(options.history!.replaceState).toHaveBeenCalledWith(
+        null,
+        '',
+        '#/'
+      );
     });
   });
 });
