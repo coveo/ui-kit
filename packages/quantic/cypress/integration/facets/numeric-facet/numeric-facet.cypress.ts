@@ -93,12 +93,13 @@ describe('Numeric Facet Test Suite', () => {
 
       scope('when selecting multiple values', () => {
         visitNumericFacetPage(defaultSettings);
-        Actions.checkValueAt(0);
+        Actions.checkFirstIdleCheckbox();
 
         for (let index = 1; index < defaultNumberOfValues; index++) {
           scope(`when selecting ${index + 1} values`, () => {
             const filterLabel = `Clear ${index + 1} filters`;
-            Actions.checkValueAt(index);
+            Actions.checkFirstIdleCheckbox();
+
             Expect.displayClearButton(true);
             Expect.clearFilterContains(filterLabel);
             Expect.numberOfSelectedCheckboxValues(index + 1);
