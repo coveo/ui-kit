@@ -74,16 +74,16 @@ function buildOptions(
 }
 
 function getHandshakeToken(location: IsomorphicLocation): string {
-  const hash = getHashAfterAdjustingForAngular(location);
-  const params = hash.slice(1);
-  const handshakeParam = params.split('&').find(isHandshakeTokenParam);
+  const params = getHashParamsAfterAdjustingForAngular(location);
+  const handshakeParam = params.get(handshakeTokenParamName);
 
-  return handshakeParam ? handshakeParam.split('=')[1] : '';
+  return handshakeParam || '';
 }
 
-function getHashAfterAdjustingForAngular(location: IsomorphicLocation) {
+function getHashParamsAfterAdjustingForAngular(location: IsomorphicLocation) {
   const hash = location.hash;
-  return isAngularHash(location) ? `#${hash.slice(2)}` : hash;
+  const adjustedHash = isAngularHash(location) ? hash.slice(2) : hash.slice(1);
+  return new URLSearchParams(adjustedHash);
 }
 
 function isAngularHash(location: IsomorphicLocation) {
@@ -91,24 +91,14 @@ function isAngularHash(location: IsomorphicLocation) {
   return hash.indexOf('#/') === 0;
 }
 
-function isHandshakeTokenParam(param: string) {
-  const [key] = param.split('=');
-  return key === handshakeTokenParamName;
-}
-
 function removeHandshakeToken(
   location: IsomorphicLocation,
   history: IsomorphicHistory
 ) {
-  const delimiter = '&';
-  const hash = getHashAfterAdjustingForAngular(location);
-  const token = getHandshakeToken(location);
-  const handshakeEntry = `${handshakeTokenParamName}=${token}`;
+  const params = getHashParamsAfterAdjustingForAngular(location);
+  params.delete(handshakeTokenParamName);
+  const newHash = params.toString();
 
-  const entries = hash.substr(1).split(delimiter);
-  const newHash = entries
-    .filter((param) => param !== handshakeEntry)
-    .join(delimiter);
   const adjustedHash = isAngularHash(location) ? `/${newHash}` : newHash;
 
   history.replaceState(null, '', `#${adjustedHash}`);
