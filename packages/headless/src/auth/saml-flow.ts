@@ -26,7 +26,7 @@ const handshakeTokenParamName = 'handshake_token';
 
 export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
   const options = buildOptions(config);
-  const api = `${options.platformOrigin}/rest/search`;
+  const api = `${options.platformOrigin}/rest/search/v2/login`;
 
   return {
     login() {
@@ -34,7 +34,7 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
       const redirectUri = encodeURIComponent(location.href);
       const params = `organizationId=${organizationId}&redirectUri=${redirectUri}`;
 
-      location.href = `${api}/v2/login/${provider}?${params}`;
+      location.href = `${api}/${provider}?${params}`;
     },
 
     async exchangeHandshakeToken() {
@@ -43,7 +43,7 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
       removeHandshakeToken(location, history);
 
       try {
-        const response = await request(`${api}/login/handshake/token`, {
+        const response = await request(`${api}/handshake/token`, {
           method: 'POST',
           body: JSON.stringify({handshakeToken}),
           headers: {
