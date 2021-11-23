@@ -21,25 +21,25 @@ export interface CaseAssistClientOptions extends ClientOptions {
 }
 
 export class CaseAssistClient {
-    private client: AnalyticsClient;
+    public coveoAnalyticsClient: AnalyticsClient;
     private svc: SVCPlugin;
 
     constructor(private options: Partial<CaseAssistClientOptions>) {
-        this.client = options.enableAnalytics ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
-        this.svc = new SVCPlugin({client: this.client});
+        this.coveoAnalyticsClient = options.enableAnalytics ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
+        this.svc = new SVCPlugin({client: this.coveoAnalyticsClient});
     }
 
     public disable() {
-        if (this.client instanceof CoveoAnalyticsClient) {
-            this.client.clear();
+        if (this.coveoAnalyticsClient instanceof CoveoAnalyticsClient) {
+            this.coveoAnalyticsClient.clear();
         }
-        this.client = new NoopAnalytics();
-        this.svc = new SVCPlugin({client: this.client});
+        this.coveoAnalyticsClient = new NoopAnalytics();
+        this.svc = new SVCPlugin({client: this.coveoAnalyticsClient});
     }
 
     public enable() {
-        this.client = new CoveoAnalyticsClient(this.options);
-        this.svc = new SVCPlugin({client: this.client});
+        this.coveoAnalyticsClient = new CoveoAnalyticsClient(this.options);
+        this.svc = new SVCPlugin({client: this.coveoAnalyticsClient});
     }
 
     public logEnterInterface(meta: EnterInterfaceMetadata) {
@@ -106,10 +106,10 @@ export class CaseAssistClient {
     }
 
     private sendFlowStartEvent() {
-        return this.client.sendEvent('event', 'svc', CaseAssistEvents.flowStart);
+        return this.coveoAnalyticsClient.sendEvent('event', 'svc', CaseAssistEvents.flowStart);
     }
 
     private sendClickEvent() {
-        return this.client.sendEvent('event', 'svc', CaseAssistEvents.click);
+        return this.coveoAnalyticsClient.sendEvent('event', 'svc', CaseAssistEvents.click);
     }
 }
