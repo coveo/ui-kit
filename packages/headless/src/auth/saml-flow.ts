@@ -1,4 +1,4 @@
-import {fetch} from 'cross-fetch';
+import {BrowserFetch, getBrowserFetch} from './browser-fetch';
 import {getBrowserHistory, BrowserHistory} from './browser-history';
 import {getBrowserLocation, BrowserLocation} from './browser-location';
 
@@ -6,7 +6,7 @@ export interface SamlFlowOptions {
   organizationId: string;
   provider: string;
   platformOrigin?: string;
-  request?: Fetch;
+  request?: BrowserFetch;
   location?: BrowserLocation;
   history?: BrowserHistory;
 }
@@ -16,11 +16,6 @@ export interface SamlFlow {
   handshakeTokenAvailable: boolean;
   login(): void;
 }
-
-type Fetch = (
-  input: RequestInfo,
-  init?: RequestInit | undefined
-) => Promise<Response>;
 
 const handshakeTokenParamName = 'handshake_token';
 
@@ -67,7 +62,7 @@ function buildOptions(config: SamlFlowOptions): Required<SamlFlowOptions> {
   return {
     location: getBrowserLocation(),
     history: getBrowserHistory(),
-    request: fetch,
+    request: getBrowserFetch(),
     platformOrigin: 'https://platform.cloud.coveo.com',
     ...config,
   };
