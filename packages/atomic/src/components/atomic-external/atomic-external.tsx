@@ -5,7 +5,7 @@ import {
   initializeEventName,
 } from '../../utils/initialization-utils';
 /**
- * The `atomic-external` component allows to initialize components outside a search interface.
+ * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize .
  */
 @Component({
   tag: 'atomic-external',

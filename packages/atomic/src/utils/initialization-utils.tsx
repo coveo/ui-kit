@@ -41,9 +41,9 @@ const initializableElements = ['atomic-search-interface', 'atomic-external'];
 
 /**
  * Retrieves `Bindings` on a configured parent search interface.
- * @param event Element on which to dispatch the event, must be the child of a configured "atomic-search-interface" or "atomic-external" element.
+ * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
  * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element.
- * @throws The error thrown if the element is not a children of a configured "atomic-search-interface" or "atomic-external" element.
+ * @throws The error thrown if the element isn't a child of a configured "atomic-search-interface" or "atomic-external" element.
  */
 export const initializeBindings = (element: Element) =>
   new Promise<Bindings>((resolve) => {
