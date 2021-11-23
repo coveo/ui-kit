@@ -18,7 +18,11 @@ export const togoHierarchy = ['Africa', 'Togo', 'Lome'];
 function categoryFacetActions(selector: AllFacetSelectors) {
   return {
     selectChildValue(value: string) {
-      selector.childValueOption().contains(value).click({force: true});
+      selector
+        .childValueOption()
+        .contains(value)
+        .click({force: true})
+        .logAction(`when selecting "${value}"`);
     },
     selectParentValue(value: string) {
       selector.parentValueOption().contains(value).click({force: true});

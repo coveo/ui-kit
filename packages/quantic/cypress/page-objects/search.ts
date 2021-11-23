@@ -30,6 +30,7 @@ export const InterceptAliases = {
     Tab: {
       InterfaceChange: uaAlias('interfaceChange'),
     },
+    Breadcrumb: uaAlias('breadcrumbFacet'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',

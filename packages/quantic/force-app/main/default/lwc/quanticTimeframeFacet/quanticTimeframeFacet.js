@@ -2,12 +2,14 @@ import {
   getHeadlessBindings,
   initializeWithHeadless,
   registerComponentForInit,
+  registerToStore,
 } from 'c/quanticHeadlessLoader';
 import {
   DateUtils,
   fromSearchApiDate,
   I18nUtils,
   RelativeDateFormatter,
+  Store,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
@@ -329,6 +331,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
     this.initializeDateFilterController(engine);
+    registerToStore(this.engineId, Store.facetTypes.DATEFACETS, {
+      label: this.label,
+      facetId: this.facet.state.facetId,
+      format: this.formatFacetValue,
+    });
   };
 
   /**
