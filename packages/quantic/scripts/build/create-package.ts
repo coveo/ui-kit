@@ -153,22 +153,26 @@ async function createGithubDiscussionPost(
   const packageDetails = (await sfdx.getPackageVersionList()).result.find(
     (pack) => pack.SubscriberPackageVersionId === packageVersionId
   );
-  const dicussionName = `${packageDetails.Package2Name} v${options.packageVersion}`;
+  const discussionTitle = `${packageDetails.Package2Name} v${options.packageVersion}`;
   const discussionBody = `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`;
-  const discussionType = 'Announcements';
 
   log('Creating Github discussion...');
   try {
-    const repositoryData = await getRepoCategoryData('coveo', 'ui-kit', token);
-    const announcementTypeId = repositoryData.discussionCategories.edges.find(
-      (edge) => edge.node.name === discussionType
+    const repository = await getRepoCategoryData(
+      {owner: 'nathanlb', name: 'sfdx-cli-testing'},
+      token
+    );
+    const announcementCategoryId = repository.discussionCategories.edges.find(
+      (edge) => edge.node.name === 'Announcements'
     ).node.id;
 
-    const {discussion} = await createDiscussion(
-      repositoryData.id,
-      announcementTypeId,
-      dicussionName,
-      discussionBody,
+    const discussion = await createDiscussion(
+      {
+        repositoryId: repository.id,
+        categoryId: announcementCategoryId,
+        title: discussionTitle,
+        body: discussionBody,
+      },
       token
     );
     log(`Github discussion ID: ${discussion.id} created.`);

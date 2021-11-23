@@ -1,40 +1,28 @@
-// eslint-disable-next-line node/no-unpublished-import
+/* eslint-disable node/no-unpublished-import */
 import {graphql} from '@octokit/graphql';
-
-export interface DiscussionCategories {
-  edges: Array<{
-    node: {
-      name: string;
-      id: string;
-    };
-  }>;
-}
-
-export interface RepoCategoryData {
-  id: string;
-  discussionCategories: DiscussionCategories;
-}
-
-export interface RepoCategoryResponse {
-  repository: RepoCategoryData;
-}
+import {
+  Repository,
+  Discussion,
+  validate,
+  CreateDiscussionInput,
+  Mutation,
+  QueryRepositoryArgs,
+} from '@octokit/graphql-schema';
 
 export async function getRepoCategoryData(
-  repoOwner: string,
-  repoName: string,
+  args: QueryRepositoryArgs,
   token: string
-): Promise<RepoCategoryData> {
-  const maxCategories = 10;
+): Promise<Repository> {
   const graphqlWithAuth = graphql.defaults({
     headers: {
       authorization: `token ${token}`,
     },
   });
   const query = `
-    query {
-      repository(owner: "${repoOwner}", name: "${repoName}") {
+    query categoryTypes($owner: String!, $name: String!) {
+      repository(owner: $owner, name: $name) {
         id
-        discussionCategories(first: ${maxCategories}) {
+        discussionCategories(first: 10) {
           edges {
             node {
               name
@@ -45,40 +33,31 @@ export async function getRepoCategoryData(
       }
     }
   `;
-  return ((await graphqlWithAuth(query)) as RepoCategoryResponse).repository;
-}
-
-export interface CreateDiscussionResponse {
-  createDiscussion: CreateDiscussionData;
-}
-
-export interface CreateDiscussionData {
-  discussion: {
-    id: string;
-  };
+  validate(query);
+  return (await graphqlWithAuth<{repository: Repository}>(query, args))
+    .repository;
 }
 
 export async function createDiscussion(
-  repoId: string,
-  categoryId: string,
-  title: string,
-  body: string,
+  args: CreateDiscussionInput,
   token: string
-): Promise<CreateDiscussionData> {
+): Promise<Discussion> {
   const graphqlWithAuth = graphql.defaults({
     headers: {
       authorization: `token ${token}`,
     },
   });
   const query = `
-    mutation {
-      createDiscussion(input: {repositoryId: "${repoId}", categoryId: "${categoryId}", body: "${body}", title: "${title}"}) {
+    mutation createDiscussion($repositoryId: String!, $categoryId: String!,  $title: String!, $body: String!) {
+      createDiscussion(input: {repositoryId: $repositoryId, categoryId: $categoryId, title: $title, body: $body}) {
         discussion {
           id
         }
       }
     }
   `;
-  return ((await graphqlWithAuth(query)) as CreateDiscussionResponse)
-    .createDiscussion;
+
+  validate(query);
+  return (await graphqlWithAuth<Mutation>(query, args)).createDiscussion
+    ?.discussion;
 }
