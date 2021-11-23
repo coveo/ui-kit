@@ -1,4 +1,4 @@
-// eslint-disable-next-line node/no-extraneous-import
+// eslint-disable-next-line node/no-unpublished-import
 import {graphql} from '@octokit/graphql';
 
 export interface DiscussionCategories {

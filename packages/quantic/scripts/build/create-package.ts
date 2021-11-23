@@ -153,7 +153,7 @@ async function createGithubDiscussionPost(
   const packageDetails = (await sfdx.getPackageVersionList()).result.find(
     (pack) => pack.SubscriberPackageVersionId === packageVersionId
   );
-  const dicussionName = `${packageDetails.Package2Name}v${options.packageVersion}`;
+  const dicussionName = `${packageDetails.Package2Name} v${options.packageVersion}`;
   const discussionBody = `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`;
   const discussionType = 'Announcements';
 
