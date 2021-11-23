@@ -79,7 +79,7 @@ describe('buildSamlFlow', () => {
         provider.exchangeHandshakeToken();
 
         expect(request).toHaveBeenCalledWith(
-          'https://platform.cloud.coveo.com/rest/search/login/handshake/token',
+          'https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token',
           {
             method: 'POST',
             body: JSON.stringify({handshakeToken}),
