@@ -4,7 +4,7 @@
   "description": "Functions to faciliate authentication with Coveo platform.",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/coveo/ui-kit/issues"
   },
-  "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme"
+  "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "jest": "^27.3.0",
+    "ts-jest": "^27.0.7"
+  }
 }
