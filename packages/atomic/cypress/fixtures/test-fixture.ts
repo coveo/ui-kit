@@ -106,6 +106,15 @@ export class TestFixture {
     return this;
   }
 
+  public withViewport(viewport: Cypress.ViewportPreset) {
+    cy.viewport(viewport);
+    return this;
+  }
+
+  public withMobileViewport() {
+    return this.withViewport('iphone-x');
+  }
+
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
