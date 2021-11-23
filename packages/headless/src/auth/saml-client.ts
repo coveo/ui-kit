@@ -2,7 +2,7 @@ import {buildSamlFlow} from './saml-flow';
 
 export interface SamlClientOptions {
   /**
-   * The unique identifier of the target Coveo Cloud organization.
+   * The unique identifier of the target Coveo Cloud organization (e.g., mycoveoorganizationg8tp8wu3).
    */
   organizationId: string;
 
