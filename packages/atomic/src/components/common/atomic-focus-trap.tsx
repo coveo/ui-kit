@@ -98,10 +98,15 @@ export class AtomicFocusTrap {
   }
 
   @Listen('focusin', {target: 'document'})
-  onFocusChanged(e: {originalTarget: HTMLElement}) {
-    if (contains(this.host, e.originalTarget)) {
+  onFocusChanged(e: FocusEvent) {
+    if (!e.target) {
       return;
     }
+
+    if (contains(this.host, e.target as Element)) {
+      return;
+    }
+
     getFirstFocusableDescendant(this.host)?.focus();
   }
 
