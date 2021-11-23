@@ -1,3 +1,4 @@
+import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {
   BreadcrumbManagerSelector,
@@ -44,7 +45,7 @@ function baseBreadcrumbManagerExpectations(
         .should('have.length', value)
         .logDetail(`should display ${value} ${name} breadcrumb values`);
     },
-    firstbreadcrumbValueLabelContains: (value: string) => {
+    firstBreadcrumbValueLabelContains: (value: string) => {
       selector
         .firstbreadcrumbValueLabel()
         .contains(value)
@@ -74,6 +75,36 @@ function breadcrumbManagerExpectations(selector: BreadcrumbManagerSelector) {
         .clearFilters()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the breadcrumb manager`);
+    },
+    logFacetBreadcrumbFacet: (field: string) => {
+      cy.wait(InterceptAliases.UA.Breadcrumb)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property(
+            'actionCause',
+            'breadcrumbFacet'
+          );
+          expect(analyticsBody.customData).to.have.property(
+            'facetField',
+            field
+          );
+        })
+        .logDetail('should log the "breadcrumbFacet" UA event');
+    },
+    logCategoryFacetBreadcrumbFacet: (field: string) => {
+      cy.wait(InterceptAliases.UA.Breadcrumb)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property(
+            'actionCause',
+            'breadcrumbFacet'
+          );
+          expect(analyticsBody.customData).to.have.property(
+            'categoryFacetField',
+            field
+          );
+        })
+        .logDetail('should log the category "breadcrumbFacet" UA event');
     },
   };
 }

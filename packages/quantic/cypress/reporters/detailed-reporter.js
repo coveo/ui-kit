@@ -163,9 +163,10 @@ class DetailedReporter {
    * @param {Message} message The message instance.
    */
   handleAction(message) {
+    const symbol = this._isWindows ? '>' : '→';
     this._logBuffer.push(
-      this.scopeIndent() + chalk.blue('-> ')+ chalk.dim(message.content)
-    )
+      `${this.scopeIndent()}${chalk.blue(symbol)} ${chalk.dim(message.content)}`
+    );
   }
 
   /**
