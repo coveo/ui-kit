@@ -3,7 +3,6 @@ import {graphql} from '@octokit/graphql';
 import {
   Repository,
   Discussion,
-  validate,
   CreateDiscussionInput,
   Mutation,
   QueryRepositoryArgs,
@@ -33,7 +32,6 @@ export async function getRepoCategoryData(
       }
     }
   `;
-  validate(query);
   return (await graphqlWithAuth<{repository: Repository}>(query, args))
     .repository;
 }
@@ -56,8 +54,6 @@ export async function createDiscussion(
       }
     }
   `;
-
-  validate(query);
   return (await graphqlWithAuth<Mutation>(query, args)).createDiscussion
     ?.discussion;
 }
