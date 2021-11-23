@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.32.0...@coveo/headless@1.33.0) (2021-11-22)
+
+
+### Features
+
+* **headless:** added case assist engine ([#1502](https://github.com/coveo/ui-kit/issues/1502)) ([cb6b275](https://github.com/coveo/ui-kit/commit/cb6b275b969b96b47c9492bbe6632dc0abb6a2e7))
+
+
+
+
+
+# [1.32.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.7...@coveo/headless@1.32.0) (2021-11-22)
+
+
+### Features
+
+* **atomic:** expose headless as a subpackage ([#1500](https://github.com/coveo/ui-kit/issues/1500)) ([4ac4b05](https://github.com/coveo/ui-kit/commit/4ac4b05f62ecd78fa08739cecb185fc611e2a2d6))
+
+
+
+
+
+## [1.31.7](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.6...@coveo/headless@1.31.7) (2021-11-18)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.31.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.31.5...@coveo/headless@1.31.6) (2021-11-15)
 
 

@@ -1,0 +1,28 @@
+.search-interface-props-table {
+  text-align: left;
+  font-size: 13px;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.search-interface-props-table th,
+.search-interface-props-table td {
+  word-break: break-word;
+}
+
+.search-interface-props-table th:nth-of-type(1),
+.search-interface-props-table td:nth-of-type(1),
+.search-interface-props-table th:nth-of-type(3),
+.search-interface-props-table td:nth-of-type(3),
+.search-interface-props-table th:nth-of-type(4),
+.search-interface-props-table td:nth-of-type(4) {
+  width: 10%;
+}
+
+.search-interface-props-table th:nth-of-type(2),
+.search-interface-props-table td:nth-of-type(2),
+.search-interface-props-table th:nth-of-type(5),
+.search-interface-props-table td:nth-of-type(5) {
+  width: 40%;
+}

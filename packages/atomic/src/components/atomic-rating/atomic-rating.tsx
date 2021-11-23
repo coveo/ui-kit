@@ -40,7 +40,7 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
   };
 
   return (
-    <div class="relative" part="value-rating">
+    <div class="relative w-max" part="value-rating">
       <div class="z-0 flex gap-0.5">{emptyIconDisplay()}</div>
       <div
         class="absolute left-0 top-0 z-1 flex gap-0.5 overflow-hidden"
