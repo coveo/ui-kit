@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.2...@coveo/atomic@1.15.3) (2021-11-23)
+
+
+### Bug Fixes
+
+* **atomic:** fix focus trap event target ([#1509](https://github.com/coveo/ui-kit/issues/1509)) ([67b5ee9](https://github.com/coveo/ui-kit/commit/67b5ee9a29c5d39eee1133d4710a0dc0cd85cacc))
+
+
+
+
+
 ## [1.15.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.1...@coveo/atomic@1.15.2) (2021-11-22)
 
 
