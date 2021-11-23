@@ -2,14 +2,14 @@ import {ComponentSelector, CypressSelector} from '../common-selectors';
 
 export const summaryComponent = 'c-quantic-summary';
 
-export interface SummarytSelector extends ComponentSelector {
+export interface SummarySelector extends ComponentSelector {
   text: () => CypressSelector;
   range: () => CypressSelector;
   total: () => CypressSelector;
   query: () => CypressSelector;
 }
 
-export const SummarySelectors: SummarytSelector = {
+export const SummarySelectors: SummarySelector = {
   get: () => cy.get(summaryComponent),
 
   text: () =>

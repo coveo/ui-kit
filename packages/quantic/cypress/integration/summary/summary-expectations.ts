@@ -1,7 +1,7 @@
 import {should} from '../common-selectors';
-import {SummarySelectors, SummarytSelector} from './summary-selectors';
+import {SummarySelectors, SummarySelector} from './summary-selectors';
 
-function summarytExpectations(selector: SummarytSelector) {
+function summarytExpectations(selector: SummarySelector) {
   return {
     displaySummary: (display: boolean) => {
       selector

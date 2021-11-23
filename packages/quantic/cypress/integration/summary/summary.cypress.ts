@@ -9,11 +9,11 @@ import {SummaryExpectations as Expect} from './summary-expectations';
 import {ResultsPerPageActions} from '../results-per-page/results-per-page-actions';
 
 describe('quantic-summary', () => {
-  const summarytUrl = 's/quantic-summary';
+  const summaryUrl = 's/quantic-summary';
 
   function visitSummary(waitForSearch = true) {
     interceptSearch();
-    cy.visit(summarytUrl);
+    cy.visit(summaryUrl);
     configure();
     if (waitForSearch) {
       cy.wait(InterceptAliases.Search);
@@ -22,14 +22,14 @@ describe('quantic-summary', () => {
 
   function setupWithPauseBeforeSearch() {
     interceptSearchIndefinitely();
-    cy.visit(summarytUrl);
+    cy.visit(summaryUrl);
     configure();
   }
 
   function loadFromUrlHash(urlHash: string) {
     interceptSearch();
 
-    cy.visit(`${summarytUrl}#${urlHash}`);
+    cy.visit(`${summaryUrl}#${urlHash}`);
     configure();
   }
 
@@ -41,38 +41,42 @@ describe('quantic-summary', () => {
 
   describe('when loading default summary', () => {
     it('should work as expected', () => {
-      visitSummary();
+      visitSummary(false);
 
+      cy.wait(InterceptAliases.Search).then((interception) => {
+        console.log(interception);
+      });
       Expect.displaySummary(true);
+      Expect.displayQuery(false);
       Expect.displayRange(true);
+      Expect.rangeContains('1-25');
       Expect.displayTotal(true);
     });
   });
 
-  describe('when searching', () => {
+  describe('when a query yields no results', () => {
     it('should work as expected', () => {
-      scope('when a query yields no results', () => {
-        const url = 'q=somethingwithnoresult';
-        loadFromUrlHash(url);
+      const url =
+        'q=nowaythisquerywillevereverevertreturnanythingitsimpossible';
+      loadFromUrlHash(url);
 
-        Expect.displaySummary(false);
-      });
+      Expect.displaySummary(false);
+    });
+  });
 
-      reset();
+  describe('when a query yields one result', () => {
+    it('should work as expected', () => {
+      const query = "Queen's Gambit sparks world of online chess celebrities";
+      const url = `q=${query}`;
+      loadFromUrlHash(url);
 
-      scope('when a query yields one result', () => {
-        const query = "Queen's Gambit sparks world of online chess celebrities";
-        const url = `q=${query}`;
-        loadFromUrlHash(url);
-
-        Expect.displaySummary(true);
-        Expect.displayRange(true);
-        Expect.rangeContains('1-1');
-        Expect.displayTotal(true);
-        Expect.totalContains('1');
-        Expect.displayQuery(true);
-        Expect.queryContains(query);
-      });
+      Expect.displaySummary(true);
+      Expect.displayRange(true);
+      Expect.rangeContains('1-1');
+      Expect.displayTotal(true);
+      Expect.totalContains('1');
+      Expect.displayQuery(true);
+      Expect.queryContains(query);
     });
   });
 
