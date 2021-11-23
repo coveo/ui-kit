@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Functions to faciliate authentication with Coveo platform.",
   "main": "index.js",
-  "browser": "dist/browser/auth.js",
+  "module": "dist/auth.esm.js",
   "scripts": {
     "build": "node esbuild.js",
     "test": "jest"
