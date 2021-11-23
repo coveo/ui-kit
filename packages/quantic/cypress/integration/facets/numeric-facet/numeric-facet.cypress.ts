@@ -298,4 +298,32 @@ describe('Numeric Facet Test Suite', () => {
       });
     });
   });
+
+  describe('with custom #numberOfValues', () => {
+    it('should work as expected', () => {
+      scope('when setting number of values greater than 0', () => {
+        visitNumericFacetPage({
+          numberOfValues: 2,
+          field: defaultField,
+          label: defaultLabel,
+        });
+
+        Expect.displayLabel(true);
+        Expect.displayValues(true);
+        Expect.numberOfValues(2);
+        Expect.numberOfIdleCheckboxValues(2);
+      });
+
+      scope('when setting number of values equal to 0', () => {
+        visitNumericFacetPage({
+          numberOfValues: 0,
+          field: defaultField,
+          label: defaultLabel,
+        });
+
+        Expect.displayLabel(false);
+        Expect.displayValues(false);
+      });
+    });
+  });
 });
