@@ -21,7 +21,7 @@ jobs:
         run: |
           npm ci
           npx lerna bootstrap
-          npm run build:e2e
+          npm run build
       - uses: cypress-io/github-action@v2
         name: Cypress tests
         with:
