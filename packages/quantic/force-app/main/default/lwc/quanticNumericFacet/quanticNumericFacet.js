@@ -136,6 +136,8 @@ export default class QuanticNumericFacet extends LightningElement {
   numericFilter;
   /**  @type {SearchStatus} */
   searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
   /** @type {Function} */
@@ -194,7 +196,7 @@ export default class QuanticNumericFacet extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
     registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
       label: this.label,
-      facetId: this.facet?.state.facetId,
+      facetId: this.facet?.state.facetId ?? this.field,
       format: this.formattingFunction,
     });
   }
@@ -237,6 +239,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
+    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   updateFilterState() {
@@ -245,9 +248,6 @@ export default class QuanticNumericFacet extends LightningElement {
     this.end = this.filterState?.range?.end?.toString();
   }
 
-  get showPlaceholder () {
-    return this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
-  }
 
   get values() {
     return (
@@ -387,8 +387,12 @@ export default class QuanticNumericFacet extends LightningElement {
     if (!allValid) {
       return;
     }
-    const engine = getHeadlessBindings(this.engineId).engine;
-    engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
+
+    if(this.numberOfValues > 0) {
+      const engine = getHeadlessBindings(this.engineId).engine;
+      engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
+    }
+    
     this.numericFilter.setRange({
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined

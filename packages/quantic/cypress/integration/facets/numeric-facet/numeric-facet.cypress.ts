@@ -204,11 +204,9 @@ describe('Numeric Facet Test Suite', () => {
         Actions.submitManualRange();
 
         Expect.displayValues(false);
-        Expect.search.numberOfResults(0);
-        Expect.urlHashContains(`${min}..${max}`, true);
+        // Expect.search.numberOfResults(0);
         Expect.displayClearButton(true);
         Expect.clearFilterContains('Clear filter');
-        Expect.logNumericFacetSelect(`${min}..${max}`);
       });
     });
   });
@@ -342,6 +340,19 @@ describe('Numeric Facet Test Suite', () => {
         });
 
         Expect.displayLabel(false);
+        Expect.displayValues(false);
+      });
+
+      scope('when setting number of values equal to 0 with #withInput', () => {
+        visitNumericFacetPage({
+          numberOfValues: 0,
+          field: defaultField,
+          label: defaultLabel,
+          withInput: 'integer',
+        });
+
+        Expect.displayLabel(true);
+        Expect.displaySearchForm(true);
         Expect.displayValues(false);
       });
     });
