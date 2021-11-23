@@ -30,7 +30,7 @@ const {
  *
  * Additional context is provided using the `scope` function.
  * Details on a particular expectation are logged using the `logDetail` custom Cypress command.
- * Details on a particul action are logged using `logAction` custom Cypress command.
+ * Details on a particular action are logged using `logAction` custom Cypress command.
  * See `detailed-collector.ts` for more information.
  */
 class DetailedReporter {
