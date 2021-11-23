@@ -6,6 +6,7 @@
 - [Atomic](packages/atomic): Coveo's web-component library for building modern search experiences.
 - [Quantic](packages/quantic): Coveo's LWC library for building Salesforce search experiences.
 - [Bueno](packages/bueno): A simple schema validator.
+- [Auth](packages/auth): Functions to help authentication with Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
 
 ## Installation
