@@ -136,8 +136,6 @@ export default class QuanticNumericFacet extends LightningElement {
   numericFilter;
   /**  @type {SearchStatus} */
   searchStatus;
-  /** @type {boolean} */
-  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
   /** @type {Function} */
@@ -189,7 +187,7 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.numberOfValues > 0) {
       this.initializeFacet(engine);
     }
-    if(this.withInput) {
+    if(this.withInput || (this.withInput && this.numberOfValues === 0)) {
       this.initializeFilter(engine);
     }
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
@@ -239,13 +237,16 @@ export default class QuanticNumericFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   updateFilterState() {
     this.filterState = this.numericFilter?.state;
     this.start = this.filterState?.range?.start?.toString();
     this.end = this.filterState?.range?.end?.toString();
+  }
+
+  get showPlaceholder () {
+    return this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
