@@ -97,12 +97,11 @@ export abstract class BasePlugin {
 
         if (eventType === BasePluginEventTypes.pageview) {
             this.nextPageViewId = this.uuidGenerator();
+            this.hasSentFirstPageView = true;
         }
-
-        this.hasSentFirstPageView = true;
     }
 
-    /* 
+    /*
         When calling getPayload or getParameters, we need to return what would be sent by the API without updating our internal reference. 
         For instance, if you getPayload("pageview"), we want to return the same payload as if you did coveoua("send", "pageview").
     */

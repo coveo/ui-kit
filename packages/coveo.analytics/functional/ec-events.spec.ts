@@ -289,6 +289,31 @@ describe('ec events', () => {
         expect(afterSecond.dr).toBe(initialLocation);
     });
 
+    it('should only update the current location and referrer on the first page view (COM-1372)', async () => {
+        const secondLocation = 'http://very.new/';
+
+        await coveoua('send', 'event', '1');
+        await coveoua('send', 'pageview');
+        changeDocumentLocation(secondLocation);
+        await coveoua('send', 'event', '2');
+        await coveoua('send', 'pageview');
+        await coveoua('send', 'event', '3');
+
+        const [firstEvent, firstPageView, secondEvent, secondPageView, thirdEvent] = getParsedBody();
+
+        expect(firstEvent.dl).toBe(initialLocation);
+        expect(firstEvent.dr).toBe(document.referrer);
+        expect(firstPageView.dl).toBe(initialLocation);
+        expect(firstPageView.dr).toBe(document.referrer);
+        expect(secondEvent.dl).toBe(initialLocation);
+        expect(secondEvent.dr).toBe(document.referrer);
+
+        expect(secondPageView.dl).toBe(secondLocation);
+        expect(secondPageView.dr).toBe(initialLocation);
+        expect(thirdEvent.dl).toBe(secondLocation);
+        expect(thirdEvent.dr).toBe(initialLocation);
+    });
+
     it('should return the same payload', async () => {
         const secondLocation = 'http://very.new/';
 
