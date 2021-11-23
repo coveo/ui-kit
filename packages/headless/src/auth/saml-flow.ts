@@ -1,14 +1,14 @@
 import {fetch} from 'cross-fetch';
-import {getIsomorphicHistory, IsomorphicHistory} from './isomorphic-history';
-import {getIsomorphicLocation, IsomorphicLocation} from './isomorphic-location';
+import {getBrowserHistory, BrowserHistory} from './browser-history';
+import {getBrowserLocation, BrowserLocation} from './browser-location';
 
 export interface SamlFlowOptions {
   organizationId: string;
   provider: string;
   platformOrigin?: string;
   request?: Fetch;
-  location?: IsomorphicLocation;
-  history?: IsomorphicHistory;
+  location?: BrowserLocation;
+  history?: BrowserHistory;
 }
 
 export interface SamlFlow {
@@ -65,35 +65,35 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
 
 function buildOptions(config: SamlFlowOptions): Required<SamlFlowOptions> {
   return {
-    location: getIsomorphicLocation(),
-    history: getIsomorphicHistory(),
+    location: getBrowserLocation(),
+    history: getBrowserHistory(),
     request: fetch,
     platformOrigin: 'https://platform.cloud.coveo.com',
     ...config,
   };
 }
 
-function getHandshakeToken(location: IsomorphicLocation): string {
+function getHandshakeToken(location: BrowserLocation): string {
   const params = getHashParamsAfterAdjustingForAngular(location);
   const handshakeParam = params.get(handshakeTokenParamName);
 
   return handshakeParam || '';
 }
 
-function getHashParamsAfterAdjustingForAngular(location: IsomorphicLocation) {
+function getHashParamsAfterAdjustingForAngular(location: BrowserLocation) {
   const hash = location.hash;
   const adjustedHash = isAngularHash(location) ? hash.slice(2) : hash.slice(1);
   return new URLSearchParams(adjustedHash);
 }
 
-function isAngularHash(location: IsomorphicLocation) {
+function isAngularHash(location: BrowserLocation) {
   const hash = location.hash;
   return hash.indexOf('#/') === 0;
 }
 
 function removeHandshakeToken(
-  location: IsomorphicLocation,
-  history: IsomorphicHistory
+  location: BrowserLocation,
+  history: BrowserHistory
 ) {
   const params = getHashParamsAfterAdjustingForAngular(location);
   params.delete(handshakeTokenParamName);

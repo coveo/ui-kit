@@ -1,5 +1,5 @@
-import {IsomorphicHistory} from './isomorphic-history';
-import {IsomorphicLocation} from './isomorphic-location';
+import {BrowserHistory} from './browser-history';
+import {BrowserLocation} from './browser-location';
 import {buildSamlFlow, SamlFlow, SamlFlowOptions} from './saml-flow';
 
 describe('buildSamlFlow', () => {
@@ -12,11 +12,11 @@ describe('buildSamlFlow', () => {
     provider = buildSamlFlow(options);
   }
 
-  function buildMockLocation(): IsomorphicLocation {
+  function buildMockLocation(): BrowserLocation {
     return {hash: '', href: ''};
   }
 
-  function buildMockHistory(): IsomorphicHistory {
+  function buildMockHistory(): BrowserHistory {
     return {replaceState: jest.fn()};
   }
 
