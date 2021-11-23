@@ -11,7 +11,7 @@ import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {
-  CaseAssistSection,
+  CaseAssistConfigurationSection,
   ConfigurationSection,
   ContextSection,
   PipelineSection,
@@ -41,7 +41,7 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
   >;
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
-  Partial<CaseAssistSection>;
+  Partial<CaseAssistConfigurationSection>;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
@@ -202,7 +202,9 @@ export const configureCaseAssistAnalytics = ({
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
+  const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CaseAssistClient({
+    enableAnalytics,
     token,
     endpoint,
     runtimeEnvironment,
@@ -224,7 +226,7 @@ export const configureCaseAssistAnalytics = ({
     ],
   });
 
-  if (state.configuration.analytics.enabled === false) {
+  if (!enableAnalytics) {
     client.disable();
   }
   return client;

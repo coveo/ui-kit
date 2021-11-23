@@ -12,6 +12,7 @@ interface Bindings {
 
 declare global {
   const CoveoHeadless: typeof HeadlessTypes;
+  const CoveoHeadlessCaseAssist: typeof HeadlessTypes;
   interface Window {
     coveoHeadless: {
       [engineId: string]: {

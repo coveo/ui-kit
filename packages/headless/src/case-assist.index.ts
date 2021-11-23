@@ -24,3 +24,6 @@ export {
 export {LoggerOptions} from './app/logger';
 
 export {LogLevel} from './app/logger';
+
+export * from './features/case-assist/case-assist-analytics-actions';
+export {loadCaseAssistAnalyticsActions} from './features/case-assist/case-assist-analytics-actions-loader';

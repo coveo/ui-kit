@@ -24,6 +24,10 @@ const main = async () => {
       './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
     );
     await copy(
+      './node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
+      './force-app/main/default/staticresources/coveoheadless/browser/case-assist/headless.js'
+    );
+    await copy(
       './node_modules/@coveo/headless/dist/definitions',
       './force-app/main/default/staticresources/coveoheadless/definitions'
     );
