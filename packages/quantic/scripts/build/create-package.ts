@@ -1,7 +1,5 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 import * as fs from 'fs';
-/* eslint-disable-next-line node/no-extraneous-import */
-import {Octokit} from '@octokit/rest';
 import * as sfdx from './util/sfdx-commands';
 import * as path from 'path';
 import {StepLogger, StepsRunner} from './util/log';
@@ -10,6 +8,7 @@ import {
   SfdxJWTAuth,
   SfdxCreatePackageVersionResponse,
 } from './util/sfdx-commands';
+import {createDiscussion, getRepoCategoryData} from './util/github';
 import * as pack from '../../package.json';
 
 require('dotenv').config();
@@ -96,11 +95,16 @@ async function authorizePublishingOrg(log: StepLogger, options: Options) {
 }
 
 async function ensurePackageNotPublished(log: StepLogger, options: Options) {
-  if (await getIsPublished()) {
+  log(
+    `Ensuring package version ${options.packageVersion} is not already published...`
+  );
+  if (options.promote && (await getIsPublished())) {
     log(
       `Skipped publishing ${options.packageVersion} since this patch version is already published.`
     );
+    throw new Error();
   }
+  log('Confirmed.');
 }
 
 async function removeTranslations(log: StepLogger) {
@@ -140,28 +144,37 @@ async function promotePackage(log: StepLogger, packageVersionId: string) {
   log(`Quantic package ${packageVersionId} published.`);
 }
 
-async function createGithubRelease(
+async function createGithubDiscussionPost(
   log: StepLogger,
   options: Options,
   packageVersionId: string
 ) {
   const token = process.env.GITHUB_TOKEN || '';
-  const github = new Octokit({auth: token});
-
   const packageDetails = (await sfdx.getPackageVersionList()).result.find(
     (pack) => pack.SubscriberPackageVersionId === packageVersionId
   );
-  const releaseName = `${packageDetails.Package2Name}v${options.packageVersion}`;
+  const dicussionName = `${packageDetails.Package2Name}v${options.packageVersion}`;
+  const discussionBody = `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`;
+  const discussionType = 'Announcements';
 
-  log('Creating Github release...');
-  await github.rest.repos.createRelease({
-    owner: 'coveo',
-    repo: 'ui-kit',
-    tag_name: releaseName,
-    name: releaseName,
-    body: `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`,
-  });
-  log('Github release created.');
+  log('Creating Github discussion...');
+  try {
+    const repositoryData = await getRepoCategoryData('coveo', 'ui-kit', token);
+    const announcementTypeId = repositoryData.discussionCategories.edges.find(
+      (edge) => edge.node.name === discussionType
+    ).node.id;
+
+    const {discussion} = await createDiscussion(
+      repositoryData.id,
+      announcementTypeId,
+      dicussionName,
+      discussionBody,
+      token
+    );
+    log(`Github discussion ID: ${discussion.id} created.`);
+  } catch (error) {
+    log(`Discussion creation FAILED: ${error.message}`);
+  }
 }
 
 (async function () {
@@ -195,7 +208,7 @@ async function createGithubRelease(
         .add(async (log) => await promotePackage(log, packageVersionId))
         .add(
           async (log) =>
-            await createGithubRelease(log, options, packageVersionId)
+            await createGithubDiscussionPost(log, options, packageVersionId)
         );
 
     await runner.run();
