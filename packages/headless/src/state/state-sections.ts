@@ -33,6 +33,8 @@ import {DictionaryFieldContextState} from '../features/dictionary-field-context/
 import {ProductListingState} from '../features/product-listing/product-listing-state';
 import {SortState} from '../features/sort/sort-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
+import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
+import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
 
 export interface QuerySection {
   /**
@@ -46,6 +48,13 @@ export interface AdvancedSearchQueriesSection {
    * The current advanced search parameters (e.g: aq and cq)
    */
   advancedSearchQueries: AdvancedSearchQueriesState;
+}
+
+export interface StaticFilterSection {
+  /**
+   * The set of static filters.
+   */
+  staticFilterSet: StaticFilterSetState;
 }
 
 export interface TabSection {
@@ -300,4 +309,11 @@ export interface RecentQueriesSection {
    * The recent queries executed by the current user.
    */
   recentQueries: RecentQueriesState;
+}
+
+export interface CaseAssistConfigurationSection {
+  /**
+   * The case assist engine configuration
+   */
+  caseAssistConfiguration: CaseAssistConfigurationState;
 }

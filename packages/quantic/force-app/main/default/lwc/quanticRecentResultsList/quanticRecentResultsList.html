@@ -1,32 +1,37 @@
 <template>
-  <c-quantic-card-container title={label}>
-    <lightning-button-icon
-      class="slds-p-bottom_small"
-      slot="actions"
-      onclick={toggleVisibility}
-      icon-name={actionButtonIcon}
-      alternative-text={actionButtonLabel}
-      variant="bare"
-    >
-    </lightning-button-icon>
-    <template if:false={isCollapsed}>
-      <div class="slds-m-top_medium">
-        <template if:false={hasResults}>
-          <div class="slds-text-body_small empty-list-message slds-var-m-top_small slds-p-horizontal_x-small">{labels.emptyListLabel}</div>
-        </template>
-        <ul>
-          <template for:each={results} for:item="result">
-            <li class="slds-grid" key={result.uniqueId}>
-              <div class="recent-result__container slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small">
-                <lightning-icon class="recent-result__icon slds-current-color" icon-name="utility:page" alternative-text="page icon" size="xx-small"></lightning-icon>
-                <div class="slds-text-body_small nowrap result-link__container">
-                  <c-quantic-recent-result-link result={result} engine-id={engineId} target={target}></c-quantic-recent-result-link>
-                </div>
-              </div>
-            </li>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={maxLength}></c-quantic-placeholder>
+  </template>
+  <template if:false={showPlaceholder}>
+    <c-quantic-card-container title={label}>
+      <lightning-button-icon
+        class="slds-p-bottom_small"
+        slot="actions"
+        onclick={toggleVisibility}
+        icon-name={actionButtonIcon}
+        alternative-text={actionButtonLabel}
+        variant="bare"
+      >
+      </lightning-button-icon>
+      <template if:false={isCollapsed}>
+        <div class="slds-m-top_medium">
+          <template if:false={hasResults}>
+            <div class="slds-text-body_small empty-list-message slds-var-m-top_small slds-p-horizontal_x-small">{labels.emptyListLabel}</div>
           </template>
-        </ul>
-      </div>
-    </template>
-  </c-quantic-card-container>
+          <ul>
+            <template for:each={results} for:item="result">
+              <li class="slds-grid" key={result.uniqueId}>
+                <div class="recent-result__container slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small">
+                  <lightning-icon class="recent-result__icon slds-current-color" icon-name="utility:page" alternative-text="page icon" size="xx-small"></lightning-icon>
+                  <div class="slds-text-body_small nowrap result-link__container">
+                    <c-quantic-recent-result-link result={result} engine-id={engineId} target={target}></c-quantic-recent-result-link>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </template>
+    </c-quantic-card-container>
+  </template>
 </template>

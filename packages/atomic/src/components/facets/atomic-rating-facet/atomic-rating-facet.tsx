@@ -87,11 +87,11 @@ export class AtomicRatingFacet
    */
   @Prop() public field!: string;
   /**
-   * The number of intervals to split the index for this facet.
+   * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
   @Prop() public numberOfIntervals = 5;
   /**
-   * The maximum value of the field. This value is also used as the number of icons to be displayed.
+   * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
    */
   @Prop() public maxValueInIndex = this.numberOfIntervals;
   /**
@@ -109,6 +109,13 @@ export class AtomicRatingFacet
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
+   *
+   * When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`.
+   * This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):
+   *
+   * - `--atomic-rating-facet-icon-active-color`
+   * - `--atomic-rating-facet-icon-inactive-color`
+
    */
   @Prop() public icon = Star;
   /**
@@ -158,6 +165,7 @@ export class AtomicRatingFacet
       facetId: this.facetId!,
       element: this.host,
       format: (value) => this.formatFacetValue(value),
+      content: (value) => this.ratingContent(value),
     });
   }
 
@@ -191,6 +199,16 @@ export class AtomicRatingFacet
     });
   }
 
+  private ratingContent(facetValue: NumericFacetValue) {
+    return (
+      <Rating
+        numberOfTotalIcons={this.maxValueInIndex}
+        numberOfActiveIcons={facetValue.start}
+        icon={this.icon}
+      ></Rating>
+    );
+  }
+
   private renderHeader() {
     return (
       <FacetHeader
@@ -217,11 +235,7 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <Rating
-              numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.start}
-              icon={this.icon}
-            ></Rating>
+            {this.ratingContent(facetValue)}
           </FacetValueCheckbox>
         );
       case 'link':
@@ -233,11 +247,7 @@ export class AtomicRatingFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
           >
-            <Rating
-              numberOfTotalIcons={this.maxValueInIndex}
-              numberOfActiveIcons={facetValue.start}
-              icon={this.icon}
-            ></Rating>
+            {this.ratingContent(facetValue)}
           </FacetValueLink>
         );
     }

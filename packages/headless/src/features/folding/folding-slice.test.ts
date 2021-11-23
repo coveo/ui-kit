@@ -193,18 +193,20 @@ describe('folding slice', () => {
         mockEngine = buildMockSearchAppEngine();
       });
 
-      const doLoadCollection = () => {
+      const doLoadCollection = async () => {
         const indexedResults = buildMockResultsFromHierarchy(
           'thread',
           testThreadHierarchy
         );
         rootResult = emulateAPIFolding(indexedResults);
 
-        mockEngine.dispatch(loadCollection(rootResult.raw.collection!));
+        await Promise.resolve(
+          mockEngine.dispatch(loadCollection(rootResult.raw.collection!))
+        );
       };
 
-      it('uses #cq with correct expression to obtain the full collection', () => {
-        doLoadCollection();
+      it('uses #cq with correct expression to obtain the full collection', async () => {
+        await doLoadCollection();
         expect(PlatformClient.call).toHaveBeenCalledWith(
           expect.objectContaining({
             requestParams: expect.objectContaining({
@@ -214,8 +216,8 @@ describe('folding slice', () => {
         );
       });
 
-      it('uses #folding parameters to obtain parent and max 100 child results', () => {
-        doLoadCollection();
+      it('uses #folding parameters to obtain parent and max 100 child results', async () => {
+        await doLoadCollection();
         expect(PlatformClient.call).toHaveBeenCalledWith(
           expect.objectContaining({
             requestParams: expect.objectContaining({
@@ -227,14 +229,14 @@ describe('folding slice', () => {
         );
       });
 
-      it('when #querySyntax is enabled and #q is non empty, it build a proper query expression to get keywords highlighting', () => {
+      it('when #querySyntax is enabled and #q is non empty, it build a proper query expression to get keywords highlighting', async () => {
         mockEngine = buildMockSearchAppEngine({
           state: {
             ...createMockState(),
             query: {enableQuerySyntax: true, q: 'hello'},
           },
         });
-        doLoadCollection();
+        await doLoadCollection();
         expect(PlatformClient.call).toHaveBeenCalledWith(
           expect.objectContaining({
             requestParams: expect.objectContaining({
@@ -245,14 +247,14 @@ describe('folding slice', () => {
         );
       });
 
-      it('when #querySyntax is disabled and #q is non empty, it build a proper query expression to get keywords highlighting', () => {
+      it('when #querySyntax is disabled and #q is non empty, it build a proper query expression to get keywords highlighting', async () => {
         mockEngine = buildMockSearchAppEngine({
           state: {
             ...createMockState(),
             query: {enableQuerySyntax: false, q: 'hello'},
           },
         });
-        doLoadCollection();
+        await doLoadCollection();
         expect(PlatformClient.call).toHaveBeenCalledWith(
           expect.objectContaining({
             requestParams: expect.objectContaining({
@@ -263,8 +265,8 @@ describe('folding slice', () => {
         );
       });
 
-      it('does not uses facets to get the full collection', () => {
-        doLoadCollection();
+      it('does not uses facets to get the full collection', async () => {
+        await doLoadCollection();
         expect(PlatformClient.call).toHaveBeenCalledWith(
           expect.objectContaining({
             requestParams: expect.not.objectContaining({

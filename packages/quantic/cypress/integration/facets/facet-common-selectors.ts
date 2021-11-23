@@ -8,6 +8,7 @@ export interface BaseFacetSelector extends ComponentSelector {
   facetValueLabelAtIndex: (index: number) => CypressSelector;
   collapseButton: () => CypressSelector;
   expandButton: () => CypressSelector;
+  placeholder: () => CypressSelector;
 }
 
 export interface FacetWithValuesSelector extends ComponentSelector {

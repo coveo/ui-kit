@@ -1,9 +1,6 @@
 @define-mixin atomic-list-with-dividers {
   &.density-comfortable {
-    padding: 2rem 1rem;
-
-    atomic-result,
-    atomic-result-placeholder {
+    > * {
       &::before {
         margin: 2rem 0;
       }
@@ -11,20 +8,14 @@
   }
 
   &.density-normal {
-    padding: 1.5rem 1rem;
-
-    atomic-result,
-    atomic-result-placeholder {
+    > * {
       &::before {
         margin: 1.5rem 0;
       }
     }
 
     @screen mobile-only {
-      padding: 1.75rem 1rem;
-
-      atomic-result,
-      atomic-result-placeholder {
+      > * {
         &::before {
           margin: 1.75rem 0;
         }
@@ -33,20 +24,14 @@
   }
 
   &.density-compact {
-    padding: 1rem 1rem;
-
-    atomic-result,
-    atomic-result-placeholder {
+    > * {
       &::before {
         margin: 1rem 0;
       }
     }
 
     @screen mobile-only {
-      padding: 1.5rem 1rem;
-
-      atomic-result,
-      atomic-result-placeholder {
+      > * {
         &::before {
           margin: 1.5rem 0;
         }
@@ -54,8 +39,7 @@
     }
   }
 
-  atomic-result,
-  atomic-result-placeholder {
+  > * {
     &::before {
       display: block;
       content: ' ';

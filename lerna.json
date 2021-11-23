@@ -1,6 +1,10 @@
 {
   "packages": [
-    "packages/**"
+    "packages/atomic",
+    "packages/headless",
+    "packages/bueno",
+    "packages/quantic",
+    "packages/samples/**"
   ],
   "command": {
     "version": {

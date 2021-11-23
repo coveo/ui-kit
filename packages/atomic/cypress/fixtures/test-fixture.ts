@@ -33,6 +33,7 @@ export class TestFixture {
     [];
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifierPredicate[] = [];
+  private returnError = false;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -92,6 +93,19 @@ export class TestFixture {
     return this;
   }
 
+  public withNoResults() {
+    return this.withCustomResponse((r) => {
+      r.results = [];
+      r.totalCountFiltered = 0;
+      return r;
+    });
+  }
+
+  public withError() {
+    this.returnError = true;
+    return this;
+  }
+
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
@@ -132,6 +146,21 @@ export class TestFixture {
               response.send(200, newResponse);
             });
           }
+        ).as(TestFixture.interceptAliases.Search.substring(1));
+      }
+
+      if (this.returnError) {
+        cy.intercept(
+          {
+            method: 'POST',
+            url: '**/rest/search/v2?*',
+          },
+          (request) =>
+            request.reply((response) =>
+              response.send(418, {
+                exception: {code: 'Something very weird just happened'},
+              })
+            )
         ).as(TestFixture.interceptAliases.Search.substring(1));
       }
 
@@ -177,6 +206,16 @@ export class TestFixture {
       QuerySuggestions: '@coveoQuerySuggest',
       Search: '@coveoSearch',
       FacetSearch: '@coveoFacetSearch',
+    };
+  }
+
+  public static get urlParts() {
+    return {
+      UA: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics',
+      Search: 'https://cloud.coveo.com/rest/search/v2',
+      UAClick: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/click',
+      UASearch:
+        'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
     };
   }
 

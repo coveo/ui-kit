@@ -28,10 +28,7 @@ import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
 import {AtomicStore, initialStore} from '../../utils/store';
 
-export type InitializationOptions = Pick<
-  SearchEngineConfiguration,
-  'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
->;
+export type InitializationOptions = SearchEngineConfiguration;
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
@@ -241,19 +238,14 @@ export class AtomicSearchInterface {
   }
 
   private initEngine(options: InitializationOptions) {
+    const searchConfig = this.getSearchConfiguration(options);
+    const analyticsConfig = this.getAnalyticsConfig(options);
     try {
       this.engine = buildSearchEngine({
         configuration: {
           ...options,
-          search: {
-            searchHub: this.searchHub,
-            pipeline: this.pipeline,
-            locale: this.language,
-            timezone: this.timezone,
-          },
-          analytics: {
-            enabled: this.analytics,
-          },
+          search: searchConfig,
+          analytics: analyticsConfig,
         },
         loggerOptions: {
           level: this.logLevel,
@@ -263,6 +255,36 @@ export class AtomicSearchInterface {
       this.error = error as Error;
       throw error;
     }
+  }
+
+  private getSearchConfiguration(options: InitializationOptions) {
+    const searchConfigFromProps = {
+      searchHub: this.searchHub,
+      pipeline: this.pipeline,
+      locale: this.language,
+      timezone: this.timezone,
+    };
+
+    if (options.search) {
+      return {
+        ...options.search,
+        ...searchConfigFromProps,
+      };
+    }
+
+    return searchConfigFromProps;
+  }
+
+  private getAnalyticsConfig(options: InitializationOptions) {
+    const analyticsConfigFromProps = {enabled: this.analytics};
+    if (options.analytics) {
+      return {
+        ...options.analytics,
+        ...analyticsConfigFromProps,
+      };
+    }
+
+    return analyticsConfigFromProps;
   }
 
   private initI18n() {
@@ -352,6 +374,7 @@ export class AtomicSearchInterface {
           bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),
+      <atomic-aria-live></atomic-aria-live>,
       <slot></slot>,
     ];
   }

@@ -3,8 +3,9 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  registerToStore,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode} from 'c/quanticUtils';
+import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
 
 import showMore from '@salesforce/label/c.quantic_ShowMore';
 import showLess from '@salesforce/label/c.quantic_ShowLess';
@@ -21,6 +22,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetState} FacetState */
 /** @typedef {import("coveo").Facet} Facet */
 /** @typedef {import("coveo").FacetValue} FacetValue */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
@@ -91,14 +93,6 @@ export default class QuanticFacet extends LightningElement {
    */
   @api displayValuesAs = 'checkbox';
   /**
-   * The character that separates values of a multi-value field.
-   * If the field is defined as a "multi-value", each path is delimited by `;`, and each part of a path is delimited by `>`. So the indexed value looks like `parent1>child1; parent2>child2`, and `delimitingCharacter` should be set to `>`.
-   * @api
-   * @type {string}
-   * @defaultValue `'>'`
-   */
-  @api delimitingCharacter = '>';
-  /**
    * Whether not to exclude the parents of folded results when estimating the result count for each facet value.
    * @api
    * @type {boolean}
@@ -134,8 +128,14 @@ export default class QuanticFacet extends LightningElement {
   
   /** @type {Facet} */
   facet;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {boolean} */
+  showPlaceholder = true;
   /** @type {Function} */
   unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
   /** @type {HTMLInputElement} */
   input;
 
@@ -153,26 +153,6 @@ export default class QuanticFacet extends LightningElement {
     expandFacet,
   };
 
-  /**
-   * @param {SearchEngine} engine
-   */
-  initialize = (engine) => {
-    const options = {
-      field: this.field,
-      sortCriteria: this.sortCriteria,
-      numberOfValues: Number(this.numberOfValues),
-      facetSearch: {
-        numberOfValues: Number(this.numberOfValues)
-      },
-      facetId: this.facetId ?? this.field,
-      delimitingCharacter: this.delimitingCharacter,
-      filterFacetCount: !this.noFilterFacetCount,
-      injectionDepth: Number(this.injectionDepth),
-    };
-    this.facet = CoveoHeadless.buildFacet(engine, {options});
-    this.unsubscribe = this.facet.subscribe(() => this.updateState());
-  }
-
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
@@ -182,24 +162,52 @@ export default class QuanticFacet extends LightningElement {
     this.input = this.template.querySelector('.facet__searchbox-input');
   }
 
+  /**
+   * @param {SearchEngine} engine
+   */
+  initialize = (engine) => {
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+
+    const options = {
+      field: this.field,
+      sortCriteria: this.sortCriteria,
+      numberOfValues: Number(this.numberOfValues),
+      facetSearch: this.noSearch ? undefined : {
+        numberOfValues: Number(this.numberOfValues)
+      },
+      facetId: this.facetId ?? this.field,
+      filterFacetCount: !this.noFilterFacetCount,
+      injectionDepth: Number(this.injectionDepth),
+    };
+    this.facet = CoveoHeadless.buildFacet(engine, {options});
+    this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    registerToStore(this.engineId, Store.facetTypes.FACETS, {
+      label: this.label,
+      facetId: this.facet.state.facetId
+    });
+  }
+
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.state = this.facet.state;
+    this.state = this.facet?.state;
+    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
-    return (
-      this.state?.values
-        .filter((value) => value.numberOfResults || value.state === 'selected')
-        .map((v) => ({
-          ...v,
-          checked: v.state === 'selected',
-          highlightedResult: v.value,
-        })) || []
-    );
+    return this.state?.values
+      .filter((value) => value.numberOfResults || value.state === 'selected')
+      .map((v) => ({
+        ...v,
+        checked: v.state === 'selected',
+        highlightedResult: v.value,
+      })) || [];
   }
 
   get query() {
@@ -283,7 +291,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isFacetSearchActive() {
-    return this.input?.value !== '';
+    return !this.noSearch && !!this.input?.value?.length;
   }
 
   get isDisplayAsLink() {
@@ -302,6 +310,10 @@ export default class QuanticFacet extends LightningElement {
     return '';
   }
 
+  get displaySearch() {
+    return !this.noSearch && this.state?.canShowMoreValues;
+  }
+
   onSelectClickHandler(value) {
     if (this.isDisplayAsLink) {
       this.facet.toggleSingleSelect(value);
@@ -314,23 +326,29 @@ export default class QuanticFacet extends LightningElement {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
 
+  getItemFromValue(value) {
+    return (this.isFacetSearchActive ? this.facetSearchResults : this.values).find((item) => item.value === value);
+  }
+
   /**
-   * @param {CustomEvent<FacetValue>} evt
+   * @param {CustomEvent<{value: string}>} evt
    */
-  onSelect(evt) {
-    const specificSearchResult = {
-      displayValue: evt.detail.value,
-      rawValue: evt.detail.value,
-      count: evt.detail.numberOfResults,
-    };
-    if (this.isFacetSearchActive) {
+  onSelectValue(evt) {
+    const item = this.getItemFromValue(evt.detail.value);
+
+    if (item && this.isFacetSearchActive) {
+      const specificSearchResult = {
+        displayValue: item.value,
+        rawValue: item.value,
+        count: item.numberOfResults,
+      };
       if (this.isDisplayAsLink) {
         this.facet.facetSearch.singleSelect(specificSearchResult);
       } else {
         this.facet.facetSearch.select(specificSearchResult);
       }
     } else {
-      this.onSelectClickHandler(evt.detail);
+      this.onSelectClickHandler(item);
     }
     this.clearInput();
   }

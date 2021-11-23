@@ -3,16 +3,13 @@ import {
   generateComponentHTML,
   TagProps,
 } from '../../fixtures/test-fixture';
-import {resultTemplateComponent} from '../result-templates/result-template-selectors';
+import {resultTemplateComponent} from './result-template-selectors';
 import {
   resultListComponent,
   ResultSection,
   resultSectionTags,
 } from './result-list-selectors';
-
-function toArray<T>(values: T | T[]): T[] {
-  return Array.isArray(values) ? values : [values];
-}
+import {toArray} from '../../utils/arrayUtils';
 
 export function buildTemplateWithoutSections(
   elements: HTMLElement | HTMLElement[],
@@ -41,6 +38,20 @@ export function buildTemplateWithSections(
   }
   return buildTemplateWithoutSections(sectionsEls, props);
 }
+
+export const addFieldValueInResponse =
+  (field: string, fieldValue: string | number | string[] | null) =>
+  (fixture: TestFixture) => {
+    fixture.withCustomResponse((response) =>
+      response.results.forEach((result) => {
+        if (fieldValue === null) {
+          delete result.raw[field];
+        } else {
+          result.raw[field] = fieldValue;
+        }
+      })
+    );
+  };
 
 export const addResultList =
   (template?: HTMLElement) => (fixture: TestFixture) => {

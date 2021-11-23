@@ -1,0 +1,96 @@
+<template>
+  <slot><!-- Timeframes --></slot>
+
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows="5"></c-quantic-placeholder>
+  </template>
+  <template if:false={showPlaceholder}>
+    <template if:true={showFacet}>
+      <c-quantic-card-container title={label}>
+        <lightning-button-icon
+          slot="actions"
+          class={actionButtonCssClasses}
+          icon-name={actionButtonIcon}
+          alternative-text={actionButtonLabel}
+          onclick={toggleFacetVisibility}
+          onmousedown={preventDefault}
+          variant="bare"
+        ></lightning-button-icon>
+
+        <template if:true={hasActiveValues}>
+          <button class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-p-top_x-small slds-p-horizontal_x-small" onclick={clearSelections}>
+            <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={clearFilterLabel} size="xx-small"></lightning-icon>
+            <span class="nowrap pill__text-container slds-truncate">{clearFilterLabel}</span>
+          </button>
+        </template>
+
+        <template if:false={isCollapsed}>
+          <template if:true={withDatePicker}>
+            <div class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small">
+              <form onsubmit={handleApply}>
+                <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center">
+                  <div class="slds-col slds-size_1-of-5">
+                    <span class="timeframe-facet__input-label">{labels.startLabel}</span>
+                  </div>
+                  <div class="slds-col slds-size_4-of-5">
+                    <lightning-input
+                      type="date"
+                      class="timeframe-facet__start-input"
+                      label="Start"
+                      variant="label-hidden"
+                      date-style="short"
+                      min="1401-01-01"
+                      placeholder={datepickerFormat}
+                      value={startDateNoTime}
+                      onchange={handleStartDateChange}
+                      onblur={handleStartDateBlur}>
+                    </lightning-input>
+                  </div>
+                </div>
+                <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center slds-p-top_x-small">
+                  <div class="slds-col slds-size_1-of-5">
+                    <span class="timeframe-facet__input-label">{labels.endLabel}</span>
+                  </div>
+                  <div class="slds-col slds-size_4-of-5">
+                    <lightning-input
+                      type="date"
+                      class="timeframe-facet__end-input"
+                      label="End"
+                      variant="label-hidden"
+                      date-style="short"
+                      placeholder={datepickerFormat}
+                      value={endDateNoTime}
+                      onchange={handleEndDateChange}
+                      onblur={handleEndDateBlur}>
+                    </lightning-input>
+                  </div>  
+                </div>
+                <div class="slds-col slds-p-top_x-small">
+                  <button
+                    class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply"
+                    onblur={resetRangeValidation}>{labels.apply}</button>
+                </div>
+              </form>
+            </div>
+          </template>
+
+          <template if:true={showValues}>
+            <ul class="slds-has-dividers_around-space slds-m-top_medium">
+              <template for:each={formattedValues} for:item="v">
+                <c-quantic-facet-value
+                  key={v.key}
+                  item={v}
+                  is-checked={v.selected}
+                  onselectvalue={onSelectValue}
+                  formatting-function={formatFacetValue}
+                  display-as-link
+                >
+                </c-quantic-facet-value>
+              </template>
+            </ul>
+          </template>
+        </template>
+      </c-quantic-card-container>
+    </template>
+  </template>
+</template>

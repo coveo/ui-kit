@@ -5,19 +5,19 @@
   width: var(--atomic-facet-checkbox-size, 16px);
   height: var(--atomic-facet-checkbox-size, 16px);
 
-  @apply absolute z-1 left-2 grid place-items-center rounded no-outline hover:border-primary-light focus:border-primary-light;
+  @apply absolute z-1 left-2 grid place-items-center rounded no-outline hover:border-primary-light focus-visible:border-primary-light;
 }
 
 .value-checkbox + label {
   @apply w-full flex pl-8 pr-2 py-2.5 text-on-background cursor-pointer truncate hover:bg-neutral-light;
 }
 
-.value-checkbox:focus + label,
+.value-checkbox:focus-visible + label,
 .value-checkbox:hover + label {
   @apply bg-neutral-light;
 }
 
-.value-checkbox:focus + label .value-label,
+.value-checkbox:focus-visible + label .value-label,
 .value-checkbox:hover + label .value-label {
   @apply text-primary;
 }

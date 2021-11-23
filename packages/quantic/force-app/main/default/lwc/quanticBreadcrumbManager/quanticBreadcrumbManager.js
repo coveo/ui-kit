@@ -5,12 +5,14 @@ import {
 } from 'lwc';
 import {
   registerComponentForInit,
-  initializeWithHeadless
+  initializeWithHeadless,
+  getFromStore,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
+import colon from '@salesforce/label/c.quantic_Colon';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -19,6 +21,7 @@ import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 /** @typedef {import("coveo").NumericFacetBreadcrumb} NumericFacetBreadcrumb */
 /** @typedef {import("coveo").DateFacetBreadcrumb} DateFacetBreadcrumb */
 /** @typedef {import("coveo").BreadcrumbValue} BreadcrumbValue */
+/** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 
 /**
  * The `QuanticBreadcrumbManager` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -65,7 +68,8 @@ export default class QuanticBreadcrumbManager extends LightningElement {
 
   labels = {
     nMore,
-    clearAllFilters
+    clearAllFilters,
+    colon
   }
 
   connectedCallback() {
@@ -102,11 +106,14 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatRangeBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.NUMERICFACETS);
     return {
       ...breadcrumb,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
       values: (breadcrumb.values.map(range => ({
         ...range,
-        value: `${range.value.start} - ${range.value.end}`
+        value: `${range.value.start} - ${range.value.end}`,
+        formattedValue: data[breadcrumb.field]?.format(range.value),
       })))
     };
   }
@@ -123,18 +130,44 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
   }
 
+  /**
+   * 
+   * @param {DateFacetValue} dateRange 
+   */
+  formatDateRange(dateRange) {
+    try {
+      const startDate = CoveoHeadless.deserializeRelativeDate(dateRange.start);
+      const endDate = CoveoHeadless.deserializeRelativeDate(dateRange.end);
+      
+      return new RelativeDateFormatter().formatRange(startDate, endDate);
+    } catch (err) {
+      // handle it as a fixed date range
+      return `${this.formatDate(dateRange.start)} - ${this.formatDate(dateRange.end)}`;
+    }
+  }
+
   formatDate(dateValue) {
     const date = new Date(dateValue);
     return date.toLocaleDateString();
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.DATEFACETS);
     return {
       ...breadcrumb,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
       values: breadcrumb.values.map(range => ({
         ...range,
-        value: `${this.formatDate(range.value.start)} - ${this.formatDate(range.value.end)}`
+        value: data[breadcrumb.field]?.format(range.value),
       }))
+    };
+  }
+  
+  formatFacetBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.FACETS);
+    return {
+      ...breadcrumb,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
     };
   }
 
@@ -173,21 +206,23 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   get facetBreadcrumbValues() {
-    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs || [];
+    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs?.map(breadcrumb =>this.formatFacetBreadcrumbValue(breadcrumb)) || [];
     return facetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get numericFacetBreadcrumbsValues() {
-    const numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
+    const numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(breadcrumb =>this.formatRangeBreadcrumbValue(breadcrumb)) || [];
     return numericFacetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get categoryFacetBreadcrumbsValues() {
+    const data = getFromStore(this.engineId, Store.facetTypes.CATEGORYFACETS);
     return this.categoryFacetBreadcrumbs.map(breadcrumb => {
       const breadcrumbValues = this.formatCategoryBreadcrumbValue(breadcrumb);
       return {
         facetId: breadcrumb.facetId,
         field: breadcrumb.field,
+        label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
         deselect: breadcrumb.deselect,
         value: breadcrumbValues.join(` ${this.categoryDivider} `)
       };

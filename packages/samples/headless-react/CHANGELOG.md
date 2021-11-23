@@ -3,6 +3,179 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.6](https://github.com/coveo/ui-kit/compare/headless-react@0.43.5...headless-react@0.43.6) (2021-11-22)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.43.5](https://github.com/coveo/ui-kit/compare/headless-react@0.43.4...headless-react@0.43.5) (2021-11-22)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.43.4](https://github.com/coveo/ui-kit/compare/headless-react@0.43.3...headless-react@0.43.4) (2021-11-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.43.3](https://github.com/coveo/ui-kit/compare/headless-react@0.43.2...headless-react@0.43.3) (2021-11-15)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.43.2](https://github.com/coveo/ui-kit/compare/headless-react@0.43.1...headless-react@0.43.2) (2021-11-12)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.43.1](https://github.com/coveo/ui-kit/compare/headless-react@0.43.0...headless-react@0.43.1) (2021-11-10)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# 0.43.0 (2021-11-09)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+* **headless-react:** made lerna bootstrap headless-react ([#481](https://github.com/coveo/ui-kit/issues/481)) ([6deb31c](https://github.com/coveo/ui-kit/commit/6deb31cdd722d1a854ade8ff70901b76d86897fe))
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+### Features
+
+* expression builder poc using v4 structure ([#1369](https://github.com/coveo/ui-kit/issues/1369)) ([c622999](https://github.com/coveo/ui-kit/commit/c62299921f58354de09c196b354f918b20c15a7c))
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://github.com/coveo/ui-kit/issues/488)) ([c026310](https://github.com/coveo/ui-kit/commit/c0263106cf6328556893874b37d7521e42f73d5a))
+* **headless:** add sample for smart snippet controller  ([#920](https://github.com/coveo/ui-kit/issues/920)) ([a23b638](https://github.com/coveo/ui-kit/commit/a23b6387068ee9166d99b02655abaa15d11443b0))
+* **headless:** add StaticFilter ([#1322](https://github.com/coveo/ui-kit/issues/1322)) ([c28ddc5](https://github.com/coveo/ui-kit/commit/c28ddc50c9096d4fc3db91166e746353f8b2cba0))
+* **headless:** add support for fields debugging in relevance inspector ([#1236](https://github.com/coveo/ui-kit/issues/1236)) ([282c7c1](https://github.com/coveo/ui-kit/commit/282c7c141a13173a8fd848bbae9611653ba92c67))
+* **headless:** added `ResultLinkAnalytics` ([#492](https://github.com/coveo/ui-kit/issues/492)) ([de45056](https://github.com/coveo/ui-kit/commit/de45056386fd0b487c835090bb68f37aab8652aa))
+* **headless:** added folding ([#740](https://github.com/coveo/ui-kit/issues/740)) ([06f52e8](https://github.com/coveo/ui-kit/commit/06f52e8f564ddf1bcdccf2f143b1119ffce40656))
+* **headless:** added folding show more ([#862](https://github.com/coveo/ui-kit/issues/862)) ([e0cc1dc](https://github.com/coveo/ui-kit/commit/e0cc1dcfe959f531070d85382da9b7742f2da594))
+* **headless:** allow relative redirection urls, communicate state using localstorage  ([#1042](https://github.com/coveo/ui-kit/issues/1042)) ([9d8d0cb](https://github.com/coveo/ui-kit/commit/9d8d0cb922f0abf57b44bbe70e36202c168bffd3))
+* **headless:** execute Triggers ([#944](https://github.com/coveo/ui-kit/issues/944)) ([f429f1c](https://github.com/coveo/ui-kit/commit/f429f1cc64cd362358a7273b1f551026d1f5a74a))
+* **headless:** expose and migrate to new engines ([#872](https://github.com/coveo/ui-kit/issues/872)) ([23e61b3](https://github.com/coveo/ui-kit/commit/23e61b3f344b9e3f20995a21a6958711f64481d5))
+* **headless:** expose logRecommendationOpen action ([#902](https://github.com/coveo/ui-kit/issues/902)) ([68fca5b](https://github.com/coveo/ui-kit/commit/68fca5b58621d17afe8baeda4e12310b8167f483))
+* **headless:** Notify Triggers ([#926](https://github.com/coveo/ui-kit/issues/926)) ([cd48b14](https://github.com/coveo/ui-kit/commit/cd48b1420b1d30661e651c5406981f1c068765f6))
+* **headless:** Query Triggers ([#918](https://github.com/coveo/ui-kit/issues/918)) ([81d0277](https://github.com/coveo/ui-kit/commit/81d027769a0cc5b3485dd57a53fd5fee3ba2c446))
+* **headless:** support DictionaryFieldContext ([#1268](https://github.com/coveo/ui-kit/issues/1268)) ([17c4562](https://github.com/coveo/ui-kit/commit/17c456234e0fe9f7dc30142252ea81f217ef9b9d))
+* **headless:** TriggerRedirection ([#875](https://github.com/coveo/ui-kit/issues/875)) ([1439c9c](https://github.com/coveo/ui-kit/commit/1439c9c5eda19355898a203024f3d85c1f191045))
+* **headless:** v1 breaking changes ([#876](https://github.com/coveo/ui-kit/issues/876)) ([25a83d0](https://github.com/coveo/ui-kit/commit/25a83d0d08b758478b8941c0636d1948bb11cb59))
+* **productlisting:** Create documentation ([#1291](https://github.com/coveo/ui-kit/issues/1291)) ([34654e4](https://github.com/coveo/ui-kit/commit/34654e497ecd9952ccbdf802c05eacbe68179ae6))
+* **quantic:** add salesforce server tokens generation. ([#573](https://github.com/coveo/ui-kit/issues/573)) ([c3506ab](https://github.com/coveo/ui-kit/commit/c3506abe18a5f7a1a3c6153521bb18b11b2afd7a))
+
+
+
+
+
+## [0.42.2](https://github.com/coveo/ui-kit/compare/headless-react@0.42.1...headless-react@0.42.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+
+
+
+
+
+## [0.42.1](https://github.com/coveo/ui-kit/compare/headless-react@0.42.0...headless-react@0.42.1) (2021-11-02)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.42.0](https://github.com/coveo/ui-kit/compare/headless-react@0.41.3...headless-react@0.42.0) (2021-11-01)
+
+
+### Features
+
+* expression builder poc using v4 structure ([#1369](https://github.com/coveo/ui-kit/issues/1369)) ([c622999](https://github.com/coveo/ui-kit/commit/c62299921f58354de09c196b354f918b20c15a7c))
+
+
+
+
+
+## [0.41.3](https://github.com/coveo/ui-kit/compare/headless-react@0.41.2...headless-react@0.41.3) (2021-11-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.41.2](https://github.com/coveo/ui-kit/compare/headless-react@0.41.1...headless-react@0.41.2) (2021-11-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.41.1](https://github.com/coveo/ui-kit/compare/headless-react@0.41.0...headless-react@0.41.1) (2021-10-28)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.41.0](https://github.com/coveo/ui-kit/compare/headless-react@0.40.5...headless-react@0.41.0) (2021-10-25)
+
+
+### Features
+
+* **headless:** add StaticFilter ([#1322](https://github.com/coveo/ui-kit/issues/1322)) ([c28ddc5](https://github.com/coveo/ui-kit/commit/c28ddc50c9096d4fc3db91166e746353f8b2cba0))
+
+
+
+
+
+## [0.40.5](https://github.com/coveo/ui-kit/compare/headless-react@0.40.4...headless-react@0.40.5) (2021-10-20)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.40.4](https://github.com/coveo/ui-kit/compare/headless-react@0.40.3...headless-react@0.40.4) (2021-10-19)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.40.3](https://github.com/coveo/ui-kit/compare/headless-react@0.40.2...headless-react@0.40.3) (2021-10-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.40.2](https://github.com/coveo/ui-kit/compare/headless-react@0.40.1...headless-react@0.40.2) (2021-10-12)
 
 **Note:** Version bump only for package headless-react

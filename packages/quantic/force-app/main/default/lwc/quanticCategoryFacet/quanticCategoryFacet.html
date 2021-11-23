@@ -1,4 +1,7 @@
 <template>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
+  </template>
   <template if:true={hasParentsOrValues}>
     <c-quantic-card-container title={label}>
       <lightning-button-icon
@@ -20,26 +23,26 @@
           <template if:false={isFacetSearchActive}>
             <template if:true={hasParents}>
               <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
-                <div onclick={reset}>
-                  <lightning-button-icon variant="bare" icon-name="utility:chevronleft"></lightning-button-icon>
+                <div class="facet__allCategories slds-grid slds-grid_vertical-align-center" onclick={reset}>
+                  <lightning-icon class="slds-m-right_xxx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
                   <span class="nowrap">{labels.allCategories}</span>
                 </div> 
               </li> 
             </template>
             <template for:each={nonActiveParents} for:item="v">
-              <c-quantic-category-facet-value onselectvalue={onSelect} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
+              <c-quantic-category-facet-value onselectvalue={onSelectValue} key={v.value} item={v} non-active-parent="true"></c-quantic-category-facet-value>
             </template>
             <template if:true={activeParent}>
-              <li class="slds-grid slds-p-around_x-small">
+              <li class="facet__active-parent slds-grid slds-grid_vertical-align-center slds-p-around_x-small slds-m-left_medium">
                 <span class="nowrap parent-text__bold">{activeParent.value}</span>
-                <span class="facet__number-of-results parent-text__bold">({activeParent.numberOfResults})</span>
+                <span class="facet__number-of-results parent-text__bold slds-var-m-left_xx-small">({activeParent.numberOfResults})</span>
               </li>  
             </template>
             <li class="slds-grid">
               <ul class="slds-size_1-of-1">
                 <template for:each={values} for:item="v">
                   <c-quantic-category-facet-value
-                    onselectvalue={onSelect} 
+                    onselectvalue={onSelectValue} 
                     key={v.value} 
                     item={v}
                     active-parent={activeParent}>
@@ -52,7 +55,7 @@
             <template if:true={hasSearchResults}>
               <template for:each={facetSearchResults} for:item="result">
                 <c-quantic-category-facet-value 
-                  onselectvalue={onSelect} 
+                  onselectvalue={onSelectValue} 
                   key={result.index}  
                   item={result} 
                   is-search-result="true">

@@ -3,11 +3,13 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultLinkComponent,
   ResultLinkSelectors,
 } from './result-link-selectors';
+import * as CommonAssertions from '../../common-assertions';
 
 interface ResultLinkProps {
   target?: '_self' | '_blank' | '_parent' | '_top';
@@ -35,15 +37,8 @@ describe('Result Link Component', () => {
         .init();
     });
 
-    it.skip('should remove the component from the DOM', () => {
-      cy.get(resultLinkComponent).should('not.exist');
-    });
-
-    it.skip('should log a console error', () => {
-      cy.get(resultLinkComponent)
-        .find('atomic-component-error')
-        .should('exist');
-    });
+    CommonAssertions.assertRemovesComponent(ResultLinkSelectors.shadow);
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when used inside a result template', () => {

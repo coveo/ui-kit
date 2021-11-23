@@ -73,7 +73,7 @@ export default class QuanticSearchBox extends LightningElement {
   initialize = (engine) => {
     this.searchBox = CoveoHeadless.buildSearchBox(engine, {
       options: {
-        numberOfSuggestions: this.numberOfSuggestions,
+        numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
           notMatchDelimiters: {
             open: '<b>',
@@ -141,13 +141,17 @@ export default class QuanticSearchBox extends LightningElement {
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
       this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
-      return CLASS_WITH_SUBMIT;
+      return CLASS_WITHOUT_SUBMIT;
     }
     this.input?.setAttribute(
       'aria-labelledby',
       'fixed-text-label fixed-text-addon-post'
     );
-    return CLASS_WITHOUT_SUBMIT;
+    return CLASS_WITH_SUBMIT;
+  }
+
+  get searchBoxInputClass() {
+    return this.withoutSubmitButton ? 'slds-input searchbox__input' : 'slds-input searchbox__input searchbox__input-with-button';
   }
 
   get suggestionsOpen() {

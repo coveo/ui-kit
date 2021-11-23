@@ -69,20 +69,25 @@ export class PlatformClient {
           return shouldRetry;
         },
       });
+
       if (response.status === 419) {
         logger.info('Platform renewing token');
         throw new ExpiredTokenError();
+      }
+
+      if (response.status === 404) {
+        throw new DisconnectedError(url, response.status);
       }
 
       logger.info({response, requestInfo}, 'Platform response');
 
       return response;
     } catch (error) {
-      if (error.message === 'Failed to fetch') {
-        return new DisconnectedError();
+      if ((error as PlatformClientCallError).message === 'Failed to fetch') {
+        return new DisconnectedError(url);
       }
 
-      return error;
+      return error as PlatformClientCallError;
     }
   }
 }
@@ -98,6 +103,7 @@ type PlatformEnvironment = PlatformCombination['env'];
 interface URLOptions<E extends PlatformEnvironment> {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];
+  multiRegionSubDomain?: string;
 }
 
 function coveoCloudURL<E extends PlatformEnvironment>(
@@ -119,6 +125,10 @@ function coveoCloudURL<E extends PlatformEnvironment>(
 export function platformUrl<E extends PlatformEnvironment>(
   options?: URLOptions<E>
 ) {
+  if (options?.multiRegionSubDomain) {
+    return `https://${options.multiRegionSubDomain}.org.coveo.com`;
+  }
+
   return coveoCloudURL('platform', options);
 }
 

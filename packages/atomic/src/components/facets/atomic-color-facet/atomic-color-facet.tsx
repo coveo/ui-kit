@@ -60,6 +60,7 @@ import {Hidden} from '../../common/hidden';
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
+ * @part value-* - The dynamic part name used to customize a facet value. The `*` is a syntactical placeholder for a specific facet value. For example, if the component's `field` property is set to 'filetype' and your source has a `YouTubeVideo` file type, the part would be targeted like this: `atomic-color-facet::part(value-YouTubeVideo)...`.
  *
  * @part value-box - The facet value when display is 'box'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
@@ -128,10 +129,6 @@ export class AtomicColorFacet
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
-   * The character that separates values of a multi-value field.
-   */
-  @Prop() public delimitingCharacter = '>';
-  /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop() public filterFacetCount = true;
@@ -151,7 +148,6 @@ export class AtomicColorFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      delimitingCharacter: this.delimitingCharacter,
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,
     };

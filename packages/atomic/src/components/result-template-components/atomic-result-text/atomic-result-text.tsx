@@ -11,7 +11,6 @@ import {
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
- * @part result-text-highlight - The highlighted elements from the text.
  */
 @Component({
   tag: 'atomic-result-text',
@@ -55,11 +54,11 @@ export class AtomicResultText implements InitializableComponent {
         highlights,
       });
       const innerHTML = escape(highlightedValue)
-        .replace(new RegExp(openingDelimiter, 'g'), '<b part="highlight">')
+        .replace(new RegExp(openingDelimiter, 'g'), '<b>')
         .replace(new RegExp(closingDelimiter, 'g'), '</b>');
       return <Host innerHTML={innerHTML}></Host>;
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
     }
   }
 
@@ -81,15 +80,6 @@ export class AtomicResultText implements InitializableComponent {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
-
     const resultValue = this.resultValue;
     if (!resultValue && !this.default) {
       this.host.remove();

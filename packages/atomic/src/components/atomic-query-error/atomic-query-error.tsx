@@ -12,6 +12,7 @@ import SomethingWrong from '../../images/something-wrong.svg';
 import SearchInactive from '../../images/search-inactive.svg';
 import NoConnection from '../../images/no-connection.svg';
 import Indexing from '../../images/indexing.svg';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 const disconnectedException = 'Disconnected';
 const noEndpointsException = 'NoEndpointsException';
@@ -50,6 +51,9 @@ export class AtomicQueryError implements InitializableComponent {
   @State() public error!: Error;
   @State() showMoreInfo = false;
 
+  @AriaLiveRegion('query-error')
+  protected ariaMessage!: string;
+
   public initialize() {
     this.queryError = buildQueryError(this.bindings.engine);
   }
@@ -81,6 +85,10 @@ export class AtomicQueryError implements InitializableComponent {
     return this.bindings.engine.state.configuration.organizationId;
   }
 
+  private get url() {
+    return this.bindings.engine.state.configuration.platformUrl;
+  }
+
   private get errorType() {
     return this.queryErrorState.error!.type;
   }
@@ -91,7 +99,10 @@ export class AtomicQueryError implements InitializableComponent {
         return {
           icon: NoConnection,
           title: this.bindings.i18n.t('disconnected'),
-          description: this.bindings.i18n.t('check-your-connection'),
+          description: this.bindings.i18n.t('check-your-connection', {
+            url: this.url,
+            interpolation: {escapeValue: false},
+          }),
         };
       case noEndpointsException:
         return {
@@ -132,22 +143,25 @@ export class AtomicQueryError implements InitializableComponent {
       return;
     }
 
+    const details = this.details;
+    this.ariaMessage = `${details.title} ${details.description}`;
+
     return (
       <div class="text-center">
         <atomic-icon
           part="icon"
-          icon={this.details.icon}
+          icon={details.icon}
           class="w-1/2 mt-8"
         ></atomic-icon>
         <h3 part="title" class="text-2xl text-on-background mt-8">
-          {this.details.title}
+          {details.title}
         </h3>
         <p part="description" class="text-lg text-neutral-dark mt-2.5">
-          {this.details.description}
+          {details.description}
         </p>
-        {this.details.link ? (
+        {details.link ? (
           <a
-            href={this.details.link}
+            href={details.link}
             part="doc-link"
             class="btn-primary p-3 mt-10 inline-block"
           >

@@ -39,6 +39,9 @@
             "c/quanticPager": [
                 "quanticPager/quanticPager.js"
             ],
+            "c/quanticPlaceholder": [
+                "quanticPlaceholder/quanticPlaceholder.js"
+            ],
             "c/quanticQueryError": [
                 "quanticQueryError/quanticQueryError.js"
             ],
@@ -74,6 +77,9 @@
             ],
             "c/quanticNumericFacetValue": [
                 "quanticNumericFacetValue/quanticNumericFacetValue.js"
+            ],
+            "c/quanticResultQuickview": [
+                "quanticResultQuickview/quanticResultQuickview.js"
             ],
             "c/quanticRecentQueriesList": [
                 "quanticRecentQueriesList/quanticRecentQueriesList.js"

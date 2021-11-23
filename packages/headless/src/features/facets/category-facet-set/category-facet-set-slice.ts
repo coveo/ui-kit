@@ -22,10 +22,14 @@ import {
 } from './category-facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {selectPath} from './category-facet-reducer-helpers';
+import {
+  handleCategoryFacetDeselectAll,
+  selectPath,
+} from './category-facet-reducer-helpers';
 import {executeSearch} from '../../search/search-actions';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -106,6 +110,11 @@ export const categoryFacetSetReducer = createReducer(
         handleCategoryFacetDeselectAll(state, facetId);
       })
       .addCase(deselectAllFacets, (state) => {
+        Object.keys(state).forEach((facetId) =>
+          handleCategoryFacetDeselectAll(state, facetId)
+        );
+      })
+      .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) =>
           handleCategoryFacetDeselectAll(state, facetId)
         );
@@ -256,19 +265,4 @@ function isRequestInvalid(
     response.values
   ).parents;
   return requestParents.length !== responseParents.length;
-}
-
-function handleCategoryFacetDeselectAll(
-  state: CategoryFacetSetState,
-  facetId: string
-) {
-  const slice = state[facetId];
-
-  if (!slice) {
-    return;
-  }
-
-  slice.request.numberOfValues = slice.initialNumberOfValues;
-  slice.request.currentValues = [];
-  slice.request.preventAutoSelect = true;
 }

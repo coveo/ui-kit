@@ -1,4 +1,4 @@
-import {Component, h, State, Element} from '@stencil/core';
+import {Component, h, State, Element, VNode} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -22,6 +22,7 @@ interface Breadcrumb {
   facetId: string;
   label: string;
   formattedValue: string[];
+  content?: VNode;
   deselect: () => void;
 }
 
@@ -49,6 +50,7 @@ export class AtomicBreadbox implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   private resizeObserver!: ResizeObserver;
   private showMore!: HTMLButtonElement;
+  private showLess!: HTMLButtonElement;
   facetManager!: FacetManager;
 
   @Element() private host!: HTMLElement;
@@ -104,12 +106,21 @@ export class AtomicBreadbox implements InitializableComponent {
     this.updateShowMoreValue(hiddenBreadcrumbs);
   }
 
+  private updateShowLessDisplay() {
+    this.show(this.showLess);
+    if (this.showLess.offsetTop === 0) {
+      this.hide(this.showLess);
+    }
+  }
+
   private adaptBreadcrumbs() {
     if (!this.breadcrumbs.length) {
       return;
     }
     this.showAllBreadcrumbs();
+
     if (!this.isCollapsed) {
+      this.updateShowLessDisplay();
       return;
     }
 
@@ -146,21 +157,27 @@ export class AtomicBreadbox implements InitializableComponent {
       <li class="breadcrumb" key={value}>
         <Button
           part="breadcrumb-button"
-          style="outline-neutral"
-          class="py-2 px-3 flex items-baseline btn-pill"
+          style="outline-bg-neutral"
+          class="py-2 px-3 flex items-center btn-pill group"
           title={`${breadcrumb.label}: ${fullValue}`}
           onClick={() => breadcrumb.deselect()}
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate with-colon text-neutral-dark mr-px"
+            class="max-w-snippet truncate with-colon text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
           >
             {breadcrumb.label}
           </span>
-          <span part="breadcrumb-value" class="max-w-snippet truncate">
-            {value}
+          <span
+            part="breadcrumb-value"
+            class={breadcrumb.content ? '' : 'max-w-snippet truncate'}
+          >
+            {breadcrumb.content ?? value}
           </span>
-          <atomic-icon class="w-2 ml-2" icon={CloseIcon}></atomic-icon>
+          <atomic-icon
+            class="w-2.5 h-2.5 ml-2 mt-px"
+            icon={CloseIcon}
+          ></atomic-icon>
         </Button>
       </li>
     );
@@ -203,6 +220,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li key="show-less">
         <Button
+          ref={(ref) => (this.showLess = ref!)}
           part="show-less"
           style="outline-primary"
           text={this.bindings.i18n.t('show-less')}
@@ -270,6 +288,9 @@ export class AtomicBreadbox implements InitializableComponent {
         formattedValue: [
           this.bindings.store.state.numericFacets[facetId].format(value.value),
         ],
+        content: this.bindings.store.state.numericFacets[facetId].content?.(
+          value.value
+        ),
       }));
   }
 

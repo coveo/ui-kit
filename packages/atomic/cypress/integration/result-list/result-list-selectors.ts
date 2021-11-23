@@ -27,6 +27,7 @@ export const ResultListSelectors = {
     ResultListSelectors.shadow().find('atomic-result-placeholder'),
   result: () => ResultListSelectors.shadow().find('atomic-result'),
   firstResult: () => ResultListSelectors.result().first().shadow(),
+  firstResultRoot: () => ResultListSelectors.firstResult().find('.result-root'),
   sections: {
     visual: () =>
       ResultListSelectors.firstResult().find(resultSectionTags.visual),

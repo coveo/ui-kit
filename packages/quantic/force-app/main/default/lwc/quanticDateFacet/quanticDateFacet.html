@@ -1,4 +1,7 @@
 <template>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
+  </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
@@ -22,7 +25,7 @@
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
             <template for:each={values} for:item="v">
               <c-quantic-facet-value
-                onselectvalue={onSelect} 
+                onselectvalue={onSelectValue} 
                 key={v.start} 
                 item={v} 
                 is-checked={v.checked}

@@ -11,7 +11,7 @@ import {
   QuerySection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/build-search-request';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {CollectionId} from './folding-state';
 
 export interface RegisterFoldingActionCreatorPayload {
@@ -77,7 +77,7 @@ export const loadCollection = createAsyncThunk<
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
-      buildSearchAndFoldingLoadCollectionRequest(state);
+      await buildSearchAndFoldingLoadCollectionRequest(state);
 
     const response = await apiClient.search({
       ...sharedWithSearchRequest,

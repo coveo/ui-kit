@@ -1,4 +1,7 @@
 <template>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
+  </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
@@ -21,7 +24,7 @@
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
             
-            <template if:false={noSearch}>
+            <template if:true={displaySearch}>
               <div onchange={handleKeyUp} class="slds-size_1-of-1">
                 <lightning-input class="facet__searchbox-input slds-p-horizontal_x-small slds-p-bottom_x-small" name={labels.search} type="search" label="facet-input" variant="label-hidden" placeholder={labels.search}></lightning-input>
               </div>
@@ -30,7 +33,7 @@
             <template if:false={isFacetSearchActive}>
               <template for:each={values} for:item="v">
                 <c-quantic-facet-value 
-                  onselectvalue={onSelect} 
+                  onselectvalue={onSelectValue} 
                   key={v.value} 
                   item={v} 
                   is-checked={v.checked}
@@ -58,10 +61,11 @@
               <template if:true={hasSearchResults}>
                 <template for:each={facetSearchResults} for:item="result">
                   <c-quantic-facet-value 
-                    onselectvalue={onSelect} 
+                    onselectvalue={onSelectValue} 
                     key={result.value}
                     item={result}
-                    is-checked={result.checked}>
+                    is-checked={result.checked}
+                    display-as-link={isDisplayAsLink}>
                   </c-quantic-facet-value>
                 </template>
               </template>

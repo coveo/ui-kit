@@ -1,9 +1,12 @@
 <template>
+  <template if:true={showPlaceholder}>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
+  </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
       <c-quantic-card-container title={label}>
         <lightning-button-icon
-          class="actionButtonCssClasses"
+          class={actionButtonCssClasses}
           slot="actions"
           onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
@@ -13,22 +16,67 @@
         >
         </lightning-button-icon>
         <template if:true={hasActiveValues}>
-          <button class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-p-top_x-small slds-p-horizontal_x-small" onclick={clearSelections}>
-            <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={altText} size="xx-small"></lightning-icon>
+          <button class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-var-p-top_x-small slds-var-p-horizontal_x-small" onclick={clearSelections}>
+            <lightning-icon class="slds-current-color slds-var-m-right_xx-small" icon-name="utility:close" alternative-text={altText} size="xx-small"></lightning-icon>
             <span class="nowrap pill__text-container slds-truncate">{clearFilterLabel}</span>
           </button>
         </template>
         <template if:false={isCollapsed}>
-          <ul class="slds-has-dividers_around-space slds-m-top_medium">
-            <template for:each={values} for:item="v">
-              <c-quantic-facet-value 
-                onselectvalue={onSelect} 
-                key={v.start} 
-                item={v} 
-                is-checked={v.checked}
-                formatting-function={formattingFunction}
-                >
-              </c-quantic-facet-value>
+          <ul class="slds-has-dividers_around-space slds-var-m-top_medium">
+            <template if:true={withInput}>
+              <div class="slds-p-horizontal_x-small">
+                <form onsubmit={onApply} class="facet__search-form slds-grid slds-gutters slds-var-p-bottom_small slds-var-p-top_small">
+                  <div class="slds-col slds-p-right_none">
+                    <lightning-input 
+                      type="number"
+                      step={step}
+                      value={start}
+                      message-when-range-overflow={customMessageOverflow}
+                      class="numeric__input-min" 
+                      label={labels.min} 
+                      variant="label-hidden"
+                      placeholder={labels.min}
+                      aria-label={numberInputMinimumLabel}
+                      onchange={onChangeMin}>
+                    </lightning-input>
+                  </div>
+                  <div class="slds-col">
+                    <lightning-input 
+                      type="number"
+                      step={step}
+                      value={end}
+                      message-when-range-underflow={customMessageUnderflow}
+                      class="numeric__input-max"
+                      label={labels.max} 
+                      variant="label-hidden" 
+                      placeholder={labels.max}
+                      aria-label={numberInputMaximumLabel}
+                      onchange={onChangeMax}>
+                    </lightning-input>
+                  </div>
+                  <div class="slds-col slds-p-left_none">
+                    <lightning-button 
+                      label={labels.apply} 
+                      title={labels.apply} 
+                      aria-label={numberInputApplyLabel}
+                      type="submit"
+                      class="slds-size_small"
+                      onblur={resetValidationErrors}>
+                    </lightning-button>
+                  </div>
+                </form>
+              </div>
+            </template>
+            <template if:true={showValues}>
+               <template for:each={values} for:item="v">
+                <c-quantic-facet-value 
+                  onselectvalue={onSelectValue} 
+                  key={v.key} 
+                  item={v} 
+                  is-checked={v.checked}
+                  formatting-function={formattingFunction}>
+                </c-quantic-facet-value>
+              </template>
             </template>
           </ul>
         </template>

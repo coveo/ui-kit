@@ -27,6 +27,7 @@ const CLASS_WITHOUT_SUBMIT =
 
 /**
  * The `QuanticStandaloneSearchBox` component creates a search box with built-in support for query suggestions.
+ * See [Use a Standalone Search Box](https://docs.coveo.com/en/quantic/latest/usage/ssb-usage/).
  * @example
  * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri"></c-quantic-standalone-search-box>
  */
@@ -51,7 +52,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   * @type {string}
   * @defaultValue 'Search...'
   */
-  @api placeholder = `${this.labels.search}...`;
+  @api placeholder = `${this.labels.search}`;
   /**
   * Whether not to render a submit button.
   * @api
@@ -134,7 +135,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   initialize = (engine) => {
     this.standaloneSearchBox = CoveoHeadless.buildStandaloneSearchBox(engine, {
       options: {
-        numberOfSuggestions: this.numberOfSuggestions,
+        numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {
           notMatchDelimiters: {
             open: '<b>',
@@ -179,13 +180,17 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   get searchBoxContainerClass() {
     if (this.withoutSubmitButton) {
       this.input?.setAttribute('aria-labelledby', 'fixed-text-label');
-      return CLASS_WITH_SUBMIT;
+      return CLASS_WITHOUT_SUBMIT;
     }
     this.input?.setAttribute(
       'aria-labelledby',
       'fixed-text-label fixed-text-addon-post'
     );
-    return CLASS_WITHOUT_SUBMIT;
+    return CLASS_WITH_SUBMIT;
+  }
+
+  get searchBoxInputClass() {
+    return this.withoutSubmitButton ? 'slds-input searchbox__input' : 'slds-input searchbox__input searchbox__input-with-button';
   }
 
   showSuggestions() {

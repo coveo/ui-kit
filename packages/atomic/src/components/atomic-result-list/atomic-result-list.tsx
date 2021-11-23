@@ -9,6 +9,7 @@ import {
   buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
+  buildInteractiveResult,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -16,7 +17,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {parseHTML} from '../../utils/utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
@@ -24,9 +24,20 @@ import {
   getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
+import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+ *
+ * @part result-list - The element containing every result of a result list
+ * @part result-list-grid-clickable - The clickable result when results are displayed as a grid
+ * @part result-table - The element of the result table containing a heading and a body
+ * @part result-table-heading - The element containing the row of cells in the result table's heading
+ * @part result-table-heading-row - The element containing cells of the result table's heading
+ * @part result-table-heading-cell - The element representing a cell of the result table's heading
+ * @part result-table-body - The element containing the rows of the result table's body
+ * @part result-table-row - The element containing the cells of a row in the result table's body
+ * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
   tag: 'atomic-result-list',
@@ -62,11 +73,21 @@ export class AtomicResultList implements InitializableComponent {
    * A list of fields to include in the query results, separated by commas.
    */
   @Prop() public fieldsToInclude = '';
-
+  /**
+   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+   */
   @Prop() display: ResultDisplayLayout = 'list';
-
+  /**
+   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+   */
   @Prop() density: ResultDisplayDensity = 'normal';
-
+  /**
+   * The expected size of the image displayed in the results.
+   */
+  @Prop() imageSize?: ResultDisplayImageSize;
+  /**
+   * @deprecated use `imageSize` instead.
+   */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   private listWrapperRef?: HTMLDivElement;
@@ -115,11 +136,11 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
+    const content = document.createDocumentFragment();
+    const linkEl = document.createElement('atomic-result-link');
+    content.appendChild(linkEl);
     this.resultTemplatesManager.registerTemplates({
-      content: {
-        innerHTML: '<atomic-result-link></atomic-result-link>',
-        usesSections: false,
-      },
+      content,
       conditions: [],
     });
   }
@@ -138,12 +159,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private getTemplate(result: Result): TemplateContent {
-    return (
-      this.resultTemplatesManager.selectTemplate(result) ?? {
-        innerHTML: '',
-        usesSections: false,
-      }
-    );
+    return this.resultTemplatesManager.selectTemplate(result)!;
   }
 
   private getId(result: Result) {
@@ -158,7 +174,7 @@ export class AtomicResultList implements InitializableComponent {
           key={`placeholder-${i}`}
           display={this.display}
           density={this.density}
-          image={this.image}
+          imageSize={this.imageSize ?? this.image}
         ></atomic-result-placeholder>
       )
     );
@@ -168,17 +184,31 @@ export class AtomicResultList implements InitializableComponent {
     return this.resultListState.results.map((result) => {
       const template = this.getTemplate(result);
 
-      return (
+      const atomicResult = (
         <atomic-result
           key={this.getId(result)}
           result={result}
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
-          image={this.image}
-          useSections={template.usesSections}
-          content={template.innerHTML}
+          imageSize={this.imageSize ?? this.image}
+          content={template}
         ></atomic-result>
+      );
+
+      return this.display === 'grid' ? (
+        <LinkWithResultAnalytics
+          part="result-list-grid-clickable"
+          interactiveResult={buildInteractiveResult(this.bindings.engine, {
+            options: {result},
+          })}
+          href={result.clickUri}
+          target="_self"
+        >
+          {atomicResult}
+        </LinkWithResultAnalytics>
+      ) : (
+        atomicResult
       );
     });
   }
@@ -187,7 +217,7 @@ export class AtomicResultList implements InitializableComponent {
     return (
       <atomic-result-table-placeholder
         density={this.density}
-        image={this.image}
+        imageSize={this.imageSize ?? this.image}
         rows={this.resultsPerPageState.numberOfResults}
       ></atomic-result-table-placeholder>
     );
@@ -195,17 +225,27 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildTable() {
     const fieldColumns = Array.from(
-      parseHTML(
-        this.getTemplate(this.resultListState.results[0]).innerHTML
-      ).querySelectorAll('atomic-table-element')
+      this.getTemplate(this.resultListState.results[0]).querySelectorAll(
+        'atomic-table-element'
+      )
     );
 
+    if (fieldColumns.length === 0) {
+      this.bindings.engine.logger.error(
+        'atomic-table-element elements missing in the result template to display columns.',
+        this.host
+      );
+    }
+
     return (
-      <table class={`list-root ${this.getClasses().join(' ')}`}>
-        <thead>
-          <tr>
+      <table
+        class={`list-root ${this.getClasses().join(' ')}`}
+        part="result-table"
+      >
+        <thead part="result-table-heading">
+          <tr part="result-table-heading-row">
             {fieldColumns.map((column) => (
-              <th>
+              <th part="result-table-heading-cell">
                 <atomic-text
                   value={column.getAttribute('label')!}
                 ></atomic-text>
@@ -213,17 +253,26 @@ export class AtomicResultList implements InitializableComponent {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody part="result-table-body">
           {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result)}>
-              {fieldColumns.map((column) => (
-                <td key={column.getAttribute('label')! + this.getId(result)}>
-                  <atomic-table-cell
-                    result={result}
-                    content={column.innerHTML}
-                  ></atomic-table-cell>
-                </td>
-              ))}
+            <tr key={this.getId(result)} part="result-table-row">
+              {fieldColumns.map((column) => {
+                return (
+                  <td
+                    key={column.getAttribute('label')! + this.getId(result)}
+                    part="result-table-cell"
+                  >
+                    <atomic-result
+                      engine={this.bindings.engine}
+                      result={result}
+                      display={this.display}
+                      density={this.density}
+                      image-size={this.imageSize ?? this.image}
+                      content={column}
+                    ></atomic-result>
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
@@ -233,7 +282,10 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildList() {
     return (
-      <div class={`list-root ${this.getClasses().join(' ')}`}>
+      <div
+        class={`list-root ${this.getClasses().join(' ')}`}
+        part="result-list"
+      >
         {this.buildListPlaceholders()}
         {this.resultListState.results.length ? this.buildListResults() : null}
       </div>

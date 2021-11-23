@@ -11,6 +11,7 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import escape from 'escape-html';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -43,6 +44,9 @@ export class AtomicQuerySummary implements InitializableComponent {
    */
   @Prop() enableDuration = false;
 
+  @AriaLiveRegion('query-summary')
+  protected ariaMessage!: string;
+
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
@@ -65,28 +69,45 @@ export class AtomicQuerySummary implements InitializableComponent {
   private get resultOfOptions() {
     const locales = this.bindings.i18n.languages;
     return {
-      interpolation: {escapeValue: false},
       count: this.querySummaryState.lastResult,
-      first: this.wrapHighlight(
-        this.querySummaryState.firstResult.toLocaleString(locales)
-      ),
-      last: this.wrapHighlight(
-        this.querySummaryState.lastResult.toLocaleString(locales)
-      ),
-      total: this.wrapHighlight(
-        this.querySummaryState.total.toLocaleString(locales)
-      ),
-      query: this.wrapHighlight(escape(this.querySummaryState.query)),
+      first: this.querySummaryState.firstResult.toLocaleString(locales),
+      last: this.querySummaryState.lastResult.toLocaleString(locales),
+      total: this.querySummaryState.total.toLocaleString(locales),
+      query: this.querySummaryState.query,
     };
   }
 
+  private get highlightedResultOfOptions() {
+    const {first, last, total, query, ...options} = this.resultOfOptions;
+    return {
+      ...options,
+      interpolation: {escapeValue: false},
+      first: this.wrapHighlight(first),
+      last: this.wrapHighlight(last),
+      total: this.wrapHighlight(total),
+      query: this.wrapHighlight(escape(query)),
+    };
+  }
+
+  private get summary() {
+    if (this.querySummaryState.isLoading) {
+      return this.bindings.i18n.t('loading-results');
+    }
+    return this.bindings.i18n.t(
+      this.querySummaryState.hasQuery
+        ? 'showing-results-of-with-query'
+        : 'showing-results-of',
+      this.resultOfOptions
+    );
+  }
+
   private renderHasResults() {
-    const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t(
-          'showing-results-of-with-query',
-          this.resultOfOptions
-        )
-      : this.bindings.i18n.t('showing-results-of', this.resultOfOptions);
+    const content = this.bindings.i18n.t(
+      this.querySummaryState.hasQuery
+        ? 'showing-results-of-with-query'
+        : 'showing-results-of',
+      this.highlightedResultOfOptions
+    );
 
     return <span part="results" innerHTML={content}></span>;
   }
@@ -104,6 +125,10 @@ export class AtomicQuerySummary implements InitializableComponent {
           class="h-6 my-2 w-60 bg-neutral rounded animate-pulse"
         ></div>
       );
+    }
+
+    if (this.querySummaryState.hasResults) {
+      this.ariaMessage = this.summary;
     }
 
     return (

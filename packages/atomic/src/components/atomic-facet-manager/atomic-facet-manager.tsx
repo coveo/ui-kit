@@ -1,4 +1,4 @@
-import {Component, h, Element, State} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
@@ -13,6 +13,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {NumberValue, Schema} from '@coveo/bueno';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
@@ -43,7 +44,17 @@ export class AtomicFacetManager implements InitializableComponent {
   public facetManagerState!: FacetManagerState;
   @State() public error!: Error;
 
+  /**
+   * The number of expanded facets inside the manager.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+   */
+  @Prop() public collapseFacetsAfter = 4;
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
@@ -57,9 +68,31 @@ export class AtomicFacetManager implements InitializableComponent {
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
+    this.updateCollapsedState(sortedFacets);
 
     this.host.append(...sortedFacets);
   };
+
+  private updateCollapsedState(facets: FacetElement[]) {
+    if (this.collapseFacetsAfter === -1) {
+      return;
+    }
+
+    facets.forEach((facet, index) => {
+      facet.setAttribute(
+        'is-collapsed',
+        index + 1 > this.collapseFacetsAfter ? 'true' : 'false'
+      );
+    });
+  }
+
+  private validateProps() {
+    new Schema({
+      collapseFacetAfter: new NumberValue({min: -1, required: true}),
+    }).validate({
+      collapseFacetAfter: this.collapseFacetsAfter,
+    });
+  }
 
   private get facets() {
     const facets: FacetElement[] = [];

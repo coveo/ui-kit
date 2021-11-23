@@ -4,6 +4,9 @@ import documentation from '@salesforce/label/c.quantic_Documentation';
 import message from '@salesforce/label/c.quantic_Message';
 import video from '@salesforce/label/c.quantic_Video';
 
+import {objectTypeIcons} from './icons/objectTypeIcons';
+import {fileTypeIcons} from './icons/fileTypeIcons';
+
 const KNOWLEDGE='Knowledge';
 const CHATTER='Chatter';
 
@@ -13,7 +16,7 @@ const CHATTER='Chatter';
  * The `QuanticResultLabel` component displays an [SLDS icon](https://www.lightningdesignsystem.com/icons/) and label for a result.
  * If the `Result` option is set this component can infer default label and icon based on the result properties. Otherwise the `label` and `icon` properties are required.
  * @example
- * <c-quantic-result-label label="Account" icon="standard:account" size="medium"></c-quantic-result-label>
+ * <c-quantic-result-label label="Account" icon="standard:account" size="medium" icon-only></c-quantic-result-label>
  */
 export default class QuanticResultLabel extends LightningElement {
   /**
@@ -37,10 +40,17 @@ export default class QuanticResultLabel extends LightningElement {
   /**
    * Size of the icon and label to display.
    * @api
-   * @type {string}
+   * @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'}
    * @defaultValue `'small'`
    */
   @api size  ='small';
+  /**
+   * Whether to only display the icon without the label.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api iconOnly = false;
 
   labels = {
     documentation,
@@ -72,6 +82,9 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.icon) {
       return this.icon;
     }
+    if (this.isKnowledgeArticle) {
+      return 'standard:knowledge';
+    }
     if (this.objectTypeIcon) {
       return this.objectTypeIcon;
     }
@@ -85,6 +98,9 @@ export default class QuanticResultLabel extends LightningElement {
     if (this.label) {
       return this.label;
     }
+    if (this.isKnowledgeArticle) {
+      return KNOWLEDGE;
+    }
     if (this.objectTypeLabel) {
       return this.objectTypeLabel;
     }
@@ -97,53 +113,18 @@ export default class QuanticResultLabel extends LightningElement {
     return this.labels.documentation;
   }
 
+  get isKnowledgeArticle() {
+    return !!this.result.raw.sfknowledgearticleid;
+  }
+
   get objectTypeIcon() {
     const objType = this.result.raw.objecttype?.toLowerCase();
-    if (!objType) {
-      return undefined;
-    }
-
-    const defaultIcon = `standard:${objType}`;
-    const iconMap = {
-      'feeditem': 'standard:post',
-      'how_to': 'standard:question_feed',
-      'message': 'standard:note',
-      'city': 'standard:address',
-      'continent': 'standard:location',
-      'kb_knowledge': 'standard:knowledge',
-      'item': 'standard:feed',
-      'blogpost': 'standard:news',
-      'attachment': 'doctype:attachment',
-      'board': 'standard:dashboard_ea',
-      'casecomment': 'standard:case_comment',
-      'collaborationgroup': 'standard:team_member',
-      'contentversion': 'standard:drafts',
-      'goal': 'standard:goals',
-      'invoice': 'standard:partner_fund_claim',
-      'doc': 'doctype:word',
-    };
-
-    const icon = iconMap[objType];
-    return icon ?? defaultIcon;
+    return objectTypeIcons[objType];
   }
 
   get fileTypeIcon() {
     const fileType = this.result.raw.filetype?.toLowerCase();
-    if (!fileType) {
-      return undefined;
-    }
-
-    const defaultIcon = `doctype:${fileType}`;
-    const iconMap = {
-      'youtubevideo': 'custom:custom99',
-      'youtubeplaylist': 'custom:custom99',
-      'kb_knowledge': 'standard:knowledge',
-      'doc': 'doctype:word',
-      'xls': 'doctype:excel',
-    }
-
-    const icon = iconMap[fileType];
-    return icon ?? defaultIcon;
+    return fileTypeIcons[fileType];
   }
 
   get objectTypeLabel() {
@@ -161,7 +142,7 @@ export default class QuanticResultLabel extends LightningElement {
       case 'knowledge':
         return this.labels.knowledge;
       default:
-        return undefined;
+        return objType;
     }
   }
 
@@ -179,6 +160,8 @@ export default class QuanticResultLabel extends LightningElement {
         return lower.toUpperCase();
       case 'kb_knowledge':
         return this.labels.knowledge;
+      case 'youtubevideo':
+        return this.labels.video;
       default:
         return fileType;
     }
@@ -193,7 +176,7 @@ export default class QuanticResultLabel extends LightningElement {
     const lower = sourceType.toLowerCase();
     switch (lower) {
       case 'youtube':
-        return this.labels.video;
+        return 'YouTube';
       case 'confluence2':
         return this.labels.documentation;
       default:

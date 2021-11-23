@@ -26,6 +26,7 @@ import {restoreSearchParameters} from '../../search-parameters/search-parameter-
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {WritableDraft} from 'immer/dist/internal';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -104,6 +105,12 @@ export const facetSetReducer = createReducer(
         handleFacetDeselectAll(request);
       })
       .addCase(deselectAllFacets, (state) => {
+        Object.keys(state).forEach((facetId) => {
+          const request = state[facetId];
+          handleFacetDeselectAll(request);
+        });
+      })
+      .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) => {
           const request = state[facetId];
           handleFacetDeselectAll(request);
@@ -202,6 +209,7 @@ function mutateStateFromFacetResponse(
 }
 
 export const defaultFacetOptions: FacetOptionalParameters = {
+  // TODO: Remove on next major version
   delimitingCharacter: '>',
   filterFacetCount: true,
   injectionDepth: 1000,

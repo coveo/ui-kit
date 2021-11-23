@@ -2,7 +2,7 @@ import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 // @ts-ignore
-import {Debouncer, Deferred} from 'c/quanticUtils';
+import {Debouncer, Deferred, Store} from 'c/quanticUtils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
@@ -117,6 +117,20 @@ async function initEngine(engineId) {
 }
 
 /**
+ * Initialize coveoHeadless Store object 
+ * @param {string} engineId The ID of the engine.
+ */
+const initQuanticStore = (engineId) => {
+  try {
+     if(!window.coveoHeadless[engineId].bindings.store) {
+       window.coveoHeadless[engineId].bindings.store = Store.initialize();
+     }
+  } catch (error) {
+    throw new Error('Fatal error: unable to initialize Quantic store: ' + error);
+  }
+}
+
+/**
  * Sets the options passed to engine constructor for given engine ID.
  * @param options The Headless options for the specified engine ID.
  * @param {(options: unknown) => unknown} engineConstructor Th engine constructor.
@@ -195,6 +209,14 @@ function getHeadlessBindings(engineId) {
 }
 
 /**
+ * Returns store object for specified engineId.
+ * @param {string} engineId The engine ID.
+ */
+function getQuanticStore(engineId) {
+ return window.coveoHeadless?.[engineId]?.bindings?.store;
+}
+
+/**
  * Initializes a component with Coveo Headless.
  * @param element The LightningElement component to initialize.
  * @param {string} engineId The id of the engine.
@@ -205,6 +227,7 @@ async function initializeWithHeadless(element, engineId, initialize) {
     return;
   }
   try {
+    initQuanticStore(engineId);
     initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
   } catch (error) {
@@ -222,6 +245,36 @@ function destroyEngine(engineId) {
   }
 }
 
+/**
+ * Register a facet in the store.
+ * @param {string} engineId The engine ID.
+ * @param {string} facetType
+ * @param {{ label: string; facetId: string; format?: function}} data
+ */
+function registerToStore(engineId, facetType, data) {
+  const store = getQuanticStore(engineId);
+  try {
+    Store.registerFacetToStore(store, facetType, data);
+  } catch (error) {
+    console.error('Fatal error: unable to register in store', error);
+  }
+}
+
+/**
+ * Get facet data from store.
+ * @param {string} engineId The engine ID.
+ * @param {string} facetType
+ */
+function getFromStore(engineId, facetType) {
+  const store = getQuanticStore(engineId);
+  try {
+    return Store.getFromStore(store, facetType);
+  } catch (error) {
+    console.error('Fatal error: unable to get data from store', error);
+    return undefined;
+  }
+}
+
 export {
   loadDependencies,
   setInitializedCallback,
@@ -232,4 +285,6 @@ export {
   getHeadlessBindings,
   initializeWithHeadless,
   destroyEngine,
+  registerToStore,
+  getFromStore,
 }

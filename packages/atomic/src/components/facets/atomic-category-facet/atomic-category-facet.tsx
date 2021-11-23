@@ -124,9 +124,9 @@ export class AtomicCategoryFacet
   @Prop() public withSearch = false;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
-   * TODO: add automatic (occurences when not expanded, alphanumeric when expanded)
+   * Possible values are 'alphanumeric' and 'occurrences'.
    */
+  // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
   /**
    * The character that separates values of a multi-value field.
@@ -200,19 +200,17 @@ export class AtomicCategoryFacet
     return !!this.facetState.parents.length;
   }
 
-  private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
-  }
-
   private renderHeader() {
     return (
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfSelectedValues={
+          this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0
+        }
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        onClearFilters={() => this.facet.deselectAll()}
       ></FacetHeader>
     );
   }

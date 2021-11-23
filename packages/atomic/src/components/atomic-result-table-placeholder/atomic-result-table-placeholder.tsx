@@ -18,11 +18,11 @@ const placeholderClasses = 'block bg-neutral rounded';
 })
 export class AtomicResultTablePlaceholder {
   @Prop() density!: ResultDisplayDensity;
-  @Prop() image!: ResultDisplayImageSize;
+  @Prop() imageSize!: ResultDisplayImageSize;
   @Prop() rows!: number;
 
   private getClasses() {
-    return getResultDisplayClasses('table', this.density, this.image);
+    return getResultDisplayClasses('table', this.density, this.imageSize);
   }
 
   public render() {
@@ -46,12 +46,6 @@ export class AtomicResultTablePlaceholder {
               <div
                 class={`h-8 mt-2 ${placeholderClasses}`}
                 style={{width: '6.5rem'}}
-              ></div>
-            </th>
-            <th>
-              <div
-                class={`h-8 mt-2 ${placeholderClasses}`}
-                style={{width: '11rem'}}
               ></div>
             </th>
           </tr>
@@ -83,12 +77,6 @@ export class AtomicResultTablePlaceholder {
                 <div
                   class={`h-5 mt-1.5 ${placeholderClasses}`}
                   style={{width: '4.875rem'}}
-                ></div>
-              </td>
-              <td>
-                <div
-                  class={`h-5 mt-1.5 ${placeholderClasses}`}
-                  style={{width: '9.5rem'}}
                 ></div>
               </td>
             </tr>
