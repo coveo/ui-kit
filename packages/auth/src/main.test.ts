@@ -1,4 +1,4 @@
-import {sum} from './main';
+import {sum} from './auth';
 
 describe('#sum', () => {
   it('adds', () => {
