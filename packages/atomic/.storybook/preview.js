@@ -23,4 +23,8 @@ export const decorators = [
 
 export const parameters = {
   controls: {expanded: true, hideNoControlsWarning: true},
+  a11y: {
+    element: 'atomic-search-interface',
+    manual: true,
+  },
 };

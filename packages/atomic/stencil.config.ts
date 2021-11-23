@@ -75,6 +75,7 @@ export const config: Config = {
       '^.+\\.svg$': './svg.transform.js',
     },
     transformIgnorePatterns: [],
+    testPathIgnorePatterns: ['headless'],
   },
   devServer: {
     reloadStrategy: 'pageReload',

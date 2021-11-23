@@ -35,14 +35,20 @@ export const CodeSamplePanel = () => {
   const {componentTag, isResultComponent, advancedConfig} =
     storyParameters as StoryParameters;
 
-  const styleString = renderShadowPartsToStyleString(componentTag, args);
-  const htmlString = isResultComponent
-    ? renderArgsToResultTemplate(
-        renderArgsToHTMLString(componentTag, args, advancedConfig),
-        () => args,
-        false
-      )
-    : renderArgsToHTMLString(componentTag, args, advancedConfig);
+  const componentToHTML = renderArgsToHTMLString(
+    componentTag,
+    args,
+    advancedConfig
+  );
+  const stylingToHTML = renderShadowPartsToStyleString(componentTag, args);
+  const htmlCodeWithSpacing = addSpacingBetweenStylingAndHTML(
+    componentToHTML,
+    stylingToHTML
+  );
+
+  const codeString = isResultComponent
+    ? renderArgsToResultTemplate(htmlCodeWithSpacing, () => args, false)
+    : htmlCodeWithSpacing;
 
   return (
     <div
@@ -59,7 +65,7 @@ export const CodeSamplePanel = () => {
         height="800px"
         theme="vs-dark"
         defaultValue={''}
-        value={addSpacingBetweenStylingAndHTML(htmlString, styleString)}
+        value={codeString}
         defaultLanguage="html"
         options={{
           theme: 'vs-dark',
@@ -77,6 +83,9 @@ export const CodeSamplePanel = () => {
           editor.onDidFocusEditorText(() => {
             editor.setScrollTop(0);
             editor.updateOptions({readOnly: true});
+          });
+          editor.onDidBlurEditorText(() => {
+            editor.updateOptions({readOnly: false});
           });
           editor.onDidChangeModelContent(() =>
             editor.getAction('editor.action.formatDocument').run()

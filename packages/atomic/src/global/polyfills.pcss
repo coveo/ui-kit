@@ -6,3 +6,15 @@
   -webkit-line-clamp: $line-count;
   -webkit-box-orient: vertical;
 }
+
+/**
+ * aspect-ratio doesn't work on Safari prior to v15.
+ */
+@define-mixin aspect-ratio-h $ratio, $fallback-height {
+  aspect-ratio: $ratio;
+  height: auto;
+
+  @supports not (aspect-ratio: $ratio) {
+    height: $fallback-height;
+  }
+}

@@ -14,6 +14,8 @@ import { TemplateContent } from "./components/atomic-result-template/atomic-resu
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
+    interface AtomicAriaLive {
+    }
     interface AtomicBreadbox {
     }
     interface AtomicCategoryFacet {
@@ -188,6 +190,9 @@ export namespace Components {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+    }
+    interface AtomicFocusTrap {
+        "active": boolean;
     }
     interface AtomicFormatCurrency {
         /**
@@ -411,6 +416,7 @@ export namespace Components {
     }
     interface AtomicRefineModal {
         "modalStatus": ModalStatus;
+        "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
     }
@@ -553,7 +559,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon": string;
         /**
@@ -763,6 +769,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicAriaLiveElement extends Components.AtomicAriaLive, HTMLStencilElement {
+    }
+    var HTMLAtomicAriaLiveElement: {
+        prototype: HTMLAtomicAriaLiveElement;
+        new (): HTMLAtomicAriaLiveElement;
+    };
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
     var HTMLAtomicBreadboxElement: {
@@ -822,6 +834,12 @@ declare global {
     var HTMLAtomicFieldConditionElement: {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
+    };
+    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
+    }
+    var HTMLAtomicFocusTrapElement: {
+        prototype: HTMLAtomicFocusTrapElement;
+        new (): HTMLAtomicFocusTrapElement;
     };
     interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
     }
@@ -1136,6 +1154,7 @@ declare global {
         new (): HTMLAtomicTimeframeFacetElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
@@ -1146,6 +1165,7 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
+        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
@@ -1201,6 +1221,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AtomicAriaLive {
+    }
     interface AtomicBreadbox {
     }
     interface AtomicCategoryFacet {
@@ -1377,6 +1399,9 @@ declare namespace LocalJSX {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+    }
+    interface AtomicFocusTrap {
+        "active"?: boolean;
     }
     interface AtomicFormatCurrency {
         /**
@@ -1601,6 +1626,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRefineModal {
         "modalStatus": ModalStatus;
+        "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
     }
@@ -1743,7 +1769,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon"?: string;
         /**
@@ -1940,6 +1966,7 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface IntrinsicElements {
+        "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-color-facet": AtomicColorFacet;
@@ -1950,6 +1977,7 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
+        "atomic-focus-trap": AtomicFocusTrap;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
@@ -2008,6 +2036,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
@@ -2018,6 +2047,7 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
+            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;

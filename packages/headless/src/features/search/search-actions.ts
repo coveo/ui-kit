@@ -136,7 +136,7 @@ export const executeSearch = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      buildSearchRequest(state)
+      await buildSearchRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -207,7 +207,7 @@ export const fetchMoreResults = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      buildFetchMoreRequest(state)
+      await buildFetchMoreRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -263,7 +263,7 @@ const automaticallyRetryQueryWithCorrection = async (
   const fetched = await fetchFromAPI(
     client,
     getState(),
-    buildSearchRequest(getState())
+    await buildSearchRequest(getState())
   );
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
@@ -283,10 +283,10 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-const buildFetchMoreRequest = (
+const buildFetchMoreRequest = async (
   state: StateNeededByExecuteSearch
-): MappedSearchRequest => {
-  const mappedRequest = buildSearchRequest(state);
+): Promise<MappedSearchRequest> => {
+  const mappedRequest = await buildSearchRequest(state);
   mappedRequest.request = {
     ...mappedRequest.request,
     firstResult:

@@ -14,13 +14,13 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.32.8",
+  "version": "0.33.0",
   "files": [
     "dist/"
   ],
   "scripts": {
     "start": "rollup -c -w",
-    "build": "npm run clean && npm run build:prod",
+    "build": "npm run build:prod",
     "build:prod": "rollup -c --environment BUILD:production",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",

@@ -374,6 +374,7 @@ export class AtomicSearchInterface {
           bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),
+      <atomic-aria-live></atomic-aria-live>,
       <slot></slot>,
     ];
   }

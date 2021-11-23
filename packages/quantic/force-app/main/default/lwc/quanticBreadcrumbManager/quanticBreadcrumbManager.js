@@ -5,9 +5,10 @@ import {
 } from 'lwc';
 import {
   registerComponentForInit,
-  initializeWithHeadless
+  initializeWithHeadless,
+  getFromStore,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, RelativeDateFormatter} from 'c/quanticUtils';
+import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
@@ -105,11 +106,14 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatRangeBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.NUMERICFACETS);
     return {
       ...breadcrumb,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
       values: (breadcrumb.values.map(range => ({
         ...range,
-        value: `${range.value.start} - ${range.value.end}`
+        value: `${range.value.start} - ${range.value.end}`,
+        formattedValue: data[breadcrumb.field]?.format(range.value),
       })))
     };
   }
@@ -148,12 +152,22 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.DATEFACETS);
     return {
       ...breadcrumb,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
       values: breadcrumb.values.map(range => ({
         ...range,
-        value: this.formatDateRange(range.value),
+        value: data[breadcrumb.field]?.format(range.value),
       }))
+    };
+  }
+  
+  formatFacetBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.FACETS);
+    return {
+      ...breadcrumb,
+      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
     };
   }
 
@@ -192,21 +206,23 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   get facetBreadcrumbValues() {
-    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs || [];
+    const facetBreadcrumbsToDisplay = this.facetBreadcrumbs?.map(breadcrumb =>this.formatFacetBreadcrumbValue(breadcrumb)) || [];
     return facetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get numericFacetBreadcrumbsValues() {
-    const numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(this.formatRangeBreadcrumbValue) || [];
+    const numericFacetBreadcrumbsToDisplay = this.numericFacetBreadcrumbs.map(breadcrumb =>this.formatRangeBreadcrumbValue(breadcrumb)) || [];
     return numericFacetBreadcrumbsToDisplay.map(breadcrumb => this.getBreadcrumbValues(breadcrumb));
   }
 
   get categoryFacetBreadcrumbsValues() {
+    const data = getFromStore(this.engineId, Store.facetTypes.CATEGORYFACETS);
     return this.categoryFacetBreadcrumbs.map(breadcrumb => {
       const breadcrumbValues = this.formatCategoryBreadcrumbValue(breadcrumb);
       return {
         facetId: breadcrumb.facetId,
         field: breadcrumb.field,
+        label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
         deselect: breadcrumb.deselect,
         value: breadcrumbValues.join(` ${this.categoryDivider} `)
       };

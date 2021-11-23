@@ -77,7 +77,7 @@ export const loadCollection = createAsyncThunk<
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
-      buildSearchAndFoldingLoadCollectionRequest(state);
+      await buildSearchAndFoldingLoadCollectionRequest(state);
 
     const response = await apiClient.search({
       ...sharedWithSearchRequest,

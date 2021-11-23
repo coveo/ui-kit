@@ -3,6 +3,10 @@ import {
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {debounce} from 'lodash';
+import {addons} from '@storybook/addons';
+import {A11Y_EXTENSION_EVENTS} from './register';
+import CoreEvents from '@storybook/core-events';
+
 interface SearchInterface extends HTMLElement {
   initialize: (cfg: SearchEngineConfiguration) => Promise<void>;
   executeFirstSearch: () => Promise<void>;
@@ -29,6 +33,10 @@ export const initializeInterfaceDebounced = (
       });
 
       await clone.executeFirstSearch();
+      addons.getChannel().emit(A11Y_EXTENSION_EVENTS.SEARCH_EXECUTED);
+      addons.getChannel().on(CoreEvents.DOCS_RENDERED, () => {
+        clone.innerHTML = '';
+      });
     },
     1000,
     {trailing: true}
