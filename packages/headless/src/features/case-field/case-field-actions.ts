@@ -7,6 +7,7 @@ import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-
 import {
   CaseAssistConfigurationSection,
   CaseFieldsSection,
+  CaseInputsSection,
   ConfigurationSection,
   DebugSection,
 } from '../../state/state-sections';
@@ -27,10 +28,10 @@ export interface SetCaseFieldActionCreatorPayload {
 }
 
 /**
- * Adds or updates the state caseFields with the specified field and value.
+ * Registers a case field with the specified field and value.
  */
-export const setCaseField = createAction(
-  'caseAssist/caseField/set',
+export const registerCaseField = createAction(
+  'caseAssist/caseField/register',
   (payload: SetCaseFieldActionCreatorPayload) =>
     validatePayload(payload, {
       fieldName: requiredNonEmptyString,
@@ -38,12 +39,16 @@ export const setCaseField = createAction(
     })
 );
 
-export const enableCaseClassifications = createAction(
-  'caseAssist/classifications/enable'
-);
-
-export const disableCaseClassifications = createAction(
-  'caseAssist/classifications/disable'
+/**
+ * Updates the specified case field with the provided value.
+ */
+export const updateCaseField = createAction(
+  'caseAssist/caseField/update',
+  (payload: SetCaseFieldActionCreatorPayload) =>
+    validatePayload(payload, {
+      fieldName: requiredNonEmptyString,
+      fieldValue: requiredNonEmptyString,
+    })
 );
 
 export interface FetchClassificationsThunkReturn {
@@ -54,6 +59,7 @@ export interface FetchClassificationsThunkReturn {
 export type StateNeededByFetchClassifications = ConfigurationSection &
   CaseAssistConfigurationSection &
   CaseFieldsSection &
+  CaseInputsSection &
   DebugSection;
 
 export const fetchCaseClassifications = createAsyncThunk<
@@ -89,7 +95,7 @@ export const buildFetchClassificationRequest = async (
   ...(state.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
-  fields: state.caseFields.fields,
+  fields: state.caseInputs,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });

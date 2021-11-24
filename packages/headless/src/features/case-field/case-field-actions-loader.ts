@@ -3,44 +3,39 @@ import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-as
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {caseFields} from '../../app/reducers';
 import {
-  disableCaseClassifications,
-  enableCaseClassifications,
   fetchCaseClassifications,
   FetchClassificationsThunkReturn,
-  setCaseField,
+  updateCaseField,
   SetCaseFieldActionCreatorPayload,
   StateNeededByFetchClassifications,
-} from './case-fields-actions';
+  registerCaseField,
+} from './case-field-actions';
 
 export {SetCaseFieldActionCreatorPayload};
 
 /**
- * The case fields action creators.
+ * The case field action creators.
  */
-export interface CaseAssistActionCreators {
+export interface CaseFieldActionCreators {
   /**
-   * Adds or updates the state caseFields with the specified field and value.
+   * Registers a case field with the specified field and value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setCaseField(
+  registerCaseField(
     payload: SetCaseFieldActionCreatorPayload
   ): PayloadAction<SetCaseFieldActionCreatorPayload>;
 
   /**
-   * Enables case classifications to be updated when case information changes.
+   * Updates the specified case field with the provided value.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  enableCaseClassifications(): PayloadAction;
-
-  /**
-   * Disables case classifications from being updated when case information changes.
-   *
-   * @returns A dispatchable action.
-   */
-  disableCaseClassifications(): PayloadAction;
+  updateCaseField(
+    payload: SetCaseFieldActionCreatorPayload
+  ): PayloadAction<SetCaseFieldActionCreatorPayload>;
 
   /**
    * Retrieves the case classifications from the platform.
@@ -57,20 +52,19 @@ export interface CaseAssistActionCreators {
 }
 
 /**
- * Loads the `case assist` reducer and returns possible action creators.
+ * Loads the `case fields` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadCaseFieldsActions(
+export function loadCaseFieldActions(
   engine: CaseAssistEngine
-): CaseAssistActionCreators {
+): CaseFieldActionCreators {
   engine.addReducers({caseFields});
 
   return {
-    setCaseField,
-    enableCaseClassifications,
-    disableCaseClassifications,
+    registerCaseField,
+    updateCaseField,
     fetchCaseClassifications,
   };
 }

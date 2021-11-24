@@ -1,4 +1,4 @@
-export const getCaseInputsInitialState = (): CaseInputsState => ({});
+export const getCaseInputInitialState = (): CaseInputsState => ({});
 
 export interface CaseInput {
   value: string;

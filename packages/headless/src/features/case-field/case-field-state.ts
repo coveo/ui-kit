@@ -1,7 +1,6 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 
-export const getCaseFieldsInitialState = (): CaseFieldsState => ({
-  enabled: false,
+export const getCaseFieldInitialState = (): CaseFieldsState => ({
   status: {
     loading: false,
     error: null,
@@ -52,11 +51,6 @@ export interface CaseField {
 }
 
 export interface CaseFieldsState {
-  /**
-   * Specifies if the automatic update of case field classifications should be enabled.
-   * By default the feature is disabled.
-   */
-  enabled: boolean;
   /**
    * The status of the case fields classification request.
    */

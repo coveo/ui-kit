@@ -1,19 +1,19 @@
-import {setCaseInput} from './case-inputs-actions';
-import {caseInputsReducer} from './case-inputs-slice';
-import {getCaseInputsInitialState, CaseInputsState} from './case-inputs-state';
+import {setCaseInput} from './case-input-actions';
+import {caseInputsReducer} from './case-input-slice';
+import {getCaseInputInitialState, CaseInputsState} from './case-input-state';
 
-describe('case inputs slice', () => {
+describe('case input slice', () => {
   const testMapping = {fieldName: 'foo', fieldValue: 'fooValue'};
 
   let state: CaseInputsState;
 
   beforeEach(() => {
-    state = getCaseInputsInitialState();
+    state = getCaseInputInitialState();
   });
 
   it('should have an initial state', () => {
     expect(caseInputsReducer(undefined, {type: 'foo'})).toEqual(
-      getCaseInputsInitialState()
+      getCaseInputInitialState()
     );
   });
 
