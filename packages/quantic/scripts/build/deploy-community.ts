@@ -184,10 +184,14 @@ async function deployComponents(
 ): Promise<void> {
   log('Deploying components...');
 
-  await sfdx.deploySource({
-    alias: options.scratchOrg.alias,
-    packagePaths: ['force-app/main', 'force-app/examples'],
-  });
+  try {
+    await sfdx.deploySource({
+      alias: options.scratchOrg.alias,
+      packagePaths: ['force-app/main', 'force-app/examples'],
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
   log('Components deployed.');
 }
