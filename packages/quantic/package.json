@@ -34,7 +34,7 @@
     "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote"
   },
   "dependencies": {
-    "@coveo/headless": "^1.33.0"
+    "@coveo/headless": "^1.33.1"
   },
   "engines": {
     "node": ">=14.0.0"
