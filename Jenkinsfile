@@ -51,12 +51,12 @@ node('linux && docker') {
       stage('Cypress Test') {
         if (!isBump) {
           parallel([
-            'atomic': {
+            /*'atomic': {
               sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
               sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
               sh 'chown -R $(whoami) /tmp'
               sh 'cd packages/atomic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
-            },
+            },*/
             'quantic': {
               withCredentials([
                 string(credentialsId: 'sfdx-auth-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
