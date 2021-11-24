@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "0.85.9",
+  "version": "0.85.10",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -32,7 +32,7 @@
     "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json"
   },
   "dependencies": {
-    "@coveo/headless": "^1.33.0"
+    "@coveo/headless": "^1.33.1"
   },
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "^25.4.4",
