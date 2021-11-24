@@ -34,10 +34,6 @@ function ensureEnvVariables() {
   });
 }
 
-function isCi() {
-  return process.argv.some((arg) => arg === '--ci');
-}
-
 async function getMatchingPackageVersion(versionNumber: string) {
   return (await sfdx.getPackageVersionList()).result.find(
     (pkg) =>
@@ -61,14 +57,13 @@ async function getPackageVersion(): Promise<string> {
 }
 
 async function buildOptions(): Promise<Options> {
-  const ci = isCi();
+  const ci = process.argv.includes('--ci');
+  const promote = process.argv.includes('--promote');
+  const removeTranslations = process.argv.includes('--remove-translations');
 
   if (ci) {
     ensureEnvVariables();
   }
-
-  const promote = process.argv.includes('--promote');
-  const removeTranslations = process.argv.includes('--remove-translations');
 
   return {
     packageVersion: await getPackageVersion(),
