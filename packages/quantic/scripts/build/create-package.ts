@@ -102,7 +102,7 @@ async function ensurePackageNotPublished(log: StepLogger, options: Options) {
     log(
       `Skipped publishing ${options.packageVersion} since this patch version is already published.`
     );
-    throw new Error();
+    throw new Error('Package already published.');
   }
   log('Confirmed.');
 }
