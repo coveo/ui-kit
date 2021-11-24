@@ -1,7 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  disableCaseClassifications,
-  enableCaseClassifications,
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
@@ -23,12 +21,6 @@ export const caseFieldsReducer = createReducer(
       .addCase(updateCaseField, (state, action) => {
         const {fieldName, fieldValue} = action.payload;
         state.fields[fieldName].value = fieldValue;
-      })
-      .addCase(enableCaseClassifications, (state) => {
-        state.enabled = true;
-      })
-      .addCase(disableCaseClassifications, (state) => {
-        state.enabled = false;
       })
       .addCase(fetchCaseClassifications.rejected, (state, action) => {
         state.status.error = action.payload ?? null;

@@ -3,8 +3,6 @@ import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-as
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {caseFields} from '../../app/reducers';
 import {
-  disableCaseClassifications,
-  enableCaseClassifications,
   fetchCaseClassifications,
   FetchClassificationsThunkReturn,
   updateCaseField,
@@ -40,20 +38,6 @@ export interface CaseFieldActionCreators {
   ): PayloadAction<SetCaseFieldActionCreatorPayload>;
 
   /**
-   * Enables case classifications to be updated when case information changes.
-   *
-   * @returns A dispatchable action.
-   */
-  enableCaseClassifications(): PayloadAction;
-
-  /**
-   * Disables case classifications from being updated when case information changes.
-   *
-   * @returns A dispatchable action.
-   */
-  disableCaseClassifications(): PayloadAction;
-
-  /**
    * Retrieves the case classifications from the platform.
    * A single call retrieves classifications for all fields specified in the Case Assist configuration.
    * Case classifications are retrieved based on the case information entered so far.
@@ -68,7 +52,7 @@ export interface CaseFieldActionCreators {
 }
 
 /**
- * Loads the `case assist` reducer and returns possible action creators.
+ * Loads the `case fields` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
@@ -81,8 +65,6 @@ export function loadCaseFieldActions(
   return {
     registerCaseField,
     updateCaseField,
-    enableCaseClassifications,
-    disableCaseClassifications,
     fetchCaseClassifications,
   };
 }

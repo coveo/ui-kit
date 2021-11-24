@@ -1,8 +1,6 @@
 import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response';
 import {
   updateCaseField,
-  enableCaseClassifications,
-  disableCaseClassifications,
   fetchCaseClassifications,
   registerCaseField,
 } from './case-field-actions';
@@ -70,24 +68,6 @@ describe('case field slice', () => {
       expect(modifiedState.fields[existingField.fieldName].suggestions).toEqual(
         existingSuggestions
       );
-    });
-  });
-
-  describe('#enableCaseClassifications', () => {
-    it('should allow to enable case classifications', () => {
-      expect(state.enabled).toBe(false);
-      expect(
-        caseFieldsReducer(state, enableCaseClassifications()).enabled
-      ).toBe(true);
-    });
-  });
-
-  describe('#enableCaseClassifications', () => {
-    it('should allow to enable case classifications', () => {
-      state.enabled = true;
-      expect(
-        caseFieldsReducer(state, disableCaseClassifications()).enabled
-      ).toBe(false);
     });
   });
 

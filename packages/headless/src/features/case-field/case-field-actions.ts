@@ -51,14 +51,6 @@ export const updateCaseField = createAction(
     })
 );
 
-export const enableCaseClassifications = createAction(
-  'caseAssist/classifications/enable'
-);
-
-export const disableCaseClassifications = createAction(
-  'caseAssist/classifications/disable'
-);
-
 export interface FetchClassificationsThunkReturn {
   /** The successful classifications response. */
   response: GetCaseClassificationsResponse;
