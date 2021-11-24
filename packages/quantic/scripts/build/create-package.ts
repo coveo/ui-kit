@@ -158,7 +158,7 @@ async function createGithubDiscussionPost(
   log('Creating Github discussion...');
   try {
     const repository = await getRepoCategoryData(
-      {owner: 'nathanlb', name: 'sfdx-cli-testing'},
+      {owner: 'coveo', name: 'ui-kit'},
       token
     );
     const announcementCategoryId = repository.discussionCategories.edges.find(
@@ -194,9 +194,8 @@ async function createGithubDiscussionPost(
     options.removeTranslations &&
       runner.add(async (log) => await removeTranslations(log));
     runner.add(async (log) => {
-      packageVersionId = await (
-        await createPackage(log, options)
-      ).result.SubscriberPackageVersionId;
+      packageVersionId = (await createPackage(log, options)).result
+        .SubscriberPackageVersionId;
       !options.promote &&
         log(
           JSON.stringify(

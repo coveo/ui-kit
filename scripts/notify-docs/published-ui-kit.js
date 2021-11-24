@@ -22,7 +22,7 @@ async function notify() {
 async function main() {
   try {
     await notify();
-    console.log('notification sent')
+    console.log('notification sent');
   } catch(e) {
     const {status, message, request} = e;
     console.error('notification failed', status, message);
