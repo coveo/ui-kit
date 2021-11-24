@@ -7,6 +7,7 @@ import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-
 import {
   CaseAssistConfigurationSection,
   CaseFieldsSection,
+  CaseInputsSection,
   ConfigurationSection,
   DebugSection,
 } from '../../state/state-sections';
@@ -54,6 +55,7 @@ export interface FetchClassificationsThunkReturn {
 export type StateNeededByFetchClassifications = ConfigurationSection &
   CaseAssistConfigurationSection &
   CaseFieldsSection &
+  CaseInputsSection &
   DebugSection;
 
 export const fetchCaseClassifications = createAsyncThunk<
@@ -89,7 +91,7 @@ export const buildFetchClassificationRequest = async (
   ...(state.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
-  fields: state.caseFields.fields,
+  fields: state.caseInputs,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });
