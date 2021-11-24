@@ -42,11 +42,10 @@ const initializableElements = ['atomic-search-interface', 'atomic-external'];
 /**
  * Retrieves `Bindings` on a configured parent search interface.
  * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
- * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element.
- * @throws The error thrown if the element isn't a child of a configured "atomic-search-interface" or "atomic-external" element.
+ * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
  */
 export const initializeBindings = (element: Element) =>
-  new Promise<Bindings>((resolve) => {
+  new Promise<Bindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
       (bindings: Bindings) => resolve(bindings)
@@ -54,14 +53,16 @@ export const initializeBindings = (element: Element) =>
     element.dispatchEvent(event);
 
     if (!element.closest(initializableElements.join(', '))) {
-      throw new MissingInterfaceParentError(element.nodeName.toLowerCase());
+      reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
     }
   });
 
 export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {
     super(
-      `The "${elementName}" element must be the child of a configured "atomic-search-interface" or "atomic-external" element.`
+      `The "${elementName}" element must be the child of the following elements: ${initializableElements.join(
+        ', '
+      )}`
     );
   }
 }
