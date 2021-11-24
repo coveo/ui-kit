@@ -248,7 +248,6 @@ export default class QuanticNumericFacet extends LightningElement {
     this.end = this.filterState?.range?.end?.toString();
   }
 
-
   get values() {
     return (
       this.state?.values
@@ -266,6 +265,7 @@ export default class QuanticNumericFacet extends LightningElement {
   get step() {
     return this.withInput ==='integer' ? '1' : 'any';
   }
+
   /** @returns {HTMLInputElement} */
   get inputMin() {
     return this.template.querySelector('.numeric__input-min');
