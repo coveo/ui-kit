@@ -4,11 +4,12 @@ import {
   enableCaseClassifications,
   disableCaseClassifications,
   fetchCaseClassifications,
+  registerCaseField,
 } from './case-field-actions';
 import {caseFieldsReducer} from './case-field-slice';
 import {getCaseFieldInitialState, CaseFieldsState} from './case-field-state';
 
-describe('case fields slice', () => {
+describe('case field slice', () => {
   let state: CaseFieldsState;
   const testField = {
     fieldName: 'test-field-name',
@@ -28,7 +29,7 @@ describe('case fields slice', () => {
   describe('#registerCaseField', () => {
     it('should allow to set a case field', () => {
       expect(
-        caseFieldsReducer(state, updateCaseField(testField)).fields[
+        caseFieldsReducer(state, registerCaseField(testField)).fields[
           testField.fieldName
         ].value
       ).toEqual(testField.fieldValue);
