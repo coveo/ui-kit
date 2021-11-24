@@ -66,7 +66,7 @@ export const config: Config = {
           src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'build/assets',
         },
-      ],
+      ].filter((n) => n),
     },
   ],
   testing: {
