@@ -4,11 +4,11 @@ import {
   fetchCaseClassifications,
   registerCaseField,
 } from './case-field-actions';
-import {caseFieldsReducer} from './case-field-slice';
-import {getCaseFieldInitialState, CaseFieldsState} from './case-field-state';
+import {caseFieldReducer} from './case-field-slice';
+import {getCaseFieldInitialState, CaseFieldState} from './case-field-state';
 
 describe('case field slice', () => {
-  let state: CaseFieldsState;
+  let state: CaseFieldState;
   const testField = {
     fieldName: 'test-field-name',
     fieldValue: 'test-field-value',
@@ -19,7 +19,7 @@ describe('case field slice', () => {
   });
 
   it('should have an initial state', () => {
-    expect(caseFieldsReducer(undefined, {type: 'foo'})).toEqual(
+    expect(caseFieldReducer(undefined, {type: 'foo'})).toEqual(
       getCaseFieldInitialState()
     );
   });
@@ -27,7 +27,7 @@ describe('case field slice', () => {
   describe('#registerCaseField', () => {
     it('should allow to set a case field', () => {
       expect(
-        caseFieldsReducer(state, registerCaseField(testField)).fields[
+        caseFieldReducer(state, registerCaseField(testField)).fields[
           testField.fieldName
         ].value
       ).toEqual(testField.fieldValue);
@@ -58,7 +58,7 @@ describe('case field slice', () => {
 
     it('should allow to update a case field without affecting suggestions', () => {
       const updatedValue = 'updated-value';
-      const modifiedState = caseFieldsReducer(
+      const modifiedState = caseFieldReducer(
         state,
         updateCaseField({...existingField, fieldValue: updatedValue})
       );
@@ -103,7 +103,7 @@ describe('case field slice', () => {
         },
         ''
       );
-      const finalState = caseFieldsReducer(state, action);
+      const finalState = caseFieldReducer(state, action);
 
       expect(finalState.fields[testField.fieldName].suggestions).toEqual(
         response.fields[testField.fieldName].predictions
@@ -120,14 +120,14 @@ describe('case field slice', () => {
       };
       const action = fetchCaseClassifications.rejected(null, '');
       action.payload = err;
-      const finalState = caseFieldsReducer(state, action);
+      const finalState = caseFieldReducer(state, action);
       expect(finalState.status.error).toEqual(err);
       expect(finalState.status.loading).toBe(false);
     });
 
-    it('set the isLoading state to true during getProductRecommendations.pending', () => {
+    it('set the isLoading state to true during fetchCaseClassifications.pending', () => {
       const pendingAction = fetchCaseClassifications.pending('');
-      const finalState = caseFieldsReducer(state, pendingAction);
+      const finalState = caseFieldReducer(state, pendingAction);
       expect(finalState.status.loading).toBe(true);
     });
   });

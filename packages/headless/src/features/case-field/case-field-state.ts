@@ -1,6 +1,6 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 
-export const getCaseFieldInitialState = (): CaseFieldsState => ({
+export const getCaseFieldInitialState = (): CaseFieldState => ({
   status: {
     loading: false,
     error: null,
@@ -9,7 +9,7 @@ export const getCaseFieldInitialState = (): CaseFieldsState => ({
   fields: {},
 });
 
-export interface CaseFieldsStatus {
+export interface CaseFieldStatus {
   /**
    * `true` if a request is in progress and `false` otherwise.
    */
@@ -50,11 +50,11 @@ export interface CaseField {
   suggestions: CaseFieldSuggestion[];
 }
 
-export interface CaseFieldsState {
+export interface CaseFieldState {
   /**
    * The status of the case fields classification request.
    */
-  status: CaseFieldsStatus;
+  status: CaseFieldStatus;
   /**
    * The case fields for which classifications are retrieved.
    */

@@ -6,8 +6,8 @@ import {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-c
 import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response';
 import {
   CaseAssistConfigurationSection,
-  CaseFieldsSection,
-  CaseInputsSection,
+  CaseFieldSection,
+  CaseInputSection,
   ConfigurationSection,
   DebugSection,
 } from '../../state/state-sections';
@@ -58,8 +58,8 @@ export interface FetchClassificationsThunkReturn {
 
 export type StateNeededByFetchClassifications = ConfigurationSection &
   CaseAssistConfigurationSection &
-  CaseFieldsSection &
-  CaseInputsSection &
+  CaseFieldSection &
+  CaseInputSection &
   DebugSection;
 
 export const fetchCaseClassifications = createAsyncThunk<

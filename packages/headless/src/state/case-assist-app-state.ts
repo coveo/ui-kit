@@ -1,7 +1,7 @@
 import {
   CaseAssistConfigurationSection,
-  CaseFieldsSection,
-  CaseInputsSection,
+  CaseFieldSection,
+  CaseInputSection,
   ConfigurationSection,
   DebugSection,
   DocumentSuggestionSection,
@@ -9,7 +9,7 @@ import {
 
 export type CaseAssistAppState = ConfigurationSection &
   CaseAssistConfigurationSection &
-  CaseInputsSection &
-  CaseFieldsSection &
+  CaseInputSection &
+  CaseFieldSection &
   DocumentSuggestionSection &
   DebugSection;
