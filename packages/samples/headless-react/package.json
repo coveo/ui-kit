@@ -1,9 +1,9 @@
 {
   "name": "headless-react",
-  "version": "0.43.6",
+  "version": "0.43.7",
   "dependencies": {
-    "@coveo/headless": "^1.33.0",
     "@testing-library/jest-dom": "5.15.1",
+    "@coveo/headless": "^1.33.1",
     "@testing-library/react": "11.2.7",
     "@testing-library/user-event": "13.5.0",
     "@types/escape-html": "1.0.1",
