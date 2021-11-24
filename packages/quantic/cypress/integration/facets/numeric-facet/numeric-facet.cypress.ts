@@ -186,6 +186,7 @@ describe('Numeric Facet Test Suite', () => {
         visitNumericFacetPage(customWithInputSettings);
 
         Actions.checkValueAt(2);
+        cy.wait(InterceptAliases.UA.Facet.Select);
         Expect.displayClearButton(true);
         Expect.clearFilterContains('Clear filter');
         Expect.numberOfSelectedCheckboxValues(1);
