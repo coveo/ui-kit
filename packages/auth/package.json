@@ -12,7 +12,8 @@
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "e2e:saml": "vite samples/saml/"
   },
   "repository": {
     "type": "git",
@@ -37,7 +38,8 @@
     "rollup": "^2.60.1",
     "rollup-plugin-license": "^2.6.0",
     "rollup-plugin-terser": "^7.0.2",
-    "ts-jest": "^27.0.7"
+    "ts-jest": "^27.0.7",
+    "vite": "^2.6.14"
   },
   "engines": {
     "node": ">=10"
