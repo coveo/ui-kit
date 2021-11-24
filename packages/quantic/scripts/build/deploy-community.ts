@@ -219,6 +219,7 @@ async function deployCommunity(
       if (retry === 2) {
         throw error;
       }
+      console.log(error.result.details.componentFailures);
       retry++;
     }
   } while (!success && retry <= 2);
