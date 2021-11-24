@@ -125,7 +125,7 @@ describe('case field slice', () => {
       expect(finalState.status.loading).toBe(false);
     });
 
-    it('set the isLoading state to true during getProductRecommendations.pending', () => {
+    it('set the isLoading state to true during fetchCaseClassifications.pending', () => {
       const pendingAction = fetchCaseClassifications.pending('');
       const finalState = caseFieldsReducer(state, pendingAction);
       expect(finalState.status.loading).toBe(true);
