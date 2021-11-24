@@ -190,7 +190,7 @@ async function deployComponents(
       packagePaths: ['force-app/main', 'force-app/examples'],
     });
   } catch (e) {
-    console.log(e);
+    console.log(e.result.details.componentFailures);
   }
 
   log('Components deployed.');
