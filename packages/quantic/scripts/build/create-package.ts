@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unsupported-features/node-builtins */
 import * as fs from 'fs';
 import * as sfdx from './util/sfdx-commands';
 import * as path from 'path';

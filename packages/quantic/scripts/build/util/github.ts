@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-import */
 import {graphql} from '@octokit/graphql';
 import {
   Repository,

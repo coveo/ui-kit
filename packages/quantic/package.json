@@ -36,6 +36,9 @@
   "dependencies": {
     "@coveo/headless": "^1.33.0"
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "^25.4.4",
     "@octokit/graphql": "^4.8.0",

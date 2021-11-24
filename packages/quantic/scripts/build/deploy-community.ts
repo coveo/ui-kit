@@ -3,8 +3,7 @@ import * as path from 'path';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
 import {SfdxJWTAuth} from './util/sfdx-commands';
-// eslint-disable-next-line node/no-unpublished-require
-const waitOn = require('wait-on');
+import waitOn from 'wait-on';
 
 interface Options {
   configFile: string;
