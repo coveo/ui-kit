@@ -4,14 +4,14 @@ import {caseInputs} from '../../app/reducers';
 import {
   setCaseInput,
   SetCaseInputActionCreatorPayload,
-} from './case-inputs-actions';
+} from './case-input-actions';
 
 export {SetCaseInputActionCreatorPayload};
 
 /**
  * The case inputs action creators.
  */
-export interface CaseInputsActionCreators {
+export interface CaseInputActionCreators {
   /**
    * Adds or updates the state caseInputs with the specified field and value.
    *
@@ -29,9 +29,9 @@ export interface CaseInputsActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadCaseInputsActions(
+export function loadCaseInputActions(
   engine: CaseAssistEngine
-): CaseInputsActionCreators {
+): CaseInputActionCreators {
   engine.addReducers({caseInputs});
 
   return {

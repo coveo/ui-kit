@@ -40,8 +40,8 @@ import {dictionaryFieldContextReducer} from '../features/dictionary-field-contex
 import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 import {staticFilterSetReducer} from '../features/static-filter-set/static-filter-set-slice';
 import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
-import {caseInputsReducer} from '../features/case-inputs/case-inputs-slice';
-import {caseFieldsReducer} from '../features/case-fields/case-fields-slice';
+import {caseInputsReducer} from '../features/case-input/case-input-slice';
+import {caseFieldsReducer} from '../features/case-field/case-field-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;

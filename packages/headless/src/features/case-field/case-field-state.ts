@@ -1,6 +1,6 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 
-export const getCaseFieldsInitialState = (): CaseFieldsState => ({
+export const getCaseFieldInitialState = (): CaseFieldsState => ({
   enabled: false,
   status: {
     loading: false,

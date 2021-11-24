@@ -3,26 +3,26 @@ import {
   disableCaseClassifications,
   enableCaseClassifications,
   fetchCaseClassifications,
-  setCaseField,
-} from './case-fields-actions';
-import {getCaseFieldsInitialState} from './case-fields-state';
+  registerCaseField,
+  updateCaseField,
+} from './case-field-actions';
+import {getCaseFieldInitialState} from './case-field-state';
 
 export const caseFieldsReducer = createReducer(
-  getCaseFieldsInitialState(),
+  getCaseFieldInitialState(),
 
   (builder) => {
     builder
-      .addCase(setCaseField, (state, action) => {
+      .addCase(registerCaseField, (state, action) => {
         const {fieldName, fieldValue} = action.payload;
-        const field = state.fields[fieldName];
-        if (field) {
-          field.value = fieldValue;
-        } else {
-          state.fields[fieldName] = {
-            value: fieldValue,
-            suggestions: [],
-          };
-        }
+        state.fields[fieldName] = {
+          value: fieldValue,
+          suggestions: [],
+        };
+      })
+      .addCase(updateCaseField, (state, action) => {
+        const {fieldName, fieldValue} = action.payload;
+        state.fields[fieldName].value = fieldValue;
       })
       .addCase(enableCaseClassifications, (state) => {
         state.enabled = true;

@@ -1,12 +1,12 @@
 import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response';
 import {
-  setCaseField,
+  updateCaseField,
   enableCaseClassifications,
   disableCaseClassifications,
   fetchCaseClassifications,
-} from './case-fields-actions';
-import {caseFieldsReducer} from './case-fields-slice';
-import {getCaseFieldsInitialState, CaseFieldsState} from './case-fields-state';
+} from './case-field-actions';
+import {caseFieldsReducer} from './case-field-slice';
+import {getCaseFieldInitialState, CaseFieldsState} from './case-field-state';
 
 describe('case fields slice', () => {
   let state: CaseFieldsState;
@@ -16,69 +16,59 @@ describe('case fields slice', () => {
   };
 
   beforeEach(() => {
-    state = getCaseFieldsInitialState();
+    state = getCaseFieldInitialState();
   });
 
   it('should have an initial state', () => {
     expect(caseFieldsReducer(undefined, {type: 'foo'})).toEqual(
-      getCaseFieldsInitialState()
+      getCaseFieldInitialState()
     );
   });
 
-  describe('#setCaseField', () => {
-    describe('without caseFields', () => {
-      it('should allow to set a case field', () => {
-        expect(
-          caseFieldsReducer(state, setCaseField(testField)).fields[
-            testField.fieldName
-          ].value
-        ).toEqual(testField.fieldValue);
-      });
+  describe('#registerCaseField', () => {
+    it('should allow to set a case field', () => {
+      expect(
+        caseFieldsReducer(state, updateCaseField(testField)).fields[
+          testField.fieldName
+        ].value
+      ).toEqual(testField.fieldValue);
+    });
+  });
+
+  describe('#updateCaseField', () => {
+    const existingField = {
+      fieldName: 'existing-field-name',
+      fieldValue: 'existing-field-value',
+    };
+    const existingSuggestions = [
+      {
+        id: 'id',
+        value: 'value',
+        confidence: 0.8,
+      },
+    ];
+
+    beforeEach(() => {
+      state.fields = {
+        [existingField.fieldName]: {
+          value: existingField.fieldValue,
+          suggestions: existingSuggestions,
+        },
+      };
     });
 
-    describe('with existing caseFields', () => {
-      const existingField = {
-        fieldName: 'existing-field-name',
-        fieldValue: 'existing-field-value',
-      };
-      const existingSuggestions = [
-        {
-          id: 'id',
-          value: 'value',
-          confidence: 0.8,
-        },
-      ];
-
-      beforeEach(() => {
-        state.fields = {
-          [existingField.fieldName]: {
-            value: existingField.fieldValue,
-            suggestions: existingSuggestions,
-          },
-        };
-      });
-
-      it('should allow to set a case field', () => {
-        expect(
-          caseFieldsReducer(state, setCaseField(testField)).fields[
-            testField.fieldName
-          ].value
-        ).toEqual(testField.fieldValue);
-      });
-
-      it('should allow to update a case field without affecting suggestions', () => {
-        const updatedValue = 'updated-value';
-        const modifiedState = caseFieldsReducer(
-          state,
-          setCaseField({...existingField, fieldValue: updatedValue})
-        );
-        expect(modifiedState.fields[existingField.fieldName].value).toEqual(
-          updatedValue
-        );
-        expect(
-          modifiedState.fields[existingField.fieldName].suggestions
-        ).toEqual(existingSuggestions);
-      });
+    it('should allow to update a case field without affecting suggestions', () => {
+      const updatedValue = 'updated-value';
+      const modifiedState = caseFieldsReducer(
+        state,
+        updateCaseField({...existingField, fieldValue: updatedValue})
+      );
+      expect(modifiedState.fields[existingField.fieldName].value).toEqual(
+        updatedValue
+      );
+      expect(modifiedState.fields[existingField.fieldName].suggestions).toEqual(
+        existingSuggestions
+      );
     });
   });
 

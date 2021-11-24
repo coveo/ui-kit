@@ -26,4 +26,5 @@ export {LoggerOptions} from './app/logger';
 export {LogLevel} from './app/logger';
 
 // Case Assist Action Loaders
-export {loadCaseInputsActions, loadCaseFieldsActions} from './features/index';
+export * from './features/case-input/case-input-actions-loader';
+export * from './features/case-field/case-field-actions-loader';

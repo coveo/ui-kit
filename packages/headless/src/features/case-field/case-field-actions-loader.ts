@@ -7,24 +7,35 @@ import {
   enableCaseClassifications,
   fetchCaseClassifications,
   FetchClassificationsThunkReturn,
-  setCaseField,
+  updateCaseField,
   SetCaseFieldActionCreatorPayload,
   StateNeededByFetchClassifications,
-} from './case-fields-actions';
+  registerCaseField,
+} from './case-field-actions';
 
 export {SetCaseFieldActionCreatorPayload};
 
 /**
- * The case fields action creators.
+ * The case field action creators.
  */
-export interface CaseAssistActionCreators {
+export interface CaseFieldActionCreators {
   /**
-   * Adds or updates the state caseFields with the specified field and value.
+   * Registers a case field with the specified field and value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setCaseField(
+  registerCaseField(
+    payload: SetCaseFieldActionCreatorPayload
+  ): PayloadAction<SetCaseFieldActionCreatorPayload>;
+
+  /**
+   * Updates the specified case field with the provided value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateCaseField(
     payload: SetCaseFieldActionCreatorPayload
   ): PayloadAction<SetCaseFieldActionCreatorPayload>;
 
@@ -62,13 +73,14 @@ export interface CaseAssistActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadCaseFieldsActions(
+export function loadCaseFieldActions(
   engine: CaseAssistEngine
-): CaseAssistActionCreators {
+): CaseFieldActionCreators {
   engine.addReducers({caseFields});
 
   return {
-    setCaseField,
+    registerCaseField,
+    updateCaseField,
     enableCaseClassifications,
     disableCaseClassifications,
     fetchCaseClassifications,

@@ -28,10 +28,22 @@ export interface SetCaseFieldActionCreatorPayload {
 }
 
 /**
- * Adds or updates the state caseFields with the specified field and value.
+ * Registers a case field with the specified field and value.
  */
-export const setCaseField = createAction(
-  'caseAssist/caseField/set',
+export const registerCaseField = createAction(
+  'caseAssist/caseField/register',
+  (payload: SetCaseFieldActionCreatorPayload) =>
+    validatePayload(payload, {
+      fieldName: requiredNonEmptyString,
+      fieldValue: requiredNonEmptyString,
+    })
+);
+
+/**
+ * Updates the specified case field with the provided value.
+ */
+export const updateCaseField = createAction(
+  'caseAssist/caseField/update',
   (payload: SetCaseFieldActionCreatorPayload) =>
     validatePayload(payload, {
       fieldName: requiredNonEmptyString,
