@@ -1,45 +1,38 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
-import {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-request';
-import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response';
+import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request';
 import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {
   CaseAssistConfigurationSection,
   DocumentSuggestionsSection,
   ConfigurationSection,
   DebugSection,
+  CaseInputsSection,
 } from '../../state/state-sections';
 
-export const enableCaseClassifications = createAction(
-  'caseAssist/classifications/enable'
-);
-
-export const disableCaseClassifications = createAction(
-  'caseAssist/classifications/disable'
-);
-
 export interface FetchDocumentSuggestionsThunkReturn {
-  /** The successful classifications response. */
+  /** The successful document suggestions response. */
   response: GetDocumentSuggestionsResponse;
 }
 
-export type StateNeededByFetchClassifications = ConfigurationSection &
+export type StateNeededByFetchDocumentSuggestions = ConfigurationSection &
   CaseAssistConfigurationSection &
   DocumentSuggestionsSection &
+  CaseInputsSection &
   DebugSection;
 
 export const fetchDocumentSuggestions = createAsyncThunk<
   FetchDocumentSuggestionsThunkReturn,
   void,
-  AsyncThunkCaseAssistOptions<StateNeededByFetchClassifications>
+  AsyncThunkCaseAssistOptions<StateNeededByFetchDocumentSuggestions>
 >(
-  'caseAssist/classifications/fetch',
+  'caseAssist/documentSuggestions/fetch',
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
 
-    const fetched = await apiClient(
+    const fetched = await apiClient.getDocumentSuggestions(
       await buildFetchDocumentSuggestionsRequest(state)
     );
 
@@ -54,8 +47,8 @@ export const fetchDocumentSuggestions = createAsyncThunk<
 );
 
 export const buildFetchDocumentSuggestionsRequest = async (
-  state: StateNeededByFetchClassifications
-): Promise<GetCaseClassificationsRequest> => ({
+  state: StateNeededByFetchDocumentSuggestions
+): Promise<GetDocumentSuggestionsRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
   url: state.configuration.platformUrl,
@@ -63,7 +56,7 @@ export const buildFetchDocumentSuggestionsRequest = async (
   ...(state.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
-  fields: state.DocumentSuggestions.fields,
+  fields: state.caseInputs,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });

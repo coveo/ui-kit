@@ -1,76 +1,42 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {caseFields} from '../../app/reducers';
+import {documentSuggestions} from '../../app/reducers';
 import {
-  disableCaseClassifications,
-  enableCaseClassifications,
-  fetchCaseClassifications,
-  FetchClassificationsThunkReturn,
-  setCaseField,
-  SetCaseFieldActionCreatorPayload,
-  StateNeededByFetchClassifications,
+  fetchDocumentSuggestions,
+  FetchDocumentSuggestionsThunkReturn,
+  StateNeededByFetchDocumentSuggestions,
 } from './document-suggestions-actions';
-
-export {SetCaseFieldActionCreatorPayload};
 
 /**
  * The case fields action creators.
  */
 export interface CaseAssistActionCreators {
   /**
-   * Adds or updates the state caseFields with the specified field and value.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  setCaseField(
-    payload: SetCaseFieldActionCreatorPayload
-  ): PayloadAction<SetCaseFieldActionCreatorPayload>;
-
-  /**
-   * Enables case classifications to be updated when case information changes.
+   * Retrieves the document suggestions from the platform.
+   * Document suggestions are retrieved based on the case information entered so far.
    *
    * @returns A dispatchable action.
    */
-  enableCaseClassifications(): PayloadAction;
-
-  /**
-   * Disables case classifications from being updated when case information changes.
-   *
-   * @returns A dispatchable action.
-   */
-  disableCaseClassifications(): PayloadAction;
-
-  /**
-   * Retrieves the case classifications from the platform.
-   * A single call retrieves classifications for all fields specified in the Case Assist configuration.
-   * Case classifications are retrieved based on the case information entered so far.
-   *
-   * @returns A dispatchable action.
-   */
-  fetchCaseClassifications(): AsyncThunkAction<
-    FetchClassificationsThunkReturn,
+  fetchDocumentSuggestions(): AsyncThunkAction<
+    FetchDocumentSuggestionsThunkReturn,
     void,
-    AsyncThunkCaseAssistOptions<StateNeededByFetchClassifications>
+    AsyncThunkCaseAssistOptions<StateNeededByFetchDocumentSuggestions>
   >;
 }
 
 /**
- * Loads the `case assist` reducer and returns possible action creators.
+ * Loads the `document suggestions` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadCaseFieldsActions(
+export function loadDocumentSuggestionsActions(
   engine: CaseAssistEngine
 ): CaseAssistActionCreators {
-  engine.addReducers({caseFields});
+  engine.addReducers({documentSuggestions});
 
   return {
-    setCaseField,
-    enableCaseClassifications,
-    disableCaseClassifications,
-    fetchCaseClassifications,
+    fetchDocumentSuggestions,
   };
 }
