@@ -17,7 +17,7 @@ import {
 } from './caseAssistActions';
 
 export interface CaseAssistClientOptions extends ClientOptions {
-    enableAnalytics: boolean;
+    enableAnalytics?: boolean;
 }
 
 export class CaseAssistClient {
@@ -25,7 +25,9 @@ export class CaseAssistClient {
     private svc: SVCPlugin;
 
     constructor(private options: Partial<CaseAssistClientOptions>) {
-        this.coveoAnalyticsClient = options.enableAnalytics ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
+        const analyticsEnabled = options.enableAnalytics ?? true;
+
+        this.coveoAnalyticsClient = analyticsEnabled ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
         this.svc = new SVCPlugin({client: this.coveoAnalyticsClient});
     }
 

@@ -116,6 +116,16 @@ describe('CaseAssistClient', () => {
         }
     };
 
+    it('should have #enableAnalytics default to #true', async () => {
+        client = new CaseAssistClient({});
+
+        await client.logEnterInterface({
+            ticket: emptyTicket,
+        });
+
+        expect(fetchMock.called()).toBe(true);
+    });
+
     it('should not send events when #enableAnalytics option is #false', async () => {
         client = new CaseAssistClient({
             enableAnalytics: false,
