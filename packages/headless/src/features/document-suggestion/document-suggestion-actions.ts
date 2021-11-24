@@ -6,7 +6,7 @@ import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-d
 import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {
   CaseAssistConfigurationSection,
-  DocumentSuggestionsSection,
+  DocumentSuggestionSection,
   ConfigurationSection,
   DebugSection,
   CaseInputsSection,
@@ -19,7 +19,7 @@ export interface FetchDocumentSuggestionsThunkReturn {
 
 export type StateNeededByFetchDocumentSuggestions = ConfigurationSection &
   CaseAssistConfigurationSection &
-  DocumentSuggestionsSection &
+  DocumentSuggestionSection &
   CaseInputsSection &
   DebugSection;
 

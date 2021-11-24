@@ -2,15 +2,15 @@ import {
   DocumentSuggestion,
   GetDocumentSuggestionsResponse,
 } from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
-import {fetchDocumentSuggestions} from './document-suggestions-actions';
-import {documentSuggestionsReducer} from './document-suggestions-slice';
+import {fetchDocumentSuggestions} from './document-suggestion-actions';
+import {documentSuggestionReducer} from './document-suggestion-slice';
 import {
-  getDocumentSuggestionsInitialState,
-  DocumentSuggestionsState,
-} from './document-suggestions-state';
+  getDocumentSuggestionInitialState,
+  DocumentSuggestionState,
+} from './document-suggestion-state';
 
-describe('document suggestions slice', () => {
-  let state: DocumentSuggestionsState;
+describe('document suggestion slice', () => {
+  let state: DocumentSuggestionState;
   const mockDocument: DocumentSuggestion = {
     clickUri: 'www.clikuri.com',
     title: 'Mock Document',
@@ -23,12 +23,12 @@ describe('document suggestions slice', () => {
   };
 
   beforeEach(() => {
-    state = getDocumentSuggestionsInitialState();
+    state = getDocumentSuggestionInitialState();
   });
 
   it('should have an initial state', () => {
-    expect(documentSuggestionsReducer(undefined, {type: 'foo'})).toEqual(
-      getDocumentSuggestionsInitialState()
+    expect(documentSuggestionReducer(undefined, {type: 'foo'})).toEqual(
+      getDocumentSuggestionInitialState()
     );
   });
 
@@ -49,7 +49,7 @@ describe('document suggestions slice', () => {
         },
         ''
       );
-      const finalState = documentSuggestionsReducer(state, action);
+      const finalState = documentSuggestionReducer(state, action);
 
       expect(finalState.documents).toEqual(response.documents);
       expect(finalState.status.loading).toBe(false);
@@ -64,14 +64,14 @@ describe('document suggestions slice', () => {
       };
       const action = fetchDocumentSuggestions.rejected(null, '');
       action.payload = err;
-      const finalState = documentSuggestionsReducer(state, action);
+      const finalState = documentSuggestionReducer(state, action);
       expect(finalState.status.error).toEqual(err);
       expect(finalState.status.loading).toBe(false);
     });
 
     it('set the isLoading state to true during fetchDocumentSuggestions.pending', () => {
       const pendingAction = fetchDocumentSuggestions.pending('');
-      const finalState = documentSuggestionsReducer(state, pendingAction);
+      const finalState = documentSuggestionReducer(state, pendingAction);
       expect(finalState.status.loading).toBe(true);
     });
   });

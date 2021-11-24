@@ -42,7 +42,7 @@ import {staticFilterSetReducer} from '../features/static-filter-set/static-filte
 import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
 import {caseInputsReducer} from '../features/case-input/case-input-slice';
 import {caseFieldsReducer} from '../features/case-field/case-field-slice';
-import {documentSuggestionsReducer} from '../features/document-suggestions/document-suggestions-slice';
+import {documentSuggestionReducer} from '../features/document-suggestion/document-suggestion-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -99,4 +99,4 @@ export const sort = sortReducer;
 export const caseAssistConfiguration = caseAssistConfigurationReducer;
 export const caseInputs = caseInputsReducer;
 export const caseFields = caseFieldsReducer;
-export const documentSuggestions = documentSuggestionsReducer;
+export const documentSuggestion = documentSuggestionReducer;

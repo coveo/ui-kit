@@ -1,9 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchDocumentSuggestions} from './document-suggestions-actions';
-import {getDocumentSuggestionsInitialState} from './document-suggestions-state';
+import {fetchDocumentSuggestions} from './document-suggestion-actions';
+import {getDocumentSuggestionInitialState} from './document-suggestion-state';
 
-export const documentSuggestionsReducer = createReducer(
-  getDocumentSuggestionsInitialState(),
+export const documentSuggestionReducer = createReducer(
+  getDocumentSuggestionInitialState(),
 
   (builder) => {
     builder

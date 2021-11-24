@@ -1,8 +1,8 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 import {DocumentSuggestion} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 
-export const getDocumentSuggestionsInitialState =
-  (): DocumentSuggestionsState => ({
+export const getDocumentSuggestionInitialState =
+  (): DocumentSuggestionState => ({
     enabled: false,
     status: {
       loading: false,
@@ -12,7 +12,7 @@ export const getDocumentSuggestionsInitialState =
     documents: [],
   });
 
-export interface DocumentSuggestionsStatus {
+export interface DocumentSuggestionStatus {
   /**
    * `true` if a request is in progress and `false` otherwise.
    */
@@ -27,7 +27,7 @@ export interface DocumentSuggestionsStatus {
   lastResponseId: string;
 }
 
-export interface DocumentSuggestionsState {
+export interface DocumentSuggestionState {
   /**
    * Specifies if the automatic update of document suggestions should be enabled.
    * By default the feature is disabled.
@@ -36,7 +36,7 @@ export interface DocumentSuggestionsState {
   /**
    * The status of the document suggestions request.
    */
-  status: DocumentSuggestionsStatus;
+  status: DocumentSuggestionStatus;
   /**
    * The retrieved document suggestions.
    */

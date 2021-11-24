@@ -1,17 +1,17 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {documentSuggestions} from '../../app/reducers';
+import {documentSuggestion} from '../../app/reducers';
 import {
   fetchDocumentSuggestions,
   FetchDocumentSuggestionsThunkReturn,
   StateNeededByFetchDocumentSuggestions,
-} from './document-suggestions-actions';
+} from './document-suggestion-actions';
 
 /**
- * The case fields action creators.
+ * The document suggestion action creators.
  */
-export interface CaseAssistActionCreators {
+export interface DocumentSuggestionActionCreators {
   /**
    * Retrieves the document suggestions from the platform.
    * Document suggestions are retrieved based on the case information entered so far.
@@ -26,15 +26,15 @@ export interface CaseAssistActionCreators {
 }
 
 /**
- * Loads the `document suggestions` reducer and returns possible action creators.
+ * Loads the `document suggestion` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadDocumentSuggestionsActions(
+export function loadDocumentSuggestionActions(
   engine: CaseAssistEngine
-): CaseAssistActionCreators {
-  engine.addReducers({documentSuggestions});
+): DocumentSuggestionActionCreators {
+  engine.addReducers({documentSuggestion});
 
   return {
     fetchDocumentSuggestions,
