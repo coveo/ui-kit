@@ -9,6 +9,7 @@ import {
 } from './util/sfdx-commands';
 import {createDiscussion, getRepoCategoryData} from './util/github';
 import * as pack from '../../package.json';
+import * as sfdxProject from '../../sfdx-project.json';
 
 require('dotenv').config();
 
@@ -71,7 +72,7 @@ async function buildOptions(): Promise<Options> {
 
   return {
     packageVersion: await getPackageVersion(),
-    packageId: '0Ho6g000000k9g8CAA',
+    packageId: sfdxProject.packageAliases.Quantic,
     promote: !!promote,
     removeTranslations: !!removeTranslations,
     jwt: {
