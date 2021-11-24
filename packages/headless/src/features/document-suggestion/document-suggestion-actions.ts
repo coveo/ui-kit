@@ -9,7 +9,7 @@ import {
   DocumentSuggestionSection,
   ConfigurationSection,
   DebugSection,
-  CaseInputsSection,
+  CaseInputSection,
 } from '../../state/state-sections';
 
 export interface FetchDocumentSuggestionsThunkReturn {
@@ -20,7 +20,7 @@ export interface FetchDocumentSuggestionsThunkReturn {
 export type StateNeededByFetchDocumentSuggestions = ConfigurationSection &
   CaseAssistConfigurationSection &
   DocumentSuggestionSection &
-  CaseInputsSection &
+  CaseInputSection &
   DebugSection;
 
 export const fetchDocumentSuggestions = createAsyncThunk<
