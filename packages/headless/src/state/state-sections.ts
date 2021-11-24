@@ -35,8 +35,8 @@ import {SortState} from '../features/sort/sort-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
-import {CaseFieldsState} from '../features/case-field/case-field-state';
-import {CaseInputsState} from '../features/case-input/case-input-state';
+import {CaseFieldState} from '../features/case-field/case-field-state';
+import {CaseInputState} from '../features/case-input/case-input-state';
 
 export interface QuerySection {
   /**
@@ -320,16 +320,16 @@ export interface CaseAssistConfigurationSection {
   caseAssistConfiguration: CaseAssistConfigurationState;
 }
 
-export interface CaseInputsSection {
+export interface CaseInputSection {
   /**
    * The case inputs.
    */
-  caseInputs: CaseInputsState;
+  caseInputs: CaseInputState;
 }
 
-export interface CaseFieldsSection {
+export interface CaseFieldSection {
   /**
    * The case fields and their predicted values.
    */
-  caseFields: CaseFieldsState;
+  caseFields: CaseFieldState;
 }

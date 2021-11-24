@@ -1,9 +1,9 @@
-export const getCaseInputInitialState = (): CaseInputsState => ({});
+export const getCaseInputInitialState = (): CaseInputState => ({});
 
 export interface CaseInput {
   value: string;
 }
 
-export interface CaseInputsState {
+export interface CaseInputState {
   [fieldName: string]: CaseInput;
 }

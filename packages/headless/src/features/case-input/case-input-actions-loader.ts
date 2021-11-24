@@ -1,8 +1,8 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {caseInputs} from '../../app/reducers';
+import {caseInput} from '../../app/reducers';
 import {
-  setCaseInput,
+  updateCaseInput,
   SetCaseInputActionCreatorPayload,
 } from './case-input-actions';
 
@@ -18,7 +18,7 @@ export interface CaseInputActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  setCaseInput(
+  updateCaseInput(
     payload: SetCaseInputActionCreatorPayload
   ): PayloadAction<SetCaseInputActionCreatorPayload>;
 }
@@ -32,9 +32,9 @@ export interface CaseInputActionCreators {
 export function loadCaseInputActions(
   engine: CaseAssistEngine
 ): CaseInputActionCreators {
-  engine.addReducers({caseInputs});
+  engine.addReducers({caseInput});
 
   return {
-    setCaseInput,
+    updateCaseInput,
   };
 }

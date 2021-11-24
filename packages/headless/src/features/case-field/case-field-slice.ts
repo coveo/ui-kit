@@ -6,7 +6,7 @@ import {
 } from './case-field-actions';
 import {getCaseFieldInitialState} from './case-field-state';
 
-export const caseFieldsReducer = createReducer(
+export const caseFieldReducer = createReducer(
   getCaseFieldInitialState(),
 
   (builder) => {

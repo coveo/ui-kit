@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {caseFields} from '../../app/reducers';
+import {caseField} from '../../app/reducers';
 import {
   fetchCaseClassifications,
   FetchClassificationsThunkReturn,
@@ -60,7 +60,7 @@ export interface CaseFieldActionCreators {
 export function loadCaseFieldActions(
   engine: CaseAssistEngine
 ): CaseFieldActionCreators {
-  engine.addReducers({caseFields});
+  engine.addReducers({caseField});
 
   return {
     registerCaseField,

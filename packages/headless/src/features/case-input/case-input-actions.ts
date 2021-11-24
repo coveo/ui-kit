@@ -16,10 +16,10 @@ export interface SetCaseInputActionCreatorPayload {
 }
 
 /**
- * Adds or updates the state caseInputs with the specified field and value.
+ * Adds or updates the case inputs with the specified field and value.
  */
-export const setCaseInput = createAction(
-  'caseAssist/caseInput/set',
+export const updateCaseInput = createAction(
+  'caseAssist/caseInput/update',
   (payload: SetCaseInputActionCreatorPayload) =>
     validatePayload(payload, {
       fieldName: requiredNonEmptyString,
