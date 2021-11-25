@@ -9,9 +9,6 @@ node('linux && docker') {
       stage('Setup') {
         sh 'npm ci'
         sh 'npx lerna bootstrap --ci'
-        if (!isBump) {
-          sh 'npm run lockLernaDependencies'
-        }
       }
 
       stage('Build') {
@@ -51,12 +48,12 @@ node('linux && docker') {
       stage('Cypress Test') {
         if (!isBump) {
           parallel([
-            /*'atomic': {
+            'atomic': {
               sh 'cd packages/atomic && ./node_modules/cypress/bin/cypress install'
               sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
               sh 'chown -R $(whoami) /tmp'
               sh 'cd packages/atomic && NO_COLOR=1 ./node_modules/cypress/bin/cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome'
-            },*/
+            },
             'quantic': {
               withCredentials([
                 string(credentialsId: 'sfdx-auth-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
@@ -116,6 +113,9 @@ node('linux && docker') {
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
       stage('Veracode package') {
         sh 'rm -rf veracode && mkdir veracode'
+        
+        sh 'mkdir veracode/auth'
+        sh 'cp -R packages/auth/src packages/auth/package.json packages/auth/package-lock.json veracode/auth'
 
         sh 'mkdir veracode/bueno'
         sh 'cp -R packages/bueno/src packages/bueno/package.json packages/bueno/package-lock.json veracode/bueno'

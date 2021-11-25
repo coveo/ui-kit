@@ -180,14 +180,10 @@ async function deployComponents(
 ): Promise<void> {
   log('Deploying components...');
 
-  try {
-    await sfdx.deploySource({
-      alias: options.scratchOrg.alias,
-      packagePaths: ['force-app/main', 'force-app/examples'],
-    });
-  } catch (e) {
-    console.log(e.result.details.componentFailures);
-  }
+  await sfdx.deploySource({
+    alias: options.scratchOrg.alias,
+    packagePaths: ['force-app/main', 'force-app/examples'],
+  });
 
   log('Components deployed.');
 }
@@ -215,7 +211,6 @@ async function deployCommunity(
       if (retry === 2) {
         throw error;
       }
-      console.log(error.result.details.componentFailures);
       retry++;
     }
   } while (!success && retry <= 2);

@@ -51,6 +51,7 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog",
       "defaultScope": [
+        "auth",
         "bueno",
         "headless",
         "atomic",

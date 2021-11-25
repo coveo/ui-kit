@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script type="module">
+      import {buildSamlClient} from '../../src/auth.ts';
+
+      // Test values for "organizationId and "provider" can be generated using:
+      // https://github.com/coveo/searchfuncttests/blob/develop/searchapi/auth/samlOktaMultipleProviderWithQuery.ts
+      const organizationId = '';
+      const provider = '';
+      const platformOrigin = 'https://platformdev.cloud.coveo.com';
+
+      const saml = buildSamlClient({organizationId, provider, platformOrigin});
+
+      async function main() {
+        const accessToken = await saml.authenticate();
+        console.log(accessToken);
+      }
+
+      main();
+    </script>
+  </head>
+</html>
