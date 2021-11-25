@@ -10,7 +10,7 @@ export interface SamlState {
   setLoginPending(): void;
 }
 
-export function buildSamlState(config: SamlStateOptions): SamlState {
+export function buildSamlState(config: SamlStateOptions = {}): SamlState {
   const loginPendingFlag = 'samlLoginPending';
   const storage = config.storage || getBrowserStorage();
 
