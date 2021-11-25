@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.1](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.33.0...@coveo/bueno@0.33.1) (2021-11-25)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# 0.33.0 (2021-11-22)
+
+
+### Bug Fixes
+
+* **atomic,bueno:** validate isNaN for NumberValue (bueno) and remove some reflected props (atomic) ([#505](https://github.com/coveo/ui-kit/issues/505)) ([ea0c153](https://github.com/coveo/ui-kit/commit/ea0c153995afac1915ec2f75299348092201e7f9))
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+* **headless:** throw an error from Bueno when facet id is invalid ([#314](https://github.com/coveo/ui-kit/issues/314)) ([6deacb2](https://github.com/coveo/ui-kit/commit/6deacb2e48c8ad08115e716d1cfebe47c3b41ea1))
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+### Features
+
+* **atomic:** expose headless as a subpackage ([#1500](https://github.com/coveo/ui-kit/issues/1500)) ([4ac4b05](https://github.com/coveo/ui-kit/commit/4ac4b05f62ecd78fa08739cecb185fc611e2a2d6))
+* **bueno:** add constrainTo option to StringValue ([8f56ff1](https://github.com/coveo/ui-kit/commit/8f56ff1f3330ac258840bff5d9b3fc24710ebf1c))
+* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://github.com/coveo/ui-kit/commit/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
+* **bueno:** added ValueConfig to RecordValue ([9829eca](https://github.com/coveo/ui-kit/commit/9829ecae1d2f7be5ff06d62273025744b6470687))
+* **bueno:** allow  RecordValue<string, ArrayValue> ([de086b0](https://github.com/coveo/ui-kit/commit/de086b07f4f984885510843c969dedec8921f7e9))
+* **headless:** add #f url parameter ([#326](https://github.com/coveo/ui-kit/issues/326)) ([239af65](https://github.com/coveo/ui-kit/commit/239af658f60d678f25400cbb0d27dc1d63064a3a))
+* **quantic:** add salesforce server tokens generation. ([#573](https://github.com/coveo/ui-kit/issues/573)) ([c3506ab](https://github.com/coveo/ui-kit/commit/c3506abe18a5f7a1a3c6153521bb18b11b2afd7a))
+
+
+
+
+
 ## [0.32.8](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.32.7...@coveo/bueno@0.32.8) (2021-11-02)
 
 

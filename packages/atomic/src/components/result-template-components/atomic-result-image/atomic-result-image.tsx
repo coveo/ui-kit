@@ -28,11 +28,16 @@ export class AtomicResultImage implements InitializableComponent {
 
   public error!: Error;
 
-  public render() {
-    const url = ResultTemplatesHelpers.getResultProperty(
+  public get url() {
+    const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
     );
+    return Array.isArray(value) ? value[0] : value;
+  }
+
+  public render() {
+    const url = this.url;
 
     if (!url) {
       this.host.remove();

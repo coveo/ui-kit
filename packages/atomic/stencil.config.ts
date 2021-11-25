@@ -61,11 +61,12 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {src: 'themes'},
+        isDevWatch && {src: 'external-builds', dest: 'build/headless'},
         {
           src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'build/assets',
         },
-      ],
+      ].filter((n) => n),
     },
   ],
   testing: {
@@ -75,6 +76,7 @@ export const config: Config = {
       '^.+\\.svg$': './svg.transform.js',
     },
     transformIgnorePatterns: [],
+    testPathIgnorePatterns: ['headless'],
   },
   devServer: {
     reloadStrategy: 'pageReload',

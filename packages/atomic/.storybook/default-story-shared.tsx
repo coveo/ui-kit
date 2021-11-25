@@ -2,7 +2,7 @@ import {h} from '@stencil/core';
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-import {TemplateResult} from 'lit-html';
+import {render, TemplateResult} from 'lit-html';
 import {mapPropsToArgTypes} from './map-props-to-args';
 import {resultComponentArgTypes} from './map-result-list-props-to-args';
 
@@ -88,6 +88,12 @@ export function renderShadowPartsToStyleString(
   const rulesTextNode = document.createTextNode(`\n\t\t${styleRules}\n\n`);
   styleElement.appendChild(rulesTextNode);
   return styleElement.outerHTML;
+}
+
+export function renderAdditionalMarkup(additionalMarkup: () => TemplateResult) {
+  const el = document.createElement('div');
+  render(additionalMarkup(), el);
+  return el.innerHTML;
 }
 
 export default function sharedDefaultStory(

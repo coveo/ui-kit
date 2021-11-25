@@ -36,11 +36,33 @@ export interface Bindings {
 
 export type InitializeEventHandler = (bindings: Bindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
+export const initializeEventName = 'atomic/initializeComponent';
+const initializableElements = ['atomic-search-interface', 'atomic-external'];
+
+/**
+ * Retrieves `Bindings` on a configured parent search interface.
+ * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
+ * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
+ */
+export const initializeBindings = (element: Element) =>
+  new Promise<Bindings>((resolve, reject) => {
+    const event = buildCustomEvent<InitializeEventHandler>(
+      initializeEventName,
+      (bindings: Bindings) => resolve(bindings)
+    );
+    element.dispatchEvent(event);
+
+    if (!element.closest(initializableElements.join(', '))) {
+      reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+    }
+  });
 
 export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {
     super(
-      `The "${elementName}" element must be the child of a configured "atomic-search-interface" element.`
+      `The "${elementName}" element must be the child of the following elements: ${initializableElements.join(
+        ', '
+      )}`
     );
   }
 }
@@ -96,7 +118,7 @@ export function InitializeBindings() {
     component.componentWillLoad = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
-        'atomic/initializeComponent',
+        initializeEventName,
         (bindings: Bindings) => {
           this.bindings = bindings;
 
@@ -222,6 +244,33 @@ export function BindStateToController(
     component.disconnectedCallback = function () {
       !getElement(this).isConnected && unsubscribeController();
       disconnectedCallback && disconnectedCallback.call(this);
+    };
+  };
+}
+
+interface DeferredExecution {
+  args: unknown[];
+}
+
+export function DeferUntilRender() {
+  return (component: ComponentInterface, methodName: string) => {
+    const {componentDidRender, connectedCallback} = component;
+    const originalMethod = component[methodName] as Function;
+    let deferredExecutions: DeferredExecution[] = [];
+
+    component.connectedCallback = function () {
+      this[methodName] = function (...args: unknown[]) {
+        deferredExecutions.push({args});
+      };
+      connectedCallback && connectedCallback.call(this);
+    };
+
+    component.componentDidRender = function () {
+      deferredExecutions.forEach(({args}) =>
+        originalMethod.call(this, ...args)
+      );
+      deferredExecutions = [];
+      componentDidRender && componentDidRender.call(this);
     };
   };
 }

@@ -3,6 +3,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.0.1...@coveo/quantic@1.0.2) (2021-11-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.0.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.10...@coveo/quantic@1.0.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* **quantic:** fix deployment ([#1520](https://github.com/coveo/ui-kit/issues/1520)) ([9819245](https://github.com/coveo/ui-kit/commit/98192453ecd57369dfb85e20b23c6a628e6fb856))
+
+
+
+
+
+## [0.85.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.9...@coveo/quantic@0.85.10) (2021-11-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.8...@coveo/quantic@0.85.9) (2021-11-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.7...@coveo/quantic@0.85.8) (2021-11-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.6...@coveo/quantic@0.85.7) (2021-11-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.5...@coveo/quantic@0.85.6) (2021-11-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.4...@coveo/quantic@0.85.5) (2021-11-17)
+
+
+### Bug Fixes
+
+* **quantic:** update timeframe facet range validations ([#1488](https://github.com/coveo/ui-kit/issues/1488)) ([a52c9fe](https://github.com/coveo/ui-kit/commit/a52c9fe58b2caab753f6e215d1687f1e13302d6e))
+
+
+
+
+
+## [0.85.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.3...@coveo/quantic@0.85.4) (2021-11-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.2...@coveo/quantic@0.85.3) (2021-11-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.1...@coveo/quantic@0.85.2) (2021-11-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.85.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.85.0...@coveo/quantic@0.85.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* **quantic:** copy only main headless browser file ([#1480](https://github.com/coveo/ui-kit/issues/1480)) ([11a1549](https://github.com/coveo/ui-kit/commit/11a15498f337f99fd6f2191608312a2387aeaa6c))
+
+
+
+
+
 # [0.85.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@0.84.2...@coveo/quantic@0.85.0) (2021-11-10)
 
 

@@ -1,9 +1,13 @@
 import {
-  CaseAssistSection,
+  CaseAssistConfigurationSection,
+  CaseFieldSection,
+  CaseInputSection,
   ConfigurationSection,
   DebugSection,
 } from './state-sections';
 
 export type CaseAssistAppState = ConfigurationSection &
-  CaseAssistSection &
+  CaseAssistConfigurationSection &
+  CaseInputSection &
+  CaseFieldSection &
   DebugSection;

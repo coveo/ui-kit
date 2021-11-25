@@ -7,6 +7,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       logDetail: typeof logDetail;
+      logAction: typeof logAction;
     }
   }
 }
@@ -20,6 +21,7 @@ export interface DetailedCollector {
   beginScope(title: string): void;
   endScope(): void;
   expectation(message: string): void;
+  action(message: string): void;
 }
 
 class DetailedCollectorImpl implements DetailedCollector {
@@ -28,6 +30,13 @@ class DetailedCollectorImpl implements DetailedCollector {
 
   constructor() {
     this._isWindows = platform() === 'win32';
+  }
+
+  action(message: string): void {
+    this.sendToReporter({
+      type: 'action',
+      content: message,
+    });
   }
 
   beginScope(title: string) {
@@ -80,6 +89,7 @@ class VoidDetailedCollector implements DetailedCollector {
   beginScope(title: string) {}
   endScope() {}
   expectation(message: string) {}
+  action(message: string) {}
 }
 
 export function getCollector(enable: boolean): DetailedCollector {
@@ -108,6 +118,10 @@ export function registerDetailedReporterPlugin(
       collector.expectation(message);
       return null;
     },
+    detailedAction(message: string) {
+      collector.action(message);
+      return null;
+    },
   });
 }
 
@@ -115,8 +129,13 @@ export function logDetail(message: string) {
   cy.task('detailedExpectation', message);
 }
 
+export function logAction(message: string) {
+  cy.task('detailedAction', message);
+}
+
 export function registerDetailedReporterCommands() {
   Cypress.Commands.add('logDetail', logDetail);
+  Cypress.Commands.add('logAction', logAction);
 }
 
 export function scope(title: string, delegate: () => void): void {

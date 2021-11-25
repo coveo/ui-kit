@@ -1097,5 +1097,9 @@
   "only": {
     "en": "only",
     "fr": "seulement"
+  },
+  "loading-results": {
+    "en": "Loading new results",
+    "fr": "Chargement de nouveaux résultats"
   }
 }

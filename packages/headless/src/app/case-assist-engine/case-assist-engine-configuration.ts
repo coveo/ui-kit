@@ -1,9 +1,11 @@
 import {Schema} from '@coveo/bueno';
-import {nonEmptyString} from '../../utils/validate-payload';
+import {
+  nonEmptyString,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
-  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
 /**
@@ -11,25 +13,22 @@ import {
  */
 export interface CaseAssistEngineConfiguration extends EngineConfiguration {
   /**
-   * Specifies the unique identifier of the target case assist configuration.
+   * Specifies the unique identifier of the target case assist configuration. See [Retrieving a Case Assist ID](https://docs.coveo.com/en/3328/service/manage-case-assist-configurations#retrieving-a-case-assist-id).
    */
-  caseAssistId?: string;
+  caseAssistId: string;
+  /**
+   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   *
+   * Notes:
+   *  Coveo Machine Learning models use this information to provide contextually relevant output.
+   *  Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
+   */
+  locale?: string;
 }
 
 export const caseAssistEngineConfigurationSchema =
   new Schema<CaseAssistEngineConfiguration>({
     ...engineConfigurationDefinitions,
-    caseAssistId: nonEmptyString,
+    caseAssistId: requiredNonEmptyString,
+    locale: nonEmptyString,
   });
-
-/**
- * Creates a sample case assist engine configuration.
- *
- * @returns The sample case assist engine configuration.
- */
-export function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
-  return {
-    ...getSampleEngineConfiguration(),
-    caseAssistId: 'sample-case-assist-id',
-  };
-}

@@ -1,3 +1,5 @@
+@import '../../global/polyfills.pcss';
+
 @define-mixin row-result-mobile {
   &.image-large.density-compact atomic-result-section-visual {
     width: 10.25rem;
@@ -137,9 +139,8 @@
     grid-template-rows: repeat(8, auto);
 
     atomic-result-section-visual {
-      aspect-ratio: 1 / 1;
+      @mixin aspect-ratio-h 1 / 1, 7.25rem;
       width: 100%;
-      height: auto;
       margin-right: 0;
       margin-bottom: 1rem;
     }

@@ -255,7 +255,7 @@ describe('quantic-timeframe-facet', () => {
         Actions.expand();
       });
 
-      scope('when specifying a range', () => {
+      scope('when specifying a valid range', () => {
         Actions.applyRange(validRange.start, validRange.end);
 
         cy.wait(InterceptAliases.Search);
@@ -279,6 +279,30 @@ describe('quantic-timeframe-facet', () => {
       });
 
       scope('when entering an invalid range', () => {
+        scope('with empty start and end dates', () => {
+          Actions.submitForm();
+
+          Expect.numberOfValidationErrors(2);
+          Expect.validationError('Complete this field.');
+        });
+
+        scope('when entering then erasing dates', () => {
+          Actions.typeStartDate(validRange.start);
+          Actions.submitForm();
+
+          Expect.numberOfValidationErrors(1);
+          Expect.validationError('Complete this field.');
+
+          Actions.typeEndDate(validRange.end);
+          Actions.submitForm();
+          cy.wait(InterceptAliases.Search);
+
+          Expect.numberOfValidationErrors(0);
+
+          Actions.clearFilter();
+          cy.wait(InterceptAliases.Search);
+        });
+
         scope('invalid start date format', () => {
           Actions.applyRange('bad start date', validRange.end);
 

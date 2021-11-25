@@ -29,8 +29,8 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
- * @part result-list - The element containing every results of a result list
- * @part result-list-grid-clickable - The clickable element on a result when displayed as a grid
+ * @part result-list - The element containing every result of a result list
+ * @part result-list-grid-clickable - The clickable result when results are displayed as a grid
  * @part result-table - The element of the result table containing a heading and a body
  * @part result-table-heading - The element containing the row of cells in the result table's heading
  * @part result-table-heading-row - The element containing cells of the result table's heading
