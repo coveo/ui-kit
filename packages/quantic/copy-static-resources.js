@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-require */
 const {promisify} = require('util');
 const ncp = promisify(require('ncp'));
 const mkdir = promisify(require('fs').mkdir);
