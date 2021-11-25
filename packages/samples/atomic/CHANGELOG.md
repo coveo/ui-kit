@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.34.0 (2021-11-25)
+
+
+### Bug Fixes
+
+* **ci:** update production and qa docker containers  ([#1423](https://github.com/coveo/ui-kit/issues/1423)) ([946a057](https://github.com/coveo/ui-kit/commit/946a057933dff770d1806a907de3fe30bdce1049))
+* **uikit:** regenerate package lock files  ([#1170](https://github.com/coveo/ui-kit/issues/1170)) ([e67165a](https://github.com/coveo/ui-kit/commit/e67165a83a3b37e4f9b89f956113dd8ded28a15a))
+
+
+### Features
+
+* **atomic:** support Facet Value Captions ([#997](https://github.com/coveo/ui-kit/issues/997)) ([aa9bc6e](https://github.com/coveo/ui-kit/commit/aa9bc6eb71b71367c934b14f11e80cdc5777a754))
+* **atomic:** theme changes ([#929](https://github.com/coveo/ui-kit/issues/929)) ([705e7d0](https://github.com/coveo/ui-kit/commit/705e7d0d78e67dc60c78867b59e712f1fa1ef06f))
+
+
+
+
+
 ## [0.33.6](https://github.com/coveo/ui-kit/compare/coveo-atomic-example-070-alpha33@0.33.5...coveo-atomic-example-070-alpha33@0.33.6) (2021-11-02)
 
 
