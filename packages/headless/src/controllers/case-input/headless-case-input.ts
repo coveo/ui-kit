@@ -1,17 +1,20 @@
-import {setCaseInput} from '../../features/case-inputs/case-inputs-actions';
-import {fetchCaseClassifications} from '../../features/case-fields/case-fields-actions';
-import {logCaseFieldUpdate} from '../../features/case-inputs/case-inputs-analytics-actions';
+import {updateCaseInput} from '../../features/case-input/case-input-actions';
+import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
+//import {logCaseFieldUpdate} from '../../features/case-input/case-input-analytics-actions';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {
   CaseAssistConfigurationSection,
-  CaseInputsSection,
+  CaseFieldSection,
+  CaseInputSection,
   ConfigurationSection,
+  DocumentSuggestionSection,
 } from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
-import {caseInputs, configuration} from '../../app/reducers';
+import {caseField, caseInput, documentSuggestion} from '../../app/reducers';
 import {Schema, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 import {loadReducerError} from '../../utils/errors';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
 
 export interface CaseInputOptions {
   field: string;
@@ -22,9 +25,7 @@ export interface CaseInputProps {
 }
 
 function validateCaseInputOptions(
-  engine: CaseAssistEngine<
-    ConfigurationSection & CaseAssistConfigurationSection & CaseInputsSection
-  >,
+  engine: CaseAssistEngine,
   options: Partial<CaseInputOptions> | undefined
 ) {
   const schema = new Schema<CaseInputOptions>({
@@ -46,7 +47,15 @@ export interface CaseInput extends Controller {
    *
    * @param value - The case input value to set.
    */
-  set(value: string): void;
+  update(value: string): void;
+  /**
+   *
+   */
+  fetchCaseClassifications(): void;
+  /**
+   *
+   */
+  fetchDocumentSuggestions(): void;
   /**
    * A scoped and simplified part of the headless state that is relevant to the `CaseInput` controller.
    * */
@@ -83,18 +92,31 @@ export function buildCaseInput(
 
   const fieldName = props.options.field;
 
+  dispatch(
+    updateCaseInput({
+      fieldName: fieldName,
+      fieldValue: '',
+    })
+  );
+
   return {
     ...controller,
 
-    set(value: string) {
+    update(value: string) {
       dispatch(
-        setCaseInput({
+        updateCaseInput({
           fieldName: fieldName,
           fieldValue: value,
         })
       );
-      dispatch(logCaseFieldUpdate());
+      //dispatch(logCaseFieldUpdate());
+    },
+
+    fetchCaseClassifications() {
       dispatch(fetchCaseClassifications());
+    },
+
+    fetchDocumentSuggestions() {
       dispatch(fetchDocumentSuggestions());
     },
 
@@ -139,8 +161,12 @@ export function buildDescriptionInput(engine: CaseAssistEngine): CaseInput {
 function loadCaseInputReducers(
   engine: CaseAssistEngine
 ): engine is CaseAssistEngine<
-  ConfigurationSection & CaseAssistConfigurationSection & CaseInputsSection
+  ConfigurationSection &
+    CaseAssistConfigurationSection &
+    CaseInputSection &
+    CaseFieldSection &
+    DocumentSuggestionSection
 > {
-  engine.addReducers({configuration, caseInputs});
+  engine.addReducers({caseInput, caseField, documentSuggestion});
   return true;
 }
