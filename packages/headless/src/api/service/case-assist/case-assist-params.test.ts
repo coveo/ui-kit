@@ -65,7 +65,9 @@ describe('case assist params', () => {
 
   describe('prepareSuggestionRequestFields', () => {
     it('should structure fields in API format', () => {
-      const effective = prepareSuggestionRequestFields({myField: 'some value'});
+      const effective = prepareSuggestionRequestFields({
+        myField: {value: 'some value'},
+      });
 
       expect(effective).toEqual({
         myField: {
@@ -76,8 +78,8 @@ describe('case assist params', () => {
 
     it('should omit fields with empty value', () => {
       const effective = prepareSuggestionRequestFields({
-        shouldBeSkipped: '',
-        shouldBeKept: 'has some value',
+        shouldBeSkipped: {value: ''},
+        shouldBeKept: {value: 'has some value'},
       });
 
       expect(effective).toEqual({
