@@ -1,4 +1,7 @@
 import {Logger} from 'pino';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {CaseAssistAppState} from '../../../state/case-assist-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
@@ -19,6 +22,12 @@ import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-doc
 export interface CaseAssistAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
+}
+
+export interface AsyncThunkCaseAssistOptions<
+  T extends Partial<CaseAssistAppState>
+> extends AsyncThunkOptions<T, ClientThunkExtraArguments<CaseAssistAPIClient>> {
+  rejectValue: CaseAssistAPIErrorStatusResponse;
 }
 
 /**
