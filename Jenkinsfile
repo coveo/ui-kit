@@ -9,9 +9,6 @@ node('linux && docker') {
       stage('Setup') {
         sh 'npm ci'
         sh 'npx lerna bootstrap --ci'
-        if (!isBump) {
-          sh 'npm run lockLernaDependencies'
-        }
       }
 
       stage('Build') {
