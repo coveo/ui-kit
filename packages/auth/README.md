@@ -33,7 +33,7 @@ main();
 
 - `organizationId: string`
 
-  The unique identifier of the target Coveo Cloud organization (e.g., mycoveoorganizationg8tp8wu3).
+  The unique identifier of the target Coveo Cloud organization (e.g., `mycoveoorganizationg8tp8wu3`).
 
 - `provider: string`
 
@@ -44,3 +44,26 @@ main();
   The Coveo origin to authenticate through.
 
   Default value is `https://platform.cloud.coveo.com`.
+
+### Usage with @coveo/headless
+
+```
+import {buildSamlClient} from '@coveo/auth`;
+import {buildSearchEngine} from '@coveo/headless`;
+
+const saml = buildSamlClient({organizationId, provider});
+
+async function main() {
+  const accessToken = await saml.authenticate();
+
+  const engine = buildSearchEngine({
+    configuration: {
+      organizationId,
+      accessToken,
+      renewAccessToken: saml.authenticate,
+    },
+  });
+}
+
+main();
+```
