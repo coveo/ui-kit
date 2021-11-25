@@ -1,5 +1,4 @@
 import tsPlugin from '@rollup/plugin-typescript';
-import {terser} from 'rollup-plugin-terser';
 import licensePlugin from 'rollup-plugin-license';
 
 const typescript = (config) =>
@@ -27,37 +26,14 @@ const license = () => {
   return licensePlugin({banner});
 }
 
-function node() {
-  return {
-    input: 'src/auth.ts',
-    output: [
-      {file: `dist/auth.js`, format: 'cjs'},
-      {file: `dist/auth.esm.js`, format: 'es'},
-    ],
-    plugins: [
-      typescript({sourceMap: false}),
-      license(),
-    ],
-  };
-}
-
-function browser() {
-  return {
-    input: 'src/auth.ts',
-    output: [
-      {
-        file: `dist/browser/auth.js`,
-        format: 'iife',
-        name: 'CoveoAuth',
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      typescript({sourceMap: true}),
-      terser(),
-      license(),
-    ],
-  };
-}
-
-export default [node(), browser()];
+export default {
+  input: 'src/auth.ts',
+  output: [
+    {file: `dist/auth.js`, format: 'cjs'},
+    {file: `dist/auth.esm.js`, format: 'es'},
+  ],
+  plugins: [
+    typescript({sourceMap: false}),
+    license(),
+  ],
+};
