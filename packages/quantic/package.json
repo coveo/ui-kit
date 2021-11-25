@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "0.85.10",
+  "version": "1.0.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -29,13 +29,20 @@
     "setup:examples": "node_modules/.bin/ts-node scripts/build/deploy-community.ts",
     "deploy:main": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/main",
     "deploy:examples": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples",
-    "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json"
+    "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json",
+    "package:create": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
+    "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote"
   },
   "dependencies": {
-    "@coveo/headless": "^1.33.1"
+    "@coveo/headless": "^1.33.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   },
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "^25.4.4",
+    "@octokit/graphql": "^4.8.0",
+    "@octokit/graphql-schema": "^10.73.0",
     "@salesforce/eslint-config-lwc": "0.11.1",
     "@salesforce/sfdx-lwc-jest": "^1.0.1",
     "@types/jest": "26.0.24",
