@@ -2,7 +2,8 @@
     "compilerOptions": {
       "module": "CommonJS",
       "esModuleInterop": true,
-      "types": ["node"]
+      "resolveJsonModule": true,
+      "types": ["node"],
     },
     "include": ["./**/*.ts"]
   }

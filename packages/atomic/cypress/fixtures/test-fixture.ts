@@ -93,9 +93,26 @@ export class TestFixture {
     return this;
   }
 
+  public withNoResults() {
+    return this.withCustomResponse((r) => {
+      r.results = [];
+      r.totalCountFiltered = 0;
+      return r;
+    });
+  }
+
   public withError() {
     this.returnError = true;
     return this;
+  }
+
+  public withViewport(viewport: Cypress.ViewportPreset) {
+    cy.viewport(viewport);
+    return this;
+  }
+
+  public withMobileViewport() {
+    return this.withViewport('iphone-x');
   }
 
   public init() {
