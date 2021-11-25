@@ -14,20 +14,43 @@ npm i @coveo/saml
 
 2. Instantiate the SAML client provided by this package in your web application.
 
+### Sample
 ```
 import {buildSamlClient} from '@coveo/auth`;
 
 const organizationId = '<your organization id>';
 const provider = '<your configured SAML provider name>';
-const saml = buildSamlClient({organizationId, provider});
 
 async function main() {
+  const saml = buildSamlClient({organizationId, provider});
   const accessToken = await saml.authenticate();
   console.log(accessToken);
 }
 
 main();
 ```
+### Sample with `@coveo/headless`
+
+```
+import {buildSamlClient} from '@coveo/auth`;
+import {buildSearchEngine} from '@coveo/headless`;
+
+async function main() {
+  const saml = buildSamlClient(...)
+  const accessToken = await saml.authenticate();
+
+  const engine = buildSearchEngine({
+    configuration: {
+      organizationId,
+      accessToken,
+      renewAccessToken: saml.authenticate,
+    },
+  });
+}
+
+main()
+```
+React sample [available here](../samples/headless-react/src/pages/SamlPage.tsx).
 
 ### `SamlClientOptions`
 
@@ -44,26 +67,3 @@ main();
   The Coveo origin to authenticate through.
 
   Default value is `https://platform.cloud.coveo.com`.
-
-### Usage with @coveo/headless
-
-```
-import {buildSamlClient} from '@coveo/auth`;
-import {buildSearchEngine} from '@coveo/headless`;
-
-const saml = buildSamlClient({organizationId, provider});
-
-async function main() {
-  const accessToken = await saml.authenticate();
-
-  const engine = buildSearchEngine({
-    configuration: {
-      organizationId,
-      accessToken,
-      renewAccessToken: saml.authenticate,
-    },
-  });
-}
-
-main();
-```
