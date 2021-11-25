@@ -1,18 +1,47 @@
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {makeCaseAssistAnalyticsAction} from '../analytics/analytics-utils';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const extractCaseFromState = (_state: Partial<CaseAssistAppState>) => {
-  // TODO: At the moment we don't have what we need in the state
-  // to return the case information, so we just return an empty ticket.
-  return {};
-};
+import {
+  selectCase,
+  selectCaseClassification,
+  selectDocumentSuggestion,
+} from './case-assist-analytics-selectors';
 
 export const logCaseStart = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/start',
   (client, state) =>
     client.logEnterInterface({
-      ticket: extractCaseFromState(state),
+      ticket: selectCase(state),
+    })
+);
+
+export const logCaseNextStage = makeCaseAssistAnalyticsAction(
+  'analytics/caseAssist/case/nextStage',
+  (client, state) =>
+    client.logMoveToNextCaseStep({
+      ticket: selectCase(state),
+    })
+);
+
+export const logCreateCase = makeCaseAssistAnalyticsAction(
+  'analytics/caseAssist/case/create',
+  (client, state) =>
+    client.logCaseCreated({
+      ticket: selectCase(state),
+    })
+);
+
+export const logSolveCase = makeCaseAssistAnalyticsAction(
+  'analytics/caseAssist/case/solve',
+  (client, state) =>
+    client.logCaseSolved({
+      ticket: selectCase(state),
+    })
+);
+
+export const logAbandonCase = makeCaseAssistAnalyticsAction(
+  'analytics/caseAssist/case/abandon',
+  (client, state) =>
+    client.logCaseCancelled({
+      ticket: selectCase(state),
     })
 );
 
@@ -22,6 +51,40 @@ export const logUpdateCaseField = (fieldName: string) =>
     (client, state) =>
       client.logUpdateCaseField({
         fieldName,
-        ticket: extractCaseFromState(state),
+        ticket: selectCase(state),
       })
-  );
+  )();
+
+export const logClassificationClick = (classificationId: string) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/classification/click',
+    (client, state) =>
+      client.logSelectFieldSuggestion({
+        suggestion: selectCaseClassification(state, classificationId),
+        ticket: selectCase(state),
+      })
+  )();
+
+export const logDocumentSuggestionClick = (suggestionId: string) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/click',
+    (client, state) =>
+      client.logSelectDocumentSuggestion({
+        suggestion: selectDocumentSuggestion(state, suggestionId),
+        ticket: selectCase(state),
+      })
+  )();
+
+export const logDocumentSuggestionRating = (
+  suggestionId: string,
+  rating: number
+) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/rate',
+    (client, state) =>
+      client.logRateDocumentSuggestion({
+        rating,
+        suggestion: selectDocumentSuggestion(state, suggestionId),
+        ticket: selectCase(state),
+      })
+  )();
