@@ -2,8 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
-// eslint-disable-next-line node/no-unpublished-require
-const waitOn = require('wait-on');
+import {SfdxJWTAuth} from './util/sfdx-commands';
+import waitOn from 'wait-on';
 
 interface Options {
   configFile: string;
@@ -14,11 +14,7 @@ interface Options {
   };
   deleteOldOrgs: boolean;
   deleteOrgOnError: boolean;
-  jwt: {
-    clientId: string;
-    keyFile: string;
-    username: string;
-  };
+  jwt: SfdxJWTAuth;
   scratchOrg: {
     alias: string;
     defFile: string;
@@ -256,17 +252,19 @@ async function updateCommunityConfigFile(
   log(`Searching for configuration file '${options.configFile}'...`);
   if (fs.existsSync(options.configFile)) {
     log('Configuration file found. Merging settings.');
-    baseConfig = JSON.parse(fs.readFileSync(options.configFile, 'UTF-8'));
+    baseConfig = JSON.parse(
+      fs.readFileSync(options.configFile, {
+        encoding: 'utf-8',
+      })
+    );
   } else {
     log('Creating configuration file...');
   }
   baseConfig.env.examplesUrl = communityUrl;
 
-  fs.writeFileSync(
-    options.configFile,
-    JSON.stringify(baseConfig, null, 2),
-    'UTF-8'
-  );
+  fs.writeFileSync(options.configFile, JSON.stringify(baseConfig, null, 2), {
+    encoding: 'utf-8',
+  });
   log('Configuration file updated.');
 }
 

@@ -6,6 +6,12 @@ export interface SfdxOrg {
   status: string;
 }
 
+export interface SfdxJWTAuth {
+  clientId: string;
+  keyFile: string;
+  username: string;
+}
+
 export interface SfdxListOrgsResponse extends SfdxResponse {
   result: {
     nonScratchOrgs: Array<SfdxOrg>;
@@ -31,6 +37,56 @@ export interface SfdxPublishCommunityResponse extends SfdxResponse {
   };
 }
 
+export interface SfdxCreatePackageVersionResponse extends SfdxResponse {
+  result: {
+    Id: string;
+    Status: string;
+    Package2Id: string;
+    Package2VersionId: string;
+    SubscriberPackageVersionId: string;
+    Tag?: string;
+    Branch?: string;
+    Error: string[];
+    CreatedDate: string;
+    HasMetadataRemoved: boolean;
+  };
+}
+
+export interface SfdxPackageDetails {
+  Package2Id: string;
+  Branch?: string;
+  Tag?: string;
+  MajorVersion: number;
+  MinorVersion: number;
+  PatchVersion: number;
+  BuildNumber: number;
+  Id: string;
+  SubscriberPackageVersionId: string;
+  Name: string;
+  NamespacePrefix?: string;
+  Package2Name: string;
+  Description: string;
+  Version: string;
+  IsPasswordProtected: boolean;
+  IsReleased: boolean;
+  CreatedDate: string;
+  LastModifiedDate: string;
+  InstallUrl: string;
+  CodeCoverage: string;
+  ValidationSkipped: boolean;
+  AncestorId: string;
+  AncestorVersion: string;
+  Alias: string;
+  IsOrgDependent: string;
+  ReleaseVersion: string;
+  BuildDurationInSeconds: string;
+  HasMetadataRemoved: string;
+}
+
+export interface SfdxGetPackageListResponse extends SfdxResponse {
+  result: SfdxPackageDetails[];
+}
+
 export async function getActiveScratchOrgUsernames(
   devHubAlias: string,
   scratchOrgName: string
@@ -49,12 +105,12 @@ export interface AuthorizeOrgArguments {
   jwtKeyFile: string;
 }
 
-async function authorizeOrg(args: AuthorizeOrgArguments) {
+export async function authorizeOrg(args: AuthorizeOrgArguments) {
   const instanceUrl = `https://${
     args.isScratchOrg ? 'test' : 'login'
   }.salesforce.com`;
   await sfdx(
-    `force:auth:jwt:grant --clientid ${args.jwtClientId} --jwtkeyfile "${args.jwtKeyFile}" --username ${args.username} --instanceurl ${instanceUrl}`
+    `force:auth:jwt:grant --clientid ${args.jwtClientId} --jwtkeyfile "${args.jwtKeyFile}" --username ${args.username} --instanceurl ${instanceUrl} --setdefaultdevhubusername`
   );
 }
 
@@ -179,4 +235,34 @@ export async function publishCommunity(
 
 export async function setAlias(alias: string, value: string) {
   await sfdx(`alias:set ${alias}="${value}"`);
+}
+
+export interface CreatePackageVersionArguments {
+  packageId: string;
+  packageVersion: string;
+  timeout: number;
+}
+
+export async function createPackageVersion(
+  args: CreatePackageVersionArguments
+): Promise<SfdxCreatePackageVersionResponse> {
+  return await sfdx<SfdxCreatePackageVersionResponse>(
+    `force:package:version:create --package ${args.packageId} --versionnumber "${args.packageVersion}" --installationkeybypass --codecoverage --wait ${args.timeout}`
+  );
+}
+
+export interface PromotePackageVersionArguments {
+  packageVersionId: string;
+}
+
+export async function promotePackageVersion(
+  args: PromotePackageVersionArguments
+) {
+  return await sfdx(
+    `force:package:version:promote --package ${args.packageVersionId} --noprompt`
+  );
+}
+
+export async function getPackageVersionList(): Promise<SfdxGetPackageListResponse> {
+  return await sfdx<SfdxGetPackageListResponse>('force:package:version:list');
 }
