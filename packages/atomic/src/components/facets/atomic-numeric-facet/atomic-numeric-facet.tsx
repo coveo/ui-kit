@@ -399,7 +399,15 @@ export class AtomicNumericFacet
       return true;
     }
 
-    return this.searchStatusState.hasResults || !!this.filterState?.range;
+    if (!this.searchStatusState.hasResults) {
+      return false;
+    }
+
+    if (!this.valuesToRender.length && this.numberOfValues > 0) {
+      return false;
+    }
+
+    return true;
   }
 
   public render() {
