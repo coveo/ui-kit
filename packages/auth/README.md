@@ -36,7 +36,7 @@ import {buildSamlClient} from '@coveo/auth`;
 import {buildSearchEngine} from '@coveo/headless`;
 
 async function main() {
-  const saml = buildSamlClient(...)
+  const saml = buildSamlClient(...);
   const accessToken = await saml.authenticate();
 
   const engine = buildSearchEngine({
