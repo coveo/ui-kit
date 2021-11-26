@@ -74,7 +74,7 @@ export function buildResultTemplatesManager<Content = unknown>(
       try {
         validateTemplates(newTemplates);
       } catch (error) {
-        engine.logger.error(error, 'Result template manager error');
+        engine.logger.error(error as Error, 'Result template manager error');
         return;
       }
 

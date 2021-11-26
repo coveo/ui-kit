@@ -9,8 +9,14 @@ const pathToPackageJSON = resolve(process.cwd(), './package.json');
 const pkg = JSON.parse(readFileSync(pathToPackageJSON));
 const packageRef = `${pkg.name}@${pkg.version}`;
 
-function isPublished() {
-  return !!execSync(`npm view ${packageRef}`).toString().length;
+function shouldPublish() {
+  try {
+    const packageVersionNotPublished = !execSync(`npm view ${packageRef}`).toString().length;
+    return packageVersionNotPublished;
+  } catch (e) {
+    const isFirstPublish = e.toString().includes('404 Not Found');
+    return isFirstPublish;
+  }
 }
 
 function publish() {
@@ -23,7 +29,7 @@ function publish() {
   });
 }
 
-if (!isPublished()) {
+if (shouldPublish()) {
   publish();
 } else {
   console.info(
