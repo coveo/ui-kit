@@ -32,14 +32,14 @@ export const selectCase = (state: Partial<CaseAssistAppState>) => {
 export const selectCaseInputValue = (
   state: Partial<CaseAssistAppState>,
   fieldName: string
-) => state?.caseInputs?.[fieldName]?.value;
+) => state?.caseInput?.[fieldName]?.value;
 
 export const selectCustomCaseInputValues = (
   state: Partial<CaseAssistAppState>
 ) =>
-  Object.keys(state?.caseInputs ?? []).reduce((customFields, fieldName) => {
+  Object.keys(state?.caseInput ?? []).reduce((customFields, fieldName) => {
     if (isCustomFieldName(fieldName)) {
-      const value = state?.caseInputs?.[fieldName]?.value;
+      const value = state?.caseInput?.[fieldName]?.value;
       if (typeof value !== 'undefined') {
         return {...customFields, [fieldName]: value};
       }
@@ -51,15 +51,15 @@ export const selectCustomCaseInputValues = (
 export const selectCaseFieldValue = (
   state: Partial<CaseAssistAppState>,
   fieldName: string
-) => state?.caseFields?.fields[fieldName]?.value;
+) => state?.caseField?.fields[fieldName]?.value;
 
 export const selectCustomCaseFieldValues = (
   state: Partial<CaseAssistAppState>
 ) =>
-  Object.keys(state?.caseFields?.fields ?? []).reduce(
+  Object.keys(state?.caseField?.fields ?? []).reduce(
     (customFields, fieldName) => {
       if (isCustomFieldName(fieldName)) {
-        const value = state?.caseFields?.fields?.[fieldName]?.value;
+        const value = state?.caseField?.fields?.[fieldName]?.value;
         if (typeof value !== 'undefined') {
           return {...customFields, [fieldName]: value};
         }
@@ -75,9 +75,9 @@ export const selectCaseClassification = (
   classificationId: string
 ) => {
   const classificationFieldName = Object.keys(
-    state?.caseFields?.fields ?? []
+    state?.caseField?.fields ?? []
   ).find((fieldName) =>
-    state?.caseFields?.fields[fieldName].suggestions.some(
+    state?.caseField?.fields[fieldName].suggestions.some(
       (suggestion) => suggestion.id === classificationId
     )
   );
@@ -88,8 +88,7 @@ export const selectCaseClassification = (
     );
   }
 
-  const classificationField =
-    state?.caseFields?.fields[classificationFieldName];
+  const classificationField = state?.caseField?.fields[classificationFieldName];
 
   const classification = classificationField?.suggestions.find(
     (suggestion) => suggestion.id === classificationId
@@ -97,7 +96,7 @@ export const selectCaseClassification = (
 
   return {
     classificationId: classification?.id ?? '',
-    responseId: state.caseFields?.status.lastResponseId ?? '',
+    responseId: state.caseField?.status.lastResponseId ?? '',
     fieldName: classificationFieldName,
     classification: {
       value: classification?.value ?? '',
