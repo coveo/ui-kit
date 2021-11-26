@@ -11,7 +11,7 @@ import {
 
 describe('case assist analytics selectors', () => {
   const stateWithCaseInputs: Partial<CaseAssistAppState> = {
-    caseInputs: {
+    caseInput: {
       id: {value: 'some-case-id'},
       subject: {value: 'some case subject'},
       description: {value: 'some case description'},
@@ -21,7 +21,7 @@ describe('case assist analytics selectors', () => {
   };
 
   const stateWithCaseFields: Partial<CaseAssistAppState> = {
-    caseFields: {
+    caseField: {
       status: {
         loading: false,
         error: null,
@@ -101,7 +101,7 @@ describe('case assist analytics selectors', () => {
 
     it('should return an empty object if no custom fields', () => {
       const state = JSON.parse(JSON.stringify(stateWithCaseInputs));
-      delete state.caseInputs.customFieldA;
+      delete state.caseInput.customFieldA;
 
       const customFields = selectCustomCaseInputValues(state);
 
@@ -110,7 +110,7 @@ describe('case assist analytics selectors', () => {
 
     it('should return an empty object if custom field has no value', () => {
       const state = JSON.parse(JSON.stringify(stateWithCaseInputs));
-      state.caseInputs.customFieldA.value = undefined;
+      state.caseInput.customFieldA.value = undefined;
 
       const customFields = selectCustomCaseInputValues(state);
 
@@ -147,7 +147,7 @@ describe('case assist analytics selectors', () => {
 
     it('should return an empty object if no custom fields', () => {
       const state = JSON.parse(JSON.stringify(stateWithCaseFields));
-      delete state.caseFields.fields.customFieldB;
+      delete state.caseField.fields.customFieldB;
 
       const customFields = selectCustomCaseFieldValues(state);
 
@@ -156,7 +156,7 @@ describe('case assist analytics selectors', () => {
 
     it('should return an empty object if custom field has no value', () => {
       const state = JSON.parse(JSON.stringify(stateWithCaseFields));
-      state.caseFields.fields.customFieldB.value = undefined;
+      state.caseField.fields.customFieldB.value = undefined;
 
       const customFields = selectCustomCaseFieldValues(state);
 
