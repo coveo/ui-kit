@@ -56,7 +56,7 @@ export const buildFetchDocumentSuggestionsRequest = async (
   ...(state.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
-  fields: state.caseInputs,
+  fields: state.caseInput,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });
