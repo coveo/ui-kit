@@ -14,7 +14,7 @@ function shouldPublish() {
     const packageVersionNotPublished = !execSync(`npm view ${packageRef}`).toString().length;
     return packageVersionNotPublished;
   } catch (e) {
-    const isFirstPublish = e.toString().includes('404 Not Found');
+    const isFirstPublish = e.toString().includes('code E404');
     return isFirstPublish;
   }
 }
