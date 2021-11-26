@@ -1,4 +1,5 @@
 import {buildSamlFlow} from './saml-flow';
+import {buildSamlState} from './saml-state';
 
 export interface SamlClientOptions {
   /**
@@ -36,13 +37,24 @@ export interface SamlClient {
  */
 export function buildSamlClient(config: SamlClientOptions): SamlClient {
   const provider = buildSamlFlow(config);
+  const state = buildSamlState();
 
   return {
     async authenticate() {
       if (provider.handshakeTokenAvailable) {
+        state.removeLoginPending();
         return await provider.exchangeHandshakeToken();
       }
 
+      if (state.isLoginPending) {
+        state.removeLoginPending();
+        console.warn(
+          'No handshake token found in url. Skipping redirect to avoid an infinite loop. Manually refresh the page to restart SAML authentication flow.'
+        );
+        return '';
+      }
+
+      state.setLoginPending();
       provider.login();
       return '';
     },
