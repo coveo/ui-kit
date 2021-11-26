@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.35.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.0...@coveo/headless@1.35.1) (2021-11-26)
+
+
+### Bug Fixes
+
+* **headless:** renamed interface to match state ([#1527](https://github.com/coveo/ui-kit/issues/1527)) ([1c702dc](https://github.com/coveo/ui-kit/commit/1c702dc1036eec4bec1829ddae1706800b7d2a6c))
+
+
+
+
+
 # [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.34.0...@coveo/headless@1.35.0) (2021-11-25)
 
 
