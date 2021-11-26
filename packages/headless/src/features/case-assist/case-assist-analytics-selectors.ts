@@ -106,19 +106,33 @@ export const caseAssistCaseClassificationSelector = (
 };
 
 export const caseAssistDocumentSuggestionSelector = (
-  _state: Partial<CaseAssistAppState>,
-  _suggestionId: string
+  state: Partial<CaseAssistAppState>,
+  suggestionId: string
 ) => {
-  // TODO: Retrieve the document suggestion information from the state
+  let suggestionIdx;
+  const suggestion = state.documentSuggestion?.documents.find((s, idx) => {
+    const isFound = s.uniqueId === suggestionId;
+    if (isFound) {
+      suggestionIdx = idx;
+    }
+    return isFound;
+  });
+
+  if (!suggestion) {
+    throw new Error(
+      `Document Suggestion with ID '${suggestionId}' could not be found.`
+    );
+  }
+
   return {
-    suggestionId: '',
-    responseId: '',
+    suggestionId: suggestion.uniqueId,
+    responseId: state.documentSuggestion?.status.lastResponseId ?? '',
     suggestion: {
-      documentUri: '',
-      documentUriHash: '',
-      documentTitle: '',
-      documentUrl: '',
-      documentPosition: 0,
+      documentUri: suggestion.fields['uri'] as string,
+      documentUriHash: suggestion.fields['urihash'] as string,
+      documentTitle: suggestion.title,
+      documentUrl: suggestion.clickUri,
+      documentPosition: suggestionIdx ?? 0,
     },
   };
 };

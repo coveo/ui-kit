@@ -7,6 +7,7 @@ import {
   caseAssistCaseInputValueSelector,
   caseAssistCustomCaseFieldValuesSelector,
   caseAssistCustomCaseInputValuesSelector,
+  caseAssistDocumentSuggestionSelector,
 } from './case-assist-analytics-selectors';
 
 describe('case assist analytics selectors', () => {
@@ -50,6 +51,30 @@ describe('case assist analytics selectors', () => {
       },
     },
   });
+
+  const buildStateWithDocumentSuggestions =
+    (): Partial<CaseAssistAppState> => ({
+      documentSuggestion: {
+        documents: [
+          {
+            uniqueId: 'document-id',
+            clickUri: 'http://my.document.uri/clickable',
+            excerpt: 'The content of my document',
+            fields: {
+              uri: 'http://my.document.uri',
+              urihash: 'document-uri-hash',
+            },
+            hasHtmlVersion: false,
+            title: 'My Document',
+          },
+        ],
+        status: {
+          loading: false,
+          error: null,
+          lastResponseId: 'last-document-suggestion-response-id',
+        },
+      },
+    });
 
   describe('#caseAssistCaseSelector', () => {
     it('should retrieve all the case information from the state', () => {
@@ -203,8 +228,32 @@ describe('case assist analytics selectors', () => {
   });
 
   describe('#caseAssistDocumentSuggestionSelector', () => {
-    it.todo('should return the document suggestion matching the specified ID');
+    it('should return the document suggestion matching the specified ID', () => {
+      const suggestion = caseAssistDocumentSuggestionSelector(
+        buildStateWithDocumentSuggestions(),
+        'document-id'
+      );
 
-    it.todo('should throw when the document suggestion is not found');
+      expect(suggestion).toMatchObject({
+        responseId: 'last-document-suggestion-response-id',
+        suggestionId: 'document-id',
+        suggestion: {
+          documentPosition: 0,
+          documentTitle: 'My Document',
+          documentUri: 'http://my.document.uri',
+          documentUriHash: 'document-uri-hash',
+          documentUrl: 'http://my.document.uri/clickable',
+        },
+      });
+    });
+
+    it('should throw when the document suggestion is not found', () => {
+      expect(() =>
+        caseAssistDocumentSuggestionSelector(
+          buildStateWithDocumentSuggestions(),
+          'some-invalid-suggestion-id'
+        )
+      ).toThrow();
+    });
   });
 });
