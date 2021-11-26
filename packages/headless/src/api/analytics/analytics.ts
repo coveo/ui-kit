@@ -150,6 +150,7 @@ export const configureAnalytics = ({
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
+  const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CoveoSearchPageClient(
     {
       token,
@@ -175,7 +176,7 @@ export const configureAnalytics = ({
     provider
   );
 
-  if (state.configuration.analytics.enabled === false) {
+  if (!enableAnalytics) {
     client.disable();
   }
   return client;

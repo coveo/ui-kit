@@ -134,7 +134,7 @@ export const makeCaseAssistAnalyticsAction = (
   ) => Promise<void | SearchEventResponse> | void
 ) => {
   return createAsyncThunk<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >(
@@ -155,7 +155,6 @@ export const makeCaseAssistAnalyticsAction = (
         {client: client.coveoAnalyticsClient, response},
         'Analytics response'
       );
-      return {};
     }
   );
 };

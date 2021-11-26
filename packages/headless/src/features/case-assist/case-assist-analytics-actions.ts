@@ -1,15 +1,15 @@
 import {makeCaseAssistAnalyticsAction} from '../analytics/analytics-utils';
 import {
-  selectCase,
-  selectCaseClassification,
-  selectDocumentSuggestion,
+  caseAssistCaseSelector,
+  caseAssistCaseClassificationSelector,
+  caseAssistDocumentSuggestionSelector,
 } from './case-assist-analytics-selectors';
 
 export const logCaseStart = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/start',
   (client, state) =>
     client.logEnterInterface({
-      ticket: selectCase(state),
+      ticket: caseAssistCaseSelector(state),
     })
 );
 
@@ -17,7 +17,7 @@ export const logCaseNextStage = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/nextStage',
   (client, state) =>
     client.logMoveToNextCaseStep({
-      ticket: selectCase(state),
+      ticket: caseAssistCaseSelector(state),
     })
 );
 
@@ -25,7 +25,7 @@ export const logCreateCase = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/create',
   (client, state) =>
     client.logCaseCreated({
-      ticket: selectCase(state),
+      ticket: caseAssistCaseSelector(state),
     })
 );
 
@@ -33,7 +33,7 @@ export const logSolveCase = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/solve',
   (client, state) =>
     client.logCaseSolved({
-      ticket: selectCase(state),
+      ticket: caseAssistCaseSelector(state),
     })
 );
 
@@ -41,7 +41,7 @@ export const logAbandonCase = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/abandon',
   (client, state) =>
     client.logCaseCancelled({
-      ticket: selectCase(state),
+      ticket: caseAssistCaseSelector(state),
     })
 );
 
@@ -51,7 +51,7 @@ export const logUpdateCaseField = (fieldName: string) =>
     (client, state) =>
       client.logUpdateCaseField({
         fieldName,
-        ticket: selectCase(state),
+        ticket: caseAssistCaseSelector(state),
       })
   )();
 
@@ -60,8 +60,11 @@ export const logClassificationClick = (classificationId: string) =>
     'analytics/caseAssist/classification/click',
     (client, state) =>
       client.logSelectFieldSuggestion({
-        suggestion: selectCaseClassification(state, classificationId),
-        ticket: selectCase(state),
+        suggestion: caseAssistCaseClassificationSelector(
+          state,
+          classificationId
+        ),
+        ticket: caseAssistCaseSelector(state),
       })
   )();
 
@@ -70,8 +73,8 @@ export const logDocumentSuggestionClick = (suggestionId: string) =>
     'analytics/caseAssist/documentSuggestion/click',
     (client, state) =>
       client.logSelectDocumentSuggestion({
-        suggestion: selectDocumentSuggestion(state, suggestionId),
-        ticket: selectCase(state),
+        suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
+        ticket: caseAssistCaseSelector(state),
       })
   )();
 
@@ -84,7 +87,7 @@ export const logDocumentSuggestionRating = (
     (client, state) =>
       client.logRateDocumentSuggestion({
         rating,
-        suggestion: selectDocumentSuggestion(state, suggestionId),
-        ticket: selectCase(state),
+        suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
+        ticket: caseAssistCaseSelector(state),
       })
   )();

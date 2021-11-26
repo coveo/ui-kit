@@ -16,31 +16,31 @@ import {
 
 export interface CaseAssistAnalyticsActionCreators {
   logCaseStart(): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
 
   logCaseNextStage(): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
 
   logCreateCase(): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
 
   logSolveCase(): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
 
   logAbandonCase(): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
@@ -48,7 +48,7 @@ export interface CaseAssistAnalyticsActionCreators {
   logUpdateCaseField(
     fieldName: string
   ): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
@@ -56,7 +56,7 @@ export interface CaseAssistAnalyticsActionCreators {
   logClassificationClick(
     classificationId: string
   ): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
@@ -64,7 +64,7 @@ export interface CaseAssistAnalyticsActionCreators {
   logDocumentSuggestionClick(
     suggestionId: string
   ): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
@@ -73,17 +73,15 @@ export interface CaseAssistAnalyticsActionCreators {
     suggestionId: string,
     rating: number
   ): AsyncThunkAction<
-    {},
+    void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
   >;
 }
 
 export function loadCaseAssistAnalyticsActions(
-  engine: CaseAssistEngine
+  _engine: CaseAssistEngine
 ): CaseAssistAnalyticsActionCreators {
-  engine.addReducers({});
-
   return {
     logCaseStart,
     logCaseNextStage,

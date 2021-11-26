@@ -11,10 +11,10 @@ export enum KnownCaseFields {
 const isCustomFieldName = (fieldName: string) =>
   !(Object.values(KnownCaseFields) as string[]).includes(fieldName);
 
-export const selectCase = (state: Partial<CaseAssistAppState>) => {
+export const caseAssistCaseSelector = (state: Partial<CaseAssistAppState>) => {
   const selectFieldValue = (fieldName: string) =>
-    selectCaseInputValue(state, fieldName) ??
-    selectCaseFieldValue(state, fieldName);
+    caseAssistCaseInputValueSelector(state, fieldName) ??
+    caseAssistCaseFieldValueSelector(state, fieldName);
 
   return {
     id: selectFieldValue(KnownCaseFields.id),
@@ -23,24 +23,24 @@ export const selectCase = (state: Partial<CaseAssistAppState>) => {
     category: selectFieldValue(KnownCaseFields.category),
     productId: selectFieldValue(KnownCaseFields.productId),
     custom: {
-      ...selectCustomCaseInputValues(state),
-      ...selectCustomCaseFieldValues(state),
+      ...caseAssistCustomCaseInputValuesSelector(state),
+      ...caseAssistCustomCaseFieldValuesSelector(state),
     },
   };
 };
 
-export const selectCaseInputValue = (
+export const caseAssistCaseInputValueSelector = (
   state: Partial<CaseAssistAppState>,
   fieldName: string
 ) => state?.caseInput?.[fieldName]?.value;
 
-export const selectCustomCaseInputValues = (
+export const caseAssistCustomCaseInputValuesSelector = (
   state: Partial<CaseAssistAppState>
 ) =>
   Object.keys(state?.caseInput ?? []).reduce((customFields, fieldName) => {
     if (isCustomFieldName(fieldName)) {
       const value = state?.caseInput?.[fieldName]?.value;
-      if (typeof value !== 'undefined') {
+      if (value) {
         return {...customFields, [fieldName]: value};
       }
     }
@@ -48,19 +48,19 @@ export const selectCustomCaseInputValues = (
     return customFields;
   }, {});
 
-export const selectCaseFieldValue = (
+export const caseAssistCaseFieldValueSelector = (
   state: Partial<CaseAssistAppState>,
   fieldName: string
 ) => state?.caseField?.fields[fieldName]?.value;
 
-export const selectCustomCaseFieldValues = (
+export const caseAssistCustomCaseFieldValuesSelector = (
   state: Partial<CaseAssistAppState>
 ) =>
   Object.keys(state?.caseField?.fields ?? []).reduce(
     (customFields, fieldName) => {
       if (isCustomFieldName(fieldName)) {
         const value = state?.caseField?.fields?.[fieldName]?.value;
-        if (typeof value !== 'undefined') {
+        if (value) {
           return {...customFields, [fieldName]: value};
         }
       }
@@ -70,12 +70,12 @@ export const selectCustomCaseFieldValues = (
     {}
   );
 
-export const selectCaseClassification = (
+export const caseAssistCaseClassificationSelector = (
   state: Partial<CaseAssistAppState>,
   classificationId: string
 ) => {
   const classificationFieldName = Object.keys(
-    state?.caseField?.fields ?? []
+    state?.caseField?.fields ?? {}
   ).find((fieldName) =>
     state?.caseField?.fields[fieldName].suggestions.some(
       (suggestion) => suggestion.id === classificationId
@@ -105,7 +105,7 @@ export const selectCaseClassification = (
   };
 };
 
-export const selectDocumentSuggestion = (
+export const caseAssistDocumentSuggestionSelector = (
   _state: Partial<CaseAssistAppState>,
   _suggestionId: string
 ) => {

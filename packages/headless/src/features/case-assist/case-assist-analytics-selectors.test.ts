@@ -1,16 +1,16 @@
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {
   KnownCaseFields,
-  selectCase,
-  selectCaseClassification,
-  selectCaseFieldValue,
-  selectCaseInputValue,
-  selectCustomCaseFieldValues,
-  selectCustomCaseInputValues,
+  caseAssistCaseSelector,
+  caseAssistCaseClassificationSelector,
+  caseAssistCaseFieldValueSelector,
+  caseAssistCaseInputValueSelector,
+  caseAssistCustomCaseFieldValuesSelector,
+  caseAssistCustomCaseInputValuesSelector,
 } from './case-assist-analytics-selectors';
 
 describe('case assist analytics selectors', () => {
-  const stateWithCaseInputs: Partial<CaseAssistAppState> = {
+  const buildStateWithCaseInput = (): Partial<CaseAssistAppState> => ({
     caseInput: {
       id: {value: 'some-case-id'},
       subject: {value: 'some case subject'},
@@ -18,9 +18,9 @@ describe('case assist analytics selectors', () => {
       productId: {value: 'some product ID'},
       customFieldA: {value: 'custom value'},
     },
-  };
+  });
 
-  const stateWithCaseFields: Partial<CaseAssistAppState> = {
+  const buildStateWithCaseField = (): Partial<CaseAssistAppState> => ({
     caseField: {
       status: {
         loading: false,
@@ -49,13 +49,13 @@ describe('case assist analytics selectors', () => {
         },
       },
     },
-  };
+  });
 
-  describe('#selectCase', () => {
+  describe('#caseAssistCaseSelector', () => {
     it('should retrieve all the case information from the state', () => {
-      const caseInfo = selectCase({
-        ...stateWithCaseInputs,
-        ...stateWithCaseFields,
+      const caseInfo = caseAssistCaseSelector({
+        ...buildStateWithCaseInput(),
+        ...buildStateWithCaseField(),
       });
 
       expect(caseInfo).toMatchObject({
@@ -72,16 +72,19 @@ describe('case assist analytics selectors', () => {
     });
   });
 
-  describe('#selectCaseInputValue', () => {
+  describe('#caseAssistCaseInputValueSelector', () => {
     it('should return the input value', () => {
-      const value = selectCaseInputValue(stateWithCaseInputs, 'subject');
+      const value = caseAssistCaseInputValueSelector(
+        buildStateWithCaseInput(),
+        'subject'
+      );
 
       expect(value).toBe('some case subject');
     });
 
     it('should return #undefined when field is not found', () => {
-      const value = selectCaseInputValue(
-        stateWithCaseInputs,
+      const value = caseAssistCaseInputValueSelector(
+        buildStateWithCaseInput(),
         'thisFieldDoesNotExist'
       );
 
@@ -89,9 +92,11 @@ describe('case assist analytics selectors', () => {
     });
   });
 
-  describe('#selectCustomCaseInputValue', () => {
+  describe('#caseAssistCustomCaseInputValueSelector', () => {
     it('should return all inputs except the known fields', () => {
-      const customFields = selectCustomCaseInputValues(stateWithCaseInputs);
+      const customFields = caseAssistCustomCaseInputValuesSelector(
+        buildStateWithCaseInput()
+      );
 
       expect(customFields).toHaveProperty('customFieldA', 'custom value');
       Object.values(KnownCaseFields).forEach((knownCaseField) =>
@@ -100,34 +105,37 @@ describe('case assist analytics selectors', () => {
     });
 
     it('should return an empty object if no custom fields', () => {
-      const state = JSON.parse(JSON.stringify(stateWithCaseInputs));
-      delete state.caseInput.customFieldA;
+      const state = buildStateWithCaseInput();
+      delete state.caseInput!.customFieldA;
 
-      const customFields = selectCustomCaseInputValues(state);
+      const customFields = caseAssistCustomCaseInputValuesSelector(state);
 
       expect(Object.keys(customFields)).toHaveLength(0);
     });
 
     it('should return an empty object if custom field has no value', () => {
-      const state = JSON.parse(JSON.stringify(stateWithCaseInputs));
-      state.caseInput.customFieldA.value = undefined;
+      const state = buildStateWithCaseInput();
+      state.caseInput!.customFieldA.value = '';
 
-      const customFields = selectCustomCaseInputValues(state);
+      const customFields = caseAssistCustomCaseInputValuesSelector(state);
 
       expect(customFields).not.toHaveProperty('customFieldA');
     });
   });
 
-  describe('#selectCaseFieldValue', () => {
+  describe('#caseAssistCaseFieldValueSelector', () => {
     it('should return the field value', () => {
-      const value = selectCaseFieldValue(stateWithCaseFields, 'category');
+      const value = caseAssistCaseFieldValueSelector(
+        buildStateWithCaseField(),
+        'category'
+      );
 
       expect(value).toBe('software');
     });
 
     it('should return #undefined when field is not found', () => {
-      const value = selectCaseFieldValue(
-        stateWithCaseFields,
+      const value = caseAssistCaseFieldValueSelector(
+        buildStateWithCaseField(),
         'thisFieldDoesNotExist'
       );
 
@@ -135,9 +143,11 @@ describe('case assist analytics selectors', () => {
     });
   });
 
-  describe('#selectCustomCaseFieldValue', () => {
+  describe('#caseAssistCustomCaseFieldValueSelector', () => {
     it('should return all fields except the known ones', () => {
-      const customFields = selectCustomCaseFieldValues(stateWithCaseFields);
+      const customFields = caseAssistCustomCaseFieldValuesSelector(
+        buildStateWithCaseField()
+      );
 
       expect(customFields).toHaveProperty('customFieldB', 'custom value');
       Object.values(KnownCaseFields).forEach((knownCaseField) =>
@@ -146,28 +156,28 @@ describe('case assist analytics selectors', () => {
     });
 
     it('should return an empty object if no custom fields', () => {
-      const state = JSON.parse(JSON.stringify(stateWithCaseFields));
-      delete state.caseField.fields.customFieldB;
+      const state = buildStateWithCaseField();
+      delete state.caseField!.fields.customFieldB;
 
-      const customFields = selectCustomCaseFieldValues(state);
+      const customFields = caseAssistCustomCaseFieldValuesSelector(state);
 
       expect(Object.keys(customFields)).toHaveLength(0);
     });
 
     it('should return an empty object if custom field has no value', () => {
-      const state = JSON.parse(JSON.stringify(stateWithCaseFields));
-      state.caseField.fields.customFieldB.value = undefined;
+      const state = buildStateWithCaseField();
+      state.caseField!.fields.customFieldB.value = '';
 
-      const customFields = selectCustomCaseFieldValues(state);
+      const customFields = caseAssistCustomCaseFieldValuesSelector(state);
 
       expect(customFields).not.toHaveProperty('customFieldB');
     });
   });
 
-  describe('#selectCaseClassification', () => {
+  describe('#caseAssistCaseClassificationSelector', () => {
     it('should return the classification matching the specified ID', () => {
-      const classification = selectCaseClassification(
-        stateWithCaseFields,
+      const classification = caseAssistCaseClassificationSelector(
+        buildStateWithCaseField(),
         'service-suggestion-id'
       );
 
@@ -184,15 +194,15 @@ describe('case assist analytics selectors', () => {
 
     it('should throw when the classification is not found', () => {
       expect(() =>
-        selectCaseClassification(
-          stateWithCaseFields,
+        caseAssistCaseClassificationSelector(
+          buildStateWithCaseField(),
           'invalid-classification-id'
         )
       ).toThrow();
     });
   });
 
-  describe('#selectDocumentSuggestion', () => {
+  describe('#caseAssistDocumentSuggestionSelector', () => {
     it.todo('should return the document suggestion matching the specified ID');
 
     it.todo('should throw when the document suggestion is not found');
