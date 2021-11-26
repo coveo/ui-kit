@@ -3,7 +3,6 @@ import {DocumentSuggestion} from '../../api/service/case-assist/get-document-sug
 
 export const getDocumentSuggestionInitialState =
   (): DocumentSuggestionState => ({
-    enabled: false,
     status: {
       loading: false,
       error: null,
@@ -28,11 +27,6 @@ export interface DocumentSuggestionStatus {
 }
 
 export interface DocumentSuggestionState {
-  /**
-   * Specifies if the automatic update of document suggestions should be enabled.
-   * By default the feature is disabled.
-   */
-  enabled: boolean;
   /**
    * The status of the document suggestions request.
    */

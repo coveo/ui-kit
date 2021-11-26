@@ -2,6 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
+import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';
 import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request';
 import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {
@@ -10,6 +11,7 @@ import {
   ConfigurationSection,
   DebugSection,
   CaseInputSection,
+  CaseFieldSection,
 } from '../../state/state-sections';
 
 export interface FetchDocumentSuggestionsThunkReturn {
@@ -21,6 +23,7 @@ export type StateNeededByFetchDocumentSuggestions = ConfigurationSection &
   CaseAssistConfigurationSection &
   DocumentSuggestionSection &
   CaseInputSection &
+  CaseFieldSection &
   DebugSection;
 
 export const fetchDocumentSuggestions = createAsyncThunk<
@@ -56,7 +59,10 @@ export const buildFetchDocumentSuggestionsRequest = async (
   ...(state.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
-  fields: state.caseInputs,
+  fields: state.caseInput,
+  context: state.caseField
+    ? prepareContextFromFields(state.caseField.fields)
+    : undefined,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });

@@ -1,4 +1,5 @@
 import {buildSamlFlow} from './saml-flow';
+import {buildSamlState} from './saml-state';
 
 export interface SamlClientOptions {
   /**
@@ -7,9 +8,7 @@ export interface SamlClientOptions {
   organizationId: string;
 
   /**
-   * The SAML authentication provider name (e.g., `oktaA323aab78b9f1-45b5-a095-a1f0fa09ddd5`). See [Creating a Search API SAML Authentication Provider](https://docs.coveo.com/en/91/build-a-search-ui/saml-authentication#creating-a-search-api-saml-authentication-provider).
-
-]
+   * The SAML authentication provider name (e.g., `oktaA323aab78b9f1-45b5-a095-a1f0fa09ddd5`). See [Creating a Search API SAML Authentication Provider](https://docs.coveo.com/en/91/#creating-a-search-api-saml-authentication-provider).
    */
   provider: string;
 
@@ -38,13 +37,24 @@ export interface SamlClient {
  */
 export function buildSamlClient(config: SamlClientOptions): SamlClient {
   const provider = buildSamlFlow(config);
+  const state = buildSamlState();
 
   return {
     async authenticate() {
       if (provider.handshakeTokenAvailable) {
+        state.removeLoginPending();
         return await provider.exchangeHandshakeToken();
       }
 
+      if (state.isLoginPending) {
+        state.removeLoginPending();
+        console.warn(
+          'No handshake token found in url. Skipping redirect to avoid an infinite loop. Manually refresh the page to restart SAML authentication flow.'
+        );
+        return '';
+      }
+
+      state.setLoginPending();
       provider.login();
       return '';
     },
