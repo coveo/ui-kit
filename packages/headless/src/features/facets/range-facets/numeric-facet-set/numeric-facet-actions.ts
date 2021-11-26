@@ -144,7 +144,7 @@ export const registerNumericFacet = createAction(
       validateManualNumericRanges(payload);
       return {payload, error: null};
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
 );
@@ -205,7 +205,7 @@ export const updateNumericFacetValues = createAction(
       validateManualNumericRanges({currentValues: payload.values});
       return {payload, error: null};
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
 );
