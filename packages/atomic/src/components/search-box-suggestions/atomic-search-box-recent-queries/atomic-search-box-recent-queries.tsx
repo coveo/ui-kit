@@ -57,7 +57,7 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private retrieveLocalStorage() {
-    return this.storage.getItemParsed(StorageItems.RECENT_QUERIES, []);
+    return this.storage.getParsedJSON(StorageItems.RECENT_QUERIES, []);
   }
 
   private updateLocalStorage() {
@@ -65,7 +65,7 @@ export class AtomicSearchBoxRecentQueries {
       return this.disableFeature();
     }
 
-    return this.storage.setObject(
+    return this.storage.setJSON(
       StorageItems.RECENT_QUERIES,
       this.recentQueriesList.state.queries
     );

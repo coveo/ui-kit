@@ -1,11 +1,9 @@
-import {SearchEngine} from '@coveo/headless';
-
 export enum StorageItems {
   RECENT_QUERIES = 'coveo-recent-queries',
 }
 
 export class SafeStorage implements Storage {
-  constructor(private logger: SearchEngine['logger']) {}
+  constructor() {}
   public clear() {
     return this.tryAccessLocalStorageOrWarn(
       () => localStorage.clear(),
@@ -20,7 +18,7 @@ export class SafeStorage implements Storage {
     );
   }
 
-  public getItemParsed<T>(key: StorageItems, fallback: T) {
+  public getParsedJSON<T>(key: StorageItems, fallback: T) {
     const item = this.getItem(key);
     if (!item) {
       return fallback;
@@ -60,7 +58,7 @@ export class SafeStorage implements Storage {
     );
   }
 
-  public setObject(key: StorageItems, obj: any) {
+  public setJSON(key: StorageItems, obj: unknown) {
     const stringified = this.tryJSONOrWarn(
       key,
       () => JSON.stringify(obj),
@@ -74,7 +72,7 @@ export class SafeStorage implements Storage {
     orElse: () => OnFailure
   ) {
     return this.tryOrElse(tryTo, () => {
-      this.logger.warn(
+      console.warn(
         'Error while trying to read or modify local storage. This can be caused by browser specific settings.'
       );
       return orElse();
@@ -87,7 +85,7 @@ export class SafeStorage implements Storage {
     orElse: () => OnFailure
   ) {
     return this.tryOrElse(tryTo, () => {
-      this.logger.warn(
+      console.warn(
         `Error while trying to do JSON manipulation with local storage entry. ${key}`
       );
       return orElse();
@@ -101,7 +99,7 @@ export class SafeStorage implements Storage {
     try {
       return tryTo();
     } catch (e) {
-      this.logger.warn(e as Error);
+      console.warn(e as Error);
       return orElse();
     }
   }

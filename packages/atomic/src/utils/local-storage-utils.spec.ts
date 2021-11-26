@@ -11,7 +11,7 @@ describe('Safe local storage', () => {
     const engine = buildSearchEngine({
       configuration: getSampleSearchEngineConfiguration(),
     });
-    storage = new SafeStorage(engine.logger);
+    storage = new SafeStorage();
   });
 
   afterEach(() => {
@@ -24,9 +24,9 @@ describe('Safe local storage', () => {
   });
 
   it('allows to save and retrieve an object', () => {
-    storage.setObject(StorageItems.RECENT_QUERIES, {foo: 'bar'});
+    storage.setJSON(StorageItems.RECENT_QUERIES, {foo: 'bar'});
     expect(
-      storage.getItemParsed(StorageItems.RECENT_QUERIES, {})
+      storage.getParsedJSON(StorageItems.RECENT_QUERIES, {})
     ).toMatchObject({
       foo: 'bar',
     });
@@ -45,7 +45,7 @@ describe('Safe local storage', () => {
     (localStorage.getItem as jest.Mock).mockImplementationOnce(() => {
       throw new Error('🤯');
     });
-    expect(storage.getItemParsed(StorageItems.RECENT_QUERIES, 'foo')).toEqual(
+    expect(storage.getParsedJSON(StorageItems.RECENT_QUERIES, 'foo')).toEqual(
       'foo'
     );
   });
