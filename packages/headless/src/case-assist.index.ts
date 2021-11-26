@@ -28,3 +28,4 @@ export {LogLevel} from './app/logger';
 // Case Assist Action Loaders
 export * from './features/case-input/case-input-actions-loader';
 export * from './features/case-field/case-field-actions-loader';
+export * from './features/document-suggestion/document-suggestion-actions-loader';

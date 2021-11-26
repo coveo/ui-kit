@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.2...@coveo/atomic@1.16.3) (2021-11-26)
+
+
+### Bug Fixes
+
+* **atomic:** fix numeric input on no facet results  ([#1523](https://github.com/coveo/ui-kit/issues/1523)) ([74555b9](https://github.com/coveo/ui-kit/commit/74555b928a1a51861f594616b3aced2ba0868078))
+
+
+
+
+
+## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.1...@coveo/atomic@1.16.2) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.0...@coveo/atomic@1.16.1) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.8...@coveo/atomic@1.16.0) (2021-11-25)
 
 

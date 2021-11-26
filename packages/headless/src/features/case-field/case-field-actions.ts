@@ -2,6 +2,7 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
+import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';
 import {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-request';
 import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response';
 import {
@@ -95,7 +96,10 @@ export const buildFetchClassificationRequest = async (
   ...(state.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
-  fields: state.caseInputs,
+  fields: state.caseInput,
+  context: state.caseField
+    ? prepareContextFromFields(state.caseField.fields)
+    : undefined,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });

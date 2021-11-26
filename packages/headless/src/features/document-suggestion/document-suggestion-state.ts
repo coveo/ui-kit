@@ -1,0 +1,38 @@
+import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
+import {DocumentSuggestion} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+
+export const getDocumentSuggestionInitialState =
+  (): DocumentSuggestionState => ({
+    status: {
+      loading: false,
+      error: null,
+      lastResponseId: '',
+    },
+    documents: [],
+  });
+
+export interface DocumentSuggestionStatus {
+  /**
+   * `true` if a request is in progress and `false` otherwise.
+   */
+  loading: boolean;
+  /**
+   * The Case Assist API error response.
+   */
+  error: CaseAssistAPIErrorStatusResponse | null;
+  /**
+   * The ID of the response.
+   */
+  lastResponseId: string;
+}
+
+export interface DocumentSuggestionState {
+  /**
+   * The status of the document suggestions request.
+   */
+  status: DocumentSuggestionStatus;
+  /**
+   * The retrieved document suggestions.
+   */
+  documents: DocumentSuggestion[];
+}

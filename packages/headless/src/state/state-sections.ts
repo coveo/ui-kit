@@ -37,6 +37,7 @@ import {StaticFilterSetState} from '../features/static-filter-set/static-filter-
 import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
+import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
 
 export interface QuerySection {
   /**
@@ -324,12 +325,19 @@ export interface CaseInputSection {
   /**
    * The case inputs.
    */
-  caseInputs: CaseInputState;
+  caseInput: CaseInputState;
 }
 
 export interface CaseFieldSection {
   /**
    * The case fields and their predicted values.
    */
-  caseFields: CaseFieldState;
+  caseField: CaseFieldState;
+}
+
+export interface DocumentSuggestionSection {
+  /**
+   * The document suggestions for case assist.
+   */
+  documentSuggestions: DocumentSuggestionState;
 }
