@@ -140,9 +140,13 @@ describe('Numeric Facet Test Suite', () => {
         const min = 120;
         const max = 8000;
 
+        visitNumericFacetPage(customWithInputSettings);
+        cy.wait(InterceptAliases.Search);
+
         Actions.inputMinValue(min);
         Actions.inputMaxValue(max);
         Actions.submitManualRange();
+        cy.wait(InterceptAliases.Search);
 
         Expect.displayValues(false);
         Expect.search.numberOfResults(10);
@@ -170,7 +174,6 @@ describe('Numeric Facet Test Suite', () => {
 
       scope('when min input is bigger than max input', () => {
         visitNumericFacetPage(customWithInputSettings);
-
         Actions.inputMinValue(100);
         Actions.inputMaxValue(80);
         Actions.submitManualRange();
@@ -200,18 +203,21 @@ describe('Numeric Facet Test Suite', () => {
         const max = 10000000000;
 
         visitNumericFacetPage(customWithInputSettings);
+        cy.wait(InterceptAliases.Search);
 
         Actions.inputMinValue(min);
         Actions.inputMaxValue(max);
         Actions.submitManualRange();
+        cy.wait(InterceptAliases.Search);
 
         Expect.displayValues(false);
-        // Expect.search.numberOfResults(0);
+        Expect.search.numberOfResults(0);
         Expect.displayClearButton(true);
         Expect.clearFilterContains('Clear filter');
       });
     });
   });
+
   describe('with field returns no results', () => {
     before(() => {
       visitNumericFacetPage({
@@ -223,6 +229,7 @@ describe('Numeric Facet Test Suite', () => {
       Expect.displayLabel(false);
     });
   });
+
   describe('with isCollapsed', () => {
     function setupIsCollapsed() {
       visitNumericFacetPage({
@@ -243,6 +250,7 @@ describe('Numeric Facet Test Suite', () => {
       Expect.displayExpandButton(true);
     });
   });
+
   describe('with a selected range in the URL', () => {
     const min = 120;
     const max = 8000;
@@ -275,6 +283,7 @@ describe('Numeric Facet Test Suite', () => {
       });
     });
   });
+
   describe('with custom #rangeAlgorithm', () => {
     it('should render correctly', () => {
       function setupWithRangeAlgorithm(rangeAlgorithm: string) {
@@ -302,6 +311,7 @@ describe('Numeric Facet Test Suite', () => {
       });
     });
   });
+
   describe('with custom sorting', () => {
     ['ascending', 'descending'].forEach((sorting) => {
       it(`should use "${sorting}" sorting in the facet request`, () => {
