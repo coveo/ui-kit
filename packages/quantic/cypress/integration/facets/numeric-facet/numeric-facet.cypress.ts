@@ -187,6 +187,7 @@ describe('Numeric Facet Test Suite', () => {
 
       scope('when selecting from values', () => {
         visitNumericFacetPage(customWithInputSettings);
+        cy.wait(InterceptAliases.Search);
 
         Actions.checkValueAt(2);
         cy.wait(InterceptAliases.UA.Facet.Select);
