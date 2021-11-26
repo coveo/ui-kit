@@ -74,7 +74,7 @@ export const validatePayload = <P>(
   } catch (error) {
     return {
       payload,
-      error: serializeSchemaValidationError(error),
+      error: serializeSchemaValidationError(error as Error),
     };
   }
 };
@@ -121,7 +121,7 @@ const validateObject = <T extends object>(
   try {
     return schema.validate(obj, validationMessage);
   } catch (error) {
-    engine.logger.error(error, errorMessage);
+    engine.logger.error(error as Error, errorMessage);
     throw error;
   }
 };
