@@ -1,5 +1,6 @@
 import {
   BaseParam,
+  ContextParam,
   DebugParam,
   LocaleParam,
   VisitorIDParam,
@@ -16,6 +17,7 @@ export type GetCaseClassificationsRequest = BaseParam &
   VisitorIDParam &
   LocaleParam &
   FieldsParam &
+  ContextParam &
   DebugParam;
 
 export const buildGetCaseClassificationsRequest = (

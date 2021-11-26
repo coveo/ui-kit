@@ -61,6 +61,19 @@ export const prepareSuggestionRequestFields = (
       {}
     );
 
+export const prepareContextFromFields = (
+  fields: CaseFields
+): Record<string, string | string[]> =>
+  Object.keys(fields)
+    .filter((fieldName) => fields[fieldName].value !== '')
+    .reduce(
+      (obj, fieldName) => ({
+        ...obj,
+        [fieldName]: fields[fieldName].value,
+      }),
+      {}
+    );
+
 const validateCaseAssistRequestParams = (req: CaseAssistParam) => {
   if (!req.url) {
     throw new Error("The 'url' attribute must contain a valid platform URL.");
