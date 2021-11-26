@@ -47,7 +47,7 @@ export class AtomicSearchBoxRecentQueries {
     });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());
-    this.storage = new SafeStorage(this.bindings.engine.logger);
+    this.storage = new SafeStorage();
 
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
