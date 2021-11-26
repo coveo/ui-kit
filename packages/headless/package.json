@@ -15,7 +15,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.34.0",
+  "version": "1.35.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -79,8 +79,5 @@
     "rollup-plugin-terser": "7.0.2",
     "ts-jest": "26.5.6",
     "ts-node": "10.2.1"
-  },
-  "engines": {
-    "node": ">=10"
   }
 }

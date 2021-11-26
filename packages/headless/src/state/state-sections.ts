@@ -325,14 +325,14 @@ export interface CaseInputSection {
   /**
    * The case inputs.
    */
-  caseInputs: CaseInputState;
+  caseInput: CaseInputState;
 }
 
 export interface CaseFieldSection {
   /**
    * The case fields and their predicted values.
    */
-  caseFields: CaseFieldState;
+  caseField: CaseFieldState;
 }
 
 export interface DocumentSuggestionSection {
