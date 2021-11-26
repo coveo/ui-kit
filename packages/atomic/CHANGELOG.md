@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.0...@coveo/atomic@1.16.1) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.8...@coveo/atomic@1.16.0) (2021-11-25)
+
+
+### Features
+
+* **atomic:** export initialize bindings & add atomic-external component ([#1511](https://github.com/coveo/ui-kit/issues/1511)) ([6f648bd](https://github.com/coveo/ui-kit/commit/6f648bd8659d3d95c70a85527a2eb426f0f315ca))
+
+
+
+
+
 ## [1.15.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.7...@coveo/atomic@1.15.8) (2021-11-25)
 
 **Note:** Version bump only for package @coveo/atomic

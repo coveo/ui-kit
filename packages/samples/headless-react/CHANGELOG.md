@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.1](https://github.com/coveo/ui-kit/compare/headless-react@0.44.0...headless-react@0.44.1) (2021-11-26)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.44.0](https://github.com/coveo/ui-kit/compare/headless-react@0.43.9...headless-react@0.44.0) (2021-11-25)
+
+
+### Features
+
+* **auth:** add auth package ([#1514](https://github.com/coveo/ui-kit/issues/1514)) ([a977c62](https://github.com/coveo/ui-kit/commit/a977c62b7f7086746096d1930a4ddab044d70d41))
+
+
+
+
+
 ## [0.43.9](https://github.com/coveo/ui-kit/compare/headless-react@0.43.8...headless-react@0.43.9) (2021-11-25)
 
 **Note:** Version bump only for package headless-react

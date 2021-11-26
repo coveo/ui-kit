@@ -3,6 +3,7 @@ import {AboutPage} from './pages/AboutPage';
 import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
 import {RecommendationPage} from './pages/RecommendationPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
+import {SamlPage} from './pages/SamlPage';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
@@ -31,6 +32,11 @@ function App(props: SearchPageProps) {
               About
             </NavLink>
           </button>
+          <button>
+            <NavLink to="/saml" activeStyle={activeNavLink}>
+              Saml
+            </NavLink>
+          </button>
         </nav>
         <Switch>
           <Route path="/recommendation">
@@ -41,6 +47,9 @@ function App(props: SearchPageProps) {
           </Route>
           <Route path="/about">
             <AboutPage />
+          </Route>
+          <Route path="/saml">
+            <SamlPage organizationId="" provider="" />
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />
