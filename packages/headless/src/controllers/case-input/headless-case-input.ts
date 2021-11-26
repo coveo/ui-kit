@@ -1,6 +1,6 @@
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
-//import {logCaseFieldUpdate} from '../../features/case-input/case-input-analytics-actions';
+//import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {
   CaseAssistConfigurationSection,
@@ -49,16 +49,16 @@ export interface CaseInput extends Controller {
    */
   update(value: string): void;
   /**
-   *
+   * Retrieve case classifications based on case information in state.
    */
   fetchCaseClassifications(): void;
   /**
-   *
+   * Retrieve document suggestions based on case information in state.
    */
   fetchDocumentSuggestions(): void;
   /**
    * A scoped and simplified part of the headless state that is relevant to the `CaseInput` controller.
-   * */
+   */
   state: CaseInputState;
 }
 
@@ -109,7 +109,7 @@ export function buildCaseInput(
           fieldValue: value,
         })
       );
-      //dispatch(logCaseFieldUpdate());
+      //dispatch(logUpdateCaseField());
     },
 
     fetchCaseClassifications() {
@@ -121,41 +121,9 @@ export function buildCaseInput(
     },
 
     get state() {
-      return getState().caseInputs[fieldName];
+      return getState().caseInput[fieldName];
     },
   };
-}
-
-/**
- * Creates a `Case Input` controller instance for a case subject.
- *
- * @param engine - The headless engine.
- * @returns A `CaseInput` controller instance.
- */
-export function buildSubjectInput(engine: CaseAssistEngine): CaseInput {
-  const fieldName = 'subject';
-
-  return buildCaseInput(engine, {
-    options: {
-      field: fieldName,
-    },
-  });
-}
-
-/**
- * Creates a `Case Input` controller instance for a case description.
- *
- * @param engine - The headless engine.
- * @returns A `CaseInput` controller instance.
- */
-export function buildDescriptionInput(engine: CaseAssistEngine): CaseInput {
-  const fieldName = 'description';
-
-  return buildCaseInput(engine, {
-    options: {
-      field: fieldName,
-    },
-  });
 }
 
 function loadCaseInputReducers(
