@@ -60,7 +60,9 @@ export const buildFetchDocumentSuggestionsRequest = async (
     visitorId: await getVisitorID(),
   }),
   fields: state.caseInput,
-  context: prepareContextFromFields(state.caseField.fields),
+  context: state.caseField
+    ? prepareContextFromFields(state.caseField.fields)
+    : undefined,
   locale: state.caseAssistConfiguration.locale,
   debug: state.debug,
 });
