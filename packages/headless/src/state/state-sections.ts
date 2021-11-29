@@ -339,7 +339,7 @@ export interface DocumentSuggestionSection {
   /**
    * The document suggestions for case assist.
    */
-  documentSuggestions: DocumentSuggestionState;
+  documentSuggestion: DocumentSuggestionState;
 }
 
 export interface DocumentSuggestionSection {

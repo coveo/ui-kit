@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.6...@coveo/atomic@1.16.7) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix line clamp max height & break word in title section ([#1530](https://github.com/coveo/ui-kit/issues/1530)) ([a6ef188](https://github.com/coveo/ui-kit/commit/a6ef18870890a9a2c6cb8f6a3a06dca553c5be69))
+
+
+
+
+
+## [1.16.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.5...@coveo/atomic@1.16.6) (2021-11-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.4...@coveo/atomic@1.16.5) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** add group class to link facet values ([#1531](https://github.com/coveo/ui-kit/issues/1531)) ([63365e3](https://github.com/coveo/ui-kit/commit/63365e30441d4e30ff7d6150fd12ce4d1e193b38))
+
+
+
+
+
+## [1.16.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.3...@coveo/atomic@1.16.4) (2021-11-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.2...@coveo/atomic@1.16.3) (2021-11-26)
+
+
+### Bug Fixes
+
+* **atomic:** fix numeric input on no facet results  ([#1523](https://github.com/coveo/ui-kit/issues/1523)) ([74555b9](https://github.com/coveo/ui-kit/commit/74555b928a1a51861f594616b3aced2ba0868078))
+
+
+
+
+
 ## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.1...@coveo/atomic@1.16.2) (2021-11-26)
 
 **Note:** Version bump only for package @coveo/atomic

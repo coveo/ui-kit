@@ -1,12 +1,10 @@
 import defaultStory from '../../../.storybook/default-story';
-import BreadboxDoc from './atomic-breadbox.mdx';
 import {html} from 'lit-html';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/Breadbox',
   'atomic-breadbox',
   {},
-  BreadboxDoc,
   {
     additionalMarkup: () =>
       html`

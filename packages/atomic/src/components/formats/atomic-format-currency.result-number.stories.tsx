@@ -1,5 +1,4 @@
 import defaultResultComponentStory from '../../../.storybook/default-result-component-story';
-import FormatCurrencyDoc from './atomic-format-currency.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultNumber/Format/Currency',
@@ -7,7 +6,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {
     currency: 'USD',
   },
-  FormatCurrencyDoc,
   {
     engineConfig: {
       preprocessRequest: (r) => {

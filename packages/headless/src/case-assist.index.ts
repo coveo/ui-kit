@@ -29,6 +29,7 @@ export {LogLevel} from './app/logger';
 export * from './features/case-input/case-input-actions-loader';
 export * from './features/case-field/case-field-actions-loader';
 export * from './features/document-suggestion/document-suggestion-actions-loader';
+export * from './features/case-assist/case-assist-analytics-actions-loader';
 
 // Controllers
 export {
