@@ -1,5 +1,4 @@
 import defaultResultComponentStory from '../../../.storybook/default-result-component-story';
-import FormatUnitDoc from './atomic-format-unit.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultNumber/Format/Unit',
@@ -7,7 +6,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {
     unit: 'byte',
   },
-  FormatUnitDoc,
   {
     engineConfig: {
       preprocessRequest: (r) => {
