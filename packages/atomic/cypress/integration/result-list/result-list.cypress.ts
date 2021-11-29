@@ -82,7 +82,7 @@ describe('Result List Component', () => {
       ResultListSelectors.shadow().find('.list-wrapper:not(.placeholder)');
     });
 
-    withAnySectionnableResultList(() => {
+    withAnySectionnableResultList((display, imageSize, density) => {
       it('should expose --line-height in the title section', () => {
         ResultListSelectors.sections
           .title()
@@ -102,6 +102,18 @@ describe('Result List Component', () => {
           .bottomMetadata()
           .find(lineHeightSelector)
           .should('be.visible');
+      });
+
+      it(`should pass the display-${display} class to the list root`, () => {
+        ResultListSelectors.root().should('have.class', `display-${display}`);
+      });
+
+      it(`should pass the image-${imageSize} class to the list root`, () => {
+        ResultListSelectors.root().should('have.class', `image-${imageSize}`);
+      });
+
+      it(`should pass the density-${density} class to the list root`, () => {
+        ResultListSelectors.root().should('have.class', `density-${density}`);
       });
     });
   });
