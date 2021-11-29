@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.2...@coveo/headless@1.36.0) (2021-11-26)
+
+
+### Features
+
+* **headless:** added document suggestion actions ([#1522](https://github.com/coveo/ui-kit/issues/1522)) ([dc7ac1b](https://github.com/coveo/ui-kit/commit/dc7ac1b525ab70abed16070c8d73985f141b46b6))
+
+
+
+
+
 ## [1.35.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.1...@coveo/headless@1.35.2) (2021-11-26)
 
 **Note:** Version bump only for package @coveo/headless

@@ -112,13 +112,12 @@ export default function defaultResultComponentStory(
   title: string,
   componentTag: string,
   defaultArgs: Args,
-  docPage: typeof DocsPage,
   advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
   const config = buildConfigWithDefaultValues(advancedConfig);
 
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
-    sharedDefaultStory(title, componentTag, defaultArgs, docPage, true, config);
+    sharedDefaultStory(title, componentTag, defaultArgs, true, config);
 
   defaultModuleExport.argTypes = {
     ...resultComponentArgTypes,

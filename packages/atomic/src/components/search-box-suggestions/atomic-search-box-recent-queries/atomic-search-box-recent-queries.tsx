@@ -11,8 +11,7 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {once} from '../../../utils/utils';
-
-const localStorageKey = 'coveo-recent-queries';
+import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 
 @Component({
   tag: 'atomic-search-box-recent-queries',
@@ -21,6 +20,7 @@ const localStorageKey = 'coveo-recent-queries';
 export class AtomicSearchBoxRecentQueries {
   private bindings!: SearchBoxSuggestionsBindings;
   private recentQueriesList!: RecentQueriesList;
+  private storage!: SafeStorage;
 
   @Element() private host!: HTMLElement;
 
@@ -47,6 +47,7 @@ export class AtomicSearchBoxRecentQueries {
     });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());
+    this.storage = new SafeStorage();
 
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
@@ -56,13 +57,7 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private retrieveLocalStorage() {
-    try {
-      return JSON.parse(
-        window.localStorage.getItem(localStorageKey) || '[]'
-      ) as string[];
-    } catch (error) {
-      return [];
-    }
+    return this.storage.getParsedJSON(StorageItems.RECENT_QUERIES, []);
   }
 
   private updateLocalStorage() {
@@ -70,14 +65,10 @@ export class AtomicSearchBoxRecentQueries {
       return this.disableFeature();
     }
 
-    try {
-      window.localStorage.setItem(
-        localStorageKey,
-        JSON.stringify(this.recentQueriesList.state.queries)
-      );
-    } catch (error) {
-      return null;
-    }
+    return this.storage.setJSON(
+      StorageItems.RECENT_QUERIES,
+      this.recentQueriesList.state.queries
+    );
   }
 
   private warnUser = once(() =>
@@ -88,11 +79,7 @@ export class AtomicSearchBoxRecentQueries {
 
   private disableFeature() {
     this.warnUser();
-    try {
-      window.localStorage.removeItem(localStorageKey);
-    } catch (error) {
-      return;
-    }
+    this.storage.removeItem(StorageItems.RECENT_QUERIES);
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {

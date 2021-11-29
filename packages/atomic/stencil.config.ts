@@ -77,6 +77,8 @@ export const config: Config = {
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['headless'],
+    setupFiles: ['jest-localstorage-mock'],
+    resetMocks: false,
   },
   devServer: {
     reloadStrategy: 'pageReload',
