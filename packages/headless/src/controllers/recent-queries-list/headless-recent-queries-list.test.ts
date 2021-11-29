@@ -94,10 +94,7 @@ describe('recent queries list', () => {
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
-      const validationSpy = spyOn(
-        NumberValue.prototype,
-        'validate'
-      ).and.callThrough();
+      const validationSpy = jest.spyOn(NumberValue.prototype, 'validate');
       engine.state.recentQueries = {...testInitialState, ...testOptions};
 
       expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();
