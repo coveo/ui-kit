@@ -1,13 +1,10 @@
 import {html} from 'lit-html';
 import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
-import ResultNumberDoc from './atomic-result-number.mdx';
 
-// TODO: Would benefit a lot from KIT-1167
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultNumber',
   'atomic-result-number',
   {field: 'size'},
-  ResultNumberDoc,
   {
     engineConfig: {
       preprocessRequest: (r) => {
