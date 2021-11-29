@@ -1,0 +1,27 @@
+lightning-icon{
+  --sds-c-icon-color-foreground-default: white;
+}
+.slds-visual-picker__figure{
+  width: 158px;
+  height: 31px;
+}
+
+.slds-form-element__label{
+  color: unset;
+}
+
+.slds-visual-picker{
+  overflow: hidden;
+}
+
+.visual-picker__hidden{
+  animation: animateHide .3s ease-in-out forwards;
+}
+
+@keyframes animateHide {
+  100% {
+    width: 0;
+    opacity: 0;
+    margin-right:0;
+  }
+}

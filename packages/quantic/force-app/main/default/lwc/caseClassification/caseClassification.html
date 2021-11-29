@@ -1,0 +1,37 @@
+<template>
+  <div style="height: 400px;">
+    <fieldset class="slds-form-element">
+      <legend class="slds-form-element__legend slds-form-element__label slds-text-heading_small slds-p-bottom_x-small">
+        {label}
+      </legend>
+      <div class="slds-form-element__control">
+        <div class="slds-grid">
+          <template for:each={suggestedOptions} for:item="option">
+            <div key={option.id} class='slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium'>
+              <input type="radio" onchange={handleChange} id={option.id} value={option.value} name={label} />
+              <label for={option.id}>
+                <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
+                  <span>
+                    <span>{option.value}</span>
+                  </span>
+                </span>
+                <span class="slds-icon_container slds-visual-picker__text-check">
+                  <lightning-icon size="xx-small" icon-name="utility:check">
+                  </lightning-icon>
+                </span>
+              </label>
+            </div>
+          </template>
+          <template if:false={isSelectVisible}>
+            <lightning-button variant="base" label={selectTitle} title={selectTitle}
+              onclick={showSelect}></lightning-button>
+          </template>
+          <template if:true={isSelectVisible}>
+            <lightning-combobox name="progress" value={_selectValue} variant="label-hidden" placeholder={slectPlaceHolder}
+              options={options} onchange={handleSelectChange}></lightning-combobox>
+          </template>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</template>
