@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.6...@coveo/atomic@1.16.7) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix line clamp max height & break word in title section ([#1530](https://github.com/coveo/ui-kit/issues/1530)) ([a6ef188](https://github.com/coveo/ui-kit/commit/a6ef18870890a9a2c6cb8f6a3a06dca553c5be69))
+
+
+
+
+
 ## [1.16.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.5...@coveo/atomic@1.16.6) (2021-11-29)
 
 **Note:** Version bump only for package @coveo/atomic
