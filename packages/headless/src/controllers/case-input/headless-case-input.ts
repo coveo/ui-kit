@@ -108,7 +108,7 @@ export function buildCaseInput(
     update(
       value: string,
       updatesToFetch?: {
-        caselassifications?: boolean;
+        caseClassifications?: boolean;
         documentSuggestions?: boolean;
       }
     ) {
@@ -120,7 +120,7 @@ export function buildCaseInput(
       );
       dispatch(logUpdateCaseField(fieldName));
 
-      updatesToFetch?.caselassifications &&
+      updatesToFetch?.caseClassifications &&
         dispatch(fetchCaseClassifications());
       updatesToFetch?.documentSuggestions &&
         dispatch(fetchDocumentSuggestions());
