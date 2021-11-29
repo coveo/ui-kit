@@ -10,7 +10,12 @@ import {
   DocumentSuggestionSection,
 } from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
-import {caseField, caseInput, documentSuggestion} from '../../app/reducers';
+import {
+  caseField,
+  caseInput,
+  configuration,
+  documentSuggestion,
+} from '../../app/reducers';
 import {Schema, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 import {loadReducerError} from '../../utils/errors';
@@ -37,6 +42,11 @@ function validateCaseInputOptions(
   validateOptions(engine, schema, options, 'buildCaseInput');
 }
 
+export interface UpdateFetchOptions {
+  caseClassifications?: boolean;
+  documentSuggestions?: boolean;
+}
+
 /**
  * The `CaseInput` controller is responsible for setting and retrieving the value of a single field from the case creation form.
  * This controller should be used for case information free-text fields.
@@ -46,16 +56,9 @@ export interface CaseInput extends Controller {
    * Sets the value of the specified field.
    *
    * @param value - The case input value to set.
+   * @param updatesToFetch - A set of flags dictating whether to fetch case assist data after updating the input value.
    */
-  update(value: string): void;
-  /**
-   * Retrieve case classifications based on case information in state.
-   */
-  fetchCaseClassifications(): void;
-  /**
-   * Retrieve document suggestions based on case information in state.
-   */
-  fetchDocumentSuggestions(): void;
+  update(value: string, updatesToFetch?: UpdateFetchOptions): void;
   /**
    * A scoped and simplified part of the headless state that is relevant to the `CaseInput` controller.
    */
@@ -102,7 +105,13 @@ export function buildCaseInput(
   return {
     ...controller,
 
-    update(value: string) {
+    update(
+      value: string,
+      updatesToFetch?: {
+        caselassifications?: boolean;
+        documentSuggestions?: boolean;
+      }
+    ) {
       dispatch(
         updateCaseInput({
           fieldName: fieldName,
@@ -110,14 +119,11 @@ export function buildCaseInput(
         })
       );
       //dispatch(logUpdateCaseField());
-    },
 
-    fetchCaseClassifications() {
-      dispatch(fetchCaseClassifications());
-    },
-
-    fetchDocumentSuggestions() {
-      dispatch(fetchDocumentSuggestions());
+      updatesToFetch?.caselassifications &&
+        dispatch(fetchCaseClassifications());
+      updatesToFetch?.documentSuggestions &&
+        dispatch(fetchDocumentSuggestions());
     },
 
     get state() {
@@ -135,6 +141,6 @@ function loadCaseInputReducers(
     CaseFieldSection &
     DocumentSuggestionSection
 > {
-  engine.addReducers({caseInput, caseField, documentSuggestion});
+  engine.addReducers({configuration, caseInput, caseField, documentSuggestion});
   return true;
 }
