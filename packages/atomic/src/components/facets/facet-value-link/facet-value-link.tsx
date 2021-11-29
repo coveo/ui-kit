@@ -18,7 +18,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
         style="text-neutral"
         part="value-link"
         onClick={() => props.onClick()}
-        class="w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
+        class="group w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
       >
