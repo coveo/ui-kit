@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.7...@coveo/atomic@1.17.0) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** line break for badge and printable uri ([#1537](https://github.com/coveo/ui-kit/issues/1537)) ([ad9a7d8](https://github.com/coveo/ui-kit/commit/ad9a7d8015813a864a6579e3f82d373355127e5a))
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
+## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.6...@coveo/atomic@1.16.7) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix line clamp max height & break word in title section ([#1530](https://github.com/coveo/ui-kit/issues/1530)) ([a6ef188](https://github.com/coveo/ui-kit/commit/a6ef18870890a9a2c6cb8f6a3a06dca553c5be69))
+
+
+
+
+
+## [1.16.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.5...@coveo/atomic@1.16.6) (2021-11-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.4...@coveo/atomic@1.16.5) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** add group class to link facet values ([#1531](https://github.com/coveo/ui-kit/issues/1531)) ([63365e3](https://github.com/coveo/ui-kit/commit/63365e30441d4e30ff7d6150fd12ce4d1e193b38))
+
+
+
+
+
 ## [1.16.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.3...@coveo/atomic@1.16.4) (2021-11-29)
 
 **Note:** Version bump only for package @coveo/atomic

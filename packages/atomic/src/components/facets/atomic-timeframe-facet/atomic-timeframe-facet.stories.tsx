@@ -1,6 +1,5 @@
 import {html} from 'lit-html';
 import defaultStory from '../../../../.storybook/default-story';
-import TimeframeFacetDoc from './atomic-timeframe-facet.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/TimeframeFacet',
@@ -8,7 +7,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   {
     unit: 'year',
   },
-  TimeframeFacetDoc,
   {
     additionalMarkup: () => html`
       <style>
