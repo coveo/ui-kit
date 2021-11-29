@@ -142,7 +142,11 @@ export default function sharedDefaultStory(
   const defaultLoader = () => console.log('Not implemented');
   const defaultDecorator = (Story: () => JSX.Element, params: {args: Args}) => {
     updateCurrentArgs(params.args);
-    return <Story />;
+    return (
+      <div>
+        <Story />
+      </div>
+    );
   };
 
   exportedStory.loaders = [defaultLoader];
