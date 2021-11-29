@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.7...@coveo/atomic@1.17.0) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** line break for badge and printable uri ([#1537](https://github.com/coveo/ui-kit/issues/1537)) ([ad9a7d8](https://github.com/coveo/ui-kit/commit/ad9a7d8015813a864a6579e3f82d373355127e5a))
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
 ## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.6...@coveo/atomic@1.16.7) (2021-11-29)
 
 
