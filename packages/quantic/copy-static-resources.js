@@ -9,26 +9,26 @@ const copy = async (source, dest) => {
 const main = async () => {
   console.info('Begin copy.');
 
-  try {
-    await mkdir(
-      './force-app/main/default/staticresources/coveoheadless/browser/',
-      {recursive: true}
-    );
-    await mkdir(
-      './force-app/main/default/staticresources/coveoheadless/definitions/',
-      {recursive: true}
-    );
-    await copy(
-      './node_modules/@coveo/headless/dist/browser/headless.js',
-      './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
-    );
-    await copy(
-      './node_modules/@coveo/headless/dist/definitions',
-      './force-app/main/default/staticresources/coveoheadless/definitions'
-    );
-  } catch (error) {
-    console.info(error);
-  }
+  await mkdir(
+    './force-app/main/default/staticresources/coveoheadless/browser/case-assist',
+    {recursive: true}
+  );
+  await mkdir(
+    './force-app/main/default/staticresources/coveoheadless/definitions/',
+    {recursive: true}
+  );
+  await copy(
+    './node_modules/@coveo/headless/dist/browser/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
+  );
+  await copy(
+    './node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/browser/case-assist/headless.js'
+  );
+  await copy(
+    './node_modules/@coveo/headless/dist/definitions',
+    './force-app/main/default/staticresources/coveoheadless/definitions'
+  );
 
   console.info('Headless copied.');
 };
