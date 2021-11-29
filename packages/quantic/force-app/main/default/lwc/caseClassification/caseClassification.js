@@ -30,7 +30,7 @@ export default class CaseClassification extends LightningElement {
    * @type {string}
    * @defaultValue `'Which product is related to your problem?'`
    */
-  @api label = 'Which product is related to your problem?'
+  @api label = 'Which product is related to your problem?';
 
   /**
    * @type {string}
@@ -91,7 +91,7 @@ export default class CaseClassification extends LightningElement {
    */
   handleSelectChange(event) {
     if (this._isSuggestionsVisible) {
-      this._hideSuggestions()
+      this._hideSuggestions();
     }
     this._value = event.target.value;
   }
@@ -111,8 +111,8 @@ export default class CaseClassification extends LightningElement {
     const suggestions = this.template.querySelectorAll('.slds-visual-picker')
     suggestions.forEach(suggestion => {
       // @ts-ignore
-      suggestion.style.width = `${suggestion.clientWidth}px`
-      suggestion.classList.add('visual-picker__hidden')
+      suggestion.style.width = `${suggestion.clientWidth}px`;
+      suggestion.classList.add('visual-picker__hidden');
     });
   }
 }
