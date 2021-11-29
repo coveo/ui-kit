@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.4...@coveo/atomic@1.16.5) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** add group class to link facet values ([#1531](https://github.com/coveo/ui-kit/issues/1531)) ([63365e3](https://github.com/coveo/ui-kit/commit/63365e30441d4e30ff7d6150fd12ce4d1e193b38))
+
+
+
+
+
 ## [1.16.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.3...@coveo/atomic@1.16.4) (2021-11-29)
 
 **Note:** Version bump only for package @coveo/atomic
