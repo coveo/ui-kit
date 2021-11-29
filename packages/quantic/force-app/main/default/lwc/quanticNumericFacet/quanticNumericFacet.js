@@ -189,7 +189,7 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.numberOfValues > 0) {
       this.initializeFacet(engine);
     }
-    if(this.withInput || (this.withInput && this.numberOfValues === 0)) {
+    if(this.withInput) {
       this.initializeFilter(engine);
     }
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
@@ -216,6 +216,7 @@ export default class QuanticNumericFacet extends LightningElement {
       }
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    
   }
 
   /**
