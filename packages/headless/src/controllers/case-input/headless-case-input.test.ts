@@ -7,10 +7,16 @@ import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
 } from '../../test/mock-engine';
-import {caseField, caseInput, documentSuggestion} from '../../app/reducers';
+import {
+  caseField,
+  caseInput,
+  configuration,
+  documentSuggestion,
+} from '../../app/reducers';
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {getCaseFieldInitialState} from '../../features/case-field/case-field-state';
 
 describe('Case Input', () => {
   let engine: MockCaseAssistEngine;
@@ -33,6 +39,7 @@ describe('Case Input', () => {
 
   it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
       caseInput,
       caseField,
       documentSuggestion,
@@ -53,6 +60,23 @@ describe('Case Input', () => {
   });
 
   describe('#update', () => {
+    const testValue = 'test input value';
+
+    beforeEach(() => {
+      engine.state = {
+        ...engine.state,
+        caseField: {
+          ...getCaseFieldInitialState(),
+          fields: {
+            ['testCaseField']: {
+              value: 'test value',
+              suggestions: [],
+            },
+          },
+        },
+      };
+    });
+
     it('dispatches a #updateCaseInput action with the passed input value', () => {
       const testValue = 'test input value';
       input.update(testValue);
@@ -62,19 +86,19 @@ describe('Case Input', () => {
       );
     });
 
-    /*it('dispatches a #logCaseFieldUpdate analytics action', () => {
+    it('dispatches a #logCaseFieldUpdate analytics action', () => {
       const testValue = 'test input value';
-      caseInput.update(testValue);
+      input.update(testValue);
 
       expect(engine.actions).toContainEqual(
-        logCaseFieldUpdate({fieldName: testFieldName, fieldValue: testValue})
+        expect.objectContaining({
+          type: 'analytics/caseAssist/case/field/update/pending',
+        })
       );
-    });*/
-  });
+    });
 
-  describe('#fetchCaseClassifications', () => {
     it('dispatches a #fetchCaseClassifications action', () => {
-      input.fetchCaseClassifications();
+      input.update(testValue, {caseClassifications: true});
 
       expect(engine.actions).toContainEqual(
         expect.objectContaining({
@@ -82,12 +106,28 @@ describe('Case Input', () => {
         })
       );
     });
-  });
 
-  describe('#fetchDocumentSuggestions', () => {
     it('dispatches a #fetchDocumentSuggestions', () => {
-      input.fetchDocumentSuggestions();
+      input.update(testValue, {documentSuggestions: true});
 
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: fetchDocumentSuggestions.pending.type,
+        })
+      );
+    });
+
+    it('dispatches both', () => {
+      input.update(testValue, {
+        caseClassifications: true,
+        documentSuggestions: true,
+      });
+
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: fetchCaseClassifications.pending.type,
+        })
+      );
       expect(engine.actions).toContainEqual(
         expect.objectContaining({
           type: fetchDocumentSuggestions.pending.type,

@@ -341,10 +341,3 @@ export interface DocumentSuggestionSection {
    */
   documentSuggestion: DocumentSuggestionState;
 }
-
-export interface DocumentSuggestionSection {
-  /**
-   * The document suggestions for case assist.
-   */
-  documentSuggestions: DocumentSuggestionState;
-}

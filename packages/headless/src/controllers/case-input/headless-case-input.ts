@@ -1,6 +1,6 @@
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
-//import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';
+import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {
   CaseAssistConfigurationSection,
@@ -118,7 +118,7 @@ export function buildCaseInput(
           fieldValue: value,
         })
       );
-      //dispatch(logUpdateCaseField());
+      dispatch(logUpdateCaseField(fieldName));
 
       updatesToFetch?.caselassifications &&
         dispatch(fetchCaseClassifications());

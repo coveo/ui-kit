@@ -12,9 +12,9 @@ export function buildMockCaseAssistState(
   return {
     configuration: getConfigurationInitialState(),
     caseAssistConfiguration: getCaseAssistConfigurationInitialState(),
-    caseFields: getCaseFieldInitialState(),
-    caseInputs: getCaseInputInitialState(),
-    documentSuggestions: getDocumentSuggestionInitialState(),
+    caseField: getCaseFieldInitialState(),
+    caseInput: getCaseInputInitialState(),
+    documentSuggestion: getDocumentSuggestionInitialState(),
     debug: getDebugInitialState(),
     version: 'unit-testing-version',
     ...config,
