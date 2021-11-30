@@ -14,7 +14,6 @@ export class MissingResultParentError extends Error {
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.
  * Allows the Stencil component to resolve the curent result in which the component is being rendered.
  *
- * In the case of
  *
  * @example
  * @ResultContext() private result!: Result;
