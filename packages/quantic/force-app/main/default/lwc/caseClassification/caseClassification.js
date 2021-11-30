@@ -1,10 +1,9 @@
 import { LightningElement, api } from 'lwc';
 
 /**
- * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category. 
+ * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
  */
 export default class CaseClassification extends LightningElement {
-
   /**
    * All the options proposed to the user to choose from.
    * @type {Array}
@@ -15,7 +14,7 @@ export default class CaseClassification extends LightningElement {
     { id: 1, label: 'Run tracking', value: 'Run tracking' },
     { id: 2, label: 'Health Metrics', value: 'Health Metrics' },
     { id: 3, label: 'Blue series', value: 'Blue series' },
-    { id: 4, label: 'Gold series', value: 'Gold Series' },
+    { id: 4, label: 'Gold series', value: 'Gold Series' }
   ];
 
   /**
@@ -43,6 +42,14 @@ export default class CaseClassification extends LightningElement {
    * @defaultValue `'Select another feature'`
    */
   @api selectTitle = 'Select another feature';
+
+  /**
+   * Tells if there is more options to show in addition to the already suggested options.
+   * @returns {boolean}
+   */
+  get isMoreOptionsVisible() {
+    return this.numberOfSuggestions < this.options.length;
+  }
 
   /**
    * Returns the suggested options to be shown as the suggestions provided by Coveo case assist.
@@ -85,9 +92,9 @@ export default class CaseClassification extends LightningElement {
     this._isSelectVisible = true;
   }
 
-  /** 
+  /**
    * Handles the input change.
-   * @returns {void} 
+   * @returns {void}
    */
   handleSelectChange(event) {
     if (this._isSuggestionsVisible) {
@@ -105,11 +112,19 @@ export default class CaseClassification extends LightningElement {
   }
 
   /**
+   * Returns the value of the case classification input.
+   * @returns {string}
+   */
+  @api get value() {
+    return this._value;
+  }
+
+  /**
    * Hide the suggested options.
    */
   _hideSuggestions() {
-    const suggestions = this.template.querySelectorAll('.slds-visual-picker')
-    suggestions.forEach(suggestion => {
+    const suggestions = this.template.querySelectorAll('.slds-visual-picker');
+    suggestions.forEach((suggestion) => {
       // @ts-ignore
       suggestion.style.width = `${suggestion.clientWidth}px`;
       suggestion.classList.add('visual-picker__hidden');

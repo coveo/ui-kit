@@ -11,9 +11,7 @@
               <input type="radio" onchange={handleChange} id={option.id} value={option.value} name={label} />
               <label for={option.id}>
                 <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
-                  <span>
-                    <span>{option.value}</span>
-                  </span>
+                    {option.value}
                 </span>
                 <span class="slds-icon_container slds-visual-picker__text-check">
                   <lightning-icon size="xx-small" icon-name="utility:check">
@@ -22,13 +20,15 @@
               </label>
             </div>
           </template>
-          <template if:false={isSelectVisible}>
-            <lightning-button variant="base" label={selectTitle} title={selectTitle}
-              onclick={showSelect}></lightning-button>
-          </template>
-          <template if:true={isSelectVisible}>
-            <lightning-combobox name="progress" value={_selectValue} variant="label-hidden" placeholder={slectPlaceHolder}
-              options={options} onchange={handleSelectChange}></lightning-combobox>
+          <template if:true={isMoreOptionsVisible}>
+            <template if:false={isSelectVisible}>
+              <lightning-button variant="base" label={selectTitle} title={selectTitle}
+                onclick={showSelect}></lightning-button>
+            </template>
+            <template if:true={isSelectVisible}>
+              <lightning-combobox name="progress" value={_selectValue} variant="label-hidden" placeholder={slectPlaceHolder}
+                options={options} onchange={handleSelectChange}></lightning-combobox>
+            </template>
           </template>
         </div>
       </div>
