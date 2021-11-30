@@ -44,3 +44,9 @@ export {
   CaseInputProps,
   buildCaseInput,
 } from './controllers/case-input/headless-case-input';
+
+export {
+  DocumentSuggestion,
+  DocumentSuggestionState,
+  buildDocumentSuggestion,
+} from './controllers/document-suggestion/headless-document-suggestion';
