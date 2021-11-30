@@ -1,9 +1,9 @@
 lightning-icon{
-  --sds-c-icon-color-foreground-default: white;
+  /* --sds-c-icon-color-foreground-default: white; */
 }
 .slds-visual-picker__figure{
-  width: 158px;
-  height: 31px;
+  width: 9.875rem;
+  height: 1.938rem;
 }
 
 .slds-form-element__label{
@@ -15,10 +15,10 @@ lightning-icon{
 }
 
 .visual-picker__hidden{
-  animation: animateHide .3s ease-in-out forwards;
+  animation: hideAnimation .3s ease-in-out forwards;
 }
 
-@keyframes animateHide {
+@keyframes hideAnimation {
   100% {
     width: 0;
     opacity: 0;

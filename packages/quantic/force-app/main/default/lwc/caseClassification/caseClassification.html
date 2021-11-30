@@ -26,7 +26,7 @@
               </lightning-button>
             </template>
             <template if:true={isSelectVisible}>
-              <lightning-combobox name="progress" value={_selectValue} variant="label-hidden"
+              <lightning-combobox name="progress" value={value} variant="label-hidden"
                 placeholder={slectPlaceHolder} options={options} onchange={handleSelectChange}></lightning-combobox>
             </template>
           </template>
