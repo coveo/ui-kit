@@ -44,18 +44,21 @@ export default class CaseClassification extends LightningElement {
   @api label = this.labels.caseClassificationLabel;
 
   /**
+   * The place holder of the combo box input. 
    * @type {string}
    * @defaultValue `'Select Product'`
    */
   @api slectPlaceHolder = this.labels.selectProduct;
 
   /**
+   * The title of the button to show the combo box button.
    * @type {string}
    * @defaultValue `'Select another feature'`
    */
   @api selectTitle = this.labels.selectAnotherFeature;
 
   /**
+   * The message to be shown when the value is missing.
    * @type {string}
    * @defaultValue `'Select an option'`
    */
