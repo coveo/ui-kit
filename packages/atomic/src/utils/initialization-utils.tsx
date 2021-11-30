@@ -90,12 +90,12 @@ export function applyFocusVisiblePolyfill(element: HTMLElement) {
 
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used on a property named `bindings`.
- * Automatically fetches the `Bindings` from the parent `atomic-search-interface` or `atomic-extarnal` components.
+ * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-extarnal` components.
  *
  * Once a component is bound, the `initialize` method is called.
- * In the event of an initialization error, the `error` property will be set and a `atomic-component-error` will be rendered.
+ * In the event of an initialization error, the `error` property will be set and an `atomic-component-error` will be rendered.
  *
- * In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`.
+ * In order for a component using this decorator to render properly, it should have an internal state bound to one of the properties from `bindings`.
  * This is possible by using the `BindStateToController` decorator.
  *
  * @example
@@ -199,15 +199,15 @@ export function InitializeBindings() {
 }
 
 /**
- * A [StencilJS property decorator](https://stenciljs.com/) to be used along with the [State decorator](https://stenciljs.com/docs/state#state-decorator).
- * Allows the Stencil component state property to automatically get updates from a [Coveo Headless controller](https://docs.coveo.com/en/headless/latest/usage/#use-headless-controllers).
+ * A [StencilJS property decorator](https://stenciljs.com/) is used together with the [State decorator](https://stenciljs.com/docs/state#state-decorator).
+ * This allows the Stencil component state property to automatically get updates from a [Coveo Headless controller](https://docs.coveo.com/en/headless/latest/usage/#use-headless-controllers).
  *
  * @example
  * @BindStateToController('pager') @State() private pagerState!: PagerState;
  *
  * For more information and examples, view the "Utilities" section of the readme.
  *
- * @param controllerProperty The controller property to subscribe to. The controller has to be created inside the `initialize` method.
+ * @param controllerProperty The controller property to subscribe to. The controller has to be created inside of the `initialize` method.
  * @param options The configurable `BindStateToController` options.
  */
 export function BindStateToController(

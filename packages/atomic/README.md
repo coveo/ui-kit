@@ -52,14 +52,14 @@ npm run cypress:test
 
 ### Stencil decorators
 
-To build custom Atomic components, it is highly recommended to use the same toolchain that we used, [Stencil](https://stenciljs.com/).
+When building custom Atomic components, it's highly recommended that you use the same toolchain used to develop the components in the Atomic library, [Stencil](https://stenciljs.com/).
 We provide decorators which are used internally with most of our components.
 
 ## InitializeBindings & BindStateToController decorators
 
-`InitializeBindings` is an utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied a property named `bindings`.
+`InitializeBindings` is a utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied a property named `bindings`.
 
-_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using the `BindStateToController`decorator along with a `State` decorator.
+_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the properties from `bindings`. This is possible by using the `BindStateToController` decorator along with a `State` decorator.
 
 Here is a complete example:
 
@@ -84,7 +84,7 @@ export class AtomicComponent implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private controller!: Controller;
 
-  // Will automatically subscribe the `controllerState` to the state of the `controller`
+  // Automatically subscribes the `controllerState` to the state of the `controller`
   @BindStateToController('controller')
   @State()
   private controllerState!: ControllerState;
@@ -102,7 +102,7 @@ export class AtomicComponent implements InitializableComponent {
 
 ## ResultContext decorator
 
-`ResultContext` is an utility that automatically fetches the `result` from the component's parent rendered `atomic-result`. To be used inside custom result template components.
+`ResultContext` is a utility that automatically fetches the `result` from the parent component's rendered `atomic-result`. This utility is used inside of custom result template components.
 
 ```typescript
 import {Component, State} from '@stencil/core';
