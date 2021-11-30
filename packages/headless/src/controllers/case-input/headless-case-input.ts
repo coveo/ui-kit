@@ -11,6 +11,7 @@ import {
 } from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
+  caseAssistConfiguration,
   caseField,
   caseInput,
   configuration,
@@ -48,8 +49,7 @@ export interface UpdateFetchOptions {
 }
 
 /**
- * The `CaseInput` controller is responsible for setting and retrieving the value of a single field from the case creation form.
- * This controller should be used for case information free-text fields.
+ * The `CaseInput` controller is responsible for setting and retrieving the value of a single field from the case creation form and optionally trigger Case Assist API requests.
  */
 export interface CaseInput extends Controller {
   /**
@@ -141,6 +141,12 @@ function loadCaseInputReducers(
     CaseFieldSection &
     DocumentSuggestionSection
 > {
-  engine.addReducers({configuration, caseInput, caseField, documentSuggestion});
+  engine.addReducers({
+    configuration,
+    caseAssistConfiguration,
+    caseInput,
+    caseField,
+    documentSuggestion,
+  });
   return true;
 }

@@ -8,6 +8,7 @@ import {
   MockCaseAssistEngine,
 } from '../../test/mock-engine';
 import {
+  caseAssistConfiguration,
   caseField,
   caseInput,
   configuration,
@@ -39,6 +40,7 @@ describe('Case Input', () => {
   it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
+      caseAssistConfiguration,
       caseInput,
       caseField,
       documentSuggestion,
@@ -81,7 +83,7 @@ describe('Case Input', () => {
       );
     });
 
-    it('dispatches a #fetchCaseClassifications action', () => {
+    it('dispatches a #fetchCaseClassifications action if requested', () => {
       input.update(testValue, {caseClassifications: true});
 
       expect(engine.actions).toContainEqual(
@@ -91,7 +93,7 @@ describe('Case Input', () => {
       );
     });
 
-    it('dispatches a #fetchDocumentSuggestions', () => {
+    it('dispatches a #fetchDocumentSuggestions if requested', () => {
       input.update(testValue, {documentSuggestions: true});
 
       expect(engine.actions).toContainEqual(
@@ -101,7 +103,7 @@ describe('Case Input', () => {
       );
     });
 
-    it('dispatches both', () => {
+    it('dispatches both if requested', () => {
       input.update(testValue, {
         caseClassifications: true,
         documentSuggestions: true,
