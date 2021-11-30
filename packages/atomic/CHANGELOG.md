@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.1...@coveo/atomic@1.17.2) (2021-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** init SafeStorage before calling it ([#1541](https://github.com/coveo/ui-kit/issues/1541)) ([deb8655](https://github.com/coveo/ui-kit/commit/deb86550ce7b98056d5674705a57a3c7ed59f31e))
+
+
+
+
+
 ## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.0...@coveo/atomic@1.17.1) (2021-11-30)
 
 **Note:** Version bump only for package @coveo/atomic
