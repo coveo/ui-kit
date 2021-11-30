@@ -14,7 +14,7 @@ export const SummarySelectors: SummarySelector = {
 
   text: () =>
     SummarySelectors.get().find('.slds-rich-text-editor__output span'),
-  range: () => SummarySelectors.text().find('b').first(),
-  total: () => SummarySelectors.text().find('b').eq(1),
-  query: () => SummarySelectors.text().find('b').eq(2),
+  range: () => SummarySelectors.text().find('.summary__range'),
+  total: () => SummarySelectors.text().find('.summary__total'),
+  query: () => SummarySelectors.text().find('.summary__query'),
 };

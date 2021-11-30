@@ -101,8 +101,8 @@ export default class QuanticSummary extends LightningElement {
       : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state?.lastResult);
     return I18nUtils.format(
       this.labels[labelName],
-      I18nUtils.getTextBold(this.range),
-      I18nUtils.getTextBold(this.total),
-      I18nUtils.getTextBold(this.query));
+      I18nUtils.getTextWithDecorator(this.range, '<b class="summary__range">', '</b>'),
+      I18nUtils.getTextWithDecorator(this.total, '<b class="summary__total">', '</b>'),
+      I18nUtils.getTextWithDecorator(this.query, '<b class="summary__query">', '</b>'));
   }
 }
