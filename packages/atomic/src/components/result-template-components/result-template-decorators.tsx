@@ -10,6 +10,17 @@ export class MissingResultParentError extends Error {
   }
 }
 
+/**
+ * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.
+ * Allows the Stencil component to resolve the curent result in which the component is being rendered.
+ *
+ * In the case of
+ *
+ * @example
+ * @ResultContext() private result!: Result;
+ *
+ * For more information and examples, view the "Utilities" section of the readme.
+ */
 export function ResultContext() {
   return (component: ComponentInterface, resultVariable: string) => {
     const {connectedCallback, render} = component;
@@ -34,12 +45,13 @@ export function ResultContext() {
 
     component.render = function () {
       if (this.error) {
-        this.host?.remove();
+        const element = getElement(this);
+        element.remove();
         console.error(
           'Result component is in error and has been removed from the DOM',
           this.error,
           this,
-          this.host
+          element
         );
         return;
       }

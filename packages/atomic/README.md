@@ -4,6 +4,8 @@
 
 A web-component library for building modern UIs interfacing with the Coveo platform. Atomic web-components are built with [Stencil](https://stenciljs.com/docs/introduction). They are self-encapsulated, composable, and light-weight.
 
+Using the library: [Coveo Atomic Library Official Documentation](https://docs.coveo.com/en/atomic/latest/).
+
 ## Getting Started
 
 Once you have cloned the repo, follow the instructions in the top-level [README.md](../../README.md) to install dependencies and link packages.
@@ -25,44 +27,6 @@ To run the unit tests for the components, run:
 ```bash
 npm test
 ```
-
-## Using the components
-
-### Script tag
-
-- Put a script tag similar to this `<script src='https://unpkg.com/my-component@0.0.1/dist/mycomponent.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### Initialization
-
-- To initialize the `atomic-search-interface` component, you have to add a script tag calling `initialize(...)` on it once the custom element is defined:
-
-```html
-<script>
-  (async () => {
-    await customElements.whenDefined('atomic-search-interface');
-    document.querySelector('atomic-search-interface').initialize({
-      accessToken: 'my_token',
-      organizationId: 'my_org',
-    });
-  })();
-</script>
-```
-
-- All other components have to be the child of an initialized `atomic-search-interface` to work properly.
-- For testing or demo purposes, adding the `sample` attribute on the `atomic-search-interface` element is sufficient and will bypass initialization.
-
-### Node Modules
-
-- Run `npm install @coveo/atomic --save`
-- Put a script tag similar to this `<script src='node_modules/@coveo/atomic/dist/mycomponent.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### In your app
-
-- Run `npm install @coveo/atomic --save`
-- Add an import to the npm packages `import '@coveo/atomic';`
-- Then you can use the element anywhere in your template, JSX, html etc
 
 ## Run Cypress for Atomic components
 
@@ -86,24 +50,41 @@ npm run cypress:test
 
 ## Utilities
 
-### The InitializeBindings & BindStateToController decorators
+### Stencil decorators
 
-The `InitializeBindings` is an utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `bindings` property directly.
+To build custom Atomic components, it is highly recommended to use the same toolchain that we used, [Stencil](https://stenciljs.com/).
+We provide decorators which are used internally with most of our components.
 
-_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using either the `BindStateToController`decorator.
+## InitializeBindings & BindStateToController decorators
 
-Here is a complete example using all these decorators:
+`InitializeBindings` is an utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied a property named `bindings`.
+
+_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using the `BindStateToController`decorator along with a `State` decorator.
+
+Here is a complete example:
 
 ```typescript
+import {Component, State} from '@stencil/core';
+import {
+  InitializeBindings,
+  InitializableComponent,
+  BindStateToController,
+  Bindings,
+} from '@coveo/atomic';
+import {
+  ControllerState,
+  Controller,
+  buildController,
+} from '@coveo/atomic/headless';
+
 @Component({
   tag: 'atomic-component',
-  shadow: true,
 })
-export class AtomicComponent {
+export class AtomicComponent implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private controller!: Controller;
 
-  // Will automatically subscribe the `controllerState` to state of the `controller`
+  // Will automatically subscribe the `controllerState` to the state of the `controller`
   @BindStateToController('controller')
   @State()
   private controllerState!: ControllerState;
@@ -115,6 +96,28 @@ export class AtomicComponent {
 
   render() {
     return [this.strings.value(), this.controllerState.value];
+  }
+}
+```
+
+## ResultContext decorator
+
+`ResultContext` is an utility that automatically fetches the `result` from the component's parent rendered `atomic-result`. To be used inside custom result template components.
+
+```typescript
+import {Component, State} from '@stencil/core';
+import {ResultContext} from '@coveo/atomic';
+
+@Component({
+  tag: 'atomic-result-component',
+})
+export class AtomicResultComponent {
+  @ResultContext() private result!: Result;
+
+  @State() public error!: Error;
+
+  public render() {
+    return this.result.title;
   }
 }
 ```
