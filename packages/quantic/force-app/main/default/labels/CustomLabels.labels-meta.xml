@@ -448,4 +448,32 @@
         <protected>false</protected>
         <shortDescription>Expand [component label]</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_CaseClassificationLabel</fullName>
+      <value>Which product is related to your problem?</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Which product is related to your problem?</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SelectProduct</fullName>
+      <value>Select Product</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Select Product</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SelectAnotherFeature</fullName>
+      <value>Select another feature</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Select another feature</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SelectOption</fullName>
+      <value>Select an option</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Select an option</shortDescription>
+    </labels>
 </CustomLabels>

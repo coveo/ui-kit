@@ -1,9 +1,20 @@
 import { LightningElement, api } from 'lwc';
+import caseClassificationLabel from '@salesforce/label/c.quantic_CaseClassificationLabel';
+import selectOption from '@salesforce/label/c.quantic_SelectOption';
+import selectAnotherFeature from '@salesforce/label/c.quantic_SelectAnotherFeature';
+import selectProduct from '@salesforce/label/c.quantic_SelectProduct';
 
 /**
  * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
  */
 export default class CaseClassification extends LightningElement {
+  labels = {
+    caseClassificationLabel,
+    selectAnotherFeature,
+    selectOption,
+    selectProduct
+  };
+
   /**
    * All the options proposed to the user to choose from.
    * @type {Array}
@@ -14,7 +25,6 @@ export default class CaseClassification extends LightningElement {
     { id: 1, label: 'Run tracking', value: 'Run tracking' },
     { id: 2, label: 'Health Metrics', value: 'Health Metrics' },
     { id: 3, label: 'Blue series', value: 'Blue series' },
-    { id: 4, label: 'Gold series', value: 'Gold Series' }
   ];
 
   /**
@@ -25,26 +35,77 @@ export default class CaseClassification extends LightningElement {
   @api numberOfSuggestions = 3;
 
   /**
+   * Tells if the case classification input is required.
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api required = false;
+
+  /**
    * The label to be shown to the user.
    * @type {string}
    * @defaultValue `'Which product is related to your problem?'`
    */
-  @api label = 'Which product is related to your problem?';
+  @api label = this.labels.caseClassificationLabel;
 
   /**
    * @type {string}
    * @defaultValue `'Select Product'`
    */
-  @api slectPlaceHolder = 'Select Product';
+  @api slectPlaceHolder = this.labels.selectProduct;
 
   /**
    * @type {string}
    * @defaultValue `'Select another feature'`
    */
-  @api selectTitle = 'Select another feature';
+  @api selectTitle = this.labels.selectAnotherFeature;
 
   /**
-   * Tells if there is more options to show in addition to the already suggested options.
+   * @type {string}
+   * @defaultValue `'Select an option'`
+   */
+  @api messageWhenValueMissing = this.labels.selectOption;
+
+  /** @type {string} */
+  _errorMessage = '';
+
+  /** @type {boolean} */
+  _isSelectVisible = false;
+
+  /** @type {string} */
+  _Value = '';
+
+  /** @type {boolean} */
+  _isSuggestionsVisible = true;
+
+  /**
+   * Tells if there is an error in the input.
+   * @returns {boolean}
+   */
+  @api get hasError() {
+    return !!this._errorMessage.length;
+  }
+
+  /**
+   * Shows an error message in the componet if there is an error.
+   * @returns {void}
+   */
+  @api reportValidity() {
+    if (this.required && !this._value) {
+      this._errorMessage = this.messageWhenValueMissing;
+    }
+  }
+
+  /**
+   * Returns the error message to be shown.
+   * @type {string}
+   */
+  get errorMessage() {
+    return this._errorMessage;
+  }
+
+  /**
+   * Tells if there is more options to show in addition to the suggested options.
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
@@ -64,7 +125,9 @@ export default class CaseClassification extends LightningElement {
    * @type {boolean}
    */
   get isSelectVisible() {
-    return this._isSelectVisible || this.numberOfSuggestions === 0;
+    return (
+      this._isSelectVisible || parseInt(this.numberOfSuggestions, 10) === 0
+    );
   }
 
   /**
@@ -75,14 +138,13 @@ export default class CaseClassification extends LightningElement {
     return this._isSuggestionsVisible;
   }
 
-  /** @type {boolean} */
-  _isSelectVisible = false;
-
-  /** @type {string} */
-  _Value = '';
-
-  /** @type {boolean} */
-  _isSuggestionsVisible = true;
+  /**
+   * Returns the CSS class of the form.
+   * @returns {string}
+   */
+  get formClass() {
+    return `slds-form-element ${this.hasError ? 'slds-has-error' : ''}`;
+  }
 
   /**
    * Shows the select input.
@@ -97,6 +159,7 @@ export default class CaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
+    this._errorMessage = '';
     if (this._isSuggestionsVisible) {
       this._hideSuggestions();
     }
@@ -108,6 +171,7 @@ export default class CaseClassification extends LightningElement {
    * @returns {void}
    */
   handleChange(event) {
+    this._errorMessage = '';
     this._value = event.target.value;
   }
 

@@ -228,4 +228,20 @@
         <label>Agrandir {{0}}</label>
         <name>quantic_Expand</name>
     </customLabels>
+    <customLabels>
+      <label>Quel produit est lié à votre problème ?</label>
+      <name>quantic_CaseClassificationLabel</name>
+    </customLabels>
+    <customLabels>
+      <label>Sélectionner un produit</label>
+      <name>quantic_SelectProduct</name>
+    </customLabels>
+    <customLabels>
+      <label>Sélectionnez une autre option</label>
+      <name>quantic_SelectAnotherFeature</name>
+    </customLabels>
+    <customLabels>
+      <label>Sélectionner une option</label>
+      <name>quantic_SelectOption</name>
+    </customLabels>
 </Translations>
