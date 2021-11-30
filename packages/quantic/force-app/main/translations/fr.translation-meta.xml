@@ -230,7 +230,7 @@
     </customLabels>
     <customLabels>
       <label>Quel produit est lié à votre problème ?</label>
-      <name>quantic_CaseClassificationLabel</name>
+      <name>quantic_CaseClassificationTitle</name>
     </customLabels>
     <customLabels>
       <label>Sélectionner un produit</label>

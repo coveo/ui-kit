@@ -449,7 +449,7 @@
         <shortDescription>Expand [component label]</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_CaseClassificationLabel</fullName>
+      <fullName>quantic_CaseClassificationTitle</fullName>
       <value>Which product is related to your problem?</value>
       <language>en_US</language>
       <protected>false</protected>

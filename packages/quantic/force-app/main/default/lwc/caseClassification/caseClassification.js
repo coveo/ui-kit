@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import caseClassificationLabel from '@salesforce/label/c.quantic_CaseClassificationLabel';
+import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 import selectAnotherFeature from '@salesforce/label/c.quantic_SelectAnotherFeature';
 import selectProduct from '@salesforce/label/c.quantic_SelectProduct';
@@ -9,7 +9,7 @@ import selectProduct from '@salesforce/label/c.quantic_SelectProduct';
  */
 export default class CaseClassification extends LightningElement {
   labels = {
-    caseClassificationLabel,
+    caseClassificationTitle,
     selectAnotherFeature,
     selectOption,
     selectProduct
@@ -41,7 +41,7 @@ export default class CaseClassification extends LightningElement {
    * @type {string}
    * @defaultValue `'Which product is related to your problem?'`
    */
-  @api label = this.labels.caseClassificationLabel;
+  @api label = this.labels.caseClassificationTitle;
 
   /**
    * The place holder of the combo box input. 
