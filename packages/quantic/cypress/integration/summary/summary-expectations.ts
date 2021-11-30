@@ -1,4 +1,5 @@
 import {should} from '../common-selectors';
+import {SearchExpectations} from '../search-expectations';
 import {SummarySelectors, SummarySelector} from './summary-selectors';
 
 function summarytExpectations(selector: SummarySelector) {
@@ -33,10 +34,13 @@ function summarytExpectations(selector: SummarySelector) {
         .contains(value)
         .logDetail(`range value should contain "${value}"`);
     },
-    totalContains: (value: string) => {
+    totalContains: (value: number) => {
       selector
         .total()
-        .contains(value)
+        .invoke('text')
+        .then((text) =>
+          expect(text).to.be.equal(new Intl.NumberFormat().format(value))
+        )
         .logDetail(`total value should contain "${value}"`);
     },
     queryContains: (value: string) => {
@@ -50,4 +54,7 @@ function summarytExpectations(selector: SummarySelector) {
 
 export const SummaryExpectations = {
   ...summarytExpectations(SummarySelectors),
+  search: {
+    ...SearchExpectations,
+  },
 };

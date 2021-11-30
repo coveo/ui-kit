@@ -1,12 +1,14 @@
-import {configure, reset} from '../../page-objects/configurator';
+import {configure} from '../../page-objects/configurator';
 import {
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../page-objects/search';
-import {scope} from '../../reporters/detailed-collector';
 import {SummaryExpectations as Expect} from './summary-expectations';
-import {ResultsPerPageActions} from '../results-per-page/results-per-page-actions';
+import {
+  setPageSizeValue,
+  setResultsPerPage,
+} from '../../page-objects/actions/action-set-results-per-page';
 
 describe('quantic-summary', () => {
   const summaryUrl = 's/quantic-summary';
@@ -44,13 +46,13 @@ describe('quantic-summary', () => {
       visitSummary(false);
 
       cy.wait(InterceptAliases.Search).then((interception) => {
-        console.log(interception);
+        Expect.displaySummary(true);
+        Expect.displayQuery(false);
+        Expect.displayRange(true);
+        Expect.rangeContains(`1-${interception.response?.body.results.length}`);
+        Expect.displayTotal(true);
+        Expect.totalContains(interception.response?.body.totalCount);
       });
-      Expect.displaySummary(true);
-      Expect.displayQuery(false);
-      Expect.displayRange(true);
-      Expect.rangeContains('1-25');
-      Expect.displayTotal(true);
     });
   });
 
@@ -74,7 +76,7 @@ describe('quantic-summary', () => {
       Expect.displayRange(true);
       Expect.rangeContains('1-1');
       Expect.displayTotal(true);
-      Expect.totalContains('1');
+      Expect.totalContains(1);
       Expect.displayQuery(true);
       Expect.queryContains(query);
     });
@@ -83,13 +85,18 @@ describe('quantic-summary', () => {
   describe('when selecting result per page', () => {
     it('should work as expected', () => {
       visitSummary();
-      ResultsPerPageActions.selectValue(2);
-      cy.wait(InterceptAliases.Search);
 
-      Expect.displaySummary(true);
-      Expect.displayRange(true);
-      Expect.rangeContains('1-25');
-      Expect.displayTotal(true);
+      setPageSizeValue(45);
+      setResultsPerPage();
+
+      cy.wait(InterceptAliases.Search).then((interception) => {
+        Expect.displaySummary(true);
+        Expect.displayQuery(false);
+        Expect.displayRange(true);
+        Expect.rangeContains(`1-${interception.response?.body.results.length}`);
+        Expect.displayTotal(true);
+        Expect.totalContains(interception.response?.body.totalCount);
+      });
     });
   });
 });

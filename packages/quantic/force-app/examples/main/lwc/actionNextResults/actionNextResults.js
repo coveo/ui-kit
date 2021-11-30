@@ -6,7 +6,7 @@ export default class ActionNextResults extends LightningElement {
 
   pager;
 
-  handleGetNextResults() {
+  handle () {
     if (this.pager) {
       this.pager.nextPage();
     } else {
