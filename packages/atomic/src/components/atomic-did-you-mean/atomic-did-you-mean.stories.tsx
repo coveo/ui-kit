@@ -1,11 +1,9 @@
 import defaultStory from '../../../.storybook/default-story';
-import DidYouMeanDoc from './atomic-did-you-mean.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/DidYouMean',
   'atomic-did-you-mean',
   {},
-  DidYouMeanDoc,
   {
     engineConfig: {
       preprocessRequest: (r) => {

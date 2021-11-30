@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.36.0...@coveo/headless@1.37.0) (2021-11-29)
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
 # [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.2...@coveo/headless@1.36.0) (2021-11-26)
 
 
