@@ -16,7 +16,6 @@ import {
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {getCaseFieldInitialState} from '../../features/case-field/case-field-state';
 
 describe('Case Input', () => {
   let engine: MockCaseAssistEngine;
@@ -61,21 +60,6 @@ describe('Case Input', () => {
 
   describe('#update', () => {
     const testValue = 'test input value';
-
-    beforeEach(() => {
-      engine.state = {
-        ...engine.state,
-        caseField: {
-          ...getCaseFieldInitialState(),
-          fields: {
-            ['testCaseField']: {
-              value: 'test value',
-              suggestions: [],
-            },
-          },
-        },
-      };
-    });
 
     it('dispatches a #updateCaseInput action with the passed input value', () => {
       const testValue = 'test input value';
