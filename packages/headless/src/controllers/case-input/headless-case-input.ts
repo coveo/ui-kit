@@ -17,8 +17,11 @@ import {
   configuration,
   documentSuggestion,
 } from '../../app/reducers';
-import {Schema, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../../utils/validate-payload';
+import {Schema} from '@coveo/bueno';
+import {
+  requiredNonEmptyString,
+  validateOptions,
+} from '../../utils/validate-payload';
 import {loadReducerError} from '../../utils/errors';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
 
@@ -35,10 +38,7 @@ function validateCaseInputOptions(
   options: Partial<CaseInputOptions> | undefined
 ) {
   const schema = new Schema<CaseInputOptions>({
-    field: new StringValue({
-      required: true,
-      emptyAllowed: false,
-    }),
+    field: requiredNonEmptyString,
   });
   validateOptions(engine, schema, options, 'buildCaseInput');
 }

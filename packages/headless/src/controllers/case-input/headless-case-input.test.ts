@@ -53,7 +53,7 @@ describe('Case Input', () => {
     );
   });
 
-  it('building a case input without specifying an empty field name throws', () => {
+  it('building a case input specifying an empty field name throws', () => {
     options.field = '';
     expect(() => initCaseInput()).toThrow(
       'Check the options of buildCaseInput'
