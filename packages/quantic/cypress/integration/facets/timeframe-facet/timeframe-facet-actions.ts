@@ -6,7 +6,11 @@ import {
 function timeframeFacetActions(selector: TimeframeFacetSelector) {
   return {
     selectValue: (value: string) =>
-      selector.valueLabel().contains(value).click(),
+      selector
+        .valueLabel()
+        .contains(value)
+        .click()
+        .logAction(`when selecting "${value}" in the time frame facet`),
 
     clearFilter: () => selector.clearFilterButton().click(),
 

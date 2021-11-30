@@ -419,3 +419,41 @@ export class RelativeDateFormatter {
     return I18nUtils.format(label, relativeDate.amount);
   }
 }
+
+export class Store {
+
+  static facetTypes = {
+    FACETS: 'facets' , 
+    NUMERICFACETS: 'numericFacets' , 
+    DATEFACETS: 'dateFacets' , 
+    CATEGORYFACETS: 'categoryFacets' 
+  }
+  static initialize() {
+    return { 
+      state : { 
+        facets: {},
+        numericFacets: {},
+        dateFacets: {},
+        categoryFacets: {},
+      }}
+  }
+  /**
+   * @param {Record<String, unknown>} store
+   * @param {string} facetType
+   * @param {{ label?: string; facetId: any; format?: Function;}} data
+   */
+  static registerFacetToStore(store, facetType, data) {
+    if(store?.state[facetType][data.facetId]) {
+      return;
+    }
+    store.state[facetType][data.facetId] = data;
+  }
+
+  /**
+   * @param {Record<String, unknown>} store
+   * @param {string} facetType
+   */
+  static getFromStore(store, facetType) {
+    return store.state[facetType];
+  }
+}
