@@ -1,5 +1,12 @@
 import {Schema} from '@coveo/bueno';
-import {CaseAssistEngine, loadCaseFieldActions} from '../../case-assist.index';
+import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
+import {
+  caseField,
+  caseInput,
+  configuration,
+  documentSuggestion,
+} from '../../app/reducers';
 import {
   logClassificationClick,
   logUpdateCaseField,
@@ -9,9 +16,20 @@ import {
   registerCaseField,
   updateCaseField,
 } from '../../features/case-field/case-field-actions';
+import {CaseFieldSuggestion} from '../../features/case-field/case-field-state';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {
+  CaseAssistConfigurationSection,
+  CaseFieldSection,
+  CaseInputSection,
+  ConfigurationSection,
+  DocumentSuggestionSection,
+} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
-import {nonEmptyString, validateOptions} from '../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validateOptions,
+} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
 export interface CaseFieldProps {
@@ -19,22 +37,36 @@ export interface CaseFieldProps {
 }
 
 const optionsSchema = new Schema({
-  fieldName: nonEmptyString,
+  field: requiredNonEmptyString,
 });
 
 export interface CaseFieldOptions {
-  fieldName: string;
+  field: string;
+}
+
+export interface CaseFieldState {
+  loading: boolean;
+  error: CaseAssistAPIErrorStatusResponse | null;
+  value: string;
+  suggestions: CaseFieldSuggestion[];
 }
 
 export interface CaseField extends Controller {
-  set(value: string): void;
+  update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions): void;
+
+  state: CaseFieldState;
+}
+
+export interface UpdateCaseFieldFetchOptions {
+  caseClassifications?: boolean;
+  documentSuggestions?: boolean;
 }
 
 export function buildCaseField(
   engine: CaseAssistEngine,
   props: CaseFieldProps = {}
 ): CaseField {
-  if (!loadCaseFieldActions(engine)) {
+  if (!loadCaseFieldReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -50,7 +82,7 @@ export function buildCaseField(
 
   dispatch(
     registerCaseField({
-      fieldName: options.fieldName,
+      fieldName: options.field,
       fieldValue: '',
     })
   );
@@ -66,7 +98,7 @@ export function buildCaseField(
       const loading = getState().caseField?.status?.loading ?? false;
       const error = getState().caseField?.status?.error ?? null;
 
-      const field = getState().caseField?.fields?.[options.fieldName];
+      const field = getState().caseField?.fields?.[options.field];
       const value = field?.value ?? '';
       const suggestions = field?.suggestions ?? [];
 
@@ -78,13 +110,9 @@ export function buildCaseField(
       };
     },
 
-    set(
-      value: string,
-      shouldFetchDocumentSuggestions = false,
-      shouldFetchCaseClassifications = false
-    ) {
+    update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions) {
       const suggestionId = getState().caseField?.fields?.[
-        options.fieldName
+        options.field
       ]?.suggestions?.find((s) => s.value === value)?.id;
 
       if (suggestionId) {
@@ -93,19 +121,30 @@ export function buildCaseField(
 
       dispatch(
         updateCaseField({
-          fieldName: options.fieldName,
+          fieldName: options.field,
           fieldValue: value,
         })
       );
 
-      dispatch(logUpdateCaseField(options.fieldName));
+      dispatch(logUpdateCaseField(options.field));
 
-      if (shouldFetchDocumentSuggestions) {
-        dispatch(fetchDocumentSuggestions());
-      }
-      if (shouldFetchCaseClassifications) {
+      updatesToFetch?.caseClassifications &&
         dispatch(fetchCaseClassifications());
-      }
+      updatesToFetch?.documentSuggestions &&
+        dispatch(fetchDocumentSuggestions());
     },
   };
+}
+
+function loadCaseFieldReducers(
+  engine: CaseAssistEngine
+): engine is CaseAssistEngine<
+  ConfigurationSection &
+    CaseAssistConfigurationSection &
+    CaseInputSection &
+    CaseFieldSection &
+    DocumentSuggestionSection
+> {
+  engine.addReducers({configuration, caseInput, caseField, documentSuggestion});
+  return true;
 }

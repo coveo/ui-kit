@@ -2,6 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
+  requiredEmptyAllowedString,
 } from '../../utils/validate-payload';
 
 export interface SetCaseInputActionCreatorPayload {
@@ -23,6 +24,6 @@ export const updateCaseInput = createAction(
   (payload: SetCaseInputActionCreatorPayload) =>
     validatePayload(payload, {
       fieldName: requiredNonEmptyString,
-      fieldValue: requiredNonEmptyString,
+      fieldValue: requiredEmptyAllowedString,
     })
 );
