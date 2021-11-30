@@ -1,0 +1,121 @@
+import {Component, Context, ContextType} from 'react';
+import {
+  buildFacet,
+  Facet as HeadlessFacet,
+  FacetProps,
+  FacetState,
+  SearchEngine,
+} from '@coveo/headless';
+import {FacetSearch} from './facet-search';
+import {AppContext} from '../../context/engine';
+import {WithController, WithFacet} from './facet-hook';
+
+export class FacetWithSpecificDecorator extends Component<
+  FacetProps,
+  FacetState
+> {
+  static contextType = AppContext;
+  context!: ContextType<Context<{engine: SearchEngine}>>;
+
+  @WithFacet()
+  controller!: HeadlessFacet;
+
+  render() {
+    if (!this.state) {
+      return null;
+    }
+
+    if (!this.state.values.length) {
+      return <div>No facet values</div>;
+    }
+
+    return (
+      <ul>
+        <li>
+          <FacetSearch
+            controller={this.controller.facetSearch}
+            facetState={this.state.facetSearch}
+            isValueSelected={(facetSearchValue) =>
+              !!this.state.values.find(
+                (facetValue) =>
+                  facetValue.value === facetSearchValue.displayValue &&
+                  this.controller.isValueSelected(facetValue)
+              )
+            }
+          />
+        </li>
+        <li>
+          <ul>
+            {this.state.values.map((value) => (
+              <li key={value.value}>
+                <input
+                  type="checkbox"
+                  checked={this.controller.isValueSelected(value)}
+                  onChange={() => this.controller.toggleSelect(value)}
+                  disabled={this.state.isLoading}
+                />
+                {value.value} ({value.numberOfResults} results)
+              </li>
+            ))}
+          </ul>
+        </li>
+      </ul>
+    );
+  }
+}
+
+export class FacetWithGenericDecorator extends Component<
+  FacetProps,
+  FacetState
+> {
+  static contextType = AppContext;
+  context!: ContextType<Context<{engine: SearchEngine}>>;
+
+  @WithController<HeadlessFacet, FacetProps, FacetState>((cmp) =>
+    buildFacet(cmp.context.engine, cmp.props)
+  )
+  controller!: HeadlessFacet;
+
+  render() {
+    if (!this.state) {
+      return null;
+    }
+
+    if (!this.state.values.length) {
+      return <div>No facet values</div>;
+    }
+
+    return (
+      <ul>
+        <li>
+          <FacetSearch
+            controller={this.controller.facetSearch}
+            facetState={this.state.facetSearch}
+            isValueSelected={(facetSearchValue) =>
+              !!this.state.values.find(
+                (facetValue) =>
+                  facetValue.value === facetSearchValue.displayValue &&
+                  this.controller.isValueSelected(facetValue)
+              )
+            }
+          />
+        </li>
+        <li>
+          <ul>
+            {this.state.values.map((value) => (
+              <li key={value.value}>
+                <input
+                  type="checkbox"
+                  checked={this.controller.isValueSelected(value)}
+                  onChange={() => this.controller.toggleSelect(value)}
+                  disabled={this.state.isLoading}
+                />
+                {value.value} ({value.numberOfResults} results)
+              </li>
+            ))}
+          </ul>
+        </li>
+      </ul>
+    );
+  }
+}

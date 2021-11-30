@@ -4,6 +4,7 @@ import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
 import {RecommendationPage} from './pages/RecommendationPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {SamlPage} from './pages/SamlPage';
+import {PageWithHooks} from './pages/PageWithHooks';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
@@ -53,6 +54,9 @@ function App(props: SearchPageProps) {
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />
+          </Route>
+          <Route path="/hooks">
+            <PageWithHooks />
           </Route>
           <Route path="/">
             <SearchPage {...props} />
