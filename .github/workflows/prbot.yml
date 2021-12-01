@@ -13,12 +13,15 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
-      - run: npm ci
-      - run: npx lerna bootstrap --ci
+      - run: |
+          npm ci
+          npx lerna bootstrap --ci
       - run: npm run build
       - uses: actions/upload-artifact@v2
         with:
-          path: ${{ github.workspace }}
+          path: |
+            ${{ github.workspace }}
+            !**/node_modules
           retention-days: 1
   lint-check:
     name: "Check with linter"
@@ -50,6 +53,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
+      - run: npm ci
       - uses: actions/download-artifact@v2
         with:
           path: ${{ github.workspace }}
@@ -68,6 +72,9 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           path: ${{ github.workspace }}
+      - run: |
+          npm ci
+          npx lerna bootstrap --ci
       - run: npm run doc:generate
   unit-test:
     name: "Run unit test"
@@ -83,4 +90,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           path: ${{ github.workspace }}
+      - run: |
+          npm ci
+          npx lerna bootstrap --ci
       - run: npm test
