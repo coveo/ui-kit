@@ -25,7 +25,7 @@
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
     "build": "npm run build:prod --",
-    "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
+    "build:prod": "npm run typedefinitions && node esbuild.js",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
