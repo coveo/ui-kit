@@ -1,5 +1,4 @@
 import {should} from '../common-selectors';
-import {SearchExpectations} from '../search-expectations';
 import {SummarySelectors, SummarySelector} from './summary-selectors';
 
 function summarytExpectations(selector: SummarySelector) {
@@ -54,7 +53,4 @@ function summarytExpectations(selector: SummarySelector) {
 
 export const SummaryExpectations = {
   ...summarytExpectations(SummarySelectors),
-  search: {
-    ...SearchExpectations,
-  },
 };
