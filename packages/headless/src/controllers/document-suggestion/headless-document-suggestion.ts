@@ -35,7 +35,7 @@ export interface DocumentSuggestion extends Controller {
 
 export interface DocumentSuggestionState {
   /**
-   * Whether suggestions are being retrieved for the field.
+   * Whether document suggestions are being retrieved.
    */
   loading: boolean;
   /**
