@@ -35,7 +35,7 @@ export interface DocumentSuggestion extends Controller {
 
 export interface DocumentSuggestionState {
   /**
-   * `true` if a request is in progress and `false` otherwise.
+   * Whether suggestions are being retrieved for the field.
    */
   loading: boolean;
   /**
