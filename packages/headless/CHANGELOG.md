@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.37.1...@coveo/headless@1.37.2) (2021-11-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.37.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.37.0...@coveo/headless@1.37.1) (2021-11-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.36.0...@coveo/headless@1.37.0) (2021-11-29)
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
+# [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.2...@coveo/headless@1.36.0) (2021-11-26)
+
+
+### Features
+
+* **headless:** added document suggestion actions ([#1522](https://github.com/coveo/ui-kit/issues/1522)) ([dc7ac1b](https://github.com/coveo/ui-kit/commit/dc7ac1b525ab70abed16070c8d73985f141b46b6))
+
+
+
+
+
+## [1.35.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.1...@coveo/headless@1.35.2) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.35.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.35.0...@coveo/headless@1.35.1) (2021-11-26)
+
+
+### Bug Fixes
+
+* **headless:** renamed interface to match state ([#1527](https://github.com/coveo/ui-kit/issues/1527)) ([1c702dc](https://github.com/coveo/ui-kit/commit/1c702dc1036eec4bec1829ddae1706800b7d2a6c))
+
+
+
+
+
+# [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.34.0...@coveo/headless@1.35.0) (2021-11-25)
+
+
+### Features
+
+* **auth:** add auth package ([#1514](https://github.com/coveo/ui-kit/issues/1514)) ([a977c62](https://github.com/coveo/ui-kit/commit/a977c62b7f7086746096d1930a4ddab044d70d41))
+
+
+
+
+
+# [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.33.2...@coveo/headless@1.34.0) (2021-11-25)
+
+
+### Features
+
+* **headless:** added case classification-related actions ([#1505](https://github.com/coveo/ui-kit/issues/1505)) ([d596848](https://github.com/coveo/ui-kit/commit/d596848cf8a38f7618f09a15e4996333fca77dd8))
+
+
+
+
+
+## [1.33.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.33.1...@coveo/headless@1.33.2) (2021-11-25)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.33.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.33.0...@coveo/headless@1.33.1) (2021-11-23)
 
 **Note:** Version bump only for package @coveo/headless

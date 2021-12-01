@@ -60,6 +60,10 @@ export const CodeSamplePanel = () => {
         position: 'relative',
       }}
     >
+      <p style={{fontWeight: 'bold', fontSize: '1rem'}}>
+        Modify Controls and Shadow Parts to see the changes reflected in this
+        code sample.
+      </p>
       <MonacoEditor
         width="100%"
         height="800px"
@@ -95,7 +99,7 @@ export const CodeSamplePanel = () => {
       <button
         style={{
           position: 'absolute',
-          top: '20px',
+          top: '70px',
           right: '20px',
           backgroundColor: 'white',
           border: '1px solid rgba(0,0,0,0.1)',

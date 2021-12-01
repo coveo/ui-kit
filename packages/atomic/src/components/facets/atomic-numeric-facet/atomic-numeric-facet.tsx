@@ -382,9 +382,12 @@ export class AtomicNumericFacet
     return this.shouldRenderInput || this.shouldRenderValues;
   }
 
+  private get hasInputRange() {
+    return !!this.filterState?.range;
+  }
+
   private get shouldRenderValues() {
-    const hasInputRange = !!this.filterState?.range;
-    return !hasInputRange && !!this.valuesToRender.length;
+    return !this.hasInputRange && !!this.valuesToRender.length;
   }
 
   private get shouldRenderInput() {
@@ -392,7 +395,19 @@ export class AtomicNumericFacet
       return false;
     }
 
-    return this.searchStatusState.hasResults || !!this.filterState?.range;
+    if (this.hasInputRange) {
+      return true;
+    }
+
+    if (!this.searchStatusState.hasResults) {
+      return false;
+    }
+
+    if (!this.valuesToRender.length && this.numberOfValues > 0) {
+      return false;
+    }
+
+    return true;
   }
 
   public render() {

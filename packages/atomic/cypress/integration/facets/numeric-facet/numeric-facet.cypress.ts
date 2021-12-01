@@ -523,6 +523,54 @@ describe('Numeric Facet V1 Test Suites', () => {
           );
         });
       });
+
+      describe('verify visibility of range input', () => {
+        const activeInput = `nf[${field}_input]=0..1000`;
+
+        const visibilitySetup = () =>
+          new TestFixture().with(
+            addNumericFacet({field, label, 'with-input': 'integer'})
+          );
+
+        describe('with no query results', () => {
+          const baseSetup = () => visibilitySetup().withNoResults();
+
+          before(() => {
+            baseSetup().init();
+          });
+
+          NumericFacetAssertions.assertDisplayRangeInput(false);
+
+          describe('with active input', () => {
+            before(() => {
+              baseSetup().withHash(activeInput).init();
+            });
+            NumericFacetAssertions.assertDisplayRangeInput(true);
+          });
+        });
+
+        describe('with no facet results', () => {
+          const baseSetup = () =>
+            visibilitySetup().withCustomResponse((r) => {
+              const idx = r.facets.findIndex((facet) => facet.field === field);
+              r.facets[idx].values = [];
+            });
+
+          before(() => {
+            baseSetup().init();
+          });
+
+          NumericFacetAssertions.assertDisplayRangeInput(false);
+
+          describe('with active input', () => {
+            before(() => {
+              baseSetup().withHash(activeInput).init();
+            });
+
+            NumericFacetAssertions.assertDisplayRangeInput(true);
+          });
+        });
+      });
     });
 
     describe('with a selected path in the URL', () => {

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.33.2...@coveo/bueno@0.34.0) (2021-11-29)
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
+## [0.33.2](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.33.1...@coveo/bueno@0.33.2) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+## [0.33.1](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.33.0...@coveo/bueno@0.33.1) (2021-11-25)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
 # 0.33.0 (2021-11-22)
 
 

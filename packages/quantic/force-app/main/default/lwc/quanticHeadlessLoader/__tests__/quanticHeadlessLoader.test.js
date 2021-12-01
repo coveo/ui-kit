@@ -10,10 +10,17 @@ import {
   registerToStore,
   getFromStore,
 } from '../quanticHeadlessLoader';
-import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
 import { Deferred } from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
+  const CoveoHeadlessStub = {
+    buildSearchEngine: function() {
+      return {
+        executeFirstSearch: jest.fn(() => {})
+      }  
+    }
+  }
+
   const testOptions = {
     configuration: {
       organizationId: 'testOrganization',

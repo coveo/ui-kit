@@ -136,7 +136,7 @@ export const toggleSelectCategoryFacetValue = createAction(
       validateCategoryFacetValue(payload.selection);
       return {payload, error: null};
     } catch (error) {
-      return {payload, error: serializeSchemaValidationError(error)};
+      return {payload, error: serializeSchemaValidationError(error as Error)};
     }
   }
 );
