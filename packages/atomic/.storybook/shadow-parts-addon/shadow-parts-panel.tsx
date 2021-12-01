@@ -45,6 +45,7 @@ export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
                 </button>
                 <textarea
                   style={{display: isOpened ? 'block' : 'none'}}
+                  placeholder="Examples: &#10;background-color: inherit;&#10;color: blue;&#10;font-weight: bold;"
                   onChange={(v) => {
                     updateArgs({
                       [`${ADDON_PARAMETER_KEY}:${part.name}`]: v.target.value,

@@ -8,6 +8,7 @@ import {
   MockCaseAssistEngine,
 } from '../../test/mock-engine';
 import {
+  caseAssistConfiguration,
   caseField,
   caseInput,
   configuration,
@@ -16,7 +17,6 @@ import {
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {getCaseFieldInitialState} from '../../features/case-field/case-field-state';
 
 describe('Case Input', () => {
   let engine: MockCaseAssistEngine;
@@ -40,6 +40,7 @@ describe('Case Input', () => {
   it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
+      caseAssistConfiguration,
       caseInput,
       caseField,
       documentSuggestion,
@@ -52,7 +53,7 @@ describe('Case Input', () => {
     );
   });
 
-  it('building a case input without specifying an empty field name throws', () => {
+  it('building a case input specifying an empty field name throws', () => {
     options.field = '';
     expect(() => initCaseInput()).toThrow(
       'Check the options of buildCaseInput'
@@ -61,21 +62,6 @@ describe('Case Input', () => {
 
   describe('#update', () => {
     const testValue = 'test input value';
-
-    beforeEach(() => {
-      engine.state = {
-        ...engine.state,
-        caseField: {
-          ...getCaseFieldInitialState(),
-          fields: {
-            ['testCaseField']: {
-              value: 'test value',
-              suggestions: [],
-            },
-          },
-        },
-      };
-    });
 
     it('dispatches a #updateCaseInput action with the passed input value', () => {
       const testValue = 'test input value';
@@ -97,7 +83,7 @@ describe('Case Input', () => {
       );
     });
 
-    it('dispatches a #fetchCaseClassifications action', () => {
+    it('dispatches a #fetchCaseClassifications action if requested', () => {
       input.update(testValue, {caseClassifications: true});
 
       expect(engine.actions).toContainEqual(
@@ -107,7 +93,7 @@ describe('Case Input', () => {
       );
     });
 
-    it('dispatches a #fetchDocumentSuggestions', () => {
+    it('dispatches a #fetchDocumentSuggestions if requested', () => {
       input.update(testValue, {documentSuggestions: true});
 
       expect(engine.actions).toContainEqual(
@@ -117,7 +103,7 @@ describe('Case Input', () => {
       );
     });
 
-    it('dispatches both', () => {
+    it('dispatches both if requested', () => {
       input.update(testValue, {
         caseClassifications: true,
         documentSuggestions: true,

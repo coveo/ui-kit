@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.1.1...@coveo/auth@1.1.2) (2021-11-30)
+
+
+### Bug Fixes
+
+* **auth:** correct installation command in readme ([#1536](https://github.com/coveo/ui-kit/issues/1536)) ([f54a20d](https://github.com/coveo/ui-kit/commit/f54a20df00778eb7faa3ae1489ab17fdfe39794a))
+
+
+
+
+
 ## [1.1.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.1.0...@coveo/auth@1.1.1) (2021-11-26)
 
 

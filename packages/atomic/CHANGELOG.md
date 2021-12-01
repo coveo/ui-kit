@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.0...@coveo/atomic@1.18.1) (2021-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.2...@coveo/atomic@1.18.0) (2021-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** fixed list root image classes ([#1534](https://github.com/coveo/ui-kit/issues/1534)) ([c92949b](https://github.com/coveo/ui-kit/commit/c92949bcd8d1b0784febf56ca6493e8b4461a8a8))
+
+
+### Features
+
+* **atomic:** expose & document Stencil decorators ([#1544](https://github.com/coveo/ui-kit/issues/1544)) ([1caded2](https://github.com/coveo/ui-kit/commit/1caded253146a16c4399a2beea0bd4f1071bd405))
+
+
+
+
+
+## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.1...@coveo/atomic@1.17.2) (2021-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** init SafeStorage before calling it ([#1541](https://github.com/coveo/ui-kit/issues/1541)) ([deb8655](https://github.com/coveo/ui-kit/commit/deb86550ce7b98056d5674705a57a3c7ed59f31e))
+
+
+
+
+
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.0...@coveo/atomic@1.17.1) (2021-11-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.7...@coveo/atomic@1.17.0) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** line break for badge and printable uri ([#1537](https://github.com/coveo/ui-kit/issues/1537)) ([ad9a7d8](https://github.com/coveo/ui-kit/commit/ad9a7d8015813a864a6579e3f82d373355127e5a))
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
 ## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.6...@coveo/atomic@1.16.7) (2021-11-29)
 
 
