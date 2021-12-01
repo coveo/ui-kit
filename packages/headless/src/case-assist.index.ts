@@ -46,7 +46,7 @@ export {
 } from './controllers/case-input/headless-case-input';
 
 export {
-  DocumentSuggestion,
-  DocumentSuggestionState,
-  buildDocumentSuggestion,
-} from './controllers/document-suggestion/headless-document-suggestion';
+  DocumentSuggestionList as DocumentSuggestion,
+  DocumentSuggestionListState as DocumentSuggestionState,
+  buildDocumentSuggestionList as buildDocumentSuggestion,
+} from './controllers/document-suggestion-list/headless-document-suggestion-list';

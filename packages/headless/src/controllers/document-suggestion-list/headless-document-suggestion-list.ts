@@ -17,12 +17,12 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
-import {DocumentSuggestion as Document} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+import {DocumentSuggestion} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 
 /**
  * The `DocumentSuggestion` controller is responsible for getting document suggestions using case information present in the state.
  */
-export interface DocumentSuggestion extends Controller {
+export interface DocumentSuggestionList extends Controller {
   /**
    * Fetches document suggestions using case information present in the state.
    */
@@ -30,10 +30,10 @@ export interface DocumentSuggestion extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `DocumentSuggestion` controller.
    */
-  state: DocumentSuggestionState;
+  state: DocumentSuggestionListState;
 }
 
-export interface DocumentSuggestionState {
+export interface DocumentSuggestionListState {
   /**
    * Whether document suggestions are being retrieved.
    */
@@ -45,19 +45,19 @@ export interface DocumentSuggestionState {
   /**
    * The retrieved document suggestions.
    */
-  documents: Document[];
+  documents: DocumentSuggestion[];
 }
 
 /**
- * Creates a `Document Suggestion` controller instance.
+ * Creates a `Document Suggestion List` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `DocumentSuggestion` controller instance.
+ * @returns A `DocumentSuggestionList` controller instance.
  */
-export function buildDocumentSuggestion(
+export function buildDocumentSuggestionList(
   engine: CaseAssistEngine
-): DocumentSuggestion {
-  if (!loadDocumentSuggestionReducers(engine)) {
+): DocumentSuggestionList {
+  if (!loadDocumentSuggestionListReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -83,7 +83,7 @@ export function buildDocumentSuggestion(
   };
 }
 
-function loadDocumentSuggestionReducers(
+function loadDocumentSuggestionListReducers(
   engine: CaseAssistEngine
 ): engine is CaseAssistEngine<
   ConfigurationSection &

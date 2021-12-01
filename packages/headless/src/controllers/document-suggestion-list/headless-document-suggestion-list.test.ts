@@ -1,7 +1,7 @@
 import {
-  DocumentSuggestion,
-  buildDocumentSuggestion,
-} from './headless-document-suggestion';
+  DocumentSuggestionList,
+  buildDocumentSuggestionList,
+} from './headless-document-suggestion-list';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
@@ -16,12 +16,12 @@ import {
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
 import {getDocumentSuggestionInitialState} from '../../features/document-suggestion/document-suggestion-state';
 
-describe('Document Suggestion', () => {
+describe('Document Suggestion List', () => {
   let engine: MockCaseAssistEngine;
-  let docSuggestion: DocumentSuggestion;
+  let docSuggestion: DocumentSuggestionList;
 
   function initDocumentSuggestion() {
-    docSuggestion = buildDocumentSuggestion(engine);
+    docSuggestion = buildDocumentSuggestionList(engine);
   }
 
   beforeEach(() => {
