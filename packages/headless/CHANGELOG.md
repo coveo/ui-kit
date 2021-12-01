@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.38.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.38.0...@coveo/headless@1.38.1) (2021-12-01)
+
+
+### Bug Fixes
+
+* **headless:** always build external builds locally ([#1546](https://github.com/coveo/ui-kit/issues/1546)) ([39f442a](https://github.com/coveo/ui-kit/commit/39f442a729cda7781fc573651f06de8489d4b561))
+
+
+
+
+
 # [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.37.2...@coveo/headless@1.38.0) (2021-12-01)
 
 
