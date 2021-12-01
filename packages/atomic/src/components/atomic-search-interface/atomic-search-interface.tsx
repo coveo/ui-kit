@@ -310,7 +310,7 @@ export class AtomicSearchInterface {
       ? existingMiddleware(event, payload)
       : payload;
     if (out.customData) {
-      out.customData.CoveoAtomicVersion = getAtomicEnvironment().version;
+      out.customData.coveoAtomicVersion = getAtomicEnvironment().version;
     }
     return out;
   }
