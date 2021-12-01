@@ -15,16 +15,15 @@ export interface Controller {
 export function buildController<T extends object>(
   engine: CoreEngine<T>
 ): Controller {
-  const prevState: Map<Symbol, string> = new Map();
+  let prevState: string;
+  const listeners: Map<Symbol, () => void> = new Map();
+  const hasNoListeners = () => listeners.size === 0;
 
-  const hasStateChanged = (
-    currentState: Record<string, unknown>,
-    symbol: Symbol
-  ): boolean => {
+  const hasStateChanged = (currentState: Record<string, unknown>): boolean => {
     try {
       const stringifiedState = JSON.stringify(currentState);
-      const hasChanged = prevState.get(symbol) !== stringifiedState;
-      prevState.set(symbol, stringifiedState);
+      const hasChanged = prevState !== stringifiedState;
+      prevState = stringifiedState;
       return hasChanged;
     } catch (e) {
       console.warn(
@@ -39,15 +38,23 @@ export function buildController<T extends object>(
     subscribe(listener: () => void) {
       listener();
       const symbol = Symbol();
-      prevState.set(symbol, JSON.stringify(this.state));
-      const unsubscribe = engine.subscribe(() => {
-        if (hasStateChanged(this.state, symbol)) {
-          listener();
-        }
-      });
+      let unsubscribe: () => void;
+
+      if (hasNoListeners()) {
+        prevState = JSON.stringify(this.state);
+        unsubscribe = engine.subscribe(() => {
+          if (hasStateChanged(this.state)) {
+            listeners.forEach((listener) => listener());
+          }
+        });
+      }
+      listeners.set(symbol, listener);
+
       return () => {
-        prevState.delete(symbol);
-        unsubscribe();
+        listeners.delete(symbol);
+        if (hasNoListeners()) {
+          unsubscribe && unsubscribe();
+        }
       };
     },
 
