@@ -1,4 +1,5 @@
 import {
+  caseAssistConfiguration,
   caseField,
   caseInput,
   configuration,
@@ -43,6 +44,7 @@ describe('Case Field', () => {
   it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toBeCalledWith({
       configuration,
+      caseAssistConfiguration,
       caseInput,
       caseField,
       documentSuggestion,

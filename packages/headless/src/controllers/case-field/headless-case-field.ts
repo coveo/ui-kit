@@ -2,6 +2,7 @@ import {Schema} from '@coveo/bueno';
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {
+  caseAssistConfiguration,
   caseField,
   caseInput,
   configuration,
@@ -176,6 +177,12 @@ function loadCaseFieldReducers(
     CaseFieldSection &
     DocumentSuggestionSection
 > {
-  engine.addReducers({configuration, caseInput, caseField, documentSuggestion});
+  engine.addReducers({
+    configuration,
+    caseAssistConfiguration,
+    caseInput,
+    caseField,
+    documentSuggestion,
+  });
   return true;
 }
