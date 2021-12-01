@@ -29,13 +29,13 @@ To build a single project for production (for instance, the `product-listing` pa
 npm run build  -- --filter product-listing
 ```
 
-To start all projects in development (you should run `npm run build` at least once first), run:
+To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm start
+npm start -- --scope @coveo/quantic 
 ```
 
-To start Atomic & Headless simultaneously in development, run:
+To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
 npm run dev
