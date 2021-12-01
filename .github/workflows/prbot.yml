@@ -20,9 +20,17 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           path: |
-            ${{ github.workspace }}
-            !**/node_modules
+            packages/bueno/dist
+            packages/headless/dist
+            packages/atomic/dist
+            packages/atomic/docs
+            packages/atomic/headless
+            packages/atomic/loader
+            packages/atomic/storybook-static
+            packages/atomic/www
+            packages/headless-react/build
           retention-days: 1
+      - run: npm run pr:report
   lint-check:
     name: "Check with linter"
     needs: build
@@ -40,24 +48,6 @@ jobs:
         with:
           path: ${{ github.workspace }}
       - run: npm run lint:check
-  report-bundle-size:
-    name: "Report bundle size"
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
-      - run: npm ci
-      - uses: actions/download-artifact@v2
-        with:
-          path: ${{ github.workspace }}
-      - run: npm run pr:report
   generate-doc:
     name: "Generate doc"
     needs: build
