@@ -20,16 +20,16 @@ jobs:
           npx lerna bootstrap --ci
       - run: npm run build
       - run: |
-        tar -czvf build.tar.gz \
-          packages/bueno/dist \
-          packages/headless/dist \
-          packages/atomic/dist \
-          packages/atomic/docs \
-          packages/atomic/headless \
-          packages/atomic/loader \
-          packages/atomic/storybook-static \
-          packages/atomic/www \
-          packages/headless-react/build
+          tar -czvf build.tar.gz \
+            packages/bueno/dist \
+            packages/headless/dist \
+            packages/atomic/dist \
+            packages/atomic/docs \
+            packages/atomic/headless \
+            packages/atomic/loader \
+            packages/atomic/storybook-static \
+            packages/atomic/www \
+            packages/headless-react/build
       - uses: actions/upload-artifact@v2
         with:
           path: build.tar.gz
