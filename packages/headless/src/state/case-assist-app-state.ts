@@ -5,6 +5,7 @@ import {
   ConfigurationSection,
   DebugSection,
   DocumentSuggestionSection,
+  VersionSection,
 } from './state-sections';
 
 export type CaseAssistAppState = ConfigurationSection &
@@ -12,4 +13,5 @@ export type CaseAssistAppState = ConfigurationSection &
   CaseInputSection &
   CaseFieldSection &
   DocumentSuggestionSection &
+  VersionSection &
   DebugSection;
