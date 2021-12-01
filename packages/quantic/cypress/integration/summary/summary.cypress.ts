@@ -87,15 +87,15 @@ describe('quantic-summary', () => {
   describe('when selecting result per page', () => {
     it('should work as expected', () => {
       visitSummary();
-      const customResultPerPage = 45;
-      setPageSizeValue(45);
+      const customResultsPerPage = 45;
+      setPageSizeValue(customResultsPerPage);
       setResultsPerPage();
 
       cy.wait(InterceptAliases.Search).then((interception) => {
         Expect.displaySummary(true);
         Expect.displayQuery(false);
         Expect.displayRange(true);
-        Expect.rangeContains(`1-${customResultPerPage}`);
+        Expect.rangeContains(`1-${customResultsPerPage}`);
         Expect.displayTotal(true);
         Expect.totalContains(interception.response?.body.totalCount);
       });
