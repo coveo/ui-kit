@@ -51,7 +51,7 @@ export default class CaseClassification extends LightningElement {
   @api slectPlaceHolder = this.labels.selectProduct;
 
   /**
-   * The title of the button to show in the combo box button.
+   * The title of the button to show the combo box button.
    * @type {string}
    * @defaultValue `'Select another feature'`
    */
@@ -71,7 +71,7 @@ export default class CaseClassification extends LightningElement {
   _isSelectVisible = false;
 
   /** @type {string} */
-  _Value = '';
+  _value = '';
 
   /** @type {boolean} */
   _isSuggestionsVisible = true;
