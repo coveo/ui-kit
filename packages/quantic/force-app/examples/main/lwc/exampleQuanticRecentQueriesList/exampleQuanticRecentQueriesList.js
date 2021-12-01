@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 
-export default class ExampleQuanticPager extends LightningElement {
+export default class ExampleQuanticRecentQueriesList extends LightningElement {
   @api engineId = 'quantic-recent-queries-list-engine';
   @track config = {};
   isConfigured = false;
