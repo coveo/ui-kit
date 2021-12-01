@@ -18,10 +18,10 @@ import {getDocumentSuggestionInitialState} from '../../features/document-suggest
 
 describe('Document Suggestion List', () => {
   let engine: MockCaseAssistEngine;
-  let docSuggestion: DocumentSuggestionList;
+  let docSuggestionList: DocumentSuggestionList;
 
   function initDocumentSuggestion() {
-    docSuggestion = buildDocumentSuggestionList(engine);
+    docSuggestionList = buildDocumentSuggestionList(engine);
   }
 
   beforeEach(() => {
@@ -41,7 +41,7 @@ describe('Document Suggestion List', () => {
 
   it('state returns correct initial state', () => {
     const initialState = getDocumentSuggestionInitialState();
-    expect(docSuggestion.state).toEqual({
+    expect(docSuggestionList.state).toEqual({
       loading: initialState.status.loading,
       error: initialState.status.error,
       documents: initialState.documents,
@@ -50,7 +50,7 @@ describe('Document Suggestion List', () => {
 
   describe('#fetch', () => {
     it('dispatches a #fetchDocumentSuggestions', () => {
-      docSuggestion.fetch();
+      docSuggestionList.fetch();
 
       expect(engine.actions).toContainEqual(
         expect.objectContaining({
