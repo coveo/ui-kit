@@ -3,18 +3,6 @@ on:
 - pull_request
 
 jobs:
-  lint-check:
-    name: "Check with linter"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
-      - run: npm ci
-      - run: npm run lint:check
   build:
     name: "Build"
     runs-on: ubuntu-latest
@@ -31,6 +19,24 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           path: ${{ github.workspace }}
+          retention-days: 1
+  lint-check:
+    name: "Check with linter"
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - uses: actions/download-artifact@v2
+        with:
+          path: ${{ github.workspace }}
+      - run: npm run lint:check
   report-bundle-size:
     name: "Report bundle size"
     needs: build
