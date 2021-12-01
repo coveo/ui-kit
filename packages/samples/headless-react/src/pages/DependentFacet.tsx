@@ -3,6 +3,7 @@ import {
   buildSearchEngine,
   Facet as HeadlessFacet,
   getSampleSearchEngineConfiguration,
+  loadFacetSetActions,
   SearchEngine,
 } from '@coveo/headless';
 import {Component} from 'react';
@@ -14,28 +15,22 @@ export class DependentFacet extends Component<
   {visibleDependantFacet: boolean}
 > {
   private engine: SearchEngine;
-  private parentFacet: HeadlessFacet;
-  private dependentFacet: HeadlessFacet;
+  private facets: HeadlessFacet[];
   constructor(props: {}) {
     super(props);
     this.engine = buildSearchEngine({
       configuration: getSampleSearchEngineConfiguration(),
     });
-    this.parentFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype'},
-    });
-    this.dependentFacet = buildFacet(this.engine, {options: {field: 'author'}});
+    const fields = ['objecttype', 'author', 'source', 'filetype'];
+    this.facets = fields.map((field) =>
+      buildFacet(this.engine, {options: {field}})
+    );
     this.state = {visibleDependantFacet: false};
   }
 
   componentDidMount() {
     this.engine.executeFirstSearch();
-    this.engine.subscribe(() => {
-      const parentActive = this.engine.state.facetSet![
-        'objecttype'
-      ].currentValues.some((v) => v.state !== 'idle');
-      this.setState({visibleDependantFacet: parentActive});
-    });
+    this.makeDependent();
   }
 
   render() {
@@ -52,10 +47,40 @@ export class DependentFacet extends Component<
               display: this.state.visibleDependantFacet ? 'block' : 'none',
             }}
           >
-            <Facet controller={this.dependentFacet} />
+            {this.dependentFacets.map((childFacet) => (
+              <Facet key={childFacet.state.facetId} controller={childFacet} />
+            ))}
           </div>
         </div>
       </AppContext.Provider>
     );
+  }
+
+  makeDependent() {
+    this.parentFacet.subscribe(() => {
+      const parentActive = this.parentFacet.state.values.some(
+        (v) => v.state !== 'idle'
+      );
+      if (!parentActive && this.state.visibleDependantFacet) {
+        this.dependentFacets.forEach((childFacet) =>
+          this.clearChildFacet(childFacet)
+        );
+      }
+      this.setState({visibleDependantFacet: parentActive});
+    });
+  }
+
+  clearChildFacet(childFacet: HeadlessFacet) {
+    loadFacetSetActions(this.engine).deselectAllFacetValues(
+      childFacet.state.facetId
+    );
+  }
+
+  get dependentFacets() {
+    return this.facets.slice(1);
+  }
+
+  get parentFacet() {
+    return this.facets[0];
   }
 }
