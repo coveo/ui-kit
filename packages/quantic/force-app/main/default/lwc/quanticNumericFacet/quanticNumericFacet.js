@@ -31,6 +31,7 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
+ * @category Search
  * @example
  * <c-quantic-numeric-facet engine-id={engineId} facet-id="myfacet" field="ytlikecount" label="Youtube Likes" numberOfValues="5" sort-criteria="descending" range-algorithm="even" formatting-function={myFormattingFunction} is-collapsed></c-quantic-numeric-facet>
  */

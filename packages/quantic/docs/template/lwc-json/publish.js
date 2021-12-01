@@ -7,7 +7,7 @@
 const fs = require('fs');
 const paramCase = require('change-case').paramCase;
 const xmlToJson = require('xml2json').toJson;
-const dump = require('jsdoc/util/dumper').dump; 
+const dump = require('jsdoc/util/dumper').dump;
 
 function formatType(type) {
   return type
@@ -66,13 +66,12 @@ function parseFunction(element, parentNode) {
 }
 
 function isTagDefined(element, tagTitle) {
-  return element.tags?.filter((tag) => tag.title === tagTitle).length;
+  return element.tags?.filter((tag) => tag.originalTitle === tagTitle).length;
 }
 
 function isPublic(element) {
   return isTagDefined(element, 'api');
 }
-
 
 function parseMember(element, parentNode) {
   if (!isPublic(element)) {
@@ -92,7 +91,7 @@ function parseMember(element, parentNode) {
   }
   if (prop.type.name === 'function') {
     prop.type.params = element.params || '',
-    prop.type.returns = element.returns || ''
+      prop.type.returns = element.returns || ''
   }
   parentNode.properties.push(prop);
 }
@@ -104,9 +103,25 @@ function getMetadata(element) {
   return JSON.parse(xmlToJson(xmlData));
 }
 
+function getComponentCategory(element) {
+  return element.tags?.find((tag) => tag.originalTitle === 'category').value;
+}
+
+const categoryMap = {
+  search: 'Search',
+  resultTemplate: 'Result Template',
+  caseAssist: 'Case Assist',
+  utility: 'Utility'
+}
+
 function parseClass(element, parentNode, childNodes) {
   if (!parentNode.components) {
-    parentNode.components = [];
+    parentNode.components = {
+      search: [],
+      resultTemplate: [],
+      caseAssist: [],
+      utility: []
+    };
   }
 
   element.xmlMeta = getMetadata(element).LightningComponentBundle;
@@ -115,7 +130,7 @@ function parseClass(element, parentNode, childNodes) {
     name: element.name,
     attribute: paramCase(element.name),
     description: element.classdesc || '',
-    access: element.access || '',
+    category: getComponentCategory(element),
     fires: element.fires || '',
     examples: [],
     xmlMeta: {
@@ -125,7 +140,12 @@ function parseClass(element, parentNode, childNodes) {
     }
   };
 
-  parentNode.components.push(thisClass);
+  const categoryKey = Object.keys(categoryMap).find(key => categoryMap[key] === thisClass.category);
+  try {
+    parentNode.components[categoryKey].push(thisClass);
+  } catch(error) {
+    throw new Error(`JsDoc parsing FAILED: invalid category value ${thisClass.category} on component ${thisClass.name}`);
+  }
 
   if (element.examples) {
     for (let i = 0, len = element.examples.length; i < len; i++) {
@@ -153,7 +173,7 @@ function graft(parentNode, childNodes, parentLongname) {
       return (element.memberof === parentLongname);
     })
     .forEach(function (element, _index) {
-      switch(element.kind) {
+      switch (element.kind) {
         case 'function':
           return parseFunction(element, parentNode);
         case 'member':

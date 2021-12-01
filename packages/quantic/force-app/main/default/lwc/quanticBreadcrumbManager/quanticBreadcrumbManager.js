@@ -25,6 +25,7 @@ import colon from '@salesforce/label/c.quantic_Colon';
 
 /**
  * The `QuanticBreadcrumbManager` component creates breadcrumbs that display a summary of the currently active facet values.
+ * @category Search
  * @example
  * <c-quantic-breadcrumb-manager engine-id={engineId} category-divider=";" collapse-threshold="4"></c-quantic-breadcrumb-manager>
  */

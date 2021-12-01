@@ -10,11 +10,9 @@ import {api, LightningElement} from 'lwc';
 
 /**
  * The `QuanticFacetManager` component acts as a container component allowing facets to be reordered dynamically as search queries are performed.
- *
  * 
  * An item template element can be assigned to the `itemTemplate` slot allowing to customize the element that wraps each facet.
- *
- * 
+ * @category Search
  * @example
  * <c-quantic-facet-manager engine-id={engineId}>
  *   <c-quantic-facet engine-id={engineId} field="type"></c-quantic-facet>

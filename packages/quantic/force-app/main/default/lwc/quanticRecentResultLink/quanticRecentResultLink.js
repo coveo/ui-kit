@@ -7,6 +7,7 @@ import {ResultUtils} from 'c/quanticUtils';
 
 /**
  * The `QuanticResultLink` component is used internally by the `QuanticRecentResultsList` component.
+ * @category Search
  * @example
  * <c-quantic-recent-result-link engine-id={engineId} result={result}></c-quantic-recent-result-link>
  */

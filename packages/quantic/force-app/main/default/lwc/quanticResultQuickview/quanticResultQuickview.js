@@ -12,6 +12,7 @@ import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 
 /**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
+ * @category Result Template
  * @fires CustomEvent#haspreview
  * @example
  * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
