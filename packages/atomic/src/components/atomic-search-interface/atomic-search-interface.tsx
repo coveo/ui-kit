@@ -312,7 +312,7 @@ export class AtomicSearchInterface {
     if (out.customData) {
       out.customData.CoveoAtomicVersion = getAtomicEnvironment().version;
     }
-    return payload;
+    return out;
   }
 
   private initI18n() {
