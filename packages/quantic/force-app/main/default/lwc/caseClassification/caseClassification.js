@@ -20,10 +20,7 @@ export default class CaseClassification extends LightningElement {
    * @type {Array}
    * @defaultValue `[]`
    */
-  @api options = [    { id: 0, label: 'Heart rate tracking', value: 'Heart rate tracking' },
-  { id: 1, label: 'Run tracking', value: 'Run tracking' },
-  { id: 2, label: 'Health Metrics', value: 'Health Metrics' },
-  { id: 3, label: 'Blue series', value: 'Blue series' },];
+  @api options = [];
 
   /**
    * The number of suggestions to be shown.
