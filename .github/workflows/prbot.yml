@@ -3,16 +3,78 @@ on:
 - pull_request
 
 jobs:
-  pr-robot:
+  lint-check:
+    name: "Check with linter"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: npm run lint:check
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: npx lerna bootstrap --ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}
+  report-bundle-size:
+    name: "Report bundle size"
+    needs: build
     runs-on: ubuntu-latest
     env:
       GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v2
-      with:
+      - uses: actions/checkout@v2
+        with:
           fetch-depth: 0
-    - uses: actions/setup-node@v1
-      with:
-          node-version: '14'
-    - run: npm i
-    - run: npm run pr:report
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - uses: actions/download-artifact@v2
+        with:
+          path: ${{ github.workspace }}
+      - run: npm run pr:report
+  generate-doc:
+    name: "Generate doc"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - uses: actions/download-artifact@v2
+        with:
+          path: ${{ github.workspace }}
+      - run: npm run doc:generate
+  unit-test:
+    name: "Run unit test"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - uses: actions/download-artifact@v2
+        with:
+          path: ${{ github.workspace }}
+      - run: npm test
