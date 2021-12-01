@@ -6,6 +6,8 @@ jobs:
   build:
     name: "Build"
     runs-on: ubuntu-latest
+    env:
+      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -17,26 +19,26 @@ jobs:
           npm ci
           npx lerna bootstrap --ci
       - run: npm run build
+      - run: |
+        tar -czvf build.tar.gz \
+          packages/bueno/dist \
+          packages/headless/dist \
+          packages/atomic/dist \
+          packages/atomic/docs \
+          packages/atomic/headless \
+          packages/atomic/loader \
+          packages/atomic/storybook-static \
+          packages/atomic/www \
+          packages/headless-react/build
       - uses: actions/upload-artifact@v2
         with:
-          path: |
-            packages/bueno/dist
-            packages/headless/dist
-            packages/atomic/dist
-            packages/atomic/docs
-            packages/atomic/headless
-            packages/atomic/loader
-            packages/atomic/storybook-static
-            packages/atomic/www
-            packages/headless-react/build
+          path: build.tar.gz
           retention-days: 1
       - run: npm run pr:report
   lint-check:
     name: "Check with linter"
     needs: build
     runs-on: ubuntu-latest
-    env:
-      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -46,7 +48,8 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
         with:
-          path: ${{ github.workspace }}
+          path: .
+      - run: tar -xzvf build.tar.gz
       - run: npm run lint:check
   generate-doc:
     name: "Generate doc"
@@ -61,7 +64,8 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
         with:
-          path: ${{ github.workspace }}
+          path: .
+      - run: tar -xzvf build.tar.gz
       - run: |
           npm ci
           npx lerna bootstrap --ci
@@ -79,7 +83,8 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
         with:
-          path: ${{ github.workspace }}
+          path: .
+      - run: tar -xzvf build.tar.gz
       - run: |
           npm ci
           npx lerna bootstrap --ci
