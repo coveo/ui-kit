@@ -28,8 +28,7 @@ jobs:
             packages/atomic/headless \
             packages/atomic/loader \
             packages/atomic/storybook-static \
-            packages/atomic/www \
-            packages/headless-react/build
+            packages/atomic/www
       - uses: actions/upload-artifact@v2
         with:
           path: build.tar.gz
