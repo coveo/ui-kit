@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.2...@coveo/atomic@1.18.0) (2021-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** fixed list root image classes ([#1534](https://github.com/coveo/ui-kit/issues/1534)) ([c92949b](https://github.com/coveo/ui-kit/commit/c92949bcd8d1b0784febf56ca6493e8b4461a8a8))
+
+
+### Features
+
+* **atomic:** expose & document Stencil decorators ([#1544](https://github.com/coveo/ui-kit/issues/1544)) ([1caded2](https://github.com/coveo/ui-kit/commit/1caded253146a16c4399a2beea0bd4f1071bd405))
+
+
+
+
+
 ## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.1...@coveo/atomic@1.17.2) (2021-11-30)
 
 
