@@ -20,12 +20,13 @@ import {
   SearchStatus,
   buildSearchStatus,
   loadSearchConfigurationActions,
+  AnalyticsConfiguration,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
-import {setCoveoGlobal} from '../../global/environment';
+import {getAtomicEnvironment, setCoveoGlobal} from '../../global/environment';
 import {AtomicStore, initialStore} from '../../utils/store';
 
 export type InitializationOptions = SearchEngineConfiguration;
@@ -275,16 +276,43 @@ export class AtomicSearchInterface {
     return searchConfigFromProps;
   }
 
-  private getAnalyticsConfig(options: InitializationOptions) {
-    const analyticsConfigFromProps = {enabled: this.analytics};
+  private getAnalyticsConfig(
+    options: InitializationOptions
+  ): AnalyticsConfiguration {
+    const enabledFromProps = {
+      enabled: this.analytics,
+    };
     if (options.analytics) {
       return {
         ...options.analytics,
-        ...analyticsConfigFromProps,
+        ...enabledFromProps,
+        analyticsClientMiddleware: (event, payload) =>
+          this.augmentAnalyticsWithAtomicVersion(
+            event,
+            payload,
+            options.analytics?.analyticsClientMiddleware
+          ),
       };
     }
 
-    return analyticsConfigFromProps;
+    return {
+      ...enabledFromProps,
+      analyticsClientMiddleware: this.augmentAnalyticsWithAtomicVersion,
+    };
+  }
+
+  private augmentAnalyticsWithAtomicVersion(
+    event: string,
+    payload: any,
+    existingMiddleware?: AnalyticsConfiguration['analyticsClientMiddleware']
+  ) {
+    const out = existingMiddleware
+      ? existingMiddleware(event, payload)
+      : payload;
+    if (out.customData) {
+      out.customData.CoveoAtomicVersion = getAtomicEnvironment().version;
+    }
+    return payload;
   }
 
   private initI18n() {
