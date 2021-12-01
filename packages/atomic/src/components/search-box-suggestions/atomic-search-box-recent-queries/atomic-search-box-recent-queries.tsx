@@ -41,13 +41,13 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private initialize() {
+    this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
       options: {maxLength: 1000},
     });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());
-    this.storage = new SafeStorage();
 
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),

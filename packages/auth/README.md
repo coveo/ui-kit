@@ -5,7 +5,7 @@ Functions to help authenticate with the Coveo platform.
 ## Install
 
 ```
-npm i @coveo/saml
+npm i @coveo/auth
 ```
 
 ## SAML

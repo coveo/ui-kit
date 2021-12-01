@@ -7,7 +7,7 @@ describe('logActionErrorMiddleware', () => {
   it should not log an error`, () => {
     const e = buildMockSearchAppEngine();
     const {dispatch} = e;
-    spyOn(e.logger, 'error');
+    jest.spyOn(e.logger, 'error');
 
     const action = {type: 'foo'};
     dispatch(action);
@@ -46,7 +46,7 @@ describe('logActionErrorMiddleware', () => {
   it(`when a action has an error parameter
   it should log an error`, () => {
     const e = buildMockSearchAppEngine();
-    spyOn(e.logger, 'error');
+    jest.spyOn(e.logger, 'error');
     const {dispatch} = e;
 
     const error = serializeSchemaValidationError(
@@ -69,7 +69,7 @@ describe('logActionMiddleware', () => {
   it(`when a action is dispatched
   it should pass through the middleware and log to debug`, () => {
     const e = buildMockSearchAppEngine();
-    spyOn(e.logger, 'debug');
+    jest.spyOn(e.logger, 'debug');
     const {dispatch} = e;
 
     const action = {type: 'foo'};

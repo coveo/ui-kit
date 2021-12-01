@@ -138,7 +138,7 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     (store.dispatch as jest.Mock).mockReset();
 
-    jest.runTimersToTime(500);
+    jest.advanceTimersByTime(500);
     await callMiddleware(middleware, action);
 
     expect(store.dispatch).toHaveBeenCalled();
