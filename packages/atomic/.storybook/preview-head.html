@@ -1,3 +1,13 @@
 <script type="module" src="atomic/atomic.esm.js"></script>
 <script nomodule src="atomic/atomic.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    let message = {
+      height: document.body.scrollHeight,
+      width: document.body.scrollWidth,
+    };
+    // window.top refers to parent window
+    window.top.postMessage(message, '*');
+  });
+</script>
 <link rel="stylesheet" href="atomic/themes/coveo.css" />
