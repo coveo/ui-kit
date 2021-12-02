@@ -1,5 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
-import json from '@rollup/plugin-json';
+// import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import tsPlugin from '@rollup/plugin-typescript';
 import replacePlugin from '@rollup/plugin-replace';
@@ -27,15 +27,15 @@ function replace() {
   return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env), 'process.env.VERSION': JSON.stringify(version)});
 }
 
-function onWarn(warning, warn) {
-  const isCircularDependency = warning.code === 'CIRCULAR_DEPENDENCY';
+// function onWarn(warning, warn) {
+//   const isCircularDependency = warning.code === 'CIRCULAR_DEPENDENCY';
 
-  if (isCI && isCircularDependency) {
-    throw new Error(warning.message);
-  }
+//   if (isCI && isCircularDependency) {
+//     throw new Error(warning.message);
+//   }
 
-  warn(warning);
-}
+//   warn(warning);
+// }
 
 /**
  * @param {string} value
@@ -53,59 +53,59 @@ function matchesFilter(value) {
 
 // Node Bundles
 
-const nodejs = [
-  {
-    input: 'src/index.ts',
-    outDir: 'dist',
-  },
-  {
-    input: 'src/case-assist.index.ts',
-    outDir: 'dist/case-assist'
-  },
-  {
-    input: 'src/recommendation.index.ts',
-    outDir: 'dist/recommendation'
-  },
-  {
-    input: 'src/product-recommendation.index.ts',
-    outDir: 'dist/product-recommendation'
-  },
-  {
-    input: 'src/product-listing.index.ts',
-    outDir: 'dist/product-listing'
-  },
-].filter(b => matchesFilter(b.input)).map(buildNodeConfiguration);
+// const nodejs = [
+//   {
+//     input: 'src/index.ts',
+//     outDir: 'dist',
+//   },
+//   {
+//     input: 'src/case-assist.index.ts',
+//     outDir: 'dist/case-assist'
+//   },
+//   {
+//     input: 'src/recommendation.index.ts',
+//     outDir: 'dist/recommendation'
+//   },
+//   {
+//     input: 'src/product-recommendation.index.ts',
+//     outDir: 'dist/product-recommendation'
+//   },
+//   {
+//     input: 'src/product-listing.index.ts',
+//     outDir: 'dist/product-listing'
+//   },
+// ].filter(b => matchesFilter(b.input)).map(buildNodeConfiguration);
 
-function buildNodeConfiguration({input, outDir}) {
-  return {
-    input,
-    output: [
-      {file: `${outDir}/headless.js`, format: 'cjs'},
-      {file: `${outDir}/headless.esm.js`, format: 'es'},
-    ],
-    plugins: [
-      resolve({preferBuiltins: true, mainFields: ['main']}),
-      json(),
-      commonjs({
-        // https://github.com/pinojs/pino/issues/688
-        ignore: ['pino-pretty'],
-      }),
-      typescript(),
-      replace(),
-    ],
-    external: [
-      'os',
-      'https',
-      'http',
-      'stream',
-      'zlib',
-      'fs',
-      'vm',
-      'util',
-    ],
-    onwarn: onWarn,
-  };
-}
+// function buildNodeConfiguration({input, outDir}) {
+//   return {
+//     input,
+//     output: [
+//       {file: `${outDir}/headless.js`, format: 'cjs'},
+//       {file: `${outDir}/headless.esm.js`, format: 'es'},
+//     ],
+//     plugins: [
+//       resolve({preferBuiltins: true, mainFields: ['main']}),
+//       json(),
+//       commonjs({
+//         // https://github.com/pinojs/pino/issues/688
+//         ignore: ['pino-pretty'],
+//       }),
+//       typescript(),
+//       replace(),
+//     ],
+//     external: [
+//       'os',
+//       'https',
+//       'http',
+//       'stream',
+//       'zlib',
+//       'fs',
+//       'vm',
+//       'util',
+//     ],
+//     onwarn: onWarn,
+//   };
+// }
 
 // Browser Bundles
 
@@ -222,8 +222,8 @@ function copySourceFiles() {
   });
 }
 
-// For Atomic's development purposes only
-const dev = [
+// For Atomic's local development purposes only
+const local = [
   {
     input: 'src/index.ts',
     output: [buildEsmOutput('../atomic/src/external-builds')],
@@ -246,6 +246,14 @@ const dev = [
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
-const config = isProduction ? [...browser] : dev;
+const config = [];
+
+if (isProduction) {
+  config.push(...browser);
+}
+
+if (!isCI) {
+  config.push(...local)
+}
 
 export default config;

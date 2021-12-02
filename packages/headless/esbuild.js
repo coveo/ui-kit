@@ -11,23 +11,23 @@ const useCaseEntries = {
   'case-assist': 'src/case-assist.index.ts',
 };
 
-function getGlobalName(useCase) {
-  const map = {
-    search: 'CoveoHeadless',
-    recommendation: 'CoveoHeadlessRecommendation',
-    'product-recommendation': 'CoveoHeadlessProductRecommendation',
-    'product-listing': 'CoveoHeadlessProductListing',
-    'case-assist': 'CoveoHeadlessCaseAssist',
-  };
+// function getGlobalName(useCase) {
+//   const map = {
+//     search: 'CoveoHeadless',
+//     recommendation: 'CoveoHeadlessRecommendation',
+//     'product-recommendation': 'CoveoHeadlessProductRecommendation',
+//     'product-listing': 'CoveoHeadlessProductListing',
+//     'case-assist': 'CoveoHeadlessCaseAssist',
+//   };
 
-  const globalName = map[useCase];
+//   const globalName = map[useCase];
 
-  if (globalName) {
-    return globalName;
-  }
+//   if (globalName) {
+//     return globalName;
+//   }
 
-  throw new Error(`Please specify a global name for use-case: "${useCase}"`);
-}
+//   throw new Error(`Please specify a global name for use-case: "${useCase}"`);
+// }
 
 function getPackageVersion() {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;

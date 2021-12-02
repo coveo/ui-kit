@@ -89,11 +89,17 @@ export function applyFocusVisiblePolyfill(element: HTMLElement) {
 }
 
 /**
- * Utility that automatically fetches the `Bindings` from the parent `AtomicSearchInterface` component.
- * Once a component is bound, the `initialize` method is called, if defined.
+ * A [StencilJS property decorator](https://stenciljs.com/) to be used on a property named `bindings`.
+ * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-extarnal` components.
  *
- * In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`.
+ * Once a component is bound, the `initialize` method is called.
+ * In the event of an initialization error, the `error` property will be set and an `atomic-component-error` will be rendered.
+ *
+ * In order for a component using this decorator to render properly, it should have an internal state bound to one of the properties from `bindings`.
  * This is possible by using the `BindStateToController` decorator.
+ *
+ * @example
+ * @InitializeBindings() public bindings!: Bindings;
  *
  * For more information and examples, view the "Utilities" section of the readme.
  */
@@ -193,9 +199,16 @@ export function InitializeBindings() {
 }
 
 /**
- * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to a Headless Framework controller.
- * @param controllerProperty The controller property to subscribe to. The controller has to be defined inside the `initialize` method.
- * @param options
+ * A [StencilJS property decorator](https://stenciljs.com/) is used together with the [State decorator](https://stenciljs.com/docs/state#state-decorator).
+ * This allows the Stencil component state property to automatically get updates from a [Coveo Headless controller](https://docs.coveo.com/en/headless/latest/usage/#use-headless-controllers).
+ *
+ * @example
+ * @BindStateToController('pager') @State() private pagerState!: PagerState;
+ *
+ * For more information and examples, view the "Utilities" section of the readme.
+ *
+ * @param controllerProperty The controller property to subscribe to. The controller has to be created inside of the `initialize` method.
+ * @param options The configurable `BindStateToController` options.
  */
 export function BindStateToController(
   controllerProperty: string,
