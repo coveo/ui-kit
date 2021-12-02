@@ -6,6 +6,7 @@
 - [Atomic](packages/atomic): Coveo's web-component library for building modern search experiences.
 - [Quantic](packages/quantic): Coveo's LWC library for building Salesforce search experiences.
 - [Bueno](packages/bueno): A simple schema validator.
+- [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
 
 ## Installation
@@ -28,13 +29,13 @@ To build a single project for production (for instance, the `product-listing` pa
 npm run build  -- --filter product-listing
 ```
 
-To start all projects in development (you should run `npm run build` at least once first), run:
+To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm start
+npm start -- --scope @coveo/quantic 
 ```
 
-To start Atomic & Headless simultaneously in development, run:
+To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
 npm run dev

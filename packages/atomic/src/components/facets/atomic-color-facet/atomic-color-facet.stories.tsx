@@ -1,12 +1,10 @@
 import {html} from 'lit-html';
 import defaultStory from '../../../../.storybook/default-story';
-import ColorFacetDoc from './atomic-color-facet.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/ColorFacet',
   'atomic-color-facet',
   {field: 'filetype', numberOfValues: '9'},
-  ColorFacetDoc,
   {
     additionalMarkup: () => html`<style>
       atomic-color-facet {

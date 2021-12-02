@@ -40,6 +40,9 @@ import {dictionaryFieldContextReducer} from '../features/dictionary-field-contex
 import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 import {staticFilterSetReducer} from '../features/static-filter-set/static-filter-set-slice';
 import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
+import {caseInputReducer} from '../features/case-input/case-input-slice';
+import {caseFieldReducer} from '../features/case-field/case-field-slice';
+import {documentSuggestionReducer} from '../features/document-suggestion/document-suggestion-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -94,3 +97,6 @@ export const productListing = productListingReducer;
 export const sort = sortReducer;
 
 export const caseAssistConfiguration = caseAssistConfigurationReducer;
+export const caseInput = caseInputReducer;
+export const caseField = caseFieldReducer;
+export const documentSuggestion = documentSuggestionReducer;

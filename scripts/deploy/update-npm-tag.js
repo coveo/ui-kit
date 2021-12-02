@@ -1,7 +1,7 @@
 const {promisify} = require('util');
 const exec = promisify(require('child_process').exec);
 
-const packageDirs = ['atomic', 'bueno', 'headless'];
+const packageDirs = ['atomic', 'auth', 'bueno', 'headless'];
 
 async function main() {
   const requests = packageDirs

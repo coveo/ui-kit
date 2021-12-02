@@ -1,11 +1,9 @@
 import defaultResultComponentStory from '../../../.storybook/default-result-component-story';
-import FormatNumberDoc from './atomic-format-number.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultNumber/Format/Number',
   'atomic-format-number',
   {},
-  FormatNumberDoc,
   {
     engineConfig: {
       preprocessRequest: (r) => {

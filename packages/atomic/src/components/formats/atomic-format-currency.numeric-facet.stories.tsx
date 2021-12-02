@@ -1,5 +1,4 @@
 import defaultStory from '../../../.storybook/default-story';
-import FormatCurrencyDoc from './atomic-format-currency.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/NumericFacet/Format/Currency',
@@ -7,7 +6,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   {
     currency: 'USD',
   },
-  FormatCurrencyDoc,
   {
     parentElement: () => {
       const numericFacetElement = document.createElement(

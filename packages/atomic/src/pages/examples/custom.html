@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Custom component example</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const interface = document.querySelector('#search');
+        await interface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        interface.executeFirstSearch();
+      })();
+    </script>
+    <script type="module">
+      import {initializeBindings} from '/build/index.esm.js';
+      import {buildSearchBox} from '/build/headless/headless.esm.js';
+
+      class CustomComponent extends HTMLElement {
+        constructor() {
+          super();
+          this.initialize();
+        }
+
+        get template() {
+          const template = document.createElement('template');
+          template.innerHTML = '<input type="text" placeholder="Search as you type" />';
+          return template;
+        }
+
+        async initialize() {
+          const bindings = await initializeBindings(this);
+
+          const shadowRoot = this.attachShadow({mode: 'closed'});
+          shadowRoot.appendChild(this.template.content.cloneNode(true));
+
+          const searchBox = buildSearchBox(bindings.engine);
+          const input = shadowRoot.querySelector('input');
+          input.addEventListener('input', () => {
+            searchBox.updateText(input.value);
+            searchBox.submit();
+          });
+        }
+      }
+
+      window.customElements.define('custom-component', CustomComponent);
+    </script>
+  </head>
+  <body>
+    <atomic-search-interface id="search">
+      <custom-component></custom-component>
+      <atomic-query-summary></atomic-query-summary>
+      <atomic-result-list></atomic-result-list>
+    </atomic-search-interface>
+  </body>
+</html>

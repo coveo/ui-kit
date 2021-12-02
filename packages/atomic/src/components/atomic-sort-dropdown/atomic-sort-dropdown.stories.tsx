@@ -1,12 +1,10 @@
 import {html} from 'lit-html';
 import defaultStory from '../../../.storybook/default-story';
-import SortDropdownDoc from './atomic-sort-dropdown.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/SortDropdown',
   'atomic-sort-dropdown',
   {},
-  SortDropdownDoc,
   {
     additionalChildMarkup: () => html`
       <atomic-sort-expression

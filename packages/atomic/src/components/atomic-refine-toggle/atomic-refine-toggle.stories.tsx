@@ -1,12 +1,10 @@
 import {html} from 'lit-html';
 import defaultStory from '../../../.storybook/default-story';
-import RefineToggleDoc from './atomic-refine-toggle.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/RefineToggle',
   'atomic-refine-toggle',
   {},
-  RefineToggleDoc,
   {
     additionalMarkup: () => html`
       <div style="display:none;">

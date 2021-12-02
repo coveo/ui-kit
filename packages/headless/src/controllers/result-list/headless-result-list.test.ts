@@ -109,39 +109,36 @@ describe('ResultList', () => {
         ...engine,
         dispatch: mockDispatch,
       });
-      spyOn(engine.logger, 'error');
-      spyOn(engine.logger, 'info');
+      jest.spyOn(engine.logger, 'error');
+      jest.spyOn(engine.logger, 'info');
     });
 
     it(`when calling fetchMoreResults consecutively many times with a small delay
-  should log an error and prevent further dispatch`, async (done) => {
+  should log an error and prevent further dispatch`, async () => {
       await fetchMoreResultsAndWait(6, 100);
 
       expect(mockDispatch).toHaveBeenCalledTimes(5);
       expect(engine.logger.error).toHaveBeenCalledTimes(1);
-      done();
     });
 
     it(`when calling fetchMoreResults consecutively a few times with a small delay
-  should not log an error and allow further dispatches`, async (done) => {
+  should not log an error and allow further dispatches`, async () => {
       await fetchMoreResultsAndWait(3, 100);
 
       expect(mockDispatch).toHaveBeenCalledTimes(3);
       expect(engine.logger.error).not.toHaveBeenCalled();
-      done();
     });
 
     it(`when calling fetchMoreResults consecutively many times with a longer delay
-  should not log an error and allow further dispatches`, async (done) => {
+  should not log an error and allow further dispatches`, async () => {
       await fetchMoreResultsAndWait(6, 250);
 
       expect(mockDispatch).toHaveBeenCalledTimes(6);
       expect(engine.logger.error).not.toHaveBeenCalled();
-      done();
     });
 
     it(`when calling fetchMoreResults while there are no more results available
-    is should not dispatch and log an info`, async (done) => {
+    is should not dispatch and log an info`, async () => {
       engine.state.search.response.totalCountFiltered =
         engine.state.search.response.results.length;
       await fetchMoreResultsAndWait(1, 0);
@@ -150,7 +147,6 @@ describe('ResultList', () => {
       expect(engine.logger.info).toHaveBeenCalledWith(
         'No more results are available for the result list to fetch.'
       );
-      done();
     });
   });
 });

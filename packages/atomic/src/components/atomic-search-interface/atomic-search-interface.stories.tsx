@@ -7,6 +7,9 @@ export default {
       canvas: {
         hidden: true,
       },
+      'storybook/docs/panel': {
+        hidden: false,
+      },
     },
     viewMode: 'docs',
     docs: {

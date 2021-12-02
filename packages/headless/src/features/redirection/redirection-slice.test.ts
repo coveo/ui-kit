@@ -89,31 +89,28 @@ describe('redirection slice', () => {
   }
 
   it(`when the plan endpoint doesn't return a redirection trigger
-  payload should contain the defaultRedirectionUrl`, async (done) => {
+  payload should contain the defaultRedirectionUrl`, async () => {
     const response = await mockPlan();
     expect(response.payload).toBe('https://www.test.com');
-    done();
   });
 
   it(`when the plan endpoint doesn't return a redirection trigger,
   and the defaultRedirectionUrl is a relative url,
-  payload should contain the defaultRedirectionUrl`, async (done) => {
+  payload should contain the defaultRedirectionUrl`, async () => {
     const defaultRedirectionUrl = '/search-page';
     const response = await mockPlan({defaultRedirectionUrl});
 
     expect(response.payload).toBe(defaultRedirectionUrl);
-    done();
   });
 
   it(`when the plan endpoint doesn't return a redirection trigger
-  should not dispatch a logRedirection action`, async (done) => {
+  should not dispatch a logRedirection action`, async () => {
     await mockPlan();
     expect(getlogRedirectionAction()).toBeFalsy();
-    done();
   });
 
   it(`when the plan endpoint returns a redirection trigger
-  payload should contain the redirection trigger URL`, async (done) => {
+  payload should contain the redirection trigger URL`, async () => {
     const response = await mockPlan({
       trigger: {
         type: 'redirect',
@@ -122,11 +119,10 @@ describe('redirection slice', () => {
     });
     expect(response.payload).toBe('https://www.coveo.com');
     expect(getlogRedirectionAction()).toBeTruthy();
-    done();
   });
 
   it(`when the plan endpoint returns a redirection trigger
-  should dispatch a logRedirection action`, async (done) => {
+  should dispatch a logRedirection action`, async () => {
     const response = await mockPlan({
       trigger: {
         type: 'redirect',
@@ -135,6 +131,5 @@ describe('redirection slice', () => {
     });
     expect(response.payload).toBe('https://www.coveo.com');
     expect(getlogRedirectionAction()).toBeTruthy();
-    done();
   });
 });

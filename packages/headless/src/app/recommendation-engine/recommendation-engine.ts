@@ -119,7 +119,7 @@ function validateConfiguration(
   try {
     recommendationEngineConfigurationSchema.validate(configuration);
   } catch (error) {
-    logger.error(error, 'Recommendation engine configuration error');
+    logger.error(error as Error, 'Recommendation engine configuration error');
     throw error;
   }
 }
