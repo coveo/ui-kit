@@ -61,6 +61,14 @@
         const resultList = document.querySelector('atomic-result-list');
         displaySelect.value = resultList.display;
         displaySelect.addEventListener('change', (e) => resultList.setAttribute('display', e.target.value));
+
+        const useLoadMoreResultsClass = 'use-load-more-results';
+        const paginationSelect = document.getElementById('pagination-select');
+        const pagination = document.querySelector('.pagination');
+        paginationSelect.value = pagination.classList.contains(useLoadMoreResultsClass) ? 'load-more' : 'pager';
+        paginationSelect.addEventListener('change', (e) =>
+          pagination.classList.toggle(useLoadMoreResultsClass, e.target.value === 'load-more')
+        );
       })();
     </script>
     <style>
@@ -112,9 +120,8 @@
         --search-box-width: 648px;
       }
 
-      #result-display-select,
-      label[for='result-display-select'] {
-        margin-bottom: 1rem;
+      atomic-search-box {
+        margin-top: 1rem;
       }
 
       body {
@@ -199,9 +206,27 @@
         display: grid;
         grid-template-areas:
           'header header header'
-          'lmr    lmr    lmr'
           'pager  .      rpp';
         grid-template-columns: auto 1fr auto;
+      }
+
+      .pagination atomic-load-more-results {
+        display: none;
+      }
+
+      .pagination.use-load-more-results {
+        grid-template-areas:
+          'header header header'
+          'lmr    lmr    lmr';
+      }
+
+      .pagination.use-load-more-results atomic-pager,
+      .pagination.use-load-more-results atomic-results-per-page {
+        display: none;
+      }
+
+      .pagination.use-load-more-results atomic-load-more-results {
+        display: initial;
       }
 
       .pagination .accessibility-header {
@@ -269,12 +294,21 @@
     <atomic-search-interface id="search" pipeline="Search" search-hub="MainSearch">
       <div class="header-bg"></div>
       <div class="search">
-        <label for="result-display-select">Result list layout:&nbsp;</label
-        ><select id="result-display-select">
-          <option value="list">List</option>
-          <option value="grid">Grid</option>
-          <option value="table">Table</option>
-        </select>
+        <div id="result-display-option">
+          <label for="result-display-select">Result list layout:&nbsp;</label
+          ><select id="result-display-select">
+            <option value="list">List</option>
+            <option value="grid">Grid</option>
+            <option value="table">Table</option>
+          </select>
+        </div>
+        <div id="pagination-option">
+          <label for="pagination-select">Browsing mode:&nbsp;</label>
+          <select id="pagination-select">
+            <option value="pager">Pagination</option>
+            <option value="load-more">Load more results button</option>
+          </select>
+        </div>
         <h1 class="accessibility-header">Search</h1>
         <atomic-search-box></atomic-search-box>
       </div>
@@ -403,7 +437,7 @@
           </atomic-result-template>
         </atomic-result-list>
       </div>
-      <div class="pagination">
+      <div class="pagination use-load-more-results">
         <h1 class="accessibility-header">Pagination</h1>
         <atomic-load-more-results></atomic-load-more-results>
         <atomic-pager></atomic-pager>
