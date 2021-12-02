@@ -23,8 +23,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - run: |
           npm ci
-          npx lerna exec "npm ci"
-          npx lerna link
+          npx lerna bootstrap
       - run: npm run build
       - run: |
           tar -czvf build.tar.gz \
@@ -63,8 +62,7 @@ jobs:
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
           npm ci
-          npx lerna exec "npm ci"
-          npx lerna link
+          npx lerna bootstrap
       - run: npm run lint:check
   generate-doc:
     name: "Generate doc"
@@ -87,8 +85,7 @@ jobs:
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
           npm ci
-          npx lerna exec "npm ci"
-          npx lerna link
+          npx lerna bootstrap
       - run: npm run doc:generate
   unit-test:
     name: "Run unit test"
@@ -111,7 +108,6 @@ jobs:
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
           npm ci
-          npx lerna exec "npm ci"
-          npx lerna link
+          npx lerna bootstrap
       - run: npx lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
