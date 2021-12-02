@@ -45,18 +45,18 @@ const base = {
   },
 };
 
-const browser = Object.entries(useCaseEntries).map((entry) => {
-  const [useCase, entryPoint] = entry;
-  const dir = getUseCaseDir('dist/browser', useCase);
-  const outfile = `${dir}/headless.js`;
+// const browser = Object.entries(useCaseEntries).map((entry) => {
+//   const [useCase, entryPoint] = entry;
+//   const dir = getUseCaseDir('dist/browser', useCase);
+//   const outfile = `${dir}/headless.js`;
 
-  return buildBrowserConfig({
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'iife',
-    globalName: getGlobalName(useCase),
-  });
-});
+//   return buildBrowserConfig({
+//     entryPoints: [entryPoint],
+//     outfile,
+//     format: 'iife',
+//     globalName: getGlobalName(useCase),
+//   });
+// });
 
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
@@ -150,7 +150,7 @@ function buildNodeConfig(options) {
 }
 
 async function main() {
-  await Promise.all([...browserEsm, ...browser, ...nodeEsm, ...nodeCjs]);
+  await Promise.all([...browserEsm, ...nodeEsm, ...nodeCjs]);
 }
 
 main();

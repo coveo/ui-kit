@@ -114,35 +114,35 @@ const browser = [
     input: 'src/index.ts',
     output: [
       buildUmdOutput('dist/browser', 'CoveoHeadless'),
-      buildEsmOutput('dist/browser')
+      // buildEsmOutput('dist/browser')
     ]
   },
   {
     input: 'src/case-assist.index.ts',
     output: [
       buildUmdOutput('dist/browser/case-assist', 'CoveoHeadlessCaseAssist'),
-      buildEsmOutput('dist/browser/case-assist')
+      // buildEsmOutput('dist/browser/case-assist')
     ]
   },
   {
     input: 'src/recommendation.index.ts',
     output: [
       buildUmdOutput('dist/browser/recommendation', 'CoveoHeadlessRecommendation'),
-      buildEsmOutput('dist/browser/recommendation')
+      // buildEsmOutput('dist/browser/recommendation')
     ]
   },
   {
     input: 'src/product-recommendation.index.ts',
     output: [
       buildUmdOutput('dist/browser/product-recommendation', 'CoveoHeadlessProductRecommendation'),
-      buildEsmOutput('dist/browser/product-recommendation')
+      // buildEsmOutput('dist/browser/product-recommendation')
     ]
   },
   {
     input: 'src/product-listing.index.ts',
     output: [
       buildUmdOutput('dist/browser/product-listing', 'CoveoHeadlessProductListing'),
-      buildEsmOutput('dist/browser/product-listing')
+      // buildEsmOutput('dist/browser/product-listing')
     ]
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
@@ -246,6 +246,6 @@ const dev = [
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
-const config = isProduction ? [...nodejs, ...browser] : dev;
+const config = isProduction ? [...browser] : dev;
 
 export default config;
