@@ -12,7 +12,7 @@ import {AppContext} from '../context/engine';
 
 export class DependentFacet extends Component<
   {},
-  {visibleDependantFacet: boolean}
+  {visibleDependentFacet: boolean}
 > {
   private engine: SearchEngine;
   private facets: HeadlessFacet[];
@@ -25,7 +25,7 @@ export class DependentFacet extends Component<
     this.facets = fields.map((field) =>
       buildFacet(this.engine, {options: {field}})
     );
-    this.state = {visibleDependantFacet: false};
+    this.state = {visibleDependentFacet: false};
   }
 
   componentDidMount() {
@@ -44,7 +44,7 @@ export class DependentFacet extends Component<
           <h2>Dependent facet</h2>
           <div
             style={{
-              display: this.state.visibleDependantFacet ? 'block' : 'none',
+              display: this.state.visibleDependentFacet ? 'block' : 'none',
             }}
           >
             {this.dependentFacets.map((childFacet) => (
@@ -61,12 +61,12 @@ export class DependentFacet extends Component<
       const parentActive = this.parentFacet.state.values.some(
         (v) => v.state !== 'idle'
       );
-      if (!parentActive && this.state.visibleDependantFacet) {
+      if (!parentActive && this.state.visibleDependentFacet) {
         this.dependentFacets.forEach((childFacet) =>
           this.clearChildFacet(childFacet)
         );
       }
-      this.setState({visibleDependantFacet: parentActive});
+      this.setState({visibleDependentFacet: parentActive});
     });
   }
 
