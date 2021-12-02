@@ -464,7 +464,7 @@
     </labels>
     <labels>
       <fullName>quantic_SelectAnotherFeature</fullName>
-      <value>Select another feature</value>
+      <value>More Topics</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Select another feature</shortDescription>
