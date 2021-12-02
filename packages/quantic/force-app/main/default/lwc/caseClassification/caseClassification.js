@@ -107,7 +107,7 @@ export default class CaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return this.numberOfSuggestions < this.options.length;
+    return this.options.length > this.numberOfSuggestions;
   }
 
   /**
