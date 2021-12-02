@@ -457,7 +457,7 @@
     </labels>
     <labels>
       <fullName>quantic_SelectProduct</fullName>
-      <value>Select Product</value>
+      <value>Select Topic</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Select Product</shortDescription>
