@@ -1,7 +1,5 @@
 name: PR Robot
-on:
-- pull_request
-
+on: [pull_request]
 jobs:
   build:
     name: "Build"
@@ -148,7 +146,7 @@ jobs:
           group: 'Atomic test runs'
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
-          install: false
+          install: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
