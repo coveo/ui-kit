@@ -15,8 +15,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - run: |
           npm ci
           npx lerna exec "npm ci"
@@ -49,8 +53,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - uses: actions/download-artifact@v2
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
@@ -69,8 +77,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - uses: actions/download-artifact@v2
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
@@ -89,8 +101,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - uses: actions/download-artifact@v2
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
