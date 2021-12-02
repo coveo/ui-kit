@@ -23,6 +23,7 @@ jobs:
           tar -czvf build.tar.gz \
             packages/bueno/dist \
             packages/headless/dist \
+            packages/auth/dist \
             packages/atomic/dist \
             packages/atomic/docs \
             packages/atomic/headless \
@@ -47,6 +48,7 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
       - run: tar -xzvf artifact/build.tar.gz
+      - run: npm ci
       - run: npm run lint:check
   generate-doc:
     name: "Generate doc"
@@ -81,4 +83,5 @@ jobs:
       - run: |
           npm ci
           npx lerna bootstrap --ci
+      - run: npx lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
