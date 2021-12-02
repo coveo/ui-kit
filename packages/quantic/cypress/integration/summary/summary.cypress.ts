@@ -3,6 +3,7 @@ import {
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
+  mockSearchNoResults,
 } from '../../page-objects/search';
 import {SummaryExpectations as Expect} from './summary-expectations';
 import {getNextResults} from '../../page-objects/actions/action-get-next-results';
@@ -60,9 +61,8 @@ describe('quantic-summary', () => {
 
   describe('when a query yields no results', () => {
     it('should work as expected', () => {
-      const url =
-        'q=nowaythisquerywillevereverevertreturnanythingitsimpossible';
-      loadFromUrlHash(url);
+      mockSearchNoResults();
+      visitSummary();
 
       Expect.displaySummary(false);
     });

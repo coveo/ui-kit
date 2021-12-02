@@ -1,7 +1,7 @@
 import {should} from '../common-selectors';
 import {SummarySelectors, SummarySelector} from './summary-selectors';
 
-function summarytExpectations(selector: SummarySelector) {
+function summaryExpectations(selector: SummarySelector) {
   return {
     displaySummary: (display: boolean) => {
       selector
@@ -19,7 +19,7 @@ function summarytExpectations(selector: SummarySelector) {
       selector
         .total()
         .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the total results of search`);
+        .logDetail(`${should(display)} display the total number of results`);
     },
     displayQuery: (display: boolean) => {
       selector
@@ -34,13 +34,12 @@ function summarytExpectations(selector: SummarySelector) {
         .logDetail(`range value should contain "${value}"`);
     },
     totalContains: (value: number) => {
+      const formatNumber = (v: number) => new Intl.NumberFormat().format(v);
       selector
         .total()
         .invoke('text')
-        .then((text) =>
-          expect(text).to.be.equal(new Intl.NumberFormat().format(value))
-        )
-        .logDetail(`total value should contain "${value}"`);
+        .then((text) => expect(text).to.be.equal(formatNumber(value)))
+        .logDetail(`total value should contain "${formatNumber(value)}"`);
     },
     queryContains: (value: string) => {
       selector
@@ -52,5 +51,5 @@ function summarytExpectations(selector: SummarySelector) {
 }
 
 export const SummaryExpectations = {
-  ...summarytExpectations(SummarySelectors),
+  ...summaryExpectations(SummarySelectors),
 };
