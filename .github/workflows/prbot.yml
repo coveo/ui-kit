@@ -19,7 +19,8 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
       - run: |
           npm ci
-          npx lerna bootstrap --ci
+          npx lerna exec "npm ci"
+          npx lerna link
       - run: npm run build
       - run: |
           tar -czvf build.tar.gz \
@@ -52,7 +53,10 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
       - uses: actions/download-artifact@v2
       - run: tar -xzvf artifact/build.tar.gz
-      - run: npm ci
+      - run: |
+          npm ci
+          npx lerna exec "npm ci"
+          npx lerna link
       - run: npm run lint:check
   generate-doc:
     name: "Generate doc"
@@ -71,7 +75,8 @@ jobs:
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
           npm ci
-          npx lerna bootstrap --ci
+          npx lerna exec "npm ci"
+          npx lerna link
       - run: npm run doc:generate
   unit-test:
     name: "Run unit test"
@@ -90,6 +95,7 @@ jobs:
       - run: tar -xzvf artifact/build.tar.gz
       - run: |
           npm ci
-          npx lerna bootstrap --ci
+          npx lerna exec "npm ci"
+          npx lerna link
       - run: npx lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
