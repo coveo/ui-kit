@@ -1,0 +1,11 @@
+<template>
+  <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
+
+  <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+  <c-quantic-case-classification slot="preview" options={config.options} slect-placeholder={config.selectPlaceholder}
+  select-title={config.selectTitle} number-of-suggestions={config.numberOfSuggestions} required={config.required}
+  label={config.label} message-when-value-missing={config.messageWhenValueMissing}>
+  </c-quantic-case-classification>
+  </c-example-layout>
+</template>

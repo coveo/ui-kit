@@ -44,11 +44,11 @@ export default class QuanticCaseClassification extends LightningElement {
   @api label = this.labels.caseClassificationTitle;
 
   /**
-   * The place holder of the combo box input. 
+   * The placeholder of the combo box input. 
    * @type {string}
    * @defaultValue `'Select Product'`
    */
-  @api slectPlaceHolder = this.labels.selectTopic;
+  @api slectPlaceholder = this.labels.selectTopic;
 
   /**
    * The title of the button to show the combo box button.
