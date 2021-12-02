@@ -81,7 +81,7 @@ export default class CaseClassification extends LightningElement {
    * @returns {boolean}
    */
   @api get hasError() {
-    return !!this._errorMessage.length;
+    return !!this._errorMessage;
   }
 
   /**
