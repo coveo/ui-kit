@@ -47,7 +47,7 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
         with:
-          path: build.tar.gz
+          path: ${{ github.workspace }}
       - run: tar -xzvf build.tar.gz
       - run: npm run lint:check
   generate-doc:
@@ -63,7 +63,7 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
         with:
-          path: build.tar.gz
+          path: ${{ github.workspace }}
       - run: tar -xzvf build.tar.gz
       - run: |
           npm ci
@@ -82,7 +82,7 @@ jobs:
           node-version: '16'
       - uses: actions/download-artifact@v2
         with:
-          path: build.tar.gz
+          path: ${{ github.workspace }}
       - run: tar -xzvf build.tar.gz
       - run: |
           npm ci
