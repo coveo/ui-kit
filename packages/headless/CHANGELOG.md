@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.39.0...@coveo/headless@1.40.0) (2021-12-01)
+
+
+### Features
+
+* **headless:** add Case Field controller for Case Assist ([#1550](https://github.com/coveo/ui-kit/issues/1550)) ([c753e53](https://github.com/coveo/ui-kit/commit/c753e533fd0fc8dd75e6b5cdb4ffa8069de3996f))
+
+
+
+
+
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.38.1...@coveo/headless@1.39.0) (2021-12-01)
+
+
+### Features
+
+* **headless:** added document suggestion controller ([#1547](https://github.com/coveo/ui-kit/issues/1547)) ([000e6f0](https://github.com/coveo/ui-kit/commit/000e6f089fa4c42853dbdd4b9369d2d3475158b9))
+
+
+
+
+
 ## [1.38.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.38.0...@coveo/headless@1.38.1) (2021-12-01)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.3...@coveo/atomic@1.18.4) (2021-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.18.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.2...@coveo/atomic@1.18.3) (2021-12-01)
+
+
+### Bug Fixes
+
+* **atomic:** explicitly define exports ([#1554](https://github.com/coveo/ui-kit/issues/1554)) ([8ba2413](https://github.com/coveo/ui-kit/commit/8ba24130cafa2b928ceefe9b225e90858c8f18f0))
+
+
+
+
+
 ## [1.18.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.1...@coveo/atomic@1.18.2) (2021-12-01)
 
 **Note:** Version bump only for package @coveo/atomic

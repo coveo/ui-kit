@@ -263,7 +263,7 @@ export class AtomicRefineModal implements InitializableComponent {
           class={`w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10 ${
             isOpened
               ? 'animate-scaleUpRefineModal'
-              : 'animate-scaleDownRefineModal'
+              : 'animate-slideDownRefineModal'
           }`}
           aria-modal={isOpened.toString()}
         >
