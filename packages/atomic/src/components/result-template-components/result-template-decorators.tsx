@@ -58,3 +58,28 @@ export function ResultContext() {
     };
   };
 }
+
+type ResultContextEventHandler = (result: Result) => void;
+export type ResultContextEvent = CustomEvent<ResultContextEventHandler>;
+const resultContextEventName = 'atomic/resolveResult';
+
+/**
+ * Retrieves `Result` on a rendered `atomic-result`.
+ *
+ * This method is useful to build custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
+ *
+ * @param element Element on which to dispatch the event, which must be the child of a rendered "atomic-result".
+ * @returns A promise that resolves on initialization of the parent "atomic-result" element, and rejects when it's not the case.
+ */
+export const resultContext = (element: Element) =>
+  new Promise<Result>((resolve, reject) => {
+    const event = buildCustomEvent<ResultContextEventHandler>(
+      resultContextEventName,
+      (result: Result) => resolve(result)
+    );
+    element.dispatchEvent(event);
+
+    if (!element.closest('atomic-result')) {
+      reject(new MissingResultParentError(element.nodeName.toLowerCase()));
+    }
+  });
