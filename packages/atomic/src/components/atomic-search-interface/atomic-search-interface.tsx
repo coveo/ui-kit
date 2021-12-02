@@ -20,14 +20,14 @@ import {
   SearchStatus,
   buildSearchStatus,
   loadSearchConfigurationActions,
-  AnalyticsConfiguration,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
-import {getAtomicEnvironment, setCoveoGlobal} from '../../global/environment';
+import {setCoveoGlobal} from '../../global/environment';
 import {AtomicStore, initialStore} from '../../utils/store';
+import {getAnalyticsConfig} from './analytics-config';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -240,7 +240,7 @@ export class AtomicSearchInterface {
 
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
-    const analyticsConfig = this.getAnalyticsConfig(options);
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildSearchEngine({
         configuration: {
@@ -274,45 +274,6 @@ export class AtomicSearchInterface {
     }
 
     return searchConfigFromProps;
-  }
-
-  private getAnalyticsConfig(
-    options: InitializationOptions
-  ): AnalyticsConfiguration {
-    const enabledFromProps = {
-      enabled: this.analytics,
-    };
-    if (options.analytics) {
-      return {
-        ...options.analytics,
-        ...enabledFromProps,
-        analyticsClientMiddleware: (event, payload) =>
-          this.augmentAnalyticsWithAtomicVersion(
-            event,
-            payload,
-            options.analytics?.analyticsClientMiddleware
-          ),
-      };
-    }
-
-    return {
-      ...enabledFromProps,
-      analyticsClientMiddleware: this.augmentAnalyticsWithAtomicVersion,
-    };
-  }
-
-  private augmentAnalyticsWithAtomicVersion(
-    event: string,
-    payload: any,
-    existingMiddleware?: AnalyticsConfiguration['analyticsClientMiddleware']
-  ) {
-    const out = existingMiddleware
-      ? existingMiddleware(event, payload)
-      : payload;
-    if (out.customData) {
-      out.customData.coveoAtomicVersion = getAtomicEnvironment().version;
-    }
-    return out;
   }
 
   private initI18n() {
