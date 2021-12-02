@@ -9,7 +9,7 @@ function getWindow() {
   return window as unknown as {CoveoAtomic: AtomicEnvironment};
 }
 
-function getAtomicEnvironment(): AtomicEnvironment {
+export function getAtomicEnvironment(): AtomicEnvironment {
   return {
     version: process.env.VERSION!,
     headlessVersion: VERSION,
