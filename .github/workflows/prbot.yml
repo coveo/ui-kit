@@ -56,8 +56,6 @@ jobs:
             node_modules
             */*/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/download-artifact@v2
-      - run: tar -xzvf artifact/build.tar.gz
       - run: |
           npm ci
           npx lerna bootstrap
