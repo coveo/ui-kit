@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.41.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.40.1...@coveo/headless@1.41.0) (2021-12-02)
+
+
+### Features
+
+* **atomic,headless:** add analytics metadata about headless and atomic version number ([#1558](https://github.com/coveo/ui-kit/issues/1558)) ([6bdf967](https://github.com/coveo/ui-kit/commit/6bdf967113ed50ce3a0cd639aecfb1f3efa12225))
+
+
+
+
+
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.40.0...@coveo/headless@1.40.1) (2021-12-02)
+
+
+### Bug Fixes
+
+* **headless:** rework previous state comparison for controllers to allow multiple subscribers ([#1555](https://github.com/coveo/ui-kit/issues/1555)) ([24f7c8b](https://github.com/coveo/ui-kit/commit/24f7c8bf5db6882cacd663ec0fc567cf22f77197))
+
+
+
+
+
 # [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.39.0...@coveo/headless@1.40.0) (2021-12-01)
 
 

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.5...@coveo/atomic@1.19.0) (2021-12-02)
+
+
+### Features
+
+* **atomic,headless:** add analytics metadata about headless and atomic version number ([#1558](https://github.com/coveo/ui-kit/issues/1558)) ([6bdf967](https://github.com/coveo/ui-kit/commit/6bdf967113ed50ce3a0cd639aecfb1f3efa12225))
+
+
+
+
+
+## [1.18.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.4...@coveo/atomic@1.18.5) (2021-12-02)
+
+
+### Bug Fixes
+
+* **atomic:** change refine toggle closing animation to a simple slide down ([#1552](https://github.com/coveo/ui-kit/issues/1552)) ([8129b74](https://github.com/coveo/ui-kit/commit/8129b742ae7f314b3274bc5338d8a29be22a61d6))
+
+
+
+
+
 ## [1.18.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.3...@coveo/atomic@1.18.4) (2021-12-01)
 
 **Note:** Version bump only for package @coveo/atomic

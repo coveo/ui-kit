@@ -47,9 +47,11 @@ describe('analytics', () => {
       configuration: getConfigurationInitialState(),
     };
 
-    it('when context is not provided, #getBaseMetadata returns an empty object', () => {
+    it('when context is not provided, #getBaseMetadata returns an object with version', () => {
       const provider = new AnalyticsProvider(baseState);
-      expect(provider.getBaseMetadata()).toEqual({});
+      expect(provider.getBaseMetadata()).toEqual({
+        coveoHeadlessVersion: expect.any(String),
+      });
     });
 
     it('when context is provided, #getBaseMetadata returns the correct object', () => {
@@ -62,7 +64,10 @@ describe('analytics', () => {
         },
       };
       const provider = new AnalyticsProvider(state);
-      expect(provider.getBaseMetadata()).toEqual({context_test: 'value'});
+      expect(provider.getBaseMetadata()).toEqual({
+        context_test: 'value',
+        coveoHeadlessVersion: expect.any(String),
+      });
     });
 
     it('when search is not provided, #getSearchUID returns the default id', () => {

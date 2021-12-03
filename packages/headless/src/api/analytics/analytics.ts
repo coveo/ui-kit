@@ -20,7 +20,6 @@ import {
   SearchHubSection,
   SearchSection,
 } from '../../state/state-sections';
-import {ContextPayload} from '../../features/context/context-state';
 import {PreprocessRequest} from '../preprocess-request';
 import {getLanguage} from './shared-analytics';
 import {
@@ -28,6 +27,7 @@ import {
   SectionNeededForFacetMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {VERSION} from '../../utils/version';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -56,18 +56,18 @@ export class AnalyticsProvider implements SearchPageClientProvider {
       responseTime: this.responseTime,
       results: this.mapResultsToAnalyticsDocument(),
       numberOfResults: this.numberOfResults,
-      getBaseMetadata: this.getBaseMetadata(),
     };
   }
 
   public getBaseMetadata() {
     const {context} = this.state;
     const contextValues = context?.contextValues || {};
-    const formattedObject: ContextPayload = {};
+    const formattedObject: Record<string, string | string[]> = {};
     for (const [key, value] of Object.entries(contextValues)) {
       const formattedKey = `context_${key}`;
       formattedObject[formattedKey] = value;
     }
+    formattedObject['coveoHeadlessVersion'] = VERSION;
     return formattedObject;
   }
 
