@@ -13,13 +13,12 @@ export class AtomicResultFieldsList {
   @ResultContext()
   private resizeObserver!: ResizeObserver;
 
-  private updatingChildren = false;
   private rows: number[] = [];
   @Element() private host!: HTMLElement;
 
   public connectedCallback() {
     this.resizeObserver = new ResizeObserver(() => this.update());
-    this.resizeObserver.observe(this.host.parentElement!);
+    this.observe();
   }
 
   public disconnectedCallback() {
@@ -31,15 +30,20 @@ export class AtomicResultFieldsList {
   }
 
   public update() {
-    if (this.updatingChildren) {
-      return;
-    }
-    this.updatingChildren = true;
+    this.unobserve();
     this.showDividers();
     this.showChildren();
     this.hideChildrenToFit();
     this.hideDividersAtEndOfRows();
-    this.updatingChildren = false;
+    this.observe();
+  }
+
+  private observe() {
+    this.resizeObserver.observe(this.host.parentElement!);
+  }
+
+  private unobserve() {
+    this.resizeObserver.unobserve(this.host.parentElement!);
   }
 
   private get children() {

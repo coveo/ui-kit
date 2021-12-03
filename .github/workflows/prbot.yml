@@ -1,18 +1,157 @@
 name: PR Robot
-on:
-- pull_request
-
+on: [pull_request]
 jobs:
-  pr-robot:
+  build:
+    name: "Build"
     runs-on: ubuntu-latest
     env:
       GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v2
-      with:
+      - uses: actions/checkout@v2
+        with:
           fetch-depth: 0
-    - uses: actions/setup-node@v1
-      with:
-          node-version: '14'
-    - run: npm i
-    - run: npm run pr:report
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - run: |
+          npm ci
+          npx lerna bootstrap
+      - run: npm run build
+      - run: |
+          tar -czvf build.tar.gz \
+            packages/bueno/dist \
+            packages/headless/dist \
+            packages/auth/dist \
+            packages/atomic/dist \
+            packages/atomic/docs \
+            packages/atomic/headless \
+            packages/atomic/loader \
+            packages/atomic/storybook-static \
+            packages/atomic/www
+      - uses: actions/upload-artifact@v2
+        with:
+          path: build.tar.gz
+          retention-days: 1
+      - run: npm run pr:report
+  lint-check:
+    name: "Check with linter"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/download-artifact@v2
+      - run: tar -xzvf artifact/build.tar.gz
+      - run: |
+          npm ci
+          npx lerna bootstrap
+      - run: npm run lint:check
+  generate-doc:
+    name: "Generate doc"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/download-artifact@v2
+      - run: tar -xzvf artifact/build.tar.gz
+      - run: |
+          npm ci
+          npx lerna bootstrap
+      - run: npm run doc:generate
+  unit-test:
+    name: "Run unit tests"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/download-artifact@v2
+      - run: tar -xzvf artifact/build.tar.gz
+      - run: |
+          npm ci
+          npx lerna bootstrap
+      - run: npx lerna run copy:staticresources --scope @coveo/quantic
+      - run: npm test
+  e2e-test:
+    name: "Run e2e tests"
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3]
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/download-artifact@v2
+      - run: tar -xzvf artifact/build.tar.gz
+      - run: |
+          npm ci
+          npx lerna bootstrap
+      - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
+        name: Run Cypress
+        with:
+          working-directory: ./packages/atomic
+          parallel: true
+          record: true
+          group: 'Atomic test runs'
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
+          install: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: packages/atomic/cypress/screenshots
