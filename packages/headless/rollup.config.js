@@ -52,7 +52,7 @@ function matchesFilter(value) {
 
 // Browser Bundles
 
-const browser = [
+const browserUmd = [
   {
     input: 'src/index.ts',
     output: [
@@ -130,14 +130,6 @@ function buildUmdOutput(outDir, name) {
   }
 }
 
-function buildEsmOutput(outDir) {
-  return {
-    file: `${outDir}/headless.esm.js`,
-    format: 'es',
-    ...sourceMapConfig(),
-  }
-}
-
 function sourceMapConfig() {
   return {
     sourcemap: isProduction,
@@ -161,38 +153,6 @@ function copySourceFiles() {
   });
 }
 
-// For Atomic's local development purposes only
-const local = [
-  {
-    input: 'src/index.ts',
-    output: [buildEsmOutput('../atomic/src/external-builds')],
-  },
-  {
-    input: 'src/case-assist.index.ts',
-    output: [buildEsmOutput('../atomic/src/external-builds/case-assist')],
-  },
-  {
-    input: 'src/recommendation.index.ts',
-    output: [buildEsmOutput('../atomic/src/external-builds/recommendation')],
-  },
-  {
-    input: 'src/product-recommendation.index.ts',
-    output: [buildEsmOutput('../atomic/src/external-builds/product-recommendation')],
-  },
-  {
-    input: 'src/product-listing.index.ts',
-    output: [buildEsmOutput('../atomic/src/external-builds/product-listing')],
-  },
-].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
-
-const config = [];
-
-if (isProduction) {
-  config.push(...browser);
-}
-
-if (!isCI) {
-  config.push(...local)
-}
+const config = isProduction ? browserUmd : [];
 
 export default config;

@@ -27,20 +27,32 @@ const base = {
   },
 };
 
+const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map((entry) => {
+  const [useCase, entryPoint] = entry;
+  const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
+
+  return buildBrowserEsmConfig(entryPoint, outDir);
+});
+
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
-  const dir = getUseCaseDir('dist/browser', useCase);
-  const outfile = `${dir}/headless.esm.js`;
+  const outDir = getUseCaseDir('dist/browser', useCase);
+
+  return buildBrowserEsmConfig(entryPoint, outDir);
+});
+
+function getUseCaseDir(prefix, useCase) {
+  return useCase === 'search' ? prefix : `${prefix}/${useCase}`;
+}
+
+function buildBrowserEsmConfig(entryPoint, outDir) {
+  const outfile = `${outDir}/headless.esm.js`;
 
   return buildBrowserConfig({
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
   });
-});
-
-function getUseCaseDir(prefix, useCase) {
-  return useCase === 'search' ? prefix : `${prefix}/${useCase}`;
 }
 
 /**
@@ -119,7 +131,7 @@ function buildNodeConfig(options) {
 }
 
 async function main() {
-  await Promise.all([...browserEsm, ...nodeEsm, ...nodeCjs]);
+  await Promise.all([...browserEsm, ...browserEsmForAtomicDevelopment, ...nodeEsm, ...nodeCjs]);
 }
 
 main();
