@@ -6,7 +6,7 @@ const copy = async (source, dest) => {
   try {
     return await ncp(source, dest);
   } catch (e) {
-    console.log(`Failed to copy: ${source}\nDoes the file exist?`);
+    console.log(`Failed to copy: ${source}\nDoes the resource exist?`);
     process.exit(1);
   }
 };
