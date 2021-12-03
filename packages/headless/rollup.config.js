@@ -222,8 +222,8 @@ function copySourceFiles() {
   });
 }
 
-// For Atomic's development purposes only
-const dev = [
+// For Atomic's local development purposes only
+const local = [
   {
     input: 'src/index.ts',
     output: [buildEsmOutput('../atomic/src/external-builds')],
@@ -246,6 +246,14 @@ const dev = [
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
-const config = isProduction ? [...nodejs, ...browser] : dev;
+const config = [];
+
+if (isProduction) {
+  config.push(...nodejs, ...browser);
+}
+
+if (!isCI) {
+  config.push(...local)
+}
 
 export default config;

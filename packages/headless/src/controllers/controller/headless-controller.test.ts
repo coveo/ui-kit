@@ -63,4 +63,19 @@ describe('Controller', () => {
 
     expect(listener).toHaveBeenCalledTimes(1);
   });
+
+  it('allows subscribing twice to same instance when there is a state change', () => {
+    const firstListener = jest.fn();
+    const secondListener = jest.fn();
+    cmp.subscribe(firstListener);
+    cmp.subscribe(secondListener);
+
+    updateControllerState({property: 'new value'});
+
+    const allListeners = registeredListeners();
+    allListeners.forEach((l) => l());
+
+    expect(firstListener).toHaveBeenCalledTimes(2);
+    expect(secondListener).toHaveBeenCalledTimes(2);
+  });
 });
