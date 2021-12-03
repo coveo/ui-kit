@@ -3,6 +3,8 @@ const {readFileSync} = require('fs');
 const {build} = require('esbuild');
 const alias = require('esbuild-plugin-alias');
 
+const devMode = process.argv[2] === 'dev';
+
 const useCaseEntries = {
   search: 'src/index.ts',
   recommendation: 'src/recommendation.index.ts',
@@ -13,6 +15,10 @@ const useCaseEntries = {
 
 function getPackageVersion() {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
+}
+
+function getUseCaseDir(prefix, useCase) {
+  return useCase === 'search' ? prefix : `${prefix}/${useCase}`;
 }
 
 /**
@@ -30,22 +36,19 @@ const base = {
 const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
+  const outfile = `${outDir}/headless.esm.js`;
 
-  return buildBrowserEsmConfig(entryPoint, outDir);
+  return buildBrowserConfig({
+    entryPoints: [entryPoint],
+    outfile,
+    format: 'esm',
+    watch: devMode,
+  });
 });
 
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/browser', useCase);
-
-  return buildBrowserEsmConfig(entryPoint, outDir);
-});
-
-function getUseCaseDir(prefix, useCase) {
-  return useCase === 'search' ? prefix : `${prefix}/${useCase}`;
-}
-
-function buildBrowserEsmConfig(entryPoint, outDir) {
   const outfile = `${outDir}/headless.esm.js`;
 
   return buildBrowserConfig({
@@ -53,7 +56,7 @@ function buildBrowserEsmConfig(entryPoint, outDir) {
     outfile,
     format: 'esm',
   });
-}
+});
 
 /**
  * @param {import('esbuild').BuildOptions} options
