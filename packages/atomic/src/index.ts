@@ -1,6 +1,6 @@
-export * from './components';
+export {Components, JSX} from './components';
 
-export * from './utils/result-utils';
+export {bindLogDocumentOpenOnResult} from './utils/result-utils';
 
 export {
   initializeBindings,

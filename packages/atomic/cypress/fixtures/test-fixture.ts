@@ -242,6 +242,19 @@ export class TestFixture {
     };
   }
 
+  public static getUABody() {
+    return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
+      request: {[key: string]: any};
+    }>;
+  }
+
+  public static getUACustomData() {
+    return TestFixture.getUABody().then(
+      ({request}) =>
+        request.body.customData as {[key: string]: string | string[]}
+    );
+  }
+
   private intercept() {
     cy.intercept({
       method: 'POST',
