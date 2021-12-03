@@ -4,7 +4,11 @@ import {
   field,
   NumericFacetExpectations as Expect,
 } from './numeric-facet-expectations';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  mockSearchNoResults,
+} from '../../../page-objects/search';
 import {NumericFacetActions as Actions} from './numeric-facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
 
@@ -198,24 +202,24 @@ describe('Numeric Facet Test Suite', () => {
         Expect.inputMaxEmpty();
         Expect.inputMinEmpty();
       });
+    });
+  });
 
-      scope('when selecting range with no search results', () => {
-        const min = 1;
-        const max = 10000000000;
+  describe('when selecting range with no search results', () => {
+    it('should work as expected', () => {
+      const min = 1;
+      const max = 100000;
 
-        visitNumericFacetPage(customWithInputSettings);
-        cy.wait(InterceptAliases.Search);
+      mockSearchNoResults();
+      visitNumericFacetPage(customWithInputSettings, false);
+      Actions.inputMinValue(min);
+      Actions.inputMaxValue(max);
+      Actions.submitManualRange();
 
-        Actions.inputMinValue(min);
-        Actions.inputMaxValue(max);
-        Actions.submitManualRange();
-        cy.wait(InterceptAliases.Search);
-
-        Expect.displayValues(false);
-        Expect.search.numberOfResults(0);
-        Expect.displayClearButton(true);
-        Expect.clearFilterContains('Clear filter');
-      });
+      Expect.displayValues(false);
+      Expect.search.numberOfResults(0);
+      Expect.displayClearButton(true);
+      Expect.clearFilterContains('Clear filter');
     });
   });
 
