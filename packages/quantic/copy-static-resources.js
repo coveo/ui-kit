@@ -3,7 +3,12 @@ const ncp = promisify(require('ncp'));
 const mkdir = promisify(require('fs').mkdir);
 
 const copy = async (source, dest) => {
-  return await ncp(source, dest);
+  try {
+    return await ncp(source, dest);
+  } catch (e) {
+    console.log(`Failed to copy: ${source}\nDoes the file exist?`);
+    process.exit(1);
+  }
 };
 
 const main = async () => {
