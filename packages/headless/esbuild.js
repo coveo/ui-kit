@@ -11,24 +11,6 @@ const useCaseEntries = {
   'case-assist': 'src/case-assist.index.ts',
 };
 
-// function getGlobalName(useCase) {
-//   const map = {
-//     search: 'CoveoHeadless',
-//     recommendation: 'CoveoHeadlessRecommendation',
-//     'product-recommendation': 'CoveoHeadlessProductRecommendation',
-//     'product-listing': 'CoveoHeadlessProductListing',
-//     'case-assist': 'CoveoHeadlessCaseAssist',
-//   };
-
-//   const globalName = map[useCase];
-
-//   if (globalName) {
-//     return globalName;
-//   }
-
-//   throw new Error(`Please specify a global name for use-case: "${useCase}"`);
-// }
-
 function getPackageVersion() {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
@@ -44,19 +26,6 @@ const base = {
     'process.env.VERSION': JSON.stringify(getPackageVersion()),
   },
 };
-
-// const browser = Object.entries(useCaseEntries).map((entry) => {
-//   const [useCase, entryPoint] = entry;
-//   const dir = getUseCaseDir('dist/browser', useCase);
-//   const outfile = `${dir}/headless.js`;
-
-//   return buildBrowserConfig({
-//     entryPoints: [entryPoint],
-//     outfile,
-//     format: 'iife',
-//     globalName: getGlobalName(useCase),
-//   });
-// });
 
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
