@@ -34,13 +34,17 @@ const addInResultListFixture = (numChild: number) => {
         result.raw.afieldwithsometext = 'Some text';
       });
     })
+    .withViewport('macbook-13')
     .init();
 };
 
 describe('Result Fields Component', () => {
   describe('when not used inside a result template', () => {
     beforeEach(() => {
-      new TestFixture().with((e) => addTag(e, fieldsListComponent, {})).init();
+      new TestFixture()
+        .with((e) => addTag(e, fieldsListComponent, {}))
+        .withViewport('macbook-13')
+        .init();
     });
 
     CommonAssertions.assertRemovesComponent(() => cy.get(fieldsListComponent));
