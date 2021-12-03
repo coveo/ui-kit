@@ -1,0 +1,46 @@
+{
+  "name": "@coveo/auth",
+  "private": false,
+  "version": "1.1.2",
+  "description": "Functions to help authenticate with the Coveo platform.",
+  "main": "dist/auth.js",
+  "module": "dist/auth.esm.js",
+  "types": "./dist/definitions/auth.d.ts",
+  "scripts": {
+    "build": "npm run typedefinitions & rollup -c",
+    "test": "jest",
+    "test:watch": "jest --watch --colors --no-cache --silent=false",
+    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "clean": "rimraf -f -r dist/*",
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "e2e:saml": "vite manual-e2e/saml/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/auth"
+  },
+  "keywords": [
+    "coveo",
+    "authentication",
+    "saml"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/coveo/ui-kit/issues"
+  },
+  "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/jest": "^27.0.3",
+    "jest": "^27.3.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.60.1",
+    "rollup-plugin-license": "^2.6.0",
+    "ts-jest": "^27.0.7",
+    "vite": "^2.6.14"
+  },
+  "engines": {
+    "node": ">=10"
+  }
+}

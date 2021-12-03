@@ -1,5 +1,4 @@
 import {exec} from 'child_process';
-// eslint-disable-next-line node/no-unpublished-import
 import strip from 'strip-color';
 import * as path from 'path';
 

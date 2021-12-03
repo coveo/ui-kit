@@ -4,12 +4,14 @@ import {
   history,
   CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
+  CaseAssistClient,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {
+  CaseAssistConfigurationSection,
   ConfigurationSection,
   ContextSection,
   PipelineSection,
@@ -18,7 +20,6 @@ import {
   SearchHubSection,
   SearchSection,
 } from '../../state/state-sections';
-import {ContextPayload} from '../../features/context/context-state';
 import {PreprocessRequest} from '../preprocess-request';
 import {getLanguage} from './shared-analytics';
 import {
@@ -26,6 +27,7 @@ import {
   SectionNeededForFacetMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {VERSION} from '../../utils/version';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -37,6 +39,9 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
       RecommendationSection &
       SectionNeededForFacetMetadata
   >;
+
+export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
+  Partial<CaseAssistConfigurationSection>;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
@@ -51,18 +56,18 @@ export class AnalyticsProvider implements SearchPageClientProvider {
       responseTime: this.responseTime,
       results: this.mapResultsToAnalyticsDocument(),
       numberOfResults: this.numberOfResults,
-      getBaseMetadata: this.getBaseMetadata(),
     };
   }
 
   public getBaseMetadata() {
     const {context} = this.state;
     const contextValues = context?.contextValues || {};
-    const formattedObject: ContextPayload = {};
+    const formattedObject: Record<string, string | string[]> = {};
     for (const [key, value] of Object.entries(contextValues)) {
       const formattedKey = `context_${key}`;
       formattedObject[formattedKey] = value;
     }
+    formattedObject['coveoHeadlessVersion'] = VERSION;
     return formattedObject;
   }
 
@@ -145,6 +150,7 @@ export const configureAnalytics = ({
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
+  const enableAnalytics = state.configuration.analytics.enabled;
   const client = new CoveoSearchPageClient(
     {
       token,
@@ -170,7 +176,7 @@ export const configureAnalytics = ({
     provider
   );
 
-  if (state.configuration.analytics.enabled === false) {
+  if (!enableAnalytics) {
     client.disable();
   }
   return client;
@@ -180,3 +186,49 @@ export const getVisitorID = () =>
   new CoveoAnalyticsClient({}).getCurrentVisitorId();
 
 export const historyStore = new history.HistoryStore();
+
+interface ConfigureCaseAssistAnalyticsOptions {
+  state: StateNeededByCaseAssistAnalytics;
+  logger: Logger;
+  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  preprocessRequest?: PreprocessRequest;
+}
+
+export const configureCaseAssistAnalytics = ({
+  logger,
+  state,
+  analyticsClientMiddleware = (_, p) => p,
+  preprocessRequest,
+}: ConfigureCaseAssistAnalyticsOptions) => {
+  const token = state.configuration.accessToken;
+  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
+  const enableAnalytics = state.configuration.analytics.enabled;
+  const client = new CaseAssistClient({
+    enableAnalytics,
+    token,
+    endpoint,
+    runtimeEnvironment,
+    preprocessRequest,
+    beforeSendHooks: [
+      analyticsClientMiddleware,
+      (type, payload) => {
+        logger.info(
+          {
+            ...payload,
+            type,
+            endpoint,
+            token,
+          },
+          'Analytics request'
+        );
+        return payload;
+      },
+    ],
+  });
+
+  if (!enableAnalytics) {
+    client.disable();
+  }
+  return client;
+};

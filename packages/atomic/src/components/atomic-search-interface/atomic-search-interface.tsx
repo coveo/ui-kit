@@ -27,6 +27,7 @@ import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
 import {AtomicStore, initialStore} from '../../utils/store';
+import {getAnalyticsConfig} from './analytics-config';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -239,7 +240,7 @@ export class AtomicSearchInterface {
 
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
-    const analyticsConfig = this.getAnalyticsConfig(options);
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildSearchEngine({
         configuration: {
@@ -273,18 +274,6 @@ export class AtomicSearchInterface {
     }
 
     return searchConfigFromProps;
-  }
-
-  private getAnalyticsConfig(options: InitializationOptions) {
-    const analyticsConfigFromProps = {enabled: this.analytics};
-    if (options.analytics) {
-      return {
-        ...options.analytics,
-        ...analyticsConfigFromProps,
-      };
-    }
-
-    return analyticsConfigFromProps;
   }
 
   private initI18n() {

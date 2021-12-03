@@ -318,7 +318,7 @@ export class AtomicResultList implements InitializableComponent {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
-      this.image
+      this.imageSize ?? this.image
     );
     if (
       this.resultListState.firstSearchExecuted &&

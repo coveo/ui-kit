@@ -13,7 +13,6 @@ export default function defaultStory(
   title: string,
   componentTag: string,
   defaultArgs: Args,
-  docPage: typeof DocsPage,
   advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
@@ -21,7 +20,6 @@ export default function defaultStory(
       title,
       componentTag,
       defaultArgs,
-      docPage,
       false,
       advancedConfig
     );

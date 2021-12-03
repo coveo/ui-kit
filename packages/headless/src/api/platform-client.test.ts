@@ -54,7 +54,7 @@ describe('PlatformClient call', () => {
     mockFetch.mockClear();
   });
 
-  it('should call fetch with the right parameters', async (done) => {
+  it('should call fetch with the right parameters', async () => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
@@ -71,10 +71,9 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-    done();
   });
 
-  it('should preprocess the request if a middleware is provided', async (done) => {
+  it('should preprocess the request if a middleware is provided', async () => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
@@ -100,7 +99,6 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-    done();
   });
 
   it(`when the contentType is www-url-form-encoded and the #requestParams can be encoded,
@@ -192,17 +190,16 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it('when status is 419 should return a TokenExpiredError', async (done) => {
+  it('when status is 419 should return a TokenExpiredError', async () => {
     mockFetch.mockReturnValueOnce(
       Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
     );
 
     const response = await platformCall();
     expect(response).toBeInstanceOf(ExpiredTokenError);
-    done();
   });
 
-  it('when status is 429 should try exponential backOff', async (done) => {
+  it('when status is 429 should try exponential backOff', async () => {
     mockFetch
       .mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
@@ -217,10 +214,9 @@ describe('PlatformClient call', () => {
     await platformCall();
 
     expect(mockFetch).toHaveBeenCalledTimes(3);
-    done();
   });
 
-  it('should not throw when backOff rejects with a response', async (done) => {
+  it('should not throw when backOff rejects with a response', async () => {
     const spy = jest.spyOn(BackOff, 'backOff');
     const expectedResponse = new Response(JSON.stringify({hoho: 'oups'}), {
       status: 429,
@@ -229,10 +225,9 @@ describe('PlatformClient call', () => {
 
     const response = await platformCall();
     expect(response).toBe(expectedResponse);
-    done();
   });
 
-  it('should not throw when fetch throws a common error', async (done) => {
+  it('should not throw when fetch throws a common error', async () => {
     const fetchError = new Error('Could not fetch');
     fetchError.name = 'FetchError';
 
@@ -240,16 +235,14 @@ describe('PlatformClient call', () => {
     const response = await platformCall();
 
     expect(response).toBe(fetchError);
-    done();
   });
 
-  it('should return when there is an AbortError', async (done) => {
+  it('should return when there is an AbortError', async () => {
     const abortError = new Error();
     abortError.name = 'AbortError';
 
     mockFetch.mockRejectedValue(abortError);
     const response = await platformCall();
     expect(response).toBe(abortError);
-    done();
   });
 });

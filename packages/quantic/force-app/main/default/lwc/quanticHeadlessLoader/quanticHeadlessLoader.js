@@ -8,18 +8,36 @@ const DEBOUNCE_DELAY = 200;
 let debouncers = {};
 let dependencyPromises = [];
 
+const HeadlessBundleNames = {
+  search: 'search',
+  caseAssist: 'case-assist'
+};
+
+const headlessBundles = {
+  [HeadlessBundleNames.search]: {
+    libPath: '/browser/headless.js',
+    bundle: () => CoveoHeadless,
+  },
+  [HeadlessBundleNames.caseAssist]: {
+    libPath: '/browser/case-assist/headless.js',
+    bundle: () => CoveoHeadlessCaseAssist,
+  },
+};
+
 /**
  * Initiates dependency loading promises.
  * @param element The Lightning element to use to load dependencies.
  */
-const loadDependencies = async (element) => {
+const loadDependencies = async (element, headlessUseCase) => {
+  const bundleInfo = headlessUseCase ? headlessBundles[headlessUseCase] : headlessBundles.search;
+
   if (!dependencyPromises.length) {
     dependencyPromises = [
-      loadScript(element, HeadlessPath + '/browser/headless.js'),
+      loadScript(element, HeadlessPath + bundleInfo.libPath),
     ];
   }
   await Promise.all(dependencyPromises);
-  return CoveoHeadless;
+  return bundleInfo.bundle();
 }
 
 /**

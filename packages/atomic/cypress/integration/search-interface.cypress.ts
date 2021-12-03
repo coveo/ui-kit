@@ -33,6 +33,13 @@ describe('Search Interface Component', () => {
         .should('contain', 'patate')
         .should('contain', 'seconde');
     });
+
+    it('should log libraries versions in analytics custom data', () => {
+      TestFixture.getUACustomData().then((customData) => {
+        expect(customData).to.have.property('coveoAtomicVersion');
+        expect(customData).to.have.property('coveoHeadlessVersion');
+      });
+    });
   });
 
   describe('without an automatic search', () => {

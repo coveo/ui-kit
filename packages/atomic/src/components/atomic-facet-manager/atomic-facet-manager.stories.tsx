@@ -1,12 +1,10 @@
 import {html} from 'lit-html';
 import defaultStory from '../../../.storybook/default-story';
-import FacetManagerDoc from './atomic-facet-manager.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/FacetManager',
   'atomic-facet-manager',
   {},
-  FacetManagerDoc,
   {
     additionalMarkup: () => html`
       <style>

@@ -1,12 +1,10 @@
 import {html} from 'lit-html';
 import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
-import FieldConditionDoc from './atomic-field-condition.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/FieldCondition',
   'atomic-field-condition',
   {},
-  FieldConditionDoc,
   {
     additionalChildMarkup: () =>
       html`

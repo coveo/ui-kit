@@ -104,7 +104,8 @@ function validateConfiguration(
   try {
     caseAssistEngineConfigurationSchema.validate(configuration);
   } catch (error) {
-    logger.error(error, 'Case Assist engine configuration error');
+    logger.error(error as Error, 'Case Assist engine configuration error');
+
     throw error;
   }
 }

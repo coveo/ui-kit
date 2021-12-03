@@ -177,7 +177,7 @@ function buildBrowserConfiguration({input, output}) {
       replace(),
       isProduction && sizeSnapshot(),
       isProduction && terser(),
-      copy({targets: [{ src: 'src/', dest: 'dist/browser/' }]}),
+      copySourceFiles(),
     ],
   }
 }
@@ -208,8 +208,22 @@ function sourceMapConfig() {
   }
 }
 
-// For Atomic's development purposes only
-const dev = [
+function copySourceFiles() {
+  return copy({
+    targets: [
+      {
+        src: ['src/', '!src/**/*.test.ts', '!src/test/'],
+        dest: 'dist/browser/src/',
+        expandDirectories: true,
+        onlyFiles: true,
+      },
+    ],
+    flatten: false,
+  });
+}
+
+// For Atomic's local development purposes only
+const local = [
   {
     input: 'src/index.ts',
     output: [buildEsmOutput('../atomic/src/external-builds')],
@@ -232,6 +246,14 @@ const dev = [
   },
 ].filter(b => matchesFilter(b.input)).map(buildBrowserConfiguration);
 
-const config = isProduction ? [...nodejs, ...browser] : dev;
+const config = [];
+
+if (isProduction) {
+  config.push(...nodejs, ...browser);
+}
+
+if (!isCI) {
+  config.push(...local)
+}
 
 export default config;

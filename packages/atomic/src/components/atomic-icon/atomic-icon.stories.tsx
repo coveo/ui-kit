@@ -1,6 +1,5 @@
 import {html} from 'lit-html';
 import defaultStory from '../../../.storybook/default-story';
-import IconDoc from './atomic-icon.mdx';
 import AssetsList from '../../../docs/assets.json';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
 
@@ -16,7 +15,6 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   {
     icon: 'assets://account.svg',
   },
-  IconDoc,
   {
     additionalMarkup: () => {
       return html`

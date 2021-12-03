@@ -106,6 +106,15 @@ export class TestFixture {
     return this;
   }
 
+  public withViewport(viewport: Cypress.ViewportPreset) {
+    cy.viewport(viewport);
+    return this;
+  }
+
+  public withMobileViewport() {
+    return this.withViewport('iphone-x');
+  }
+
   public init() {
     cy.visit(buildTestUrl(this.hash)).injectAxe();
     this.intercept();
@@ -231,6 +240,19 @@ export class TestFixture {
       warn: '@consoleWarn',
       log: '@consoleLog',
     };
+  }
+
+  public static getUABody() {
+    return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
+      request: {[key: string]: any};
+    }>;
+  }
+
+  public static getUACustomData() {
+    return TestFixture.getUABody().then(
+      ({request}) =>
+        request.body.customData as {[key: string]: string | string[]}
+    );
   }
 
   private intercept() {

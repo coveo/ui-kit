@@ -3,6 +3,222 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.5...@coveo/atomic@1.19.0) (2021-12-02)
+
+
+### Features
+
+* **atomic,headless:** add analytics metadata about headless and atomic version number ([#1558](https://github.com/coveo/ui-kit/issues/1558)) ([6bdf967](https://github.com/coveo/ui-kit/commit/6bdf967113ed50ce3a0cd639aecfb1f3efa12225))
+
+
+
+
+
+## [1.18.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.4...@coveo/atomic@1.18.5) (2021-12-02)
+
+
+### Bug Fixes
+
+* **atomic:** change refine toggle closing animation to a simple slide down ([#1552](https://github.com/coveo/ui-kit/issues/1552)) ([8129b74](https://github.com/coveo/ui-kit/commit/8129b742ae7f314b3274bc5338d8a29be22a61d6))
+
+
+
+
+
+## [1.18.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.3...@coveo/atomic@1.18.4) (2021-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.18.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.2...@coveo/atomic@1.18.3) (2021-12-01)
+
+
+### Bug Fixes
+
+* **atomic:** explicitly define exports ([#1554](https://github.com/coveo/ui-kit/issues/1554)) ([8ba2413](https://github.com/coveo/ui-kit/commit/8ba24130cafa2b928ceefe9b225e90858c8f18f0))
+
+
+
+
+
+## [1.18.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.1...@coveo/atomic@1.18.2) (2021-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.0...@coveo/atomic@1.18.1) (2021-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.2...@coveo/atomic@1.18.0) (2021-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** fixed list root image classes ([#1534](https://github.com/coveo/ui-kit/issues/1534)) ([c92949b](https://github.com/coveo/ui-kit/commit/c92949bcd8d1b0784febf56ca6493e8b4461a8a8))
+
+
+### Features
+
+* **atomic:** expose & document Stencil decorators ([#1544](https://github.com/coveo/ui-kit/issues/1544)) ([1caded2](https://github.com/coveo/ui-kit/commit/1caded253146a16c4399a2beea0bd4f1071bd405))
+
+
+
+
+
+## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.1...@coveo/atomic@1.17.2) (2021-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** init SafeStorage before calling it ([#1541](https://github.com/coveo/ui-kit/issues/1541)) ([deb8655](https://github.com/coveo/ui-kit/commit/deb86550ce7b98056d5674705a57a3c7ed59f31e))
+
+
+
+
+
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.17.0...@coveo/atomic@1.17.1) (2021-11-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.7...@coveo/atomic@1.17.0) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** line break for badge and printable uri ([#1537](https://github.com/coveo/ui-kit/issues/1537)) ([ad9a7d8](https://github.com/coveo/ui-kit/commit/ad9a7d8015813a864a6579e3f82d373355127e5a))
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
+## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.6...@coveo/atomic@1.16.7) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix line clamp max height & break word in title section ([#1530](https://github.com/coveo/ui-kit/issues/1530)) ([a6ef188](https://github.com/coveo/ui-kit/commit/a6ef18870890a9a2c6cb8f6a3a06dca553c5be69))
+
+
+
+
+
+## [1.16.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.5...@coveo/atomic@1.16.6) (2021-11-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.4...@coveo/atomic@1.16.5) (2021-11-29)
+
+
+### Bug Fixes
+
+* **atomic:** add group class to link facet values ([#1531](https://github.com/coveo/ui-kit/issues/1531)) ([63365e3](https://github.com/coveo/ui-kit/commit/63365e30441d4e30ff7d6150fd12ce4d1e193b38))
+
+
+
+
+
+## [1.16.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.3...@coveo/atomic@1.16.4) (2021-11-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.2...@coveo/atomic@1.16.3) (2021-11-26)
+
+
+### Bug Fixes
+
+* **atomic:** fix numeric input on no facet results  ([#1523](https://github.com/coveo/ui-kit/issues/1523)) ([74555b9](https://github.com/coveo/ui-kit/commit/74555b928a1a51861f594616b3aced2ba0868078))
+
+
+
+
+
+## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.1...@coveo/atomic@1.16.2) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.16.0...@coveo/atomic@1.16.1) (2021-11-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.8...@coveo/atomic@1.16.0) (2021-11-25)
+
+
+### Features
+
+* **atomic:** export initialize bindings & add atomic-external component ([#1511](https://github.com/coveo/ui-kit/issues/1511)) ([6f648bd](https://github.com/coveo/ui-kit/commit/6f648bd8659d3d95c70a85527a2eb426f0f315ca))
+
+
+
+
+
+## [1.15.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.7...@coveo/atomic@1.15.8) (2021-11-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.15.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.6...@coveo/atomic@1.15.7) (2021-11-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.15.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.5...@coveo/atomic@1.15.6) (2021-11-23)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.15.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.4...@coveo/atomic@1.15.5) (2021-11-23)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.15.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.15.3...@coveo/atomic@1.15.4) (2021-11-23)
 
 **Note:** Version bump only for package @coveo/atomic
