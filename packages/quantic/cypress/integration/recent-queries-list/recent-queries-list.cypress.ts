@@ -1,4 +1,4 @@
-import {configure, reset} from '../../page-objects/configurator';
+import {configure} from '../../page-objects/configurator';
 import {InterceptAliases, interceptSearch} from '../../page-objects/search';
 import {RecentQueriesListExpectations as Expect} from './recent-queries-list-expectations';
 import {scope} from '../../reporters/detailed-collector';
@@ -7,6 +7,7 @@ import {
   performSearch,
   setQuery,
 } from '../../page-objects/actions/action-perform-search';
+import {RecentQueriesListSelectors} from './recent-queries-list-selectors';
 
 interface RecentQueriesListOptions {
   maxLength: number;
@@ -36,6 +37,15 @@ describe('quantic-recent-queries-list', () => {
     cy.visit(pageUrl);
     configure(options);
   }
+  function loadFromUrlHash(
+    urlHash: string,
+    options: Partial<RecentQueriesListOptions> = {}
+  ) {
+    interceptSearch();
+    cy.visit(`${pageUrl}#${urlHash}`);
+    configure(options);
+    cy.wait(InterceptAliases.Search);
+  }
 
   it('should render a placeholder before results have returned', () => {
     visitRecentQueries();
@@ -63,24 +73,44 @@ describe('quantic-recent-queries-list', () => {
           Expect.displayQueries(true);
           Expect.numberOfQueries(index + 1);
           Expect.lastQueryContains(query);
-
+          Expect.displayQuery(query, true);
+          Expect.urlHashContains(query);
           clearInput();
         });
       });
 
       scope('when searching queries greater than #maxLength', () => {
-        createRandomQueriesList(15).forEach((query) => {
+        const listQueries = createRandomQueriesList(15);
+        listQueries.forEach((query) => {
           setQuery(query);
           performSearch().wait(InterceptAliases.Search);
           clearInput();
         });
 
         Expect.numberOfQueries(defaultMaxLength);
+        Expect.displayQuery(listQueries[0], false);
+      });
+
+      scope('when selecting a query in the list', () => {
+        const query1 = 'queryOne';
+        const query2 = 'queryTwo';
+
+        setQuery(query1);
+        performSearch().wait(InterceptAliases.Search);
+        clearInput();
+        setQuery(query2);
+        performSearch().wait(InterceptAliases.Search);
+        clearInput();
+
+        Expect.lastQueryContains(query2);
+        Expect.urlHashContains(query2);
+        RecentQueriesListSelectors.query(query1).click();
+        Expect.urlHashContains(query1);
       });
     });
   });
 
-  describe('with custom options', () => {
+  describe('with custom #maxLength', () => {
     const customMaxLength = 3;
 
     it('should work as expected', () => {
@@ -88,13 +118,27 @@ describe('quantic-recent-queries-list', () => {
         maxLength: customMaxLength,
       });
 
-      createRandomQueriesList(5).forEach((query) => {
+      const listQueries = createRandomQueriesList(5);
+      listQueries.forEach((query) => {
         setQuery(query);
         performSearch().wait(InterceptAliases.Search);
         clearInput();
       });
 
       Expect.numberOfQueries(customMaxLength);
+      Expect.displayQuery(listQueries[0], false);
+    });
+  });
+
+  describe('with a query in the URL', () => {
+    it('should work as expected', () => {
+      const url = 'q=somequery';
+
+      loadFromUrlHash(url);
+
+      Expect.displayEmptyList(false);
+      Expect.displayQuery('somequery', true);
+      Expect.numberOfQueries(1);
     });
   });
 });

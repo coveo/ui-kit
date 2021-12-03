@@ -36,6 +36,18 @@ function recentQueriesListExpectations(selector: RecentQueriesListSelector) {
         .should('have.length', length)
         .logDetail(`should display ${length} queries in the list`);
     },
+    displayQuery: (value: string, display: boolean) => {
+      selector
+        .query(value)
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display query with value: "${value}"`);
+    },
+    urlHashContains: (query: string) => {
+      const urlHash = `#q=${query}`;
+      cy.url()
+        .should('include', urlHash)
+        .logDetail(`URL hash should contain "${urlHash}"`);
+    },
   };
 }
 
