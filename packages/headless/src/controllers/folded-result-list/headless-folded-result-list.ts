@@ -25,7 +25,7 @@ import {
 } from '../result-list/headless-result-list';
 import {SearchStatusState} from '../search-status/headless-search-status';
 
-export {FoldedCollection, FoldedResult};
+export type {FoldedCollection, FoldedResult};
 
 const optionsSchema = new Schema<Required<FoldingOptions>>(
   foldingOptionsSchemaDefinition

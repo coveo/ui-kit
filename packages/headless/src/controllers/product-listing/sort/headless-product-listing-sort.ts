@@ -30,16 +30,15 @@ import {
 import {Schema} from '@coveo/bueno';
 import {validateInitialState} from '../../../utils/validate-payload';
 
-export {
+export type {
   SortBy,
   SortDirection,
   SortByRelevance,
   SortByFields,
   SortByFieldsFields,
   SortCriterion,
-  buildRelevanceSortCriterion,
-  buildFieldsSortCriterion,
 };
+export {buildRelevanceSortCriterion, buildFieldsSortCriterion};
 
 export interface ProductListingSortProps {
   /**

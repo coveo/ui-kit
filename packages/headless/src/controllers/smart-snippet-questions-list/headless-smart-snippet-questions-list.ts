@@ -6,7 +6,6 @@ import {
   QuestionAnswer,
   QuestionAnswerDocumentIdentifier,
 } from '../../api/search/search/question-answering';
-export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
@@ -18,6 +17,8 @@ import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from '../../features/question-answering/question-answering-actions';
+
+export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.

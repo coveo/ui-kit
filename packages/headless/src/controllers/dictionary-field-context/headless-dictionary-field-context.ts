@@ -10,7 +10,7 @@ import {DictionaryFieldContextSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {Controller, buildController} from '../controller/headless-controller';
 
-export {DictionaryFieldContextPayload};
+export type {DictionaryFieldContextPayload};
 
 /**
  * The `DictionaryFieldContext` controller allows specifying which [dictionary field](https://docs.coveo.com/en/2036/index-content/about-fields#dictionary-fields) keys to retrieve.

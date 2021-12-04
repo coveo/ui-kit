@@ -33,7 +33,7 @@ import {
   StringFieldExpression,
 } from './string-field/string-field';
 
-export {
+export type {
   KeywordExpression,
   NearExpression,
   OtherTerm,

@@ -15,7 +15,7 @@ import {
   AnalyticsRuntimeEnvironment,
 } from './configuration-actions';
 
-export {
+export type {
   SetOriginLevel2ActionCreatorPayload,
   SetOriginLevel3ActionCreatorPayload,
   UpdateAnalyticsConfigurationActionCreatorPayload,
