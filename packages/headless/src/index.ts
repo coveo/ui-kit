@@ -63,15 +63,15 @@ export type {FieldDescription} from './api/search/fields/fields-response';
 export type {Raw} from './api/search/search/raw';
 export type {
   SortCriterion,
-  SortBy,
   SortByDate,
   SortByField,
   SortByNoSort,
   SortByQRE,
   SortByRelevancy,
-  SortOrder,
 } from './features/sort-criteria/criteria';
 export {
+  SortBy,
+  SortOrder,
   buildDateSortCriterion,
   buildCriterionExpression,
   buildFieldSortCriterion,

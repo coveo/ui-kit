@@ -60,14 +60,14 @@ export type {
   ProductListingSortProps,
   ProductListingSort,
   ProductListingSortState,
-  SortBy,
   SortByFields,
   SortByFieldsFields,
   SortByRelevance,
   SortCriterion,
-  SortDirection,
 } from './controllers/product-listing/sort/headless-product-listing-sort';
 export {
+  SortBy,
+  SortDirection,
   buildSort,
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
