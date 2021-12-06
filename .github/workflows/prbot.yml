@@ -19,12 +19,18 @@ jobs:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
   lint-check:
     name: "Check with linter"
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   generate-doc:
@@ -32,6 +38,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npm run doc:generate
   unit-test:
@@ -39,6 +48,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npx lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
@@ -53,6 +65,9 @@ jobs:
     env:
       NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
         name: Run Cypress
