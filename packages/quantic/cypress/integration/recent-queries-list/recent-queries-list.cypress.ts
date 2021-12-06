@@ -118,7 +118,7 @@ describe('quantic-recent-queries-list', () => {
         maxLength: customMaxLength,
       });
 
-      const listQueries = createRandomQueriesList(5);
+      const listQueries = createRandomQueriesList(4);
       listQueries.forEach((query) => {
         setQuery(query);
         performSearch().wait(InterceptAliases.Search);
