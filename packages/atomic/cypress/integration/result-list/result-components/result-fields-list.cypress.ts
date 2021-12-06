@@ -1,5 +1,4 @@
 import {
-  addTag,
   generateComponentHTML,
   TestFixture,
 } from '../../../fixtures/test-fixture';
@@ -40,7 +39,9 @@ const addInResultListFixture = (numChild: number) => {
 describe('Result Fields Component', () => {
   describe('when not used inside a result template', () => {
     beforeEach(() => {
-      new TestFixture().with((e) => addTag(e, fieldsListComponent, {})).init();
+      new TestFixture()
+        .withElement(generateComponentHTML(fieldsListComponent))
+        .init();
     });
 
     CommonAssertions.assertRemovesComponent(() => cy.get(fieldsListComponent));

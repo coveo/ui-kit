@@ -1,7 +1,7 @@
 name: "Setup & build"
-description: "Checkout HEAD, setup node, install dependencies & builds"
+description: "Checkout HEAD, setup node, install dependencies & build"
 runs:
-  using: "composite"
+  using: composite
   steps:
     - uses: actions/setup-node@v2
       with:
@@ -19,7 +19,7 @@ runs:
           packages/atomic/loader
           packages/atomic/storybook-static
           packages/atomic/www
-        key: ${{ runner.os }}-${{ github.sha }}
+        key: ${{ github.sha }}
     - uses: actions/cache@v2
       with:
         path: |
