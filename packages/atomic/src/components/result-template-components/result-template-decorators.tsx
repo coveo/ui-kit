@@ -26,7 +26,7 @@ export function ResultContext() {
     component.connectedCallback = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
-        'atomic/resolveResult',
+        resultContextEventName,
         (result: Result) => {
           this[resultVariable] = result;
         }
@@ -73,13 +73,15 @@ const resultContextEventName = 'atomic/resolveResult';
  */
 export const resultContext = (element: Element) =>
   new Promise<Result>((resolve, reject) => {
-    const event = buildCustomEvent<ResultContextEventHandler>(
-      resultContextEventName,
-      (result: Result) => resolve(result)
-    );
-    element.dispatchEvent(event);
+    setTimeout(() => {
+      const event = buildCustomEvent<ResultContextEventHandler>(
+        resultContextEventName,
+        (result: Result) => resolve(result)
+      );
+      element.dispatchEvent(event);
 
-    if (!element.closest('atomic-result')) {
-      reject(new MissingResultParentError(element.nodeName.toLowerCase()));
-    }
+      if (!element.closest('atomic-result')) {
+        reject(new MissingResultParentError(element.nodeName.toLowerCase()));
+      }
+    });
   });
