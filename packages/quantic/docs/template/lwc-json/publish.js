@@ -116,12 +116,8 @@ const categoryMap = {
 
 function parseClass(element, parentNode, childNodes) {
   if (!parentNode.components) {
-    parentNode.components = {
-      search: [],
-      resultTemplate: [],
-      caseAssist: [],
-      utility: []
-    };
+    parentNode.components = {};
+    Object.keys(categoryMap).forEach(key => parentNode.components[key] = []);
   }
 
   element.xmlMeta = getMetadata(element).LightningComponentBundle;
@@ -143,7 +139,7 @@ function parseClass(element, parentNode, childNodes) {
   const categoryKey = Object.keys(categoryMap).find(key => categoryMap[key] === thisClass.category);
   try {
     parentNode.components[categoryKey].push(thisClass);
-  } catch(error) {
+  } catch (error) {
     throw new Error(`JsDoc parsing FAILED: invalid category value ${thisClass.category} on component ${thisClass.name}`);
   }
 
