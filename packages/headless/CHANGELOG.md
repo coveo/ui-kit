@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.41.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.40.1...@coveo/headless@1.41.0) (2021-12-02)
+
+
+### Features
+
+* **atomic,headless:** add analytics metadata about headless and atomic version number ([#1558](https://github.com/coveo/ui-kit/issues/1558)) ([6bdf967](https://github.com/coveo/ui-kit/commit/6bdf967113ed50ce3a0cd639aecfb1f3efa12225))
+
+
+
+
+
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.40.0...@coveo/headless@1.40.1) (2021-12-02)
+
+
+### Bug Fixes
+
+* **headless:** rework previous state comparison for controllers to allow multiple subscribers ([#1555](https://github.com/coveo/ui-kit/issues/1555)) ([24f7c8b](https://github.com/coveo/ui-kit/commit/24f7c8bf5db6882cacd663ec0fc567cf22f77197))
+
+
+
+
+
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.39.0...@coveo/headless@1.40.0) (2021-12-01)
+
+
+### Features
+
+* **headless:** add Case Field controller for Case Assist ([#1550](https://github.com/coveo/ui-kit/issues/1550)) ([c753e53](https://github.com/coveo/ui-kit/commit/c753e533fd0fc8dd75e6b5cdb4ffa8069de3996f))
+
+
+
+
+
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.38.1...@coveo/headless@1.39.0) (2021-12-01)
+
+
+### Features
+
+* **headless:** added document suggestion controller ([#1547](https://github.com/coveo/ui-kit/issues/1547)) ([000e6f0](https://github.com/coveo/ui-kit/commit/000e6f089fa4c42853dbdd4b9369d2d3475158b9))
+
+
+
+
+
+## [1.38.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.38.0...@coveo/headless@1.38.1) (2021-12-01)
+
+
+### Bug Fixes
+
+* **headless:** always build external builds locally ([#1546](https://github.com/coveo/ui-kit/issues/1546)) ([39f442a](https://github.com/coveo/ui-kit/commit/39f442a729cda7781fc573651f06de8489d4b561))
+
+
+
+
+
 # [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.37.2...@coveo/headless@1.38.0) (2021-12-01)
 
 
