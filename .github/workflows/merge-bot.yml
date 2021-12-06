@@ -14,5 +14,6 @@ jobs:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       steps:
         - uses: actions/setup-node@v2
+        - run: echo "bad"
         - name: Run the Bot
           run: npx @coveo/merge-bot
