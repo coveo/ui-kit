@@ -19,14 +19,11 @@ export function buildController<T extends object>(
   const listeners: Map<Symbol, () => void> = new Map();
   const hasNoListeners = () => listeners.size === 0;
 
-  const hasStateChanged = (
-    currentState: Record<string, unknown>,
-    symbol: Symbol
-  ): boolean => {
+  const hasStateChanged = (currentState: Record<string, unknown>): boolean => {
     try {
       const stringifiedState = JSON.stringify(currentState);
-      const hasChanged = prevState.get(symbol) !== stringifiedState;
-      prevState.set(symbol, stringifiedState);
+      const hasChanged = prevState !== stringifiedState;
+      prevState = stringifiedState;
       return hasChanged;
     } catch (e) {
       console.warn(
