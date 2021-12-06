@@ -31,11 +31,17 @@ describe('Facet Test Suite', () => {
 
   const indexFacetValuesAlias = '@indexFacetValues';
 
-  function visitFacetPage(options: Partial<FacetOptions> = {}) {
+  function visitFacetPage(
+    options: Partial<FacetOptions> = {},
+    waitForSearch = true
+  ) {
     interceptSearch();
 
     cy.visit(pageUrl);
     configure(options);
+    if (waitForSearch) {
+      cy.wait(InterceptAliases.Search);
+    }
   }
 
   function loadFromUrlHash(
@@ -80,7 +86,6 @@ describe('Facet Test Suite', () => {
             label: defaultLabel,
             numberOfValues: defaultNumberOfValues,
           });
-          cy.wait(InterceptAliases.Search);
         }
         setupWithError();
 
@@ -96,11 +101,14 @@ describe('Facet Test Suite', () => {
 
   describe('with values', () => {
     function setupWithValues() {
-      visitFacetPage({
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-      });
+      visitFacetPage(
+        {
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+        },
+        false
+      );
     }
 
     function setupWithNoMoreValues() {
@@ -111,7 +119,6 @@ describe('Facet Test Suite', () => {
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
       });
-      cy.wait(InterceptAliases.Search);
     }
 
     function searchForValue(query: string) {
@@ -153,6 +160,7 @@ describe('Facet Test Suite', () => {
 
         function collapseFacet() {
           Actions.clickCollapseButton();
+          cy.wait(InterceptAliases.Search);
         }
 
         selectFirstFacetValue();
@@ -172,6 +180,7 @@ describe('Facet Test Suite', () => {
           function clearSelectedValues() {
             Actions.clickExpandButton();
             Actions.clickClearFilter();
+            cy.wait(InterceptAliases.Search);
           }
           clearSelectedValues();
           Expect.displayClearButton(false);
@@ -184,6 +193,7 @@ describe('Facet Test Suite', () => {
           const initialNumberOfSelectedValues = 2;
           function selectTwoValues() {
             Actions.checkFirstValue();
+            Expect.logFacetSelect(defaultField, 0);
             Actions.checkLastValue();
           }
           selectTwoValues();
@@ -193,8 +203,8 @@ describe('Facet Test Suite', () => {
           Expect.numberOfIdleCheckboxValues(
             defaultNumberOfValues - initialNumberOfSelectedValues
           );
-          // To be fixed in https://coveord.atlassian.net/browse/SFINT-4177
-          //Expect.logFacetSelect(defaultField, 1);
+
+          Expect.logFacetSelect(defaultField, 1);
 
           scope('when collapsing the facet', () => {
             collapseFacet();
@@ -278,8 +288,7 @@ describe('Facet Test Suite', () => {
         Expect.displayShowMoreButton(true);
         Expect.displaySearchInput(true);
         Expect.displaySearchClearButton(false);
-        // To be fixed in https://coveord.atlassian.net/browse/SFINT-4177
-        //Expect.logFacetSelect(defaultField, 0);
+        Expect.logFacetSelect(defaultField, 0);
       });
 
       scope('when collapsing a facet', () => {
@@ -321,14 +330,12 @@ describe('Facet Test Suite', () => {
               label: defaultLabel,
               numberOfValues: smallNumberOfValues,
             });
-            cy.wait(InterceptAliases.Search);
             Actions.clickShowMoreButton();
           }
           showMoreValues();
           Expect.numberOfValues(smallNumberOfValues * 2);
-          // To be fixed in https://coveord.atlassian.net/browse/SFINT-4177
-          // aliasFacetValues();
-          // Expect.facetValuesEqual(indexFacetValuesAlias);
+          aliasFacetValues();
+          Expect.facetValuesEqual(indexFacetValuesAlias);
 
           scope('when clicking show more button again', () => {
             function showMoreValuesAgain() {
@@ -338,9 +345,9 @@ describe('Facet Test Suite', () => {
 
             showMoreValuesAgain();
             Expect.numberOfValues(smallNumberOfValues * 3);
-            //To be fixed in https://coveord.atlassian.net/browse/SFINT-4177
-            // aliasFacetValues();
-            // Expect.facetValuesEqual(indexFacetValuesAlias);
+            // To be fixed in https://coveord.atlassian.net/browse/SFINT-4177
+            aliasFacetValues();
+            Expect.facetValuesEqual(indexFacetValuesAlias);
 
             scope('when clicking show less button', () => {
               function showLessValues() {
