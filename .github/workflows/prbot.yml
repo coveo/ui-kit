@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
   lint-check:
     name: "Check with linter"
     needs: build
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
       - run: npm run lint:check
   generate-doc:
     name: "Generate doc"
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
       - run: npm run doc:generate
   unit-test:
     name: "Run unit tests"
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
       - run: npx lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
   e2e-test:
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
       - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
         name: Run Cypress
         with:
