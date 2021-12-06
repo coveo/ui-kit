@@ -6,7 +6,7 @@ import {
   SearchEngine,
 } from '@coveo/headless';
 import {Component} from 'react';
-import {ComplexTreeDependentFacet} from '../components/dependent-facet/complex-tree-dependent.fn';
+import {ComplexDependentFacet} from '../components/dependent-facet/complex-dependencies.fn';
 import {SingleParentMultipleDependentFacet} from '../components/dependent-facet/single-parent-multiple-dependent.fn';
 import {SingleParentSingleDependentFacet} from '../components/dependent-facet/single-parent-single-dependent.fn';
 import {SingleValueDependentFacet} from '../components/dependent-facet/single-value-dependent.fn';
@@ -119,8 +119,8 @@ export class DependentFacetPage extends Component<
 
       case 'ComplexDependencies':
         return (
-          <ComplexTreeDependentFacet
-            facetTree={{
+          <ComplexDependentFacet
+            dependencies={{
               [this.sourceFacet.state.facetId]: {
                 facet: this.sourceFacet,
                 controls: [this.objectTypeFacet, this.fileTypeFacet],
