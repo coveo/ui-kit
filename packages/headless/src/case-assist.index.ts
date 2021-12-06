@@ -46,6 +46,14 @@ export {
 } from './controllers/case-input/headless-case-input';
 
 export {
+  CaseFieldState,
+  CaseField,
+  CaseFieldOptions,
+  CaseFieldProps,
+  buildCaseField,
+} from './controllers/case-field/headless-case-field';
+
+export {
   DocumentSuggestionList as DocumentSuggestion,
   DocumentSuggestionListState as DocumentSuggestionState,
   buildDocumentSuggestionList as buildDocumentSuggestion,
