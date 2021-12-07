@@ -1,4 +1,4 @@
-import {configure, reset} from '../../../page-objects/configurator';
+import {configure} from '../../../page-objects/configurator';
 
 import {FacetExpectations as Expect} from './facet-expectations';
 import {
