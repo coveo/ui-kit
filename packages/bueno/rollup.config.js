@@ -3,7 +3,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 import replacePlugin from '@rollup/plugin-replace';
 import {terser} from 'rollup-plugin-terser';
-import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
@@ -38,7 +37,6 @@ const browserConfig = {
     commonjs(),
     typescript(),
     replace(),
-    sizeSnapshot(),
     terser(),
   ],
   onwarn: onWarn,
