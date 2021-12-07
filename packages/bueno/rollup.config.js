@@ -23,21 +23,6 @@ function onWarn(warning, warn) {
   warn(warning);
 }
 
-const nodeConfig = {
-  input: 'src/index.ts',
-  output: [
-    {file: 'dist/bueno.js', format: 'cjs'},
-    {file: 'dist/bueno.esm.js', format: 'es'},
-  ],
-  plugins: [
-    resolve({preferBuiltins: true}),
-    commonjs(),
-    typescript(),
-    replace(),
-  ],
-  onwarn: onWarn,
-};
-
 const browserConfig = {
   input: 'src/index.ts',
   output: [
@@ -45,11 +30,6 @@ const browserConfig = {
       file: 'dist/browser/bueno.js',
       format: 'umd',
       name: 'Bueno',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/browser/bueno.esm.js',
-      format: 'es',
       sourcemap: true,
     },
   ],
@@ -61,8 +41,9 @@ const browserConfig = {
     sizeSnapshot(),
     terser(),
   ],
+  onwarn: onWarn,
 };
 
-const config = isProduction ? [nodeConfig, browserConfig] : [nodeConfig];
+const config = isProduction ? [browserConfig] : [];
 
 export default config;
