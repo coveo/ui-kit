@@ -12,7 +12,7 @@
     "./dist/bueno.js": "./dist/browser/bueno.js",
     "./dist/bueno.esm.js": "./dist/browser/bueno.esm.js"
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "0.34.0",
   "files": [
@@ -21,7 +21,8 @@
   "scripts": {
     "start": "rollup -c -w",
     "build": "npm run build:prod",
-    "build:prod": "rollup -c --environment BUILD:production",
+    "build:prod": "npm run typedefinitions & node esbuild.js & rollup -c --environment BUILD:production",
+    "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
