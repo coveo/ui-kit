@@ -9,7 +9,10 @@ const isProduction = process.env.BUILD === 'production';
 
 function replace() {
   const env = isProduction ? 'production' : 'development';
-  return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env)});
+  return replacePlugin({
+    'process.env.NODE_ENV': JSON.stringify(env),
+    preventAssignment: true,
+  });
 }
 
 function onWarn(warning, warn) {
