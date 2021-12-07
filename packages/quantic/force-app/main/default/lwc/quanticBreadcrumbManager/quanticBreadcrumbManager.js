@@ -40,12 +40,14 @@ export default class QuanticBreadcrumbManager extends LightningElement {
    * A character that divides each path segment in a category facet breadcrumb.
    * @api
    * @type {string}
+   * @defaultValue `'/'`
    */
   @api categoryDivider = '/';
   /** 
    * Maximum number of displayed breadcrumb values. When more values are selected, additional values appear under the "More" button.
    * @api
    * @type {Number}
+   * @defaultValue `5`
    */
   @api collapseThreshold = 5;
 
