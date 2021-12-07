@@ -66,13 +66,14 @@ const resultContextEventName = 'atomic/resolveResult';
 /**
  * Retrieves `Result` on a rendered `atomic-result`.
  *
- * This method is useful to build custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
+ * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
  *
- * @param element Element on which to dispatch the event, which must be the child of a rendered "atomic-result".
- * @returns A promise that resolves on initialization of the parent "atomic-result" element, and rejects when it's not the case.
+ * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
+ * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  */
 export const resultContext = (element: Element) =>
   new Promise<Result>((resolve, reject) => {
+    // TODO: https://coveord.atlassian.net/browse/KIT-127 make it work with connectedCallback
     setTimeout(() => {
       const event = buildCustomEvent<ResultContextEventHandler>(
         resultContextEventName,

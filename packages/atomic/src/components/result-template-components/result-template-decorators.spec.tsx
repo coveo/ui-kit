@@ -47,14 +47,14 @@ describe('ResultContext decorator', () => {
 });
 
 describe('resultContext method', () => {
-  it('rejects when the component is not the children of an atomic-result element', async () => {
+  it('rejects when the component is not the child of an atomic-result element', async () => {
     const element = document.createElement('my-component');
     await expect(resultContext(element)).rejects.toEqual(
       new MissingResultParentError('my-component')
     );
   });
 
-  it("revolves the bindings when it's a children an atomic-result element", async () => {
+  it("revolves the bindings when it's a child of an atomic-result element", async () => {
     const page = await newSpecPage({
       components: [AtomicResult],
       template: () => (
