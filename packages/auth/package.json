@@ -3,8 +3,11 @@
   "private": false,
   "version": "1.1.2",
   "description": "Functions to help authenticate with the Coveo platform.",
-  "main": "dist/auth.js",
-  "module": "dist/auth.esm.js",
+  "main": "./dist/auth.js",
+  "module": "./dist/auth.esm.js",
+  "browser": {
+    "./dist/auth.esm.js": "./dist/auth.esm.js"
+  },
   "types": "./dist/definitions/auth.d.ts",
   "scripts": {
     "build": "npm run typedefinitions & node esbuild.js",
