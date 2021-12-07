@@ -11,7 +11,7 @@ import {ResultContext} from '../result-template-decorators';
 })
 export class AtomicResultFieldsList {
   @ResultContext()
-  private resizeObserver!: ResizeObserver;
+  private resizeObserver?: ResizeObserver;
 
   private updatingChildren = false;
   private rows: number[] = [];
@@ -23,7 +23,7 @@ export class AtomicResultFieldsList {
   }
 
   public disconnectedCallback() {
-    this.resizeObserver.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   public componentDidRender() {
