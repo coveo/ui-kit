@@ -1,3 +1,4 @@
+import {Result} from '@coveo/headless';
 import {Component, h, Element, Host} from '@stencil/core';
 import {ResultContext} from '../result-template-decorators';
 
@@ -11,14 +12,17 @@ import {ResultContext} from '../result-template-decorators';
 })
 export class AtomicResultFieldsList {
   @ResultContext()
+  protected result!: Result;
+
   private resizeObserver!: ResizeObserver;
 
+  private updatingChildren = false;
   private rows: number[] = [];
   @Element() private host!: HTMLElement;
 
   public connectedCallback() {
     this.resizeObserver = new ResizeObserver(() => this.update());
-    this.observe();
+    this.resizeObserver.observe(this.host.parentElement!);
   }
 
   public disconnectedCallback() {
@@ -30,20 +34,15 @@ export class AtomicResultFieldsList {
   }
 
   public update() {
-    this.unobserve();
+    if (this.updatingChildren) {
+      return;
+    }
+    this.updatingChildren = true;
     this.showDividers();
     this.showChildren();
     this.hideChildrenToFit();
     this.hideDividersAtEndOfRows();
-    this.observe();
-  }
-
-  private observe() {
-    this.resizeObserver.observe(this.host.parentElement!);
-  }
-
-  private unobserve() {
-    this.resizeObserver.unobserve(this.host.parentElement!);
+    this.updatingChildren = false;
   }
 
   private get children() {
