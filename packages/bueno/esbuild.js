@@ -1,6 +1,8 @@
 const {build} = require('esbuild');
 const {apacheLicense} = require('../../scripts/license/apache');
 
+const devMode = process.argv[2] === 'dev';
+
 /**
  * @type {import('esbuild').BuildOptions}
  */
@@ -37,6 +39,7 @@ function browserEsm() {
     platform: 'browser',
     outfile: 'dist/browser/bueno.esm.js',
     format: 'esm',
+    watch: devMode,
     minify: true,
     sourcemap: true,
   });

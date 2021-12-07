@@ -19,7 +19,7 @@
     "dist/"
   ],
   "scripts": {
-    "start": "rollup -c -w",
+    "start": "concurrently \"npm run typedefinitions -- -w\" \"node esbuild.js dev\"",
     "build": "npm run build:prod",
     "build:prod": "npm run typedefinitions & node esbuild.js & rollup -c --environment BUILD:production",
     "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
