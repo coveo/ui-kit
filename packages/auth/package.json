@@ -7,7 +7,7 @@
   "module": "dist/auth.esm.js",
   "types": "./dist/definitions/auth.d.ts",
   "scripts": {
-    "build": "npm run typedefinitions & rollup -c",
+    "build": "npm run typedefinitions & node esbuild.js",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
