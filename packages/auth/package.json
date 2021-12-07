@@ -34,12 +34,9 @@
   },
   "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.3.0",
     "@types/jest": "^27.0.3",
     "jest": "^27.3.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.60.1",
-    "rollup-plugin-license": "^2.6.0",
     "ts-jest": "^27.0.7",
     "vite": "^2.6.14"
   },
