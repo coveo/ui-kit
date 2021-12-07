@@ -1,7 +1,7 @@
 const {build} = require('esbuild');
 
-const license = () => {
-  const comment = `
+const apacheLicense = () => {
+  const license = `
   Copyright [yyyy] [name of copyright owner]
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ const license = () => {
     .replace('[yyyy]', new Date().getFullYear())
     .replace('[name of copyright owner]', 'Coveo Solutions Inc.');
 
-  return `/*${comment}\n*/`;
+  return `/*${license}\n*/`;
 };
 
 /**
@@ -27,7 +27,7 @@ const license = () => {
 const base = {
   entryPoints: ['src/auth.ts'],
   bundle: true,
-  banner: {js: license()},
+  banner: {js: apacheLicense()},
   tsconfig: './src/tsconfig.build.json',
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
