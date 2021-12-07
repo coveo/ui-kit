@@ -73,7 +73,7 @@ const resultContextEventName = 'atomic/resolveResult';
  */
 export const resultContext = (element: Element) =>
   new Promise<Result>((resolve, reject) => {
-    // TODO: https://coveord.atlassian.net/browse/KIT-127 make it work with connectedCallback
+    // TODO: https://coveord.atlassian.net/browse/KIT-1277 make it work with connectedCallback
     setTimeout(() => {
       const event = buildCustomEvent<ResultContextEventHandler>(
         resultContextEventName,
