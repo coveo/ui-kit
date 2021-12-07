@@ -2,6 +2,7 @@ import {
   BaseFacetSelector,
   FacetWithSearchSelector,
   FacetWithShowMoreLessSelector,
+  FacetWithValuesSelector,
 } from './facet-common-selectors';
 
 const valueCheckbox = 'input[type="checkbox"]';
@@ -52,6 +53,18 @@ export const baseFacetActions = (selector: BaseFacetSelector) => {
     },
     clickExpandButton: () => {
       selector.expandButton().click();
+    },
+  };
+};
+
+export const facetWithValuesActions = (selector: FacetWithValuesSelector) => {
+  return {
+    checkFirstIdleCheckbox: () => {
+      selector
+        .idleCheckbox()
+        .first()
+        .check({force: true})
+        .logAction('When checking the first idle checkbox in the facet');
     },
   };
 };

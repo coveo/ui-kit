@@ -187,6 +187,25 @@ export default class QuanticNumericFacet extends LightningElement {
       this.updateState()
     );
 
+    if(this.numberOfValues > 0) {
+      this.initializeFacet(engine);
+    }
+    if(this.withInput) {
+      this.initializeFilter(engine);
+    }
+    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
+    registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
+      label: this.label,
+      facetId: this.facet?.state.facetId ?? this.field,
+      format: this.formattingFunction,
+    });
+  }
+
+  /**
+   * @param {import("coveo").SearchEngine} engine
+   */
+  initializeFacet(engine) {
     this.facet = CoveoHeadless.buildNumericFacet(engine, {
       options: {
         field: this.field,
@@ -197,17 +216,8 @@ export default class QuanticNumericFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
       }
     });
-    if(this.withInput) {
-      this.initializeFilter(engine);
-    }
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
-    registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
-      label: this.label,
-      facetId: this.facet.state.facetId,
-      format: this.formattingFunction,
-    });
+    
   }
 
   /**
@@ -217,7 +227,7 @@ export default class QuanticNumericFacet extends LightningElement {
     this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
       options: {
         field: this.field,
-        facetId: this.facet.state.facetId ? `${this.facet.state.facetId}_input` : undefined
+        facetId: this.facet?.state.facetId ? `${this.facet.state.facetId}_input` : undefined
       }
     });
     this.unsubscribeFilter = this.numericFilter.subscribe(() => this.updateFilterState());
@@ -257,6 +267,7 @@ export default class QuanticNumericFacet extends LightningElement {
   get step() {
     return this.withInput ==='integer' ? '1' : 'any';
   }
+
   /** @returns {HTMLInputElement} */
   get inputMin() {
     return this.template.querySelector('.numeric__input-min');
@@ -265,10 +276,6 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @returns {HTMLInputElement} */
   get inputMax() {
     return this.template.querySelector('.numeric__input-max');
-  }
-
-  get hasValues() {
-    return this.values.length !== 0;
   }
 
   get hasActiveValues() {
@@ -302,6 +309,19 @@ export default class QuanticNumericFacet extends LightningElement {
       return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
     }
     return '';
+  }
+
+  get shouldRenderInput() {
+    return this.withInput && this.searchStatus?.state?.hasResults || !!this.filterState?.range;
+  }
+
+  get shouldRenderValues() {
+    const hasInputRange = !!this.filterState?.range;
+    return !hasInputRange && !!this.values.length;
+  }
+
+  get shouldRenderFacet() {
+    return this.shouldRenderInput || this.shouldRenderValues;
   }
 
   setValidityParameters() {
@@ -365,8 +385,12 @@ export default class QuanticNumericFacet extends LightningElement {
     if (!allValid) {
       return;
     }
-    const engine = getHeadlessBindings(this.engineId).engine;
-    engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
+
+    if(this.numberOfValues > 0) {
+      const engine = getHeadlessBindings(this.engineId).engine;
+      engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
+    }
+    
     this.numericFilter.setRange({
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined
