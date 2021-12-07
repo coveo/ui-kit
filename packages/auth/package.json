@@ -9,6 +9,9 @@
     "./dist/auth.esm.js": "./dist/auth.esm.js"
   },
   "types": "./dist/definitions/auth.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "npm run typedefinitions & node esbuild.js",
     "test": "jest",
