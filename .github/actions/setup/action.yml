@@ -1,5 +1,5 @@
 name: "Setup & build"
-description: "Checkout HEAD, setup node, install dependencies & build"
+description: "Setup node, install dependencies & build"
 runs:
   using: composite
   steps:
