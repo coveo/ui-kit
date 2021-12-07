@@ -103,8 +103,9 @@ function getMetadata(element) {
   return JSON.parse(xmlToJson(xmlData));
 }
 
-function getComponentCategory(element) {
-  return element.tags?.find((tag) => tag.originalTitle === 'category').value;
+function getComponentCategories(element) {
+  const categories = element.tags?.filter((tag) => tag.originalTitle === 'category');
+  return categories ? categories.map(category => category.value) : [];
 }
 
 const categoryMap = {
@@ -126,7 +127,7 @@ function parseClass(element, parentNode, childNodes) {
     name: element.name,
     attribute: paramCase(element.name),
     description: element.classdesc || '',
-    category: getComponentCategory(element),
+    categories: getComponentCategories(element),
     fires: element.fires || '',
     examples: [],
     xmlMeta: {
@@ -136,12 +137,11 @@ function parseClass(element, parentNode, childNodes) {
     }
   };
 
-  const categoryKey = Object.keys(categoryMap).find(key => categoryMap[key] === thisClass.category);
-  try {
-    parentNode.components[categoryKey].push(thisClass);
-  } catch (error) {
-    throw new Error(`JsDoc parsing FAILED: invalid category value ${thisClass.category} on component ${thisClass.name}`);
+  const categoryKeys = Object.keys(categoryMap).filter(key => thisClass.categories.includes(categoryMap[key]));
+  if (!categoryKeys.length) {
+    throw new Error(`JsDoc parsing FAILED: Invalid or missing category value(s) on component ${thisClass.name}.`);
   }
+  categoryKeys.forEach(categoryKey => parentNode.components[categoryKey].push(thisClass));
 
   if (element.examples) {
     for (let i = 0, len = element.examples.length; i < len; i++) {
