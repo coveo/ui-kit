@@ -1,4 +1,7 @@
-import {baseFacetActions} from '../facet-common-actions';
+import {
+  baseFacetActions,
+  facetWithValuesActions,
+} from '../facet-common-actions';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,
@@ -21,4 +24,5 @@ const numericFacetActions = (selector: AllFacetSelectors) => {
 export const NumericFacetActions = {
   ...numericFacetActions(NumericFacetSelectors),
   ...baseFacetActions(NumericFacetSelectors),
+  ...facetWithValuesActions(NumericFacetSelectors),
 };

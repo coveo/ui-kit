@@ -15,6 +15,7 @@ import {
 import {
   validatePayload,
   requiredNonEmptyString,
+  requiredEmptyAllowedString,
 } from '../../utils/validate-payload';
 
 export interface SetCaseFieldActionCreatorPayload {
@@ -36,7 +37,7 @@ export const registerCaseField = createAction(
   (payload: SetCaseFieldActionCreatorPayload) =>
     validatePayload(payload, {
       fieldName: requiredNonEmptyString,
-      fieldValue: requiredNonEmptyString,
+      fieldValue: requiredEmptyAllowedString,
     })
 );
 
@@ -48,7 +49,7 @@ export const updateCaseField = createAction(
   (payload: SetCaseFieldActionCreatorPayload) =>
     validatePayload(payload, {
       fieldName: requiredNonEmptyString,
-      fieldValue: requiredNonEmptyString,
+      fieldValue: requiredEmptyAllowedString,
     })
 );
 
