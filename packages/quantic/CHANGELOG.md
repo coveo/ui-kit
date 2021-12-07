@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.10...@coveo/quantic@1.1.11) (2021-12-06)
+
+
+### Bug Fixes
+
+* **quantic:** Allow to display only the range filter when numberOfValues =0 in numeric-facet ([#1512](https://github.com/coveo/ui-kit/issues/1512)) ([28b8368](https://github.com/coveo/ui-kit/commit/28b8368e68544c0f29189454b0579366fac25b8f))
+
+
+
+
+
+## [1.1.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.9...@coveo/quantic@1.1.10) (2021-12-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.1.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.8...@coveo/quantic@1.1.9) (2021-12-03)
 
 **Note:** Version bump only for package @coveo/quantic
