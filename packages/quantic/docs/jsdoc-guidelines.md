@@ -38,7 +38,7 @@ example:
  * @example
  * <c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
  */
-export default class QuanticBreadcrumbManager extends LightningElement {
+export default class QuanticFacetValue extends LightningElement {
   ...
 }
 ```
