@@ -2,10 +2,9 @@ import {useEffect, useState} from 'react';
 import {Facet as HeadlessFacet, FacetState} from '@coveo/headless';
 import {Facet} from '../facet/facet.fn';
 
-interface ComplexDependency {
+interface MultiLevelDependency {
   [facetId: string]: {
     facet: HeadlessFacet;
-    controls?: HeadlessFacet[];
     dependsOn?: HeadlessFacet;
   };
 }
@@ -18,8 +17,8 @@ interface FacetDependencyState {
   [facetId: string]: FacetState;
 }
 
-export const ComplexDependentFacet: React.FunctionComponent<{
-  dependencies: ComplexDependency;
+export const MultilevelDependentFacet: React.FunctionComponent<{
+  dependencies: MultiLevelDependency;
 }> = ({dependencies}) => {
   const [showFacet, setShowFacet] = useState<ShowFacetState>({});
 
@@ -32,11 +31,12 @@ export const ComplexDependentFacet: React.FunctionComponent<{
         .reduce((previous, next) => ({...previous, ...next}), {});
     });
 
-  const relationship = () => {
+  const linkFacets = () => {
     const resultingState = {...showFacet};
 
     Object.keys(dependencies).forEach((facetId) => {
       resultingState[facetId] = true;
+
       if (dependencies[facetId].dependsOn) {
         const parentFacetHasActiveValues =
           dependencies[facetId].dependsOn!.state.hasActiveValues;
@@ -52,20 +52,19 @@ export const ComplexDependentFacet: React.FunctionComponent<{
     setShowFacet(resultingState);
   };
 
-  useEffect(() => {
-    Object.entries(dependencies).forEach(([facetId, tree]) => {
-      if (tree.controls) {
-        tree.facet.subscribe(() =>
-          setFacetDependencyState({
-            ...facetDependencyState,
-            [facetId]: tree.facet.state,
-          })
-        );
-      }
+  const bindFacetsToState = () => {
+    Object.entries(dependencies).forEach(([facetId, dependency]) => {
+      dependency.facet.subscribe(() =>
+        setFacetDependencyState({
+          ...facetDependencyState,
+          [facetId]: dependency.facet.state,
+        })
+      );
     });
-  }, []);
+  };
 
-  useEffect(relationship, [facetDependencyState]);
+  useEffect(bindFacetsToState, []);
+  useEffect(linkFacets, [facetDependencyState]);
 
   return (
     <>

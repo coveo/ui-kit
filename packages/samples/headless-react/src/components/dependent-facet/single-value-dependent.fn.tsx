@@ -10,7 +10,7 @@ export const SingleValueDependentFacet: React.FunctionComponent<{
   const [showDependentFacet, setShowDependentFacet] = useState(false);
   const [parentState, setParentState] = useState(parentFacet.state);
 
-  const relationship = () => {
+  const linkFacets = () => {
     const isDependentValueActive = parentFacet.state.values.some(
       (v) => v.value === dependentValue && v.state !== 'idle'
     );
@@ -24,7 +24,7 @@ export const SingleValueDependentFacet: React.FunctionComponent<{
     () => parentFacet.subscribe(() => setParentState(parentFacet.state)),
     []
   );
-  useEffect(relationship, [parentState.hasActiveValues]);
+  useEffect(linkFacets, [parentState.hasActiveValues]);
 
   const parent = <Facet controller={parentFacet} />;
   const dependent = <Facet controller={dependentFacet} />;
