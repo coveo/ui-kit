@@ -4,13 +4,11 @@ import {
   ApiIndexSignature,
   ApiInterface,
   ApiItem,
-  ApiItemKind,
   ApiMethodSignature,
   ApiPropertySignature,
   ApiTypeAlias,
   Excerpt,
   ExcerptToken,
-  ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
@@ -106,7 +104,7 @@ function resolveInheritedMembers(
 }
 
 function isPropertySignature(item: ApiItem): item is ApiPropertySignature {
-  return item.kind === ApiItemKind.PropertySignature;
+  return item.kind === 'PropertySignature';
 }
 
 function resolvePropertySignature(
@@ -168,7 +166,7 @@ function buildEntityFromPropertyAndResolveTypeAlias(
 }
 
 function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
-  return m.kind === ApiItemKind.IndexSignature;
+  return m.kind === 'IndexSignature';
 }
 
 function resolveIndexSignature(m: ApiIndexSignature) {
@@ -188,7 +186,7 @@ function resolveIndexSignature(m: ApiIndexSignature) {
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
-  return m.kind === ApiItemKind.MethodSignature;
+  return m.kind === 'MethodSignature';
 }
 
 function resolveMethodSignature(
@@ -313,7 +311,7 @@ function buildObjEntityFromParam(
 }
 
 function isCallSignature(c: ApiItem): c is ApiCallSignature {
-  return c.kind === ApiItemKind.CallSignature;
+  return c.kind === 'CallSignature';
 }
 
 function resolveCallSignature(c: ApiCallSignature) {
@@ -349,7 +347,7 @@ function isPromise(token: ExcerptToken) {
 }
 
 function isReference(token: ExcerptToken) {
-  return token.kind === ExcerptTokenKind.Reference;
+  return token.kind === 'Reference';
 }
 
 function isUnionType(typeName: string) {

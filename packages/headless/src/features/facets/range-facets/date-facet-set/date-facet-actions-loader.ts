@@ -13,7 +13,7 @@ import {
   updateDateFacetValues,
 } from './date-facet-actions';
 
-export {
+export type {
   RegisterDateFacetActionCreatorPayload,
   ToggleSelectDateFacetValueActionCreatorPayload,
   UpdateDateFacetSortCriterionActionCreatorPayload,

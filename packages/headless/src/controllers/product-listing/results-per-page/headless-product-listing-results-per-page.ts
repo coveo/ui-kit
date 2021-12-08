@@ -15,7 +15,7 @@ import {
   ResultsPerPageState,
 } from '../../core/results-per-page/headless-core-results-per-page';
 
-export {
+export type {
   ResultsPerPage,
   ResultsPerPageProps,
   ResultsPerPageInitialState,

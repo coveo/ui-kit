@@ -17,7 +17,7 @@ import {
   UpdateFreezeCurrentValuesActionCreatorPayload,
 } from './facet-set-actions';
 
-export {
+export type {
   RegisterFacetActionCreatorPayload,
   ToggleSelectFacetValueActionCreatorPayload,
   UpdateFacetIsFieldExpandedActionCreatorPayload,

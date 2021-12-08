@@ -27,12 +27,12 @@ import {
   StaticFilterValueOptions,
 } from './static-filter-value';
 
-export {
+export type {
   StaticFilterValue,
   StaticFilterValueState,
   StaticFilterValueOptions,
-  buildStaticFilterValue,
 };
+export {buildStaticFilterValue};
 
 const optionsSchema = new Schema<Required<StaticFilterOptions>>({
   id: staticFilterIdSchema,

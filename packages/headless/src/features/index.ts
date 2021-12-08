@@ -29,10 +29,8 @@ export * from './breadcrumb/breadcrumb-actions-loader';
 export * from './recent-queries/recent-queries-actions-loader';
 export * from './recent-results/recent-results-actions-loader';
 
-export {
-  ResultTemplatesManager,
-  buildResultTemplatesManager,
-} from './result-templates/result-templates-manager';
+export type {ResultTemplatesManager} from './result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './result-templates/result-templates-manager';
 
 import {
   getResultProperty as getResultPropertyAlias,

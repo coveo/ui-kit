@@ -2,7 +2,6 @@ import {
   ApiEntryPoint,
   ApiFunction,
   ApiItem,
-  ApiItemKind,
 } from '@microsoft/api-extractor-model';
 import {findApi} from '../api-finder';
 import {resolveFunction} from '../function-resolver';
@@ -30,5 +29,5 @@ function findInitializer(entry: ApiEntryPoint, name: string) {
 }
 
 function isFunction(item: ApiItem): item is ApiFunction {
-  return item.kind === ApiItemKind.Function;
+  return item.kind === 'Function';
 }

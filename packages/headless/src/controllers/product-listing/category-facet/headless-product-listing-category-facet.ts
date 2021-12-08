@@ -40,7 +40,7 @@ import {fetchProductListing} from '../../../features/product-listing/product-lis
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
 
-export {
+export type {
   CoreCategoryFacet,
   CoreCategoryFacetState,
   CategoryFacetValue,

@@ -17,7 +17,7 @@ import {loadReducerError} from '../../utils/errors';
 import {configuration, didYouMean} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
-export {QueryCorrection, WordCorrection};
+export type {QueryCorrection, WordCorrection};
 
 export interface DidYouMean extends Controller {
   /**
