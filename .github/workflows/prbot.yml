@@ -7,4 +7,4 @@ jobs:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'tag detected'
+      - run: echo 'tag detected!'
