@@ -169,9 +169,6 @@ export default class QuanticResultQuickview extends LightningElement {
       if (!this.hasNoPreview) {
         classNames.push('quickview__button_base');
       }
-      if (this.previewButtonLabel) {
-        classNames.push('slds-var-p-horizontal_medium');
-      }
     }
     else {
       if (this.previewButtonVariant === 'brand') {
