@@ -6,7 +6,7 @@ import {
   SetCaseInputActionCreatorPayload,
 } from './case-input-actions';
 
-export {SetCaseInputActionCreatorPayload};
+export type {SetCaseInputActionCreatorPayload};
 
 /**
  * The case inputs action creators.

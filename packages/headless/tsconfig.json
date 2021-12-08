@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "isolatedModules": true,
     "declaration": false,
     "lib": ["DOM", "ES2019"],
     "module": "ESNext",
