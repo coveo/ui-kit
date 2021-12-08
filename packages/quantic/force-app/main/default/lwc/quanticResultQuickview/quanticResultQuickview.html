@@ -1,13 +1,15 @@
 <template>
   <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
+    <template if:true={hasButtonLabel}>
       {previewButtonLabel}
-      <lightning-icon 
-        size="x-small"
-        icon-name={previewButtonIcon}
-        title={buttonLabel}
-        alternative-text={buttonLabel}
-        class={buttonIconClass}>
-      </lightning-icon>
+    </template>  
+    <lightning-icon 
+      size="x-small"
+      icon-name={previewButtonIcon}
+      title={buttonLabel}
+      alternative-text={buttonLabel}
+      class={buttonIconClass}>
+    </lightning-icon>
   </button>
 
   <template if:true={isQuickviewOpen}>

@@ -18,12 +18,12 @@
   height: 50%;
 }
 
-.quickview__button_base{
+.quickview__button-base{
   border-radius: 0.25rem;
   color: var(--color-text-link-active, #0f2d5d);
 }
 
-.quickview__button_base:hover {
+.quickview__button-base:not([disabled]):hover {
   background-color: #f6f7f9;
   box-shadow: 0 0 0px 0.25rem #f6f7f9;
 }
