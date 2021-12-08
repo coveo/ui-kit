@@ -17,6 +17,7 @@ runs:
           packages/samples/headless-react
           !node_modules
           !**/node_modules
+          !**/src
         key: ${{ github.sha }}
     - uses: actions/cache@v2
       with:
