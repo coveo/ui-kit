@@ -10,7 +10,7 @@ import {
 import {ProductListingSection} from '../../../state/state-sections';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 
-export {FacetManager, FacetManagerState, FacetManagerPayload};
+export type {FacetManager, FacetManagerState, FacetManagerPayload};
 
 /**
  * Creates a `FacetManager` instance for the product listing.

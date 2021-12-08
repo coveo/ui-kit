@@ -13,7 +13,7 @@ import {
   UpdateCategoryFacetSortCriterionActionCreatorPayload,
 } from './category-facet-set-actions';
 
-export {
+export type {
   RegisterCategoryFacetActionCreatorPayload,
   ToggleSelectCategoryFacetValueActionCreatorPayload,
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,

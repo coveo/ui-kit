@@ -9,7 +9,7 @@ import {
 } from './dictionary-field-context-actions';
 import {DictionaryFieldContextPayload} from './dictionary-field-context-state';
 
-export {AddDictionaryFieldContextActionCreatorPayload};
+export type {AddDictionaryFieldContextActionCreatorPayload};
 
 /**
  * The dictionary field context action creators.

@@ -13,7 +13,7 @@ import {context} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {CoreEngine} from '../../app/engine';
 
-export {ContextPayload, ContextValue};
+export type {ContextPayload, ContextValue};
 
 /**
  * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/399/) into the search requests and usage analytics search events sent from a search interface.

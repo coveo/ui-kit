@@ -15,7 +15,7 @@ import {
   StateNeededByQuerySuggest,
 } from './query-suggest-actions';
 
-export {
+export type {
   ClearQuerySuggestActionCreatorPayload,
   FetchQuerySuggestionsActionCreatorPayload,
   RegisterQuerySuggestActionCreatorPayload,

@@ -21,7 +21,7 @@ import {
   DateFilterState,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-filter';
 
-export {
+export type {
   DateFilterOptions,
   DateFilterInitialState,
   DateFilterRange,

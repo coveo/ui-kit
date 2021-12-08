@@ -26,10 +26,8 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 
-export {
-  ProductListingEngineConfiguration,
-  getSampleProductListingEngineConfiguration,
-};
+export type {ProductListingEngineConfiguration};
+export {getSampleProductListingEngineConfiguration};
 
 const productListingEngineReducers = {productListing};
 type ProductListingEngineReducers = typeof productListingEngineReducers;

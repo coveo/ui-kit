@@ -1,7 +1,6 @@
 import {
   DocCodeSpan,
   DocNode,
-  DocNodeKind,
   DocNodeTransforms,
   DocParagraph,
   DocPlainText,
@@ -29,13 +28,13 @@ function emitNode(node: DocNode): string {
 }
 
 function isParagraph(node: DocNode): node is DocParagraph {
-  return node.kind === DocNodeKind.Paragraph;
+  return node.kind === 'Paragraph';
 }
 
 function isPlainText(node: DocNode): node is DocPlainText {
-  return node.kind === DocNodeKind.PlainText;
+  return node.kind === 'PlainText';
 }
 
 function isCodeSpan(node: DocNode): node is DocCodeSpan {
-  return node.kind === DocNodeKind.CodeSpan;
+  return node.kind === 'CodeSpan';
 }

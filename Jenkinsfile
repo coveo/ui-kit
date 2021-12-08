@@ -4,6 +4,10 @@ node('linux && docker') {
   def isBump = !!tag
   def isMaster = env.BRANCH_NAME == 'master'
 
+  if (!isMaster) {
+    return
+  }
+
   withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=4096']) {
     withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Setup') {
@@ -75,10 +79,6 @@ node('linux && docker') {
           ])
         }
       }
-    }
-
-    if (!isMaster) {
-      return
     }
 
     stage('Clean working directory') {

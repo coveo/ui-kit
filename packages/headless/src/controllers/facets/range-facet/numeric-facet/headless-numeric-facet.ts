@@ -25,8 +25,7 @@ import {
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 
-export {
-  buildNumericRange,
+export type {
   NumericRangeOptions,
   NumericRangeRequest,
   NumericFacetValue,
@@ -35,6 +34,7 @@ export {
   NumericFacet,
   NumericFacetState,
 };
+export {buildNumericRange};
 
 /**
  * Creates a `NumericFacet` controller instance.

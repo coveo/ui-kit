@@ -10,7 +10,7 @@ import {CartRecommendationsListOptions} from './headless-cart-recommendations-op
 import {ErrorPayload} from '../controller/error-payload';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
-export {CartRecommendationsListOptions, ProductRecommendation};
+export type {CartRecommendationsListOptions, ProductRecommendation};
 
 const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,

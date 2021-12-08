@@ -9,7 +9,7 @@ import {
 } from './context-actions';
 import {ContextPayload} from './context-state';
 
-export {AddContextActionCreatorPayload};
+export type {AddContextActionCreatorPayload};
 
 /**
  * The context action creators.

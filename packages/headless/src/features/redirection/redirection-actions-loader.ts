@@ -8,7 +8,7 @@ import {
   RedirectionState,
 } from './redirection-actions';
 
-export {CheckForRedirectionActionCreatorPayload};
+export type {CheckForRedirectionActionCreatorPayload};
 
 /**
  * The redirection action creators.

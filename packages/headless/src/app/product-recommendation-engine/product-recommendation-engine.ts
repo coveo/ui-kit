@@ -26,10 +26,8 @@ import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 
-export {
-  ProductRecommendationEngineConfiguration,
-  getSampleProductRecommendationEngineConfiguration,
-} from './product-recommendation-engine-configuration';
+export type {ProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
+export {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
 
 const productRecommendationEngineReducers = {searchHub, productRecommendations};
 type ProductRecommendationEngineReducers =
