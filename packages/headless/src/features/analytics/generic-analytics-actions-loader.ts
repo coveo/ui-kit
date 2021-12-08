@@ -11,7 +11,7 @@ import {
 } from './analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
-export {
+export type {
   LogSearchEventActionCreatorPayload,
   LogClickEventActionCreatorPayload,
   LogCustomEventActionCreatorPayload,

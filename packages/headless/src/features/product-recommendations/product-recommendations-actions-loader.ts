@@ -20,7 +20,7 @@ import {
   StateNeededByGetProductRecommendations,
 } from './product-recommendations-actions';
 
-export {
+export type {
   SetProductRecommendationsAdditionalFieldsActionCreatorPayload,
   SetProductRecommendationsBrandFilterActionCreatorPayload,
   SetProductRecommendationsCategoryFilterActionCreatorPayload,

@@ -34,13 +34,13 @@ import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
 
-export {
+export type {
   DateFacetOptions,
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,
-  buildDateRange,
 };
+export {buildDateRange};
 
 export interface DateFacetProps {
   /**

@@ -11,4 +11,7 @@ export {
   InitializableComponent,
 } from './utils/initialization-utils';
 
-export {ResultContext} from './components/result-template-components/result-template-decorators';
+export {
+  ResultContext,
+  resultContext,
+} from './components/result-template-components/result-template-decorators';

@@ -19,7 +19,7 @@ import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api
 import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments';
 import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
 
-export {CaseAssistEngineConfiguration};
+export type {CaseAssistEngineConfiguration};
 
 const caseassistEngineReducers = {
   debug,

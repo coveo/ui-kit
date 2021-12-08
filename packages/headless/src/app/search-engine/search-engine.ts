@@ -35,11 +35,8 @@ import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 
-export {
-  SearchEngineConfiguration,
-  SearchConfigurationOptions,
-  getSampleSearchEngineConfiguration,
-};
+export type {SearchEngineConfiguration, SearchConfigurationOptions};
+export {getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;

@@ -26,7 +26,7 @@ const messageExpression = buildQueryExpression()
     operator: 'isExactly',
     values: ['Message'],
   })
-  .toString();
+  .toQuerySyntax();
 
 const controller = buildTab(engine, {
   initialState: {isActive: true},
