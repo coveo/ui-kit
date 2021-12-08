@@ -10,14 +10,17 @@ runs:
       id: build-cache
       with:
         path: |
-          packages/bueno
-          packages/headless
-          packages/auth
-          packages/atomic
-          packages/samples/headless-react
+          packages/bueno/dist
+          packages/headless/dist
+          packages/auth/dist
+          packages/atomic/dist
+          packages/atomic/docs
+          packages/atomic/headless
+          packages/atomic/loader
+          packages/atomic/storybook-static
+          packages/atomic/www
           !node_modules
           !**/node_modules
-          !**/src
         key: ${{ github.sha }}
     - uses: actions/cache@v2
       with:
