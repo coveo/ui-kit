@@ -1,5 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
-import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
+import { LightningElement, api, track } from 'lwc';
+import { getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
@@ -36,6 +36,27 @@ export default class QuanticResultQuickview extends LightningElement {
   * @defaultValue `undefined`
   */
   @api maximumPreviewSize;
+
+  /**
+   * The icon to be shown in the preview button.
+   * @type {string}
+   * @defaultValue `'utility:preview'`
+   */
+  @api previewButtonIcon = 'utility:preview';
+
+  /**
+   * The label to be shown in the preview button.
+   * @type {string}
+   * @defaultValue `''`
+   */
+  @api previewButtonLabel = '';
+
+  /**
+   * The variant the preview button.
+   * @type {''|'brand'|'outline'}
+   * @defaultValue `''`
+   */
+  @api previewButtonVariant = '';
 
   /** @type {QuickviewState} */
   @track state;
@@ -76,7 +97,7 @@ export default class QuanticResultQuickview extends LightningElement {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
     }
-    this.quickview = CoveoHeadless.buildQuickview(engine, {options});
+    this.quickview = CoveoHeadless.buildQuickview(engine, { options });
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);
@@ -98,7 +119,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   addRecentResult() {
     getHeadlessEnginePromise(this.engineId).then((engine) => {
-      const {pushRecentResult} = CoveoHeadless.loadRecentResultsActions(engine);
+      const { pushRecentResult } = CoveoHeadless.loadRecentResultsActions(engine);
       engine.dispatch(pushRecentResult(JSON.parse(JSON.stringify(this.result))));
     });
   }
@@ -110,7 +131,7 @@ export default class QuanticResultQuickview extends LightningElement {
   stopPropagation(evt) {
     evt.stopPropagation();
   }
-  
+
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(new CustomEvent('haspreview', {
       detail: {
@@ -139,5 +160,31 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get buttonLabel() {
     return this.hasNoPreview ? this.labels.noPreview : this.labels.openPreview;
+  }
+
+  get buttonClass() {
+    let classNames = ['slds-button'];
+
+    if (!this.previewButtonVariant || !this.previewButtonLabel) {
+      if (!this.hasNoPreview) {
+        classNames.push('quickview__button_base');
+      }
+      if (this.previewButtonLabel) {
+        classNames.push('slds-var-p-horizontal_medium');
+      }
+    }
+    else {
+      if (this.previewButtonVariant === 'brand') {
+        classNames.push('slds-button_brand');
+      } else {
+        classNames.push('slds-button_outline-brand');
+      }
+    }
+
+    return classNames.join(' ');
+  }
+
+  get buttonIconClass() {
+    return `slds-current-color ${!this.previewButtonLabel ? '' : 'slds-button__icon_right'}`;
   }
 }

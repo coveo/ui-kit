@@ -1,14 +1,13 @@
 <template>
-  <button class="quickview__button slds-button" onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
-    <slot name="button">
+  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
+      {previewButtonLabel}
       <lightning-icon 
         size="x-small"
-        icon-name="utility:preview"
+        icon-name={previewButtonIcon}
         title={buttonLabel}
         alternative-text={buttonLabel}
-        class="slds-current-color">
+        class={buttonIconClass}>
       </lightning-icon>
-    </slot>
   </button>
 
   <template if:true={isQuickviewOpen}>

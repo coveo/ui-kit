@@ -18,14 +18,13 @@
   height: 50%;
 }
 
-.quickview__button {
-  color: var(--color-text-link-active, #0f2d5d);
+.quickview__button_base{
   border-radius: 0.25rem;
+  color: var(--color-text-link-active, #0f2d5d);
 }
 
-.quickview__button:hover {
+.quickview__button_base:hover {
   background-color: #f6f7f9;
-  box-shadow: 0 0 0px 0.25rem #f6f7f9;
 }
 
 .slds-modal__footer{
