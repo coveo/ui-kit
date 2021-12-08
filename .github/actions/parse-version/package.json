@@ -1,6 +1,0 @@
-{
-  "name": "parse-version",
-  "dependencies": {
-    "@actions/core": "^1.6.0"
-  }
-}

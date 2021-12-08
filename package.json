@@ -24,6 +24,7 @@
     "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\""
   },
   "devDependencies": {
+    "@actions/core": "^1.6.0",
     "@actions/github": "4.0.0",
     "@commitlint/config-conventional": "12.1.4",
     "@commitlint/config-lerna-scopes": "10.0.0",
