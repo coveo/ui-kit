@@ -1,26 +1,10 @@
 name: PR Robot
-on: [pull_request]
+on:
+  pull_request:
+    tags: **
 jobs:
   build:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v2
-        with:
-          node-version-file: '.nvmrc'
-      - uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-      - run: npm run setup
-      - id: parse-version
-        uses: ./.github/actions/parse-version
-      - run: echo "${{steps.parse-version.outputs.headless-minor}}"
-      - run: echo "${{steps.parse-version.outputs.headless-major}}"
-      - run: echo "${{steps.parse-version.outputs.atomic-minor}}"
-      - run: echo "${{steps.parse-version.outputs.atomic-major}}"
+      - run: echo 'tag detected'
