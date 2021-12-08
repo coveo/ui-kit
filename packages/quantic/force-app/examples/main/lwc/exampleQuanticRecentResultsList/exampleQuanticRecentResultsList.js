@@ -34,6 +34,10 @@ export default class ExampleQuanticRecentResultsList extends LightningElement {
         },
     ];
 
+    get notConfigured() {
+        return !this.isConfigured;
+    }
+
     handleTryItNow(evt) {
         this.config = evt.detail;
         this.isConfigured = true;

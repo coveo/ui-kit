@@ -4,7 +4,9 @@
         description={pageDescription}
         show-preview={isConfigured}>
 
-        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+            <c-action-select-results slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-select-results>
+        </c-configurator>
 
         <c-quantic-search-interface slot="preview" engine-id={engineId}>
             <c-quantic-recent-results-list

@@ -5,6 +5,8 @@ import {
 } from '../../page-objects/search';
 import {RecentResultsListExpectations as Expect} from './recent-results-list-expectations';
 import {scope} from '../../reporters/detailed-collector';
+import {selectResults} from '../../page-objects/actions/action-select-results';
+import {RecentResultsListSelectors} from './recent-results-list-selectors';
 
 interface RecentResultsListOptions {
   maxLength: number;
@@ -15,11 +17,15 @@ describe('quantic-recent-results-list', () => {
   const pageUrl = 's/quantic-recent-results-list';
 
   function visitRecentResultsList(
-    options: Partial<RecentResultsListOptions> = {}
+    options: Partial<RecentResultsListOptions> = {},
+    clearStorage = true
   ) {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
+    if (clearStorage) {
+      localStorage.setItem('_quantic-recent-results', '');
+    }
   }
 
   function setupWithPauseBeforeSearch() {
@@ -37,14 +43,27 @@ describe('quantic-recent-results-list', () => {
 
   describe('with default options', () => {
     it('should work as expected', () => {
-      visitRecentResultsList();
+      visitRecentResultsList({
+        maxLength: 3,
+      });
 
       scope('when loading the page', () => {
         Expect.displayResults(false);
         Expect.displayEmptyList(true);
       });
 
-      scope('when selecting different results', () => {});
+      scope('when selecting different results', () => {
+        selectResults();
+        Expect.displayEmptyList(false);
+        Expect.displayResults(true);
+        Expect.numberOfResults(1);
+        selectResults();
+        Expect.numberOfResults(2);
+        selectResults();
+        Expect.numberOfResults(3);
+        selectResults();
+        Expect.numberOfResults(3);
+      });
     });
   });
 

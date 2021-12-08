@@ -1,4 +1,3 @@
-import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {
   RecentResultsListSelectors,
@@ -24,6 +23,12 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
         .emptyList()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display empty list`);
+    },
+    numberOfResults: (length: number) => {
+      selector
+        .results()
+        .should('have.length', length)
+        .logDetail(`should display ${length} results in the list`);
     },
   };
 }

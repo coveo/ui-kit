@@ -6,6 +6,7 @@ export interface RecentResultsListSelector extends ComponentSelector {
   placeholder: () => CypressSelector;
   results: () => CypressSelector;
   resultLinks: () => CypressSelector;
+  resultAtIndex: (index: number) => CypressSelector;
   emptyList: () => CypressSelector;
 }
 
@@ -18,5 +19,7 @@ export const RecentResultsListSelectors: RecentResultsListSelector = {
     RecentResultsListSelectors.get().find('.recent-result__container'),
   resultLinks: () =>
     RecentResultsListSelectors.get().find('c-quantic-recent-result-link'),
+  resultAtIndex: (index: number) =>
+    RecentResultsListSelectors.resultLinks().eq(index).find('a'),
   emptyList: () => RecentResultsListSelectors.get().find('.empty-list-message'),
 };
