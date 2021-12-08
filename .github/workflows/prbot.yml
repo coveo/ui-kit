@@ -75,7 +75,7 @@ jobs:
         with:
           working-directory: ./packages/atomic
           parallel: true
-          record: true
+          record: false
           group: 'Atomic test runs'
           start: npm run start:prod
           wait-on: 'http://localhost:3333'
