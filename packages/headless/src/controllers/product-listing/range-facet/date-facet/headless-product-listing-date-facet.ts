@@ -20,17 +20,17 @@ import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
-export {
+export type {
   DateFacetOptions,
   DateFacetValue,
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,
-  buildDateRange,
   DateFacetProps,
   DateFacet,
   DateFacetState,
 };
+export {buildDateRange};
 
 /**
  * Creates a `DateFacet` controller instance for the product listing.

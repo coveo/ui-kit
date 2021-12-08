@@ -8,7 +8,7 @@ import {
   UpdateQuerySetQueryActionCreatorPayload,
 } from './query-set-actions';
 
-export {
+export type {
   RegisterQuerySetQueryActionCreatorPayload,
   UpdateQuerySetQueryActionCreatorPayload,
 };

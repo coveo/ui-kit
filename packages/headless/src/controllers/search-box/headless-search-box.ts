@@ -46,7 +46,7 @@ import {
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
-export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
+export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
 export interface SearchBoxProps {
   options?: SearchBoxOptions;

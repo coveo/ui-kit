@@ -10,7 +10,7 @@ import {
   StateNeededByFetchProductListing,
 } from './product-listing-actions';
 
-export {SetProductListingUrlPayload};
+export type {SetProductListingUrlPayload};
 
 /**
  * The product listings action creators.

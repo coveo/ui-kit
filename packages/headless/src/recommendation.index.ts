@@ -1,21 +1,23 @@
-export {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
-export {
+export type {
   RecommendationEngine,
   RecommendationEngineOptions,
   RecommendationEngineConfiguration,
+} from './app/recommendation-engine/recommendation-engine';
+export {
   buildRecommendationEngine,
   getSampleRecommendationEngineConfiguration,
 } from './app/recommendation-engine/recommendation-engine';
 
-export {CoreEngine, ExternalEngineOptions} from './app/engine';
-export {
+export type {CoreEngine, ExternalEngineOptions} from './app/engine';
+export type {
   EngineConfiguration,
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
-export {LoggerOptions} from './app/logger';
-export {LogLevel} from './app/logger';
+export type {LoggerOptions} from './app/logger';
+export type {LogLevel} from './app/logger';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';
@@ -30,35 +32,33 @@ export * from './features/recommendation/recommendation-actions-loader';
 export * from './features/recommendation/recommendation-click-analytics-actions-loader';
 
 // Controllers
-export {
-  Controller,
-  buildController,
-} from './controllers/controller/headless-controller';
+export type {Controller} from './controllers/controller/headless-controller';
+export {buildController} from './controllers/controller/headless-controller';
 
-export {
+export type {
   RecommendationListOptions,
   RecommendationListProps,
   RecommendationListState,
   RecommendationList,
-  buildRecommendationList,
 } from './controllers/recommendation/headless-recommendation';
+export {buildRecommendationList} from './controllers/recommendation/headless-recommendation';
 
-export {
+export type {
   Context,
   ContextState,
   ContextValue,
   ContextPayload,
-  buildContext,
 } from './controllers/context/headless-context';
+export {buildContext} from './controllers/context/headless-context';
 
-export {
+export type {
   DictionaryFieldContext,
   DictionaryFieldContextState,
   DictionaryFieldContextPayload,
-  buildDictionaryFieldContext,
 } from './controllers/dictionary-field-context/headless-dictionary-field-context';
+export {buildDictionaryFieldContext} from './controllers/dictionary-field-context/headless-dictionary-field-context';
 
 // Miscellaneous
-export {Result} from './api/search/search/result';
-export {HighlightKeyword} from './utils/highlight';
-export {Raw} from './api/search/search/raw';
+export type {Result} from './api/search/search/result';
+export type {HighlightKeyword} from './utils/highlight';
+export type {Raw} from './api/search/search/raw';
