@@ -1,4 +1,4 @@
-name: Master Robot
+name: Publish Robot
 on:
   push:
     branches:
