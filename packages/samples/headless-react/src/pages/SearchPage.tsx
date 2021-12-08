@@ -363,7 +363,7 @@ export class SearchPage extends Component {
         operator: 'isExactly',
         values: ['Message'],
       })
-      .toString();
+      .toQuerySyntax();
   }
 
   private get confluenceExpression() {
@@ -379,7 +379,7 @@ export class SearchPage extends Component {
         values: ['Space'],
         negate: true,
       })
-      .toString();
+      .toQuerySyntax();
   }
 
   private executeInitialSearch() {
@@ -419,7 +419,7 @@ export class SearchPage extends Component {
         operator: 'isExactly',
         values: ['youtubevideo'],
       })
-      .toString();
+      .toQuerySyntax();
 
     const dropboxExpression = buildQueryExpression()
       .addStringField({
@@ -432,7 +432,7 @@ export class SearchPage extends Component {
         operator: 'isExactly',
         values: ['File'],
       })
-      .toString();
+      .toQuerySyntax();
 
     return [
       buildStaticFilterValue({

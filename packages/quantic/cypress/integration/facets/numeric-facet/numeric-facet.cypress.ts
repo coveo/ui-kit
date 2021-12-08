@@ -4,7 +4,11 @@ import {
   field,
   NumericFacetExpectations as Expect,
 } from './numeric-facet-expectations';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  mockSearchNoResults,
+} from '../../../page-objects/search';
 import {NumericFacetActions as Actions} from './numeric-facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
 
@@ -93,12 +97,13 @@ describe('Numeric Facet Test Suite', () => {
 
       scope('when selecting multiple values', () => {
         visitNumericFacetPage(defaultSettings);
-        Actions.checkValueAt(0);
+        Actions.checkFirstIdleCheckbox();
 
         for (let index = 1; index < defaultNumberOfValues; index++) {
           scope(`when selecting ${index + 1} values`, () => {
             const filterLabel = `Clear ${index + 1} filters`;
-            Actions.checkValueAt(index);
+            Actions.checkFirstIdleCheckbox();
+
             Expect.displayClearButton(true);
             Expect.clearFilterContains(filterLabel);
             Expect.numberOfSelectedCheckboxValues(index + 1);
@@ -138,11 +143,14 @@ describe('Numeric Facet Test Suite', () => {
       scope('when selecting a valid range', () => {
         const min = 120;
         const max = 8000;
+
         visitNumericFacetPage(customWithInputSettings);
+        cy.wait(InterceptAliases.Search);
 
         Actions.inputMinValue(min);
         Actions.inputMaxValue(max);
         Actions.submitManualRange();
+        cy.wait(InterceptAliases.Search);
 
         Expect.displayValues(false);
         Expect.search.numberOfResults(10);
@@ -153,7 +161,8 @@ describe('Numeric Facet Test Suite', () => {
       });
 
       scope('when selecting a empty range', () => {
-        visitNumericFacetPage(customWithInputSettings);
+        Actions.clickClearFilter();
+        cy.wait(InterceptAliases.UA.Facet.ClearAll);
 
         Actions.submitManualRange();
         Expect.displayInputWarning(1);
@@ -166,9 +175,9 @@ describe('Numeric Facet Test Suite', () => {
         Expect.inputWarningContains();
         Expect.displayValues(true);
       });
+
       scope('when min input is bigger than max input', () => {
         visitNumericFacetPage(customWithInputSettings);
-
         Actions.inputMinValue(100);
         Actions.inputMaxValue(80);
         Actions.submitManualRange();
@@ -179,10 +188,13 @@ describe('Numeric Facet Test Suite', () => {
         );
         Expect.displayValues(true);
       });
+
       scope('when selecting from values', () => {
         visitNumericFacetPage(customWithInputSettings);
+        cy.wait(InterceptAliases.Search);
 
         Actions.checkValueAt(2);
+        cy.wait(InterceptAliases.UA.Facet.Select);
         Expect.displayClearButton(true);
         Expect.clearFilterContains('Clear filter');
         Expect.numberOfSelectedCheckboxValues(1);
@@ -192,6 +204,25 @@ describe('Numeric Facet Test Suite', () => {
       });
     });
   });
+
+  describe('when selecting range with no search results', () => {
+    it('should work as expected', () => {
+      const min = 1;
+      const max = 100000;
+
+      mockSearchNoResults();
+      visitNumericFacetPage(customWithInputSettings, false);
+      Actions.inputMinValue(min);
+      Actions.inputMaxValue(max);
+      Actions.submitManualRange();
+
+      Expect.displayValues(false);
+      Expect.search.numberOfResults(0);
+      Expect.displayClearButton(true);
+      Expect.clearFilterContains('Clear filter');
+    });
+  });
+
   describe('with field returns no results', () => {
     before(() => {
       visitNumericFacetPage({
@@ -203,6 +234,7 @@ describe('Numeric Facet Test Suite', () => {
       Expect.displayLabel(false);
     });
   });
+
   describe('with isCollapsed', () => {
     function setupIsCollapsed() {
       visitNumericFacetPage({
@@ -223,6 +255,7 @@ describe('Numeric Facet Test Suite', () => {
       Expect.displayExpandButton(true);
     });
   });
+
   describe('with a selected range in the URL', () => {
     const min = 120;
     const max = 8000;
@@ -255,6 +288,7 @@ describe('Numeric Facet Test Suite', () => {
       });
     });
   });
+
   describe('with custom #rangeAlgorithm', () => {
     it('should render correctly', () => {
       function setupWithRangeAlgorithm(rangeAlgorithm: string) {
@@ -282,6 +316,7 @@ describe('Numeric Facet Test Suite', () => {
       });
     });
   });
+
   describe('with custom sorting', () => {
     ['ascending', 'descending'].forEach((sorting) => {
       it(`should use "${sorting}" sorting in the facet request`, () => {
@@ -295,6 +330,47 @@ describe('Numeric Facet Test Suite', () => {
           const facetRequest = interception.request.body.facets[0];
           expect(facetRequest.sortCriteria).to.eq(sorting);
         });
+      });
+    });
+  });
+
+  describe('with custom #numberOfValues', () => {
+    it('should work as expected', () => {
+      scope('when setting number of values greater than 0', () => {
+        visitNumericFacetPage({
+          numberOfValues: 2,
+          field: defaultField,
+          label: defaultLabel,
+        });
+
+        Expect.displayLabel(true);
+        Expect.displayValues(true);
+        Expect.numberOfValues(2);
+        Expect.numberOfIdleCheckboxValues(2);
+      });
+
+      scope('when setting number of values equal to 0', () => {
+        visitNumericFacetPage({
+          numberOfValues: 0,
+          field: defaultField,
+          label: defaultLabel,
+        });
+
+        Expect.displayLabel(false);
+        Expect.displayValues(false);
+      });
+
+      scope('when setting number of values equal to 0 with #withInput', () => {
+        visitNumericFacetPage({
+          numberOfValues: 0,
+          field: defaultField,
+          label: defaultLabel,
+          withInput: 'integer',
+        });
+
+        Expect.displayLabel(true);
+        Expect.displaySearchForm(true);
+        Expect.displayValues(false);
       });
     });
   });
