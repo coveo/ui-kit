@@ -14,7 +14,7 @@ export class AtomicResultFieldsList {
   @ResultContext()
   protected result!: Result;
 
-  private resizeObserver!: ResizeObserver;
+  private resizeObserver?: ResizeObserver;
 
   private updatingChildren = false;
   private rows: number[] = [];
@@ -26,7 +26,7 @@ export class AtomicResultFieldsList {
   }
 
   public disconnectedCallback() {
-    this.resizeObserver.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   public componentDidRender() {

@@ -35,7 +35,7 @@ const youtubeExpression = buildQueryExpression()
     operator: 'isExactly',
     values: ['youtubevideo'],
   })
-  .toString();
+  .toQuerySyntax();
 
 const dropboxExpression = buildQueryExpression()
   .addStringField({
@@ -48,7 +48,7 @@ const dropboxExpression = buildQueryExpression()
     operator: 'isExactly',
     values: ['File'],
   })
-  .toString();
+  .toQuerySyntax();
 
 const youtube = buildStaticFilterValue({
   caption: 'Youtube',
