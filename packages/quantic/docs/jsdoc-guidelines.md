@@ -12,7 +12,7 @@ example:
 ```
 
 ## Components
-Components should be given a short but specific description explaining its role. Include relevant information about certain behaviours or limitations of the component here when pertinent to developers.
+Components should be given a short but specific description explaining their role. Include relevant information about certain behaviours or limitations of the component when pertinent to developers.
 
 ### @fires
 Events fired from this component should be defined using the `@fires` tag.
@@ -23,7 +23,7 @@ Each component should be given one or more category values using the `@category`
 - **Case Assist**: Components pertaining to the Case Assist use-case.
 - **Result Template**: Components meant to be used within result templates.
 - **Utility**: Components providing a generic utility without pertaining to any specific Coveo Headless use-case.
-If there is more than one relevant category it should be specified with its own tag.
+If there are more than one relevant category, each should be specified with its own tag.
 If a new category is required it should be discussed with the code owners and adjustements must be made to the parsing script.
 
 ### @example
@@ -44,14 +44,14 @@ export default class QuanticFacetValue extends LightningElement {
 ```
 
 ## Public Properties
-Public properties, marked using an `@api` **decorator** should be given a JSDoc comment following these guidelines.
+Public properties, marked using an `@api` **decorator**, should be specified via JSDoc comments following the guidelines below.
 Each public property should be given a short but specific description explaining its role. Include relevant information about certain behaviours or limitations of the component here when pertinent to developers.
 
 ### @api
-Each public property should be given an `@api` tag in the JSDoc comment.
+Each public property should be specified with an `@api` tag in the JSDoc comment.
 
 ### @type
-A type value must be specified for each public property. If the type is non-primitive as is the case if it is defined in Coveo Headless, a link to public documentation containing more detailed information should be provided.
+A type value must be specified for each public property. If the type is non-primitive as is the case when defined in Coveo Headless, a link to public documentation containing more detailed information should be provided.
 
 ### @defaultValue
 The default value should be defined in between back quote (\`) characters using the `@defaultValue` tag.
