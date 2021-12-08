@@ -39,6 +39,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   /**
    * The icon to be shown in the preview button.
+   * @api
    * @type {string}
    * @defaultValue `'utility:preview'`
    */
@@ -46,13 +47,15 @@ export default class QuanticResultQuickview extends LightningElement {
 
   /**
    * The label to be shown in the preview button.
+   * @api
    * @type {string}
    * @defaultValue `''`
    */
   @api previewButtonLabel = '';
 
   /**
-   * The variant the preview button.
+   * The variant of the preview button.
+   * @api
    * @type {''|'brand'|'outline'}
    * @defaultValue `''`
    */
