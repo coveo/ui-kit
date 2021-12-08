@@ -1,0 +1,91 @@
+name: Master Robot
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - **
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+  lint-check:
+    name: "Check with linter"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - run: npm run lint:check
+  generate-doc:
+    name: "Generate doc"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - run: npm run doc:generate
+  unit-test:
+    name: "Run unit tests"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - run: npx lerna run copy:staticresources --scope @coveo/quantic
+      - run: npm test
+  e2e-test:
+    name: "Run e2e tests"
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3]
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
+        name: Run Cypress
+        with:
+          working-directory: ./packages/atomic
+          parallel: true
+          record: true
+          group: 'Atomic test runs'
+          start: npm run start:prod
+          wait-on: 'http://localhost:3333'
+          install: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: packages/atomic/cypress/screenshots
+  bump-version:
+    name: "Bump version"
+    needs: [lint-check, generate-doc, unit-test, e2e-test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - run: git clean -xfd -e node_modules/ -e .husky
+      - run: npm run bump:version
