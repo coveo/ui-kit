@@ -6,7 +6,7 @@
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run clean && lerna run build",
-    "test": "lerna run --parallel test",
+    "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",

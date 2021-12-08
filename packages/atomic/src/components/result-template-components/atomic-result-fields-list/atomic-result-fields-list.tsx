@@ -1,4 +1,3 @@
-import {Result} from '@coveo/headless';
 import {Component, h, Element, Host} from '@stencil/core';
 import {ResultContext} from '../result-template-decorators';
 
@@ -12,8 +11,6 @@ import {ResultContext} from '../result-template-decorators';
 })
 export class AtomicResultFieldsList {
   @ResultContext()
-  protected result!: Result;
-
   private resizeObserver?: ResizeObserver;
 
   private updatingChildren = false;
