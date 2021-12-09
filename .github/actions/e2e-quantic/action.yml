@@ -16,9 +16,10 @@ runs:
           --clientid ${{ env.SDFX_AUTH_CLIENT_ID }} \
           --jwtkeyfile ${{ env.SFDX_AUTH_JWT_KEY }} \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
-          --instanceurl ${{ SFDX_AUTH_JWT_INSTANCE_URL }} \
+          --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
           --setdefaultdevhubusername
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
+        rm ${{ env.SFDX_AUTH_JWT_KEY }}
       shell: bash
       working-directory: ./packages/quantic
       env:
@@ -39,10 +40,6 @@ runs:
         name: cypress-screenshots
         path: packages/quantic/cypress/screenshots
     - run: npx --no-install ts-node scripts/build/delete-org.ts
-      shell: bash
-      if: always()
-      working-directory: ./packages/quantic
-    - run: rm server.key
       shell: bash
       if: always()
       working-directory: ./packages/quantic
