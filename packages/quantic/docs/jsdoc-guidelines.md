@@ -48,7 +48,7 @@ Public properties, marked using an `@api` **decorator**, should be specified via
 Each public property should be given a short but specific description explaining its role. Include relevant information about certain behaviours or limitations of the component here when pertinent to developers.
 
 ### @api
-Each public property should be specified with an `@api` tag in the JSDoc comment.
+Each public property documentation string should be preceded by an `@api` tag in the JSDoc comment.
 
 ### @type
 A type value must be specified for each public property. If the type is non-primitive as is the case when defined in Coveo Headless, a link to public documentation containing more detailed information should be provided.
