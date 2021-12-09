@@ -18,8 +18,8 @@ runs:
           --username rdaccess@coveo.com \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
-        rm server.key
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
+        rm server.key
       shell: bash
       working-directory: ./packages/quantic
       env:
