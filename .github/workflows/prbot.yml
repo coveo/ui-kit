@@ -87,3 +87,5 @@ jobs:
       - "unit-test"
       - "e2e-atomic-test"
       - "e2e-quantic-test"
+    steps:
+      - run: echo 'Build has been verified'
