@@ -4,10 +4,10 @@
       {label}
     </legend>
     <div class="slds-form-element__control" aria-describedby="case-classification-error-message">
-      <div class="slds-grid">
+      <div class="row">
         <template for:each={classifications} for:item="option">
           <div key={option.value}
-            class="slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium">
+            class="slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-bottom_x-small">
             <input type="radio" onchange={handleChange} id={option.value} value={option.value} name={label} />
             <label for={option.value}>
               <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
