@@ -1,4 +1,3 @@
-// const {buildBundleSizeReport} = require('./bundle-size/bundle-size');
 const {
   getPullRequestComments,
   updatePullRequestComment,
@@ -15,7 +14,6 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
-  // const bundleSizeReport = await buildBundleSizeReport();
   const bundleSizeReport = "bundle size report is under maintenance"
 
   return `
