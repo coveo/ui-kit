@@ -11,11 +11,11 @@ runs:
   using: composite
   steps:
     - run: |
-        echo "${{ inputs.jwtkey }}" > server.key
+        echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
         npx --no-install sfdx force:auth:jwt:grant \
-          --clientid ${{ inputs.clientid }} \
+          --clientid ${{ env.SDFX_AUTH_CLIENT_ID }} \
           --jwtkeyfile server.key \
-          --username rdaccess@coveo.com \
+          --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
