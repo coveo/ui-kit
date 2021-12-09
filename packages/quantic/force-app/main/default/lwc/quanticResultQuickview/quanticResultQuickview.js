@@ -181,7 +181,10 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonIconClass() {
-    return `slds-current-color ${!this.previewButtonLabel ? '' : 'slds-button__icon_right'}`;
+    return [
+      'slds-current-color',
+      this.previewButtonLabel && 'slds-button__icon_right'
+    ].join(' ');
   }
 
   get hasButtonLabel(){
