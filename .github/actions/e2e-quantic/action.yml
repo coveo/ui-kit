@@ -19,7 +19,6 @@ runs:
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
-        rm server.key
       shell: bash
       working-directory: ./packages/quantic
       env:
@@ -39,6 +38,10 @@ runs:
         name: cypress-screenshots
         path: packages/quantic/cypress/screenshots
     - run: npx --no-install ts-node scripts/build/delete-org.ts
+      shell: bash
+      if: always()
+      working-directory: ./packages/quantic
+    - run: rm server.key
       shell: bash
       if: always()
       working-directory: ./packages/quantic
