@@ -1,8 +1,10 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
 import selectTopic from '@salesforce/label/c.quantic_SelectTopic';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
+import {registerComponentForInit, initializeWithHeadless, loadDependencies} from 'c/quanticHeadlessLoader';
+
 
 /**
  * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
@@ -16,18 +18,34 @@ export default class QuanticCaseClassification extends LightningElement {
   };
 
   /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+
+  headless;
+
+  priority;
+  unsubscribePriority;
+
+  @track classifications = [];
+
+
+  /**
    * All the options proposed to the user to choose from.
    * @type {Array}
    * @defaultValue `[]`
    */
   @api options = [];
 
+
   /**
    * The number of suggestions to be shown.
    * @type {number}
    * @defaultValue `3`
    */
-  @api numberOfSuggestions = 3;
+  @api numberOfSuggestions = 1;
 
   /**
    * Tells if the case classification input is required.
@@ -76,6 +94,7 @@ export default class QuanticCaseClassification extends LightningElement {
   /** @type {boolean} */
   _isSuggestionsVisible = true;
 
+  @track _options = []
 
   /**
    * Tells if there is an error in the input.
@@ -131,7 +150,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get isSelectVisible() {
     return (
-      this._isSelectVisible || 0 >= parseInt(this.numberOfSuggestions, 10)
+      this._isSelectVisible || 0 >= this.classifications.length
     );
   }
 
@@ -198,5 +217,43 @@ export default class QuanticCaseClassification extends LightningElement {
       suggestion.style.width = `${suggestion.clientWidth}px`;
       suggestion.classList.add('visual-picker__hidden');
     });
+  }
+
+  connectedCallback() {
+    loadDependencies(this, 'case-assist').then((headless) => {
+      this.headless = headless
+    })
+    registerComponentForInit(this, this.engineId);
+    this._options = this.options
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+    // this._options = this.options
+
+  }
+
+  initialize = (engine) => {
+    this.priority = this.headless.buildCaseField(engine, {
+      options: {
+        field: 'sfpriority'
+      }
+    });
+    this.unsubscribePriority = this.priority.subscribe(() => this.updatePriorityState());
+  }
+  
+  disconnectedCallback() {
+    this.unsubscribePriority?.();
+  }
+  
+  updatePriorityState() {
+    console.log()
+    this.classifications = this.priority.state.suggestions ?? [];
+    const suggestToOpptions = this.classifications.map(option=>{
+      return {value: option.value, label: option.value}
+    })
+    console.log(suggestToOpptions)
+    this._options = [...this.options, ...suggestToOpptions]
+    console.log(JSON.parse(JSON.stringify(this._options)))
   }
 }
