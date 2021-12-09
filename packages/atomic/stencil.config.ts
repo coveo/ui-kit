@@ -26,6 +26,7 @@ function replace() {
   return replacePlugin({
     'process.env.NODE_ENV': JSON.stringify(env),
     'process.env.VERSION': JSON.stringify(version),
+    preventAssignment: true,
   });
 }
 
@@ -84,6 +85,7 @@ export const config: Config = {
     reloadStrategy: 'pageReload',
   },
   plugins: [
+    // https://github.com/fabriciomendonca/stencil-inline-svg/issues/16
     inlineSvg(),
     postcss({
       plugins: [

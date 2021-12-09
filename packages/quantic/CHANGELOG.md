@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.0...@coveo/quantic@1.2.1) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.11...@coveo/quantic@1.2.0) (2021-12-09)
+
+
+### Features
+
+* **quantic:** smallest pr ever ([#1563](https://github.com/coveo/ui-kit/issues/1563)) ([52dc6ef](https://github.com/coveo/ui-kit/commit/52dc6efa91ab6772d09c391220c7224956a1cc82))
+
+
+
+
+
 ## [1.1.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.10...@coveo/quantic@1.1.11) (2021-12-06)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.20.0...@coveo/atomic@1.20.1) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.19.0...@coveo/atomic@1.20.0) (2021-12-09)
+
+
+### Features
+
+* **atomic:** add & export resultContext method ([#1565](https://github.com/coveo/ui-kit/issues/1565)) ([5ca64ae](https://github.com/coveo/ui-kit/commit/5ca64ae577bcc520458e8b62465ba9113b64b87d))
+
+
+
+
+
 # [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.18.5...@coveo/atomic@1.19.0) (2021-12-02)
 
 
