@@ -150,7 +150,7 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get hasNoPreview() {
-    return true;
+    return !this.state?.resultHasPreview;
   }
 
   get contentContainer() {
