@@ -4,14 +4,14 @@ inputs:
   clientid:
     description: The SFDX client ID
     required: true
-  jwtkeyfile:
-    description: The SFDX JWT key file
+  jwtkey:
+    description: The SFDX JWT key contents
     required: true
 runs:
   using: composite
   steps:
     - run: |
-        echo "${{ inputs.jwtkeyfile }}" > server.key
+        echo "${{ inputs.jwtkey }}" > server.key
         npx --no-install sfdx force:auth:jwt:grant \
           --clientid ${{ inputs.clientid }} \
           --jwtkeyfile server.key \
@@ -24,6 +24,9 @@ runs:
       working-directory: ./packages/quantic
       env:
         BRANCH_NAME: ${{ github.ref }}
+        SFDX_AUTH_CLIENT_ID: ${{ inputs.clientid }}
+        SFDX_AUTH_JWT_KEY: ${{ inputs.jwtkey }}
+        SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
     - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
