@@ -6,6 +6,7 @@
 
         <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
             <c-action-select-results slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-select-results>
+            <c-action-set-local-storage slot="actions" engine-id={engineId}></c-action-set-local-storage>
         </c-configurator>
 
         <c-quantic-search-interface slot="preview" engine-id={engineId}>

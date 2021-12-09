@@ -6,17 +6,19 @@ export default class ActionSelectResults extends LightningElement {
   @api disabled;
 
   interactiveResult;
+  count = 1;
 
   handle() {
     const result = { 
-      title: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8), 
-      uri: "http://www.salesforce.com/",
+      title: this.count.toString(), 
+      uri: "https://github.com/coveo/ui-kit/",
       uniqueId:  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 16),
-      clickUri: "http://www.salesforce.com/",
+      clickUri: "https://github.com/coveo/ui-kit/",
       raw: {
         urihash: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 16)
       }
     };
+    this.count ++;
     this.resolveInteractiveResultController(result)
       .then((controller) => {
         this.interactiveResult = controller;
