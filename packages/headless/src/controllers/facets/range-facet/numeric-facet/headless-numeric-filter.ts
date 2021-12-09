@@ -22,7 +22,7 @@ import {
   buildCoreNumericFilter,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
 
-export {
+export type {
   NumericFilterOptions,
   NumericFilterInitialState,
   NumericFilterRange,

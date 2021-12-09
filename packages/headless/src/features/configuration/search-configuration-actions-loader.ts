@@ -6,7 +6,7 @@ import {
   UpdateSearchConfigurationActionCreatorPayload,
 } from './configuration-actions';
 
-export {UpdateSearchConfigurationActionCreatorPayload};
+export type {UpdateSearchConfigurationActionCreatorPayload};
 
 /**
  * The search configuration action creators.

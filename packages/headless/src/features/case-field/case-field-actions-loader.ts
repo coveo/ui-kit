@@ -11,7 +11,7 @@ import {
   registerCaseField,
 } from './case-field-actions';
 
-export {SetCaseFieldActionCreatorPayload};
+export type {SetCaseFieldActionCreatorPayload};
 
 /**
  * The case field action creators.

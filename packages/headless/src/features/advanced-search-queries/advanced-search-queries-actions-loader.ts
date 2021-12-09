@@ -7,7 +7,7 @@ import {
   AdvancedSearchQueryActionCreatorPayload,
 } from './advanced-search-queries-actions';
 
-export {AdvancedSearchQueryActionCreatorPayload};
+export type {AdvancedSearchQueryActionCreatorPayload};
 
 /**
  * The advanced search query action creators.

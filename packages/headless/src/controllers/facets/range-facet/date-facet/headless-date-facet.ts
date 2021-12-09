@@ -20,16 +20,16 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 
-export {
+export type {
   DateFacetOptions,
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,
-  buildDateRange,
   DateFacetProps,
   DateFacet,
   DateFacetState,
 };
+export {buildDateRange};
 
 /**
  * Creates a `DateFacet` controller instance.
