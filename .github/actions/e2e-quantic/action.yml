@@ -10,17 +10,15 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: echo "$KEY" > $HOME/secrets/rdaccess.key
-      shell: bash
-      env:
-        KEY: ${{ inputs.jwtkeyfile }}
     - run: |
+        echo "${{ inputs.jwtkeyfile }}" > server.key
         ./node_modules/.bin/sfdx force:auth:jwt:grant \
           --clientid ${{ inputs.clientid }} \
-          --jwtkeyfile $HOME/secrets/rdaccess.key \
+          --jwtkeyfile server.key \
           --username rdaccess@coveo.com \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
+        rm server.key
       shell: bash
       working-directory: ./packages/quantic
     - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
