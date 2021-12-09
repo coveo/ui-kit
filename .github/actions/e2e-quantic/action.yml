@@ -17,7 +17,6 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        group: 'Quantic test runs'
         start: ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci
         install: true
         config: reporter=cypress/reporters/detailed-reporter.js

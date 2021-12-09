@@ -7,7 +7,6 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/atomic
-        group: 'Atomic test runs'
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
         install: true
