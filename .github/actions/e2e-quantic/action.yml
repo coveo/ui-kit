@@ -10,12 +10,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: echo ${{ inputs.jwtkeyfile }} > $HOME/secrets/rsaccess.key
+    - run: echo $KEY > $HOME/secrets/rdaccess.key
       shell: bash
+      env:
+        KEY: ${{ inputs.jwtkeyfile }}
     - run: |
         ./node_modules/.bin/sfdx force:auth:jwt:grant \
           --clientid ${{ inputs.clientid }} \
-          --jwtkeyfile $HOME/secrets/rsaccess.key \
+          --jwtkeyfile $HOME/secrets/rdaccess.key \
           --username rdaccess@coveo.com \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
