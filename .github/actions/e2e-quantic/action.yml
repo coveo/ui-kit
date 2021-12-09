@@ -11,12 +11,12 @@ runs:
   using: composite
   steps:
     - run: |
-        echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
+        echo "${{inputs.jwtkey}}" > ${{ env.SFDX_AUTH_JWT_KEY }}
         npx --no-install sfdx force:auth:jwt:grant \
           --clientid ${{ env.SDFX_AUTH_CLIENT_ID }} \
-          --jwtkeyfile server.key \
+          --jwtkeyfile ${{ env.SFDX_AUTH_JWT_KEY }} \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
-          --instanceurl https://login.salesforce.com \
+          --instanceurl ${{ SFDX_AUTH_JWT_INSTANCE_URL }} \
           --setdefaultdevhubusername
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
       shell: bash
@@ -24,8 +24,9 @@ runs:
       env:
         BRANCH_NAME: ${{ github.ref }}
         SFDX_AUTH_CLIENT_ID: ${{ inputs.clientid }}
-        SFDX_AUTH_JWT_KEY: ${{ inputs.jwtkey }}
+        SFDX_AUTH_JWT_KEY: server.key
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+        SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
     - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
