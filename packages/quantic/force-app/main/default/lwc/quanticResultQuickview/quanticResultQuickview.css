@@ -18,7 +18,7 @@
   height: 50%;
 }
 
-.quickview__button-base{
+.quickview__button-base:not([disabled]){
   border-radius: 0.25rem;
   color: var(--color-text-link-active, #0f2d5d);
 }

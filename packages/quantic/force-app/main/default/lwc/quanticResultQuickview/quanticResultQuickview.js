@@ -150,7 +150,7 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get hasNoPreview() {
-    return !this.state?.resultHasPreview;
+    return true;
   }
 
   get contentContainer() {
@@ -166,18 +166,10 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonClass() {
-    let classNames = ['slds-button'];
-
-    if (!this.previewButtonVariant || !this.previewButtonLabel) {
-      if (!this.hasNoPreview) {
-        classNames.push('quickview__button-base');
-      }
-    }
-    else {
-      classNames.push(`slds-button_${this.previewButtonVariant}`);
-    }
-
-    return classNames.join(' ');
+    return [
+      'slds-button',
+      this.previewButtonVariant ? `slds-button_${this.previewButtonVariant}` : 'quickview__button-base'
+    ].join(' ')
   }
 
   get buttonIconClass() {
@@ -187,7 +179,7 @@ export default class QuanticResultQuickview extends LightningElement {
     ].join(' ');
   }
 
-  get hasButtonLabel(){
+  get hasButtonLabel() {
     return !!this.previewButtonLabel;
   }
 }
