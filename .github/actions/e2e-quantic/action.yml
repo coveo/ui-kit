@@ -22,6 +22,8 @@ runs:
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
       shell: bash
       working-directory: ./packages/quantic
+      env:
+        BRANCH_NAME: ${{ github.ref }}
     - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
