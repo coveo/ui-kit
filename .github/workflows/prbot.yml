@@ -75,3 +75,6 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-quantic
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkeyfile: ${{ secrets.SFDX_AUTH_JWT_KEY }}

@@ -1,18 +1,24 @@
 name: "Quantic E2E tests"
 description: "Runs Cypress tests for Quantic"
+input:
+  clientid:
+    description: The SFDX client ID
+    required: true
+  jwtkeyfile:
+    description: The SFDX JWT key file
+    required: true
 runs:
   using: composite
   steps:
     - run: |
         ./node_modules/.bin/sfdx force:auth:jwt:grant \
-          --clientid ${{ secrets.SFDX_AUTH_CLIENT_ID }} \
-          --jwtkeyfile ${{ secrets.SFDX_AUTH_JWT_KEY }} \
+          --clientid ${{ inputs.clientid }} \
+          --jwtkeyfile ${{ inputs.jwtkeyfile }} \
           --username rdaccess@coveo.com \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
       shell: bash
-      with:
-        working-directory: ./packages/quantic
+      working-directory: ./packages/quantic
     - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
@@ -28,5 +34,4 @@ runs:
     - run: ./node_modules/.bin/ts-node scripts/build/delete-org.ts
       shell: bash
       if: always()
-      with:
-        working-directory: ./packages/quantic
+      working-directory: ./packages/quantic
