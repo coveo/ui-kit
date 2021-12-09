@@ -30,7 +30,7 @@ runs:
         key: ${{ hashFiles('**/package-lock.json') }}
     - run: |
         npm ci
-        npx lerna bootstrap --ci
+        npx --no-install lerna bootstrap --ci
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build

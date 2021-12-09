@@ -9,7 +9,7 @@ runs:
         working-directory: ./packages/atomic
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
-        install: true
+        install: false
     - uses: actions/upload-artifact@v2
       if: failure()
       with:

@@ -12,28 +12,28 @@ runs:
   steps:
     - run: |
         echo "${{ inputs.jwtkeyfile }}" > server.key
-        ./node_modules/.bin/sfdx force:auth:jwt:grant \
+        npx --no-install sfdx force:auth:jwt:grant \
           --clientid ${{ inputs.clientid }} \
           --jwtkeyfile server.key \
           --username rdaccess@coveo.com \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
         rm server.key
+        npx --no-install ts-node scripts/build/deploy-community.ts --ci
       shell: bash
       working-directory: ./packages/quantic
     - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        start: ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci
-        install: true
+        install: false
         config: reporter=cypress/reporters/detailed-reporter.js
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
         name: cypress-screenshots
         path: packages/quantic/cypress/screenshots
-    - run: ./node_modules/.bin/ts-node scripts/build/delete-org.ts
+    - run: npx --no-install ts-node scripts/build/delete-org.ts
       shell: bash
       if: always()
       working-directory: ./packages/quantic

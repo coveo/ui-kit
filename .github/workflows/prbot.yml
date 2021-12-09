@@ -53,7 +53,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: npx lerna run copy:staticresources --scope @coveo/quantic
+      - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
   e2e-atomic-test:
     name: "Run e2e tests on Atomic"
