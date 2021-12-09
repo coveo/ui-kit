@@ -1,6 +1,6 @@
 name: "Quantic E2E tests"
 description: "Runs Cypress tests for Quantic"
-input:
+inputs:
   clientid:
     description: The SFDX client ID
     required: true
@@ -10,10 +10,12 @@ input:
 runs:
   using: composite
   steps:
+    - run: echo ${{ inputs.jwtkeyfile }} > $HOME/secrets/rsaccess.key
+      shell: bash
     - run: |
         ./node_modules/.bin/sfdx force:auth:jwt:grant \
           --clientid ${{ inputs.clientid }} \
-          --jwtkeyfile ${{ inputs.jwtkeyfile }} \
+          --jwtkeyfile $HOME/secrets/rsaccess.key \
           --username rdaccess@coveo.com \
           --instanceurl https://login.salesforce.com \
           --setdefaultdevhubusername
