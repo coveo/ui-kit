@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: echo $KEY > $HOME/secrets/rdaccess.key
+    - run: echo "$KEY" > $HOME/secrets/rdaccess.key
       shell: bash
       env:
         KEY: ${{ inputs.jwtkeyfile }}
