@@ -1,0 +1,33 @@
+name: "Quantic E2E tests"
+description: "Runs Cypress tests for Quantic"
+runs:
+  using: composite
+  steps:
+    - run: |
+        ./node_modules/.bin/sfdx force:auth:jwt:grant \
+          --clientid ${{ secrets.SFDX_AUTH_CLIENT_ID }} \
+          --jwtkeyfile ${{ secrets.SFDX_AUTH_JWT_KEY }} \
+          --username rdaccess@coveo.com \
+          --instanceurl https://login.salesforce.com \
+          --setdefaultdevhubusername
+      shell: bash
+      with:
+        working-directory: ./packages/quantic
+    - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
+      name: Run Cypress
+      with:
+        working-directory: ./packages/quantic
+        group: 'Quantic test runs'
+        start: ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci
+        install: true
+        config: reporter=cypress/reporters/detailed-reporter.js
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: packages/quantic/cypress/screenshots
+    - run: ./node_modules/.bin/ts-node scripts/build/delete-org.ts
+      shell: bash
+      if: always()
+      with:
+        working-directory: ./packages/quantic

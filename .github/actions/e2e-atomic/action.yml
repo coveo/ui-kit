@@ -1,0 +1,18 @@
+name: "Atomic E2E tests"
+description: "Runs Cypress tests for Atomic"
+runs:
+  using: composite
+  steps:
+    - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
+      name: Run Cypress
+      with:
+        working-directory: ./packages/atomic
+        group: 'Atomic test runs'
+        start: npm run start:prod
+        wait-on: 'http://localhost:3333'
+        install: true
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: packages/atomic/cypress/screenshots
