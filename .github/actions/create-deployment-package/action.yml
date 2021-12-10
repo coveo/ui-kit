@@ -5,22 +5,8 @@ runs:
   steps:
     - id: parse-version
       uses: ./.github/actions/parse-version
-    - name: Install NPM dependencies
-      run: npm install @aws-sdk/client-secrets-manager
-      shell: bash
-    - name: Get Pipeline Token
-      uses: actions/github-script@v5
-      shell: bash
-      with:
-        script: |
-          const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager')
-          const client = new SecretsManagerClient({ region: 'us-east-1' })
-          const res = await client.send(new GetSecretValueCommand({
-            SecretId: 'arn:aws:secretsmanager:us-east-1:458176070654:secret:deployment_pipeline_tokens_dev-Iv6AOi'
-          }))
-          const token = JSON.parse(res.SecretString).jenkins
-          core.setSecret(token)
-          core.exportVariable('PIPELINE_API_TOKEN', token)
+    - id: get-pipeline-token
+      uses: ./.github/actions/get-pipeline-token
     - name: Create & deploy package
       shell: bash
       run: |
@@ -29,3 +15,5 @@ runs:
           --resolve HEADLESS_MAJOR_VERSION=${{steps.parse-version.outputs.headless-major}} \
           --resolve ATOMIC_MINOR_VERSION=${{steps.parse-version.outputs.atomic-minor}} \
           --resolve ATOMIC_MAJOR_VERSION=${{steps.parse-version.outputs.atomic-major}}
+      env:
+        PIPELINE_API_TOKEN: ${{ steps.get-pipeline-token.outputs.token }}
