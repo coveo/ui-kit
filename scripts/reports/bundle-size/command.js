@@ -1,3 +1,4 @@
+const {resolve} = require('path');
 const {statSync, readdirSync} = require('fs');
 const {promisify} = require('util');
 const exec = promisify(require('child_process').exec);
@@ -20,7 +21,7 @@ async function buildFiles() {
 
 function readFileSizes() {
   console.log('getting file sizes');
-  const dir = '../../../packages/headless/dist/browser';
+  const dir = resolve(__dirname, '../../../packages/headless/dist/browser');
   const entries = getUseCasesAndFilePaths(dir);
 
   return entries
