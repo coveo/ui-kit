@@ -19,7 +19,7 @@ runs:
           --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
           --setdefaultdevhubusername
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
-        rm ${{ env.SFDX_AUTH_JWT_KEY }}
+        # rm ${{ env.SFDX_AUTH_JWT_KEY }}
       shell: bash
       working-directory: ./packages/quantic
       env:
