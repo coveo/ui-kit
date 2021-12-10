@@ -32,7 +32,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        install: false
+        install: true
         config: reporter=cypress/reporters/detailed-reporter.js
     - uses: actions/upload-artifact@v2
       if: failure()
