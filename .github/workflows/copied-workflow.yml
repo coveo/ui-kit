@@ -25,7 +25,7 @@ jobs:
           echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > server.key
           ./node_modules/.bin/sfdx force:auth:jwt:grant --clientid ${{ secrets.SFDX_AUTH_CLIENT_ID }} --jwtkeyfile server.key --username ${{ env.SFDX_AUTH_JWT_USERNAME }} --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} --setdefaultdevhubusername
           ./node_modules/.bin/ts-node scripts/build/deploy-community.ts --ci
-      - uses: cypress-io/github-action@v2
+      - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
         name: Cypress tests
         with:
           working-directory: ./packages/quantic
