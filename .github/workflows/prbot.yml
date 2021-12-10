@@ -67,13 +67,18 @@ jobs:
       - uses: ./.github/actions/e2e-atomic
   e2e-quantic-test:
     name: "Run e2e tests on Quantic"
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - run: |
+          npm ci
+          npx lerna bootstrap --ci
+          npm run build
       - uses: ./.github/actions/e2e-quantic
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
