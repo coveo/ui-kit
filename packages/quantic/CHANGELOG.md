@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.3.0...@coveo/quantic@1.4.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** added jsdoc categories ([#1566](https://github.com/coveo/ui-kit/issues/1566)) ([73f383c](https://github.com/coveo/ui-kit/commit/73f383cb0336fc3dec1cc0873313aae31c8415fb))
+
+
+
+
+
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.2...@coveo/quantic@1.3.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** slots added in quick view ([#1575](https://github.com/coveo/ui-kit/issues/1575)) ([06112a1](https://github.com/coveo/ui-kit/commit/06112a1869d67e3ed9271c1c95141962b3b0f9b4))
+
+
+
+
+
+## [1.2.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.1...@coveo/quantic@1.2.2) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.0...@coveo/quantic@1.2.1) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.11...@coveo/quantic@1.2.0) (2021-12-09)
+
+
+### Features
+
+* **quantic:** smallest pr ever ([#1563](https://github.com/coveo/ui-kit/issues/1563)) ([52dc6ef](https://github.com/coveo/ui-kit/commit/52dc6efa91ab6772d09c391220c7224956a1cc82))
+
+
+
+
+
 ## [1.1.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.10...@coveo/quantic@1.1.11) (2021-12-06)
 
 

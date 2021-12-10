@@ -11,6 +11,7 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadles
 /**
  * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
  * @fires CustomEvent#registerresulttemplates
+ * @category Search
  * @example
  * <c-quantic-result-list engine-id={engineId} fields-to-include="objecttype,gdfiletitle"></c-quantic-result-list>
  */
