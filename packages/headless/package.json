@@ -15,7 +15,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.41.2",
+  "version": "1.41.3",
   "files": [
     "dist/",
     "recommendation/",
@@ -43,7 +43,7 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.34.0",
+    "@coveo/bueno": "^0.34.1",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/pino": "^6.3.4",
     "@types/redux-mock-store": "^1.0.2",
@@ -65,7 +65,6 @@
     "@microsoft/api-extractor-model": "7.13.16",
     "@microsoft/tsdoc": "0.13.2",
     "@types/jest": "27.0.3",
-    "concurrently": "6.4.0",
     "jest": "27.4.0",
     "jest-fetch-mock": "3.0.3",
     "ts-jest": "27.0.7",

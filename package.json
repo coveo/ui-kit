@@ -34,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "aws-sdk": "2.1019.0",
+    "concurrently": "6.4.0",
     "cross-fetch": "3.1.4",
     "cz-conventional-changelog": "3.3.0",
     "esbuild": "0.14.2",

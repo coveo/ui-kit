@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.2...@coveo/quantic@1.3.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** slots added in quick view ([#1575](https://github.com/coveo/ui-kit/issues/1575)) ([06112a1](https://github.com/coveo/ui-kit/commit/06112a1869d67e3ed9271c1c95141962b3b0f9b4))
+
+
+
+
+
+## [1.2.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.1...@coveo/quantic@1.2.2) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.0...@coveo/quantic@1.2.1) (2021-12-09)
 
 **Note:** Version bump only for package @coveo/quantic
