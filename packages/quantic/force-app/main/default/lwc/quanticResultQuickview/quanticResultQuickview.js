@@ -59,7 +59,7 @@ export default class QuanticResultQuickview extends LightningElement {
    * @type {undefined|'brand'|'outline-brand'}
    * @defaultValue `undefined`
    */
-  @api previewButtonVariant = undefined;
+  @api previewButtonVariant;
 
   /** @type {QuickviewState} */
   @track state;
