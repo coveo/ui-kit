@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.4.0...@coveo/quantic@1.5.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** remove old scratch organizations ([#1586](https://github.com/coveo/ui-kit/issues/1586)) ([4966c26](https://github.com/coveo/ui-kit/commit/4966c26ef7a03bd3c8da0034a3a9b59bdda18418))
+
+
+
+
+
 # [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.3.0...@coveo/quantic@1.4.0) (2021-12-10)
 
 
