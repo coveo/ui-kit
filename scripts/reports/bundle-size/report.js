@@ -3,54 +3,32 @@ function buildReport(oldSizes, newSizes) {
   return buildVisualReport(rows);
 }
 
-function prepareData(oldBundleMaps, newBundleMaps) {
+function prepareData(oldBundleMap, newBundleMap) {
   console.log('preparing data');
 
-  const oldEntries = Object.entries(oldBundleMaps);
+  const oldEntries = Object.entries(oldBundleMap);
   
   const combinedEntries = oldEntries.map(entry => {
-    const [bundleName, oldBundleSizeMap] = entry;
-    const newBundleSizeMap = newBundleMaps[bundleName] || buildNullSizeMap();
-    
-    return [bundleName, oldBundleSizeMap, newBundleSizeMap];
+    const [useCase, oldSize] = entry;
+    const newSize = newBundleMap[useCase] || 0;
+    return [useCase, oldSize, newSize];
   })
   
   return combinedEntries.map(entry => buildRows(...entry));
 }
 
-function buildNullSizeMap() {
-  return {
-    bundled: 0,
-    minified: 0,
-    gzipped: 0,
-  }
-}
-
-function buildRows(bundleName, oldSizeMap, newSizeMap) {
-  return Object.keys(oldSizeMap)
-  .filter(key => isNumeric(oldSizeMap[key]))
-  .map((compression, index) => {
-    const fileName = index === 0 ? bundleName : '';
-    
-    const oldSize = oldSizeMap[compression];
-    const newSize = newSizeMap[compression];
-    const change = (newSize - oldSize) * 100 / oldSize;
-
-    return [fileName, compression, toKb(oldSize), toKb(newSize), toOneDecimal(change)];
-  });
+function buildRows(useCase, oldSize, newSize) {
+  const change = (newSize - oldSize) * 100 / oldSize;
+  return [useCase, toKb(oldSize), toKb(newSize), toOneDecimal(change)];
 }
 
 function toKb(num) {
-  const kilobytes = num / 1000;
+  const kilobytes = num / 1024;
   return toOneDecimal(kilobytes);
 }
 
 function toOneDecimal(num) {
   return Math.round(num * 10) / 10;
-}
-
-function isNumeric(value) {
-  return typeof value === 'number'
 }
 
 function buildVisualReport(rows) {
@@ -63,8 +41,8 @@ function buildVisualReport(rows) {
   return `
   **Bundle Size**
   
-  | File | Compression | Old (kb) | New (kb) | Change (%)
-  | ---- |:-----------:|:--------:|:--------:|:------:
+  | File | Old (kb) | New (kb) | Change (%)
+  | ---- |:--------:|:--------:|:------:
   ${presentableRows}
   `
 }
