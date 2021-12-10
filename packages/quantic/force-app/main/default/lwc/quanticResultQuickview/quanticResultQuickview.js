@@ -51,7 +51,7 @@ export default class QuanticResultQuickview extends LightningElement {
    * @type {string}
    * @defaultValue `undefined`
    */
-  @api previewButtonLabel = undefined;
+  @api previewButtonLabel;
 
   /**
    * The variant of the preview button.
