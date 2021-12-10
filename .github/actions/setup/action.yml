@@ -20,7 +20,7 @@ runs:
           packages/atomic/storybook-static
           packages/atomic/www
           packages/quantic/docs/out
-          packages/quantic/force-app/main/default/staticresources/coveoheadless/
+          packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
