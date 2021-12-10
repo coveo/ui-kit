@@ -24,23 +24,23 @@ function readFileSizes() {
   const dir = resolve(__dirname, '../../../packages/headless/dist/browser');
   const entries = getUseCasesAndFilePaths(dir);
 
-  return entries
+  const sizeEntries = entries
     .map((entry) => {
       const {useCase, filePath} = entry;
       const {size} = statSync(filePath);
-      return {useCase, size};
-    })
-    .reduce((acc, curr) => ({...acc, [curr.useCase]: curr.size}), {});
+      return [useCase, size];
+    });
+  
+  return Object.fromEntries(sizeEntries);
 }
 
 function getUseCasesAndFilePaths(dir) {
   const filePaths = getEsmFilePaths(dir);
-  return filePaths.map((filePath) => {
-    return {
-      useCase: determineUseCase(dir, filePath),
-      filePath,
-    };
-  });
+
+  return filePaths.map((filePath) => ({
+    useCase: determineUseCase(dir, filePath),
+    filePath,
+  }));
 }
 
 function getEsmFilePaths(dir) {
