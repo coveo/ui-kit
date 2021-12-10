@@ -19,6 +19,8 @@ runs:
           packages/atomic/loader
           packages/atomic/storybook-static
           packages/atomic/www
+          packages/quantic/docs/out
+          packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
@@ -30,7 +32,7 @@ runs:
         key: ${{ hashFiles('**/package-lock.json') }}
     - run: |
         npm ci
-        npx lerna bootstrap --ci
+        npx --no-install lerna bootstrap --ci
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
