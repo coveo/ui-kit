@@ -27,6 +27,15 @@ export interface SfdxActiveScratchOrgsResponse extends SfdxResponse {
   };
 }
 
+export interface SfdxOldScratchOrgsResponse extends SfdxResponse {
+  result: {
+    records: {
+      SignupUsername: string;
+      CreatedDate: string;
+    }[];
+  };
+}
+
 export interface SfdxCreateOrgResponse extends SfdxResponse {
   result: SfdxOrg;
 }
@@ -98,6 +107,26 @@ export async function getActiveScratchOrgUsernames(
   return response.result.records.map((r) => r.SignupUsername);
 }
 
+export async function getOldScratchOrgUsernames(
+  devHubAlias: string,
+  scratchOrgName: string
+): Promise<string[]> {
+  const response = await sfdx<SfdxOldScratchOrgsResponse>(
+    `force:data:soql:query -u ${devHubAlias} -q "SELECT SignupUsername, CreatedDate FROM ScratchOrgInfo WHERE OrgName='${scratchOrgName}' AND Status != 'Deleted'"`
+  );
+
+  const ageThresholdMsec = 2 * 60 * 60 * 1000;
+  const isOldOrg = (createdDateString: string) => {
+    const created = new Date(createdDateString).getTime();
+    const now = new Date(Date.now()).getTime();
+    return now - created > ageThresholdMsec;
+  };
+
+  return response.result.records
+    .filter((r) => isOldOrg(r.CreatedDate))
+    .map((r) => r.SignupUsername);
+}
+
 export interface AuthorizeOrgArguments {
   username: string;
   isScratchOrg: boolean;
@@ -155,6 +184,41 @@ export async function deleteActiveScratchOrgs(
       console.warn(JSON.stringify(error));
     }
   }
+}
+
+interface DeleteOldScratchOrgsArguments {
+  devHubUsername: string;
+  scratchOrgName: string;
+  jwtClientId: string;
+  jwtKeyFile: string;
+}
+
+export async function deleteOldScratchOrgs(
+  args: DeleteOldScratchOrgsArguments
+): Promise<number> {
+  const usernames = await getOldScratchOrgUsernames(
+    args.devHubUsername,
+    args.scratchOrgName
+  );
+
+  let nbDeletedOrgs = 0;
+  for (const username of usernames) {
+    try {
+      await authorizeOrg({
+        username,
+        isScratchOrg: true,
+        jwtClientId: args.jwtClientId,
+        jwtKeyFile: args.jwtKeyFile,
+      });
+      await deleteOrg(username);
+      nbDeletedOrgs += 1;
+    } catch (error) {
+      console.warn(`Failed to delete organization ${username}`);
+      console.warn(JSON.stringify(error));
+    }
+  }
+
+  return nbDeletedOrgs;
 }
 
 export async function orgExists(alias: string): Promise<boolean> {
