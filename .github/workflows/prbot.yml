@@ -67,6 +67,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic
   e2e-quantic-test:
     name: "Run e2e tests on Quantic"
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
