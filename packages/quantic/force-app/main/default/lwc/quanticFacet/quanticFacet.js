@@ -28,6 +28,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticFacet` displays a facet of the results for the current query.
+ * @category Search
  * @example
  * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
  */

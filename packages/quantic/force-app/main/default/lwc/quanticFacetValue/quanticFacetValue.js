@@ -10,6 +10,7 @@ import LOCALE from '@salesforce/i18n/locale';
 /**
  * The `QuanticFacetValue` component is used by a facet component to display a formatted facet value and the number of results with that value.
  * @fires CustomEvent#selectvalue
+ * @category Search
  * @example
  * <c-quantic-facet-value onselectvalue={onSelect} item={result} is-checked={result.checked} display-as-link={displayAsLink} formatting-function={formattingFunction}></c-quantic-facet-value>
  */

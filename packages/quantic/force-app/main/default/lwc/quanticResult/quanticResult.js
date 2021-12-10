@@ -9,6 +9,7 @@ import {TimeSpan} from 'c/quanticUtils';
 
 /**
  * The `QuanticResult` component is used internally by the `QuanticResultList` component.
+ * @category Search
  * @example
  * <c-quantic-result engine-id={engineId} result={result} result-templates-manager={resultTemplatesManager}></c-quantic-result>
  */

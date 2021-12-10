@@ -6,6 +6,7 @@ import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadl
 
 /**
  * The `QuanticTab` component allows the end user to view a subset of results.
+ * @category Search
  * @example
  * <c-quantic-tab engine-id={engineId} label="Community" expression="@objecttype==&quot;Message&quot;" is-active></c-quantic-tab>
  */
