@@ -13,7 +13,7 @@ runs:
     - run: |
         echo "${{inputs.jwtkey}}" > ${{ env.SFDX_AUTH_JWT_KEY }}
         npx --no-install sfdx force:auth:jwt:grant \
-          --clientid ${{ env.SDFX_AUTH_CLIENT_ID }} \
+          --clientid ${{ env.SFDX_AUTH_CLIENT_ID }} \
           --jwtkeyfile ${{ env.SFDX_AUTH_JWT_KEY }} \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
           --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
