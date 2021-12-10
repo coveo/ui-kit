@@ -1,4 +1,5 @@
 const {setOutput} = require('@actions/core');
+const {major, minor} = require('semver');
 const headlessPackage = require('../../../packages/headless/package.json');
 const atomicPackage = require('../../../packages/atomic/package.json');
 
@@ -6,14 +7,19 @@ const atomicPackage = require('../../../packages/atomic/package.json');
  * @param {string} fullVersion
  */
 function getVersions(fullVersion) {
-  const [minor, major] = /^([^\.]*)\.[^\.]*/.exec(fullVersion);
-  return {minor, major};
+  return {
+    major: major(fullVersion),
+    minor: minor(fullVersion),
+  };
 }
 
 const headlessVersions = getVersions(headlessPackage.version);
 const atomicVersions = getVersions(atomicPackage.version);
 
 setOutput('headless-major', headlessVersions.major);
-setOutput('headless-minor', headlessVersions.minor);
+setOutput(
+  'headless-minor',
+  `${headlessVersions.major}.${headlessVersions.minor}`
+);
 setOutput('atomic-major', atomicVersions.major);
-setOutput('atomic-minor', atomicVersions.minor);
+setOutput('atomic-minor', `${atomicVersions.major}.${atomicVersions.minor}`);
