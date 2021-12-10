@@ -17,8 +17,8 @@ jobs:
       - name: Setup & Build
         run: |
           npm ci
-          npx lerna bootstrap
-          npm run build:e2e
+          npx lerna bootstrap --ci
+          npm run build
       - name: Setup Salesforce
         working-directory: packages/quantic
         run: |
