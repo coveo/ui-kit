@@ -54,20 +54,19 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
-  # TODO: Uncomment with https://coveord.atlassian.net/browse/SFINT-4259
-  # e2e-quantic-test:
-  #   name: "Run e2e tests on Quantic"
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: ./.github/actions/setup
-  #     - uses: ./.github/actions/e2e-quantic
-  #       with:
-  #         clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-  #         jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  e2e-quantic-test:
+    name: "Run e2e tests on Quantic"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-quantic
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   bump-version:
     name: "Bump version"
     needs:
@@ -75,8 +74,7 @@ jobs:
       - "generate-doc"
       - "unit-test"
       - "e2e-atomic-test"
-      # TODO: Uncomment with https://coveord.atlassian.net/browse/SFINT-4259
-      # - "e2e-quantic-test"
+      - "e2e-quantic-test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
