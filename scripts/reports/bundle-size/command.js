@@ -29,7 +29,7 @@ function readFileSizes() {
       const {size} = statSync(filePath);
       return {useCase, size};
     })
-    .reduce((acc, curr) => ({...acc, ...curr}), {});
+    .reduce((acc, curr) => ({...acc, [curr.useCase]: curr.size}), {});
 }
 
 function getUseCasesAndFilePaths(dir) {

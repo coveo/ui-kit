@@ -34,8 +34,7 @@ function toOneDecimal(num) {
 function buildVisualReport(rows) {
   console.log('building visual report');
 
-  const rowsCombinedAcrossBundles = rows.reduce((accumulated, current) => accumulated.concat(current), []);
-  const rowsWithColumnsConcatenated = rowsCombinedAcrossBundles.map(row => '|' + row.join('|'))
+  const rowsWithColumnsConcatenated = rows.map(row => '|' + row.join('|'));
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
   
   return `
