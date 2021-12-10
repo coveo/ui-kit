@@ -37,6 +37,30 @@ export default class QuanticResultQuickview extends LightningElement {
   */
   @api maximumPreviewSize;
 
+  /**
+   * The icon to be shown in the preview button.
+   * @api
+   * @type {string}
+   * @defaultValue `'utility:preview'`
+   */
+  @api previewButtonIcon = 'utility:preview';
+
+  /**
+   * The label to be shown in the preview button.
+   * @api
+   * @type {string}
+   * @defaultValue `undefined`
+   */
+  @api previewButtonLabel;
+
+  /**
+   * The variant of the preview button.
+   * @api
+   * @type {undefined|'brand'|'outline-brand'}
+   * @defaultValue `undefined`
+   */
+  @api previewButtonVariant;
+
   /** @type {QuickviewState} */
   @track state;
 
@@ -110,7 +134,7 @@ export default class QuanticResultQuickview extends LightningElement {
   stopPropagation(evt) {
     evt.stopPropagation();
   }
-  
+
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(new CustomEvent('haspreview', {
       detail: {
@@ -139,5 +163,23 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get buttonLabel() {
     return this.hasNoPreview ? this.labels.noPreview : this.labels.openPreview;
+  }
+
+  get buttonClass() {
+    return [
+      'slds-button',
+      this.previewButtonVariant ? `slds-button_${this.previewButtonVariant}` : 'quickview__button-base'
+    ].join(' ')
+  }
+
+  get buttonIconClass() {
+    return [
+      'slds-current-color',
+      this.previewButtonLabel && 'slds-button__icon_right'
+    ].join(' ');
+  }
+
+  get hasButtonLabel() {
+    return !!this.previewButtonLabel;
   }
 }
