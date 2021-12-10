@@ -27,7 +27,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   deploy:
     name: 'Deploy the package'
-    needs: build
+    needs: npm-publish
     runs-on: [self-hosted, linux, x64, ec2-alpha]
     steps:
       - uses: actions/checkout@v2
