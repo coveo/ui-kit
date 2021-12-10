@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.3.0...@coveo/quantic@1.4.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** added jsdoc categories ([#1566](https://github.com/coveo/ui-kit/issues/1566)) ([73f383c](https://github.com/coveo/ui-kit/commit/73f383cb0336fc3dec1cc0873313aae31c8415fb))
+
+
+
+
+
 # [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.2...@coveo/quantic@1.3.0) (2021-12-10)
 
 
