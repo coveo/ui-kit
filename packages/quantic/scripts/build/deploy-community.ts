@@ -130,14 +130,14 @@ async function buildOptions(): Promise<Options> {
 async function deleteOldOrgs(log: StepLogger, options: Options): Promise<void> {
   log('Deleting old scratch organizations...');
 
-  await sfdx.deleteOldScratchOrgs({
+  const nbDeleted = await sfdx.deleteOldScratchOrgs({
     devHubUsername: options.jwt.username,
     scratchOrgName: getCiOrgName(),
     jwtClientId: options.jwt.clientId,
     jwtKeyFile: options.jwt.keyFile,
   });
 
-  log('Scratch organizations deleted.');
+  log(`${nbDeleted} scratch organizations deleted.`);
 }
 
 async function ensureScratchOrgExists(log: StepLogger, options: Options) {

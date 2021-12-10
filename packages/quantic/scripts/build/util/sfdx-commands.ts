@@ -195,12 +195,13 @@ interface DeleteOldScratchOrgsArguments {
 
 export async function deleteOldScratchOrgs(
   args: DeleteOldScratchOrgsArguments
-): Promise<void> {
+): Promise<number> {
   const usernames = await getOldScratchOrgUsernames(
     args.devHubUsername,
     args.scratchOrgName
   );
 
+  let nbDeletedOrgs = 0;
   for (const username of usernames) {
     try {
       await authorizeOrg({
@@ -210,11 +211,14 @@ export async function deleteOldScratchOrgs(
         jwtKeyFile: args.jwtKeyFile,
       });
       await deleteOrg(username);
+      nbDeletedOrgs += 1;
     } catch (error) {
       console.warn(`Failed to delete organization ${username}`);
       console.warn(JSON.stringify(error));
     }
   }
+
+  return nbDeletedOrgs;
 }
 
 export async function orgExists(alias: string): Promise<boolean> {
