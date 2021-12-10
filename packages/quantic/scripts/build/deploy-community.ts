@@ -130,7 +130,7 @@ async function buildOptions(): Promise<Options> {
 async function deleteOldOrgs(log: StepLogger, options: Options): Promise<void> {
   log('Deleting old scratch organizations...');
 
-  await sfdx.deleteActiveScratchOrgs({
+  await sfdx.deleteOldScratchOrgs({
     devHubUsername: options.jwt.username,
     scratchOrgName: getCiOrgName(),
     jwtClientId: options.jwt.clientId,
