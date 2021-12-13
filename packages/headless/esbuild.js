@@ -3,6 +3,7 @@ const {readFileSync} = require('fs');
 const {build} = require('esbuild');
 const alias = require('esbuild-plugin-alias');
 const {umdWrapper} = require('../../scripts/bundle/umd');
+const { apacheLicense } = require('../../scripts/license/apache');
 
 const devMode = process.argv[2] === 'dev';
 
@@ -50,6 +51,7 @@ const base = {
     'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env.VERSION': JSON.stringify(getPackageVersion()),
   },
+  banner: {js: apacheLicense()}
 };
 
 const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map((entry) => {
@@ -90,7 +92,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
     outfile,
     format: 'cjs',
     banner: {
-      js: umd.header
+      js: `${base.banner.js}\n${umd.header}`
     },
     footer: {
       js: umd.footer
