@@ -70,7 +70,7 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
       selector
         .result(value)
         .should('have.attr', 'target')
-        .and('include', urlResult)
+        .and('include', target)
         .then((_target) => expect(_target).to.equal(target));
     },
     logDocumentOpen: (resultTitle: string) => {
