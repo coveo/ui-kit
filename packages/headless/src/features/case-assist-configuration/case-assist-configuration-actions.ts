@@ -16,9 +16,6 @@ export interface SetCaseAssistConfigurationActionCreatorPayload {
   locale?: string;
 }
 
-/**
- * Set case assist configuration.
- */
 export const setCaseAssistConfiguration = createAction(
   'caseAssistConfiguration/set',
   (payload: SetCaseAssistConfigurationActionCreatorPayload) =>

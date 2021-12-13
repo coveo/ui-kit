@@ -132,10 +132,6 @@ export function validateManualNumericRanges(
   });
 }
 
-/**
- * Registers a numeric facet.
- * @param (RegisterNumericFacetActionCreatorPayload) The options to register the facet with.
- */
 export const registerNumericFacet = createAction(
   'numericFacet/register',
   (payload: RegisterNumericFacetActionCreatorPayload) => {
@@ -161,11 +157,6 @@ export interface ToggleSelectNumericFacetValueActionCreatorPayload {
   selection: NumericFacetValue;
 }
 
-/**
- * Toggles a numeric facet value.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (NumericFacetValue) The target numeric facet value.
- */
 export const toggleSelectNumericFacetValue = createAction(
   'numericFacet/toggleSelectValue',
   (payload: ToggleSelectNumericFacetValueActionCreatorPayload) =>
@@ -187,11 +178,6 @@ export interface UpdateNumericFacetValuesActionCreatorPayload {
   values: NumericFacetValue[];
 }
 
-/**
- * Updates numeric facet values.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param values (NumericFacetValue[]) The numeric facet values.
- */
 export const updateNumericFacetValues = createAction(
   'numericFacet/updateFacetValues',
   (payload: UpdateNumericFacetValuesActionCreatorPayload) => {
@@ -222,13 +208,6 @@ export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
   criterion: RangeFacetSortCriterion;
 }
 
-/** Updates the sort criterion of a numeric facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param criterion (RangeFacetSortCriterion) The target criterion.
- */
 export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
 
-/** Deselects all values of a numeric facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- */
 export const deselectAllNumericFacetValues = deselectAllFacetValues;

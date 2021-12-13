@@ -19,10 +19,6 @@ import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 
-/**
- * Executes a facet search (i.e., a search for facet values in a facet search box).
- * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
- */
 export const executeFacetSearch = createAsyncThunk<
   {facetId: string; response: FacetSearchResponse},
   string,
@@ -55,10 +51,6 @@ export const executeFacetSearch = createAsyncThunk<
   }
 );
 
-/**
- * Resets the query and empties the values of the facet search.
- * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
- */
 export const clearFacetSearch = createAction(
   'facetSearch/clearResults',
   (payload: {facetId: string}) =>

@@ -16,9 +16,6 @@ export interface SetCaseInputActionCreatorPayload {
   fieldValue: string;
 }
 
-/**
- * Adds or updates the case inputs with the specified field and value.
- */
 export const updateCaseInput = createAction(
   'caseAssist/caseInput/update',
   (payload: SetCaseInputActionCreatorPayload) =>

@@ -1,8 +1,5 @@
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
-/**
- * Log trigger query
- */
 export const logTriggerQuery = makeAnalyticsAction(
   'analytics/trigger/query',
   AnalyticsType.Search,
@@ -14,9 +11,6 @@ export const logTriggerQuery = makeAnalyticsAction(
   }
 );
 
-/**
- * Log trigger notify
- */
 export const logNotifyTrigger = makeAnalyticsAction(
   'analytics/trigger/notify',
   AnalyticsType.Search,
@@ -30,9 +24,6 @@ export const logNotifyTrigger = makeAnalyticsAction(
   }
 );
 
-/**
- * Log trigger redirection
- */
 export const logTriggerRedirect = makeAnalyticsAction(
   'analytics/trigger/redirect',
   AnalyticsType.Search,
