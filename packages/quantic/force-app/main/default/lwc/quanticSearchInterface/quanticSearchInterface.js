@@ -51,9 +51,9 @@ export default class QuanticSearchInterface extends LightningElement {
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    * @api
    * @type {string}
-   * @defaultValue 'default'
+   * @defaultValue `undefined`
    */
-  @api pipeline = 'default';
+  @api pipeline;
 
   /**
    * Whether the state should not be reflected in the URL parameters.
