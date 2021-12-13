@@ -36,7 +36,7 @@ import {
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
-export {
+export type {
   FacetOptions,
   FacetSearchOptions,
   FacetValueState,

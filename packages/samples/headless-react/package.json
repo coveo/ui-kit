@@ -1,9 +1,9 @@
 {
   "name": "headless-react",
-  "version": "0.45.9",
+  "version": "0.45.12",
   "dependencies": {
-    "@coveo/auth": "^1.1.2",
-    "@coveo/headless": "^1.41.0",
+    "@coveo/auth": "^1.1.4",
+    "@coveo/headless": "^1.41.3",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.2.7",
     "@testing-library/user-event": "13.5.0",
@@ -28,7 +28,7 @@
   "scripts": {
     "prepublishOnly": "exit 1",
     "dev": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "tsc --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

@@ -3,8 +3,6 @@
       <c-quantic-placeholder variant="resultList" number-of-rows={numberOfResults}></c-quantic-placeholder>
     </template>
     <template for:each={results} for:item="result">
-      <c-quantic-result key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager} engine-id={engineId}>
-        <p></p>
-      </c-quantic-result>
+      <c-quantic-result key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager} engine-id={engineId}></c-quantic-result>
     </template>
 </template>

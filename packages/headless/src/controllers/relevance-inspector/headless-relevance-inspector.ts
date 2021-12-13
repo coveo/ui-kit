@@ -33,7 +33,7 @@ import {loadReducerError} from '../../utils/errors';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
-export {
+export type {
   RankingInformation,
   DocumentWeights,
   TermWeightReport,

@@ -9,7 +9,7 @@ import {
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 
-export {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
+export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 
 /**
  * Creates a `Pager` controller instance for the product listing.

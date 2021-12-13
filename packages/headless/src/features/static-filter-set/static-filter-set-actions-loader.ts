@@ -9,7 +9,7 @@ import {
   deselectAllStaticFilterValues,
 } from './static-filter-set-actions';
 
-export {
+export type {
   RegisterStaticFilterActionCreatorPayload,
   ToggleSelectStaticFilterValueActionCreatorPayload,
 };
