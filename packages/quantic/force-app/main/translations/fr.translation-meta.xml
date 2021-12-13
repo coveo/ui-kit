@@ -405,10 +405,6 @@
       <name>quantic_CaseClassificationTitle</name>
     </customLabels>
     <customLabels>
-      <label>Sélectionner une option</label>
-      <name>quantic_SelectTopic</name>
-    </customLabels>
-    <customLabels>
       <label>Autres options</label>
       <name>quantic_MoreTopics</name>
     </customLabels>

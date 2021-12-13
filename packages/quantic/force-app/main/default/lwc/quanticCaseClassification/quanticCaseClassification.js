@@ -5,7 +5,6 @@ import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 import {registerComponentForInit, initializeWithHeadless, loadDependencies} from 'c/quanticHeadlessLoader';
 
-
 /**
  * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
  */
@@ -31,21 +30,12 @@ export default class QuanticCaseClassification extends LightningElement {
 
   @track classifications = [];
 
-
   /**
-   * All the options proposed to the user to choose from.
+   * The options proposed to the user to choose from.
    * @type {Array}
    * @defaultValue `[]`
    */
   @api options = [];
-
-
-  /**
-   * The number of suggestions to be shown.
-   * @type {number}
-   * @defaultValue `3`
-   */
-  @api numberOfSuggestions = 1;
 
   /**
    * Tells if the case classification input is required.
@@ -57,23 +47,23 @@ export default class QuanticCaseClassification extends LightningElement {
   /**
    * The label to be shown to the user.
    * @type {string}
-   * @defaultValue `'Which product is related to your problem?'`
+   * @defaultValue `'Which topic is related to your issue?'`
    */
   @api label = this.labels.caseClassificationTitle;
 
   /**
    * The placeholder of the combo box input. 
    * @type {string}
-   * @defaultValue `'Select Product'`
+   * @defaultValue `'More topics'`
    */
-  @api slectPlaceholder = this.labels.selectTopic;
+  @api selectPlaceholder = this.labels.moreTopics;
 
   /**
-   * The title of the button to show the combo box button.
-   * @type {string}
-   * @defaultValue `'Select another feature'`
+   * The number of suggestions to be shown.
+   * @type {number}
+   * @defaultValue `3`
    */
-  @api selectTitle = this.labels.moreTopics;
+  @api numberOfSuggestions = 3;
 
   /**
    * The message to be shown when the value is missing.
@@ -81,6 +71,13 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `'Select an option'`
    */
   @api messageWhenValueMissing = this.labels.selectOption;
+
+  /**
+   * The max options to be displayed. an option can be a suggestion or the select dropdown.
+   * @type {number}
+   * @defaultValue `4`
+   */
+  @api maxOptions = 4
 
   /** @type {string} */
   _errorMessage = '';
@@ -129,19 +126,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return this.options.length > this.numberOfSuggestions;
-  }
-
-  /**
-   * Returns the suggested options to be shown as the suggestions provided by Coveo case assist.
-   * @returns {Array}
-   */
-  get suggestedOptions() {
-    if (0 > parseInt(this.numberOfSuggestions, 10)) {
-      console.warn('numberOfSuggestions should be greater or equal to 0');
-      return [];
-    }
-    return this.options.slice(0, this.numberOfSuggestions);
+    return this.options.length + this.suggestions.length > this.maxOptions;
   }
 
   /**
@@ -168,6 +153,25 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get formClass() {
     return `slds-form-element ${this.hasError ? 'slds-has-error' : ''}`;
+  }
+
+  /** 
+   * Returns all the options, including the suggestions.
+   * @returns {Array}
+   *  */
+  get allOptions(){
+    return [...this.options, ...this.suggestions]
+  }
+  
+  /**
+   * Returns the suggestions to be shown.
+   * @returns {Array}
+   */
+  get suggestions(){
+    const suggestionsToOptions = this.classifications.map(option=>{
+      return {value: option.value, label: option.value}
+    })
+    return suggestionsToOptions.slice(0, this.numberOfSuggestions)
   }
 
   /**
@@ -247,7 +251,6 @@ export default class QuanticCaseClassification extends LightningElement {
   }
   
   updatePriorityState() {
-    console.log()
     this.classifications = this.priority.state.suggestions ?? [];
     const suggestToOpptions = this.classifications.map(option=>{
       return {value: option.value, label: option.value}

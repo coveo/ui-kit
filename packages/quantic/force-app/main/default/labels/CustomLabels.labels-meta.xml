@@ -757,13 +757,6 @@
       <shortDescription>Which topic relates to your issue?</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_SelectTopic</fullName>
-      <value>Select Topic</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>Select Topic</shortDescription>
-    </labels>
-    <labels>
       <fullName>quantic_MoreTopics</fullName>
       <value>More Topics</value>
       <language>en_US</language>

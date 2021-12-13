@@ -5,10 +5,10 @@
     </legend>
     <div class="slds-form-element__control" aria-describedby="case-classification-error-message">
       <div class="row">
-        <template for:each={classifications} for:item="option">
+        <template for:each={suggestions} for:item="option">
           <div key={option.value}
             class="slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-bottom_x-small">
-            <input type="radio" onchange={handleChange} id={option.value} value={option.value} name={label} />
+            <input type="radio" onchange={handleChange} id={option.value} value={option.value} name={option.label} />
             <label for={option.value}>
               <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
                 {option.value}
@@ -22,12 +22,29 @@
         </template>
         <template if:true={isMoreOptionsVisible}>
           <template if:false={isSelectVisible}>
-            <lightning-button variant="base" label={selectTitle} title={selectTitle} onclick={showSelect}>
+            <lightning-button variant="base" label={selectPlaceholder} title={selectPlaceholder} onclick={showSelect}>
             </lightning-button>
           </template>
           <template if:true={isSelectVisible}>
             <lightning-combobox name="progress" value={value} variant="label-hidden"
-              placeholder={slectPlaceholder} options={_options} onchange={handleSelectChange}></lightning-combobox>
+              placeholder={selectPlaceholder} options={allOptions} onchange={handleSelectChange}></lightning-combobox>
+          </template>
+        </template>
+        <template if:false={isMoreOptionsVisible}>
+          <template for:each={options} for:item="option">
+            <div key={option.value}
+              class="slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-bottom_x-small">
+              <input type="radio" onchange={handleChange} id={option.value} value={option.value} name={label} />
+              <label for={option.value}>
+                <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
+                  {option.value}
+                </span>
+                <span class="slds-icon_container slds-visual-picker__text-check">
+                  <lightning-icon size="xx-small" icon-name="utility:check">
+                  </lightning-icon>
+                </span>
+              </label>
+            </div>
           </template>
         </template>
       </div>
