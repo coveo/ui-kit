@@ -1,9 +1,8 @@
 name: Publish Robot
 on:
   push:
-    branches:
-      - master
-    tags: ['*']
+    tags:
+      - "@coveo/*"
 jobs:
   build:
     name: "Build"
