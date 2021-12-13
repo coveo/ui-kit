@@ -64,14 +64,20 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
         .result(value)
         .should('have.attr', 'href')
         .and('include', urlResult)
-        .then((href) => expect(href).to.equal(urlResult));
+        .then((href) => expect(href).to.equal(urlResult))
+        .logDetail(
+          `The result link should contain attribute href equal to "${urlResult}"`
+        );
     },
     targetContainsAtResult: (value: string, target: string) => {
       selector
         .result(value)
         .should('have.attr', 'target')
         .and('include', target)
-        .then((_target) => expect(_target).to.equal(target));
+        .then((_target) => expect(_target).to.equal(target))
+        .logDetail(
+          `The result link should contain attribute target equal to "${target}"`
+        );
     },
     logDocumentOpen: (resultTitle: string) => {
       cy.wait(InterceptAliases.UA.DocumentOpen)
