@@ -21,26 +21,19 @@ function initDataFile() {
 
 async function prepareData() {
   const data = await getData();
-  const { minified, gzipped } = data;
-  return `\n${minified},${gzipped}`;
+  return `\n${data}`;
 }
 
 async function getData() {
-  const slash = isWindows() ? '\\' : '/'
-  const bundleName = `dist${slash}browser${slash}headless.esm.js`;
-  
+  const useCase = 'search';
   const sizes = await computeFileSizes();
-  const data = sizes[bundleName];
+  const data = sizes[useCase];
   
   if (!data) {
-    throw new Error(`failed to retrieve data for bundle: ${bundleName}`)
+    throw new Error(`failed to retrieve data for bundle: ${useCase}`)
   }
 
   return data;
-}
-
-function isWindows() {
-  return process.platform === 'win32';
 }
 
 function appendToDataFile(row) {
