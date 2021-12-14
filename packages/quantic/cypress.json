@@ -1,5 +1,6 @@
 {
   "includeShadowDom": true,
+  "projectId": "59g399",
   "integrationFolder": "cypress/integration",
   "testFiles": ["**/*.cypress.ts"],
   "pluginsFile": "cypress/plugins/index.ts",
