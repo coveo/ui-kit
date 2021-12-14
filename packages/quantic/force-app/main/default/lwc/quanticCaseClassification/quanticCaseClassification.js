@@ -1,9 +1,8 @@
-import { LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
-import selectTopic from '@salesforce/label/c.quantic_SelectTopic';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
-import {registerComponentForInit, initializeWithHeadless, loadDependencies} from 'c/quanticHeadlessLoader';
+import { registerComponentForInit, initializeWithHeadless, loadDependencies } from 'c/quanticHeadlessLoader';
 
 /**
  * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
@@ -12,9 +11,13 @@ export default class QuanticCaseClassification extends LightningElement {
   labels = {
     caseClassificationTitle,
     moreTopics,
-    selectTopic,
     selectOption
   };
+
+  /**
+   * The field of the case to be classified.
+   */
+  @api fieldName;
 
   /**
    * The ID of the engine instance the component registers to.
@@ -23,10 +26,11 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api engineId;
 
+  engine;
   headless;
 
-  priority;
-  unsubscribePriority;
+  field;
+  unsubscribeField;
 
   @track classifications = [];
 
@@ -72,13 +76,6 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api messageWhenValueMissing = this.labels.selectOption;
 
-  /**
-   * The max options to be displayed. an option can be a suggestion or the select dropdown.
-   * @type {number}
-   * @defaultValue `4`
-   */
-  @api maxOptions = 4
-
   /** @type {string} */
   _errorMessage = '';
 
@@ -90,8 +87,6 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /** @type {boolean} */
   _isSuggestionsVisible = true;
-
-  @track _options = []
 
   /**
    * Tells if there is an error in the input.
@@ -126,7 +121,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return this.options.length + this.suggestions.length > this.maxOptions;
+    return (this.options.length + this.suggestions.length) > parseInt(this.numberOfSuggestions, 10) + 1;
   }
 
   /**
@@ -156,22 +151,21 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /** 
-   * Returns all the options, including the suggestions.
+   * Returns the options, excluding the suggestions.
    * @returns {Array}
    *  */
-  get allOptions(){
-    return [...this.options, ...this.suggestions]
+  get filtredOptions() {
+    return this.options.filter( (option) => {
+      return this.classifications.findIndex(item => item.value === option.value) === -1;
+    });
   }
-  
+
   /**
    * Returns the suggestions to be shown.
    * @returns {Array}
    */
-  get suggestions(){
-    const suggestionsToOptions = this.classifications.map(option=>{
-      return {value: option.value, label: option.value}
-    })
-    return suggestionsToOptions.slice(0, this.numberOfSuggestions)
+  get suggestions() {
+    return this.classifications.slice(0, parseInt(this.numberOfSuggestions, 10));
   }
 
   /**
@@ -183,24 +177,30 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Handles the selection of a suggestion.
+   * @returns {void}
+   */
+  handleSelectClassification(event){
+    const suggestionId = event.target.dataset.suggestionId;
+    const value = event.target.value;
+    this.engine.dispatch(this.actions.logClassificationClick(suggestionId));
+    this.field.update(value);
+    this._errorMessage = '';
+    this._value = value;
+  }
+
+  /**
    * Handles the select input change.
    * @returns {void}
    */
   handleSelectChange(event) {
+    const value = event.target.value;
+    this.field.update(value);
     this._errorMessage = '';
-    if (this._isSuggestionsVisible) {
+    this._value = value;
+    if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this._hideSuggestions();
     }
-    this._value = event.target.value;
-  }
-
-  /**
-   * Handles changes in the suggested options.
-   * @returns {void}
-   */
-  handleChange(event) {
-    this._errorMessage = '';
-    this._value = event.target.value;
   }
 
   /**
@@ -225,38 +225,39 @@ export default class QuanticCaseClassification extends LightningElement {
 
   connectedCallback() {
     loadDependencies(this, 'case-assist').then((headless) => {
-      this.headless = headless
+      this.headless = headless;
     })
     registerComponentForInit(this, this.engineId);
-    this._options = this.options
   }
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    // this._options = this.options
-
   }
 
   initialize = (engine) => {
-    this.priority = this.headless.buildCaseField(engine, {
+    this.engine = engine;
+    this.field = this.headless.buildCaseField(engine, {
       options: {
-        field: 'sfpriority'
+        field: this.fieldName
       }
     });
-    this.unsubscribePriority = this.priority.subscribe(() => this.updatePriorityState());
+    this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
+
+    this.actions = {
+      ...this.headless.loadCaseAssistAnalyticsActions(engine),
+      ...this.headless.loadCaseFieldActions(engine),
+    };
   }
-  
+
   disconnectedCallback() {
-    this.unsubscribePriority?.();
+    this.unsubscribeField?.();
   }
-  
-  updatePriorityState() {
-    this.classifications = this.priority.state.suggestions ?? [];
-    const suggestToOpptions = this.classifications.map(option=>{
-      return {value: option.value, label: option.value}
-    })
-    console.log(suggestToOpptions)
-    this._options = [...this.options, ...suggestToOpptions]
-    console.log(JSON.parse(JSON.stringify(this._options)))
+
+  updateFieldState() {
+    this.classifications = this.field.state.suggestions ?? [];
+    // const suggestToOpptions = this.classifications.map(option => {
+    //   return { value: option.value, label: option.value }
+    // })
+    // console.log(suggestToOpptions)
   }
 }
