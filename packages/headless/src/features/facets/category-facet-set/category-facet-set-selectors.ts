@@ -1,5 +1,6 @@
 import {
   CategoryFacetSection,
+  ProductListingSection,
   SearchSection,
 } from '../../../state/state-sections';
 import {baseFacetResponseSelector} from '../facet-set/facet-set-selectors';
@@ -15,7 +16,7 @@ function isCategoryFacetResponse(
 }
 
 export const categoryFacetResponseSelector = (
-  state: CategoryFacetSection & SearchSection,
+  state: CategoryFacetSection & Partial<SearchSection | ProductListingSection>,
   facetId: string
 ) => {
   const response = baseFacetResponseSelector(state, facetId);
@@ -34,7 +35,7 @@ export const categoryFacetRequestSelector = (
 };
 
 export const categoryFacetSelectedValuesSelector = (
-  state: CategoryFacetSection & SearchSection,
+  state: CategoryFacetSection & Partial<SearchSection | ProductListingSection>,
   facetId: string
 ) => {
   const facetResponse = categoryFacetResponseSelector(state, facetId);

@@ -7,18 +7,21 @@ import {FacetResponse, FacetValue} from './interfaces/response';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
 export const baseFacetResponseSelector = (
-  state: SearchSection | ProductListingSection,
+  state: Partial<SearchSection | ProductListingSection>,
   id: string
 ) => {
-  if ('productListing' in state) {
+  if ('productListing' in state && state.productListing) {
     return state.productListing.facets.results.find(
       (response) => response.facetId === id
     );
   }
 
-  return state.search.response.facets.find(
-    (response) => response.facetId === id
-  );
+  if ('search' in state && state.search) {
+    return state.search.response.facets.find(
+      (response) => response.facetId === id
+    );
+  }
+  return undefined;
 };
 
 export const facetRequestSelector = (state: FacetSection, id: string) => {
