@@ -154,6 +154,10 @@ export default class QuanticResultQuickview extends LightningElement {
     return !this.state?.resultHasPreview;
   }
 
+  get hasIcon() {
+    return !!this.previewButtonIcon;
+  }
+
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }

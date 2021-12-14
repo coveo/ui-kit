@@ -1,17 +1,17 @@
 <template>
-  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
+  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} title={buttonLabel} disabled={hasNoPreview}>
     <template if:true={hasButtonLabel}>
       {previewButtonLabel}
     </template>  
-    <lightning-icon 
+    <template if:true={hasIcon}>
+      <lightning-icon 
       size="x-small"
       icon-name={previewButtonIcon}
-      title={buttonLabel}
       alternative-text={buttonLabel}
       class={buttonIconClass}>
-    </lightning-icon>
+      </lightning-icon>
+    </template>
   </button>
-
   <template if:true={isQuickviewOpen}>
     <section onclick={closeQuickview} role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_medium slds-fade-in-open">
       <div class="slds-modal__container">
