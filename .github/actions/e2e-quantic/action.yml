@@ -33,6 +33,7 @@ runs:
       with:
         working-directory: ./packages/quantic
         install: true
+        record: ${{ github.ref == 'refs/heads/master' && true || false }}
         config: reporter=cypress/reporters/detailed-reporter.js
     - uses: actions/upload-artifact@v2
       if: failure()

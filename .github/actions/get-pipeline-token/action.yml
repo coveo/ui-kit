@@ -1,0 +1,8 @@
+name: "Get pipeline token"
+description: "Get a token for the pipeline API from the AWS Secrets Manager"
+outputs:
+  token:
+    description: "The pipeline API token"
+runs:
+  using: 'node16'
+  main: 'index.js'
