@@ -11,6 +11,9 @@ runs:
         wait-on: 'http://localhost:3333'
         install: true
         record: ${{ github.ref == 'refs/heads/master' && true || false }}
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
