@@ -56,7 +56,7 @@ export interface RegisterFacetActionCreatorPayload {
   numberOfValues?: number;
 
   /**
-   * The criterion to use for sorting returned facet values.
+   * The criterion to use for sorting returned facet values. The default value of `automatic` adjusts the sort based on whether the facet is expanded or not, and whether the full list of values is being displayed.
    *
    * @defaultValue `automatic`
    */
