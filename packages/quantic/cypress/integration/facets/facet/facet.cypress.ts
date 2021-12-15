@@ -431,7 +431,6 @@ describe('Facet Test Suite', () => {
 
         function collapseFacet() {
           Actions.clickCollapseButton();
-          cy.wait(InterceptAliases.Search);
         }
 
         selectFirstFacetValue();
