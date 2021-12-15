@@ -41,7 +41,7 @@ export default class QuanticCaseClassification extends LightningElement {
   /**
    * All the possible values of a given category.
    * @api
-   * @type {Array}
+   * @type {Array<object>}
    * @defaultValue `[]`
    */
   @api options = [];
@@ -160,7 +160,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * Returns the options, excluding the suggestions.
-   * @returns {Array}
+   * @returns {Array<object>}
    *  */
   get filtredOptions() {
     return this.options.filter((option) => {
@@ -228,6 +228,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * Hide the suggested options.
+   * @returns {void}
    */
   _hideSuggestions() {
     const suggestions = this.template.querySelectorAll('.slds-visual-picker');
