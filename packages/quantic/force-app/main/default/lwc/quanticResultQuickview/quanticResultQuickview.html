@@ -1,14 +1,17 @@
 <template>
-  <button class="quickview__button slds-button" onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
-    <lightning-icon 
+  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} title={buttonLabel} disabled={hasNoPreview}>
+    <template if:true={hasButtonLabel}>
+      {previewButtonLabel}
+    </template>  
+    <template if:true={hasIcon}>
+      <lightning-icon 
       size="x-small"
-      icon-name="utility:preview"
-      title={buttonLabel}
+      icon-name={previewButtonIcon}
       alternative-text={buttonLabel}
-      class="slds-current-color">
-    </lightning-icon>
+      class={buttonIconClass}>
+      </lightning-icon>
+    </template>
   </button>
-
   <template if:true={isQuickviewOpen}>
     <section onclick={closeQuickview} role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_medium slds-fade-in-open">
       <div class="slds-modal__container">
@@ -37,6 +40,9 @@
         </template>
         <template if:false={isLoading}>
           <div onclick={stopPropagation} class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" id="quickview__content-container" lwc:dom="manual"></div>
+          <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
+            <slot name="footer"></slot>
+          </footer>
         </template>
       </div>
     </section>

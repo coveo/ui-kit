@@ -7,6 +7,7 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
+import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -68,7 +69,7 @@ export class AtomicResult {
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   @Listen('atomic/resolveResult')
-  public resolveResult(event: CustomEvent) {
+  public resolveResult(event: ResultContextEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);

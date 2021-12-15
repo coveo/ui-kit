@@ -15,6 +15,7 @@ const CHATTER='Chatter';
 /**
  * The `QuanticResultLabel` component displays an [SLDS icon](https://www.lightningdesignsystem.com/icons/) and label for a result.
  * If the `Result` option is set this component can infer default label and icon based on the result properties. Otherwise the `label` and `icon` properties are required.
+ * @category Result Template
  * @example
  * <c-quantic-result-label label="Account" icon="standard:account" size="medium" icon-only></c-quantic-result-label>
  */

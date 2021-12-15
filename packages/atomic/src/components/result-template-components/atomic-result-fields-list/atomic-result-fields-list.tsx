@@ -1,3 +1,4 @@
+import {Result} from '@coveo/headless';
 import {Component, h, Element, Host} from '@stencil/core';
 import {ResultContext} from '../result-template-decorators';
 
@@ -11,7 +12,9 @@ import {ResultContext} from '../result-template-decorators';
 })
 export class AtomicResultFieldsList {
   @ResultContext()
-  private resizeObserver!: ResizeObserver;
+  protected result!: Result;
+
+  private resizeObserver?: ResizeObserver;
 
   private updatingChildren = false;
   private rows: number[] = [];
@@ -23,7 +26,7 @@ export class AtomicResultFieldsList {
   }
 
   public disconnectedCallback() {
-    this.resizeObserver.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   public componentDidRender() {

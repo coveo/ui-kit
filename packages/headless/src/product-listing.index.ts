@@ -1,88 +1,86 @@
-export {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
-export {
+export type {
   ProductListingEngine,
   ProductListingEngineConfiguration,
   ProductListingEngineOptions,
+} from './app/product-listing-engine/product-listing-engine';
+export {
   buildProductListingEngine,
   getSampleProductListingEngineConfiguration,
 } from './app/product-listing-engine/product-listing-engine';
 
-export {CoreEngine, ExternalEngineOptions} from './app/engine';
-export {
+export type {CoreEngine, ExternalEngineOptions} from './app/engine';
+export type {
   EngineConfiguration,
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
-export {LoggerOptions} from './app/logger';
-export {LogLevel} from './app/logger';
+export type {LoggerOptions} from './app/logger';
+export type {LogLevel} from './app/logger';
 
-export {ProductRecommendation} from './api/search/search/product-recommendation';
+export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';
-export {
-  loadProductListingActions,
-  ProductListingActionCreators,
-  SetProductListingUrlPayload,
-} from './features/product-listing/product-listing-actions-loader';
+export * from './features/product-listing/product-listing-actions-loader';
 
 // Controllers
-export {
-  Controller,
-  buildController,
-} from './controllers/controller/headless-controller';
+export type {Controller} from './controllers/controller/headless-controller';
+export {buildController} from './controllers/controller/headless-controller';
 
-export {
+export type {
   ProductListingState,
   ProductListing,
   ProductListingOptions,
   ProductListingProps,
   ProductListingControllerState,
-  buildProductListing,
 } from './controllers/product-listing/headless-product-listing';
+export {buildProductListing} from './controllers/product-listing/headless-product-listing';
 
-export {
+export type {
   PagerInitialState,
   PagerOptions,
   PagerProps,
   PagerState,
   Pager,
-  buildPager,
 } from './controllers/product-listing/pager/headless-product-listing-pager';
+export {buildPager} from './controllers/product-listing/pager/headless-product-listing-pager';
 
-export {
+export type {
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
   ResultsPerPage,
-  buildResultsPerPage,
 } from './controllers/product-listing/results-per-page/headless-product-listing-results-per-page';
+export {buildResultsPerPage} from './controllers/product-listing/results-per-page/headless-product-listing-results-per-page';
 
-export {
+export type {
   ProductListingSortInitialState,
   ProductListingSortProps,
   ProductListingSort,
   ProductListingSortState,
-  buildSort,
-  SortBy,
   SortByFields,
   SortByFieldsFields,
   SortByRelevance,
   SortCriterion,
+} from './controllers/product-listing/sort/headless-product-listing-sort';
+export {
+  SortBy,
   SortDirection,
+  buildSort,
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
 } from './controllers/product-listing/sort/headless-product-listing-sort';
 
-export {
+export type {
   FacetManager,
   FacetManagerPayload,
   FacetManagerState,
-  buildFacetManager,
 } from './controllers/product-listing/facet/headless-product-listing-facet-manager';
+export {buildFacetManager} from './controllers/product-listing/facet/headless-product-listing-facet-manager';
 
-export {
+export type {
   CoreFacet,
   CoreFacetState,
   Facet,
@@ -95,10 +93,10 @@ export {
   FacetValue,
   FacetValueState,
   SpecificFacetSearchResult,
-  buildFacet,
 } from './controllers/product-listing/facet/headless-product-listing-facet';
+export {buildFacet} from './controllers/product-listing/facet/headless-product-listing-facet';
 
-export {
+export type {
   CoreCategoryFacet,
   CoreCategoryFacetState,
   CategoryFacet,
@@ -110,10 +108,10 @@ export {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
-  buildCategoryFacet,
 } from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
+export {buildCategoryFacet} from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 
-export {
+export type {
   DateFacet,
   DateFacetOptions,
   DateFacetProps,
@@ -122,12 +120,13 @@ export {
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,
+} from './controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
+export {
   buildDateFacet,
   buildDateRange,
 } from './controllers/product-listing/range-facet/date-facet/headless-product-listing-date-facet';
 
-export {
-  buildDateFilter,
+export type {
   DateFilter,
   DateFilterOptions,
   DateFilterProps,
@@ -135,8 +134,9 @@ export {
   DateFilterState,
   DateFilterInitialState,
 } from './controllers/product-listing/range-facet/date-facet/headless-product-listing-date-filter';
+export {buildDateFilter} from './controllers/product-listing/range-facet/date-facet/headless-product-listing-date-filter';
 
-export {
+export type {
   NumericFacet,
   NumericFacetOptions,
   NumericFacetProps,
@@ -144,12 +144,13 @@ export {
   NumericFacetValue,
   NumericRangeOptions,
   NumericRangeRequest,
+} from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-facet';
+export {
   buildNumericFacet,
   buildNumericRange,
 } from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-facet';
 
-export {
-  buildNumericFilter,
+export type {
   NumericFilter,
   NumericFilterOptions,
   NumericFilterProps,
@@ -157,3 +158,4 @@ export {
   NumericFilterState,
   NumericFilterInitialState,
 } from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';
+export {buildNumericFilter} from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';

@@ -1,7 +1,7 @@
 import defaultStory from '../../../.storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/NoResult',
+  'Atomic/NoResults',
   'atomic-no-results',
   {},
   {

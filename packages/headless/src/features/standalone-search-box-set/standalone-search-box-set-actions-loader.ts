@@ -14,7 +14,7 @@ import {
   StateNeededForRedirect,
 } from './standalone-search-box-set-actions';
 
-export {
+export type {
   RegisterStandaloneSearchBoxActionCreatorPayload,
   FetchRedirectUrlActionCreatorPayload,
   UpdateAnalyticsToSearchFromLinkActionCreatorPayload,

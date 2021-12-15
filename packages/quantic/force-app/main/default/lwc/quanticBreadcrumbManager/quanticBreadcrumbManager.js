@@ -25,6 +25,7 @@ import colon from '@salesforce/label/c.quantic_Colon';
 
 /**
  * The `QuanticBreadcrumbManager` component creates breadcrumbs that display a summary of the currently active facet values.
+ * @category Search
  * @example
  * <c-quantic-breadcrumb-manager engine-id={engineId} category-divider=";" collapse-threshold="4"></c-quantic-breadcrumb-manager>
  */
@@ -39,12 +40,14 @@ export default class QuanticBreadcrumbManager extends LightningElement {
    * A character that divides each path segment in a category facet breadcrumb.
    * @api
    * @type {string}
+   * @defaultValue `'/'`
    */
   @api categoryDivider = '/';
   /** 
    * Maximum number of displayed breadcrumb values. When more values are selected, additional values appear under the "More" button.
    * @api
    * @type {Number}
+   * @defaultValue `5`
    */
   @api collapseThreshold = 5;
 

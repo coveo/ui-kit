@@ -7,6 +7,7 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadles
 
 /**
  * The `QuanticResultsPerPage` component determines how many results to display per page.
+ * @category Search
  * @example
  * <c-quantic-results-per-page engine-id={engineId} choices-displayed="5,10,20" initial-choice="5"></c-quantic-results-per-page>
  */

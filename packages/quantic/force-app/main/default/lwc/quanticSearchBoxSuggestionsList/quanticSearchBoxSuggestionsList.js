@@ -11,6 +11,7 @@ import {LightningElement, api,track} from 'lwc';
  * The `QuanticSearchBoxSuggestionsList` is used internally by search box components to display the query suggestions in an omnibox.
  * @fires CustomEvent#highlightchange
  * @fires CustomEvent#suggestionselected
+ * @category Search
  * @example
  * <c-quantic-search-box-suggestions-list suggestions={suggestions} onhighlightchange={handleHighlightChange} onsuggestionselected={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
  */

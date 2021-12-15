@@ -49,6 +49,7 @@ jobs:
       - name: Install NPM dependencies
         working-directory: ./packages/quantic
         run: |
+          npm i -g typescript
           npm i -g sfdx-cli
           npm i
       - name: Build Quantic project

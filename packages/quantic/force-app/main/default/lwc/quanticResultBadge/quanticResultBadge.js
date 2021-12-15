@@ -7,6 +7,7 @@ import featured from '@salesforce/label/c.quantic_Featured';
 
 /**
  * The `QuanticResultBadge` component displays a badge to be used in result templates.
+ * @category Result Template
  * @example
  * <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
  */

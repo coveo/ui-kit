@@ -16,6 +16,7 @@ import expand from '@salesforce/label/c.quantic_Expand';
 
 /**
  * The `QuanticRecentResultsList` component displays the current user's recently clicked results.
+ * @category Search
  * @example
  * <c-quantic-recent-results-list engine-id={engineId} max-length="8" label="Recently Viewed Results" is-collapsed></c-quantic-recent-results-list>
  */

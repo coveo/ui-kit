@@ -12,6 +12,7 @@ import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 
 /**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
+ * @category Result Template
  * @fires CustomEvent#haspreview
  * @example
  * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
@@ -36,6 +37,30 @@ export default class QuanticResultQuickview extends LightningElement {
   * @defaultValue `undefined`
   */
   @api maximumPreviewSize;
+
+  /**
+   * The icon to be shown in the preview button.
+   * @api
+   * @type {string}
+   * @defaultValue `'utility:preview'`
+   */
+  @api previewButtonIcon = 'utility:preview';
+
+  /**
+   * The label to be shown in the preview button.
+   * @api
+   * @type {string}
+   * @defaultValue `undefined`
+   */
+  @api previewButtonLabel;
+
+  /**
+   * The variant of the preview button.
+   * @api
+   * @type {undefined|'brand'|'outline-brand'}
+   * @defaultValue `undefined`
+   */
+  @api previewButtonVariant;
 
   /** @type {QuickviewState} */
   @track state;
@@ -110,7 +135,7 @@ export default class QuanticResultQuickview extends LightningElement {
   stopPropagation(evt) {
     evt.stopPropagation();
   }
-  
+
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(new CustomEvent('haspreview', {
       detail: {
@@ -129,6 +154,10 @@ export default class QuanticResultQuickview extends LightningElement {
     return !this.state?.resultHasPreview;
   }
 
+  get hasIcon() {
+    return !!this.previewButtonIcon;
+  }
+
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
@@ -139,5 +168,23 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get buttonLabel() {
     return this.hasNoPreview ? this.labels.noPreview : this.labels.openPreview;
+  }
+
+  get buttonClass() {
+    return [
+      'slds-button',
+      this.previewButtonVariant ? `slds-button_${this.previewButtonVariant}` : 'quickview__button-base'
+    ].join(' ')
+  }
+
+  get buttonIconClass() {
+    return [
+      'slds-current-color',
+      this.previewButtonLabel && 'slds-button__icon_right'
+    ].join(' ');
+  }
+
+  get hasButtonLabel() {
+    return !!this.previewButtonLabel;
   }
 }

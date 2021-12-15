@@ -145,10 +145,6 @@ export function validateManualDateRanges(
   });
 }
 
-/**
- * Registers a date facet.
- * @param (RegisterDateFacetActionCreatorPayload) The options to register the facet with.
- */
 export const registerDateFacet = createAction(
   'dateFacet/register',
   (payload: RegisterDateFacetActionCreatorPayload) => {
@@ -174,11 +170,6 @@ export interface ToggleSelectDateFacetValueActionCreatorPayload {
   selection: DateFacetValue;
 }
 
-/**
- * Toggles a date facet value.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (DateFacetValue) The target date facet value.
- */
 export const toggleSelectDateFacetValue = createAction(
   'dateFacet/toggleSelectValue',
   (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
@@ -200,11 +191,6 @@ export interface UpdateDateFacetValuesActionCreatorPayload {
   values: DateFacetValue[];
 }
 
-/**
- * Updates date facet values.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param values (DateFacetValue[]) The date facet values.
- */
 export const updateDateFacetValues = createAction(
   'dateFacet/updateFacetValues',
   (payload: UpdateDateFacetValuesActionCreatorPayload) => {
@@ -235,13 +221,6 @@ export interface UpdateDateFacetSortCriterionActionCreatorPayload {
   criterion: RangeFacetSortCriterion;
 }
 
-/** Updates the sort criterion of a date facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param criterion (RangeFacetSortCriterion) The target criterion.
- */
 export const updateDateFacetSortCriterion = updateRangeFacetSortCriterion;
 
-/** Deselects all values of a date facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- */
 export const deselectAllDateFacetValues = deselectAllFacetValues;

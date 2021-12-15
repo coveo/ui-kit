@@ -21,7 +21,7 @@ import {logParametersChange} from '../../features/search-parameters/search-param
 import {deepEqualAnyOrder} from '../../utils/compare-utils';
 import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
 
-export {SearchParameters};
+export type {SearchParameters};
 
 export interface SearchParameterManagerProps {
   /**

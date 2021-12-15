@@ -40,7 +40,11 @@ import {defaultFacetSearchOptions} from '../../../../features/facets/facet-searc
 import {CoreEngine} from '../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
 
-export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
+export type {
+  CategoryFacetValue,
+  CategoryFacetOptions,
+  CategoryFacetSearchOptions,
+};
 
 export interface CategoryFacetProps {
   /** The options for the `CategoryFacet` controller. */

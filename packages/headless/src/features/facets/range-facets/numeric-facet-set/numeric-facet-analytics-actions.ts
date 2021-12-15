@@ -19,9 +19,6 @@ export interface LogNumericFacetBreadcrumbActionCreatorPayload {
   selection: NumericFacetValue;
 }
 
-/**
- * Logs a numeric facet breadcrumb event.
- */
 export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload
 ) =>

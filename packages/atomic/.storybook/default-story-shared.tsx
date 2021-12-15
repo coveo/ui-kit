@@ -110,6 +110,7 @@ export default function sharedDefaultStory(
 
   const defaultModuleExport = {
     title,
+    id: componentTag,
     argTypes: mapPropsToArgTypes(componentTag),
     parameters: {
       docs: {
@@ -146,6 +147,7 @@ export default function sharedDefaultStory(
 
   exportedStory.loaders = [defaultLoader];
   exportedStory.decorators = [defaultDecorator];
+  exportedStory.storyName = componentTag;
 
   return {
     defaultModuleExport,

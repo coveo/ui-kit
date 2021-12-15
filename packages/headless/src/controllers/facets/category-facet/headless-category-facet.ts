@@ -40,7 +40,7 @@ import {
 } from '../../core/facets/category-facet/headless-core-category-facet';
 import {buildCategoryFacetSearch} from './headless-category-facet-search';
 
-export {
+export type {
   CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
