@@ -3,30 +3,24 @@ import {
   AtomicSearchBox,
   AtomicSearchInterface,
 } from '@coveo/atomic-react';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 
 export function AtomicReactPage() {
+  const searchInterface = useRef<HTMLAtomicSearchInterfaceElement>(null);
+
   useEffect(() => {
-    init();
+    init(searchInterface.current!);
   }, []);
 
   return (
-    <AtomicSearchInterface>
+    <AtomicSearchInterface ref={searchInterface}>
       <AtomicSearchBox />
       <AtomicResultList />
     </AtomicSearchInterface>
   );
 }
 
-async function init() {
-  await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = document.querySelector('atomic-search-interface');
-
-  if (!searchInterface) {
-    console.log('failed to initialize. atomic-search-interface not found');
-    return;
-  }
-
+async function init(searchInterface: HTMLAtomicSearchInterfaceElement) {
   await searchInterface.initialize({
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
     organizationId: 'searchuisamples',
