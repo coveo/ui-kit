@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "setup": "npm i && husky install && lerna bootstrap && npm run lockLernaDependencies",
+    "setup": "npm i && husky install && lerna bootstrap",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run clean && lerna run build",
@@ -20,8 +20,7 @@
     "npm:tag:beta": "npm run npm:tag -- beta",
     "npm:tag:latest": "npm run npm:tag -- latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
-    "doc:generate": "lerna run doc:generate",
-    "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\""
+    "doc:generate": "lerna run doc:generate"
   },
   "devDependencies": {
     "@actions/github": "4.0.0",
