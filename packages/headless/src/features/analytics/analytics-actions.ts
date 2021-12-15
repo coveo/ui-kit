@@ -56,10 +56,6 @@ export interface LogSearchEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-/**
- * Logs a search event.
- * @param p (SearchEventPayload) The search event payload.
- */
 export const logSearchEvent = (p: LogSearchEventActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/generic/search',
@@ -83,10 +79,6 @@ export interface LogClickEventActionCreatorPayload {
   result: Result;
 }
 
-/**
- * Logs a click event.
- * @param p (ClickEventPayload) The click event payload.
- */
 export const logClickEvent = (p: LogClickEventActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/generic/click',
@@ -118,10 +110,6 @@ export interface LogCustomEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-/**
- * Logs a custom event.
- * @param p (CustomEventPayload) The custom event payload.
- */
 export const logCustomEvent = (p: LogCustomEventActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/generic/custom',
@@ -132,18 +120,12 @@ export const logCustomEvent = (p: LogCustomEventActionCreatorPayload) =>
     }
   )();
 
-/**
- * Logs an interface load event.
- */
 export const logInterfaceLoad = makeAnalyticsAction(
   'analytics/interface/load',
   AnalyticsType.Search,
   (client) => client.logInterfaceLoad()
 );
 
-/**
- * Logs an interface change event.
- */
 export const logInterfaceChange = makeAnalyticsAction(
   'analytics/interface/change',
   AnalyticsType.Search,

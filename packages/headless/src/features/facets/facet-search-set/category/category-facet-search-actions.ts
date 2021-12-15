@@ -20,8 +20,6 @@ const categoryFacetSearchResultDefinition = {
   count: new NumberValue({required: true, min: 0}),
 };
 
-/** Selects the corresponding category facet value for the provided
- * category facet search result */
 export const selectCategoryFacetSearchResult = createAction(
   'categoryFacet/selectSearchResult',
   (payload: {facetId: string; value: CategoryFacetSearchResult}) =>
@@ -31,10 +29,6 @@ export const selectCategoryFacetSearchResult = createAction(
     })
 );
 
-/**
- * Registers a category facet search box with the specified options.
- * @param (FacetSearchOptions) An object specifying the target facet and facet search box options.
- */
 export const registerCategoryFacetSearch = createAction(
   'categoryFacetSearch/register',
   (payload: FacetSearchOptions) =>

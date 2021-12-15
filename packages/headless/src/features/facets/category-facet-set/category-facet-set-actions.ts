@@ -96,10 +96,6 @@ const registerCategoryFacetPayloadDefinition = {
   filterByBasePath: new BooleanValue({required: false}),
 };
 
-/**
- * Registers a category facet in the category facet set.
- * @param (RegisterCategoryFacetActionCreatorPayload) The options to register the category facet with.
- */
 export const registerCategoryFacet = createAction(
   'categoryFacet/register',
   (payload: RegisterCategoryFacetActionCreatorPayload) =>
@@ -123,11 +119,6 @@ export interface ToggleSelectCategoryFacetValueActionCreatorPayload {
   retrieveCount: number;
 }
 
-/**
- * Toggles a category facet value.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (CategoryFacetValue) The target category facet value.
- */
 export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
   (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
@@ -141,9 +132,6 @@ export const toggleSelectCategoryFacetValue = createAction(
   }
 );
 
-/** Deselects all values of a category facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- */
 export const deselectAllCategoryFacetValues = createAction(
   'categoryFacet/deselectAll',
   (payload: string) => validatePayload(payload, facetIdDefinition)
@@ -161,10 +149,6 @@ export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {
   numberOfValues: number;
 }
 
-/** Updates the number of values of a category facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param numberOfValues (number) The new number of facet values (e.g., `10`).
- */
 export const updateCategoryFacetNumberOfValues = createAction(
   'categoryFacet/updateNumberOfValues',
   (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) =>
@@ -186,11 +170,6 @@ export interface UpdateCategoryFacetSortCriterionActionCreatorPayload {
   criterion: CategoryFacetSortCriterion;
 }
 
-/**
- * Updates the the sort criterion for the category facet
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param criterion (FacetSortCriterion) The criterion by which to sort the facet.
- */
 export const updateCategoryFacetSortCriterion = createAction(
   'categoryFacet/updateSortCriterion',
   (payload: UpdateCategoryFacetSortCriterionActionCreatorPayload) =>

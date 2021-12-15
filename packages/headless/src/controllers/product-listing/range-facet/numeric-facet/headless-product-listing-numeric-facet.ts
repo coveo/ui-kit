@@ -25,8 +25,7 @@ import {
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
-export {
-  buildNumericRange,
+export type {
   NumericRangeOptions,
   NumericRangeRequest,
   NumericFacetValue,
@@ -35,6 +34,7 @@ export {
   NumericFacet,
   NumericFacetState,
 };
+export {buildNumericRange};
 
 /**
  * Creates a `NumericFacet` controller instance for the product listing.

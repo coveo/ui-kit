@@ -117,10 +117,6 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   dispatch(updatePage(1));
 });
 
-/**
- * Executes a search query.
- * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
- */
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,

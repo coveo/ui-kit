@@ -35,6 +35,7 @@ export const InterceptAliases = {
       FieldUpdate: uaAlias('ticket_field_update'),
       ClassificationClick: uaAlias('ticket_classification_click'),
     },
+    DocumentOpen: uaAlias('documentOpen'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',

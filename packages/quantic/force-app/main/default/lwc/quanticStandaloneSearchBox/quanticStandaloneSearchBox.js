@@ -28,6 +28,7 @@ const CLASS_WITHOUT_SUBMIT =
 /**
  * The `QuanticStandaloneSearchBox` component creates a search box with built-in support for query suggestions.
  * See [Use a Standalone Search Box](https://docs.coveo.com/en/quantic/latest/usage/ssb-usage/).
+ * @category Search
  * @example
  * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri"></c-quantic-standalone-search-box>
  */

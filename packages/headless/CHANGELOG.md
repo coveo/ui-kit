@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.3...@coveo/headless@1.41.4) (2021-12-13)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.2...@coveo/headless@1.41.3) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.1...@coveo/headless@1.41.2) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.0...@coveo/headless@1.41.1) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.41.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.40.1...@coveo/headless@1.41.0) (2021-12-02)
+
+
+### Features
+
+* **atomic,headless:** add analytics metadata about headless and atomic version number ([#1558](https://github.com/coveo/ui-kit/issues/1558)) ([6bdf967](https://github.com/coveo/ui-kit/commit/6bdf967113ed50ce3a0cd639aecfb1f3efa12225))
+
+
+
+
+
 ## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.40.0...@coveo/headless@1.40.1) (2021-12-02)
 
 

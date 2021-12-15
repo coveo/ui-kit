@@ -5,6 +5,7 @@ import {parseXML} from 'c/quanticUtils';
 
 /**
  * The `QuanticResultPrintableUri` component displays the URI, or path, to access a result.
+ * @category Result Template
  * @example
  * <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
  */

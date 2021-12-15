@@ -1,0 +1,57 @@
+name: "Quantic E2E tests"
+description: "Runs Cypress tests for Quantic"
+inputs:
+  cypress-record-key:
+    description: The Cypress record key for actions that must be recorded
+    required: false
+    default: ''
+  github-token:
+    description: The GitHub token for actions that must be recorded
+    required: false
+    default: ''
+  clientid:
+    description: The SFDX client ID
+    required: true
+  jwtkey:
+    description: The SFDX JWT key contents
+    required: true
+runs:
+  using: composite
+  steps:
+    - run: |
+        echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
+        npx --no-install sfdx force:auth:jwt:grant \
+          --clientid ${{ env.SFDX_AUTH_CLIENT_ID }} \
+          --jwtkeyfile server.key \
+          --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
+          --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
+          --setdefaultdevhubusername
+        npx --no-install ts-node scripts/build/deploy-community.ts --ci
+        rm server.key
+      shell: bash
+      working-directory: ./packages/quantic
+      env:
+        BRANCH_NAME: ${{ github.ref }}
+        SFDX_AUTH_CLIENT_ID: ${{ inputs.clientid }}
+        SFDX_AUTH_JWT_KEY: ${{inputs.jwtkey}}
+        SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
+        SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
+    - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
+      name: Run Cypress
+      with:
+        working-directory: ./packages/quantic
+        install: true
+        record: ${{ github.ref == 'refs/heads/master' && true || false }}
+        config: reporter=cypress/reporters/detailed-reporter.js
+      env:
+        CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: packages/quantic/cypress/screenshots
+    - run: npx --no-install ts-node scripts/build/delete-org.ts
+      shell: bash
+      if: always()
+      working-directory: ./packages/quantic

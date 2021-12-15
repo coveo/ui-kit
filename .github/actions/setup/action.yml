@@ -1,0 +1,39 @@
+name: "Setup & build"
+description: "Setup node, install dependencies & build"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v2
+      with:
+        node-version-file: '.nvmrc'
+    - uses: actions/cache@v2
+      id: build-cache
+      with:
+        path: |
+          packages/bueno/dist
+          packages/headless/dist
+          packages/auth/dist
+          packages/atomic/dist
+          packages/atomic/docs
+          packages/atomic/headless
+          packages/atomic/loader
+          packages/atomic/storybook-static
+          packages/atomic/www
+          packages/quantic/docs/out
+          packages/quantic/force-app/main/default/staticresources/coveoheadless
+          !node_modules
+          !**/node_modules
+        key: ${{ github.sha }}
+    - uses: actions/cache@v2
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}
+    - run: |
+        npm ci
+        npx --no-install lerna bootstrap --ci
+      shell: bash
+    - if: steps.build-cache.outputs.cache-hit != 'true'
+      run: npm run build
+      shell: bash

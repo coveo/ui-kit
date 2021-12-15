@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.0...@coveo/quantic@1.5.1) (2021-12-13)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.4.0...@coveo/quantic@1.5.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** remove old scratch organizations ([#1586](https://github.com/coveo/ui-kit/issues/1586)) ([4966c26](https://github.com/coveo/ui-kit/commit/4966c26ef7a03bd3c8da0034a3a9b59bdda18418))
+
+
+
+
+
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.3.0...@coveo/quantic@1.4.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** added jsdoc categories ([#1566](https://github.com/coveo/ui-kit/issues/1566)) ([73f383c](https://github.com/coveo/ui-kit/commit/73f383cb0336fc3dec1cc0873313aae31c8415fb))
+
+
+
+
+
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.2...@coveo/quantic@1.3.0) (2021-12-10)
+
+
+### Features
+
+* **quantic:** slots added in quick view ([#1575](https://github.com/coveo/ui-kit/issues/1575)) ([06112a1](https://github.com/coveo/ui-kit/commit/06112a1869d67e3ed9271c1c95141962b3b0f9b4))
+
+
+
+
+
+## [1.2.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.1...@coveo/quantic@1.2.2) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.2.0...@coveo/quantic@1.2.1) (2021-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.11...@coveo/quantic@1.2.0) (2021-12-09)
+
+
+### Features
+
+* **quantic:** smallest pr ever ([#1563](https://github.com/coveo/ui-kit/issues/1563)) ([52dc6ef](https://github.com/coveo/ui-kit/commit/52dc6efa91ab6772d09c391220c7224956a1cc82))
+
+
+
+
+
+## [1.1.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.10...@coveo/quantic@1.1.11) (2021-12-06)
+
+
+### Bug Fixes
+
+* **quantic:** Allow to display only the range filter when numberOfValues =0 in numeric-facet ([#1512](https://github.com/coveo/ui-kit/issues/1512)) ([28b8368](https://github.com/coveo/ui-kit/commit/28b8368e68544c0f29189454b0579366fac25b8f))
+
+
+
+
+
+## [1.1.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.9...@coveo/quantic@1.1.10) (2021-12-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.1.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.8...@coveo/quantic@1.1.9) (2021-12-03)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.1.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.7...@coveo/quantic@1.1.8) (2021-12-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.1.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.1.6...@coveo/quantic@1.1.7) (2021-12-02)
 
 **Note:** Version bump only for package @coveo/quantic

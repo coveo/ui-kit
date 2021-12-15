@@ -11,15 +11,16 @@
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const interface = document.querySelector('#search');
-        await interface.initialize({
+        const searchInterface = document.querySelector('#search');
+        await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
         });
 
-        interface.executeFirstSearch();
+        searchInterface.executeFirstSearch();
       })();
     </script>
+    <!-- Custom Atomic Component using the initializeBindings method -->
     <script type="module">
       import {initializeBindings} from '/build/index.esm.js';
       import {buildSearchBox} from '/build/headless/headless.esm.js';
@@ -53,12 +54,44 @@
 
       window.customElements.define('custom-component', CustomComponent);
     </script>
+
+    <!-- Custom Atomic Result Template Component using the resultContext method -->
+    <script type="module">
+      import {resultContext} from '/build/index.esm.js';
+
+      class CustomTemplateComponent extends HTMLElement {
+        constructor() {
+          super();
+          this.initialize();
+        }
+
+        template(result) {
+          const template = document.createElement('template');
+          template.innerHTML = `<p>Title: ${result.title}</p>`;
+          return template;
+        }
+
+        async initialize() {
+          const result = await resultContext(this);
+          const shadowRoot = this.attachShadow({mode: 'closed'});
+          shadowRoot.appendChild(this.template(result).content.cloneNode(true));
+        }
+      }
+
+      window.customElements.define('custom-template-component', CustomTemplateComponent);
+    </script>
   </head>
   <body>
-    <atomic-search-interface id="search">
+    <atomic-search-interface>
       <custom-component></custom-component>
       <atomic-query-summary></atomic-query-summary>
-      <atomic-result-list></atomic-result-list>
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <custom-template-component></custom-template-component>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
     </atomic-search-interface>
   </body>
 </html>

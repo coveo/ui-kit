@@ -27,6 +27,7 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
  * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5).
  * Coveo Machine Learning models use this information to provide contextually relevant output.
  * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
+ * @category Search
  * @example
  * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeine="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
  */
@@ -50,9 +51,9 @@ export default class QuanticSearchInterface extends LightningElement {
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    * @api
    * @type {string}
-   * @defaultValue 'default'
+   * @defaultValue `undefined`
    */
-  @api pipeline = 'default';
+  @api pipeline;
 
   /**
    * Whether the state should not be reflected in the URL parameters.

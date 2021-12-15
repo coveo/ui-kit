@@ -11,7 +11,7 @@
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('#search');
+        const searchInterface = document.querySelector('atomic-search-interface');
 
         // Initialization
         await searchInterface.initialize({
@@ -237,7 +237,7 @@
   </head>
 
   <body>
-    <atomic-search-interface id="search">
+    <atomic-search-interface>
       <div class="header-bg"></div>
       <atomic-search-box></atomic-search-box>
       <atomic-facet-manager>
