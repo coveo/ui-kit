@@ -53,6 +53,7 @@ export default class QuanticSearchInterface extends LightningElement {
               this.engineId,
               this
             );
+            setInitializedCallback(this.initialize, this.engineId);
           }
         });
       } else {
