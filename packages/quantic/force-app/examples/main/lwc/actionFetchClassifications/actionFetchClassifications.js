@@ -3,7 +3,6 @@ import { loadDependencies } from 'c/quanticHeadlessLoader';
 
 export default class ActionFetchClassifications extends LightningElement {
   @api engineId;
-  @api disabled;
   
   headless;
   actions;
