@@ -84,9 +84,6 @@ export interface FetchProductListingThunkReturn {
   response: ProductListingSuccessResponse;
 }
 
-/**
- * Fetches a product listing.
- */
 export const fetchProductListing = createAsyncThunk<
   FetchProductListingThunkReturn,
   void,

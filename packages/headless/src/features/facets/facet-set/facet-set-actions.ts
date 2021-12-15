@@ -73,10 +73,7 @@ const facetRegistrationOptionsDefinition = {
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
 };
-/**
- * Registers a facet in the facet set.
- * @param (RegisterFacetActionCreatorPayload) The options to register the facet with.
- */
+
 export const registerFacet = createAction(
   'facet/register',
   (payload: RegisterFacetActionCreatorPayload) =>
@@ -95,11 +92,6 @@ export interface ToggleSelectFacetValueActionCreatorPayload {
   selection: FacetValue;
 }
 
-/**
- * Toggles a facet value.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (FacetValue) The target facet value.
- */
 export const toggleSelectFacetValue = createAction(
   'facet/toggleSelectValue',
   (payload: ToggleSelectFacetValueActionCreatorPayload) =>
@@ -109,10 +101,6 @@ export const toggleSelectFacetValue = createAction(
     })
 );
 
-/**
- * Deselects all values of a facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- */
 export const deselectAllFacetValues = createAction(
   'facet/deselectAll',
   (payload: string) => validatePayload(payload, facetIdDefinition)
@@ -130,11 +118,6 @@ export interface UpdateFacetSortCriterionActionCreatorPayload {
   criterion: FacetSortCriterion;
 }
 
-/**
- * Updates the sort criterion of a facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param criterion (FacetSortCriterion) The criterion by which to sort the facet.
- */
 export const updateFacetSortCriterion = createAction(
   'facet/updateSortCriterion',
   (payload: UpdateFacetSortCriterionActionCreatorPayload) =>
@@ -156,11 +139,6 @@ export interface UpdateFacetNumberOfValuesActionCreatorPayload {
   numberOfValues: number;
 }
 
-/**
- * Updates the number of values of a facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param numberOfValues (number) The new number of facet values (e.g., `10`).
- */
 export const updateFacetNumberOfValues = createAction(
   'facet/updateNumberOfValues',
   (payload: UpdateFacetNumberOfValuesActionCreatorPayload) =>
@@ -182,11 +160,6 @@ export interface UpdateFacetIsFieldExpandedActionCreatorPayload {
   isFieldExpanded: boolean;
 }
 
-/**
- * Whether to expand (show more values than initially configured) or shrink down the facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param isFieldExpanded (boolean) Whether to expand or shrink down the facet.
- */
 export const updateFacetIsFieldExpanded = createAction(
   'facet/updateIsFieldExpanded',
   (payload: UpdateFacetIsFieldExpandedActionCreatorPayload) =>
@@ -208,11 +181,6 @@ export interface UpdateFreezeCurrentValuesActionCreatorPayload {
   freezeCurrentValues: boolean;
 }
 
-/**
- * Updates the updateFreezeCurrentValues flag of a facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param freezeCurrentValues (boolean) Whether the values should be frozen in the next request.
- */
 export const updateFreezeCurrentValues = createAction(
   'facet/updateFreezeCurrentValues',
   (payload: UpdateFreezeCurrentValuesActionCreatorPayload) =>

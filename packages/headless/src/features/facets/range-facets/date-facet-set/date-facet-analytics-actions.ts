@@ -19,10 +19,6 @@ export interface LogDateFacetBreadcrumbActionCreatorPayload {
   selection: DateFacetValue;
 }
 
-/**
- * Logs a date facet breadcrumb event.
- * @param payload (LogDateFacetBreadcrumbActionCreatorPayload) Object specifying the target facet and selection.
- */
 export const logDateFacetBreadcrumb = (
   payload: LogDateFacetBreadcrumbActionCreatorPayload
 ) =>

@@ -7,10 +7,6 @@ import {
   validateResultPayload,
 } from '../analytics/analytics-utils';
 
-/**
- * Logs a document quickview click event.
- * @param result - The result that was previewed.
- */
 export const logDocumentQuickview = (result: Result) => {
   return buildDocumentQuickviewThunk(result)();
 };

@@ -20,15 +20,9 @@ export const logRecentResultClickThunk = (result: Result) =>
     }
   );
 
-/**
- * Logs a custom event with an `actionCause` value of `recentResultClick`.
- */
 export const logRecentResultClick = (result: Result) =>
   logRecentResultClickThunk(result)();
 
-/**
- * Logs a custom event with an `actionCause` value of `clearRecentResults`.
- */
 export const logClearRecentResults = makeAnalyticsAction(
   'analytics/recentResults/clear',
   AnalyticsType.Custom,
