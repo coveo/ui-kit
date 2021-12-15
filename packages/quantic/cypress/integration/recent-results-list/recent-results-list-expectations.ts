@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../page-objects/search';
+import {logUaEvent} from '../common-expectations';
 import {should} from '../common-selectors';
 import {
   RecentResultsListSelectors,
@@ -51,7 +52,7 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
       selector
         .lastResult()
         .contains(result)
-        .logDetail(`The last result added should contain "${result}"`);
+        .logDetail(`The last added result should contain "${result}"`);
     },
     labelContains: (label: string) => {
       selector
@@ -63,7 +64,6 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
       selector
         .result(value)
         .should('have.attr', 'href')
-        .and('include', urlResult)
         .then((href) => expect(href).to.equal(urlResult))
         .logDetail(
           `The result link should contain attribute href equal to "${urlResult}"`
@@ -73,21 +73,17 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
       selector
         .result(value)
         .should('have.attr', 'target')
-        .and('include', target)
         .then((_target) => expect(_target).to.equal(target))
         .logDetail(
           `The result link should contain attribute target equal to "${target}"`
         );
     },
     logDocumentOpen: (resultTitle: string) => {
-      cy.wait(InterceptAliases.UA.DocumentOpen)
-        .then((interception) => {
-          const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property('actionCause', 'documentOpen');
-          expect(analyticsBody).to.have.property('documentTitle', resultTitle);
-          expect(analyticsBody).to.have.property('documentUri', urlResult);
-        })
-        .logDetail('should log the "documentOpen" UA event');
+      logUaEvent(InterceptAliases.UA.DocumentOpen, 'documentOpen', {
+        actionCause: 'documentOpen',
+        documentTitle: resultTitle,
+        documentUri: urlResult,
+      });
     },
   };
 }

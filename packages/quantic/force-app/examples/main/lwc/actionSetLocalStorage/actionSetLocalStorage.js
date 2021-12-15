@@ -26,7 +26,7 @@ export default class ActionSetLocalStorage extends LightningElement {
         },
     ];
 
-    setItem() {
+    setItems() {
         localStorage.setItem(this.localStorageKey, JSON.stringify(this.recentResultList));
     }
 

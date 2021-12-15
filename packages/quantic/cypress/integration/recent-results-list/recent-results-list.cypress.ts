@@ -47,6 +47,7 @@ describe('quantic-recent-results-list', () => {
     beforeEach(() => {
       clearLocalStorage();
     });
+
     it('should work as expected', () => {
       visitRecentResultsList({
         maxLength: 3,
