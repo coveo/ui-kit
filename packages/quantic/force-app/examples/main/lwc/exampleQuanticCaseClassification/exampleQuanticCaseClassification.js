@@ -24,7 +24,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
     },
     {
       attribute: 'selectPlaceholder',
-      label: 'Select title',
+      label: 'Select placeholder',
       description: 'The placeholder of the select input.',
       defaultValue: 'More Topics',
     },
