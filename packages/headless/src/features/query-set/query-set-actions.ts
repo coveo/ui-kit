@@ -22,11 +22,6 @@ export interface RegisterQuerySetQueryActionCreatorPayload {
   query: string;
 }
 
-/**
- * Registers a query in the query set.
- * @param id (string) The unique identifier of the target query.
- * @param query (string) The initial basic query expression.
- */
 export const registerQuerySetQuery = createAction(
   'querySet/register',
   (payload: RegisterQuerySetQueryActionCreatorPayload) =>
@@ -45,11 +40,6 @@ export interface UpdateQuerySetQueryActionCreatorPayload {
   query: string;
 }
 
-/**
- * Updates a query in the query set.
- * @param id (string) The unique identifier of the target query.
- * @param query (string) The new basic query expression.
- */
 export const updateQuerySetQuery = createAction(
   'querySet/update',
   (payload: UpdateQuerySetQueryActionCreatorPayload) =>

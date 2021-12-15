@@ -79,7 +79,6 @@ export interface SearchParameters {
   tab?: string;
 }
 
-/** Restores search parameters from e.g. a url*/
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',
   (payload: SearchParameters) =>

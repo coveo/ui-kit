@@ -49,10 +49,6 @@ const getCategoryFacetMetadata = (
   };
 };
 
-/**
- * Logs a category facet breadcrumb event.
- * @param payload (LogCategoryFacetBreadcrumbActionCreatorPayload) Object specifying the target facet and path.
- */
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ) =>

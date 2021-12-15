@@ -19,10 +19,6 @@ export interface AdvancedSearchQueryActionCreatorPayload {
   lq?: string;
 }
 
-/**
- * Update the values of the advanced search queries.
- * @param (advancedSearchQueries)  The current state of the advanced search queries.
- */
 export const updateAdvancedSearchQueries = createAction(
   'advancedSearchQueries/update',
   (payload: AdvancedSearchQueryActionCreatorPayload) =>
@@ -33,10 +29,6 @@ export const updateAdvancedSearchQueries = createAction(
     })
 );
 
-/**
- * Registers the initial state of the advanced search queries.
- * @param (advancedSearchQueries)  The initial state of the advanced search queries.
- */
 export const registerAdvancedSearchQueries = createAction(
   'advancedSearchQueries/register',
   (payload: AdvancedSearchQueryActionCreatorPayload) =>
