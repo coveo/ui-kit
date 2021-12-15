@@ -7,6 +7,7 @@ import {ResultContext} from '../result-template-decorators';
  * @part result-badge-element - The badge element with the background color and text color.
  * @part result-badge-icon - The optional icon displayed in the badge element.
  * @part result-badge-label - The optional icon displayed in the badge element.
+ * @slot default - Allow to display alternative content instead of a field or text.
  */
 @Component({
   tag: 'atomic-result-badge',
@@ -47,16 +48,18 @@ export class AtomicResultBadge {
     );
   }
 
+  private getTextContent() {
+    if (this.field !== undefined) {
+      return <atomic-result-text field={this.field}></atomic-result-text>;
+    }
+    if (this.label !== undefined) {
+      return <atomic-text value={this.label}></atomic-text>;
+    }
+    return <slot></slot>;
+  }
+
   private renderText() {
-    return (
-      <span part="result-badge-label">
-        {this.field ? (
-          <atomic-result-text field={this.field}></atomic-result-text>
-        ) : (
-          <atomic-text value={this.label ?? ''}></atomic-text>
-        )}
-      </span>
-    );
+    return <span part="result-badge-label">{this.getTextContent()}</span>;
   }
 
   private renderBadge() {
@@ -66,7 +69,7 @@ export class AtomicResultBadge {
         class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full"
       >
         {this.icon && this.renderIcon()}
-        {(this.field || this.label) && this.renderText()}
+        {this.renderText()}
       </div>
     );
   }
