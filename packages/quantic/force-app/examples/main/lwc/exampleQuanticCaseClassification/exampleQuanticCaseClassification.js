@@ -1,38 +1,51 @@
-import { LightningElement, track } from 'lwc';
+import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   // `config` stores the options retrieved from the configurator.
-  @track config = {}
+  @track config = {};
   isConfigured = false;
 
   pageTitle = 'Quantic Case Classification';
-  pageDescription = 'The QuanticCaseClassification component is a section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.';
+  pageDescription =
+    'The QuanticCaseClassification component is a section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.';
 
   // `options` is used by `configurator` to render the configuration form.
   options = [
     {
+      attribute: 'engineId',
+      label: 'Engine id',
+      description: 'The engine to be used',
+      defaultValue: 'case-assist-engine',
+    },
+    {
+      attribute: 'fieldName',
+      label: 'Field name',
+      description: 'The field to be classifed',
+      defaultValue: 'sfpriority',
+    },
+    {
       attribute: 'label',
-      label: 'label',
+      label: 'Label',
       description: 'The label of the component.',
-      defaultValue: 'Which topic is related to your problem?'
+      defaultValue: 'Which topic is related to your problem?',
     },
     {
       attribute: 'selectTitle',
       label: 'Select title',
       description: 'The title of the select input.',
-      defaultValue: 'More Topics'
+      defaultValue: 'More Topics',
     },
     {
       attribute: 'selectPlaceholder',
       label: 'Select placeholder',
       description: 'The plceholder of the select input.',
-      defaultValue: 'Select option'
+      defaultValue: 'Select option',
     },
     {
       attribute: 'messageWhenValueMissing',
       label: 'Message when value missing',
       description: 'The error message to show when the value is missing.',
-      defaultValue: 'select an option'
+      defaultValue: 'select an option',
     },
 
     {
@@ -40,24 +53,26 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       label: 'Options',
       description: 'The options to choose from.',
       defaultValue: [
-        { id: 0, label: 'Heart rate tracking', value: 'Heart rate tracking' },
-        { id: 1, label: 'Run tracking', value: 'Run tracking' },
-        { id: 2, label: 'Health Metrics', value: 'Health Metrics' },
-        { id: 3, label: 'Blue series', value: 'Blue series' }
-      ]
+        {label: 'Very low', value: 'Very low'},
+        {label: 'Low', value: 'Low'},
+        {label: 'Medium', value: 'Medium'},
+        {label: 'High', value: 'High'},
+        {label: 'Very high', value: 'Very high'},
+      ],
     },
     {
       attribute: 'required',
       label: 'Required',
       description: 'Tells if the input is required.',
-      defaultValue: false
+      defaultValue: false,
     },
     {
-      attribute: 'numberOfSuggestions',
-      label: 'Number of suggestions',
-      description: 'The number of suggestions to be shown.',
-      defaultValue: 3
-    }
+      attribute: 'maxChoices',
+      label: 'Maximum number of choices',
+      description:
+        'The maximum number of choices to be shown, a choice can be a suggestions or the select dropdown.',
+      defaultValue: 4,
+    },
   ];
 
   handleTryItNow(evt) {

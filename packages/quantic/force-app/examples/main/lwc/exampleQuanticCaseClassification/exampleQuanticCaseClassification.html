@@ -2,10 +2,14 @@
   <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
 
   <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+  
+  <c-quantic-case-assist-interface engine-id={config.engineId} slot="preview">
+    <c-quantic-case-classification engine-id={config.engineId} field-name={config.fieldName} options={config.options} select-placeholder={config.selectPlaceholder}
+    max-choices={config.maxChoices} required={config.required}
+    label={config.label} message-when-value-missing={config.messageWhenValueMissing}>
+    </c-quantic-case-classification>
+    <c-action-fetch-classifications engine-id={config.engineId}></c-action-fetch-classifications>
+  </c-quantic-case-assist-interface>
 
-  <c-quantic-case-classification slot="preview" options={config.options} slect-placeholder={config.selectPlaceholder}
-  select-title={config.selectTitle} number-of-suggestions={config.numberOfSuggestions} required={config.required}
-  label={config.label} message-when-value-missing={config.messageWhenValueMissing}>
-  </c-quantic-case-classification>
   </c-example-layout>
 </template>
