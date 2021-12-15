@@ -3,6 +3,7 @@
     "browser": true
   },
   "ignorePatterns": [
-    "dist/**/*"
+    "dist/",
+    "src/"
   ]
 }

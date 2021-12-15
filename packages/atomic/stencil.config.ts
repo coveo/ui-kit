@@ -45,8 +45,11 @@ export const config: Config = {
     react({
       componentCorePackage: '@coveo/atomic',
       proxiesFile: '../atomic-react/src/components/stencil-generated/index.ts',
-      includeDefineCustomElements: false,
+      includeDefineCustomElements: true,
     }),
+    {
+      type: 'dist-custom-elements',
+    },
     {
       type: 'dist',
       esmLoaderPath: '../loader',

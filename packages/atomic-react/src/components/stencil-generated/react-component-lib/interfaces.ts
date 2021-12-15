@@ -6,7 +6,7 @@ export interface EventEmitter<T = any> {
 export interface StyleReactProps {
   class?: string;
   className?: string;
-  style?: {[key: string]: any};
+  style?: { [key: string]: any };
 }
 
 export interface OverlayEventDetail<T = any> {
