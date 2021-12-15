@@ -49,8 +49,10 @@
         </template>
       </div>
     </div>
-    <div class="slds-form-element__help" id="case-classification-error-message">
-      {errorMessage}
-    </div>
+    <template if:true={hasError}>
+      <div class="slds-form-element__help" id="case-classification-error-message">
+        {errorMessage}
+      </div>
+    </template>
   </fieldset>
 </template>

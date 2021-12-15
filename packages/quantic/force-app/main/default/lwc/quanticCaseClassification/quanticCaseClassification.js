@@ -39,14 +39,16 @@ export default class QuanticCaseClassification extends LightningElement {
   @track classifications = [];
 
   /**
-   * The options proposed to the user to choose from.
+   * All the possible values of a given category.
+   * @api
    * @type {Array}
    * @defaultValue `[]`
    */
   @api options = [];
 
   /**
-   * Tells if the case classification input is required.
+   * Tells whether the input is required or not.
+   * @api
    * @type {boolean}
    * @defaultValue `false`
    */
@@ -54,6 +56,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * The label to be shown to the user.
+   * @api
    * @type {string}
    * @defaultValue `'Which topic is related to your issue?'`
    */
@@ -61,13 +64,15 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * The placeholder of the combo box input.
+   * @api
    * @type {string}
    * @defaultValue `'More topics'`
    */
   @api selectPlaceholder = this.labels.moreTopics;
 
   /**
-   * The maximum number of choices to be shown, a choice can be a suggestions or the select dropdown.
+   * The maximum number of choices to be displayed, a choice can be a suggestions, an inline option or the select dropdown.
+   * @api
    * @type {number}
    * @defaultValue `4`
    */
@@ -75,6 +80,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * The message to be shown when the value is missing.
+   * @api
    * @type {string}
    * @defaultValue `'Select an option'`
    */
