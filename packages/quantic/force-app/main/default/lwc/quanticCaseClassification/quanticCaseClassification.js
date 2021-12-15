@@ -1,8 +1,12 @@
-import { LightningElement, api, track } from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
-import { registerComponentForInit, initializeWithHeadless, loadDependencies } from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  loadDependencies,
+} from 'c/quanticHeadlessLoader';
 
 /**
  * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
@@ -11,7 +15,7 @@ export default class QuanticCaseClassification extends LightningElement {
   labels = {
     caseClassificationTitle,
     moreTopics,
-    selectOption
+    selectOption,
   };
 
   /**
@@ -56,7 +60,7 @@ export default class QuanticCaseClassification extends LightningElement {
   @api label = this.labels.caseClassificationTitle;
 
   /**
-   * The placeholder of the combo box input. 
+   * The placeholder of the combo box input.
    * @type {string}
    * @defaultValue `'More topics'`
    */
@@ -121,7 +125,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return this.options.length > parseInt(this.maxChoices, 10);
+    return this.options.length > Math.max(parseInt(this.maxChoices, 10), 1);
   }
 
   /**
@@ -129,9 +133,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @type {boolean}
    */
   get isSelectVisible() {
-    return (
-      this._isSelectVisible || 0 >= this.suggestions.length
-    );
+    return this._isSelectVisible || 0 >= this.suggestions.length;
   }
 
   /**
@@ -150,13 +152,17 @@ export default class QuanticCaseClassification extends LightningElement {
     return `slds-form-element ${this.hasError ? 'slds-has-error' : ''}`;
   }
 
-  /** 
+  /**
    * Returns the options, excluding the suggestions.
    * @returns {Array}
    *  */
   get filtredOptions() {
     return this.options.filter((option) => {
-      return this.classifications.findIndex(item => item.value === option.value) === -1;
+      return (
+        this.classifications.findIndex(
+          (item) => item.value === option.value
+        ) === -1
+      );
     });
   }
 
@@ -165,7 +171,10 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array}
    */
   get suggestions() {
-    return this.classifications.slice(0, parseInt(this.maxChoices, 10) - 1);
+    return this.classifications.slice(
+      0,
+      Math.max(parseInt(this.maxChoices, 10), 1) - 1
+    );
   }
 
   /**
@@ -226,7 +235,7 @@ export default class QuanticCaseClassification extends LightningElement {
   connectedCallback() {
     loadDependencies(this, 'case-assist').then((headless) => {
       this.headless = headless;
-    })
+    });
     registerComponentForInit(this, this.engineId);
   }
 
@@ -238,8 +247,8 @@ export default class QuanticCaseClassification extends LightningElement {
     this.engine = engine;
     this.field = this.headless.buildCaseField(engine, {
       options: {
-        field: this.fieldName
-      }
+        field: this.fieldName,
+      },
     });
     this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
 
@@ -247,7 +256,7 @@ export default class QuanticCaseClassification extends LightningElement {
       ...this.headless.loadCaseAssistAnalyticsActions(engine),
       ...this.headless.loadCaseFieldActions(engine),
     };
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribeField?.();
