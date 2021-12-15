@@ -63,11 +63,11 @@ export default class QuanticCaseClassification extends LightningElement {
   @api selectPlaceholder = this.labels.moreTopics;
 
   /**
-   * The number of suggestions to be shown.
+   * The maximum number of choices to be shown, a choice can be a suggestions or the select dropdown.
    * @type {number}
-   * @defaultValue `3`
+   * @defaultValue `4`
    */
-  @api numberOfSuggestions = 3;
+  @api maxChoices = 4;
 
   /**
    * The message to be shown when the value is missing.
@@ -121,7 +121,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return (this.options.length + this.suggestions.length) > parseInt(this.numberOfSuggestions, 10) + 1;
+    return this.options.length > parseInt(this.maxChoices, 10);
   }
 
   /**
@@ -130,7 +130,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get isSelectVisible() {
     return (
-      this._isSelectVisible || 0 >= this.classifications.length
+      this._isSelectVisible || 0 >= this.suggestions.length
     );
   }
 
@@ -155,7 +155,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array}
    *  */
   get filtredOptions() {
-    return this.options.filter( (option) => {
+    return this.options.filter((option) => {
       return this.classifications.findIndex(item => item.value === option.value) === -1;
     });
   }
@@ -165,7 +165,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array}
    */
   get suggestions() {
-    return this.classifications.slice(0, parseInt(this.numberOfSuggestions, 10));
+    return this.classifications.slice(0, parseInt(this.maxChoices, 10) - 1);
   }
 
   /**
@@ -180,7 +180,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * Handles the selection of a suggestion.
    * @returns {void}
    */
-  handleSelectClassification(event){
+  handleSelectClassification(event) {
     const suggestionId = event.target.dataset.suggestionId;
     const value = event.target.value;
     this.engine.dispatch(this.actions.logClassificationClick(suggestionId));
@@ -255,9 +255,5 @@ export default class QuanticCaseClassification extends LightningElement {
 
   updateFieldState() {
     this.classifications = this.field.state.suggestions ?? [];
-    // const suggestToOpptions = this.classifications.map(option => {
-    //   return { value: option.value, label: option.value }
-    // })
-    // console.log(suggestToOpptions)
   }
 }

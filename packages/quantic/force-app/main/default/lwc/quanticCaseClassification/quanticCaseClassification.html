@@ -1,5 +1,5 @@
 <template>
-  <fieldset class={formClass} style="height: 100px;">
+  <fieldset class={formClass}>
     <legend class="slds-form-element__legend slds-form-element__label slds-text-heading_small">
       {label}
     </legend>
@@ -7,7 +7,7 @@
       <div class="row">
         <template for:each={suggestions} for:item="option">
           <div key={option.value}
-            class="slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+            class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
             <input type="radio" data-suggestion-id={option.id} onchange={handleSelectClassification} id={option.value} value={option.value} name='options' />
             <label for={option.value}>
               <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
@@ -22,18 +22,18 @@
         </template>
         <template if:true={isMoreOptionsVisible}>
           <template if:false={isSelectVisible}>
-            <lightning-button variant="base" label={selectPlaceholder} title={selectPlaceholder} onclick={showSelect}>
+            <lightning-button class="slds-var-m-top_x-small" variant="base" label={selectPlaceholder} title={selectPlaceholder} onclick={showSelect}>
             </lightning-button>
           </template>
           <template if:true={isSelectVisible}>
-            <lightning-combobox name="progress" value={value} variant="label-hidden"
+            <lightning-combobox class="slds-var-m-top_x-small" value={value} variant="label-hidden"
               placeholder={selectPlaceholder} options={options} onchange={handleSelectChange}></lightning-combobox>
           </template>
         </template>
         <template if:false={isMoreOptionsVisible}>
           <template for:each={filtredOptions} for:item="option">
             <div key={option.value}
-              class="slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+              class="case-classification-option slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
               <input type="radio" onchange={handleSelectChange} id={option.value} value={option.value} name='options' />
               <label for={option.value}>
                 <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
