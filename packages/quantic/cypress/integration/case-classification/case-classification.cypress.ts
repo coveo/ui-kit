@@ -20,12 +20,13 @@ describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
 
   const defaultField = 'sfpriority';
-  const defaultMaxOptions = 4;
+  const defaultMaxChoices = 4;
   const suggestions = [
     {id: '0', value: 'Very low'},
     {id: '1', value: 'Low'},
     {id: '2', value: 'Medium'},
     {id: '3', value: 'High'},
+    {id: '4', value: 'Very high'},
   ];
 
   function visitCaseClassification(
@@ -39,7 +40,7 @@ describe('quantic-case-classification', () => {
   describe('with default options', () => {
     it('should work as expected', () => {
       visitCaseClassification({
-        maxChoices: defaultMaxOptions,
+        maxChoices: defaultMaxChoices,
       });
 
       scope('when loading the page', () => {
@@ -92,7 +93,7 @@ describe('quantic-case-classification', () => {
   describe('when no suggestions are found', () => {
     it('should display only the select dropdown', () => {
       visitCaseClassification({
-        maxChoices: defaultMaxOptions,
+        maxChoices: defaultMaxChoices,
       });
 
       scope('when loading the page', () => {
@@ -154,7 +155,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('with invalid number of maxChoices', () => {
-    it('should display only the select drop down when the maxChoices is set to 0', () => {
+    it('should display only the select dropdown when maxChoices is set to 0', () => {
       visitCaseClassification({
         maxChoices: 0,
       });
@@ -168,10 +169,10 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when fetching suggestions', () => {
-        const nbSuggestions = 2;
+        const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, nbSuggestions)
+          suggestions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -181,7 +182,7 @@ describe('quantic-case-classification', () => {
       });
     });
 
-    it('should display the select drop down when the maxChoices is inferior to 0', () => {
+    it('should display the select dropdown when maxChoices is inferior to 0', () => {
       visitCaseClassification({
         maxChoices: -1,
       });
@@ -195,10 +196,10 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when fetching suggestions', () => {
-        const nbSuggestions = 2;
+        const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, nbSuggestions)
+          suggestions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -209,7 +210,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('with max choices set to the number of options', () => {
+  describe('with maxChoices set to the number of options', () => {
     const optionsCount = 5;
     it('should display all the options as inline options', () => {
       visitCaseClassification({
@@ -260,7 +261,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('with max choices greater than the number of options', () => {
+  describe('with maxChoices greater than the number of options', () => {
     const optionsCount = 5;
     it('should display all the options as inline options', () => {
       visitCaseClassification({
