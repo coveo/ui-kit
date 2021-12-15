@@ -10,6 +10,10 @@ function caseClassificationActions(selector: CaseClassificationSelector) {
     clickSelectTitle: () => selector.selectTitle().click(),
     openSelectInput: () => selector.selectInput().click(),
     clickSelectOption: (i: number) => selector.selectOption(i).click(),
+    reportValidity: () =>
+      selector.get().then((el) => {
+        el[0].reportValidity();
+      }),
   };
 }
 

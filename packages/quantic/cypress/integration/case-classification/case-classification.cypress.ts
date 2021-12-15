@@ -289,4 +289,62 @@ describe('quantic-case-classification', () => {
       });
     });
   });
+
+  describe('when required is set to true', () => {
+    it('should display an error when no option is selected', () => {
+      visitCaseClassification({
+        required: true,
+      });
+
+      scope('when reporting validity and no option is selected', () => {
+        Actions.reportValidity();
+        Expect.displayError(true);
+      });
+
+      scope('when reporting validity and an option is selected', () => {
+        const clickedIndex = 3;
+
+        Actions.openSelectInput();
+        Actions.clickSelectOption(clickedIndex);
+        Expect.logUpdatedClassificationFromSelectOption(
+          defaultField,
+          clickedIndex
+        );
+        Actions.reportValidity();
+        Expect.displayError(false);
+      });
+    });
+
+    it('should display an error when no suggestion is selected', () => {
+      visitCaseClassification({
+        required: true,
+      });
+
+      scope('when reporting validity and no suggestion is selected', () => {
+        Actions.reportValidity();
+        Expect.displayError(true);
+      });
+
+      scope('when reporting validity and a suggestion is selected', () => {
+        const suggestionsCount = 2;
+        const clickedIndex = 0;
+
+        mockCaseClassification(
+          defaultField,
+          suggestions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+
+        Actions.clickSuggestion(clickedIndex);
+        Expect.logClickedSuggestions(clickedIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          defaultField,
+          clickedIndex
+        );
+
+        Actions.reportValidity();
+        Expect.displayError(false);
+      });
+    });
+  });
 });
