@@ -1,7 +1,10 @@
 import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {ConsoleExpectations} from '../console-expectations';
-import {CaseClassificationSelector, CaseClassificationSelectors} from './case-classification-selectors';
+import {
+  CaseClassificationSelector,
+  CaseClassificationSelectors,
+} from './case-classification-selectors';
 
 function caseClassificationExpectations(selector: CaseClassificationSelector) {
   return {
@@ -36,7 +39,10 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
     hideSuggestions: (hidden: boolean) => {
       selector
         .suggestedOptions()
-        .should(hidden ? 'have.class' : 'not.have.class', 'visual-picker__hidden')
+        .should(
+          hidden ? 'have.class' : 'not.have.class',
+          'visual-picker__hidden'
+        )
         .logDetail(`${should(hidden)} hide the suggested options`);
     },
 
@@ -45,6 +51,67 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .suggestedOptions()
         .should('have.length', value)
         .logDetail(`should display ${value} suggested options`);
+    },
+
+    numberOfInlineOptions: (value: number) => {
+      selector
+        .inlineOptions()
+        .should('have.length', value)
+        .logDetail(`should display ${value} suggested options`);
+    },
+
+    logUpdatedClassificationFromSuggestion: (field: string, index: number) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate).then(
+        (interception) => {
+          const analyticsBody = interception.request.body;
+          selector
+            .suggestedOptionInput(index)
+            .invoke('attr', 'value')
+            .should('eq', analyticsBody.svc_ticket_custom[field]);
+        }
+      );
+    },
+
+    logUpdatedClassificationFromSelectOption: (
+      field: string,
+      index: number
+    ) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate).then(
+        (interception) => {
+          const analyticsBody = interception.request.body;
+          selector
+            .selectOption(index)
+            .invoke('attr', 'data-value')
+            .should('eq', analyticsBody.svc_ticket_custom[field]);
+        }
+      );
+    },
+
+    logUpdatedClassificationFromInlineOption: (
+      field: string,
+      index: number
+    ) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate).then(
+        (interception) => {
+          const analyticsBody = interception.request.body;
+          selector
+            .inlineOptionInput(index)
+            .invoke('attr', 'value')
+            .should('eq', analyticsBody.svc_ticket_custom[field]);
+        }
+      );
+    },
+
+    logClickedSuggestions: (value: number) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.ClassificationClick).then(
+        (interception) => {
+          const analyticsBody = interception.request.body;
+          selector
+            .suggestedOptionInput(value)
+            .invoke('attr', 'data-suggestion-id')
+            .should('eq', analyticsBody.svc_action_data.classificationId);
+        }
+      );
     },
   };
 }

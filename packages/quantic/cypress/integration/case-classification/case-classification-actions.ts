@@ -1,4 +1,7 @@
-import { CaseClassificationSelector, CaseClassificationSelectors } from './case-classification-selectors';
+import {
+  CaseClassificationSelector,
+  CaseClassificationSelectors,
+} from './case-classification-selectors';
 
 function caseClassificationActions(selector: CaseClassificationSelector) {
   return {

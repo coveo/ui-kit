@@ -1,80 +1,126 @@
 import {configure} from '../../page-objects/configurator';
 import {
-  InterceptAliases,
   interceptSearch,
-  interceptSearchIndefinitely,
+  mockCaseClassification,
 } from '../../page-objects/search';
 import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
 import {CaseClassificationActions as Actions} from './case-classification-actions';
-import {stubConsoleError} from '../console-selectors';
-import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
+import {fetchClassifications} from '../../page-objects/actions/action-fetch-classifications';
 
 interface CaseClassificationOptions {
-  numberOfSuggestions: number;
+  maxChoices: number;
   label: string;
   required: boolean;
-  slectPlaceholder: string;
-  selectTitle: string;
+  selectPlaceholder: string;
   messageWhenValueMissing: string;
 }
 
-describe('quantic-pager', () => {
+describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
 
-  function visitCaseClassification(options: Partial<CaseClassificationOptions>) {
+  const defaultField = 'sfpriority';
+  const defaultMaxOptions = 4;
+  const suggestions = [
+    {id: '0', value: 'Very low'},
+    {id: '1', value: 'Low'},
+    {id: '2', value: 'Medium'},
+    {id: '3', value: 'High'},
+  ];
+
+  function visitCaseClassification(
+    options: Partial<CaseClassificationOptions>
+  ) {
+    interceptSearch();
     cy.visit(pageUrl);
     configure(options);
   }
 
   describe('with default options', () => {
     it('should work as expected', () => {
-      visitCaseClassification({});
+      visitCaseClassification({
+        maxChoices: defaultMaxOptions,
+      });
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
-        Expect.displaySelectTitle(true);
-        Expect.numberOfSuggestions(3);
-      });
-
-      scope('when clicking select title', () => {
-        Actions.clickSelectTitle();
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
         Expect.displaySelectInput(true);
       });
 
-      scope('when clicking on an option from the suggested options', () => {
-        Actions.clickSuggestion(0);
-        Expect.numberOfSuggestions(3);
+      scope('when fetching and selecting a suggestion', () => {
+        const nbSuggestions = 2;
+        const clickedIndex = 0;
+        mockCaseClassification(
+          defaultField,
+          suggestions.slice(0, nbSuggestions)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.numberOfSuggestions(nbSuggestions);
+        Expect.numberOfInlineOptions(0);
+        Actions.clickSuggestion(clickedIndex);
+        Expect.logClickedSuggestions(clickedIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          defaultField,
+          clickedIndex
+        );
       });
 
-      scope('when clicking on an option from the select input', () => {
-        Actions.openSelectInput();
-        Actions.clickSelectOption(1);
-        Expect.hideSuggestions(true);
-      });
-
+      scope(
+        'when fetching and selecting an option from the select input',
+        () => {
+          const nbSuggestions = 2;
+          const clickedIndex = 3;
+          mockCaseClassification(
+            defaultField,
+            suggestions.slice(0, nbSuggestions)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(true);
+          Expect.numberOfSuggestions(nbSuggestions);
+          Expect.numberOfInlineOptions(0);
+          Actions.clickSelectTitle();
+          Actions.openSelectInput();
+          Actions.clickSelectOption(clickedIndex);
+          Expect.hideSuggestions(true);
+          Expect.logUpdatedClassificationFromSelectOption(
+            defaultField,
+            clickedIndex
+          );
+        }
+      );
     });
   });
 
-  describe('with number of suggestions equals to zero', () => {
-    it('should display the select input', () => {
+  describe('with maxChoices set to 1', () => {
+    it('should work as expected', () => {
       visitCaseClassification({
-        numberOfSuggestions: 0,
+        maxChoices: 1,
       });
 
-      Expect.displaySelectInput(true);
-      Expect.numberOfSuggestions(0);
-    });
-  });
-
-  describe('with number of suggestions lesser than zero', () => {
-    it('should display the select input', () => {
-      visitCaseClassification({
-        numberOfSuggestions: -3,
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
       });
 
-      Expect.displaySelectInput(true);
-      Expect.numberOfSuggestions(0);
+      scope('when fetching suggestions', () => {
+        const nbSuggestions = 2;
+        mockCaseClassification(
+          defaultField,
+          suggestions.slice(0, nbSuggestions)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.numberOfSuggestions(0);
+        Expect.numberOfInlineOptions(0);
+        Expect.displaySelectInput(true);
+      });
     });
   });
 });
