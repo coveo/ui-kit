@@ -2,6 +2,8 @@ const path = require('path');
 const {readFileSync} = require('fs');
 const {build} = require('esbuild');
 const alias = require('esbuild-plugin-alias');
+const {umdWrapper} = require('../../scripts/bundle/umd');
+const { apacheLicense } = require('../../scripts/license/apache');
 
 const devMode = process.argv[2] === 'dev';
 
@@ -12,6 +14,24 @@ const useCaseEntries = {
   'product-listing': 'src/product-listing.index.ts',
   'case-assist': 'src/case-assist.index.ts',
 };
+
+function getUmdGlobalName(useCase) {
+  const map = {
+    search: 'CoveoHeadless',
+    recommendation: 'CoveoHeadlessRecommendation',
+    'product-recommendation': 'CoveoHeadlessProductRecommendation',
+    'product-listing': 'CoveoHeadlessProductListing',
+    'case-assist': 'CoveoHeadlessCaseAssist',
+  }
+
+  const globalName = map[useCase];
+
+  if (globalName) {
+    return globalName;
+  }
+
+  throw new Error(`Please specify a global name for the "${useCase}" use-case.`)
+}
 
 function getPackageVersion() {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
@@ -31,6 +51,7 @@ const base = {
     'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env.VERSION': JSON.stringify(getPackageVersion()),
   },
+  banner: {js: apacheLicense()}
 };
 
 const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map((entry) => {
@@ -55,6 +76,27 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
+  });
+});
+
+const browserUmd = Object.entries(useCaseEntries).map((entry) => {
+  const [useCase, entryPoint] = entry;
+  const outDir = getUseCaseDir('dist/browser/', useCase);
+  const outfile = `${outDir}/headless.js`;
+  
+  const globalName = getUmdGlobalName(useCase);
+  const umd = umdWrapper(globalName);
+
+  return buildBrowserConfig({
+    entryPoints: [entryPoint],
+    outfile,
+    format: 'cjs',
+    banner: {
+      js: `${base.banner.js}\n${umd.header}`
+    },
+    footer: {
+      js: umd.footer
+    }, 
   });
 });
 
@@ -134,7 +176,7 @@ function buildNodeConfig(options) {
 }
 
 async function main() {
-  await Promise.all([...browserEsm, ...browserEsmForAtomicDevelopment, ...nodeEsm, ...nodeCjs]);
+  await Promise.all([...browserEsm, ...browserUmd, ...browserEsmForAtomicDevelopment, ...nodeEsm, ...nodeCjs]);
 }
 
 main();

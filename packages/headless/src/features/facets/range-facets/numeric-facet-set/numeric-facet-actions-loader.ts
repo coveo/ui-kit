@@ -13,7 +13,7 @@ import {
   UpdateNumericFacetValuesActionCreatorPayload,
 } from './numeric-facet-actions';
 
-export {
+export type {
   RegisterNumericFacetActionCreatorPayload,
   ToggleSelectNumericFacetValueActionCreatorPayload,
   UpdateNumericFacetSortCriterionActionCreatorPayload,

@@ -28,22 +28,22 @@
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const interface1 = document.querySelector('#interface-1');
-        const interface2 = document.querySelector('#interface-2');
+        const searchInterface1 = document.querySelector('#interface-1');
+        const searchInterface2 = document.querySelector('#interface-2');
 
         await Promise.all([
-          interface1.initialize({
+          searchInterface1.initialize({
             accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
             organizationId: 'searchuisamples',
           }),
-          interface2.initialize({
+          searchInterface2.initialize({
             accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
             organizationId: 'electronicscoveodemocomo0n2fu8v',
           }),
         ]);
 
-        interface1.executeFirstSearch();
-        interface2.executeFirstSearch();
+        searchInterface1.executeFirstSearch();
+        searchInterface2.executeFirstSearch();
       })();
     </script>
   </head>

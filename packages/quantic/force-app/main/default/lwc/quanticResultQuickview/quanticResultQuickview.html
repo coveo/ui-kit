@@ -1,11 +1,14 @@
 <template>
-  <button class="quickview__button slds-button" onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
+  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} disabled={hasNoPreview}>
+    <template if:true={hasButtonLabel}>
+      {previewButtonLabel}
+    </template>  
     <lightning-icon 
       size="x-small"
-      icon-name="utility:preview"
+      icon-name={previewButtonIcon}
       title={buttonLabel}
       alternative-text={buttonLabel}
-      class="slds-current-color">
+      class={buttonIconClass}>
     </lightning-icon>
   </button>
 
@@ -37,6 +40,9 @@
         </template>
         <template if:false={isLoading}>
           <div onclick={stopPropagation} class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" id="quickview__content-container" lwc:dom="manual"></div>
+          <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
+            <slot name="footer"></slot>
+          </footer>
         </template>
       </div>
     </section>

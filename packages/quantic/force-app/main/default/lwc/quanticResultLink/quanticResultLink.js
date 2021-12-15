@@ -6,7 +6,8 @@ import {ResultUtils} from 'c/quanticUtils';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * The `QuanticResultLink component creates a clickable link from a result that points to the original item.
+ * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
+ * @category Result Template
  * @example
  * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
  */

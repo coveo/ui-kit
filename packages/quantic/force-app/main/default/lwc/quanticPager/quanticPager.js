@@ -9,6 +9,7 @@ import previous from '@salesforce/label/c.quantic_Previous';
 
 /**
  * The `QuanticPager` provides buttons that allow the end user to navigate through the different result pages.
+ * @category Search
  * @example
  * <c-quantic-pager engine-id={engineId} number-of-pages="4"></c-quantic-pager>
  */

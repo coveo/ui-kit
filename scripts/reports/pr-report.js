@@ -1,4 +1,4 @@
-const {buildBundleSizeReport} = require('./bundle-size/bundle-size');
+const { buildBundleSizeReport } = require('./bundle-size/bundle-size');
 const {
   getPullRequestComments,
   updatePullRequestComment,

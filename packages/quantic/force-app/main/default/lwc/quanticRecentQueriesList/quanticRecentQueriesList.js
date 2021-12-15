@@ -13,6 +13,7 @@ import expand from '@salesforce/label/c.quantic_Expand';
 
 /**
  * The `QuanticRecentQueriesList` component displays the user's recent queries.
+ * @category Search
  * @example
  * <c-quantic-recent-queries-list engine-id={engineId} max-length="8" label="Recent Searches" is-collapsed></c-quantic-recent-queries-list>
  */

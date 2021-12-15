@@ -56,6 +56,7 @@ import apply from '@salesforce/label/c.quantic_Apply';
 
 /**
  * The `QuanticTimeframeFacet` component displays dates as relative ranges.
+ * @category Search
  * @example
  * <c-quantic-timeframe-facet engine-id={engineId} field="Date" label="Indexed Date" is-collapsed with-date-picker>
  *   <c-quantic-timeframe period="past" unit="year" amount="10" label="Past decade"></c-quantic-timeframe>

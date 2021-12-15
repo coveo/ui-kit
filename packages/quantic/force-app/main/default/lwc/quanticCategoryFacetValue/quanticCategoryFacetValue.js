@@ -7,6 +7,7 @@ import inLabel from "@salesforce/label/c.quantic_InLabel";
 /**
  * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and the number of results with that value.
  * @fires CustomEvent#selectvalue
+ * @category Search
  * @example
  * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
  */

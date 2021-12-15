@@ -1,5 +1,5 @@
 import {ApiMethodSignature, Parameter} from '@microsoft/api-extractor-model';
-import {DocComment, DocNode, DocNodeKind} from '@microsoft/tsdoc';
+import {DocComment, DocNode} from '@microsoft/tsdoc';
 import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
 import {emitAsTsDoc} from './tsdoc-emitter';
 
@@ -160,7 +160,7 @@ function removeBlockTagNodes(nodes: readonly DocNode[]) {
 
 function hasBlockTag(nodes: readonly DocNode[]): boolean {
   return nodes.some((n) => {
-    const isBlockTag = n.kind === DocNodeKind.BlockTag;
+    const isBlockTag = n.kind === 'BlockTag';
     const hasBlockTagChild = hasBlockTag(n.getChildNodes());
     return isBlockTag || hasBlockTagChild;
   });

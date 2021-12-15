@@ -71,7 +71,7 @@ import {
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions';
 
-export {
+export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,

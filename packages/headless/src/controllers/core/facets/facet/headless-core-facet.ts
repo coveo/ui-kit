@@ -44,7 +44,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {CoreEngine} from '../../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 
-export {FacetOptions, FacetSearchOptions, FacetValueState};
+export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
 export interface FacetProps {
   /**
