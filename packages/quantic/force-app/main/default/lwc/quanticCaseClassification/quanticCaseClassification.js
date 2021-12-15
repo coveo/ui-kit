@@ -131,7 +131,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return this.options.length > Math.max(parseInt(this.maxChoices, 10), 1);
+    return this.options.length > Math.max(Number(this.maxChoices), 1);
   }
 
   /**
@@ -179,7 +179,7 @@ export default class QuanticCaseClassification extends LightningElement {
   get suggestions() {
     return this.classifications.slice(
       0,
-      Math.max(parseInt(this.maxChoices, 10), 1) - 1
+      Math.max(Number(this.maxChoices), 1) - 1
     );
   }
 
