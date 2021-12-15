@@ -10,6 +10,7 @@ export interface CaseClassificationSelector extends ComponentSelector {
   inlineOptions: () => CypressSelector;
   suggestedOptions: () => CypressSelector;
   suggestedOption: (i: number) => CypressSelector;
+  inlineOption: (i: number) => CypressSelector;
   suggestedOptionInput: (i: number) => CypressSelector;
   inlineOptionInput: (i: number) => CypressSelector;
   error: () => CypressSelector;
@@ -35,6 +36,8 @@ export const CaseClassificationSelectors: CaseClassificationSelector = {
     CaseClassificationSelectors.get()
       .find('.case-classification-suggestion')
       .eq(i),
+  inlineOption: (i: number) =>
+    CaseClassificationSelectors.get().find('.case-classification-option').eq(i),
   suggestedOptionInput: (i: number) =>
     CaseClassificationSelectors.get()
       .find('.case-classification-suggestion input')
