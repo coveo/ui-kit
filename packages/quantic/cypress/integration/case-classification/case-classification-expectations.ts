@@ -1,6 +1,5 @@
 import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
-import {ConsoleExpectations} from '../console-expectations';
 import {
   CaseClassificationSelector,
   CaseClassificationSelectors,
@@ -57,68 +56,65 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
       selector
         .inlineOptions()
         .should('have.length', value)
-        .logDetail(`should display ${value} suggested options`);
+        .logDetail(`should display ${value} inline options`);
     },
 
     logUpdatedClassificationFromSuggestion: (field: string, index: number) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate).then(
-        (interception) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate)
+        .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
             .suggestedOptionInput(index)
             .invoke('attr', 'value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
-        }
-      );
+        })
+        .logDetail('should log the "ticket_field_update" UA event');
     },
 
     logUpdatedClassificationFromSelectOption: (
       field: string,
       index: number
     ) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate).then(
-        (interception) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate)
+        .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
             .selectOption(index)
             .invoke('attr', 'data-value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
-        }
-      );
+        })
+        .logDetail('should log the "ticket_field_update" UA event');
     },
 
     logUpdatedClassificationFromInlineOption: (
       field: string,
       index: number
     ) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate).then(
-        (interception) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate)
+        .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
             .inlineOptionInput(index)
             .invoke('attr', 'value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
-        }
-      );
+        })
+        .logDetail('should log the "ticket_field_update" UA event');
     },
 
     logClickedSuggestions: (value: number) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.ClassificationClick).then(
-        (interception) => {
+      cy.wait(InterceptAliases.UA.CaseAssist.ClassificationClick)
+        .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
             .suggestedOptionInput(value)
             .invoke('attr', 'data-suggestion-id')
             .should('eq', analyticsBody.svc_action_data.classificationId);
-        }
-      );
+        })
+        .logDetail('should log the "ticket_classification_click" UA event');
     },
   };
 }
 
 export const CaseClassificationExpectations = {
   ...caseClassificationExpectations(CaseClassificationSelectors),
-  console: {
-    ...ConsoleExpectations,
-  },
 };
