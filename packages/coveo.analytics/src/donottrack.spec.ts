@@ -94,5 +94,29 @@ describe('doNotTrack', () => {
                 expect(doNotTrack()).toBeTruthy();
             });
         });
+
+        [false, 'no', '0', 'unspecified'].forEach((value) => {
+            it('should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
+                initModule(true, {
+                    navigatorDoNotTrack: value,
+                });
+
+                expect(doNotTrack()).toBeFalsy();
+            });
+
+            it('should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value), () => {
+                initModule(true, {
+                    navigatorMsDoNotTrack: value,
+                });
+                expect(doNotTrack()).toBeFalsy();
+            });
+
+            it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
+                initModule(true, {
+                    windowDoNotTrack: value,
+                });
+                expect(doNotTrack()).toBeFalsy();
+            });
+        });
     });
 });

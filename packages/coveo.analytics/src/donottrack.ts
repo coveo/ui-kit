@@ -6,6 +6,8 @@
 
 import {hasNavigator} from './detector';
 
+const doNotTrackValues = ['1', 1, 'yes', true];
+
 export function doNotTrack(): boolean {
     return (
         hasNavigator() &&
@@ -14,7 +16,7 @@ export function doNotTrack(): boolean {
             (<any>navigator).doNotTrack,
             (<any>navigator).msDoNotTrack,
             (<any>window).doNotTrack,
-        ].some((value) => !!value)
+        ].some((value) => doNotTrackValues.indexOf(value) !== -1)
     );
 }
 
