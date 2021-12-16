@@ -13,6 +13,8 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {getProductListingInitialState} from '../../features/product-listing/product-listing-state';
+import {buildMockProductListingState} from '../../test/mock-product-listing-state';
 
 describe('analytics', () => {
   const logger = pino({level: 'silent'});
@@ -208,6 +210,38 @@ describe('analytics', () => {
       };
       const provider = new AnalyticsProvider(state);
       expect(provider.getLanguage()).toEqual('en');
+    });
+
+    it('when productListing is provided, #getSearchUID returns the correct id', () => {
+      const searchUid = 'test';
+      const state = {
+        ...baseState,
+        productListing: {
+          ...getProductListingInitialState(),
+          responseId: searchUid,
+        },
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getSearchUID()).toEqual(searchUid);
+    });
+
+    it('when facets for productListing are provided, #getFacetState returns the facet state', () => {
+      const state = buildMockProductListingState({
+        productListing: {
+          ...getProductListingInitialState(),
+          facets: {
+            results: [
+              buildMockFacetResponse({
+                values: [
+                  {numberOfResults: 1, value: 'helloooo', state: 'selected'},
+                ],
+              }),
+            ],
+          },
+        },
+      });
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getFacetState().length).toBe(1);
     });
   });
 });
