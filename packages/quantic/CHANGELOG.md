@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.2...@coveo/quantic@1.6.0) (2021-12-16)
+
+
+### Features
+
+* **quantic:** quanticCaseAssistInterface component added  ([#1602](https://github.com/coveo/ui-kit/issues/1602)) ([05015cf](https://github.com/coveo/ui-kit/commit/05015cf51fc6d51d4c3b99b4f293a0c3e837351a))
+
+
+
+
+
 ## [1.5.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.1...@coveo/quantic@1.5.2) (2021-12-16)
 
 

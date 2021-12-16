@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.5...@coveo/headless@1.41.6) (2021-12-16)
+
+
+### Bug Fixes
+
+* (headless): Send correct analytics events from Product Listing controllers ([#1597](https://github.com/coveo/ui-kit/issues/1597)) ([c7a57bb](https://github.com/coveo/ui-kit/commit/c7a57bbf5084d63f2eb5ee4b8473fa8ab305e30a))
+
+
+
+
+
 ## [1.41.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.4...@coveo/headless@1.41.5) (2021-12-16)
 
 **Note:** Version bump only for package @coveo/headless
