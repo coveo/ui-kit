@@ -83,7 +83,11 @@ export function buildProductListingEngine(
     reducers: productListingEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const engine = buildEngine(
+    augmentedOptions,
+    thunkArguments,
+    productListingClient
+  );
 
   return {
     ...engine,

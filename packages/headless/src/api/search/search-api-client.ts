@@ -38,6 +38,8 @@ import {
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {FieldValuesRequest} from './field-values/field-values-request';
+import {FieldValuesResponseSuccess} from './field-values/field-values-response';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
@@ -283,6 +285,28 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
+  async listFieldValues(req: FieldValuesRequest) {
+    const response = await PlatformClient.call({
+      ...baseSearchRequest(req, 'POST', 'application/json', '/values'),
+      requestParams: pickNonBaseParams(req),
+      ...this.options,
+    });
+
+    if (response instanceof Error) {
+      throw response;
+    }
+
+    const body = await response.json();
+
+    if (isSuccessFieldValuesResponse(body)) {
+      return {success: body};
+    }
+
+    return {
+      error: unwrapError({response, body}),
+    };
+  }
+
   private getAbortControllerInstanceIfAvailable(): AbortController | null {
     // For nodejs environments only, we want to load the implementation of AbortController from node-abort-controller package.
     // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
@@ -382,6 +406,12 @@ function isSuccessFieldsDescriptionResponse(
 
 function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {
   return (body as SearchResponseSuccess).results !== undefined;
+}
+
+function isSuccessFieldValuesResponse(
+  body: unknown
+): body is FieldValuesResponseSuccess {
+  return (body as FieldValuesResponseSuccess).values !== undefined;
 }
 
 function isSearchAPIErrorWithStatusCode(

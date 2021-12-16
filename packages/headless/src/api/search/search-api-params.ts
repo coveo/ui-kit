@@ -89,6 +89,27 @@ export interface TimezoneParam {
   timezone: string;
 }
 
+export interface FieldParam {
+  field: string;
+}
+
+export interface MaximumNumberOfValuesParam {
+  maximumNumberOfValues: number;
+}
+
+export interface ContantQueryOverrideParam {
+  constantQueryOverride: string;
+}
+
+export interface QueryOverrideParam {
+  queryOverride: string;
+}
+
+export interface Pattern {
+  pattern: string;
+  patternType: 'Wildcards' | 'RegularExpression' | 'EditDistance' | 'Phonetic';
+}
+
 export const baseSearchRequest = (
   req: BaseParam,
   method: HttpMethods,

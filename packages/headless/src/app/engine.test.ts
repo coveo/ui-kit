@@ -9,7 +9,7 @@ describe('engine', () => {
 
   function initEngine() {
     const thunkArguments = buildMockThunkExtraArguments();
-    engine = buildEngine(options, thunkArguments);
+    engine = buildEngine(options, thunkArguments, {});
   }
 
   beforeEach(() => {

@@ -77,7 +77,11 @@ export function buildCaseAssistEngine(
     reducers: caseassistEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const engine = buildEngine(
+    augmentedOptions,
+    thunkArguments,
+    caseAssistAPIClient
+  );
 
   const {caseAssistId, locale} = options.configuration;
 

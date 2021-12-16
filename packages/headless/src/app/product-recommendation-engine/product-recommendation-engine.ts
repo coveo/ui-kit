@@ -81,7 +81,7 @@ export function buildProductRecommendationEngine(
     reducers: productRecommendationEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const engine = buildEngine(augmentedOptions, thunkArguments, searchAPIClient);
 
   const {searchHub, timezone, locale} = options.configuration;
 

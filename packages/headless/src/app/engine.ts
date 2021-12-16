@@ -34,7 +34,8 @@ type EngineDispatch<
 
 export interface CoreEngine<
   State extends object = {},
-  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+  APIClient extends object = {}
 > {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
@@ -80,6 +81,10 @@ export interface CoreEngine<
    * Disable analytics tracking
    */
   disableAnalytics(): void;
+  /**
+   * The API client that the engine uses to send request to the Coveo platform.
+   */
+  apiClient: APIClient;
 }
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
@@ -129,12 +134,14 @@ export interface ExternalEngineOptions<State extends object> {
 
 export function buildEngine<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments,
+  APIClient extends {}
 >(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ExtraArguments
-): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
-  const engine = buildCoreEngine(options, thunkExtraArguments);
+  thunkExtraArguments: ExtraArguments,
+  apiClient: APIClient
+): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments, APIClient> {
+  const engine = buildCoreEngine(options, thunkExtraArguments, apiClient);
   const {accessToken, organizationId, platformUrl, analytics} =
     options.configuration;
 
@@ -156,11 +163,13 @@ export function buildEngine<
 
 function buildCoreEngine<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments,
+  APIClient extends {}
 >(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ExtraArguments
-): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+  thunkExtraArguments: ExtraArguments,
+  apiClient: APIClient
+): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments, APIClient> {
   const {reducers} = options;
   const reducerManager = createReducerManager({...coreReducers, ...reducers});
   const logger = thunkExtraArguments.logger;
@@ -195,6 +204,8 @@ function buildCoreEngine<
     logger,
 
     store,
+
+    apiClient,
   };
 }
 

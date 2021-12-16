@@ -505,6 +505,20 @@ describe('search api client', () => {
         expect(res.success).toBe('hello');
       });
     });
+
+    describe('SearchAPIClient.listFieldValues', () => {
+      it('it calls with proper parameters', async () => {
+        /*const payload = encodeUTF16('hello');
+        const headers = {'content-type': 'text/html; charset=UTF-16'};
+        const response = new Response(payload, {headers});
+        PlatformClient.call = () => Promise.resolve(response);
+
+        const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
+        const res = await searchAPIClient.html(req);
+
+        expect(res.success).toBe('hello');*/
+      });
+    });
   });
 
   describe('SearchAPIClient.search question answering', () => {

@@ -63,6 +63,8 @@ export interface SearchEngine<State extends object = {}>
   executeFirstSearchAfterStandaloneSearchBoxRedirect(
     analytics: StandaloneSearchBoxAnalytics
   ): void;
+
+  apiClient: SearchAPIClient;
 }
 
 /**
@@ -99,7 +101,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     reducers: searchEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments);
+  const engine = buildEngine(augmentedOptions, thunkArguments, searchAPIClient);
 
   const {search} = options.configuration;
 
@@ -112,6 +114,10 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
     get state() {
       return engine.state;
+    },
+
+    get apiClient() {
+      return searchAPIClient;
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {

@@ -31,6 +31,7 @@ import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {CaseAssistEngine} from '../case-assist.index';
 import {buildMockCaseAssistState} from './mock-case-assist-state';
+import {SearchAPIClient} from '../api/search/search-api-client';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -68,6 +69,7 @@ export function buildMockSearchAppEngine(
     ...engine,
     executeFirstSearch: jest.fn(),
     executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
+    apiClient: jest.fn() as unknown as SearchAPIClient,
   };
 }
 
@@ -145,6 +147,7 @@ function buildMockCoreEngine<T extends AppState>(
     addReducers: jest.fn(),
     enableAnalytics: jest.fn(),
     disableAnalytics: jest.fn(),
+    apiClient: {},
     ...rest,
   };
 }
