@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.1...@coveo/quantic@1.5.2) (2021-12-16)
+
+
+### Bug Fixes
+
+* **quantic:** Fix flaky test in E2E facet tests ([#1573](https://github.com/coveo/ui-kit/issues/1573)) ([bd23eef](https://github.com/coveo/ui-kit/commit/bd23eefb1315c0f3c0c06b4e0ea4da4ba7282ec8))
+* **quantic:** removed default pipeline value ([#1592](https://github.com/coveo/ui-kit/issues/1592)) ([ab24ea5](https://github.com/coveo/ui-kit/commit/ab24ea52f4027be26a9768e40e29fb6c6b2c71bc))
+
+
+
+
+
 ## [1.5.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.0...@coveo/quantic@1.5.1) (2021-12-13)
 
 **Note:** Version bump only for package @coveo/quantic
