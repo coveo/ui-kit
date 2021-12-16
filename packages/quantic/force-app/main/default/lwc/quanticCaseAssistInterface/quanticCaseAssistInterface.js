@@ -37,7 +37,7 @@ export default class QuanticSearchInterface extends LightningElement {
   engineOptions;
 
   connectedCallback() {
-    loadDependencies(this, 'case-assist').then((CoveoHeadlessCaseAssist) => {
+    loadDependencies(this, 'case-assist').then(() => {
       if (!getHeadlessBindings(this.engineId).engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
