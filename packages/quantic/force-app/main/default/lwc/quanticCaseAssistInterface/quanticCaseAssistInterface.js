@@ -27,7 +27,7 @@ export default class QuanticSearchInterface extends LightningElement {
   @api engineId;
 
   /**
-   * The ID of Case Assist configuration.
+   * The Case Assist configuration ID.
    * @api
    * @type {string}
    */
