@@ -18,7 +18,7 @@ import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHea
  * @example
  * <c-quantic-case-assist-interface engine-id={engineId} case-assist-id={caseAssistId}></c-quantic-case-assist-interface>
  */
-export default class QuanticSearchInterface extends LightningElement {
+export default class QuanticCaseAssistInterface extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
    * @api
