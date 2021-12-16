@@ -636,11 +636,23 @@ export namespace Components {
         "numberOfQueries": number;
     }
     interface AtomicSearchBoxQuerySuggestions {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery": number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchInterface {
@@ -1852,11 +1864,23 @@ declare namespace LocalJSX {
         "numberOfQueries"?: number;
     }
     interface AtomicSearchBoxQuerySuggestions {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchInterface {
