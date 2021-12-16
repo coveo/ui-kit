@@ -3,7 +3,8 @@ import {
   getHeadlessBindings,
   loadDependencies,
   setEngineOptions,
-  setInitializedCallback
+  setInitializedCallback,
+  HeadlessBundleNames
 } from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -37,7 +38,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
   engineOptions;
 
   connectedCallback() {
-    loadDependencies(this, 'case-assist').then(() => {
+    loadDependencies(this, HeadlessBundleNames.caseAssist).then(() => {
       if (!getHeadlessBindings(this.engineId).engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
