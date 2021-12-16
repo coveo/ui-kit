@@ -2,7 +2,7 @@ import {LightningElement, track, api} from 'lwc';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @api engineId = 'case-assist-engine';
-  @api caseAssistId = '94381aab-30b2-4f42-bb7a-ab34ab815d22';
+  @api caseAssistId = 'a4fb453a-b1f1-4054-9067-bef117586baa';
 
   @track config = {};
   isConfigured = false;
