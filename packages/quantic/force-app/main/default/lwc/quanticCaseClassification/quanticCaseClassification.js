@@ -5,11 +5,13 @@ import selectOption from '@salesforce/label/c.quantic_SelectOption';
 import {
   registerComponentForInit,
   initializeWithHeadless,
-  loadDependencies,
 } from 'c/quanticHeadlessLoader';
 
 /**
- * A section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
+ * The `QuanticCaseClassification` component is a section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
+ *
+ * @example
+ * <c-quantic-case-classification engine-id={engineId} field-name="sfpriority" options={options} required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
  */
 export default class QuanticCaseClassification extends LightningElement {
   labels = {
@@ -19,24 +21,16 @@ export default class QuanticCaseClassification extends LightningElement {
   };
 
   /**
-   * The field of the case to be classified.
-   */
-  @api fieldName;
-
-  /**
    * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
   @api engineId;
 
-  engine;
-  headless;
-
-  field;
-  unsubscribeField;
-
-  @track classifications = [];
+  /**
+   * The field of the case to be classified.
+   */
+  @api fieldName;
 
   /**
    * All the possible values of a given category.
@@ -86,6 +80,13 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api messageWhenValueMissing = this.labels.selectOption;
 
+  @track classifications = [];
+
+  engine;
+
+  field;
+  unsubscribeField;
+
   /** @type {string} */
   _errorMessage = '';
 
@@ -116,6 +117,14 @@ export default class QuanticCaseClassification extends LightningElement {
     } else {
       this._errorMessage = '';
     }
+  }
+
+  /**
+   * Returns the value of the case classification input.
+   * @returns {string}
+   */
+  @api get value() {
+    return this._value;
   }
 
   /**
@@ -219,14 +228,6 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Returns the value of the case classification input.
-   * @returns {string}
-   */
-  @api get value() {
-    return this._value;
-  }
-
-  /**
    * Hide the suggested options.
    * @returns {void}
    */
@@ -240,9 +241,6 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   connectedCallback() {
-    loadDependencies(this, 'case-assist').then((headless) => {
-      this.headless = headless;
-    });
     registerComponentForInit(this, this.engineId);
   }
 
@@ -252,7 +250,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   initialize = (engine) => {
     this.engine = engine;
-    this.field = this.headless.buildCaseField(engine, {
+    this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
       options: {
         field: this.fieldName,
       },
@@ -260,8 +258,8 @@ export default class QuanticCaseClassification extends LightningElement {
     this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
 
     this.actions = {
-      ...this.headless.loadCaseAssistAnalyticsActions(engine),
-      ...this.headless.loadCaseFieldActions(engine),
+      ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
+      ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
     };
   };
 
