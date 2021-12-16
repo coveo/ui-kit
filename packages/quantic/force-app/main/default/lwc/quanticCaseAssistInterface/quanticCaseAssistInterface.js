@@ -15,7 +15,7 @@ import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHea
 /**
  * The `QuanticCaseAssistInterface` component handles the headless case assist engine.
  * A single instance should be used for each instance of the Coveo Headless case assist engine.
- *
+ *@category Case Assist
  * @example
  * <c-quantic-case-assist-interface engine-id={engineId} case-assist-id={caseAssistId}></c-quantic-case-assist-interface>
  */
