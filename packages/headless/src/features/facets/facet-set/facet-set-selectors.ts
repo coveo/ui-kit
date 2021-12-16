@@ -6,8 +6,10 @@ import {FacetSection} from '../../../state/state-sections';
 import {FacetResponse, FacetValue} from './interfaces/response';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
+export type FacetResponseSection = SearchSection | ProductListingSection;
+
 export const baseFacetResponseSelector = (
-  state: Partial<SearchSection | ProductListingSection>,
+  state: Partial<FacetResponseSection>,
   id: string
 ) => {
   if ('productListing' in state && state.productListing) {
@@ -35,7 +37,7 @@ function isFacetResponse(
   return !!response && response.facetId in state.facetSet;
 }
 export const facetResponseSelector = (
-  state: (ProductListingSection | SearchSection) & FacetSection,
+  state: FacetResponseSection & FacetSection,
   facetId: string
 ) => {
   const response = baseFacetResponseSelector(state, facetId);
@@ -47,7 +49,7 @@ export const facetResponseSelector = (
 };
 
 export const facetResponseSelectedValuesSelector = (
-  state: (ProductListingSection | SearchSection) & FacetSection,
+  state: FacetResponseSection & FacetSection,
   facetId: string
 ): FacetValue[] => {
   const response = facetResponseSelector(state, facetId);
@@ -58,9 +60,7 @@ export const facetResponseSelectedValuesSelector = (
   return response.values.filter((value) => value.state === 'selected');
 };
 
-export const isFacetLoadingResponseSelector = (
-  state: SearchSection | ProductListingSection
-) => {
+export const isFacetLoadingResponseSelector = (state: FacetResponseSection) => {
   if ('productListing' in state) {
     return state.productListing.isLoading;
   }

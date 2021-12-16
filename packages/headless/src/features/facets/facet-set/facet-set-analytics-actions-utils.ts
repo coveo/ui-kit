@@ -4,8 +4,6 @@ import {
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
-  ProductListingSection,
-  SearchSection,
 } from '../../../state/state-sections';
 import {getSearchInitialState} from '../../search/search-state';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
@@ -26,12 +24,13 @@ import {FacetRequest} from './interfaces/request';
 import {FacetValue} from './interfaces/response';
 import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 import {getProductListingInitialState} from '../../product-listing/product-listing-state';
+import {FacetResponseSection} from './facet-set-selectors';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &
   DateFacetSection &
   NumericFacetSection &
-  Partial<SearchSection | ProductListingSection>;
+  Partial<FacetResponseSection>;
 
 export type FacetSelectionChangeMetadata = {
   facetId: string;
