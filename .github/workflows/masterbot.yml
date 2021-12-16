@@ -4,7 +4,7 @@ on:
     branches:
       - master
     tags-ignore:
-      - "@coveo/*"
+      - "**"
 jobs:
   build:
     name: "Build"
