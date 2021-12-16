@@ -63,6 +63,7 @@ export interface FacetOptions {
 
   /**
    * The criterion to use for sorting returned facet values.
+   * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/build-a-search-ui/query-parameters#RestFacetRequest-sortCriteria).
    *
    * @defaultValue `automatic`
    */
