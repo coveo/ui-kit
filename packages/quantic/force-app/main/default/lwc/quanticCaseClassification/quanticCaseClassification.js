@@ -7,6 +7,9 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 
+/** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
+/** @typedef {import("coveo").CaseField} CaseField */
+
 /**
  * The `QuanticCaseClassification` component is a section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
  *
@@ -83,9 +86,13 @@ export default class QuanticCaseClassification extends LightningElement {
 
   @track classifications = [];
 
+  /** @type {CaseAssistEngine} */
   engine;
 
+  /**@type {CaseField} */
   field;
+
+  /** @type {Function} */
   unsubscribeField;
 
   /** @type {string} */
@@ -246,6 +253,9 @@ export default class QuanticCaseClassification extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
 
+  /**
+   * @param {CaseAssistEngine} engine
+   */
   initialize = (engine) => {
     this.engine = engine;
     this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
