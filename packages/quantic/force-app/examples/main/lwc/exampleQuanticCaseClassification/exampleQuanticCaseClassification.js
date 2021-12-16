@@ -58,7 +58,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       attribute: 'maxChoices',
       label: 'Maximum number of choices to be displayed',
       description:
-        'The maximum number of choices to be displayed, a choice can be a suggestions, an inline option or the select dropdown.',
+        'The maximum number of choices to be displayed, a choice can be a suggestion, an inline option or the select dropdown.',
       defaultValue: 4,
     },
   ];

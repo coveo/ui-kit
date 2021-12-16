@@ -71,7 +71,7 @@ export default class QuanticCaseClassification extends LightningElement {
   @api selectPlaceholder = this.labels.moreTopics;
 
   /**
-   * The maximum number of choices to be displayed, a choice can be a suggestions, an inline option or the select dropdown.
+   * The maximum number of choices to be displayed, a choice can be a suggestion, an inline option or the select dropdown.
    * @api
    * @type {number}
    * @defaultValue `4`
