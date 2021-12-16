@@ -62,7 +62,8 @@ export interface FacetOptions {
   numberOfValues?: number;
 
   /**
-   * The criterion to use for sorting returned facet values. The default value of `automatic` adjusts the sort based on whether the facet is expanded or not, and whether the full list of values is being displayed.
+   * The criterion to use for sorting returned facet values.
+   * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/build-a-search-ui/query-parameters#RestFacetRequest-sortCriteria).
    *
    * @defaultValue `automatic`
    */
