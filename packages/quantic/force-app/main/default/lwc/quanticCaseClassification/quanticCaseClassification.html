@@ -31,7 +31,7 @@
           </template>
         </template>
         <template if:false={isMoreOptionsVisible}>
-          <template for:each={filtredOptions} for:item="option">
+          <template for:each={filteredOptions} for:item="option">
             <div key={option.value}
               class="case-classification-option slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
               <input type="radio" onchange={handleSelectChange} id={option.value} value={option.value} name='options' />

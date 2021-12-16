@@ -10,6 +10,7 @@ import {
 /**
  * The `QuanticCaseClassification` component is a section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
  *
+ * @category Case Assist
  * @example
  * <c-quantic-case-classification engine-id={engineId} field-name="sfpriority" options={options} required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
  */
@@ -170,15 +171,12 @@ export default class QuanticCaseClassification extends LightningElement {
   /**
    * Returns the options, excluding the suggestions.
    * @returns {Array<object>}
-   *  */
-  get filtredOptions() {
-    return this.options.filter((option) => {
-      return (
-        this.classifications.findIndex(
-          (item) => item.value === option.value
-        ) === -1
-      );
-    });
+   *  
+   */
+  get filteredOptions() {
+    return this.options.filter((option) => 
+      !this.classifications.some((item) => item.value === option.value)
+    );
   }
 
   /**
