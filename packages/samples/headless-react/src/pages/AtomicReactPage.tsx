@@ -6,6 +6,21 @@ import {
 import {useEffect, useRef} from 'react';
 
 export function AtomicReactPage() {
+  return (
+    <AtomicSearchInterfaceWrapper>
+      <AtomicSearchBox />
+      <AtomicResultList />
+    </AtomicSearchInterfaceWrapper>
+  );
+}
+
+interface WrapperProps {
+  onReady?: () => void;
+}
+
+function AtomicSearchInterfaceWrapper(
+  props: React.PropsWithChildren<WrapperProps>
+) {
   const searchInterface = useRef<HTMLAtomicSearchInterfaceElement>(null);
 
   useEffect(() => {
@@ -14,8 +29,7 @@ export function AtomicReactPage() {
 
   return (
     <AtomicSearchInterface ref={searchInterface}>
-      <AtomicSearchBox />
-      <AtomicResultList />
+      {props.children}
     </AtomicSearchInterface>
   );
 }
