@@ -88,7 +88,7 @@ export default class QuanticCaseClassification extends LightningElement {
   @track classifications = [];
 
   /** @type {boolean} */
-  loading = true;
+  loading = false;
 
   /** @type {CaseAssistEngine} */
   engine;
