@@ -139,6 +139,12 @@ export function interceptSearchIndefinitely(): {sendResponse: () => void} {
   return interceptIndefinitely(routeMatchers.search);
 }
 
+export function interceptClassificationsIndefinitely(): {
+  sendResponse: () => void;
+} {
+  return interceptIndefinitely(routeMatchers.caseClassification);
+}
+
 export function mockSearchNoResults() {
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {

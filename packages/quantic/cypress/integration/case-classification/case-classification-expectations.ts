@@ -35,6 +35,13 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`${should(display)} display the error`);
     },
 
+    displayLoading: (display: boolean) => {
+      selector
+        .loadingSpinner()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the loading spinner`);
+    },
+
     hideSuggestions: (hidden: boolean) => {
       selector
         .suggestedOptions()

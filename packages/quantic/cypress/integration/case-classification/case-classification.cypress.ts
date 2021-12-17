@@ -2,6 +2,7 @@ import {configure} from '../../page-objects/configurator';
 import {
   interceptSearch,
   mockCaseClassification,
+  interceptClassificationsIndefinitely,
 } from '../../page-objects/search';
 import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
 import {CaseClassificationActions as Actions} from './case-classification-actions';
@@ -86,6 +87,37 @@ describe('quantic-case-classification', () => {
           defaultField,
           clickedIndex
         );
+      });
+    });
+  });
+
+  describe('when the suggestions are loading', () => {
+    it('should display the loading spinner', () => {
+      visitCaseClassification({
+        maxChoices: defaultMaxChoices,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        const suggestionsCount = 2;
+        mockCaseClassification(
+          defaultField,
+          suggestions.slice(0, suggestionsCount)
+        );
+        interceptClassificationsIndefinitely();
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+        Expect.numberOfSuggestions(0);
+        Expect.numberOfInlineOptions(0);
+        Expect.displayLoading(true);
       });
     });
   });
