@@ -56,7 +56,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * The label to be shown to the user.
    * @api
    * @type {string}
-   * @defaultValue `'Which topic is related to your issue?'`
+   * @defaultValue `'Which topic relates to your issue?'`
    */
   @api label = this.labels.caseClassificationTitle;
 
@@ -64,7 +64,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * The placeholder of the combo box input.
    * @api
    * @type {string}
-   * @defaultValue `'More topics'`
+   * @defaultValue `'More Topics'`
    */
   @api selectPlaceholder = this.labels.moreTopics;
 
@@ -84,12 +84,13 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api messageWhenValueMissing = this.labels.selectOption;
 
+  /** @type {Array<object>} */
   @track classifications = [];
 
   /** @type {CaseAssistEngine} */
   engine;
 
-  /**@type {CaseField} */
+  /** @type {CaseField} */
   field;
 
   /** @type {Function} */

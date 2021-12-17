@@ -15,7 +15,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
     {
       attribute: 'fieldName',
       label: 'Field name',
-      description: 'The field to be classifed',
+      description: 'The field to be classifed.',
       defaultValue: 'sfpriority',
     },
     {
