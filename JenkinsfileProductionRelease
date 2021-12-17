@@ -33,6 +33,7 @@ node('linux && docker') {
           sh 'cd packages/quantic && npm run build'
           sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote --ci'
         }
+      }
     }
 
     stage('Notify Docs') {
