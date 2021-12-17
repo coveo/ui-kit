@@ -5,8 +5,6 @@ runs:
   steps:
     - id: parse-version
       uses: ./.github/actions/parse-version
-    - id: get-pipeline-token
-      uses: ./.github/actions/get-pipeline-token
     - name: Create & deploy package
       shell: bash
       run: |
@@ -15,5 +13,3 @@ runs:
           --resolve HEADLESS_MAJOR_VERSION=${{steps.parse-version.outputs.headless-major}} \
           --resolve ATOMIC_MINOR_VERSION=${{steps.parse-version.outputs.atomic-minor}} \
           --resolve ATOMIC_MAJOR_VERSION=${{steps.parse-version.outputs.atomic-major}}
-      env:
-        PIPELINE_API_TOKEN: ${{ steps.get-pipeline-token.outputs.token }}
