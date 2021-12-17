@@ -30,7 +30,7 @@ node('linux && docker') {
         withEnv([
           'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
         ]) {
-          sh 'cd packages/quantic && npm run build'
+          sh 'npm run build'
           sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote --ci'
         }
       }
