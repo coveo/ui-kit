@@ -23,7 +23,7 @@ node('linux && docker') {
 
     stage('Quantic publish') {
       withCredentials([
-        string(credentialsId: 'github-coveobot_token', variable: 'GITHUB_TOKEN'),
+        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN'),
         string(credentialsId: 'sfdx-auth-pkg-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
         file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
       ]) {
