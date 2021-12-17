@@ -3,7 +3,15 @@ description: "Create a deployment package for Headless and Atomic"
 runs:
   using: composite
   steps:
-    - id: parse-version
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - name: Install deployment package
+      shell: bash
+      run: pip install --index-url https://pypi.dev.cloud.coveo.com/simple 'deployment-package==7.*'
+    - name: Parse Headless & Atomic version
+      id: parse-version
       uses: ./.github/actions/parse-version
     - name: Create & deploy package
       shell: bash
