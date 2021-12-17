@@ -10,16 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Workflow allowed to start"
-  build:
-    name: "Build"
-    needs: allow-workflow
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup
   npm-publish:
     name: 'Publish to NPM'
-    needs: build
+    needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,12 +23,7 @@ jobs:
   deploy:
     name: 'Deploy the package'
     needs: npm-publish
-    runs-on: [self-hosted, linux, x64, ec2-alpha]
-    container:
-      image: 458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:stable
-      options: --user root
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+    runs-on: [self-hosted, linux, x64, eks-poc]
     steps:
       - uses: actions/checkout@v2
         with:
