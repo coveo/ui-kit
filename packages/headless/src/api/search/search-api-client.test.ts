@@ -507,16 +507,25 @@ describe('search api client', () => {
     });
 
     describe('SearchAPIClient.listFieldValues', () => {
-      it('it calls with proper parameters', async () => {
-        /*const payload = encodeUTF16('hello');
-        const headers = {'content-type': 'text/html; charset=UTF-16'};
-        const response = new Response(payload, {headers});
-        PlatformClient.call = () => Promise.resolve(response);
+      it('it calls with proper parameters', () => {
+        const expectedRequest = {
+          field: 'foo',
+          constantQueryOverride: 'hello',
+          queryOverride: 'world',
+          maximumNumberOfValues: 456,
+          sortCriteria: 'occurrences',
+        };
 
-        const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
-        const res = await searchAPIClient.html(req);
-
-        expect(res.success).toBe('hello');*/
+        searchAPIClient.listFieldValues({
+          accessToken: '123',
+          organizationId: 'the_org',
+          url: 'the_url',
+          ...expectedRequest,
+        });
+        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        expect(request.requestParams).toMatchObject(
+          expect.objectContaining(expectedRequest)
+        );
       });
     });
   });
