@@ -58,9 +58,8 @@ export * from './features/analytics/index';
 
 // Types & Helpers
 export {TestUtils, HighlightUtils};
-export type {Result} from './api/search/search/result';
-export type {FieldDescription} from './api/search/fields/fields-response';
-export type {Raw} from './api/search/search/raw';
+export * from './api/search/index';
+
 export type {
   SortCriterion,
   SortByDate,
@@ -98,14 +97,5 @@ export type {
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export type {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';
-export type {
-  RelativeDate,
-  RelativeDatePeriod,
-  RelativeDateUnit,
-} from './api/search/date/relative-date';
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date';
 
 export * from './utils/query-expression/query-expression';

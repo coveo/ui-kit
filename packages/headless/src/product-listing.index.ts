@@ -20,6 +20,7 @@ export type {LoggerOptions} from './app/logger';
 export type {LogLevel} from './app/logger';
 
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
+export * from './api/commerce/product-listings/index';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';
