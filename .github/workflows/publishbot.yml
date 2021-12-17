@@ -2,7 +2,7 @@ name: Publish Robot
 on:
   push:
     tags:
-      - "@coveo/*"
+      - "**"
 jobs:
   build:
     name: "Build"
