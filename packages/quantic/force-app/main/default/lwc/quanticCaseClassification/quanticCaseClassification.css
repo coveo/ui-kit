@@ -6,6 +6,11 @@ lightning-icon{
   height: 1.938rem;
 }
 
+.loadin-holder{
+  position: relative;
+  width: 9.875rem;
+}
+
 .slds-form-element__label{
   color: unset;
 }

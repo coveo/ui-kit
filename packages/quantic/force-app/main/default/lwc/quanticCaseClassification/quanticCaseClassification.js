@@ -87,6 +87,9 @@ export default class QuanticCaseClassification extends LightningElement {
   /** @type {Array<object>} */
   @track classifications = [];
 
+  /** @type {boolean} */
+  loading = true;
+
   /** @type {CaseAssistEngine} */
   engine;
 
@@ -179,7 +182,6 @@ export default class QuanticCaseClassification extends LightningElement {
   /**
    * Returns the options, excluding the suggestions.
    * @returns {Array<object>}
-   *  
    */
   get filteredOptions() {
     return this.options.filter((option) => 
@@ -278,5 +280,6 @@ export default class QuanticCaseClassification extends LightningElement {
 
   updateFieldState() {
     this.classifications = this.field.state.suggestions ?? [];
+    this.loading = this.field.state.loading;
   }
 }

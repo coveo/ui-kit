@@ -5,20 +5,27 @@
     </legend>
     <div class="slds-form-element__control" aria-describedby="case-classification-error-message">
       <div class="row">
-        <template for:each={suggestions} for:item="option">
-          <div key={option.value}
-            class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
-            <input type="radio" data-suggestion-id={option.id} onchange={handleSelectClassification} id={option.value} value={option.value} name='options' />
-            <label for={option.value}>
-              <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
-                {option.value}
-              </span>
-              <span class="slds-icon_container slds-visual-picker__text-check">
-                <lightning-icon size="xx-small" icon-name="utility:check">
-                </lightning-icon>
-              </span>
-            </label>
+        <template if:true={loading}>
+          <div class="loading-holder slds-var-m-top_x-small">
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
           </div>
+        </template>
+        <template if:false={loading}>
+          <template for:each={suggestions} for:item="option">
+            <div key={option.value}
+              class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+              <input type="radio" data-suggestion-id={option.id} onchange={handleSelectClassification} id={option.value} value={option.value} name='options' />
+              <label for={option.value}>
+                <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
+                  {option.value}
+                </span>
+                <span class="slds-icon_container slds-visual-picker__text-check">
+                  <lightning-icon size="xx-small" icon-name="utility:check">
+                  </lightning-icon>
+                </span>
+              </label>
+            </div>
+          </template>
         </template>
         <template if:true={isMoreOptionsVisible}>
           <template if:false={isSelectVisible}>
