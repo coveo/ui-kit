@@ -1,0 +1,36 @@
+<template>
+  <div class="slds-card">
+    <lightning-accordion
+      active-section-name="A"
+      allow-multiple-sections-open
+      class="slds-p-vertical_xx-small"
+    >
+      <template iterator:it={suggestions}>
+        <lightning-accordion-section
+          key={it.value.id}
+          name="A"
+          label={it.value.title}
+        >
+          <div slot="actions" class="slds-p-left_xx-large">
+            <!-- <c-vote-count count={it.value.helpedCount}></c-vote-count> -->
+          </div>
+          <div class="slds-p-horizontal_large slds-p-vertical_xx-small">
+            <p class="description">{it.value.description}</p>
+            <div class="row slds-m-top_medium">
+              <lightning-button
+                onclick={test}
+                variant="brand-outline"
+                label="Read more"
+                icon-name="utility:new_window"
+                icon-position="right"
+              ></lightning-button>
+              <template if:true={it.value.feedback}>
+                <!-- <c-vote-tracker></c-vote-tracker> -->
+              </template>
+            </div>
+          </div>
+        </lightning-accordion-section>
+      </template>
+    </lightning-accordion>
+  </div>
+</template>
