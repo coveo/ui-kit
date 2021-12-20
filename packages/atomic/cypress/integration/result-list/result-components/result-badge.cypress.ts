@@ -15,15 +15,23 @@ export interface ResultBadgeProps {
   label?: string;
 }
 
-const addResultBadgeInResultList = (props: ResultBadgeProps = {}) =>
-  addResultList(
+const addResultBadgeInResultList = (
+  props: ResultBadgeProps = {},
+  slot?: HTMLElement
+) => {
+  const resultBadgeEl = generateComponentHTML(
+    resultBadgeComponent,
+    props as TagProps
+  );
+  if (slot) {
+    resultBadgeEl.appendChild(slot);
+  }
+  return addResultList(
     buildTemplateWithSections({
-      bottomMetadata: generateComponentHTML(
-        resultBadgeComponent,
-        props as TagProps
-      ),
+      bottomMetadata: resultBadgeEl,
     })
   );
+};
 
 describe('Result Badge Component', () => {
   describe('outside of a result template', () => {
@@ -55,7 +63,7 @@ describe('Result Badge Component', () => {
         );
       });
 
-      describe('when the field value is valid', () => {
+      describe('when the field value is a string', () => {
         const field = 'my-field';
         const rawText = 'hello-world';
         const localizedText = 'Hello, World!';
@@ -76,7 +84,7 @@ describe('Result Badge Component', () => {
         });
       });
 
-      describe('with text', () => {
+      describe('when a label is specified', () => {
         const rawText = 'hello-world';
         const localizedText = 'Hello, World!';
         beforeEach(() => {
@@ -88,6 +96,29 @@ describe('Result Badge Component', () => {
 
         it('renders the localized text', () => {
           ResultBadgeSelectors.text().should('have.text', localizedText);
+        });
+      });
+
+      describe('when a slot is specified', () => {
+        beforeEach(() => {
+          new TestFixture()
+            .with(
+              addResultBadgeInResultList({}, generateComponentHTML('canvas'))
+            )
+            .init();
+        });
+
+        it('should render the specified element', () => {
+          ResultBadgeSelectors.labelPart()
+            .find('slot')
+            .should((el) => {
+              expect(
+                el
+                  .get()[0]
+                  .assignedElements()
+                  .find((el) => el.tagName === 'CANVAS')
+              ).not.to.be.undefined;
+            });
         });
       });
     });
