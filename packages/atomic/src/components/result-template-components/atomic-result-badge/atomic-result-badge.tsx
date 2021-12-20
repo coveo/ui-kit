@@ -8,13 +8,13 @@ import {ResultContext} from '../result-template-decorators';
  * A badge can either display:
  * * Text:
  * ```html
- * <atomic-result-badge label="Trending"></atomic-result-badge>
+ * <atomic-result-badge label="trending"></atomic-result-badge>
  * ```
  * * The contents of a field:
  * ```html
  * <atomic-result-badge field="objecttype"></atomic-result-badge>
  * ```
- * * An icon alone:
+ * * An icon:
  * ```html
  * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
  * ```
@@ -27,8 +27,8 @@ import {ResultContext} from '../result-template-decorators';
  *
  * @part result-badge-element - The decorative outer-most element with the background color and text color.
  * @part result-badge-icon - The icon displayed at the left-end of the badge, if present.
- * @part result-badge-label - A wrapper around the contents at the right-end of the badge. This may be text, a field or slotted elements depending on which was configured.
- * @slot default - The elements to display inside the badge, instead of a field or label.
+ * @part result-badge-label - The wrapper around the contents at the right-end of the badge. This may be text, a field or slotted elements depending on which was configured.
+ * @slot default - The element(s) to display inside the badge, instead of a field or label.
  */
 @Component({
   tag: 'atomic-result-badge',
