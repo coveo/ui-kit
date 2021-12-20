@@ -1,10 +1,15 @@
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {QuerySuggestSuccessResponse} from '../../../headless/dist/definitions/api/search/query-suggest/query-suggest-response';
 import {buildTestUrl} from '../utils/setupComponent';
 
 export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
 ) => SearchResponseSuccess | void;
+
+export type QuerySuggestResponseModifierPredicate = (
+  response: QuerySuggestSuccessResponse
+) => QuerySuggestSuccessResponse | void;
 
 export type SearchInterface = HTMLElement & {
   initialize: (opts: {
@@ -33,6 +38,8 @@ export class TestFixture {
     [];
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifierPredicate[] = [];
+  private querySuggestResponseModifiers: QuerySuggestResponseModifierPredicate[] =
+    [];
   private returnError = false;
 
   public with(feat: TestFeature) {
@@ -90,6 +97,13 @@ export class TestFixture {
 
   public withCustomResponse(predicate: SearchResponseModifierPredicate) {
     this.responseModifiers.push(predicate);
+    return this;
+  }
+
+  public withCustomQuerySuggestResponse(
+    predicate: QuerySuggestResponseModifierPredicate
+  ) {
+    this.querySuggestResponseModifiers.push(predicate);
     return this;
   }
 
@@ -156,6 +170,24 @@ export class TestFixture {
             });
           }
         ).as(TestFixture.interceptAliases.Search.substring(1));
+      }
+
+      if (this.querySuggestResponseModifiers.length) {
+        cy.intercept(
+          {method: 'POST', path: '**/rest/search/v2/querySuggest?*'},
+          (request) => {
+            request.reply((response) => {
+              let newResponse = response.body;
+              this.querySuggestResponseModifiers.forEach((modifier) => {
+                const returnedResponse = modifier(newResponse);
+                if (returnedResponse) {
+                  newResponse = returnedResponse;
+                }
+              });
+              response.send(200, newResponse);
+            });
+          }
+        );
       }
 
       if (this.returnError) {

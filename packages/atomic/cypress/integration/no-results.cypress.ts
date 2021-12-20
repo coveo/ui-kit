@@ -1,9 +1,9 @@
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
-import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {getAnalyticsAt} from '../utils/network';
-import {generateAliasForSearchBox} from './search-box-selectors';
+import {SearchBoxSelectors} from './search-box-selectors';
 import * as CommonAssertions from './common-assertions';
 import {NoResultsSelectors} from './no-results-selectors';
+import {addSearchBox} from './search-box-actions';
 
 describe('No Results Test Suites', () => {
   const tag = 'atomic-no-results';
@@ -56,11 +56,8 @@ describe('No Results Test Suites', () => {
   });
 
   function submitNoResultsSearch() {
-    generateAliasForSearchBox();
-    cy.get('@searchBoxFirstDiv')
-      .find('[part="input"]')
-      .type('asiufasfgasiufhsaiufgsa');
-    cy.get('@searchBoxFirstDiv').find('[part="submit-button"]').click();
+    SearchBoxSelectors.inputBox().type('asiufasfgasiufhsaiufgsa');
+    SearchBoxSelectors.submitButton().click();
     cy.wait(wait);
   }
 
