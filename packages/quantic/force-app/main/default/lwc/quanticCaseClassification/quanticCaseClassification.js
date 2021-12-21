@@ -161,7 +161,7 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Tells if there is more options to show in addition to the suggested options.
+   * Tells if there are more options to show in addition to the suggested options.
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
