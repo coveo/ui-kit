@@ -3,10 +3,16 @@ description: "Create a deployment package for Headless and Atomic"
 runs:
   using: composite
   steps:
-    - id: parse-version
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - name: Install deployment package
+      shell: bash
+      run: pip install --index-url https://pypi.dev.cloud.coveo.com/simple 'deployment-package==7.*'
+    - name: Parse Headless & Atomic version
+      id: parse-version
       uses: ./.github/actions/parse-version
-    - id: get-pipeline-token
-      uses: ./.github/actions/get-pipeline-token
     - name: Create & deploy package
       shell: bash
       run: |
@@ -15,5 +21,3 @@ runs:
           --resolve HEADLESS_MAJOR_VERSION=${{steps.parse-version.outputs.headless-major}} \
           --resolve ATOMIC_MINOR_VERSION=${{steps.parse-version.outputs.atomic-minor}} \
           --resolve ATOMIC_MAJOR_VERSION=${{steps.parse-version.outputs.atomic-major}}
-      env:
-        PIPELINE_API_TOKEN: ${{ steps.get-pipeline-token.outputs.token }}

@@ -5,6 +5,10 @@ export const ResultBadgeSelectors = {
   shadow: () => cy.get(resultBadgeComponent).shadow(),
   firstInResult: () =>
     ResultListSelectors.firstResult().find(resultBadgeComponent),
+  labelPart: () =>
+    ResultBadgeSelectors.firstInResult().find('[part="result-badge-label"]', {
+      includeShadowDom: true,
+    }),
   text: () =>
     ResultBadgeSelectors.firstInResult()
       .find('atomic-text', {includeShadowDom: true})

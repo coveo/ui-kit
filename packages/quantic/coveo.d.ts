@@ -1,6 +1,7 @@
 /* eslint-disable node/no-unpublished-import */
 import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
+export * from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 
 import * as HeadlessCaseAssistTypes from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 

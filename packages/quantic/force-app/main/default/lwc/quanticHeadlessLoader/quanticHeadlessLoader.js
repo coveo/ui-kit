@@ -305,4 +305,5 @@ export {
   destroyEngine,
   registerToStore,
   getFromStore,
+  HeadlessBundleNames,
 }

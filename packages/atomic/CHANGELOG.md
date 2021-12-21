@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.20.6...@coveo/atomic@1.21.0) (2021-12-20)
+
+
+### Features
+
+* **atomic:** added slot inside of atomic-result-badge ([#1601](https://github.com/coveo/ui-kit/issues/1601)) ([211b38f](https://github.com/coveo/ui-kit/commit/211b38f1591abd35e1de1992c591f32b503adf05))
+
+
+
+
+
+## [1.20.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.20.5...@coveo/atomic@1.20.6) (2021-12-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.20.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.20.4...@coveo/atomic@1.20.5) (2021-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.20.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.20.3...@coveo/atomic@1.20.4) (2021-12-16)
 
 **Note:** Version bump only for package @coveo/atomic
