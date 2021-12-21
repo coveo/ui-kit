@@ -30,6 +30,9 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+      - run: |
+          apt update
+          apt install -y build-essential
       - run: rm -rf veracode && mkdir veracode
       - run: mkdir veracode/auth
       - run: cp -R packages/auth/src packages/auth/package.json packages/auth/package-lock.json veracode/auth
