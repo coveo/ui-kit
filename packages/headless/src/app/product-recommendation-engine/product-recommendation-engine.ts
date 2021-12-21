@@ -42,7 +42,8 @@ type ProductRecommendationEngineState =
 export interface ProductRecommendationEngine<State extends object = {}>
   extends CoreEngine<
     State & ProductRecommendationEngineState,
-    SearchThunkExtraArguments
+    SearchThunkExtraArguments,
+    SearchAPIClient
   > {}
 
 /**
@@ -81,7 +82,11 @@ export function buildProductRecommendationEngine(
     reducers: productRecommendationEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments, searchAPIClient);
+  const engine = buildEngine<
+    ProductRecommendationEngineReducers,
+    SearchThunkExtraArguments,
+    SearchAPIClient
+  >(augmentedOptions, thunkArguments);
 
   const {searchHub, timezone, locale} = options.configuration;
 

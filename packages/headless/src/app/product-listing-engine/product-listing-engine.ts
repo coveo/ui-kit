@@ -41,7 +41,8 @@ type ProductListingEngineState =
 export interface ProductListingEngine<State extends object = {}>
   extends CoreEngine<
     State & ProductListingEngineState,
-    ProductListingThunkExtraArguments
+    ProductListingThunkExtraArguments,
+    ProductListingAPIClient
   > {}
 
 /**
@@ -83,11 +84,11 @@ export function buildProductListingEngine(
     reducers: productListingEngineReducers,
   };
 
-  const engine = buildEngine(
-    augmentedOptions,
-    thunkArguments,
-    productListingClient
-  );
+  const engine = buildEngine<
+    ProductListingEngineReducers,
+    ProductListingThunkExtraArguments,
+    ProductListingAPIClient
+  >(augmentedOptions, thunkArguments);
 
   return {
     ...engine,

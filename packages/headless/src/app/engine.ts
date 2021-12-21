@@ -18,7 +18,10 @@ import {createReducerManager, ReducerManager} from './reducer-manager';
 import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {
+  ClientThunkExtraArguments,
+  ThunkExtraArguments,
+} from './thunk-extra-arguments';
 import {configuration, version} from './reducers';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 import {logActionErrorMiddleware} from './logger-middlewares';
@@ -34,7 +37,7 @@ type EngineDispatch<
 
 export interface CoreEngine<
   State extends object = {},
-  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
+  ExtraArguments extends ClientThunkExtraArguments<APIClient> = ClientThunkExtraArguments<never>,
   APIClient extends object = {}
 > {
   /**
@@ -134,14 +137,20 @@ export interface ExternalEngineOptions<State extends object> {
 
 export function buildEngine<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments,
+  ExtraArguments extends ClientThunkExtraArguments<APIClient>,
   APIClient extends {}
 >(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ExtraArguments,
-  apiClient: APIClient
-): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments, APIClient> {
-  const engine = buildCoreEngine(options, thunkExtraArguments, apiClient);
+  thunkExtraArguments: ExtraArguments
+): CoreEngine<
+  StateFromReducersMapObject<Reducers>,
+  ClientThunkExtraArguments<APIClient>,
+  APIClient
+> {
+  const engine = buildCoreEngine<Reducers, ExtraArguments, APIClient>(
+    options,
+    thunkExtraArguments
+  );
   const {accessToken, organizationId, platformUrl, analytics} =
     options.configuration;
 
@@ -163,16 +172,15 @@ export function buildEngine<
 
 function buildCoreEngine<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments,
+  ExtraArguments extends ClientThunkExtraArguments<APIClient>,
   APIClient extends {}
 >(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ExtraArguments,
-  apiClient: APIClient
+  thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments, APIClient> {
   const {reducers} = options;
   const reducerManager = createReducerManager({...coreReducers, ...reducers});
-  const logger = thunkExtraArguments.logger;
+  const {logger, apiClient} = thunkExtraArguments;
   const store = createStore(options, thunkExtraArguments, reducerManager);
 
   return {

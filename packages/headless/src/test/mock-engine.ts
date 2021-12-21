@@ -29,9 +29,9 @@ import {ProductListingAppState} from '../state/product-listing-app-state';
 import {buildMockProductListingState} from './mock-product-listing-state';
 import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
-import {CaseAssistEngine} from '../case-assist.index';
 import {buildMockCaseAssistState} from './mock-case-assist-state';
 import {SearchAPIClient} from '../api/search/search-api-client';
+import {CaseAssistEngine} from '../case-assist.index';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -80,7 +80,10 @@ export interface MockRecommendationEngine
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
 ): MockRecommendationEngine {
-  return buildMockCoreEngine(config, createMockRecommendationState);
+  return buildMockCoreEngine(
+    config,
+    createMockRecommendationState
+  ) as MockRecommendationEngine;
 }
 
 export interface MockProductRecommendationEngine
@@ -92,7 +95,10 @@ export function buildMockProductRecommendationsAppEngine(
     ProductRecommendationEngine<ProductRecommendationsAppState>
   > = {}
 ): MockProductRecommendationEngine {
-  return buildMockCoreEngine(config, buildMockProductRecommendationsState);
+  return buildMockCoreEngine(
+    config,
+    buildMockProductRecommendationsState
+  ) as MockProductRecommendationEngine;
 }
 
 export interface MockProductListingEngine
@@ -102,7 +108,10 @@ export interface MockProductListingEngine
 export function buildMockProductListingEngine(
   config: Partial<ProductListingEngine<ProductListingAppState>> = {}
 ): MockProductListingEngine {
-  return buildMockCoreEngine(config, buildMockProductListingState);
+  return buildMockCoreEngine(
+    config,
+    buildMockProductListingState
+  ) as MockProductListingEngine;
 }
 
 export interface MockCaseAssistEngine
@@ -112,7 +121,10 @@ export interface MockCaseAssistEngine
 export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}
 ): MockCaseAssistEngine {
-  return buildMockCoreEngine(config, buildMockCaseAssistState);
+  return buildMockCoreEngine(
+    config,
+    buildMockCaseAssistState
+  ) as MockCaseAssistEngine;
 }
 
 interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}

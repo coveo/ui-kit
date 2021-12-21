@@ -8,8 +8,8 @@ describe('engine', () => {
   let engine: CoreEngine;
 
   function initEngine() {
-    const thunkArguments = buildMockThunkExtraArguments();
-    engine = buildEngine(options, thunkArguments, {});
+    const thunkArguments = {...buildMockThunkExtraArguments(), apiClient: {}};
+    engine = buildEngine(options, thunkArguments);
   }
 
   beforeEach(() => {

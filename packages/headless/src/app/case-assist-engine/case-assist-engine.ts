@@ -36,7 +36,8 @@ type CaseAssistEngineState =
 export interface CaseAssistEngine<State extends object = {}>
   extends CoreEngine<
     State & CaseAssistEngineState,
-    CaseAssistThunkExtraArguments
+    CaseAssistThunkExtraArguments,
+    CaseAssistAPIClient
   > {}
 
 /**
@@ -77,11 +78,11 @@ export function buildCaseAssistEngine(
     reducers: caseassistEngineReducers,
   };
 
-  const engine = buildEngine(
-    augmentedOptions,
-    thunkArguments,
-    caseAssistAPIClient
-  );
+  const engine = buildEngine<
+    CaseAssistEngineReducers,
+    CaseAssistThunkExtraArguments,
+    CaseAssistAPIClient
+  >(augmentedOptions, thunkArguments);
 
   const {caseAssistId, locale} = options.configuration;
 

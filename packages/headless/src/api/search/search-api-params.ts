@@ -97,7 +97,7 @@ export interface MaximumNumberOfValuesParam {
   maximumNumberOfValues: number;
 }
 
-export interface ContantQueryOverrideParam {
+export interface ConstantQueryOverrideParam {
   constantQueryOverride: string;
 }
 
@@ -105,7 +105,7 @@ export interface QueryOverrideParam {
   queryOverride: string;
 }
 
-export interface Pattern {
+export interface PatternParam {
   pattern: string;
   patternType: 'Wildcards' | 'RegularExpression' | 'EditDistance' | 'Phonetic';
 }

@@ -47,7 +47,11 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
  * The engine for powering search experiences.
  */
 export interface SearchEngine<State extends object = {}>
-  extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
+  extends CoreEngine<
+    State & SearchEngineState,
+    SearchThunkExtraArguments,
+    SearchAPIClient
+  > {
   /**
    * Executes the first search.
    *
@@ -101,7 +105,11 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     reducers: searchEngineReducers,
   };
 
-  const engine = buildEngine(augmentedOptions, thunkArguments, searchAPIClient);
+  const engine = buildEngine<
+    SearchEngineReducers,
+    SearchThunkExtraArguments,
+    SearchAPIClient
+  >(augmentedOptions, thunkArguments);
 
   const {search} = options.configuration;
 
@@ -114,10 +122,6 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
     get state() {
       return engine.state;
-    },
-
-    get apiClient() {
-      return searchAPIClient;
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {

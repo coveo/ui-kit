@@ -514,6 +514,8 @@ describe('search api client', () => {
           queryOverride: 'world',
           maximumNumberOfValues: 456,
           sortCriteria: 'occurrences',
+          pattern: 'foo',
+          patternType: 'RegularExpression' as const,
         };
 
         searchAPIClient.listFieldValues({
