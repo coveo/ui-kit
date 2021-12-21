@@ -38,6 +38,10 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
 import {registerFacetToStore} from '../../../utils/store';
 import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
+import {
+  MaintainFocus,
+  PersistentFocus,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -155,6 +159,9 @@ export class AtomicCategoryFacet
    */
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
+
+  @MaintainFocus()
+  protected showMoreFocus!: PersistentFocus;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -391,10 +398,12 @@ export class AtomicCategoryFacet
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
+            this.showMoreFocus.focusAfterSearch();
             this.facet.showLessValues();
           }}
           canShowLessValues={this.facetState.canShowLessValues}
           canShowMoreValues={this.facetState.canShowMoreValues}
+          showMoreRef={this.showMoreFocus.setElement}
         ></FacetShowMoreLess>
       </div>
     );
