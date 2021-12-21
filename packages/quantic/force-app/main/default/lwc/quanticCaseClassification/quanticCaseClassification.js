@@ -16,7 +16,7 @@ import {
 /** @typedef {import("coveo").CaseField} CaseField */
 
 /**
- * The `QuanticCaseClassification` component is a section for a user to classify his case aided by suggestions provided by Coveo Case Assist. There is also a dropdown available to see all available values for a given category.
+ * The `QuanticCaseClassification` component displays field value suggestion returned by Coveo Case Assist as well as a single-select dropdown containing other available values.
  *
  * @category Case Assist
  * @example
