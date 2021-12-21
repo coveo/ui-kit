@@ -118,7 +118,7 @@ export default class QuanticCaseClassification extends LightningElement {
   _isSuggestionsVisible = true;
 
   /**
-   * Tells if there is an error in the input.
+   * Whether there is an error in the input.
    * @returns {boolean}
    */
   @api get hasError() {
