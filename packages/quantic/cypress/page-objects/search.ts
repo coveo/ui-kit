@@ -41,6 +41,7 @@ export const InterceptAliases = {
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
   CaseClassification: '@coveoCaseClassification',
+  fetchPicklist: '@fetchPicklist',
 };
 
 export const routeMatchers = {
@@ -159,8 +160,27 @@ export function mockSearchNoResults() {
 export function mockCaseClassification(field: string, value: Array<object>) {
   cy.intercept(routeMatchers.caseClassification, (req) => {
     req.continue((res) => {
-      res.body.fields[field].predictions = value;
+      res.body.fields[`sf${field.toLowerCase()}`].predictions = value;
       res.send();
     });
   }).as(InterceptAliases.CaseClassification.substring(1));
+}
+
+export function mockSfPicklistValues(field: string, values: Array<object>) {
+  cy.intercept(
+    {
+      url: '**/aura?*',
+      query: {'aura.RecordUi.getPicklistValuesByRecordType': '1'},
+    },
+    (req) => {
+      req.continue((res) => {
+        res.body?.actions?.[0]?.returnValue?.picklistFieldValues?.[
+          field
+        ]?.values = values.map((value) => {
+          return {...value, attributes: null};
+        });
+        res.send();
+      });
+    }
+  ).as(InterceptAliases.fetchPicklist.substring(1));
 }

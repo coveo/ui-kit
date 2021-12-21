@@ -73,7 +73,10 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
           selector
             .suggestedOptionInput(index)
             .invoke('attr', 'value')
-            .should('eq', analyticsBody.svc_ticket_custom[field]);
+            .should(
+              'eq',
+              analyticsBody.svc_ticket_custom[`sf${field.toLowerCase()}`]
+            );
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -88,7 +91,10 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
           selector
             .selectOption(index)
             .invoke('attr', 'data-value')
-            .should('eq', analyticsBody.svc_ticket_custom[field]);
+            .should(
+              'eq',
+              analyticsBody.svc_ticket_custom[`sf${field.toLowerCase()}`]
+            );
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -103,7 +109,10 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
           selector
             .inlineOptionInput(index)
             .invoke('attr', 'value')
-            .should('eq', analyticsBody.svc_ticket_custom[field]);
+            .should(
+              'eq',
+              analyticsBody.svc_ticket_custom[`sf${field.toLowerCase()}`]
+            );
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },

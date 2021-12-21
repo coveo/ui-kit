@@ -2,6 +2,7 @@ import {configure} from '../../page-objects/configurator';
 import {
   interceptSearch,
   mockCaseClassification,
+  mockSfPicklistValues,
   interceptClassificationsIndefinitely,
 } from '../../page-objects/search';
 import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
@@ -20,19 +21,20 @@ interface CaseClassificationOptions {
 describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
 
-  const defaultField = 'sfpriority';
+  const defaultField = 'Priority';
   const defaultMaxChoices = 4;
-  const suggestions = [
-    {id: '0', value: 'Very low'},
-    {id: '1', value: 'Low'},
-    {id: '2', value: 'Medium'},
-    {id: '3', value: 'High'},
-    {id: '4', value: 'Very high'},
+  const allOptions = [
+    {id: '0', value: 'Very low', label: 'Very low'},
+    {id: '1', value: 'Low', label: 'Low'},
+    {id: '2', value: 'Medium', label: 'Medium'},
+    {id: '3', value: 'High', label: 'High'},
+    {id: '4', value: 'Very high', label: 'Very high'},
   ];
 
   function visitCaseClassification(
     options: Partial<CaseClassificationOptions>
   ) {
+    mockSfPicklistValues(defaultField, allOptions);
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
@@ -56,7 +58,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(true);
@@ -109,7 +111,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         interceptClassificationsIndefinitely();
         fetchClassifications();
@@ -164,7 +166,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -204,7 +206,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -231,7 +233,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -261,7 +263,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -312,7 +314,7 @@ describe('quantic-case-classification', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
@@ -364,7 +366,7 @@ describe('quantic-case-classification', () => {
 
         mockCaseClassification(
           defaultField,
-          suggestions.slice(0, suggestionsCount)
+          allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
 

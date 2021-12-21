@@ -1,7 +1,12 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api, track, wire} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
+import {
+  getObjectInfo,
+  getPicklistValuesByRecordType,
+} from 'lightning/uiObjectInfoApi';
+import CASE_OBJECT from '@salesforce/schema/Case';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -15,9 +20,18 @@ import {
  *
  * @category Case Assist
  * @example
- * <c-quantic-case-classification engine-id={engineId} field-name="sfpriority" options={options} required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
+ * <c-quantic-case-classification engine-id={engineId} field-name="Priority" required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
  */
 export default class QuanticCaseClassification extends LightningElement {
+  @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
+  objectInfo;
+
+  @wire(getPicklistValuesByRecordType, {
+    recordTypeId: '$objectInfo.data.defaultRecordTypeId',
+    objectApiName: CASE_OBJECT,
+  })
+  picklistValues;
+
   labels = {
     caseClassificationTitle,
     moreTopics,
@@ -35,14 +49,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * The field of the case to be classified.
    */
   @api fieldName;
-
-  /**
-   * All the possible values of a given category.
-   * @api
-   * @type {Array<object>}
-   * @defaultValue `[]`
-   */
-  @api options = [];
 
   /**
    * Tells whether the input is required or not.
@@ -119,6 +125,13 @@ export default class QuanticCaseClassification extends LightningElement {
     return !!this._errorMessage;
   }
 
+  get options() {
+    return (
+      this.picklistValues?.data?.picklistFieldValues?.[this.fieldName]
+        ?.values ?? []
+    );
+  }
+
   /**
    * Shows an error message in the component if there is an error.
    * @returns {void}
@@ -184,8 +197,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array<object>}
    */
   get filteredOptions() {
-    return this.options.filter((option) => 
-      !this.classifications.some((item) => item.value === option.value)
+    return this.options.filter(
+      (option) =>
+        !this.classifications.some((item) => item.value === option.value)
     );
   }
 
@@ -263,7 +277,7 @@ export default class QuanticCaseClassification extends LightningElement {
     this.engine = engine;
     this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
       options: {
-        field: this.fieldName,
+        field: `sf${this.fieldName.toLowerCase()}`,
       },
     });
     this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());

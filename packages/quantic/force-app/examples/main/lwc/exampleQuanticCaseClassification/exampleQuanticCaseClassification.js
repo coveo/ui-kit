@@ -16,7 +16,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       attribute: 'fieldName',
       label: 'Field name',
       description: 'The field to be classifed.',
-      defaultValue: 'sfpriority',
+      defaultValue: 'Priority',
     },
     {
       attribute: 'label',
@@ -35,18 +35,6 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       label: 'Message when value missing',
       description: 'The error message to shown when the value is missing.',
       defaultValue: 'Select an option',
-    },
-    {
-      attribute: 'options',
-      label: 'Options',
-      description: 'All the possible values of a given category',
-      defaultValue: [
-        {label: 'Very low', value: 'Very low'},
-        {label: 'Low', value: 'Low'},
-        {label: 'Medium', value: 'Medium'},
-        {label: 'High', value: 'High'},
-        {label: 'Very high', value: 'Very high'},
-      ],
     },
     {
       attribute: 'required',
