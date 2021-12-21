@@ -169,7 +169,7 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Tells if the select input is visible.
+   * Whether the select input is visible.
    * @type {boolean}
    */
   get isSelectVisible() {
