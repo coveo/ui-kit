@@ -19,7 +19,7 @@ export type {LoggerOptions} from './app/logger';
 
 export type {LogLevel} from './app/logger';
 
-export * from './api/service/case-assist/index';
+//export * from './api/service/case-assist/index';
 
 // Case Assist Action Loaders
 export * from './features/case-input/case-input-actions-loader';

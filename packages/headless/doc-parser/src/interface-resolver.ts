@@ -1,5 +1,6 @@
 import {
   ApiCallSignature,
+  ApiConstructSignature,
   ApiEntryPoint,
   ApiIndexSignature,
   ApiInterface,
@@ -83,7 +84,11 @@ function resolveMembers(
       return resolveIndexSignature(m);
     }
 
-    throw new Error(`Unsupported member: ${m.displayName}`);
+    if (isConstructorSignature(m)) {
+      return {} as Entity;
+    }
+
+    throw new Error(`Unsupported member: ${m.displayName} ${m.kind}`);
   });
 
   return sortEntities(members);
@@ -94,6 +99,9 @@ function resolveInheritedMembers(
   apiInterface: ApiInterface,
   ancestorNames: string[]
 ) {
+  if (!apiInterface.extendsTypes) {
+    return [];
+  }
   return apiInterface.extendsTypes
     .map((m) => {
       const typeName = extractSearchableTypeName(m.excerpt);
@@ -169,6 +177,10 @@ function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
   return m.kind === 'IndexSignature';
 }
 
+function isConstructorSignature(m: ApiItem): m is ApiConstructSignature {
+  return m.kind === 'Constructor';
+}
+
 function resolveIndexSignature(m: ApiIndexSignature) {
   const params = m.parameters
     .map((p) => `${p.name}: ${p.parameterTypeExcerpt.text}`)
@@ -186,7 +198,7 @@ function resolveIndexSignature(m: ApiIndexSignature) {
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
-  return m.kind === 'MethodSignature';
+  return m.kind === 'MethodSignature' || m.kind === 'Method';
 }
 
 function resolveMethodSignature(

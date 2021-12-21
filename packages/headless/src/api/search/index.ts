@@ -11,6 +11,7 @@ export {
   validateRelativeDate,
 } from './date/relative-date';
 
+export type {BaseParam} from '../platform-service-params';
 export type {SearchRequest} from './search/search-request';
 export type {SearchResponseSuccess} from './search/search-response';
 export type {FacetSearchRequest} from './facet-search/facet-search-request';
@@ -26,3 +27,4 @@ export type {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 export type {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
 export type {RecommendationRequest} from './recommendation/recommendation-request';
 export {SearchAPIClient} from './search-api-client';
+export type {SearchAPIClientOptions} from './search-api-client';

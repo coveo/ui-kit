@@ -77,9 +77,17 @@ export type SearchAPIClientResponse<T> =
   | {success: T}
   | {error: SearchAPIErrorWithStatusCode};
 
+/**
+ * The client to use to interface with the Search API.
+ */
 export class SearchAPIClient implements FacetSearchAPIClient {
   constructor(private options: SearchAPIClientOptions) {}
 
+  /**
+   * Gets the plan of execution of a search request, withouth performing the query.
+   * @param req The query to execute
+   * @returns Execution plan
+   */
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
@@ -104,6 +112,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
+  /**
+   * Gets a list of query suggestions for a request.
+   * @param req The request
+   * @returns Query suggestions
+   */
   async querySuggest(
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
@@ -134,6 +147,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   private searchAbortController: AbortController | null = null;
 
+  /**
+   * Execute a query against the index.
+   * @param req Query to execute
+   * @returns Search results
+   */
   async search(
     req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
@@ -173,6 +191,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
+  /**
+   * Searches through the values of a facet.
+   * @param req Facet search request
+   * @returns Facet search results
+   */
   async facetSearch(req: FacetSearchRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
@@ -193,6 +216,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     return processedResponse.body;
   }
 
+  /**
+   * Execute a query against the index to retrieve recommendations
+   * @param req Recommendation request
+   * @returns Recommendations
+   */
   async recommendations(req: RecommendationRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
@@ -215,6 +243,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
+  /**
+   * Retrieve HTML representation of a document in the index.
+   * @param req HTML request
+   * @returns HTML representation of the document, as a decoded string
+   */
   async html(req: HtmlRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(
@@ -243,6 +276,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     return {error: unwrapError({response, body})};
   }
 
+  /**
+   * Execute a query against the index to retrieve product recommendations
+   * @param req Product request
+   * @returns Products
+   */
   async productRecommendations(req: ProductRecommendationsRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
@@ -265,6 +303,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
+  /**
+   * Lists all fields for the index, as well as their descriptions.
+   * @param req Descriptions request
+   * @returns Descriptions
+   */
   async fieldDescriptions(req: BaseParam) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
@@ -285,6 +328,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
+  /**
+   * List the available values for a given field.
+   * @param req Field values request
+   * @returns Field values
+   */
   async listFieldValues(req: FieldValuesRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/values'),
