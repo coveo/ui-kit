@@ -150,6 +150,9 @@ export class AtomicFacet
   @MaintainFocus()
   protected showMoreFocus!: PersistentFocus;
 
+  @MaintainFocus()
+  protected headerFocus!: PersistentFocus;
+
   private validateProps() {
     new Schema({
       displayValuesAs: new StringValue({
@@ -206,10 +209,14 @@ export class AtomicFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setElement}
       ></FacetHeader>
     );
   }

@@ -163,6 +163,9 @@ export class AtomicCategoryFacet
   @MaintainFocus()
   protected showMoreFocus!: PersistentFocus;
 
+  @MaintainFocus()
+  protected headerFocus!: PersistentFocus;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
@@ -217,7 +220,11 @@ export class AtomicCategoryFacet
         }
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
+        headerRef={this.headerFocus.setElement}
       ></FacetHeader>
     );
   }

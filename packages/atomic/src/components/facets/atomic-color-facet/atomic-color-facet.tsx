@@ -147,6 +147,9 @@ export class AtomicColorFacet
   @MaintainFocus()
   protected showMoreFocus!: PersistentFocus;
 
+  @MaintainFocus()
+  protected headerFocus!: PersistentFocus;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
@@ -192,10 +195,14 @@ export class AtomicColorFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setElement}
       ></FacetHeader>
     );
   }
