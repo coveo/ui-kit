@@ -1,3 +1,4 @@
+import {Bindings} from '..';
 import {UpdateLiveRegionEventArgs} from '../components/atomic-search-interface/atomic-aria-live';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
@@ -29,35 +30,46 @@ export interface PersistentFocus {
 
 export function MaintainFocus() {
   return (component: InitializableComponent, setterName: string) => {
-    const {componentDidRender, connectedCallback} = component;
+    const {componentWillLoad} = component;
 
-    component.connectedCallback = function () {
-      let element: HTMLElement | undefined = undefined;
-      let lastSearchId: string | undefined = undefined;
+    component.componentWillLoad = function () {
+      componentWillLoad && componentWillLoad.call(this);
+      const {componentDidRender} = this;
       let maintainFocus = false;
+      let lastSearchId: string | undefined = undefined;
+      let element: HTMLElement | undefined = undefined;
+
+      function tryFocusElement(bindings: Bindings) {
+        if (!element) {
+          return;
+        }
+        const searchId = bindings.engine.state.search.searchResponseId;
+        if (maintainFocus && searchId !== lastSearchId) {
+          setTimeout(() => element?.focus());
+          maintainFocus = false;
+        }
+        lastSearchId = searchId;
+      }
+
+      this.componentDidRender = function () {
+        componentDidRender && componentDidRender.call(this);
+        if (!this.bindings) {
+          return;
+        }
+        tryFocusElement(this.bindings);
+      };
 
       const focusMaintainer: PersistentFocus = {
-        setElement: (el) => (element = el),
+        setElement: (el) => {
+          el && (element = el);
+          tryFocusElement(this.bindings);
+        },
         focusAfterSearch: () => {
           lastSearchId = this.bindings.engine.state.search.searchResponseId;
           maintainFocus = true;
         },
       };
       this[setterName] = focusMaintainer;
-      connectedCallback && connectedCallback.call(this);
-
-      this.componentDidRender = () => {
-        if (!this.bindings) {
-          return;
-        }
-        const searchId = this.bindings.engine.state.search.searchResponseId;
-        if (maintainFocus && searchId !== lastSearchId) {
-          element?.focus();
-          maintainFocus = false;
-        }
-        lastSearchId = searchId;
-        componentDidRender && componentDidRender.call(this);
-      };
     };
   };
 }

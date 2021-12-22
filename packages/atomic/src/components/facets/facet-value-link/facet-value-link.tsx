@@ -13,7 +13,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
   });
 
   return (
-    <li key={props.displayValue}>
+    <li key={props.displayValue} class={props.class} part={props.part}>
       <Button
         style="text-neutral"
         part="value-link"
@@ -21,6 +21,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
         class="group w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
+        ref={props.buttonRef}
       >
         {children}
         <span part="value-count" class="value-count">
