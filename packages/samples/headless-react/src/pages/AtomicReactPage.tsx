@@ -1,14 +1,21 @@
 import {
   AtomicResultList,
   AtomicSearchBox,
-  AtomicSearchInterfaceWrapper,
+  AtomicSearchInterface,
+  AtomicFacet,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
 } from '@coveo/atomic-react';
 
 export function AtomicReactPage() {
+  const engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
+  });
   return (
-    <AtomicSearchInterfaceWrapper>
+    <AtomicSearchInterface engine={engine}>
       <AtomicSearchBox />
+      <AtomicFacet field="objecttype" label="Object type" />
       <AtomicResultList />
-    </AtomicSearchInterfaceWrapper>
+    </AtomicSearchInterface>
   );
 }
