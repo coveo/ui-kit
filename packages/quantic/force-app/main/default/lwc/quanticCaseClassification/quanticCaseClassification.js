@@ -6,6 +6,7 @@ import {
   getObjectInfo,
   getPicklistValuesByRecordType,
 } from 'lightning/uiObjectInfoApi';
+// @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
 import {
   registerComponentForInit,
