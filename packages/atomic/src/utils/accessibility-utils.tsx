@@ -23,19 +23,19 @@ export function AriaLiveRegion(regionName: string) {
   };
 }
 
-export interface PersistentFocus {
-  setElement(element: HTMLElement | undefined): void;
+export interface FocusTargetController {
+  setTarget(element: HTMLElement | undefined): void;
   focusAfterSearch(): void;
 }
 
-export function MaintainFocus() {
+export function FocusTarget() {
   return (component: InitializableComponent, setterName: string) => {
     const {componentWillLoad} = component;
 
     component.componentWillLoad = function () {
       componentWillLoad && componentWillLoad.call(this);
       const {componentDidRender} = this;
-      let maintainFocus = false;
+      let focusAfterSearch = false;
       let lastSearchId: string | undefined = undefined;
       let element: HTMLElement | undefined = undefined;
 
@@ -44,9 +44,9 @@ export function MaintainFocus() {
           return;
         }
         const searchId = bindings.engine.state.search.searchResponseId;
-        if (maintainFocus && searchId !== lastSearchId) {
+        if (focusAfterSearch && searchId !== lastSearchId) {
           setTimeout(() => element?.focus());
-          maintainFocus = false;
+          focusAfterSearch = false;
         }
         lastSearchId = searchId;
       }
@@ -59,17 +59,17 @@ export function MaintainFocus() {
         tryFocusElement(this.bindings);
       };
 
-      const focusMaintainer: PersistentFocus = {
-        setElement: (el) => {
+      const focusTargetController: FocusTargetController = {
+        setTarget: (el) => {
           el && (element = el);
           tryFocusElement(this.bindings);
         },
         focusAfterSearch: () => {
           lastSearchId = this.bindings.engine.state.search.searchResponseId;
-          maintainFocus = true;
+          focusAfterSearch = true;
         },
       };
-      this[setterName] = focusMaintainer;
+      this[setterName] = focusTargetController;
     };
   };
 }

@@ -39,8 +39,8 @@ import {registerFacetToStore} from '../../../utils/store';
 import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
 import {
-  MaintainFocus,
-  PersistentFocus,
+  FocusTarget,
+  FocusTargetController,
 } from '../../../utils/accessibility-utils';
 
 /**
@@ -160,14 +160,14 @@ export class AtomicCategoryFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
-  @MaintainFocus()
-  protected showMoreFocus!: PersistentFocus;
+  @FocusTarget()
+  protected showMoreFocus!: FocusTargetController;
 
-  @MaintainFocus()
-  protected headerFocus!: PersistentFocus;
+  @FocusTarget()
+  protected headerFocus!: FocusTargetController;
 
-  @MaintainFocus()
-  protected activeValueFocus!: PersistentFocus;
+  @FocusTarget()
+  protected activeValueFocus!: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -228,9 +228,9 @@ export class AtomicCategoryFacet
           this.facet.deselectAll();
         }}
         headerRef={(header) => {
-          this.headerFocus.setElement(header);
+          this.headerFocus.setTarget(header);
           if (!this.hasParents) {
-            this.activeValueFocus.setElement(header);
+            this.activeValueFocus.setTarget(header);
           }
         }}
       ></FacetHeader>
@@ -353,7 +353,7 @@ export class AtomicCategoryFacet
           searchQuery={this.facetState.facetSearch.query}
           part="active-parent"
           class="parent-active"
-          buttonRef={this.activeValueFocus.setElement}
+          buttonRef={this.activeValueFocus.setTarget}
         >
           <FacetValueLabelHighlight
             displayValue={activeParentDisplayValue}
@@ -448,7 +448,7 @@ export class AtomicCategoryFacet
           }}
           canShowLessValues={this.facetState.canShowLessValues}
           canShowMoreValues={this.facetState.canShowMoreValues}
-          showMoreRef={this.showMoreFocus.setElement}
+          showMoreRef={this.showMoreFocus.setTarget}
         ></FacetShowMoreLess>
       </div>
     );

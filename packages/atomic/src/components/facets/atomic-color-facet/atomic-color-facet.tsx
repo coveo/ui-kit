@@ -37,8 +37,8 @@ import {
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
 import {
-  MaintainFocus,
-  PersistentFocus,
+  FocusTarget,
+  FocusTargetController,
 } from '../../../utils/accessibility-utils';
 
 /**
@@ -144,11 +144,11 @@ export class AtomicColorFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
-  @MaintainFocus()
-  protected showMoreFocus!: PersistentFocus;
+  @FocusTarget()
+  protected showMoreFocus!: FocusTargetController;
 
-  @MaintainFocus()
-  protected headerFocus!: PersistentFocus;
+  @FocusTarget()
+  protected headerFocus!: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -202,7 +202,7 @@ export class AtomicColorFacet
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.headerFocus.setElement}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }
@@ -346,7 +346,7 @@ export class AtomicColorFacet
         }}
         canShowLessValues={this.facetState.canShowLessValues}
         canShowMoreValues={this.facetState.canShowMoreValues}
-        showMoreRef={this.showMoreFocus.setElement}
+        showMoreRef={this.showMoreFocus.setTarget}
       ></FacetShowMoreLess>
     );
   }
