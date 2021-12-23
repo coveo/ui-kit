@@ -35,7 +35,7 @@ export function interceptClassificationsIndefinitely(): {
 export function mockCaseClassification(field: string, value: Array<object>) {
   cy.intercept(routeMatchers.caseClassification, (req) => {
     req.continue((res) => {
-      res.body.fields[`sf${field.toLowerCase()}`].predictions = value;
+      res.body.fields[field].predictions = value;
       res.send();
     });
   }).as(InterceptAliases.CaseClassification.substring(1));

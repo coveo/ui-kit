@@ -21,7 +21,8 @@ interface CaseClassificationOptions {
 describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
 
-  const defaultField = 'Priority';
+  const sfDefaultField = 'Priority';
+  const coveoDefaultField = 'sfpriority';
   const defaultMaxChoices = 4;
   const allOptions = [
     {id: '0', value: 'Very low', label: 'Very low'},
@@ -34,7 +35,7 @@ describe('quantic-case-classification', () => {
   function visitCaseClassification(
     options: Partial<CaseClassificationOptions>
   ) {
-    mockSfPicklistValues(defaultField, allOptions);
+    mockSfPicklistValues(sfDefaultField, allOptions);
     interceptCaseAssist();
     cy.visit(pageUrl);
     configure(options);
@@ -57,7 +58,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -73,7 +74,7 @@ describe('quantic-case-classification', () => {
         Actions.clickSuggestion(clickedIndex);
         Expect.logClickedSuggestions(clickedIndex);
         Expect.logUpdatedClassificationFromSuggestion(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -86,7 +87,7 @@ describe('quantic-case-classification', () => {
         Actions.clickSelectOption(clickedIndex);
         Expect.hideSuggestions(true);
         Expect.logUpdatedClassificationFromSelectOption(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -110,7 +111,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         interceptClassificationsIndefinitely();
@@ -138,7 +139,7 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when fetching suggestions', () => {
-        mockCaseClassification(defaultField, []);
+        mockCaseClassification(coveoDefaultField, []);
         fetchClassifications();
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(true);
@@ -165,7 +166,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -181,7 +182,7 @@ describe('quantic-case-classification', () => {
         Actions.openSelectInput();
         Actions.clickSelectOption(clickedIndex);
         Expect.logUpdatedClassificationFromSelectOption(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -205,7 +206,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -221,7 +222,7 @@ describe('quantic-case-classification', () => {
         Actions.openSelectInput();
         Actions.clickSelectOption(clickedIndex);
         Expect.logUpdatedClassificationFromSelectOption(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -243,7 +244,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -259,7 +260,7 @@ describe('quantic-case-classification', () => {
         Actions.openSelectInput();
         Actions.clickSelectOption(clickedIndex);
         Expect.logUpdatedClassificationFromSelectOption(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -284,7 +285,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -300,7 +301,7 @@ describe('quantic-case-classification', () => {
         Actions.clickSuggestion(clickedIndex);
         Expect.logClickedSuggestions(clickedIndex);
         Expect.logUpdatedClassificationFromSuggestion(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -310,7 +311,7 @@ describe('quantic-case-classification', () => {
 
         Actions.clickInlineOption(clickedIndex);
         Expect.logUpdatedClassificationFromInlineOption(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
       });
@@ -335,7 +336,7 @@ describe('quantic-case-classification', () => {
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -364,7 +365,7 @@ describe('quantic-case-classification', () => {
         Actions.openSelectInput();
         Actions.clickSelectOption(clickedIndex);
         Expect.logUpdatedClassificationFromSelectOption(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
         Actions.reportValidity();
@@ -387,7 +388,7 @@ describe('quantic-case-classification', () => {
         const clickedIndex = 0;
 
         mockCaseClassification(
-          defaultField,
+          coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
@@ -395,7 +396,7 @@ describe('quantic-case-classification', () => {
         Actions.clickSuggestion(clickedIndex);
         Expect.logClickedSuggestions(clickedIndex);
         Expect.logUpdatedClassificationFromSuggestion(
-          defaultField,
+          coveoDefaultField,
           clickedIndex
         );
 

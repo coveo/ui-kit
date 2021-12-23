@@ -22,7 +22,7 @@ import {
  *
  * @category Case Assist
  * @example
- * <c-quantic-case-classification engine-id={engineId} field-name="Priority" required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
+ * <c-quantic-case-classification engine-id={engineId} coveo-field-name="sfpriority" sf-field-api-name="Priority" required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
  */
 export default class QuanticCaseClassification extends LightningElement {
   labels = {
@@ -48,11 +48,17 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api engineId;
   /**
-   * The field of the case to be classified.
+   * The name of the field of the case in the Salesforce API to be classified.
    * @api
    * @type {string}
    */
-  @api fieldName;
+  @api sfFieldApiName;
+    /**
+   * The name of the Coveo field to be classified.
+   * @api
+   * @type {string}
+   */
+    @api coveoFieldName;
   /**
    * Tells whether the input is required or not.
    * @api
@@ -124,7 +130,7 @@ export default class QuanticCaseClassification extends LightningElement {
     this.engine = engine;
     this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
       options: {
-        field: `sf${this.fieldName.toLowerCase()}`,
+        field: this.coveoFieldName,
       },
     });
     this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
@@ -158,7 +164,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get options() {
     return (
-      this.picklistValues?.data?.picklistFieldValues?.[this.fieldName]
+      this.picklistValues?.data?.picklistFieldValues?.[this.sfFieldApiName]
         ?.values ?? []
     );
   }

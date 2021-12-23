@@ -13,10 +13,16 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
 
   options = [
     {
-      attribute: 'fieldName',
-      label: 'Field name',
-      description: 'The field to be classifed.',
+      attribute: 'sfFieldApiName',
+      label: 'Salesforce API field name',
+      description: 'The name of the field of the case in the Salesforce API to be classified.',
       defaultValue: 'Priority',
+    },
+    {
+      attribute: 'coveoFieldName',
+      label: 'Coveo field name',
+      description: 'The name of the Coveo field to be classified.',
+      defaultValue: 'sfpriority',
     },
     {
       attribute: 'label',

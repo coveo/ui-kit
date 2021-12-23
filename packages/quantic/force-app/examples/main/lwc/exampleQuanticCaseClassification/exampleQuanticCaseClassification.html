@@ -3,9 +3,10 @@
     <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
 
     <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={engineId} slot="preview">
-      <c-quantic-case-classification engine-id={engineId} field-name={config.fieldName}
-        select-placeholder={config.selectPlaceholder} max-choices={config.maxChoices} required={config.required}
-        label={config.label} message-when-value-missing={config.messageWhenValueMissing}>
+      <c-quantic-case-classification engine-id={engineId} coveo-field-name={config.coveoFieldName}
+        sf-field-api-name={config.sfFieldApiName} select-placeholder={config.selectPlaceholder}
+        max-choices={config.maxChoices} required={config.required} label={config.label}
+        message-when-value-missing={config.messageWhenValueMissing}>
       </c-quantic-case-classification>
       <c-action-fetch-classifications engine-id={engineId}></c-action-fetch-classifications>
     </c-quantic-case-assist-interface>
