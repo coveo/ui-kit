@@ -10,7 +10,10 @@ import {
   colorFacetComponent,
   ColorFacetSelectors,
 } from './color-facet-selectors';
-import {typeFacetSearchQuery} from '../facet-common-actions';
+import {
+  pressShowMoreUntilImpossible,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
 import * as FacetAssertions from '../facet/facet-assertions';
 import * as ColorFacetAssertions from './color-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
@@ -218,6 +221,29 @@ describe('Color Facet Test Suites', () => {
     describe('verify analytics', () => {
       before(setupSelectShowMore);
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
+    });
+
+    describe('repeatedly until there\'s no more "Show more" button', () => {
+      function setupRepeatShowMore() {
+        new TestFixture()
+          .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+          .init();
+        pressShowMoreUntilImpossible(ColorFacetSelectors);
+      }
+
+      describe('verify rendering', () => {
+        before(setupRepeatShowMore);
+
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          ColorFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          ColorFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertFocusShowLess(ColorFacetSelectors);
+      });
     });
 
     describe('when selecting the "Show less" button', () => {

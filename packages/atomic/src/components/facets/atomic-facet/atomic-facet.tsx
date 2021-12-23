@@ -151,6 +151,9 @@ export class AtomicFacet
   protected showMoreFocus!: FocusTargetController;
 
   @FocusTarget()
+  protected showLessFocus!: FocusTargetController;
+
+  @FocusTarget()
   protected headerFocus!: FocusTargetController;
 
   private validateProps() {
@@ -364,11 +367,15 @@ export class AtomicFacet
   }
 
   private renderShowMoreLess() {
+    if (this.facetState.canShowMoreValues) {
+      this.showLessFocus.disableForCurrentSearch();
+    }
     return (
       <FacetShowMoreLess
         label={this.label}
         i18n={this.bindings.i18n}
         onShowMore={() => {
+          this.showLessFocus.focusAfterSearch();
           this.facet.showMoreValues();
         }}
         onShowLess={() => {
@@ -378,6 +385,7 @@ export class AtomicFacet
         canShowMoreValues={this.facetState.canShowMoreValues}
         canShowLessValues={this.facetState.canShowLessValues}
         showMoreRef={this.showMoreFocus.setTarget}
+        showLessRef={this.showLessFocus.setTarget}
       ></FacetShowMoreLess>
     );
   }

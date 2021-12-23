@@ -17,7 +17,10 @@ import {
   categoryFacetLabel,
 } from './category-facet-actions';
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {typeFacetSearchQuery} from '../facet-common-actions';
+import {
+  pressShowMoreUntilImpossible,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -396,6 +399,27 @@ describe('Category Facet Test Suites', () => {
       describe('verify analytics', () => {
         before(setupShowMore);
         CategoryFacetAssertions.assertLogFacetShowMore();
+      });
+
+      describe('repeatedly until there\'s no more "Show more" button', () => {
+        function setupRepeatShowMore() {
+          setupWithDefaultSettings();
+          pressShowMoreUntilImpossible(CategoryFacetSelectors);
+        }
+
+        describe('verify rendering', () => {
+          before(setupRepeatShowMore);
+
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertFocusShowLess(CategoryFacetSelectors);
+        });
       });
 
       describe('when selecting the "Show less" button', () => {
