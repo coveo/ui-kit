@@ -206,3 +206,9 @@ export function assertDisplayAllCategoriesButton(display: boolean) {
     );
   });
 }
+
+export function assertFocusActiveParent() {
+  it('should focus on the active parent', () => {
+    CategoryFacetSelectors.activeParentValue().should('be.focused');
+  });
+}

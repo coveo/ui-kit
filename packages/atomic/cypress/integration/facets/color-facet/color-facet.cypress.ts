@@ -123,6 +123,7 @@ describe('Color Facet Test Suites', () => {
             ColorFacetAssertions.assertNumberOfIdleBoxValues(
               colorFacetDefaultNumberOfValues
             );
+            CommonFacetAssertions.assertFocusHeader(ColorFacetSelectors);
           });
 
           describe('verify analytics', () => {
@@ -212,6 +213,7 @@ describe('Color Facet Test Suites', () => {
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
       );
+      CommonFacetAssertions.assertFocusShowMore(ColorFacetSelectors);
     });
     describe('verify analytics', () => {
       before(setupSelectShowMore);

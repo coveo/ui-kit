@@ -125,6 +125,7 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               defaultNumberOfValues
             );
+            CommonFacetAssertions.assertFocusHeader(FacetSelectors);
           });
           describe('verify analytics', () => {
             before(setupClearCheckboxValues);
@@ -671,6 +672,7 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors,
         defaultNumberOfValues * 2
       );
+      CommonFacetAssertions.assertFocusShowMore(FacetSelectors);
     });
 
     describe('verify analytics', () => {
