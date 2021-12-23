@@ -255,7 +255,7 @@ describe('Category Facet Test Suites', () => {
         function setupSelectFirstParent() {
           setupGoDeeperLastLevel();
           cy.wait(TestFixture.interceptAliases.UA);
-          CategoryFacetSelectors.parentValue().first().focus().click();
+          CategoryFacetSelectors.parentValue().first().click();
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
@@ -278,6 +278,11 @@ describe('Category Facet Test Suites', () => {
           );
           CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
+        });
+
+        describe('test accessibility', () => {
+          beforeEach(setupSelectFirstParent);
+
           CategoryFacetAssertions.assertFocusActiveParent();
         });
 
@@ -635,6 +640,7 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(1);
           CategoryFacetAssertions.assertNumberOfParentValues(2);
           CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+          CategoryFacetAssertions.assertFocusActiveParent();
         });
       });
 
