@@ -2,6 +2,7 @@ import {LightningElement, api, track, wire} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
+import loading from '@salesforce/label/c.quantic_Loading';
 import {
   getObjectInfo,
   getPicklistValuesByRecordType,
@@ -24,9 +25,15 @@ import {
  * <c-quantic-case-classification engine-id={engineId} field-name="Priority" required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
  */
 export default class QuanticCaseClassification extends LightningElement {
+  labels = {
+    caseClassificationTitle,
+    moreTopics,
+    selectOption,
+    loading
+  };
+
   @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
   objectInfo;
-
   // @ts-ignore
   @wire(getPicklistValuesByRecordType, {
     recordTypeId: '$objectInfo.data.defaultRecordTypeId',
@@ -34,24 +41,18 @@ export default class QuanticCaseClassification extends LightningElement {
   })
   picklistValues;
 
-  labels = {
-    caseClassificationTitle,
-    moreTopics,
-    selectOption,
-  };
-
   /**
    * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
   @api engineId;
-
   /**
    * The field of the case to be classified.
+   * @api
+   * @type {string}
    */
   @api fieldName;
-
   /**
    * Tells whether the input is required or not.
    * @api
@@ -59,7 +60,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `false`
    */
   @api required = false;
-
   /**
    * The label to be shown to the user.
    * @api
@@ -67,7 +67,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `'Which topic relates to your issue?'`
    */
   @api label = this.labels.caseClassificationTitle;
-
   /**
    * The placeholder of the combo box input.
    * @api
@@ -75,7 +74,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `'More Topics'`
    */
   @api selectPlaceholder = this.labels.moreTopics;
-
   /**
    * The maximum number of choices to be displayed, a choice can be a suggestion, an inline option or the select dropdown.
    * @api
@@ -83,7 +81,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `4`
    */
   @api maxChoices = 4;
-
   /**
    * The message to be shown when the value is missing.
    * @api
@@ -97,27 +94,55 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /** @type {boolean} */
   loading = false;
-
   /** @type {CaseAssistEngine} */
   engine;
-
   /** @type {CaseField} */
   field;
-
   /** @type {Function} */
   unsubscribeField;
-
   /** @type {string} */
   _errorMessage = '';
-
   /** @type {boolean} */
   _isSelectVisible = false;
-
   /** @type {string} */
   _value = '';
-
   /** @type {boolean} */
   _isSuggestionsVisible = true;
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  /**
+   * @param {CaseAssistEngine} engine
+   */
+  initialize = (engine) => {
+    this.engine = engine;
+    this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
+      options: {
+        field: `sf${this.fieldName.toLowerCase()}`,
+      },
+    });
+    this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
+
+    this.actions = {
+      ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
+      ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
+    };
+  };
+
+  disconnectedCallback() {
+    this.unsubscribeField?.();
+  }
+
+  updateFieldState() {
+    this.classifications = this.field.state.suggestions ?? [];
+    this.loading = this.field.state.loading;
+  }
 
   /**
    * Whether there is an error in the input.
@@ -127,6 +152,10 @@ export default class QuanticCaseClassification extends LightningElement {
     return !!this._errorMessage;
   }
 
+  /**
+   * Returns a list of all the possible options.
+   * @returns {Array<{value: string, label: string}>}
+   */
   get options() {
     return (
       this.picklistValues?.data?.picklistFieldValues?.[this.fieldName]
@@ -247,7 +276,7 @@ export default class QuanticCaseClassification extends LightningElement {
     this._errorMessage = '';
     this._value = value;
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
-      this._hideSuggestions();
+      this.hideSuggestions();
     }
   }
 
@@ -255,47 +284,12 @@ export default class QuanticCaseClassification extends LightningElement {
    * Hide the suggested options.
    * @returns {void}
    */
-  _hideSuggestions() {
+  hideSuggestions() {
     const suggestions = this.template.querySelectorAll('.slds-visual-picker');
     suggestions.forEach((suggestion) => {
       // @ts-ignore
       suggestion.style.width = `${suggestion.clientWidth}px`;
       suggestion.classList.add('visual-picker__hidden');
     });
-  }
-
-  connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-  }
-
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
-  }
-
-  /**
-   * @param {CaseAssistEngine} engine
-   */
-  initialize = (engine) => {
-    this.engine = engine;
-    this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
-      options: {
-        field: `sf${this.fieldName.toLowerCase()}`,
-      },
-    });
-    this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
-
-    this.actions = {
-      ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
-      ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
-    };
-  };
-
-  disconnectedCallback() {
-    this.unsubscribeField?.();
-  }
-
-  updateFieldState() {
-    this.classifications = this.field.state.suggestions ?? [];
-    this.loading = this.field.state.loading;
   }
 }

@@ -7,7 +7,7 @@
       <div class="row">
         <template if:true={loading}>
           <div class="loading-holder slds-var-m-top_x-small">
-            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            <lightning-spinner alternative-text={labels.loading} size="small"></lightning-spinner>
           </div>
         </template>
         <template if:false={loading}>

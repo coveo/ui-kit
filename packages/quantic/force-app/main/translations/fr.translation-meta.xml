@@ -412,4 +412,8 @@
       <label>Sélectionner une option</label>
       <name>quantic_SelectOption</name>
     </customLabels>
+    <customLabels>
+      <label>Chargement</label>
+      <name>quantic_Loading</name>
+    </customLabels>
 </Translations>

@@ -770,4 +770,11 @@
       <protected>false</protected>
       <shortDescription>Select an option</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_Loading</fullName>
+      <value>Loading</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Loading</shortDescription>
+    </labels>
 </CustomLabels>
