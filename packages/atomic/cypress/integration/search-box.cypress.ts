@@ -4,15 +4,22 @@ import {SearchBoxSelectors} from './search-box-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as CommonAssertions from './common-assertions';
 
-const setSuggestions = (count: number) => (fixture: TestFixture) => {
-  fixture.withCustomQuerySuggestResponse((response) => {
-    response.completions = Array.from({length: count}, (_, i) => ({
-      expression: `query-suggestion-${i}`,
-      executableConfidence: 0,
-      highlighted: `Suggestion ${i}`,
-      score: 0,
-    }));
-  });
+const setSuggestions = (count: number) => () => {
+  cy.intercept(
+    {method: 'POST', path: '**/rest/search/v2/querySuggest?*'},
+    (request) => {
+      request.reply((response) => {
+        const newResponse = response.body;
+        newResponse.completions = Array.from({length: count}, (_, i) => ({
+          expression: `query-suggestion-${i}`,
+          executableConfidence: 0,
+          highlighted: `Suggestion ${i}`,
+          score: 0,
+        }));
+        response.send(200, newResponse);
+      });
+    }
+  );
 };
 
 const setRecentQueries = (count: number) => () => {
