@@ -257,7 +257,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * Handles the selection of a suggestion.
    * @returns {void}
    */
-  handleSelectClassification(event) {
+  handleSelectSuggestion(event) {
     const suggestionId = event.target.dataset.suggestionId;
     const value = event.target.value;
     this.engine.dispatch(this.actions.logClassificationClick(suggestionId));
