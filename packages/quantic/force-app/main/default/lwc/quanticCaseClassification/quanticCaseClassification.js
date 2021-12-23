@@ -27,6 +27,7 @@ export default class QuanticCaseClassification extends LightningElement {
   @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
   objectInfo;
 
+  // @ts-ignore
   @wire(getPicklistValuesByRecordType, {
     recordTypeId: '$objectInfo.data.defaultRecordTypeId',
     objectApiName: CASE_OBJECT,
