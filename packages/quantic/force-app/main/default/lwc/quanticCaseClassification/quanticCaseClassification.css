@@ -1,37 +1,37 @@
-lightning-icon{
+lightning-icon {
   --sds-c-icon-color-foreground-default: white;
 }
-.slds-visual-picker__figure{
+.slds-visual-picker__figure {
   width: 9.875rem;
   height: 1.938rem;
 }
 
-.loading-holder{
+.loading-holder {
   position: relative;
   width: 9.875rem;
 }
 
-.slds-form-element__label{
+.slds-form-element__label {
   color: unset;
 }
 
-.slds-visual-picker{
+.slds-visual-picker {
   overflow: hidden;
 }
 
-.row{
+.row {
   display: flex;
   flex-wrap: wrap;
 }
 
-.visual-picker__hidden{
-  animation: hideAnimation .3s ease-in-out forwards;
+.visual-picker__hidden {
+  animation: hideAnimation 0.3s ease-in-out forwards;
 }
 
 @keyframes hideAnimation {
   100% {
     width: 0;
     opacity: 0;
-    margin-right:0;
+    margin-right: 0;
   }
 }

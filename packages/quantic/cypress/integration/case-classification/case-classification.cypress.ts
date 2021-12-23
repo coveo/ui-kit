@@ -40,8 +40,8 @@ describe('quantic-case-classification', () => {
     configure(options);
   }
 
-  describe('with default options', () => {
-    it('should work as expected', () => {
+  describe('when using default options', () => {
+    it('should render the component and all parts', () => {
       visitCaseClassification({
         maxChoices: defaultMaxChoices,
       });
@@ -148,7 +148,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('with maxChoices set to 1', () => {
+  describe('when maxChoices set to 1', () => {
     it('should display only the select dropdown', () => {
       visitCaseClassification({
         maxChoices: 1,
@@ -188,7 +188,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('with invalid number of maxChoices', () => {
+  describe('when invalid number of maxChoices is given', () => {
     it('should display only the select dropdown when maxChoices is set to 0', () => {
       visitCaseClassification({
         maxChoices: 0,
@@ -213,6 +213,17 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.numberOfInlineOptions(0);
         Expect.displaySelectInput(true);
+      });
+
+      scope('when selecting an option from the select input', () => {
+        const clickedIndex = 3;
+
+        Actions.openSelectInput();
+        Actions.clickSelectOption(clickedIndex);
+        Expect.logUpdatedClassificationFromSelectOption(
+          defaultField,
+          clickedIndex
+        );
       });
     });
 
@@ -241,10 +252,21 @@ describe('quantic-case-classification', () => {
         Expect.numberOfInlineOptions(0);
         Expect.displaySelectInput(true);
       });
+
+      scope('when selecting an option from the select input', () => {
+        const clickedIndex = 3;
+
+        Actions.openSelectInput();
+        Actions.clickSelectOption(clickedIndex);
+        Expect.logUpdatedClassificationFromSelectOption(
+          defaultField,
+          clickedIndex
+        );
+      });
     });
   });
 
-  describe('with maxChoices set to the number of options', () => {
+  describe('when maxChoices is set to the number of options', () => {
     const optionsCount = 5;
     it('should display all the options as inline options', () => {
       visitCaseClassification({
@@ -295,7 +317,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('with maxChoices greater than the number of options', () => {
+  describe('when maxChoices is greater than the number of options', () => {
     const optionsCount = 5;
     it('should display all the options as inline options', () => {
       visitCaseClassification({

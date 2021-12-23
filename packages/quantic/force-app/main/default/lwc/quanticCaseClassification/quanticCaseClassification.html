@@ -11,13 +11,13 @@
           </div>
         </template>
         <template if:false={loading}>
-          <template for:each={suggestions} for:item="option">
-            <div key={option.value}
+          <template for:each={suggestions} for:item="suggestion">
+            <div key={suggestion.value}
               class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
-              <input type="radio" data-suggestion-id={option.id} onchange={handleSelectClassification} id={option.value} value={option.value} name='options' />
-              <label for={option.value}>
+              <input type="radio" data-suggestion-id={suggestion.id} onchange={handleSelectClassification} id={suggestion.value} value={suggestion.value} name='options' />
+              <label for={suggestion.value}>
                 <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
-                  {option.value}
+                  {suggestion.value}
                 </span>
                 <span class="slds-icon_container slds-visual-picker__text-check">
                   <lightning-icon size="xx-small" icon-name="utility:check">
