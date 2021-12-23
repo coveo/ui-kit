@@ -1,10 +1,10 @@
 import {configure} from '../../page-objects/configurator';
 import {
-  interceptSearch,
+  interceptCaseAssist,
   mockCaseClassification,
   mockSfPicklistValues,
   interceptClassificationsIndefinitely,
-} from '../../page-objects/search';
+} from '../../page-objects/case-assist';
 import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
 import {CaseClassificationActions as Actions} from './case-classification-actions';
 import {scope} from '../../reporters/detailed-collector';
@@ -35,7 +35,7 @@ describe('quantic-case-classification', () => {
     options: Partial<CaseClassificationOptions>
   ) {
     mockSfPicklistValues(defaultField, allOptions);
-    interceptSearch();
+    interceptCaseAssist();
     cy.visit(pageUrl);
     configure(options);
   }

@@ -1,4 +1,4 @@
-import {InterceptAliases} from '../../page-objects/search';
+import {InterceptAliases} from '../../page-objects/case-assist';
 import {should} from '../common-selectors';
 import {
   CaseClassificationSelector,
@@ -67,7 +67,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
     },
 
     logUpdatedClassificationFromSuggestion: (field: string, index: number) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate)
+      cy.wait(InterceptAliases.UA.FieldUpdate)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
@@ -85,7 +85,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
       field: string,
       index: number
     ) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate)
+      cy.wait(InterceptAliases.UA.FieldUpdate)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
@@ -103,7 +103,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
       field: string,
       index: number
     ) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.FieldUpdate)
+      cy.wait(InterceptAliases.UA.FieldUpdate)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
@@ -118,7 +118,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
     },
 
     logClickedSuggestions: (value: number) => {
-      cy.wait(InterceptAliases.UA.CaseAssist.ClassificationClick)
+      cy.wait(InterceptAliases.UA.ClassificationClick)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           selector

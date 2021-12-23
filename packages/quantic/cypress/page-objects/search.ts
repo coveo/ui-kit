@@ -31,17 +31,11 @@ export const InterceptAliases = {
       InterfaceChange: uaAlias('interfaceChange'),
     },
     Breadcrumb: uaAlias('breadcrumbFacet'),
-    CaseAssist: {
-      FieldUpdate: uaAlias('ticket_field_update'),
-      ClassificationClick: uaAlias('ticket_classification_click'),
-    },
     DocumentOpen: uaAlias('documentOpen'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
-  CaseClassification: '@coveoCaseClassification',
-  fetchPicklist: '@fetchPicklist',
 };
 
 export const routeMatchers = {
@@ -49,7 +43,6 @@ export const routeMatchers = {
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
-  caseClassification: '**/rest/organizations/*/caseassists/*/classify',
 };
 
 export function interceptSearch() {
@@ -57,8 +50,6 @@ export function interceptSearch() {
     .intercept('POST', routeMatchers.analytics, (req) => {
       if (req.body.actionCause) {
         req.alias = uaAlias(req.body.actionCause).substring(1);
-      } else if (req.body.svc_action) {
-        req.alias = uaAlias(req.body.svc_action).substring(1);
       } else if (req.body.eventType === 'getMoreResults') {
         req.alias = uaAlias(req.body.eventValue).substring(1);
       }
@@ -140,12 +131,6 @@ export function interceptSearchIndefinitely(): {sendResponse: () => void} {
   return interceptIndefinitely(routeMatchers.search);
 }
 
-export function interceptClassificationsIndefinitely(): {
-  sendResponse: () => void;
-} {
-  return interceptIndefinitely(routeMatchers.caseClassification);
-}
-
 export function mockSearchNoResults() {
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {
@@ -155,32 +140,4 @@ export function mockSearchNoResults() {
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
-}
-
-export function mockCaseClassification(field: string, value: Array<object>) {
-  cy.intercept(routeMatchers.caseClassification, (req) => {
-    req.continue((res) => {
-      res.body.fields[`sf${field.toLowerCase()}`].predictions = value;
-      res.send();
-    });
-  }).as(InterceptAliases.CaseClassification.substring(1));
-}
-
-export function mockSfPicklistValues(field: string, values: Array<object>) {
-  cy.intercept(
-    {
-      url: '**/aura?*',
-      query: {'aura.RecordUi.getPicklistValuesByRecordType': '1'},
-    },
-    (req) => {
-      req.continue((res) => {
-        res.body?.actions?.[0]?.returnValue?.picklistFieldValues?.[
-          field
-        ]?.values = values.map((value) => {
-          return {...value, attributes: null};
-        });
-        res.send();
-      });
-    }
-  ).as(InterceptAliases.fetchPicklist.substring(1));
 }
