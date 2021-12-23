@@ -255,7 +255,7 @@ describe('Category Facet Test Suites', () => {
         function setupSelectFirstParent() {
           setupGoDeeperLastLevel();
           cy.wait(TestFixture.interceptAliases.UA);
-          CategoryFacetSelectors.parentValue().first().click();
+          CategoryFacetSelectors.parentValue().first().focus().click();
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
