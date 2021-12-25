@@ -39,10 +39,18 @@ export default class QuanticDocumentSuggestions extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.template.addEventListener('rating', this.onRating);
   }
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    const slots = this.template.host.shadowRoot.querySelectorAll('slot');
+    slots.forEach((slot) => {
+      const slotContent = slot.assignedNodes()[0];
+      if (slotContent) {
+        slotContent.dataset.id = slot.dataset.docId;
+      }
+    });
   }
 
   /**
@@ -50,23 +58,33 @@ export default class QuanticDocumentSuggestions extends LightningElement {
    */
   initialize = (engine) => {
     this.engine = engine;
-    this.documentSuggestion = CoveoHeadlessCaseAssist.buildDocumentSuggestion(engine);
-    this.unsubscribeDocumentSuggestion = this.documentSuggestion.subscribe(() => this.updateDocumentSuggestionState());
+    this.documentSuggestion =
+      CoveoHeadlessCaseAssist.buildDocumentSuggestion(engine);
+    this.unsubscribeDocumentSuggestion = this.documentSuggestion.subscribe(() =>
+      this.updateDocumentSuggestionState()
+    );
 
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
       ...CoveoHeadlessCaseAssist.loadDocumentSuggestionActions(engine),
     };
 
-    engine.dispatch(this.actions.fetchDocumentSuggestions)
+    engine.dispatch(this.actions.fetchDocumentSuggestions());
   };
 
   disconnectedCallback() {
     this.unsubscribeDocumentSuggestion?.();
+    this.template.removeEventListener('rating', this.onRating);
   }
 
   updateDocumentSuggestionState() {
     this.suggestions = this.documentSuggestion.state.documents ?? [];
     this.loading = this.documentSuggestion.state.loading;
   }
+
+  onRating = (evt) => {
+    this.engine.dispatch(
+      this.actions.logDocumentSuggestionRating(evt.detail.id, evt.detail.score)
+    );
+  };
 }

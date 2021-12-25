@@ -7,15 +7,16 @@
     >
       <template iterator:it={suggestions}>
         <lightning-accordion-section
-          key={it.value.id}
-          name="A"
+          key={it.value.uniqueId}
           label={it.value.title}
         >
           <div slot="actions" class="slds-p-left_xx-large">
-            <!-- <c-vote-count count={it.value.helpedCount}></c-vote-count> -->
+            <slot name="rating" data-doc-id={it.value.fields.rowid}>
+              rating
+            </slot>
           </div>
           <div class="slds-p-horizontal_large slds-p-vertical_xx-small">
-            <p class="description">{it.value.description}</p>
+            <p class="description">{it.value.excerpt}</p>
             <div class="row slds-m-top_medium">
               <lightning-button
                 onclick={test}
@@ -24,9 +25,8 @@
                 icon-name="utility:new_window"
                 icon-position="right"
               ></lightning-button>
-              <template if:true={it.value.feedback}>
-                <!-- <c-vote-tracker></c-vote-tracker> -->
-              </template>
+              <slot name="actions" data-doc-id={it.value.uniqueId}>
+              </slot>
             </div>
           </div>
         </lightning-accordion-section>
