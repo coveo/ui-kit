@@ -14,11 +14,11 @@ import * as sfdxProject from '../../sfdx-project.json';
 require('dotenv').config();
 
 interface Options {
-  packageVersion: string;
   packageId: string;
   promote: boolean;
   removeTranslations: boolean;
   jwt: SfdxJWTAuth;
+  packageVersion?: string;
 }
 
 function ensureEnvVariables() {
@@ -47,13 +47,21 @@ async function getIsPublished(): Promise<boolean> {
   return matchingVersion?.IsReleased;
 }
 
-async function getPackageVersion(): Promise<string> {
-  const versionNumber = pack.version;
-  const matchingVersion = await getMatchingPackageVersion(pack.version);
-  const buildNumber = matchingVersion
-    ? Number(matchingVersion.Version.split('.').pop()) + 1
-    : 0;
-  return `${versionNumber}.${buildNumber}`;
+async function getPackageVersion(log: StepLogger): Promise<string> {
+  log('Determining next package version...');
+  try {
+    const versionNumber = pack.version;
+    const matchingVersion = await getMatchingPackageVersion(pack.version);
+    const buildNumber = matchingVersion
+      ? Number(matchingVersion.Version.split('.').pop()) + 1
+      : 0;
+    const version = `${versionNumber}.${buildNumber}`;
+    log(`Package version ${version} determined.`);
+    return version;
+  } catch (error) {
+    log('Failed to determine next package version.');
+    throw new Error(error.message);
+  }
 }
 
 async function buildOptions(): Promise<Options> {
@@ -66,7 +74,6 @@ async function buildOptions(): Promise<Options> {
   }
 
   return {
-    packageVersion: await getPackageVersion(),
     packageId: sfdxProject.packageAliases.Quantic,
     promote: !!promote,
     removeTranslations: !!removeTranslations,
@@ -185,6 +192,9 @@ async function createGithubDiscussionPost(
 
   try {
     runner.add(async (log) => await authorizePublishingOrg(log, options));
+    runner.add(async (log) => {
+      options.packageVersion = await getPackageVersion(log);
+    });
     options.promote &&
       runner.add(async (log) => await ensurePackageNotPublished(log, options));
     options.removeTranslations &&
