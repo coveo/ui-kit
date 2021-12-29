@@ -108,12 +108,12 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_field_update" UA event');
     },
 
-    logClickedSuggestions: (value: number) => {
+    logClickedSuggestion: (index: number) => {
       cy.wait(InterceptAliases.UA.ClassificationClick)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           selector
-            .suggestedOptionInput(value)
+            .suggestedOptionInput(index)
             .invoke('attr', 'data-suggestion-id')
             .should('eq', analyticsBody.svc_action_data.classificationId);
         })

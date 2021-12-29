@@ -72,7 +72,7 @@ describe('quantic-case-classification', () => {
         const clickedIndex = 0;
 
         Actions.clickSuggestion(clickedIndex);
-        Expect.logClickedSuggestions(clickedIndex);
+        Expect.logClickedSuggestion(clickedIndex);
         Expect.logUpdatedClassificationFromSuggestion(
           coveoDefaultField,
           clickedIndex
@@ -299,7 +299,7 @@ describe('quantic-case-classification', () => {
         const clickedIndex = 0;
 
         Actions.clickSuggestion(clickedIndex);
-        Expect.logClickedSuggestions(clickedIndex);
+        Expect.logClickedSuggestion(clickedIndex);
         Expect.logUpdatedClassificationFromSuggestion(
           coveoDefaultField,
           clickedIndex
@@ -394,7 +394,7 @@ describe('quantic-case-classification', () => {
         fetchClassifications();
 
         Actions.clickSuggestion(clickedIndex);
-        Expect.logClickedSuggestions(clickedIndex);
+        Expect.logClickedSuggestion(clickedIndex);
         Expect.logUpdatedClassificationFromSuggestion(
           coveoDefaultField,
           clickedIndex
