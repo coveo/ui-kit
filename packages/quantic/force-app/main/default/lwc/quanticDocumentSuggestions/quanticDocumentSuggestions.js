@@ -44,7 +44,7 @@ export default class QuanticDocumentSuggestions extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    const slots = this.template.host.shadowRoot.querySelectorAll('slot');
+    const slots = this.template.querySelectorAll('slot');
     slots.forEach((slot) => {
       const slotContent = slot.assignedNodes()[0];
       if (slotContent) {
