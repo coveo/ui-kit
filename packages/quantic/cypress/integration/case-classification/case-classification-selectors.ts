@@ -25,28 +25,30 @@ export const CaseClassificationSelectors: CaseClassificationSelector = {
   selectTitle: () => CaseClassificationSelectors.get().find('lightning-button'),
   selectInput: () =>
     CaseClassificationSelectors.get().find('lightning-combobox'),
-  selectOption: (i: number) =>
+  selectOption: (idx: number) =>
     CaseClassificationSelectors.get()
       .find('lightning-base-combobox-item')
-      .eq(i),
+      .eq(idx),
   inlineOptions: () =>
     CaseClassificationSelectors.get().find('.case-classification-option'),
   suggestedOptions: () =>
     CaseClassificationSelectors.get().find('.case-classification-suggestion'),
-  suggestedOption: (i: number) =>
+  suggestedOption: (idx: number) =>
     CaseClassificationSelectors.get()
       .find('.case-classification-suggestion')
-      .eq(i),
-  inlineOption: (i: number) =>
-    CaseClassificationSelectors.get().find('.case-classification-option').eq(i),
-  suggestedOptionInput: (i: number) =>
+      .eq(idx),
+  inlineOption: (idx: number) =>
+    CaseClassificationSelectors.get()
+      .find('.case-classification-option')
+      .eq(idx),
+  suggestedOptionInput: (idx: number) =>
     CaseClassificationSelectors.get()
       .find('.case-classification-suggestion input')
-      .eq(i),
-  inlineOptionInput: (i: number) =>
+      .eq(idx),
+  inlineOptionInput: (idx: number) =>
     CaseClassificationSelectors.get()
       .find('.case-classification-option input')
-      .eq(i),
+      .eq(idx),
   error: () =>
     CaseClassificationSelectors.get().find('.slds-form-element__help'),
   loadingSpinner: () =>

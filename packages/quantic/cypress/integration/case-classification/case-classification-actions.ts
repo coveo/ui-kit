@@ -5,11 +5,11 @@ import {
 
 function caseClassificationActions(selector: CaseClassificationSelector) {
   return {
-    clickSuggestion: (i: number) => selector.suggestedOption(i).click(),
-    clickInlineOption: (i: number) => selector.inlineOption(i).click(),
+    clickSuggestion: (idx: number) => selector.suggestedOption(idx).click(),
+    clickInlineOption: (idx: number) => selector.inlineOption(idx).click(),
     clickSelectTitle: () => selector.selectTitle().click(),
     openSelectInput: () => selector.selectInput().click(),
-    clickSelectOption: (i: number) => selector.selectOption(i).click(),
+    clickSelectOption: (idx: number) => selector.selectOption(idx).click(),
     reportValidity: () =>
       selector.get().then((el) => {
         el[0].reportValidity();
