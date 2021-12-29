@@ -210,7 +210,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @type {boolean}
    */
   get isSelectVisible() {
-    return this._isSelectVisible || 0 >= this.suggestions.length;
+    return this._isSelectVisible || this.suggestions.length <= 0;
   }
 
   /**
