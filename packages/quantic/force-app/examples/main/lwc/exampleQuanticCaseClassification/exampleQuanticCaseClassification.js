@@ -45,7 +45,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
     {
       attribute: 'required',
       label: 'Required',
-      description: 'Tells whether the input is required or not.',
+      description: 'Indicates whether the input is required or not.',
       defaultValue: false,
     },
     {

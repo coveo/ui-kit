@@ -18,7 +18,7 @@ import {
 /** @typedef {import("coveo").CaseField} CaseField */
 
 /**
- * The `QuanticCaseClassification` component displays field value suggestion returned by Coveo Case Assist as well as a single-select dropdown containing other available values.
+ * The `QuanticCaseClassification` component displays field value suggestions returned by Coveo Case Assist as well as a single-select dropdown containing other available values.
  *
  * @category Case Assist
  * @example
