@@ -39,7 +39,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
     {
       attribute: 'messageWhenValueMissing',
       label: 'Message when value missing',
-      description: 'The error message to shown when the value is missing.',
+      description: 'The error message shown when the value is missing.',
       defaultValue: 'Select an option',
     },
     {
