@@ -59,6 +59,15 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`should display ${value} suggested options`);
     },
 
+    correctSugestionsOrder: (suggestions: Array<{value: string}>) => {
+      suggestions.forEach((suggestion, idx) => {
+        selector
+          .suggestedOption(idx)
+          .should('have.text', suggestion.value)
+          .logDetail('should display in the correct order');
+      });
+    },
+
     numberOfInlineOptions: (value: number) => {
       selector
         .inlineOptions()
