@@ -1101,5 +1101,17 @@
   "loading-results": {
     "en": "Loading new results",
     "fr": "Chargement de nouveaux résultats"
+  },
+  "stars": {
+    "en": "one out of {{max}} stars",
+    "fr": "une étoile sur {{max}}"
+  },
+  "stars_plural": {
+    "en": "{{count}} out of {{max}} stars",
+    "fr": "{{count}} étoiles sur {{max}}"
+  },
+  "stars-range": {
+    "en": "{{count}} to {{max}} stars",
+    "fr": "{{count}} à {{max}} étoiles"
   }
 }
