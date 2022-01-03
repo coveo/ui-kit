@@ -23,7 +23,7 @@ describe('product listing api client', () => {
     jest.clearAllMocks();
   });
 
-  const mockPlatformCall = (fakeResponse: any) => {
+  const mockPlatformCall = (fakeResponse: unknown) => {
     platformCallMock = jest.fn();
 
     platformCallMock.mockReturnValue(fakeResponse);

@@ -5,7 +5,7 @@ import {buildSamlFlow, SamlFlow, SamlFlowOptions} from './saml-flow';
 describe('buildSamlFlow', () => {
   const handshakeToken = 'token';
   let options: SamlFlowOptions;
-  let request: jest.Mock<any, any>;
+  let request: jest.Mock;
   let provider: SamlFlow;
 
   function initSamlFlow() {
