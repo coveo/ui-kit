@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
+        with:
+          with-registry: 'true'
       - run: npm config set loglevel verbose --global
       - run: npm run npm:publish:alpha
         env:
