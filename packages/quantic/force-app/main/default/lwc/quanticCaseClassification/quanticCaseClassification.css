@@ -6,9 +6,15 @@ lightning-icon {
   height: 1.938rem;
 }
 
+.slds-form-element {
+  display: flex;
+  flex-direction: column;
+}
+
 .loading-holder {
   position: relative;
   width: 9.875rem;
+  height: 1.938rem;
 }
 
 .slds-form-element__label {

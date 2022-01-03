@@ -146,8 +146,10 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   updateFieldState() {
-    this.classifications = this.field.state.suggestions ?? [];
-    this.loading = this.field.state.loading;
+    if(this.maxChoices > 1){
+      this.classifications = this.field.state.suggestions ?? [];
+      this.loading = this.field.state.loading;
+    }
   }
 
   /**

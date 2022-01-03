@@ -118,7 +118,7 @@ describe('quantic-case-classification', () => {
         interceptClassificationsIndefinitely();
         fetchClassifications();
         Expect.displaySelectTitle(false);
-        Expect.displaySelectInput(true);
+        Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(0);
         Expect.numberOfInlineOptions(0);
         Expect.displayLoading(true);
