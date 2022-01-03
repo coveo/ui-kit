@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.0...@coveo/atomic@1.22.1) (2022-01-03)
+
+
+### Bug Fixes
+
+* **atomic:** maintained keyboard focus on facets for accessibility ([#1618](https://github.com/coveo/ui-kit/issues/1618)) ([3f29420](https://github.com/coveo/ui-kit/commit/3f294208a5b84bf8c5ee241b46c2f2dfcb6e0de0))
+
+
+
+
+
 # [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.21.0...@coveo/atomic@1.22.0) (2022-01-03)
 
 
