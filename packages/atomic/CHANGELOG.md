@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.21.0...@coveo/atomic@1.22.0) (2022-01-03)
+
+
+### Features
+
+* **atomic:** added aria-live for query suggestions ([#1613](https://github.com/coveo/ui-kit/issues/1613)) ([8415f74](https://github.com/coveo/ui-kit/commit/8415f74017edf788247691fa27e81a80a43e350d))
+
+
+
+
+
 # [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.20.6...@coveo/atomic@1.21.0) (2021-12-20)
 
 
