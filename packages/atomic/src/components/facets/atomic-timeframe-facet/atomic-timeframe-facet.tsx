@@ -33,6 +33,10 @@ import dayjs from 'dayjs';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -114,6 +118,9 @@ export class AtomicTimeframeFacet
    * Minimum: `0`
    */
   @Prop() public injectionDepth = 1000;
+
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
 
   public initialize() {
     this.manualTimeframes = this.getManualTimeframes();
@@ -216,6 +223,7 @@ export class AtomicTimeframeFacet
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
           if (this.filterState?.range) {
             this.filter?.clear();
             return;
@@ -225,6 +233,7 @@ export class AtomicTimeframeFacet
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }

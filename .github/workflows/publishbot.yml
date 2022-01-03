@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
+        with:
+          with-registry: 'true'
       - run: npm config set loglevel verbose --global
       - run: npm run npm:publish:alpha
         env:
@@ -29,10 +31,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
       - run: |
-          apt update
-          apt install -y build-essential
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+      - uses: ./.github/actions/setup
       - run: rm -rf veracode && mkdir veracode
       - run: mkdir veracode/auth
       - run: cp -R packages/auth/src packages/auth/package.json packages/auth/package-lock.json veracode/auth

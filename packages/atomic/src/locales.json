@@ -1102,6 +1102,18 @@
     "en": "Loading new results",
     "fr": "Chargement de nouveaux résultats"
   },
+  "query-suggestions-available": {
+    "en": "{{count}} search suggestion available.",
+    "fr": "{{count}} suggestion de recherche disponible."
+  },
+  "query-suggestions-available_plural": {
+    "en": "{{count}} search suggestions are available.",
+    "fr": "{{count}} suggestions de recherche disponible."
+  },
+  "query-suggestions-unavailable": {
+    "en": "There are no search suggestions.",
+    "fr": "Il n'y a pas de suggestions de recherche."
+  },
   "stars": {
     "en": "one out of {{max}} stars",
     "fr": "une étoile sur {{max}}"

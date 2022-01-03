@@ -22,6 +22,7 @@ import {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '../search-box-suggestions/suggestions-common';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -66,6 +67,9 @@ export class AtomicSearchBox {
    *  - atomic-search-box-recent-queries
    */
   @Prop() public numberOfQueries = 8;
+
+  @AriaLiveRegion('search-box')
+  protected ariaMessage!: string;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -200,6 +204,16 @@ export class AtomicSearchBox {
     this.scrollActiveDescendantIntoView();
   }
 
+  private updateAriaMessage() {
+    this.ariaMessage = this.suggestionElements.length
+      ? this.bindings.i18n.t('query-suggestions-available', {
+          count: this.suggestionElements.filter(
+            (element) => element.query !== undefined
+          ).length,
+        })
+      : this.bindings.i18n.t('query-suggestions-unavailable');
+  }
+
   private async triggerSuggestions() {
     await Promise.all(
       this.suggestions.map((suggestion) => suggestion.onInput())
@@ -213,6 +227,7 @@ export class AtomicSearchBox {
       this.numberOfQueries +
       suggestionElements.filter((sug) => sug.query === undefined).length;
     this.suggestionElements = suggestionElements.slice(0, max);
+    this.updateAriaMessage();
   }
 
   private onInput(value: string) {
@@ -335,6 +350,7 @@ export class AtomicSearchBox {
 
   private clearSuggestionElements() {
     this.suggestionElements = [];
+    this.ariaMessage = '';
   }
 
   private renderSuggestion(

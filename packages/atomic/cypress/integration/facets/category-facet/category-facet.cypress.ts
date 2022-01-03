@@ -14,9 +14,13 @@ import {
   addCategoryFacet,
   hierarchicalField,
   selectSearchResultAt,
+  categoryFacetLabel,
 } from './category-facet-actions';
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {typeFacetSearchQuery} from '../facet-common-actions';
+import {
+  pressShowMoreUntilImpossible,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -55,7 +59,7 @@ describe('Category Facet Test Suites', () => {
       );
       CommonFacetAssertions.assertLabelContains(
         CategoryFacetSelectors,
-        'Atlas'
+        categoryFacetLabel
       );
       CategoryFacetAssertions.assertValuesSortedByOccurences();
     });
@@ -92,6 +96,7 @@ describe('Category Facet Test Suites', () => {
         );
         CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
         CategoryFacetAssertions.assertPathInUrl(selectedPath);
+        CategoryFacetAssertions.assertFocusActiveParent();
 
         describe('when collapsing the facet', () => {
           before(() => {
@@ -178,6 +183,30 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoBreadcrumb();
           CategoryFacetAssertions.assertNoPathInUrl();
+          CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
+        });
+
+        describe('verify analytics', () => {
+          before(setupClear);
+          CategoryFacetAssertions.assertLogClearFacetValues();
+        });
+      });
+
+      describe('when clicking the active value', () => {
+        function setupClear() {
+          setupGoDeeperOneLevel();
+          cy.wait(TestFixture.interceptAliases.UA);
+          CategoryFacetSelectors.activeParentValue().click();
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupClear);
+          CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
+          CategoryFacetAssertions.assertNumberOfParentValues(0);
+          CategoryFacetAssertions.assertNoBreadcrumb();
+          CategoryFacetAssertions.assertNoPathInUrl();
+          CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
         });
 
         describe('verify analytics', () => {
@@ -217,6 +246,7 @@ describe('Category Facet Test Suites', () => {
         );
         CategoryFacetAssertions.assertPathInBreadcrumb(canadaHierarchy);
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
+        CategoryFacetAssertions.assertFocusActiveParent();
       });
 
       describe('verify analytics', () => {
@@ -253,9 +283,95 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
 
+        describe('test accessibility', () => {
+          beforeEach(setupSelectFirstParent);
+
+          CategoryFacetAssertions.assertFocusActiveParent();
+        });
+
         describe('verify analytics', () => {
           before(setupSelectFirstParent);
           CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
+        });
+
+        describe('when selecting the label button to collapse', () => {
+          function setupSelectLabelCollapse() {
+            setupSelectFirstParent();
+            cy.wait(TestFixture.interceptAliases.Search);
+            CategoryFacetSelectors.labelButton().click();
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectLabelCollapse);
+            CommonFacetAssertions.assertDisplayFacet(
+              CategoryFacetSelectors,
+              true
+            );
+            CommonAssertions.assertAccessibility(categoryFacetComponent);
+            CommonAssertions.assertContainsComponentError(
+              CategoryFacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertDisplayClearButton(
+              CategoryFacetSelectors,
+              true
+            );
+            CommonFacetAssertions.assertDisplayValues(
+              CategoryFacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertLabelContains(
+              CategoryFacetSelectors,
+              categoryFacetLabel
+            );
+          });
+
+          describe('when selecting the label button to expand', () => {
+            function setupSelectLabelExpand() {
+              setupSelectLabelCollapse();
+              CategoryFacetSelectors.labelButton().click();
+            }
+
+            before(setupSelectLabelExpand);
+
+            CommonFacetAssertions.assertDisplayClearButton(
+              CategoryFacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertDisplayValues(
+              CategoryFacetSelectors,
+              true
+            );
+            CommonFacetAssertions.assertDisplayShowMoreButton(
+              CategoryFacetSelectors,
+              true
+            );
+          });
+
+          describe('when selecting the "Clear" button', () => {
+            function setupClearBoxValues() {
+              setupSelectLabelCollapse();
+              cy.wait(TestFixture.interceptAliases.UA);
+              CategoryFacetSelectors.clearButton().click();
+              cy.wait(TestFixture.interceptAliases.Search);
+            }
+
+            describe('verify rendering', () => {
+              before(setupClearBoxValues);
+
+              CommonFacetAssertions.assertDisplayClearButton(
+                CategoryFacetSelectors,
+                false
+              );
+              CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
+            });
+
+            describe('verify analytics', () => {
+              before(setupClearBoxValues);
+
+              CategoryFacetAssertions.assertLogClearFacetValues();
+            });
+          });
         });
       });
     });
@@ -285,6 +401,27 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetAssertions.assertLogFacetShowMore();
       });
 
+      describe('repeatedly until there\'s no more "Show more" button', () => {
+        function setupRepeatShowMore() {
+          setupWithDefaultSettings();
+          pressShowMoreUntilImpossible(CategoryFacetSelectors);
+        }
+
+        describe('verify rendering', () => {
+          before(setupRepeatShowMore);
+
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertFocusShowLess(CategoryFacetSelectors);
+        });
+      });
+
       describe('when selecting the "Show less" button', () => {
         function setupShowLess() {
           setupShowMore();
@@ -306,6 +443,7 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetSelectors,
             false
           );
+          CommonFacetAssertions.assertFocusShowMore(CategoryFacetSelectors);
         });
 
         describe('verify analytics', () => {
@@ -526,6 +664,7 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(1);
           CategoryFacetAssertions.assertNumberOfParentValues(2);
           CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+          CategoryFacetAssertions.assertFocusActiveParent();
         });
       });
 

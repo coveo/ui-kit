@@ -1,8 +1,8 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {addQuerySummary} from './query-summary-actions';
 import {QuerySummarySelectors} from './query-summary-selectors';
 import * as CommonAssertions from './common-assertions';
+import {addSearchBox} from './search-box-actions';
 
 const addResultsPerPage = (count: number) => (fixture: TestFixture) => {
   fixture.withElement(
