@@ -1,8 +1,8 @@
 import {LightningElement, track, api} from 'lwc';
+import {getCaseAssistId} from 'c/utils'
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @api engineId = 'case-assist-engine';
-  @api caseAssistId = 'a4fb453a-b1f1-4054-9067-bef117586baa';
 
   @track config = {};
   isConfigured = false;
@@ -57,7 +57,8 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
     },
   ];
 
-  handleTryItNow(evt) {
+  async handleTryItNow(evt) {
+    this.caseAssistId = await getCaseAssistId('Demo');
     this.config = evt.detail;
     this.isConfigured = true;
   }
