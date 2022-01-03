@@ -148,13 +148,13 @@ export class AtomicFacet
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   @FocusTarget()
-  protected showMoreFocus!: FocusTargetController;
+  private showMoreFocus!: FocusTargetController;
 
   @FocusTarget()
-  protected showLessFocus!: FocusTargetController;
+  private showLessFocus!: FocusTargetController;
 
   @FocusTarget()
-  protected headerFocus!: FocusTargetController;
+  private headerFocus!: FocusTargetController;
 
   private validateProps() {
     new Schema({

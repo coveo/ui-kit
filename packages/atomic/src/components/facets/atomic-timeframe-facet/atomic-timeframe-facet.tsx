@@ -120,7 +120,7 @@ export class AtomicTimeframeFacet
   @Prop() public injectionDepth = 1000;
 
   @FocusTarget()
-  protected headerFocus!: FocusTargetController;
+  private headerFocus!: FocusTargetController;
 
   public initialize() {
     this.manualTimeframes = this.getManualTimeframes();

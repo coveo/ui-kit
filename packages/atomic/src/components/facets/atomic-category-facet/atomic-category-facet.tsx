@@ -161,16 +161,16 @@ export class AtomicCategoryFacet
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   @FocusTarget()
-  protected showMoreFocus!: FocusTargetController;
+  private showMoreFocus!: FocusTargetController;
 
   @FocusTarget()
-  protected showLessFocus!: FocusTargetController;
+  private showLessFocus!: FocusTargetController;
 
   @FocusTarget()
-  protected headerFocus!: FocusTargetController;
+  private headerFocus!: FocusTargetController;
 
   @FocusTarget()
-  protected activeValueFocus!: FocusTargetController;
+  private activeValueFocus!: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);

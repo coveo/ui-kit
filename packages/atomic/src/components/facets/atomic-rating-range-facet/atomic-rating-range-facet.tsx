@@ -129,7 +129,7 @@ export class AtomicRatingRangeFacet
   @Prop() public injectionDepth = 1000;
 
   @FocusTarget()
-  protected headerFocus!: FocusTargetController;
+  private headerFocus!: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);

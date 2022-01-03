@@ -138,7 +138,7 @@ export class AtomicRatingFacet
   @Prop() public injectionDepth = 1000;
 
   @FocusTarget()
-  protected headerFocus!: FocusTargetController;
+  private headerFocus!: FocusTargetController;
 
   private validateProps() {
     new Schema({
