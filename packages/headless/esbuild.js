@@ -169,6 +169,11 @@ function buildNodeConfig(options) {
           __dirname,
           './node_modules/web-encoding/src/lib.cjs'
         ),
+        // https://github.com/coveo/ui-kit/issues/1616
+        'node-fetch': path.resolve(
+          __dirname,
+          './node_modules/node-fetch/lib/index.mjs'
+        )
       }),
     ],
     ...options,
