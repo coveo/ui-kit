@@ -38,6 +38,10 @@ import {
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -143,6 +147,15 @@ export class AtomicFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
+  @FocusTarget()
+  private showMoreFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private showLessFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
+
   private validateProps() {
     new Schema({
       displayValuesAs: new StringValue({
@@ -199,10 +212,14 @@ export class AtomicFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }
@@ -350,18 +367,25 @@ export class AtomicFacet
   }
 
   private renderShowMoreLess() {
+    if (this.facetState.canShowMoreValues) {
+      this.showLessFocus.disableForCurrentSearch();
+    }
     return (
       <FacetShowMoreLess
         label={this.label}
         i18n={this.bindings.i18n}
         onShowMore={() => {
+          this.showLessFocus.focusAfterSearch();
           this.facet.showMoreValues();
         }}
         onShowLess={() => {
+          this.showMoreFocus.focusAfterSearch();
           this.facet.showLessValues();
         }}
-        canShowLessValues={this.facetState.canShowLessValues}
         canShowMoreValues={this.facetState.canShowMoreValues}
+        canShowLessValues={this.facetState.canShowLessValues}
+        showMoreRef={this.showMoreFocus.setTarget}
+        showLessRef={this.showLessFocus.setTarget}
       ></FacetShowMoreLess>
     );
   }

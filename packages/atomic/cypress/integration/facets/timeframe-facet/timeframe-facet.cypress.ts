@@ -135,6 +135,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
               TimeframeFacetSelectors,
               defaultNumberOfValues
             );
+            CommonFacetAssertions.assertFocusHeader(TimeframeFacetSelectors);
           });
 
           describe('verify analytics', () => {

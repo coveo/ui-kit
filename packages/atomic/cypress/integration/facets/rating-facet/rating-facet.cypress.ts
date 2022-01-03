@@ -177,6 +177,38 @@ describe('Rating Facet Test Suites', () => {
           before(setupSelectLinkValue);
           RatingFacetAssertions.assertLogRatingFacetSelect(ratingFacetField);
         });
+
+        describe('when selecting the "Clear" button', () => {
+          function setupClearCheckboxValues() {
+            setupSelectLinkValue();
+            cy.wait(TestFixture.interceptAliases.UA);
+            RatingFacetSelectors.clearButton().click();
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupClearCheckboxValues);
+
+            CommonFacetAssertions.assertDisplayClearButton(
+              RatingFacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertNumberOfSelectedLinkValues(
+              RatingFacetSelectors,
+              0
+            );
+            CommonFacetAssertions.assertNumberOfIdleLinkValues(
+              RatingFacetSelectors,
+              ratingFacetDefaultNumberOfIntervals
+            );
+            CommonFacetAssertions.assertFocusHeader(RatingFacetSelectors);
+          });
+          describe('verify analytics', () => {
+            before(setupClearCheckboxValues);
+
+            CommonFacetAssertions.assertLogClearFacetValues(ratingFacetField);
+          });
+        });
       });
     });
   });

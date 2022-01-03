@@ -5,14 +5,17 @@ import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
 import {Button} from '../../common/button';
 
-export const FacetHeader: FunctionalComponent<{
+export interface FacetHeaderProps {
   i18n: i18n;
   label: string;
   numberOfSelectedValues: number;
   isCollapsed: boolean;
   onToggleCollapse(): void;
   onClearFilters?(): void;
-}> = (props) => {
+  headerRef?: (element?: HTMLButtonElement) => void;
+}
+
+export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});
   const collapseFacet = props.i18n.t('collapse-facet', {label});
@@ -33,6 +36,7 @@ export const FacetHeader: FunctionalComponent<{
       onClick={() => props.onToggleCollapse()}
       ariaExpanded={(!props.isCollapsed).toString()}
       text={label}
+      ref={props.headerRef}
     >
       <atomic-icon
         part="label-button-icon"
