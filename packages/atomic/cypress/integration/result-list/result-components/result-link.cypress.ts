@@ -73,6 +73,8 @@ describe('Result Link Component', () => {
         .should('have.attr', 'href', clickUri);
     });
 
+    CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
+
     describe('when there is a slot', () => {
       const slottedComponent = 'canvas';
       beforeEach(() => {
