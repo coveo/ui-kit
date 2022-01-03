@@ -1,5 +1,6 @@
 import {LightningElement, track, api} from 'lwc';
-import {getCaseAssistId} from 'c/utils'
+// @ts-ignore
+import {getCaseAssistId} from 'c/utils';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @api engineId = 'case-assist-engine';
