@@ -291,8 +291,8 @@ describe('quantic-case-classification', () => {
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
-        Expect.numberOfSuggestions(2);
-        Expect.numberOfInlineOptions(3);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.displaySelectInput(false);
       });
 
@@ -342,8 +342,8 @@ describe('quantic-case-classification', () => {
         );
         fetchClassifications();
         Expect.displaySelectTitle(false);
-        Expect.numberOfSuggestions(2);
-        Expect.numberOfInlineOptions(3);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.displaySelectInput(false);
       });
     });
@@ -356,6 +356,11 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when reporting validity and no option is selected', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
         Actions.reportValidity();
         Expect.displayError(true);
       });
@@ -380,19 +385,22 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when reporting validity and no suggestion is selected', () => {
-        Actions.reportValidity();
-        Expect.displayError(true);
-      });
-
-      scope('when reporting validity and a suggestion is selected', () => {
         const suggestionsCount = 2;
-        const clickedIndex = 0;
 
         mockCaseClassification(
           coveoDefaultField,
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Actions.reportValidity();
+        Expect.displayError(true);
+      });
+
+      scope('when reporting validity and a suggestion is selected', () => {
+        const clickedIndex = 0;
 
         Actions.clickSuggestion(clickedIndex);
         Expect.logClickedSuggestion(clickedIndex);
