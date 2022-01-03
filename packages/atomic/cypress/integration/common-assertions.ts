@@ -1,5 +1,4 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
