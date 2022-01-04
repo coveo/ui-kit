@@ -175,6 +175,7 @@ function buildNodeConfig(options) {
   });
 }
 
+// https://github.com/coveo/ui-kit/issues/1616
 function adjustRequireImportsInNodeEsmBundles() {
   const paths = getNodeEsmBundlePaths();
   
