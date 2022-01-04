@@ -93,13 +93,14 @@ export class FacetDateInput {
           ref={(ref) => (this.startRef = ref!)}
           class={inputClasses}
           aria-label={startAria}
+          placeholder="yyyy-mm-dd"
           required
           // API/Index minimum supported date
           min={this.formattedDateValue('1401-01-01')}
           max={this.formattedDateValue(this.end)}
           value={this.formattedDateValue(this.filterState.range?.start)}
           onInput={(e) =>
-            (this.start = (e.target as HTMLInputElement).valueAsDate!)
+            (this.start = new Date((e.target as HTMLInputElement).value))
           }
         />
         <label
@@ -116,11 +117,12 @@ export class FacetDateInput {
           ref={(ref) => (this.endRef = ref!)}
           class={inputClasses}
           aria-label={endAria}
+          placeholder="yyyy-mm-dd"
           required
           min={this.formattedDateValue(this.start)}
           value={this.formattedDateValue(this.filterState.range?.end)}
           onInput={(e) =>
-            (this.end = (e.target as HTMLInputElement).valueAsDate!)
+            (this.end = new Date((e.target as HTMLInputElement).value))
           }
         />
         <Button
