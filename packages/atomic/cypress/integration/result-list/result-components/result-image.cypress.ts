@@ -55,5 +55,7 @@ describe('Result Image Component', () => {
     it('should render the component', () => {
       ResultImageSelectors.resultImage().should('have.attr', 'src', image);
     });
+
+    CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
   });
 });

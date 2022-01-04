@@ -39,7 +39,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.caseAssist).then(() => {
-      if (!getHeadlessBindings(this.engineId).engine) {
+      if (!getHeadlessBindings(this.engineId)?.engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
             this.engineOptions = {

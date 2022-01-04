@@ -277,3 +277,25 @@ export function assertDisplayShowLessButton(
     );
   });
 }
+
+export function assertFocusHeader(BaseFacetSelector: BaseFacetSelector) {
+  it('should focus on the header', () => {
+    BaseFacetSelector.labelButton().should('be.focused');
+  });
+}
+
+export function assertFocusShowMore(
+  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
+) {
+  it('should focus on the show more button', () => {
+    FacetWithShowMoreLessSelector.showMoreButton().should('be.focused');
+  });
+}
+
+export function assertFocusShowLess(
+  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
+) {
+  it('should focus on the show less button', () => {
+    FacetWithShowMoreLessSelector.showLessButton().should('be.focused');
+  });
+}

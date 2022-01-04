@@ -8,6 +8,7 @@ import {
   selectIdleBoxValueAt,
 } from './facet-actions';
 import {
+  pressShowMoreUntilImpossible,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
@@ -125,6 +126,7 @@ describe('Facet v1 Test Suites', () => {
               FacetSelectors,
               defaultNumberOfValues
             );
+            CommonFacetAssertions.assertFocusHeader(FacetSelectors);
           });
           describe('verify analytics', () => {
             before(setupClearCheckboxValues);
@@ -671,12 +673,31 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors,
         defaultNumberOfValues * 2
       );
+      CommonFacetAssertions.assertFocusShowMore(FacetSelectors);
     });
 
     describe('verify analytics', () => {
       before(setupSelectShowMore);
 
       FacetAssertions.assertLogFacetShowMore(field);
+    });
+
+    describe('repeatedly until there\'s no more "Show more" button', () => {
+      function setupRepeatShowMore() {
+        new TestFixture().with(addFacet({field, label})).init();
+        pressShowMoreUntilImpossible(FacetSelectors);
+      }
+
+      describe('verify rendering', () => {
+        before(setupRepeatShowMore);
+
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          FacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
+        CommonFacetAssertions.assertFocusShowLess(FacetSelectors);
+      });
     });
 
     describe('when selecting the "Show less" button', () => {

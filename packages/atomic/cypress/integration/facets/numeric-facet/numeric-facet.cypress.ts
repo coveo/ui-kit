@@ -152,6 +152,7 @@ describe('Numeric Facet V1 Test Suites', () => {
                 NumericFacetSelectors,
                 8
               );
+              CommonFacetAssertions.assertFocusHeader(NumericFacetSelectors);
             });
 
             describe('verify analytics', () => {

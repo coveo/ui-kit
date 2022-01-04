@@ -461,15 +461,15 @@ export namespace Components {
     }
     interface AtomicResultBadge {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
          */
         "field"?: string;
         /**
-          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
-          * The text to display instead of the field.
+          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
     }
@@ -1693,15 +1693,15 @@ declare namespace LocalJSX {
     }
     interface AtomicResultBadge {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
          */
         "field"?: string;
         /**
-          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
-          * The text to display instead of the field.
+          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
     }

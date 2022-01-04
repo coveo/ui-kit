@@ -26,6 +26,10 @@ import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -124,6 +128,9 @@ export class AtomicRatingRangeFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
@@ -199,10 +206,14 @@ export class AtomicRatingRangeFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }

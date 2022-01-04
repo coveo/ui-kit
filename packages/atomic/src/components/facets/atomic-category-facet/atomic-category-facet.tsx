@@ -38,6 +38,10 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
 import {registerFacetToStore} from '../../../utils/store';
 import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -156,6 +160,18 @@ export class AtomicCategoryFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
+  @FocusTarget()
+  private showMoreFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private showLessFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private activeValueFocus!: FocusTargetController;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
@@ -210,7 +226,16 @@ export class AtomicCategoryFacet
         }
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
+        headerRef={(header) => {
+          this.headerFocus.setTarget(header);
+          if (!this.hasParents) {
+            this.activeValueFocus.setTarget(header);
+          }
+        }}
       ></FacetHeader>
     );
   }
@@ -249,7 +274,10 @@ export class AtomicCategoryFacet
           style="text-neutral"
           part="all-categories-button"
           class="parent-button"
-          onClick={() => this.facet.deselectAll()}
+          onClick={() => {
+            this.activeValueFocus.focusAfterSearch();
+            this.facet.deselectAll();
+          }}
         >
           <atomic-icon
             aria-hidden="true"
@@ -280,7 +308,11 @@ export class AtomicCategoryFacet
           style="text-neutral"
           part="parent-button"
           class="parent-button"
-          onClick={() => this.facet.toggleSelect(facetValue)}
+          ariaPressed="false"
+          onClick={() => {
+            this.activeValueFocus.focusAfterSearch();
+            this.facet.toggleSelect(facetValue);
+          }}
           ariaLabel={ariaLabel}
         >
           <atomic-icon
@@ -302,18 +334,35 @@ export class AtomicCategoryFacet
 
     const nonActiveParents = this.facetState.parents.slice(0, -1);
     const activeParent = this.facetState.parents.slice(-1)[0];
+    const activeParentDisplayValue = getFieldValueCaption(
+      this.field,
+      activeParent.value,
+      this.bindings.i18n
+    );
 
     return (
       <ul part="parents" class="mt-3">
         {this.renderAllCategories()}
         {nonActiveParents.map((parent) => this.renderParent(parent))}
-        <li part="active-parent" class="parent-active">
-          {getFieldValueCaption(
-            this.field,
-            activeParent.value,
-            this.bindings.i18n
-          )}
-        </li>
+        <FacetValueLink
+          displayValue={activeParentDisplayValue}
+          numberOfResults={activeParent.numberOfResults}
+          isSelected={true}
+          i18n={this.bindings.i18n}
+          onClick={() => {
+            this.activeValueFocus.focusAfterSearch();
+            this.facet.deselectAll();
+          }}
+          searchQuery={this.facetState.facetSearch.query}
+          part="active-parent"
+          class="parent-active"
+          buttonRef={this.activeValueFocus.setTarget}
+        >
+          <FacetValueLabelHighlight
+            displayValue={activeParentDisplayValue}
+            isSelected={true}
+          ></FacetValueLabelHighlight>
+        </FacetValueLink>
       </ul>
     );
   }
@@ -331,7 +380,10 @@ export class AtomicCategoryFacet
         numberOfResults={facetValue.numberOfResults}
         isSelected={isSelected}
         i18n={this.bindings.i18n}
-        onClick={() => this.facet.toggleSelect(facetValue)}
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.toggleSelect(facetValue);
+        }}
         searchQuery={this.facetState.facetSearch.query}
       >
         <FacetValueLabelHighlight
@@ -363,7 +415,10 @@ export class AtomicCategoryFacet
             field={this.field}
             i18n={this.bindings.i18n}
             searchQuery={this.facetState.facetSearch.query}
-            onClick={() => this.facet.facetSearch.select(value)}
+            onClick={() => {
+              this.activeValueFocus.focusAfterSearch();
+              this.facet.facetSearch.select(value);
+            }}
           ></CategoryFacetSearchResult>
         ))}
       </ul>
@@ -382,19 +437,26 @@ export class AtomicCategoryFacet
   }
 
   private renderShowMoreLess() {
+    if (this.facetState.canShowMoreValues) {
+      this.showLessFocus.disableForCurrentSearch();
+    }
     return (
       <div class={this.hasParents ? 'pl-9' : ''}>
         <FacetShowMoreLess
           label={this.label}
           i18n={this.bindings.i18n}
           onShowMore={() => {
+            this.showLessFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
+            this.showMoreFocus.focusAfterSearch();
             this.facet.showLessValues();
           }}
           canShowLessValues={this.facetState.canShowLessValues}
           canShowMoreValues={this.facetState.canShowMoreValues}
+          showMoreRef={this.showMoreFocus.setTarget}
+          showLessRef={this.showLessFocus.setTarget}
         ></FacetShowMoreLess>
       </div>
     );
