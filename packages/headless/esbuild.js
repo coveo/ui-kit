@@ -1,5 +1,5 @@
 const path = require('path');
-const {readFileSync} = require('fs');
+const fs = require('fs');
 const {build} = require('esbuild');
 const alias = require('esbuild-plugin-alias');
 const {umdWrapper} = require('../../scripts/bundle/umd');
@@ -34,7 +34,7 @@ function getUmdGlobalName(useCase) {
 }
 
 function getPackageVersion() {
-  return JSON.parse(readFileSync('package.json', 'utf-8')).version;
+  return JSON.parse(fs.readFileSync('package.json', 'utf-8')).version;
 }
 
 function getUseCaseDir(prefix, useCase) {
@@ -169,19 +169,36 @@ function buildNodeConfig(options) {
           __dirname,
           './node_modules/web-encoding/src/lib.cjs'
         ),
-        // https://github.com/coveo/ui-kit/issues/1616
-        'node-fetch': path.resolve(
-          __dirname,
-          './node_modules/node-fetch/lib/index.mjs'
-        )
       }),
     ],
     ...options,
   });
 }
 
+function adjustRequireImportsInNodeEsmBundles() {
+  const paths = getNodeEsmBundlePaths();
+  
+  return paths.map(async (filePath) => {
+    const resolvedPath = path.resolve(__dirname, filePath);
+
+    const content = await fs.promises.readFile(resolvedPath, {encoding: 'utf-8'});
+    const modified = content.replace(/__require\(/g, 'require(');
+
+    await fs.promises.writeFile(resolvedPath, modified);
+  })
+}
+
+function getNodeEsmBundlePaths() {
+  return Object.entries(useCaseEntries).map((entry) => {
+    const [useCase] = entry;
+    const dir = getUseCaseDir('dist/', useCase);
+    return `${dir}/headless.esm.js`;
+  })
+}
+
 async function main() {
   await Promise.all([...browserEsm, ...browserUmd, ...browserEsmForAtomicDevelopment, ...nodeEsm, ...nodeCjs]);
+  await Promise.all(adjustRequireImportsInNodeEsmBundles())
 }
 
 main();
