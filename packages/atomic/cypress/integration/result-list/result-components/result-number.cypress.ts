@@ -107,6 +107,8 @@ describe('Result Number Component', () => {
         prepareExistingFieldValue(value).withLanguage('en').init();
         ResultNumberSelectors.firstInResult().should('have.text', '1,234.5');
       });
+
+      CommonAssertions.assertAccessibility(ResultNumberSelectors.firstInResult);
     });
 
     describe('with a format', () => {

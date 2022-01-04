@@ -79,5 +79,7 @@ describe('Result Date Component', () => {
     it('should render the field value formatted correctly', () => {
       ResultDateSelectors.firstInResult().should('have.text', '2021-09-03');
     });
+
+    CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
   });
 });
