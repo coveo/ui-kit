@@ -17,6 +17,13 @@ import {selectIdleLinkValueAt} from '../facet-common-actions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import * as TimeframeFacetAssertions from './timeframe-facet-assertions';
+import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
+import {breadboxComponent} from '../../breadbox/breadbox-selectors';
+import {
+  addBreadbox,
+  breadboxLabel,
+  unselectBreadcrumbAtIndex,
+} from '../../breadbox/breadbox-actions';
 
 const startDate = '2020-08-06';
 const endDate = '2021-09-03';
@@ -428,5 +435,67 @@ describe('Timeframe Facet V1 Test Suites', () => {
       2,
       `Past ${unitFrames[2].unit}`
     );
+  });
+
+  describe('with breadbox', () => {
+    function setupBreadboxWithFacet() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addTimeframeFacet({label}, unitFrames))
+        .init();
+    }
+    describe('verify rendering', () => {
+      before(setupBreadboxWithFacet);
+      BreadboxAssertions.assertDisplayBreadcrumb(false);
+    });
+
+    describe('when selecting a facetValue', () => {
+      const selectionIndex = 2;
+      function setupSelectedFacet() {
+        setupBreadboxWithFacet();
+        selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
+        cy.wait(TestFixture.interceptAliases.Search);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectedFacet);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertSelectedLinkFacetsInBreadcrumb(
+          TimeframeFacetSelectors
+        );
+        BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
+      });
+
+      describe('when unselect a facetValue on breadcrumb', () => {
+        const unselectionIndex = 0;
+        function setupUnselectFacetValue() {
+          setupSelectedFacet();
+          cy.wait(TestFixture.interceptAliases.UA);
+          unselectBreadcrumbAtIndex(unselectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupUnselectFacetValue);
+          BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+
+        describe('verify analytic', () => {
+          before(setupUnselectFacetValue);
+          BreadboxAssertions.assertLogBreadcrumbFacet(field);
+        });
+
+        describe('verify selected facetValue', () => {
+          before(setupSelectedFacet);
+          BreadboxAssertions.assertUnselectLinkFacet(
+            TimeframeFacetSelectors,
+            unselectionIndex
+          );
+        });
+      });
+    });
   });
 });

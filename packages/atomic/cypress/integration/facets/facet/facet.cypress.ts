@@ -14,8 +14,15 @@ import {
   typeFacetSearchQuery,
 } from '../facet-common-actions';
 import * as FacetAssertions from './facet-assertions';
+import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
+import {breadboxComponent} from '../../breadbox/breadbox-selectors';
+import {
+  addBreadbox,
+  breadboxLabel,
+  unselectBreadcrumbAtIndex,
+} from '../../breadbox/breadbox-actions';
 
 describe('Facet v1 Test Suites', () => {
   describe('with checkbox values', () => {
@@ -911,5 +918,91 @@ describe('Facet v1 Test Suites', () => {
       defaultNumberOfValues - 1
     );
     CommonFacetAssertions.assertFirstValueContains(FacetSelectors, 'Cervantes');
+  });
+
+  describe('with breadbox', () => {
+    function setupBreadboxWithFacet() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field, label}))
+        .init();
+    }
+    describe('verify rendering', () => {
+      before(setupBreadboxWithFacet);
+      BreadboxAssertions.assertDisplayBreadcrumb(false);
+    });
+
+    describe('when selecting a value', () => {
+      const selectionIndex = 2;
+      function setupSelectedFacet() {
+        setupBreadboxWithFacet();
+        selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+        cy.wait(TestFixture.interceptAliases.Search);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectedFacet);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+          FacetSelectors
+        );
+        BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
+      });
+
+      describe('when unselect a facetValue on breadcrumb', () => {
+        const unselectionIndex = 0;
+        function setupUnselectFacetValue() {
+          setupSelectedFacet();
+          cy.wait(TestFixture.interceptAliases.UA);
+          unselectBreadcrumbAtIndex(unselectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupUnselectFacetValue);
+          BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+
+        describe('verify analytic', () => {
+          before(setupUnselectFacetValue);
+          BreadboxAssertions.assertLogBreadcrumbFacet(field);
+        });
+
+        describe('verify selected facetValue', () => {
+          before(setupSelectedFacet);
+          BreadboxAssertions.assertUnselectCheckboxFacet(
+            FacetSelectors,
+            unselectionIndex
+          );
+        });
+      });
+    });
+
+    describe('when select 3 values', () => {
+      const index = [0, 1, 2];
+      function setupSelectedMulitpleFacets() {
+        setupBreadboxWithFacet();
+        index.forEach((i: number) => {
+          selectIdleCheckboxValueAt(FacetSelectors, i);
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectedMulitpleFacets);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+          FacetSelectors
+        );
+        BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+        BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      });
+    });
   });
 });

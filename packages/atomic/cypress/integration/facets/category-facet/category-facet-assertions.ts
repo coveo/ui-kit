@@ -39,16 +39,6 @@ export function assertNumberOfParentValues(value: number) {
   });
 }
 
-export function assertPathInBreadcrumb(path: string[]) {
-  const ellipsedPath =
-    path.length > 3 ? path.slice(0, 1).concat(['...'], path.slice(-2)) : path;
-  const joinedPath = ellipsedPath.join(' / ');
-  // TODO: fix breadcrumb tests
-  it.skip(`should display the selected path "${joinedPath}" in the breadcrumbs`, () => {
-    BreadcrumbSelectors.breadcrumbButton().first().contains(joinedPath);
-  });
-}
-
 export function assertPathInUrl(path: string[]) {
   const categoryFacetListInUrl = path.join(',');
   it(`should display the selected path "${categoryFacetListInUrl}" in the url`, () => {
@@ -56,13 +46,6 @@ export function assertPathInUrl(path: string[]) {
       categoryFacetListInUrl
     )}`;
     cy.url().should('include', urlHash);
-  });
-}
-
-export function assertNoBreadcrumb() {
-  // TODO: fix breadcrumb tests
-  it.skip('should not have any breadcrumb', () => {
-    BreadcrumbSelectors.breadcrumbButton().should('not.exist');
   });
 }
 
