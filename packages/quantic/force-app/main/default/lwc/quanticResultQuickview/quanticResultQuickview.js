@@ -91,6 +91,16 @@ export default class QuanticResultQuickview extends LightningElement {
       // eslint-disable-next-line @lwc/lwc/no-inner-html
       this.contentContainer.innerHTML = this.state.content;
     }
+    const slots = this.template.querySelectorAll('slot');
+    slots.forEach((slot) => {
+      let slotContent = slot;
+      while(slotContent?.tagName === 'SLOT'){
+        slotContent = slotContent.assignedNodes()[0]
+      }
+      if (slotContent) {
+        slotContent.dataset.id = this.result.uniqueId;
+      }
+    });
   }
 
   /**

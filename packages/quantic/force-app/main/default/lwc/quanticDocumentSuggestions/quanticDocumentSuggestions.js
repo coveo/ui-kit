@@ -16,24 +16,26 @@ import {
  */
 export default class QuanticDocumentSuggestions extends LightningElement {
   /**
-   * The ID of the engine instance the component registers to.
+   * The ID of the case assist engine instance the component registers to.
    * @api
    * @type {string}
    */
   @api engineId;
+  /**
+   * The ID of the search engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+  @api searchEngineId;
 
   /** @type {Array<object>} */
   @track suggestions = [];
-
   /** @type {boolean} */
   loading = false;
-
   /** @type {CaseAssistEngine} */
   engine;
-
   /** @type {DocumentSuggestion} */
   documentSuggestion;
-
   /** @type {Function} */
   unsubscribeDocumentSuggestion;
 
@@ -46,7 +48,10 @@ export default class QuanticDocumentSuggestions extends LightningElement {
     initializeWithHeadless(this, this.engineId, this.initialize);
     const slots = this.template.querySelectorAll('slot');
     slots.forEach((slot) => {
-      const slotContent = slot.assignedNodes()[0];
+      let slotContent = slot;
+      while (slotContent?.tagName === 'SLOT') {
+        slotContent = slotContent.assignedNodes()[0];
+      }
       if (slotContent) {
         slotContent.dataset.id = slot.dataset.docId;
       }
@@ -78,7 +83,14 @@ export default class QuanticDocumentSuggestions extends LightningElement {
   }
 
   updateDocumentSuggestionState() {
-    this.suggestions = this.documentSuggestion.state.documents ?? [];
+    this.suggestions =
+      this.documentSuggestion.state.documents.map((suggestion) => {
+        return {
+          ...suggestion,
+          raw: suggestion.fields,
+          uri: suggestion.fields.uri,
+        };
+      }) ?? [];
     this.loading = this.documentSuggestion.state.loading;
   }
 
