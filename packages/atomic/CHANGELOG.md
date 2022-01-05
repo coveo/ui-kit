@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.5...@coveo/atomic@1.22.6) (2022-01-05)
+
+
+### Bug Fixes
+
+* **atomic:** improved labels for rating facet values ([#1625](https://github.com/coveo/ui-kit/issues/1625)) ([2d7227c](https://github.com/coveo/ui-kit/commit/2d7227c6780f47893056630938c38d5480077f4b))
+* updated cypress version ([#1633](https://github.com/coveo/ui-kit/issues/1633)) ([c7545a3](https://github.com/coveo/ui-kit/commit/c7545a3d7f8e2135ae20e62e93180210fc001044))
+
+
+
+
+
+## [1.22.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.4...@coveo/atomic@1.22.5) (2022-01-05)
+
+
+### Bug Fixes
+
+* **atomic:** allow date input for Safari versions under 14 ([#1630](https://github.com/coveo/ui-kit/issues/1630)) ([aa60e72](https://github.com/coveo/ui-kit/commit/aa60e72f2b4677102d1a1766ce70bd0355f040fb))
+
+
+
+
+
+## [1.22.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.3...@coveo/atomic@1.22.4) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.22.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.2...@coveo/atomic@1.22.3) (2022-01-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.22.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.1...@coveo/atomic@1.22.2) (2022-01-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.22.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.0...@coveo/atomic@1.22.1) (2022-01-03)
 
 

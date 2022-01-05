@@ -10,8 +10,8 @@ export interface NumericRange {
   end: number;
 }
 export const defaultNumberOfValues = 8;
-export const label = 'Youtube Views';
-export const field = 'ytviewcount';
+export const numericFacetLabel = 'Youtube Views';
+export const numericFacetField = 'ytviewcount';
 export const numericRanges: NumericRange[] = [
   {
     start: 0,
