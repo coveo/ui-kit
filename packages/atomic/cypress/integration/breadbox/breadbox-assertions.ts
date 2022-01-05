@@ -6,12 +6,11 @@ import {
 } from '../facets/facet-common-assertions';
 import {BreadboxSelectors} from './breadbox-selectors';
 import {TestFixture} from '../../fixtures/test-fixture';
-import {unselectBreadcrumbAtIndex} from './breadbox-actions';
+import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
 import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';
 import {label} from '../facets/facet/facet-actions';
 import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
-import {numericFacetLabel} from '../facets/numeric-facet/numeric-facet-actions';
 import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';
 import {categoryFacetLabel} from '../facets/category-facet/category-facet-actions';
 
@@ -84,7 +83,7 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
 }
 
 function assertBreadcrumbValueText(facetSelector: string, facetLabel: string) {
-  cy.getTextOfAllElements(facetSelector).then((facetValues: any) => {
+  cy.getTextOfAllElements(facetSelector).then((facetValues) => {
     facetValues.forEach((element: string) => {
       BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}${element}`);
     });
@@ -129,15 +128,15 @@ export function assertSelectedColorFacetsInBreadcrumb(
   });
 }
 
-export function assertUnselectCheckboxFacet(
+export function assertDeselectCheckboxFacet(
   BaseFacetSelector: BaseFacetSelector,
   index: number
 ) {
-  it('should be unselected after removing from breadcrumb list', () => {
+  it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
       .then((value) => {
-        unselectBreadcrumbAtIndex(index);
+        deselectBreadcrumbAtIndex(index);
         BaseFacetSelector.valueLabel()
           .contains(value)
           .parent()
@@ -148,22 +147,22 @@ export function assertUnselectCheckboxFacet(
   });
 }
 
-export function assertUnselectCategoryFacet(index: number) {
-  it('should be unselected after removing from breadcrumb list', () => {
-    unselectBreadcrumbAtIndex(index);
+export function assertDeselectCategoryFacet(index: number) {
+  it('should be deselected after removing from breadcrumb list', () => {
+    deselectBreadcrumbAtIndex(index);
     CategoryFacetSelectors.activeParentValue().should('not.exist');
   });
 }
 
-export function assertUnselectLinkFacet(
+export function assertDeselectLinkFacet(
   FacetWithLinkSelector: FacetWithLinkSelector,
   index: number
 ) {
-  it('should be unselected after removing from breadcrumb list', () => {
+  it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
       .then((value) => {
-        unselectBreadcrumbAtIndex(index);
+        deselectBreadcrumbAtIndex(index);
         FacetWithLinkSelector.selectedLinkValue()
           .contains(value)
           .parent()
@@ -174,12 +173,12 @@ export function assertUnselectLinkFacet(
   });
 }
 
-export function assertUnselectColorFacet(index: number) {
-  it('should be unselected after removing from breadcrumb list', () => {
+export function assertDeselectColorFacet(index: number) {
+  it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
       .then((value) => {
-        unselectBreadcrumbAtIndex(index);
+        deselectBreadcrumbAtIndex(index);
         ColorFacetSelectors.valueLabel()
           .contains(value)
           .parent()

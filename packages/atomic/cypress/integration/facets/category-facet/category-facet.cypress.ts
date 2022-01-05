@@ -26,7 +26,7 @@ import {breadboxComponent} from '../../breadbox/breadbox-selectors';
 import {
   addBreadbox,
   breadboxLabel,
-  unselectBreadcrumbAtIndex,
+  deselectBreadcrumbAtIndex,
 } from '../../breadbox/breadbox-actions';
 
 describe('Category Facet Test Suites', () => {
@@ -773,7 +773,7 @@ describe('Category Facet Test Suites', () => {
         function setupUnselectFacetValue() {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.UA);
-          unselectBreadcrumbAtIndex(unselectionIndex);
+          deselectBreadcrumbAtIndex(unselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
@@ -791,7 +791,7 @@ describe('Category Facet Test Suites', () => {
 
         describe('verify selected facetValue', () => {
           before(setupSelectedFacet);
-          BreadboxAssertions.assertUnselectCategoryFacet(unselectionIndex);
+          BreadboxAssertions.assertDeselectCategoryFacet(unselectionIndex);
         });
       });
     });

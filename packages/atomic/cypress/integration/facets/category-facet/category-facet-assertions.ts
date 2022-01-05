@@ -4,10 +4,7 @@ import {
 } from '../../../utils/componentUtils';
 import {RouteAlias} from '../../../utils/setupComponent';
 import {ResultListSelectors} from '../../result-list/result-list-selectors';
-import {
-  CategoryFacetSelectors,
-  BreadcrumbSelectors,
-} from './category-facet-selectors';
+import {CategoryFacetSelectors} from './category-facet-selectors';
 import {hierarchicalField} from './category-facet-actions';
 import {should} from '../../common-assertions';
 

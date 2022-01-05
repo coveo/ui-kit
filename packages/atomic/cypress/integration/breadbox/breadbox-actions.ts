@@ -7,6 +7,6 @@ export const addBreadbox =
   (env: TestFixture) =>
     addTag(env, 'atomic-breadbox', props);
 
-export function unselectBreadcrumbAtIndex(index: number) {
+export function deselectBreadcrumbAtIndex(index: number) {
   BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(index).click();
 }

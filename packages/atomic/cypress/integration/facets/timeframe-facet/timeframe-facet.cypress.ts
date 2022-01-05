@@ -22,7 +22,7 @@ import {breadboxComponent} from '../../breadbox/breadbox-selectors';
 import {
   addBreadbox,
   breadboxLabel,
-  unselectBreadcrumbAtIndex,
+  deselectBreadcrumbAtIndex,
 } from '../../breadbox/breadbox-actions';
 
 const startDate = '2020-08-06';
@@ -515,11 +515,11 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
 
       describe('when unselect a facetValue on breadcrumb', () => {
-        const unselectionIndex = 0;
+        const deselectionIndex = 0;
         function setupUnselectFacetValue() {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.UA);
-          unselectBreadcrumbAtIndex(unselectionIndex);
+          deselectBreadcrumbAtIndex(deselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
@@ -535,9 +535,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify selected facetValue', () => {
           before(setupSelectedFacet);
-          BreadboxAssertions.assertUnselectLinkFacet(
+          BreadboxAssertions.assertDeselectLinkFacet(
             TimeframeFacetSelectors,
-            unselectionIndex
+            deselectionIndex
           );
         });
       });
