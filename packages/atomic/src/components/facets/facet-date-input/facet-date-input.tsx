@@ -70,6 +70,10 @@ export class FacetDateInput {
     const inputClasses = 'input-primary p-2.5';
     const labelClasses = 'text-neutral-dark self-center';
 
+    const placeholder = 'yyyy-mm-dd';
+    // Fallback for Safari < 14.1, date with format yyyy-mm-dd over 1400 (API limit)
+    const pattern = '^(1[4-9])\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
+
     return (
       <form
         class="grid gap-2 grid-cols-min-1fr mt-4 px-2"
@@ -93,13 +97,15 @@ export class FacetDateInput {
           ref={(ref) => (this.startRef = ref!)}
           class={inputClasses}
           aria-label={startAria}
+          placeholder={placeholder}
+          pattern={pattern}
           required
           // API/Index minimum supported date
           min={this.formattedDateValue('1401-01-01')}
           max={this.formattedDateValue(this.end)}
           value={this.formattedDateValue(this.filterState.range?.start)}
           onInput={(e) =>
-            (this.start = (e.target as HTMLInputElement).valueAsDate!)
+            (this.start = new Date((e.target as HTMLInputElement).value))
           }
         />
         <label
@@ -116,11 +122,13 @@ export class FacetDateInput {
           ref={(ref) => (this.endRef = ref!)}
           class={inputClasses}
           aria-label={endAria}
+          placeholder={placeholder}
+          pattern={pattern}
           required
           min={this.formattedDateValue(this.start)}
           value={this.formattedDateValue(this.filterState.range?.end)}
           onInput={(e) =>
-            (this.end = (e.target as HTMLInputElement).valueAsDate!)
+            (this.end = new Date((e.target as HTMLInputElement).value))
           }
         />
         <Button
