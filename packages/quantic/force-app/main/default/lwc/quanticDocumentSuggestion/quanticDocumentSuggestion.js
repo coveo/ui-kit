@@ -8,13 +8,13 @@ import {
 /** @typedef {import("coveo").DocumentSuggestion} DocumentSuggestion */
 
 /**
- * The `QuanticDocumentSuggestions` component is a .
+ * The `QuanticDocumentSuggestion` component displays the document suggestions returned by Coveo Case Assist based on the values that the user has previously entred in the different fields.
  *
  * @category Case Assist
  * @example
- * <c-quantic-document-suggestions></c-quantic-document-suggestions>
+ * <c-quantic-document-suggestion></c-quantic-document-suggestion>
  */
-export default class QuanticDocumentSuggestions extends LightningElement {
+export default class QuanticDocumentSuggestion extends LightningElement {
   /**
    * The ID of the case assist engine instance the component registers to.
    * @api
