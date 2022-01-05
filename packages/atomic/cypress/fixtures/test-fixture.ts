@@ -1,3 +1,4 @@
+import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {buildTestUrl} from '../utils/setupComponent';
@@ -244,7 +245,7 @@ export class TestFixture {
 
   public static getUABody() {
     return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
-      request: {[key: string]: any};
+      request: CyHttpMessages.IncomingHttpRequest;
     }>;
   }
 

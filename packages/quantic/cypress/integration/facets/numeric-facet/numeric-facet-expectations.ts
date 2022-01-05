@@ -1,3 +1,5 @@
+import {SearchResponseSuccess} from '@coveo/headless/dist/definitions/api/search/search/search-response';
+import {NumericFacetValue} from '@coveo/headless/dist/definitions/product-listing.index';
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {SearchExpectations} from '../../search-expectations';
@@ -12,7 +14,7 @@ import {
 
 export const field = 'ytlikecount';
 
-const getEvenRangeValue = (value: any) => {
+const getEvenRangeValue = (value: {start?: unknown; end?: unknown}) => {
   const start = Number(value.start);
   const end = Number(value.end);
   return end - start;
@@ -79,10 +81,13 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
     },
     displayEqualRange: () => {
       cy.wait(InterceptAliases.Search).then((interception) => {
-        const values = interception.response?.body.facets[0].values;
-        const fixedRange = getEvenRangeValue(values[0]);
-        values.forEach((element: any) => {
-          expect(getEvenRangeValue(element)).to.eq(fixedRange);
+        const values = (interception.response?.body as SearchResponseSuccess)
+          .facets[0].values;
+        const fixedRange = getEvenRangeValue(values[0] as NumericFacetValue);
+        values.forEach((element) => {
+          expect(getEvenRangeValue(element as NumericFacetValue)).to.eq(
+            fixedRange
+          );
         });
       });
     },

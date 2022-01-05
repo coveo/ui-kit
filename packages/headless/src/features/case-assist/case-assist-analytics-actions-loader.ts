@@ -80,6 +80,7 @@ export interface CaseAssistAnalyticsActionCreators {
 }
 
 export function loadCaseAssistAnalyticsActions(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _engine: CaseAssistEngine
 ): CaseAssistAnalyticsActionCreators {
   return {
