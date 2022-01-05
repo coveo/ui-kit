@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.4...@coveo/atomic@1.22.5) (2022-01-05)
+
+
+### Bug Fixes
+
+* **atomic:** allow date input for Safari versions under 14 ([#1630](https://github.com/coveo/ui-kit/issues/1630)) ([aa60e72](https://github.com/coveo/ui-kit/commit/aa60e72f2b4677102d1a1766ce70bd0355f040fb))
+
+
+
+
+
 ## [1.22.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.3...@coveo/atomic@1.22.4) (2022-01-05)
 
 **Note:** Version bump only for package @coveo/atomic
