@@ -1,0 +1,10 @@
+<template>
+  <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+    <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={config.engineId} slot="preview">
+      <c-quantic-document-suggestion engine-id={config.engineId} search-engine-id={config.searchEngineId}>
+      </c-quantic-document-suggestion>
+    </c-quantic-case-assist-interface>
+  </c-example-layout>
+</template>

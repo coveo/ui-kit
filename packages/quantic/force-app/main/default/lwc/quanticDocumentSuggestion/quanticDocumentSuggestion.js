@@ -8,7 +8,7 @@ import {
 /** @typedef {import("coveo").DocumentSuggestion} DocumentSuggestion */
 
 /**
- * The `QuanticDocumentSuggestion` component displays the document suggestions returned by Coveo Case Assist based on the values that the user has previously entred in the different fields.
+ * The `QuanticDocumentSuggestion` component displays an accordion containing the document suggestions returned by Coveo Case Assist based on the values that the user has previously entred in the different fields.
  *
  * @category Case Assist
  * @example
