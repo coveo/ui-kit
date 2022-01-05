@@ -1115,15 +1115,15 @@
     "fr": "Il n'y a pas de suggestions de recherche."
   },
   "stars": {
-    "en": "one out of {{max}} stars",
+    "en": "one star out of {{max}}",
     "fr": "une étoile sur {{max}}"
   },
   "stars_plural": {
-    "en": "{{count}} out of {{max}} stars",
+    "en": "{{count}} stars out of {{max}}",
     "fr": "{{count}} étoiles sur {{max}}"
   },
   "stars-range": {
-    "en": "{{count}} to {{max}} stars",
-    "fr": "{{count}} à {{max}} étoiles"
+    "en": "{{value}} to {{count}} stars",
+    "fr": "{{value}} à {{count}} étoiles"
   }
 }

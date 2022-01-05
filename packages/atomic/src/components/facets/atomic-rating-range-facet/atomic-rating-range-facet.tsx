@@ -189,8 +189,8 @@ export class AtomicRatingRangeFacet
       });
     }
     return this.bindings.i18n.t('stars-range', {
-      count: facetValue.start,
-      max: this.maxValueInIndex,
+      value: facetValue.start,
+      count: this.maxValueInIndex,
     });
   }
 
