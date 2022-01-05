@@ -70,6 +70,9 @@ export class FacetDateInput {
     const inputClasses = 'input-primary p-2.5';
     const labelClasses = 'text-neutral-dark self-center';
 
+    const placeholder = 'yyyy-mm-dd';
+    const pattern = '^[12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
+
     return (
       <form
         class="grid gap-2 grid-cols-min-1fr mt-4 px-2"
@@ -93,7 +96,8 @@ export class FacetDateInput {
           ref={(ref) => (this.startRef = ref!)}
           class={inputClasses}
           aria-label={startAria}
-          placeholder="yyyy-mm-dd"
+          placeholder={placeholder}
+          pattern={pattern}
           required
           // API/Index minimum supported date
           min={this.formattedDateValue('1401-01-01')}
@@ -117,7 +121,8 @@ export class FacetDateInput {
           ref={(ref) => (this.endRef = ref!)}
           class={inputClasses}
           aria-label={endAria}
-          placeholder="yyyy-mm-dd"
+          placeholder={placeholder}
+          pattern={pattern}
           required
           min={this.formattedDateValue(this.start)}
           value={this.formattedDateValue(this.filterState.range?.end)}
