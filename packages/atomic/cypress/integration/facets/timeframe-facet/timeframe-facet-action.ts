@@ -9,8 +9,8 @@ export interface UnitRange extends TagProps {
   unit: string;
 }
 
-export const label = 'Timeframe';
-export const field = 'date';
+export const timeframeFacetLabel = 'Timeframe';
+export const timeframeFacetField = 'date';
 export const unitFrames: UnitRange[] = [
   {unit: 'month'},
   {unit: 'quarter'},
