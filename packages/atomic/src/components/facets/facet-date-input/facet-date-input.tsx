@@ -71,7 +71,8 @@ export class FacetDateInput {
     const labelClasses = 'text-neutral-dark self-center';
 
     const placeholder = 'yyyy-mm-dd';
-    const pattern = '^[12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
+    // Fallback for Safari < 14.1, date with format yyyy-mm-dd over 1400 (API limit)
+    const pattern = '^(1[4-9])\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
 
     return (
       <form
