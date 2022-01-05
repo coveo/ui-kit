@@ -10,6 +10,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    interpolation: {escapeValue: false},
   });
 
   return (
