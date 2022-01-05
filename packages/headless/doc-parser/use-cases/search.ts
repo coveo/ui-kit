@@ -81,14 +81,11 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {
       react_class: [
         'packages/samples/headless-react/src/components/date-filter/date-filter.class.tsx',
-        'packages/samples/headless-react/src/components/relative-date-filter/relative-date-filter.class.tsx',
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/date-filter/date-filter.fn.tsx',
-        'packages/samples/headless-react/src/components/relative-date-filter/relative-date-filter.fn.tsx',
       ],
     },
-    utils: ['buildDateRange'],
   },
   {
     initializer: 'buildPager',
