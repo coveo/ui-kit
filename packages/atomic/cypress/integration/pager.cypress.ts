@@ -101,12 +101,12 @@ describe('Pager Test Suites', () => {
     });
   });
 
-  describe('when selecting page 3', () => {
+  describe('when selecting page 5', () => {
     beforeEach(() => {
       new TestFixture()
         .withElement(generateComponentHTML(pagerComponent))
         .init();
-      PagerSelectors.li().find('button[aria-label="Page 3"]').click();
+      PagerSelectors.li().find('button[aria-label="Page 5"]').click();
       cy.wait(TestFixture.interceptAliases.Search);
     });
 
