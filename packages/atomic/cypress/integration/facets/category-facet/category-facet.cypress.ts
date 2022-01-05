@@ -730,23 +730,23 @@ describe('Category Facet Test Suites', () => {
   });
 
   describe('with breadbox', () => {
-    function setupBreadboxWithFacet() {
+    function setupBreadboxWithCategoryFacet() {
       new TestFixture().with(addBreadbox()).with(addCategoryFacet()).init();
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithFacet);
+      before(setupBreadboxWithCategoryFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
-      function setupSelectedFacet() {
-        setupBreadboxWithFacet();
+      function setupSelectedCategoryFacet() {
+        setupBreadboxWithCategoryFacet();
         selectChildValueAt(canadaHierarchyIndex[0]);
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedFacet);
+        before(setupSelectedCategoryFacet);
         const selectedPath = canadaHierarchy.slice(0, 1);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
@@ -758,7 +758,7 @@ describe('Category Facet Test Suites', () => {
 
       describe('when clicking the active value', () => {
         before(() => {
-          setupSelectedFacet();
+          setupSelectedCategoryFacet();
           CategoryFacetSelectors.activeParentValue().click();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -768,37 +768,37 @@ describe('Category Facet Test Suites', () => {
         });
       });
 
-      describe('when unselect a facetValue on breadcrumb', () => {
-        const unselectionIndex = 0;
-        function setupUnselectFacetValue() {
-          setupSelectedFacet();
+      describe('when deselecting a facetValue on breadcrumb', () => {
+        const deselectionIndex = 0;
+        function setupDeselectCategoryFacetValue() {
+          setupSelectedCategoryFacet();
           cy.wait(TestFixture.interceptAliases.UA);
-          deselectBreadcrumbAtIndex(unselectionIndex);
+          deselectBreadcrumbAtIndex(deselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectCategoryFacetValue);
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
         describe('verify analytic', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectCategoryFacetValue);
           BreadboxAssertions.assertLogBreadcrumbCategoryFacet(
             hierarchicalField
           );
         });
 
         describe('verify selected facetValue', () => {
-          before(setupSelectedFacet);
-          BreadboxAssertions.assertDeselectCategoryFacet(unselectionIndex);
+          before(setupSelectedCategoryFacet);
+          BreadboxAssertions.assertDeselectCategoryFacet(deselectionIndex);
         });
       });
     });
 
     describe('when selecting values subsequently to go deeper three level (last level of the dataset)', () => {
-      function setupSelectedMulitpleFacets() {
-        setupBreadboxWithFacet();
+      function setupSelectedDeeperLeverCategoryFacets() {
+        setupBreadboxWithCategoryFacet();
         selectChildValueAt(canadaHierarchyIndex[0]);
         cy.wait(TestFixture.interceptAliases.UA);
         selectChildValueAt(canadaHierarchyIndex[1]);
@@ -811,7 +811,7 @@ describe('Category Facet Test Suites', () => {
 
       describe('verify rendering', () => {
         const selectedPath = canadaHierarchy;
-        before(setupSelectedMulitpleFacets);
+        before(setupSelectedDeeperLeverCategoryFacets);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -823,7 +823,7 @@ describe('Category Facet Test Suites', () => {
 
       describe('when selecting the "All Categories" button', () => {
         before(() => {
-          setupSelectedMulitpleFacets();
+          setupSelectedDeeperLeverCategoryFacets();
           CategoryFacetSelectors.allCategoriesButton().click();
           cy.wait(TestFixture.interceptAliases.Search);
         });

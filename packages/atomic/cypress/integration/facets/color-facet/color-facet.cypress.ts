@@ -504,14 +504,14 @@ describe('Color Facet Test Suites', () => {
     describe('when selecting a facetValue', () => {
       const selectionIndex = 2;
 
-      function setupSelectedFacet() {
+      function setupSelectedColorFacet() {
         setupBreadboxWithColorFacet();
         selectIdleBoxValueAt(selectionIndex);
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedFacet);
+        before(setupSelectedColorFacet);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -520,35 +520,35 @@ describe('Color Facet Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       });
 
-      describe('when unselect a facetValue on breadcrumb', () => {
-        const unselectionIndex = 0;
-        function setupUnselectFacetValue() {
-          setupSelectedFacet();
+      describe('when deselecting a facetValue on breadcrumb', () => {
+        const deselectionIndex = 0;
+        function setupDeselectColorFacetValue() {
+          setupSelectedColorFacet();
           cy.wait(TestFixture.interceptAliases.UA);
-          deselectBreadcrumbAtIndex(unselectionIndex);
+          deselectBreadcrumbAtIndex(deselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectColorFacetValue);
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
         describe('verify analytic', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectColorFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(colorFacetField);
         });
 
         describe('verify selected facetValue', () => {
-          before(setupSelectedFacet);
-          BreadboxAssertions.assertDeselectColorFacet(unselectionIndex);
+          before(setupSelectedColorFacet);
+          BreadboxAssertions.assertDeselectColorFacet(deselectionIndex);
         });
       });
     });
 
     describe('when select 3 facetValues', () => {
       const index = [0, 1, 2];
-      function setupSelectedMulitpleFacets() {
+      function setupSelectedMulitpleColorFacets() {
         setupBreadboxWithColorFacet();
         index.forEach((i: number) => {
           selectIdleBoxValueAt(i);
@@ -557,7 +557,7 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedMulitpleFacets);
+        before(setupSelectedMulitpleColorFacets);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);

@@ -952,22 +952,22 @@ describe('Facet v1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       });
 
-      describe('when unselect a facetValue on breadcrumb', () => {
-        const unselectionIndex = 0;
-        function setupUnselectFacetValue() {
+      describe('when deselecting a facetValue on breadcrumb', () => {
+        const deselectionIndex = 0;
+        function setupDeselectFacetValue() {
           setupSelectedFacet();
           cy.wait(TestFixture.interceptAliases.UA);
-          deselectBreadcrumbAtIndex(unselectionIndex);
+          deselectBreadcrumbAtIndex(deselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectFacetValue);
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
         describe('verify analytic', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(field);
         });
 
@@ -975,7 +975,7 @@ describe('Facet v1 Test Suites', () => {
           before(setupSelectedFacet);
           BreadboxAssertions.assertDeselectCheckboxFacet(
             FacetSelectors,
-            unselectionIndex
+            deselectionIndex
           );
         });
       });

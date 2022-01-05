@@ -483,27 +483,27 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe('with breadbox', () => {
-    function setupBreadboxWithFacet() {
+    function setupBreadboxWithTimeframeFacet() {
       new TestFixture()
         .with(addBreadbox())
         .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
         .init();
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithFacet);
+      before(setupBreadboxWithTimeframeFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
     describe('when selecting a facetValue', () => {
       const selectionIndex = 2;
-      function setupSelectedFacet() {
-        setupBreadboxWithFacet();
+      function setupSelectedTimeframeFacetValue() {
+        setupBreadboxWithTimeframeFacet();
         selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedFacet);
+        before(setupSelectedTimeframeFacetValue);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -514,30 +514,55 @@ describe('Timeframe Facet V1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       });
 
-      describe('when unselect a facetValue on breadcrumb', () => {
+      describe('when deselecting a facetValue on breadcrumb', () => {
         const deselectionIndex = 0;
-        function setupUnselectFacetValue() {
-          setupSelectedFacet();
+        function setupDeselectTimeframeFacetValue() {
+          setupSelectedTimeframeFacetValue();
           cy.wait(TestFixture.interceptAliases.UA);
           deselectBreadcrumbAtIndex(deselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectTimeframeFacetValue);
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
         describe('verify analytic', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectTimeframeFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(timeframeFacetField);
         });
 
         describe('verify selected facetValue', () => {
-          before(setupSelectedFacet);
+          before(setupSelectedTimeframeFacetValue);
           BreadboxAssertions.assertDeselectLinkFacet(
             TimeframeFacetSelectors,
             deselectionIndex
+          );
+        });
+      });
+
+      describe('when selecting a value from custom timeframe', () => {
+        const selectionIndex = 0;
+        const periodFrames = [
+          {unit: 'month', amount: 20},
+          {unit: 'year', amount: 3},
+        ];
+        function setupBreadboxWithCustomTimeframeFacet() {
+          new TestFixture()
+            .with(addBreadbox())
+            .with(addTimeframeFacet({label: timeframeFacetLabel}, periodFrames))
+            .init();
+          selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verfiry rendering', () => {
+          before(setupBreadboxWithCustomTimeframeFacet);
+          CommonAssertions.assertAccessibility(breadboxComponent);
+          BreadboxAssertions.assertDisplayBreadcrumb(true);
+          BreadboxAssertions.assertSelectedLinkFacetsInBreadcrumb(
+            TimeframeFacetSelectors
           );
         });
       });

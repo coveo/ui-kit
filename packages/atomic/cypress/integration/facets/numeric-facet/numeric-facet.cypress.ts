@@ -1103,7 +1103,7 @@ describe('Numeric Facet V1 Test Suites', () => {
   });
 
   describe('with breadbox', () => {
-    function setupBreadboxWithFacet() {
+    function setupBreadboxWithNumericFacet() {
       new TestFixture()
         .with(addBreadbox())
         .with(
@@ -1118,20 +1118,20 @@ describe('Numeric Facet V1 Test Suites', () => {
         .init();
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithFacet);
+      before(setupBreadboxWithNumericFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
-    describe('when selecting a facetValue', () => {
+    describe('when selecting a numeric facetValue', () => {
       const selectionIndex = 2;
-      function setupSelectedFacet() {
-        setupBreadboxWithFacet();
+      function setupSelectedNumericFacetValue() {
+        setupBreadboxWithNumericFacet();
         selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedFacet);
+        before(setupSelectedNumericFacetValue);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -1143,39 +1143,51 @@ describe('Numeric Facet V1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       });
 
-      describe('when unselect a facetValue on breadcrumb', () => {
-        const unselectionIndex = 0;
-        function setupUnselectFacetValue() {
-          setupSelectedFacet();
+      describe('when deselecting a facetValue on breadcrumb', () => {
+        const deselectionIndex = 0;
+        function setupDeselectNumericFacetValue() {
+          setupSelectedNumericFacetValue();
           cy.wait(TestFixture.interceptAliases.UA);
-          deselectBreadcrumbAtIndex(unselectionIndex);
+          deselectBreadcrumbAtIndex(deselectionIndex);
           cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectNumericFacetValue);
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
         describe('verify analytic', () => {
-          before(setupUnselectFacetValue);
+          before(setupDeselectNumericFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(numericFacetField);
         });
 
         describe('verify selected facetValue', () => {
-          before(setupSelectedFacet);
+          before(setupSelectedNumericFacetValue);
           BreadboxAssertions.assertDeselectCheckboxFacet(
             NumericFacetSelectors,
-            unselectionIndex
+            deselectionIndex
           );
         });
       });
     });
 
-    describe('when select 3 facetValues', () => {
-      const index = [0, 1, 2];
-      function setupSelectedMulitpleFacets() {
-        setupBreadboxWithFacet();
+    describe('when selecting 2 facetValues of numeric facet with custom format number', () => {
+      const index = [0, 1];
+      function setupSelectedMulitpleNumericFacetValuess() {
+        new TestFixture()
+          .with(addBreadbox())
+          .with(
+            addNumericFacet(
+              {field: numericFacetField, label: numericFacetLabel},
+              'atomic-format-number',
+              {
+                'minimum-fraction-digits': 1,
+                'maximum-fraction-digits': 4,
+              }
+            )
+          )
+          .init();
         index.forEach((i: number) => {
           selectIdleCheckboxValueAt(NumericFacetSelectors, i);
           cy.wait(TestFixture.interceptAliases.Search);
@@ -1183,7 +1195,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedMulitpleFacets);
+        before(setupSelectedMulitpleNumericFacetValuess);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
