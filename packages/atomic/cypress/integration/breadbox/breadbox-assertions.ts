@@ -9,6 +9,11 @@ import {TestFixture} from '../../fixtures/test-fixture';
 import {unselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
 import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';
+import {label} from '../facets/facet/facet-actions';
+import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
+import {numericFacetLabel} from '../facets/numeric-facet/numeric-facet-actions';
+import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';
+import {categoryFacetLabel} from '../facets/category-facet/category-facet-actions';
 
 export function assertDisplayBreadcrumb(display: boolean) {
   it(`${should(display)} display the breadcrumb`, () => {
@@ -38,12 +43,25 @@ export function assertDisplayBreadcrumbShowMore(display: boolean) {
   });
 }
 
+export function assertDisplayBreadcrumbShowLess(display: boolean) {
+  it(`${should(display)} display the breadcrumb show less button`, () => {
+    BreadboxSelectors.breadcrumbShowLessButton().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertRemoveBreadcrumbShowMoreInDOM() {
+  it('should not contain the breadcrumb show more button in DOM', () => {
+    BreadboxSelectors.breadcrumbShowMoreButton().should('not.exist');
+  });
+}
+
 export function assertDisplayBreadcrumbClearIcon() {
   it('should display a "Clear" icon next to each facetValue', () => {
     BreadboxSelectors.breadcrumbClearFacetValueButton()
       .its('length')
       .then((count) => {
-        console.log(count);
         for (let i = 0; i < count; i++) {
           BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(i).should(
             'be.visible'
@@ -57,61 +75,57 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
   const ellipsedPath =
     path.length > 3 ? path.slice(0, 1).concat(['...'], path.slice(-2)) : path;
   const joinedPath = ellipsedPath.join(' / ');
-  console.log(path);
 
   it(`should display the selected path "${joinedPath}" in the breadcrumbs`, () => {
-    BreadboxSelectors.breadcrumbButton().first().contains(joinedPath);
+    BreadboxSelectors.breadcrumbButton().contains(
+      `${categoryFacetLabel}${joinedPath}`
+    );
+  });
+}
+
+function assertBreadcrumbValueText(facetSelector: string, facetLabel: string) {
+  cy.getTextOfAllElements(facetSelector).then((facetValues: any) => {
+    facetValues.forEach((element: string) => {
+      BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}${element}`);
+    });
   });
 }
 
 export function assertSelectedCheckboxFacetsInBreadcrumb(
-  BaseFacetSelector: FacetWithCheckboxSelector
+  BaseFacetSelector: FacetWithCheckboxSelector,
+  facetLabelValue = label
 ) {
   it('should display the selected checkbox facets in the breadcrumbs', () => {
-    BreadboxSelectors.breadcrumbButtonValue().as('breadcrumbAllValues');
     BaseFacetSelector.selectedCheckboxValue()
       .parent()
       .find('[part="value-label"]')
       .as('facetAllValuesLabel');
-    cy.getTextOfAllElements('@breadcrumbAllValues').then((breadcrumbValues) => {
-      console.log(breadcrumbValues);
-      cy.getTextOfAllElements('@facetAllValuesLabel').then((facetValues) => {
-        expect(breadcrumbValues).to.eqls(facetValues);
-      });
-    });
+    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
   });
 }
 
 export function assertSelectedLinkFacetsInBreadcrumb(
-  FacetWithLinkSelector: FacetWithLinkSelector
+  FacetWithLinkSelector: FacetWithLinkSelector,
+  facetLabelValue = timeframeFacetLabel
 ) {
   it('should display the selected link facets in the breadcrumbs', () => {
-    BreadboxSelectors.breadcrumbButtonValue().as('breadcrumbAllValues');
     FacetWithLinkSelector.selectedLinkValue()
       .parent()
       .find('[part="value-label"]')
       .as('facetAllValuesLabel');
-    cy.getTextOfAllElements('@breadcrumbAllValues').then((breadcrumbValues) => {
-      console.log(breadcrumbValues);
-      cy.getTextOfAllElements('@facetAllValuesLabel').then((facetValues) => {
-        expect(breadcrumbValues).to.eqls(facetValues);
-      });
-    });
+    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
   });
 }
 
-export function assertSelectedColorFacetsInBreadcrumb() {
+export function assertSelectedColorFacetsInBreadcrumb(
+  facetLabelValue = colorFacetLabel
+) {
   it('should display the selected color facets in the breadcrumbs', () => {
-    BreadboxSelectors.breadcrumbButtonValue().as('breadcrumbAllValues');
     ColorFacetSelectors.selectedBoxValue()
       .parent()
       .find('[part="value-label"]')
       .as('facetAllValuesLabel');
-    cy.getTextOfAllElements('@breadcrumbAllValues').then((breadcrumbValues) => {
-      cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
-        expect(breadcrumbValues).to.eql(originalValues);
-      });
-    });
+    assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
   });
 }
 
@@ -199,8 +213,30 @@ export function assertLogBreadcrumbCategoryFacet(field: string) {
   });
 }
 
+export function assertLogBreadcrumbClearAll() {
+  it('should log the breadcrumb facet clearAll to UA', () => {
+    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
+      const analyticsBody = intercept.request.body;
+      expect(analyticsBody).to.have.property(
+        'actionCause',
+        'breadcrumbResetAll'
+      );
+    });
+  });
+}
+
 export function assertBreadcrumbDisplayLength(number: number) {
   it(`should display ${number} number of values in breadcrumb`, () => {
     BreadboxSelectors.breadcrumbButton().its('length').should('eq', number);
+  });
+}
+
+export function assertDisplayAllBreadcrumb(display: boolean) {
+  it(`should  ${display ? '' : 'not'} display all values in breadcrumb`, () => {
+    BreadboxSelectors.breadcrumbButton()
+      .parent()
+      .parent()
+      .find('li[style="display: none;"]')
+      .should(display ? 'not.exist' : 'exist');
   });
 }

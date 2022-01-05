@@ -18,4 +18,6 @@ export const BreadboxSelectors = {
   clearAllButton: () => BreadboxSelectors.shadow().find('[part="clear"]'),
   breadcrumbShowMoreButton: () =>
     BreadboxSelectors.wrapper().find('[part="show-more"]'),
+  breadcrumbShowLessButton: () =>
+    BreadboxSelectors.wrapper().find('[part="show-less"]'),
 };

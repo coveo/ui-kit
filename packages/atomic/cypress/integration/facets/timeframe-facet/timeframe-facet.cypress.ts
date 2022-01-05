@@ -1,9 +1,9 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   addTimeframeFacet,
-  field,
+  timeframeFacetField,
   inputStartDate,
-  label,
+  timeframeFacetLabel,
   unitFrames,
   clickApplyButton,
   inputEndDate,
@@ -32,7 +32,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
   const defaultNumberOfValues = unitFrames.length;
   describe('with default "date" field timeframe-facet', () => {
     function setupTimeframeFacet() {
-      new TestFixture().with(addTimeframeFacet({label}, unitFrames)).init();
+      new TestFixture()
+        .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
+        .init();
     }
 
     describe('verify rendering', () => {
@@ -43,7 +45,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
         TimeframeFacetSelectors,
         false
       );
-      CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        TimeframeFacetSelectors,
+        timeframeFacetLabel
+      );
       CommonFacetAssertions.assertNumberOfSelectedLinkValues(
         TimeframeFacetSelectors,
         0
@@ -83,7 +88,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       describe('verify analytic', () => {
         before(setupSelectLinkValue);
         TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
-          field,
+          timeframeFacetField,
           unitFrames[selectionIndex].unit
         );
       });
@@ -113,7 +118,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         describe('verify analytics', () => {
           before(setupSecondLinkValue);
           TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
-            field,
+            timeframeFacetField,
             unitFrames[secondSelectionIndex].unit,
             'past',
             1
@@ -147,7 +152,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
           describe('verify analytics', () => {
             before(setupClearCheckboxValues);
-            CommonFacetAssertions.assertLogClearFacetValues(field);
+            CommonFacetAssertions.assertLogClearFacetValues(
+              timeframeFacetField
+            );
           });
         });
 
@@ -160,7 +167,11 @@ describe('Timeframe Facet V1 Test Suites', () => {
         new TestFixture()
           .with(
             addTimeframeFacet(
-              {label, field, 'with-date-picker': ''},
+              {
+                label: timeframeFacetLabel,
+                field: timeframeFacetField,
+                'with-date-picker': '',
+              },
               unitFrames
             )
           )
@@ -193,7 +204,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify analytic', () => {
           before(setupInputRange);
-          TimeframeFacetAssertions.assertLogTimeframeInputRange(field);
+          TimeframeFacetAssertions.assertLogTimeframeInputRange(
+            timeframeFacetField
+          );
         });
       });
     });
@@ -203,7 +216,12 @@ describe('Timeframe Facet V1 Test Suites', () => {
     const customField = 'indexeddate';
     function setupTimeframeFacet() {
       new TestFixture()
-        .with(addTimeframeFacet({label, field: customField}, unitFrames))
+        .with(
+          addTimeframeFacet(
+            {label: timeframeFacetLabel, field: customField},
+            unitFrames
+          )
+        )
         .init();
     }
 
@@ -215,7 +233,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
         TimeframeFacetSelectors,
         false
       );
-      CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        TimeframeFacetSelectors,
+        timeframeFacetLabel
+      );
     });
   });
 
@@ -224,8 +245,8 @@ describe('Timeframe Facet V1 Test Suites', () => {
       new TestFixture()
         .with(
           addTimeframeFacet({
-            label,
-            field,
+            label: timeframeFacetLabel,
+            field: timeframeFacetField,
             'with-date-picker': inputType,
           })
         )
@@ -238,7 +259,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
       TimeframeFacetAssertions.assertDisplayRangeInput(true);
       TimeframeFacetAssertions.assertDisplayApplyButton(true);
-      CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        TimeframeFacetSelectors,
+        timeframeFacetLabel
+      );
       CommonFacetAssertions.assertDisplayValues(TimeframeFacetSelectors, false);
     });
 
@@ -295,7 +319,12 @@ describe('Timeframe Facet V1 Test Suites', () => {
     const selectionIndex = 0;
     function setupTimeframeFacetCustomAmount() {
       new TestFixture()
-        .with(addTimeframeFacet({label, field}, periodFrames))
+        .with(
+          addTimeframeFacet(
+            {label: timeframeFacetLabel, field: timeframeFacetField},
+            periodFrames
+          )
+        )
         .init();
     }
 
@@ -303,7 +332,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
       before(setupTimeframeFacetCustomAmount);
       CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
       CommonAssertions.assertAccessibility(timeframeFacetComponent);
-      CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        TimeframeFacetSelectors,
+        timeframeFacetLabel
+      );
       CommonAssertions.assertContainsComponentError(
         TimeframeFacetSelectors,
         false
@@ -324,7 +356,12 @@ describe('Timeframe Facet V1 Test Suites', () => {
     const periodFrames = [{unit: 'year', period, amount: 25}];
     function setupTimeframeFacetCustomAmount() {
       new TestFixture()
-        .with(addTimeframeFacet({label, field}, periodFrames))
+        .with(
+          addTimeframeFacet(
+            {label: timeframeFacetLabel, field: timeframeFacetField},
+            periodFrames
+          )
+        )
         .init();
     }
 
@@ -336,7 +373,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
         TimeframeFacetSelectors,
         false
       );
-      CommonFacetAssertions.assertLabelContains(TimeframeFacetSelectors, label);
+      CommonFacetAssertions.assertLabelContains(
+        TimeframeFacetSelectors,
+        timeframeFacetLabel
+      );
       CommonFacetAssertions.assertNumberOfIdleLinkValues(
         TimeframeFacetSelectors,
         1
@@ -359,7 +399,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
   describe('when no search has yet been executed', () => {
     before(() => {
       new TestFixture()
-        .with(addTimeframeFacet({label}, unitFrames))
+        .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
         .withoutFirstAutomaticSearch()
         .init();
     });
@@ -378,7 +418,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           addTimeframeFacet(
             {
               field: 'dafsfs',
-              label,
+              label: timeframeFacetLabel,
             },
             unitFrames
           )
@@ -403,8 +443,8 @@ describe('Timeframe Facet V1 Test Suites', () => {
         .with(
           addTimeframeFacet(
             {
-              field,
-              label,
+              field: timeframeFacetField,
+              label: timeframeFacetLabel,
             },
             invalidFrames
           )
@@ -421,8 +461,13 @@ describe('Timeframe Facet V1 Test Suites', () => {
   describe('with a selected path in the URL', () => {
     before(() => {
       new TestFixture()
-        .with(addTimeframeFacet({label, field}, unitFrames))
-        .withHash(`df[${field}]=past-1-month..now`)
+        .with(
+          addTimeframeFacet(
+            {label: timeframeFacetLabel, field: timeframeFacetField},
+            unitFrames
+          )
+        )
+        .withHash(`df[${timeframeFacetField}]=past-1-month..now`)
         .init();
     });
 
@@ -441,7 +486,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     function setupBreadboxWithFacet() {
       new TestFixture()
         .with(addBreadbox())
-        .with(addTimeframeFacet({label}, unitFrames))
+        .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
         .init();
     }
     describe('verify rendering', () => {
@@ -485,7 +530,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify analytic', () => {
           before(setupUnselectFacetValue);
-          BreadboxAssertions.assertLogBreadcrumbFacet(field);
+          BreadboxAssertions.assertLogBreadcrumbFacet(timeframeFacetField);
         });
 
         describe('verify selected facetValue', () => {
