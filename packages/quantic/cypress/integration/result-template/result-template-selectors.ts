@@ -10,5 +10,5 @@ export const ResultTemplateSelectors: ResultTemplateSelector = {
   get: () => cy.get(resultTemplateComponent),
 
   slotByName: (name: string) =>
-    ResultTemplateSelectors.get().find(`div[slot="${name}"]`),
+    ResultTemplateSelectors.get().find(`slot[name="${name}"]`),
 };

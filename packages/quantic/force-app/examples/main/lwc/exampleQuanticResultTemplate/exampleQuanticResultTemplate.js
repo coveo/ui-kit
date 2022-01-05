@@ -1,8 +1,8 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticResultTemplate extends LightningElement {
-  @api engineId = 'quantic-result-template-engine';
   @track config = {};
+  isConfigured = false;
 
   pageTitle = 'Quantic Result Template';
   pageDescription = 'The QuanticResultTemplate component is used to construct result templates using predefined and formatted [slots]';
@@ -10,5 +10,6 @@ export default class ExampleQuanticResultTemplate extends LightningElement {
 
   handleTryItNow(evt) {
     this.config = evt.detail;
+    this.isConfigured = true;
   }
 }
