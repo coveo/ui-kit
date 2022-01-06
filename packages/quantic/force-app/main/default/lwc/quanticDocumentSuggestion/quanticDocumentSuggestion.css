@@ -1,8 +1,13 @@
-.description{
+.description {
   font-size: 14px;
 }
-.row{
+
+.row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.slds-card {
+  border: 1px solid #dddbda;
 }

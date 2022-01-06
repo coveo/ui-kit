@@ -12,7 +12,7 @@ import {
  *
  * @category Case Assist
  * @example
- * <c-quantic-document-suggestion></c-quantic-document-suggestion>
+ * <c-quantic-document-suggestion engine-id={engineId}></c-quantic-document-suggestion>
  */
 export default class QuanticDocumentSuggestion extends LightningElement {
   /**
@@ -38,10 +38,17 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   documentSuggestion;
   /** @type {Function} */
   unsubscribeDocumentSuggestion;
+  /** @type {string} */
+  firstSuggestion;
+  /** @type {Array<string>} */
+  openedDocuments = [];
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
     this.template.addEventListener('rating', this.onRating);
+    this.template.addEventListener('accordion-section-select', () => {
+      console.log('event receved');
+    });
   }
 
   renderedCallback() {
@@ -91,6 +98,10 @@ export default class QuanticDocumentSuggestion extends LightningElement {
           uri: suggestion.fields.uri,
         };
       }) ?? [];
+    if (this.suggestions.length) {
+      this.firstSuggestion = this.suggestions?.[0].title;
+      this.openedDocuments = [this.suggestions?.[0].title];
+    }
     this.loading = this.documentSuggestion.state.loading;
   }
 
@@ -99,4 +110,23 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       this.actions.logDocumentSuggestionRating(evt.detail.id, evt.detail.score)
     );
   };
+
+  handleSectionClick(evt) {
+    const accordion = this.template.querySelector('lightning-accordion');
+    if (
+      JSON.stringify(this.openedDocuments) !==
+      JSON.stringify(accordion.activeSectionName)
+    ) {
+      if (this.openedDocuments.indexOf(evt.target.name) === -1) {
+        this.engine.dispatch(
+          this.actions.logDocumentSuggestionClick(evt.target.dataset.id)
+        );
+      }
+      this.openedDocuments = accordion.activeSectionName;
+    }
+  }
+
+  stopPropagation(evt) {
+    evt.stopPropagation();
+  }
 }

@@ -1,27 +1,38 @@
 <template>
-  <c-quantic-search-interface engine-id={searchEngineId}>
-    <div class="slds-card">
-      <lightning-accordion active-section-name="A" allow-multiple-sections-open class="slds-p-vertical_xx-small">
-        <template iterator:it={suggestions}>
-          <lightning-accordion-section key={it.value.uniqueId} label={it.value.title}>
-            <div slot="actions" class="slds-var-p-horizontal_x-large">
-              <slot name="rating" data-doc-id={it.value.uniqueId}>
-              </slot>
-            </div>
-            <div class="slds-var-p-horizontal_x-large slds-var-p-vertical_x-small">
-              <p class="description">{it.value.excerpt}</p>
-              <div class="row slds-var-p-top_medium">
-                <c-quantic-result-quickview engine-id={searchEngineId} preview-button-icon="utility:new_window" preview-button-label="Show more"
-                  preview-button-variant="outline-brand" result={it.value}>
-                  <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
-                </c-quantic-result-quickview>
-                <slot name="actions" data-doc-id={it.value.uniqueId}>
-                </slot>
-              </div>
-            </div>
-          </lightning-accordion-section>
-        </template>
-      </lightning-accordion>
+  <template if:true={loading}>
+    <div class="class to be added here">
+      <lightning-spinner alternative-text="loading" size="small"></lightning-spinner>
     </div>
-  </c-quantic-search-interface>
+  </template>
+  <template if:false={loading}>
+    <c-quantic-search-interface engine-id={searchEngineId}>
+      <div class="slds-card">
+        <lightning-accordion active-section-name={firstSuggestion} allow-multiple-sections-open
+          class="slds-p-vertical_xx-small">
+          <template iterator:it={suggestions}>
+            <lightning-accordion-section data-id={it.value.uniqueId} onclick={handleSectionClick}
+              key={it.value.uniqueId} name={it.value.title} label={it.value.title}>
+              <div onclick={stopPropagation}>
+                <div slot="actions" class="slds-var-p-horizontal_x-large">
+                  <slot name="rating" data-doc-id={it.value.uniqueId}>
+                  </slot>
+                </div>
+                <div class="slds-var-p-horizontal_x-large slds-var-p-vertical_x-small">
+                  <p class="description">{it.value.excerpt}</p>
+                  <div class="row slds-var-p-top_medium">
+                    <c-quantic-result-quickview engine-id={searchEngineId} preview-button-icon="utility:new_window"
+                      preview-button-label="Show more" preview-button-variant="outline-brand" result={it.value}>
+                      <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
+                    </c-quantic-result-quickview>
+                    <slot name="actions" data-doc-id={it.value.uniqueId}>
+                    </slot>
+                  </div>
+                </div>
+              </div>
+            </lightning-accordion-section>
+          </template>
+        </lightning-accordion>
+      </div>
+    </c-quantic-search-interface>
+  </template>
 </template>
