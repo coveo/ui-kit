@@ -31,6 +31,12 @@ export type {
   NumericFilter,
 };
 
+/**
+ * Creates a `NumericFilter` controller instance.
+ * @param engine - The headless engine.
+ * @param props - The configurable `NumericFilter` controller properties.
+ * @returns A `NumericFilter` controller instance.
+ */
 export function buildNumericFilter(
   engine: SearchEngine,
   props: NumericFilterProps

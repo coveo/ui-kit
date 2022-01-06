@@ -15,17 +15,13 @@ import {
   assertDisplaysXMoreLabel,
   assertDoesNotDisplayXMoreLabel,
 } from './result-multi-value-text-assertions';
-import {resultMultiValueTextComponent} from './result-multi-value-text-selectors';
+import {
+  resultMultiValueTextComponent,
+  ResultMultiValueTextSelectors,
+} from './result-multi-value-text-selectors';
 import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
-import {
-  assertAccessibility,
-  assertConsoleError,
-  assertRemovesComponent,
-} from '../../common-assertions';
-import {
-  resultListComponent,
-  ResultListSelectors,
-} from '../result-list-selectors';
+import {ResultListSelectors} from '../result-list-selectors';
+import * as CommonAssertions from '../../common-assertions';
 
 export interface MultiValueTextProps {
   field?: string | number;
@@ -84,8 +80,10 @@ describe('Result MultiValueText Component', () => {
         .init();
     });
 
-    assertRemovesComponent(() => cy.get(resultMultiValueTextComponent));
-    assertConsoleError();
+    CommonAssertions.assertRemovesComponent(() =>
+      cy.get(resultMultiValueTextComponent)
+    );
+    CommonAssertions.assertConsoleError();
   });
 
   describe('when used inside a result template', () => {
@@ -96,7 +94,7 @@ describe('Result MultiValueText Component', () => {
           .init();
       });
 
-      assertRemovesComponent(() =>
+      CommonAssertions.assertRemovesComponent(() =>
         ResultListSelectors.firstResult().find(resultMultiValueTextComponent)
       );
     });
@@ -109,10 +107,10 @@ describe('Result MultiValueText Component', () => {
           .init();
       });
 
-      assertRemovesComponent(() =>
+      CommonAssertions.assertRemovesComponent(() =>
         ResultListSelectors.firstResult().find(resultMultiValueTextComponent)
       );
-      assertConsoleError();
+      CommonAssertions.assertConsoleError();
     });
 
     function testWithValidFieldValue(
@@ -206,6 +204,9 @@ describe('Result MultiValueText Component', () => {
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
           assertDisplaysXMoreLabel(3);
+          CommonAssertions.assertAccessibility(
+            ResultMultiValueTextSelectors.firstInResult
+          );
         });
 
         describe('with max-values-to-display=2', () => {
@@ -224,7 +225,6 @@ describe('Result MultiValueText Component', () => {
 
           assertShouldRenderValues(localizedValues.slice(0, 2));
           assertDisplaysXMoreLabel(2);
-          assertAccessibility(resultListComponent);
         });
 
         describe('with max-values-to-display=4', () => {
@@ -237,7 +237,6 @@ describe('Result MultiValueText Component', () => {
 
             assertShouldRenderValues(localizedValues);
             assertDoesNotDisplayXMoreLabel();
-            assertAccessibility(resultListComponent);
           });
 
           describe('with slots', () => {
@@ -260,8 +259,6 @@ describe('Result MultiValueText Component', () => {
               [localizedValues[0], 'A', localizedValues[2], 'B'],
               'should replace the correct values'
             );
-
-            assertAccessibility(resultListComponent);
           });
 
           describe('with a facet and two selected values', () => {

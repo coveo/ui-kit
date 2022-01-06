@@ -11,7 +11,7 @@ import {parseXML} from 'c/quanticUtils';
  */
 export default class QuanticResultPrintableUri extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
    * @type {Result}
    */

@@ -28,6 +28,10 @@ import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -133,6 +137,9 @@ export class AtomicRatingFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
+
   private validateProps() {
     new Schema({
       displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
@@ -193,15 +200,16 @@ export class AtomicRatingFacet
   }
 
   private formatFacetValue(facetValue: NumericFacetValue) {
-    return this.bindings.i18n.t('to', {
-      start: facetValue.start,
-      end: facetValue.end,
+    return this.bindings.i18n.t('stars', {
+      count: facetValue.start,
+      max: this.maxValueInIndex,
     });
   }
 
   private ratingContent(facetValue: NumericFacetValue) {
     return (
       <Rating
+        i18n={this.bindings.i18n}
         numberOfTotalIcons={this.maxValueInIndex}
         numberOfActiveIcons={facetValue.start}
         icon={this.icon}
@@ -214,10 +222,14 @@ export class AtomicRatingFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }

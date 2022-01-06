@@ -1,6 +1,8 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
+import {i18n} from 'i18next';
 
 interface RatingProps {
+  i18n: i18n;
   numberOfTotalIcons: number;
   numberOfActiveIcons: number;
   icon: string;
@@ -40,7 +42,15 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
   };
 
   return (
-    <div class="relative w-max" part="value-rating">
+    <div
+      class="relative w-max"
+      part="value-rating"
+      role="img"
+      aria-label={props.i18n.t('stars', {
+        count: props.numberOfActiveIcons,
+        max: props.numberOfTotalIcons,
+      })}
+    >
       <div class="z-0 flex gap-0.5">{emptyIconDisplay()}</div>
       <div
         class="absolute left-0 top-0 z-1 flex gap-0.5 overflow-hidden"

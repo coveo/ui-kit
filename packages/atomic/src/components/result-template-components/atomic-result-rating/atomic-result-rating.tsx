@@ -3,6 +3,10 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import Star from '../../../images/star.svg';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
 import {Rating} from '../../atomic-rating/atomic-rating';
+import {
+  Bindings,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 
 /**
  * The `atomic-result-rating` element renders a star rating.
@@ -15,6 +19,7 @@ import {Rating} from '../../atomic-rating/atomic-rating';
   shadow: true,
 })
 export class AtomicResultRating {
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
   @Element() host!: HTMLElement;
 
@@ -43,7 +48,7 @@ export class AtomicResultRating {
    */
   @Prop() public icon = Star;
 
-  @State() public error?: Error;
+  @State() public error!: Error;
 
   @State() numberOfStars: number | null = null;
 
@@ -78,6 +83,7 @@ export class AtomicResultRating {
     }
     return (
       <Rating
+        i18n={this.bindings.i18n}
         icon={this.icon}
         numberOfTotalIcons={this.maxValueInIndex}
         numberOfActiveIcons={this.numberOfStars}

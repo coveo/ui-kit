@@ -16,36 +16,15 @@ const nonEmptyArray = new ArrayValue({
   required: true,
 });
 
-/**
- * Registers the fields to include in the query response.
- * @param payload (string[]) The target fields (e.g., `["field1", "field2"]`).
- */
 export const registerFieldsToInclude = createAction(
   'fields/registerFieldsToInclude',
   (payload: string[]) => validatePayload<string[]>(payload, nonEmptyArray)
 );
 
-/**
- * Enable fetch all fields.
- *
- * This should not be used in any production environment, as it can have a negative impact on query execution time.
- *
- * Should be used for debugging purposes.
- */
 export const enableFetchAllFields = createAction('fields/fetchall/enable');
 
-/**
- * Disable fetch all fields.
- */
 export const disableFetchAllFields = createAction('fields/fetchall/disable');
 
-/**
- * Retrieve fields descrption from the index.
- *
- * This should not be used in any production environment, as it can have a negative impact on query execution time.
- *
- * Should be used for debugging purposes.
- */
 export const fetchFieldsDescription = createAsyncThunk<
   FieldDescription[],
   void,

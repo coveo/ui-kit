@@ -1,8 +1,5 @@
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
-/**
- * Log redirection
- */
 export const logRedirection = makeAnalyticsAction(
   'analytics/redirection',
   AnalyticsType.Search,

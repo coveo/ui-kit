@@ -3,10 +3,15 @@ import { api, LightningElement } from 'lwc';
 export default class ActionPerformSearch extends LightningElement {
   @api engineId;
   @api disabled;
+  @api withInput = false;
 
   searchBox;
+  input;
 
   handlePerformSearch() {
+    if(!this.input && this.withInput) {
+      this.input =  this.template.querySelector('lightning-input');
+    }
     if (this.searchBox) {
       this.triggerSearch(this.searchBox);
     } else {
@@ -19,7 +24,8 @@ export default class ActionPerformSearch extends LightningElement {
   }
 
   triggerSearch(controller) {
-    controller.updateText('');
+    const query = this.input ? this.input.value : '';
+    controller.updateText(query);
     controller.submit();
   }
 

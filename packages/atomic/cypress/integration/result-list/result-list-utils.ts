@@ -5,36 +5,46 @@ import {
 } from '../../../src/components/atomic-result/atomic-result-display-options';
 import {resultListComponent} from './result-list-selectors';
 
+interface WithAnySectionnableResultListOptions {
+  viewports?: Record<string, number>;
+  layouts?: ResultDisplayLayout[];
+  imageSizes?: ResultDisplayImageSize[];
+  densities?: ResultDisplayDensity[];
+}
+
 export function withAnySectionnableResultList(
   assertions: (
     display: ResultDisplayLayout,
     imageSize: ResultDisplayImageSize,
     density: ResultDisplayDensity
-  ) => void
+  ) => void,
+  options?: WithAnySectionnableResultListOptions
 ) {
-  const viewports = {mobile: 1023, desktop: 1024};
+  const viewports = options?.viewports ?? {mobile: 1023, desktop: 1024};
+  const layouts = options?.layouts ?? ['list', 'grid'];
+  const imageSizes = options?.imageSizes ?? ['none', 'icon', 'small', 'large'];
+  const densities = options?.densities ?? ['compact', 'normal', 'comfortable'];
   Object.entries(viewports).forEach(([viewport, width]) =>
     describe(`with a ${viewport} viewport`, () =>
-      (['list', 'grid'] as const).forEach((display) =>
+      layouts.forEach((display) =>
         describe(`in a result ${display}`, () =>
-          (['none', 'icon', 'small', 'large'] as const).forEach((image) =>
+          imageSizes.forEach((image) =>
             describe(`with image-size="${image}"`, () =>
-              (['compact', 'normal', 'comfortable'] as const).forEach(
-                (density) =>
-                  describe(`with density="${density}"`, () => {
-                    before(() => {
-                      const aspectRatio = 16 / 9;
-                      cy.viewport(width, width / aspectRatio);
-                      cy.get(resultListComponent).then((comp) => {
-                        const resultList = comp.get()[0];
-                        resultList.setAttribute('display', display);
-                        resultList.setAttribute('image-size', image);
-                        resultList.setAttribute('density', density);
-                      });
+              densities.forEach((density) =>
+                describe(`with density="${density}"`, () => {
+                  before(() => {
+                    const aspectRatio = 16 / 9;
+                    cy.viewport(width, width / aspectRatio);
+                    cy.get(resultListComponent).then((comp) => {
+                      const resultList = comp.get()[0];
+                      resultList.setAttribute('display', display);
+                      resultList.setAttribute('image-size', image);
+                      resultList.setAttribute('density', density);
                     });
+                  });
 
-                    assertions(display, image, density);
-                  })
+                  assertions(display, image, density);
+                })
               ))
           ))
       ))

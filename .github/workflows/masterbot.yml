@@ -1,0 +1,90 @@
+name: Master Robot
+on:
+  push:
+    branches:
+      - master
+jobs:
+  allow-workflow:
+    name: "Allow workflow"
+    if: "!startsWith(github.event.head_commit.message, '[Version Bump]')"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Workflow allowed to start"
+  build:
+    name: "Build"
+    needs: allow-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+  lint-check:
+    name: "Check with linter"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npm run lint:check
+  generate-doc:
+    name: "Generate doc"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npm run doc:generate
+  unit-test:
+    name: "Run unit tests"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
+      - run: npm test
+  e2e-atomic-test:
+    name: "Run e2e tests on Atomic"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic
+        with:
+          cypress-record-key: ${{ secrets.ATOMIC_CYPRESS_RECORD_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  e2e-quantic-test:
+    name: "Run e2e tests on Quantic"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-quantic
+        with:
+          cypress-record-key: ${{ secrets.QUANTIC_CYPRESS_RECORD_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  bump-version:
+    name: "Bump version"
+    needs:
+      - "lint-check"
+      - "generate-doc"
+      - "unit-test"
+      - "e2e-atomic-test"
+      - "e2e-quantic-test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Clean directory
+        run: git clean -xfd -e node_modules/ -e .husky
+      - name: Commit & push
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
+          npm run bump:version

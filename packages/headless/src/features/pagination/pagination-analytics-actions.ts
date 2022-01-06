@@ -3,9 +3,6 @@ import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {currentPageSelector} from './pagination-selectors';
 import {getPaginationInitialState} from './pagination-state';
 
-/**
- * Log pager resize
- */
 export const logPagerResize = makeAnalyticsAction(
   'analytics/pager/resize',
   AnalyticsType.Search,
@@ -17,9 +14,6 @@ export const logPagerResize = makeAnalyticsAction(
     })
 );
 
-/**
- * Log page number
- */
 export const logPageNumber = makeAnalyticsAction(
   'analytics/pager/number',
   AnalyticsType.Search,
@@ -29,9 +23,6 @@ export const logPageNumber = makeAnalyticsAction(
     })
 );
 
-/**
- * Log pager next
- */
 export const logPageNext = makeAnalyticsAction(
   'analytics/pager/next',
   AnalyticsType.Search,
@@ -41,9 +32,6 @@ export const logPageNext = makeAnalyticsAction(
     })
 );
 
-/**
- * Log pager previous
- */
 export const logPagePrevious = makeAnalyticsAction(
   'analytics/pager/previous',
   AnalyticsType.Search,

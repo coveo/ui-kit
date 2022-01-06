@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.7...@coveo/quantic@1.6.8) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.6...@coveo/quantic@1.6.7) (2022-01-05)
+
+
+### Bug Fixes
+
+* updated cypress version ([#1633](https://github.com/coveo/ui-kit/issues/1633)) ([c7545a3](https://github.com/coveo/ui-kit/commit/c7545a3d7f8e2135ae20e62e93180210fc001044))
+
+
+
+
+
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.5...@coveo/quantic@1.6.6) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.4...@coveo/quantic@1.6.5) (2022-01-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.3...@coveo/quantic@1.6.4) (2022-01-04)
+
+
+### Bug Fixes
+
+* **quantic:** added missing optional chaining ([#1626](https://github.com/coveo/ui-kit/issues/1626)) ([6e6f05a](https://github.com/coveo/ui-kit/commit/6e6f05a5f675bdb02a93ff8e1c291a38d0d9b0b4))
+
+
+
+
+
+## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.2...@coveo/quantic@1.6.3) (2022-01-03)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.1...@coveo/quantic@1.6.2) (2021-12-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.0...@coveo/quantic@1.6.1) (2021-12-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.6.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.2...@coveo/quantic@1.6.0) (2021-12-16)
+
+
+### Features
+
+* **quantic:** quanticCaseAssistInterface component added  ([#1602](https://github.com/coveo/ui-kit/issues/1602)) ([05015cf](https://github.com/coveo/ui-kit/commit/05015cf51fc6d51d4c3b99b4f293a0c3e837351a))
+
+
+
+
+
+## [1.5.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.1...@coveo/quantic@1.5.2) (2021-12-16)
+
+
+### Bug Fixes
+
+* **quantic:** Fix flaky test in E2E facet tests ([#1573](https://github.com/coveo/ui-kit/issues/1573)) ([bd23eef](https://github.com/coveo/ui-kit/commit/bd23eefb1315c0f3c0c06b4e0ea4da4ba7282ec8))
+* **quantic:** removed default pipeline value ([#1592](https://github.com/coveo/ui-kit/issues/1592)) ([ab24ea5](https://github.com/coveo/ui-kit/commit/ab24ea52f4027be26a9768e40e29fb6c6b2c71bc))
+
+
+
+
+
 ## [1.5.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.5.0...@coveo/quantic@1.5.1) (2021-12-13)
 
 **Note:** Version bump only for package @coveo/quantic

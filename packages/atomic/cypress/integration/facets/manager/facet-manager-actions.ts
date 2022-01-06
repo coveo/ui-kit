@@ -5,7 +5,7 @@ import {
 } from '../../../fixtures/test-fixture';
 import {facetComponent} from '../facet/facet-selectors';
 import {field as facetField} from '../facet/facet-actions';
-import {field as numericFacetField} from '../numeric-facet/numeric-facet-actions';
+import {numericFacetField} from '../numeric-facet/numeric-facet-actions';
 import {hierarchicalField} from '../category-facet/category-facet-actions';
 import {numericFacetComponent} from '../numeric-facet/numeric-facet-selectors';
 import {categoryFacetComponent} from '../category-facet/category-facet-selectors';

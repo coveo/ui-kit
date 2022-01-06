@@ -50,3 +50,6 @@ cypress/plugins/config/examples-community.json
 
 # Generated Documentation
 docs/out/*
+
+# Environment Variables
+.env

@@ -36,9 +36,6 @@ export interface SetRecommendationIdActionCreatorPayload {
   id: string;
 }
 
-/**
- * Set recommendation identifier.
- */
 export const setRecommendationId = createAction(
   'recommendation/set',
   (payload: SetRecommendationIdActionCreatorPayload) =>
@@ -47,9 +44,6 @@ export const setRecommendationId = createAction(
     })
 );
 
-/**
- * Get recommendations.
- */
 export const getRecommendations = createAsyncThunk<
   GetRecommendationsThunkReturn,
   void,

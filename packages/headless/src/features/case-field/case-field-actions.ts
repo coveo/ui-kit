@@ -29,9 +29,6 @@ export interface SetCaseFieldActionCreatorPayload {
   fieldValue: string;
 }
 
-/**
- * Registers a case field with the specified field and value.
- */
 export const registerCaseField = createAction(
   'caseAssist/caseField/register',
   (payload: SetCaseFieldActionCreatorPayload) =>
@@ -41,9 +38,6 @@ export const registerCaseField = createAction(
     })
 );
 
-/**
- * Updates the specified case field with the provided value.
- */
 export const updateCaseField = createAction(
   'caseAssist/caseField/update',
   (payload: SetCaseFieldActionCreatorPayload) =>

@@ -26,20 +26,12 @@ const registerRecentResultsPayloadDefinition = {
   maxLength: new NumberValue({required: true, min: 1, default: 10}),
 };
 
-/**
- * Initialize the `recentResults` state.
- * @param payload (RegisterRecentResultsCreatorPayload) The initial state and options.
- */
 export const registerRecentResults = createAction(
   'recentResults/registerRecentResults',
   (payload: RegisterRecentResultsCreatorPayload) =>
     validatePayload(payload, registerRecentResultsPayloadDefinition)
 );
 
-/**
- * Push a recent result to the list.
- * @param payload (Result) The recently viewed result to push to the list.
- */
 export const pushRecentResult = createAction(
   'recentResults/pushRecentResult',
   (payload: Result) => {
@@ -50,9 +42,6 @@ export const pushRecentResult = createAction(
   }
 );
 
-/**
- * Clear the recent results list.
- */
 export const clearRecentResults = createAction(
   'recentResults/clearRecentResults'
 );

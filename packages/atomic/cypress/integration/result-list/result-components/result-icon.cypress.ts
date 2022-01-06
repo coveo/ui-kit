@@ -46,6 +46,8 @@ describe('Result Icon Component', () => {
       () => ResultIconSelectors.svg().first(),
       'user'
     );
+
+    CommonAssertions.assertAccessibility(ResultIconSelectors.firstInResult);
   });
 
   describe('when the "objecttype" field value matches picklist_type.svg', () => {

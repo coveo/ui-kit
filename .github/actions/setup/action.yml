@@ -1,11 +1,22 @@
 name: "Setup & build"
 description: "Setup node, install dependencies & build"
+inputs:
+  with-registry:
+    description: Whether we should use the npmjs.org registry
+    required: false
+    default: 'false'
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v2
+    - if: ${{ inputs.with-registry != 'true' }}
+      uses: actions/setup-node@v2
       with:
         node-version-file: '.nvmrc'
+    - if: ${{ inputs.with-registry == 'true' }}
+      uses: actions/setup-node@v2
+      with:
+        node-version-file: '.nvmrc'
+        registry-url: 'https://registry.npmjs.org'
     - uses: actions/cache@v2
       id: build-cache
       with:

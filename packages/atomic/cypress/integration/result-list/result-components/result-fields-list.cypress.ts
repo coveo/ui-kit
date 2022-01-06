@@ -91,4 +91,6 @@ describe('Result Fields Component', () => {
       .filter('.hide-divider')
       .should('have.length.above', 0);
   });
+
+  CommonAssertions.assertAccessibility(FieldsListSelectors.firstInResult);
 });

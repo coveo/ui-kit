@@ -15,6 +15,7 @@ import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
+  ProductListingSection,
   QuerySection,
   RecommendationSection,
   SearchHubSection,
@@ -37,6 +38,7 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
       QuerySection &
       ContextSection &
       RecommendationSection &
+      ProductListingSection &
       SectionNeededForFacetMetadata
   >;
 
@@ -75,6 +77,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     return (
       this.state.search?.response.searchUid ||
       this.state.recommendation?.searchUid ||
+      this.state.productListing?.responseId ||
       getSearchInitialState().response.searchUid
     );
   }
