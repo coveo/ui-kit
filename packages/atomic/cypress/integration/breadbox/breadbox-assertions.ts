@@ -239,3 +239,15 @@ export function assertDisplayAllBreadcrumb(display: boolean) {
       .should(display ? 'not.exist' : 'exist');
   });
 }
+
+export function assertFocusBreadcrumb(index: number) {
+  it(`Should focus on the breadcrumb at index ${index}`, () => {
+    BreadboxSelectors.breadcrumbButton().eq(index).should('be.focused');
+  });
+}
+
+export function assertFocusClearAll() {
+  it('Should focus on the clear all button', () => {
+    BreadboxSelectors.clearAllButton().should('be.focused');
+  });
+}

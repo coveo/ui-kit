@@ -12,7 +12,11 @@ import {
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from '../facets/facet-common-actions';
-import {addBreadbox, breadboxLabel} from './breadbox-actions';
+import {
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
 import * as CommonAssertions from '../common-assertions';
 import * as CommonFacetAssertions from '../facets/facet-common-assertions';
@@ -140,6 +144,35 @@ describe('Breadbox Test Suites', () => {
       BreadboxAssertions.assertCategoryPathInBreadcrumb(selectedPath);
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       BreadboxAssertions.assertBreadcrumbDisplayLength(3);
+    });
+  });
+
+  describe('when selecting 3 facet values', () => {
+    beforeEach(() => {
+      setupBreadboxWithMultipleFacets();
+      for (let i = 0; i < 3; i++) {
+        selectIdleCheckboxValueAt(FacetSelectors, 0);
+        cy.wait(TestFixture.interceptAliases.Search);
+        cy.wait(TestFixture.interceptAliases.UA);
+      }
+    });
+
+    describe('when clearing the second breadcrumb', () => {
+      beforeEach(() => {
+        deselectBreadcrumbAtIndex(1);
+        cy.wait(TestFixture.interceptAliases.Search);
+      });
+
+      BreadboxAssertions.assertFocusBreadcrumb(1);
+    });
+
+    describe('when clearing the last breadcrumb', () => {
+      beforeEach(() => {
+        deselectBreadcrumbAtIndex(2);
+        cy.wait(TestFixture.interceptAliases.Search);
+      });
+
+      BreadboxAssertions.assertFocusClearAll();
     });
   });
 
