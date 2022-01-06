@@ -1,0 +1,20 @@
+<template>
+    <c-example-layout
+        title={pageTitle}
+        description={pageDescription}
+        show-preview={isConfigured}>
+
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+
+        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+            <c-quantic-result-quickview
+                engine-id={engineId}
+                result={config.result}
+                maximum-preview-size={config.maximumPreviewSize}
+                preview-button-icon={config.previewButtonIcon}
+                preview-button-label={config.previewButtonLabel}
+                preview-button-variant={config.previewButtonVariant}>
+            </c-quantic-result-quickview>
+        </c-quantic-search-interface>
+    </c-example-layout>
+</template>
