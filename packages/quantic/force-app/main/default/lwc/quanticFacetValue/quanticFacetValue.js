@@ -16,7 +16,7 @@ import LOCALE from '@salesforce/i18n/locale';
  */
 export default class QuanticFacetValue extends LightningElement {
   /**
-   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/controllers/facet/#facetvalue) to display.
+   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/search/controllers/facet/#facetvalue) to display.
    * @api
    * @type {FacetValueBase}
    */

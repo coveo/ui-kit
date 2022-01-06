@@ -3,16 +3,19 @@ on:
   push:
     branches:
       - master
-    tags-ignore:
-      - "@coveo/*"
 jobs:
+  allow-workflow:
+    name: "Allow workflow"
+    if: "!startsWith(github.event.head_commit.message, '[Version Bump]')"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Workflow allowed to start"
   build:
     name: "Build"
+    needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
   lint-check:
     name: "Check with linter"
@@ -20,8 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   generate-doc:
@@ -30,8 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npm run doc:generate
   unit-test:
@@ -40,8 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
@@ -51,8 +48,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
         with:
@@ -64,8 +59,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-quantic
         with:
@@ -85,6 +78,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Clean directory

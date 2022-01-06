@@ -2,7 +2,10 @@ import {
   AnalyticsConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
+import {AnalyticsClientSendEventHook} from '@coveo/headless/node_modules/coveo.analytics';
 import {getAtomicEnvironment} from '../../global/environment';
+
+type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];
 
 export function getAnalyticsConfig(
   searchEngineConfig: SearchEngineConfiguration,
@@ -29,7 +32,7 @@ export function getAnalyticsConfig(
 
 function augmentAnalyticsWithAtomicVersion(
   event: string,
-  payload: any,
+  payload: AnalyticsPayload,
   existingMiddleware?: AnalyticsConfiguration['analyticsClientMiddleware']
 ) {
   const out = existingMiddleware ? existingMiddleware(event, payload) : payload;

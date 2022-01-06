@@ -8,7 +8,7 @@ describe('Safe local storage', () => {
   let storage: SafeStorage;
 
   beforeEach(() => {
-    const engine = buildSearchEngine({
+    buildSearchEngine({
       configuration: getSampleSearchEngineConfiguration(),
     });
     storage = new SafeStorage();

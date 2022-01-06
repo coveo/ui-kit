@@ -52,6 +52,17 @@ const controllers: ControllerConfiguration[] = [
     utils: ['buildNumericRange'],
   },
   {
+    initializer: 'buildNumericFilter',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/numeric-filter/numeric-filter.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/numeric-filter/numeric-filter.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildDateFacet',
     samplePaths: {
       react_class: [
@@ -64,6 +75,17 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
     utils: ['buildDateRange'],
+  },
+  {
+    initializer: 'buildDateFilter',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/date-filter/date-filter.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/date-filter/date-filter.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildPager',

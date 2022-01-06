@@ -13,6 +13,7 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    interpolation: {escapeValue: false},
   });
   let labelRef: HTMLLabelElement;
 
@@ -45,6 +46,7 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
         part="value-checkbox-label"
         class="group items-center"
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
+        aria-hidden="true"
       >
         {children}
         <span part="value-count" class="value-count">

@@ -34,8 +34,12 @@ import {CategoryFacet as CategoryFacetFn} from '../components/category-facet/cat
 import {Facet} from '../components/facet/facet.class';
 import {Facet as FacetFn} from '../components/facet/facet.fn';
 import {NumericFacet} from '../components/numeric-facet/numeric-facet.class';
+import {NumericFilter} from '../components/numeric-filter/numeric-filter.class';
+import {NumericFilter as NumericFilterFn} from '../components/numeric-filter/numeric-filter.fn';
 import {NumericFacet as NumericFacetFn} from '../components/numeric-facet/numeric-facet.fn';
 import {DateFacet} from '../components/date-facet/date-facet.class';
+import {DateFilter} from '../components/date-filter/date-filter.class';
+import {DateFilter as DateFilterFn} from '../components/date-filter/date-filter.fn';
 import {DateFacet as DateFacetFn} from '../components/date-facet/date-facet.fn';
 import {RelativeDateFacet} from '../components/relative-date-facet/relative-date-facet.class';
 import {RelativeDateFacet as RelativeDateFacetFn} from '../components/relative-date-facet/relative-date-facet.fn';
@@ -121,6 +125,10 @@ import {
   StaticFilterValue,
   buildStaticFilterValue,
   buildQueryExpression,
+  NumericFilter as HeadlessNumericFilter,
+  DateFilter as HeadlessDateFilter,
+  buildNumericFilter,
+  buildDateFilter,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -177,9 +185,11 @@ export class SearchPage extends Component {
   private readonly objectTypeFacet: HeadlessFacet;
   private readonly fileSizeAutomaticNumericFacet: HeadlessNumericFacet;
   private readonly fileSizeManualNumericFacet: HeadlessNumericFacet;
+  private readonly fileSizeNumericFilter: HeadlessNumericFilter;
   private readonly dateAutomaticDateFacet: HeadlessDateFacet;
   private readonly dateManualDateFacet: HeadlessDateFacet;
   private readonly dateRelativeDateFacet: HeadlessDateFacet;
+  private readonly dateFilter: HeadlessDateFilter;
   private readonly sort: HeadlessSort;
   private readonly resultsPerPage: HeadlessResultsPerPage;
   private readonly pager: HeadlessPager;
@@ -255,6 +265,7 @@ export class SearchPage extends Component {
         generateAutomaticRanges: true,
       },
     });
+
     this.fileSizeManualNumericFacet = buildNumericFacet(this.engine, {
       options: {
         field: 'size',
@@ -266,6 +277,10 @@ export class SearchPage extends Component {
           buildNumericRange({start: 5 * MB, end: 5 * GB}),
         ],
       },
+    });
+
+    this.fileSizeNumericFilter = buildNumericFilter(this.engine, {
+      options: {field: 'size', facetId: 'size-6'},
     });
 
     this.dateAutomaticDateFacet = buildDateFacet(this.engine, {
@@ -291,6 +306,10 @@ export class SearchPage extends Component {
         generateAutomaticRanges: false,
         currentValues: relativeDateRanges,
       },
+    });
+
+    this.dateFilter = buildDateFilter(this.engine, {
+      options: {field: 'date', facetId: 'date-7'},
     });
 
     this.sort = buildSort(this.engine, {
@@ -522,6 +541,7 @@ export class SearchPage extends Component {
                   buildNumericRange({start: 5 * MB, end: 5 * GB}),
                 ]}
               />
+              <NumericFilter field="size" facetId="size-5" />
               <DateFacet
                 field="date"
                 facetId="date-1"
@@ -539,6 +559,7 @@ export class SearchPage extends Component {
                 generateAutomaticRanges={false}
                 currentValues={relativeDateRanges}
               />
+              <DateFilter field="date" facetId="date-3" />
             </FacetManager>
             <FacetManagerFn controller={this.facetManager}>
               <CategoryFacetFn controller={this.geographyFacet} />
@@ -551,9 +572,11 @@ export class SearchPage extends Component {
                 controller={this.fileSizeManualNumericFacet}
                 format={(bytes) => filesize(bytes, {base: 10})}
               />
+              <NumericFilterFn controller={this.fileSizeNumericFilter} />
               <DateFacetFn controller={this.dateAutomaticDateFacet} />
               <DateFacetFn controller={this.dateManualDateFacet} />
               <RelativeDateFacetFn controller={this.dateRelativeDateFacet} />
+              <DateFilterFn controller={this.dateFilter} />
             </FacetManagerFn>
           </Section>
           <Section title="sort">

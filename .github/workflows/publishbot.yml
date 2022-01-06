@@ -1,37 +1,39 @@
 name: Publish Robot
 on:
   push:
-    tags:
-      - "@coveo/*"
+    branches:
+      - master
 jobs:
-  build:
-    name: "Build"
+  allow-workflow:
+    name: "Allow workflow"
+    if: "startsWith(github.event.head_commit.message, '[Version Bump]')"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - run: echo "Workflow allowed to start"
   npm-publish:
     name: 'Publish to NPM'
-    needs: build
+    needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
+        with:
+          with-registry: 'true'
+      - run: npm config set loglevel verbose --global
       - run: npm run npm:publish:alpha
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   deploy:
     name: 'Deploy the package'
     needs: npm-publish
-    runs-on: [self-hosted, linux, x64, ec2-alpha]
+    runs-on: [self-hosted, linux, x64, eks-poc]
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
       - uses: ./.github/actions/setup
       - run: rm -rf veracode && mkdir veracode
       - run: mkdir veracode/auth

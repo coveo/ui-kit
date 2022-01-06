@@ -82,7 +82,7 @@ export default class QuanticSearchInterface extends LightningElement {
 
   connectedCallback() {
     loadDependencies(this).then(() => {
-      if (!getHeadlessBindings(this.engineId).engine) {
+      if (!getHeadlessBindings(this.engineId)?.engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
             this.engineOptions = {

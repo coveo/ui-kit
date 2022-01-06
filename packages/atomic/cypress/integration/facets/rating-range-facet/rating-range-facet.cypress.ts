@@ -98,6 +98,39 @@ describe('Rating Range Test Suites', () => {
         before(setupSelectLinkValue);
         RatingFacetAssertions.assertLogRatingFacetSelect(ratingRangeFacetField);
       });
+
+      describe('when selecting the "Clear filter" button', () => {
+        function setupClearCheckboxValues() {
+          setupSelectLinkValue();
+          cy.wait(TestFixture.interceptAliases.UA);
+          RatingRangeFacetSelectors.clearButton().click();
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+        describe('verify rendering', () => {
+          before(setupClearCheckboxValues);
+
+          CommonFacetAssertions.assertDisplayClearButton(
+            RatingRangeFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertNumberOfSelectedLinkValues(
+            RatingRangeFacetSelectors,
+            0
+          );
+          CommonFacetAssertions.assertNumberOfIdleLinkValues(
+            RatingRangeFacetSelectors,
+            ratingRangeFacetDefaultNumberOfIntervals
+          );
+          CommonFacetAssertions.assertFocusHeader(RatingRangeFacetSelectors);
+        });
+
+        describe('verify analytics', () => {
+          before(setupClearCheckboxValues);
+          CommonFacetAssertions.assertLogClearFacetValues(
+            ratingRangeFacetField
+          );
+        });
+      });
     });
   });
 
