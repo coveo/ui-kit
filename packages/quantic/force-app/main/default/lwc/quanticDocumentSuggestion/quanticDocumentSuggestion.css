@@ -1,6 +1,10 @@
 .description {
   font-size: 14px;
 }
+.loading-holder{
+  position: relative;
+  height: 3.5rem;
+}
 
 .row {
   display: flex;

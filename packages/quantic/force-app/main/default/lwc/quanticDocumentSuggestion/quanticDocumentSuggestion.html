@@ -1,22 +1,23 @@
 <template>
-  <template if:true={loading}>
-    <div class="class to be added here">
-      <lightning-spinner alternative-text="loading" size="small"></lightning-spinner>
-    </div>
-  </template>
-  <template if:false={loading}>
-    <c-quantic-search-interface engine-id={searchEngineId}>
+  <c-quantic-search-interface engine-id={searchEngineId}>
+    <template if:true={loading}>
+      <div class="loading-holder">
+        <lightning-spinner alternative-text="loading"></lightning-spinner>
+      </div>
+    </template>
+    <template if:false={loading}>
+      zest berk
       <div class="slds-card">
         <lightning-accordion active-section-name={firstSuggestion} allow-multiple-sections-open
           class="slds-p-vertical_xx-small">
           <template iterator:it={suggestions}>
             <lightning-accordion-section data-id={it.value.uniqueId} onclick={handleSectionClick}
               key={it.value.uniqueId} name={it.value.title} label={it.value.title}>
+              <div slot="actions" class="slds-var-p-horizontal_x-large">
+                <slot name="rating" data-doc-id={it.value.uniqueId}>
+                </slot>
+              </div>
               <div onclick={stopPropagation}>
-                <div slot="actions" class="slds-var-p-horizontal_x-large">
-                  <slot name="rating" data-doc-id={it.value.uniqueId}>
-                  </slot>
-                </div>
                 <div class="slds-var-p-horizontal_x-large slds-var-p-vertical_x-small">
                   <p class="description">{it.value.excerpt}</p>
                   <div class="row slds-var-p-top_medium">
@@ -33,6 +34,6 @@
           </template>
         </lightning-accordion>
       </div>
-    </c-quantic-search-interface>
-  </template>
+    </template>
+  </c-quantic-search-interface>
 </template>

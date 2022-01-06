@@ -46,9 +46,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
     this.template.addEventListener('rating', this.onRating);
-    this.template.addEventListener('accordion-section-select', () => {
-      console.log('event receved');
-    });
   }
 
   renderedCallback() {
