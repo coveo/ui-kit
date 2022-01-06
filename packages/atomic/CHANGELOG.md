@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.7...@coveo/atomic@1.22.8) (2022-01-06)
+
+
+### Bug Fixes
+
+* **atomic:** specify use of connectedCallback for resultContext method ([#1637](https://github.com/coveo/ui-kit/issues/1637)) ([b117756](https://github.com/coveo/ui-kit/commit/b1177569cb3d81d5724beb4ea661767380019df1))
+
+
+
+
+
 ## [1.22.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.6...@coveo/atomic@1.22.7) (2022-01-05)
 
 **Note:** Version bump only for package @coveo/atomic
