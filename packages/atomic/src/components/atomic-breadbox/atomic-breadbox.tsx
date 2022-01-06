@@ -71,7 +71,7 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() private isCollapsed = true;
 
   @FocusTarget()
-  private breadcrumbRemovedFocus!: FocusTargetController;
+  private breadcrumbFocus!: FocusTargetController;
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -174,14 +174,14 @@ export class AtomicBreadbox implements InitializableComponent {
           title={`${breadcrumb.label}: ${fullValue}`}
           onClick={() => {
             if (this.numberOfBreadcrumbs > 1) {
-              this.breadcrumbRemovedFocus.focusAfterSearch();
+              this.breadcrumbFocus.focusAfterSearch();
             }
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           }}
           ref={
             this.lastRemovedBreadcrumbIndex === index
-              ? this.breadcrumbRemovedFocus.setTarget
+              ? this.breadcrumbFocus.setTarget
               : undefined
           }
         >
@@ -266,9 +266,7 @@ export class AtomicBreadbox implements InitializableComponent {
           class="p-2 btn-pill"
           ariaLabel={this.bindings.i18n.t('clear-all-filters')}
           onClick={() => this.breadcrumbManager.deselectAll()}
-          ref={
-            isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined
-          }
+          ref={isFocusTarget ? this.breadcrumbFocus.setTarget : undefined}
         ></Button>
       </li>
     );
