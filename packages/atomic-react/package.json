@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "npm run clean && npm run compile",
+    "dev": "npm link ../samples/headless-react/node_modules/react",
     "clean": "rm -rf dist",
     "compile": "npm run tsc",
     "tsc": "tsc -p ."
