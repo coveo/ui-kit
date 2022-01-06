@@ -21,8 +21,10 @@ export class AtomicResultFieldsList {
   @Element() private host!: HTMLElement;
 
   public connectedCallback() {
-    this.resizeObserver = new ResizeObserver(() => this.update());
-    this.resizeObserver.observe(this.host.parentElement!);
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => this.update());
+      this.resizeObserver.observe(this.host.parentElement!);
+    }
   }
 
   public disconnectedCallback() {

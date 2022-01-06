@@ -48,7 +48,7 @@ const ELLIPSIS = '...';
 export class AtomicBreadbox implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
-  private resizeObserver!: ResizeObserver;
+  private resizeObserver?: ResizeObserver;
   private showMore!: HTMLButtonElement;
   private showLess!: HTMLButtonElement;
   facetManager!: FacetManager;
@@ -67,12 +67,15 @@ export class AtomicBreadbox implements InitializableComponent {
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
-    this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
-    this.resizeObserver.observe(this.host.parentElement!);
+
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
+      this.resizeObserver.observe(this.host.parentElement!);
+    }
   }
 
   public disconnectedCallback() {
-    this.resizeObserver.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   private get breadcrumbs() {
