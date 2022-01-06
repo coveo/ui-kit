@@ -6,13 +6,13 @@ export interface CaseClassificationSelector extends ComponentSelector {
   label: () => CypressSelector;
   selectTitle: () => CypressSelector;
   selectInput: () => CypressSelector;
-  selectOption: (i: number) => CypressSelector;
+  selectOption: (idx: number) => CypressSelector;
   inlineOptions: () => CypressSelector;
   suggestedOptions: () => CypressSelector;
-  suggestedOption: (i: number) => CypressSelector;
-  inlineOption: (i: number) => CypressSelector;
-  suggestedOptionInput: (i: number) => CypressSelector;
-  inlineOptionInput: (i: number) => CypressSelector;
+  suggestedOption: (idx: number) => CypressSelector;
+  inlineOption: (idx: number) => CypressSelector;
+  suggestedOptionInput: (idx: number) => CypressSelector;
+  inlineOptionInput: (idx: number) => CypressSelector;
   error: () => CypressSelector;
   loadingSpinner: () => CypressSelector;
 }

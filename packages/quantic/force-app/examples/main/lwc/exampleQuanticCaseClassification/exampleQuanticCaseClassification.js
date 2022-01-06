@@ -1,10 +1,8 @@
-import {LightningElement, track, api} from 'lwc';
+import {LightningElement, track} from 'lwc';
 // @ts-ignore
 import {getCaseAssistId} from 'c/utils';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
-  @api engineId = 'case-assist-engine';
-
   @track config = {};
   isConfigured = false;
 
@@ -14,9 +12,16 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
 
   options = [
     {
+      attribute: 'engineId',
+      label: 'Engine id',
+      description: 'The ID of the engine instance the component registers to.',
+      defaultValue: 'case-assist-engine',
+    },
+    {
       attribute: 'sfFieldApiName',
       label: 'Salesforce API field name',
-      description: 'The name of the field of the case in the Salesforce API to be classified.',
+      description:
+        'The name of the field of the case in the Salesforce API to be classified.',
       defaultValue: 'Priority',
     },
     {

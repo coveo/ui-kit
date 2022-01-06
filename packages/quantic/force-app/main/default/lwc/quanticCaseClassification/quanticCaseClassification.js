@@ -18,7 +18,7 @@ import {
 /** @typedef {import("coveo").CaseField} CaseField */
 
 /**
- * The `QuanticCaseClassification` component displays field value suggestions returned by Coveo Case Assist as well as a single-select dropdown containing other available values.
+ * The `QuanticCaseClassification` component displays field value suggestions returned by Coveo Case Assist as well as a single-select dropdown containing other available values retreived from the CASE_OBJECT of the Salesforce org used.
  *
  * @category Case Assist
  * @example
@@ -29,7 +29,7 @@ export default class QuanticCaseClassification extends LightningElement {
     caseClassificationTitle,
     moreTopics,
     selectOption,
-    loading
+    loading,
   };
 
   @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
@@ -53,12 +53,12 @@ export default class QuanticCaseClassification extends LightningElement {
    * @type {string}
    */
   @api sfFieldApiName;
-    /**
+  /**
    * The name of the Coveo field to be classified.
    * @api
    * @type {string}
    */
-    @api coveoFieldName;
+  @api coveoFieldName;
   /**
    * Tells whether the input is required or not.
    * @api
@@ -97,7 +97,10 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /** @type {Array<object>} */
   @track classifications = [];
-
+  /** @type {Array<object>} */
+  previousClassifications = [];
+  /** @type {Array<object>} */
+  suggestions = [];
   /** @type {boolean} */
   loading = false;
   /** @type {CaseAssistEngine} */
@@ -146,9 +149,20 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   updateFieldState() {
-    if(this.maxChoices > 1){
+    if (this.maxChoices > 1) {
+      this.previousClassifications = this.classifications;
       this.classifications = this.field.state.suggestions ?? [];
       this.loading = this.field.state.loading;
+      if (
+        JSON.stringify(this.classifications) !==
+        JSON.stringify(this.previousClassifications)
+      ) {
+        const firstSuggestion = this.classifications[0];
+        this.field.update(firstSuggestion.value);
+        this._value = firstSuggestion.value;
+        this.suggestions = this.classifications;
+        this.checkCorrectSuggestion();
+      }
     }
   }
 
@@ -170,7 +184,6 @@ export default class QuanticCaseClassification extends LightningElement {
         ?.values ?? []
     );
   }
-
   /**
    * Shows an error message in the component if there is an error.
    * @returns {void}
@@ -243,17 +256,6 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Returns the suggestions to be shown.
-   * @returns {Array}
-   */
-  get suggestions() {
-    return this.classifications.slice(
-      0,
-      Math.max(Number(this.maxChoices), 1) - 1
-    );
-  }
-
-  /**
    * Shows the select input.
    * @returns {void}
    */
@@ -266,12 +268,11 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectSuggestion(event) {
-    const suggestionId = event.target.dataset.suggestionId;
     const value = event.target.value;
-    this.engine.dispatch(this.actions.logClassificationClick(suggestionId));
     this.field.update(value);
     this._errorMessage = '';
     this._value = value;
+    this.checkCorrectSuggestion();
   }
 
   /**
@@ -286,6 +287,7 @@ export default class QuanticCaseClassification extends LightningElement {
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.hideSuggestions();
     }
+    this.checkCorrectSuggestion();
   }
 
   /**
@@ -293,11 +295,20 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   hideSuggestions() {
-    const suggestions = this.template.querySelectorAll('.slds-visual-picker');
+    const suggestions = this.template.querySelectorAll('.case-classification-suggestion');
     suggestions.forEach((suggestion) => {
       // @ts-ignore
       suggestion.style.width = `${suggestion.clientWidth}px`;
       suggestion.classList.add('visual-picker__hidden');
+    });
+  }
+
+  checkCorrectSuggestion() {
+    this.suggestions = this.suggestions.map((sug) => {
+      if (sug.value === this._value) {
+        return {...sug, checked: true};
+      }
+      return {...sug, checked: false};
     });
   }
 }
