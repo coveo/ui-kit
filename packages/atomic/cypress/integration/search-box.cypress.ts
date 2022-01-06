@@ -63,12 +63,7 @@ describe('Search Box Test Suites', () => {
         SearchBoxSelectors.inputBox().click();
       });
 
-      it('should limit the amount of suggestions & recent queries', () => {
-        SearchBoxSelectors.querySuggestions()
-          .children()
-          .should('have.length', expectedSum);
-      });
-
+      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
       CommonAssertions.assertAriaLiveMessage(
         SearchBoxSelectors.liveRegion,
         expectedSum.toString()
@@ -81,13 +76,7 @@ describe('Search Box Test Suites', () => {
         SearchBoxSelectors.inputBox().type('Rec');
       });
 
-      it('should not limit the amount of suggestions & recent queries', () => {
-        SearchBoxSelectors.querySuggestions().should(
-          'have.length',
-          expectedSum
-        );
-      });
-
+      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
       CommonAssertions.assertAriaLiveMessage(
         SearchBoxSelectors.liveRegion,
         expectedSum.toString()

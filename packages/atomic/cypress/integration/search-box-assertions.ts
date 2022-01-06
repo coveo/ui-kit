@@ -11,3 +11,9 @@ export function assertHasText(text: string) {
     SearchBoxSelectors.inputBox().should('have.value', text);
   });
 }
+
+export function assertHasSuggestionsCount(count: number) {
+  it(`should display ${count} suggestions`, () => {
+    SearchBoxSelectors.querySuggestions().should('have.length', count);
+  });
+}
