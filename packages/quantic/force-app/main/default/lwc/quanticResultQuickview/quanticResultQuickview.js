@@ -95,6 +95,7 @@ export default class QuanticResultQuickview extends LightningElement {
     slots.forEach((slot) => {
       let slotContent = slot;
       while(slotContent?.tagName === 'SLOT'){
+        // @ts-ignore
         slotContent = slotContent.assignedNodes()[0]
       }
       if (slotContent) {

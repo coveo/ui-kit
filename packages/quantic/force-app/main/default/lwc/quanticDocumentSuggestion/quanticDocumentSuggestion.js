@@ -3,18 +3,25 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import loading from '@salesforce/label/c.quantic_Loading';
+
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").DocumentSuggestion} DocumentSuggestion */
+
 
 /**
  * The `QuanticDocumentSuggestion` component displays an accordion containing the document suggestions returned by Coveo Case Assist based on the values that the user has previously entred in the different fields.
  *
  * @category Case Assist
  * @example
- * <c-quantic-document-suggestion engine-id={engineId}></c-quantic-document-suggestion>
+ * <c-quantic-document-suggestion engine-id={engineId} search-engine-id={searchEngineId}></c-quantic-document-suggestion>
  */
 export default class QuanticDocumentSuggestion extends LightningElement {
+  labels = {
+    loading
+  }
+  
   /**
    * The ID of the case assist engine instance the component registers to.
    * @api
@@ -54,6 +61,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     slots.forEach((slot) => {
       let slotContent = slot;
       while (slotContent?.tagName === 'SLOT') {
+        // @ts-ignore
         slotContent = slotContent.assignedNodes()[0];
       }
       if (slotContent) {
@@ -103,7 +111,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   }
 
   onRating = (evt) => {
-    // console.log('rating event receved')
     this.engine.dispatch(
       this.actions.logDocumentSuggestionRating(evt.detail.id, evt.detail.score)
     );
@@ -113,6 +120,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     const accordion = this.template.querySelector('lightning-accordion');
     if (
       JSON.stringify(this.openedDocuments) !==
+      // @ts-ignore
       JSON.stringify(accordion.activeSectionName)
     ) {
       if (this.openedDocuments.indexOf(evt.target.name) === -1) {
@@ -120,6 +128,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
           this.actions.logDocumentSuggestionClick(evt.target.dataset.id)
         );
       }
+      // @ts-ignore
       this.openedDocuments = accordion.activeSectionName;
     }
   }

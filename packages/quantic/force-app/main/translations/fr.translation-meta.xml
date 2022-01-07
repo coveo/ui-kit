@@ -400,4 +400,8 @@
         <label>Fin :</label>
         <name>quantic_EndLabel</name>
     </customLabels>
+    <customLabels>
+      <label>Chargement</label>
+      <name>quantic_Loading</name>
+  </customLabels>
 </Translations>

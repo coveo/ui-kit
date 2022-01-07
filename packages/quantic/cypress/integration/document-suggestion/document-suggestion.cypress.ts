@@ -1,5 +1,5 @@
 import {configure} from '../../page-objects/configurator';
-import {DocumentSuggestionExpectations as Expect} from './document.suggestiom.expectations';
+import {DocumentSuggestionExpectations as Expect} from './document.suggestion.expectations';
 import {DocumentSuggestionActions as Actions} from './document-suggestion-actions';
 import {scope} from '../../reporters/detailed-collector';
 import {
