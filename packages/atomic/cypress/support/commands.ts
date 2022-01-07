@@ -6,7 +6,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
       getAnalyticsAt(selector: string, order: number): Chainable<unknown>;
-      getTextOfAllElements(selector: string): Chainable<unknown>;
+      getTextOfAllElements(selector: string): Chainable<string[]>;
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;

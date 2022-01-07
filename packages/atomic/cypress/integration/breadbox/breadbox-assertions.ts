@@ -13,6 +13,7 @@ import {label} from '../facets/facet/facet-actions';
 import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
 import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';
 import {categoryFacetLabel} from '../facets/category-facet/category-facet-actions';
+import {AnalyticsTracker} from '../../utils/analyticsUtils';
 
 export function assertDisplayBreadcrumb(display: boolean) {
   it(`${should(display)} display the breadcrumb`, () => {
@@ -214,13 +215,10 @@ export function assertLogBreadcrumbCategoryFacet(field: string) {
 
 export function assertLogBreadcrumbClearAll() {
   it('should log the breadcrumb facet clearAll to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property(
-        'actionCause',
-        'breadcrumbResetAll'
-      );
-    });
+    expect(AnalyticsTracker.getLastSearchEvent()).to.have.property(
+      'actionCause',
+      'breadcrumbResetAll'
+    );
   });
 }
 

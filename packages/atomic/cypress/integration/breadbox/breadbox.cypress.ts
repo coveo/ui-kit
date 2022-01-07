@@ -37,6 +37,7 @@ import {
 } from '../facets/timeframe-facet/timeframe-facet-action';
 import {TimeframeFacetSelectors} from '../facets/timeframe-facet/timeframe-facet-selectors';
 import {NumericFacetSelectors} from '../facets/numeric-facet/numeric-facet-selectors';
+import {waitUntilNextSearchRendered} from '../common-actions';
 
 describe('Breadbox Test Suites', () => {
   function setupBreadboxWithMultipleFacets() {
@@ -57,11 +58,9 @@ describe('Breadbox Test Suites', () => {
     function setupBreadboxWithSelectedFacetAndNumericFacet() {
       setupBreadboxWithMultipleFacets();
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.UA);
-      cy.wait(TestFixture.interceptAliases.Search);
+      waitUntilNextSearchRendered();
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      waitUntilNextSearchRendered();
     }
 
     describe('verify rendering', () => {
@@ -85,7 +84,7 @@ describe('Breadbox Test Suites', () => {
       function setupClearAllBreadcrumb() {
         setupBreadboxWithSelectedFacetAndNumericFacet();
         BreadboxSelectors.clearAllButton().click();
-        cy.wait(TestFixture.interceptAliases.Search);
+        waitUntilNextSearchRendered();
       }
 
       describe('verify rendering', () => {
@@ -119,14 +118,11 @@ describe('Breadbox Test Suites', () => {
       const selectionIndex = 0;
       setupBreadboxWithMultipleFacets();
       selectChildValueAt(canadaHierarchyIndex[0]);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      waitUntilNextSearchRendered();
       selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      waitUntilNextSearchRendered();
       selectIdleBoxValueAt(selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      waitUntilNextSearchRendered();
     }
     describe('verify rendering', () => {
       before(setupBreadboxWithDifferentTypeSelectedFacet);
@@ -148,12 +144,10 @@ describe('Breadbox Test Suites', () => {
     function setupSelectedMulitpleFacets() {
       setupBreadboxWithMultipleFacets();
       FacetSelectors.showMoreButton().click();
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
+      waitUntilNextSearchRendered();
       index.forEach((i: number) => {
         selectIdleCheckboxValueAt(FacetSelectors, i);
-        cy.wait(TestFixture.interceptAliases.Search);
-        cy.wait(TestFixture.interceptAliases.UA);
+        waitUntilNextSearchRendered();
       });
     }
 
