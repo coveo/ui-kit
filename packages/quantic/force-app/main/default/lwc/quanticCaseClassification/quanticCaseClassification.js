@@ -249,10 +249,17 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array<object>}
    */
   get filteredOptions() {
-    return this.options.filter(
-      (option) =>
-        !this.classifications.some((item) => item.value === option.value)
-    );
+    return this.options
+      .filter(
+        (option) =>
+          !this.classifications.some((item) => item.value === option.value)
+      )
+      .map((option) => {
+        if (option.value === this._value) {
+          return {...option, checked: true};
+        }
+        return {...option, checked: false};
+      });
   }
 
   /**
@@ -268,9 +275,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectSuggestion(event) {
-    const value = event.target.value;
-    this.field.update(value);
     this._errorMessage = '';
+    const value = event.target.checked ? event.target.value : '';
+    this.field.update(value);
     this._value = value;
     this.checkCorrectSuggestion();
   }
@@ -287,7 +294,6 @@ export default class QuanticCaseClassification extends LightningElement {
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.hideSuggestions();
     }
-    this.checkCorrectSuggestion();
   }
 
   /**
@@ -295,7 +301,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   hideSuggestions() {
-    const suggestions = this.template.querySelectorAll('.case-classification-suggestion');
+    const suggestions = this.template.querySelectorAll(
+      '.case-classification-suggestion'
+    );
     suggestions.forEach((suggestion) => {
       // @ts-ignore
       suggestion.style.width = `${suggestion.clientWidth}px`;
