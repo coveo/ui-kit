@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.9...@coveo/atomic@1.22.10) (2022-01-07)
+
+
+### Bug Fixes
+
+* **atomic:** fixed focus when clearing a breadcrumb ([#1640](https://github.com/coveo/ui-kit/issues/1640)) ([62fcf9a](https://github.com/coveo/ui-kit/commit/62fcf9ad0c543cf3f5a2cbd2d9afd10aef614da0))
+
+
+
+
+
 ## [1.22.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.8...@coveo/atomic@1.22.9) (2022-01-07)
 
 
