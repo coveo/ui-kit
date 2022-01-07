@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.8...@coveo/atomic@1.22.9) (2022-01-07)
+
+
+### Bug Fixes
+
+* **atomic:** bring safari date regexp into the new millenium ([#1638](https://github.com/coveo/ui-kit/issues/1638)) ([0d4cebc](https://github.com/coveo/ui-kit/commit/0d4cebc8b42512a88e37c4a7e0f2adf0e78f0793))
+* **atomic:** fix color facet values in Safari 13 ([#1634](https://github.com/coveo/ui-kit/issues/1634)) ([5d0f91f](https://github.com/coveo/ui-kit/commit/5d0f91ff423c58918e1e1b53c0975e10f4f6a935))
+* **atomic:** prevent ResizeObserver from crashing Safari 12 ([#1635](https://github.com/coveo/ui-kit/issues/1635)) ([98b4796](https://github.com/coveo/ui-kit/commit/98b47965a5b63782eae4f984de99386501b26140))
+
+
+
+
+
 ## [1.22.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.7...@coveo/atomic@1.22.8) (2022-01-06)
 
 
