@@ -6,7 +6,6 @@
       </div>
     </template>
     <template if:false={loading}>
-      zest berk
       <div class="slds-card">
         <lightning-accordion active-section-name={firstSuggestion} allow-multiple-sections-open
           class="slds-p-vertical_xx-small">
@@ -14,8 +13,8 @@
             <lightning-accordion-section data-id={it.value.uniqueId} onclick={handleSectionClick}
               key={it.value.uniqueId} name={it.value.title} label={it.value.title}>
               <div slot="actions" class="slds-var-p-horizontal_x-large">
-                <slot name="rating" data-doc-id={it.value.uniqueId}>
-                </slot>
+                  <slot name="rating" data-doc-id={it.value.uniqueId}>
+                  </slot>
               </div>
               <div onclick={stopPropagation}>
                 <div class="slds-var-p-horizontal_x-large slds-var-p-vertical_x-small">
@@ -23,10 +22,9 @@
                   <div class="row slds-var-p-top_medium">
                     <c-quantic-result-quickview engine-id={searchEngineId} preview-button-icon="utility:new_window"
                       preview-button-label="Show more" preview-button-variant="outline-brand" result={it.value}>
-                      <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
+                        <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
                     </c-quantic-result-quickview>
-                    <slot name="actions" data-doc-id={it.value.uniqueId}>
-                    </slot>
+                    <slot name="actions" data-doc-id={it.value.uniqueId}></slot>
                   </div>
                 </div>
               </div>

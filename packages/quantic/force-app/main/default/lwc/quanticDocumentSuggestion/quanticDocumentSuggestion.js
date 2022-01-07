@@ -103,6 +103,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   }
 
   onRating = (evt) => {
+    // console.log('rating event receved')
     this.engine.dispatch(
       this.actions.logDocumentSuggestionRating(evt.detail.id, evt.detail.score)
     );
