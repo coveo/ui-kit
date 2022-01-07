@@ -25,9 +25,15 @@ describe('quantic-result-template', () => {
       Expect.displaySlotByName('excerpt', true);
       Expect.displaySlotByName('bottom-metadata', true);
 
-      Actions.appendChildren('div', {
-        slot: 'label',
-      });
+      Actions.appendChildren(
+        'div',
+        {
+          slot: 'label',
+        },
+        'some label'
+      );
+
+      Expect.displaySlotByName('title', true);
     });
   });
 });
