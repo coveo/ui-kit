@@ -31,11 +31,11 @@ const headlessBundles = {
 const loadDependencies = async (element, headlessUseCase) => {
   const bundleInfo = headlessUseCase ? headlessBundles[headlessUseCase] : headlessBundles.search;
 
-  // if (!dependencyPromises.length) {
-    dependencyPromises = [...dependencyPromises,
-      loadScript(element, HeadlessPath + bundleInfo.libPath),
-    ];
-  // }
+  dependencyPromises = [
+    ...dependencyPromises,
+    loadScript(element, HeadlessPath + bundleInfo.libPath),
+  ];
+    
   await Promise.all(dependencyPromises);
   return bundleInfo.bundle();
 }
