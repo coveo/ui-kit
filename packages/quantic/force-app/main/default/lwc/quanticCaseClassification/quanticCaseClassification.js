@@ -22,7 +22,7 @@ import {
  *
  * @category Case Assist
  * @example
- * <c-quantic-case-classification engine-id={engineId} coveo-field-name="sfpriority" sf-field-api-name="Priority" required label="Which topic is related to your issue?" select-placeholder="More topics" max-choices="4" message-when-value-missing="Select an option"></c-quantic-case-classification>
+ * <c-quantic-case-classification engine-id={engineId} coveo-field-name="sfpriority" sf-field-api-name="Priority" required label="Which topic is related to your issue?" select-placeholder="More topics" max-suggestions="3" message-when-value-missing="Select an option"></c-quantic-case-classification>
  */
 export default class QuanticCaseClassification extends LightningElement {
   labels = {
@@ -39,7 +39,21 @@ export default class QuanticCaseClassification extends LightningElement {
     recordTypeId: '$objectInfo.data.defaultRecordTypeId',
     objectApiName: CASE_OBJECT,
   })
-  picklistValues;
+  setPicklistValues(values, error) {
+    if (error) {
+      console.error('Error getting the picklist values');
+    } else {
+      this.picklistValues = values;
+      if (
+        values.data &&
+        !values.data.picklistFieldValues[this.sfFieldApiName]
+      ) {
+        console.error(
+          `The Salesforce field API name "${this.sfFieldApiName}" is not found`
+        );
+      }
+    }
+  }
 
   /**
    * The ID of the engine instance the component registers to.
@@ -81,12 +95,12 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api selectPlaceholder = this.labels.moreTopics;
   /**
-   * The maximum number of choices to be displayed, a choice can be a suggestion, an inline option or the select dropdown. This property is used to precise when the select input should be displayed and when the inline options should be displayed. the minimum value of this property in 1.
+   * The maximum number of suggestions to be displayed.
    * @api
    * @type {number}
-   * @defaultValue `4`
+   * @defaultValue `3`
    */
-  @api maxChoices = 4;
+  @api maxSuggestions = 3;
   /**
    * The message to be shown when the value is missing.
    * @api
@@ -99,6 +113,8 @@ export default class QuanticCaseClassification extends LightningElement {
   @track classifications = [];
   /** @type {Array<object>} */
   previousClassifications = [];
+  /** @type {Object} */
+  @track picklistValues;
   /** @type {Array<object>} */
   suggestions = [];
   /** @type {boolean} */
@@ -149,7 +165,7 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   updateFieldState() {
-    if (this.maxChoices > 1) {
+    if (this.maxSuggestions > 0) {
       this.previousClassifications = this.classifications;
       this.classifications = this.field.state.suggestions ?? [];
       this.loading = this.field.state.loading;
@@ -160,7 +176,10 @@ export default class QuanticCaseClassification extends LightningElement {
         const firstSuggestion = this.classifications[0];
         this.field.update(firstSuggestion.value);
         this._value = firstSuggestion.value;
-        this.suggestions = this.classifications;
+        this.suggestions = this.classifications.slice(
+          0,
+          Math.max(Number(this.maxSuggestions), 0)
+        );
         this.checkCorrectSuggestion();
       }
     }
@@ -217,7 +236,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get isMoreOptionsVisible() {
-    return this.options.length > Math.max(Number(this.maxChoices), 1);
+    return this.options.length > Math.max(Number(this.maxSuggestions), 0);
   }
 
   /**

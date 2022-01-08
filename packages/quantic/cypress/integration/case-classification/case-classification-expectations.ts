@@ -1,5 +1,7 @@
 import {InterceptAliases} from '../../page-objects/case-assist';
 import {should} from '../common-selectors';
+import {ConsoleExpectations} from '../console-expectations';
+
 import {
   CaseClassificationSelector,
   CaseClassificationSelectors,
@@ -87,6 +89,19 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_field_update" UA event');
     },
 
+    logDeselect: (field: string) => {
+      cy.wait(InterceptAliases.UA.FieldUpdate)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody.svc_action_data).to.have.property(
+            'fieldName',
+            field
+          );
+          expect(analyticsBody.svc_ticket_custom).not.to.have.property(field);
+        })
+        .logDetail('should log the "ticket_field_update" UA event');
+    },
+
     logUpdatedClassificationFromSelectOption: (
       field: string,
       index: number
@@ -133,4 +148,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
 export const CaseClassificationExpectations = {
   ...caseClassificationExpectations(CaseClassificationSelectors),
+  console: {
+    ...ConsoleExpectations,
+  },
 };

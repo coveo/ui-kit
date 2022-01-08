@@ -9,13 +9,16 @@ import {CaseClassificationExpectations as Expect} from './case-classification-ex
 import {CaseClassificationActions as Actions} from './case-classification-actions';
 import {scope} from '../../reporters/detailed-collector';
 import {fetchClassifications} from '../../page-objects/actions/action-fetch-classifications';
+import {stubConsoleError} from '../console-selectors';
 
 interface CaseClassificationOptions {
-  maxChoices: number;
+  maxSuggestions: number;
   label: string;
   required: boolean;
   selectPlaceholder: string;
   messageWhenValueMissing: string;
+  sfFieldApiName: string;
+  coveoFieldName: string;
 }
 
 describe('quantic-case-classification', () => {
@@ -23,7 +26,7 @@ describe('quantic-case-classification', () => {
 
   const sfDefaultField = 'Priority';
   const coveoDefaultField = 'sfpriority';
-  const defaultMaxChoices = 4;
+  const defaultMaxSuggestions = 3;
   const allOptions = [
     {id: '0', value: 'Very low', label: 'Very low'},
     {id: '1', value: 'Low', label: 'Low'},
@@ -44,7 +47,7 @@ describe('quantic-case-classification', () => {
   describe('when using default options', () => {
     it('should render the component and all parts', () => {
       visitCaseClassification({
-        maxChoices: defaultMaxChoices,
+        maxSuggestions: defaultMaxSuggestions,
       });
 
       scope('when loading the page', () => {
@@ -56,7 +59,7 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when fetching suggestions', () => {
-        const suggestionsCount = 2;
+        const suggestionsCount = 3;
         const firstSuggestionIndex = 0;
 
         mockCaseClassification(
@@ -105,7 +108,7 @@ describe('quantic-case-classification', () => {
   describe('when the suggestions are loading', () => {
     it('should display the loading spinner', () => {
       visitCaseClassification({
-        maxChoices: defaultMaxChoices,
+        maxSuggestions: defaultMaxSuggestions,
       });
 
       scope('when loading the page', () => {
@@ -136,7 +139,7 @@ describe('quantic-case-classification', () => {
   describe('when no suggestions are found', () => {
     it('should display only the select dropdown', () => {
       visitCaseClassification({
-        maxChoices: defaultMaxChoices,
+        maxSuggestions: defaultMaxSuggestions,
       });
 
       scope('when loading the page', () => {
@@ -157,10 +160,97 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('when maxChoices set to 1', () => {
-    it('should display only the select dropdown', () => {
+  describe('when maxSuggestions set to 1', () => {
+    it('should display only one suggestion and the select dropdown', () => {
       visitCaseClassification({
-        maxChoices: 1,
+        maxSuggestions: 1,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
+
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.numberOfSuggestions(1);
+        Expect.numberOfInlineOptions(0);
+        Expect.displaySelectInput(false);
+        Expect.displaySelectTitle(true);
+        Expect.logClickedSuggestion(firstSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstSuggestionIndex
+        );
+      });
+
+      scope('when selecting an option from the select input', () => {
+        const clickedIndex = 3;
+
+        Actions.clickSelectTitle();
+        Actions.openSelectInput();
+        Actions.clickSelectOption(clickedIndex);
+        Expect.logUpdatedClassificationFromSelectOption(
+          coveoDefaultField,
+          clickedIndex
+        );
+      });
+    });
+  });
+
+  describe('when maxSuggestions is equal or inferior to 0', () => {
+    it('should display only the select dropdown when maxSuggestions is set to 0', () => {
+      visitCaseClassification({
+        maxSuggestions: 0,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        const suggestionsCount = 2;
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.numberOfSuggestions(0);
+        Expect.numberOfInlineOptions(0);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when selecting an option from the select input', () => {
+        const clickedIndex = 3;
+
+        Actions.openSelectInput();
+        Actions.clickSelectOption(clickedIndex);
+        Expect.logUpdatedClassificationFromSelectOption(
+          coveoDefaultField,
+          clickedIndex
+        );
+      });
+    });
+
+    it('should display the select dropdown when maxSuggestion is inferior to 0', () => {
+      visitCaseClassification({
+        maxSuggestions: -1,
       });
 
       scope('when loading the page', () => {
@@ -197,89 +287,11 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('when invalid number of maxChoices is given', () => {
-    it('should display only the select dropdown when maxChoices is set to 0', () => {
-      visitCaseClassification({
-        maxChoices: 0,
-      });
-
-      scope('when loading the page', () => {
-        Expect.displayLabel(true);
-        Expect.numberOfInlineOptions(0);
-        Expect.numberOfSuggestions(0);
-        Expect.displaySelectTitle(false);
-        Expect.displaySelectInput(true);
-      });
-
-      scope('when fetching suggestions', () => {
-        const suggestionsCount = 2;
-        mockCaseClassification(
-          coveoDefaultField,
-          allOptions.slice(0, suggestionsCount)
-        );
-        fetchClassifications();
-        Expect.displaySelectTitle(false);
-        Expect.numberOfSuggestions(0);
-        Expect.numberOfInlineOptions(0);
-        Expect.displaySelectInput(true);
-      });
-
-      scope('when selecting an option from the select input', () => {
-        const clickedIndex = 3;
-
-        Actions.openSelectInput();
-        Actions.clickSelectOption(clickedIndex);
-        Expect.logUpdatedClassificationFromSelectOption(
-          coveoDefaultField,
-          clickedIndex
-        );
-      });
-    });
-
-    it('should display the select dropdown when maxChoices is inferior to 0', () => {
-      visitCaseClassification({
-        maxChoices: -1,
-      });
-
-      scope('when loading the page', () => {
-        Expect.displayLabel(true);
-        Expect.numberOfInlineOptions(0);
-        Expect.numberOfSuggestions(0);
-        Expect.displaySelectTitle(false);
-        Expect.displaySelectInput(true);
-      });
-
-      scope('when fetching suggestions', () => {
-        const suggestionsCount = 2;
-        mockCaseClassification(
-          coveoDefaultField,
-          allOptions.slice(0, suggestionsCount)
-        );
-        fetchClassifications();
-        Expect.displaySelectTitle(false);
-        Expect.numberOfSuggestions(0);
-        Expect.numberOfInlineOptions(0);
-        Expect.displaySelectInput(true);
-      });
-
-      scope('when selecting an option from the select input', () => {
-        const clickedIndex = 3;
-
-        Actions.openSelectInput();
-        Actions.clickSelectOption(clickedIndex);
-        Expect.logUpdatedClassificationFromSelectOption(
-          coveoDefaultField,
-          clickedIndex
-        );
-      });
-    });
-  });
-
-  describe('when maxChoices is set to the number of options', () => {
+  describe('when maxSuggestions is set to the number of options', () => {
     const optionsCount = 5;
     it('should display all the options as inline options', () => {
       visitCaseClassification({
-        maxChoices: optionsCount,
+        maxSuggestions: optionsCount,
       });
 
       scope('when loading the page', () => {
@@ -333,11 +345,11 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('when maxChoices is greater than the number of options', () => {
+  describe('when maxSuggestions is greater than the number of options', () => {
     const optionsCount = 5;
     it('should display all the options as inline options', () => {
       visitCaseClassification({
-        maxChoices: optionsCount + 1,
+        maxSuggestions: optionsCount + 1,
       });
 
       scope('when loading the page', () => {
@@ -405,8 +417,9 @@ describe('quantic-case-classification', () => {
         required: true,
       });
 
-      scope('when reporting validity and a suggestion is selected', () => {
+      scope('when reporting validity and no suggestion is selected', () => {
         const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
 
         mockCaseClassification(
           coveoDefaultField,
@@ -416,8 +429,79 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
+        Expect.logClickedSuggestion(firstSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstSuggestionIndex
+        );
+        Actions.clickSuggestion(firstSuggestionIndex);
+        Expect.logDeselect(coveoDefaultField);
+        Actions.reportValidity();
+        Expect.displayError(true);
+      });
+
+      scope('when reporting validity and a suggestion is selected', () => {
+        const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
+
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Actions.clickSuggestion(firstSuggestionIndex);
+        Expect.logClickedSuggestion(firstSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstSuggestionIndex
+        );
         Actions.reportValidity();
         Expect.displayError(false);
+      });
+    });
+  });
+
+  describe('when incorrect Salesforce field API name is given', () => {
+    it('should log an error in the console', () => {
+      interceptCaseAssist();
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleError(win);
+        },
+      });
+      configure({
+        sfFieldApiName: 'incorrect sfFieldApiName',
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(false);
+        Expect.console.error(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
+
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.numberOfInlineOptions(0);
+        Expect.displaySelectInput(false);
+        Expect.logClickedSuggestion(firstSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstSuggestionIndex
+        );
       });
     });
   });
