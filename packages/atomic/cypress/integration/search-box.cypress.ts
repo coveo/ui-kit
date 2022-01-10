@@ -3,6 +3,7 @@ import {SafeStorage, StorageItems} from '../../src/utils/local-storage-utils';
 import {SearchBoxSelectors} from './search-box-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as CommonAssertions from './common-assertions';
+import * as SearchBoxAssertions from './search-box-assertions';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(
@@ -62,12 +63,7 @@ describe('Search Box Test Suites', () => {
         SearchBoxSelectors.inputBox().click();
       });
 
-      it('should limit the amount of suggestions & recent queries', () => {
-        SearchBoxSelectors.querySuggestions()
-          .children()
-          .should('have.length', expectedSum);
-      });
-
+      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
       CommonAssertions.assertAriaLiveMessage(
         SearchBoxSelectors.liveRegion,
         expectedSum.toString()
@@ -80,17 +76,41 @@ describe('Search Box Test Suites', () => {
         SearchBoxSelectors.inputBox().type('Rec');
       });
 
-      it('should not limit the amount of suggestions & recent queries', () => {
-        SearchBoxSelectors.querySuggestions().should(
-          'have.length',
-          expectedSum
-        );
-      });
-
+      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
       CommonAssertions.assertAriaLiveMessage(
         SearchBoxSelectors.liveRegion,
         expectedSum.toString()
       );
+
+      describe('after selecting a suggestion with the mouse', () => {
+        beforeEach(() => {
+          SearchBoxSelectors.querySuggestions().eq(1).click();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
+
+        SearchBoxAssertions.assertFocusSearchBox();
+        SearchBoxAssertions.assertHasText('Recent query 1');
+      });
+
+      describe('after focusing a suggestion with the keyboard', () => {
+        beforeEach(() => {
+          SearchBoxSelectors.inputBox()
+            .focus()
+            .type('{downarrow}{downarrow}{downarrow}');
+        });
+
+        SearchBoxAssertions.assertHasText('Recent query 1');
+
+        describe('after pressing the search button', () => {
+          beforeEach(() => {
+            SearchBoxSelectors.submitButton().click();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
+
+          SearchBoxAssertions.assertFocusSearchBox();
+          SearchBoxAssertions.assertHasText('Recent query 1');
+        });
+      });
     });
   });
 
