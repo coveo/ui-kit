@@ -3,7 +3,6 @@ import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-sugge
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
-  FetchQuerySuggestionsThunkReturn,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from './query-suggest-actions';
@@ -187,34 +186,28 @@ describe('querySuggest slice', () => {
       const responseId = 'response-uuid';
       const completions = getCompletions();
       const fetchQuerySuggestionsFulfilledAction =
-        fetchQuerySuggestions.fulfilled(
-          buildMockFetchQuerySuggestionsResponse(),
-          '',
-          {
-            id,
-          }
-        );
+        buildFetchQuerySuggestFullfilledAction();
 
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
-      function buildMockFetchQuerySuggestionsResponse(): FetchQuerySuggestionsThunkReturn {
-        return {
-          completions,
-          id,
-          responseId,
-          q: 'abc',
-        };
-      }
-
-      it('when fetchQuerySuggestions has an invalid id, it does not throw', () => {
-        const id = 'invalid id';
-        const action = fetchQuerySuggestions.fulfilled(
-          buildMockFetchQuerySuggestionsResponse(),
+      function buildFetchQuerySuggestFullfilledAction() {
+        return fetchQuerySuggestions.fulfilled(
+          {
+            completions,
+            id,
+            responseId,
+            q: 'abc',
+          },
           '',
           {
             id,
           }
         );
+      }
+
+      it('when fetchQuerySuggestions has an id that is not a key of the set, it does not throw', () => {
+        const action = buildFetchQuerySuggestFullfilledAction();
+        action.meta.arg.id = 'invalid id';
 
         expect(() => querySuggestReducer(state, action)).not.toThrow();
       });
