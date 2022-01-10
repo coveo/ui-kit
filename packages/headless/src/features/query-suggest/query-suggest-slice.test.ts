@@ -3,6 +3,7 @@ import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-sugge
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
+  FetchQuerySuggestionsThunkReturn,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from './query-suggest-actions';
@@ -181,19 +182,34 @@ describe('querySuggest slice', () => {
         expect(() => querySuggestReducer(state, action)).not.toThrow();
       });
     });
+
     describe('fetchQuerySuggestions.fulfilled', () => {
       const responseId = 'response-uuid';
       const completions = getCompletions();
       const fetchQuerySuggestionsFulfilledAction =
-        fetchQuerySuggestions.fulfilled({completions, id, responseId}, '', {
-          id,
-        });
+        fetchQuerySuggestions.fulfilled(
+          buildMockFetchQuerySuggestionsResponse(),
+          '',
+          {
+            id,
+          }
+        );
+
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
+
+      function buildMockFetchQuerySuggestionsResponse(): FetchQuerySuggestionsThunkReturn {
+        return {
+          completions,
+          id,
+          responseId,
+          q: 'abc',
+        };
+      }
 
       it('when fetchQuerySuggestions has an invalid id, it does not throw', () => {
         const id = 'invalid id';
         const action = fetchQuerySuggestions.fulfilled(
-          {completions, id, responseId},
+          buildMockFetchQuerySuggestionsResponse(),
           '',
           {
             id,
@@ -267,30 +283,28 @@ describe('querySuggest slice', () => {
       });
 
       it('should add the executed query to the list of partialQueries', () => {
-        const q = 'test';
-        state[id] = buildMockQuerySuggest({
-          q,
-          currentRequestId: 'the_right_id',
-        });
+        state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
         const nextState = querySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
+
+        const {q} = fetchQuerySuggestionsFulfilledAction.payload;
         expect(nextState[id]?.partialQueries).toEqual([q]);
       });
 
       it('should encode `;` characters in the list of partialQueries', () => {
-        const q = ';';
-        state[id] = buildMockQuerySuggest({
-          q,
-          currentRequestId: 'the_right_id',
-        });
+        fetchQuerySuggestionsFulfilledAction.payload.q = ';';
+
+        state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
         const nextState = querySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
+
+        const {q} = fetchQuerySuggestionsFulfilledAction.payload;
         expect(nextState[id]?.partialQueries).toEqual([encodeURIComponent(q)]);
       });
     });

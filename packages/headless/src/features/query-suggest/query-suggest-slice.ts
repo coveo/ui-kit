@@ -52,7 +52,7 @@ export const querySuggestReducer = createReducer(
           return;
         }
 
-        const {q} = querySuggest;
+        const {q} = action.payload;
         if (q) {
           querySuggest.partialQueries.push(
             q.replace(/;/, encodeURIComponent(';'))

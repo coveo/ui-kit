@@ -14,6 +14,7 @@ import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
+  QuerySetSection,
   QuerySuggestionSection,
   SearchHubSection,
 } from '../../state/state-sections';
@@ -22,6 +23,7 @@ import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
+  QuerySetSection &
   QuerySuggestionSection &
   Partial<ContextSection & PipelineSection & SearchHubSection>;
 
@@ -110,7 +112,12 @@ export interface FetchQuerySuggestionsActionCreatorPayload {
 
 export interface FetchQuerySuggestionsThunkReturn
   extends FetchQuerySuggestionsActionCreatorPayload,
-    QuerySuggestSuccessResponse {}
+    QuerySuggestSuccessResponse {
+  /**
+   * The query for which query suggestions were retrieved.
+   */
+  q: string | undefined;
+}
 
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
@@ -125,9 +132,8 @@ export const fetchQuerySuggestions = createAsyncThunk<
   ) => {
     validatePayload(payload, idDefinition);
     const id = payload.id;
-    const response = await apiClient.querySuggest(
-      await buildQuerySuggestRequest(id, getState())
-    );
+    const request = await buildQuerySuggestRequest(id, getState());
+    const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -135,6 +141,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
     return {
       id,
+      q: request.q,
       ...response.success,
     };
   }
@@ -149,7 +156,7 @@ export const buildQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
-    q: s.querySuggest[id]!.q,
+    q: s.querySet[id],
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
