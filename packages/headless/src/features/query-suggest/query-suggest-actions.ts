@@ -23,9 +23,10 @@ import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
-  QuerySetSection &
   QuerySuggestionSection &
-  Partial<ContextSection & PipelineSection & SearchHubSection>;
+  Partial<
+    QuerySetSection & ContextSection & PipelineSection & SearchHubSection
+  >;
 
 const idDefinition = {
   id: requiredNonEmptyString,
@@ -156,7 +157,10 @@ export const buildQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
-    q: s.querySet[id],
+    /**
+     * @deprecated - Adjust `StateNeededByQuerySuggest` to make `querySet` required in v2.
+     */
+    q: s.querySet?.[id],
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
