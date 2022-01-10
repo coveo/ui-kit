@@ -12,22 +12,22 @@ interface WrapperProps extends JSX.AtomicSearchInterface {
   theme?: string | 'none';
 }
 
-const DefaultProps: Required<
-  Pick<WrapperProps, 'onReady' | 'theme' | 'engine'>
-> = {
+const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'theme'>> = {
   onReady: (executeFirstSearch) => {
     return executeFirstSearch();
   },
   theme: 'coveo',
-  engine: buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  }),
 };
 
 export const AtomicSearchInterfaceWrapper = (
   props: React.PropsWithChildren<WrapperProps>
 ) => {
   const mergedProps = {...DefaultProps, ...props};
+  if (!mergedProps.engine) {
+    mergedProps.engine = buildSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
+    });
+  }
   const {engine, theme, onReady, ...allOtherProps} = mergedProps;
   const searchInterfaceRef = useRef<HTMLAtomicSearchInterfaceElement>(null);
   if (theme !== 'none') {

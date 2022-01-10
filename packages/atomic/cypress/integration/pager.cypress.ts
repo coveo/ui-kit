@@ -5,7 +5,9 @@ import {
   shouldRenderErrorComponent,
   buildTestUrl,
 } from '../utils/setupComponent';
-import {createAliasNavigation, PagerSelectors} from './pager-selectors';
+import {pagerComponent, PagerSelectors} from './pager-selectors';
+import * as PagerAssertions from './pager-assertions';
+import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {
@@ -14,20 +16,20 @@ describe('Pager Test Suites', () => {
 
   function componentLoaded(numberOfPages: number) {
     const totalLi = numberOfPages + 2;
-    cy.get('@pagerLi').get(PagerSelectors.pager).should('be.visible');
-    cy.get('@pagerLi')
+    PagerSelectors.pager().should('be.visible');
+    PagerSelectors.li()
       .find('button')
       .contains(numberOfPages.toString())
       .should('be.visible');
-    cy.get('@previousButton').should('be.visible');
-    cy.get('@nextButton').should('be.visible');
-    cy.get('@pagerLi').its('length').should('eq', totalLi);
-    cy.checkA11y(PagerSelectors.pager);
+    PagerSelectors.buttonPrevious().should('be.visible');
+    PagerSelectors.buttonNext().should('be.visible');
+    PagerSelectors.li().its('length').should('eq', totalLi);
+    cy.checkA11y(pagerComponent);
   }
 
   function checkPagerSelected(pageNumber: string, selected: boolean) {
     const isContain = selected ? 'contain' : 'not.contain';
-    cy.get('@pagerLi')
+    PagerSelectors.li()
       .contains(pageNumber)
       .should('have.attr', 'part')
       .and(isContain, 'active-page-button');
@@ -45,7 +47,6 @@ describe('Pager Test Suites', () => {
   describe('Default Pager', () => {
     beforeEach(() => {
       setupPager();
-      createAliasNavigation();
     });
 
     it('should load and pass automated accessibility', () => {
@@ -53,7 +54,7 @@ describe('Pager Test Suites', () => {
     });
 
     it('should go to next page and log UA on button next', async () => {
-      cy.get('@nextButton').click();
+      PagerSelectors.buttonNext().click();
       checkPagerSelected('2', true);
       checkPagerSelected('1', false);
       validateUrlhash(2);
@@ -66,8 +67,8 @@ describe('Pager Test Suites', () => {
     });
 
     it('should go to previous page and log UA on button previous', async () => {
-      cy.get('@nextButton').click();
-      cy.get('@previousButton').click();
+      PagerSelectors.buttonNext().click();
+      PagerSelectors.buttonPrevious().click();
 
       checkPagerSelected('1', true);
       checkPagerSelected('2', false);
@@ -81,7 +82,7 @@ describe('Pager Test Suites', () => {
     });
 
     it('should go to page 3 and log UA on button Pager', async () => {
-      cy.get('@pagerLi').find('button').contains('3').click();
+      PagerSelectors.li().find('button').contains('3').click();
       checkPagerSelected('3', true);
       checkPagerSelected('1', false);
       validateUrlhash(3);
@@ -94,10 +95,22 @@ describe('Pager Test Suites', () => {
     });
 
     it('should load more numbers when click 5', () => {
-      cy.get('@pagerLi').find('button').contains('5').click();
+      PagerSelectors.li().find('button').contains('5').click();
       checkPagerSelected('5', true);
       checkPagerSelected('6', false);
     });
+  });
+
+  describe('when selecting page 5', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .withElement(generateComponentHTML(pagerComponent))
+        .init();
+      PagerSelectors.li().find('button[aria-label="Page 5"]').click();
+      cy.wait(TestFixture.interceptAliases.Search);
+    });
+
+    PagerAssertions.assertFocusActivePage();
   });
 
   describe('Pager should load from url', () => {
@@ -105,8 +118,7 @@ describe('Pager Test Suites', () => {
       cy.visit(buildTestUrl('firstResult=20'));
       injectComponent('<atomic-pager></atomic-pager>');
       cy.wait(1000);
-      createAliasNavigation();
-      cy.get('@pagerLi').get(PagerSelectors.pager).should('be.visible');
+      PagerSelectors.pager().should('be.visible');
       checkPagerSelected('3', true);
     });
   });
@@ -114,25 +126,22 @@ describe('Pager Test Suites', () => {
   describe('Option numberOfPages ', () => {
     it('should render when prop is a number', () => {
       setupPager('number-of-pages=10');
-      createAliasNavigation();
       componentLoaded(10);
     });
 
     it('should render when prop is a number_string ', () => {
       setupPager('number-of-pages="8"');
-      createAliasNavigation();
       componentLoaded(8);
     });
 
     it('should fallback to number when prop contains number&character', () => {
       setupPager('number-of-pages="9k3"');
-      createAliasNavigation();
       componentLoaded(9);
     });
 
     it('should render an error when the prop is not in the list of numberOfPages', () => {
       setupPager('number-of-pages="-5"');
-      shouldRenderErrorComponent(PagerSelectors.pager);
+      shouldRenderErrorComponent(pagerComponent);
     });
   });
 });
