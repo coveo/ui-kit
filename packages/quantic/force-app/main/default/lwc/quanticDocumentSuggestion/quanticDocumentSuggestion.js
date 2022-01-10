@@ -13,7 +13,7 @@ import loading from '@salesforce/label/c.quantic_Loading';
  *
  * @category Case Assist
  * @example
- * <c-quantic-document-suggestion engine-id={engineId} search-engine-id={searchEngineId}></c-quantic-document-suggestion>
+ * <c-quantic-document-suggestion engine-id={engineId} search-engine-id={searchEngineId} max-documents="5"></c-quantic-document-suggestion>
  */
 export default class QuanticDocumentSuggestion extends LightningElement {
   labels = {
@@ -99,8 +99,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   }
 
   updateDocumentSuggestionState() {
-    console.log(this.maxDocuments)
-    console.log(this.engineId)
     this.suggestions =
       this.documentSuggestion.state.documents
         .map((suggestion) => {
