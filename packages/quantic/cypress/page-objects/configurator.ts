@@ -1,3 +1,5 @@
+import {Result} from '@coveo/headless/dist/definitions/index';
+
 const selectors = {
   try: 'lightning-button[data-cy="cfg-try"]',
   reset: 'lightning-button[data-cy="cfg-reset"]',
@@ -7,7 +9,7 @@ const getInputSelector = (field: string): string =>
   `lightning-input[data-cy="cfg-${field}"] input`;
 
 export const configure = (
-  options: Record<string, string | number | boolean> = {}
+  options: Record<string, string | number | boolean | Result> = {}
 ) => {
   // The form takes some time to load when Salesforce have been idle for a while.
   cy.get('slot[name="configuration"]', {timeout: 30000});
