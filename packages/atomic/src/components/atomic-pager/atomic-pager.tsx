@@ -15,6 +15,10 @@ import {
 } from '../../utils/initialization-utils';
 import ArrowRight from '../../images/arrow-right.svg';
 import {Button} from '../common/button';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -52,6 +56,9 @@ export class AtomicPager implements InitializableComponent {
    * Specifies how many page buttons to display in the pager.
    */
   @Prop() numberOfPages = 5;
+
+  @FocusTarget()
+  private activePage!: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -112,6 +119,10 @@ export class AtomicPager implements InitializableComponent {
 
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
+    const parts = ['page-button'];
+    if (isSelected) {
+      parts.push('active-page-button');
+    }
     return (
       <li>
         <Button
@@ -121,10 +132,12 @@ export class AtomicPager implements InitializableComponent {
           onClick={() => {
             this.pager.selectPage(page);
             this.scrollToTop();
+            this.activePage.focusAfterSearch();
           }}
           class={`btn-page ${isSelected ? 'selected' : ''}`}
-          part={`page-button ${isSelected && 'active-page-button'}`}
+          part={parts.join(' ')}
           text={page.toLocaleString(this.bindings.i18n.language)}
+          ref={isSelected ? this.activePage.setTarget : undefined}
         ></Button>
       </li>
     );
