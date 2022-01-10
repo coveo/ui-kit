@@ -88,7 +88,6 @@ export class AtomicResultsPerPage implements InitializableComponent {
     }
   }
 
-  // TODO: use standard keyboard shortcuts KIT-949
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
 
