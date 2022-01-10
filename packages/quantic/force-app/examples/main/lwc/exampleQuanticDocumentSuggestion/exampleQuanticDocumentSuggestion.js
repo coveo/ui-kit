@@ -23,6 +23,12 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       description: 'The id of the search engine associated.',
       defaultValue: 'search-engine',
     },
+    {
+      attribute: 'maxDocuments',
+      label: 'Max documents',
+      description: 'The maximum number of document suggesions to display, it\'s a value between 1 and 5.',
+      defaultValue: 5,
+    },
   ]
 
   async handleTryItNow(evt) {

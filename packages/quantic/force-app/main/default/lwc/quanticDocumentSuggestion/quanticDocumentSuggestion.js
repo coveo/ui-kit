@@ -5,10 +5,8 @@ import {
 } from 'c/quanticHeadlessLoader';
 import loading from '@salesforce/label/c.quantic_Loading';
 
-
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").DocumentSuggestion} DocumentSuggestion */
-
 
 /**
  * The `QuanticDocumentSuggestion` component displays an accordion containing the document suggestions returned by Coveo Case Assist based on the values that the user has previously entred in the different fields.
@@ -19,9 +17,9 @@ import loading from '@salesforce/label/c.quantic_Loading';
  */
 export default class QuanticDocumentSuggestion extends LightningElement {
   labels = {
-    loading
-  }
-  
+    loading,
+  };
+
   /**
    * The ID of the case assist engine instance the component registers to.
    * @api
@@ -34,6 +32,12 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @type {string}
    */
   @api searchEngineId;
+  /**
+   * The maximum number of document suggesions to display, it's a value between 1 and 5.
+   * @api
+   * @type {number}
+   */
+  @api maxDocuments = 5;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -95,14 +99,18 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   }
 
   updateDocumentSuggestionState() {
+    console.log(this.maxDocuments)
+    console.log(this.engineId)
     this.suggestions =
-      this.documentSuggestion.state.documents.map((suggestion) => {
-        return {
-          ...suggestion,
-          raw: suggestion.fields,
-          uri: suggestion.fields.uri,
-        };
-      }) ?? [];
+      this.documentSuggestion.state.documents
+        .map((suggestion) => {
+          return {
+            ...suggestion,
+            raw: suggestion.fields,
+            uri: suggestion.fields.uri,
+          };
+        })
+        .slice(0, Math.max(1, this.maxDocuments)) ?? [];
     if (this.suggestions.length) {
       this.firstSuggestion = this.suggestions?.[0].title;
       this.openedDocuments = [this.suggestions?.[0].title];
@@ -123,7 +131,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       // @ts-ignore
       JSON.stringify(accordion.activeSectionName)
     ) {
-      if (this.openedDocuments.indexOf(evt.target.name) === -1) {
+      if (!this.openedDocuments.includes(evt.target.name)) {
         this.engine.dispatch(
           this.actions.logDocumentSuggestionClick(evt.target.dataset.id)
         );
@@ -135,5 +143,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   stopPropagation(evt) {
     evt.stopPropagation();
+  }
+
+  get hasSuggestions() {
+    return !!this.suggestions.length;
   }
 }
