@@ -175,15 +175,10 @@ export default class QuanticCaseClassification extends LightningElement {
         JSON.stringify(this.classifications) !==
         JSON.stringify(this.previousClassifications)
       ) {
-        if (this.classifications.length) {
-          const firstSuggestion = this.classifications[0];
-          this.field.update(firstSuggestion.value);
-          this._value = firstSuggestion.value;
-        } else {
-          this.field.update('');
-          this._value = '';
-        }
-        this.checkCorrectSuggestion();
+        const value = this.classifications.length
+          ? this.classifications[0].value
+          : '';
+        this.setValue(value);
       }
     }
   }
@@ -196,16 +191,6 @@ export default class QuanticCaseClassification extends LightningElement {
     return !!this._errorMessage;
   }
 
-  /**
-   * Returns a list of all the possible options.
-   * @returns {Array<{value: string, label: string}>}
-   */
-  get options() {
-    return (
-      this.picklistValues?.data?.picklistFieldValues?.[this.sfFieldApiName]
-        ?.values ?? []
-    );
-  }
   /**
    * Shows an error message in the component if there is an error.
    * @returns {void}
@@ -240,6 +225,17 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get isMoreOptionsVisible() {
     return this.options.length > Math.max(Number(this.maxSuggestions), 0);
+  }
+
+  /**
+   * Returns a list of all the possible options.
+   * @returns {Array<{value: string, label: string}>}
+   */
+  get options() {
+    return (
+      this.picklistValues?.data?.picklistFieldValues?.[this.sfFieldApiName]
+        ?.values ?? []
+    );
   }
 
   /**
@@ -285,6 +281,19 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Returns the suggestions to display.
+   * @returns {Array<object>}
+   */
+  get suggestions() {
+    return this.classifications.map((suggestion) => {
+      if (suggestion.value === this._value) {
+        return {...suggestion, checked: true};
+      }
+      return {...suggestion, checked: false};
+    });
+  }
+
+  /**
    * Shows the select input.
    * @returns {void}
    */
@@ -299,9 +308,7 @@ export default class QuanticCaseClassification extends LightningElement {
   handleSelectSuggestion(event) {
     this._errorMessage = '';
     const value = event.target.checked ? event.target.value : '';
-    this.field.update(value);
-    this._value = value;
-    this.checkCorrectSuggestion();
+    this.setValue(value);
   }
 
   /**
@@ -309,10 +316,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
-    const value = event.target.value;
-    this.field.update(value);
     this._errorMessage = '';
-    this._value = value;
+    const value = event.target.value;
+    this.setValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.hideSuggestions();
     }
@@ -333,12 +339,12 @@ export default class QuanticCaseClassification extends LightningElement {
     });
   }
 
-  checkCorrectSuggestion() {
-    this.classifications = this.classifications.map((suggestion) => {
-      if (suggestion.value === this._value) {
-        return {...suggestion, checked: true};
-      }
-      return {...suggestion, checked: false};
-    });
+  /**
+   * Set the current value and update the state.
+   * @returns
+   */
+  setValue(value) {
+    this.field.update(value);
+    this._value = value;
   }
 }
