@@ -58,7 +58,37 @@ describe('quantic-resultQuickview', () => {
 
   describe('with custom options', () => {
     it('should work as expected', () => {
-      visitResultQuickview();
+      scope('custom #previewButtonIcon', () => {
+        visitResultQuickview({
+          previewButtonIcon: 'utility:bug',
+        });
+
+        Expect.displayButtonPreview(true);
+        Expect.displayButtonPreviewIcon(true);
+        Actions.clickPreview();
+        Expect.displaySectionPreview(true);
+      });
+
+      scope('custom #previewButtonLabel', () => {
+        visitResultQuickview({
+          previewButtonLabel: 'custom label',
+        });
+
+        Expect.displayButtonPreview(true);
+        Expect.buttonPreviewContains('custom label');
+        Actions.clickPreview();
+        Expect.displaySectionPreview(true);
+      });
+
+      scope('custom #previewButtonVariant', () => {
+        visitResultQuickview({
+          previewButtonVariant: 'outline-brand',
+        });
+
+        Expect.displayButtonPreview(true, 'outline-brand');
+        Actions.clickPreview('outline-brand');
+        Expect.displaySectionPreview(true);
+      });
     });
   });
 });

@@ -14,6 +14,12 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the button preview`);
     },
+    displayButtonPreviewIcon: (display: boolean) => {
+      selector
+        .buttonPreviewIcon()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the icon in button preview`);
+    },
     buttonPreviewIsDisabled: (disabled: boolean, variant?: string) => {
       selector
         .buttonPreview(variant)
@@ -38,6 +44,12 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .resultDate()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the result date`);
+    },
+    buttonPreviewContains: (label: string) => {
+      selector
+        .buttonPreview()
+        .contains(label)
+        .logDetail(`The button preview should contain "${label}"`);
     },
     logDocumentQuickview: (title: string) => {
       cy.wait(InterceptAliases.UA.DocumentQuickview)

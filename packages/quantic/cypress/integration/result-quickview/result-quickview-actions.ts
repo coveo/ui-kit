@@ -5,9 +5,9 @@ import {
 
 const resultQuickviewActions = (selector: ResultQuickviewSelector) => {
   return {
-    clickPreview: () =>
+    clickPreview: (variant?: string) =>
       selector
-        .buttonPreview()
+        .buttonPreview(variant)
         .click()
         .logAction('When clicking preview button'),
   };
