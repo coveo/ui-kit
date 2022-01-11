@@ -21,6 +21,13 @@ import {
   pressShowMoreUntilImpossible,
   typeFacetSearchQuery,
 } from '../facet-common-actions';
+import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
+import {breadboxComponent} from '../../breadbox/breadbox-selectors';
+import {
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox/breadbox-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -94,7 +101,6 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           false
         );
-        CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
         CategoryFacetAssertions.assertPathInUrl(selectedPath);
         CategoryFacetAssertions.assertFocusActiveParent();
 
@@ -181,7 +187,6 @@ describe('Category Facet Test Suites', () => {
           before(setupClear);
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
-          CategoryFacetAssertions.assertNoBreadcrumb();
           CategoryFacetAssertions.assertNoPathInUrl();
           CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
         });
@@ -204,7 +209,6 @@ describe('Category Facet Test Suites', () => {
           before(setupClear);
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
-          CategoryFacetAssertions.assertNoBreadcrumb();
           CategoryFacetAssertions.assertNoPathInUrl();
           CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
         });
@@ -244,7 +248,6 @@ describe('Category Facet Test Suites', () => {
           false,
           false
         );
-        CategoryFacetAssertions.assertPathInBreadcrumb(canadaHierarchy);
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
         CategoryFacetAssertions.assertFocusActiveParent();
       });
@@ -279,7 +282,6 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetSelectors,
             false
           );
-          CategoryFacetAssertions.assertPathInBreadcrumb(selectedPath);
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
 
@@ -723,6 +725,112 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           true
         );
+      });
+    });
+  });
+
+  describe('with breadbox', () => {
+    function setupBreadboxWithCategoryFacet() {
+      new TestFixture().with(addBreadbox()).with(addCategoryFacet()).init();
+    }
+    describe('verify rendering', () => {
+      before(setupBreadboxWithCategoryFacet);
+      BreadboxAssertions.assertDisplayBreadcrumb(false);
+    });
+
+    describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
+      function setupSelectedCategoryFacet() {
+        setupBreadboxWithCategoryFacet();
+        selectChildValueAt(canadaHierarchyIndex[0]);
+        cy.wait(TestFixture.interceptAliases.Search);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectedCategoryFacet);
+        const selectedPath = canadaHierarchy.slice(0, 1);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertCategoryPathInBreadcrumb(selectedPath);
+        BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
+      });
+
+      describe('when clicking the active value', () => {
+        before(() => {
+          setupSelectedCategoryFacet();
+          CategoryFacetSelectors.activeParentValue().click();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
+
+        describe('verify rendering', () => {
+          BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+      });
+
+      describe('when deselecting a facetValue on breadcrumb', () => {
+        const deselectionIndex = 0;
+        function setupDeselectCategoryFacetValue() {
+          setupSelectedCategoryFacet();
+          cy.wait(TestFixture.interceptAliases.UA);
+          deselectBreadcrumbAtIndex(deselectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupDeselectCategoryFacetValue);
+          BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+
+        describe('verify analytic', () => {
+          before(setupDeselectCategoryFacetValue);
+          BreadboxAssertions.assertLogBreadcrumbCategoryFacet(
+            hierarchicalField
+          );
+        });
+
+        describe('verify selected facetValue', () => {
+          before(setupSelectedCategoryFacet);
+          BreadboxAssertions.assertDeselectCategoryFacet(deselectionIndex);
+        });
+      });
+    });
+
+    describe('when selecting values subsequently to go deeper three level (last level of the dataset)', () => {
+      function setupSelectedDeeperLeverCategoryFacets() {
+        setupBreadboxWithCategoryFacet();
+        selectChildValueAt(canadaHierarchyIndex[0]);
+        cy.wait(TestFixture.interceptAliases.UA);
+        selectChildValueAt(canadaHierarchyIndex[1]);
+        cy.wait(TestFixture.interceptAliases.UA);
+        selectChildValueAt(canadaHierarchyIndex[2]);
+        cy.wait(TestFixture.interceptAliases.UA);
+        selectChildValueAt(canadaHierarchyIndex[3]);
+        cy.wait(TestFixture.interceptAliases.Search);
+      }
+
+      describe('verify rendering', () => {
+        const selectedPath = canadaHierarchy;
+        before(setupSelectedDeeperLeverCategoryFacets);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertCategoryPathInBreadcrumb(selectedPath);
+        BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+        BreadboxAssertions.assertBreadcrumbDisplayLength(1);
+      });
+
+      describe('when selecting the "All Categories" button', () => {
+        before(() => {
+          setupSelectedDeeperLeverCategoryFacets();
+          CategoryFacetSelectors.allCategoriesButton().click();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
+
+        describe('verify rendering', () => {
+          BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
       });
     });
   });

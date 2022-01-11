@@ -26,14 +26,16 @@ jobs:
   deploy:
     name: 'Deploy the package'
     needs: npm-publish
-    runs-on: [self-hosted, linux, x64, eks-poc]
+    runs-on: [self-hosted, linux, x64, ec2-alpha]
+    container:
+      image: 458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:stable
+      options: --user root
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential
       - uses: ./.github/actions/setup
       - run: rm -rf veracode && mkdir veracode
       - run: mkdir veracode/auth

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.11](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.10...@coveo/headless@1.41.11) (2022-01-05)
+
+
+### Bug Fixes
+
+* **headless:** adjust __require statements in node esm bundles ([#1624](https://github.com/coveo/ui-kit/issues/1624)) ([d2eedcb](https://github.com/coveo/ui-kit/commit/d2eedcb63db8f21e6fb679b011edd402ba22d5cb))
+
+
+
+
+
+## [1.41.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.9...@coveo/headless@1.41.10) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.41.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.8...@coveo/headless@1.41.9) (2022-01-05)
 
 **Note:** Version bump only for package @coveo/headless

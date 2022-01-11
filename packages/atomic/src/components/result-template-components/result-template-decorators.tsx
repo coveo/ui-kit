@@ -68,21 +68,20 @@ const resultContextEventName = 'atomic/resolveResult';
  *
  * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
  *
+ * You should use the method in the [connectedCallback lifecycle method](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks).
+ *
  * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  */
 export const resultContext = (element: Element) =>
   new Promise<Result>((resolve, reject) => {
-    // TODO: https://coveord.atlassian.net/browse/KIT-1277 make it work with connectedCallback
-    setTimeout(() => {
-      const event = buildCustomEvent<ResultContextEventHandler>(
-        resultContextEventName,
-        (result: Result) => resolve(result)
-      );
-      element.dispatchEvent(event);
+    const event = buildCustomEvent<ResultContextEventHandler>(
+      resultContextEventName,
+      (result: Result) => resolve(result)
+    );
+    element.dispatchEvent(event);
 
-      if (!element.closest('atomic-result')) {
-        reject(new MissingResultParentError(element.nodeName.toLowerCase()));
-      }
-    });
+    if (!element.closest('atomic-result')) {
+      reject(new MissingResultParentError(element.nodeName.toLowerCase()));
+    }
   });

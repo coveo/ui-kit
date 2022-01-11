@@ -3,10 +3,6 @@ description: "Create a deployment package for Headless and Atomic"
 runs:
   using: composite
   steps:
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-        cache: 'pip'
     - name: Install deployment package
       shell: bash
       run: pip install --index-url https://pypi.dev.cloud.coveo.com/simple 'deployment-package==7.*'

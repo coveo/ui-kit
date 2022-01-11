@@ -24,7 +24,7 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   id: string;
   searchBoxController: SearchBox;
   numberOfQueries: number;
-  inputRef: HTMLInputElement;
+  clearSuggestions(): void;
   triggerSuggestions(): void;
   getSuggestions: () => SearchBoxSuggestions[];
 }

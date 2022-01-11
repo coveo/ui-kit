@@ -1,4 +1,4 @@
-import {HighlightKeyword} from '@coveo/headless';
+import {HighlightKeyword, Result} from '@coveo/headless';
 import {
   generateComponentHTML,
   TagProps,
@@ -109,7 +109,9 @@ describe('Result Text Component', () => {
           response.results.forEach((result) => {
             result.raw[field] = rawValue;
             if (highlightsAvailable) {
-              (result as any)[`${field}Highlights`] = [highlight];
+              (result as Result & Record<string, HighlightKeyword[]>)[
+                `${field}Highlights`
+              ] = [highlight];
             }
           })
         )
