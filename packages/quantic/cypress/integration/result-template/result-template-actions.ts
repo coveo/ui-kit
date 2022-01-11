@@ -18,9 +18,9 @@ const resultTemplateActions = (selector: ResultTemplateSelector) => {
             e.setAttribute(k, v.toString());
           }
           if (innerHtml) e.innerHTML = innerHtml;
-          element.append(e);
+          element.get()[0].appendChild(e);
         })
-        .logAction('Insert Html');
+        .logAction('Insert Html child');
     },
   };
 };

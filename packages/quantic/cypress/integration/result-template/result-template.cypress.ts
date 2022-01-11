@@ -3,6 +3,18 @@ import {ResultTemplateExpectations as Expect} from './result-template-expectatio
 import {ResultTemplateActions as Actions} from './result-template-actions';
 import {configure} from '../../page-objects/configurator';
 
+const slots = {
+  LABEL: 'label',
+  BADGES: 'badges',
+  ACTIONS: 'actions',
+  DATE: 'date',
+  VISUAL: 'visual',
+  TITLE: 'title',
+  METADATA: 'metadata',
+  EMPHASIZED: 'emphasized',
+  EXCERPT: 'excerpt',
+  BOTTONMETADATA: 'bottom-metadata',
+};
 describe('quantic-result-template', () => {
   const pageUrl = 's/quantic-result-template';
   function visitResultTemplate() {
@@ -14,26 +26,19 @@ describe('quantic-result-template', () => {
   describe('with default options', () => {
     it('should work as expected', () => {
       visitResultTemplate();
-      Expect.displaySlotByName('label', true);
-      Expect.displaySlotByName('badges', true);
-      Expect.displaySlotByName('actions', true);
-      Expect.displaySlotByName('date', true);
-      Expect.displaySlotByName('visual', true);
-      Expect.displaySlotByName('title', true);
-      Expect.displaySlotByName('metadata', true);
-      Expect.displaySlotByName('emphasized', true);
-      Expect.displaySlotByName('excerpt', true);
-      Expect.displaySlotByName('bottom-metadata', true);
-
-      Actions.appendChildren(
-        'div',
-        {
-          slot: 'label',
-        },
-        'some label'
-      );
-
-      Expect.displaySlotByName('title', true);
+      for (const [k, v] of Object.entries(slots)) {
+        Expect.displaySlotByName(v, true);
+        Expect.numberOfSlotsByName(v, 1);
+        Actions.appendChildren(
+          'div',
+          {
+            slot: v,
+          },
+          k
+        );
+        Expect.displaySlotByName(v, true);
+        Expect.numberOfSlotsByName(v, 1);
+      }
     });
   });
 });
