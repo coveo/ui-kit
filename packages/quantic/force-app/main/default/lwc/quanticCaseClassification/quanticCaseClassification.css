@@ -47,3 +47,9 @@ lightning-icon {
   border-top-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
   border-radius: 4px;
 }
+
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

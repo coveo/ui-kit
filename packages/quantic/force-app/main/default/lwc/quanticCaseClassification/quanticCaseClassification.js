@@ -115,8 +115,6 @@ export default class QuanticCaseClassification extends LightningElement {
   previousClassifications = [];
   /** @type {Object} */
   @track picklistValues;
-  /** @type {Array<object>} */
-  suggestions = [];
   /** @type {boolean} */
   loading = false;
   /** @type {CaseAssistEngine} */
@@ -167,19 +165,24 @@ export default class QuanticCaseClassification extends LightningElement {
   updateFieldState() {
     if (this.maxSuggestions > 0) {
       this.previousClassifications = this.classifications;
-      this.classifications = this.field.state.suggestions ?? [];
+      this.classifications =
+        this.field.state.suggestions.slice(
+          0,
+          Math.max(Number(this.maxSuggestions), 0)
+        ) ?? [];
       this.loading = this.field.state.loading;
       if (
         JSON.stringify(this.classifications) !==
         JSON.stringify(this.previousClassifications)
       ) {
-        const firstSuggestion = this.classifications[0];
-        this.field.update(firstSuggestion.value);
-        this._value = firstSuggestion.value;
-        this.suggestions = this.classifications.slice(
-          0,
-          Math.max(Number(this.maxSuggestions), 0)
-        );
+        if (this.classifications.length) {
+          const firstSuggestion = this.classifications[0];
+          this.field.update(firstSuggestion.value);
+          this._value = firstSuggestion.value;
+        } else {
+          this.field.update('');
+          this._value = '';
+        }
         this.checkCorrectSuggestion();
       }
     }
@@ -244,7 +247,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @type {boolean}
    */
   get isSelectVisible() {
-    return this._isSelectVisible || this.suggestions.length <= 0;
+    return this._isSelectVisible || this.classifications.length <= 0;
   }
 
   /**
@@ -331,11 +334,11 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   checkCorrectSuggestion() {
-    this.suggestions = this.suggestions.map((sug) => {
-      if (sug.value === this._value) {
-        return {...sug, checked: true};
+    this.classifications = this.classifications.map((suggestion) => {
+      if (suggestion.value === this._value) {
+        return {...suggestion, checked: true};
       }
-      return {...sug, checked: false};
+      return {...suggestion, checked: false};
     });
   }
 }
