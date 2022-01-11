@@ -14,12 +14,12 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the button preview`);
     },
-    isDisabled: (disabled: boolean, variant?: string) => {
+    buttonPreviewIsDisabled: (disabled: boolean, variant?: string) => {
       selector
         .buttonPreview(variant)
         .invoke('attr', 'disabled')
-        .should('deep.equal', disabled)
-        .logDetail(`${should(disabled)} be disabled the button preview`);
+        .should(disabled ? 'exist' : 'not.exist')
+        .logDetail(`The button preview ${should(disabled)} be disabled`);
     },
     displaySectionPreview: (display: boolean) => {
       selector

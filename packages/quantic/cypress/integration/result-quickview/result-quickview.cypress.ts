@@ -9,7 +9,7 @@ import {scope} from '../../reporters/detailed-collector';
 import {Result} from '@coveo/headless/dist/definitions/index';
 
 interface ResultQuickviewOptions {
-  result: Result;
+  result: object;
   maximumPreviewSize: number;
   previewButtonIcon: string;
   previewButtonLabel: string;
@@ -34,17 +34,23 @@ describe('quantic-resultQuickview', () => {
       scope('when loading the page', () => {
         Expect.events.receivedEvent(true, haspreview);
         Expect.displayButtonPreview(true);
-        Expect.isDisabled(false);
+        Expect.buttonPreviewIsDisabled(false);
       });
 
-      scope('when getting different results', () => {});
+      scope('when the result has no preview', () => {
+        const result = {
+          hasHtmlVersion: false,
+        };
+        visitResultQuickview({
+          result: result,
+        });
+        Expect.displayButtonPreview(true);
+        Expect.buttonPreviewIsDisabled(true);
+      });
     });
   });
 
   describe('with custom options', () => {
-    const customFieldsToInclude =
-      'source,language,sfcasestatus,sfcreatedbyname';
-
     it('should work as expected', () => {
       visitResultQuickview();
     });
