@@ -1,0 +1,11 @@
+.localdevserver
+.sfdx
+CHANGELOG.md
+docs
+node_modules
+quantic-examples-community
+reports
+typings
+package-lock.json
+tsconfig.json
+jsconfig.json

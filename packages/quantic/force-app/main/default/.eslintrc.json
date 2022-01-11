@@ -2,6 +2,9 @@
   "ignorePatterns": "staticresources/**/*",
   "extends": ["@salesforce/eslint-config-lwc/recommended"],
   "root": true,
+  "rules": {
+    "no-confusing-arrow": 0
+  },
   "globals": {
     "CoveoHeadless": "readonly",
     "CoveoHeadlessCaseAssist": "readonly"

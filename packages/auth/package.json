@@ -19,7 +19,11 @@
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
-    "e2e:saml": "vite manual-e2e/saml/"
+    "e2e:saml": "vite manual-e2e/saml/",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -39,11 +43,20 @@
   "devDependencies": {
     "@types/jest": "^27.0.3",
     "jest": "^27.3.0",
+    "lint-staged": "^12.1.7",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.7",
     "vite": "^2.6.14"
   },
   "engines": {
     "node": ">=10"
+  },
+  "lint-staged": {
+    "**/*.{js,ts?(x)}": [
+      "eslint"
+    ],
+    "**/*.{html,json,xml,css,scss,yml,md}": [
+      "prettier --check"
+    ]
   }
 }

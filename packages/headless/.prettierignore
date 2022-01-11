@@ -1,0 +1,4 @@
+dist
+*.md
+temp
+package-lock.json

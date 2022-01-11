@@ -1,0 +1,8 @@
+dist
+*.md
+storybook-static
+docs
+headless
+localdevserver
+www
+package-lock.json

@@ -8,8 +8,11 @@
     "build": "lerna run clean && lerna run build",
     "test": "lerna run --parallel test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
-    "lint:check": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint:staged": "lerna run lint-staged && :",
+    "lint:check": "lerna run lint:check --parallel",
+    "lint:fix": "lerna run lint:fix",
+    "prettier:check": "lerna run prettier:check",
+    "prettier:fix": "lerna run prettier:fix",
     "pr:report": "node ./scripts/reports/pr-report.js",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
     "cypress:test": "lerna run cypress:test",
@@ -70,11 +73,8 @@
     ]
   },
   "lint-staged": {
-    "**/*.ts?(x)": [
-      "npm run lint:fix"
-    ],
-    "**/*.{scss,css,pcss,html,mdx}": [
-      "prettier --print-width 120 --write"
+    "*": [
+      "npm run lint:staged"
     ]
   },
   "engines": {

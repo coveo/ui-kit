@@ -33,7 +33,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ssr:build": "npm run build && npm run build:server",
-    "ssr:start": "node ./build/server/server/server.js"
+    "ssr:start": "node ./build/server/server/server.js",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "browserslist": {
     "production": [
@@ -46,5 +50,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "lint-staged": {
+    "**/*.{js,ts?(x)}": [
+      "eslint"
+    ],
+    "**/*.{html,json,xml,css,scss,yml,md}": [
+      "prettier --check"
+    ]
+  },
+  "devDependencies": {
+    "lint-staged": "^12.1.7"
   }
 }

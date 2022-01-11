@@ -26,11 +26,24 @@
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
     "npm:publish": "node ../../scripts/deploy/publish.js",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "devDependencies": {
     "@types/jest": "26.0.24",
     "jest": "26.6.3",
+    "lint-staged": "^12.1.7",
     "ts-jest": "26.5.6"
+  },
+  "lint-staged": {
+    "**/*.{js,ts?(x)}": [
+      "eslint"
+    ],
+    "**/*.{html,json,xml,css,scss,yml,md}": [
+      "prettier --check"
+    ]
   }
 }
