@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.10...@coveo/atomic@1.22.11) (2022-01-10)
+
+
+### Bug Fixes
+
+* **atomic:** fixed focus when pressing a pager page button ([#1632](https://github.com/coveo/ui-kit/issues/1632)) ([6f199e8](https://github.com/coveo/ui-kit/commit/6f199e8c4c42a18f7966c627e1d6f77d93a100d6))
+* **atomic:** improved keyboard focus on search box ([#1639](https://github.com/coveo/ui-kit/issues/1639)) ([c18f938](https://github.com/coveo/ui-kit/commit/c18f9389fe5ba418081e8fb0a3f3426d8aef3819))
+
+
+
+
+
 ## [1.22.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.9...@coveo/atomic@1.22.10) (2022-01-07)
 
 

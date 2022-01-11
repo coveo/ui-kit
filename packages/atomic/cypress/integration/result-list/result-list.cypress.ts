@@ -1,4 +1,4 @@
-import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
+import {pagerComponent, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
 import {
   resultListComponent,
@@ -38,9 +38,8 @@ describe('Result List Component', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addResultList())
-        .withElement(generateComponentHTML(PagerSelectors.pager))
+        .withElement(generateComponentHTML(pagerComponent))
         .init();
-      createAliasNavigation();
     });
 
     it('should update the results', () => {
@@ -50,7 +49,7 @@ describe('Result List Component', () => {
         firstResultHtml = element[0].innerHTML;
       });
 
-      cy.get('@nextButton').click();
+      PagerSelectors.buttonNext().click();
       cy.wait(500);
 
       ResultListSelectors.firstResult().should((element) => {

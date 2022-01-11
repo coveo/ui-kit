@@ -22,7 +22,11 @@ import {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '../search-box-suggestions/suggestions-common';
-import {AriaLiveRegion} from '../../utils/accessibility-utils';
+import {
+  AriaLiveRegion,
+  FocusTarget,
+  FocusTargetController,
+} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -71,6 +75,9 @@ export class AtomicSearchBox {
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
+  @FocusTarget()
+  private inputFocus!: FocusTargetController;
+
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
@@ -116,7 +123,7 @@ export class AtomicSearchBox {
       id: this.id,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
-      inputRef: this.inputRef,
+      clearSuggestions: () => this.clearSuggestions(),
       triggerSuggestions: () => this.triggerSuggestions(),
       getSuggestions: () => this.suggestions,
     };
@@ -231,6 +238,7 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
+    this.isExpanded = true;
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
     this.triggerSuggestions();
@@ -241,7 +249,7 @@ export class AtomicSearchBox {
     this.triggerSuggestions();
   }
 
-  private onBlur() {
+  private clearSuggestions() {
     this.isExpanded = false;
     this.updateActiveDescendant();
     this.clearSuggestionElements();
@@ -256,7 +264,7 @@ export class AtomicSearchBox {
 
     this.searchBox.submit();
     this.updateActiveDescendant();
-    this.inputRef.blur();
+    this.clearSuggestions();
   }
 
   private updateQuery(query: string) {
@@ -274,7 +282,7 @@ export class AtomicSearchBox {
         this.onSubmit();
         break;
       case 'Escape':
-        this.onBlur();
+        this.clearSuggestions();
         break;
       case 'ArrowDown':
         e.preventDefault();
@@ -291,7 +299,10 @@ export class AtomicSearchBox {
     return (
       <input
         part="input"
-        ref={(el) => (this.inputRef = el as HTMLInputElement)}
+        ref={(el) => {
+          this.inputRef = el as HTMLInputElement;
+          this.inputFocus.setTarget(el);
+        }}
         role="combobox"
         aria-autocomplete="both"
         aria-haspopup="true"
@@ -307,7 +318,7 @@ export class AtomicSearchBox {
         class="h-full outline-none bg-transparent flex-grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
-        onBlur={() => this.onBlur()}
+        onBlur={() => this.clearSuggestions()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
         onKeyDown={(e) => this.onKeyDown(e)}
       />
@@ -407,6 +418,7 @@ export class AtomicSearchBox {
         part="submit-button"
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => {
+          this.inputFocus.focusAfterSearch();
           this.searchBox.submit();
           this.clearSuggestionElements();
         }}
