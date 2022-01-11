@@ -204,6 +204,7 @@ export class AtomicResultList implements InitializableComponent {
           })}
           href={result.clickUri}
           target="_self"
+          role="group"
         >
           {atomicResult}
         </LinkWithResultAnalytics>

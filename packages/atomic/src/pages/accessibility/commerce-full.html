@@ -385,45 +385,47 @@
                   margin-right: 0.25rem;
                 }
               </style>
-              <atomic-result-section-badges>
-                <atomic-result-badge field="ec_brand"></atomic-result-badge>
-              </atomic-result-section-badges>
-              <atomic-result-section-visual>
-                <atomic-result-image field="ec_images"></atomic-result-image>
-              </atomic-result-section-visual>
-              <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-              <atomic-result-section-title-metadata>
-                <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
-              </atomic-result-section-title-metadata>
+              <atomic-result-section-title>
+                <h2><atomic-result-link></atomic-result-link></h2>
+              </atomic-result-section-title>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
                   <atomic-format-currency currency="USD"></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
+              <atomic-result-section-title-metadata>
+                <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+              </atomic-result-section-title-metadata>
+              <atomic-result-section-badges>
+                <atomic-result-badge field="ec_brand" role="note"></atomic-result-badge>
+              </atomic-result-section-badges>
+              <atomic-result-section-visual>
+                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+              </atomic-result-section-visual>
               <atomic-result-section-excerpt
                 ><atomic-result-text field="ec_shortdesc"></atomic-result-text
               ></atomic-result-section-excerpt>
-              <atomic-result-section-bottom-metadata>
+              <atomic-result-section-bottom-metadata role="grid">
                 <atomic-result-fields-list>
-                  <atomic-field-condition class="field" if-defined="cat_platform">
-                    <span class="field-label"><atomic-text value="Platform"></atomic-text>:</span>
-                    <atomic-result-text field="cat_platform"></atomic-result-text>
+                  <atomic-field-condition class="field" if-defined="cat_platform" role="row">
+                    <span class="field-label" role="rowheader"><atomic-text value="Platform"></atomic-text>:</span>
+                    <atomic-result-text field="cat_platform" role="cell"></atomic-result-text>
                   </atomic-field-condition>
 
-                  <atomic-field-condition class="field" if-defined="cat_condition">
-                    <span class="field-label"><atomic-text value="Condition"></atomic-text>:</span>
-                    <atomic-result-text field="cat_condition"></atomic-result-text>
+                  <atomic-field-condition class="field" if-defined="cat_condition" role="row">
+                    <span class="field-label" role="rowheader"><atomic-text value="Condition"></atomic-text>:</span>
+                    <atomic-result-text field="cat_condition" role="cell"></atomic-result-text>
                   </atomic-field-condition>
 
-                  <atomic-field-condition class="field" if-defined="cat_categories">
-                    <span class="field-label"><atomic-text value="Tags"></atomic-text>:</span>
-                    <atomic-result-multi-value-text field="cat_categories"></atomic-result-multi-value-text>
+                  <atomic-field-condition class="field" if-defined="cat_categories" role="row">
+                    <span class="field-label" role="rowheader"><atomic-text value="Tags"></atomic-text>:</span>
+                    <atomic-result-multi-value-text field="cat_categories" role="cell"></atomic-result-multi-value-text>
                   </atomic-field-condition>
                 </atomic-result-fields-list>
               </atomic-result-section-bottom-metadata>
               <atomic-table-element label="Description">
-                <atomic-result-link></atomic-result-link>
+                <h2><atomic-result-link></atomic-result-link></h2>
               </atomic-table-element>
               <atomic-table-element label="Price">
                 <atomic-result-number field="ec_price">
