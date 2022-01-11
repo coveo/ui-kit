@@ -21,7 +21,7 @@ export const ResultQuickviewSelectors: ResultQuickviewSelector = {
       : ResultQuickviewSelectors.get().find('.quickview__button-base'),
   sectionPreview: () => ResultQuickviewSelectors.get().find('section'),
   closeButton: () => ResultQuickviewSelectors.get().find('.slds-modal__close'),
-  title: () => ResultQuickviewSelectors.get().find('h3 .slds-modal__title'),
+  title: () => ResultQuickviewSelectors.get().find('c-quantic-result-link'),
   resultLabel: () =>
     ResultQuickviewSelectors.get().find('c-quantic-result-label'),
   resultLink: () =>

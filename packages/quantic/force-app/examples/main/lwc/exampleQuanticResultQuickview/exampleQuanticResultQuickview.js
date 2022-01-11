@@ -12,15 +12,15 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
     }
 
     result = {
-        title: "2020 Customer Awards: United States Postal Service - Keep Calm and Carry On",
+        title: "Test",
         hasHtmlVersion: true,
-        uniqueId: "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+        uniqueId: "5",
         raw: {
             date: 1591016242000,
-            urihash: "ñvgyuDzH6CY2agð3"
+            urihash: "5"
         },
-        uri: "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
-        clickUri: "https://community.khoros.com/t5/Khoros-Kudos-Awards-2020/2020-Customer-Awards-United-States-Postal-Service-Keep-Calm-and/cns-p/600865"
+        uri: "https://google.com",
+        clickUri: "https://google.com"
     }
 
     pageTitle = 'Quantic Result Quickview';

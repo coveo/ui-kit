@@ -27,7 +27,19 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the section preview`);
     },
-    logDocumentQuickview: (field: string, title: string) => {
+    displayTitle: (display: boolean) => {
+      selector
+        .title()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the title`);
+    },
+    displayDate: (display: boolean) => {
+      selector
+        .resultDate()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the result date`);
+    },
+    logDocumentQuickview: (title: string) => {
       cy.wait(InterceptAliases.UA.DocumentQuickview)
         .then((interception) => {
           const analyticsBody = interception.request.body;
