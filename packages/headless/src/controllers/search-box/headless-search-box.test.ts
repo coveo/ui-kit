@@ -240,7 +240,7 @@ describe('headless searchBox', () => {
       expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
     });
 
-    it('it allows autoSelection', () => {
+    it('allows autoSelection', () => {
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(
