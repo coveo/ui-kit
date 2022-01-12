@@ -27,7 +27,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api engineId;
   /**
-   * The ID of the search engine instance the component registers to.
+   * The ID of the search engine instance the component registers to, this is used to instantiate the search interface to be able to show the quick view.
    * @api
    * @type {string}
    * @defaultValue `'search-engine'`
