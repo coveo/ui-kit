@@ -1,7 +1,7 @@
 import {LightningElement, track, api} from 'lwc';
 
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
-  @api caseAssistId = 'a4fb453a-b1f1-4054-9067-bef117586baa'
+  @api caseAssistId = 'a4fb453a-b1f1-4054-9067-bef117586baa';
 
   @track config = {};
   isConfigured = false;
@@ -26,10 +26,11 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
     {
       attribute: 'maxDocuments',
       label: 'Max documents',
-      description: 'The maximum number of document suggesions to display, it\'s a value between 1 and 5.',
+      description:
+        "The maximum number of document suggesions to display, it's a value between 1 and 5.",
       defaultValue: 5,
     },
-  ]
+  ];
 
   async handleTryItNow(evt) {
     this.config = evt.detail;
