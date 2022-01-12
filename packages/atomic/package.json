@@ -13,15 +13,16 @@
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
+  "collection": "collection-manifest.json",
+  "collection:main": "dist/index.js",
   "unpkg": "dist/atomic/atomic.esm.js",
   "files": [
     "dist/",
     "loader/",
     "docs/",
     "licenses/",
-    "headless/"
+    "headless/",
+    "collection-manifest.json"
   ],
   "scripts": {
     "clean": "rimraf -f -r dist/* headless/*",
@@ -56,6 +57,7 @@
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
     "stencil-inline-svg": "^1.1.0",
+    "@stencil/store": "1.5.0",
     "tailwindcss": "^2.2.19"
   },
   "devDependencies": {
@@ -67,7 +69,6 @@
     "@stencil/core": "2.11.0",
     "@stencil/postcss": "2.1.0",
     "@stencil/react-output-target": "^0.2.0",
-    "@stencil/store": "1.5.0",
     "@storybook/addon-a11y": "6.3.12",
     "@storybook/addon-controls": "6.3.12",
     "@storybook/addon-docs": "6.3.12",
