@@ -28,6 +28,10 @@ export const CategoryFacetSelectors = {
     CategoryFacetSelectors.shadow().find('[part="parent-button"]'),
   activeParentValue: () =>
     CategoryFacetSelectors.shadow().find('[part="active-parent"]'),
+  activeParentValueWithText: (text: string) =>
+    CategoryFacetSelectors.shadow().find(
+      `[part="active-parent"]:contains("${text}")`
+    ),
   showMoreButton: () =>
     CategoryFacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () =>
