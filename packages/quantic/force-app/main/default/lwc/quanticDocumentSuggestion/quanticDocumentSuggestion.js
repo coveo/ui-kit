@@ -39,6 +39,12 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @type {number}
    */
   @api maxDocuments = 5;
+  /**
+   * Whether we want to disply the quick view or not.
+   * @api
+   * @type {boolean}
+   */
+  @api showQuickView = false;
 
   /** @type {Array<object>} */
   @track suggestions = [];
