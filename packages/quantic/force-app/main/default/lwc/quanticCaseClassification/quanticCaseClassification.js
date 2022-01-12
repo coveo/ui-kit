@@ -341,7 +341,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * Set the current value and update the state.
-   * @returns
+   * @returns {void}
    */
   setValue(value) {
     this.field.update(value);
