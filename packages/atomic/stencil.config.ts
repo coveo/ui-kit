@@ -43,6 +43,7 @@ export const config: Config = {
   outputTargets: [
     {
       type: 'dist',
+      collectionDir: null,
       esmLoaderPath: '../loader',
       copy: [
         {src: 'themes'},
