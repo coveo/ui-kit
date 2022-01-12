@@ -13,7 +13,8 @@
     "dev": "npm link ../samples/headless-react/node_modules/react",
     "clean": "rm -rf dist",
     "compile": "npm run tsc",
-    "tsc": "tsc -p ."
+    "tsc": "tsc -p .",
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
