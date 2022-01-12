@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.12](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.11...@coveo/headless@1.41.12) (2022-01-12)
+
+
+### Bug Fixes
+
+* **headless:** add updateFacetAutoSelection & stop preventing auto select on new searches ([#1652](https://github.com/coveo/ui-kit/issues/1652)) ([d807d40](https://github.com/coveo/ui-kit/commit/d807d40184d9ab323470c9addc0c23b05e4be6bc))
+
+
+
+
+
 ## [1.41.11](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.10...@coveo/headless@1.41.11) (2022-01-05)
 
 
