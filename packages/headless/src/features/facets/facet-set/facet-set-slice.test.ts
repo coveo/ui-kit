@@ -22,7 +22,10 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
-import {deselectAllFacets} from '../generic/facet-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
@@ -255,6 +258,17 @@ describe('facet-set slice', () => {
     facetSetReducer(state, deselectAllFacets());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
+  });
+
+  it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {
+    state['1'] = buildMockFacetRequest({preventAutoSelect: true});
+    state['2'] = buildMockFacetRequest({preventAutoSelect: true});
+    const finalState = facetSetReducer(
+      state,
+      updateFacetAutoSelection({allow: true})
+    );
+    expect(finalState['1'].preventAutoSelect).toBe(false);
+    expect(finalState['2'].preventAutoSelect).toBe(false);
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleFacetDeselectAll for every facet', () => {
