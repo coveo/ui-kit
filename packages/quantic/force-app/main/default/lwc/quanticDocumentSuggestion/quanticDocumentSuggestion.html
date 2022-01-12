@@ -41,5 +41,9 @@
         </lightning-accordion>
       </div>
     </template>
+    <template if:false={hasSuggestions}>
+      <div class="no-suggestion-message slds-align_absolute-center slds-var-p-vertical_xx-large slds-text-color_weak">
+        {labels.noSuggestions}</div>
+    </template>
   </template>
 </template>

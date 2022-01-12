@@ -4,6 +4,7 @@ import {
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
 import loading from '@salesforce/label/c.quantic_Loading';
+import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").DocumentSuggestion} DocumentSuggestion */
@@ -18,6 +19,7 @@ import loading from '@salesforce/label/c.quantic_Loading';
 export default class QuanticDocumentSuggestion extends LightningElement {
   labels = {
     loading,
+    noSuggestions
   };
 
   /**
