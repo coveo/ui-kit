@@ -74,17 +74,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    const slots = this.template.querySelectorAll('slot');
-    slots.forEach((slot) => {
-      let slotContent = slot;
-      while (slotContent?.tagName === 'SLOT') {
-        // @ts-ignore
-        slotContent = slotContent.assignedNodes()[0];
-      }
-      if (slotContent) {
-        slotContent.dataset.id = slot.dataset.docId;
-      }
-    });
+    this.injectIdToSlots();
   }
 
   /**
@@ -156,6 +146,20 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   stopPropagation(evt) {
     evt.stopPropagation();
+  }
+
+  injectIdToSlots() {
+    const slots = this.template.querySelectorAll('slot');
+    slots.forEach((slot) => {
+      let slotContent = slot;
+      while (slotContent?.tagName === 'SLOT') {
+        // @ts-ignore
+        slotContent = slotContent.assignedNodes()[0];
+      }
+      if (slotContent) {
+        slotContent.dataset.id = slot.dataset.docId;
+      }
+    });
   }
 
   get hasSuggestions() {
