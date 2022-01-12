@@ -8,6 +8,7 @@ import {
   interceptSuggestionIndefinitely,
 } from '../../page-objects/case-assist';
 import {sendRating} from '../../page-objects/actions/action-send-rating';
+import allDocuments from '../../fixtures/documentSuggestions.json';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;
@@ -15,54 +16,6 @@ interface DocumentSuggestionOptions {
 
 describe('quantic-document-suggestion', () => {
   const pageUrl = 's/quantic-document-suggestion';
-
-  const allDocuments = [
-    {
-      uniqueId: '1',
-      title: 'Document 1',
-      excerpt: 'The excerpt of the first document suggestion.',
-      hasHtmlVersion: true,
-      fields: {
-        uri: 'test',
-      },
-    },
-    {
-      uniqueId: '2',
-      title: 'Document 2',
-      excerpt: 'The excerpt of the second document suggestion.',
-      hasHtmlVersion: true,
-      fields: {
-        uri: 'test',
-      },
-    },
-    {
-      uniqueId: '3',
-      title: 'Document 3',
-      excerpt: 'The excerpt of the third document suggestion.',
-      hasHtmlVersion: true,
-      fields: {
-        uri: 'test',
-      },
-    },
-    {
-      uniqueId: '4',
-      title: 'Document 4',
-      excerpt: 'The excerpt of the fourth document suggestion.',
-      hasHtmlVersion: true,
-      fields: {
-        uri: 'test',
-      },
-    },
-    {
-      uniqueId: '5',
-      title: 'Document 5',
-      excerpt: 'The excerpt of the fifth document suggestion.',
-      hasHtmlVersion: true,
-      fields: {
-        uri: 'test',
-      },
-    },
-  ];
 
   const defaultMaxDocuments = 5;
 

@@ -10,7 +10,7 @@ function documentSuggestionActions(selector: DocumentSuggestionSelector) {
         .sectionTitle(idx)
         .click()
         .logAction(
-          'When clicking on the document suggestion at the specified index'
+          `When clicking on the document suggestion at the following index: ${idx}`
         ),
   };
 }
