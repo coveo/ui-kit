@@ -13,6 +13,7 @@ import autoprefixer from 'autoprefixer';
 import replacePlugin from '@rollup/plugin-replace';
 import mixins from 'postcss-mixins';
 import {readFileSync} from 'fs';
+import {reactOutputTarget as react} from '@stencil/react-output-target';
 
 const isProduction = process.env.BUILD === 'production';
 
@@ -41,6 +42,14 @@ export const config: Config = {
   sourceMap: true,
   globalScript: 'node_modules/focus-visible/dist/focus-visible.min.js',
   outputTargets: [
+    react({
+      componentCorePackage: '@coveo/atomic',
+      proxiesFile: '../atomic-react/src/components/stencil-generated/index.ts',
+      includeDefineCustomElements: true,
+    }),
+    {
+      type: 'dist-custom-elements',
+    },
     {
       type: 'dist',
       esmLoaderPath: '../loader',
