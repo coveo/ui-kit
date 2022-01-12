@@ -51,6 +51,18 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .contains(label)
         .logDetail(`The button preview should contain "${label}"`);
     },
+    displayContentContainer: (display: boolean) => {
+      selector
+        .contentContainer()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the content`);
+    },
+    displaySpinner: (display: boolean) => {
+      selector
+        .spinner()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the spinner`);
+    },
     logDocumentQuickview: (title: string) => {
       cy.wait(InterceptAliases.UA.DocumentQuickview)
         .then((interception) => {

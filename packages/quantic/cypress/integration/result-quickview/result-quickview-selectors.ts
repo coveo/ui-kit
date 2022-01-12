@@ -11,6 +11,8 @@ export interface ResultQuickviewSelector extends ComponentSelector {
   resultLabel: () => CypressSelector;
   resultLink: () => CypressSelector;
   resultDate: () => CypressSelector;
+  contentContainer: () => CypressSelector;
+  spinner: () => CypressSelector;
 }
 
 export const ResultQuickviewSelectors: ResultQuickviewSelector = {
@@ -31,4 +33,8 @@ export const ResultQuickviewSelectors: ResultQuickviewSelector = {
     ResultQuickviewSelectors.get().find('c-quantic-result-link'),
   resultDate: () =>
     ResultQuickviewSelectors.get().find('.quickview__result-date'),
+  contentContainer: () =>
+    ResultQuickviewSelectors.get().find('.quickview__content-container'),
+  spinner: () =>
+    ResultQuickviewSelectors.get().find('.quickview__spinner-container'),
 };
