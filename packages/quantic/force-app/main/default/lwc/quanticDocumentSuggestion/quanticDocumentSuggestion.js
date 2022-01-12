@@ -30,8 +30,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * The ID of the search engine instance the component registers to.
    * @api
    * @type {string}
+   * @defaultValue `'search-engine'`
    */
-  @api searchEngineId;
+  @api searchEngineId = 'search-engine';
   /**
    * The maximum number of document suggesions to display, it's a value between 1 and 5.
    * @api
