@@ -248,6 +248,20 @@ describe('headless searchBox', () => {
       );
     });
 
+    it('autoSelection should be allowed after deselecting facets', () => {
+      searchBox.submit();
+
+      const deselectAllBreadcrumbsIndex = engine.actions.findIndex(
+        (action) => action.type === deselectAllBreadcrumbs.type
+      );
+      const updateFacetAutoSelectionIndex = engine.actions.findIndex(
+        (action) => action.type === updateFacetAutoSelection.type
+      );
+      expect(deselectAllBreadcrumbsIndex).toBeLessThanOrEqual(
+        updateFacetAutoSelectionIndex
+      );
+    });
+
     it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
