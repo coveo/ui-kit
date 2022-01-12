@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.22.11",
+  "version": "1.23.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -13,15 +13,16 @@
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
+  "collection": "collection-manifest.json",
+  "collection:main": "dist/index.js",
   "unpkg": "dist/atomic/atomic.esm.js",
   "files": [
     "dist/",
     "loader/",
     "docs/",
     "licenses/",
-    "headless/"
+    "headless/",
+    "collection-manifest.json"
   ],
   "scripts": {
     "clean": "rimraf -f -r dist/* headless/*",
@@ -48,6 +49,7 @@
     "@coveo/bueno": "^0.34.1",
     "@coveo/headless": "^1.41.11",
     "@salesforce-ux/design-system": "^2.16.1",
+    "@stencil/store": "1.5.0",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "dompurify": "^2.3.0",

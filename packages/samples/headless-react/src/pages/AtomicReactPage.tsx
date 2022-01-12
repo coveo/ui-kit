@@ -5,7 +5,6 @@ import {
   AtomicFacet,
   buildSearchEngine,
   AtomicResultTemplate,
-  Template,
   AtomicResultLink,
   AtomicResultBadge,
   AtomicResultSectionBadges,
@@ -129,75 +128,73 @@ export function AtomicReactPage() {
           image-size="large"
         >
           <AtomicResultTemplate>
-            <Template>
-              <AtomicResultSectionBadges>
-                <AtomicResultBadge field="ec_brand" />
-              </AtomicResultSectionBadges>
-              <AtomicResultSectionVisual>
-                <AtomicResultImage field="ec_images" />
-              </AtomicResultSectionVisual>
-              <AtomicResultSectionTitle>
-                <AtomicResultLink />
-              </AtomicResultSectionTitle>
-              <AtomicResultSectionTitleMetadata>
+            <AtomicResultSectionBadges>
+              <AtomicResultBadge field="ec_brand" />
+            </AtomicResultSectionBadges>
+            <AtomicResultSectionVisual>
+              <AtomicResultImage field="ec_images" />
+            </AtomicResultSectionVisual>
+            <AtomicResultSectionTitle>
+              <AtomicResultLink />
+            </AtomicResultSectionTitle>
+            <AtomicResultSectionTitleMetadata>
+              <AtomicResultRating field="ec_rating" />
+              <AtomicResultPrintableUri maxNumberOfParts={3} />
+            </AtomicResultSectionTitleMetadata>
+            <AtomicResultSectionEmphasized>
+              <AtomicResultNumber field="ec_price">
+                <AtomicFormatCurrency currency="USD" />
+              </AtomicResultNumber>
+            </AtomicResultSectionEmphasized>
+            <AtomicResultSectionExcerpt>
+              <AtomicResultText field="ec_shortdesc" />
+            </AtomicResultSectionExcerpt>
+            <AtomicResultSectionBottomMetadata>
+              <AtomicResultFieldsList>
+                <AtomicFieldCondition
+                  className="field"
+                  ifDefined="cat_platform"
+                >
+                  <span className="field-label">
+                    <AtomicText value="Platform" />
+                  </span>
+                  <AtomicResultText field="cat_platform" />
+                </AtomicFieldCondition>
+
+                <AtomicFieldCondition
+                  className="field"
+                  ifDefined="cat_condition"
+                >
+                  <span className="field-label">
+                    <AtomicText value="Condition" />
+                  </span>
+                  <AtomicResultText field="cat_condition" />
+                </AtomicFieldCondition>
+
+                <AtomicFieldCondition
+                  className="field"
+                  ifDefined="cat_categories"
+                >
+                  <span className="field-label">
+                    <AtomicText value="Tags" />
+                  </span>
+                  <AtomicResultMultiValueText field="cat_categories" />
+                </AtomicFieldCondition>
+              </AtomicResultFieldsList>
+            </AtomicResultSectionBottomMetadata>
+            <AtomicTableElement label="Description">
+              <AtomicResultLink />
+            </AtomicTableElement>
+            <AtomicTableElement label="Price">
+              <AtomicResultNumber field="ec_price">
+                <AtomicFormatCurrency currency="USD" />
+              </AtomicResultNumber>
+            </AtomicTableElement>
+            <AtomicTableElement label="Rating">
+              <AtomicResultNumber field="ec_rating">
                 <AtomicResultRating field="ec_rating" />
-                <AtomicResultPrintableUri maxNumberOfParts={3} />
-              </AtomicResultSectionTitleMetadata>
-              <AtomicResultSectionEmphasized>
-                <AtomicResultNumber field="ec_price">
-                  <AtomicFormatCurrency currency="USD" />
-                </AtomicResultNumber>
-              </AtomicResultSectionEmphasized>
-              <AtomicResultSectionExcerpt>
-                <AtomicResultText field="ec_shortdesc" />
-              </AtomicResultSectionExcerpt>
-              <AtomicResultSectionBottomMetadata>
-                <AtomicResultFieldsList>
-                  <AtomicFieldCondition
-                    className="field"
-                    ifDefined="cat_platform"
-                  >
-                    <span className="field-label">
-                      <AtomicText value="Platform" />
-                    </span>
-                    <AtomicResultText field="cat_platform" />
-                  </AtomicFieldCondition>
-
-                  <AtomicFieldCondition
-                    className="field"
-                    ifDefined="cat_condition"
-                  >
-                    <span className="field-label">
-                      <AtomicText value="Condition" />
-                    </span>
-                    <AtomicResultText field="cat_condition" />
-                  </AtomicFieldCondition>
-
-                  <AtomicFieldCondition
-                    className="field"
-                    ifDefined="cat_categories"
-                  >
-                    <span className="field-label">
-                      <AtomicText value="Tags" />
-                    </span>
-                    <AtomicResultMultiValueText field="cat_categories" />
-                  </AtomicFieldCondition>
-                </AtomicResultFieldsList>
-              </AtomicResultSectionBottomMetadata>
-              <AtomicTableElement label="Description">
-                <AtomicResultLink />
-              </AtomicTableElement>
-              <AtomicTableElement label="Price">
-                <AtomicResultNumber field="ec_price">
-                  <AtomicFormatCurrency currency="USD" />
-                </AtomicResultNumber>
-              </AtomicTableElement>
-              <AtomicTableElement label="Rating">
-                <AtomicResultNumber field="ec_rating">
-                  <AtomicResultRating field="ec_rating" />
-                </AtomicResultNumber>
-              </AtomicTableElement>
-            </Template>
+              </AtomicResultNumber>
+            </AtomicTableElement>
           </AtomicResultTemplate>
         </AtomicResultList>
         <div className="pagination">
