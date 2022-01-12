@@ -40,11 +40,17 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api maxDocuments = 5;
   /**
-   * Whether we want to disply the quick view or not.
+   * Whether or not we want to disply the quick view.
    * @api
    * @type {boolean}
    */
   @api showQuickView = false;
+  /**
+   * @api
+   * @type {boolean}
+   * Whether or not we want to fetch suggestions when initializing this component..
+   */
+  @api fetchOnInit = false;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -97,7 +103,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       ...CoveoHeadlessCaseAssist.loadDocumentSuggestionActions(engine),
     };
 
-    engine.dispatch(this.actions.fetchDocumentSuggestions());
+    if (this.fetchOnInit) {
+      engine.dispatch(this.actions.fetchDocumentSuggestions());
+    }
   };
 
   disconnectedCallback() {
