@@ -21,7 +21,10 @@ import {
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
 import {getFacetSetInitialState} from './facet-set-state';
-import {deselectAllFacets} from '../generic/facet-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {WritableDraft} from 'immer/dist/internal';
@@ -116,6 +119,11 @@ export const facetSetReducer = createReducer(
           handleFacetDeselectAll(request);
         });
       })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.keys(state).forEach((facetId) => {
+          state[facetId].preventAutoSelect = !action.payload.allow;
+        })
+      )
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
       })

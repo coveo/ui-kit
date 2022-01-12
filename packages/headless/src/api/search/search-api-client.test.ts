@@ -241,7 +241,8 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.querySuggest
     should call PlatformClient.call with the right options`, async () => {
       const id = 'someid123';
-      const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
+      const qs = buildMockQuerySuggest({id, count: 11});
+      state.querySet[id] = 'some query';
       state.querySuggest[id] = qs;
 
       const req = await buildQuerySuggestRequest(id, state);
@@ -257,7 +258,7 @@ describe('search api client', () => {
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
         requestParams: {
-          q: state.querySuggest[id]!.q,
+          q: state.querySet[id],
           count: state.querySuggest[id]!.count,
           context: state.context.contextValues,
           pipeline: state.pipeline,
