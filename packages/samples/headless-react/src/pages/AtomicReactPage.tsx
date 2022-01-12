@@ -6,7 +6,6 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
   AtomicResultTemplate,
-  Template,
   AtomicResultLink,
   AtomicResultBadge,
   AtomicResultSectionBadges,
@@ -32,14 +31,12 @@ export function AtomicReactPage() {
             sourcetype: ['YouTube'],
           }}
         >
-          <Template>
-            <AtomicResultSectionBadges>
-              <AtomicResultBadge field="source"></AtomicResultBadge>
-            </AtomicResultSectionBadges>
-            <AtomicResultSectionTitle>
-              <AtomicResultLink></AtomicResultLink>
-            </AtomicResultSectionTitle>
-          </Template>
+          <AtomicResultSectionBadges>
+            <AtomicResultBadge field="source"></AtomicResultBadge>
+          </AtomicResultSectionBadges>
+          <AtomicResultSectionTitle>
+            <AtomicResultLink></AtomicResultLink>
+          </AtomicResultSectionTitle>
         </AtomicResultTemplate>
       </AtomicResultList>
     </AtomicSearchInterface>

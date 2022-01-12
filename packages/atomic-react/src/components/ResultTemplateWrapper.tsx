@@ -1,7 +1,8 @@
-import React, {useEffect, useRef} from 'react';
 import type {JSX} from '@coveo/atomic';
-import {AtomicResultTemplate} from './stencil-generated';
+import React, {useEffect, useRef} from 'react';
+import ReactDOMServer from 'react-dom/server';
 import {mapToHTMLProperties} from './MapToHTMLProperties';
+import {AtomicResultTemplate} from './stencil-generated';
 
 interface MatchConditions {
   mustMatch?: Record<string, string[]>;
@@ -20,6 +21,8 @@ export const ResultTemplateWrapper = (
     ? mapToHTMLProperties('must-not-match', mustNotMatch)
     : [];
 
+  const innerHTML = ReactDOMServer.renderToStaticMarkup(<>{children}</>);
+
   const resultTemplateRef = useRef<HTMLAtomicResultTemplateElement>(null);
   useEffect(() => {
     mustMatchAsHTMLProperties
@@ -30,7 +33,7 @@ export const ResultTemplateWrapper = (
   }, [resultTemplateRef]);
   return (
     <AtomicResultTemplate ref={resultTemplateRef} {...allOtherProps}>
-      {children}
+      <template dangerouslySetInnerHTML={{__html: innerHTML}}></template>
     </AtomicResultTemplate>
   );
 };
