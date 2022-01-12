@@ -54,7 +54,7 @@ export function selectSearchResultAt(index: number) {
     });
 }
 
-export function pressParentButtonAt(index: number) {
+export function pressParentButton(index: number) {
   CategoryFacetSelectors.parentValue()
     .eq(index)
     .then(([parentValue]) => {

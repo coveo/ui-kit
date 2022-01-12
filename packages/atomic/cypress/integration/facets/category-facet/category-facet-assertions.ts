@@ -2,7 +2,6 @@ import {
   doSortAlphanumeric,
   doSortOccurences,
 } from '../../../utils/componentUtils';
-import {RouteAlias} from '../../../utils/setupComponent';
 import {ResultListSelectors} from '../../result-list/result-list-selectors';
 import {CategoryFacetSelectors} from './category-facet-selectors';
 import {hierarchicalField} from './category-facet-actions';
@@ -54,9 +53,7 @@ export function assertNoPathInUrl() {
 
 export function assertLogFacetSelect(path: string[]) {
   it('should log the facet selection to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property(
         'facetValue',
         path.join(';')
@@ -66,12 +63,15 @@ export function assertLogFacetSelect(path: string[]) {
         hierarchicalField
       );
 
-      expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
-      expect(analyticsBody.facetState[0]).to.have.property(
+      expect(analyticsBody.facetState?.[0]).to.have.property(
+        'state',
+        'selected'
+      );
+      expect(analyticsBody.facetState?.[0]).to.have.property(
         'field',
         hierarchicalField
       );
-      expect(analyticsBody.facetState[0]).to.have.property(
+      expect(analyticsBody.facetState?.[0]).to.have.property(
         'facetType',
         'hierarchical'
       );
@@ -81,9 +81,7 @@ export function assertLogFacetSelect(path: string[]) {
 
 export function assertLogFacetShowMore() {
   it('should log the facet show more results to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('eventType', 'facet');
+    cy.expectCustomEvent('facet').then((analyticsBody) => {
       expect(analyticsBody).to.have.property(
         'eventValue',
         'showMoreFacetResults'
@@ -98,10 +96,8 @@ export function assertLogFacetShowMore() {
 
 export function assertLogClearFacetValues() {
   it('should log the facet clear all to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
-      expect(analyticsBody.customData).to.have.property(
+    cy.expectSearchEvent('facetClearAll').then((analyticsBody) => {
+      expect(analyticsBody?.customData).to.have.property(
         'facetField',
         hierarchicalField
       );
@@ -111,9 +107,7 @@ export function assertLogClearFacetValues() {
 
 export function assertLogFacetShowLess() {
   it('should log the facet show less results to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('eventType', 'facet');
+    cy.expectCustomEvent('facet').then((analyticsBody) => {
       expect(analyticsBody).to.have.property(
         'eventValue',
         'showLessFacetResults'

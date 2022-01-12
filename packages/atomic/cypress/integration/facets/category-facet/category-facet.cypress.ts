@@ -17,7 +17,7 @@ import {
   categoryFacetLabel,
   pressShowMore,
   pressShowLess,
-  pressParentButtonAt,
+  pressParentButton,
   pressClearButton,
   pressActiveParent,
   pressAllCategoriesButton,
@@ -253,7 +253,7 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the first parent button', () => {
         function setupSelectFirstParent() {
           setupGoDeeperLastLevel();
-          pressParentButtonAt(0);
+          pressParentButton(0);
         }
 
         const selectedPath = canadaHierarchy.slice(0, 1);
@@ -761,13 +761,13 @@ describe('Category Facet Test Suites', () => {
         describe('verify rendering', () => {
           before(setupDeselectCategoryFacetValue);
           BreadboxAssertions.assertDisplayBreadcrumb(false);
+          BreadboxAssertions.assertLogBreadcrumbCategoryFacet(
+            hierarchicalField
+          );
         });
 
         describe('verify analytic', () => {
           before(setupDeselectCategoryFacetValue);
-          BreadboxAssertions.assertLogBreadcrumbCategoryFacet(
-            hierarchicalField
-          );
         });
 
         describe('verify selected facetValue', () => {
