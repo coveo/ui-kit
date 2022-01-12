@@ -19,7 +19,7 @@ const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'theme'>> = {
   theme: 'coveo',
 };
 
-export const AtomicSearchInterfaceWrapper = (
+export const SearchInterfaceWrapper = (
   props: React.PropsWithChildren<WrapperProps>
 ) => {
   const mergedProps = {...DefaultProps, ...props};
