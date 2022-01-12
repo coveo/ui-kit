@@ -176,22 +176,19 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
-  describe('when selecting 12 facet values', () => {
-    const index = [1, 2, 0, 2, 0, 1, 2, 0, 2, 0, 1, 2];
-    function setupSelectedMulitpleFacets() {
-      setupBreadboxWithMultipleFacets();
-      FacetSelectors.showMoreButton().click();
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
-      index.forEach((i: number) => {
-        selectIdleCheckboxValueAt(FacetSelectors, i);
-        cy.wait(TestFixture.interceptAliases.Search);
-        cy.wait(TestFixture.interceptAliases.UA);
-      });
+  describe('when selecting 16 facet values', () => {
+    const activeValues = [...Array(16).keys()];
+
+    function setupFacetWithMultipleSelectedValues() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field, label}))
+        .withHash(`f[${field}]=${activeValues.join(',')}`)
+        .init();
     }
 
     describe('verify rendering', () => {
-      before(setupSelectedMulitpleFacets);
+      before(setupFacetWithMultipleSelectedValues);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -199,13 +196,13 @@ describe('Breadbox Test Suites', () => {
       BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
         FacetSelectors
       );
-      BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(activeValues.length);
       BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
     });
 
     describe('when selecting "+" show more breadcrumb', () => {
       before(() => {
-        setupSelectedMulitpleFacets();
+        setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
       });
 
@@ -218,7 +215,7 @@ describe('Breadbox Test Suites', () => {
 
     describe('when selecting "-" show less breadcrumb', () => {
       before(() => {
-        setupSelectedMulitpleFacets();
+        setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
         BreadboxSelectors.breadcrumbShowLessButton().click();
       });
