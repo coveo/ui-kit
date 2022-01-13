@@ -5,7 +5,9 @@ import {
   initializeEventName,
 } from '../../utils/initialization-utils';
 /**
- * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize .
+ * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
+ *
+ * @part selector - The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
  */
 @Component({
   tag: 'atomic-external',
