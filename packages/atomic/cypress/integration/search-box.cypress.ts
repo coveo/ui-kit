@@ -91,14 +91,14 @@ describe('Search Box Test Suites', () => {
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
 
-      function setupWithSuggestionsAndRecentQueriesAndInput() {
-        setupWithSuggestionsAndRecentQueries();
+      function setInputText() {
         SearchBoxSelectors.inputBox().type('Rec');
       }
 
       describe('verify rendering', () => {
         before(() => {
-          setupWithSuggestionsAndRecentQueriesAndInput();
+          setupWithSuggestionsAndRecentQueries();
+          setInputText();
         });
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
@@ -110,7 +110,8 @@ describe('Search Box Test Suites', () => {
 
       describe('after selecting a suggestion with the mouse', () => {
         before(() => {
-          setupWithSuggestionsAndRecentQueriesAndInput();
+          setupWithSuggestionsAndRecentQueries();
+          setInputText();
           SearchBoxSelectors.querySuggestions().eq(1).click();
         });
 
@@ -121,7 +122,7 @@ describe('Search Box Test Suites', () => {
       describe('after focusing a suggestion with the keyboard', () => {
         before(() => {
           setupWithRecentQueries();
-          SearchBoxSelectors.inputBox().type('Rec');
+          setInputText();
 
           SearchBoxSelectors.inputBox()
             .focus()
