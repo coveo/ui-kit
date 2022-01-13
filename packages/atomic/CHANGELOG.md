@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.23.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.1...@coveo/atomic@1.23.2) (2022-01-13)
+
+
+### Bug Fixes
+
+* **atomic:** replaced atomic-results-per-page button with radio ([#1647](https://github.com/coveo/ui-kit/issues/1647)) ([5e02c60](https://github.com/coveo/ui-kit/commit/5e02c60104573ec2d417d35a12b356f8661975bb))
+
+
+
+
+
+## [1.23.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.0...@coveo/atomic@1.23.1) (2022-01-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.11...@coveo/atomic@1.23.0) (2022-01-12)
+
+
+### Bug Fixes
+
+* **atomic:** update Atomic output target for Stencil, remove exported decorators ([#1646](https://github.com/coveo/ui-kit/issues/1646)) ([8f82e13](https://github.com/coveo/ui-kit/commit/8f82e13b3c420f3bc937262c49ac208aa75704e9))
+
+
+### Features
+
+* atomic-react package initial commit ([#1645](https://github.com/coveo/ui-kit/issues/1645)) ([ce2b570](https://github.com/coveo/ui-kit/commit/ce2b570107a8ed68efedb9aff97573ab0f7ddc75))
+
+
+
+
+
 ## [1.22.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.22.10...@coveo/atomic@1.22.11) (2022-01-10)
 
 

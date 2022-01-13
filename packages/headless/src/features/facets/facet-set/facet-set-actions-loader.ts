@@ -16,6 +16,10 @@ import {
   updateFreezeCurrentValues,
   UpdateFreezeCurrentValuesActionCreatorPayload,
 } from './facet-set-actions';
+import {
+  updateFacetAutoSelection,
+  UpdateFacetAutoSelectionActionCreatorPayload,
+} from '../generic/facet-actions';
 
 export type {
   RegisterFacetActionCreatorPayload,
@@ -24,6 +28,7 @@ export type {
   UpdateFacetNumberOfValuesActionCreatorPayload,
   UpdateFacetSortCriterionActionCreatorPayload,
   UpdateFreezeCurrentValuesActionCreatorPayload,
+  UpdateFacetAutoSelectionActionCreatorPayload,
 };
 
 /**
@@ -97,6 +102,15 @@ export interface FacetSetActionCreators {
   updateFreezeCurrentValues(
     payload: UpdateFreezeCurrentValuesActionCreatorPayload
   ): PayloadAction<UpdateFreezeCurrentValuesActionCreatorPayload>;
+
+  /**
+   * Updates the preventAutoSelect flag of all facets
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateFacetAutoSelection(
+    payload: UpdateFacetAutoSelectionActionCreatorPayload
+  ): PayloadAction<UpdateFacetAutoSelectionActionCreatorPayload>;
 }
 
 /**
@@ -118,5 +132,6 @@ export function loadFacetSetActions(
     updateFacetNumberOfValues,
     updateFacetSortCriterion,
     updateFreezeCurrentValues,
+    updateFacetAutoSelection,
   };
 }

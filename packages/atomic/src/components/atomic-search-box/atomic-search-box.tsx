@@ -158,11 +158,11 @@ export class AtomicSearchBox {
   }
 
   private get firstValue() {
-    return this.listRef.firstElementChild!;
+    return this.listRef.firstElementChild;
   }
 
   private get lastValue() {
-    return this.listRef.lastElementChild!;
+    return this.listRef.lastElementChild;
   }
 
   private get nextOrFirstValue() {
@@ -190,7 +190,7 @@ export class AtomicSearchBox {
   }
 
   private focusNextValue() {
-    if (!this.hasSuggestions) {
+    if (!this.hasSuggestions || !this.nextOrFirstValue) {
       return;
     }
 
@@ -201,7 +201,7 @@ export class AtomicSearchBox {
   }
 
   private focusPreviousValue() {
-    if (!this.hasSuggestions) {
+    if (!this.hasSuggestions || !this.previousOrLastValue) {
       return;
     }
 

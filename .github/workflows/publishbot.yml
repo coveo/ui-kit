@@ -26,14 +26,11 @@ jobs:
   deploy:
     name: 'Deploy the package'
     needs: npm-publish
-    runs-on: [self-hosted, linux, x64, eks-poc]
+    runs-on: [self-hosted, linux, x64, ec2-alpha]
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential
       - uses: ./.github/actions/setup
       - run: rm -rf veracode && mkdir veracode
       - run: mkdir veracode/auth
