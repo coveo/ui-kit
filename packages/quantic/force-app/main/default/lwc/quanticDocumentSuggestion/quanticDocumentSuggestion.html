@@ -21,9 +21,9 @@
               </div>
               <div onclick={stopPropagation}>
                 <div class="
-                      slds-var-p-horizontal_x-large
-                      slds-var-p-vertical_x-small
-                    ">
+                    slds-var-p-horizontal_large
+                    slds-var-p-vertical_x-small
+                  ">
                   <p class="excerpt">{it.value.excerpt}</p>
                   <div class="row slds-var-p-top_medium">
                     <template if:true={showQuickview}>
@@ -42,8 +42,14 @@
       </div>
     </template>
     <template if:false={hasSuggestions}>
-      <div class="no-suggestion-message slds-align_absolute-center slds-var-p-vertical_xx-large slds-text-color_weak">
-        {labels.noSuggestions}</div>
+      <div class="
+          no-suggestion-message
+          slds-align_absolute-center
+          slds-var-p-vertical_xx-large
+          slds-text-color_weak
+        ">
+        {labels.noSuggestions}
+      </div>
     </template>
   </template>
 </template>
