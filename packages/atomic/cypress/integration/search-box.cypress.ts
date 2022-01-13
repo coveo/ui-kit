@@ -36,7 +36,8 @@ describe('Search Box Test Suites', () => {
     const numOfRecentQueries = 4;
     const maxSuggestionsWithoutQuery = numOfSuggestions - 1;
     const maxRecentQueriesWithoutQuery = numOfRecentQueries - 1;
-    beforeEach(() => {
+
+    function setupWithSuggestionsAndRecentQueries() {
       new TestFixture()
         .with(setSuggestions(numOfSuggestions))
         .with(setRecentQueries(numOfRecentQueries))
@@ -54,12 +55,29 @@ describe('Search Box Test Suites', () => {
           })
         )
         .init();
-    });
+    }
+
+    function setupWithRecentQueries() {
+      new TestFixture()
+        .with(setRecentQueries(numOfRecentQueries))
+        .with(
+          addSearchBox({
+            recentQueries: {
+              maxWithoutQuery: maxRecentQueriesWithoutQuery,
+              maxWithQuery: numOfRecentQueries,
+            },
+            props: {'number-of-queries': numOfRecentQueries},
+          })
+        )
+        .init();
+    }
 
     describe('without input', () => {
       const expectedSum =
         maxSuggestionsWithoutQuery + maxRecentQueriesWithoutQuery;
-      beforeEach(() => {
+
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().click();
       });
 
@@ -72,20 +90,28 @@ describe('Search Box Test Suites', () => {
 
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
-      beforeEach(() => {
+
+      function setupWithSuggestionsAndRecentQueriesAndInput() {
+        setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type('Rec');
+      }
+
+      describe('verify rendering', () => {
+        before(() => {
+          setupWithSuggestionsAndRecentQueriesAndInput();
+        });
+
+        SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
+        CommonAssertions.assertAriaLiveMessage(
+          SearchBoxSelectors.liveRegion,
+          expectedSum.toString()
+        );
       });
 
-      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-      CommonAssertions.assertAriaLiveMessage(
-        SearchBoxSelectors.liveRegion,
-        expectedSum.toString()
-      );
-
       describe('after selecting a suggestion with the mouse', () => {
-        beforeEach(() => {
+        before(() => {
+          setupWithSuggestionsAndRecentQueriesAndInput();
           SearchBoxSelectors.querySuggestions().eq(1).click();
-          cy.wait(TestFixture.interceptAliases.Search);
         });
 
         SearchBoxAssertions.assertFocusSearchBox();
@@ -93,7 +119,10 @@ describe('Search Box Test Suites', () => {
       });
 
       describe('after focusing a suggestion with the keyboard', () => {
-        beforeEach(() => {
+        before(() => {
+          setupWithRecentQueries();
+          SearchBoxSelectors.inputBox().type('Rec');
+
           SearchBoxSelectors.inputBox()
             .focus()
             .type('{downarrow}{downarrow}{downarrow}');
@@ -102,9 +131,8 @@ describe('Search Box Test Suites', () => {
         SearchBoxAssertions.assertHasText('Recent query 1');
 
         describe('after pressing the search button', () => {
-          beforeEach(() => {
+          before(() => {
             SearchBoxSelectors.submitButton().click();
-            cy.wait(TestFixture.interceptAliases.Search);
           });
 
           SearchBoxAssertions.assertFocusSearchBox();
