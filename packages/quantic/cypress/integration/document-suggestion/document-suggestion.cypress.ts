@@ -53,7 +53,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         Actions.clickSuggestion(clickIndex);
-        Expect.logClickingSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
       });
@@ -62,7 +62,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         sendRating(clickIndex);
-        Expect.logRatingSuggestion(clickIndex);
+        Expect.logRatingSuggestion(clickIndex, allDocuments);
       });
     });
   });
@@ -83,7 +83,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         Actions.clickSuggestion(clickIndex);
-        Expect.logClickingSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
       });
@@ -92,7 +92,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         sendRating(clickIndex);
-        Expect.logRatingSuggestion(clickIndex);
+        Expect.logRatingSuggestion(clickIndex, allDocuments);
       });
     });
   });
@@ -125,7 +125,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         Actions.clickSuggestion(clickIndex);
-        Expect.logClickingSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
         Expect.displayQuickviews(false);
@@ -135,7 +135,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         sendRating(clickIndex);
-        Expect.logRatingSuggestion(clickIndex);
+        Expect.logRatingSuggestion(clickIndex, allDocuments);
       });
     });
   });
@@ -275,7 +275,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         Actions.clickSuggestion(clickIndex);
-        Expect.logClickingSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
         Expect.displayQuickviewButton(true, 1);
@@ -286,7 +286,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 1;
 
         sendRating(clickIndex);
-        Expect.logRatingSuggestion(clickIndex);
+        Expect.logRatingSuggestion(clickIndex, allDocuments);
       });
     });
   });

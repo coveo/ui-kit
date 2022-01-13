@@ -5,6 +5,10 @@ import {
   DocumentSuggestionSelectors,
 } from './document-suggestion-selectors';
 
+interface Fields {
+  uri: string;
+}
+
 function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
   return {
     displayAccordion: (display: boolean) => {
@@ -75,7 +79,10 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
         .logDetail(`should display ${value} document suggestions`);
     },
 
-    logClickingSuggestion: (index: number) => {
+    logClickingSuggestion: (
+      index: number,
+      documents: Array<{title: string; fields: Fields}>
+    ) => {
       cy.wait(InterceptAliases.UA.SuggestionClick)
         .then((interception) => {
           const analyticsBody = interception.request.body;
@@ -83,11 +90,26 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
             .accordionSection(index)
             .invoke('attr', 'data-id')
             .should('eq', analyticsBody.svc_action_data.suggestionId);
+          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            'documentTitle',
+            documents[index].title
+          );
+          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            'documentUri',
+            documents[index].fields.uri
+          );
+          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            'documentPosition',
+            index
+          );
         })
         .logDetail('should log the "suggestion_click" UA event');
     },
 
-    logRatingSuggestion: (index: number) => {
+    logRatingSuggestion: (
+      index: number,
+      documents: Array<{title: string; fields: Fields}>
+    ) => {
       cy.wait(InterceptAliases.UA.SuggestionRate)
         .then((interception) => {
           const analyticsBody = interception.request.body;
@@ -95,6 +117,18 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
             .accordionSection(index)
             .invoke('attr', 'data-id')
             .should('eq', analyticsBody.svc_action_data.suggestionId);
+          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            'documentTitle',
+            documents[index].title
+          );
+          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            'documentUri',
+            documents[index].fields.uri
+          );
+          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            'documentPosition',
+            index
+          );
         })
         .logDetail('should log the "suggestion_rate" UA event');
     },
