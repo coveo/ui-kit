@@ -15,6 +15,7 @@ interface DocumentSuggestionOptions {
   maxDocuments: number;
   fetchOnInit: boolean;
   showQuickview: boolean;
+  numberOfAutoOpenedDocuments: number;
 }
 
 describe('quantic-document-suggestion', () => {
@@ -136,6 +137,105 @@ describe('quantic-document-suggestion', () => {
 
         sendRating(clickIndex);
         Expect.logRatingSuggestion(clickIndex, allDocuments);
+      });
+    });
+  });
+
+  describe('when using a custom number of automatically opened documents', () => {
+    it('should render the component and all parts', () => {
+      const numberOfAutoOpenedDocuments = 2;
+
+      visitDocumentSuggestion({
+        numberOfAutoOpenedDocuments,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(defaultMaxDocuments);
+        for (let i = 0; i < numberOfAutoOpenedDocuments; i++) {
+          Expect.displayAccordionSectionContent(true, i);
+        }
+        Expect.displayQuickviews(false);
+      });
+    });
+
+    it('should render the component and all parts when the number of automatically opened documents is set to 0', () => {
+      visitDocumentSuggestion({
+        numberOfAutoOpenedDocuments: 0,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(defaultMaxDocuments);
+        Expect.displayAccordionSectionContent(false, 0);
+
+        Expect.displayQuickviews(false);
+      });
+    });
+  });
+
+  describe('when using an invalid number of automatically opened documents', () => {
+    it('should not open any document when the number of automatically opened documents is inferior to 0', () => {
+      visitDocumentSuggestion({
+        numberOfAutoOpenedDocuments: -1,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(defaultMaxDocuments);
+        Expect.displayAccordionSectionContent(false, 0);
+        Expect.displayQuickviews(false);
+      });
+    });
+
+    it('should open all the documents when the number of automatically opened documents is superior to 5', () => {
+      visitDocumentSuggestion({
+        numberOfAutoOpenedDocuments: defaultMaxDocuments + 1,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(defaultMaxDocuments);
+        for (let i = 0; i < defaultMaxDocuments; i++) {
+          Expect.displayAccordionSectionContent(true, i);
+        }
+        Expect.displayQuickviews(false);
       });
     });
   });

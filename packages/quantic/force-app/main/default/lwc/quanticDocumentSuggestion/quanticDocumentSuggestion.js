@@ -53,6 +53,12 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * Whether or not we want to fetch suggestions when initializing this component.
    */
   @api fetchOnInit = false;
+  /**
+   * @api
+   * @type {number}
+   * The number of automatically opened document suggestions when fetching suggestions.
+   */
+  @api numberOfAutoOpenedDocuments = 1;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -64,8 +70,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   documentSuggestion;
   /** @type {Function} */
   unsubscribeDocumentSuggestion;
-  /** @type {string} */
-  firstSuggestion;
   /** @type {Array<string>} */
   openedDocuments = [];
 
@@ -116,10 +120,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
           };
         })
         .slice(0, Math.max(1, this.maxDocuments)) ?? [];
-    if (this.suggestions.length) {
-      this.firstSuggestion = this.suggestions?.[0].title;
-      this.openedDocuments = [this.suggestions?.[0].title];
-    }
+    this.openFirstDocuments();
     this.loading = this.documentSuggestion.state.loading;
   }
 
@@ -143,6 +144,16 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       }
       // @ts-ignore
       this.openedDocuments = accordion.activeSectionName;
+    }
+  }
+
+  openFirstDocuments() {
+    if (this.suggestions.length) {
+      this.openedDocuments = this.suggestions
+        .slice(0, Math.max(0, Number(this.numberOfAutoOpenedDocuments)))
+        .map((suggestion) => {
+          return suggestion.title;
+        });
     }
   }
 

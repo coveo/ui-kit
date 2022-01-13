@@ -43,6 +43,13 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
         'Whether or not we want to disply the quick view for the document suggestions.',
       defaultValue: false,
     },
+    {
+      attribute: 'numberOfAutoOpenedDocuments',
+      label: 'Number of automatically opened documents',
+      description:
+        'The number of automatically opened document suggestions when fetching suggestions.',
+      defaultValue: 1,
+    },
   ];
 
   async handleTryItNow(evt) {
