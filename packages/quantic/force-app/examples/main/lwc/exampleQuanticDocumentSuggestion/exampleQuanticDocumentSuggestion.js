@@ -1,8 +1,7 @@
 import {LightningElement, track, api} from 'lwc';
+import {getCaseAssistId} from 'c/caseAssistUtils';
 
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
-  @api caseAssistId = 'a4fb453a-b1f1-4054-9067-bef117586baa';
-
   @track config = {};
   isConfigured = false;
 
@@ -30,9 +29,24 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
         "The maximum number of document suggesions to display, it's a value between 1 and 5.",
       defaultValue: 5,
     },
+    {
+      attribute: 'fetchOnInit',
+      label: 'Fetch on init',
+      description:
+        'Whether or not we want to fetch suggestions when initializing this component.',
+      defaultValue: false,
+    },
+    {
+      attribute: 'showQuickview',
+      label: 'Show quickview',
+      description:
+        'Whether or not we want to disply the quick view for the document suggestions.',
+      defaultValue: false,
+    },
   ];
 
   async handleTryItNow(evt) {
+    this.caseAssistId = await getCaseAssistId('Demo');
     this.config = evt.detail;
     this.isConfigured = true;
   }

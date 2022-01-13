@@ -1,12 +1,14 @@
 <template>
   <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
     <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+      <c-action-fetch-suggestions slot="actions" disabled={notConfigured} engine-id={config.engineId}>
+      </c-action-fetch-suggestions>
     </c-configurator>
 
     <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={config.engineId} slot="preview">
       <c-quantic-document-suggestion engine-id={config.engineId} search-engine-id={config.searchEngineId}
-        max-documents={config.maxDocuments}>
-        <c-action-send-rating slot="rating"></c-action-send-rating>
+        max-documents={config.maxDocuments} fetch-on-init={config.fetchOnInit} show-quickview={config.showQuickview}>
+        <c-action-send-rating slot="actions"></c-action-send-rating>
       </c-quantic-document-suggestion>
     </c-quantic-case-assist-interface>
   </c-example-layout>
