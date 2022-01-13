@@ -19,7 +19,7 @@ import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
 export default class QuanticDocumentSuggestion extends LightningElement {
   labels = {
     loading,
-    noSuggestions
+    noSuggestions,
   };
 
   /**
@@ -42,15 +42,15 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api maxDocuments = 5;
   /**
-   * Whether or not we want to disply the quick view.
+   * Whether or not we want to disply the quick view for the document suggestions.
    * @api
    * @type {boolean}
    */
-  @api showQuickView = false;
+  @api showQuickview = false;
   /**
    * @api
    * @type {boolean}
-   * Whether or not we want to fetch suggestions when initializing this component..
+   * Whether or not we want to fetch suggestions when initializing this component.
    */
   @api fetchOnInit = false;
 
