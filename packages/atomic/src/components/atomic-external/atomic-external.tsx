@@ -6,14 +6,15 @@ import {
 } from '../../utils/initialization-utils';
 /**
  * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
- *
- * @part selector - The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
  */
 @Component({
   tag: 'atomic-external',
   shadow: false,
 })
 export class AtomicExternal {
+  /**
+   * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+   */
   @Prop() selector = 'atomic-search-interface';
   @Listen('atomic/initializeComponent')
   public handleInitialization(event: InitializeEvent) {
