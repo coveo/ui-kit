@@ -2,7 +2,7 @@ import {
   SearchEventRequest,
   ClickEventRequest,
   CustomEventRequest,
-} from 'coveo.analytics/src/events';
+} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {findLast} from './arrayUtils';
 
 export type AnyEventRequest =

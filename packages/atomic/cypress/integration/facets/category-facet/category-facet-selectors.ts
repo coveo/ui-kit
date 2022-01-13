@@ -22,6 +22,8 @@ export const CategoryFacetSelectors = {
     CategoryFacetSelectors.shadow().find('[part="value-label"]'),
   values: () => CategoryFacetSelectors.shadow().find('[part="values"]'),
   childValue: () => CategoryFacetSelectors.shadow().find('[part="value-link"]'),
+  childValueLabel: () =>
+    CategoryFacetSelectors.childValue().find('[part="value-label"]'),
   valueCount: () =>
     CategoryFacetSelectors.shadow().find('[part="value-count"]'),
   parentValue: () =>

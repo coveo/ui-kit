@@ -33,8 +33,7 @@ export const addCategoryFacet =
   };
 
 export function selectChildValueAt(index: number) {
-  CategoryFacetSelectors.childValue()
-    .find('[part="value-label"]')
+  CategoryFacetSelectors.childValueLabel()
     .eq(index)
     .then(([childValue]) => {
       const text = childValue.textContent!;
