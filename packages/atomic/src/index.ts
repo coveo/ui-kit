@@ -6,12 +6,6 @@ export {
   initializeBindings,
   Bindings,
   MissingInterfaceParentError,
-  BindStateToController,
-  InitializeBindings,
-  InitializableComponent,
 } from './utils/initialization-utils';
 
-export {
-  ResultContext,
-  resultContext,
-} from './components/result-template-components/result-template-decorators';
+export {resultContext} from './components/result-template-components/result-template-decorators';
