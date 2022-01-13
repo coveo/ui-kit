@@ -273,10 +273,7 @@ export default class QuanticCaseClassification extends LightningElement {
           !this.classifications.some((item) => item.value === option.value)
       )
       .map((option) => {
-        if (option.value === this._value) {
-          return {...option, checked: true};
-        }
-        return {...option, checked: false};
+        return {...option, checked: (option.value === this._value)};
       });
   }
 
