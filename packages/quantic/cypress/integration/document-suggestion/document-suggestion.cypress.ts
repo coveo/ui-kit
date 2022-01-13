@@ -9,9 +9,12 @@ import {
 } from '../../page-objects/case-assist';
 import {sendRating} from '../../page-objects/actions/action-send-rating';
 import allDocuments from '../../fixtures/documentSuggestions.json';
+import {fetchSuggestions} from '../../page-objects/actions/action-get-suggestions';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;
+  fetchOnInit: boolean;
+  showQuickview: boolean;
 }
 
 describe('quantic-document-suggestion', () => {
@@ -29,12 +32,21 @@ describe('quantic-document-suggestion', () => {
 
   describe('when using default options', () => {
     it('should render the component and all parts', () => {
-      mockDocumentSuggestion(allDocuments);
       visitDocumentSuggestion();
 
       scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(defaultMaxDocuments);
+        Expect.displayAccordionSectionContent(true, 0);
       });
 
       scope('when clicking on a document suggestion', () => {
@@ -42,6 +54,38 @@ describe('quantic-document-suggestion', () => {
 
         Actions.clickSuggestion(clickIndex);
         Expect.logClickingSuggestion(clickIndex);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(true, clickIndex);
+      });
+
+      scope('when rating a document suggestion', () => {
+        const clickIndex = 1;
+
+        sendRating(clickIndex);
+        Expect.logRatingSuggestion(clickIndex);
+      });
+    });
+  });
+
+  describe('when fetchOnInit property is set to true', () => {
+    it('should render the component and all parts', () => {
+      mockDocumentSuggestion(allDocuments);
+      visitDocumentSuggestion({fetchOnInit: true});
+
+      scope('when loading the page', () => {
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(defaultMaxDocuments);
+        Expect.displayAccordionSectionContent(true, 0);
+      });
+
+      scope('when clicking on a document suggestion', () => {
+        const clickIndex = 1;
+
+        Actions.clickSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(true, clickIndex);
       });
 
       scope('when rating a document suggestion', () => {
@@ -57,14 +101,24 @@ describe('quantic-document-suggestion', () => {
     const maxDocuments = 3;
 
     it('should render the component and all parts', () => {
-      mockDocumentSuggestion(allDocuments);
       visitDocumentSuggestion({
         maxDocuments,
       });
 
       scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(maxDocuments);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviews(false);
       });
 
       scope('when clicking on a document suggestion', () => {
@@ -72,6 +126,9 @@ describe('quantic-document-suggestion', () => {
 
         Actions.clickSuggestion(clickIndex);
         Expect.logClickingSuggestion(clickIndex);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(true, clickIndex);
+        Expect.displayQuickviews(false);
       });
 
       scope('when rating a document suggestion', () => {
@@ -85,50 +142,88 @@ describe('quantic-document-suggestion', () => {
 
   describe('when using an invalid number maxDocuments', () => {
     it('should render one document suggestion when maxDocuments is equal to 0', () => {
-      mockDocumentSuggestion(allDocuments);
       visitDocumentSuggestion({
         maxDocuments: 0,
       });
 
       scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(1);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviews(false);
       });
     });
 
     it('should render one document suggestion when maxDocuments is inferior to 0', () => {
-      mockDocumentSuggestion(allDocuments);
       visitDocumentSuggestion({
         maxDocuments: -1,
       });
 
       scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(1);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviews(false);
       });
     });
 
     it('should render five document suggestions when maxDocuments is superior to 5', () => {
-      mockDocumentSuggestion(allDocuments);
       visitDocumentSuggestion({
         maxDocuments: 6,
       });
 
       scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(5);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviews(false);
       });
     });
   });
 
   describe('when there is no document suggestion', () => {
     it('should not render any document suggestion', () => {
-      mockDocumentSuggestion([]);
       visitDocumentSuggestion();
 
       scope('when loading the page', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion([]);
+        fetchSuggestions();
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
       });
     });
   });
@@ -137,11 +232,61 @@ describe('quantic-document-suggestion', () => {
     it('should display the loading spinner', () => {
       visitDocumentSuggestion();
 
-      scope('when fetching suggestions', () => {
-        interceptSuggestionIndefinitely();
+      scope('when loading the page', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        interceptSuggestionIndefinitely();
+        fetchSuggestions();
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(false);
         Expect.displayLoading(true);
+      });
+    });
+  });
+
+  describe('when showQuickView is set to true', () => {
+    it('should render the component and all parts', () => {
+      visitDocumentSuggestion({
+        showQuickview: true,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(allDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(defaultMaxDocuments);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviewButton(true, 0);
+      });
+
+      scope('when clicking on a document suggestion', () => {
+        const clickIndex = 1;
+
+        Actions.clickSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(true, clickIndex);
+        Expect.displayQuickviewButton(true, 1);
+        Expect.displayQuickviewButton(true, 1);
+      });
+
+      scope('when rating a document suggestion', () => {
+        const clickIndex = 1;
+
+        sendRating(clickIndex);
+        Expect.logRatingSuggestion(clickIndex);
       });
     });
   });

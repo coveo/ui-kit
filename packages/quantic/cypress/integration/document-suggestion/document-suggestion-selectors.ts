@@ -6,8 +6,13 @@ export interface DocumentSuggestionSelector extends ComponentSelector {
   accordion: () => CypressSelector;
   accordionSections: () => CypressSelector;
   accordionSection: (idx: number) => CypressSelector;
+  accordionSectionContent: (idx: number) => CypressSelector;
   sectionTitle: (idx: number) => CypressSelector;
   loadingSpinner: () => CypressSelector;
+  noSuggestionsMessage: () => CypressSelector;
+  quickviewButton: (idx: number) => CypressSelector;
+  quickviews: () => CypressSelector;
+  documentExcerpt: (idx: number) => CypressSelector;
 }
 
 export const DocumentSuggestionSelectors: DocumentSuggestionSelector = {
@@ -21,8 +26,22 @@ export const DocumentSuggestionSelectors: DocumentSuggestionSelector = {
     DocumentSuggestionSelectors.get()
       .find('lightning-accordion-section')
       .eq(idx),
+  accordionSectionContent: (idx: number) =>
+    DocumentSuggestionSelectors.get()
+      .find('lightning-accordion-section section')
+      .eq(idx),
   sectionTitle: (idx: number) =>
     DocumentSuggestionSelectors.get().find('.section-control').eq(idx),
   loadingSpinner: () =>
     DocumentSuggestionSelectors.get().find('lightning-spinner'),
+  noSuggestionsMessage: () =>
+    DocumentSuggestionSelectors.get().find('.no-suggestion-message'),
+  quickviewButton: (idx: number) =>
+    DocumentSuggestionSelectors.get()
+      .find('c-quantic-result-quickview')
+      .eq(idx),
+  quickviews: () =>
+    DocumentSuggestionSelectors.get().find('c-quantic-result-quickview'),
+  documentExcerpt: (idx) =>
+    DocumentSuggestionSelectors.get().find('.excerpt').eq(idx),
 };

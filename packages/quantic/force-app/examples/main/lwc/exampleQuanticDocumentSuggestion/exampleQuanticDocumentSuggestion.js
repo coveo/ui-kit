@@ -1,4 +1,4 @@
-import {LightningElement, track, api} from 'lwc';
+import {LightningElement, track} from 'lwc';
 import {getCaseAssistId} from 'c/caseAssistUtils';
 
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
