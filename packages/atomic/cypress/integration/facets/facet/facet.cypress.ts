@@ -691,7 +691,9 @@ describe('Facet v1 Test Suites', () => {
 
     describe('repeatedly until there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
-        new TestFixture().with(addFacet({field, label})).init();
+        new TestFixture()
+          .with(addFacet({field, label, 'number-of-values': 100}))
+          .init();
         pressShowMoreUntilImpossible(FacetSelectors);
       }
 
