@@ -8,11 +8,10 @@ export interface ResultLinkProps {
   target: string;
   part?: string;
   title?: string;
-  role?: string;
 }
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
-  {href, interactiveResult, target, part, title, role},
+  {href, interactiveResult, target, part, title},
   children
 ) => {
   const stopPropagationAndProcess = (e: Event, process: () => void) => {
@@ -39,7 +38,6 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
         stopPropagationAndProcess(e, interactiveResult.cancelPendingSelect)
       }
       target={target}
-      role={role}
     >
       {children}
     </a>
