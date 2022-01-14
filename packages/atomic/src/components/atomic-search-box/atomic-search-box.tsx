@@ -75,9 +75,6 @@ export class AtomicSearchBox {
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
-  @FocusTarget()
-  private inputFocus!: FocusTargetController;
-
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
@@ -299,10 +296,7 @@ export class AtomicSearchBox {
     return (
       <input
         part="input"
-        ref={(el) => {
-          this.inputRef = el as HTMLInputElement;
-          this.inputFocus.setTarget(el);
-        }}
+        ref={(el) => (this.inputRef = el as HTMLInputElement)}
         role="combobox"
         aria-autocomplete="both"
         aria-haspopup="true"
@@ -418,7 +412,6 @@ export class AtomicSearchBox {
         part="submit-button"
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => {
-          this.inputFocus.focusAfterSearch();
           this.searchBox.submit();
           this.clearSuggestionElements();
         }}
