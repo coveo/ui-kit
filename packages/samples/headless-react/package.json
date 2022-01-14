@@ -28,14 +28,13 @@
   },
   "scripts": {
     "prepublishOnly": "exit 1",
-    "dev": "npm run copy:assets && react-scripts start",
+    "dev": "react-scripts start",
     "build": "tsc --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ssr:build": "npm run build && npm run build:server",
-    "ssr:start": "node ./build/server/server/server.js",
-    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang"
+    "ssr:start": "node ./build/server/server/server.js"
   },
   "browserslist": {
     "production": [
@@ -48,8 +47,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "ncp": "^2.0.0"
   }
 }
