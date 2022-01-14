@@ -39,14 +39,14 @@ export default class QuanticCaseClassification extends LightningElement {
     recordTypeId: '$objectInfo.data.defaultRecordTypeId',
     objectApiName: CASE_OBJECT,
   })
-  setPicklistValues(values, error) {
+  setPicklistValues({data, error}) {
     if (error) {
       console.error('Error getting the picklist values');
     } else {
-      this.picklistValues = values;
+      this.picklistValues = data;
       if (
-        values.data &&
-        !values.data.picklistFieldValues[this.sfFieldApiName]
+        data &&
+        !data.picklistFieldValues[this.sfFieldApiName]
       ) {
         console.error(
           `The Salesforce field API name "${this.sfFieldApiName}" is not found`
@@ -233,7 +233,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get options() {
     return (
-      this.picklistValues?.data?.picklistFieldValues?.[this.sfFieldApiName]
+      this.picklistValues?.picklistFieldValues?.[this.sfFieldApiName]
         ?.values ?? []
     );
   }
