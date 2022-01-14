@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.23.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.3...@coveo/atomic@1.23.4) (2022-01-14)
+
+
+### Bug Fixes
+
+* **atomic:** improved accessibility for results ([#1651](https://github.com/coveo/ui-kit/issues/1651)) ([ced4654](https://github.com/coveo/ui-kit/commit/ced46540a4aeeeda37f4741fdbb377a5515c0e9b))
+
+
+
+
+
 ## [1.23.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.2...@coveo/atomic@1.23.3) (2022-01-13)
 
 **Note:** Version bump only for package @coveo/atomic
