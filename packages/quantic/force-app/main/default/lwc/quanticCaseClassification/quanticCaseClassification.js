@@ -178,7 +178,7 @@ export default class QuanticCaseClassification extends LightningElement {
         const value = this.classifications.length
           ? this.classifications[0].value
           : '';
-        this.setValue(value);
+        this.setFieldValue(value);
       }
     }
   }
@@ -273,7 +273,7 @@ export default class QuanticCaseClassification extends LightningElement {
           !this.classifications.some((item) => item.value === option.value)
       )
       .map((option) => {
-        return {...option, checked: (option.value === this._value)};
+        return {...option, checked: option.value === this._value};
       });
   }
 
@@ -283,7 +283,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get suggestions() {
     return this.classifications.map((suggestion) => {
-      return {...suggestion, checked: (suggestion.value === this._value)};
+      return {...suggestion, checked: suggestion.value === this._value};
     });
   }
 
@@ -302,7 +302,7 @@ export default class QuanticCaseClassification extends LightningElement {
   handleSelectSuggestion(event) {
     this._errorMessage = '';
     const value = event.target.checked ? event.target.value : '';
-    this.setValue(value);
+    this.setFieldValue(value);
   }
 
   /**
@@ -312,7 +312,7 @@ export default class QuanticCaseClassification extends LightningElement {
   handleSelectChange(event) {
     this._errorMessage = '';
     const value = event.target.value;
-    this.setValue(value);
+    this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.hideSuggestions();
     }
@@ -337,7 +337,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setValue(value) {
+  setFieldValue(value) {
     this.field.update(value);
     this._value = value;
   }

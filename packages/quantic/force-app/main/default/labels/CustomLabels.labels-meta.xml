@@ -751,7 +751,7 @@
     </labels>
     <labels>
       <fullName>quantic_CaseClassificationTitle</fullName>
-      <value>Which topic relates to your issue?</value>
+      <value>How can we help you? Please select a topic.</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Which topic relates to your issue?</shortDescription>
