@@ -43,17 +43,6 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
         .logDetail(`${should(display)} display the quickview`);
     },
 
-    displayExcerpt: (display: boolean, idx: number) => {
-      selector
-        .documentExcerpt(idx)
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(
-          `${should(
-            display
-          )} display the excerpt of the document at the index: ${idx}`
-        );
-    },
-
     displayAccordionSectionContent: (display: boolean, idx: number) => {
       selector
         .accordionSectionContent(idx)

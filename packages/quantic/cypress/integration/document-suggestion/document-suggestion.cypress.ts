@@ -378,7 +378,7 @@ describe('quantic-document-suggestion', () => {
         Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
-        Expect.displayQuickviewButton(true, 1);
+        Expect.displayQuickviewButton(true, 0);
         Expect.displayQuickviewButton(true, 1);
       });
 
