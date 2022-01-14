@@ -25,4 +25,4 @@ yarn-error.log*
 .eslintcache
 
 public/assets
-public/lang 
+public/lang
