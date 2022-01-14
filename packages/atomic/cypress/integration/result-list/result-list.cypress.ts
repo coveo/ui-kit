@@ -1,8 +1,12 @@
-import {createAliasNavigation, PagerSelectors} from '../pager-selectors';
+import {pagerComponent, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
-import {ResultListSelectors} from './result-list-selectors';
+import {
+  resultListComponent,
+  ResultListSelectors,
+} from './result-list-selectors';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {addResultList, buildTemplateWithSections} from './result-list-actions';
+import * as CommonAssertions from '../common-assertions';
 
 describe('Result List Component', () => {
   it('should load', () => {
@@ -34,9 +38,8 @@ describe('Result List Component', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addResultList())
-        .withElement(generateComponentHTML(PagerSelectors.pager))
+        .withElement(generateComponentHTML(pagerComponent))
         .init();
-      createAliasNavigation();
     });
 
     it('should update the results', () => {
@@ -46,7 +49,7 @@ describe('Result List Component', () => {
         firstResultHtml = element[0].innerHTML;
       });
 
-      cy.get('@nextButton').click();
+      PagerSelectors.buttonNext().click();
       cy.wait(500);
 
       ResultListSelectors.firstResult().should((element) => {
@@ -145,10 +148,11 @@ describe('Result List Component', () => {
         .init();
     });
 
-    withAnySectionnableResultList(() => {
-      it.skip('should pass accessibility tests', () => {
-        cy.checkA11y();
-      });
-    });
+    withAnySectionnableResultList(
+      () => {
+        CommonAssertions.assertAccessibility(resultListComponent);
+      },
+      {densities: ['normal'], imageSizes: ['icon', 'small']}
+    );
   });
 });

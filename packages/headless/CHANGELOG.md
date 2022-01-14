@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.12](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.11...@coveo/headless@1.41.12) (2022-01-12)
+
+
+### Bug Fixes
+
+* **headless:** add updateFacetAutoSelection & stop preventing auto select on new searches ([#1652](https://github.com/coveo/ui-kit/issues/1652)) ([d807d40](https://github.com/coveo/ui-kit/commit/d807d40184d9ab323470c9addc0c23b05e4be6bc))
+
+
+
+
+
+## [1.41.11](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.10...@coveo/headless@1.41.11) (2022-01-05)
+
+
+### Bug Fixes
+
+* **headless:** adjust __require statements in node esm bundles ([#1624](https://github.com/coveo/ui-kit/issues/1624)) ([d2eedcb](https://github.com/coveo/ui-kit/commit/d2eedcb63db8f21e6fb679b011edd402ba22d5cb))
+
+
+
+
+
+## [1.41.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.9...@coveo/headless@1.41.10) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.8...@coveo/headless@1.41.9) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.8](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.7...@coveo/headless@1.41.8) (2022-01-04)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.7](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.6...@coveo/headless@1.41.7) (2021-12-17)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.5...@coveo/headless@1.41.6) (2021-12-16)
+
+
+### Bug Fixes
+
+* (headless): Send correct analytics events from Product Listing controllers ([#1597](https://github.com/coveo/ui-kit/issues/1597)) ([c7a57bb](https://github.com/coveo/ui-kit/commit/c7a57bbf5084d63f2eb5ee4b8473fa8ab305e30a))
+
+
+
+
+
 ## [1.41.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.4...@coveo/headless@1.41.5) (2021-12-16)
 
 **Note:** Version bump only for package @coveo/headless

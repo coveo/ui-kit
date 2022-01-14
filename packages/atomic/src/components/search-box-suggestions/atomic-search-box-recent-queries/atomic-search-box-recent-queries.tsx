@@ -13,6 +13,9 @@ import {
 import {once} from '../../../utils/utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 
+/**
+ * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
+ */
 @Component({
   tag: 'atomic-search-box-recent-queries',
   shadow: true,
@@ -26,7 +29,13 @@ export class AtomicSearchBoxRecentQueries {
 
   @State() public error!: Error;
 
+  /**
+   * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+   */
   @Prop() public maxWithQuery = 3;
+  /**
+   * The maximum number of suggestions that will be displayed initially when the input field is empty.
+   */
   @Prop() public maxWithoutQuery?: number;
 
   componentWillLoad() {
@@ -160,7 +169,7 @@ export class AtomicSearchBoxRecentQueries {
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );
-        this.bindings.inputRef.blur();
+        this.bindings.clearSuggestions();
       },
     };
   }

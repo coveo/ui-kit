@@ -3,6 +3,7 @@ import {
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
   FacetWithSearchSelector,
+  FacetWithShowMoreLessSelector,
 } from './facet-common-assertions';
 
 export function selectIdleCheckboxValueAt(
@@ -33,5 +34,19 @@ export function typeFacetSearchQuery(
     if (index < characters.length - 1) {
       cy.wait(TestFixture.interceptAliases.UA);
     }
+  });
+}
+
+export function pressShowMoreUntilImpossible(
+  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
+) {
+  FacetWithShowMoreLessSelector.showMoreButton().then((jq) => {
+    const [el] = jq.filter(':visible');
+    if (!el) {
+      return;
+    }
+    el.click();
+    cy.wait(TestFixture.interceptAliases.Search);
+    pressShowMoreUntilImpossible(FacetWithShowMoreLessSelector);
   });
 }

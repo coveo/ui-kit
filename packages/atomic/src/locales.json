@@ -226,10 +226,6 @@
     "zh-cn": "每一页的结果",
     "zh-tw": "每頁的結果數"
   },
-  "display-results-per-page": {
-    "en": "Display {{results}} results per page",
-    "fr": "Afficher {{results}} résultats par page"
-  },
   "sort": {
     "en": "Sort",
     "fr": "Tri"
@@ -1101,5 +1097,29 @@
   "loading-results": {
     "en": "Loading new results",
     "fr": "Chargement de nouveaux résultats"
+  },
+  "query-suggestions-available": {
+    "en": "{{count}} search suggestion available.",
+    "fr": "{{count}} suggestion de recherche disponible."
+  },
+  "query-suggestions-available_plural": {
+    "en": "{{count}} search suggestions are available.",
+    "fr": "{{count}} suggestions de recherche disponible."
+  },
+  "query-suggestions-unavailable": {
+    "en": "There are no search suggestions.",
+    "fr": "Il n'y a pas de suggestions de recherche."
+  },
+  "stars": {
+    "en": "one star out of {{max}}",
+    "fr": "une étoile sur {{max}}"
+  },
+  "stars_plural": {
+    "en": "{{count}} stars out of {{max}}",
+    "fr": "{{count}} étoiles sur {{max}}"
+  },
+  "stars-range": {
+    "en": "{{value}} to {{count}} stars",
+    "fr": "{{value}} à {{count}} étoiles"
   }
 }

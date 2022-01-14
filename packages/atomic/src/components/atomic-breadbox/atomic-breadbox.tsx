@@ -17,6 +17,10 @@ import {Button} from '../common/button';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFieldValueCaption} from '../../utils/field-utils';
 import {Hidden} from '../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../utils/accessibility-utils';
 
 interface Breadcrumb {
   facetId: string;
@@ -48,9 +52,11 @@ const ELLIPSIS = '...';
 export class AtomicBreadbox implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
-  private resizeObserver!: ResizeObserver;
+  private resizeObserver?: ResizeObserver;
   private showMore!: HTMLButtonElement;
   private showLess!: HTMLButtonElement;
+  private lastRemovedBreadcrumbIndex = 0;
+  private numberOfBreadcrumbs = 0;
   facetManager!: FacetManager;
 
   @Element() private host!: HTMLElement;
@@ -64,15 +70,21 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
+  @FocusTarget()
+  private breadcrumbFocus!: FocusTargetController;
+
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
-    this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
-    this.resizeObserver.observe(this.host.parentElement!);
+
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
+      this.resizeObserver.observe(this.host.parentElement!);
+    }
   }
 
   public disconnectedCallback() {
-    this.resizeObserver.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   private get breadcrumbs() {
@@ -145,7 +157,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return ellipsedPath.join(SEPARATOR);
   }
 
-  private renderBreadcrumb(breadcrumb: Breadcrumb) {
+  private renderBreadcrumb(breadcrumb: Breadcrumb, index: number) {
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
       : breadcrumb.formattedValue;
@@ -160,7 +172,18 @@ export class AtomicBreadbox implements InitializableComponent {
           style="outline-bg-neutral"
           class="py-2 px-3 flex items-center btn-pill group"
           title={`${breadcrumb.label}: ${fullValue}`}
-          onClick={() => breadcrumb.deselect()}
+          onClick={() => {
+            if (this.numberOfBreadcrumbs > 1) {
+              this.breadcrumbFocus.focusAfterSearch();
+            }
+            this.lastRemovedBreadcrumbIndex = index;
+            breadcrumb.deselect();
+          }}
+          ref={
+            this.lastRemovedBreadcrumbIndex === index
+              ? this.breadcrumbFocus.setTarget
+              : undefined
+          }
         >
           <span
             part="breadcrumb-label"
@@ -232,6 +255,8 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private renderClearAll() {
+    const isFocusTarget =
+      this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
     return (
       <li key="clear-all">
         <Button
@@ -241,6 +266,7 @@ export class AtomicBreadbox implements InitializableComponent {
           class="p-2 btn-pill"
           ariaLabel={this.bindings.i18n.t('clear-all-filters')}
           onClick={() => this.breadcrumbManager.deselectAll()}
+          ref={isFocusTarget ? this.breadcrumbFocus.setTarget : undefined}
         ></Button>
       </li>
     );
@@ -325,9 +351,12 @@ export class AtomicBreadbox implements InitializableComponent {
       const indexB = this.facetManagerState.facetIds.indexOf(b.facetId);
       return indexA - indexB;
     });
+    this.numberOfBreadcrumbs = sortedBreadcrumbs.length;
 
     return [
-      sortedBreadcrumbs.map((breadcrumb) => this.renderBreadcrumb(breadcrumb)),
+      sortedBreadcrumbs.map((breadcrumb, i) =>
+        this.renderBreadcrumb(breadcrumb, i)
+      ),
       this.isCollapsed && this.renderShowMore(),
       !this.isCollapsed && this.renderShowLess(),
       this.renderClearAll(),

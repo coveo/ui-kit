@@ -29,7 +29,10 @@ import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {deselectAllFacets} from '../generic/facet-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 describe('category facet slice', () => {
@@ -331,6 +334,19 @@ describe('category facet slice', () => {
       expect(
         CategoryFacetReducers.handleCategoryFacetDeselectAll
       ).toHaveBeenCalledTimes(2);
+    });
+
+    it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {
+      state[facetId]!.request.preventAutoSelect = true;
+      state[anotherFacetId]!.request.preventAutoSelect = true;
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        updateFacetAutoSelection({allow: true})
+      );
+
+      expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
+      expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
     });
 
     it('dispatching #deselectAllBreadcrumbs calls #handleCategoryFacetDeselectAll for every facet', () => {

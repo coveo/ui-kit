@@ -86,9 +86,12 @@ class DetailedCollectorImpl implements DetailedCollector {
 }
 
 class VoidDetailedCollector implements DetailedCollector {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   beginScope(title: string) {}
   endScope() {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   expectation(message: string) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   action(message: string) {}
 }
 

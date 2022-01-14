@@ -176,6 +176,10 @@ describe('Result Printable Uri Component', () => {
         ResultPrintableUriSelectors.ellipsisButton().should('not.exist');
         ResultPrintableUriSelectors.links().should('have.length.above', 3);
       });
+
+      CommonAssertions.assertAccessibility(
+        ResultPrintableUriSelectors.firstInResult
+      );
     });
   });
 });

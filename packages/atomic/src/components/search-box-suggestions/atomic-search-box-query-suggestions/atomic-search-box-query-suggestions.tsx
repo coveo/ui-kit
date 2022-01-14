@@ -12,6 +12,9 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 
+/**
+ * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
+ */
 @Component({
   tag: 'atomic-search-box-query-suggestions',
   shadow: true,
@@ -22,7 +25,13 @@ export class AtomicSearchBoxQuerySuggestions {
 
   @State() public error!: Error;
 
+  /**
+   * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+   */
   @Prop() public maxWithQuery?: number;
+  /**
+   * The maximum number of suggestions that will be displayed initially when the input field is empty.
+   */
   @Prop() public maxWithoutQuery?: number;
 
   componentWillLoad() {
@@ -90,7 +99,7 @@ export class AtomicSearchBoxQuerySuggestions {
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
-        this.bindings.inputRef.blur();
+        this.bindings.clearSuggestions();
       },
     };
   }

@@ -3,11 +3,16 @@ on:
   push:
     branches:
       - master
-    tags-ignore:
-      - "@coveo/*"
 jobs:
+  allow-workflow:
+    name: "Allow workflow"
+    if: "!startsWith(github.event.head_commit.message, '[Version Bump]')"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Workflow allowed to start"
   build:
     name: "Build"
+    needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

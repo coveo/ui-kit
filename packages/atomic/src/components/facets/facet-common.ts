@@ -19,4 +19,7 @@ export interface FacetValueProps {
   isSelected: boolean;
   onClick(): void;
   searchQuery?: string;
+  class?: string;
+  part?: string;
+  buttonRef?: (element?: HTMLButtonElement) => void;
 }

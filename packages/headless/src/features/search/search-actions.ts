@@ -50,6 +50,7 @@ import {validatePayload} from '../../utils/validate-payload';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -113,6 +114,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   });
 
   dispatch(deselectAllBreadcrumbs());
+  dispatch(updateFacetAutoSelection({allow: true}));
   dispatch(updateQuery(payload));
   dispatch(updatePage(1));
 });

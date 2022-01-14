@@ -3,10 +3,32 @@ import {Component, Element, Prop, h} from '@stencil/core';
 import {ResultContext} from '../result-template-decorators';
 
 /**
- * The `atomic-result-badge` element renders a badge containing a field.
- * @part result-badge-element - The badge element with the background color and text color.
- * @part result-badge-icon - The optional icon displayed in the badge element.
- * @part result-badge-label - The optional icon displayed in the badge element.
+ * The `atomic-result-badge` element renders a badge to highlight special features of a result.
+ *
+ * A badge can either display:
+ * * Text:
+ * ```html
+ * <atomic-result-badge label="trending"></atomic-result-badge>
+ * ```
+ * * The contents of a field:
+ * ```html
+ * <atomic-result-badge field="objecttype"></atomic-result-badge>
+ * ```
+ * * An icon:
+ * ```html
+ * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
+ * ```
+ * * Slotted elements:
+ * ```html
+ * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
+ *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
+ * </atomic-result-badge>
+ * ```
+ *
+ * @part result-badge-element - The decorative outer-most element with the background color and text color.
+ * @part result-badge-icon - The icon displayed at the left-end of the badge, if present.
+ * @part result-badge-label - The wrapper around the contents at the right-end of the badge. This may be text, a field or slotted elements depending on which was configured.
+ * @slot default - The element(s) to display inside the badge, instead of a field or label.
  */
 @Component({
   tag: 'atomic-result-badge',
@@ -17,19 +39,22 @@ export class AtomicResultBadge {
   @ResultContext() private result!: Result;
   @Element() host!: HTMLElement;
   /**
-   * The result field which the component should use.
-   * This will look in the Result object first, and then in the Result.raw object for the fields.
-   * It is important to include the necessary field in the ResultList component.
+   * The field to display in the badge.
+   *
+   * Not compatible with `label` nor slotted elements.
    */
   @Prop() public field?: string;
 
   /**
-   * The text to display instead of the field.
+   * The text to display in the badge.
+   *
+   * Not compatible with `field` nor slotted elements.
    */
   @Prop() public label?: string;
 
   /**
-   * Specifies the icon to display.
+   * Specifies an icon to display at the left-end of the badge.
+   * This can be used in conjunction with `field`, `label` or slotted elements.
    *
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
@@ -47,16 +72,18 @@ export class AtomicResultBadge {
     );
   }
 
+  private getTextContent() {
+    if (this.field !== undefined) {
+      return <atomic-result-text field={this.field}></atomic-result-text>;
+    }
+    if (this.label !== undefined) {
+      return <atomic-text value={this.label}></atomic-text>;
+    }
+    return <slot></slot>;
+  }
+
   private renderText() {
-    return (
-      <span part="result-badge-label">
-        {this.field ? (
-          <atomic-result-text field={this.field}></atomic-result-text>
-        ) : (
-          <atomic-text value={this.label ?? ''}></atomic-text>
-        )}
-      </span>
-    );
+    return <span part="result-badge-label">{this.getTextContent()}</span>;
   }
 
   private renderBadge() {
@@ -66,7 +93,7 @@ export class AtomicResultBadge {
         class="inline-flex place-items-center space-x-1.5 h-full px-3 bg-neutral-light text-neutral-dark text-xs rounded-full"
       >
         {this.icon && this.renderIcon()}
-        {(this.field || this.label) && this.renderText()}
+        {this.renderText()}
       </div>
     );
   }
