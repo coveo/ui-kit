@@ -9,12 +9,13 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "build": "npm run clean && npm run compile",
+    "build": "npm run clean && npm run compile && npm run copy:assets",
     "dev": "npm link ../samples/headless-react/node_modules/react",
     "clean": "rm -rf dist",
     "compile": "npm run tsc",
     "tsc": "tsc -p .",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets dist/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang dist/lang "
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -29,6 +30,7 @@
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
+    "ncp": "^2.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
