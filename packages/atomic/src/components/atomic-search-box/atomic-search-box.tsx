@@ -22,11 +22,7 @@ import {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '../search-box-suggestions/suggestions-common';
-import {
-  AriaLiveRegion,
-  FocusTarget,
-  FocusTargetController,
-} from '../../utils/accessibility-utils';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
