@@ -136,7 +136,6 @@ describe('Search Box Test Suites', () => {
             SearchBoxSelectors.submitButton().click();
           });
 
-          SearchBoxAssertions.assertFocusSearchBox();
           SearchBoxAssertions.assertHasText('Recent query 1');
         });
       });
