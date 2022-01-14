@@ -1,5 +1,6 @@
 import {TestFixture} from '../../fixtures/test-fixture';
 import {
+  BaseFacetSelector,
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
   FacetWithSearchSelector,
@@ -49,4 +50,14 @@ export function pressShowMoreUntilImpossible(
     cy.wait(TestFixture.interceptAliases.Search);
     pressShowMoreUntilImpossible(FacetWithShowMoreLessSelector);
   });
+}
+
+export function pressLabelButton(
+  BaseFacetSelector: BaseFacetSelector,
+  shouldBecomeCollapsed: boolean
+) {
+  BaseFacetSelector.labelButton().click();
+  BaseFacetSelector.values().should(
+    shouldBecomeCollapsed ? 'not.exist' : 'exist'
+  );
 }

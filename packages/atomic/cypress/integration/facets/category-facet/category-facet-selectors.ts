@@ -22,12 +22,18 @@ export const CategoryFacetSelectors = {
     CategoryFacetSelectors.shadow().find('[part="value-label"]'),
   values: () => CategoryFacetSelectors.shadow().find('[part="values"]'),
   childValue: () => CategoryFacetSelectors.shadow().find('[part="value-link"]'),
+  childValueLabel: () =>
+    CategoryFacetSelectors.childValue().find('[part="value-label"]'),
   valueCount: () =>
     CategoryFacetSelectors.shadow().find('[part="value-count"]'),
   parentValue: () =>
     CategoryFacetSelectors.shadow().find('[part="parent-button"]'),
   activeParentValue: () =>
     CategoryFacetSelectors.shadow().find('[part="active-parent"]'),
+  activeParentValueWithText: (text: string) =>
+    CategoryFacetSelectors.shadow().find(
+      `[part="active-parent"]:contains("${text}")`
+    ),
   showMoreButton: () =>
     CategoryFacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () =>
