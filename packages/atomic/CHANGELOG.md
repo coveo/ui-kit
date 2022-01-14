@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.23.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.4...@coveo/atomic@1.23.5) (2022-01-14)
+
+
+### Bug Fixes
+
+* **atomic:** removed search box focus when pressing search button ([#1665](https://github.com/coveo/ui-kit/issues/1665)) ([0681ff6](https://github.com/coveo/ui-kit/commit/0681ff6c4af688e27602aa6a747cab53c5b7d0b9))
+
+
+
+
+
 ## [1.23.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.3...@coveo/atomic@1.23.4) (2022-01-14)
 
 
