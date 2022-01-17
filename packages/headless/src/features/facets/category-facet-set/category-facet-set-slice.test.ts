@@ -740,11 +740,14 @@ describe('category facet slice', () => {
     });
   });
 
-  function testFulfilledSearchRequest(
-    searchBuilder: (
-      facets: FacetResponse[]
-    ) => PayloadAction<ExecuteSearchThunkReturn, string>
-  ) {
+  describe('#executeSearch.fulfilled', () => {
+    function buildExecuteSearchAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+    }
+
     it('when an invalid path is requested, it sets the request #currentValues to an empty array', () => {
       const currentValues = [
         buildMockCategoryFacetValueRequest({
@@ -756,7 +759,7 @@ describe('category facet slice', () => {
       state[facetId] = buildMockCategoryFacetSlice({request});
 
       const facet = buildMockCategoryFacetResponse({facetId, values: []});
-      const action = searchBuilder([facet]);
+      const action = buildExecuteSearchAction([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.currentValues).toEqual([]);
@@ -777,7 +780,7 @@ describe('category facet slice', () => {
       });
       const facet = buildMockCategoryFacetResponse({facetId, values: [root]});
 
-      const action = searchBuilder([facet]);
+      const action = buildExecuteSearchAction([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
@@ -788,7 +791,7 @@ describe('category facet slice', () => {
       state[facetId] = buildMockCategoryFacetSlice({request});
 
       const facet = buildMockCategoryFacetResponse({facetId});
-      const action = searchBuilder([facet]);
+      const action = buildExecuteSearchAction([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.preventAutoSelect).toBe(false);
@@ -796,21 +799,10 @@ describe('category facet slice', () => {
 
     it('when the facet response #id does not exist in state, it does not throw', () => {
       const facet = buildMockCategoryFacetResponse({facetId});
-      const action = searchBuilder([facet]);
+      const action = buildExecuteSearchAction([facet]);
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
-  }
-
-  describe('#executeSearch.fulfilled', () => {
-    function buildExecuteSearchAction(facets: FacetResponse[]) {
-      const search = buildMockSearch();
-      search.response.facets = facets;
-
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
-    }
-
-    testFulfilledSearchRequest(buildExecuteSearchAction);
   });
 
   describe('#fetchFacetValues.fulfilled', () => {
@@ -825,6 +817,25 @@ describe('category facet slice', () => {
       );
     }
 
-    testFulfilledSearchRequest(buildFetchFacetValuesAction);
+    it('when an valid path is requested, it does not adjust the #currentValues of the request', () => {
+      const valid = buildMockCategoryFacetValueRequest({
+        value: 'valid',
+        state: 'selected',
+      });
+      const currentValues = [valid];
+      const request = buildMockCategoryFacetRequest({currentValues});
+      state[facetId] = buildMockCategoryFacetSlice({request});
+
+      const root = buildMockCategoryFacetValue({
+        value: 'valid',
+        state: 'selected',
+      });
+      const facet = buildMockCategoryFacetResponse({facetId, values: [root]});
+
+      const action = buildFetchFacetValuesAction([facet]);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
+    });
   });
 });
