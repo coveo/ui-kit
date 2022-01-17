@@ -14,7 +14,7 @@ Since Atomic React is built on top of the core [Atomic](https://docs.coveo.com/e
 
 However, there are still some special considerations.
 
-## Static assets - Languages and SVG
+## Static Assets - Languages and SVGs
 
 For performance reasons, the generated JavaScript bundle does not automatically include static assets that are loaded on demand. This impacts language support, as well as the use of included SVG icons.
 
