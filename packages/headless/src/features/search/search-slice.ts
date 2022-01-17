@@ -1,5 +1,9 @@
 import {createReducer, PayloadAction} from '@reduxjs/toolkit';
-import {executeSearch, fetchMoreResults} from './search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+  fetchMoreResults,
+} from './search-actions';
 import {getSearchInitialState, SearchState} from './search-state';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
@@ -60,6 +64,9 @@ export const searchReducer = createReducer(
     builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
       state.results = [...state.results, ...action.payload.response.results];
+    });
+    builder.addCase(fetchFacetValues.fulfilled, (state, action) => {
+      state.response.facets = action.payload.response.facets;
     });
     builder.addCase(executeSearch.pending, handlePendingSearch);
     builder.addCase(fetchMoreResults.pending, handlePendingSearch);

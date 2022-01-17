@@ -2,7 +2,11 @@ import {searchReducer} from './search-slice';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
-import {executeSearch, fetchMoreResults} from './search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+  fetchMoreResults,
+} from './search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   buildMockSearchAppEngine,
@@ -16,6 +20,8 @@ import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {Response} from 'cross-fetch';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
 
 jest.mock('../../api/platform-client');
 
@@ -391,5 +397,22 @@ describe('search-slice', () => {
         type: applyDidYouMeanCorrection.type,
       });
     });
+  });
+
+  it('when a fetchFacetValues fulfilled is received, updates the facet state', () => {
+    const response = buildMockSearchResponse({
+      facets: [buildMockFacetResponse()],
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+    const action = fetchFacetValues.fulfilled(
+      searchState,
+      '',
+      logFacetShowMore('')
+    );
+
+    const finalState = searchReducer(state, action);
+    expect(finalState.response.facets).toEqual(response.facets);
   });
 });

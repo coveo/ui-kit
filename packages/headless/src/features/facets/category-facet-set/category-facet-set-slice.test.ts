@@ -23,7 +23,11 @@ import {
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
-import {executeSearch} from '../../search/search-actions';
+import {
+  executeSearch,
+  ExecuteSearchThunkReturn,
+  fetchFacetValues,
+} from '../../search/search-actions';
 import {FacetResponse} from '../facet-set/interfaces/response';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
@@ -34,6 +38,7 @@ import {
   updateFacetAutoSelection,
 } from '../generic/facet-actions';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {PayloadAction} from '@reduxjs/toolkit';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -735,14 +740,11 @@ describe('category facet slice', () => {
     });
   });
 
-  describe('#executeSearch.fulfilled', () => {
-    function buildExecuteSearchAction(facets: FacetResponse[]) {
-      const search = buildMockSearch();
-      search.response.facets = facets;
-
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
-    }
-
+  function testFulfilledSearchRequest(
+    searchBuilder: (
+      facets: FacetResponse[]
+    ) => PayloadAction<ExecuteSearchThunkReturn, string>
+  ) {
     it('when an invalid path is requested, it sets the request #currentValues to an empty array', () => {
       const currentValues = [
         buildMockCategoryFacetValueRequest({
@@ -754,7 +756,7 @@ describe('category facet slice', () => {
       state[facetId] = buildMockCategoryFacetSlice({request});
 
       const facet = buildMockCategoryFacetResponse({facetId, values: []});
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.currentValues).toEqual([]);
@@ -775,7 +777,7 @@ describe('category facet slice', () => {
       });
       const facet = buildMockCategoryFacetResponse({facetId, values: [root]});
 
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
@@ -786,7 +788,7 @@ describe('category facet slice', () => {
       state[facetId] = buildMockCategoryFacetSlice({request});
 
       const facet = buildMockCategoryFacetResponse({facetId});
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.preventAutoSelect).toBe(false);
@@ -794,9 +796,35 @@ describe('category facet slice', () => {
 
     it('when the facet response #id does not exist in state, it does not throw', () => {
       const facet = buildMockCategoryFacetResponse({facetId});
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
+  }
+
+  describe('#executeSearch.fulfilled', () => {
+    function buildExecuteSearchAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+    }
+
+    testFulfilledSearchRequest(buildExecuteSearchAction);
+  });
+
+  describe('#fetchFacetValues.fulfilled', () => {
+    function buildFetchFacetValuesAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return fetchFacetValues.fulfilled(
+        search,
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+    }
+
+    testFulfilledSearchRequest(buildFetchFacetValuesAction);
   });
 });
