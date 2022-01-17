@@ -11,7 +11,7 @@
   "scripts": {
     "build": "npm run clean && npm run compile && npm run copy:assets",
     "dev": "npm link ../samples/headless-react/node_modules/react",
-    "clean": "rm -rf dist",
+    "clean": "rimraf -f -r dist",
     "compile": "npm run tsc",
     "tsc": "tsc -p .",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
