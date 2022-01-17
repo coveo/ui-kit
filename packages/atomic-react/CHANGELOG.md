@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.2.4...@coveo/atomic-react@0.3.0) (2022-01-17)
+
+
+### Features
+
+* **atomic:** make assets and language available for atomic-react ([#1663](https://github.com/coveo/ui-kit/issues/1663)) ([514ba25](https://github.com/coveo/ui-kit/commit/514ba255453a94e8c901687a3cbc8dd65033c043))
+
+
+
+
+
 ## [0.2.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.2.3...@coveo/atomic-react@0.2.4) (2022-01-14)
 
 **Note:** Version bump only for package @coveo/atomic-react
