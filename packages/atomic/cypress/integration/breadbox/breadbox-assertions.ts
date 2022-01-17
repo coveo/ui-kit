@@ -201,10 +201,8 @@ export function assertLogBreadcrumbFacet(field: string) {
 
 export function assertLogBreadcrumbCategoryFacet(field: string) {
   it('should log the breadcrumb facet to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'breadcrumbFacet');
-      expect(analyticsBody.customData).to.have.property(
+    cy.expectSearchEvent('breadcrumbFacet').then((analyticsBody) => {
+      expect(analyticsBody?.customData).to.have.property(
         'categoryFacetField',
         field
       );

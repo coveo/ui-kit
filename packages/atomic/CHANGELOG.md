@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.23.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.4...@coveo/atomic@1.23.5) (2022-01-14)
+
+
+### Bug Fixes
+
+* **atomic:** removed search box focus when pressing search button ([#1665](https://github.com/coveo/ui-kit/issues/1665)) ([0681ff6](https://github.com/coveo/ui-kit/commit/0681ff6c4af688e27602aa6a747cab53c5b7d0b9))
+
+
+
+
+
+## [1.23.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.3...@coveo/atomic@1.23.4) (2022-01-14)
+
+
+### Bug Fixes
+
+* **atomic:** improved accessibility for results ([#1651](https://github.com/coveo/ui-kit/issues/1651)) ([ced4654](https://github.com/coveo/ui-kit/commit/ced46540a4aeeeda37f4741fdbb377a5515c0e9b))
+
+
+
+
+
+## [1.23.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.2...@coveo/atomic@1.23.3) (2022-01-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.23.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.1...@coveo/atomic@1.23.2) (2022-01-13)
+
+
+### Bug Fixes
+
+* **atomic:** replaced atomic-results-per-page button with radio ([#1647](https://github.com/coveo/ui-kit/issues/1647)) ([5e02c60](https://github.com/coveo/ui-kit/commit/5e02c60104573ec2d417d35a12b356f8661975bb))
+
+
+
+
+
 ## [1.23.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.0...@coveo/atomic@1.23.1) (2022-01-12)
 
 **Note:** Version bump only for package @coveo/atomic

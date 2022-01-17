@@ -1,26 +1,39 @@
 // Must be declared global to be detected by typescript (allows import/export)
+
+import {AnalyticsTracker, SearchEventRequest} from '../utils/analyticsUtils';
+
 // eslint-disable @typescript/interface-name
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
-      getAnalyticsAt(selector: string, order: number): Chainable<unknown>;
       getTextOfAllElements(selector: string): Chainable<unknown>;
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
+      expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
+      expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
     }
   }
 }
 
-Cypress.Commands.add('getAnalyticsAt', (selector: string, order: number) => {
-  for (let i = 0; i < order; i++) {
-    cy.wait(selector);
-  }
-  cy.wait(selector).then((interception) => {
-    cy.wrap(interception.request.body);
-  });
+Cypress.Commands.add('expectSearchEvent', (actionCause) => {
+  cy.wrap(AnalyticsTracker)
+    .invoke('getLastSearchEvent')
+    .should((analyticsBody) => {
+      expect(analyticsBody).to.have.property('actionCause', actionCause);
+      return analyticsBody;
+    });
+});
+
+Cypress.Commands.add('expectCustomEvent', (eventType) => {
+  cy.wrap(AnalyticsTracker)
+    .invoke('getLastCustomEvent')
+    .should((analyticsBody) => {
+      expect(analyticsBody).to.have.property('eventType', eventType);
+      return analyticsBody;
+    });
 });
 
 Cypress.Commands.add('getTextOfAllElements', (selector: string) => {
