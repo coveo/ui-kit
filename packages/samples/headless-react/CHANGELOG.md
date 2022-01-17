@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.48.0](https://github.com/coveo/ui-kit/compare/headless-react@0.47.5...headless-react@0.48.0) (2022-01-17)
+
+
+### Features
+
+* **atomic:** make assets and language available for atomic-react ([#1663](https://github.com/coveo/ui-kit/issues/1663)) ([514ba25](https://github.com/coveo/ui-kit/commit/514ba255453a94e8c901687a3cbc8dd65033c043))
+
+
+
+
+
 ## [0.47.5](https://github.com/coveo/ui-kit/compare/headless-react@0.47.4...headless-react@0.47.5) (2022-01-14)
 
 **Note:** Version bump only for package headless-react
