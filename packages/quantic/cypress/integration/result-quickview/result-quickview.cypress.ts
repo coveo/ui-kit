@@ -72,6 +72,7 @@ describe('quantic-resultQuickview', () => {
         Expect.displayTitle(true);
         Expect.displayContentContainer(false);
         Expect.displaySpinner(true);
+        Expect.noAlertShown();
       });
     });
   });
@@ -86,6 +87,7 @@ describe('quantic-resultQuickview', () => {
 
         Expect.displayButtonPreview(true);
         Expect.displayButtonPreviewIcon(true);
+        Expect.buttonPreviewIconContains('bug');
         Actions.clickPreview();
         Expect.displaySectionPreview(true);
       });

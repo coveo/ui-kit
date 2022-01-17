@@ -20,6 +20,14 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the icon in button preview`);
     },
+    buttonPreviewIconContains: (iconName: string) => {
+      selector
+        .buttonPreviewIcon()
+        .find('svg')
+        .invoke('attr', 'data-key')
+        .should('contain', iconName)
+        .logDetail(`the icon in button preview should contain "${iconName}"`);
+    },
     buttonPreviewIsDisabled: (disabled: boolean, variant?: string) => {
       selector
         .buttonPreview(variant)
@@ -62,6 +70,10 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         .spinner()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the spinner`);
+    },
+    noAlertShown: () => {
+      const spy = cy.spy(window, 'alert');
+      expect(spy).to.not.be.called;
     },
     logDocumentQuickview: (title: string) => {
       cy.wait(InterceptAliases.UA.DocumentQuickview)
