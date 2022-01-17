@@ -23,11 +23,7 @@ import {
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
-import {
-  executeSearch,
-  ExecuteSearchThunkReturn,
-  fetchFacetValues,
-} from '../../search/search-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {FacetResponse} from '../facet-set/interfaces/response';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
