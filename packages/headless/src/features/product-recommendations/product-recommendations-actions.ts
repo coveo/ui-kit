@@ -199,6 +199,12 @@ const mapResultToProductResult = (
       (all, field) => ({...all, [field]: result.raw[field]}),
       {}
     ),
+    childResults: Array.isArray(result.childResults)
+      ? result.childResults.map((childResult) =>
+          mapResultToProductResult(childResult, {additionalFields})
+        )
+      : result.childResults,
+    totalNumberOfChildResults: result.totalNumberOfChildResults,
   };
 };
 

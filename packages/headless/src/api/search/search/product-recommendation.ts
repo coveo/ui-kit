@@ -73,6 +73,16 @@ export interface ProductRecommendation {
    * An object containing the requested additional fields for the product.
    */
   additionalFields: Record<string, unknown>;
+
+  /**
+   * A list of child product recommendations in a product grouping context
+   */
+  childResults?: ProductRecommendation[];
+
+  /**
+   * The total number of items in the group
+   */
+  totalNumberOfChildResults?: number;
 }
 
 // Change this list when changing the fields exposed by `ProductRecommendation`
@@ -88,4 +98,6 @@ export const ProductRecommendationDefaultFields: string[] = [
   'ec_images',
   'ec_in_stock',
   'ec_rating',
+  'childResults',
+  'totalNumberOfChildResults',
 ];
