@@ -34,7 +34,6 @@ import {
   updateFacetAutoSelection,
 } from '../generic/facet-actions';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {PayloadAction} from '@reduxjs/toolkit';
 
 describe('category facet slice', () => {
   const facetId = '1';
