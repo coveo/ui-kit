@@ -1,8 +1,8 @@
 {
   "name": "headless-react",
-  "version": "0.47.0",
+  "version": "0.48.0",
   "dependencies": {
-    "@coveo/atomic-react": "^0.2.0",
+    "@coveo/atomic-react": "^0.3.0",
     "@coveo/auth": "^1.1.5",
     "@coveo/headless": "^1.41.12",
     "@testing-library/jest-dom": "5.14.1",
@@ -28,13 +28,14 @@
   },
   "scripts": {
     "prepublishOnly": "exit 1",
-    "dev": "react-scripts start",
+    "dev": "npm run copy:assets && react-scripts start",
     "build": "tsc --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ssr:build": "npm run build && npm run build:server",
-    "ssr:start": "node ./build/server/server/server.js"
+    "ssr:start": "node ./build/server/server/server.js",
+    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang"
   },
   "browserslist": {
     "production": [
@@ -47,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "ncp": "^2.0.0"
   }
 }
