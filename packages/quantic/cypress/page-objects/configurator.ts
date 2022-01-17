@@ -1,5 +1,3 @@
-import {Result} from '@coveo/headless/dist/definitions/index';
-
 const selectors = {
   try: 'lightning-button[data-cy="cfg-try"]',
   reset: 'lightning-button[data-cy="cfg-reset"]',
