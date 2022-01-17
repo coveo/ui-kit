@@ -38,7 +38,7 @@ export const buildFrequentlyViewedDifferentCategoryList = (
     ...props,
     options: {
       ...options,
-      id: 'frequentlyViewedDifferentCategory',
+      id: 'frequentViewedDifferentCategory',
     },
   });
 };
