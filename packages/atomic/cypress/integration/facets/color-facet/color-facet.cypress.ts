@@ -233,7 +233,13 @@ describe('Color Facet Test Suites', () => {
     describe('repeatedly until there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
         new TestFixture()
-          .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+          .with(
+            addColorFacet({
+              field: colorFacetField,
+              label: colorFacetLabel,
+              'number-of-values': 25,
+            })
+          )
           .init();
         pressShowMoreUntilImpossible(ColorFacetSelectors);
       }

@@ -22,11 +22,7 @@ import {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '../search-box-suggestions/suggestions-common';
-import {
-  AriaLiveRegion,
-  FocusTarget,
-  FocusTargetController,
-} from '../../utils/accessibility-utils';
+import {AriaLiveRegion} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -74,9 +70,6 @@ export class AtomicSearchBox {
 
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
-
-  @FocusTarget()
-  private inputFocus!: FocusTargetController;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -299,10 +292,7 @@ export class AtomicSearchBox {
     return (
       <input
         part="input"
-        ref={(el) => {
-          this.inputRef = el as HTMLInputElement;
-          this.inputFocus.setTarget(el);
-        }}
+        ref={(el) => (this.inputRef = el as HTMLInputElement)}
         role="combobox"
         aria-autocomplete="both"
         aria-haspopup="true"
@@ -418,7 +408,6 @@ export class AtomicSearchBox {
         part="submit-button"
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => {
-          this.inputFocus.focusAfterSearch();
           this.searchBox.submit();
           this.clearSuggestionElements();
         }}
