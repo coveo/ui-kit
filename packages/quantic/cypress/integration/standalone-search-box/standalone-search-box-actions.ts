@@ -8,7 +8,7 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     typeInSearchBox: (query: string) => {
       selector
         .input()
-        .type(query, {force: true})
+        .invoke('val', query)
         .logAction(`when typing "${query}" in search box`);
     },
   };

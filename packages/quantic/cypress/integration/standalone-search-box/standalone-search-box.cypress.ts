@@ -35,27 +35,49 @@ describe('quantic-standalone-search-box', () => {
         Expect.displaySearchButton(true);
       });
 
+      scope('when submitting a search', () => {
+        visitStandaloneSearchBox();
+
+        Actions.typeInSearchBox('some query');
+        Expect.displayCloseIcon(true);
+      });
+
       scope('when setting queries in local storage', () => {
         typeQueriesListLocalStorage(
           '["query 1", "query 2", "query 3", "query 4", "query 5", "query 6"]'
         );
         visitStandaloneSearchBox();
+        Actions.typeInSearchBox('q');
         clearLocalStorage();
-      });
-
-      scope('when submitting a search', () => {
-        visitStandaloneSearchBox();
-
-        Actions.typeInSearchBox('some query');
-        Expect.displaySuggestionList(true);
-        Expect.displayCloseIcon(true);
       });
     });
   });
 
   describe('with custom option', () => {
     it('should work as expected', () => {
-      visitStandaloneSearchBox();
+      scope('with custom #placeholder', () => {
+        visitStandaloneSearchBox({
+          placeholder: 'custom placeholder',
+        });
+      });
+
+      scope('with custom #withoutSubmitButton', () => {
+        visitStandaloneSearchBox({
+          withoutSubmitButton: true,
+        });
+      });
+
+      scope('with custom #numberOfSuggestions', () => {
+        visitStandaloneSearchBox({
+          numberOfSuggestions: 3,
+        });
+      });
+
+      scope('with custom #redirectUrl', () => {
+        visitStandaloneSearchBox({
+          redirectUrl: 'http://google.com',
+        });
+      });
     });
   });
 });
