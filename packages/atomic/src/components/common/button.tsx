@@ -24,7 +24,6 @@ interface ButtonProps {
   ariaCurrent?: string;
   title?: string;
   ref?(element?: HTMLButtonElement): void;
-  key?: string;
 }
 
 export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
@@ -75,7 +74,6 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     'aria-current': props.ariaCurrent,
     disabled: props.disabled,
     ref: props.ref,
-    key: props.key,
   };
 
   return (

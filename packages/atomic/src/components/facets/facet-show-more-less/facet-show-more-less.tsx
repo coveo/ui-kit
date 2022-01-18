@@ -29,12 +29,13 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   });
   const btnClasses = 'flex items-baseline text-left p-2 text-sm max-w-full';
   const iconClasses = 'w-2 h-2 mr-1';
-  const hideShowMoreLess = !props.canShowLessValues && !props.canShowMoreValues;
+  if (!props.canShowLessValues && !props.canShowMoreValues) {
+    return;
+  }
 
   return (
-    <div class={hideShowMoreLess ? 'hidden' : 'mt-2'}>
+    <div class="mt-2">
       <Button
-        key="show-less"
         style="text-primary"
         part="show-less"
         class={`${btnClasses} ${props.canShowLessValues ? '' : 'hidden'}`}
@@ -50,7 +51,6 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         <span class="truncate">{showLess}</span>
       </Button>
       <Button
-        key="show-less"
         style="text-primary"
         part="show-more"
         class={`${btnClasses} ${props.canShowMoreValues ? '' : 'hidden'}`}
