@@ -33,6 +33,7 @@ describe('quantic-standalone-search-box', () => {
 
         Expect.displayInputSearchBox(true);
         Expect.displaySearchButton(true);
+        Expect.placeholderContains('Search');
       });
 
       scope('when submitting a search', () => {
@@ -59,12 +60,20 @@ describe('quantic-standalone-search-box', () => {
         visitStandaloneSearchBox({
           placeholder: 'custom placeholder',
         });
+
+        Expect.displayInputSearchBox(true);
+        Expect.displaySearchButton(true);
+        Expect.placeholderContains('custom placeholder');
       });
 
       scope('with custom #withoutSubmitButton', () => {
         visitStandaloneSearchBox({
           withoutSubmitButton: true,
         });
+
+        Expect.displayInputSearchBox(true);
+        Expect.displaySearchButton(false);
+        Expect.displaySearchIcon(true);
       });
 
       scope('with custom #numberOfSuggestions', () => {

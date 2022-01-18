@@ -12,7 +12,7 @@ export interface StandaloneSearchBoxSelector extends ComponentSelector {
 
 export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
-  input: () => StandaloneSearchBoxSelectors.get().find('input'),
+  input: () => StandaloneSearchBoxSelectors.get().find('input[type="search"]'),
   suggestionList: () =>
     StandaloneSearchBoxSelectors.get().find(
       'c-quantic-search-box-suggestions-list li'
