@@ -23,7 +23,7 @@ import {
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
-import {executeSearch} from '../../search/search-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {FacetResponse} from '../facet-set/interfaces/response';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
@@ -797,6 +797,40 @@ describe('category facet slice', () => {
       const action = buildExecuteSearchAction([facet]);
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('#fetchFacetValues.fulfilled', () => {
+    function buildFetchFacetValuesAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return fetchFacetValues.fulfilled(
+        search,
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+    }
+
+    it('when an valid path is requested, it does not adjust the #currentValues of the request', () => {
+      const valid = buildMockCategoryFacetValueRequest({
+        value: 'valid',
+        state: 'selected',
+      });
+      const currentValues = [valid];
+      const request = buildMockCategoryFacetRequest({currentValues});
+      state[facetId] = buildMockCategoryFacetSlice({request});
+
+      const root = buildMockCategoryFacetValue({
+        value: 'valid',
+        state: 'selected',
+      });
+      const facet = buildMockCategoryFacetResponse({facetId, values: [root]});
+
+      const action = buildFetchFacetValuesAction([facet]);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
     });
   });
 });

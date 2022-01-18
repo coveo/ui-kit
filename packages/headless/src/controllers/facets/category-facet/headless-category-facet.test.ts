@@ -17,7 +17,10 @@ import {
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {executeSearch} from '../../../features/search/search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   CategoryFacetRequest,
@@ -413,10 +416,10 @@ describe('category facet', () => {
       );
     });
 
-    it('dispatches #executeSearch', () => {
+    it('dispatches #fetchFacetValues', () => {
       categoryFacet.showMoreValues();
 
-      const action = engine.findAsyncAction(executeSearch.pending);
+      const action = engine.findAsyncAction(fetchFacetValues.pending);
       expect(action).toBeTruthy();
     });
   });
@@ -438,9 +441,9 @@ describe('category facet', () => {
       );
     });
 
-    it('dispatches #executeSearch', () => {
+    it('dispatches #fetchFacetValues', () => {
       const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+        (a) => a.type === fetchFacetValues.pending.type
       );
       expect(action).toBeTruthy();
     });
