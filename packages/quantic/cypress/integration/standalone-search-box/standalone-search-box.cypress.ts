@@ -60,7 +60,7 @@ describe('quantic-standalone-search-box', () => {
         visitStandaloneSearchBox();
 
         Actions.typeInSearchBox(query);
-        Expect.displayCloseIcon(true);
+        Expect.displayClearButton(true);
         Actions.submitSearch();
         Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
       });
@@ -117,7 +117,7 @@ describe('quantic-standalone-search-box', () => {
         });
 
         Actions.typeInSearchBox('test');
-        Expect.displayCloseIcon(true);
+        Expect.displayClearButton(true);
         Actions.submitSearch();
         Expect.urlHashContains(`/full-search-example#q=${query}`);
       });

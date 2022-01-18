@@ -26,9 +26,9 @@ function standaloneSearchBoxExpectations(
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the search button`);
     },
-    displayCloseIcon: (display: boolean) => {
+    displayClearButton: (display: boolean) => {
       selector
-        .closeIcon()
+        .clearButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the close icon`);
     },
