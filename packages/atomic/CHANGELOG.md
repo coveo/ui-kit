@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.7...@coveo/atomic@1.24.0) (2022-01-18)
+
+
+### Features
+
+* **headless:** facet show more/less improvements ([#1670](https://github.com/coveo/ui-kit/issues/1670)) ([1bc70ae](https://github.com/coveo/ui-kit/commit/1bc70aed9fbd2ef15e4d03955ab980a2d40627f0))
+
+
+
+
+
 ## [1.23.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.6...@coveo/atomic@1.23.7) (2022-01-18)
 
 
