@@ -1,6 +1,6 @@
 import {
   doSortAlphanumeric,
-  doSortOccurences,
+  doSortOccurrences,
 } from '../../../utils/componentUtils';
 import {ResultListSelectors} from '../../result-list/result-list-selectors';
 import {CategoryFacetSelectors} from './category-facet-selectors';
@@ -120,12 +120,12 @@ export function assertLogFacetShowLess() {
   });
 }
 
-export function assertValuesSortedByOccurences() {
-  it('values should be ordered by occurences', () => {
+export function assertValuesSortedByOccurrences() {
+  it('values should be ordered by occurrences', () => {
     CategoryFacetSelectors.valueCount().as('categoryFacetAllValuesCount');
     cy.getTextOfAllElements('@categoryFacetAllValuesCount').then(
       (originalValues) => {
-        expect(originalValues).to.eql(doSortOccurences(originalValues));
+        expect(originalValues).to.eql(doSortOccurrences(originalValues));
       }
     );
   });
