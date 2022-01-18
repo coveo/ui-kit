@@ -25,7 +25,7 @@
     "collection-manifest.json"
   ],
   "scripts": {
-    "clean": "rimraf -f -r dist/* headless/*",
+    "clean": "rimraf -rf dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
