@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.1...@coveo/quantic@1.7.2) (2022-01-18)
+
+
+### Bug Fixes
+
+* **quantic:** added escape util for showing query in rich-text ([#1671](https://github.com/coveo/ui-kit/issues/1671)) ([71670dd](https://github.com/coveo/ui-kit/commit/71670dd2bdbbd1b46ce4a0df57bc7406bd84efa5))
+
+
+
+
+
 ## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.0...@coveo/quantic@1.7.1) (2022-01-18)
 
 **Note:** Version bump only for package @coveo/quantic
