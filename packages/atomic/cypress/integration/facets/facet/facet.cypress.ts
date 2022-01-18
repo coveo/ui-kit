@@ -8,7 +8,6 @@ import {
   selectIdleBoxValueAt,
 } from './facet-actions';
 import {
-  pressShowMoreUntilImpossible,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
@@ -689,12 +688,11 @@ describe('Facet v1 Test Suites', () => {
       FacetAssertions.assertLogFacetShowMore(field);
     });
 
-    describe.skip('repeatedly until there\'s no more "Show more" button', () => {
+    describe('repeatedly until there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
-        new TestFixture()
-          .with(addFacet({field, label, 'number-of-values': 100}))
-          .init();
-        pressShowMoreUntilImpossible(FacetSelectors);
+        new TestFixture().with(addFacet({field: 'month', label})).init();
+        FacetSelectors.showMoreButton().click();
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {

@@ -10,10 +10,7 @@ import {
   colorFacetComponent,
   ColorFacetSelectors,
 } from './color-facet-selectors';
-import {
-  pressShowMoreUntilImpossible,
-  typeFacetSearchQuery,
-} from '../facet-common-actions';
+import {typeFacetSearchQuery} from '../facet-common-actions';
 import * as FacetAssertions from '../facet/facet-assertions';
 import * as ColorFacetAssertions from './color-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
@@ -230,18 +227,18 @@ describe('Color Facet Test Suites', () => {
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
     });
 
-    describe.skip('repeatedly until there\'s no more "Show more" button', () => {
+    describe('repeatedly until there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
         new TestFixture()
           .with(
             addColorFacet({
-              field: colorFacetField,
+              field: 'month',
               label: colorFacetLabel,
-              'number-of-values': 25,
             })
           )
           .init();
-        pressShowMoreUntilImpossible(ColorFacetSelectors);
+        ColorFacetSelectors.showMoreButton().click();
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
