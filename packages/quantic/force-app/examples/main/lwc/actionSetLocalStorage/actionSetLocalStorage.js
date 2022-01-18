@@ -2,8 +2,11 @@ import { api, LightningElement } from "lwc";
 
 export default class ActionSetLocalStorage extends LightningElement {
   @api engineId;
+  @api standaloneSearchBox=false;
 
-  localStorageKey = 'quantic-recent-results-list-engine_quantic-recent-results';
+  input;
+
+  localStorageKey = this.standaloneSearchBox ? 'coveo-standalone-search-box' : 'quantic-recent-results-list-engine_quantic-recent-results';
   recentResultList = [
     {
       title: 'test1',
@@ -26,7 +29,11 @@ export default class ActionSetLocalStorage extends LightningElement {
   ];
 
   setItems() {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.recentResultList));
+    if(this.standaloneSearchBox) {
+      this.input =  this.template.querySelector('lightning-input');
+    }
+    const value = this.standaloneSearchBox ? this.input.value : this.recentResultList;
+    localStorage.setItem(this.localStorageKey, JSON.stringify(value));
   }
 
   clear() {

@@ -3,9 +3,16 @@ import {
   StandaloneSearchBoxSelectors,
 } from './standalone-search-box-selectors';
 
-function standaloneSearchBoxActions(selector: StandaloneSearchBoxSelector) {
-  return {};
-}
+const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
+  return {
+    typeInSearchBox: (query: string) => {
+      selector
+        .input()
+        .type(query, {force: true})
+        .logAction(`when typing "${query}" in search box`);
+    },
+  };
+};
 
 export const StandaloneSearchBoxActions = {
   ...standaloneSearchBoxActions(StandaloneSearchBoxSelectors),
