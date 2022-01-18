@@ -14,7 +14,10 @@ import {
 import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {executeSearch} from '../../../features/search/search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 
@@ -373,11 +376,11 @@ describe('facet', () => {
       );
     });
 
-    it('executes a search', () => {
+    it('executes a fetchFacetValues action', () => {
       facet.showMoreValues();
 
       const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+        (a) => a.type === fetchFacetValues.pending.type
       );
       expect(action).toBeTruthy();
     });
@@ -465,10 +468,10 @@ describe('facet', () => {
       );
     });
 
-    it('executes a search', () => {
+    it('executes a fetchFacetValues action', () => {
       facet.showLessValues();
       const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+        (a) => a.type === fetchFacetValues.pending.type
       );
       expect(action).toBeTruthy();
     });

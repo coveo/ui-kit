@@ -26,6 +26,10 @@ import {BaseFacet} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -124,6 +128,9 @@ export class AtomicRatingRangeFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
@@ -175,9 +182,15 @@ export class AtomicRatingRangeFacet
   }
 
   private formatFacetValue(facetValue: NumericFacetValue) {
-    return this.bindings.i18n.t('to', {
-      start: facetValue.start,
-      end: facetValue.end,
+    if (facetValue.start === this.maxValueInIndex) {
+      return this.bindings.i18n.t('stars', {
+        count: facetValue.start,
+        max: this.maxValueInIndex,
+      });
+    }
+    return this.bindings.i18n.t('stars-range', {
+      value: facetValue.start,
+      count: this.maxValueInIndex,
     });
   }
 
@@ -185,6 +198,7 @@ export class AtomicRatingRangeFacet
     return (
       <div class="flex items-center">
         <Rating
+          i18n={this.bindings.i18n}
           numberOfTotalIcons={this.maxValueInIndex}
           numberOfActiveIcons={facetValue.start}
           icon={this.icon}
@@ -199,10 +213,14 @@ export class AtomicRatingRangeFacet
       <FacetHeader
         i18n={this.bindings.i18n}
         label={this.label}
-        onClearFilters={() => this.facet.deselectAll()}
+        onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }
@@ -218,7 +236,7 @@ export class AtomicRatingRangeFacet
         {facetValue.start === this.maxValueInIndex ? (
           <span>{this.bindings.i18n.t('only')}</span>
         ) : (
-          this.bindings.i18n.t('& up')
+          this.bindings.i18n.t('and-up')
         )}
       </span>
     );

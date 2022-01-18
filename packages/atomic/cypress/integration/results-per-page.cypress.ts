@@ -1,7 +1,9 @@
 import {getApiResponseBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
-
-const resultPerPage = 'atomic-results-per-page';
+import {
+  resultsPerPageComponent,
+  ResultsPerPageSelectors,
+} from './results-per-page-selectors';
 
 describe('Result Per Page Component', () => {
   function setup(attributes = '') {
@@ -11,12 +13,12 @@ describe('Result Per Page Component', () => {
   }
 
   function clickButton(position: number) {
-    return cy.get(resultPerPage).shadow().find('button').eq(position).click();
+    return ResultsPerPageSelectors.buttons().eq(position).click();
   }
 
   it('should load', () => {
     setup();
-    cy.get(resultPerPage).should('be.visible');
+    cy.get(resultsPerPageComponent).should('be.visible');
   });
 
   it('should execute a query with a different number of results on button click', async () => {
@@ -40,19 +42,19 @@ describe('Result Per Page Component', () => {
 
   it('passes automated accessibility', () => {
     setup();
-    cy.checkA11y(resultPerPage);
+    cy.checkA11y(resultsPerPageComponent);
   });
 
   describe('choicesDisplayed option', () => {
     it(`when the prop is not of the right type/format
     should render an error`, () => {
       setup('choices-displayed="hello"');
-      shouldRenderErrorComponent(resultPerPage);
+      shouldRenderErrorComponent(resultsPerPageComponent);
     });
 
     it('should render the choices in the component', () => {
       setup('choices-displayed="10,13"');
-      cy.get(resultPerPage).shadow().find('button').eq(1).contains(13);
+      ResultsPerPageSelectors.buttons().eq(1).should('have.value', 13);
     });
   });
 
@@ -60,22 +62,18 @@ describe('Result Per Page Component', () => {
     it(`when the prop is not valid
     should render an error`, () => {
       setup('initial-choice=-1');
-      shouldRenderErrorComponent(resultPerPage);
+      shouldRenderErrorComponent(resultsPerPageComponent);
     });
 
     it(`when the prop is not in the list of choicesDisplayed
     should render an error`, () => {
       setup('initial-choice=59');
-      shouldRenderErrorComponent(resultPerPage);
+      shouldRenderErrorComponent(resultsPerPageComponent);
     });
 
     it('should select the initialChoice correctly', () => {
       setup('initial-choice=25');
-      cy.get(resultPerPage)
-        .shadow()
-        .find('button')
-        .eq(1)
-        .should('have.attr', 'aria-checked', 'true');
+      ResultsPerPageSelectors.activeButton().should('have.value', 25);
     });
   });
 });

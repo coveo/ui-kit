@@ -10,7 +10,7 @@ import {
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
-import {executeSearch} from '../../search/search-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
@@ -21,7 +21,10 @@ import {
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
 import {getFacetSetInitialState} from './facet-set-state';
-import {deselectAllFacets} from '../generic/facet-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {WritableDraft} from 'immer/dist/internal';
@@ -116,6 +119,11 @@ export const facetSetReducer = createReducer(
           handleFacetDeselectAll(request);
         });
       })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.keys(state).forEach((facetId) => {
+          state[facetId].preventAutoSelect = !action.payload.allow;
+        })
+      )
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
       })
@@ -147,6 +155,15 @@ export const facetSetReducer = createReducer(
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = action.payload.response?.facets?.results || [];
+        facets.forEach((facetResponse) =>
+          mutateStateFromFacetResponse(
+            state[facetResponse.facetId],
+            facetResponse
+          )
+        );
+      })
+      .addCase(fetchFacetValues.fulfilled, (state, action) => {
+        const facets = action.payload.response.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId],

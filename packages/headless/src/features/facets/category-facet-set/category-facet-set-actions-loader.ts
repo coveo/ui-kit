@@ -1,4 +1,8 @@
 import {PayloadAction} from '@reduxjs/toolkit';
+import {
+  UpdateFacetAutoSelectionActionCreatorPayload,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {categoryFacetSet} from '../../../app/reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
@@ -18,6 +22,7 @@ export type {
   ToggleSelectCategoryFacetValueActionCreatorPayload,
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
   UpdateCategoryFacetSortCriterionActionCreatorPayload,
+  UpdateFacetAutoSelectionActionCreatorPayload,
 };
 
 /**
@@ -71,6 +76,15 @@ export interface CategoryFacetSetActionCreators {
   updateCategoryFacetSortCriterion(
     payload: UpdateCategoryFacetSortCriterionActionCreatorPayload
   ): PayloadAction<UpdateCategoryFacetSortCriterionActionCreatorPayload>;
+
+  /**
+   * Updates the preventAutoSelect flag of all facets.
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateFacetAutoSelection(
+    payload: UpdateFacetAutoSelectionActionCreatorPayload
+  ): PayloadAction<UpdateFacetAutoSelectionActionCreatorPayload>;
 }
 
 /**
@@ -90,5 +104,6 @@ export function loadCategoryFacetSetActions(
     toggleSelectCategoryFacetValue,
     updateCategoryFacetNumberOfValues,
     updateCategoryFacetSortCriterion,
+    updateFacetAutoSelection,
   };
 }

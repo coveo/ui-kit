@@ -1,4 +1,7 @@
-import {executeSearch} from '../../../features/search/search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -109,12 +112,12 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(executeSearch(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(executeSearch(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
     },
 
     get state() {

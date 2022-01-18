@@ -72,7 +72,7 @@ export default class QuanticFacet extends LightningElement {
    * Possible values are:
    *   - `score`
    *   - `alphanumeric`
-   *   - `occurences`
+   *   - `occurrences`
    *   - `automatic`
    * @api
    * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}

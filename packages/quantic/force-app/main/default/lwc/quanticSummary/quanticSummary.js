@@ -93,7 +93,7 @@ export default class QuanticSummary extends LightningElement {
   get noResultsLabel() {
     return I18nUtils.format(
         this.hasQuery ? this.labels.noResultsFor : this.labels.noResults,
-        I18nUtils.getTextBold(this.query));
+        I18nUtils.getTextBold(I18nUtils.escapeHTML(this.query)));
   }
 
   get summaryLabel() {
@@ -104,6 +104,6 @@ export default class QuanticSummary extends LightningElement {
       this.labels[labelName],
       I18nUtils.getTextWithDecorator(this.range, '<b class="summary__range">', '</b>'),
       I18nUtils.getTextWithDecorator(this.total, '<b class="summary__total">', '</b>'),
-      I18nUtils.getTextWithDecorator(this.query, '<b class="summary__query">', '</b>'));
+      I18nUtils.getTextWithDecorator(I18nUtils.escapeHTML(this.query), '<b class="summary__query">', '</b>'));
   }
 }

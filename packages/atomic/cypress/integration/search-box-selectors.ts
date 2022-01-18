@@ -1,7 +1,14 @@
+import {AriaLiveSelectors} from './aria-live-selectors';
+
+export const searchBoxComponent = 'atomic-search-box';
+
 export const SearchBoxSelectors = {
-  component: 'atomic-search-box',
-  inputBox: 'input',
-  querySuggestionList: 'ul',
+  shadow: () => cy.get(searchBoxComponent).shadow(),
+  inputBox: () => SearchBoxSelectors.shadow().find('[part="input"]'),
+  submitButton: () =>
+    SearchBoxSelectors.shadow().find('[part="submit-button"]'),
+  querySuggestions: () => SearchBoxSelectors.shadow().find('[data-query]'),
+  liveRegion: () => AriaLiveSelectors.region('search-box'),
 };
 
 export const ButtonText = {
@@ -10,7 +17,7 @@ export const ButtonText = {
 };
 
 export function generateAliasForSearchBox() {
-  cy.get(SearchBoxSelectors.component)
+  cy.get(searchBoxComponent)
     .shadow()
     .find('div')
     .first()

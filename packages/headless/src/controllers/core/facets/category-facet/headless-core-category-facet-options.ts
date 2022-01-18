@@ -82,7 +82,7 @@ export interface CategoryFacetOptions {
   /**
    * The criterion to use for sorting returned facet values.
    *
-   * @defaultValue `occurences`
+   * @defaultValue `occurrences`
    */
   sortCriteria?: CategoryFacetSortCriterion;
 }

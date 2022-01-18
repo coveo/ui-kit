@@ -10,11 +10,21 @@ import {
   colorFacetComponent,
   ColorFacetSelectors,
 } from './color-facet-selectors';
-import {typeFacetSearchQuery} from '../facet-common-actions';
+import {
+  pressShowMoreUntilImpossible,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
 import * as FacetAssertions from '../facet/facet-assertions';
 import * as ColorFacetAssertions from './color-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
+import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
+import {
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox/breadbox-actions';
+import {breadboxComponent} from '../../breadbox/breadbox-selectors';
 
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
@@ -123,6 +133,7 @@ describe('Color Facet Test Suites', () => {
             ColorFacetAssertions.assertNumberOfIdleBoxValues(
               colorFacetDefaultNumberOfValues
             );
+            CommonFacetAssertions.assertFocusHeader(ColorFacetSelectors);
           });
 
           describe('verify analytics', () => {
@@ -212,10 +223,40 @@ describe('Color Facet Test Suites', () => {
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
       );
+      CommonFacetAssertions.assertFocusShowMore(ColorFacetSelectors);
     });
     describe('verify analytics', () => {
       before(setupSelectShowMore);
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
+    });
+
+    describe.skip('repeatedly until there\'s no more "Show more" button', () => {
+      function setupRepeatShowMore() {
+        new TestFixture()
+          .with(
+            addColorFacet({
+              field: colorFacetField,
+              label: colorFacetLabel,
+              'number-of-values': 25,
+            })
+          )
+          .init();
+        pressShowMoreUntilImpossible(ColorFacetSelectors);
+      }
+
+      describe('verify rendering', () => {
+        before(setupRepeatShowMore);
+
+        CommonFacetAssertions.assertDisplayShowMoreButton(
+          ColorFacetSelectors,
+          false
+        );
+        CommonFacetAssertions.assertDisplayShowLessButton(
+          ColorFacetSelectors,
+          true
+        );
+        CommonFacetAssertions.assertFocusShowLess(ColorFacetSelectors);
+      });
     });
 
     describe('when selecting the "Show less" button', () => {
@@ -451,6 +492,86 @@ describe('Color Facet Test Suites', () => {
       before(generateCustomCSS);
       CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
       ColorFacetAssertions.assertBackgroundButtonColorRed();
+    });
+  });
+
+  describe('with breadbox', () => {
+    function setupBreadboxWithColorFacet() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .init();
+    }
+    describe('verify rendering', () => {
+      before(setupBreadboxWithColorFacet);
+      BreadboxAssertions.assertDisplayBreadcrumb(false);
+    });
+
+    describe('when selecting a facetValue', () => {
+      const selectionIndex = 2;
+
+      function setupSelectedColorFacet() {
+        setupBreadboxWithColorFacet();
+        selectIdleBoxValueAt(selectionIndex);
+        cy.wait(TestFixture.interceptAliases.Search);
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectedColorFacet);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertSelectedColorFacetsInBreadcrumb();
+        BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
+      });
+
+      describe('when deselecting a facetValue on breadcrumb', () => {
+        const deselectionIndex = 0;
+        function setupDeselectColorFacetValue() {
+          setupSelectedColorFacet();
+          cy.wait(TestFixture.interceptAliases.UA);
+          deselectBreadcrumbAtIndex(deselectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
+        }
+
+        describe('verify rendering', () => {
+          before(setupDeselectColorFacetValue);
+          BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+
+        describe('verify analytic', () => {
+          before(setupDeselectColorFacetValue);
+          BreadboxAssertions.assertLogBreadcrumbFacet(colorFacetField);
+        });
+
+        describe('verify selected facetValue', () => {
+          before(setupSelectedColorFacet);
+          BreadboxAssertions.assertDeselectColorFacet(deselectionIndex);
+        });
+      });
+    });
+
+    describe('when select 3 facetValues', () => {
+      const index = [0, 1, 2];
+      function setupSelectedMulitpleColorFacets() {
+        setupBreadboxWithColorFacet();
+        index.forEach((i: number) => {
+          selectIdleBoxValueAt(i);
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectedMulitpleColorFacets);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertSelectedColorFacetsInBreadcrumb();
+        BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+        BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      });
     });
   });
 });

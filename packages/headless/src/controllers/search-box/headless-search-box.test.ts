@@ -32,6 +32,7 @@ import {
   search,
 } from '../../app/reducers';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {updateFacetAutoSelection} from '../../features/facets/generic/facet-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -237,6 +238,28 @@ describe('headless searchBox', () => {
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
+    });
+
+    it('allows autoSelection', () => {
+      searchBox.submit();
+
+      expect(engine.actions).toContainEqual(
+        updateFacetAutoSelection({allow: true})
+      );
+    });
+
+    it('autoSelection should be allowed after deselecting facets', () => {
+      searchBox.submit();
+
+      const deselectAllBreadcrumbsIndex = engine.actions.findIndex(
+        (action) => action.type === deselectAllBreadcrumbs.type
+      );
+      const updateFacetAutoSelectionIndex = engine.actions.findIndex(
+        (action) => action.type === updateFacetAutoSelection.type
+      );
+      expect(deselectAllBreadcrumbsIndex).toBeLessThanOrEqual(
+        updateFacetAutoSelectionIndex
+      );
     });
 
     it('dispatches updateQuery with the correct parameters', () => {

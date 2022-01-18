@@ -1,8 +1,10 @@
 import {TestFixture} from '../../fixtures/test-fixture';
 import {
+  BaseFacetSelector,
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
   FacetWithSearchSelector,
+  FacetWithShowMoreLessSelector,
 } from './facet-common-assertions';
 
 export function selectIdleCheckboxValueAt(
@@ -34,4 +36,28 @@ export function typeFacetSearchQuery(
       cy.wait(TestFixture.interceptAliases.UA);
     }
   });
+}
+
+export function pressShowMoreUntilImpossible(
+  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
+) {
+  FacetWithShowMoreLessSelector.showMoreButton().then((jq) => {
+    const [el] = jq.filter(':visible');
+    if (!el) {
+      return;
+    }
+    el.click();
+    cy.wait(TestFixture.interceptAliases.Search);
+    pressShowMoreUntilImpossible(FacetWithShowMoreLessSelector);
+  });
+}
+
+export function pressLabelButton(
+  BaseFacetSelector: BaseFacetSelector,
+  shouldBecomeCollapsed: boolean
+) {
+  BaseFacetSelector.labelButton().click();
+  BaseFacetSelector.values().should(
+    shouldBecomeCollapsed ? 'not.exist' : 'exist'
+  );
 }

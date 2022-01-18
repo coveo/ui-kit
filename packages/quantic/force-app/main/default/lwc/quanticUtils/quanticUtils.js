@@ -154,12 +154,22 @@ export class I18nUtils {
   }
 
   /**
-   *
    * @param {Date} date
    */
   static formatDate(date) {
     const result = new Intl.DateTimeFormat(LOCALE).format(date);
     return result;
+  }
+
+  /**
+   * @param {string} html 
+   * @returns {string}
+   */
+  static escapeHTML(html) {
+    var escape = document.createElement('textarea');
+    escape.textContent = html;
+    // eslint-disable-next-line @lwc/lwc/no-inner-html
+    return escape.innerHTML;
   }
 }
 

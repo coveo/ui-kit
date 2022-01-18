@@ -1,5 +1,7 @@
+import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
 
 export type SearchResponseModifierPredicate = (
@@ -135,6 +137,15 @@ export class TestFixture {
 
       if (this.disabledAnalytics) {
         searchInterfaceComponent.setAttribute('analytics', 'false');
+      } else {
+        AnalyticsTracker.reset();
+        cy.intercept(
+          {
+            method: 'POST',
+            url: '**/rest/ua/v15/analytics/*',
+          },
+          (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
+        );
       }
 
       if (this.responseModifiers.length) {
@@ -244,7 +255,7 @@ export class TestFixture {
 
   public static getUABody() {
     return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
-      request: {[key: string]: any};
+      request: CyHttpMessages.IncomingHttpRequest;
     }>;
   }
 
