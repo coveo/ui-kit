@@ -1,4 +1,13 @@
-import {Component, h, Element, State, Prop, Listen, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  Element,
+  State,
+  Prop,
+  Listen,
+  Host,
+  Method,
+} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -89,6 +98,12 @@ export class AtomicResultList implements InitializableComponent {
    * @deprecated use `imageSize` instead.
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
+
+  private renderingFunction?: (result: Result) => HTMLElement = undefined;
+
+  @Method() public setRenderFunction(render: (result: Result) => HTMLElement) {
+    this.renderingFunction = render;
+  }
 
   private listWrapperRef?: HTMLDivElement;
 
@@ -182,7 +197,9 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildListResults() {
     return this.resultListState.results.map((result) => {
-      const template = this.getTemplate(result);
+      const content = this.renderingFunction
+        ? this.renderingFunction(result)
+        : this.getTemplate(result);
 
       const atomicResult = (
         <atomic-result
@@ -192,7 +209,7 @@ export class AtomicResultList implements InitializableComponent {
           display={this.display}
           density={this.density}
           imageSize={this.imageSize ?? this.image}
-          content={template}
+          content={content}
         ></atomic-result>
       );
 
