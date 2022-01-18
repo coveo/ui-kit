@@ -31,7 +31,7 @@ function mockSuggestions() {
       res.body.responseId = 21322434;
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  }).as(InterceptAliases.QuerySuggestions.substring(1));
 }
 
 describe('quantic-standalone-search-box', () => {
