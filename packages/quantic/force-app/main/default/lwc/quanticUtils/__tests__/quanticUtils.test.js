@@ -84,7 +84,7 @@ describe('c/quanticUtils', () => {
       });
 
       it('should escape html anchor tags', () => {
-        let htmlWithTags = '<a src="http:.//www.sketchysite.com"></a>';
+        let htmlWithTags = '<a src="http://www.sketchysite.com"></a>';
       
         expect(I18nUtils.escapeHTML(htmlWithTags)).toBe("&lt;a src=\"http:.//www.sketchysite.com\"&gt;&lt;/a&gt;");
       });
