@@ -15,7 +15,7 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
       selector.searchButton().click().logAction('when submitting query');
     },
     focusSearchBox: () => {
-      selector.input().trigger('keyup', {which: 't'.charCodeAt(0)});
+      selector.input().trigger('keyup', {which: 100});
     },
   };
 };

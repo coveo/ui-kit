@@ -56,11 +56,13 @@ describe('quantic-standalone-search-box', () => {
       });
 
       scope('when submitting a search', () => {
+        const query = 'test';
         visitStandaloneSearchBox();
 
-        Actions.typeInSearchBox('test');
+        Actions.typeInSearchBox(query);
         Expect.displayCloseIcon(true);
         Actions.submitSearch();
+        Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
       });
 
       scope('when setting suggestions', () => {
@@ -99,14 +101,25 @@ describe('quantic-standalone-search-box', () => {
 
       scope('with custom #numberOfSuggestions', () => {
         visitStandaloneSearchBox({
-          numberOfSuggestions: 3,
+          numberOfSuggestions: 1,
         });
+
+        Actions.focusSearchBox();
+        cy.wait(InterceptAliases.QuerySuggestions);
+        Expect.displaySuggestionList(true);
+        Expect.numberOfSuggestions(1);
       });
 
       scope('with custom #redirectUrl', () => {
+        const query = 'test';
         visitStandaloneSearchBox({
           redirectUrl: '/full-search-example',
         });
+
+        Actions.typeInSearchBox('test');
+        Expect.displayCloseIcon(true);
+        Actions.submitSearch();
+        Expect.urlHashContains(`/full-search-example#q=${query}`);
       });
     });
   });
