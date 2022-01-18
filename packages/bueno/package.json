@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.34.1",
+  "version": "0.34.2",
   "files": [
     "dist/"
   ],
@@ -22,7 +22,7 @@
     "start": "concurrently \"npm run typedefinitions -- -w\" \"node esbuild.js dev\"",
     "build": "npm run typedefinitions & node esbuild.js",
     "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
-    "clean": "rimraf -f -r dist/*",
+    "clean": "rimraf -rf dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
     "npm:publish": "node ../../scripts/deploy/publish.js",

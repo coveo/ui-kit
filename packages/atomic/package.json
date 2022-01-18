@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.23.5",
+  "version": "1.23.6",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -25,7 +25,7 @@
     "collection-manifest.json"
   ],
   "scripts": {
-    "clean": "rimraf -f -r dist/* headless/*",
+    "clean": "rimraf -rf dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
@@ -46,8 +46,8 @@
     "doc:list-assets": "node scripts/list-assets.js"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.34.1",
-    "@coveo/headless": "^1.41.12",
+    "@coveo/bueno": "^0.34.2",
+    "@coveo/headless": "^1.42.0",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/store": "1.5.0",
     "coveo-styleguide": "^9.26.0",
