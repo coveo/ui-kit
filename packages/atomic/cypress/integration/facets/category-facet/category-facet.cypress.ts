@@ -390,7 +390,7 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetAssertions.assertLogFacetShowMore();
       });
 
-      describe('repeatedly until there\'s no more "Show more" button', () => {
+      describe.skip('repeatedly until there\'s no more "Show more" button', () => {
         function setupRepeatShowMore() {
           setupWithDefaultSettings();
           pressShowMoreUntilImpossible(CategoryFacetSelectors);

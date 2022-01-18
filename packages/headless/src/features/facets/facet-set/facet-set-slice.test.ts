@@ -13,7 +13,11 @@ import {
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {executeSearch} from '../../search/search-actions';
+import {
+  executeSearch,
+  ExecuteSearchThunkReturn,
+  fetchFacetValues,
+} from '../../search/search-actions';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
@@ -29,8 +33,12 @@ import {
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {
+  fetchProductListing,
+  FetchProductListingThunkReturn,
+} from '../../product-listing/product-listing-actions';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {PayloadAction} from '@reduxjs/toolkit';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -332,14 +340,14 @@ describe('facet-set slice', () => {
     });
   });
 
-  describe('#executeSearch.fulfilled', () => {
-    function buildExecuteSearchAction(facets: FacetResponse[]) {
-      const search = buildMockSearch();
-      search.response.facets = facets;
-
-      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
-    }
-
+  function testFulfilledSearchRequest(
+    searchBuilder: (
+      facets: FacetResponse[]
+    ) => PayloadAction<
+      ExecuteSearchThunkReturn | FetchProductListingThunkReturn,
+      string
+    >
+  ) {
     it('updates the currentValues of facet requests to the values in the response', () => {
       const id = '1';
       const facetValue = buildMockFacetValue({value: 'TED'});
@@ -347,7 +355,7 @@ describe('facet-set slice', () => {
 
       state[id] = buildMockFacetRequest({facetId: id});
 
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
       const finalState = facetSetReducer(state, action);
 
       const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
@@ -359,7 +367,7 @@ describe('facet-set slice', () => {
       state[id] = buildMockFacetRequest({freezeCurrentValues: true});
 
       const facet = buildMockFacetResponse({facetId: id});
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
 
       const finalState = facetSetReducer(state, action);
       expect(finalState[id].freezeCurrentValues).toBe(false);
@@ -370,7 +378,7 @@ describe('facet-set slice', () => {
       state[id] = buildMockFacetRequest({preventAutoSelect: true});
 
       const facet = buildMockFacetResponse({facetId: id});
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
 
       const finalState = facetSetReducer(state, action);
       expect(finalState[id].preventAutoSelect).toBe(false);
@@ -379,10 +387,36 @@ describe('facet-set slice', () => {
     it('response containing unregistered facet ids does not throw', () => {
       const id = '1';
       const facet = buildMockFacetResponse({facetId: id});
-      const action = buildExecuteSearchAction([facet]);
+      const action = searchBuilder([facet]);
 
       expect(() => facetSetReducer(state, action)).not.toThrow();
     });
+  }
+
+  describe('#executeSearch.fulfilled', () => {
+    function buildExecuteSearchAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+    }
+
+    testFulfilledSearchRequest(buildExecuteSearchAction);
+  });
+
+  describe('#fetchFacetValues.fulfilled', () => {
+    function buildFetchFacetValuesAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return fetchFacetValues.fulfilled(
+        search,
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+    }
+
+    testFulfilledSearchRequest(buildFetchFacetValuesAction);
   });
 
   describe('#fetchProductListing.fulfilled', () => {
@@ -393,49 +427,7 @@ describe('facet-set slice', () => {
       return fetchProductListing.fulfilled(productListing, '');
     }
 
-    it('updates the currentValues of facet requests to the values in the response', () => {
-      const id = '1';
-      const facetValue = buildMockFacetValue({value: 'TED'});
-      const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
-
-      state[id] = buildMockFacetRequest({facetId: id});
-
-      const action = buildFetchProductListingAction([facet]);
-      const finalState = facetSetReducer(state, action);
-
-      const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
-      expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
-    });
-
-    it('sets #freezeCurrentValues to false', () => {
-      const id = '1';
-      state[id] = buildMockFacetRequest({freezeCurrentValues: true});
-
-      const facet = buildMockFacetResponse({facetId: id});
-      const action = buildFetchProductListingAction([facet]);
-
-      const finalState = facetSetReducer(state, action);
-      expect(finalState[id].freezeCurrentValues).toBe(false);
-    });
-
-    it('sets #preventAutoSelect to false', () => {
-      const id = '1';
-      state[id] = buildMockFacetRequest({preventAutoSelect: true});
-
-      const facet = buildMockFacetResponse({facetId: id});
-      const action = buildFetchProductListingAction([facet]);
-
-      const finalState = facetSetReducer(state, action);
-      expect(finalState[id].preventAutoSelect).toBe(false);
-    });
-
-    it('response containing unregistered facet ids does not throw', () => {
-      const id = '1';
-      const facet = buildMockFacetResponse({facetId: id});
-      const action = buildFetchProductListingAction([facet]);
-
-      expect(() => facetSetReducer(state, action)).not.toThrow();
-    });
+    testFulfilledSearchRequest(buildFetchProductListingAction);
   });
 
   describe('#selectFacetSearchResult with a registered id', () => {

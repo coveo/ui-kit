@@ -10,6 +10,7 @@ import {
   ExecuteSearchThunkReturn,
   fetchMoreResults,
   StateNeededByExecuteSearch,
+  fetchFacetValues,
 } from './search-actions';
 
 /**
@@ -55,6 +56,23 @@ export interface SearchActionCreators {
       ClientThunkExtraArguments<SearchAPIClient>
     >
   >;
+
+  /**
+   * Creates an action that only fetches facet values without affecting the rest of the state.
+   *
+   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
+   * @returns A dispatchable action.
+   */
+  fetchFacetValues(
+    analyticsSearchAction: SearchAction
+  ): AsyncThunkAction<
+    ExecuteSearchThunkReturn,
+    SearchAction,
+    AsyncThunkOptions<
+      StateNeededByExecuteSearch,
+      ClientThunkExtraArguments<SearchAPIClient>
+    >
+  >;
 }
 
 /**
@@ -68,5 +86,6 @@ export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
   return {
     executeSearch,
     fetchMoreResults,
+    fetchFacetValues,
   };
 }

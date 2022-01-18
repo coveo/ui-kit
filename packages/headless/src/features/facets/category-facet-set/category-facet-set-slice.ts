@@ -29,7 +29,7 @@ import {
   handleCategoryFacetDeselectAll,
   selectPath,
 } from './category-facet-reducer-helpers';
-import {executeSearch} from '../../search/search-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
@@ -152,28 +152,17 @@ export const categoryFacetSetReducer = createReducer(
         const path = [...value.path, value.rawValue];
         selectPath(facet.request, path, facet.initialNumberOfValues);
       })
+      .addCase(fetchFacetValues.fulfilled, (state, action) => {
+        handleCategoryFacetResponseUpdate(
+          state,
+          action.payload.response.facets
+        );
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        const {facets} = action.payload.response;
-
-        facets.forEach((response) => {
-          if (!isCategoryFacetResponse(state, response)) {
-            return;
-          }
-
-          const id = response.facetId;
-          const request = state[id]?.request;
-
-          if (!request) {
-            return;
-          }
-
-          const requestWasInvalid = isRequestInvalid(request, response);
-
-          request.currentValues = requestWasInvalid
-            ? []
-            : request.currentValues;
-          request.preventAutoSelect = false;
-        });
+        handleCategoryFacetResponseUpdate(
+          state,
+          action.payload.response.facets
+        );
       });
   }
 );
@@ -236,6 +225,29 @@ function buildCategoryFacetValueRequest(
     retrieveChildren: true,
     retrieveCount,
   };
+}
+
+function handleCategoryFacetResponseUpdate(
+  state: CategoryFacetSetState,
+  facets: AnyFacetResponse[]
+) {
+  facets.forEach((response) => {
+    if (!isCategoryFacetResponse(state, response)) {
+      return;
+    }
+
+    const id = response.facetId;
+    const request = state[id]?.request;
+
+    if (!request) {
+      return;
+    }
+
+    const requestWasInvalid = isRequestInvalid(request, response);
+
+    request.currentValues = requestWasInvalid ? [] : request.currentValues;
+    request.preventAutoSelect = false;
+  });
 }
 
 function handleCategoryFacetNestedNumberOfValuesUpdate(

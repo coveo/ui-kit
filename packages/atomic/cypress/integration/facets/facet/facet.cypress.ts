@@ -689,7 +689,7 @@ describe('Facet v1 Test Suites', () => {
       FacetAssertions.assertLogFacetShowMore(field);
     });
 
-    describe('repeatedly until there\'s no more "Show more" button', () => {
+    describe.skip('repeatedly until there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
         new TestFixture()
           .with(addFacet({field, label, 'number-of-values': 100}))
