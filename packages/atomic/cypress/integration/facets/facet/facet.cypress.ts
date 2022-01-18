@@ -832,7 +832,7 @@ describe('Facet v1 Test Suites', () => {
         .init();
     });
 
-    FacetAssertions.assertValuesSortedByOccurences();
+    FacetAssertions.assertValuesSortedByOccurrences();
   });
 
   describe('when defining a value caption', () => {

@@ -75,7 +75,7 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetSelectors,
         categoryFacetLabel
       );
-      CategoryFacetAssertions.assertValuesSortedByOccurences();
+      CategoryFacetAssertions.assertValuesSortedByOccurrences();
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
