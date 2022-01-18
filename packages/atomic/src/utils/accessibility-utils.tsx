@@ -46,7 +46,7 @@ export function FocusTarget() {
         }
         if (
           focusAfterSearch &&
-          this.bindings.engine.state.search.searchResponseId !== lastSearchId
+          this.bindings.engine.state.search.response.searchUid !== lastSearchId
         ) {
           focusAfterSearch = false;
           if (element) {
@@ -59,12 +59,12 @@ export function FocusTarget() {
       const focusTargetController: FocusTargetController = {
         setTarget: (el) => el && (element = el),
         focusAfterSearch: () => {
-          lastSearchId = this.bindings.engine.state.search.searchResponseId;
+          lastSearchId = this.bindings.engine.state.search.response.searchUid;
           focusAfterSearch = true;
         },
         disableForCurrentSearch: () =>
-          this.bindings.engine.state.search.searchResponseId !== lastSearchId &&
-          (focusAfterSearch = false),
+          this.bindings.engine.state.search.response.searchUid !==
+            lastSearchId && (focusAfterSearch = false),
       };
       this[setterName] = focusTargetController;
     };

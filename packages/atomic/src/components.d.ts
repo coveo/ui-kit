@@ -117,6 +117,9 @@ export namespace Components {
     interface AtomicDidYouMean {
     }
     interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
         "selector": string;
     }
     interface AtomicFacet {
@@ -1346,6 +1349,9 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
         "selector"?: string;
     }
     interface AtomicFacet {

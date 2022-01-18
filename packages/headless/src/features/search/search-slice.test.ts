@@ -399,20 +399,41 @@ describe('search-slice', () => {
     });
   });
 
-  it('when a fetchFacetValues fulfilled is received, updates the facet state', () => {
-    const response = buildMockSearchResponse({
-      facets: [buildMockFacetResponse()],
-    });
-    const searchState = buildMockSearch({
-      response,
-    });
-    const action = fetchFacetValues.fulfilled(
-      searchState,
-      '',
-      logFacetShowMore('')
-    );
+  describe('when a fetchFacetValues fulfilled is received', () => {
+    it('updates the facet state', () => {
+      const response = buildMockSearchResponse({
+        facets: [buildMockFacetResponse()],
+      });
+      const initialState = buildMockSearch({
+        response,
+      });
+      const action = fetchFacetValues.fulfilled(
+        initialState,
+        '',
+        logFacetShowMore('')
+      );
 
-    const finalState = searchReducer(state, action);
-    expect(finalState.response.facets).toEqual(response.facets);
+      const finalState = searchReducer(state, action);
+      expect(finalState.response.facets).toEqual(response.facets);
+    });
+
+    it('updates the searchUid, but not the searchResponseId', () => {
+      const response = buildMockSearchResponse({
+        facets: [buildMockFacetResponse()],
+      });
+      const initialState = buildMockSearch({
+        response,
+        searchResponseId: 'test',
+      });
+      const action = fetchFacetValues.fulfilled(
+        initialState,
+        '',
+        logFacetShowMore('')
+      );
+
+      const finalState = searchReducer(state, action);
+      expect(finalState.response.searchUid).toEqual(response.searchUid);
+      expect(finalState.searchResponseId).not.toEqual('test');
+    });
   });
 });
