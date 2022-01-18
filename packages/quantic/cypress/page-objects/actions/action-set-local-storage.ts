@@ -1,11 +1,3 @@
-export const typeQueriesListLocalStorage = (queries: string) =>
-  cy
-    .get('c-action-set-local-storage input')
-    .type(queries)
-    .get('c-action-set-local-storage .configurator__set-local-storage')
-    .click()
-    .logAction('when setting the local storage');
-
 export const setRecentResultsListLocalStorage = () =>
   cy
     .get('c-action-set-local-storage .configurator__set-local-storage')

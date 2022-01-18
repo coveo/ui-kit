@@ -38,6 +38,12 @@ function standaloneSearchBoxExpectations(
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the suggestion list`);
     },
+    numberOfSuggestions: (value: number) => {
+      selector
+        .suggestionList()
+        .should('have.length', value)
+        .logDetail(`should display ${value} suggestions`);
+    },
     placeholderContains: (placeholder: string) => {
       selector
         .input()

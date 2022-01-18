@@ -1,11 +1,11 @@
 import {configure} from '../../page-objects/configurator';
-import {interceptSearch} from '../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  routeMatchers,
+} from '../../page-objects/search';
 import {StandaloneSearchBoxExpectations as Expect} from './standalone-search-box-expectations';
 import {StandaloneSearchBoxActions as Actions} from './standalone-search-box-actions';
-import {
-  clearLocalStorage,
-  typeQueriesListLocalStorage,
-} from '../../page-objects/actions/action-set-local-storage';
 import {scope} from '../../reporters/detailed-collector';
 
 interface StandaloneSearchBoxOptions {
@@ -13,6 +13,25 @@ interface StandaloneSearchBoxOptions {
   withoutSubmitButton: boolean;
   numberOfSuggestions: number;
   redirectUrl: string;
+}
+
+function mockSuggestions() {
+  cy.intercept(routeMatchers.querySuggest, (req) => {
+    req.continue((res) => {
+      res.body.completions = [
+        {
+          expression: 'test',
+          highlighted: '[test]',
+        },
+        {
+          expression: 'test 2',
+          highlighted: '[test][2]',
+        },
+      ];
+      res.body.responseId = 21322434;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }
 
 describe('quantic-standalone-search-box', () => {
@@ -39,17 +58,19 @@ describe('quantic-standalone-search-box', () => {
       scope('when submitting a search', () => {
         visitStandaloneSearchBox();
 
-        Actions.typeInSearchBox('some query');
+        Actions.typeInSearchBox('test');
         Expect.displayCloseIcon(true);
+        Actions.submitSearch();
       });
 
-      scope('when setting queries in local storage', () => {
-        typeQueriesListLocalStorage(
-          '["query 1", "query 2", "query 3", "query 4", "query 5", "query 6"]'
-        );
+      scope('when setting suggestions', () => {
+        mockSuggestions();
         visitStandaloneSearchBox();
-        Actions.typeInSearchBox('q');
-        clearLocalStorage();
+
+        Actions.focusSearchBox();
+        cy.wait(InterceptAliases.QuerySuggestions);
+        Expect.displaySuggestionList(true);
+        Expect.numberOfSuggestions(2);
       });
     });
   });
@@ -84,7 +105,7 @@ describe('quantic-standalone-search-box', () => {
 
       scope('with custom #redirectUrl', () => {
         visitStandaloneSearchBox({
-          redirectUrl: 'http://google.com',
+          redirectUrl: '/full-search-example',
         });
       });
     });
