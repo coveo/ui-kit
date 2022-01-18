@@ -13,6 +13,10 @@ import {
 import {Schema, NumberValue} from '@coveo/bueno';
 import Arrow from '../../../images/arrow-right.svg';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -28,9 +32,6 @@ export class AtomicResultPrintableUri {
   @Element() public host!: HTMLElement;
 
   @State() listExpanded = false;
-  private strings = {
-    collapsedUriParts: () => this.bindings.i18n.t('collapsed-uri-parts'),
-  };
   @State() error!: Error;
 
   /**
@@ -50,6 +51,9 @@ export class AtomicResultPrintableUri {
    */
   @Prop() target = '_self';
 
+  @FocusTarget()
+  private expandedPartFocus!: FocusTargetController;
+
   private interactiveResult!: InteractiveResult;
 
   public connectedCallback() {
@@ -68,13 +72,18 @@ export class AtomicResultPrintableUri {
     });
   }
 
+  private getIndexOfEllipsis(parentsCount: number) {
+    return Math.min(parentsCount - 1, this.maxNumberOfParts);
+  }
+
   private renderEllipsis() {
     return (
       <li>
         <button
-          aria-label={this.strings.collapsedUriParts()}
+          aria-label={this.bindings.i18n.t('collapsed-uri-parts')}
           onClick={(e) => {
             e.preventDefault();
+            this.expandedPartFocus.focusOnNextTarget();
             this.listExpanded = true;
           }}
         >
@@ -88,12 +97,13 @@ export class AtomicResultPrintableUri {
   private get allParents() {
     const parentsXml = parseXML(`${this.result.raw.parents}`);
     const parents = Array.from(parentsXml.getElementsByTagName('parent'));
+    const ellipsisIndex = this.getIndexOfEllipsis(parents.length);
     return parents.map((parent, i) => {
       const name = parent.getAttribute('name');
       const uri = parent.getAttribute('uri')!;
       return (
         <li>
-          {this.renderLink(name, uri)}
+          {this.renderLink(name, uri, i === ellipsisIndex)}
           {i === parents.length - 1 ? null : this.renderSeparator()}
         </li>
       );
@@ -105,6 +115,7 @@ export class AtomicResultPrintableUri {
       <atomic-icon
         class="result-printable-uri-separator"
         icon={Arrow}
+        role="separator"
       ></atomic-icon>
     );
   }
@@ -115,10 +126,7 @@ export class AtomicResultPrintableUri {
       return parents;
     }
 
-    const lastIndexBeforeEllipsis = Math.min(
-      parents.length - 2,
-      this.maxNumberOfParts - 1
-    );
+    const lastIndexBeforeEllipsis = this.getIndexOfEllipsis(parents.length) - 1;
     return [
       parents.slice(0, lastIndexBeforeEllipsis),
       this.renderEllipsis(),
@@ -126,13 +134,18 @@ export class AtomicResultPrintableUri {
     ];
   }
 
-  private renderLink(content: VNode | string | null, uri: string) {
+  private renderLink(
+    content: VNode | string | null,
+    uri: string,
+    shouldSetTarget: boolean
+  ) {
     return (
       <LinkWithResultAnalytics
         interactiveResult={this.interactiveResult}
         href={uri}
         title={typeof content === 'string' ? content : undefined}
         target={this.target}
+        ref={shouldSetTarget ? this.expandedPartFocus.setTarget : undefined}
       >
         {content}
       </LinkWithResultAnalytics>
@@ -142,12 +155,15 @@ export class AtomicResultPrintableUri {
   public render() {
     const parents = this.renderParents();
     if (parents.length) {
-      return <ul>{parents}</ul>;
+      return (
+        <ul aria-label={this.bindings.i18n.t('printable-uri')}>{parents}</ul>
+      );
     }
 
     return this.renderLink(
       <atomic-result-text field="printableUri"></atomic-result-text>,
-      this.result.clickUri
+      this.result.clickUri,
+      false
     );
   }
 }

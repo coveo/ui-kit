@@ -695,6 +695,10 @@
     "en": "Source",
     "fr": "Source"
   },
+  "printable-uri": {
+    "en": "Source path of the result",
+    "fr": "Chemin source du résultat"
+  },
   "collapsed-uri-parts": {
     "en": "Collapsed URI parts",
     "fr": "Segments d'URI réduits"
