@@ -225,6 +225,40 @@ export const fetchMoreResults = createAsyncThunk<
   }
 );
 
+export const fetchFacetValues = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  SearchAction,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchFacetValues',
+  async (
+    analyticsAction: SearchAction,
+    {getState, dispatch, rejectWithValue, extra: {apiClient}}
+  ) => {
+    const state = getState();
+    const fetched = await fetchFromAPI(
+      apiClient,
+      state,
+      await buildFetchFacetValuesRequest(state)
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
+
+    return {
+      ...fetched,
+      analyticsAction,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
+    };
+  }
+);
+
 const getStateAfterResponse: (
   query: string,
   duration: number,
@@ -291,6 +325,16 @@ const buildFetchMoreRequest = async (
       (state.pagination?.firstResult ?? 0) +
       (state.search?.results.length ?? 0),
   };
+  return mappedRequest;
+};
+
+const buildFetchFacetValuesRequest = async (
+  state: StateNeededByExecuteSearch
+): Promise<MappedSearchRequest> => {
+  const mappedRequest = await buildSearchRequest(state);
+  // Specifying a numberOfResults of 0 will not log the query as a full fledged query in the API
+  // it will also alleviate the load on the index
+  mappedRequest.request.numberOfResults = 0;
   return mappedRequest;
 };
 

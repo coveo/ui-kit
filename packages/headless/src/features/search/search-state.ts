@@ -31,7 +31,7 @@ export interface SearchState {
    */
   results: Result[];
   /**
-   * The unique ID of the response, taken from the response's `searchUid`. This value will not change when loading more results.
+   * The unique ID of the response, taken from the response's `searchUid`. This value will not change when loading more results or fetching new facet values.
    */
   searchResponseId: string;
   /**
