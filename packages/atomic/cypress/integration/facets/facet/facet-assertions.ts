@@ -1,7 +1,7 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   doSortAlphanumeric,
-  doSortOccurences,
+  doSortOccurrences,
 } from '../../../utils/componentUtils';
 import {FacetSelectors} from './facet-selectors';
 
@@ -54,11 +54,11 @@ export function assertValuesSortedAlphanumerically() {
   });
 }
 
-export function assertValuesSortedByOccurences() {
-  it('values should be ordered by occurences', () => {
+export function assertValuesSortedByOccurrences() {
+  it('values should be ordered by occurrences', () => {
     FacetSelectors.valueCount().as('facetAllValuesCount');
     cy.getTextOfAllElements('@facetAllValuesCount').then((originalValues) => {
-      expect(originalValues).to.eql(doSortOccurences(originalValues));
+      expect(originalValues).to.eql(doSortOccurrences(originalValues));
     });
   });
 }

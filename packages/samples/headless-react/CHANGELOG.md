@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.2](https://github.com/coveo/ui-kit/compare/headless-react@0.49.1...headless-react@0.49.2) (2022-01-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.49.1](https://github.com/coveo/ui-kit/compare/headless-react@0.49.0...headless-react@0.49.1) (2022-01-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.49.0](https://github.com/coveo/ui-kit/compare/headless-react@0.48.0...headless-react@0.49.0) (2022-01-18)
+
+
+### Features
+
+* **headless:** Add FrequentlyViewedSameCategory and FrequentlyViewedDifferentCategory strategies ([#1667](https://github.com/coveo/ui-kit/issues/1667)) ([48af22f](https://github.com/coveo/ui-kit/commit/48af22f30173517bf28b62d88f49009621aaa073))
+
+
+
+
+
+# [0.48.0](https://github.com/coveo/ui-kit/compare/headless-react@0.47.5...headless-react@0.48.0) (2022-01-17)
+
+
+### Features
+
+* **atomic:** make assets and language available for atomic-react ([#1663](https://github.com/coveo/ui-kit/issues/1663)) ([514ba25](https://github.com/coveo/ui-kit/commit/514ba255453a94e8c901687a3cbc8dd65033c043))
+
+
+
+
+
 ## [0.47.5](https://github.com/coveo/ui-kit/compare/headless-react@0.47.4...headless-react@0.47.5) (2022-01-14)
 
 **Note:** Version bump only for package headless-react

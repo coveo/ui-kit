@@ -175,6 +175,7 @@ describe('Result Printable Uri Component', () => {
         ResultPrintableUriSelectors.ellipsisButton().click();
         ResultPrintableUriSelectors.ellipsisButton().should('not.exist');
         ResultPrintableUriSelectors.links().should('have.length.above', 3);
+        ResultPrintableUriSelectors.links().eq(3).should('be.focused');
       });
 
       CommonAssertions.assertAccessibility(

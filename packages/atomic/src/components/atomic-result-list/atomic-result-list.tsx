@@ -79,7 +79,8 @@ export class AtomicResultList implements InitializableComponent {
    */
   private enableInfiniteScroll = false;
   /**
-   * A list of fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results, separated by commas.
+   * The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
    */
   @Prop() public fieldsToInclude = '';
   /**

@@ -75,5 +75,19 @@ describe('c/quanticUtils', () => {
         expect(I18nUtils.format(testString, test, buddy)).toBe('this is a test string, buddy.');
       });
     });
+
+    describe('escapeHTML', () => {
+      it('should escape html tags', () => {
+        let htmlWithTags = '<div>test string</div>';
+      
+        expect(I18nUtils.escapeHTML(htmlWithTags)).toBe('&lt;div&gt;test string&lt;/div&gt;');
+      });
+
+      it('should escape html anchor tags', () => {
+        let htmlWithTags = '<a src="http://www.sketchysite.com"></a>';
+      
+        expect(I18nUtils.escapeHTML(htmlWithTags)).toBe("&lt;a src=\"http://www.sketchysite.com\"&gt;&lt;/a&gt;");
+      });
+    });
   });
 });

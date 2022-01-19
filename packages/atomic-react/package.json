@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "0.2.4",
+  "version": "0.3.3",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   "scripts": {
     "build": "npm run clean && npm run compile && npm run copy:assets",
     "dev": "npm link ../samples/headless-react/node_modules/react",
-    "clean": "rm -rf dist",
+    "clean": "rimraf -rf dist",
     "compile": "npm run tsc",
     "tsc": "tsc -p .",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
@@ -24,7 +24,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "^1.23.5"
+    "@coveo/atomic": "^1.24.0"
   },
   "devDependencies": {
     "@types/node": "^15.12.2",
