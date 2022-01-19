@@ -24,7 +24,7 @@ export function AriaLiveRegion(regionName: string) {
 
 export interface FocusTargetController {
   setTarget(element: HTMLElement | undefined): void;
-  focusAfterSearch(): void;
+  focusAfterSearch(): Promise<void>;
   focusOnNextTarget(): void;
   disableForCurrentSearch(): void;
 }
@@ -38,6 +38,7 @@ export function FocusTarget() {
       const {componentDidRender} = this;
       let focusAfterSearch = false;
       let focusOnNextTarget = false;
+      let onFocusCallback: Function | null = null;
       let lastSearchId: string | undefined = undefined;
       let element: HTMLElement | undefined = undefined;
 
@@ -53,7 +54,10 @@ export function FocusTarget() {
           focusAfterSearch = false;
           if (element) {
             const el = element;
-            setTimeout(() => el.focus());
+            setTimeout(() => {
+              el.focus();
+              onFocusCallback?.();
+            });
           }
         }
       };
@@ -67,14 +71,17 @@ export function FocusTarget() {
           if (focusOnNextTarget) {
             focusOnNextTarget = false;
             element.focus();
+            onFocusCallback?.();
           }
         },
         focusAfterSearch: () => {
           lastSearchId = this.bindings.engine.state.search.response.searchUid;
           focusAfterSearch = true;
+          return new Promise((resolve) => (onFocusCallback = resolve));
         },
         focusOnNextTarget: () => {
           focusOnNextTarget = true;
+          return new Promise((resolve) => (onFocusCallback = resolve));
         },
         disableForCurrentSearch: () =>
           this.bindings.engine.state.search.response.searchUid !==
