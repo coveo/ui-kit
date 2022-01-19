@@ -227,7 +227,7 @@ describe('Color Facet Test Suites', () => {
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
     });
 
-    describe('repeatedly until there\'s no more "Show more" button', () => {
+    describe('when there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
         new TestFixture()
           .with(
