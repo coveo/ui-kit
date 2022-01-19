@@ -14,13 +14,13 @@ interface WrapperProps extends JSX.AtomicSearchInterface {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
-   * If not provided, a default function will be used, to execute the first query immediately after initialization.
+   * If not provided, a default function will be used, which execute the first query immediately after initialization.
    */
   onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
   /**
    * An optional `theme` property can be set in order to load one of the premade Coveo theme.
    *
-   * Currently, possible values are`coveo`, `accessible` and `none`.
+   * Possible values are `coveo`, `accessible` and `none`.
    *
    * - `coveo` is the default theme, and will be used if no value is provided. It consist of a set of color that matches the Coveo brand.
    * - `accessible` is a high contrast theme, best suited for implementations where web accessibility is important.

@@ -9,8 +9,8 @@ import ReactDOMServer from 'react-dom/server';
  */
 interface WrapperProps extends AtomicJSX.AtomicResultList {
   /**
-   * A template function that receives a result parameter,
-   * that can be used to conditionally render different type of result templates based on properties of the result,.
+   * A template function that receives a result parameter.
+   * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
   template: (result: Result) => JSX.Element;
 }
