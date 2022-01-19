@@ -93,3 +93,19 @@ export type {
   DictionaryFieldContextPayload,
 } from './controllers/dictionary-field-context/headless-dictionary-field-context';
 export {buildDictionaryFieldContext} from './controllers/dictionary-field-context/headless-dictionary-field-context';
+
+export type {
+  FrequentlyViewedSameCategoryListOptions,
+  FrequentlyViewedSameCategoryListProps,
+  FrequentlyViewedSameCategoryListState,
+  FrequentlyViewedSameCategoryList,
+} from './controllers/product-recommendations/headless-frequently-viewed-same-category';
+export {buildFrequentlyViewedSameCategoryList} from './controllers/product-recommendations/headless-frequently-viewed-same-category';
+
+export type {
+  FrequentlyViewedDifferentCategoryListOptions,
+  FrequentlyViewedDifferentCategoryListProps,
+  FrequentlyViewedDifferentCategoryListState,
+  FrequentlyViewedDifferentCategoryList,
+} from './controllers/product-recommendations/headless-frequently-viewed-different-category';
+export {buildFrequentlyViewedDifferentCategoryList} from './controllers/product-recommendations/headless-frequently-viewed-different-category';

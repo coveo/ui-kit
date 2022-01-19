@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.2...@coveo/quantic@1.7.3) (2022-01-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.1...@coveo/quantic@1.7.2) (2022-01-18)
+
+
+### Bug Fixes
+
+* **quantic:** added escape util for showing query in rich-text ([#1671](https://github.com/coveo/ui-kit/issues/1671)) ([71670dd](https://github.com/coveo/ui-kit/commit/71670dd2bdbbd1b46ce4a0df57bc7406bd84efa5))
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.0...@coveo/quantic@1.7.1) (2022-01-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.11...@coveo/quantic@1.7.0) (2022-01-14)
+
+
+### Features
+
+* **quantic:** Case Classification Component ([#1599](https://github.com/coveo/ui-kit/issues/1599)) ([057c597](https://github.com/coveo/ui-kit/commit/057c5979ea52191aa60e10f30fc436893c41e65e))
+
+
+
+
+
 ## [1.6.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.10...@coveo/quantic@1.6.11) (2022-01-13)
 
 **Note:** Version bump only for package @coveo/quantic

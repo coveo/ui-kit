@@ -1,7 +1,7 @@
 {
   "name": "@coveo/auth",
   "private": false,
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Functions to help authenticate with the Coveo platform.",
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
@@ -17,7 +17,7 @@
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
-    "clean": "rimraf -f -r dist/*",
+    "clean": "rimraf -rf dist/*",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "e2e:saml": "vite manual-e2e/saml/"
   },

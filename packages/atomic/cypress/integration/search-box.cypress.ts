@@ -107,7 +107,6 @@ describe('Search Box Test Suites', () => {
             cy.wait(TestFixture.interceptAliases.Search);
           });
 
-          SearchBoxAssertions.assertFocusSearchBox();
           SearchBoxAssertions.assertHasText('Recent query 1');
         });
       });
