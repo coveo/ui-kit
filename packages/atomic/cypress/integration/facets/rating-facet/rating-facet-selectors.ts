@@ -10,7 +10,6 @@ export const RatingFacetSelectors = {
     RatingFacetSelectors.shadow().find('[part="label-button"]'),
   valueRating: () =>
     RatingFacetSelectors.shadow().find('[part="value-rating"]'),
-  valueLabel: () => RatingFacetSelectors.shadow().find('[part="value-label"]'),
   selectedCheckboxValue: () =>
     RatingFacetSelectors.shadow().find(
       '[part="value-checkbox"][aria-checked="true"]'
@@ -19,6 +18,16 @@ export const RatingFacetSelectors = {
     RatingFacetSelectors.shadow().find(
       '[part="value-checkbox"][aria-checked="false"]'
     ),
+  checkboxValueWithText: (text: string) =>
+    RatingFacetSelectors.shadow()
+      .find(`[part="value-rating"][aria-label="${text}"]`)
+      .parent()
+      .parent()
+      .find('[part="value-checkbox"]'),
+  idleCheckboxValueLabel: () =>
+    RatingFacetSelectors.idleCheckboxValue()
+      .parent()
+      .find('[part="value-rating"]'),
   selectedLinkValue: () =>
     RatingFacetSelectors.shadow().find(
       '[part="value-link"][aria-pressed="true"]'
@@ -26,6 +35,14 @@ export const RatingFacetSelectors = {
   idleLinkValue: () =>
     RatingFacetSelectors.shadow().find(
       '[part="value-link"][aria-pressed="false"]'
+    ),
+  selectedLinkValueWithText: (text: string) =>
+    RatingFacetSelectors.shadow().find(
+      `[part="value-link"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
+    ),
+  idleLinkValueLabel: () =>
+    RatingFacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="false"] [part="value-rating"]'
     ),
   facetValueAtIndex: (index: number) =>
     RatingFacetSelectors.valueRating().eq(index),

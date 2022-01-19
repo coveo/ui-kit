@@ -11,6 +11,12 @@ export const ColorFacetSelectors = {
     ColorFacetSelectors.shadow().find(
       '[part="value-box"][aria-pressed="false"]'
     ),
+  selectedBoxValueWithText: (text: string) =>
+    ColorFacetSelectors.shadow().find(
+      `[part="value-box"][aria-pressed="true"]:contains("${text}")`
+    ),
+  idleBoxValueLabel: () =>
+    ColorFacetSelectors.idleBoxValue().find('[part="value-label"]'),
   clearButton: () => ColorFacetSelectors.shadow().find('[part="clear-button"]'),
   labelButton: () => ColorFacetSelectors.shadow().find('[part="label-button"]'),
   values: () => ColorFacetSelectors.shadow().find('[part="values"]'),

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.50.0](https://github.com/coveo/ui-kit/compare/headless-react@0.49.2...headless-react@0.50.0) (2022-01-19)
+
+
+### Features
+
+* **atomic:** expose idiomatic react templating functionality ([#1677](https://github.com/coveo/ui-kit/issues/1677)) ([0876408](https://github.com/coveo/ui-kit/commit/0876408ef1ae5aeda7d731b0bede8f69ccdeaa35))
+
+
+
+
+
 ## [0.49.2](https://github.com/coveo/ui-kit/compare/headless-react@0.49.1...headless-react@0.49.2) (2022-01-18)
 
 **Note:** Version bump only for package headless-react

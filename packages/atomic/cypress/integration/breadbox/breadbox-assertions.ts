@@ -191,9 +191,7 @@ export function assertDeselectColorFacet(index: number) {
 
 export function assertLogBreadcrumbFacet(field: string) {
   it('should log the breadcrumb facet to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'breadcrumbFacet');
+    cy.expectSearchEvent('breadcrumbFacet').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
     });
   });
@@ -212,13 +210,7 @@ export function assertLogBreadcrumbCategoryFacet(field: string) {
 
 export function assertLogBreadcrumbClearAll() {
   it('should log the breadcrumb facet clearAll to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property(
-        'actionCause',
-        'breadcrumbResetAll'
-      );
-    });
+    cy.expectSearchEvent('breadcrumbResetAll');
   });
 }
 
