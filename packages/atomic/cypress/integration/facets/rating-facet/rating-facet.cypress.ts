@@ -14,6 +14,7 @@ import {
   RatingFacetSelectors,
 } from './rating-facet-selectors';
 import {
+  pressClearButton,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from '../facet-common-actions';
@@ -70,7 +71,6 @@ describe('Rating Facet Test Suites', () => {
         function setupSelectCheckboxValue() {
           setupRatingFacet();
           selectIdleCheckboxValueAt(RatingFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -152,7 +152,6 @@ describe('Rating Facet Test Suites', () => {
         function setupSelectLinkValue() {
           setupRatingFacetWithLinkValues();
           selectIdleLinkValueAt(RatingFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -181,9 +180,7 @@ describe('Rating Facet Test Suites', () => {
         describe('when selecting the "Clear" button', () => {
           function setupClearCheckboxValues() {
             setupSelectLinkValue();
-            cy.wait(TestFixture.interceptAliases.UA);
-            RatingFacetSelectors.clearButton().click();
-            cy.wait(TestFixture.interceptAliases.Search);
+            pressClearButton(RatingFacetSelectors);
           }
 
           describe('verify rendering', () => {

@@ -8,7 +8,7 @@ export function doSortAlphanumeric(originalValues: string[]) {
     .sort((first, second) => first.localeCompare(second));
 }
 
-export function doSortOccurences(originalValues: string[]) {
+export function doSortOccurrences(originalValues: string[]) {
   return originalValues
     .concat()
     .map((value) => parseInt(value.replaceAll(',', '')))

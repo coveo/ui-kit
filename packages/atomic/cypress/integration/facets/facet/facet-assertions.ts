@@ -1,7 +1,6 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   doSortAlphanumeric,
-  doSortOccurences,
+  doSortOccurrences,
 } from '../../../utils/componentUtils';
 import {FacetSelectors} from './facet-selectors';
 
@@ -29,9 +28,7 @@ export function assertNumberOfIdleBoxValues(value: number) {
 
 export function assertLogFacetSelect(field: string, index: number) {
   it('should log the facet select results to UA ', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
       expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
       expect(analyticsBody.facetState[0]).to.have.property('field', field);
@@ -54,20 +51,18 @@ export function assertValuesSortedAlphanumerically() {
   });
 }
 
-export function assertValuesSortedByOccurences() {
-  it('values should be ordered by occurences', () => {
+export function assertValuesSortedByOccurrences() {
+  it('values should be ordered by occurrences', () => {
     FacetSelectors.valueCount().as('facetAllValuesCount');
     cy.getTextOfAllElements('@facetAllValuesCount').then((originalValues) => {
-      expect(originalValues).to.eql(doSortOccurences(originalValues));
+      expect(originalValues).to.eql(doSortOccurrences(originalValues));
     });
   });
 }
 
 export function assertLogFacetShowMore(field: string) {
   it('should log the facet show more results to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('eventType', 'facet');
+    cy.expectCustomEvent('facet').then((analyticsBody) => {
       expect(analyticsBody).to.have.property(
         'eventValue',
         'showMoreFacetResults'
@@ -79,9 +74,7 @@ export function assertLogFacetShowMore(field: string) {
 
 export function assertLogFacetShowLess(field: string) {
   it('should log the facet show less results to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('eventType', 'facet');
+    cy.expectCustomEvent('facet').then((analyticsBody) => {
       expect(analyticsBody).to.have.property(
         'eventValue',
         'showLessFacetResults'

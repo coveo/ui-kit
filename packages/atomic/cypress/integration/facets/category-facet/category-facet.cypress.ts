@@ -15,15 +15,18 @@ import {
   hierarchicalField,
   selectSearchResultAt,
   categoryFacetLabel,
-  pressShowMore,
-  pressShowLess,
   pressParentButton,
-  pressClearButton,
   pressActiveParent,
   pressAllCategoriesButton,
 } from './category-facet-actions';
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {pressLabelButton, typeFacetSearchQuery} from '../facet-common-actions';
+import {
+  pressClearButton,
+  pressLabelButton,
+  typeFacetSearchQuery,
+  pressShowLess,
+  pressShowMore,
+} from '../facet-common-actions';
 import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
 import {breadboxComponent} from '../../breadbox/breadbox-selectors';
 import {
@@ -71,7 +74,7 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetSelectors,
         categoryFacetLabel
       );
-      CategoryFacetAssertions.assertValuesSortedByOccurences();
+      CategoryFacetAssertions.assertValuesSortedByOccurrences();
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
@@ -129,7 +132,7 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the "Show more" button', () => {
         function setupShowMore() {
           setupGoDeeperOneLevel();
-          pressShowMore();
+          pressShowMore(CategoryFacetSelectors);
         }
 
         describe('verify rendering', () => {
@@ -151,7 +154,7 @@ describe('Category Facet Test Suites', () => {
         describe('when selecting the "Show less" button', () => {
           function setupShowLess() {
             setupShowMore();
-            pressShowLess();
+            pressShowLess(CategoryFacetSelectors);
           }
 
           describe('verify rendering', () => {
@@ -339,7 +342,7 @@ describe('Category Facet Test Suites', () => {
           describe('when selecting the "Clear" button', () => {
             function setupClearBoxValues() {
               setupSelectLabelCollapse();
-              pressClearButton();
+              pressClearButton(CategoryFacetSelectors);
             }
 
             describe('verify rendering', () => {
@@ -365,7 +368,7 @@ describe('Category Facet Test Suites', () => {
     describe('when selecting the "Show more" button, when there\'s no more "Show more" button', () => {
       function setupShowMore() {
         setupWithDefaultSettings();
-        pressShowMore();
+        pressShowMore(CategoryFacetSelectors);
       }
 
       describe('verify rendering', () => {
@@ -390,7 +393,7 @@ describe('Category Facet Test Suites', () => {
       describe('when selecting the "Show less" button', () => {
         function setupShowLess() {
           setupShowMore();
-          pressShowLess();
+          pressShowLess(CategoryFacetSelectors);
         }
 
         describe('verify rendering', () => {
@@ -551,7 +554,7 @@ describe('Category Facet Test Suites', () => {
       const query = 'mal';
       function setupSearchFor() {
         setupWithFacetSearch();
-        typeFacetSearchQuery(CategoryFacetSelectors, query);
+        typeFacetSearchQuery(CategoryFacetSelectors, query, true);
       }
 
       describe('verify rendering', () => {
@@ -662,7 +665,7 @@ describe('Category Facet Test Suites', () => {
       const query = 'nonono';
       function setupSearchForNoValues() {
         setupWithFacetSearch();
-        typeFacetSearchQuery(CategoryFacetSelectors, query);
+        typeFacetSearchQuery(CategoryFacetSelectors, query, false);
       }
 
       describe('verify rendering', () => {

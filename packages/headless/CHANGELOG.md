@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.0...@coveo/headless@1.43.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* **headless:** Add export for category recommendation strategies ([#1678](https://github.com/coveo/ui-kit/issues/1678)) ([6a540c3](https://github.com/coveo/ui-kit/commit/6a540c3e66db218d6f5cdb36028a6e077a531e7a))
+* Typos for occurrences ([a1d0d16](https://github.com/coveo/ui-kit/commit/a1d0d16b0440affeb00118b0b1cfabc5cf9d9cb1))
+
+
+
+
+
+# [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.42.0...@coveo/headless@1.43.0) (2022-01-18)
+
+
+### Features
+
+* **headless:** facet show more/less improvements ([#1670](https://github.com/coveo/ui-kit/issues/1670)) ([1bc70ae](https://github.com/coveo/ui-kit/commit/1bc70aed9fbd2ef15e4d03955ab980a2d40627f0))
+
+
+
+
+
 # [1.42.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.12...@coveo/headless@1.42.0) (2022-01-18)
 
 
