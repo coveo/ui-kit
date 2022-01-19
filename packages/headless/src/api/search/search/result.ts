@@ -172,14 +172,4 @@ export interface Result {
    * TopResult
    */
   rankingModifier?: string;
-
-  /**
-   * The child results as returned in a product grouping context.
-   */
-  childResults: Result[];
-
-  /**
-   * The total number of items in the group.
-   */
-  totalNumberOfChildResults: number;
 }

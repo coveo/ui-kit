@@ -25,8 +25,6 @@ export function buildMockResult(config: Partial<Result> = {}): Result {
     summaryHighlights: [],
     absentTerms: [],
     raw: buildMockRaw(),
-    childResults: [],
-    totalNumberOfChildResults: 0,
     ...config,
   };
 }

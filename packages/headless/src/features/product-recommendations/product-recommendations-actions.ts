@@ -25,6 +25,17 @@ import {logProductRecommendations} from './product-recommendations-analytics.act
 import {SearchAction} from '../analytics/analytics-utils';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 
+interface ResultWithChildren extends Result {
+  childResults: ResultWithChildren[];
+  totalNumberOfChildResults: number;
+}
+
+function isResultWithChildren(result: Result): result is ResultWithChildren {
+  return (
+    result && 'childResults' in result && 'totalNumberOfChildResults' in result
+  );
+}
+
 export type StateNeededByGetProductRecommendations = ConfigurationSection &
   ProductRecommendationsSection &
   Partial<ProductRecommendationsAppState>;
@@ -174,7 +185,7 @@ const mapResultToProductResult = (
   const ec_promo_price = result.raw.ec_promo_price as number | undefined;
   const ec_in_stock = result.raw.ec_in_stock as string | undefined;
 
-  return {
+  const recommendation: ProductRecommendation = {
     permanentid: result.raw.permanentid!,
     clickUri: result.clickUri,
     ec_name: result.raw.ec_name as string,
@@ -199,13 +210,18 @@ const mapResultToProductResult = (
       (all, field) => ({...all, [field]: result.raw[field]}),
       {}
     ),
-    childResults: Array.isArray(result.childResults)
-      ? result.childResults.map((childResult) =>
-          mapResultToProductResult(childResult, {additionalFields})
-        )
-      : result.childResults,
-    totalNumberOfChildResults: result.totalNumberOfChildResults,
+    childResults: [],
+    totalNumberOfChildResults: 0,
   };
+
+  if (isResultWithChildren(result)) {
+    recommendation.childResults = result.childResults.map((childResult) =>
+      mapResultToProductResult(childResult, {additionalFields})
+    );
+    recommendation.totalNumberOfChildResults = result.totalNumberOfChildResults;
+  }
+
+  return recommendation;
 };
 
 export const buildProductRecommendationsRequest = async (

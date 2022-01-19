@@ -75,14 +75,14 @@ export interface ProductRecommendation {
   additionalFields: Record<string, unknown>;
 
   /**
-   * A list of child product recommendations in a product grouping context
+   * A list of child product recommendations in a product grouping context.
    */
-  childResults?: ProductRecommendation[];
+  childResults: ProductRecommendation[];
 
   /**
-   * The total number of items in the group
+   * The total number of items in the group.
    */
-  totalNumberOfChildResults?: number;
+  totalNumberOfChildResults: number;
 }
 
 // Change this list when changing the fields exposed by `ProductRecommendation`
