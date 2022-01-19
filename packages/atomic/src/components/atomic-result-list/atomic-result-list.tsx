@@ -102,7 +102,17 @@ export class AtomicResultList implements InitializableComponent {
 
   private renderingFunction?: (result: Result) => HTMLElement = undefined;
 
-  @Method() public setRenderFunction(render: (result: Result) => HTMLElement) {
+  /**
+   * Set a rendering function, that will bypass the standard HTML template mechanism to render results.
+   * This render function is typically used for integration with web frameworks that do not normally use raw HTML, such as React, Angular or Vue.
+   *
+   * Under normal circumstances, this method should not be used when integrating Atomic in a standard HTML based deployment.
+   *
+   * @param render
+   */
+  @Method() public async setRenderFunction(
+    render: (result: Result) => HTMLElement
+  ) {
     this.renderingFunction = render;
   }
 
