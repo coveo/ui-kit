@@ -12,6 +12,16 @@ export const NumericFacetSelectors = {
     NumericFacetSelectors.shadow().find(
       '[part="value-checkbox"][aria-checked="false"]'
     ),
+  checkboxValueWithText: (text: string) =>
+    NumericFacetSelectors.shadow()
+      .find(`[part="value-label"]:contains("${text}")`)
+      .parent()
+      .parent()
+      .find('[part="value-checkbox"]'),
+  idleCheckboxValueLabel: () =>
+    NumericFacetSelectors.idleCheckboxValue()
+      .parent()
+      .find('[part="value-label"]'),
   selectedLinkValue: () =>
     NumericFacetSelectors.shadow().find(
       '[part="value-link"][aria-pressed="true"]'
@@ -19,6 +29,14 @@ export const NumericFacetSelectors = {
   idleLinkValue: () =>
     NumericFacetSelectors.shadow().find(
       '[part="value-link"][aria-pressed="false"]'
+    ),
+  selectedLinkValueWithText: (text: string) =>
+    NumericFacetSelectors.shadow().find(
+      `[part="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
+    ),
+  idleLinkValueLabel: () =>
+    NumericFacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="false"] [part="value-label"]'
     ),
   selectedBoxValue: () =>
     NumericFacetSelectors.shadow().find(

@@ -62,18 +62,6 @@ export const addNumericFacetWithRange =
     env.withElement(e);
   };
 
-export function selectIdleCheckboxValueAt(index: number) {
-  NumericFacetSelectors.idleCheckboxValue().eq(index).click();
-}
-
-export function selectIdleLinkValueAt(index: number) {
-  NumericFacetSelectors.idleLinkValue().eq(index).click();
-}
-
-export function selectIdleBoxValueAt(index: number) {
-  NumericFacetSelectors.idleBoxValue().eq(index).click();
-}
-
 export function inputMinValue(value: number | string) {
   NumericFacetSelectors.minInput().type(value.toString(), {force: true});
 }
@@ -82,8 +70,14 @@ export function inputMaxValue(value: number | string) {
   NumericFacetSelectors.maxInput().type(value.toString(), {force: true});
 }
 
-export function clickApplyButton() {
+export function clickApplyButton(shouldBeSuccessful: boolean) {
+  NumericFacetSelectors.clearButton().should('not.exist');
   NumericFacetSelectors.applyButton().click({force: true});
+  if (shouldBeSuccessful) {
+    NumericFacetSelectors.clearButton().should('exist');
+  } else {
+    NumericFacetSelectors.inputInvalid().should('exist');
+  }
 }
 
 export function invokeSubmitButton() {

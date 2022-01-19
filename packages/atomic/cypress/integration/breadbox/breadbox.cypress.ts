@@ -57,15 +57,11 @@ describe('Breadbox Test Suites', () => {
   }
 
   describe('when selecting a standard facet and a numeric facet', () => {
-    const selectionIndex = 0;
+    const selectionIndex = 1;
     function setupBreadboxWithSelectedFacetAndNumericFacet() {
       setupBreadboxWithMultipleFacets();
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.UA);
-      cy.wait(TestFixture.interceptAliases.Search);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     describe('verify rendering', () => {
@@ -126,11 +122,7 @@ describe('Breadbox Test Suites', () => {
       cy.wait(TestFixture.interceptAliases.Search);
       cy.wait(TestFixture.interceptAliases.UA);
       selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
       selectIdleBoxValueAt(selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
     }
     describe('verify rendering', () => {
       before(setupBreadboxWithDifferentTypeSelectedFacet);
@@ -152,8 +144,6 @@ describe('Breadbox Test Suites', () => {
       setupBreadboxWithMultipleFacets();
       for (let i = 0; i < 3; i++) {
         selectIdleCheckboxValueAt(FacetSelectors, 0);
-        cy.wait(TestFixture.interceptAliases.Search);
-        cy.wait(TestFixture.interceptAliases.UA);
       }
     });
 
