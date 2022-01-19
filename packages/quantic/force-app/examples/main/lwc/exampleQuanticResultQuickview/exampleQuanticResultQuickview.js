@@ -19,8 +19,8 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
             date: 1591016242000,
             urihash: "5"
         },
-        uri: "https://google.com",
-        clickUri: "https://google.com"
+        uri: "/full-search-example",
+        clickUri: "/full-search-example"
     }
 
     pageTitle = 'Quantic Result Quickview';
@@ -30,7 +30,7 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
             attribute: 'result',
             label: 'Result',
             description: 'The result to retrieve a quickview for.',
-            defaultValue: this.result
+            defaultValue: JSON.stringify(this.result)
         },
         {
             attribute: 'maximumPreviewSize',
@@ -62,6 +62,7 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
 
     handleTryItNow(evt) {
         this.config = evt.detail;
+        this.config.result = JSON.parse(evt.detail.result);
         this.isConfigured = true;
     }
 }

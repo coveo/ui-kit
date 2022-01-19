@@ -5,26 +5,25 @@ import {ResultQuickviewActions as Actions} from './result-quickview-actions';
 import {scope} from '../../reporters/detailed-collector';
 
 interface ResultQuickviewOptions {
-  result: object;
+  result: string;
   maximumPreviewSize: number;
   previewButtonIcon: string;
   previewButtonLabel: string;
   previewButtonVariant: string;
 }
 
-function mockResultHtmlContent(html?: string) {
+function mockResultHtmlContent(tag: string, innerHtml?: string) {
   cy.intercept('POST', '**/rest/search/v2/html?*', (req) => {
     req.continue((res) => {
-      const div = document.createElement('div');
-      div.innerText = html ? html : 'this is a response';
-      res.headers = {contentType: 'text/html'};
-      res.body = div;
+      const element = document.createElement(tag);
+      element.innerHTML = innerHtml ? innerHtml : 'this is a response';
+      res.body = element;
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  });
 }
 
-describe('quantic-resultQuickview', () => {
+describe('quantic-result-quickview', () => {
   const pageUrl = 's/quantic-result-quickview';
 
   const haspreview = 'haspreview';
@@ -38,7 +37,7 @@ describe('quantic-resultQuickview', () => {
   describe('with default options', () => {
     it('should work as expected', () => {
       visitResultQuickview();
-      mockResultHtmlContent();
+      mockResultHtmlContent('div');
       scope('when loading the page', () => {
         Expect.events.receivedEvent(true, haspreview);
         Expect.displayButtonPreview(true);
@@ -48,6 +47,8 @@ describe('quantic-resultQuickview', () => {
         Expect.displaySectionPreview(true);
         Expect.displayTitle(true);
         Expect.displayDate(true);
+        Expect.displayContentContainer(true);
+        Expect.displaySpinner(false);
         Expect.logDocumentQuickview('Test');
       });
 
@@ -56,7 +57,7 @@ describe('quantic-resultQuickview', () => {
           hasHtmlVersion: false,
         };
         visitResultQuickview({
-          result: result,
+          result: JSON.stringify(result),
         });
         Expect.displayButtonPreview(true);
         Expect.buttonPreviewIsDisabled(true);
@@ -64,7 +65,7 @@ describe('quantic-resultQuickview', () => {
 
       scope('when receiving a script in html content', () => {
         visitResultQuickview();
-        mockResultHtmlContent('<script>alert("hello")</script>');
+        mockResultHtmlContent('script', 'alert("hello")');
 
         Actions.clickPreview();
         Expect.displaySectionPreview(true);
@@ -83,7 +84,7 @@ describe('quantic-resultQuickview', () => {
         visitResultQuickview({
           previewButtonIcon: 'utility:bug',
         });
-        mockResultHtmlContent();
+        mockResultHtmlContent('div');
 
         Expect.displayButtonPreview(true);
         Expect.displayButtonPreviewIcon(true);
@@ -96,7 +97,7 @@ describe('quantic-resultQuickview', () => {
         visitResultQuickview({
           previewButtonLabel: 'custom label',
         });
-        mockResultHtmlContent();
+        mockResultHtmlContent('div');
 
         Expect.displayButtonPreview(true);
         Expect.buttonPreviewContains('custom label');
@@ -108,7 +109,7 @@ describe('quantic-resultQuickview', () => {
         visitResultQuickview({
           previewButtonVariant: 'outline-brand',
         });
-        mockResultHtmlContent();
+        mockResultHtmlContent('div');
 
         Expect.displayButtonPreview(true, 'outline-brand');
         Actions.clickPreview('outline-brand');

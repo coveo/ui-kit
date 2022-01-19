@@ -7,7 +7,7 @@ const getInputSelector = (field: string): string =>
   `lightning-input[data-cy="cfg-${field}"] input`;
 
 export const configure = (
-  options: Record<string, string | number | boolean | object> = {}
+  options: Record<string, string | number | boolean> = {}
 ) => {
   // The form takes some time to load when Salesforce have been idle for a while.
   cy.get('slot[name="configuration"]', {timeout: 30000});
