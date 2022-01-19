@@ -151,7 +151,6 @@ describe('Color Facet Test Suites', () => {
         function setupSearchFor() {
           setupSelectBoxValue();
           typeFacetSearchQuery(ColorFacetSelectors, query, true);
-          // TODO: wait
         }
 
         describe('verify rendering', () => {
