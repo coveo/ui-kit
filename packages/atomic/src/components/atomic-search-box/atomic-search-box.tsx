@@ -421,9 +421,9 @@ export class AtomicSearchBox {
     return [
       <div
         part="wrapper"
-        class={`relative flex bg-background h-full w-full border border-neutral rounded-md ${
-          this.isExpanded ? 'border-primary ring ring-ring-primary' : ''
-        }`}
+        class={
+          'relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary'
+        }
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}
