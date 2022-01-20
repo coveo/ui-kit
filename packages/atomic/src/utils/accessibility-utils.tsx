@@ -25,7 +25,7 @@ export function AriaLiveRegion(regionName: string) {
 export interface FocusTargetController {
   setTarget(element: HTMLElement | undefined): void;
   focusAfterSearch(): Promise<void>;
-  focusOnNextTarget(): void;
+  focusOnNextTarget(): Promise<void>;
   disableForCurrentSearch(): void;
 }
 
