@@ -120,6 +120,7 @@ describe('quantic-standalone-search-box', () => {
         Expect.displayClearButton(true);
         Actions.submitSearch();
         Expect.urlHashContains(`/full-search-example#q=${query}`);
+        Expect.logSearchFromLink(query);
       });
     });
   });

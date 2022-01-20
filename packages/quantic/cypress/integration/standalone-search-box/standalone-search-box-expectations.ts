@@ -1,3 +1,4 @@
+import {InterceptAliases} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {
   StandaloneSearchBoxSelectors,
@@ -55,6 +56,18 @@ function standaloneSearchBoxExpectations(
       cy.url()
         .should('include', redirectUrl)
         .logDetail(`URL hash should contain "${redirectUrl}"`);
+    },
+    logSearchFromLink: (query: string) => {
+      cy.wait(InterceptAliases.UA.SearchFromLink)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property(
+            'actionCause',
+            'searchFromLink'
+          );
+          expect(analyticsBody).to.have.property('queryText', query);
+        })
+        .logDetail('should log the "searchFromLink" UA event');
     },
   };
 }
