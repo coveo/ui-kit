@@ -15,22 +15,17 @@ describe('Pager Test Suites', () => {
   }
 
   function componentLoaded(numberOfPages: number) {
-    const totalLi = numberOfPages + 2;
     PagerSelectors.pager().should('be.visible');
-    PagerSelectors.li()
-      .find('button')
-      .contains(numberOfPages.toString())
-      .should('be.visible');
+    PagerSelectors.pageButton(numberOfPages).should('be.visible');
     PagerSelectors.buttonPrevious().should('be.visible');
     PagerSelectors.buttonNext().should('be.visible');
-    PagerSelectors.li().its('length').should('eq', totalLi);
+    PagerSelectors.pageButtons().its('length').should('eq', numberOfPages);
     cy.checkA11y(pagerComponent);
   }
 
   function checkPagerSelected(pageNumber: string, selected: boolean) {
     const isContain = selected ? 'contain' : 'not.contain';
-    PagerSelectors.li()
-      .contains(pageNumber)
+    PagerSelectors.pageButton(pageNumber)
       .should('have.attr', 'part')
       .and(isContain, 'active-page-button');
   }
@@ -82,7 +77,7 @@ describe('Pager Test Suites', () => {
     });
 
     it('should go to page 3 and log UA on button Pager', async () => {
-      PagerSelectors.li().find('button').contains('3').click();
+      PagerSelectors.pageButton(3).click();
       checkPagerSelected('3', true);
       checkPagerSelected('1', false);
       validateUrlhash(3);
@@ -95,7 +90,7 @@ describe('Pager Test Suites', () => {
     });
 
     it('should load more numbers when click 5', () => {
-      PagerSelectors.li().find('button').contains('5').click();
+      PagerSelectors.pageButton(5).click();
       checkPagerSelected('5', true);
       checkPagerSelected('6', false);
     });
@@ -106,7 +101,7 @@ describe('Pager Test Suites', () => {
       new TestFixture()
         .withElement(generateComponentHTML(pagerComponent))
         .init();
-      PagerSelectors.li().find('button[aria-label="Page 5"]').click();
+      PagerSelectors.pageButton(5).click();
       cy.wait(TestFixture.interceptAliases.Search);
     });
 
