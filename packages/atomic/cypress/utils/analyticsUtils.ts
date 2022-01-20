@@ -56,10 +56,12 @@ export class AnalyticsTracker {
     this.analytics = [];
   }
 
-  static getLastSearchEvent() {
+  static getLastSearchEvent(actionCause: string) {
     return findLast(
       this.analytics,
-      isSearchEventRequest
+      (analyticsBody) =>
+        isSearchEventRequest(analyticsBody) &&
+        analyticsBody.actionCause === actionCause
     ) as SearchEventRequest | null;
   }
 
@@ -70,10 +72,12 @@ export class AnalyticsTracker {
     ) as ClickEventRequest | null;
   }
 
-  static getLastCustomEvent() {
+  static getLastCustomEvent(eventType: string) {
     return findLast(
       this.analytics,
-      isCustomEventRequest
+      (analyticsBody) =>
+        isCustomEventRequest(analyticsBody) &&
+        analyticsBody.eventType === eventType
     ) as CustomEventRequest | null;
   }
 }
