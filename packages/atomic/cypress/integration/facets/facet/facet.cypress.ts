@@ -487,6 +487,7 @@ describe('Facet v1 Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleLinkValueAt(FacetSelectors, 5);
           }
 
@@ -625,6 +626,7 @@ describe('Facet v1 Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleBoxValueAt(5);
           }
 

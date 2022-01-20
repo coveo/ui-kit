@@ -31,6 +31,7 @@ import {
   breadboxComponent,
   BreadboxSelectors,
 } from '../../breadbox/breadbox-selectors';
+import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
@@ -176,6 +177,7 @@ describe('Color Facet Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleBoxValueAt(0);
           }
 
