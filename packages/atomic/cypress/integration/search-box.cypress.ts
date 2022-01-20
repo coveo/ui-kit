@@ -57,21 +57,6 @@ describe('Search Box Test Suites', () => {
         .init();
     }
 
-    function setupWithRecentQueries() {
-      new TestFixture()
-        .with(setRecentQueries(numOfRecentQueries))
-        .with(
-          addSearchBox({
-            recentQueries: {
-              maxWithoutQuery: maxRecentQueriesWithoutQuery,
-              maxWithQuery: numOfRecentQueries,
-            },
-            props: {'number-of-queries': numOfRecentQueries},
-          })
-        )
-        .init();
-    }
-
     describe('without input', () => {
       const expectedSum =
         maxSuggestionsWithoutQuery + maxRecentQueriesWithoutQuery;
@@ -121,12 +106,10 @@ describe('Search Box Test Suites', () => {
 
       describe('after focusing a suggestion with the keyboard', () => {
         before(() => {
-          setupWithRecentQueries();
-          setInputText();
+          setupWithSuggestionsAndRecentQueries();
 
-          SearchBoxSelectors.inputBox()
-            .focus()
-            .type('{downarrow}{downarrow}{downarrow}');
+          const downKeys = Array(9).fill('{downarrow}').join('');
+          SearchBoxSelectors.inputBox().type(`Rec${downKeys}`, {delay: 200});
         });
 
         SearchBoxAssertions.assertHasText('Recent query 1');
