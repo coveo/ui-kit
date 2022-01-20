@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.25.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.1...@coveo/atomic@1.25.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* **atomic:** made search-box maintain focus effect after selecting suggestions ([#1682](https://github.com/coveo/ui-kit/issues/1682)) ([65f348b](https://github.com/coveo/ui-kit/commit/65f348b4e8de8d53bb7e18f9e3053ec3d20f3341))
+
+
+
+
+
 ## [1.25.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.0...@coveo/atomic@1.25.1) (2022-01-19)
 
 **Note:** Version bump only for package @coveo/atomic

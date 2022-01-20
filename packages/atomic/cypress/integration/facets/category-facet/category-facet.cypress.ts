@@ -23,7 +23,6 @@ import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   pressClearButton,
   pressLabelButton,
-  pressShowMoreUntilImpossible,
   typeFacetSearchQuery,
   pressShowLess,
   pressShowMore,
@@ -366,7 +365,7 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe('when selecting the "Show more" button', () => {
+    describe('when selecting the "Show more" button, when there\'s no more "Show more" button', () => {
       function setupShowMore() {
         setupWithDefaultSettings();
         pressShowMore(CategoryFacetSelectors);
@@ -383,32 +382,12 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           true
         );
+        CommonFacetAssertions.assertFocusShowLess(CategoryFacetSelectors);
       });
 
       describe('verify analytics', () => {
         before(setupShowMore);
         CategoryFacetAssertions.assertLogFacetShowMore();
-      });
-
-      describe.skip('repeatedly until there\'s no more "Show more" button', () => {
-        function setupRepeatShowMore() {
-          setupWithDefaultSettings();
-          pressShowMoreUntilImpossible(CategoryFacetSelectors);
-        }
-
-        describe('verify rendering', () => {
-          before(setupRepeatShowMore);
-
-          CommonFacetAssertions.assertDisplayShowMoreButton(
-            CategoryFacetSelectors,
-            false
-          );
-          CommonFacetAssertions.assertDisplayShowLessButton(
-            CategoryFacetSelectors,
-            true
-          );
-          CommonFacetAssertions.assertFocusShowLess(CategoryFacetSelectors);
-        });
       });
 
       describe('when selecting the "Show less" button', () => {
