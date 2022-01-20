@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.25.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.0...@coveo/atomic@1.25.1) (2022-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.25.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.24.0...@coveo/atomic@1.25.0) (2022-01-19)
+
+
+### Bug Fixes
+
+* Typos for occurrences ([a1d0d16](https://github.com/coveo/ui-kit/commit/a1d0d16b0440affeb00118b0b1cfabc5cf9d9cb1))
+
+
+### Features
+
+* **atomic:** expose idiomatic react templating functionality ([#1677](https://github.com/coveo/ui-kit/issues/1677)) ([0876408](https://github.com/coveo/ui-kit/commit/0876408ef1ae5aeda7d731b0bede8f69ccdeaa35))
+
+
+
+
+
 # [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.23.7...@coveo/atomic@1.24.0) (2022-01-18)
 
 

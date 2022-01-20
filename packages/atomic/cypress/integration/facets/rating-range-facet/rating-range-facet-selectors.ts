@@ -21,6 +21,14 @@ export const RatingRangeFacetSelectors = {
     RatingRangeFacetSelectors.shadow().find(
       '[part="value-link"][aria-pressed="false"]'
     ),
+  selectedLinkValueWithText: (text: string) =>
+    RatingRangeFacetSelectors.shadow().find(
+      `[part="value-link"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
+    ),
+  idleLinkValueLabel: () =>
+    RatingRangeFacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="false"] [part="value-rating"]'
+    ),
   facetValueAtIndex: (index: number) =>
     RatingRangeFacetSelectors.valueRating().eq(index),
   facetValueLabelAtIndex: (index: number) =>

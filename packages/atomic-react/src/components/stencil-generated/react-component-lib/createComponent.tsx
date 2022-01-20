@@ -6,6 +6,7 @@ import {
   dashToPascalCase,
   isCoveredByReact,
   mergeRefs,
+  camelToDashCase
 } from './utils';
 
 export interface HTMLStencilElement extends HTMLElement {
@@ -65,7 +66,7 @@ export const createReactComponent = <
             (acc as any)[name] = (cProps as any)[name];
           }
         } else {
-          (acc as any)[name] = (cProps as any)[name];
+          (acc as any)[camelToDashCase(name)] = (cProps as any)[name];
         }
         return acc;
       }, {});

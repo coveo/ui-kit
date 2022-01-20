@@ -1,0 +1,21 @@
+diff --git a/node_modules/@stencil/react-output-target/react-component-lib/createComponent.tsx b/node_modules/@stencil/react-output-target/react-component-lib/createComponent.tsx
+index d179160..e0901d6 100644
+--- a/node_modules/@stencil/react-output-target/react-component-lib/createComponent.tsx
++++ b/node_modules/@stencil/react-output-target/react-component-lib/createComponent.tsx
+@@ -6,6 +6,7 @@ import {
+   dashToPascalCase,
+   isCoveredByReact,
+   mergeRefs,
++  camelToDashCase
+ } from './utils';
+ 
+ export interface HTMLStencilElement extends HTMLElement {
+@@ -65,7 +66,7 @@ export const createReactComponent = <
+             (acc as any)[name] = (cProps as any)[name];
+           }
+         } else {
+-          (acc as any)[name] = (cProps as any)[name];
++          (acc as any)[camelToDashCase(name)] = (cProps as any)[name];
+         }
+         return acc;
+       }, {});

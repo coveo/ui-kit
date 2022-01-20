@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.24.0",
+  "version": "1.25.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -43,11 +43,12 @@
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",
-    "doc:list-assets": "node scripts/list-assets.js"
+    "doc:list-assets": "node scripts/list-assets.js",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@coveo/bueno": "^0.34.2",
-    "@coveo/headless": "^1.43.0",
+    "@coveo/headless": "^1.43.1",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/store": "1.5.0",
     "coveo-styleguide": "^9.26.0",
@@ -98,6 +99,7 @@
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "6.0.0",
     "ncp": "2.0.0",
+    "patch-package": "^6.4.7",
     "postcss-focus-visible": "6.0.1",
     "postcss-import": "14.0.2",
     "postcss-mixins": "8.1.0",
