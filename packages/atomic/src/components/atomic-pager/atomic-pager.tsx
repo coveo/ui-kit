@@ -20,7 +20,7 @@ import {
   FocusTargetController,
 } from '../../utils/accessibility-utils';
 import {randomID} from '../../utils/utils';
-import {createRipple} from '../../utils/ripple';
+import {RadioButton} from '../common/radio-button';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -137,22 +137,19 @@ export class AtomicPager implements InitializableComponent {
       parts.push('active-page-button');
     }
     return (
-      <input
+      <RadioButton
         key={page}
-        type="radio"
-        name={this.radioGroupName}
+        groupName={this.radioGroupName}
+        style="outline-neutral"
         checked={isSelected}
-        aria-current={isSelected ? 'page' : 'false'}
-        aria-label={this.bindings.i18n.t('page-number', {page})}
-        onChange={(e) =>
-          (e.currentTarget as HTMLInputElement).checked && this.selectPage(page)
-        }
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-        class={`btn-page btn-outline-neutral ${isSelected ? 'selected' : ''}`}
+        ariaCurrent={isSelected ? 'page' : 'false'}
+        ariaLabel={this.bindings.i18n.t('page-number', {page})}
+        onChecked={() => this.selectPage(page)}
+        class="btn-page"
         part={parts.join(' ')}
-        value={page.toLocaleString(this.bindings.i18n.language)}
+        text={page.toLocaleString(this.bindings.i18n.language)}
         ref={isSelected ? this.activePage.setTarget : undefined}
-      />
+      ></RadioButton>
     );
   }
 
