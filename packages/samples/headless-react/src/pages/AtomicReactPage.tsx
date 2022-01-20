@@ -191,19 +191,6 @@ function MyTemplate(result: Result) {
           )}
         </AtomicResultFieldsList>
       </AtomicResultSectionBottomMetadata>
-      <AtomicTableElement label="Description">
-        <AtomicResultLink />
-      </AtomicTableElement>
-      <AtomicTableElement label="Price">
-        <AtomicResultNumber field="ec_price">
-          <AtomicFormatCurrency currency="USD" />
-        </AtomicResultNumber>
-      </AtomicTableElement>
-      <AtomicTableElement label="Rating">
-        <AtomicResultNumber field="ec_rating">
-          <AtomicResultRating field="ec_rating" />
-        </AtomicResultNumber>
-      </AtomicTableElement>
     </>
   );
 }
