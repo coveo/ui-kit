@@ -934,7 +934,6 @@ describe('Facet v1 Test Suites', () => {
         function setupDeselectFacetValue() {
           setupSelectedFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {

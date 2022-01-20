@@ -5,7 +5,6 @@ import {
   FacetWithLinkSelector,
 } from '../facets/facet-common-assertions';
 import {BreadboxSelectors} from './breadbox-selectors';
-import {TestFixture} from '../../fixtures/test-fixture';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
 import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';

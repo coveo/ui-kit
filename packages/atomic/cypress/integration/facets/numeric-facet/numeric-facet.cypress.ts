@@ -1141,7 +1141,6 @@ describe('Numeric Facet V1 Test Suites', () => {
         function setupDeselectNumericFacetValue() {
           setupSelectedNumericFacetValue();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {

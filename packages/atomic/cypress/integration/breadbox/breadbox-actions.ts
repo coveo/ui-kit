@@ -9,4 +9,7 @@ export const addBreadbox =
 
 export function deselectBreadcrumbAtIndex(index: number) {
   BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(index).click();
+  BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(index).should(
+    'not.exist'
+  );
 }

@@ -523,7 +523,6 @@ describe('Color Facet Test Suites', () => {
         function setupDeselectColorFacetValue() {
           setupSelectedColorFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
