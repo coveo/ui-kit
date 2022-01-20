@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.43.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.1...@coveo/headless@1.43.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* **headless:** add product grouping support ([#1669](https://github.com/coveo/ui-kit/issues/1669)) ([5754c08](https://github.com/coveo/ui-kit/commit/5754c0824ce28046503bb39905cee00505888f5d))
+
+
+
+
+
 ## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.0...@coveo/headless@1.43.1) (2022-01-19)
 
 
