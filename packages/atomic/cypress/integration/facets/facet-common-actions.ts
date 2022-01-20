@@ -110,20 +110,6 @@ export function pressShowLess(
     });
 }
 
-export function pressShowMoreUntilImpossible(
-  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
-) {
-  FacetWithShowMoreLessSelector.showMoreButton().then((jq) => {
-    const [el] = jq.filter(':visible');
-    if (!el) {
-      return;
-    }
-    el.click();
-    cy.wait(TestFixture.interceptAliases.Search);
-    pressShowMoreUntilImpossible(FacetWithShowMoreLessSelector);
-  });
-}
-
 export function pressLabelButton(
   BaseFacetSelector: BaseFacetSelector,
   shouldBecomeCollapsed: boolean

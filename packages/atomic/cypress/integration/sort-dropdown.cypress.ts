@@ -94,7 +94,7 @@ describe('When sort with invalid criteria option', () => {
     shouldRenderErrorComponent(sortDropdown);
   });
 
-  it.skip('Should render an error when "<atomic-sort-dropdown" is missing', () => {
+  it.skip('Should render an error when "atomic-sort-dropdown" is missing', () => {
     setUpPage(`
     <atomic-sort-expression label="Relevance" criteria="${expressions[0]}"></atomic-sort-expression>
       `);
