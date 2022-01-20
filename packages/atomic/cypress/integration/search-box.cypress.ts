@@ -36,7 +36,8 @@ describe('Search Box Test Suites', () => {
     const numOfRecentQueries = 4;
     const maxSuggestionsWithoutQuery = numOfSuggestions - 1;
     const maxRecentQueriesWithoutQuery = numOfRecentQueries - 1;
-    beforeEach(() => {
+
+    function setupWithSuggestionsAndRecentQueries() {
       new TestFixture()
         .with(setSuggestions(numOfSuggestions))
         .with(setRecentQueries(numOfRecentQueries))
@@ -54,12 +55,14 @@ describe('Search Box Test Suites', () => {
           })
         )
         .init();
-    });
+    }
 
     describe('without input', () => {
       const expectedSum =
         maxSuggestionsWithoutQuery + maxRecentQueriesWithoutQuery;
-      beforeEach(() => {
+
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().click();
       });
 
@@ -72,20 +75,29 @@ describe('Search Box Test Suites', () => {
 
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
-      beforeEach(() => {
+
+      function setInputText() {
         SearchBoxSelectors.inputBox().type('Rec');
+      }
+
+      describe('verify rendering', () => {
+        before(() => {
+          setupWithSuggestionsAndRecentQueries();
+          setInputText();
+        });
+
+        SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
+        CommonAssertions.assertAriaLiveMessage(
+          SearchBoxSelectors.liveRegion,
+          expectedSum.toString()
+        );
       });
 
-      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-      CommonAssertions.assertAriaLiveMessage(
-        SearchBoxSelectors.liveRegion,
-        expectedSum.toString()
-      );
-
       describe('after selecting a suggestion with the mouse', () => {
-        beforeEach(() => {
+        before(() => {
+          setupWithSuggestionsAndRecentQueries();
+          setInputText();
           SearchBoxSelectors.querySuggestions().eq(1).click();
-          cy.wait(TestFixture.interceptAliases.Search);
         });
 
         SearchBoxAssertions.assertFocusSearchBox();
@@ -93,18 +105,18 @@ describe('Search Box Test Suites', () => {
       });
 
       describe('after focusing a suggestion with the keyboard', () => {
-        beforeEach(() => {
-          SearchBoxSelectors.inputBox()
-            .focus()
-            .type('{downarrow}{downarrow}{downarrow}');
+        before(() => {
+          setupWithSuggestionsAndRecentQueries();
+
+          const downKeys = Array(9).fill('{downarrow}').join('');
+          SearchBoxSelectors.inputBox().type(`Rec${downKeys}`, {delay: 200});
         });
 
         SearchBoxAssertions.assertHasText('Recent query 1');
 
         describe('after pressing the search button', () => {
-          beforeEach(() => {
+          before(() => {
             SearchBoxSelectors.submitButton().click();
-            cy.wait(TestFixture.interceptAliases.Search);
           });
 
           SearchBoxAssertions.assertHasText('Recent query 1');
