@@ -18,13 +18,13 @@ interface WrapperProps extends JSX.AtomicSearchInterface {
    */
   onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
   /**
-   * An optional `theme` property can be set in order to load one of the premade Coveo theme.
+   * An optional `theme` property can be set in order to load one of the premade Coveo themes.
    *
-   * Possible values are `coveo`, `accessible` and `none`.
+   * Possible values are:
    *
-   * - `coveo` is the default theme, and will be used if no value is provided. It consist of a set of color that matches the Coveo brand.
-   * - `accessible` is a high contrast theme, best suited for implementations where web accessibility is important.
-   * - `none` means that no premade theme will be loaded. You will have to provide the theme yourself.
+   * - `coveo`: the default theme, used if no value is provided. It consists of a set of colors that match the Coveo brand.
+   * - `accessible`: a high contrast theme, best suited for implementations where web accessibility is important.
+   * - `none`: no premade theme will be loaded. You will have to provide the theme yourself.
    *
    * Read more about theming and visual customization here : https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/
    */
@@ -39,7 +39,7 @@ const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'theme'>> = {
 };
 
 /**
- * This component serves as a wrapper for the core AtomicSearchInterface
+ * This component serves as a wrapper for the core AtomicSearchInterface.
  * @param props
  * @returns
  */

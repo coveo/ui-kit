@@ -33,21 +33,21 @@ It is important to respect the folder hierarchy, with SVG icons under the `asset
 
 ## Result templates
 
-Creating different type of results templates based on the type of content returned by the Coveo platform is a very common theme when building a Coveo search page.
+Rendering different types of result templates based on the type of content returned by the Coveo platform is very common when building a Coveo search page.
 
-The way to create result templates for an HTML project using the [core Atomic library](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) involves defining one or multiple `atomic-result-templates`, configured with HTML properties, adding conditions on the attributes and metadata of each results.
+The way to create result templates for an HTML project using the [core Atomic library](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) involves defining one or multiple `atomic-result-template` components, configured with HTML properties, adding conditions on the attributes and metadata of each results.
 
-Coupled with the [template](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this works very well in a pure HTML project.
+Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this works very well in a pure HTML project.
 
 However, this can be limiting and awkward to use in a React project using JSX.
 
-Atomic React expose an `AtomicResultList` component with a `template` props that can be used in a more straightforward manner when coupled with JSX.
+Atomic React exposes an `AtomicResultList` component with a `template` property that can be used in a more straightforward manner when coupled with JSX.
 
-The `template` property accept a function with a `Result` parameter, which can then be used to conditionnally render different templates based on properties and fields available on the result.
+The `template` property accepts a function with a `Result` parameter, which can then be used to conditionally render different templates based on properties and fields available in result items.
 
 The `template` function must then simply return a valid JSX Element.
 
-Here is an example of a fictitious search page, which define some premade templates for YouTube videos, as well as Salesforce cases:
+Here is an example of a fictitious search page, which defines some premade templates for YouTube videos, as well as Salesforce cases:
 
 ```jsx
 const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
