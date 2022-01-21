@@ -30,6 +30,13 @@
     @apply border border-neutral bg-background rounded hover:border-primary-light focus-visible:border-primary no-outline focus-visible:ring-2 focus-visible:ring-ring-primary;
   }
 
+  .btn-radio {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    @apply before:content-[attr(value)];
+  }
+
   .btn-primary {
     @apply rounded bg-primary text-on-primary hover:bg-primary-light no-outline focus-visible:ring-2 focus-visible:ring-ring-primary;
   }

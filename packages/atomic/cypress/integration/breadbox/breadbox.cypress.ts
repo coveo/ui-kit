@@ -15,6 +15,7 @@ import {
 import {
   addBreadbox,
   breadboxLabel,
+  deselectAllBreadcrumbs,
   deselectBreadcrumbAtIndex,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
@@ -84,8 +85,7 @@ describe('Breadbox Test Suites', () => {
     describe('when selecting "Clear all" button', () => {
       function setupClearAllBreadcrumb() {
         setupBreadboxWithSelectedFacetAndNumericFacet();
-        BreadboxSelectors.clearAllButton().click();
-        cy.wait(TestFixture.interceptAliases.Search);
+        deselectAllBreadcrumbs();
       }
 
       describe('verify rendering', () => {
@@ -119,8 +119,6 @@ describe('Breadbox Test Suites', () => {
       const selectionIndex = 0;
       setupBreadboxWithMultipleFacets();
       selectChildValueAt(canadaHierarchyIndex[0]);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
       selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
       selectIdleBoxValueAt(selectionIndex);
     }
@@ -150,7 +148,6 @@ describe('Breadbox Test Suites', () => {
     describe('when clearing the second breadcrumb', () => {
       beforeEach(() => {
         deselectBreadcrumbAtIndex(1);
-        cy.wait(TestFixture.interceptAliases.Search);
       });
 
       BreadboxAssertions.assertFocusBreadcrumb(1);
@@ -159,7 +156,6 @@ describe('Breadbox Test Suites', () => {
     describe('when clearing the last breadcrumb', () => {
       beforeEach(() => {
         deselectBreadcrumbAtIndex(2);
-        cy.wait(TestFixture.interceptAliases.Search);
       });
 
       BreadboxAssertions.assertFocusClearAll();
