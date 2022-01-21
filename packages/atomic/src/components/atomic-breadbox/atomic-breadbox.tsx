@@ -187,9 +187,9 @@ export class AtomicBreadbox implements InitializableComponent {
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate with-colon text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
+            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
           >
-            {breadcrumb.label}
+            {this.bindings.i18n.t('with-colon', {text: breadcrumb.label})}
           </span>
           <span
             part="breadcrumb-value"
@@ -370,8 +370,10 @@ export class AtomicBreadbox implements InitializableComponent {
 
     return (
       <div class="text-on-background text-sm flex">
-        <span part="label" class="font-bold p-2 pl-0 with-colon">
-          {this.bindings.i18n.t('filters')}
+        <span part="label" class="font-bold p-2 pl-0">
+          {this.bindings.i18n.t('with-colon', {
+            text: this.bindings.i18n.t('filters'),
+          })}
         </span>
         <div class="relative flex-grow">
           <ul
