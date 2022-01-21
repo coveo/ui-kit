@@ -43,8 +43,7 @@
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",
-    "doc:list-assets": "node scripts/list-assets.js",
-    "postinstall": "./node_modules/.bin/patch-package"
+    "doc:list-assets": "node scripts/list-assets.js"
   },
   "dependencies": {
     "@coveo/bueno": "^0.34.2",
