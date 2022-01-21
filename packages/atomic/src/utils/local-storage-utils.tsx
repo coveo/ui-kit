@@ -2,7 +2,7 @@ import {StandaloneSearchBoxAnalytics} from '@coveo/headless';
 
 export enum StorageItems {
   RECENT_QUERIES = 'coveo-recent-queries',
-  STANDALONE_SEARCH_BOX_DATA = 'coveo_standalone_search_box_data',
+  STANDALONE_SEARCH_BOX_DATA = 'coveo-standalone-search-box-data',
 }
 
 export interface StandaloneSearchBoxData {

@@ -21,7 +21,6 @@ import {
   buildSearchStatus,
   loadSearchConfigurationActions,
   loadQueryActions,
-  loadSearchAnalyticsActions,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
@@ -242,34 +241,23 @@ export class AtomicSearchInterface {
       return;
     }
 
-    const analyticsAction = this.checkForStandaloneSearchBoxData();
-    this.engine.executeFirstSearch(analyticsAction);
-  }
-
-  private checkForStandaloneSearchBoxData() {
+    const safeStorage = new SafeStorage();
     const standaloneSearchBoxData =
-      new SafeStorage().getParsedJSON<StandaloneSearchBoxData | null>(
+      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
         StorageItems.STANDALONE_SEARCH_BOX_DATA,
         null
       );
 
     if (!standaloneSearchBoxData) {
+      this.engine.executeFirstSearch();
       return;
     }
 
+    safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
     const {updateQuery} = loadQueryActions(this.engine!);
-    const {logSearchFromLink, logOmniboxFromLink} = loadSearchAnalyticsActions(
-      this.engine!
-    );
-
     const {value, analytics} = standaloneSearchBoxData;
-    const {cause, metadata} = analytics;
-
     this.engine!.dispatch(updateQuery({q: value}));
-
-    return cause === 'searchFromLink'
-      ? logSearchFromLink()
-      : logOmniboxFromLink(metadata!);
+    this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
   private initEngine(options: InitializationOptions) {

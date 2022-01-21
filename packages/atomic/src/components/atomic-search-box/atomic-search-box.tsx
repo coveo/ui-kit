@@ -126,16 +126,14 @@ export class AtomicSearchBox {
 
     const {redirectTo, value, analytics} = this.searchBoxState;
 
-    if (redirectTo) {
-      const data = {value, analytics};
-      const storage = new SafeStorage();
-      storage.setItem(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA,
-        JSON.stringify(data)
-      );
-
-      window.location.href = redirectTo;
+    if (redirectTo === '') {
+      return;
     }
+    const data = {value, analytics};
+    const storage = new SafeStorage();
+    storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
+
+    window.location.href = redirectTo;
   }
 
   @Listen('atomic/searchBoxSuggestion/register')

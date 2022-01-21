@@ -113,7 +113,7 @@ describe('headless standalone searchBox', () => {
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
       })),
-      redirectTo: null,
+      redirectTo: '',
       isLoading: false,
       isLoadingSuggestions: false,
       analytics: {

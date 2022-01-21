@@ -66,7 +66,7 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
    * The Url to redirect to.
    */
-  redirectTo: string | null;
+  redirectTo: string;
 }
 
 /**
@@ -143,10 +143,7 @@ export function buildStandaloneSearchBox(
       return {
         ...searchBox.state,
         isLoading: standaloneSearchBoxState.isLoading,
-        redirectTo:
-          standaloneSearchBoxState.redirectTo === ''
-            ? null
-            : standaloneSearchBoxState.redirectTo,
+        redirectTo: standaloneSearchBoxState.redirectTo,
         analytics: standaloneSearchBoxState.analytics,
       };
     },
