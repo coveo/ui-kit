@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -145,6 +145,11 @@ export class AtomicSearchBox {
       return;
     }
     this.pendingSuggestionEvents.push(event.detail);
+  }
+
+  @Watch('redirectionUrl')
+  watchRedirectionUrl() {
+    this.initialize();
   }
 
   private get suggestionBindings(): SearchBoxSuggestionsBindings {
