@@ -1,15 +1,13 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../utils/ripple';
+import {
+  ButtonStyle,
+  getRippleColorForButtonStyle,
+  getClassNameForButtonStyle,
+} from './button-style';
 
-interface ButtonProps {
-  style:
-    | 'primary'
-    | 'outline-primary'
-    | 'outline-neutral'
-    | 'outline-bg-neutral'
-    | 'text-primary'
-    | 'text-neutral'
-    | 'text-transparent';
+export interface ButtonProps {
+  style: ButtonStyle;
   onClick?(): void;
   class?: string;
   text?: string;
@@ -27,38 +25,8 @@ interface ButtonProps {
 }
 
 export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
-  let rippleColor: string;
-  let className: string;
-  switch (props.style) {
-    case 'primary':
-      className = 'btn-primary';
-      rippleColor = 'primary';
-      break;
-    case 'outline-primary':
-      className = 'btn-outline-primary';
-      rippleColor = 'neutral';
-      break;
-    case 'outline-neutral':
-      className = 'btn-outline-neutral';
-      rippleColor = 'neutral';
-      break;
-    case 'outline-bg-neutral':
-      className = 'btn-outline-bg-neutral';
-      rippleColor = 'neutral';
-      break;
-    case 'text-primary':
-      className = 'btn-text-primary';
-      rippleColor = 'neutral';
-      break;
-    case 'text-neutral':
-      className = 'btn-text-neutral';
-      rippleColor = 'neutral';
-      break;
-    case 'text-transparent':
-      className = 'btn-text-transparent';
-      rippleColor = 'neutral-light';
-      break;
-  }
+  const rippleColor = getRippleColorForButtonStyle(props.style);
+  const className = getClassNameForButtonStyle(props.style);
 
   const attributes = {
     class: props.class ? `${className} ${props.class}` : className,

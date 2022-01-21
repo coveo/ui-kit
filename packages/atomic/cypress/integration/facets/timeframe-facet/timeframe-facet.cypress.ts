@@ -513,7 +513,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
         function setupDeselectTimeframeFacetValue() {
           setupSelectedTimeframeFacetValue();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {

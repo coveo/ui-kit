@@ -1,11 +1,9 @@
 import {should} from '../common-assertions';
 import {
-  BaseFacetSelector,
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
 } from '../facets/facet-common-assertions';
 import {BreadboxSelectors} from './breadbox-selectors';
-import {TestFixture} from '../../fixtures/test-fixture';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
 import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';
@@ -129,7 +127,7 @@ export function assertSelectedColorFacetsInBreadcrumb(
 }
 
 export function assertDeselectCheckboxFacet(
-  BaseFacetSelector: BaseFacetSelector,
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   index: number
 ) {
   it('should be deselected after removing from breadcrumb list', () => {
@@ -137,12 +135,11 @@ export function assertDeselectCheckboxFacet(
       .invoke('text')
       .then((value) => {
         deselectBreadcrumbAtIndex(index);
-        BaseFacetSelector.valueLabel()
-          .contains(value)
-          .parent()
-          .parent()
-          .find('[part="value-checkbox"]')
-          .should('have.attr', 'aria-checked', 'false');
+        FacetWithCheckboxSelector.checkboxValueWithText(value).should(
+          'have.attr',
+          'aria-checked',
+          'false'
+        );
       });
   });
 }
@@ -161,14 +158,11 @@ export function assertDeselectLinkFacet(
   it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
-      .then((value) => {
+      .then((text) => {
         deselectBreadcrumbAtIndex(index);
-        FacetWithLinkSelector.selectedLinkValue()
-          .contains(value)
-          .parent()
-          .parent()
-          .find('[part="value-link"]')
-          .should('have.attr', 'aria-pressed', 'false');
+        FacetWithLinkSelector.selectedLinkValueWithText(text).should(
+          'not.exist'
+        );
       });
   });
 }
@@ -177,14 +171,9 @@ export function assertDeselectColorFacet(index: number) {
   it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
-      .then((value) => {
+      .then((text) => {
         deselectBreadcrumbAtIndex(index);
-        ColorFacetSelectors.valueLabel()
-          .contains(value)
-          .parent()
-          .parent()
-          .find('[part="value-box"]')
-          .should('have.attr', 'aria-pressed', 'false');
+        ColorFacetSelectors.selectedBoxValueWithText(text).should('not.exist');
       });
   });
 }

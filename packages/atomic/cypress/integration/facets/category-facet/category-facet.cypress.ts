@@ -734,7 +734,6 @@ describe('Category Facet Test Suites', () => {
         function setupDeselectCategoryFacetValue() {
           setupSelectedCategoryFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {

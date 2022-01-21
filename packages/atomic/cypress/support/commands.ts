@@ -1,6 +1,6 @@
 // Must be declared global to be detected by typescript (allows import/export)
-
-import {AnalyticsTracker, SearchEventRequest} from '../utils/analyticsUtils';
+import {SearchEventRequest} from '@coveo/headless/node_modules/coveo.analytics/src/events';
+import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 // eslint-disable @typescript/interface-name
 declare global {
@@ -20,18 +20,18 @@ declare global {
 
 Cypress.Commands.add('expectSearchEvent', (actionCause) => {
   cy.wrap(AnalyticsTracker)
-    .invoke('getLastSearchEvent')
+    .invoke('getLastSearchEvent', actionCause)
+    .should('not.be.null')
     .should((analyticsBody) => {
-      expect(analyticsBody).to.have.property('actionCause', actionCause);
       return analyticsBody;
     });
 });
 
 Cypress.Commands.add('expectCustomEvent', (eventType) => {
   cy.wrap(AnalyticsTracker)
-    .invoke('getLastCustomEvent')
+    .invoke('getLastCustomEvent', eventType)
+    .should('not.be.null')
     .should((analyticsBody) => {
-      expect(analyticsBody).to.have.property('eventType', eventType);
       return analyticsBody;
     });
 });
