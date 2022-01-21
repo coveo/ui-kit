@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.25.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.3...@coveo/atomic@1.25.4) (2022-01-21)
+
+
+### Bug Fixes
+
+* **atomic:** improved accessibility for pager ([#1686](https://github.com/coveo/ui-kit/issues/1686)) ([1131701](https://github.com/coveo/ui-kit/commit/1131701144cec6e1582685388e69d79a2fc82ed6))
+
+
+
+
+
 ## [1.25.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.2...@coveo/atomic@1.25.3) (2022-01-20)
 
 **Note:** Version bump only for package @coveo/atomic

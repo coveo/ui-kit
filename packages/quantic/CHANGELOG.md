@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.6...@coveo/quantic@1.7.7) (2022-01-21)
+
+
+### Bug Fixes
+
+* **quantic:** Fix flaky test quickview ([#1692](https://github.com/coveo/ui-kit/issues/1692)) ([d51f7af](https://github.com/coveo/ui-kit/commit/d51f7af5476c110e315b3a3fad2ac0a8b63b6dce))
+
+
+
+
+
 ## [1.7.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.5...@coveo/quantic@1.7.6) (2022-01-20)
 
 **Note:** Version bump only for package @coveo/quantic
