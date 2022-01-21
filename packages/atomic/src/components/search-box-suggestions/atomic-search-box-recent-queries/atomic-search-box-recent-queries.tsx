@@ -166,6 +166,12 @@ export class AtomicSearchBoxRecentQueries {
         </div>
       ),
       onSelect: () => {
+        if (this.bindings.isStandalone) {
+          this.bindings.searchBoxController.updateText(value);
+          this.bindings.searchBoxController.submit();
+          return;
+        }
+
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );

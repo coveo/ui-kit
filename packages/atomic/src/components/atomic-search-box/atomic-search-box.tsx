@@ -151,6 +151,7 @@ export class AtomicSearchBox {
     return {
       ...this.bindings,
       id: this.id,
+      isStandalone: !!this.redirectionUrl,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearSuggestions: () => this.clearSuggestions(),
