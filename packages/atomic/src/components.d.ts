@@ -643,7 +643,7 @@ export namespace Components {
          */
         "numberOfQueries": number;
         /**
-          * Defining this options makes the search box standalone.  The default Url the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that Url instead.
+          * Defining this option makes the search box standalone. This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
     }
@@ -1878,7 +1878,7 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
-          * Defining this options makes the search box standalone.  The default Url the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that Url instead.
+          * Defining this option makes the search box standalone. This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
     }

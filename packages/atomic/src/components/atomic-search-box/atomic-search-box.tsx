@@ -73,10 +73,11 @@ export class AtomicSearchBox {
   @Prop() public numberOfQueries = 8;
 
   /**
-   * Defining this options makes the search box standalone.
+   * Defining this option makes the search box standalone.
    *
-   * The default Url the user should be redirected to, when a query is submitted.
-   * If a query pipeline redirect is triggered, it will redirect to that Url instead.
+   * This option defines the default URL the user should be redirected to, when a query is submitted.
+   * If a query pipeline redirect is triggered, it will redirect to that URL instead 
+   * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
    */
   @Prop() public redirectionUrl?: string;
 
