@@ -642,6 +642,10 @@ export namespace Components {
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
+        /**
+          * Defining this options makes the search box standalone.  The default Url the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that Url instead.
+         */
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -1873,6 +1877,10 @@ declare namespace LocalJSX {
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries"?: number;
+        /**
+          * Defining this options makes the search box standalone.  The default Url the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that Url instead.
+         */
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**

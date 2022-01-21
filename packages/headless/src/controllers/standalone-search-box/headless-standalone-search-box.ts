@@ -3,7 +3,6 @@ import {
   query,
   querySuggest,
   standaloneSearchBoxSet,
-  redirection,
 } from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
@@ -144,7 +143,10 @@ export function buildStandaloneSearchBox(
       return {
         ...searchBox.state,
         isLoading: standaloneSearchBoxState.isLoading,
-        redirectTo: standaloneSearchBoxState.redirectTo,
+        redirectTo:
+          standaloneSearchBoxState.redirectTo === ''
+            ? null
+            : standaloneSearchBoxState.redirectTo,
         analytics: standaloneSearchBoxState.analytics,
       };
     },
@@ -164,7 +166,6 @@ function loadStandaloneSearchBoxReducers(
     configuration,
     query,
     querySuggest,
-    redirection,
   });
   return true;
 }

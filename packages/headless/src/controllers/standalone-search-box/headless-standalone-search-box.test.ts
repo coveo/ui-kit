@@ -21,7 +21,6 @@ import {
   query,
   standaloneSearchBoxSet,
   querySuggest,
-  redirection,
 } from '../../app/reducers';
 import {
   fetchRedirectUrl,
@@ -70,7 +69,6 @@ describe('headless standalone searchBox', () => {
       configuration,
       query,
       querySuggest,
-      redirection,
     });
   });
 
@@ -115,7 +113,7 @@ describe('headless standalone searchBox', () => {
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
       })),
-      redirectTo: '',
+      redirectTo: null,
       isLoading: false,
       isLoadingSuggestions: false,
       analytics: {

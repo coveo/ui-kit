@@ -1,5 +1,13 @@
+import {StandaloneSearchBoxAnalytics} from '@coveo/headless';
+
 export enum StorageItems {
   RECENT_QUERIES = 'coveo-recent-queries',
+  STANDALONE_SEARCH_BOX_DATA = 'coveo_standalone_search_box_data',
+}
+
+export interface StandaloneSearchBoxData {
+  value: string;
+  analytics: StandaloneSearchBoxAnalytics;
 }
 
 export class SafeStorage implements Storage {
