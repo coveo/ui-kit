@@ -1129,5 +1129,13 @@
   "with-colon": {
     "en": "{{text}}:",
     "fr": "{{text}}\u00A0:"
+  },
+  "between-quotations": {
+    "en": "\"{{text}}\"",
+    "fr": "«\u00A0{{text}}\u00A0»"
+  },
+  "between-parentheses": {
+    "en": "({{text}})",
+    "fr": "(\u00A0{{text}}\u00A0)"
   }
 }
