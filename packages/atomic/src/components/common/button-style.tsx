@@ -30,17 +30,9 @@ export function getRippleColorForButtonStyle(buttonStyle: ButtonStyle) {
   switch (buttonStyle) {
     case 'primary':
       return 'primary';
-    case 'outline-primary':
-      return 'neutral';
-    case 'outline-neutral':
-      return 'neutral';
-    case 'outline-bg-neutral':
-      return 'neutral';
-    case 'text-primary':
-      return 'neutral';
-    case 'text-neutral':
-      return 'neutral';
     case 'text-transparent':
       return 'neutral-light';
+    default:
+      return 'neutral';
   }
 }
