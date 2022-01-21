@@ -83,10 +83,7 @@ export class AtomicSearchBoxQuerySuggestions {
       content: (
         <div class="flex items-center">
           {this.bindings.getSuggestions().length > 1 && (
-            <atomic-icon
-              icon={SearchIcon}
-              class="w-4 h-4 text-neutral mr-2"
-            ></atomic-icon>
+            <atomic-icon icon={SearchIcon} class="w-4 h-4 mr-2"></atomic-icon>
           )}
           {hasQuery ? (
             <span innerHTML={suggestion.highlightedValue}></span>
