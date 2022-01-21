@@ -4,6 +4,7 @@ import serve from 'rollup-plugin-serve';
 import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
+import json from '@rollup/plugin-json';
 import {resolve} from 'path';
 
 const browserFetch = () =>
@@ -60,7 +61,7 @@ const nodeCJS = {
         file: './dist/library.js',
         format: 'cjs',
     },
-    plugins: [nodeResolve({mainFields: ['main']}), commonjs(), tsPlugin()],
+    plugins: [nodeResolve({mainFields: ['main']}), commonjs(), tsPlugin(), json()],
 };
 
 const browserESM = {
