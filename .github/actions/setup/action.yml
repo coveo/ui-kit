@@ -36,7 +36,7 @@ runs:
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules
           !**/node_modules
-        key: ${{ github.sha }}
+        key: ${{ github.sha }}-foo
     - uses: actions/cache@v2
       with:
         path: |
