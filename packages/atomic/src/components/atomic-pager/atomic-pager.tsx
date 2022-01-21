@@ -25,7 +25,7 @@ import {RadioButton} from '../common/radio-button';
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
  *
- * @part buttons - The list containing the next/previous buttons and page-buttons.
+ * @part buttons - The list of the next/previous buttons and page-buttons.
  * @part page-buttons - The list of page buttons.
  * @part previous-button - The previous button.
  * @part next-button - The next button.
