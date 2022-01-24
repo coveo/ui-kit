@@ -62,7 +62,6 @@ jobs:
     name: "Bump version"
     needs:
       - "lint-check"
-      - "generate-doc"
       - "unit-test"
       - "e2e-atomic-test"
       - "e2e-quantic-test"
