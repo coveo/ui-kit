@@ -1125,5 +1125,17 @@
   "stars-range": {
     "en": "{{value}} to {{count}} stars",
     "fr": "{{value}} à {{count}} étoiles"
+  },
+  "with-colon": {
+    "en": "{{text}}:",
+    "fr": "{{text}}\u00A0:"
+  },
+  "between-quotations": {
+    "en": "\"{{text}}\"",
+    "fr": "«\u00A0{{text}}\u00A0»"
+  },
+  "between-parentheses": {
+    "en": "({{text}})",
+    "fr": "(\u00A0{{text}}\u00A0)"
   }
 }

@@ -75,7 +75,7 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
 
   it(`should display the selected path "${joinedPath}" in the breadcrumbs`, () => {
     BreadboxSelectors.breadcrumbButton().contains(
-      `${categoryFacetLabel}${joinedPath}`
+      `${categoryFacetLabel}:${joinedPath}`
     );
   });
 }
@@ -83,7 +83,7 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
 function assertBreadcrumbValueText(facetSelector: string, facetLabel: string) {
   cy.getTextOfAllElements(facetSelector).then((facetValues) => {
     facetValues.forEach((element: string) => {
-      BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}${element}`);
+      BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}:${element}`);
     });
   });
 }

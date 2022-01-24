@@ -142,10 +142,7 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       content: (
         <div class="flex items-center">
-          <atomic-icon
-            icon={Clock}
-            class="w-5 h-5 text-neutral mr-2 -ml-1"
-          ></atomic-icon>
+          <atomic-icon icon={Clock} class="w-5 h-5 mr-2 -ml-1"></atomic-icon>
           {query === '' ? (
             <span>{value}</span>
           ) : (
@@ -166,6 +163,12 @@ export class AtomicSearchBoxRecentQueries {
         </div>
       ),
       onSelect: () => {
+        if (this.bindings.isStandalone) {
+          this.bindings.searchBoxController.updateText(value);
+          this.bindings.searchBoxController.submit();
+          return;
+        }
+
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );

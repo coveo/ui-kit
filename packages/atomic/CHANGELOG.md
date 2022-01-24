@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.4...@coveo/atomic@1.26.0) (2022-01-24)
+
+
+### Bug Fixes
+
+* **atomic:** improved contrast ratio on search suggestion icons ([#1691](https://github.com/coveo/ui-kit/issues/1691)) ([a655a8f](https://github.com/coveo/ui-kit/commit/a655a8f49d985a1338a5d0903624541bec6129e3))
+* **atomic:** made screen readers skip colon in "filters" and "sort by" ([#1690](https://github.com/coveo/ui-kit/issues/1690)) ([0b671dd](https://github.com/coveo/ui-kit/commit/0b671ddc44b90b117fcd0df5240b08310ef184a8))
+
+
+### Features
+
+* **atomic:** allow atomic-search-box to be standalone ([#1689](https://github.com/coveo/ui-kit/issues/1689)) ([d756277](https://github.com/coveo/ui-kit/commit/d7562779ec5b960dee75b2745fa2fd5a7777abb1))
+
+
+
+
+
+## [1.25.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.3...@coveo/atomic@1.25.4) (2022-01-21)
+
+
+### Bug Fixes
+
+* **atomic:** improved accessibility for pager ([#1686](https://github.com/coveo/ui-kit/issues/1686)) ([1131701](https://github.com/coveo/ui-kit/commit/1131701144cec6e1582685388e69d79a2fc82ed6))
+
+
+
+
+
 ## [1.25.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.25.2...@coveo/atomic@1.25.3) (2022-01-20)
 
 **Note:** Version bump only for package @coveo/atomic
