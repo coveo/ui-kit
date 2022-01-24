@@ -271,10 +271,10 @@ export class AtomicRefineModal implements InitializableComponent {
           <hr class="border-neutral"></hr>
           <div class="overflow-auto px-6 flex-grow">
             <div class="adjust-for-scroll-bar">
-              <main class="centered">
+              <aside class="centered">
                 {this.renderSort()}
                 {this.renderFilters()}
-              </main>
+              </aside>
             </div>
           </div>
           {this.renderFooter()}
