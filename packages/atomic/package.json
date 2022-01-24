@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.26.0",
+  "version": "1.26.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -43,7 +43,8 @@
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",
-    "doc:list-assets": "node scripts/list-assets.js"
+    "doc:list-assets": "node scripts/list-assets.js",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@coveo/bueno": "^0.34.2",
