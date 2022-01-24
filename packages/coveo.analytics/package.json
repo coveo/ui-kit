@@ -23,12 +23,13 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@react-native-async-storage/async-storage": "^1.15.8",
-        "cross-fetch": "^3.1.4"
+        "@react-native-async-storage/async-storage": "^1.15.16",
+        "cross-fetch": "^3.1.5"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^3.1.2",
         "@rollup/plugin-commonjs": "^19.0.0",
+        "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.0.0",
         "@types/fetch-mock": "^7.3.2",
         "@types/jest": "^25.1.1",
