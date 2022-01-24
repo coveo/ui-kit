@@ -27,7 +27,7 @@ jobs:
           git config --local user.name "GitHub Action test"
           git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
           git commit -m "Add generated files"
-          git push
+          git push origin HEAD:${{ github.ref }}
 
   lint-check:
     name: 'Check with linter'
