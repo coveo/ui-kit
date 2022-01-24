@@ -112,6 +112,8 @@ export class AtomicSearchInterface {
    */
   @Prop() public scrollContainer = 'atomic-search-interface';
 
+  @Prop() public foo = 'bar';
+
   public constructor() {
     setCoveoGlobal();
   }
