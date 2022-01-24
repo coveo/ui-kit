@@ -13,8 +13,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {createRipple} from '../../utils/ripple';
 import {randomID} from '../../utils/utils';
+import {RadioButton} from '../common/radio-button';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
@@ -90,23 +90,24 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
+    const parts = ['button'];
+    if (isSelected) {
+      parts.push('active-button');
+    }
+    const text = choice.toLocaleString(this.bindings.i18n.language);
 
     return (
-      <input
+      <RadioButton
         key={choice}
-        type="radio"
-        aria-label={choice}
+        groupName={this.radioGroupName}
+        style="outline-neutral"
         checked={isSelected}
-        value={choice}
-        onChange={(e) =>
-          (e.currentTarget as HTMLInputElement).checked &&
-          this.resultPerPage.set(choice)
-        }
-        class={`btn-page btn-outline-neutral ${isSelected ? 'selected' : ''}`}
-        name={this.radioGroupName}
-        onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
-        part={`button${isSelected ? ' active-button' : ''}`}
-      />
+        ariaLabel={text}
+        onChecked={() => this.resultPerPage.set(choice)}
+        class="btn-page"
+        part={parts.join(' ')}
+        text={text}
+      ></RadioButton>
     );
   }
 

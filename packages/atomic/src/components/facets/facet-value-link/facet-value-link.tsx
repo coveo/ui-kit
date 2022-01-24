@@ -26,7 +26,9 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
       >
         {children}
         <span part="value-count" class="value-count">
-          {count}
+          {props.i18n.t('between-parentheses', {
+            text: count,
+          })}
         </span>
       </Button>
     </li>

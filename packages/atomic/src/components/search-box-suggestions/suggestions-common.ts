@@ -22,6 +22,7 @@ export type SearchBoxSuggestionsEvent = (
 
 export interface SearchBoxSuggestionsBindings extends Bindings {
   id: string;
+  isStandalone: boolean;
   searchBoxController: SearchBox;
   numberOfQueries: number;
   clearSuggestions(): void;
