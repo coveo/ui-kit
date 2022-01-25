@@ -50,11 +50,19 @@ runs:
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: |
         npm run build
+
+        
+        git fetch --depth=1
+        git checkout KIT-1368
+        
+        
+        git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
+
         git config --local user.email "test@github.com"
         git config --local user.name "GitHub Action test"
-        git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
         git commit -m "Add generated files"
-        git push origin HEAD:KIT-1368
+        
+        git push origin KIT-1368
 
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
