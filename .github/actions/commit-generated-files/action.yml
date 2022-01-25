@@ -9,8 +9,8 @@ runs:
           git checkout ${{ github.head_ref }}
           git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
 
-          git config --local user.email "prbot@github.com"
-          git config --local user.name "GitHub Action Bot"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
           git commit -m "Add generated files"
 
           git push origin ${{ github.head_ref }}
