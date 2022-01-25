@@ -51,19 +51,6 @@ runs:
       run: |
         npm run build
 
-        
-        git fetch --depth=1
-        git checkout ${{ github.ref }}
-        
-        
-        git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
-
-        git config --local user.email "test@github.com"
-        git config --local user.name "GitHub Action test"
-        git commit -m "Add generated files"
-
-        git push origin ${{ github.ref }}
-
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run doc:generate
