@@ -67,6 +67,7 @@
     "@monaco-editor/react": "4.3.1",
     "@rollup/plugin-alias": "3.1.8",
     "@rollup/plugin-replace": "2.4.2",
+    "@stencil/angular-output-target": "^0.4.0",
     "@stencil/core": "2.11.0",
     "@stencil/postcss": "2.1.0",
     "@stencil/react-output-target": "^0.2.0",
