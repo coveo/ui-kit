@@ -22,18 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
-      - run: |
-          if [ ! -z "$(git status --porcelain)" ]; then  
-            git fetch --depth=1
-            git checkout ${{ github.head_ref }}
-            git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
-
-            git config --local user.email "prbot@github.com"
-            git config --local user.name "GitHub Action Bot"
-            git commit -m "Add generated files"
-
-            git push origin ${{ github.head_ref }}
-          fi
+      - uses: ./.github/actions/commit-generated-files
 
   lint-check:
     name: 'Check with linter'

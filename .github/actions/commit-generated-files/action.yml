@@ -1,0 +1,18 @@
+name: 'Commit generated files'
+description: 'Automatically commit generated files'
+runs:
+  using: composite
+  steps:
+    - run: |
+        if [ ! -z "$(git status --porcelain)" ]; then  
+          git fetch --depth=1
+          git checkout ${{ github.head_ref }}
+          git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
+
+          git config --local user.email "prbot@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git commit -m "Add generated files"
+
+          git push origin ${{ github.head_ref }}
+        fi
+      shell: bash
