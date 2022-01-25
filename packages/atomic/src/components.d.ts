@@ -681,6 +681,7 @@ export namespace Components {
           * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
+        "foo": string;
         /**
           * The search interface i18next instance.
          */
@@ -1912,6 +1913,7 @@ declare namespace LocalJSX {
           * The search interface headless engine.
          */
         "engine"?: SearchEngine;
+        "foo"?: string;
         /**
           * The search interface i18next instance.
          */
