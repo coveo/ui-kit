@@ -22,14 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
-      - run: |
-          git config --local user.email "test@github.com"
-          git config --local user.name "GitHub Action test"
-          git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
-          git commit -m "Add generated files"
-          git fetch origin KIT-1368
-          git push origin HEAD:KIT-1368
-
+      
   lint-check:
     name: 'Check with linter'
     needs: build
