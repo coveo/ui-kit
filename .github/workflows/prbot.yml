@@ -2,7 +2,7 @@ name: PR Robot
 on: [pull_request]
 jobs:
   report-size:
-    name: "Report bundle size"
+    name: 'Report bundle size'
     runs-on: ubuntu-latest
     env:
       GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
@@ -17,13 +17,15 @@ jobs:
       - run: npm ci
       - run: npm run pr:report
   build:
-    name: "Build"
+    name: 'Build'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/commit-generated-files
+
   lint-check:
-    name: "Check with linter"
+    name: 'Check with linter'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +33,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   unit-test:
-    name: "Run unit tests"
+    name: 'Run unit tests'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +42,7 @@ jobs:
       - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
   e2e-atomic-test:
-    name: "Run e2e tests on Atomic"
+    name: 'Run e2e tests on Atomic'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +50,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
   e2e-quantic-test:
-    name: "Run e2e tests on Quantic"
+    name: 'Run e2e tests on Quantic'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +61,7 @@ jobs:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   e2e-atomic-react-test:
-    name: "Run e2e tests on Atomic React"
+    name: 'Run e2e tests on Atomic React'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -67,12 +69,12 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-react
   is-valid:
-    name: "Confirm build is valid"
+    name: 'Confirm build is valid'
     runs-on: ubuntu-latest
     needs:
-      - "lint-check"
-      - "unit-test"
-      - "e2e-atomic-test"
-      - "e2e-quantic-test"
+      - 'lint-check'
+      - 'unit-test'
+      - 'e2e-atomic-test'
+      - 'e2e-quantic-test'
     steps:
       - run: echo 'Build has been verified'
