@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
       - run: |
-          if ![ -z "$(git status --porcelain)" ]; then  
+          if [ ! -z "$(git status --porcelain)" ]; then  
             git fetch --depth=1
             git checkout ${{ github.head_ref }}
             git add 'packages/atomic/**/*.d.ts' 'packages/atomic-react/src/components/stencil-generated/*'
