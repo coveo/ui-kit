@@ -1,6 +1,6 @@
 {
   "name": "headless-react",
-  "version": "0.50.6",
+  "version": "0.50.7",
   "dependencies": {
     "@coveo/atomic-react": "^0.4.6",
     "@coveo/auth": "^1.1.6",
@@ -50,6 +50,9 @@
     ]
   },
   "devDependencies": {
-    "ncp": "^2.0.0"
+    "cypress": "^9.3.1",
+    "eslint-plugin-cypress": "^2.12.1",
+    "ncp": "^2.0.0",
+    "patch-package": "^6.4.7"
   }
 }
