@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
-          node-version-file: '.n\vmrc'
+          node-version-file: '.nvmrc'
       - run: npm ci
       - run: npm run pr:report
   build:
