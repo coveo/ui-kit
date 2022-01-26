@@ -162,7 +162,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     }
 
     return [
-      <div class="flex items-center flex-wrap text-on-background">
+      <div class="flex items-center flex-wrap text-on-background justify-end">
         {this.renderLabel()}
         {this.renderSelect()}
       </div>,

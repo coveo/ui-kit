@@ -1,0 +1,27 @@
+@import './search-layout.pcss';
+
+atomic-layout {
+  width: 100%;
+  height: 100%;
+  display: grid;
+}
+
+atomic-layout-section[section='search-box'] {
+  grid-area: atomic-section-search-box;
+}
+
+atomic-layout-section[section='facets'] {
+  grid-area: atomic-section-facets;
+}
+
+atomic-layout-section[section='main'] {
+  grid-area: atomic-section-main;
+}
+
+atomic-layout-section[section='top-bar'] {
+  grid-area: atomic-section-top-bar;
+}
+
+atomic-layout-section[section='pagination'] {
+  grid-area: atomic-section-pagination;
+}

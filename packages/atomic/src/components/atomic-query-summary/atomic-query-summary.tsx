@@ -20,6 +20,7 @@ import {AriaLiveRegion} from '../../utils/accessibility-utils';
  * @part results - The container for the results.
  * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
+ * @part query - The summary highlighed query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
  */
 @Component({
@@ -66,6 +67,10 @@ export class AtomicQuerySummary implements InitializableComponent {
     return `<span class="font-bold" part="highlight">${content}</span>`;
   }
 
+  private wrapQuery(query: string) {
+    return `<span title="${query}" class="font-bold truncate" part="highlight query">${query}</span>`;
+  }
+
   private get resultOfOptions() {
     const locales = this.bindings.i18n.languages;
     return {
@@ -85,7 +90,7 @@ export class AtomicQuerySummary implements InitializableComponent {
       first: this.wrapHighlight(first),
       last: this.wrapHighlight(last),
       total: this.wrapHighlight(total),
-      query: this.wrapHighlight(escape(query)),
+      query: this.wrapQuery(escape(query)),
     };
   }
 
@@ -109,7 +114,11 @@ export class AtomicQuerySummary implements InitializableComponent {
       this.highlightedResultOfOptions
     );
 
-    return <span part="results" innerHTML={content}></span>;
+    return (
+      <span part="results" class="flex whitespace-pre" innerHTML={content}>
+        {this.renderDuration()}
+      </span>
+    );
   }
 
   public render() {
@@ -133,10 +142,7 @@ export class AtomicQuerySummary implements InitializableComponent {
 
     return (
       <div class="text-on-background" part="container">
-        {this.querySummaryState.hasResults && [
-          this.renderHasResults(),
-          this.renderDuration(),
-        ]}
+        {this.querySummaryState.hasResults && this.renderHasResults()}
       </div>
     );
   }
