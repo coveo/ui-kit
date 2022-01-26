@@ -14,7 +14,6 @@
     "clean": "rimraf -rf dist",
     "compile": "npm run tsc",
     "tsc": "tsc -p .",
-    "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets dist/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang dist/lang "
   },
