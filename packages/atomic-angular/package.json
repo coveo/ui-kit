@@ -16,6 +16,7 @@
     "@angular/platform-browser": "~13.1.0",
     "@angular/platform-browser-dynamic": "~13.1.0",
     "@angular/router": "~13.1.0",
+    "@coveo/atomic": "^1.23.7",
     "rxjs": "~7.4.0"
   },
   "devDependencies": {
