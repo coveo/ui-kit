@@ -407,8 +407,8 @@
     <customLabels>
       <label>Aucune suggestion</label>
       <name>quantic_NoSuggestions</name>
-    <customLabels>
     </customLabels>
+    <customLabels>
       <label>Comment pouvons-nous vous aider? Sélectionnez une option.</label>
       <name>quantic_CaseClassificationTitle</name>
     </customLabels>
@@ -419,9 +419,5 @@
     <customLabels>
       <label>Sélectionner une option</label>
       <name>quantic_SelectOption</name>
-    </customLabels>
-    <customLabels>
-      <label>Chargement</label>
-      <name>quantic_Loading</name>
     </customLabels>
 </Translations>
