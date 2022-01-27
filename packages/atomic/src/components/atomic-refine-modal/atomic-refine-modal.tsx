@@ -232,10 +232,12 @@ export class AtomicRefineModal implements InitializableComponent {
           <span class="truncate mr-1">
             {this.bindings.i18n.t('view-results')}
           </span>
-          <span class="with-parentheses">
-            {this.querySummaryState.total.toLocaleString(
-              this.bindings.i18n.language
-            )}
+          <span>
+            {this.bindings.i18n.t('between-parentheses', {
+              text: this.querySummaryState.total.toLocaleString(
+                this.bindings.i18n.language
+              ),
+            })}
           </span>
         </Button>
       </div>
@@ -271,10 +273,10 @@ export class AtomicRefineModal implements InitializableComponent {
           <hr class="border-neutral"></hr>
           <div class="overflow-auto px-6 flex-grow">
             <div class="adjust-for-scroll-bar">
-              <div class="centered">
+              <aside class="centered">
                 {this.renderSort()}
                 {this.renderFilters()}
-              </div>
+              </aside>
             </div>
           </div>
           {this.renderFooter()}

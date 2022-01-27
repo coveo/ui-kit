@@ -74,7 +74,9 @@ export const CategoryFacetSearchResult: FunctionalComponent<CategoryFacetSearchR
               searchQuery={searchQuery}
             ></FacetValueLabelHighlight>
             <span part="value-count" class="value-count">
-              {count}
+              {i18n.t('between-parentheses', {
+                text: count,
+              })}
             </span>
           </div>
           <div

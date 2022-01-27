@@ -11,5 +11,11 @@ export const addColorFacet =
     addTag(env, 'atomic-color-facet', props);
 
 export function selectIdleBoxValueAt(index: number) {
-  ColorFacetSelectors.idleBoxValue().eq(index).click();
+  ColorFacetSelectors.idleBoxValueLabel()
+    .eq(index)
+    .then((idleValueLabel) => {
+      const text = idleValueLabel.text();
+      cy.wrap(idleValueLabel).click();
+      ColorFacetSelectors.selectedBoxValueWithText(text).should('exist');
+    });
 }

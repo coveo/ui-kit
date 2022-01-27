@@ -182,9 +182,15 @@ export class AtomicRatingRangeFacet
   }
 
   private formatFacetValue(facetValue: NumericFacetValue) {
-    return this.bindings.i18n.t('to', {
-      start: facetValue.start,
-      end: facetValue.end,
+    if (facetValue.start === this.maxValueInIndex) {
+      return this.bindings.i18n.t('stars', {
+        count: facetValue.start,
+        max: this.maxValueInIndex,
+      });
+    }
+    return this.bindings.i18n.t('stars-range', {
+      value: facetValue.start,
+      count: this.maxValueInIndex,
     });
   }
 
@@ -192,6 +198,7 @@ export class AtomicRatingRangeFacet
     return (
       <div class="flex items-center">
         <Rating
+          i18n={this.bindings.i18n}
           numberOfTotalIcons={this.maxValueInIndex}
           numberOfActiveIcons={facetValue.start}
           icon={this.icon}
@@ -229,7 +236,7 @@ export class AtomicRatingRangeFacet
         {facetValue.start === this.maxValueInIndex ? (
           <span>{this.bindings.i18n.t('only')}</span>
         ) : (
-          this.bindings.i18n.t('& up')
+          this.bindings.i18n.t('and-up')
         )}
       </span>
     );

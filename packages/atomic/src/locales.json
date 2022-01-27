@@ -226,10 +226,6 @@
     "zh-cn": "每一页的结果",
     "zh-tw": "每頁的結果數"
   },
-  "display-results-per-page": {
-    "en": "Display {{results}} results per page",
-    "fr": "Afficher {{results}} résultats par page"
-  },
   "sort": {
     "en": "Sort",
     "fr": "Tri"
@@ -699,6 +695,10 @@
     "en": "Source",
     "fr": "Source"
   },
+  "printable-uri": {
+    "en": "Source path of the result",
+    "fr": "Chemin source du résultat"
+  },
   "collapsed-uri-parts": {
     "en": "Collapsed URI parts",
     "fr": "Segments d'URI réduits"
@@ -1113,5 +1113,29 @@
   "query-suggestions-unavailable": {
     "en": "There are no search suggestions.",
     "fr": "Il n'y a pas de suggestions de recherche."
+  },
+  "stars": {
+    "en": "one star out of {{max}}",
+    "fr": "une étoile sur {{max}}"
+  },
+  "stars_plural": {
+    "en": "{{count}} stars out of {{max}}",
+    "fr": "{{count}} étoiles sur {{max}}"
+  },
+  "stars-range": {
+    "en": "{{value}} to {{count}} stars",
+    "fr": "{{value}} à {{count}} étoiles"
+  },
+  "with-colon": {
+    "en": "{{text}}:",
+    "fr": "{{text}}\u00A0:"
+  },
+  "between-quotations": {
+    "en": "\"{{text}}\"",
+    "fr": "«\u00A0{{text}}\u00A0»"
+  },
+  "between-parentheses": {
+    "en": "({{text}})",
+    "fr": "(\u00A0{{text}}\u00A0)"
   }
 }

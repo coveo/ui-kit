@@ -13,6 +13,7 @@ import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } fro
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
     }
@@ -117,6 +118,9 @@ export namespace Components {
     interface AtomicDidYouMean {
     }
     interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
         "selector": string;
     }
     interface AtomicFacet {
@@ -509,7 +513,7 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
          */
         "fieldsToInclude": string;
         /**
@@ -520,6 +524,11 @@ export namespace Components {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param render
+         */
+        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -634,6 +643,10 @@ export namespace Components {
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
+        /**
+          * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -1346,6 +1359,9 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
         "selector"?: string;
     }
     interface AtomicFacet {
@@ -1741,7 +1757,7 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
          */
         "fieldsToInclude"?: string;
         /**
@@ -1862,6 +1878,10 @@ declare namespace LocalJSX {
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries"?: number;
+        /**
+          * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**

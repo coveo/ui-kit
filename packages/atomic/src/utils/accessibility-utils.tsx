@@ -24,7 +24,8 @@ export function AriaLiveRegion(regionName: string) {
 
 export interface FocusTargetController {
   setTarget(element: HTMLElement | undefined): void;
-  focusAfterSearch(): void;
+  focusAfterSearch(): Promise<void>;
+  focusOnNextTarget(): Promise<void>;
   disableForCurrentSearch(): void;
 }
 
@@ -36,6 +37,8 @@ export function FocusTarget() {
       componentWillLoad && componentWillLoad.call(this);
       const {componentDidRender} = this;
       let focusAfterSearch = false;
+      let focusOnNextTarget = false;
+      let onFocusCallback: Function | null = null;
       let lastSearchId: string | undefined = undefined;
       let element: HTMLElement | undefined = undefined;
 
@@ -46,25 +49,43 @@ export function FocusTarget() {
         }
         if (
           focusAfterSearch &&
-          this.bindings.engine.state.search.searchResponseId !== lastSearchId
+          this.bindings.engine.state.search.response.searchUid !== lastSearchId
         ) {
           focusAfterSearch = false;
           if (element) {
             const el = element;
-            setTimeout(() => el.focus());
+            setTimeout(() => {
+              el.focus();
+              onFocusCallback?.();
+            });
           }
         }
       };
 
       const focusTargetController: FocusTargetController = {
-        setTarget: (el) => el && (element = el),
+        setTarget: (el) => {
+          if (!el) {
+            return;
+          }
+          element = el;
+          if (focusOnNextTarget) {
+            focusOnNextTarget = false;
+            element.focus();
+            onFocusCallback?.();
+          }
+        },
         focusAfterSearch: () => {
-          lastSearchId = this.bindings.engine.state.search.searchResponseId;
+          lastSearchId = this.bindings.engine.state.search.response.searchUid;
           focusAfterSearch = true;
+          return new Promise((resolve) => (onFocusCallback = resolve));
+        },
+        focusOnNextTarget: () => {
+          focusOnNextTarget = true;
+          return new Promise((resolve) => (onFocusCallback = resolve));
         },
         disableForCurrentSearch: () =>
-          this.bindings.engine.state.search.searchResponseId !== lastSearchId &&
-          (focusAfterSearch = false),
+          this.bindings.engine.state.search.response.searchUid !==
+            lastSearchId && (focusAfterSearch = false),
       };
       this[setterName] = focusTargetController;
     };

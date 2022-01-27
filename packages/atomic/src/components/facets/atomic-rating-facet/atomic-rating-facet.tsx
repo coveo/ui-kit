@@ -200,15 +200,16 @@ export class AtomicRatingFacet
   }
 
   private formatFacetValue(facetValue: NumericFacetValue) {
-    return this.bindings.i18n.t('to', {
-      start: facetValue.start,
-      end: facetValue.end,
+    return this.bindings.i18n.t('stars', {
+      count: facetValue.start,
+      max: this.maxValueInIndex,
     });
   }
 
   private ratingContent(facetValue: NumericFacetValue) {
     return (
       <Rating
+        i18n={this.bindings.i18n}
         numberOfTotalIcons={this.maxValueInIndex}
         numberOfActiveIcons={facetValue.start}
         icon={this.icon}

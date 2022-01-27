@@ -52,8 +52,7 @@ npm run cypress:test
 
 ### Stencil decorators
 
-When building custom Atomic components, it's highly recommended that you use the same toolchain used to develop the components in the Atomic library, [Stencil](https://stenciljs.com/).
-We provide decorators which are used internally with most of our components.
+When building Atomic components, a series of decorators are used to make development faster.
 
 ## InitializeBindings & BindStateToController decorators
 

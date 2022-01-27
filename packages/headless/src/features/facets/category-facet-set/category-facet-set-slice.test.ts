@@ -23,13 +23,16 @@ import {
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
-import {executeSearch} from '../../search/search-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {FacetResponse} from '../facet-set/interfaces/response';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {deselectAllFacets} from '../generic/facet-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 describe('category facet slice', () => {
@@ -331,6 +334,19 @@ describe('category facet slice', () => {
       expect(
         CategoryFacetReducers.handleCategoryFacetDeselectAll
       ).toHaveBeenCalledTimes(2);
+    });
+
+    it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {
+      state[facetId]!.request.preventAutoSelect = true;
+      state[anotherFacetId]!.request.preventAutoSelect = true;
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        updateFacetAutoSelection({allow: true})
+      );
+
+      expect(finalState[facetId]!.request.preventAutoSelect).toBe(false);
+      expect(finalState[anotherFacetId]!.request.preventAutoSelect).toBe(false);
     });
 
     it('dispatching #deselectAllBreadcrumbs calls #handleCategoryFacetDeselectAll for every facet', () => {
@@ -781,6 +797,40 @@ describe('category facet slice', () => {
       const action = buildExecuteSearchAction([facet]);
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('#fetchFacetValues.fulfilled', () => {
+    function buildFetchFacetValuesAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return fetchFacetValues.fulfilled(
+        search,
+        '',
+        logSearchEvent({evt: 'foo'})
+      );
+    }
+
+    it('when an valid path is requested, it does not adjust the #currentValues of the request', () => {
+      const valid = buildMockCategoryFacetValueRequest({
+        value: 'valid',
+        state: 'selected',
+      });
+      const currentValues = [valid];
+      const request = buildMockCategoryFacetRequest({currentValues});
+      state[facetId] = buildMockCategoryFacetSlice({request});
+
+      const root = buildMockCategoryFacetValue({
+        value: 'valid',
+        state: 'selected',
+      });
+      const facet = buildMockCategoryFacetResponse({facetId, values: [root]});
+
+      const action = buildFetchFacetValuesAction([facet]);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
     });
   });
 });

@@ -12,6 +12,14 @@ export const TimeframeFacetSelectors = {
     TimeframeFacetSelectors.shadow().find(
       '[part="value-link"][aria-pressed="false"]'
     ),
+  selectedLinkValueWithText: (text: string) =>
+    TimeframeFacetSelectors.shadow().find(
+      `[part="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
+    ),
+  idleLinkValueLabel: () =>
+    TimeframeFacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="false"] [part="value-label"]'
+    ),
   values: () => TimeframeFacetSelectors.shadow().find('[part="values"]'),
   clearButton: () =>
     TimeframeFacetSelectors.shadow().find('[part="clear-button"]'),

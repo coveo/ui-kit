@@ -13,7 +13,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {Button} from '../common/button';
+import {randomID} from '../../utils/utils';
+import {RadioButton} from '../common/radio-button';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
@@ -33,6 +34,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   private resultPerPage!: ResultsPerPage;
   public searchStatus!: SearchStatus;
   private choices!: number[];
+  private readonly radioGroupName = randomID('atomic-results-per-page-');
 
   @State()
   @BindStateToController('resultPerPage')
@@ -86,23 +88,26 @@ export class AtomicResultsPerPage implements InitializableComponent {
     }
   }
 
-  // TODO: use standard keyboard shortcuts KIT-949
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
+    const parts = ['button'];
+    if (isSelected) {
+      parts.push('active-button');
+    }
+    const text = choice.toLocaleString(this.bindings.i18n.language);
 
     return (
-      <Button
+      <RadioButton
+        key={choice}
+        groupName={this.radioGroupName}
         style="outline-neutral"
-        role="radio"
-        ariaChecked={`${isSelected}`}
-        ariaLabel={this.bindings.i18n.t('display-results-per-page', {
-          results: choice,
-        })}
-        onClick={() => this.resultPerPage.set(choice)}
-        class={`btn-page ${isSelected ? 'selected' : ''}`}
-        part={`button${isSelected && ' active-button'}`}
-        text={choice.toLocaleString(this.bindings.i18n.language)}
-      ></Button>
+        checked={isSelected}
+        ariaLabel={text}
+        onChecked={() => this.resultPerPage.set(choice)}
+        class="btn-page"
+        part={parts.join(' ')}
+        text={text}
+      ></RadioButton>
     );
   }
 

@@ -45,7 +45,7 @@ describe('No Results Test Suites', () => {
     it('text content should match', () => {
       cy.get(tag)
         .shadow()
-        .find('[part="no-results"] .quotations')
+        .find('[part="no-results"] [part="highlight"]')
         .should('contain.text', 'gahaiusdhgaiuewjfsf');
     });
   });

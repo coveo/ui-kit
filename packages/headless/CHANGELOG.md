@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.2...@coveo/headless@1.44.0) (2022-01-24)
+
+
+### Features
+
+* **atomic:** allow atomic-search-box to be standalone ([#1689](https://github.com/coveo/ui-kit/issues/1689)) ([d756277](https://github.com/coveo/ui-kit/commit/d7562779ec5b960dee75b2745fa2fd5a7777abb1))
+
+
+
+
+
+## [1.43.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.1...@coveo/headless@1.43.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* **headless:** add product grouping support ([#1669](https://github.com/coveo/ui-kit/issues/1669)) ([5754c08](https://github.com/coveo/ui-kit/commit/5754c0824ce28046503bb39905cee00505888f5d))
+
+
+
+
+
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.0...@coveo/headless@1.43.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* **headless:** Add export for category recommendation strategies ([#1678](https://github.com/coveo/ui-kit/issues/1678)) ([6a540c3](https://github.com/coveo/ui-kit/commit/6a540c3e66db218d6f5cdb36028a6e077a531e7a))
+* Typos for occurrences ([a1d0d16](https://github.com/coveo/ui-kit/commit/a1d0d16b0440affeb00118b0b1cfabc5cf9d9cb1))
+
+
+
+
+
+# [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.42.0...@coveo/headless@1.43.0) (2022-01-18)
+
+
+### Features
+
+* **headless:** facet show more/less improvements ([#1670](https://github.com/coveo/ui-kit/issues/1670)) ([1bc70ae](https://github.com/coveo/ui-kit/commit/1bc70aed9fbd2ef15e4d03955ab980a2d40627f0))
+
+
+
+
+
+# [1.42.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.12...@coveo/headless@1.42.0) (2022-01-18)
+
+
+### Features
+
+* **headless:** Add FrequentlyViewedSameCategory and FrequentlyViewedDifferentCategory strategies ([#1667](https://github.com/coveo/ui-kit/issues/1667)) ([48af22f](https://github.com/coveo/ui-kit/commit/48af22f30173517bf28b62d88f49009621aaa073))
+
+
+
+
+
+## [1.41.12](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.11...@coveo/headless@1.41.12) (2022-01-12)
+
+
+### Bug Fixes
+
+* **headless:** add updateFacetAutoSelection & stop preventing auto select on new searches ([#1652](https://github.com/coveo/ui-kit/issues/1652)) ([d807d40](https://github.com/coveo/ui-kit/commit/d807d40184d9ab323470c9addc0c23b05e4be6bc))
+
+
+
+
+
+## [1.41.11](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.10...@coveo/headless@1.41.11) (2022-01-05)
+
+
+### Bug Fixes
+
+* **headless:** adjust __require statements in node esm bundles ([#1624](https://github.com/coveo/ui-kit/issues/1624)) ([d2eedcb](https://github.com/coveo/ui-kit/commit/d2eedcb63db8f21e6fb679b011edd402ba22d5cb))
+
+
+
+
+
+## [1.41.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.9...@coveo/headless@1.41.10) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.41.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.8...@coveo/headless@1.41.9) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.41.8](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.41.7...@coveo/headless@1.41.8) (2022-01-04)
 
 **Note:** Version bump only for package @coveo/headless

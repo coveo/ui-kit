@@ -111,7 +111,7 @@ export default class QuanticNoResults extends LightningElement {
 
   get noResultsTitleLabel() {
     if (this.query) {
-      return I18nUtils.format(this.labels.noResultsForTitle, I18nUtils.getTextBold(this.query));
+      return I18nUtils.format(this.labels.noResultsForTitle, I18nUtils.getTextBold(I18nUtils.escapeHTML(this.query)));
     }
     return this.labels.noResultsTitle;
   }

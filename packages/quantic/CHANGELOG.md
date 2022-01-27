@@ -3,6 +3,141 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.7...@coveo/quantic@1.7.8) (2022-01-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.7.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.6...@coveo/quantic@1.7.7) (2022-01-21)
+
+
+### Bug Fixes
+
+* **quantic:** Fix flaky test quickview ([#1692](https://github.com/coveo/ui-kit/issues/1692)) ([d51f7af](https://github.com/coveo/ui-kit/commit/d51f7af5476c110e315b3a3fad2ac0a8b63b6dce))
+
+
+
+
+
+## [1.7.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.5...@coveo/quantic@1.7.6) (2022-01-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.7.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.4...@coveo/quantic@1.7.5) (2022-01-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.7.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.3...@coveo/quantic@1.7.4) (2022-01-19)
+
+
+### Bug Fixes
+
+* Typos for occurrences ([a1d0d16](https://github.com/coveo/ui-kit/commit/a1d0d16b0440affeb00118b0b1cfabc5cf9d9cb1))
+
+
+
+
+
+## [1.7.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.2...@coveo/quantic@1.7.3) (2022-01-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.1...@coveo/quantic@1.7.2) (2022-01-18)
+
+
+### Bug Fixes
+
+* **quantic:** added escape util for showing query in rich-text ([#1671](https://github.com/coveo/ui-kit/issues/1671)) ([71670dd](https://github.com/coveo/ui-kit/commit/71670dd2bdbbd1b46ce4a0df57bc7406bd84efa5))
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.0...@coveo/quantic@1.7.1) (2022-01-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.11...@coveo/quantic@1.7.0) (2022-01-14)
+
+
+### Features
+
+* **quantic:** Case Classification Component ([#1599](https://github.com/coveo/ui-kit/issues/1599)) ([057c597](https://github.com/coveo/ui-kit/commit/057c5979ea52191aa60e10f30fc436893c41e65e))
+
+
+
+
+
+## [1.6.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.10...@coveo/quantic@1.6.11) (2022-01-13)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.9...@coveo/quantic@1.6.10) (2022-01-12)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.8...@coveo/quantic@1.6.9) (2022-01-12)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.7...@coveo/quantic@1.6.8) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.6...@coveo/quantic@1.6.7) (2022-01-05)
+
+
+### Bug Fixes
+
+* updated cypress version ([#1633](https://github.com/coveo/ui-kit/issues/1633)) ([c7545a3](https://github.com/coveo/ui-kit/commit/c7545a3d7f8e2135ae20e62e93180210fc001044))
+
+
+
+
+
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.5...@coveo/quantic@1.6.6) (2022-01-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.6.4...@coveo/quantic@1.6.5) (2022-01-04)
 
 **Note:** Version bump only for package @coveo/quantic

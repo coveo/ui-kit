@@ -13,11 +13,19 @@ export interface BaseFacetSelector extends ComponentSelector {
 export interface FacetWithCheckboxSelector extends ComponentSelector {
   selectedCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
   idleCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  checkboxValueWithText: (
+    text: string
+  ) => Cypress.Chainable<JQuery<HTMLElement>>;
+  idleCheckboxValueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
 export interface FacetWithLinkSelector extends ComponentSelector {
   selectedLinkValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
   idleLinkValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  selectedLinkValueWithText: (
+    text: string
+  ) => Cypress.Chainable<JQuery<HTMLElement>>;
+  idleLinkValueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
 export interface FacetWithSearchSelector extends ComponentSelector {
@@ -134,9 +142,7 @@ export function assertDisplayClearButton(
 
 export function assertLogClearFacetValues(field: string) {
   it('should log the facet clear all to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
+    cy.expectSearchEvent('facetClearAll').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
     });
   });
@@ -246,9 +252,7 @@ export function assertNoMatchesFoundContainsQuery(
 
 export function assertLogFacetSearch(field: string) {
   it('should log the facet search to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
+    cy.expectSearchEvent('facetSearch').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
     });
   });
