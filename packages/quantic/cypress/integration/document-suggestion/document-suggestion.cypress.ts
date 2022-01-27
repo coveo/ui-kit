@@ -10,6 +10,7 @@ import {
 import {sendRating} from '../../page-objects/actions/action-send-rating';
 import allDocuments from '../../fixtures/documentSuggestions.json';
 import {fetchSuggestions} from '../../page-objects/actions/action-get-suggestions';
+import {stubConsoleWarning} from '../console-selectors';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;
@@ -194,7 +195,13 @@ describe('quantic-document-suggestion', () => {
 
   describe('when using an invalid number of automatically opened documents', () => {
     it('should not open any document when the number of automatically opened documents is inferior to 0', () => {
-      visitDocumentSuggestion({
+      interceptCaseAssist();
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleWarning(win);
+        },
+      });
+      configure({
         numberOfAutoOpenedDocuments: -1,
       });
 
@@ -202,6 +209,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(true);
+        Expect.console.warning(true);
       });
 
       scope('when fetching suggestions', () => {
@@ -242,7 +250,13 @@ describe('quantic-document-suggestion', () => {
 
   describe('when using an invalid number maxDocuments', () => {
     it('should render one document suggestion when maxDocuments is equal to 0', () => {
-      visitDocumentSuggestion({
+      interceptCaseAssist();
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleWarning(win);
+        },
+      });
+      configure({
         maxDocuments: 0,
       });
 
@@ -250,6 +264,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(true);
+        Expect.console.warning(true);
       });
 
       scope('when fetching suggestions', () => {
@@ -264,7 +279,13 @@ describe('quantic-document-suggestion', () => {
     });
 
     it('should render one document suggestion when maxDocuments is inferior to 0', () => {
-      visitDocumentSuggestion({
+      interceptCaseAssist();
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleWarning(win);
+        },
+      });
+      configure({
         maxDocuments: -1,
       });
 
@@ -272,6 +293,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(true);
+        Expect.console.warning(true);
       });
 
       scope('when fetching suggestions', () => {

@@ -36,12 +36,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api searchEngineId = 'search-engine';
   /**
-   * The maximum number of document suggesions to display, it's a value between 1 and 5.
-   * @api
-   * @type {number}
-   */
-  @api maxDocuments = 5;
-  /**
    * Whether or not we want to disply the quick view for the document suggestions.
    * @api
    * @type {boolean}
@@ -53,12 +47,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * Whether or not we want to fetch suggestions when initializing this component.
    */
   @api fetchOnInit = false;
-  /**
-   * @api
-   * @type {number}
-   * The number of automatically opened document suggestions when fetching suggestions.
-   */
-  @api numberOfAutoOpenedDocuments = 1;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -72,6 +60,10 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   unsubscribeDocumentSuggestion;
   /** @type {Array<string>} */
   openedDocuments = [];
+  /** @type {number} */
+  _maxDocuments = 5;
+  /** @type {number} */
+  _numberOfAutoOpenedDocuments = 1;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -119,7 +111,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
             uri: suggestion.fields.uri,
           };
         })
-        .slice(0, Math.max(1, this.maxDocuments)) ?? [];
+        .slice(0, this._maxDocuments) ?? [];
     this.openFirstDocuments();
     this.loading = this.documentSuggestion.state.loading;
   }
@@ -150,7 +142,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   openFirstDocuments() {
     if (this.suggestions.length) {
       this.openedDocuments = this.suggestions
-        .slice(0, Math.max(0, Number(this.numberOfAutoOpenedDocuments)))
+        .slice(0, this._numberOfAutoOpenedDocuments)
         .map((suggestion) => {
           return suggestion.title;
         });
@@ -177,5 +169,39 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   get hasSuggestions() {
     return !!this.suggestions.length;
+  }
+
+  /**
+   * Set the number of automatically opened document suggestions when fetching suggestions.
+   * @param {number} value - the value to be set.
+   * @returns {void}
+   */
+  @api set numberOfAutoOpenedDocuments(value) {
+    if (isNaN(Number(value)) || Number(value) < 0) {
+      console.warn(
+        'Please enter a valid number of automatically opened documents.'
+      );
+    }
+    this._numberOfAutoOpenedDocuments = Math.max(0, Number(value) || 0);
+  }
+  get numberOfAutoOpenedDocuments() {
+    return this._numberOfAutoOpenedDocuments;
+  }
+
+  /**
+   * Set the maximum number of document suggesions to display.
+   * @param {number} value - the value to be set.
+   * @returns {void}
+   */
+  @api set maxDocuments(value) {
+    if (isNaN(Number(value)) || Number(value) < 1) {
+      console.warn(
+        'Please enter a valid maximum number of document suggesions.'
+      );
+    }
+    this._maxDocuments = Math.max(1, Number(value) || 1);
+  }
+  get maxDocuments() {
+    return this._maxDocuments;
   }
 }
