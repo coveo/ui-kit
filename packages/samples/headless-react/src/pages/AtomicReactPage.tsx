@@ -36,7 +36,6 @@ import {
   AtomicSearchInterface,
   AtomicSortDropdown,
   AtomicSortExpression,
-  AtomicTableElement,
   AtomicText,
   AtomicTimeframe,
   AtomicTimeframeFacet,

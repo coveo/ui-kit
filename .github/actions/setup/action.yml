@@ -1,5 +1,5 @@
-name: "Setup & build"
-description: "Setup node, install dependencies & build"
+name: 'Setup & build'
+description: 'Setup node, install dependencies & build'
 inputs:
   with-registry:
     description: Whether we should use the npmjs.org registry
@@ -32,6 +32,7 @@ runs:
           packages/atomic/www
           packages/quantic/docs/out
           packages/atomic-react
+          packages/samples/headless-react
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules
           !**/node_modules
@@ -48,4 +49,8 @@ runs:
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
+
+      shell: bash
+    - if: steps.build-cache.outputs.cache-hit != 'true'
+      run: npm run doc:generate
       shell: bash

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.2...@coveo/headless@1.44.0) (2022-01-24)
+
+
+### Features
+
+* **atomic:** allow atomic-search-box to be standalone ([#1689](https://github.com/coveo/ui-kit/issues/1689)) ([d756277](https://github.com/coveo/ui-kit/commit/d7562779ec5b960dee75b2745fa2fd5a7777abb1))
+
+
+
+
+
+## [1.43.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.1...@coveo/headless@1.43.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* **headless:** add product grouping support ([#1669](https://github.com/coveo/ui-kit/issues/1669)) ([5754c08](https://github.com/coveo/ui-kit/commit/5754c0824ce28046503bb39905cee00505888f5d))
+
+
+
+
+
 ## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.0...@coveo/headless@1.43.1) (2022-01-19)
 
 

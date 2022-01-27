@@ -12,7 +12,6 @@ import {
   pressLabelButton,
   pressShowLess,
   pressShowMore,
-  pressShowMoreUntilImpossible,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
@@ -31,6 +30,7 @@ import {
   breadboxLabel,
   deselectBreadcrumbAtIndex,
 } from '../../breadbox/breadbox-actions';
+import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 
 describe('Facet v1 Test Suites', () => {
   describe('with checkbox values', () => {
@@ -198,6 +198,7 @@ describe('Facet v1 Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleCheckboxValueAt(FacetSelectors, 5);
           }
 
@@ -486,6 +487,7 @@ describe('Facet v1 Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleLinkValueAt(FacetSelectors, 5);
           }
 
@@ -624,6 +626,7 @@ describe('Facet v1 Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleBoxValueAt(5);
           }
 
@@ -671,12 +674,11 @@ describe('Facet v1 Test Suites', () => {
       FacetAssertions.assertLogFacetShowMore(field);
     });
 
-    describe.skip('repeatedly until there\'s no more "Show more" button', () => {
+    describe('when there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
-        new TestFixture()
-          .with(addFacet({field, label, 'number-of-values': 100}))
-          .init();
-        pressShowMoreUntilImpossible(FacetSelectors);
+        new TestFixture().with(addFacet({field: 'month', label})).init();
+        FacetSelectors.showMoreButton().click();
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
@@ -936,7 +938,6 @@ describe('Facet v1 Test Suites', () => {
         function setupDeselectFacetValue() {
           setupSelectedFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {

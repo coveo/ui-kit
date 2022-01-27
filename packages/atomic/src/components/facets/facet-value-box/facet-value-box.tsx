@@ -28,9 +28,11 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
         <span
           title={count}
           part="value-count"
-          class="value-box-count text-neutral-dark truncate with-parentheses w-full text-sm mt-1"
+          class="value-box-count text-neutral-dark truncate w-full text-sm mt-1"
         >
-          {count}
+          {props.i18n.t('between-parentheses', {
+            text: count,
+          })}
         </span>
       </Button>
     </li>

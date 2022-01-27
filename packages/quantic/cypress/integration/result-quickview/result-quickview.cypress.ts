@@ -65,13 +65,15 @@ describe('quantic-result-quickview', () => {
 
       scope('when receiving a script in html content', () => {
         visitResultQuickview();
-        mockResultHtmlContent('script', 'alert("hello")');
+        mockResultHtmlContent(
+          'html',
+          '<body onload="myFunction()"><script>function myFunction() {alert("I am an alert box!");}</script> </body></html>'
+        );
 
         Actions.clickPreview();
         Expect.displaySectionPreview(true);
         Expect.displayDate(true);
         Expect.displayTitle(true);
-        Expect.displayContentContainer(false);
         Expect.displaySpinner(true);
         Expect.noAlertShown();
       });

@@ -15,7 +15,6 @@ import {
   pressLabelButton,
   pressShowLess,
   pressShowMore,
-  pressShowMoreUntilImpossible,
   typeFacetSearchQuery,
 } from '../facet-common-actions';
 import * as FacetAssertions from '../facet/facet-assertions';
@@ -32,6 +31,7 @@ import {
   breadboxComponent,
   BreadboxSelectors,
 } from '../../breadbox/breadbox-selectors';
+import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
@@ -177,6 +177,7 @@ describe('Color Facet Test Suites', () => {
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
+            AnalyticsTracker.reset();
             selectIdleBoxValueAt(0);
           }
 
@@ -228,18 +229,18 @@ describe('Color Facet Test Suites', () => {
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
     });
 
-    describe.skip('repeatedly until there\'s no more "Show more" button', () => {
+    describe('when there\'s no more "Show more" button', () => {
       function setupRepeatShowMore() {
         new TestFixture()
           .with(
             addColorFacet({
-              field: colorFacetField,
+              field: 'month',
               label: colorFacetLabel,
-              'number-of-values': 25,
             })
           )
           .init();
-        pressShowMoreUntilImpossible(ColorFacetSelectors);
+        ColorFacetSelectors.showMoreButton().click();
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
@@ -524,7 +525,6 @@ describe('Color Facet Test Suites', () => {
         function setupDeselectColorFacetValue() {
           setupSelectedColorFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {

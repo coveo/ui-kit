@@ -20,6 +20,7 @@ import {
   SearchStatus,
   buildSearchStatus,
   loadSearchConfigurationActions,
+  loadQueryActions,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
@@ -28,6 +29,11 @@ import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
 import {AtomicStore, initialStore} from '../../utils/store';
 import {getAnalyticsConfig} from './analytics-config';
+import {
+  SafeStorage,
+  StandaloneSearchBoxData,
+  StorageItems,
+} from '../../utils/local-storage-utils';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -235,7 +241,23 @@ export class AtomicSearchInterface {
       return;
     }
 
-    this.engine.executeFirstSearch();
+    const safeStorage = new SafeStorage();
+    const standaloneSearchBoxData =
+      safeStorage.getParsedJSON<StandaloneSearchBoxData | null>(
+        StorageItems.STANDALONE_SEARCH_BOX_DATA,
+        null
+      );
+
+    if (!standaloneSearchBoxData) {
+      this.engine.executeFirstSearch();
+      return;
+    }
+
+    safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
+    const {updateQuery} = loadQueryActions(this.engine!);
+    const {value, analytics} = standaloneSearchBoxData;
+    this.engine!.dispatch(updateQuery({q: value}));
+    this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
   private initEngine(options: InitializationOptions) {

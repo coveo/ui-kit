@@ -7,8 +7,27 @@ import {
 import {AtomicSearchInterface} from './stencil-generated/index';
 
 type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
+/**
+ * The properties of the AtomicSearchInterface component
+ */
 interface WrapperProps extends JSX.AtomicSearchInterface {
+  /**
+   * An optional callback function that can be used to control the execution of the first query.
+   *
+   * If not provided, a default function will be used, which execute the first query immediately after initialization.
+   */
   onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
+  /**
+   * An optional `theme` property can be set in order to load one of the premade Coveo themes.
+   *
+   * Possible values are:
+   *
+   * - `coveo`: the default theme, used if no value is provided. It consists of a set of colors that match the Coveo brand.
+   * - `accessible`: a high contrast theme, best suited for implementations where web accessibility is important.
+   * - `none`: no premade theme will be loaded. You will have to provide the theme yourself.
+   *
+   * Read more about theming and visual customization here : https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/
+   */
   theme?: string | 'none';
 }
 
@@ -19,6 +38,11 @@ const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'theme'>> = {
   theme: 'coveo',
 };
 
+/**
+ * This component serves as a wrapper for the core AtomicSearchInterface.
+ * @param props
+ * @returns
+ */
 export const SearchInterfaceWrapper = (
   props: React.PropsWithChildren<WrapperProps>
 ) => {

@@ -31,6 +31,114 @@ cp -r node_modules/@coveo/atomic-react/dist/lang public/lang
 
 It is important to respect the folder hierarchy, with SVG icons under the `assets` subdirectory, and labels and languages under the `lang` subdirectory of the public folder.
 
+## Result templates
+
+Rendering different types of result templates based on the type of content returned by the Coveo platform is very common when building a Coveo search page.
+
+The way to create result templates for an HTML project using the [core Atomic library](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) involves defining one or multiple `atomic-result-template` components, configured with HTML properties, adding conditions on the attributes and metadata of each results.
+
+Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this works very well in a pure HTML project.
+
+However, this can be limiting and awkward to use in a React project using JSX.
+
+Atomic React exposes an `AtomicResultList` component with a `template` property that can be used in a more straightforward manner when coupled with JSX.
+
+The `template` property accepts a function with a `Result` parameter, which can then be used to conditionally render different templates based on properties and fields available in result items.
+
+The `template` function must then simply return a valid JSX Element.
+
+Here is an example of a fictitious search page, which defines some premade templates for YouTube videos, as well as Salesforce cases:
+
+```jsx
+const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
+  result,
+}) => {
+  return (
+    <>
+      <AtomicResultSectionVisual>
+        <AtomicResultImage field="ytthumbnailurl" />
+      </AtomicResultSectionVisual>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      {result.raw.ytvideoduration !== undefined && (
+        <AtomicResultSectionBottomMetadata>
+          <AtomicText value="Duration" />
+          <AtomicResultNumber field="ytvideoduration">
+            <AtomicFormatUnit unit="minute" />
+          </AtomicResultNumber>
+        </AtomicResultSectionBottomMetadata>
+      )}
+    </>
+  );
+};
+
+const MyResultTemplateForSalesforceCases: React.FC<{result: Result}> = ({
+  result,
+}) => {
+  return (
+    <>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      <AtomicResultSectionExcerpt>
+        <AtomicResultText field="excerpt" />
+      </AtomicResultSectionExcerpt>
+      <AtomicResultSectionEmphasized>
+        {result.raw.sfpriority !== undefined && (
+          <>
+            <AtomicText value="Priority" />
+            <AtomicResultText field="sfpriority" />
+          </>
+        )}
+        {result.raw.sfstatus !== undefined && (
+          <>
+            <AtomicText value="Status" />
+            <AtomicResultText field="sfstatus" />
+          </>
+        )}
+      </AtomicResultSectionEmphasized>
+    </>
+  );
+};
+
+const MyDefaultTemplate: React.FC<{}> = () => {
+  return (
+    <>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      <AtomicResultSectionExcerpt>
+        <AtomicResultText field="excerpt" />
+      </AtomicResultSectionExcerpt>
+    </>
+  );
+};
+
+const MyResultTemplateFunction = (result: Result) => {
+  if (result.raw.filetype === 'YoutubeVideo') {
+    return <MyResultTemplateForYouTubeVideos result={result} />;
+  }
+
+  if (result.raw.objecttype === 'Case') {
+    return <MyResultTemplateForSalesforceCases result={result} />;
+  }
+
+  return <MyDefaultTemplate />;
+};
+
+const MyPage = () => {
+  const engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
+  });
+  return (
+    <AtomicSearchInterface engine={engine}>
+      <AtomicResultList template={MyResultTemplateFunction} />
+    </AtomicSearchInterface>
+  );
+};
+```
+
 ## Styling Result Template Components
 
 Due to the way Atomic Web components use [Shadow Dom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) and [CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) to provide encapsulation, it is necessary to follow these guidelines when you wish to style elements inside any result template.
@@ -58,11 +166,11 @@ const MyPage = () => {
   });
   return (
     <AtomicSearchInterface engine={engine}>
-      <AtomicResultList>
-        <AtomicResultTemplate>
-          <MyStyledResultLink />
-        </AtomicResultTemplate>
-      </AtomicResultList>
+      <AtomicResultList
+        template={(result) => {
+          return <MyStyledResultLink />;
+        }}
+      />
     </AtomicSearchInterface>
   );
 };
@@ -92,12 +200,10 @@ const MyPage = () => {
   });
   return (
     <AtomicSearchInterface engine={engine}>
-      <AtomicResultList>
-        <style>{myStyles}</style>
-        <AtomicResultTemplate>
+      <AtomicResultList template={(result)=> {
+          <style>{myStyles}</style>
           <AtomicResultBadge />
-        </AtomicResultTemplate>
-      </AtomicResultList>
+        }} />
     </AtomicSearchInterface>
   );
 };

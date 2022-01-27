@@ -9,11 +9,11 @@ export function doSortAlphanumeric(originalValues: string[]) {
 }
 
 export function doSortOccurrences(originalValues: string[]) {
+  const getNumericalValue = (value: string) =>
+    parseInt(value.replaceAll(/[,()]/g, ''));
   return originalValues
     .concat()
-    .map((value) => parseInt(value.replaceAll(',', '')))
-    .sort((a, b) => b - a)
-    .map((value) => value.toLocaleString('en'));
+    .sort((a, b) => getNumericalValue(b) - getNumericalValue(a));
 }
 
 export const aliasNoAtSignBuilder = (aliasWithAtSign: IAlias) => {

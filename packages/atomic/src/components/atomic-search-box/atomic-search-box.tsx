@@ -1,12 +1,15 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
   buildSearchBox,
   loadQuerySetActions,
   QuerySetActionCreators,
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+  buildStandaloneSearchBox,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -23,6 +26,7 @@ import {
   SearchBoxSuggestionsEvent,
 } from '../search-box-suggestions/suggestions-common';
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
+import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -43,7 +47,7 @@ import {AriaLiveRegion} from '../../utils/accessibility-utils';
 })
 export class AtomicSearchBox {
   @InitializeBindings() public bindings!: Bindings;
-  private searchBox!: SearchBox;
+  private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
   private listRef!: HTMLElement;
@@ -53,7 +57,7 @@ export class AtomicSearchBox {
 
   @BindStateToController('searchBox')
   @State()
-  private searchBoxState!: SearchBoxState;
+  private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
@@ -68,28 +72,44 @@ export class AtomicSearchBox {
    */
   @Prop() public numberOfQueries = 8;
 
+  /**
+   * Defining this option makes the search box standalone.
+   *
+   * This option defines the default URL the user should be redirected to, when a query is submitted.
+   * If a query pipeline redirect is triggered, it will redirect to that URL instead
+   * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+   */
+  @Prop() public redirectionUrl?: string;
+
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
-    this.searchBox = buildSearchBox(this.bindings.engine, {
-      options: {
-        id: this.id,
-        numberOfSuggestions: 0,
-        highlightOptions: {
-          notMatchDelimiters: {
-            open: '<span class="font-bold">',
-            close: '</span>',
-          },
-          correctionDelimiters: {
-            open: '<span class="font-normal">',
-            close: '</span>',
-          },
+
+    const searchBoxOptions = {
+      id: this.id,
+      numberOfSuggestions: 0,
+      highlightOptions: {
+        notMatchDelimiters: {
+          open: '<span class="font-bold">',
+          close: '</span>',
+        },
+        correctionDelimiters: {
+          open: '<span class="font-normal">',
+          close: '</span>',
         },
       },
-    });
+    };
+
+    this.searchBox = this.redirectionUrl
+      ? buildStandaloneSearchBox(this.bindings.engine, {
+          options: {...searchBoxOptions, redirectionUrl: this.redirectionUrl},
+        })
+      : buildSearchBox(this.bindings.engine, {
+          options: searchBoxOptions,
+        });
 
     this.suggestions.push(
       ...this.pendingSuggestionEvents.map((event) =>
@@ -97,6 +117,23 @@ export class AtomicSearchBox {
       )
     );
     this.pendingSuggestionEvents = [];
+  }
+
+  public componentDidUpdate() {
+    if (!('redirectTo' in this.searchBoxState)) {
+      return;
+    }
+
+    const {redirectTo, value, analytics} = this.searchBoxState;
+
+    if (redirectTo === '') {
+      return;
+    }
+    const data = {value, analytics};
+    const storage = new SafeStorage();
+    storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
+
+    window.location.href = redirectTo;
   }
 
   @Listen('atomic/searchBoxSuggestion/register')
@@ -110,10 +147,16 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents.push(event.detail);
   }
 
+  @Watch('redirectionUrl')
+  watchRedirectionUrl() {
+    this.initialize();
+  }
+
   private get suggestionBindings(): SearchBoxSuggestionsBindings {
     return {
       ...this.bindings,
       id: this.id,
+      isStandalone: !!this.redirectionUrl,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
       clearSuggestions: () => this.clearSuggestions(),
@@ -421,9 +464,9 @@ export class AtomicSearchBox {
     return [
       <div
         part="wrapper"
-        class={`relative flex bg-background h-full w-full border border-neutral rounded-md ${
-          this.isExpanded ? 'border-primary ring ring-ring-primary' : ''
-        }`}
+        class={
+          'relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary'
+        }
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}

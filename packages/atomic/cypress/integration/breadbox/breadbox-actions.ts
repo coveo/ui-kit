@@ -8,5 +8,22 @@ export const addBreadbox =
     addTag(env, 'atomic-breadbox', props);
 
 export function deselectBreadcrumbAtIndex(index: number) {
-  BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(index).click();
+  BreadboxSelectors.breadcrumbButton()
+    .its('length')
+    .then((numberOfBreadcrumbs) => {
+      BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(index).click();
+      if (numberOfBreadcrumbs > 1) {
+        BreadboxSelectors.breadcrumbButton().should(
+          'have.length.lessThan',
+          numberOfBreadcrumbs
+        );
+      } else {
+        BreadboxSelectors.breadcrumbClearFacetValueButton().should('not.exist');
+      }
+    });
+}
+
+export function deselectAllBreadcrumbs() {
+  BreadboxSelectors.clearAllButton().click();
+  BreadboxSelectors.clearAllButton().should('not.exist');
 }
