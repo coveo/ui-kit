@@ -72,14 +72,17 @@ describe('buildSamlFlow', () => {
   describe('#exchangeHandshakeToken', () => {
     describe('url hash contains handshake token', () => {
       beforeEach(() => {
+        options.organizationId = '1';
         options.location!.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
+
+        initSamlFlow();
       });
 
       it('sends a request with the token', () => {
         provider.exchangeHandshakeToken();
 
         expect(request).toHaveBeenCalledWith(
-          'https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token',
+          `https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token?organizationId=${options.organizationId}`,
           {
             method: 'POST',
             body: JSON.stringify({handshakeToken}),

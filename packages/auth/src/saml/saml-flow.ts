@@ -33,18 +33,21 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
     },
 
     async exchangeHandshakeToken() {
-      const {location, history, request} = options;
+      const {organizationId, location, history, request} = options;
       const handshakeToken = getHandshakeToken(location);
       removeHandshakeToken(location, history);
 
       try {
-        const response = await request(`${api}/handshake/token`, {
-          method: 'POST',
-          body: JSON.stringify({handshakeToken}),
-          headers: {
-            'content-type': 'application/json; charset=UTF-8',
-          },
-        });
+        const response = await request(
+          `${api}/handshake/token?organizationId=${organizationId}`,
+          {
+            method: 'POST',
+            body: JSON.stringify({handshakeToken}),
+            headers: {
+              'content-type': 'application/json; charset=UTF-8',
+            },
+          }
+        );
         const data = await response.json();
         return data.token;
       } catch (e) {
