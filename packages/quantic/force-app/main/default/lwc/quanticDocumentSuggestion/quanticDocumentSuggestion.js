@@ -184,6 +184,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     }
     this._numberOfAutoOpenedDocuments = Math.max(0, Number(value) || 0);
   }
+  
   get numberOfAutoOpenedDocuments() {
     return this._numberOfAutoOpenedDocuments;
   }
@@ -201,6 +202,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     }
     this._maxDocuments = Math.max(1, Number(value) || 1);
   }
+
   get maxDocuments() {
     return this._maxDocuments;
   }
