@@ -29,7 +29,7 @@ export default class ExampleQuanticStandaloneSearchBox extends LightningElement 
     {
         attribute: 'redirectUrl',
         label: 'Redirect url',
-        description: 'The url of the search page to redirect to when a query is made.',
+        description: 'The URL of the search page to redirect to when a query is performed.',
         defaultValue: '/global-search/%40uri',
     }
   ];

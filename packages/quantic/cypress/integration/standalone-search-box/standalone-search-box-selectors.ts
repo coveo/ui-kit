@@ -18,9 +18,9 @@ export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
       'c-quantic-search-box-suggestions-list li'
     ),
   clearButton: () =>
-    StandaloneSearchBoxSelectors.get().find('.slds-input__icon_right'),
+    StandaloneSearchBoxSelectors.get().find('.searchbox__clear-button'),
   searchIcon: () =>
-    StandaloneSearchBoxSelectors.get().find('.slds-input__icon_left'),
+    StandaloneSearchBoxSelectors.get().find('.searchbox__search-icon'),
   searchButton: () =>
     StandaloneSearchBoxSelectors.get().find('.searchbox__submit-button-icon'),
 };
