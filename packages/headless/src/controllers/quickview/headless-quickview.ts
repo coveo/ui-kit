@@ -32,6 +32,7 @@ export interface QuickviewOptions {
 export interface Quickview extends Controller {
   /**
    * Retrieves the preview content for the configured result.
+   * @param preventAnalytics Whether or not we want to prevent sending analytics events.
    */
   fetchResultContent(preventAnalytics: boolean): void;
 
