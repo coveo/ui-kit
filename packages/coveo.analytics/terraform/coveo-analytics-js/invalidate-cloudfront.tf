@@ -4,7 +4,6 @@ variable "package_version" {
 
 data "aws_ssm_parameter" "svc_coveoanalyticsjs_secret" {
   name = "/${var.env}/coveoanalyticsjs/svcAccountSecret"
-  type = "SecureString"
 }
 
 resource "null_resource" "invalidate-cloudfront" {
