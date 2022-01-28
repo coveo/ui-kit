@@ -12,14 +12,14 @@ npm i @coveo/auth
 
 1. Configure a [SAML authentication provider](https://docs.coveo.com/en/91/#creating-a-search-api-saml-authentication-provider) on your organization.
 
-2. Instantiate the SAML client provided by this package in your web application.
+2. Inside your web application, instantiate the SAML client in this package.
 
-### Sample
+### Example
 ```
 import {buildSamlClient} from '@coveo/auth`;
 
-const organizationId = '<your organization id>';
-const provider = '<your configured SAML provider name>';
+const organizationId = '<organization id>';
+const provider = '<configured SAML auth provider name>';
 
 async function main() {
   const saml = buildSamlClient({organizationId, provider});
@@ -29,7 +29,7 @@ async function main() {
 
 main();
 ```
-### Sample with `@coveo/headless`
+### Example with `@coveo/headless`
 
 ```
 import {buildSamlClient} from '@coveo/auth`;
@@ -50,7 +50,11 @@ async function main() {
 
 main()
 ```
-React sample [available here](../samples/headless-react/src/pages/SamlPage.tsx).
+### Example with `@coveo/headless` and `React`
+
+- Code example [available here](../samples/headless-react/src/pages/SamlPage.tsx).
+
+## Reference
 
 ### `SamlClientOptions`
 
