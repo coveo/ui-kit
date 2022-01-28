@@ -68,7 +68,10 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
     this.template.addEventListener('rating', this.onRating);
+<<<<<<< HEAD
     this.template.addEventListener('quickview_opened', this.onQvOpened);
+=======
+>>>>>>> 91bad7a22ec5072698f535d1c3bd649cfd4e9b96
   }
 
   renderedCallback() {
@@ -100,7 +103,10 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeDocumentSuggestion?.();
     this.template.removeEventListener('rating', this.onRating);
+<<<<<<< HEAD
     this.template.removeEventListener('quickview_opened', this.onQvOpened);
+=======
+>>>>>>> 91bad7a22ec5072698f535d1c3bd649cfd4e9b96
   }
 
   updateDocumentSuggestionState() {
@@ -192,7 +198,11 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     }
     this._numberOfAutoOpenedDocuments = Math.max(0, Number(value) || 0);
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 91bad7a22ec5072698f535d1c3bd649cfd4e9b96
   get numberOfAutoOpenedDocuments() {
     return this._numberOfAutoOpenedDocuments;
   }
