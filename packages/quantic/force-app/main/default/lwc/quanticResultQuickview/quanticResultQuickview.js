@@ -37,7 +37,6 @@ export default class QuanticResultQuickview extends LightningElement {
   * @defaultValue `undefined`
   */
   @api maximumPreviewSize;
-
   /**
    * The icon to be shown in the preview button.
    * @api
@@ -45,7 +44,6 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `'utility:preview'`
    */
   @api previewButtonIcon = 'utility:preview';
-
   /**
    * The label to be shown in the preview button.
    * @api
@@ -53,6 +51,13 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `undefined`
    */
   @api previewButtonLabel;
+  /**
+   * Indicates Whether or not we want to send analytics events.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api preventAnalytics = false;
 
   /**
    * The variant of the preview button.
@@ -118,8 +123,14 @@ export default class QuanticResultQuickview extends LightningElement {
 
   openQuickview() {
     this.isQuickviewOpen = true;
-    this.quickview.fetchResultContent();
+    this.quickview.fetchResultContent(this.preventAnalytics);
     this.addRecentResult();
+    this.dispatchEvent(new CustomEvent('quickview_opened', {
+      detail: {
+        id :this.result.uniqueId
+      },
+      bubbles: true,
+    }))
   }
 
   addRecentResult() {
