@@ -107,7 +107,8 @@ export const caseAssistCaseClassificationSelector = (
 
 export const caseAssistDocumentSuggestionSelector = (
   state: Partial<CaseAssistAppState>,
-  suggestionId: string
+  suggestionId: string,
+  fromQuickview = false
 ) => {
   let suggestionIdx;
   const suggestion = state.documentSuggestion?.documents.find((s, idx) => {
@@ -124,7 +125,7 @@ export const caseAssistDocumentSuggestionSelector = (
     );
   }
 
-  return {
+  const result = {
     suggestionId: suggestion.uniqueId,
     responseId: state.documentSuggestion?.status.lastResponseId ?? '',
     suggestion: {
@@ -135,4 +136,9 @@ export const caseAssistDocumentSuggestionSelector = (
       documentPosition: suggestionIdx ?? 0,
     },
   };
+
+  if (fromQuickview) {
+    return {...result, fromQuickview};
+  }
+  return result;
 };

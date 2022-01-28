@@ -247,11 +247,33 @@ describe('case assist analytics selectors', () => {
       });
     });
 
+    it('should return the document suggestion matching the specified ID with the field fromQuickview when the fromQuickview parameter is set to true', () => {
+      const suggestion = caseAssistDocumentSuggestionSelector(
+        buildStateWithDocumentSuggestions(),
+        'document-id',
+        true
+      );
+
+      expect(suggestion).toMatchObject({
+        responseId: 'last-document-suggestion-response-id',
+        suggestionId: 'document-id',
+        fromQuickview: true,
+        suggestion: {
+          documentPosition: 0,
+          documentTitle: 'My Document',
+          documentUri: 'http://my.document.uri',
+          documentUriHash: 'document-uri-hash',
+          documentUrl: 'http://my.document.uri/clickable',
+        },
+      });
+    });
+
     it('should throw when the document suggestion is not found', () => {
       expect(() =>
         caseAssistDocumentSuggestionSelector(
           buildStateWithDocumentSuggestions(),
-          'some-invalid-suggestion-id'
+          'some-invalid-suggestion-id',
+          true
         )
       ).toThrow();
     });
