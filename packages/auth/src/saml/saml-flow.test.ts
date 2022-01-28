@@ -93,6 +93,17 @@ describe('buildSamlFlow', () => {
         );
       });
 
+      it('if the organization id has an unsafe url character, it encodes it', () => {
+        options.organizationId = '>';
+        initSamlFlow();
+
+        provider.exchangeHandshakeToken();
+        expect(request).toHaveBeenCalledWith(
+          'https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token?organizationId=%3E',
+          expect.any(Object)
+        );
+      });
+
       it('url hash starts with handshake token param, it exchanges the token', () => {
         options.location!.hash = `#handshake_token=${handshakeToken}`;
         provider.exchangeHandshakeToken();
