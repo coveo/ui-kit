@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.8...@coveo/quantic@1.8.0) (2022-01-28)
+
+
+### Features
+
+* **quantic:** Document Suggestion Component ([#1641](https://github.com/coveo/ui-kit/issues/1641)) ([53adfb3](https://github.com/coveo/ui-kit/commit/53adfb343c4c4e80d9b7b04e3dba1edc159705dc))
+
+
+
+
+
 ## [1.7.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.7...@coveo/quantic@1.7.8) (2022-01-24)
 
 **Note:** Version bump only for package @coveo/quantic
