@@ -33,7 +33,7 @@ export interface Quickview extends Controller {
   /**
    * Retrieves the preview content for the configured result.
    */
-  fetchResultContent(): void;
+  fetchResultContent(preventAnalytics: boolean): void;
 
   /**
    * The state for the `Quickview` controller.
@@ -84,11 +84,13 @@ export function buildQuickview(
   return {
     ...controller,
 
-    fetchResultContent() {
+    fetchResultContent(preventAnalytics: boolean) {
       dispatch(
         fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
       );
-      dispatch(logDocumentQuickview(result));
+      if (!preventAnalytics) {
+        dispatch(logDocumentQuickview(result));
+      }
     },
 
     get state() {

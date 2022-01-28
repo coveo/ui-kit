@@ -47,7 +47,7 @@ describe('Quickview', () => {
     expect(quickview.subscribe).toBeTruthy();
   });
 
-  describe('#fetchResultContent', () => {
+  describe('#fetchResultContent when preventAnalytics is set to false', () => {
     const uniqueId = '1';
     const requestedOutputSize = 0;
 
@@ -55,7 +55,7 @@ describe('Quickview', () => {
       options.result = buildMockResult({uniqueId});
       initQuickview();
 
-      quickview.fetchResultContent();
+      quickview.fetchResultContent(false);
     });
 
     it('dispatches a #fetchResultContent action with the result uniqueId', () => {
@@ -69,6 +69,31 @@ describe('Quickview', () => {
       const action = engine.findAsyncAction(thunk.pending);
 
       expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#fetchResultContent when preventAnalytics is set to true', () => {
+    const uniqueId = '1';
+    const requestedOutputSize = 0;
+
+    beforeEach(() => {
+      options.result = buildMockResult({uniqueId});
+      initQuickview();
+
+      quickview.fetchResultContent(true);
+    });
+
+    it('dispatches a #fetchResultContent action with the result uniqueId', () => {
+      const action = engine.findAsyncAction(fetchResultContent.pending);
+      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
+    });
+
+    it('prevents dispatching a document quickview click event', () => {
+      const result = buildMockResult();
+      const thunk = buildDocumentQuickviewThunk(result);
+      const action = engine.findAsyncAction(thunk.pending);
+
+      expect(action).toBeFalsy();
     });
   });
 
