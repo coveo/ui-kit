@@ -27,6 +27,7 @@ describe('quantic-result-quickview', () => {
   const pageUrl = 's/quantic-result-quickview';
 
   const haspreview = 'haspreview';
+  const quickview_opened = 'quickview_opened';
 
   function visitResultQuickview(options: Partial<ResultQuickviewOptions> = {}) {
     interceptSearch();
@@ -44,6 +45,7 @@ describe('quantic-result-quickview', () => {
         Expect.displaySectionPreview(false);
         Expect.buttonPreviewIsDisabled(false);
         Actions.clickPreview();
+        Expect.events.receivedEvent(true, quickview_opened);
         Expect.displaySectionPreview(true);
         Expect.displayTitle(true);
         Expect.displayDate(true);
@@ -71,6 +73,7 @@ describe('quantic-result-quickview', () => {
         );
 
         Actions.clickPreview();
+        Expect.events.receivedEvent(true, quickview_opened);
         Expect.displaySectionPreview(true);
         Expect.displayDate(true);
         Expect.displayTitle(true);
@@ -92,6 +95,7 @@ describe('quantic-result-quickview', () => {
         Expect.displayButtonPreviewIcon(true);
         Expect.buttonPreviewIconContains('bug');
         Actions.clickPreview();
+        Expect.events.receivedEvent(true, quickview_opened);
         Expect.displaySectionPreview(true);
       });
 
@@ -104,6 +108,7 @@ describe('quantic-result-quickview', () => {
         Expect.displayButtonPreview(true);
         Expect.buttonPreviewContains('custom label');
         Actions.clickPreview();
+        Expect.events.receivedEvent(true, quickview_opened);
         Expect.displaySectionPreview(true);
       });
 
@@ -115,6 +120,7 @@ describe('quantic-result-quickview', () => {
 
         Expect.displayButtonPreview(true, 'outline-brand');
         Actions.clickPreview('outline-brand');
+        Expect.events.receivedEvent(true, quickview_opened);
         Expect.displaySectionPreview(true);
       });
     });
