@@ -62,7 +62,8 @@ export interface CaseAssistAnalyticsActionCreators {
   >;
 
   logDocumentSuggestionClick(
-    suggestionId: string
+    suggestionId: string,
+    fromQuickview: boolean
   ): AsyncThunkAction<
     void,
     void,
