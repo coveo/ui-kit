@@ -18,7 +18,7 @@ export const Quickview: FunctionComponent<QuickviewProps> = (props) => {
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   const openModal = () => {
-    controller.fetchResultContent(false);
+    controller.fetchResultContent();
     toggleModal(true);
   };
 

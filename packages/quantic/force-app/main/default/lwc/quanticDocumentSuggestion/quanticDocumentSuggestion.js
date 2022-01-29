@@ -126,7 +126,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   onQvOpened = (evt) => {
     this.engine.dispatch(
-      this.actions.logDocumentSuggestionClick(evt.detail.id, true)
+      this.actions.logQuickviewDocumentSuggestionClick(evt.detail.id)
     );
   };
 
@@ -139,7 +139,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     ) {
       if (!this.openedDocuments.includes(evt.target.name)) {
         this.engine.dispatch(
-          this.actions.logDocumentSuggestionClick(evt.target.dataset.id, false)
+          this.actions.logDocumentSuggestionClick(evt.target.dataset.id)
         );
       }
       // @ts-ignore

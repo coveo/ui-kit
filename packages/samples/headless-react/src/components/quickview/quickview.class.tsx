@@ -42,7 +42,7 @@ export class Quickview extends Component<QuickviewProps, QuickviewState> {
   }
 
   private openModal() {
-    this.controller.fetchResultContent(false);
+    this.controller.fetchResultContent();
     this.setState({isModalOpen: true});
   }
 

@@ -107,7 +107,9 @@ export default class QuanticResultQuickview extends LightningElement {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
     }
-    this.quickview = CoveoHeadless.buildQuickview(engine, {options});
+    this.quickview = this.preventAnalytics
+      ? CoveoHeadless.buildQuickviewCore(engine, {options})
+      : CoveoHeadless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);
@@ -123,14 +125,16 @@ export default class QuanticResultQuickview extends LightningElement {
 
   openQuickview() {
     this.isQuickviewOpen = true;
-    this.quickview.fetchResultContent(this.preventAnalytics);
+    this.quickview.fetchResultContent();
     this.addRecentResult();
-    this.dispatchEvent(new CustomEvent('quickview_opened', {
-      detail: {
-        id :this.result.uniqueId
-      },
-      bubbles: true,
-    }))
+    this.dispatchEvent(
+      new CustomEvent('quickview_opened', {
+        detail: {
+          id: this.result.uniqueId,
+        },
+        bubbles: true,
+      })
+    );
   }
 
   addRecentResult() {

@@ -12,6 +12,7 @@ import {
   logDocumentSuggestionRating,
   logSolveCase,
   logUpdateCaseField,
+  logQuickviewDocumentSuggestionClick,
 } from './case-assist-analytics-actions';
 
 export interface CaseAssistAnalyticsActionCreators {
@@ -62,8 +63,15 @@ export interface CaseAssistAnalyticsActionCreators {
   >;
 
   logDocumentSuggestionClick(
-    suggestionId: string,
-    fromQuickview: boolean
+    suggestionId: string
+  ): AsyncThunkAction<
+    void,
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
+  >;
+
+  logQuickviewDocumentSuggestionClick(
+    suggestionId: string
   ): AsyncThunkAction<
     void,
     void,
@@ -94,5 +102,6 @@ export function loadCaseAssistAnalyticsActions(
     logClassificationClick,
     logDocumentSuggestionClick,
     logDocumentSuggestionRating,
+    logQuickviewDocumentSuggestionClick,
   };
 }

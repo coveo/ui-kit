@@ -68,10 +68,17 @@ export const logClassificationClick = (classificationId: string) =>
       })
   )();
 
-export const logDocumentSuggestionClick = (
-  suggestionId: string,
-  fromQuickview = false
-) =>
+export const logDocumentSuggestionClick = (suggestionId: string) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/click',
+    (client, state) =>
+      client.logSelectDocumentSuggestion({
+        suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
+        ticket: caseAssistCaseSelector(state),
+      })
+  )();
+
+export const logQuickviewDocumentSuggestionClick = (suggestionId: string) =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/documentSuggestion/click',
     (client, state) =>
@@ -79,7 +86,7 @@ export const logDocumentSuggestionClick = (
         suggestion: caseAssistDocumentSuggestionSelector(
           state,
           suggestionId,
-          fromQuickview
+          true
         ),
         ticket: caseAssistCaseSelector(state),
       })
