@@ -14,7 +14,7 @@ import {
 
 export interface QuickviewCoreProps {
   /**
-   * The options for the `Quickview` controller.
+   * The options for the `QuickviewCore` controller.
    */
   options: QuickviewCoreOptions;
 }
@@ -38,7 +38,7 @@ export interface QuickviewCore extends Controller {
   fetchResultContent(): void;
 
   /**
-   * The state for the `Quickview` controller.
+   * The state for the `QuickviewCore` controller.
    */
   state: QuickviewCoreState;
 }
@@ -63,11 +63,11 @@ export interface QuickviewCoreState {
 }
 
 /**
- * Creates a `Quickview` controller instance.
+ * Creates a `QuickviewCore` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `Quickview` properties.
- * @returns A `Quickview` controller instance.
+ * @param props - The configurable `QuickviewCore` properties.
+ * @returns A `QuickviewCore` controller instance.
  */
 export function buildQuickviewCore(
   engine: SearchEngine,
