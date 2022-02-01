@@ -42,9 +42,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api showQuickview = false;
   /**
+   * Whether or not we want to fetch suggestions when initializing this component.
    * @api
    * @type {boolean}
-   * Whether or not we want to fetch suggestions when initializing this component.
    */
   @api fetchOnInit = false;
 

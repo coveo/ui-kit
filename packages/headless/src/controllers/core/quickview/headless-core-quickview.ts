@@ -65,10 +65,11 @@ export interface QuickviewCoreState {
 }
 
 /**
- * Creates a `QuickviewCore` controller instance.
+ * Creates a Quickview controller core instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `QuickviewCore` properties.
+ * @param fetchResultContentCallback - The callback to be triggered after executing fetchResultContent.
  * @returns A `QuickviewCore` controller instance.
  */
 export function buildQuickviewCore(
