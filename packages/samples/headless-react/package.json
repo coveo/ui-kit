@@ -36,7 +36,7 @@
     "ssr:build": "npm run build && npm run build:server",
     "ssr:start": "node ./build/server/server/server.js",
     "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang",
-    "link:atomic-react": "pushd ../../atomic-react && npm link ../samples/headless-react/node_modules/react/",
+    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/headless-react/node_modules/react/",
     "cypress:open": "cypress open"
   },
   "browserslist": {
