@@ -68,7 +68,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
     this.template.addEventListener('rating', this.onRating);
-    this.template.addEventListener('quickview_opened', this.onQvOpened);
   }
 
   renderedCallback() {
@@ -100,7 +99,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeDocumentSuggestion?.();
     this.template.removeEventListener('rating', this.onRating);
-    this.template.removeEventListener('quickview_opened', this.onQvOpened);
   }
 
   updateDocumentSuggestionState() {
@@ -121,12 +119,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   onRating = (evt) => {
     this.engine.dispatch(
       this.actions.logDocumentSuggestionRating(evt.detail.id, evt.detail.score)
-    );
-  };
-
-  onQvOpened = (evt) => {
-    this.engine.dispatch(
-      this.actions.logQuickviewDocumentSuggestionClick(evt.detail.id)
     );
   };
 
