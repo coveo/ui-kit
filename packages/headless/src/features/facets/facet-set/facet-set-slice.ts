@@ -79,16 +79,16 @@ export const facetSetReducer = createReducer(
           return;
         }
 
-        const targetValue = facetRequest.currentValues.find(
+        const existingValue = facetRequest.currentValues.find(
           (req) => req.value === selection.value
         );
 
-        if (!targetValue) {
-          return;
+        if (existingValue) {
+          const isSelected = existingValue.state === 'selected';
+          existingValue.state = isSelected ? 'idle' : 'selected';
+        } else {
+          facetRequest.currentValues.push(selection);
         }
-
-        const isSelected = targetValue.state === 'selected';
-        targetValue.state = isSelected ? 'idle' : 'selected';
 
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;

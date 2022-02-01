@@ -183,6 +183,25 @@ describe('facet-set slice', () => {
       expect(targetValue?.state).toBe('idle');
     });
 
+    it('adds new values', () => {
+      const id = '1';
+
+      const facetValue = buildMockFacetValue({value: 'TED'});
+
+      state[id] = buildMockFacetRequest({currentValues: []});
+
+      const action = toggleSelectFacetValue({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
+
+      const targetValue = finalState[id].currentValues.find(
+        (req) => req.value === facetValue.value
+      );
+      expect(targetValue).toEqual(facetValue);
+    });
+
     it('sets #freezeCurrentValues to true', () => {
       const id = '1';
 
