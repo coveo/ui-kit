@@ -1,28 +1,29 @@
-import {configuration, resultPreview} from '../../../app/reducers';
-import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
+import {configuration, resultPreview} from '../../app/reducers';
+import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {buildQuickviewDocumentSuggestionClickThunk} from '../../features/case-assist/case-assist-analytics-actions';
+import {buildMockResult} from '../../test';
+import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test';
-import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
+  buildCaseAssistQuickview,
+  CaseAssistQuickviewOptions,
+  CaseAssistQuickview,
+} from './case-assist-headless-quickview';
 import {
-  buildQuickviewCore,
-  QuickviewCoreOptions,
-  QuickviewCore,
-} from './headless-core-quickview';
+  buildMockCaseAssistEngine,
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
 
-describe('QuickviewCore', () => {
-  let engine: MockSearchEngine;
-  let options: QuickviewCoreOptions;
-  let quickview: QuickviewCore;
+describe('CaseAssistQuickview', () => {
+  let engine: MockCaseAssistEngine;
+  let options: CaseAssistQuickviewOptions;
+  let quickview: CaseAssistQuickview;
 
   function initQuickview() {
-    quickview = buildQuickviewCore(engine, {options});
+    quickview = buildCaseAssistQuickview(engine, {options});
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockCaseAssistEngine();
     options = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
@@ -60,6 +61,13 @@ describe('QuickviewCore', () => {
     it('dispatches a #fetchResultContent action with the result uniqueId', () => {
       const action = engine.findAsyncAction(fetchResultContent.pending);
       expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
+    });
+
+    it('dispatches a quickview document suggestion click event', () => {
+      const result = buildMockResult();
+      const thunk = buildQuickviewDocumentSuggestionClickThunk(result.uniqueId);
+      const action = engine.findAsyncAction(thunk.pending);
+      expect(action).toBeTruthy();
     });
   });
 

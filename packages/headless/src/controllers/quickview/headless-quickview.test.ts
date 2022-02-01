@@ -99,38 +99,24 @@ describe('Quickview', () => {
     expect(quickview.state.content).toEqual('');
   });
 
-  it(`when the result #hasHtmlVersion is true,
-  #state.resultHasPreview is true`, () => {
-    options.result = buildMockResult({hasHtmlVersion: true});
-    initQuickview();
+  [true, false].forEach((testValue) => {
+    it(`when the result #hasHtmlVersion is ${testValue} #state.resultHasPreview should be ${testValue}`, () => {
+      options.result = buildMockResult({hasHtmlVersion: testValue});
+      initQuickview();
 
-    expect(quickview.state.resultHasPreview).toBe(true);
-  });
-
-  it(`when the result #hasHtmlVersion is false,
-  #state.resultHasPreview is false`, () => {
-    options.result = buildMockResult({hasHtmlVersion: false});
-    initQuickview();
-
-    expect(quickview.state.resultHasPreview).toBe(false);
-  });
-
-  it(`when the resultPreview state #isLoading is true,
-  #state.isLoading is true`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState({isLoading: true});
-    initQuickview();
-
-    expect(quickview.state.isLoading).toBe(true);
-  });
-
-  it(`when the resultPreview state #isLoading is false,
-  #state.isLoading is false`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState({
-      isLoading: false,
+      expect(quickview.state.resultHasPreview).toBe(testValue);
     });
-    initQuickview();
+  });
 
-    expect(quickview.state.isLoading).toBe(false);
+  [true, false].forEach((testValue) => {
+    it(`when the resultPreview state #isLoading is ${testValue} #state.isLoading should be ${testValue}`, () => {
+      engine.state.resultPreview = buildMockResultPreviewState({
+        isLoading: testValue,
+      });
+      initQuickview();
+
+      expect(quickview.state.isLoading).toBe(testValue);
+    });
   });
 
   it(`when the resultPreview is initialized,

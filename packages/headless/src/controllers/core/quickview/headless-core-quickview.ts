@@ -1,6 +1,5 @@
 import {Result} from '../../../api/search/search/result';
 import {configuration, resultPreview} from '../../../app/reducers';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
 import {
   ConfigurationSection,
@@ -11,6 +10,9 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {CoreEngine} from '../../..';
+import {HtmlApiClient} from '../../../api/search/html/html-api-client';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 
 export interface QuickviewCoreProps {
   /**
@@ -70,9 +72,9 @@ export interface QuickviewCoreState {
  * @returns A `QuickviewCore` controller instance.
  */
 export function buildQuickviewCore(
-  engine: SearchEngine,
+  engine: CoreEngine,
   props: QuickviewCoreProps,
-  action?: () => void
+  fetchResultContentCallback?: () => void
 ): QuickviewCore {
   if (!loadQuickviewReducers(engine)) {
     throw loadReducerError;
@@ -91,8 +93,8 @@ export function buildQuickviewCore(
       dispatch(
         fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
       );
-      if (action) {
-        action();
+      if (fetchResultContentCallback) {
+        fetchResultContentCallback();
       }
     },
 
@@ -112,8 +114,11 @@ export function buildQuickviewCore(
 }
 
 function loadQuickviewReducers(
-  engine: SearchEngine
-): engine is SearchEngine<ConfigurationSection & ResultPreviewSection> {
+  engine: CoreEngine
+): engine is CoreEngine<
+  ConfigurationSection & ResultPreviewSection,
+  ClientThunkExtraArguments<HtmlApiClient>
+> {
   engine.addReducers({configuration, resultPreview});
   return true;
 }

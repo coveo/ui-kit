@@ -18,16 +18,12 @@ import {SearchAppState} from '../../state/search-app-state';
 import {baseSearchRequest} from './search-api-params';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
-import {Logger} from 'pino';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
-import {PreprocessRequest} from '../preprocess-request';
 import {HtmlRequest} from './html/html-request';
-import {findEncoding} from './encoding-finder';
-import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
@@ -38,6 +34,7 @@ import {
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
@@ -63,9 +60,7 @@ export interface AsyncThunkSearchOptions<
   rejectValue: SearchAPIErrorWithStatusCode;
 }
 
-export interface SearchAPIClientOptions {
-  logger: Logger;
-  preprocessRequest: PreprocessRequest;
+export interface SearchAPIClientOptions extends HtmlAPIClientOptions {
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
@@ -214,31 +209,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 
   async html(req: HtmlRequest) {
-    const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/x-www-form-urlencoded',
-        '/html'
-      ),
-      requestParams: pickNonBaseParams(req),
-      ...this.options,
-    });
-
-    if (response instanceof Error) {
-      throw response;
-    }
-
-    const encoding = findEncoding(response);
-    const buffer = await response.arrayBuffer();
-    const decoder = new TextDecoder(encoding);
-    const body = decoder.decode(buffer);
-
-    if (isSuccessHtmlResponse(body)) {
-      return {success: body};
-    }
-
-    return {error: unwrapError({response, body})};
+    return getHtml(req, this.options);
   }
 
   async productRecommendations(req: ProductRecommendationsRequest) {
@@ -300,7 +271,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 }
 
-const unwrapError = (
+export const unwrapError = (
   payload: PlatformResponse<AllSearchAPIResponse>
 ): SearchAPIErrorWithStatusCode => {
   const {response} = payload;
@@ -370,10 +341,6 @@ function isSuccessPlanResponse(body: unknown): body is PlanResponseSuccess {
   return (body as PlanResponseSuccess).preprocessingOutput !== undefined;
 }
 
-function isSuccessHtmlResponse(body: unknown): body is string {
-  return typeof body === 'string';
-}
-
 function isSuccessFieldsDescriptionResponse(
   body: unknown
 ): body is FieldDescriptionsResponseSuccess {
@@ -402,7 +369,7 @@ function isSearchAPIException(
   );
 }
 
-function pickNonBaseParams<Params extends BaseParam>(req: Params) {
+export function pickNonBaseParams<Params extends BaseParam>(req: Params) {
   // cheap version of _.omit
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {url, accessToken, organizationId, ...nonBase} = req;

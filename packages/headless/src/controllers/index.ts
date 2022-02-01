@@ -276,14 +276,6 @@ export type {
 export {buildQuickview} from './quickview/headless-quickview';
 
 export type {
-  QuickviewCore,
-  QuickviewCoreOptions,
-  QuickviewCoreProps,
-  QuickviewCoreState,
-} from './core/quickview/headless-core-quickview';
-export {buildQuickviewCore} from './core/quickview/headless-core-quickview';
-
-export type {
   FoldedCollection,
   FoldedResult,
   FoldedResultList,
