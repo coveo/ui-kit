@@ -12,7 +12,7 @@ export interface DocumentSuggestionSelector extends ComponentSelector {
   noSuggestionsMessage: () => CypressSelector;
   quickviewButton: (idx: number) => CypressSelector;
   quickviews: () => CypressSelector;
-  closeButtonQv: () => CypressSelector;
+  quickviewCloseButton: () => CypressSelector;
 }
 
 export const DocumentSuggestionSelectors: DocumentSuggestionSelector = {
@@ -42,7 +42,7 @@ export const DocumentSuggestionSelectors: DocumentSuggestionSelector = {
       .eq(idx),
   quickviews: () =>
     DocumentSuggestionSelectors.get().find('c-quantic-result-quickview'),
-  closeButtonQv: () =>
+  quickviewCloseButton: () =>
     DocumentSuggestionSelectors.get().find(
       'c-quantic-result-quickview section header button'
     ),

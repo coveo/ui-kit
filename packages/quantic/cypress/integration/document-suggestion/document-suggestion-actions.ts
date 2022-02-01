@@ -21,7 +21,7 @@ function documentSuggestionActions(selector: DocumentSuggestionSelector) {
         ),
     closeQuickview: () =>
       selector
-        .closeButtonQv()
+        .quickviewCloseButton()
         .click()
         .logAction('When closing the quickview of a document suggestion.'),
   };
