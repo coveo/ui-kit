@@ -54,7 +54,7 @@ export interface FacetSetActionCreators {
   ): PayloadAction<RegisterFacetActionCreatorPayload>;
 
   /**
-   * Toggles a facet value.
+   * Toggles a facet value. If the value does not exist, it is added.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
