@@ -85,7 +85,7 @@ export const facetSetReducer = createReducer(
           (req) => req.value === selection.value
         );
         if (!existingValue) {
-          insertValueBeforeIdleValues(facetRequest, selection);
+          insertNewValue(facetRequest, selection);
           return;
         }
 
@@ -189,14 +189,14 @@ export const facetSetReducer = createReducer(
         }
 
         const searchResultValue = buildSelectedFacetValueRequest(rawValue);
-        insertValueBeforeIdleValues(facetRequest, searchResultValue);
+        insertNewValue(facetRequest, searchResultValue);
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       });
   }
 );
 
-function insertValueBeforeIdleValues(
+function insertNewValue(
   facetRequest: FacetRequest,
   facetValue: FacetValueRequest
 ) {
