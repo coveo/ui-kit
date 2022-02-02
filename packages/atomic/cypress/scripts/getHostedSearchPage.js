@@ -6,9 +6,9 @@
 
 const fs = require('fs');
 const https = require('https');
-const path = require('path');
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
+const path = require('path');
 
 const SEARCH_URL = 'https://search.cloud.coveo.com';
 const ORG_ID = 'coveointernaltesting1';
@@ -40,7 +40,8 @@ function replaceInitScript(document) {
         organizationId: 'searchuisamples'
       });
       searchInterface.executeFirstSearch()
-    })()`;
+    })()
+  `;
 }
 
 /**
@@ -53,6 +54,7 @@ function addCssAndJs() {
     'js/SearchInterfaces.Dependencies.min.js',
     'js/SearchInterfaces.bundle.min.js',
   ];
+
   links.forEach((link) => {
     const filepath = PUBLIC_FOLDER + link;
     try {
@@ -62,8 +64,9 @@ function addCssAndJs() {
     }
     const file = fs.createWriteStream(filepath);
     https.get(BASE_URL + link, (response) => {
-      if (response.statusCode != 200) {
-        console.error(`Could not download file: ${link}, Http error: ${response.statusCode}`);
+      const code = response.statusCode;
+      if (code != 200) {
+        console.error(`Could not download file: ${link}, Http error: ${code}`);
         process.exit(1);
       }
       response.pipe(file);
@@ -76,10 +79,9 @@ JSDOM.fromURL(BASE_URL + 'html').then((dom) => {
   replaceAtomicVersion(document);
   replaceInitScript(document);
   addCssAndJs();
-  const filename = PUBLIC_FOLDER + 'hosted.html';
   try {
     const html = dom.serialize();
-    fs.writeFileSync(filename, html);
+    fs.writeFileSync(PUBLIC_FOLDER + 'hosted.html', html);
   } catch (err) {
     console.error(err);
   }
