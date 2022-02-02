@@ -226,7 +226,7 @@ describe('facet-set slice', () => {
       expect(finalState[id].freezeCurrentValues).toBe(true);
     });
 
-    it('does not #freezeCurrentValues to true when toggled value exists', () => {
+    it('does not set #freezeCurrentValues to true when toggled value exists', () => {
       const id = '1';
 
       state[id] = buildMockFacetRequest({currentValues: []});
