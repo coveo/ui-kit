@@ -4,7 +4,7 @@
 
 describe('Validate Atomic components in Hosted Search Page', () => {
   before(() => {
-    cy.exec('python3 cypress/scripts/get_hosted_search_page.py');
+    cy.exec('node cypress/scripts/getHostedSearchPage.js');
   });
 
   it('Visits the test page', () => {
