@@ -183,26 +183,33 @@ describe('facet-set slice', () => {
       expect(targetValue?.state).toBe('idle');
     });
 
-    it('adds new values', () => {
+    it('adds a new value before idle values when it does not exist', () => {
       const id = '1';
 
-      const facetValue = buildMockFacetValue({value: 'TED'});
+      const newFacetValue = buildMockFacetValue({
+        value: 'TED',
+        state: 'selected',
+      });
 
-      state[id] = buildMockFacetRequest({currentValues: []});
+      state[id] = buildMockFacetRequest({
+        currentValues: [
+          buildMockFacetValue({value: 'selected1', state: 'selected'}),
+          buildMockFacetValue({value: 'selected2', state: 'selected'}),
+          buildMockFacetValue({value: 'idle1', state: 'idle'}),
+          buildMockFacetValue({value: 'idle2', state: 'idle'}),
+        ],
+      });
 
       const action = toggleSelectFacetValue({
         facetId: id,
-        selection: facetValue,
+        selection: newFacetValue,
       });
-      const finalState = facetSetReducer(state, action);
 
-      const targetValue = finalState[id].currentValues.find(
-        (req) => req.value === facetValue.value
-      );
-      expect(targetValue).toEqual(facetValue);
+      const finalState = facetSetReducer(state, action);
+      expect(finalState[id].currentValues.indexOf(newFacetValue)).toBe(2);
     });
 
-    it('sets #freezeCurrentValues to true', () => {
+    it('sets #freezeCurrentValues to true when toggled value exists', () => {
       const id = '1';
 
       const facetValue = buildMockFacetValue({value: 'TED'});
@@ -217,6 +224,20 @@ describe('facet-set slice', () => {
       const finalState = facetSetReducer(state, action);
 
       expect(finalState[id].freezeCurrentValues).toBe(true);
+    });
+
+    it('does not #freezeCurrentValues to true when toggled value exists', () => {
+      const id = '1';
+
+      state[id] = buildMockFacetRequest({currentValues: []});
+
+      const action = toggleSelectFacetValue({
+        facetId: id,
+        selection: buildMockFacetValue({value: 'TED'}),
+      });
+      const finalState = facetSetReducer(state, action);
+
+      expect(finalState[id].freezeCurrentValues).toBe(false);
     });
 
     it('sets #preventAutoSelect to true', () => {

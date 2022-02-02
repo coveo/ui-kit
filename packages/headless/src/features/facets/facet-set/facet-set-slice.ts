@@ -79,19 +79,19 @@ export const facetSetReducer = createReducer(
           return;
         }
 
+        facetRequest.preventAutoSelect = true;
+
         const existingValue = facetRequest.currentValues.find(
           (req) => req.value === selection.value
         );
-
-        if (existingValue) {
-          const isSelected = existingValue.state === 'selected';
-          existingValue.state = isSelected ? 'idle' : 'selected';
-        } else {
-          facetRequest.currentValues.push(selection);
+        if (!existingValue) {
+          insertValueBeforeIdleValues(facetRequest, selection);
+          return;
         }
 
+        const isSelected = existingValue.state === 'selected';
+        existingValue.state = isSelected ? 'idle' : 'selected';
         facetRequest.freezeCurrentValues = true;
-        facetRequest.preventAutoSelect = true;
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
@@ -189,26 +189,28 @@ export const facetSetReducer = createReducer(
         }
 
         const searchResultValue = buildSelectedFacetValueRequest(rawValue);
-        const firstIdleIndex = currentValues.findIndex(
-          (v) => v.state === 'idle'
-        );
-        const indexToInsertAt =
-          firstIdleIndex === -1 ? currentValues.length : firstIdleIndex;
-
-        const valuesBefore = currentValues.slice(0, indexToInsertAt);
-        const valuesAfter = currentValues.slice(indexToInsertAt + 1);
-
-        facetRequest.currentValues = [
-          ...valuesBefore,
-          searchResultValue,
-          ...valuesAfter,
-        ];
-        facetRequest.numberOfValues = facetRequest.currentValues.length;
+        insertValueBeforeIdleValues(facetRequest, searchResultValue);
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       });
   }
 );
+
+function insertValueBeforeIdleValues(
+  facetRequest: FacetRequest,
+  facetValue: FacetValueRequest
+) {
+  const {currentValues} = facetRequest;
+  const firstIdleIndex = currentValues.findIndex((v) => v.state === 'idle');
+  const indexToInsertAt =
+    firstIdleIndex === -1 ? currentValues.length : firstIdleIndex;
+
+  const valuesBefore = currentValues.slice(0, indexToInsertAt);
+  const valuesAfter = currentValues.slice(indexToInsertAt + 1);
+
+  facetRequest.currentValues = [...valuesBefore, facetValue, ...valuesAfter];
+  facetRequest.numberOfValues = facetRequest.currentValues.length;
+}
 
 function mutateStateFromFacetResponse(
   facetRequest: WritableDraft<FacetRequest> | undefined,
