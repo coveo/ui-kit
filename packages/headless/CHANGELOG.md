@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.44.0...@coveo/headless@1.45.0) (2022-02-02)
+
+
+### Features
+
+* **headless:** allow toggleSelectFacetValue to add new values ([#1704](https://github.com/coveo/ui-kit/issues/1704)) ([403507e](https://github.com/coveo/ui-kit/commit/403507e38755c1164522e13f27fef17dd1fbc3f1))
+
+
+
+
+
 # [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.43.2...@coveo/headless@1.44.0) (2022-01-24)
 
 

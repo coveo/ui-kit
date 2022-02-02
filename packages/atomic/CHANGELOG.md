@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.27.0...@coveo/atomic@1.28.0) (2022-02-02)
+
+
+### Features
+
+* **headless:** allow toggleSelectFacetValue to add new values ([#1704](https://github.com/coveo/ui-kit/issues/1704)) ([403507e](https://github.com/coveo/ui-kit/commit/403507e38755c1164522e13f27fef17dd1fbc3f1))
+
+
+
+
+
 # [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.26.1...@coveo/atomic@1.27.0) (2022-01-26)
 
 
