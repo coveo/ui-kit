@@ -28,14 +28,16 @@
   },
   "scripts": {
     "prepublishOnly": "exit 1",
-    "dev": "npm run copy:assets && react-scripts start",
+    "dev": "npm run copy:assets && npm run link:atomic-react && react-scripts start",
     "build": "tsc --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ssr:build": "npm run build && npm run build:server",
     "ssr:start": "node ./build/server/server/server.js",
-    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang"
+    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang",
+    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/headless-react/node_modules/react/",
+    "cypress:open": "cypress open"
   },
   "browserslist": {
     "production": [
