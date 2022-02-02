@@ -777,4 +777,11 @@
       <protected>false</protected>
       <shortDescription>Loading</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_NoSuggestions</fullName>
+      <value>No suggestions</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No suggestions</shortDescription>
+    </labels>
 </CustomLabels>

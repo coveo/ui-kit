@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "atomic-angular": {
+    "@coveo/atomic-angular": {
       "projectType": "library",
       "root": "projects/atomic-angular",
       "sourceRoot": "projects/atomic-angular/src",
@@ -35,5 +35,5 @@
       }
     }
   },
-  "defaultProject": "atomic-angular"
+  "defaultProject": "@coveo/atomic-angular"
 }

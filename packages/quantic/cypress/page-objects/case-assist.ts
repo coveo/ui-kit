@@ -6,15 +6,19 @@ function uaAlias(eventName: string) {
 
 export const InterceptAliases = {
   UA: {
+    SuggestionClick: uaAlias('suggestion_click'),
+    SuggestionRate: uaAlias('suggestion_rate'),
     FieldUpdate: uaAlias('ticket_field_update'),
     ClassificationClick: uaAlias('ticket_classification_click'),
   },
+  DocumentSuggestion: '@coveoDocumentSuggestion',
   CaseClassification: '@coveoCaseClassification',
   fetchPicklist: '@fetchPicklist',
 };
 
 export const routeMatchers = {
   analytics: '**/rest/ua/v15/analytics/*',
+  documentSuggestion: '**/rest/organizations/*/caseassists/*/documents/suggest',
   caseClassification: '**/rest/organizations/*/caseassists/*/classify',
 };
 
@@ -26,10 +30,25 @@ export function interceptCaseAssist() {
   });
 }
 
+export function interceptSuggestionIndefinitely(): {
+  sendResponse: () => void;
+} {
+  return interceptIndefinitely(routeMatchers.documentSuggestion);
+}
+
 export function interceptClassificationsIndefinitely(): {
   sendResponse: () => void;
 } {
   return interceptIndefinitely(routeMatchers.caseClassification);
+}
+
+export function mockDocumentSuggestion(value: Array<object>) {
+  cy.intercept(routeMatchers.documentSuggestion, (req) => {
+    req.continue((res) => {
+      res.body?.documents = value;
+      res.send();
+    });
+  }).as(InterceptAliases.DocumentSuggestion.substring(1));
 }
 
 export function mockCaseClassification(field: string, value: Array<object>) {
