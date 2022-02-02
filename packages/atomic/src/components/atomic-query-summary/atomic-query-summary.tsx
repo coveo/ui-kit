@@ -20,6 +20,7 @@ import {AriaLiveRegion} from '../../utils/accessibility-utils';
  * @part results - The container for the results.
  * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
+ * @part query - The summary highlighed query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
  */
 @Component({
@@ -53,17 +54,20 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   private renderDuration() {
     if (this.enableDuration && this.querySummaryState.hasDuration) {
-      return (
-        <span part="duration">
-          {' '}
-          {this.strings.inSeconds(this.querySummaryState.durationInSeconds)}
-        </span>
-      );
+      return `<span part="duration"> ${this.strings.inSeconds(
+        this.querySummaryState.durationInSeconds
+      )}</span>`;
     }
+
+    return '';
   }
 
   private wrapHighlight(content: string) {
     return `<span class="font-bold" part="highlight">${content}</span>`;
+  }
+
+  private wrapQuery(content: string) {
+    return `<span class="font-bold" part="highlight query">${content}</span>`;
   }
 
   private get resultOfOptions() {
@@ -85,7 +89,7 @@ export class AtomicQuerySummary implements InitializableComponent {
       first: this.wrapHighlight(first),
       last: this.wrapHighlight(last),
       total: this.wrapHighlight(total),
-      query: this.wrapHighlight(escape(query)),
+      query: this.wrapQuery(escape(query)),
     };
   }
 
@@ -109,7 +113,9 @@ export class AtomicQuerySummary implements InitializableComponent {
       this.highlightedResultOfOptions
     );
 
-    return <span part="results" innerHTML={content}></span>;
+    return (
+      <span part="results" innerHTML={content + this.renderDuration()}></span>
+    );
   }
 
   public render() {
@@ -133,10 +139,7 @@ export class AtomicQuerySummary implements InitializableComponent {
 
     return (
       <div class="text-on-background" part="container">
-        {this.querySummaryState.hasResults && [
-          this.renderHasResults(),
-          this.renderDuration(),
-        ]}
+        {this.querySummaryState.hasResults && this.renderHasResults()}
       </div>
     );
   }
