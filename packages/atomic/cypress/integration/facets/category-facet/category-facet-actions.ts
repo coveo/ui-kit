@@ -33,9 +33,42 @@ export const addCategoryFacet =
   };
 
 export function selectChildValueAt(index: number) {
-  CategoryFacetSelectors.childValue().eq(index).click();
+  CategoryFacetSelectors.childValueLabel()
+    .eq(index)
+    .then(([childValue]) => {
+      const text = childValue.textContent!;
+      cy.wrap(childValue).click();
+      CategoryFacetSelectors.activeParentValueWithText(text).should('exist');
+    });
 }
 
 export function selectSearchResultAt(index: number) {
-  CategoryFacetSelectors.searchResult().eq(index).click();
+  CategoryFacetSelectors.searchResult()
+    .find('[part="value-label"]')
+    .eq(index)
+    .then(([searchResult]) => {
+      const text = searchResult.textContent!;
+      cy.wrap(searchResult).click();
+      CategoryFacetSelectors.activeParentValueWithText(text).should('exist');
+    });
+}
+
+export function pressParentButton(index: number) {
+  CategoryFacetSelectors.parentValue()
+    .eq(index)
+    .then(([parentValue]) => {
+      const text = parentValue.textContent!;
+      cy.wrap(parentValue).click();
+      CategoryFacetSelectors.activeParentValueWithText(text).should('exist');
+    });
+}
+
+export function pressAllCategoriesButton() {
+  CategoryFacetSelectors.allCategoriesButton().click();
+  CategoryFacetSelectors.allCategoriesButton().should('not.exist');
+}
+
+export function pressActiveParent() {
+  CategoryFacetSelectors.activeParentValue().click();
+  CategoryFacetSelectors.activeParentValue().should('not.exist');
 }

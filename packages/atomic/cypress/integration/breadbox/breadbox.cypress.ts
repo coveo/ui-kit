@@ -12,7 +12,12 @@ import {
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from '../facets/facet-common-actions';
-import {addBreadbox, breadboxLabel} from './breadbox-actions';
+import {
+  addBreadbox,
+  breadboxLabel,
+  deselectAllBreadcrumbs,
+  deselectBreadcrumbAtIndex,
+} from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
 import * as CommonAssertions from '../common-assertions';
 import * as CommonFacetAssertions from '../facets/facet-common-assertions';
@@ -53,15 +58,11 @@ describe('Breadbox Test Suites', () => {
   }
 
   describe('when selecting a standard facet and a numeric facet', () => {
-    const selectionIndex = 0;
+    const selectionIndex = 1;
     function setupBreadboxWithSelectedFacetAndNumericFacet() {
       setupBreadboxWithMultipleFacets();
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.UA);
-      cy.wait(TestFixture.interceptAliases.Search);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     describe('verify rendering', () => {
@@ -84,8 +85,7 @@ describe('Breadbox Test Suites', () => {
     describe('when selecting "Clear all" button', () => {
       function setupClearAllBreadcrumb() {
         setupBreadboxWithSelectedFacetAndNumericFacet();
-        BreadboxSelectors.clearAllButton().click();
-        cy.wait(TestFixture.interceptAliases.Search);
+        deselectAllBreadcrumbs();
       }
 
       describe('verify rendering', () => {
@@ -119,14 +119,8 @@ describe('Breadbox Test Suites', () => {
       const selectionIndex = 0;
       setupBreadboxWithMultipleFacets();
       selectChildValueAt(canadaHierarchyIndex[0]);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
       selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
       selectIdleBoxValueAt(selectionIndex);
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
     }
     describe('verify rendering', () => {
       before(setupBreadboxWithDifferentTypeSelectedFacet);
@@ -143,22 +137,44 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
-  describe('when selecting 12 facet values', () => {
-    const index = [1, 2, 0, 2, 0, 1, 2, 0, 2, 0, 1, 2];
-    function setupSelectedMulitpleFacets() {
+  describe('when selecting 3 facet values', () => {
+    beforeEach(() => {
       setupBreadboxWithMultipleFacets();
-      FacetSelectors.showMoreButton().click();
-      cy.wait(TestFixture.interceptAliases.Search);
-      cy.wait(TestFixture.interceptAliases.UA);
-      index.forEach((i: number) => {
-        selectIdleCheckboxValueAt(FacetSelectors, i);
-        cy.wait(TestFixture.interceptAliases.Search);
-        cy.wait(TestFixture.interceptAliases.UA);
+      for (let i = 0; i < 3; i++) {
+        selectIdleCheckboxValueAt(FacetSelectors, 0);
+      }
+    });
+
+    describe('when clearing the second breadcrumb', () => {
+      beforeEach(() => {
+        deselectBreadcrumbAtIndex(1);
       });
+
+      BreadboxAssertions.assertFocusBreadcrumb(1);
+    });
+
+    describe('when clearing the last breadcrumb', () => {
+      beforeEach(() => {
+        deselectBreadcrumbAtIndex(2);
+      });
+
+      BreadboxAssertions.assertFocusClearAll();
+    });
+  });
+
+  describe('when selecting 16 facet values', () => {
+    const activeValues = [...Array(16).keys()];
+
+    function setupFacetWithMultipleSelectedValues() {
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field, label}))
+        .withHash(`f[${field}]=${activeValues.join(',')}`)
+        .init();
     }
 
     describe('verify rendering', () => {
-      before(setupSelectedMulitpleFacets);
+      before(setupFacetWithMultipleSelectedValues);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -166,13 +182,13 @@ describe('Breadbox Test Suites', () => {
       BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
         FacetSelectors
       );
-      BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(activeValues.length);
       BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
     });
 
     describe('when selecting "+" show more breadcrumb', () => {
       before(() => {
-        setupSelectedMulitpleFacets();
+        setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
       });
 
@@ -185,7 +201,7 @@ describe('Breadbox Test Suites', () => {
 
     describe('when selecting "-" show less breadcrumb', () => {
       before(() => {
-        setupSelectedMulitpleFacets();
+        setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
         BreadboxSelectors.breadcrumbShowLessButton().click();
       });

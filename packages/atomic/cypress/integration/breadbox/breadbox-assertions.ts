@@ -1,11 +1,9 @@
 import {should} from '../common-assertions';
 import {
-  BaseFacetSelector,
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
 } from '../facets/facet-common-assertions';
 import {BreadboxSelectors} from './breadbox-selectors';
-import {TestFixture} from '../../fixtures/test-fixture';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
 import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';
@@ -77,7 +75,7 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
 
   it(`should display the selected path "${joinedPath}" in the breadcrumbs`, () => {
     BreadboxSelectors.breadcrumbButton().contains(
-      `${categoryFacetLabel}${joinedPath}`
+      `${categoryFacetLabel}:${joinedPath}`
     );
   });
 }
@@ -85,7 +83,7 @@ export function assertCategoryPathInBreadcrumb(path: string[]) {
 function assertBreadcrumbValueText(facetSelector: string, facetLabel: string) {
   cy.getTextOfAllElements(facetSelector).then((facetValues) => {
     facetValues.forEach((element: string) => {
-      BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}${element}`);
+      BreadboxSelectors.breadcrumbButton().contains(`${facetLabel}:${element}`);
     });
   });
 }
@@ -129,7 +127,7 @@ export function assertSelectedColorFacetsInBreadcrumb(
 }
 
 export function assertDeselectCheckboxFacet(
-  BaseFacetSelector: BaseFacetSelector,
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   index: number
 ) {
   it('should be deselected after removing from breadcrumb list', () => {
@@ -137,12 +135,11 @@ export function assertDeselectCheckboxFacet(
       .invoke('text')
       .then((value) => {
         deselectBreadcrumbAtIndex(index);
-        BaseFacetSelector.valueLabel()
-          .contains(value)
-          .parent()
-          .parent()
-          .find('[part="value-checkbox"]')
-          .should('have.attr', 'aria-checked', 'false');
+        FacetWithCheckboxSelector.checkboxValueWithText(value).should(
+          'have.attr',
+          'aria-checked',
+          'false'
+        );
       });
   });
 }
@@ -161,14 +158,11 @@ export function assertDeselectLinkFacet(
   it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
-      .then((value) => {
+      .then((text) => {
         deselectBreadcrumbAtIndex(index);
-        FacetWithLinkSelector.selectedLinkValue()
-          .contains(value)
-          .parent()
-          .parent()
-          .find('[part="value-link"]')
-          .should('have.attr', 'aria-pressed', 'false');
+        FacetWithLinkSelector.selectedLinkValueWithText(text).should(
+          'not.exist'
+        );
       });
   });
 }
@@ -177,23 +171,16 @@ export function assertDeselectColorFacet(index: number) {
   it('should be deselected after removing from breadcrumb list', () => {
     BreadboxSelectors.breadcrumbValueAtIndex(index)
       .invoke('text')
-      .then((value) => {
+      .then((text) => {
         deselectBreadcrumbAtIndex(index);
-        ColorFacetSelectors.valueLabel()
-          .contains(value)
-          .parent()
-          .parent()
-          .find('[part="value-box"]')
-          .should('have.attr', 'aria-pressed', 'false');
+        ColorFacetSelectors.selectedBoxValueWithText(text).should('not.exist');
       });
   });
 }
 
 export function assertLogBreadcrumbFacet(field: string) {
   it('should log the breadcrumb facet to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'breadcrumbFacet');
+    cy.expectSearchEvent('breadcrumbFacet').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
     });
   });
@@ -201,10 +188,8 @@ export function assertLogBreadcrumbFacet(field: string) {
 
 export function assertLogBreadcrumbCategoryFacet(field: string) {
   it('should log the breadcrumb facet to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'breadcrumbFacet');
-      expect(analyticsBody.customData).to.have.property(
+    cy.expectSearchEvent('breadcrumbFacet').then((analyticsBody) => {
+      expect(analyticsBody?.customData).to.have.property(
         'categoryFacetField',
         field
       );
@@ -214,13 +199,7 @@ export function assertLogBreadcrumbCategoryFacet(field: string) {
 
 export function assertLogBreadcrumbClearAll() {
   it('should log the breadcrumb facet clearAll to UA', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property(
-        'actionCause',
-        'breadcrumbResetAll'
-      );
-    });
+    cy.expectSearchEvent('breadcrumbResetAll');
   });
 }
 
@@ -237,5 +216,17 @@ export function assertDisplayAllBreadcrumb(display: boolean) {
       .parent()
       .find('li[style="display: none;"]')
       .should(display ? 'not.exist' : 'exist');
+  });
+}
+
+export function assertFocusBreadcrumb(index: number) {
+  it(`Should focus on the breadcrumb at index ${index}`, () => {
+    BreadboxSelectors.breadcrumbButton().eq(index).should('be.focused');
+  });
+}
+
+export function assertFocusClearAll() {
+  it('Should focus on the clear all button', () => {
+    BreadboxSelectors.clearAllButton().should('be.focused');
   });
 }

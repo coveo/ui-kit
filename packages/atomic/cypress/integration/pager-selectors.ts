@@ -1,15 +1,14 @@
+export const pagerComponent = 'atomic-pager';
+
 export const PagerSelectors = {
-  pager: 'atomic-pager',
-  buttonNext: '[part="next-button"]',
-  buttonPrevious: '[part="previous-button"]',
+  pager: () => cy.get(pagerComponent),
+  shadow: () => PagerSelectors.pager().shadow(),
+  pageButtons: () =>
+    PagerSelectors.shadow().find('[part="page-buttons"]').children(),
+  pageButton: (pageNumber: string | number) =>
+    PagerSelectors.pageButtons().filter(`[value="${pageNumber}"]`),
+  buttonNext: () => PagerSelectors.shadow().find('[part="next-button"]'),
+  buttonPrevious: () =>
+    PagerSelectors.shadow().find('[part="previous-button"]'),
+  buttonActivePage: () => PagerSelectors.shadow().find('[aria-current="page"]'),
 };
-
-export function createAliasLi() {
-  cy.get(PagerSelectors.pager).shadow().find('li').as('pagerLi');
-}
-
-export function createAliasNavigation() {
-  createAliasLi();
-  cy.get('@pagerLi').find(PagerSelectors.buttonPrevious).as('previousButton');
-  cy.get('@pagerLi').find(PagerSelectors.buttonNext).as('nextButton');
-}

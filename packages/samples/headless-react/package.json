@@ -1,9 +1,10 @@
 {
   "name": "headless-react",
-  "version": "0.45.19",
+  "version": "0.50.8",
   "dependencies": {
-    "@coveo/auth": "^1.1.5",
-    "@coveo/headless": "^1.41.10",
+    "@coveo/atomic-react": "^0.4.7",
+    "@coveo/auth": "^1.1.6",
+    "@coveo/headless": "^1.44.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.2.7",
     "@testing-library/user-event": "13.5.0",
@@ -27,13 +28,16 @@
   },
   "scripts": {
     "prepublishOnly": "exit 1",
-    "dev": "react-scripts start",
+    "dev": "npm run copy:assets && npm run link:atomic-react && react-scripts start",
     "build": "tsc --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ssr:build": "npm run build && npm run build:server",
-    "ssr:start": "node ./build/server/server/server.js"
+    "ssr:start": "node ./build/server/server/server.js",
+    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang",
+    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/headless-react/node_modules/react/",
+    "cypress:open": "cypress open"
   },
   "browserslist": {
     "production": [
@@ -46,5 +50,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^9.3.1",
+    "eslint-plugin-cypress": "^2.12.1",
+    "ncp": "^2.0.0",
+    "patch-package": "^6.4.7"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["node_modules", "veracode"],
+  "ignorePatterns": ["node_modules", "veracode", "stencil-generated"],
   "env": {
     "jest": true,
     "es6": true

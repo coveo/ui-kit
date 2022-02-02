@@ -95,7 +95,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * The sort criterion to apply to the returned facet values.
    * Possible values are:
    *   - `alphanumeric`: Filters are sorted in alphanumerical order.
-   *   - `occurrences`: Filters are sorted in descending order of number of occurences.
+   *   - `occurrences`: Filters are sorted in descending order of number of occurrences.
    * @api
    * @type {'alphanumeric' | 'occurrences'}
    * @defaultValue `'occurrences'`

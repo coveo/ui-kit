@@ -13,7 +13,7 @@ import {
   timeframeFacetComponent,
   TimeframeFacetSelectors,
 } from './timeframe-facet-selectors';
-import {selectIdleLinkValueAt} from '../facet-common-actions';
+import {pressClearButton, selectIdleLinkValueAt} from '../facet-common-actions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import * as TimeframeFacetAssertions from './timeframe-facet-assertions';
@@ -65,7 +65,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
       function setupSelectLinkValue() {
         setupTimeframeFacet();
         selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
       }
       describe('verify rendering', () => {
         before(setupSelectLinkValue);
@@ -97,9 +96,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         const secondSelectionIndex = 0;
         function setupSecondLinkValue() {
           setupSelectLinkValue();
-          cy.wait(TestFixture.interceptAliases.UA);
           selectIdleLinkValueAt(TimeframeFacetSelectors, secondSelectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -128,9 +125,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         describe('when selecting the "Clear filter" button', () => {
           function setupClearCheckboxValues() {
             setupSecondLinkValue();
-            cy.wait(TestFixture.interceptAliases.UA);
-            TimeframeFacetSelectors.clearButton().click();
-            cy.wait(TestFixture.interceptAliases.Search);
+            pressClearButton(TimeframeFacetSelectors);
           }
           describe('verify rendering', () => {
             before(setupClearCheckboxValues);
@@ -499,7 +494,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
       function setupSelectedTimeframeFacetValue() {
         setupBreadboxWithTimeframeFacet();
         selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
@@ -518,9 +512,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         const deselectionIndex = 0;
         function setupDeselectTimeframeFacetValue() {
           setupSelectedTimeframeFacetValue();
-          cy.wait(TestFixture.interceptAliases.UA);
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -554,7 +546,6 @@ describe('Timeframe Facet V1 Test Suites', () => {
             .with(addTimeframeFacet({label: timeframeFacetLabel}, periodFrames))
             .init();
           selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verfiry rendering', () => {

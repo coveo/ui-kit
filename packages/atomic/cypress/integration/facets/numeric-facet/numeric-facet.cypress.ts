@@ -17,6 +17,7 @@ import {
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
 import {
+  pressClearButton,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from '../facet-common-actions';
@@ -24,7 +25,10 @@ import * as NumericFacetAssertions from './numeric-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
-import {breadboxComponent} from '../../breadbox/breadbox-selectors';
+import {
+  breadboxComponent,
+  BreadboxSelectors,
+} from '../../breadbox/breadbox-selectors';
 import {
   addBreadbox,
   breadboxLabel,
@@ -79,7 +83,6 @@ describe('Numeric Facet V1 Test Suites', () => {
         function setupSelectCheckboxValue() {
           setupAutomaticRangesWithCheckboxValues();
           selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -111,12 +114,10 @@ describe('Numeric Facet V1 Test Suites', () => {
           const secondSelectionIndex = 0;
           function setupSelectSecondCheckboxValue() {
             setupSelectCheckboxValue();
-            cy.wait(TestFixture.interceptAliases.UA);
             selectIdleCheckboxValueAt(
               NumericFacetSelectors,
               secondSelectionIndex
             );
-            cy.wait(TestFixture.interceptAliases.Search);
           }
 
           describe('verify rendering', () => {
@@ -147,9 +148,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           describe('when selecting the "Clear filter" button', () => {
             function setupClearCheckboxValues() {
               setupSelectSecondCheckboxValue();
-              cy.wait(TestFixture.interceptAliases.UA);
-              NumericFacetSelectors.clearButton().click();
-              cy.wait(TestFixture.interceptAliases.Search);
+              pressClearButton(NumericFacetSelectors);
             }
             describe('verify rendering', () => {
               before(setupClearCheckboxValues);
@@ -213,7 +212,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             setupAutomaticRangesWithCheckboxValuesAndInputRange();
             inputMinValue(min);
             inputMaxValue(max);
-            clickApplyButton();
+            clickApplyButton(true);
           });
           CommonFacetAssertions.assertDisplayValues(
             NumericFacetSelectors,
@@ -268,7 +267,6 @@ describe('Numeric Facet V1 Test Suites', () => {
         function setupSelectLinkValue() {
           setupAutomaticRangesWithLinkValues();
           selectIdleLinkValueAt(NumericFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -301,9 +299,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           const secondSelectionIndex = 0;
           function setupSecondLinkValue() {
             setupSelectLinkValue();
-            cy.wait(TestFixture.interceptAliases.UA);
             selectIdleLinkValueAt(NumericFacetSelectors, secondSelectionIndex);
-            cy.wait(TestFixture.interceptAliases.Search);
           }
 
           describe('verify rendering', () => {
@@ -364,7 +360,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             setupAutomaticRangesWithLinkValuesAndInputRange();
             inputMinValue(min);
             inputMaxValue(max);
-            clickApplyButton();
+            clickApplyButton(true);
           });
           CommonFacetAssertions.assertDisplayValues(
             NumericFacetSelectors,
@@ -435,7 +431,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         before(() => {
           setupRangesWithInputOnly();
           invokeSubmitButton();
-          clickApplyButton();
+          clickApplyButton(false);
         });
         NumericFacetAssertions.assertDisplayInputWarning(2);
       });
@@ -445,7 +441,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           setupRangesWithInputOnly();
           inputMinValue(min);
           invokeSubmitButton();
-          clickApplyButton();
+          clickApplyButton(false);
         });
         NumericFacetAssertions.assertDisplayInputWarning(1);
       });
@@ -455,7 +451,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           setupRangesWithInputOnly('decimal');
           inputMaxValue(maxDecimal);
           invokeSubmitButton();
-          clickApplyButton();
+          clickApplyButton(false);
         });
         NumericFacetAssertions.assertDisplayInputWarning(1);
       });
@@ -465,7 +461,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           setupRangesWithInputOnly();
           inputMaxValue('a');
           invokeSubmitButton();
-          clickApplyButton();
+          clickApplyButton(false);
         });
         NumericFacetAssertions.assertDisplayInputWarning(2);
       });
@@ -476,7 +472,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           inputMinValue(max);
           inputMaxValue(min);
           invokeSubmitButton();
-          clickApplyButton();
+          clickApplyButton(false);
         });
         NumericFacetAssertions.assertDisplayInputWarning(
           2,
@@ -504,7 +500,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           .init();
         inputMinValue(start);
         inputMaxValue(end);
-        clickApplyButton();
+        clickApplyButton(true);
       }
 
       describe('with #inputDefault is "integer"', () => {
@@ -891,7 +887,6 @@ describe('Numeric Facet V1 Test Suites', () => {
           function setupSelectCheckboxValue() {
             setupNumericCustomFormatCurrency();
             selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-            cy.wait(TestFixture.interceptAliases.Search);
           }
 
           describe('verify rendering', () => {
@@ -1045,7 +1040,6 @@ describe('Numeric Facet V1 Test Suites', () => {
           function setupSelectLinkValue() {
             setupNumericCustomFormatCurrency();
             selectIdleLinkValueAt(NumericFacetSelectors, selectionIndex);
-            cy.wait(TestFixture.interceptAliases.Search);
           }
 
           describe('verify rendering', () => {
@@ -1127,7 +1121,6 @@ describe('Numeric Facet V1 Test Suites', () => {
       function setupSelectedNumericFacetValue() {
         setupBreadboxWithNumericFacet();
         selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
@@ -1147,9 +1140,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         const deselectionIndex = 0;
         function setupDeselectNumericFacetValue() {
           setupSelectedNumericFacetValue();
-          cy.wait(TestFixture.interceptAliases.UA);
           deselectBreadcrumbAtIndex(deselectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -1188,9 +1179,9 @@ describe('Numeric Facet V1 Test Suites', () => {
             )
           )
           .init();
-        index.forEach((i: number) => {
-          selectIdleCheckboxValueAt(NumericFacetSelectors, i);
-          cy.wait(TestFixture.interceptAliases.Search);
+        index.forEach((position, i) => {
+          selectIdleCheckboxValueAt(NumericFacetSelectors, position);
+          BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
         });
       }
 
