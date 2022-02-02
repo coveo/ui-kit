@@ -42,6 +42,7 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   /**
    * Whether to display the duration of the last query execution.
+   * @deprecated Use the `duration` part to display the duration instead.
    */
   @Prop() enableDuration = false;
 
@@ -53,13 +54,13 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private renderDuration() {
-    if (this.enableDuration && this.querySummaryState.hasDuration) {
-      return `<span part="duration"> ${this.strings.inSeconds(
-        this.querySummaryState.durationInSeconds
-      )}</span>`;
-    }
-
-    return '';
+    const shouldHide =
+      !this.querySummaryState.hasDuration || !this.enableDuration;
+    return `<span class="${
+      shouldHide && 'hidden'
+    }" part="duration"> ${this.strings.inSeconds(
+      this.querySummaryState.durationInSeconds
+    )}</span>`;
   }
 
   private wrapHighlight(content: string) {
