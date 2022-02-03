@@ -20,7 +20,7 @@ export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
   return (
     <div
       part="placeholder"
-      class="bg-background animate-pulse border border-neutral rounded-lg mb-4 p-7 w-auto"
+      class="bg-background animate-pulse border border-neutral rounded-lg mb-4 p-7"
       aria-hidden="true"
     >
       <div
