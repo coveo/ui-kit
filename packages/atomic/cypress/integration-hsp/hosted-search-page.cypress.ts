@@ -1,3 +1,5 @@
+const atomicPackage = require('../../package.json');
+
 /*
  *  This test is run under the separate configuraton "atomic/cypress-hsp.json"
  */
@@ -9,5 +11,10 @@ describe('Validate Atomic components in Hosted Search Page', () => {
 
   it('Visits the test page', () => {
     cy.visit('http://localhost:3333/hosted');
+
+    cy.window()
+      .its('CoveoAtomic')
+      .its('version')
+      .should('eq', atomicPackage.version);
   });
 });
