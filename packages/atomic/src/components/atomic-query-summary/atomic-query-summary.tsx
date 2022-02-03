@@ -54,10 +54,10 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private renderDuration() {
-    const shouldHide =
-      !this.querySummaryState.hasDuration || !this.enableDuration;
+    const shouldShow =
+      this.enableDuration && this.querySummaryState.hasDuration;
     return `<span class="${
-      shouldHide ? 'hidden' : ''
+      shouldShow ? '' : 'hidden'
     }" part="duration"> ${this.strings.inSeconds(
       this.querySummaryState.durationInSeconds
     )}</span>`;
