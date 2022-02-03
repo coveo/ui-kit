@@ -20,14 +20,14 @@ export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
   return (
     <div
       part="placeholder"
-      class="bg-background p-4 animate-pulse border border-neutral rounded-lg mb-4 w-32 lg:p-7 lg:w-auto"
+      class="bg-background animate-pulse border border-neutral rounded-lg mb-4 p-7 w-auto"
       aria-hidden="true"
     >
       <div
         class="bg-neutral rounded h-8"
         style={{width: `${getRandomArbitrary(25, 75)}%`}}
       ></div>
-      <div class="mt-7 hidden lg:block">{facetValues}</div>
+      <div class="mt-7">{facetValues}</div>
     </div>
   );
 };
