@@ -20,7 +20,7 @@ import {AriaLiveRegion} from '../../utils/accessibility-utils';
  * @part results - The container for the results.
  * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
- * @part query - The summary highlighed query.
+ * @part query - The summary highlighted query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
  */
 @Component({
@@ -42,7 +42,7 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   /**
    * Whether to display the duration of the last query execution.
-   * @deprecated Use the `duration` part to display the duration instead.
+   * @deprecated Use the `duration` part.
    */
   @Prop() enableDuration = false;
 
