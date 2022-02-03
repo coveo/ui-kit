@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.28.0...@coveo/atomic@1.29.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* **atomic:** allow query-summary to display long queries ([#1706](https://github.com/coveo/ui-kit/issues/1706)) ([58f3a1a](https://github.com/coveo/ui-kit/commit/58f3a1a9b5b694dd4e19029e44b5a1cbbbbcdcc4))
+
+
+### Features
+
+* **atomic-react:** add stencil plugin to generate angular module ([#1705](https://github.com/coveo/ui-kit/issues/1705)) ([ef1de31](https://github.com/coveo/ui-kit/commit/ef1de314e46172432c31e19cf760da33bb6606c9))
+
+
+
+
+
 # [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.27.0...@coveo/atomic@1.28.0) (2022-02-02)
 
 
