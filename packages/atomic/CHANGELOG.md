@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.1...@coveo/atomic@1.29.2) (2022-02-04)
+
+
+### Bug Fixes
+
+* **atomic:** remove facet placeholder mobile specific styling ([#1710](https://github.com/coveo/ui-kit/issues/1710)) ([85074c3](https://github.com/coveo/ui-kit/commit/85074c32438693f7e47f7fc78c36a6d69e349098))
+
+
+
+
+
 ## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.0...@coveo/atomic@1.29.1) (2022-02-04)
 
 **Note:** Version bump only for package @coveo/atomic
