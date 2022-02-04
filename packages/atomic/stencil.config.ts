@@ -15,6 +15,7 @@ import mixins from 'postcss-mixins';
 import {readFileSync} from 'fs';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
+import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 
@@ -53,6 +54,10 @@ export const config: Config = {
       componentCorePackage: '@coveo/atomic',
       directivesProxyFile:
         '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
+    }),
+    angularModule({
+      moduleFile:
+        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
     }),
     {
       type: 'dist-custom-elements',

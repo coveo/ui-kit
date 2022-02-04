@@ -3,4 +3,4 @@
  */
 export * from '@coveo/atomic/headless';
 export * from './lib/stencil-generated/components';
-export {AtomicAngularModule} from './lib/atomic-angular.module';
+export {AtomicAngularModule} from './lib/stencil-generated/atomic-angular.module';

@@ -126,7 +126,7 @@
 
       atomic-search-interface {
         display: grid;
-        grid-template-columns: var(--spacing) 1fr var(--spacing);
+        grid-template-columns: var(--spacing) minmax(0, 100%) var(--spacing);
         grid-template-areas:
           '. search      .'
           '. status      .'
@@ -182,6 +182,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+      }
+
+      atomic-query-summary {
+        margin-right: var(--spacing-col);
       }
 
       atomic-did-you-mean {
@@ -282,7 +286,7 @@
       </atomic-facet-manager>
       <atomic-breadbox></atomic-breadbox>
       <div class="topbar">
-        <atomic-query-summary enable-duration="false"></atomic-query-summary>
+        <atomic-query-summary></atomic-query-summary>
         <atomic-refine-toggle></atomic-refine-toggle>
         <atomic-sort-dropdown>
           <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>

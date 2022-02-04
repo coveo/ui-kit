@@ -1,5 +1,5 @@
 import {configure} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {interceptSearch} from '../../page-objects/search';
 import {ResultQuickviewExpectations as Expect} from './result-quickview-expectations';
 import {ResultQuickviewActions as Actions} from './result-quickview-actions';
 import {scope} from '../../reporters/detailed-collector';

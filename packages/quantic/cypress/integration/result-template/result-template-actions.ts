@@ -7,7 +7,7 @@ const resultTemplateActions = (selector: ResultTemplateSelector) => {
   return {
     appendChildren: (
       tagElement: string,
-      props: any = {},
+      props: Record<string, string> = {},
       innerHtml?: string
     ) => {
       selector

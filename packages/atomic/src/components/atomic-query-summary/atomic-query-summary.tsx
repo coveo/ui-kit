@@ -20,6 +20,7 @@ import {AriaLiveRegion} from '../../utils/accessibility-utils';
  * @part results - The container for the results.
  * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
+ * @part query - The summary highlighted query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
  */
 @Component({
@@ -41,6 +42,7 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   /**
    * Whether to display the duration of the last query execution.
+   * @deprecated Use the `duration` part.
    */
   @Prop() enableDuration = false;
 
@@ -52,18 +54,21 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private renderDuration() {
-    if (this.enableDuration && this.querySummaryState.hasDuration) {
-      return (
-        <span part="duration">
-          {' '}
-          {this.strings.inSeconds(this.querySummaryState.durationInSeconds)}
-        </span>
-      );
-    }
+    const shouldShow =
+      this.enableDuration && this.querySummaryState.hasDuration;
+    return `<span class="${
+      shouldShow ? '' : 'hidden'
+    }" part="duration"> ${this.strings.inSeconds(
+      this.querySummaryState.durationInSeconds
+    )}</span>`;
   }
 
   private wrapHighlight(content: string) {
     return `<span class="font-bold" part="highlight">${content}</span>`;
+  }
+
+  private wrapQuery(content: string) {
+    return `<span class="font-bold" part="highlight query">${content}</span>`;
   }
 
   private get resultOfOptions() {
@@ -85,7 +90,7 @@ export class AtomicQuerySummary implements InitializableComponent {
       first: this.wrapHighlight(first),
       last: this.wrapHighlight(last),
       total: this.wrapHighlight(total),
-      query: this.wrapHighlight(escape(query)),
+      query: this.wrapQuery(escape(query)),
     };
   }
 
@@ -109,7 +114,13 @@ export class AtomicQuerySummary implements InitializableComponent {
       this.highlightedResultOfOptions
     );
 
-    return <span part="results" innerHTML={content}></span>;
+    return (
+      <div
+        part="results"
+        class="overflow-hidden overflow-ellipsis"
+        innerHTML={content + this.renderDuration()}
+      ></div>
+    );
   }
 
   public render() {
@@ -133,10 +144,7 @@ export class AtomicQuerySummary implements InitializableComponent {
 
     return (
       <div class="text-on-background" part="container">
-        {this.querySummaryState.hasResults && [
-          this.renderHasResults(),
-          this.renderDuration(),
-        ]}
+        {this.querySummaryState.hasResults && this.renderHasResults()}
       </div>
     );
   }
