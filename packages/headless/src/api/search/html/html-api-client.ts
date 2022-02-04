@@ -2,11 +2,11 @@ import {HtmlRequest} from './html-request';
 import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
 import {baseSearchRequest} from '../search-api-params';
 import {PlatformClient} from '../../platform-client';
-import {pickNonBaseParams, unwrapError} from '../search-api-client';
 import {findEncoding} from '../encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {Logger} from 'pino';
 import {PreprocessRequest} from '../../preprocess-request';
+import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
 
 export interface HtmlApiClient {
   html: (req: HtmlRequest) => Promise<
