@@ -61,6 +61,7 @@ function addCssAndJs() {
       fs.mkdirSync(path.dirname(filepath), {recursive: true});
     } catch (err) {
       console.error(err);
+      process.exit(1);
     }
     const file = fs.createWriteStream(filepath);
     https.get(BASE_URL + link, (response) => {
@@ -84,5 +85,6 @@ JSDOM.fromURL(BASE_URL + 'html').then((dom) => {
     fs.writeFileSync(PUBLIC_FOLDER + 'hosted.html', html);
   } catch (err) {
     console.error(err);
+    process.exit(1);
   }
 });
