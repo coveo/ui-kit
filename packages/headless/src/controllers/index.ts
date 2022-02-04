@@ -268,6 +268,14 @@ export {buildSearchStatus} from './search-status/headless-search-status';
 export type {ErrorPayload} from './controller/error-payload';
 
 export type {
+  QuickviewCore,
+  QuickviewCoreOptions,
+  QuickviewCoreProps,
+  QuickviewCoreState,
+} from './core/quickview/headless-core-quickview';
+export {buildQuickviewCore} from './core/quickview/headless-core-quickview';
+
+export type {
   Quickview,
   QuickviewOptions,
   QuickviewProps,

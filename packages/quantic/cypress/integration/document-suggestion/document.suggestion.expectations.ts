@@ -71,7 +71,8 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
 
     logClickingSuggestion: (
       index: number,
-      documents: Array<{title: string; fields: Fields}>
+      documents: Array<{title: string; fields: Fields}>,
+      fromQuickview = false
     ) => {
       cy.wait(InterceptAliases.UA.SuggestionClick)
         .then((interception) => {
@@ -92,6 +93,12 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
             'documentPosition',
             index
           );
+          if (fromQuickview) {
+            expect(analyticsBody.svc_action_data).to.have.property(
+              'fromQuickview',
+              true
+            );
+          }
         })
         .logDetail('should log the "suggestion_click" UA event');
     },

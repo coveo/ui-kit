@@ -410,6 +410,14 @@ describe('quantic-document-suggestion', () => {
         sendRating(clickIndex);
         Expect.logRatingSuggestion(clickIndex, allDocuments);
       });
+
+      scope('when opening a quickview of a document suggestion', () => {
+        const clickIndex = 0;
+
+        Actions.openQuickview(clickIndex);
+        Expect.logClickingSuggestion(clickIndex, allDocuments, true);
+        Actions.closeQuickview();
+      });
     });
   });
 });

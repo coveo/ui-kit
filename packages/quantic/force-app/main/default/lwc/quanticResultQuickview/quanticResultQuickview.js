@@ -15,7 +15,7 @@ import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
  * @category Result Template
  * @fires CustomEvent#haspreview
  * @example
- * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
+ * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100" use-case="search"></c-quantic-result-quickview>
  */
 export default class QuanticResultQuickview extends LightningElement {
   /**
@@ -31,13 +31,12 @@ export default class QuanticResultQuickview extends LightningElement {
    */
   @api result;
   /**
-  * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
-  * @api
-  * @type {number}
-  * @defaultValue `undefined`
-  */
+   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+   * @api
+   * @type {number}
+   * @defaultValue `undefined`
+   */
   @api maximumPreviewSize;
-
   /**
    * The icon to be shown in the preview button.
    * @api
@@ -45,7 +44,6 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `'utility:preview'`
    */
   @api previewButtonIcon = 'utility:preview';
-
   /**
    * The label to be shown in the preview button.
    * @api
@@ -53,7 +51,6 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `undefined`
    */
   @api previewButtonLabel;
-
   /**
    * The variant of the preview button.
    * @api
@@ -61,6 +58,13 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `undefined`
    */
   @api previewButtonVariant;
+  /**
+   * Indicates the use case where this quickview component is used.
+   * @api
+   * @type {'search'|'case-assist'}
+   * @defaultValue `'search'`
+   */
+  @api useCase = 'search';
 
   /** @type {QuickviewState} */
   @track state;
@@ -101,8 +105,10 @@ export default class QuanticResultQuickview extends LightningElement {
     const options = {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
-    }
-    this.quickview = CoveoHeadless.buildQuickview(engine, {options});
+    };
+    this.quickview = this.useCase === 'case-assist'
+      ? CoveoHeadlessCaseAssist.buildCaseAssistQuickview(engine, {options})
+      : CoveoHeadless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);

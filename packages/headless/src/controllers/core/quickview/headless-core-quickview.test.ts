@@ -1,25 +1,24 @@
-import {configuration, resultPreview} from '../../app/reducers';
-import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
+import {configuration, resultPreview} from '../../../app/reducers';
+import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test';
-import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
+} from '../../../test';
+import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
 import {
-  buildQuickview,
-  QuickviewOptions,
-  Quickview,
-} from './headless-quickview';
+  buildQuickviewCore,
+  QuickviewCoreOptions,
+  QuickviewCore,
+} from './headless-core-quickview';
 
-describe('Quickview', () => {
+describe('QuickviewCore', () => {
   let engine: MockSearchEngine;
-  let options: QuickviewOptions;
-  let quickview: Quickview;
+  let options: QuickviewCoreOptions;
+  let quickview: QuickviewCore;
 
   function initQuickview() {
-    quickview = buildQuickview(engine, {options});
+    quickview = buildQuickviewCore(engine, {options});
   }
 
   beforeEach(() => {
@@ -61,14 +60,6 @@ describe('Quickview', () => {
     it('dispatches a #fetchResultContent action with the result uniqueId', () => {
       const action = engine.findAsyncAction(fetchResultContent.pending);
       expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
-    });
-
-    it('dispatches a document quickview click event', () => {
-      const result = buildMockResult();
-      const thunk = buildDocumentQuickviewThunk(result);
-      const action = engine.findAsyncAction(thunk.pending);
-
-      expect(action).toBeTruthy();
     });
   });
 

@@ -1,29 +1,29 @@
 import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
-import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test';
+import {buildQuickviewDocumentSuggestionClickThunk} from '../../features/case-assist/case-assist-analytics-actions';
+import {buildMockResult} from '../../test';
 import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
-  buildQuickview,
-  QuickviewOptions,
-  Quickview,
-} from './headless-quickview';
+  buildCaseAssistQuickview,
+  CaseAssistQuickviewOptions,
+  CaseAssistQuickview,
+} from './case-assist-headless-quickview';
+import {
+  buildMockCaseAssistEngine,
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
 
-describe('Quickview', () => {
-  let engine: MockSearchEngine;
-  let options: QuickviewOptions;
-  let quickview: Quickview;
+describe('CaseAssistQuickview', () => {
+  let engine: MockCaseAssistEngine;
+  let options: CaseAssistQuickviewOptions;
+  let quickview: CaseAssistQuickview;
 
   function initQuickview() {
-    quickview = buildQuickview(engine, {options});
+    quickview = buildCaseAssistQuickview(engine, {options});
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockCaseAssistEngine();
     options = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
@@ -63,11 +63,10 @@ describe('Quickview', () => {
       expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
     });
 
-    it('dispatches a document quickview click event', () => {
+    it('dispatches a quickview document suggestion click event', () => {
       const result = buildMockResult();
-      const thunk = buildDocumentQuickviewThunk(result);
+      const thunk = buildQuickviewDocumentSuggestionClickThunk(result.uniqueId);
       const action = engine.findAsyncAction(thunk.pending);
-
       expect(action).toBeTruthy();
     });
   });

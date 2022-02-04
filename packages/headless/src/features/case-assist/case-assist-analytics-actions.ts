@@ -78,6 +78,27 @@ export const logDocumentSuggestionClick = (suggestionId: string) =>
       })
   )();
 
+export const logQuickviewDocumentSuggestionClick = (suggestionId: string) => {
+  return buildQuickviewDocumentSuggestionClickThunk(suggestionId)();
+};
+
+export const buildQuickviewDocumentSuggestionClickThunk = (
+  suggestionId: string
+) => {
+  return makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/click',
+    (client, state) =>
+      client.logSelectDocumentSuggestion({
+        suggestion: caseAssistDocumentSuggestionSelector(
+          state,
+          suggestionId,
+          true
+        ),
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
+};
+
 export const logDocumentSuggestionRating = (
   suggestionId: string,
   rating: number

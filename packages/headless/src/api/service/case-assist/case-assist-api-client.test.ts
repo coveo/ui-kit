@@ -1,8 +1,11 @@
+import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder';
+import {createMockState} from '../../../test';
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
 import {PlatformClient} from '../../platform-client';
 import {CaseAssistAPIClient} from './case-assist-api-client';
 import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
 import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request';
+import {Response} from 'cross-fetch';
 
 describe('case assist api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -266,6 +269,32 @@ describe('case assist api client', () => {
       expect(response).toMatchObject({
         success: expectedBody,
       });
+    });
+  });
+
+  describe('caseAssistAPIClient.html', () => {
+    function encodeUTF16(str: string) {
+      const buf = new ArrayBuffer(str.length * 2);
+      const bufView = new Uint16Array(buf);
+
+      for (let i = 0, strLen = str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+      }
+
+      return bufView;
+    }
+
+    it('when the response is UTF-16 encoded, it decodes the response correctly', async () => {
+      const state = createMockState();
+      const payload = encodeUTF16('hello');
+      const headers = {'content-type': 'text/html; charset=UTF-16'};
+      const response = new Response(payload, {headers});
+      PlatformClient.call = () => Promise.resolve(response);
+
+      const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
+      const res = await client.html(req);
+
+      expect(res.success).toBe('hello');
     });
   });
 });
