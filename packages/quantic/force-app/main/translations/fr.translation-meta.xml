@@ -420,4 +420,8 @@
       <label>Sélectionner une option</label>
       <name>quantic_SelectOption</name>
     </customLabels>
+    <customLabels>
+      <label>En savoir plus</label>
+      <name>quantic_ReadMore</name>
+    </customLabels>
 </Translations>

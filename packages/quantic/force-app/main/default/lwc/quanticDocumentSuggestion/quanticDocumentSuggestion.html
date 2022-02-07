@@ -28,7 +28,7 @@
                   <div class="row slds-var-p-top_medium">
                     <template if:true={showQuickview}>
                       <c-quantic-result-quickview use-case="case-assist" engine-id={engineId} preview-button-icon="utility:new_window"
-                        preview-button-label="Show more" preview-button-variant="outline-brand" result={it.value}>
+                        preview-button-label={labels.readMore} preview-button-variant="outline-brand" result={it.value}>
                         <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
                       </c-quantic-result-quickview>
                     </template>
