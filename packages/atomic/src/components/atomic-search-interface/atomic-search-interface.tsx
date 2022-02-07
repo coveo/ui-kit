@@ -216,6 +216,7 @@ export class AtomicSearchInterface {
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();
+    this.initAriaLive();
 
     this.initialized = true;
   }
@@ -342,6 +343,12 @@ export class AtomicSearchInterface {
     window.addEventListener('hashchange', this.onHashChange);
   }
 
+  private initAriaLive() {
+    const element = document.createElement('atomic-aria-live');
+    element.priority = 0;
+    this.host.prepend(element);
+  }
+
   private initSearchStatus() {
     this.searchStatus = buildSearchStatus(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -385,7 +392,6 @@ export class AtomicSearchInterface {
           bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),
-      <atomic-aria-live></atomic-aria-live>,
       <slot></slot>,
     ];
   }

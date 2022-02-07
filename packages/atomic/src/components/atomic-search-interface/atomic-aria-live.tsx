@@ -1,8 +1,7 @@
-import {Component, h, Host, Listen, State} from '@stencil/core';
+import {Component, h, Host, State, Element, Method, Prop} from '@stencil/core';
 
-export interface UpdateLiveRegionEventArgs {
-  region: string;
-  message: string;
+export interface FindAriaLiveEventArgs {
+  element?: HTMLAtomicAriaLiveElement;
 }
 
 /**
@@ -14,28 +13,63 @@ export interface UpdateLiveRegionEventArgs {
   shadow: false,
 })
 export class AtomicAriaLive {
+  @Element() private host!: HTMLAtomicAriaLiveElement;
   @State() public regions: Record<string, string> = {};
 
-  @Listen('atomic/accessibility/updateLiveRegion', {target: 'document'})
-  protected updateMessage({
-    detail: {message, region},
-  }: CustomEvent<UpdateLiveRegionEventArgs>) {
-    this.regions = {...this.regions, [region]: message};
+  /**
+   * Only the `atomic-aria-live` element with the greatest priority will be used to announce changes in the search interface.
+   *
+   * @internal
+   */
+  @Prop({reflect: true}) priority = 1;
+
+  private lastUpdatedRegion?: string;
+  private disconnectFindAriaLiveEvent?: () => void;
+
+  protected onFindAriaLive(args: FindAriaLiveEventArgs) {
+    if (args.element && args.element.priority > this.priority) {
+      return;
+    }
+    args.element = this.host;
+  }
+
+  @Method()
+  public async updateMessage(region: string, message: string) {
+    const wouldOverwriteAnotherRegion = region !== this.lastUpdatedRegion;
+    if (wouldOverwriteAnotherRegion) {
+      this.lastUpdatedRegion = region;
+      if (!message) {
+        return;
+      }
+    }
+    this.host.innerText = message;
+  }
+
+  public connectedCallback() {
+    const eventListener = (ev: Event) =>
+      this.onFindAriaLive((ev as CustomEvent<FindAriaLiveEventArgs>).detail);
+    document.addEventListener(
+      'atomic/accessibility/findAriaLive',
+      eventListener
+    );
+    this.disconnectFindAriaLiveEvent = () =>
+      document.removeEventListener(
+        'atomic/accessibility/findAriaLive',
+        eventListener
+      );
+  }
+
+  public disconnectedCallback() {
+    this.disconnectFindAriaLiveEvent?.();
   }
 
   public render() {
     return (
-      <Host style={{position: 'absolute', right: '10000px'}}>
-        {Object.entries(this.regions).map(([region, message]) => (
-          <div
-            role="status"
-            aria-live="polite"
-            id={`atomic-aria-region-${region}`}
-          >
-            {message}
-          </div>
-        ))}
-      </Host>
+      <Host
+        style={{position: 'absolute', right: '10000px'}}
+        aria-live="polite"
+        role="status"
+      ></Host>
     );
   }
 }

@@ -1,18 +1,18 @@
-import {UpdateLiveRegionEventArgs} from '../components/atomic-search-interface/atomic-aria-live';
+import {FindAriaLiveEventArgs} from '../components/atomic-search-interface/atomic-aria-live';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 
 export function AriaLiveRegion(regionName: string) {
   function dispatchMessage(message: string) {
-    document.dispatchEvent(
-      buildCustomEvent<UpdateLiveRegionEventArgs>(
-        'atomic/accessibility/updateLiveRegion',
-        {
-          region: regionName,
-          message,
-        }
-      )
+    const event = buildCustomEvent<FindAriaLiveEventArgs>(
+      'atomic/accessibility/findAriaLive',
+      {}
     );
+    document.dispatchEvent(event);
+    const {element} = event.detail;
+    if (element) {
+      element.updateMessage(regionName, message);
+    }
   }
 
   return (component: InitializableComponent, setterName: string) => {

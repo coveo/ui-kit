@@ -16,6 +16,11 @@ import { InitializationOptions } from "./components/atomic-search-interface/atom
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
+        /**
+          * Only the `atomic-aria-live` element with the greatest priority will be used to announce changes in the search interface.
+         */
+        "priority": number;
+        "updateMessage": (region: string, message: string) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
@@ -1257,6 +1262,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicAriaLive {
+        /**
+          * Only the `atomic-aria-live` element with the greatest priority will be used to announce changes in the search interface.
+         */
+        "priority"?: number;
     }
     interface AtomicBreadbox {
     }
