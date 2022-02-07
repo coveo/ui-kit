@@ -14,7 +14,7 @@ export interface FindAriaLiveEventArgs {
 })
 export class AtomicAriaLive {
   @Element() private host!: HTMLAtomicAriaLiveElement;
-  @State() public regions: Record<string, string> = {};
+  @State() private message = '';
 
   /**
    * Only the `atomic-aria-live` element with the greatest priority will be used to announce changes in the search interface.
@@ -42,7 +42,7 @@ export class AtomicAriaLive {
         return;
       }
     }
-    this.host.innerText = message;
+    this.message = message;
   }
 
   public connectedCallback() {
@@ -69,7 +69,9 @@ export class AtomicAriaLive {
         style={{position: 'absolute', right: '10000px'}}
         aria-live="polite"
         role="status"
-      ></Host>
+      >
+        {this.message}
+      </Host>
     );
   }
 }
