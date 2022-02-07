@@ -21,8 +21,6 @@ describe('No Results Test Suites', () => {
       env.init();
     });
 
-    CommonAssertions.assertNoAriaLiveMessage(NoResultsSelectors.liveRegion);
-
     it('should not be visible', () => {
       cy.get(tag).should('not.be.visible');
     });
@@ -33,10 +31,7 @@ describe('No Results Test Suites', () => {
       env.withHash('q=gahaiusdhgaiuewjfsf').init();
     });
 
-    CommonAssertions.assertAriaLiveMessage(
-      NoResultsSelectors.liveRegion,
-      "couldn't find anything"
-    );
+    CommonAssertions.assertAriaLiveMessage("couldn't find anything");
 
     it('should be visible', () => {
       cy.get(tag).should('be.visible');

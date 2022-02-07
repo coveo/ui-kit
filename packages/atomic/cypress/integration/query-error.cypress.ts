@@ -9,9 +9,6 @@ describe('Query Error Test Suites', () => {
       new TestFixture().with(addQueryError()).withError().init();
     });
 
-    CommonAssertions.assertAriaLiveMessage(
-      QueryErrorSelectors.liveRegion,
-      'wrong'
-    );
+    CommonAssertions.assertAriaLiveMessage('wrong');
   });
 });

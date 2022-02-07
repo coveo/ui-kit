@@ -1,5 +1,3 @@
-import {AriaLiveSelectors} from './aria-live-selectors';
-
 export const querySummaryComponent = 'atomic-query-summary';
 export const QuerySummarySelectors = {
   shadow: () => cy.get(querySummaryComponent).shadow(),
@@ -7,5 +5,4 @@ export const QuerySummarySelectors = {
   placeholder: () =>
     QuerySummarySelectors.shadow().find('[part="placeholder"]'),
   container: () => QuerySummarySelectors.shadow().find('[part="container"]'),
-  liveRegion: () => AriaLiveSelectors.region('query-summary'),
 };
