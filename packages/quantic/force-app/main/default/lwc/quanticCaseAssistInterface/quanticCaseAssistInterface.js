@@ -4,7 +4,7 @@ import {
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
-  HeadlessBundleNames
+  HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -26,13 +26,26 @@ export default class QuanticCaseAssistInterface extends LightningElement {
    * @type {string}
    */
   @api engineId;
-
   /**
    * The Case Assist configuration ID.
    * @api
    * @type {string}
    */
   @api caseAssistId;
+  /**
+   * Whether or not we want to log a case start analytics event when initializing this component.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api preventLogCaseStartOnInit = false;
+  /**
+   * Whether or not we want to fetch classifications when initializing this component.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api preventFetchClassificationOnInit = false;
 
   /** @type {CaseAssistEngineOptions} */
   engineOptions;
@@ -70,7 +83,13 @@ export default class QuanticCaseAssistInterface extends LightningElement {
     this.engine = engine;
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
+      ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
     };
-    this.engine.dispatch(this.actions.logCaseStart());
+    if (!this.preventLogCaseStartOnInit) {
+      this.engine.dispatch(this.actions.logCaseStart());
+    }
+    if (!this.preventFetchClassificationOnInit) {
+      this.engine.dispatch(this.actions.fetchCaseClassifications());
+    }
   };
 }
