@@ -41,14 +41,16 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * Whether or not we want to disply the quick view for the document suggestions.
    * @api
    * @type {boolean}
+   * @defaultValue `false`
    */
-  @api showQuickview = false;
+  @api hideQuickview = false;
   /**
-   * Whether or not we want to fetch suggestions when initializing this component.
+   * Whether or not we want to prevent fetching suggestions when initializing this component.
    * @api
    * @type {boolean}
+   * @defaultValue `false`
    */
-  @api fetchOnInit = false;
+  @api preventFetchOnInit = false;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -63,7 +65,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   /** @type {Array<string>} */
   openedDocuments = [];
   /** @type {number} */
-  _maxDocuments = 5;
+  _maxDocuments = 3;
   /** @type {number} */
   _numberOfAutoOpenedDocuments = 1;
 
@@ -93,7 +95,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       ...CoveoHeadlessCaseAssist.loadDocumentSuggestionActions(engine),
     };
 
-    if (this.fetchOnInit) {
+    if (!this.preventFetchOnInit) {
       engine.dispatch(this.actions.fetchDocumentSuggestions());
     }
   };
@@ -183,8 +185,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       console.warn(
         'Please enter a valid number of automatically opened documents.'
       );
+    }else{
+      this._numberOfAutoOpenedDocuments = Number(value);
     }
-    this._numberOfAutoOpenedDocuments = Math.max(0, Number(value) || 0);
   }
   get numberOfAutoOpenedDocuments() {
     return this._numberOfAutoOpenedDocuments;
@@ -200,8 +203,9 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       console.warn(
         'Please enter a valid maximum number of document suggesions.'
       );
+    } else {
+      this._maxDocuments = Number(value);
     }
-    this._maxDocuments = Math.max(1, Number(value) || 1);
   }
 
   get maxDocuments() {

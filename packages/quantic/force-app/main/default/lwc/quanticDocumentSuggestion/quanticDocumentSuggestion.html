@@ -1,5 +1,5 @@
 <template>
-  <template if:true={showQuickview}>
+  <template if:false={hideQuickview}>
     <c-quantic-search-interface engine-id={searchEngineId}>
     </c-quantic-search-interface>
   </template>
@@ -26,7 +26,7 @@
                   ">
                   <p class="excerpt">{it.value.excerpt}</p>
                   <div class="row slds-var-p-top_medium">
-                    <template if:true={showQuickview}>
+                    <template if:false={hideQuickview}>
                       <c-quantic-result-quickview use-case="case-assist" engine-id={engineId}
                         preview-button-icon="utility:new_window" preview-button-label={labels.readMore}
                         preview-button-variant="outline-brand" result={it.value}>

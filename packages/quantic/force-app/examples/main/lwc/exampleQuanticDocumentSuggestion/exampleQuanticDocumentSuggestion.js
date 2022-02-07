@@ -28,20 +28,20 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       label: 'Max documents',
       description:
         "The maximum number of document suggesions to display, it's a value between 1 and 5.",
-      defaultValue: 5,
+      defaultValue: 3,
     },
     {
-      attribute: 'fetchOnInit',
-      label: 'Fetch on init',
+      attribute: 'preventFetchOnInit',
+      label: 'Prevent fetch on init',
       description:
-        'Whether or not we want to fetch suggestions when initializing this component.',
+        'Whether or not we want to prevent fetching suggestions when initializing this component.',
       defaultValue: false,
     },
     {
-      attribute: 'showQuickview',
-      label: 'Show quickview',
+      attribute: 'hideQuickview',
+      label: 'Hide quickview',
       description:
-        'Whether or not we want to disply the quick view for the document suggestions.',
+        'Whether or not we want to hide the quick view for the document suggestions.',
       defaultValue: false,
     },
     {
