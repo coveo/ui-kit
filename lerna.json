@@ -2,7 +2,7 @@
   "packages": [
     "packages/*",
     "packages/samples/**",
-    "packages/atomic-angular/projects/**"
+    "packages/atomic-angular/projects/*"
   ],
   "command": {
     "version": {
