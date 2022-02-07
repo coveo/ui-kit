@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.45.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.45.0...@coveo/headless@1.45.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* **headless:** cleanup Jenkinsfile, add test for missing parsed_doc.json file ([#1708](https://github.com/coveo/ui-kit/issues/1708)) ([cd38df9](https://github.com/coveo/ui-kit/commit/cd38df9b1c24159b9a82aef08af45bed6623e072))
+* **headless, quantic:** Prevent search analytics event when using QV in case assist ([#1701](https://github.com/coveo/ui-kit/issues/1701)) ([4c3d63a](https://github.com/coveo/ui-kit/commit/4c3d63aeabed28fe9ca808eb8e1a640f2347143a))
+
+
+
+
+
 # [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.44.0...@coveo/headless@1.45.0) (2022-02-02)
 
 
