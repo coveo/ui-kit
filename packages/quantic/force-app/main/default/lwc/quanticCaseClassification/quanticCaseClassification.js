@@ -92,13 +92,6 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api selectPlaceholder = this.labels.moreTopics;
   /**
-   * The maximum number of suggestions to be displayed.
-   * @api
-   * @type {number}
-   * @defaultValue `3`
-   */
-  @api maxSuggestions = 3;
-  /**
    * The message to be shown when the value is missing.
    * @api
    * @type {string}
@@ -128,6 +121,8 @@ export default class QuanticCaseClassification extends LightningElement {
   _value = '';
   /** @type {boolean} */
   _isSuggestionsVisible = true;
+  /** @type {number} */
+  _maxSuggestions = 3;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -345,5 +340,24 @@ export default class QuanticCaseClassification extends LightningElement {
   setFieldValue(value) {
     this.field?.update(value);
     this._value = value;
+  }
+
+  /**
+   * Get the maximum number of suggestions to be displayed.
+   */
+  @api get maxSuggestions() {
+    return this._maxSuggestions;
+  }
+  /**
+   * Set the maximum number of suggestions to be displayed.
+   * @param {number} value - the value to be set.
+   * @returns {void}
+   */
+  set maxSuggestions(value) {
+    if (isNaN(Number(value)) || Number(value) < 0) {
+      console.warn('Please enter a valid number of maximum suggestions');
+    } else {
+      this._maxSuggestions = Number(value);
+    }
   }
 }
