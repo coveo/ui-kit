@@ -4,7 +4,7 @@ import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-
+import postcssNesting from 'postcss-nested';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
 import atImport from 'postcss-import';
@@ -116,6 +116,7 @@ export const config: Config = {
         tailwindNesting(),
         tailwind(),
         focusVisible(),
+        postcssNesting(),
         autoprefixer(),
       ],
     }),
