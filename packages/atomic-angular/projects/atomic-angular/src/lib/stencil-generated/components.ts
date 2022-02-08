@@ -11,8 +11,7 @@ import { Components } from '@coveo/atomic';
 export declare interface AtomicAriaLive extends Components.AtomicAriaLive {}
 
 @ProxyCmp({
-  defineCustomElementFn: undefined,
-  methods: ['updateMessage']
+  defineCustomElementFn: undefined
 })
 @Component({
   selector: 'atomic-aria-live',

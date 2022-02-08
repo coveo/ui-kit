@@ -34,6 +34,9 @@ export class AtomicAriaLive {
     args.element = this.host;
   }
 
+  /**
+   * @internal
+   */
   @Method()
   public async updateMessage(region: string, message: string) {
     const wouldOverwriteAnotherRegion = region !== this.lastUpdatedRegion;
