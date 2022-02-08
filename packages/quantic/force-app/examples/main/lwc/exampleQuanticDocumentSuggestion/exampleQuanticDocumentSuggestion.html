@@ -5,10 +5,11 @@
       </c-action-fetch-suggestions>
     </c-configurator>
 
-    <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={config.engineId} slot="preview">
+    <c-quantic-case-assist-interface prevent-fetch-classification-on-init case-assist-id={caseAssistId}
+      engine-id={config.engineId} slot="preview">
       <c-quantic-document-suggestion engine-id={config.engineId} search-engine-id={config.searchEngineId}
-        max-documents={config.maxDocuments} prevent-fetch-on-init={config.preventFetchOnInit} hide-quickview={config.hideQuickview}
-        number-of-auto-opened-documents={config.numberOfAutoOpenedDocuments}>
+        max-documents={config.maxDocuments} prevent-fetch-on-init={config.preventFetchOnInit}
+        hide-quickview={config.hideQuickview} number-of-auto-opened-documents={config.numberOfAutoOpenedDocuments}>
         <c-action-send-rating slot="actions"></c-action-send-rating>
       </c-quantic-document-suggestion>
     </c-quantic-case-assist-interface>
