@@ -1,4 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   BaseFacetSelector,
   FacetWithLinkSelector,

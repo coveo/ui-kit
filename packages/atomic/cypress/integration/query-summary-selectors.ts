@@ -5,4 +5,5 @@ export const QuerySummarySelectors = {
   placeholder: () =>
     QuerySummarySelectors.shadow().find('[part="placeholder"]'),
   container: () => QuerySummarySelectors.shadow().find('[part="container"]'),
+  duration: () => QuerySummarySelectors.shadow().find('[part="duration"]'),
 };

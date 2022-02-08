@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.2...@coveo/atomic@1.29.3) (2022-02-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.29.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.1...@coveo/atomic@1.29.2) (2022-02-04)
+
+
+### Bug Fixes
+
+* **atomic:** remove facet placeholder mobile specific styling ([#1710](https://github.com/coveo/ui-kit/issues/1710)) ([85074c3](https://github.com/coveo/ui-kit/commit/85074c32438693f7e47f7fc78c36a6d69e349098))
+
+
+
+
+
+## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.0...@coveo/atomic@1.29.1) (2022-02-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.28.0...@coveo/atomic@1.29.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* **atomic:** allow query-summary to display long queries ([#1706](https://github.com/coveo/ui-kit/issues/1706)) ([58f3a1a](https://github.com/coveo/ui-kit/commit/58f3a1a9b5b694dd4e19029e44b5a1cbbbbcdcc4))
+
+
+### Features
+
+* **atomic-react:** add stencil plugin to generate angular module ([#1705](https://github.com/coveo/ui-kit/issues/1705)) ([ef1de31](https://github.com/coveo/ui-kit/commit/ef1de314e46172432c31e19cf760da33bb6606c9))
+
+
+
+
+
+# [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.27.0...@coveo/atomic@1.28.0) (2022-02-02)
+
+
+### Features
+
+* **headless:** allow toggleSelectFacetValue to add new values ([#1704](https://github.com/coveo/ui-kit/issues/1704)) ([403507e](https://github.com/coveo/ui-kit/commit/403507e38755c1164522e13f27fef17dd1fbc3f1))
+
+
+
+
+
 # [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.26.1...@coveo/atomic@1.27.0) (2022-01-26)
 
 

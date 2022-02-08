@@ -1,9 +1,7 @@
-import {Logger} from 'pino';
 import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {CaseAssistAppState} from '../../../state/case-assist-app-state';
 import {PlatformClient} from '../../platform-client';
-import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
   buildGetCaseClassificationsRequest,
@@ -15,14 +13,13 @@ import {
   GetDocumentSuggestionsRequest,
 } from './get-document-suggestions/get-document-suggestions-request';
 import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-document-suggestions-response';
+import {HtmlRequest} from '../../search/html/html-request';
+import {getHtml, HtmlAPIClientOptions} from '../../search/html/html-api-client';
 
 /**
  * Initialization options for the `CaseAssistAPIClient`.
  */
-export interface CaseAssistAPIClientOptions {
-  logger: Logger;
-  preprocessRequest: PreprocessRequest;
-}
+export interface CaseAssistAPIClientOptions extends HtmlAPIClientOptions {}
 
 export interface AsyncThunkCaseAssistOptions<
   T extends Partial<CaseAssistAppState>
@@ -118,5 +115,9 @@ export class CaseAssistAPIClient {
           success: body as GetDocumentSuggestionsResponse,
         }
       : {error: body as CaseAssistAPIErrorStatusResponse};
+  }
+
+  async html(req: HtmlRequest) {
+    return getHtml(req, this.options);
   }
 }

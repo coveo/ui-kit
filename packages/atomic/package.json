@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.27.0",
+  "version": "1.29.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -36,8 +36,11 @@
     "test:watch": "stencil test --spec --watchAll",
     "generate": "stencil generate",
     "cypress:test": "cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome",
-    "cypress:test:firefox": "cypress --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser firefox",
+    "cypress:test:firefox": "cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser firefox",
     "cypress:open": "cypress open",
+    "cypress-hsp:test": "cypress run --config-file cypress-hsp.json --browser chrome",
+    "cypress-hsp:test:firefox": "cypress run --config-file cypress-hsp.json --browser firefox",
+    "cypress-hsp:open": "cypress open --config-file cypress-hsp.json",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
@@ -48,7 +51,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.34.2",
-    "@coveo/headless": "^1.44.0",
+    "@coveo/headless": "^1.45.1",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/store": "1.5.0",
     "coveo-styleguide": "^9.26.0",

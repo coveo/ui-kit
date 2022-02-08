@@ -29,7 +29,7 @@
 
       async function main() {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('#search');
+        const searchInterface = document.querySelector('atomic-search-interface');
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',

@@ -1,4 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
 import {should} from '../../common-assertions';
 import {NumericFacetSelectors} from './numeric-facet-selectors';
 

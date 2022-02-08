@@ -88,6 +88,6 @@ describe('Query Summary Test Suites', () => {
       .with(addSearchBox())
       .withHash('q=test')
       .init();
-    contentShouldMatch(/Results 1-10 of [\d,]+ for test$/);
+    QuerySummarySelectors.duration().should('not.be.visible');
   });
 });

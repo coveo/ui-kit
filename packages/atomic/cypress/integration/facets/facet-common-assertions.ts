@@ -1,4 +1,3 @@
-import {TestFixture} from '../../fixtures/test-fixture';
 import {ComponentSelector, should} from '../common-assertions';
 
 export interface BaseFacetSelector extends ComponentSelector {

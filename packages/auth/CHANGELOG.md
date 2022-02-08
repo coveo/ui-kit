@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.7](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.1.6...@coveo/auth@1.1.7) (2022-02-02)
+
+
+### Bug Fixes
+
+* **auth:** send organizationId as query string param during handshake ([#1699](https://github.com/coveo/ui-kit/issues/1699)) ([51eb008](https://github.com/coveo/ui-kit/commit/51eb0089cf834a5eeef3631d322fbc7d1aafe604))
+
+
+
+
+
 ## [1.1.6](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.1.5...@coveo/auth@1.1.6) (2022-01-18)
 
 **Note:** Version bump only for package @coveo/auth

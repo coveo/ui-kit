@@ -48,6 +48,22 @@ To run all the test, run:
 npm run cypress:test
 ```
 
+To run all the test in Firefox:
+
+```sh
+npm run cypress:test:firefox
+```
+
+### Separate test for Hosted Search Page
+
+To test the current Atomic build against the hosted search pages for Trials, use the following commands:
+
+```sh
+npm run cypress-hsp:open
+npm run cypress-hsp:test
+npm run cypress-hsp:test:firefox
+```
+
 ## Utilities
 
 ### Stencil decorators

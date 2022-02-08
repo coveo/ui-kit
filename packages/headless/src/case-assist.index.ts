@@ -46,6 +46,14 @@ export type {
 export {buildCaseField} from './controllers/case-field/headless-case-field';
 
 export type {
+  CaseAssistQuickviewState,
+  CaseAssistQuickview,
+  CaseAssistQuickviewOptions,
+  CaseAssistQuickviewProps,
+} from './controllers/quickview/case-assist-headless-quickview';
+export {buildCaseAssistQuickview} from './controllers/quickview/case-assist-headless-quickview';
+
+export type {
   DocumentSuggestionList as DocumentSuggestion,
   DocumentSuggestionListState as DocumentSuggestionState,
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
