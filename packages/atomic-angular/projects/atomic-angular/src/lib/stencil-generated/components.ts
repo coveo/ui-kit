@@ -8,6 +8,26 @@ import { Components } from '@coveo/atomic';
 
 
 
+export declare interface AtomicAriaLive extends Components.AtomicAriaLive {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  methods: ['updateMessage']
+})
+@Component({
+  selector: 'atomic-aria-live',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicAriaLive {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
