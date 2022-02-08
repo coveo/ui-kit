@@ -1,5 +1,10 @@
 import {Raw} from '../api/search/search/raw';
 
+/**
+ * Returns the `Raw` property of a `Result`.
+ * @param config partial `Raw`.
+ * @returns the new `Raw`.
+ */
 export function buildMockRaw(config: Partial<Raw> = {}): Raw {
   return {
     urihash: '',

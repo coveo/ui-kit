@@ -1,6 +1,11 @@
 import {Result} from '../api/search/search/result';
 import {buildMockRaw} from './mock-raw';
 
+/**
+ * Returns a `Result`.
+ * @param config partial `Result`
+ * @returns the new `Result`
+ */
 export function buildMockResult(config: Partial<Result> = {}): Result {
   return {
     title: '',

@@ -60,6 +60,10 @@ export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
     MockEngine {}
 
+/**
+ * Returns non-functionnal `SearchEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockSearchAppEngine(
   config: Partial<SearchEngine<SearchAppState>> = {}
 ): MockSearchEngine {
@@ -75,6 +79,10 @@ export interface MockRecommendationEngine
   extends RecommendationEngine,
     MockEngine {}
 
+/**
+ * Returns non-functionnal `RecommendationEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
 ): MockRecommendationEngine {
@@ -85,6 +93,10 @@ export interface MockProductRecommendationEngine
   extends ProductRecommendationEngine,
     MockEngine {}
 
+/**
+ * Returns non-functionnal `ProductRecommendationEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
     ProductRecommendationEngine<ProductRecommendationsAppState>
@@ -97,6 +109,10 @@ export interface MockProductListingEngine
   extends ProductListingEngine<ProductListingAppState>,
     MockEngine {}
 
+/**
+ * Returns non-functionnal `ProductListingEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockProductListingEngine(
   config: Partial<ProductListingEngine<ProductListingAppState>> = {}
 ): MockProductListingEngine {
@@ -107,6 +123,10 @@ export interface MockCaseAssistEngine
   extends CaseAssistEngine<CaseAssistAppState>,
     MockEngine {}
 
+/**
+ * Returns non-functionnal `CaseAssistEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}
 ): MockCaseAssistEngine {

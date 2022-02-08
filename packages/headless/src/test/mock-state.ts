@@ -34,6 +34,11 @@ import {getDictionaryFieldContextInitialState} from '../features/dictionary-fiel
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
 
+/**
+ * Returns a `SearchAppState`
+ * @param config partial `SearchAppState`
+ * @returns the new `SearchAppState`
+ */
 export function createMockState(
   config: Partial<SearchAppState> = {}
 ): SearchAppState {
