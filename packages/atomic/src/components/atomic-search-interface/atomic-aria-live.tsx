@@ -7,7 +7,7 @@ export interface FindAriaLiveEventArgs {
 /**
  * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
  *
- * It is recommended not to dynamically add/remove this component from the page and try to have it exist on the initial render of the page.
+ * We do not recommend dynamically adding/removing this component from the page. It is better to have this component during the initial render of the page.
  */
 @Component({
   tag: 'atomic-aria-live',
