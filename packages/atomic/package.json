@@ -62,7 +62,7 @@
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
     "stencil-inline-svg": "^1.1.0",
-    "tailwindcss": "^2.2.19"
+    "tailwindcss": "3.0.19"
   },
   "devDependencies": {
     "@babel/core": "7.15.8",
@@ -87,7 +87,7 @@
     "@types/lodash": "4.14.176",
     "@types/postcss-import": "12.0.1",
     "@types/puppeteer": "5.4.4",
-    "autoprefixer": "10.4.0",
+    "autoprefixer": "10.4.2",
     "axe-core": "4.3.5",
     "babel-loader": "8.2.3",
     "cross-fetch": "3.1.4",
@@ -106,8 +106,7 @@
     "patch-package": "^6.4.7",
     "postcss-focus-visible": "6.0.1",
     "postcss-import": "14.0.2",
-    "postcss-mixins": "8.1.0",
-    "postcss-nested": "5.0.6",
+    "postcss-mixins": "9.0.1",
     "puppeteer": "9.1.1",
     "react": "16.14.0",
     "rollup-plugin-html": "0.2.1"
