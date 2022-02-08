@@ -44,10 +44,7 @@ export default class QuanticCaseClassification extends LightningElement {
       console.error('Error getting the picklist values');
     } else {
       this.picklistValues = data;
-      if (
-        data &&
-        !data.picklistFieldValues[this.sfFieldApiName]
-      ) {
+      if (data && !data.picklistFieldValues[this.sfFieldApiName]) {
         console.error(
           `The Salesforce field API name "${this.sfFieldApiName}" is not found`
         );
@@ -145,12 +142,20 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   initialize = (engine) => {
     this.engine = engine;
-    this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
-      options: {
-        field: this.coveoFieldName,
-      },
-    });
-    this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
+    try {
+      this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
+        options: {
+          field: this.coveoFieldName,
+        },
+      });
+      this.unsubscribeField = this.field?.subscribe(() =>
+        this.updateFieldState()
+      );
+    } catch (e) {
+      if (!this.coveoFieldName) {
+        console.error('Coveo field name is missing');
+      }
+    }
 
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
@@ -233,8 +238,8 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get options() {
     return (
-      this.picklistValues?.picklistFieldValues?.[this.sfFieldApiName]
-        ?.values ?? []
+      this.picklistValues?.picklistFieldValues?.[this.sfFieldApiName]?.values ??
+      []
     );
   }
 
@@ -338,7 +343,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   setFieldValue(value) {
-    this.field.update(value);
+    this.field?.update(value);
     this._value = value;
   }
 }

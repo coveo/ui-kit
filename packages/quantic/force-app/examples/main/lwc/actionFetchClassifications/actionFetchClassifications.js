@@ -11,6 +11,8 @@ export default class ActionFetchClassifications extends LightningElement {
         this.actions = {
           ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
         };
+        console.log(this.actions.fetchCaseClassifications)
+        console.log(engine)
         engine.dispatch(this.actions.fetchCaseClassifications());
       });
   }
