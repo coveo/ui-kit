@@ -15,9 +15,12 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
       selector.searchButton().click().logAction('when submitting query');
     },
     focusSearchBox: () => {
-      selector.input().trigger('keydown', {keyCode: 27});
+      selector.input().trigger('keydown', {keyCode: 38});
       cy.wait(500);
-      selector.input().trigger('keyup', {keyCode: 27});
+      selector.input().trigger('keyup', {keyCode: 38});
+    },
+    clickFirstSuggestion: () => {
+      selector.suggestionList().first().click({force: true});
     },
   };
 };

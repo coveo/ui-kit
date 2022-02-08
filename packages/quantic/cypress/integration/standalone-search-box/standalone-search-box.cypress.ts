@@ -74,6 +74,11 @@ describe('quantic-standalone-search-box', () => {
         Expect.displaySuggestionList(true);
         Expect.numberOfSuggestions(2);
       });
+
+      scope('when selecting from suggestions', () => {
+        Actions.clickFirstSuggestion();
+        Expect.inputContains('test');
+      });
     });
   });
 

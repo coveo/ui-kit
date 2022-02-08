@@ -52,6 +52,9 @@ function standaloneSearchBoxExpectations(
         .should('eq', placeholder)
         .logDetail(`The input search placeholder contains "${placeholder}"`);
     },
+    inputContains: (value: string) => {
+      selector.input().invoke('attr', 'value').contains(value);
+    },
     urlHashContains: (redirectUrl: string) => {
       cy.url()
         .should('include', redirectUrl)
