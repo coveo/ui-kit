@@ -116,6 +116,8 @@ export interface MockProductListingEngine
     MockEngine {}
 
 /**
+ * For internal use only.
+ *
  * Returns a non-functionnal `ProductListingEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
