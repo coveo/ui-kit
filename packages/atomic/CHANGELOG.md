@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.3...@coveo/atomic@1.29.4) (2022-02-09)
+
+
+### Bug Fixes
+
+* **atomic-angular:** fix custom result templates for atomic angular ([#1719](https://github.com/coveo/ui-kit/issues/1719)) ([abf0ec0](https://github.com/coveo/ui-kit/commit/abf0ec0793142a596a6660f5128d1c82a0b8063d))
+
+
+
+
+
 ## [1.29.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.2...@coveo/atomic@1.29.3) (2022-02-07)
 
 **Note:** Version bump only for package @coveo/atomic
