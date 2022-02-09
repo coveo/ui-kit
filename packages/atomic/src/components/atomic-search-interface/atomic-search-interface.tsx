@@ -344,9 +344,7 @@ export class AtomicSearchInterface {
   }
 
   private initAriaLive() {
-    const element = document.createElement('atomic-aria-live');
-    element.priority = 0;
-    this.host.prepend(element);
+    this.host.prepend(document.createElement('atomic-aria-live'));
   }
 
   private initSearchStatus() {

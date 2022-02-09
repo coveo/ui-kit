@@ -1,4 +1,4 @@
-import {Component, h, Host, State, Element, Method, Prop} from '@stencil/core';
+import {Component, h, Host, State, Element, Method} from '@stencil/core';
 
 export interface FindAriaLiveEventArgs {
   element?: HTMLAtomicAriaLiveElement;
@@ -17,21 +17,24 @@ export class AtomicAriaLive {
   @Element() private host!: HTMLAtomicAriaLiveElement;
   @State() private message = '';
 
-  /**
-   * Only the `atomic-aria-live` element with the greatest priority will be used to announce changes in the search interface.
-   *
-   * @internal
-   */
-  @Prop({reflect: true}) priority = 1;
-
   private lastUpdatedRegion?: string;
   private disconnectFindAriaLiveEvent?: () => void;
 
   protected onFindAriaLive(args: FindAriaLiveEventArgs) {
-    if (args.element && args.element.priority > this.priority) {
-      return;
+    if (!args.element || !this.isInSearchInterface) {
+      args.element = this.host;
     }
-    args.element = this.host;
+  }
+
+  private get isInSearchInterface() {
+    let element: Element | null = this.host;
+    while (element) {
+      if (element.tagName === 'ATOMIC-SEARCH-INTERFACE') {
+        return true;
+      }
+      element = element.parentElement;
+    }
+    return false;
   }
 
   /**
