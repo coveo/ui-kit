@@ -61,6 +61,8 @@ export interface MockSearchEngine
     MockEngine {}
 
 /**
+ * For internal use only.
+ *
  * Returns a non-functionnal `SearchEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
@@ -80,6 +82,8 @@ export interface MockRecommendationEngine
     MockEngine {}
 
 /**
+ * For internal use only.
+ *
  * Returns a non-functionnal `RecommendationEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
@@ -94,6 +98,8 @@ export interface MockProductRecommendationEngine
     MockEngine {}
 
 /**
+ * For internal use only.
+ *
  * Returns a non-functionnal `ProductRecommendationEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
@@ -124,6 +130,8 @@ export interface MockCaseAssistEngine
     MockEngine {}
 
 /**
+ * For internal use only.
+ *
  * Returns a non-functionnal `CaseAssistEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */

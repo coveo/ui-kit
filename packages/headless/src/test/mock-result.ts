@@ -2,6 +2,8 @@ import {Result} from '../api/search/search/result';
 import {buildMockRaw} from './mock-raw';
 
 /**
+ * For internal use only.
+ *
  * Returns a `Result` for testing purposes.
  * @param config  - A partial `Result` from which to build the target `Result`.
  * @returns The new `Result`.
