@@ -185,7 +185,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       console.warn(
         'Please enter a valid number of automatically opened documents.'
       );
-    }else{
+    } else {
       this._numberOfAutoOpenedDocuments = Number(value);
     }
   }
