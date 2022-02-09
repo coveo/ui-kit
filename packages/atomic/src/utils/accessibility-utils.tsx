@@ -1,11 +1,16 @@
-import {FindAriaLiveEventArgs} from '../components/atomic-search-interface/atomic-aria-live';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
+
+export const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
+
+export interface FindAriaLiveEventArgs {
+  element?: HTMLAtomicAriaLiveElement;
+}
 
 export function AriaLiveRegion(regionName: string) {
   function dispatchMessage(message: string) {
     const event = buildCustomEvent<FindAriaLiveEventArgs>(
-      'atomic/accessibility/findAriaLive',
+      findAriaLiveEventName,
       {}
     );
     document.dispatchEvent(event);

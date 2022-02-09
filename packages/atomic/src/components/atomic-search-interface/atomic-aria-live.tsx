@@ -1,8 +1,8 @@
 import {Component, h, Host, State, Element, Method} from '@stencil/core';
-
-export interface FindAriaLiveEventArgs {
-  element?: HTMLAtomicAriaLiveElement;
-}
+import {
+  FindAriaLiveEventArgs,
+  findAriaLiveEventName,
+} from '../../utils/accessibility-utils';
 
 /**
  * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -55,15 +55,9 @@ export class AtomicAriaLive {
   public connectedCallback() {
     const eventListener = (ev: Event) =>
       this.onFindAriaLive((ev as CustomEvent<FindAriaLiveEventArgs>).detail);
-    document.addEventListener(
-      'atomic/accessibility/findAriaLive',
-      eventListener
-    );
+    document.addEventListener(findAriaLiveEventName, eventListener);
     this.disconnectFindAriaLiveEvent = () =>
-      document.removeEventListener(
-        'atomic/accessibility/findAriaLive',
-        eventListener
-      );
+      document.removeEventListener(findAriaLiveEventName, eventListener);
   }
 
   public disconnectedCallback() {
