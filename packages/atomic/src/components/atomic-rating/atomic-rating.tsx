@@ -19,7 +19,7 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
     return (
       <atomic-icon
         icon={props.icon}
-        class={`flex-shrink-0 ${active ? 'icon-active' : 'icon-inactive'}`}
+        class={`shrink-0 ${active ? 'icon-active' : 'icon-inactive'}`}
         style={{width: iconSize, height: iconSize}}
       ></atomic-icon>
     );

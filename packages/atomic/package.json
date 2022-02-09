@@ -61,17 +61,15 @@
     "focus-visible": "^5.2.0",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
-    "stencil-inline-svg": "^1.1.0",
-    "tailwindcss": "^2.2.19"
+    "stencil-inline-svg": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.15.8",
-    "@fullhuman/postcss-purgecss": "4.0.3",
     "@monaco-editor/react": "4.3.1",
     "@rollup/plugin-alias": "3.1.8",
     "@rollup/plugin-replace": "2.4.2",
     "@stencil/angular-output-target": "^0.4.0",
-    "@stencil/core": "2.11.0",
+    "@stencil/core": "2.13.0",
     "@stencil/postcss": "2.1.0",
     "@stencil/react-output-target": "^0.2.0",
     "@storybook/addon-a11y": "6.3.12",
@@ -85,9 +83,9 @@
     "@types/escape-html": "1.0.1",
     "@types/jest": "26.0.24",
     "@types/lodash": "4.14.176",
-    "@types/postcss-import": "12.0.1",
+    "@types/postcss-import": "14.0.0",
     "@types/puppeteer": "5.4.4",
-    "autoprefixer": "10.4.0",
+    "autoprefixer": "10.4.2",
     "axe-core": "4.3.5",
     "babel-loader": "8.2.3",
     "cross-fetch": "3.1.4",
@@ -104,13 +102,14 @@
     "monaco-editor-webpack-plugin": "6.0.0",
     "ncp": "2.0.0",
     "patch-package": "^6.4.7",
-    "postcss-focus-visible": "6.0.1",
+    "postcss-focus-visible": "6.0.4",
     "postcss-import": "14.0.2",
-    "postcss-mixins": "8.1.0",
+    "postcss-mixins": "9.0.1",
     "postcss-nested": "5.0.6",
     "puppeteer": "9.1.1",
     "react": "16.14.0",
-    "rollup-plugin-html": "0.2.1"
+    "rollup-plugin-html": "0.2.1",
+    "tailwindcss": "3.0.19"
   },
   "license": "Apache-2.0"
 }
