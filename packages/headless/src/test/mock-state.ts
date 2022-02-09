@@ -35,9 +35,9 @@ import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
 
 /**
- * Returns a `SearchAppState`
- * @param config partial `SearchAppState`
- * @returns the new `SearchAppState`
+ * Returns a `SearchAppState` for testing purposes.
+ * @param config - A Partial `SearchAppState` from which to build the target `SearchAppState`.
+ * @returns The new `SearchAppState`.
  */
 export function createMockState(
   config: Partial<SearchAppState> = {}

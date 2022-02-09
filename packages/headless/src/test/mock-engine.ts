@@ -80,7 +80,7 @@ export interface MockRecommendationEngine
     MockEngine {}
 
 /**
- * Returns non-functionnal `RecommendationEngine`.
+ * Returns a non-functionnal `RecommendationEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
 export function buildMockRecommendationAppEngine(
@@ -94,7 +94,7 @@ export interface MockProductRecommendationEngine
     MockEngine {}
 
 /**
- * Returns non-functionnal `ProductRecommendationEngine`.
+ * Returns a non-functionnal `ProductRecommendationEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
 export function buildMockProductRecommendationsAppEngine(
@@ -110,7 +110,7 @@ export interface MockProductListingEngine
     MockEngine {}
 
 /**
- * Returns non-functionnal `ProductListingEngine`.
+ * Returns a non-functionnal `ProductListingEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
 export function buildMockProductListingEngine(
@@ -124,7 +124,7 @@ export interface MockCaseAssistEngine
     MockEngine {}
 
 /**
- * Returns non-functionnal `CaseAssistEngine`.
+ * Returns a non-functionnal `CaseAssistEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
 export function buildMockCaseAssistEngine(
