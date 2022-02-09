@@ -61,7 +61,7 @@ export interface MockSearchEngine
     MockEngine {}
 
 /**
- * Returns non-functionnal `SearchEngine`.
+ * Returns a non-functionnal `SearchEngine`.
  * To be used only for unit testing controllers, not for functionnal tests.
  */
 export function buildMockSearchAppEngine(
