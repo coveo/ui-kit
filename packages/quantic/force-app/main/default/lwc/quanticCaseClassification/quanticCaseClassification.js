@@ -354,10 +354,10 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   set maxSuggestions(value) {
-    if (isNaN(Number(value)) || Number(value) < 0) {
-      console.warn('Please enter a valid number of maximum suggestions');
-    } else {
+    if (Number(value) >= 0) {
       this._maxSuggestions = Number(value);
+    } else {
+      console.warn('Please enter a valid number of maximum suggestions');
     }
   }
 }
