@@ -2,7 +2,6 @@ import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 import {getAnalyticsAt} from '../utils/network';
 import {SearchBoxSelectors} from './search-box-selectors';
 import * as CommonAssertions from './common-assertions';
-import {NoResultsSelectors} from './no-results-selectors';
 import {addSearchBox} from './search-box-actions';
 
 describe('No Results Test Suites', () => {
