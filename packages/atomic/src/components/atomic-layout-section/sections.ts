@@ -1,9 +1,4 @@
-export type Section =
-  | 'search-box'
-  | 'facets'
-  | 'top-bar'
-  | 'main'
-  | 'pagination';
+export type Section = 'search' | 'facets' | 'status' | 'main' | 'pagination';
 
 export function findSection(element: HTMLElement, section: Section) {
   return element.querySelector(
