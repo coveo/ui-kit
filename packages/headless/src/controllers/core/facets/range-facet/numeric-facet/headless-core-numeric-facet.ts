@@ -31,11 +31,17 @@ import {RangeFacetSortCriterion} from '../../../../../features/facets/range-face
 import {
   configuration,
   numericFacetSet,
+  anyFacetSet,
   search,
 } from '../../../../../app/reducers';
 import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
+import {
+  enableFacet,
+  disableFacet,
+} from '../../../../../features/facets/any-facet-set/any-facet-set-actions';
+import {facetEnabledSelector} from '../../../../../features/facets/any-facet-set/any-facet-set-selectors';
 
 export type {
   NumericRangeOptions,
@@ -98,6 +104,16 @@ export interface NumericFacet extends Controller {
   toggleSingleSelect(selection: NumericFacetValue): void;
 
   /**
+   * Enables the facet
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet
+   */
+  disable(): void;
+
+  /**
    * The state of the `NumericFacet` controller.
    */
   state: NumericFacetState;
@@ -131,6 +147,9 @@ export interface NumericFacetState {
    * `true` if there is at least one non-idle value and `false` otherwise.
    */
   hasActiveValues: boolean;
+
+  /** Whether the facet is enabled and its values are used to filter search results. */
+  enabled: boolean;
 }
 
 /**
@@ -160,6 +179,9 @@ export function buildCoreNumericFacet(
   };
 
   validateNumericFacetOptions(engine, options);
+
+  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
+
   dispatch(registerNumericFacet(options));
 
   const rangeFacet = buildCoreRangeFacet<
@@ -183,8 +205,21 @@ export function buildCoreNumericFacet(
       this.toggleSelect(selection);
     },
 
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
+
     get state() {
-      return rangeFacet.state;
+      const enabled = getIsEnabled();
+
+      return {
+        ...rangeFacet.state,
+        enabled,
+      };
     },
   };
 }
@@ -194,6 +229,6 @@ function loadNumericFacetReducers(
 ): engine is CoreEngine<
   NumericFacetSection & ConfigurationSection & SearchSection
 > {
-  engine.addReducers({numericFacetSet, configuration, search});
+  engine.addReducers({numericFacetSet, anyFacetSet, configuration, search});
   return true;
 }

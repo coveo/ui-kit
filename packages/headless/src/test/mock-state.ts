@@ -33,6 +33,7 @@ import {getRecentQueriesInitialState} from '../features/recent-queries/recent-qu
 import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
+import {getAnyFacetSetInitialState} from '../features/facets/any-facet-set/any-facet-set-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -41,6 +42,7 @@ export function createMockState(
     configuration: getConfigurationInitialState(),
     advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
     staticFilterSet: getStaticFilterSetInitialState(),
+    anyFacetSet: getAnyFacetSetInitialState(),
     facetSet: getFacetSetInitialState(),
     dateFacetSet: getDateFacetSetInitialState(),
     numericFacetSet: getNumericFacetSetInitialState(),

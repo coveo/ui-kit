@@ -29,10 +29,20 @@ import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
 import {Controller} from '../../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  anyFacetSet,
+  search,
+} from '../../../../../app/reducers';
 import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
+import {
+  enableFacet,
+  disableFacet,
+} from '../../../../../features/facets/any-facet-set/any-facet-set-actions';
+import {facetEnabledSelector} from '../../../../../features/facets/any-facet-set/any-facet-set-selectors';
 
 export type {
   DateFacetOptions,
@@ -95,6 +105,16 @@ export interface DateFacet extends Controller {
   toggleSingleSelect(selection: DateFacetValue): void;
 
   /**
+   * Enables the facet
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet
+   */
+  disable(): void;
+
+  /**
    * The state of the `DateFacet` controller.
    */
   state: DateFacetState;
@@ -128,6 +148,9 @@ export interface DateFacetState {
    * `true` if there is at least one non-idle value and `false` otherwise.
    */
   hasActiveValues: boolean;
+
+  /** Whether the facet is enabled and its values are used to filter search results. */
+  enabled: boolean;
 }
 
 /**
@@ -157,6 +180,9 @@ export function buildCoreDateFacet(
   };
 
   validateDateFacetOptions(engine, options);
+
+  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
+
   dispatch(registerDateFacet(options));
 
   const rangeFacet = buildCoreRangeFacet<DateFacetRequest, DateFacetResponse>(
@@ -181,8 +207,21 @@ export function buildCoreDateFacet(
       this.toggleSelect(selection);
     },
 
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
+
     get state() {
-      return rangeFacet.state;
+      const enabled = getIsEnabled();
+
+      return {
+        ...rangeFacet.state,
+        enabled,
+      };
     },
   };
 }
@@ -192,6 +231,6 @@ function loadDateFacetReducers(
 ): engine is CoreEngine<
   ConfigurationSection & SearchSection & DateFacetSection
 > {
-  engine.addReducers({configuration, search, dateFacetSet});
+  engine.addReducers({configuration, search, dateFacetSet, anyFacetSet});
   return true;
 }

@@ -11,6 +11,7 @@ import {getPaginationInitialState} from '../features/pagination/pagination-state
 import {getSortInitialState} from '../features/sort/sort-state';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
+import {getAnyFacetSetInitialState} from '../features/facets/any-facet-set/any-facet-set-state';
 
 export function buildMockProductListingState(
   config: Partial<ProductListingAppState> = {}
@@ -25,6 +26,7 @@ export function buildMockProductListingState(
     dateFacetSet: getDateFacetSetInitialState(),
     facetOptions: getFacetOptionsInitialState(),
     facetOrder: getFacetOrderInitialState(),
+    anyFacetSet: getAnyFacetSetInitialState(),
     facetSet: getFacetSetInitialState(),
     numericFacetSet: getNumericFacetSetInitialState(),
     pagination: getPaginationInitialState(),

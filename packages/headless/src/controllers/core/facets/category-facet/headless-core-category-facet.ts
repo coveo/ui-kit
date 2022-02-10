@@ -32,6 +32,7 @@ import {CategoryFacetValue} from '../../../../features/facets/category-facet-set
 import {
   categoryFacetSearchSet,
   categoryFacetSet,
+  anyFacetSet,
   configuration,
   search,
 } from '../../../../app/reducers';
@@ -39,6 +40,11 @@ import {loadReducerError} from '../../../../utils/errors';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {CoreEngine} from '../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {
+  enableFacet,
+  disableFacet,
+} from '../../../../features/facets/any-facet-set/any-facet-set-actions';
+import {facetEnabledSelector} from '../../../../features/facets/any-facet-set/any-facet-set-selectors';
 
 export type {
   CategoryFacetValue,
@@ -105,6 +111,16 @@ export interface CoreCategoryFacet extends Controller {
   showLessValues(): void;
 
   /**
+   * Enables the facet
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet
+   */
+  disable(): void;
+
+  /**
    * The state of the `Facet` controller.
    * */
   state: CoreCategoryFacetState;
@@ -142,6 +158,9 @@ export interface CoreCategoryFacetState {
 
   /** Returns `true` if fewer values can be displayed, and `false` if not. */
   canShowLessValues: boolean;
+
+  /** Whether the facet is enabled and its values are used to filter search results. */
+  enabled: boolean;
 }
 
 export interface CategoryFacetSearch {
@@ -268,6 +287,7 @@ export function buildCoreCategoryFacet(
   };
 
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
+  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
 
   dispatch(registerCategoryFacet(options));
 
@@ -313,10 +333,19 @@ export function buildCoreCategoryFacet(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
+
     get state() {
       const request = getRequest();
       const response = getResponse();
       const isLoading = getIsLoading();
+      const enabled = getIsEnabled();
 
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
       const hasActiveValues = parents.length !== 0;
@@ -335,6 +364,7 @@ export function buildCoreCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request!.sortCriteria,
+        enabled,
       };
     },
   };
@@ -351,6 +381,7 @@ function loadCategoryFacetReducers(
   engine.addReducers({
     categoryFacetSet,
     categoryFacetSearchSet,
+    anyFacetSet,
     configuration,
     search,
   });

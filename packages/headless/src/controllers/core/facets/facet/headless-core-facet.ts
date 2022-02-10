@@ -39,10 +39,16 @@ import {
   configuration,
   facetSearchSet,
   facetSet,
+  anyFacetSet,
 } from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {CoreEngine} from '../../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
+import {
+  disableFacet,
+  enableFacet,
+} from '../../../../features/facets/any-facet-set/any-facet-set-actions';
+import {facetEnabledSelector} from '../../../../features/facets/any-facet-set/any-facet-set-selectors';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -122,6 +128,16 @@ export interface CoreFacet extends Controller {
   showLessValues(): void;
 
   /**
+   * Enables the facet
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet
+   */
+  disable(): void;
+
+  /**
    * The state of the `Facet` controller.
    * */
   state: CoreFacetState;
@@ -156,6 +172,9 @@ export interface CoreFacetState {
 
   /** `true` if fewer values can be displayed and `false` otherwise. */
   canShowLessValues: boolean;
+
+  /** Whether the facet is enabled and its values are used to filter search results. */
+  enabled: boolean;
 }
 
 export interface FacetSearch {
@@ -288,6 +307,7 @@ export function buildCoreFacet(
   const getRequest = () => facetRequestSelector(engine.state, facetId);
   const getResponse = () => facetResponseSelector(engine.state, facetId);
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
+  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
 
   const getNumberOfActiveValues = () => {
     const {currentValues} = getRequest();
@@ -361,10 +381,19 @@ export function buildCoreFacet(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
+
     get state() {
       const request = getRequest();
       const response = getResponse();
       const isLoading = getIsLoading();
+      const enabled = getIsEnabled();
 
       const sortCriterion = request.sortCriteria;
       const values = response ? response.values : [];
@@ -381,6 +410,7 @@ export function buildCoreFacet(
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues: computeCanShowLessValues(),
+        enabled,
       };
     },
   };
@@ -395,6 +425,6 @@ function loadFacetReducers(
     (SearchSection | ProductListingSection),
   SearchThunkExtraArguments
 > {
-  engine.addReducers({facetSet, configuration, facetSearchSet});
+  engine.addReducers({facetSet, anyFacetSet, configuration, facetSearchSet});
   return true;
 }

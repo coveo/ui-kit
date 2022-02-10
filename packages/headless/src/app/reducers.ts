@@ -9,6 +9,7 @@ import {categoryFacetSetReducer} from '../features/facets/category-facet-set/cat
 import {facetOrderReducer} from '../features/facets/facet-order/facet-order-slice';
 import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {specificFacetSearchSetReducer} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {anyFacetSetReducer} from '../features/facets/any-facet-set/any-facet-set-slice';
 import {facetSetReducer} from '../features/facets/facet-set/facet-set-slice';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
@@ -47,6 +48,7 @@ import {documentSuggestionReducer} from '../features/document-suggestion/documen
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
 export const facetSet = facetSetReducer;
+export const anyFacetSet = anyFacetSetReducer;
 export const facetSearchSet = specificFacetSearchSetReducer;
 export const search = searchReducer;
 export const folding = foldingReducer;

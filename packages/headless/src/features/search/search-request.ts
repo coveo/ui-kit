@@ -39,7 +39,13 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
 };
 
 function getFacets(state: StateNeededBySearchRequest) {
-  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
+  return sortFacets(getAllEnabledFacets(state), state.facetOrder ?? []);
+}
+
+function getAllEnabledFacets(state: StateNeededBySearchRequest) {
+  return getAllFacets(state).filter(
+    ({facetId}) => state.anyFacetSet?.[facetId]?.enabled
+  );
 }
 
 function getAllFacets(state: StateNeededBySearchRequest) {

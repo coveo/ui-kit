@@ -4,6 +4,7 @@ import {getContextInitialState} from '../context/context-state';
 import {getDebugInitialState} from '../debug/debug-state';
 import {getDictionaryFieldContextInitialState} from '../dictionary-field-context/dictionary-field-context-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
+import {getAnyFacetSetInitialState} from '../facets/any-facet-set/any-facet-set-state';
 import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
 import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
@@ -31,6 +32,7 @@ export function extractHistory(state: Partial<HistoryState>): HistoryState {
     context: state.context || getContextInitialState(),
     dictionaryFieldContext:
       state.dictionaryFieldContext || getDictionaryFieldContextInitialState(),
+    anyFacetSet: state.anyFacetSet || getAnyFacetSetInitialState(),
     facetSet: state.facetSet || getFacetSetInitialState(),
     numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
     dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),

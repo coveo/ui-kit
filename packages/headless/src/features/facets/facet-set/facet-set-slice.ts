@@ -30,6 +30,7 @@ import {fetchProductListing} from '../../product-listing/product-listing-actions
 import {WritableDraft} from 'immer/dist/internal';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../any-facet-set/any-facet-set-actions';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -192,6 +193,13 @@ export const facetSetReducer = createReducer(
         insertNewValue(facetRequest, searchResultValue);
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
+      })
+      .addCase(disableFacet, (state, action) => {
+        if (!(action.payload in state)) {
+          return;
+        }
+        const request = state[action.payload];
+        handleFacetDeselectAll(request);
       });
   }
 );

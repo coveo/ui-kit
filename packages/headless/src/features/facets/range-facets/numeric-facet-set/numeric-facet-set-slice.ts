@@ -25,6 +25,7 @@ import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../../any-facet-set/any-facet-set-actions';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),
@@ -81,6 +82,9 @@ export const numericFacetSetReducer = createReducer(
           facets,
           convertToRangeRequests
         );
+      })
+      .addCase(disableFacet, (state, action) => {
+        handleRangeFacetDeselectAll(state, action.payload);
       });
   }
 );
