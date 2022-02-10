@@ -33,6 +33,7 @@ export interface SearchPageClientProvider {
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
     getSearchUID: () => string;
     getPipeline: () => string;
+    getOriginContext: () => string;
     getOriginLevel1: () => string;
     getOriginLevel2: () => string;
     getOriginLevel3: () => string;
@@ -305,11 +306,11 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.noResultsBack);
     }
 
-    public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+    public async logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
-            ...this.getBaseCustomEventRequest(customData),
+            ...(await this.getBaseCustomEventRequest(customData)),
             eventType: CustomEventsTypes[event]!,
             eventValue: event,
         };
@@ -317,22 +318,22 @@ export class CoveoSearchPageClient {
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
 
-    public logCustomEventWithType(eventValue: string, eventType: string, metadata?: Record<string, any>) {
+    public async logCustomEventWithType(eventValue: string, eventType: string, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
-            ...this.getBaseCustomEventRequest(customData),
+            ...(await this.getBaseCustomEventRequest(customData)),
             eventType,
             eventValue,
         };
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
 
-    public logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
-        return this.coveoAnalyticsClient.sendSearchEvent(this.getBaseSearchEventRequest(event, metadata));
+    public async logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+        return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
     }
 
-    public logClickEvent(
+    public async logClickEvent(
         event: SearchPageEvents,
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
@@ -340,7 +341,7 @@ export class CoveoSearchPageClient {
     ) {
         const payload: ClickEventRequest = {
             ...info,
-            ...this.getBaseEventRequest({...identifier, ...metadata}),
+            ...(await this.getBaseEventRequest({...identifier, ...metadata})),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
             actionCause: event,
@@ -349,9 +350,12 @@ export class CoveoSearchPageClient {
         return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 
-    private getBaseSearchEventRequest(event: SearchPageEvents, metadata?: Record<string, any>): SearchEventRequest {
+    private async getBaseSearchEventRequest(
+        event: SearchPageEvents,
+        metadata?: Record<string, any>
+    ): Promise<SearchEventRequest> {
         return {
-            ...this.getBaseEventRequest(metadata),
+            ...(await this.getBaseEventRequest(metadata)),
             ...this.provider.getSearchEventRequestPayload(),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
@@ -359,14 +363,14 @@ export class CoveoSearchPageClient {
         };
     }
 
-    private getBaseCustomEventRequest(metadata?: Record<string, any>) {
+    private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
         return {
-            ...this.getBaseEventRequest(metadata),
+            ...(await this.getBaseEventRequest(metadata)),
             lastSearchQueryUid: this.provider.getSearchUID(),
         };
     }
 
-    private getBaseEventRequest(metadata?: Record<string, any>) {
+    private async getBaseEventRequest(metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
         return {
             ...this.getOrigins(),
@@ -374,14 +378,22 @@ export class CoveoSearchPageClient {
             language: this.provider.getLanguage(),
             facetState: this.provider.getFacetState ? this.provider.getFacetState() : [],
             anonymous: this.provider.getIsAnonymous(),
+            clientId: await this.getClientId(),
         };
     }
 
     private getOrigins() {
         return {
+            originContext: this.provider.getOriginContext(),
             originLevel1: this.provider.getOriginLevel1(),
             originLevel2: this.provider.getOriginLevel2(),
             originLevel3: this.provider.getOriginLevel3(),
         };
+    }
+
+    private getClientId() {
+        return this.coveoAnalyticsClient instanceof CoveoAnalyticsClient
+            ? this.coveoAnalyticsClient.getCurrentVisitorId()
+            : undefined;
     }
 }

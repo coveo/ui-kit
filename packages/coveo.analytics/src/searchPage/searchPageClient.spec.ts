@@ -56,6 +56,7 @@ describe('SearchPageClient', () => {
         }),
         getSearchUID: () => 'my-uid',
         getPipeline: () => 'my-pipeline',
+        getOriginContext: () => 'origin-context',
         getOriginLevel1: () => 'origin-level-1',
         getOriginLevel2: () => 'origin-level-2',
         getOriginLevel3: () => 'origin-level-3',
@@ -68,9 +69,9 @@ describe('SearchPageClient', () => {
         fetchMockBeforeEach();
 
         client = initClient();
+        client.coveoAnalyticsClient.runtime.storage.setItem('visitorId', 'visitor-id');
         fetchMock.mock(/.*/, {
             visitId: 'visit-id',
-            visitorId: 'visitor-id',
         });
     });
 
@@ -83,6 +84,7 @@ describe('SearchPageClient', () => {
     };
 
     const expectOrigins = () => ({
+        originContext: 'origin-context',
         originLevel1: 'origin-level-1',
         originLevel2: 'origin-level-2',
         originLevel3: 'origin-level-3',
@@ -99,6 +101,7 @@ describe('SearchPageClient', () => {
             customData,
             facetState: fakeFacetState,
             language: 'en',
+            clientId: 'visitor-id',
             ...expectOrigins(),
         });
     };
@@ -111,6 +114,7 @@ describe('SearchPageClient', () => {
             customData,
             queryPipeline: 'my-pipeline',
             language: 'en',
+            clientId: 'visitor-id',
             ...doc,
             ...expectOrigins(),
         });
@@ -125,6 +129,7 @@ describe('SearchPageClient', () => {
             lastSearchQueryUid: 'my-uid',
             customData,
             language: 'en',
+            clientId: 'visitor-id',
             ...expectOrigins(),
         });
     };
@@ -138,6 +143,7 @@ describe('SearchPageClient', () => {
             lastSearchQueryUid: 'my-uid',
             customData,
             language: 'en',
+            clientId: 'visitor-id',
             ...expectOrigins(),
         });
     };
