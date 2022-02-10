@@ -25,186 +25,93 @@ The location of the public directory depends on how you build, configure and dis
 For example, for any project created with [Angular CLI](https://angular.io/cli), this would mean copying language and icon assets to the root of the source directory
 
 ```
-cp -r node_modules/@coveo/atomic-react/dist/assets public/assets
-cp -r node_modules/@coveo/atomic-react/dist/lang public/lang
+cp -r node_modules/@coveo/atomic-angular/assets src/assets src/assets
+cp -r node_modules/@coveo/atomic-angular/lang src/lang
 ```
 
-It is important to respect the folder hierarchy, with SVG icons under the `assets` subdirectory, and labels and languages under the `lang` subdirectory of the public folder.
+It is important to respect the folder hierarchy, with SVG icons under the `assets` subdirectory, and labels and languages under the `lang` subdirectory.
 
-## Result templates
+## Wrapping Atomic Angular components
 
-Rendering different types of result templates based on the type of content returned by the Coveo platform is very common when building a Coveo search page.
+It can be a powerful technique to be able to wrap the out of the box components provided by Atomic Angular with application specific component.
 
-The way to create result templates for an HTML project using the [core Atomic library](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) involves defining one or multiple `atomic-result-template` components, configured with HTML properties, adding conditions on the attributes and metadata of each results.
+It can be helpful to combine multiple Atomic Angular component into a higher level parent component, which can then be reused repetitively throughout an application.
 
-Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this works very well in a pure HTML project.
+The standard `@Input()` angular decorator cannot be used directly to pass down properties to Atomic web components in a component template.
 
-However, this can be limiting and awkward to use in a React project using JSX.
+We need to create a `getter` and `setter` which will then properly assign properties to the DOM, without the standard Angular rendering engine.
 
-Atomic React exposes an `AtomicResultList` component with a `template` property that can be used in a more straightforward manner when coupled with JSX.
+For example, let's see how we could wrap `atomic-text` inside a parent component, which would pass down props.
 
-The `template` property accepts a function with a `Result` parameter, which can then be used to conditionally render different templates based on properties and fields available in result items.
+First, we need to create the parent component (`app-field-label`)
 
-The `template` function must then simply return a valid JSX Element.
+```typescript
+// field-label.component.ts
 
-Here is an example of a fictitious search page, which defines some premade templates for YouTube videos, as well as Salesforce cases:
+@Component({
+  selector: 'app-field-label',
+  templateUrl: './field-label.component.html',
+})
+export class FieldLabelComponent implements AfterViewInit {
+  @ViewChild('atomictext') atomicText?: AtomicText;
 
-```jsx
-const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
-  result,
-}) => {
-  return (
-    <>
-      <AtomicResultSectionVisual>
-        <AtomicResultImage field="ytthumbnailurl" />
-      </AtomicResultSectionVisual>
-      <AtomicResultSectionTitle>
-        <AtomicResultLink />
-      </AtomicResultSectionTitle>
-      {result.raw.ytvideoduration !== undefined && (
-        <AtomicResultSectionBottomMetadata>
-          <AtomicText value="Duration" />
-          <AtomicResultNumber field="ytvideoduration">
-            <AtomicFormatUnit unit="minute" />
-          </AtomicResultNumber>
-        </AtomicResultSectionBottomMetadata>
-      )}
-    </>
-  );
-};
+  constructor(private z: NgZone) {}
 
-const MyResultTemplateForSalesforceCases: React.FC<{result: Result}> = ({
-  result,
-}) => {
-  return (
-    <>
-      <AtomicResultSectionTitle>
-        <AtomicResultLink />
-      </AtomicResultSectionTitle>
-      <AtomicResultSectionExcerpt>
-        <AtomicResultText field="excerpt" />
-      </AtomicResultSectionExcerpt>
-      <AtomicResultSectionEmphasized>
-        {result.raw.sfpriority !== undefined && (
-          <>
-            <AtomicText value="Priority" />
-            <AtomicResultText field="sfpriority" />
-          </>
-        )}
-        {result.raw.sfstatus !== undefined && (
-          <>
-            <AtomicText value="Status" />
-            <AtomicResultText field="sfstatus" />
-          </>
-        )}
-      </AtomicResultSectionEmphasized>
-    </>
-  );
-};
-
-const MyDefaultTemplate: React.FC<{}> = () => {
-  return (
-    <>
-      <AtomicResultSectionTitle>
-        <AtomicResultLink />
-      </AtomicResultSectionTitle>
-      <AtomicResultSectionExcerpt>
-        <AtomicResultText field="excerpt" />
-      </AtomicResultSectionExcerpt>
-    </>
-  );
-};
-
-const MyResultTemplateFunction = (result: Result) => {
-  if (result.raw.filetype === 'YoutubeVideo') {
-    return <MyResultTemplateForYouTubeVideos result={result} />;
+  private val = '';
+  @Input()
+  get label(): string {
+    if (this.atomicText) {
+      this.val = this.atomicTextValueAttribute;
+    }
+    return this.val;
+  }
+  set label(v: string) {
+    this.val = v;
+    this.atomicTextValueAttribute = this.val;
   }
 
-  if (result.raw.objecttype === 'Case') {
-    return <MyResultTemplateForSalesforceCases result={result} />;
+  ngAfterViewInit(): void {
+    this.atomicTextValueAttribute = this.val;
   }
 
-  return <MyDefaultTemplate />;
-};
+  private get atomicTextValueAttribute() {
+    if (!this.atomicText) {
+      return '';
+    }
+    return this.atomicText['el'].getAttribute('value') as string;
+  }
 
-const MyPage = () => {
-  const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  });
-  return (
-    <AtomicSearchInterface engine={engine}>
-      <AtomicResultList template={MyResultTemplateFunction} />
-    </AtomicSearchInterface>
-  );
-};
-```
-
-## Styling Result Template Components
-
-Due to the way Atomic Web components use [Shadow Dom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) and [CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) to provide encapsulation, it is necessary to follow these guidelines when you wish to style elements inside any result template.
-
-### Option 1 -- Using Higher-Order Components (HOC)
-
-This option works well if you do not need to create any CSS rule that would need to target the Shadow parts of an Atomic result component.
-
-For example, if you want to modify the color of all result links in a template to `pink`, you could do so like this:
-
-```jsx
-const MyStyledResultLink: React.FC<
-  React.ComponentProps<typeof AtomicResultLink>
-> = (props) => {
-  return (
-    <AtomicResultLink {...props} style={{color: 'pink'}}>
-      {props.children}
-    </AtomicResultLink>
-  );
-};
-
-const MyPage = () => {
-  const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  });
-  return (
-    <AtomicSearchInterface engine={engine}>
-      <AtomicResultList
-        template={(result) => {
-          return <MyStyledResultLink />;
-        }}
-      />
-    </AtomicSearchInterface>
-  );
-};
-```
-
-This approach lets you wrap any core Atomic component inside a styled one, which you can then re-use in one or more templates.
-This could be done with inline styling as shown here, or with more advanced techniques such as using CSS modules.
-
-Using `React.ComponentProps<typeof AnyAtomicComponent>` allows you to extract any props that the core component exposes, and augment them if need be.
-
-### Option 2 -- Using a style tag
-
-This option works in all scenarios, and allows you to target any Shadow parts that an Atomic result component exposes, in a similar manner to using plain HTML.
-
-The following is an example that makes the text of an `AtomicResultBadge` pink:
-
-```jsx
-const myStyles = `
-atomic-result-badge::part(result-badge-element) {
-    color: pink;
+  private set atomicTextValueAttribute(v: string) {
+    if (!this.atomicText) {
+      return;
+    }
+    this.z.runOutsideAngular(() => {
+      this.atomicText!['el'].setAttribute('value', v);
+    });
+  }
 }
-`;
-
-const MyPage = () => {
-  const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  });
-  return (
-    <AtomicSearchInterface engine={engine}>
-      <AtomicResultList template={(result)=> {
-          <style>{myStyles}</style>
-          <AtomicResultBadge />
-        }} />
-    </AtomicSearchInterface>
-  );
-};
 ```
+
+```html
+<!-- field-label.component.html -->
+<atomic-text #atomictext></atomic-text>
+```
+
+```html
+<!-- Example usage in app.component.html -->
+
+<app-field-label label="My label"> </app-field-label>
+```
+
+In the above example, we can see that we need to annotate `get label()` and `set label()` with the `@Input()` angular decorator.
+
+When the label is set in the app component (`app.component.html`), we arrange for it to be passed down and propagated to `<atomic-text>` using `atomicText.el.setAttribute`. This ensure that that web component will properly receive the property without any modification of the property by the Angular rendering engine.
+
+The reference to `atomicText` is then obtained with the `ViewChild('atomictext')` decorator.
+`atomictext` is the reference set in the HTML template (`<atomic-text #atomictext></atomic-text>`).
+
+Since that reference will only exists on `ngAfterViewInit`, we need to code defensively against undefined reference.
+
+The property change is then executed inside a special `runOutsideAngular()` function to make sure that Angular does not needlessly recompute property changes, and trigger rendering lifecyle, as this is not needed.
+
+The above example also does not apply if you are simply trying to pass down "native" DOM properties, such as `id`, `class`, etc. For these properties, the standard Angular methodology can be used.

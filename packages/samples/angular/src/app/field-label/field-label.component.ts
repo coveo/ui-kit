@@ -18,13 +18,13 @@ export class FieldLabelComponent implements AfterViewInit {
 
   private val = '';
   @Input()
-  get value(): string {
+  get label(): string {
     if (this.atomicText) {
       this.val = this.atomicTextValueAttribute;
     }
     return this.val;
   }
-  set value(v: string) {
+  set label(v: string) {
     this.val = v;
     this.atomicTextValueAttribute = this.val;
   }
