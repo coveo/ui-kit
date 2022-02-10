@@ -10,7 +10,7 @@ The integration of Angular-based projects with Web based components can be trick
 
 ## Usage
 
-Since Atomic React is built on top of the core [Atomic](https://docs.coveo.com/en/atomic/latest/) web-components library, the vast majority of concepts that apply to core Atomic will apply to Atomic Angular.
+Since Atomic Angular is built on top of the core [Atomic](https://docs.coveo.com/en/atomic/latest/) web-components library, the vast majority of concepts that apply to core Atomic will apply to Atomic Angular.
 
 However, there are still some special considerations.
 
