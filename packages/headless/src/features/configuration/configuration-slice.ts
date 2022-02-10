@@ -80,6 +80,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.enabled)) {
           state.analytics.enabled = action.payload.enabled;
         }
+        if (!isNullOrUndefined(action.payload.originContext)) {
+          state.analytics.originContext = action.payload.originContext;
+        }
         if (!isNullOrUndefined(action.payload.originLevel2)) {
           state.analytics.originLevel2 = action.payload.originLevel2;
         }
