@@ -1,4 +1,5 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
@@ -57,19 +58,8 @@ export function assertRemovesComponent(
   });
 }
 
-export function assertAriaLiveMessage(
-  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
-  message: string
-) {
+export function assertAriaLiveMessage(message: string) {
   it(`screen readers should read out "${message}".`, () => {
-    selector().should('contain.text', message);
-  });
-}
-
-export function assertNoAriaLiveMessage(
-  selector: () => Cypress.Chainable<JQuery<HTMLElement>>
-) {
-  it('screen readers should not read out anything.', () => {
-    selector().should('not.exist');
+    AriaLiveSelectors.element().should('contain.text', message);
   });
 }
