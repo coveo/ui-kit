@@ -84,6 +84,14 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   enabled?: boolean;
 
   /**
+   * Sets the Origin Context dimension on the analytic events.
+   *
+   * You can use this dimension to specify the context of your application.
+   * Suggested values are "Search", "InternalSearch" and "CommunitySearch"
+   */
+  originContext?: string;
+
+  /**
    * The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab from which the usage analytics event originates (e.g., `All`).
    */
   originLevel2?: string;
@@ -116,6 +124,7 @@ export const updateAnalyticsConfiguration = createAction(
   (payload: UpdateAnalyticsConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
       enabled: new BooleanValue({default: true}),
+      originContext: originSchemaOnConfigUpdate(),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
       apiBaseUrl: nonEmptyString,
