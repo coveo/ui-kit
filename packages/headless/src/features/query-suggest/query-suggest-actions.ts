@@ -19,7 +19,11 @@ import {
   SearchHubSection,
 } from '../../state/state-sections';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
-import {getVisitorID, historyStore} from '../../api/analytics/analytics';
+import {
+  getPageID,
+  getVisitorID,
+  historyStore,
+} from '../../api/analytics/analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
@@ -152,6 +156,7 @@ export const buildQuerySuggestRequest = async (
   id: string,
   s: StateNeededByQuerySuggest
 ): Promise<QuerySuggestRequest> => {
+  const visitorAndClientId = await getVisitorID();
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
@@ -170,7 +175,16 @@ export const buildQuerySuggestRequest = async (
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),
     ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(),
+      visitorId: visitorAndClientId,
+      ...(s.configuration.analytics.enabled && {
+        analytics: {
+          clientId: visitorAndClientId,
+          clientTimestamp: new Date().toISOString(),
+          pageId: getPageID(),
+          deviceId: s.configuration.analytics.deviceId,
+          documentReferrer: s.configuration.analytics.originLevel3,
+        },
+      }),
     }),
   };
 };

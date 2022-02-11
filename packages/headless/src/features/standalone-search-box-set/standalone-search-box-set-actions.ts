@@ -1,6 +1,6 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/analytics';
+import {getPageID, getVisitorID} from '../../api/analytics/analytics';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {PlanRequest} from '../../api/search/plan/plan-request';
 import {
@@ -120,6 +120,7 @@ const logRedirect = (url: string) =>
 export const buildPlanRequest = async (
   state: StateNeededForRedirect
 ): Promise<PlanRequest> => {
+  const visitorAndClientId = await getVisitorID();
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -131,7 +132,16 @@ export const buildPlanRequest = async (
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
     ...(state.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(),
+      visitorId: visitorAndClientId,
+    }),
+    ...(state.configuration.analytics.enabled && {
+      analytics: {
+        clientId: visitorAndClientId,
+        clientTimestamp: new Date().toISOString(),
+        pageId: getPageID(),
+        deviceId: state.configuration.analytics.deviceId,
+        documentReferrer: state.configuration.analytics.originLevel3,
+      },
     }),
   };
 };

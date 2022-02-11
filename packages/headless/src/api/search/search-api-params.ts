@@ -89,6 +89,16 @@ export interface TimezoneParam {
   timezone: string;
 }
 
+export interface AnalyticsParam {
+  analytics?: {
+    clientId: string;
+    deviceId?: string;
+    pageId: string;
+    clientTimestamp: string;
+    documentReferrer: string;
+  };
+}
+
 export const baseSearchRequest = (
   req: BaseParam,
   method: HttpMethods,

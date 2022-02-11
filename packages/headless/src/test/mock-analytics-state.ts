@@ -9,6 +9,7 @@ export function buildMockAnalyticsState(
     originLevel2: '',
     originLevel3: '',
     anonymous: false,
+    deviceId: '',
     ...config,
   };
 }
