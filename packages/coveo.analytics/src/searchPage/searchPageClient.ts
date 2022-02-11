@@ -33,7 +33,7 @@ export interface SearchPageClientProvider {
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
     getSearchUID: () => string;
     getPipeline: () => string;
-    getOriginContext: () => string;
+    getOriginContext?: () => string;
     getOriginLevel1: () => string;
     getOriginLevel2: () => string;
     getOriginLevel3: () => string;
@@ -384,7 +384,7 @@ export class CoveoSearchPageClient {
 
     private getOrigins() {
         return {
-            originContext: this.provider.getOriginContext(),
+            originContext: this.provider.getOriginContext?.(),
             originLevel1: this.provider.getOriginLevel1(),
             originLevel2: this.provider.getOriginLevel2(),
             originLevel3: this.provider.getOriginLevel3(),
