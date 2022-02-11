@@ -31,6 +31,37 @@ cp -r node_modules/@coveo/atomic-angular/lang src/lang
 
 It is important to respect the folder hierarchy, with SVG icons under the `assets` subdirectory, and labels and languages under the `lang` subdirectory.
 
+Once this is done, these folders must be configured as assets folder in the application.
+
+We can do so using the `angular.json` configuration file.
+
+```json
+"build": {
+  // [...] omitted for brevity
+  "options": {
+    "assets": ["src/favicon.ico", "src/assets", "src/lang"],
+  },
+},
+```
+
+## Including default Coveo Theme
+
+To include the default Coveo theme, you can use the `angular.json` configuration file.
+
+```json
+"build": {
+   // [...] omitted for brevity
+  "options": {
+    "styles": [
+      "./node_modules/@coveo/atomic/dist/atomic/themes/coveo.css",
+      "src/styles.css"
+    ],
+  },
+},
+```
+
+This is however optional, and (all theme variables)[https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/#theme-variables] can be configured in the global application stylesheet (`src/style.css`, for example).
+
 ## Wrapping Atomic Angular Components
 
 We recommend creating application-specific components which wrap out of the box Atomic Angular components. In other words, combine multiple Atomic Angular component into a higher level parent component, which you can then reuse throughout your application.
@@ -38,7 +69,6 @@ We recommend creating application-specific components which wrap out of the box 
 When doing so, you cannot use the standard `@Input()` angular decorator directly to pass down properties to Atomic web components in a component template. You need to create getter and setter functions that properly assign properties to the DOM, without the standard Angular rendering engine.
 
 The following example wraps an `atomic-text` component inside a parent `app-field-lablel` component, which would pass down props.
-
 
 ```typescript
 // field-label.component.ts
