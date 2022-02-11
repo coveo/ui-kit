@@ -141,6 +141,10 @@ export const buildPlanRequest = async (
         pageId: getPageID(),
         deviceId: state.configuration.analytics.deviceId,
         documentReferrer: state.configuration.analytics.originLevel3,
+        originContext: state.configuration.analytics.originContext,
+        userDisplayName: state.configuration.analytics.userDisplayName,
+        actionCause: 'TODO',
+        customData: {TODO: 'TODO'},
       },
     }),
   };

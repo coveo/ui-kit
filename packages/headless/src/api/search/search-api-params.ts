@@ -96,6 +96,10 @@ export interface AnalyticsParam {
     pageId: string;
     clientTimestamp: string;
     documentReferrer: string;
+    originContext: string;
+    userDisplayName: string;
+    actionCause: string;
+    customData: Record<string, unknown>;
   };
 }
 

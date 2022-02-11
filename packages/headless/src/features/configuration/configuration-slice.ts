@@ -99,6 +99,15 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.anonymous)) {
           state.analytics.anonymous = action.payload.anonymous;
         }
+        if (!isNullOrUndefined(action.payload.deviceId)) {
+          state.analytics.deviceId = action.payload.deviceId;
+        }
+        if (!isNullOrUndefined(action.payload.deviceId)) {
+          state.analytics.deviceId = action.payload.deviceId;
+        }
+        if (!isNullOrUndefined(action.payload.userDisplayName)) {
+          state.analytics.userDisplayName = action.payload.userDisplayName;
+        }
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;

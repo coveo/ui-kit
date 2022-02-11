@@ -1,6 +1,7 @@
 import {SearchAppState} from '../../state/search-app-state';
-import {getPageID, getVisitorID} from '../../api/analytics/analytics';
+import {getVisitorID} from '../../api/analytics/analytics';
 import {ConfigurationSection} from '../../state/state-sections';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
@@ -8,7 +9,6 @@ type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
 export const buildSearchAndFoldingLoadCollectionRequest = async (
   state: StateNeededByExecuteSearchAndFolding
 ) => {
-  const clientAndVisitorID = await getVisitorID();
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -19,7 +19,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     referrer: state.configuration.analytics.originLevel3,
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
-      visitorId: clientAndVisitorID,
+      visitorId: await getVisitorID(),
     }),
     ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
@@ -53,14 +53,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,
     }),
-    ...(state.configuration.analytics.enabled && {
-      analytics: {
-        clientId: clientAndVisitorID,
-        deviceId: state.configuration.analytics.deviceId,
-        pageId: getPageID(),
-        clientTimestamp: new Date().toISOString(),
-        documentReferrer: state.configuration.analytics.originLevel3,
-      },
-    }),
+    ...(state.configuration.analytics.enabled &&
+      (await fromAnalyticsStateToAnalyticsParams(
+        state.configuration.analytics
+      ))),
   };
 };

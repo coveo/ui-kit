@@ -1,9 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  getPageID,
-  getVisitorID,
-  historyStore,
-} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,
@@ -21,6 +17,7 @@ import {
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -76,7 +73,6 @@ export const getRecommendations = createAsyncThunk<
 export const buildRecommendationRequest = async (
   s: StateNeededByGetRecommendations
 ): Promise<RecommendationRequest> => {
-  const visitorAndClientId = await getVisitorID();
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
@@ -109,16 +105,9 @@ export const buildRecommendationRequest = async (
       fieldsToInclude: s.fields.fieldsToInclude,
     }),
     ...(s.configuration.analytics.enabled && {
-      visitorId: visitorAndClientId,
+      visitorId: await getVisitorID(),
     }),
-    ...(s.configuration.analytics.enabled && {
-      analytics: {
-        clientId: visitorAndClientId,
-        clientTimestamp: new Date().toISOString(),
-        pageId: getPageID(),
-        deviceId: s.configuration.analytics.deviceId,
-        documentReferrer: s.configuration.analytics.originLevel3,
-      },
-    }),
+    ...(s.configuration.analytics.enabled &&
+      (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
   };
 };

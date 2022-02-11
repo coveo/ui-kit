@@ -104,6 +104,10 @@ export interface AnalyticsConfiguration {
    *  The name of the device that the end user is using. It should be explicitly configured in the context of a native mobile app.
    */
   deviceId?: string;
+  /**
+   * Specifies the user display name for the usage analytics logs.
+   */
+  userDisplayName?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;

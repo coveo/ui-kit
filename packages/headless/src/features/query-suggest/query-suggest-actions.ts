@@ -19,12 +19,9 @@ import {
   SearchHubSection,
 } from '../../state/state-sections';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
-import {
-  getPageID,
-  getVisitorID,
-  historyStore,
-} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
@@ -156,7 +153,6 @@ export const buildQuerySuggestRequest = async (
   id: string,
   s: StateNeededByQuerySuggest
 ): Promise<QuerySuggestRequest> => {
-  const visitorAndClientId = await getVisitorID();
   return {
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
@@ -175,16 +171,9 @@ export const buildQuerySuggestRequest = async (
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),
     ...(s.configuration.analytics.enabled && {
-      visitorId: visitorAndClientId,
-      ...(s.configuration.analytics.enabled && {
-        analytics: {
-          clientId: visitorAndClientId,
-          clientTimestamp: new Date().toISOString(),
-          pageId: getPageID(),
-          deviceId: s.configuration.analytics.deviceId,
-          documentReferrer: s.configuration.analytics.originLevel3,
-        },
-      }),
+      visitorId: await getVisitorID(),
+      ...(s.configuration.analytics.enabled &&
+        (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
     }),
   };
 };
