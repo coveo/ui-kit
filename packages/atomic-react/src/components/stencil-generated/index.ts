@@ -8,6 +8,7 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
+export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
