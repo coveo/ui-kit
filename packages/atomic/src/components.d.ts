@@ -16,6 +16,7 @@ import { InitializationOptions } from "./components/atomic-search-interface/atom
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
+        "updateMessage": (region: string, message: string) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
