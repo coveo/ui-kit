@@ -19,6 +19,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
@@ -134,18 +135,9 @@ export const buildPlanRequest = async (
     ...(state.configuration.analytics.enabled && {
       visitorId: visitorAndClientId,
     }),
-    ...(state.configuration.analytics.enabled && {
-      analytics: {
-        clientId: visitorAndClientId,
-        clientTimestamp: new Date().toISOString(),
-        pageId: getPageID(),
-        deviceId: state.configuration.analytics.deviceId,
-        documentReferrer: state.configuration.analytics.originLevel3,
-        originContext: state.configuration.analytics.originContext,
-        userDisplayName: state.configuration.analytics.userDisplayName,
-        actionCause: 'TODO',
-        customData: {TODO: 'TODO'},
-      },
-    }),
+    ...(state.configuration.analytics.enabled &&
+      (await fromAnalyticsStateToAnalyticsParams(
+        state.configuration.analytics
+      ))),
   };
 };

@@ -72,42 +72,40 @@ export const getRecommendations = createAsyncThunk<
 
 export const buildRecommendationRequest = async (
   s: StateNeededByGetRecommendations
-): Promise<RecommendationRequest> => {
-  return {
-    accessToken: s.configuration.accessToken,
-    organizationId: s.configuration.organizationId,
-    url: s.configuration.search.apiBaseUrl,
-    recommendation: s.recommendation.id,
-    tab: s.configuration.analytics.originLevel2,
-    referrer: s.configuration.analytics.originLevel3,
-    timezone: s.configuration.search.timezone,
-    locale: s.configuration.search.locale,
-    actionsHistory: s.configuration.analytics.enabled
-      ? historyStore.getHistory()
-      : [],
-    ...(s.advancedSearchQueries && {
-      aq: s.advancedSearchQueries.aq,
-      cq: s.advancedSearchQueries.cq,
-    }),
-    ...(s.pipeline && {
-      pipeline: s.pipeline,
-    }),
-    ...(s.searchHub && {
-      searchHub: s.searchHub,
-    }),
-    ...(s.context && {
-      context: s.context.contextValues,
-    }),
-    ...(s.dictionaryFieldContext && {
-      dictionaryFieldContext: s.dictionaryFieldContext.contextValues,
-    }),
-    ...(s.fields && {
-      fieldsToInclude: s.fields.fieldsToInclude,
-    }),
-    ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(),
-    }),
-    ...(s.configuration.analytics.enabled &&
-      (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
-  };
-};
+): Promise<RecommendationRequest> => ({
+  accessToken: s.configuration.accessToken,
+  organizationId: s.configuration.organizationId,
+  url: s.configuration.search.apiBaseUrl,
+  recommendation: s.recommendation.id,
+  tab: s.configuration.analytics.originLevel2,
+  referrer: s.configuration.analytics.originLevel3,
+  timezone: s.configuration.search.timezone,
+  locale: s.configuration.search.locale,
+  actionsHistory: s.configuration.analytics.enabled
+    ? historyStore.getHistory()
+    : [],
+  ...(s.advancedSearchQueries && {
+    aq: s.advancedSearchQueries.aq,
+    cq: s.advancedSearchQueries.cq,
+  }),
+  ...(s.pipeline && {
+    pipeline: s.pipeline,
+  }),
+  ...(s.searchHub && {
+    searchHub: s.searchHub,
+  }),
+  ...(s.context && {
+    context: s.context.contextValues,
+  }),
+  ...(s.dictionaryFieldContext && {
+    dictionaryFieldContext: s.dictionaryFieldContext.contextValues,
+  }),
+  ...(s.fields && {
+    fieldsToInclude: s.fields.fieldsToInclude,
+  }),
+  ...(s.configuration.analytics.enabled && {
+    visitorId: await getVisitorID(),
+  }),
+  ...(s.configuration.analytics.enabled &&
+    (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
+});
