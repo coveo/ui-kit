@@ -71,6 +71,9 @@ export interface AnalyticsClient {
     registerAfterSendEventHook(hook: AnalyticsClientSendEventHook): void;
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
     runtime: IRuntimeEnvironment;
+    /**
+     * @deprecated
+     */
     readonly currentVisitorId: string;
 }
 

@@ -32,7 +32,8 @@ export interface EventBaseRequest {
     userDisplayName?: any;
     splitTestRunName?: string;
     splitTestRunVersion?: string;
-
+    clientId?: string;
+    originContext?: string;
     originLevel1?: string;
     originLevel2?: string;
     originLevel3?: string;
