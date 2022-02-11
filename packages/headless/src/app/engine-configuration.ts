@@ -65,9 +65,9 @@ export interface AnalyticsConfiguration {
    * Sets the Origin Context dimension on the analytic events.
    *
    * You can use this dimension to specify the context of your application.
-   * Suggested values are "Search", "InternalSearch" and "CommunitySearch"
+   * The possible values are "Search", "InternalSearch", and "CommunitySearch".
    *
-   * By default, `Search`.
+   * The default value is `Search`.
    */
   originContext?: string;
   /**
