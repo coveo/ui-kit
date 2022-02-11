@@ -19,7 +19,7 @@ pipeline {
   }
 
   environment {
-    NPM_TOKEN = credentials("npmjs_com_token")
+    NPM_TOKEN = credentials("coveo-analytics-js-npm-deployment-token")
     GIT = credentials('github-coveobot')
     GH_TOKEN = credentials('github-coveobot_token')
     SNYK_TOKEN = credentials("snyk_token")
