@@ -31,19 +31,14 @@ cp -r node_modules/@coveo/atomic-angular/lang src/lang
 
 It is important to respect the folder hierarchy, with SVG icons under the `assets` subdirectory, and labels and languages under the `lang` subdirectory.
 
-## Wrapping Atomic Angular components
+## Wrapping Atomic Angular Components
 
-It can be a powerful technique to be able to wrap the out of the box components provided by Atomic Angular with application specific component.
+We recommend creating application-specific components which wrap out of the box Atomic Angular components. In other words, combine multiple Atomic Angular component into a higher level parent component, which you can then reuse throughout your application.
 
-It can be helpful to combine multiple Atomic Angular component into a higher level parent component, which can then be reused repetitively throughout an application.
+When doing so, you cannot use the standard `@Input()` angular decorator directly to pass down properties to Atomic web components in a component template. You need to create getter and setter functions that properly assign properties to the DOM, without the standard Angular rendering engine.
 
-The standard `@Input()` angular decorator cannot be used directly to pass down properties to Atomic web components in a component template.
+The following example wraps an `atomic-text` component inside a parent `app-field-lablel` component, which would pass down props.
 
-We need to create a `getter` and `setter` which will then properly assign properties to the DOM, without the standard Angular rendering engine.
-
-For example, let's see how we could wrap `atomic-text` inside a parent component, which would pass down props.
-
-First, we need to create the parent component (`app-field-label`)
 
 ```typescript
 // field-label.component.ts
@@ -103,15 +98,15 @@ export class FieldLabelComponent implements AfterViewInit {
 <app-field-label label="My label"> </app-field-label>
 ```
 
-In the above example, we can see that we need to annotate `get label()` and `set label()` with the `@Input()` angular decorator.
+In `field-label.component.ts`, notice that we annotate `get label()` and `set label()` with the `@Input()` angular decorator.
 
-When the label is set in the app component (`app.component.html`), we arrange for it to be passed down and propagated to `<atomic-text>` using `atomicText.el.setAttribute`. This ensure that that web component will properly receive the property without any modification of the property by the Angular rendering engine.
+In `app.component.html`, when we set the label in the app component, we arrange for it to be passed down and propagated to `<atomic-text>` using `atomicText.el.setAttribute` in `field-label.component.ts`. This ensures that this web component will properly receive the property without any modification by the Angular rendering engine.
 
 The reference to `atomicText` is then obtained with the `ViewChild('atomictext')` decorator.
-`atomictext` is the reference set in the HTML template (`<atomic-text #atomictext></atomic-text>`).
+`atomictext` is the reference set in the `<atomic-text #atomictext></atomic-text>` HTML template.
 
-Since that reference will only exists on `ngAfterViewInit`, we need to code defensively against undefined reference.
+Since that reference will only exist on `ngAfterViewInit`, we code defensively against undefined references.
 
-The property change is then executed inside a special `runOutsideAngular()` function to make sure that Angular does not needlessly recompute property changes, and trigger rendering lifecyle, as this is not needed.
+The property change is then executed inside a special `runOutsideAngular()` function to make sure that Angular does not needlessly recompute property changes and trigger the rendering lifecyle, as this is not needed.
 
-The above example also does not apply if you are simply trying to pass down "native" DOM properties, such as `id`, `class`, etc. For these properties, the standard Angular methodology can be used.
+The above example also does not apply if you are simply trying to pass down "native" DOM properties, such as `id`, `class`, etc. For these properties, you can use the standard Angular methodology.
