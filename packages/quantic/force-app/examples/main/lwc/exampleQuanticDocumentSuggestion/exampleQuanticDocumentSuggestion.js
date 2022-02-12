@@ -31,17 +31,17 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       defaultValue: 3,
     },
     {
-      attribute: 'preventFetchOnInit',
-      label: 'Prevent fetch on init',
+      attribute: 'fetchOnInit',
+      label: 'Fetch on init',
       description:
-        'Whether or not we want to prevent fetching suggestions when initializing this component.',
+        'Whether or not we want to fetch suggestions when initializing this component.',
       defaultValue: false,
     },
     {
-      attribute: 'hideQuickview',
-      label: 'Hide quickview',
+      attribute: 'showQuickview',
+      label: 'Show quickview',
       description:
-        'Whether or not we want to hide the quick view for the document suggestions.',
+        'Whether or not we want to disply the quick view for the document suggestions.',
       defaultValue: false,
     },
     {

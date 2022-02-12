@@ -43,14 +43,14 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api hideQuickview = false;
+  @api showQuickview = false;
   /**
-   * Whether or not we want to prevent fetching suggestions when initializing this component.
+   * Whether or not we want to fetch suggestions when initializing this component.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api preventFetchOnInit = false;
+  @api fetchOnInit = false;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -95,7 +95,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       ...CoveoHeadlessCaseAssist.loadDocumentSuggestionActions(engine),
     };
 
-    if (!this.preventFetchOnInit) {
+    if (this.fetchOnInit) {
       engine.dispatch(this.actions.fetchDocumentSuggestions());
     }
   };

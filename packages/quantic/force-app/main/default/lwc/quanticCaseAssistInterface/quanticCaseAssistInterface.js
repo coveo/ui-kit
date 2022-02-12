@@ -33,14 +33,14 @@ export default class QuanticCaseAssistInterface extends LightningElement {
    */
   @api caseAssistId;
   /**
-   * Whether or not we want to log a case start analytics event when initializing this component.
+   * Whether or not we want to prevent logging a case start analytics event when initializing this component.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
   @api preventLogCaseStartOnInit = false;
   /**
-   * Whether or not we want to fetch classifications when initializing this component.
+   * Whether or not we want to prevent fetching classifications when initializing this component.
    * @api
    * @type {boolean}
    * @defaultValue `false`
