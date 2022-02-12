@@ -249,7 +249,7 @@ describe('quantic-case-classification', () => {
       });
     });
 
-    it('should log a warning in the console and fall back to the default behavour when maxSuggestion is inferior to 0 ', () => {
+    it('should log a warning in the console and fall back to the default behavior when maxSuggestion is inferior to 0', () => {
       mockSfPicklistValues(sfDefaultField, allOptions);
       interceptCaseAssist();
       cy.visit(pageUrl, {
@@ -318,7 +318,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when maxSuggestions is not a number', () => {
-    it('should log a warning in the console and fall back to the default behavour', () => {
+    it('should log a warning in the console and fall back to the default behavior', () => {
       mockSfPicklistValues(sfDefaultField, allOptions);
       interceptCaseAssist();
       cy.visit(pageUrl, {
