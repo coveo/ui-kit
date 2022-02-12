@@ -123,13 +123,23 @@ export default class QuanticCaseClassification extends LightningElement {
   _isSuggestionsVisible = true;
   /** @type {number} */
   _maxSuggestions = 3;
+  /** @type {boolean} */
+  _renderingError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    if (!this.coveoFieldName) {
+      this._renderingError = true;
+      console.error(
+        'the coveoFieldName is required, please introduce its value'
+      );
+    }
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
+    if (!this._renderingError) {
+      initializeWithHeadless(this, this.engineId, this.initialize);
+    }
   }
 
   /**
@@ -137,20 +147,12 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   initialize = (engine) => {
     this.engine = engine;
-    try {
-      this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
-        options: {
-          field: this.coveoFieldName,
-        },
-      });
-      this.unsubscribeField = this.field?.subscribe(() =>
-        this.updateFieldState()
-      );
-    } catch (e) {
-      if (!this.coveoFieldName) {
-        console.error('Coveo field name is missing');
-      }
-    }
+    this.field = CoveoHeadlessCaseAssist.buildCaseField(engine, {
+      options: {
+        field: this.coveoFieldName,
+      },
+    });
+    this.unsubscribeField = this.field.subscribe(() => this.updateFieldState());
 
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
@@ -338,7 +340,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   setFieldValue(value) {
-    this.field?.update(value);
+    this.field.update(value);
     this._value = value;
   }
 
@@ -357,7 +359,9 @@ export default class QuanticCaseClassification extends LightningElement {
     if (Number(value) >= 0) {
       this._maxSuggestions = Number(value);
     } else {
-      console.warn('Please enter a valid number of maximum suggestions');
+      console.warn(
+        'Invalid number of maximum suggestions introduced, the default value is being used'
+      );
     }
   }
 }

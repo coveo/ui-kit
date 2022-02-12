@@ -606,7 +606,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when the Coveo field name is missing', () => {
-    it('should log an error in the console', () => {
+    it('should log an error in the console and prevent the rendering of the component', () => {
       mockSfPicklistValues(sfDefaultField, allOptions);
       interceptCaseAssist();
       cy.visit(pageUrl, {
@@ -619,11 +619,11 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayLabel(true);
+        Expect.displayLabel(false);
         Expect.numberOfInlineOptions(0);
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
-        Expect.displaySelectInput(true);
+        Expect.displaySelectInput(false);
         Expect.console.error(true);
       });
     });
