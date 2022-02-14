@@ -252,7 +252,7 @@ export namespace Components {
     }
     interface AtomicLayout {
         /**
-          * The name of the layout.
+          * Name of the layout.
          */
         "layout": Layout;
     }
@@ -1530,7 +1530,7 @@ declare namespace LocalJSX {
     }
     interface AtomicLayout {
         /**
-          * The name of the layout.
+          * Name of the layout.
          */
         "layout": Layout;
     }
