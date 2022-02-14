@@ -251,11 +251,23 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicLayout {
+        /**
+          * Name of the layout.
+         */
         "layout": Layout;
     }
     interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
         "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
         "minWidth"?: string;
+        /**
+          * Name of the layout's section.
+         */
         "section": Section;
     }
     interface AtomicLoadMoreResults {
@@ -1517,11 +1529,23 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicLayout {
+        /**
+          * Name of the layout.
+         */
         "layout": Layout;
     }
     interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
         "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
         "minWidth"?: string;
+        /**
+          * Name of the layout's section.
+         */
         "section": Section;
     }
     interface AtomicLoadMoreResults {
