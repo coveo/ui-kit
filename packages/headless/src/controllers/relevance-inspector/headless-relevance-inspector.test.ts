@@ -106,9 +106,15 @@ describe('RelevanceInspector', () => {
     expect(engine.actions).toContainEqual(disableFetchAllFields());
   });
 
-  it(`when calling fetchFieldsDescription()
+  it(`when calling fetchFieldsDescription() with debug disabled
+  it should dispatch an "enableDebug" action`, () => {
+    relevanceInspector.fetchFieldsDescription();
+    expect(engine.actions).toContainEqual(enableDebug());
+  });
+
+  it(`when calling fetchFieldsDescription() 
   it should dispatch an "fetchFieldsDescription" action`, () => {
-    relevanceInspector.fetchFieldDescriptions();
+    relevanceInspector.fetchFieldsDescription();
     expect(engine.findAsyncAction(fetchFieldsDescription.pending)).toBeTruthy();
   });
 
