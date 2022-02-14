@@ -31,9 +31,9 @@ cp -r node_modules/@coveo/atomic-angular/lang src/lang
 
 It is important to respect the folder hierarchy, with SVG icons under the `assets` subdirectory, and labels and languages under the `lang` subdirectory.
 
-Once this is done, these folders must be configured as assets folder in the application.
+Once this is done, these folders must be configured as asset folders in the application.
 
-We can do so using the `angular.json` configuration file.
+You can do so using the `angular.json` configuration file.
 
 ```json
 "build": {
@@ -44,9 +44,9 @@ We can do so using the `angular.json` configuration file.
 },
 ```
 
-## Including default Coveo Theme
+## Including the Default Coveo Theme
 
-To include the default Coveo theme, you can use the `angular.json` configuration file.
+To include the default Coveo theme, use the `angular.json` configuration file.
 
 ```json
 "build": {
