@@ -17,6 +17,7 @@ import {
   enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
+import {buildMockFieldDescription} from '../../test/mock-field-description';
 
 describe('RelevanceInspector', () => {
   let engine: MockSearchEngine;
@@ -106,9 +107,15 @@ describe('RelevanceInspector', () => {
     expect(engine.actions).toContainEqual(disableFetchAllFields());
   });
 
-  it(`when calling fetchFieldsDescription()
+  it(`when calling fetchFieldsDescription() with debug disabled
+  it should dispatch an "enableDebug" action`, () => {
+    relevanceInspector.fetchFieldsDescription();
+    expect(engine.actions).toContainEqual(enableDebug());
+  });
+
+  it(`when calling fetchFieldsDescription() 
   it should dispatch an "fetchFieldsDescription" action`, () => {
-    relevanceInspector.fetchFieldDescriptions();
+    relevanceInspector.fetchFieldsDescription();
     expect(engine.findAsyncAction(fetchFieldsDescription.pending)).toBeTruthy();
   });
 
@@ -137,6 +144,18 @@ describe('RelevanceInspector', () => {
       userIdentities: responseWithDebug.userIdentities,
       rankingExpressions: responseWithDebug.rankingExpressions,
       fieldsDescription: [],
+    });
+  });
+
+  it('should return the fieldsDecription correctly, when debug is enabled', () => {
+    const state = createMockState();
+    state.debug = true;
+    state.fields.fieldsDescription = [buildMockFieldDescription()];
+    engine = buildMockSearchAppEngine({state});
+    relevanceInspector = buildRelevanceInspector(engine);
+
+    expect(relevanceInspector.state).toMatchObject({
+      fieldsDescription: state.fields.fieldsDescription,
     });
   });
 });
