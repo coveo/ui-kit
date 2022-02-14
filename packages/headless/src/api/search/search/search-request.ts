@@ -10,6 +10,7 @@ import {
 } from '../../platform-service-params';
 import {
   AdvancedQueryParam,
+  AnalyticsParam,
   ConstantQueryParam,
   EnableDidYouMeanParam,
   EnableQuerySyntaxParam,
@@ -48,4 +49,5 @@ export type SearchRequest = BaseParam &
   FoldingParam &
   TabParam &
   ReferrerParam &
-  TimezoneParam;
+  TimezoneParam &
+  AnalyticsParam;

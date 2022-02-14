@@ -1,6 +1,7 @@
 import {SearchAppState} from '../../state/search-app-state';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {ConfigurationSection} from '../../state/state-sections';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
@@ -52,5 +53,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,
     }),
+    ...(state.configuration.analytics.enabled &&
+      (await fromAnalyticsStateToAnalyticsParams(
+        state.configuration.analytics
+      ))),
   };
 };

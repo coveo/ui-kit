@@ -100,6 +100,14 @@ export interface AnalyticsConfiguration {
    * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
    */
   anonymous?: boolean;
+  /**
+   *  The name of the device that the end user is using. It should be explicitly configured in the context of a native mobile app.
+   */
+  deviceId?: string;
+  /**
+   * Specifies the user display name for the usage analytics logs.
+   */
+  userDisplayName?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;

@@ -3,6 +3,8 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import {AnalyticsParam} from '../../api/search/search-api-params';
+import {getPageID, getVisitorID} from '../../api/analytics/analytics';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -96,6 +98,14 @@ export interface AnalyticsState {
    * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
    */
   anonymous: boolean;
+  /**
+   *  The name of the device that the end user is using. It should be explicitly configured in the context of a native mobile app.
+   */
+  deviceId: string;
+  /**
+   * Specifies the user display name for the usage analytics logs.
+   */
+  userDisplayName: string;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -117,5 +127,25 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     originLevel2: 'default',
     originLevel3: 'default',
     anonymous: false,
+    deviceId: '',
+    userDisplayName: '',
   },
 });
+
+export const fromAnalyticsStateToAnalyticsParams = async (
+  s: AnalyticsState
+): Promise<AnalyticsParam> => {
+  return {
+    analytics: {
+      clientId: await getVisitorID(),
+      deviceId: s.deviceId,
+      pageId: getPageID(),
+      clientTimestamp: new Date().toISOString(),
+      documentReferrer: s.originLevel3,
+      originContext: s.originContext,
+      userDisplayName: s.userDisplayName,
+      actionCause: 'TODO',
+      customData: {TODO: 'TODO'},
+    },
+  };
+};
