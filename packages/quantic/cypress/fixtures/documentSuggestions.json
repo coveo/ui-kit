@@ -1,5 +1,6 @@
 [
   {
+    "clickUri": "test 0",
     "uniqueId": "0",
     "title": "Document 0",
     "excerpt": "The excerpt of the first document suggestion.",
@@ -7,6 +8,7 @@
     "fields": {"uri": "test 0"}
   },
   {
+    "clickUri": "test 1",
     "uniqueId": "1",
     "title": "Document 1",
     "excerpt": "The excerpt of the second document suggestion.",
@@ -14,6 +16,7 @@
     "fields": {"uri": "test 1"}
   },
   {
+    "clickUri": "test 2",
     "uniqueId": "2",
     "title": "Document 2",
     "excerpt": "The excerpt of the third document suggestion.",
@@ -21,6 +24,7 @@
     "fields": {"uri": "test 2"}
   },
   {
+    "clickUri": "test 3",
     "uniqueId": "3",
     "title": "Document 3",
     "excerpt": "The excerpt of the fourth document suggestion.",
@@ -28,6 +32,7 @@
     "fields": {"uri": "test 3"}
   },
   {
+    "clickUri": "test 4",
     "uniqueId": "4",
     "title": "Document 4",
     "excerpt": "The excerpt of the fifth document suggestion.",

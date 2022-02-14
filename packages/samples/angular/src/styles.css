@@ -1,0 +1,6 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --spacing: 16px;
+  --spacing-col: 32px;
+  --search-box-width: 648px;
+}

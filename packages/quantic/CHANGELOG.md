@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.4...@coveo/quantic@1.8.5) (2022-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.3...@coveo/quantic@1.8.4) (2022-02-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.2...@coveo/quantic@1.8.3) (2022-02-07)
+
+
+### Bug Fixes
+
+* **headless, quantic:** Prevent search analytics event when using QV in case assist ([#1701](https://github.com/coveo/ui-kit/issues/1701)) ([4c3d63a](https://github.com/coveo/ui-kit/commit/4c3d63aeabed28fe9ca808eb8e1a640f2347143a))
+
+
+
+
+
+## [1.8.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.1...@coveo/quantic@1.8.2) (2022-02-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.0...@coveo/quantic@1.8.1) (2022-02-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.7.8...@coveo/quantic@1.8.0) (2022-01-28)
 
 

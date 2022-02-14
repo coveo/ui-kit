@@ -26,8 +26,6 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertNoAriaLiveMessage(QuerySummarySelectors.liveRegion);
-
     it('placeholder should be displayed', () => {
       QuerySummarySelectors.placeholder().should('be.visible');
     });
@@ -44,8 +42,6 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertNoAriaLiveMessage(QuerySummarySelectors.liveRegion);
-
     it('container should be empty', () => {
       QuerySummarySelectors.container().should('be.empty');
     });
@@ -59,10 +55,7 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertAriaLiveMessage(
-      QuerySummarySelectors.liveRegion,
-      '27'
-    );
+    CommonAssertions.assertAriaLiveMessage('27');
   });
 
   describe('should match text content', () => {
@@ -95,6 +88,6 @@ describe('Query Summary Test Suites', () => {
       .with(addSearchBox())
       .withHash('q=test')
       .init();
-    contentShouldMatch(/Results 1-10 of [\d,]+ for test$/);
+    QuerySummarySelectors.duration().should('not.be.visible');
   });
 });

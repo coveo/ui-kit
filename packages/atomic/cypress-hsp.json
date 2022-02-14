@@ -1,0 +1,20 @@
+{
+  "baseUrl": "http://localhost:3333",
+  "integrationFolder": "cypress/integration-hsp",
+  "testFiles": ["**/*.cypress.ts"],
+  "experimentalFetchPolyfill": true,
+  "reporter": "spec",
+  "viewportHeight": 1080,
+  "viewportWidth": 1920,
+  "retries": {
+    "runMode": 3,
+    "openMode": 1
+  },
+  "reporterOptions": {
+    "toConsole": true
+  },
+  "chromeWebSecurity": false,
+  "video": false,
+  "requestTimeout": 10000,
+  "watchForFileChanges": true
+}

@@ -4,9 +4,9 @@ import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-
-import tailwind from 'tailwindcss';
 import postcssNesting from 'postcss-nested';
+import tailwind from 'tailwindcss';
+import tailwindNesting from 'tailwindcss/nesting';
 import atImport from 'postcss-import';
 import focusVisible from 'postcss-focus-visible';
 import autoprefixer from 'autoprefixer';
@@ -15,6 +15,7 @@ import mixins from 'postcss-mixins';
 import {readFileSync} from 'fs';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
+import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 
@@ -53,6 +54,10 @@ export const config: Config = {
       componentCorePackage: '@coveo/atomic',
       directivesProxyFile:
         '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
+    }),
+    angularModule({
+      moduleFile:
+        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
     }),
     {
       type: 'dist-custom-elements',
@@ -108,6 +113,7 @@ export const config: Config = {
       plugins: [
         atImport(),
         mixins(),
+        tailwindNesting(),
         tailwind(),
         focusVisible(),
         postcssNesting(),

@@ -1,4 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
 import {should} from '../../common-assertions';
 import {TimeframeFacetSelectors} from './timeframe-facet-selectors';
 

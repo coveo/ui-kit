@@ -16,6 +16,7 @@ import { InitializationOptions } from "./components/atomic-search-interface/atom
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
+        "updateMessage": (region: string, message: string) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
@@ -330,6 +331,7 @@ export namespace Components {
     interface AtomicQuerySummary {
         /**
           * Whether to display the duration of the last query execution.
+          * @deprecated Use the `duration` part.
          */
         "enableDuration": boolean;
     }
@@ -1574,6 +1576,7 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
         /**
           * Whether to display the duration of the last query execution.
+          * @deprecated Use the `duration` part.
          */
         "enableDuration"?: boolean;
     }

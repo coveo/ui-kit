@@ -36,6 +36,7 @@ export class TestFixture {
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
+  private redirected = false;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -74,6 +75,11 @@ export class TestFixture {
 
   public withoutAnalytics() {
     this.disabledAnalytics = true;
+    return this;
+  }
+
+  public withRedirection() {
+    this.redirected = true;
     return this;
   }
 
@@ -118,7 +124,8 @@ export class TestFixture {
   }
 
   public init() {
-    cy.visit(buildTestUrl(this.hash)).injectAxe();
+    !this.redirected && cy.visit(buildTestUrl(this.hash));
+    cy.injectAxe();
     this.intercept();
     this.stubConsole();
 
