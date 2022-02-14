@@ -3,6 +3,7 @@ import {registerCategoryFacet} from '../category-facet-set/category-facet-set-ac
 import {registerFacet} from '../facet-set/facet-set-actions';
 import {registerDateFacet} from '../range-facets/date-facet-set/date-facet-actions';
 import {registerNumericFacet} from '../range-facets/numeric-facet-set/numeric-facet-actions';
+import {disableFacet, enableFacet} from './any-facet-set-actions';
 import {
   getAnyFacetSetInitialState,
   getAnyFacetSliceInitialState,
@@ -23,6 +24,12 @@ export const anyFacetSetReducer = createReducer(
       })
       .addCase(registerNumericFacet, (state, action) => {
         state[action.payload.facetId] = getAnyFacetSliceInitialState();
+      })
+      .addCase(enableFacet, (state, action) => {
+        state[action.payload].enabled = true;
+      })
+      .addCase(disableFacet, (state, action) => {
+        state[action.payload].enabled = false;
       });
   }
 );
