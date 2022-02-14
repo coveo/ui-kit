@@ -1,4 +1,3 @@
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -7,12 +6,31 @@ import {
 import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
+  AsyncThunkAnalyticsOptions,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from './analytics-utils';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {
+  CoveoSearchPageClient,
+  SearchPageClientProvider,
+  SearchPageEvents,
+  EventBuilder,
+  EventDescription,
+} from 'coveo.analytics';
+import {
+  AnalyticsProvider,
+  configureAnalytics,
+  StateNeededByAnalyticsProvider,
+} from '../../api/analytics/analytics';
+import {SearchAppState} from '../..';
+import {ConfigurationSection} from '../../state/state-sections';
+
+const searchPageState = (getState: () => unknown) =>
+  getState() as SearchAppState;
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -147,3 +165,50 @@ export const logOmniboxFromLink = (metadata: OmniboxSuggestionMetadata) =>
     AnalyticsType.Search,
     (client) => client.logOmniboxFromLink(metadata)
   )();
+
+export const analyticsDescription = createAction<EventDescription>(
+  'analytics/description'
+);
+
+export const temp__makeAnalyticsAction = <T extends AnalyticsType>(
+  prefix: string,
+  analyticsType: T,
+  builder: (
+    client: CoveoSearchPageClient,
+    state: ConfigurationSection & Partial<SearchAppState>
+  ) => EventBuilder,
+  provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
+    s
+  ) => new AnalyticsProvider(s as StateNeededByAnalyticsProvider)
+) => {
+  return createAsyncThunk<
+    {analyticsType: T},
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >(
+    prefix,
+    async (
+      _,
+      {
+        getState,
+        extra: {analyticsClientMiddleware, preprocessRequest, logger},
+        dispatch,
+      }
+    ) => {
+      const state = searchPageState(getState);
+      const client = configureAnalytics({
+        state,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+        provider: provider(state),
+      });
+      const {description, exec} = builder(client, state);
+      dispatch(analyticsDescription(description));
+      await exec();
+      return {
+        analyticsType,
+      };
+    }
+  );
+};

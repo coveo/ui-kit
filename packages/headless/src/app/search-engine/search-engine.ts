@@ -14,7 +14,7 @@ import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {debug, pipeline, search, searchHub} from '../reducers';
+import {debug, pipeline, search, searchHub, analytics} from '../reducers';
 import {StateFromReducersMapObject} from 'redux';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 import {
@@ -38,7 +38,7 @@ import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box
 export type {SearchEngineConfiguration, SearchConfigurationOptions};
 export {getSampleSearchEngineConfiguration};
 
-const searchEngineReducers = {debug, pipeline, searchHub, search};
+const searchEngineReducers = {debug, pipeline, searchHub, search, analytics};
 type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
