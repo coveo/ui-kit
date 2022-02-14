@@ -4,6 +4,9 @@ import {buildSearchLayout} from './search-layout';
 
 export type Layout = 'search';
 
+/**
+ * The `atomic-layout` helps organize elements in the page relative to one another.
+ */
 @Component({
   tag: 'atomic-layout',
   styleUrl: 'atomic-layout.pcss',
@@ -11,6 +14,9 @@ export type Layout = 'search';
 })
 export class AtomicLayout {
   @Element() private host!: HTMLElement;
+  /**
+   * Name of the layout.
+   */
   @Prop({reflect: true}) public layout!: Layout;
   // TODO: make breakpoint configurable & reuse in templates
   private breakpoint = '1024px';
