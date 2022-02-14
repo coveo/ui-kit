@@ -17,6 +17,7 @@ import {
   enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
+import {buildMockFieldDescription} from '../../test/mock-field-description';
 
 describe('RelevanceInspector', () => {
   let engine: MockSearchEngine;
@@ -143,6 +144,18 @@ describe('RelevanceInspector', () => {
       userIdentities: responseWithDebug.userIdentities,
       rankingExpressions: responseWithDebug.rankingExpressions,
       fieldsDescription: [],
+    });
+  });
+
+  it('should return the fieldsDecription correctly, when debug is enabled', () => {
+    const state = createMockState();
+    state.debug = true;
+    state.fields.fieldsDescription = [buildMockFieldDescription()];
+    engine = buildMockSearchAppEngine({state});
+    relevanceInspector = buildRelevanceInspector(engine);
+
+    expect(relevanceInspector.state).toMatchObject({
+      fieldsDescription: state.fields.fieldsDescription,
     });
   });
 });
