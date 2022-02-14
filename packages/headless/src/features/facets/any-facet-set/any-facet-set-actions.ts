@@ -2,18 +2,18 @@ import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
-export type EnableAnyFacetActionCreatorPayload = string;
+export type EnableFacetActionCreatorPayload = string;
 
-export type DisableAnyFacetActionCreatorPayload = string;
+export type DisableFacetActionCreatorPayload = string;
 
 export const enableFacet = createAction(
   'anyFacet/enable',
-  (payload: EnableAnyFacetActionCreatorPayload) =>
+  (payload: EnableFacetActionCreatorPayload) =>
     validatePayload(payload, facetIdDefinition)
 );
 
 export const disableFacet = createAction(
   'anyFacet/disable',
-  (payload: EnableAnyFacetActionCreatorPayload) =>
+  (payload: EnableFacetActionCreatorPayload) =>
     validatePayload(payload, facetIdDefinition)
 );

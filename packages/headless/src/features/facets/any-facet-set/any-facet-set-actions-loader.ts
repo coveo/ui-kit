@@ -13,14 +13,14 @@ export interface AnyFacetSetActionCreators {
    * @param facetId - The unique identifier of the facet (e.g., "1").
    * @returns A dispatchable action.
    */
-  enableAnyFacet(facetId: string): PayloadAction<string>;
+  enableFacet(facetId: string): PayloadAction<string>;
   /**
    * Disables a facet.
    *
    * @param facetId - The unique identifier of the facet (e.g., "1").
    * @returns A dispatchable action.
    */
-  disableAnyFacet(facetId: string): PayloadAction<string>;
+  disableFacet(facetId: string): PayloadAction<string>;
 }
 
 /**
@@ -35,7 +35,7 @@ export function loadAnyFacetSetActions(
   engine.addReducers({categoryFacetSet});
 
   return {
-    enableAnyFacet: enableFacet,
-    disableAnyFacet: disableFacet,
+    enableFacet: enableFacet,
+    disableFacet: disableFacet,
   };
 }
