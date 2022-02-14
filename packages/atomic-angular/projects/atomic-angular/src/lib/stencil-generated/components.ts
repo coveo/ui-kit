@@ -315,6 +315,48 @@ export class AtomicIcon {
 }
 
 
+export declare interface AtomicLayout extends Components.AtomicLayout {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['layout']
+})
+@Component({
+  selector: 'atomic-layout',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['layout']
+})
+export class AtomicLayout {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['maxWidth', 'minWidth', 'section']
+})
+@Component({
+  selector: 'atomic-layout-section',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['maxWidth', 'minWidth', 'section']
+})
+export class AtomicLayoutSection {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicLoadMoreResults extends Components.AtomicLoadMoreResults {}
 
 @ProxyCmp({
