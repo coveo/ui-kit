@@ -10,6 +10,7 @@ import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {buildSearchRequest} from './search-request';
+import {buildAnyFacetSlice} from '../../test/mock-any-facet-slice';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -91,6 +92,73 @@ describe('search request', () => {
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
+  });
+
+  it("#searchRequestParams doesn't return the disabled facets", async () => {
+    const enabledFacetRequest = buildMockFacetRequest({
+      field: 'a',
+      facetId: 'a',
+    });
+    const disabledFacetRequest = buildMockFacetRequest({
+      field: 'b',
+      facetId: 'b',
+    });
+    const enabledNumericFacetRequest = buildMockNumericFacetRequest({
+      field: 'c',
+      facetId: 'c',
+    });
+    const disabledNumericFacetRequest = buildMockNumericFacetRequest({
+      field: 'd',
+      facetId: 'd',
+    });
+    const enabledDateFacetRequest = buildMockDateFacetRequest({
+      field: 'e',
+      facetId: 'e',
+    });
+    const disabledDateFacetRequest = buildMockDateFacetRequest({
+      field: 'f',
+      facetId: 'f',
+    });
+    const enabledCategoryFacetRequest = buildMockCategoryFacetRequest({
+      field: 'g',
+      facetId: 'g',
+    });
+    const disabledCategoryFacetRequest = buildMockCategoryFacetRequest({
+      field: 'h',
+      facetId: 'h',
+    });
+
+    state.facetSet['a'] = enabledFacetRequest;
+    state.facetSet['b'] = disabledFacetRequest;
+    state.numericFacetSet['c'] = enabledNumericFacetRequest;
+    state.numericFacetSet['d'] = disabledNumericFacetRequest;
+    state.dateFacetSet['e'] = enabledDateFacetRequest;
+    state.dateFacetSet['f'] = disabledDateFacetRequest;
+    state.categoryFacetSet['g'] = buildMockCategoryFacetSlice({
+      request: enabledCategoryFacetRequest,
+    });
+    state.categoryFacetSet['h'] = buildMockCategoryFacetSlice({
+      request: disabledCategoryFacetRequest,
+    });
+
+    state.anyFacetSet['a'] = buildAnyFacetSlice();
+    state.anyFacetSet['b'] = buildAnyFacetSlice({enabled: false});
+    state.anyFacetSet['c'] = buildAnyFacetSlice();
+    state.anyFacetSet['d'] = buildAnyFacetSlice({enabled: false});
+    state.anyFacetSet['e'] = buildAnyFacetSlice();
+    state.anyFacetSet['f'] = buildAnyFacetSlice({enabled: false});
+    state.anyFacetSet['g'] = buildAnyFacetSlice();
+    state.anyFacetSet['h'] = buildAnyFacetSlice({enabled: false});
+
+    const {facets} = (await buildSearchRequest(state)).request;
+    expect(facets).toContainEqual(enabledFacetRequest);
+    expect(facets).toContainEqual(enabledNumericFacetRequest);
+    expect(facets).toContainEqual(enabledDateFacetRequest);
+    expect(facets).toContainEqual(enabledCategoryFacetRequest);
+    expect(facets).not.toContainEqual(disabledFacetRequest);
+    expect(facets).not.toContainEqual(disabledNumericFacetRequest);
+    expect(facets).not.toContainEqual(disabledDateFacetRequest);
+    expect(facets).not.toContainEqual(disabledCategoryFacetRequest);
   });
 
   it('when no facets are configured, the #searchRequestParams does not contain a #facets key', async () => {

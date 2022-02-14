@@ -44,7 +44,7 @@ function getFacets(state: StateNeededBySearchRequest) {
 
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {
   return getAllFacets(state).filter(
-    ({facetId}) => state.anyFacetSet?.[facetId]?.enabled
+    ({facetId}) => state.anyFacetSet?.[facetId]?.enabled ?? true
   );
 }
 
