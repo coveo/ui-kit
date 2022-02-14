@@ -12,6 +12,8 @@ export type Layout = 'search';
 export class AtomicLayout {
   @Element() private host!: HTMLElement;
   @Prop({reflect: true}) public layout!: Layout;
+  // TODO: make breakpoint configurable & reuse in templates
+  private breakpoint = '1024px';
 
   public connectedCallback() {
     const id = this.host.id || randomID('atomic-layout-');
@@ -25,8 +27,7 @@ export class AtomicLayout {
   private get style() {
     switch (this.layout) {
       case 'search':
-        // TODO: add dynamic layout breakpoint
-        return buildSearchLayout(this.host, '1024px');
+        return buildSearchLayout(this.host, this.breakpoint);
     }
   }
 }
