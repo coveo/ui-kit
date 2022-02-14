@@ -252,7 +252,7 @@ export namespace Components {
     }
     interface AtomicLayout {
         /**
-          * Name of the layout.
+          * The name of the layout.
          */
         "layout": Layout;
     }
@@ -266,7 +266,7 @@ export namespace Components {
          */
         "minWidth"?: string;
         /**
-          * Name of the layout's section.
+          * The name of the layout section.
          */
         "section": Section;
     }
@@ -1530,7 +1530,7 @@ declare namespace LocalJSX {
     }
     interface AtomicLayout {
         /**
-          * Name of the layout.
+          * The name of the layout.
          */
         "layout": Layout;
     }
@@ -1544,7 +1544,7 @@ declare namespace LocalJSX {
          */
         "minWidth"?: string;
         /**
-          * Name of the layout's section.
+          * The name of the layout section.
          */
         "section": Section;
     }

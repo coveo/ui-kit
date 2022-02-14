@@ -2,7 +2,7 @@ import {Component, Prop} from '@stencil/core';
 import {Section} from './sections';
 
 /**
- * The `atomic-layout-section` allows to identify various sections for the related `atomic-layout`.
+ * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
  */
 @Component({
   tag: 'atomic-layout-section',
@@ -10,7 +10,7 @@ import {Section} from './sections';
 })
 export class AtomicLayoutSection {
   /**
-   * Name of the layout's section.
+   * The name of the layout section.
    */
   @Prop() public section!: Section;
   /**
