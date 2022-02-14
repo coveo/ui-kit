@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.4...@coveo/atomic@1.29.5) (2022-02-11)
+
+
+### Bug Fixes
+
+* **atomic:** improved aria-live accessibility ([#1715](https://github.com/coveo/ui-kit/issues/1715)) ([124531f](https://github.com/coveo/ui-kit/commit/124531f9325e81b1e0856001f4ec4b1bc2ce8664))
+
+
+
+
+
 ## [1.29.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.3...@coveo/atomic@1.29.4) (2022-02-09)
 
 
