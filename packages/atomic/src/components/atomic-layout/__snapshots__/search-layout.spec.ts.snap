@@ -37,7 +37,4 @@ exports[`Search Layout #buildSearchLayout when the atomic-layout component conta
 `;
 
 exports[`Search Layout #buildSearchLayout when the atomic-layout component is empty
-    returns empty string 1`] = `"atomic-layout[layout='search']#abc { display: grid }"`;
-
-exports[`Search Layout #buildSearchLayout when the atomic-layout component is empty
     should match snapshot 1`] = `"atomic-layout[layout='search']#abc { display: grid }"`;
