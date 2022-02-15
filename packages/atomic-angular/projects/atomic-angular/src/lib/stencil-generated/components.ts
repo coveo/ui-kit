@@ -315,27 +315,6 @@ export class AtomicIcon {
 }
 
 
-export declare interface AtomicLayout extends Components.AtomicLayout {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['layout']
-})
-@Component({
-  selector: 'atomic-layout',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['layout']
-})
-export class AtomicLayout {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 @ProxyCmp({
@@ -1154,6 +1133,25 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
   inputs: ['analytics', 'engine', 'i18n', 'language', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
 })
 export class AtomicSearchInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSearchLayout extends Components.AtomicSearchLayout {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-search-layout',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicSearchLayout {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
