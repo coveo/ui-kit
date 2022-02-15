@@ -44,13 +44,8 @@ export default class QuanticCaseClassification extends LightningElement {
       console.error('Error getting the picklist values');
     } else {
       this.picklistValues = data;
-      if (
-        data &&
-        !data.picklistFieldValues[this.sfFieldApiName]
-      ) {
-        console.error(
-          `The Salesforce field API name "${this.sfFieldApiName}" is not found`
-        );
+      if (data && !data.picklistFieldValues[this.sfFieldApiName]) {
+        this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
       }
     }
   }
@@ -131,13 +126,20 @@ export default class QuanticCaseClassification extends LightningElement {
   _value = '';
   /** @type {boolean} */
   _isSuggestionsVisible = true;
+  /** @type {string} */
+  renderingError = '';
 
   connectedCallback() {
-    registerComponentForInit(this, this.engineId);
+    this.validateProps();
+    if (!this.renderingError) {
+      registerComponentForInit(this, this.engineId);
+    }
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
+    if (!this.renderingError) {
+      initializeWithHeadless(this, this.engineId, this.initialize);
+    }
   }
 
   /**
@@ -160,6 +162,16 @@ export default class QuanticCaseClassification extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeField?.();
+  }
+
+  validateProps() {
+    if (!(Number(this.maxSuggestions) >= 0)) {
+      this.renderingError = `${this.maxSuggestions} is an invalid maximum number of suggestions. A positive integer was expected.`;
+    }
+    if (!this.coveoFieldName) {
+      this.renderingError =
+        'coveoFieldName is required, please set its value.';
+    }
   }
 
   updateFieldState() {
@@ -233,8 +245,8 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get options() {
     return (
-      this.picklistValues?.picklistFieldValues?.[this.sfFieldApiName]
-        ?.values ?? []
+      this.picklistValues?.picklistFieldValues?.[this.sfFieldApiName]?.values ??
+      []
     );
   }
 

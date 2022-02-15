@@ -15,6 +15,7 @@ export interface CaseClassificationSelector extends ComponentSelector {
   inlineOptionInput: (idx: number) => CypressSelector;
   error: () => CypressSelector;
   loadingSpinner: () => CypressSelector;
+  renderingError: () => CypressSelector;
 }
 
 export const CaseClassificationSelectors: CaseClassificationSelector = {
@@ -53,4 +54,6 @@ export const CaseClassificationSelectors: CaseClassificationSelector = {
     CaseClassificationSelectors.get().find('.slds-form-element__help'),
   loadingSpinner: () =>
     CaseClassificationSelectors.get().find('lightning-spinner'),
+  renderingError: () =>
+    CaseClassificationSelectors.get().find('.error-message'),
 };
