@@ -45,7 +45,7 @@ export default class QuanticCaseClassification extends LightningElement {
     } else {
       this.picklistValues = data;
       if (data && !data.picklistFieldValues[this.sfFieldApiName]) {
-        this._renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+        this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
       }
     }
   }
@@ -127,17 +127,17 @@ export default class QuanticCaseClassification extends LightningElement {
   /** @type {boolean} */
   _isSuggestionsVisible = true;
   /** @type {string} */
-  _renderingError = '';
+  renderingError = '';
 
   connectedCallback() {
     this.validateProps();
-    if (!this._renderingError) {
+    if (!this.renderingError) {
       registerComponentForInit(this, this.engineId);
     }
   }
 
   renderedCallback() {
-    if (!this._renderingError) {
+    if (!this.renderingError) {
       initializeWithHeadless(this, this.engineId, this.initialize);
     }
   }
@@ -166,10 +166,10 @@ export default class QuanticCaseClassification extends LightningElement {
 
   validateProps() {
     if (!(Number(this.maxSuggestions) >= 0)) {
-      this._renderingError = `${this.maxSuggestions} is an invalid maximum number of suggestions. A positive integer was expected.`;
+      this.renderingError = `${this.maxSuggestions} is an invalid maximum number of suggestions. A positive integer was expected.`;
     }
     if (!this.coveoFieldName) {
-      this._renderingError =
+      this.renderingError =
         'coveoFieldName is required, please set its value.';
     }
   }

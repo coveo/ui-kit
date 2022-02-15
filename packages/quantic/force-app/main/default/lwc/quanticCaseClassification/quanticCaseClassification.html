@@ -1,8 +1,8 @@
 <template>
-  <template if:true={_renderingError}>
-    <div class="error-message slds-text-color_destructive">{_renderingError}</div>
+  <template if:true={renderingError}>
+    <div class="error-message slds-text-color_destructive">{renderingError}</div>
   </template>
-  <template if:false={_renderingError}>
+  <template if:false={renderingError}>
     <fieldset class={formClass}>
       <legend class="
           slds-form-element__legend slds-form-element__label
