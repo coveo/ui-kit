@@ -5,7 +5,7 @@ describe('External Test Suite', () => {
     before(() => {
       setupIntercept();
       cy.visit('examples/external.html');
-      cy.wait(RouteAlias.search);
+      cy.wait(RouteAlias.analytics);
 
       cy.get('atomic-external > atomic-search-box')
         .shadow()
