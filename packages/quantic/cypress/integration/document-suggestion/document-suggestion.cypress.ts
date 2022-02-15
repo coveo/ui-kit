@@ -9,6 +9,7 @@ import {
 } from '../../page-objects/case-assist';
 import {sendRating} from '../../page-objects/actions/action-send-rating';
 import allDocuments from '../../fixtures/documentSuggestions.json';
+import similarDocuments from '../../fixtures/similarDocumentSuggestions.json';
 import {fetchSuggestions} from '../../page-objects/actions/action-get-suggestions';
 import {stubConsoleWarning} from '../console-selectors';
 
@@ -417,6 +418,43 @@ describe('quantic-document-suggestion', () => {
         Actions.openQuickview(clickIndex);
         Expect.logClickingSuggestion(clickIndex, allDocuments, true);
         Actions.closeQuickview();
+      });
+    });
+  });
+
+  describe('when two document suggestions have a similar title', () => {
+    it('should render the component and all parts as expected', () => {
+      visitDocumentSuggestion();
+
+      scope('when loading the page', () => {
+        Expect.displayAccordion(false);
+        Expect.numberOfSuggestions(0);
+        Expect.displayNoSuggestions(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockDocumentSuggestion(similarDocuments);
+        fetchSuggestions();
+        Expect.displayNoSuggestions(false);
+        Expect.displayAccordion(true);
+        Expect.numberOfSuggestions(similarDocuments.length);
+        Expect.displayAccordionSectionContent(true, 0);
+      });
+
+      scope('when clicking on a document suggestion', () => {
+        const clickIndex = 1;
+
+        Actions.clickSuggestion(clickIndex);
+        Expect.logClickingSuggestion(clickIndex, similarDocuments);
+        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(true, clickIndex);
+      });
+
+      scope('when rating a document suggestion', () => {
+        const clickIndex = 1;
+
+        sendRating(clickIndex);
+        Expect.logRatingSuggestion(clickIndex, similarDocuments);
       });
     });
   });

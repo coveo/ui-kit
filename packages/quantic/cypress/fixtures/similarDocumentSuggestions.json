@@ -1,0 +1,18 @@
+[
+  {
+    "clickUri": "test 0",
+    "uniqueId": "0",
+    "title": "Similar title",
+    "excerpt": "The excerpt of the first document suggestion.",
+    "hasHtmlVersion": true,
+    "fields": {"uri": "test 0"}
+  },
+  {
+    "clickUri": "test 1",
+    "uniqueId": "1",
+    "title": "Similar title",
+    "excerpt": "The excerpt of the second document suggestion.",
+    "hasHtmlVersion": true,
+    "fields": {"uri": "test 1"}
+  }
+]
