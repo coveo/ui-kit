@@ -65,14 +65,34 @@ describe('quantic-standalone-search-box', () => {
         Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
       });
 
+      scope('when submitting using ENTER key', () => {
+        const query = 'query';
+        visitStandaloneSearchBox();
+
+        Actions.typeAndPressEnter(query);
+        Expect.displayClearButton(true);
+        Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
+      });
+
+      scope('when submitting script', () => {
+        const query = '<script>alert("test")</script>';
+        visitStandaloneSearchBox();
+
+        Actions.typeInSearchBox(query);
+        Expect.displayClearButton(true);
+        Actions.submitSearch();
+        Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
+      });
+
       scope('when setting suggestions', () => {
         mockSuggestions();
         visitStandaloneSearchBox();
 
         Actions.focusSearchBox();
-        cy.wait(InterceptAliases.QuerySuggestions);
-        Expect.displaySuggestionList(true);
-        Expect.numberOfSuggestions(2);
+        cy.wait(InterceptAliases.QuerySuggestions).then(() => {
+          Expect.displaySuggestionList(true);
+          Expect.numberOfSuggestions(2);
+        });
       });
 
       scope('when selecting from suggestions', () => {
@@ -105,14 +125,16 @@ describe('quantic-standalone-search-box', () => {
       });
 
       scope('with custom #numberOfSuggestions', () => {
+        mockSuggestions();
         visitStandaloneSearchBox({
           numberOfSuggestions: 1,
         });
 
         Actions.focusSearchBox();
-        cy.wait(InterceptAliases.QuerySuggestions);
-        Expect.displaySuggestionList(true);
-        Expect.numberOfSuggestions(1);
+        cy.wait(InterceptAliases.QuerySuggestions).then(() => {
+          Expect.displaySuggestionList(true);
+          Expect.numberOfSuggestions(1);
+        });
       });
 
       scope('with custom #redirectUrl', () => {

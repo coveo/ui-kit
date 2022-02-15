@@ -22,6 +22,9 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     clickFirstSuggestion: () => {
       selector.suggestionList().first().click({force: true});
     },
+    typeAndPressEnter: (query: string) => {
+      selector.input().type(`${query}{enter}`);
+    },
   };
 };
 
