@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.1.2...@coveo/atomic-angular@0.2.0) (2022-02-15)
+
+
+### Features
+
+* **atomic:** add search layout ([#1730](https://github.com/coveo/ui-kit/issues/1730)) ([aed0cae](https://github.com/coveo/ui-kit/commit/aed0caea993016ed90b941c377ccd52895146246))
+
+
+
+
+
+## [0.1.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.1.1...@coveo/atomic-angular@0.1.2) (2022-02-11)
+
+
+### Bug Fixes
+
+* **atomic:** improved aria-live accessibility ([#1715](https://github.com/coveo/ui-kit/issues/1715)) ([124531f](https://github.com/coveo/ui-kit/commit/124531f9325e81b1e0856001f4ec4b1bc2ce8664))
+
+
+
+
+
 ## [0.1.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.1.0...@coveo/atomic-angular@0.1.1) (2022-02-09)
 
 

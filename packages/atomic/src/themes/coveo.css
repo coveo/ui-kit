@@ -37,4 +37,8 @@
   --atomic-text-xl: 1.125rem; /* 18px */
   --atomic-text-2xl: 1.5rem; /* 24px */
   --atomic-line-height-ratio: 1.5;
+
+  /* Layout */
+  --atomic-layout-spacing-x: 2rem;
+  --atomic-layout-spacing-y: 1rem;
 }

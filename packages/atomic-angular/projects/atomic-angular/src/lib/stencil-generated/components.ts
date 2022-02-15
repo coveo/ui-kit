@@ -315,6 +315,27 @@ export class AtomicIcon {
 }
 
 
+export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['maxWidth', 'minWidth', 'section']
+})
+@Component({
+  selector: 'atomic-layout-section',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['maxWidth', 'minWidth', 'section']
+})
+export class AtomicLayoutSection {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicLoadMoreResults extends Components.AtomicLoadMoreResults {}
 
 @ProxyCmp({
@@ -1112,6 +1133,25 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
   inputs: ['analytics', 'engine', 'i18n', 'language', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
 })
 export class AtomicSearchInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSearchLayout extends Components.AtomicSearchLayout {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-search-layout',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicSearchLayout {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
