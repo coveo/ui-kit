@@ -1,0 +1,77 @@
+<!-- DO NOT TOUCH, THE PURPOSE OF THIS FILE IS FOR VISUAL COMPARISON USING CYPRESS -->
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+          search: {
+            preprocessSearchResponseMiddleware: (response) => {
+              response.body.totalCountFiltered = 100;
+              const firstResult = response.body.results[0];
+              firstResult.title = 'First result';
+              firstResult.clickUri = 'https://docs.coveo.com/#' + Math.random();
+              response.body.results = [firstResult];
+              return response;
+            },
+          },
+        });
+
+        searchInterface.executeFirstSearch();
+      })();
+    </script>
+    <style>
+      #interface1 atomic-search-layout {
+        width: 1024px;
+      }
+      #interface2 atomic-search-layout {
+        width: 500px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <atomic-search-interface>
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box></atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet field="language" label="Language" is-collapsed="true"></atomic-facet>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-refine-toggle></atomic-refine-toggle>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+              <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
+            </atomic-sort-dropdown>
+            <atomic-did-you-mean></atomic-did-you-mean>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list></atomic-result-list>
+            <atomic-query-error></atomic-query-error>
+            <atomic-no-results></atomic-no-results>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-load-more-results></atomic-load-more-results>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+  </body>
+</html>

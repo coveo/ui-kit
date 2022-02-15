@@ -30,6 +30,8 @@ src/external-builds
 src/components/atomic-search-interface/lang/
 
 cypress/screenshots/*
+cypress-visual-screenshots/comparison
+cypress-visual-screenshots/diff
 
 storybook-static/
 
