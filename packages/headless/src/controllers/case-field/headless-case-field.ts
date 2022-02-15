@@ -74,7 +74,11 @@ export interface CaseField extends Controller {
    * @param value - The field value to set.
    * @param updatesToFetch - A set of flags dictating whether to fetch case assist data after updating the field value.
    */
-  update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions): void;
+  update(
+    value: string,
+    updatesToFetch?: UpdateCaseFieldFetchOptions,
+    autoSelection?: boolean
+  ): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `CaseField` controller.
@@ -142,12 +146,16 @@ export function buildCaseField(
       };
     },
 
-    update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions) {
+    update(
+      value: string,
+      updatesToFetch?: UpdateCaseFieldFetchOptions,
+      autoSelection?: boolean
+    ) {
       const suggestionId = getState().caseField?.fields?.[
         options.field
       ]?.suggestions?.find((s) => s.value === value)?.id;
 
-      if (suggestionId) {
+      if (!autoSelection && suggestionId) {
         dispatch(logClassificationClick(suggestionId));
       }
 
@@ -158,7 +166,9 @@ export function buildCaseField(
         })
       );
 
-      dispatch(logUpdateCaseField(options.field));
+      if (!autoSelection) {
+        dispatch(logUpdateCaseField(options.field));
+      }
 
       updatesToFetch?.caseClassifications &&
         dispatch(fetchCaseClassifications());
