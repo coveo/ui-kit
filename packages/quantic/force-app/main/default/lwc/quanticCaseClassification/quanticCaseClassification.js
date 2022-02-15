@@ -169,8 +169,7 @@ export default class QuanticCaseClassification extends LightningElement {
       this.renderingError = `${this.maxSuggestions} is an invalid maximum number of suggestions. A positive integer was expected.`;
     }
     if (!this.coveoFieldName) {
-      this.renderingError =
-        'coveoFieldName is required, please set its value.';
+      this.renderingError = 'coveoFieldName is required, please set its value.';
     }
   }
 
@@ -190,7 +189,7 @@ export default class QuanticCaseClassification extends LightningElement {
         const value = this.classifications.length
           ? this.classifications[0].value
           : '';
-        this.setFieldValue(value);
+        this.setFieldValue(value, true);
       }
     }
   }
@@ -349,8 +348,8 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value) {
-    this.field.update(value);
+  setFieldValue(value, autoSelection) {
+    this.field.update(value, undefined, autoSelection);
     this._value = value;
   }
 }
