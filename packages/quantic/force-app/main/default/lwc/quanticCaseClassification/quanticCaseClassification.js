@@ -45,9 +45,7 @@ export default class QuanticCaseClassification extends LightningElement {
     } else {
       this.picklistValues = data;
       if (data && !data.picklistFieldValues[this.sfFieldApiName]) {
-        console.error(
-          `The Salesforce field API name "${this.sfFieldApiName}" is not found`
-        );
+        this._renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
       }
     }
   }
@@ -92,6 +90,13 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api selectPlaceholder = this.labels.moreTopics;
   /**
+   * The maximum number of suggestions to be displayed.
+   * @api
+   * @type {number}
+   * @defaultValue `3`
+   */
+  @api maxSuggestions = 3;
+  /**
    * The message to be shown when the value is missing.
    * @api
    * @type {string}
@@ -121,18 +126,13 @@ export default class QuanticCaseClassification extends LightningElement {
   _value = '';
   /** @type {boolean} */
   _isSuggestionsVisible = true;
-  /** @type {number} */
-  _maxSuggestions = 3;
-  /** @type {boolean} */
-  _renderingError = false;
+  /** @type {string} */
+  _renderingError = '';
 
   connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-    if (!this.coveoFieldName) {
-      this._renderingError = true;
-      console.error(
-        'the coveoFieldName is required, please introduce its value'
-      );
+    this.validateProps();
+    if (!this._renderingError) {
+      registerComponentForInit(this, this.engineId);
     }
   }
 
@@ -162,6 +162,16 @@ export default class QuanticCaseClassification extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeField?.();
+  }
+
+  validateProps() {
+    if (!(Number(this.maxSuggestions) >= 0)) {
+      this._renderingError = `${this.maxSuggestions} is an invalid maximum number of suggestions. A positive integer was expected.`;
+    }
+    if (!this.coveoFieldName) {
+      this._renderingError =
+        'coveoFieldName is required, please set its value.';
+    }
   }
 
   updateFieldState() {
@@ -342,26 +352,5 @@ export default class QuanticCaseClassification extends LightningElement {
   setFieldValue(value) {
     this.field.update(value);
     this._value = value;
-  }
-
-  /**
-   * Get the maximum number of suggestions to be displayed.
-   */
-  @api get maxSuggestions() {
-    return this._maxSuggestions;
-  }
-  /**
-   * Set the maximum number of suggestions to be displayed.
-   * @param {number} value - the value to be set.
-   * @returns {void}
-   */
-  set maxSuggestions(value) {
-    if (Number(value) >= 0) {
-      this._maxSuggestions = Number(value);
-    } else {
-      console.warn(
-        'Invalid number of maximum suggestions introduced, the default value is being used'
-      );
-    }
   }
 }
