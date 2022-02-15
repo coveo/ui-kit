@@ -1,6 +1,10 @@
 // Must be declared global to be detected by typescript (allows import/export)
 import {SearchEventRequest} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import compareSnapshotCommand from 'cypress-image-diff-js/dist/command';
+compareSnapshotCommand();
 
 // eslint-disable @typescript/interface-name
 declare global {
@@ -14,6 +18,7 @@ declare global {
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
       expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
+      compareSnapshot(name: string, threshold?: number): Chainable<unknown>;
     }
   }
 }

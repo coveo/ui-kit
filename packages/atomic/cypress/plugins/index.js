@@ -15,7 +15,7 @@
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (_on, _config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
+ module.exports = (on, config) => {
+  const getCompareSnapshotsPlugin = require('cypress-image-diff-js/dist/plugin')
+  getCompareSnapshotsPlugin(on, config)
 }
