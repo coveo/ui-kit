@@ -1,4 +1,17 @@
-export * from './mock-engine';
-export * from './mock-state';
-export * from './mock-result';
-export * from './mock-raw';
+export {
+  buildMockSearchAppEngine,
+  buildMockCaseAssistEngine,
+  buildMockProductListingEngine,
+  buildMockProductRecommendationsAppEngine,
+  buildMockRecommendationAppEngine,
+} from './mock-engine';
+export type {
+  MockSearchEngine,
+  MockCaseAssistEngine,
+  MockProductListingEngine,
+  MockProductRecommendationEngine,
+  MockRecommendationEngine,
+} from './mock-engine';
+export {createMockState} from './mock-state';
+export {buildMockResult} from './mock-result';
+export {buildMockRaw} from './mock-raw';

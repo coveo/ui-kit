@@ -92,10 +92,7 @@ export class AtomicPager implements InitializableComponent {
         part="previous-button"
         disabled={!this.pagerState.hasPreviousPage}
       >
-        <atomic-icon
-          icon={ArrowRight}
-          class="w-5 transform rotate-180"
-        ></atomic-icon>
+        <atomic-icon icon={ArrowRight} class="w-5 rotate-180"></atomic-icon>
       </Button>
     );
   }

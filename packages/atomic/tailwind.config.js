@@ -1,13 +1,7 @@
 const plugin = require('tailwindcss/plugin');
-const isDevWatch = process.argv.indexOf('--dev') > -1;
 
 module.exports = {
-  mode: 'jit', // Still some issues for reloading styles with jit mode https://github.com/ionic-team/stencil-postcss/pull/35
-  purge: {
-    content: ['./src/**/*.tsx', './src/**/*.css'],
-    enabled: !isDevWatch,
-  },
-  darkMode: false, // or 'media' or 'class'
+  content: ['./src/**/*.tsx'],
   theme: {
     extend: {
       colors: {
@@ -77,21 +71,6 @@ module.exports = {
     }),
     fontFamily: {
       sans: `var(--atomic-font-family)`,
-    },
-  },
-  variants: {
-    extend: {
-      textColor: ['visited', 'group-focus', 'disabled', 'focus-visible'],
-      borderColor: ['disabled', 'focus-visible'],
-      cursor: ['disabled'],
-      borderWidth: ['focus-visible'],
-      backgroundColor: ['group-focus', 'focus-visible'],
-      borderRadius: ['first', 'last'],
-      textDecoration: ['focus-visible'],
-      ringColor: ['focus-visible'],
-      ringWidth: ['focus-visible'],
-      outline: ['focus-visible'],
-      outlineColor: ['focus-visible'],
     },
   },
   plugins: [
