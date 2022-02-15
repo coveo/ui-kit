@@ -8,7 +8,6 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
-import { Layout } from "./components/atomic-layout/atomic-layout";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
@@ -249,12 +248,6 @@ export namespace Components {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
-    }
-    interface AtomicLayout {
-        /**
-          * Name of the layout.
-         */
-        "layout": Layout;
     }
     interface AtomicLayoutSection {
         /**
@@ -931,12 +924,6 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
-    interface HTMLAtomicLayoutElement extends Components.AtomicLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicLayoutElement: {
-        prototype: HTMLAtomicLayoutElement;
-        new (): HTMLAtomicLayoutElement;
-    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -1250,7 +1237,6 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
-        "atomic-layout": HTMLAtomicLayoutElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -1536,12 +1522,6 @@ declare namespace LocalJSX {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
-    }
-    interface AtomicLayout {
-        /**
-          * Name of the layout.
-         */
-        "layout": Layout;
     }
     interface AtomicLayoutSection {
         /**
@@ -2111,7 +2091,6 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
-        "atomic-layout": AtomicLayout;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-no-results": AtomicNoResults;
@@ -2185,7 +2164,6 @@ declare module "@stencil/core" {
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
-            "atomic-layout": LocalJSX.AtomicLayout & JSXBase.HTMLAttributes<HTMLAtomicLayoutElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
