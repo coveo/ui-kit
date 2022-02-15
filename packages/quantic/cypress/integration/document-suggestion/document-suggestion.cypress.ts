@@ -424,7 +424,9 @@ describe('quantic-document-suggestion', () => {
 
   describe('when two document suggestions have a similar title', () => {
     it('should render the component and all parts as expected', () => {
-      visitDocumentSuggestion();
+      visitDocumentSuggestion({
+        numberOfAutoOpenedDocuments: 0,
+      });
 
       scope('when loading the page', () => {
         Expect.displayAccordion(false);
@@ -438,15 +440,15 @@ describe('quantic-document-suggestion', () => {
         Expect.displayNoSuggestions(false);
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(similarDocuments.length);
-        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(false, 0);
       });
 
-      scope('when clicking on a document suggestion', () => {
+      scope('when clicking on a second document suggestion', () => {
         const clickIndex = 1;
 
         Actions.clickSuggestion(clickIndex);
         Expect.logClickingSuggestion(clickIndex, similarDocuments);
-        Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayAccordionSectionContent(false, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
       });
 
