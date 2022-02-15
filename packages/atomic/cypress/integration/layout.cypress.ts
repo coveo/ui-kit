@@ -8,7 +8,7 @@ describe('Layouts', () => {
     cy.wait(RouteAlias.analytics);
     cy.get('atomic-search-interface').compareSnapshot(
       'search-layout-desktop',
-      0.1
+      0.2
     );
   });
 
@@ -19,7 +19,7 @@ describe('Layouts', () => {
     cy.wait(RouteAlias.analytics);
     cy.get('atomic-search-interface').compareSnapshot(
       'search-layout-mobile',
-      0.1
+      0.2
     );
   });
 });
