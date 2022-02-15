@@ -443,7 +443,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordionSectionContent(false, 0);
       });
 
-      scope('when clicking on a second document suggestion', () => {
+      scope('when clicking on the second document suggestion', () => {
         const clickIndex = 1;
 
         Actions.clickSuggestion(clickIndex);
