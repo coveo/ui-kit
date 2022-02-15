@@ -81,7 +81,7 @@ describe('Case Field', () => {
       };
     });
 
-    it('dispatches a #logClassificationClick action when value is a suggestion and autoSelection is falsy ', () => {
+    it('dispatches a #logClassificationClick action when value is a suggestion and autoSelection is falsy', () => {
       field.update('suggested value');
 
       expect(engine.actions).toContainEqual(

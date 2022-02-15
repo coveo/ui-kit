@@ -166,9 +166,7 @@ export function buildCaseField(
         })
       );
 
-      if (!autoSelection) {
-        dispatch(logUpdateCaseField(options.field));
-      }
+      !autoSelection && dispatch(logUpdateCaseField(options.field));
 
       updatesToFetch?.caseClassifications &&
         dispatch(fetchCaseClassifications());
