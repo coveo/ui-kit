@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.30.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.5...@coveo/atomic@1.30.0) (2022-02-15)
+
+
+### Features
+
+* **atomic:** add search layout ([#1730](https://github.com/coveo/ui-kit/issues/1730)) ([aed0cae](https://github.com/coveo/ui-kit/commit/aed0caea993016ed90b941c377ccd52895146246))
+
+
+
+
+
 ## [1.29.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.29.4...@coveo/atomic@1.29.5) (2022-02-11)
 
 
