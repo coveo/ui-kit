@@ -60,6 +60,12 @@ export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `SearchEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockSearchAppEngine(
   config: Partial<SearchEngine<SearchAppState>> = {}
 ): MockSearchEngine {
@@ -75,6 +81,12 @@ export interface MockRecommendationEngine
   extends RecommendationEngine,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `RecommendationEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
 ): MockRecommendationEngine {
@@ -85,6 +97,12 @@ export interface MockProductRecommendationEngine
   extends ProductRecommendationEngine,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `ProductRecommendationEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
     ProductRecommendationEngine<ProductRecommendationsAppState>
@@ -97,6 +115,12 @@ export interface MockProductListingEngine
   extends ProductListingEngine<ProductListingAppState>,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `ProductListingEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockProductListingEngine(
   config: Partial<ProductListingEngine<ProductListingAppState>> = {}
 ): MockProductListingEngine {
@@ -107,6 +131,12 @@ export interface MockCaseAssistEngine
   extends CaseAssistEngine<CaseAssistAppState>,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `CaseAssistEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}
 ): MockCaseAssistEngine {

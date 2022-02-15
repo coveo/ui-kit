@@ -67,10 +67,7 @@ describe('Search Box Test Suites', () => {
       });
 
       SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-      CommonAssertions.assertAriaLiveMessage(
-        SearchBoxSelectors.liveRegion,
-        expectedSum.toString()
-      );
+      CommonAssertions.assertAriaLiveMessage(expectedSum.toString());
     });
 
     describe('with input', () => {
@@ -87,10 +84,7 @@ describe('Search Box Test Suites', () => {
         });
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-        CommonAssertions.assertAriaLiveMessage(
-          SearchBoxSelectors.liveRegion,
-          expectedSum.toString()
-        );
+        CommonAssertions.assertAriaLiveMessage(expectedSum.toString());
       });
 
       describe('after selecting a suggestion with the mouse', () => {
@@ -135,9 +129,6 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.inputBox().click();
     });
 
-    CommonAssertions.assertAriaLiveMessage(
-      SearchBoxSelectors.liveRegion,
-      ' no '
-    );
+    CommonAssertions.assertAriaLiveMessage(' no ');
   });
 });

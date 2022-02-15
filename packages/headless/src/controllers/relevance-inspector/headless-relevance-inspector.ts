@@ -67,9 +67,13 @@ export interface RelevanceInspectorInitialState {
  */
 export interface RelevanceInspector extends Controller {
   /**
-   * Fetch the description of all fields available from the index.
+   * @deprecated Use `fetchFieldsDescription` instead.
    */
   fetchFieldDescriptions(): void;
+  /**
+   * Fetch the description of all fields available from the index.
+   */
+  fetchFieldsDescription(): void;
   /**
    * Fetch all fields available from the index on each individual results.
    */
@@ -126,9 +130,15 @@ export interface RelevanceInspectorState {
   rankingExpressions?: QueryRankingExpression[];
 
   /**
-   * The description of all fields available in the index.
+   * @deprecated Use `fieldDescriptions`.
    */
   fieldDescriptions?: FieldDescription[];
+
+  /**
+   * The description of all fields available in the index.
+   */
+  fieldsDescription?: FieldDescription[];
+
   /**
    * Whether fields debugging is enabled, returning all fields available on query results.
    */
@@ -257,7 +267,8 @@ export function buildRelevanceInspector(
       dispatch(disableFetchAllFields());
     },
 
-    fetchFieldDescriptions() {
+    fetchFieldsDescription() {
+      !this.state.isEnabled && dispatch(enableDebug());
       dispatch(fetchFieldsDescription());
       warnProductionEnvironment('fieldsDescription');
       engine.logger.warn(
@@ -266,6 +277,10 @@ export function buildRelevanceInspector(
         https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#resultlistoptions
         https://docs.coveo.com/en/headless/latest/reference/search/actions/field/#registerfieldstoinclude`
       );
+    },
+
+    fetchFieldDescriptions() {
+      this.fetchFieldsDescription();
     },
   };
 }

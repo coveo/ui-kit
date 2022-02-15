@@ -348,7 +348,7 @@ export class AtomicSearchBox {
         placeholder={this.bindings.i18n.t('search')}
         aria-label={this.bindings.i18n.t('search-box')}
         type="text"
-        class="h-full outline-none bg-transparent flex-grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
+        class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
         onBlur={() => this.clearSuggestions()}
@@ -379,7 +379,7 @@ export class AtomicSearchBox {
   private renderInputContainer() {
     const isLoading = this.searchBoxState.isLoading;
     return (
-      <div class="flex-grow flex items-center">
+      <div class="grow flex items-center">
         {this.renderInput()}
         {isLoading && (
           <span
