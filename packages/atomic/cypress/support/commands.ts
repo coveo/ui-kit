@@ -1,8 +1,6 @@
 // Must be declared global to be detected by typescript (allows import/export)
 import {SearchEventRequest} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
-// eslint-disable-next-line node/no-extraneous-import
-import type {RecurseDefaults} from 'cypress-recurse';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import compareSnapshotCommand from 'cypress-image-diff-js/dist/command';
@@ -24,14 +22,9 @@ declare global {
        * https://github.com/uktrade/cypress-image-diff/issues/65
        * @param name The name of the snapshots that will be generated
        * @param testThreshold @default 0 A number between 0 and 1 that represents the allowed percentage of pixels that can be different between the two snapshots
-       * @param retryOptions @default { limit: 0, timeout: Cypress.config('defaultCommandTimeout'), delay: Cypress.config('defaultCommandTimeout') / 5 }
        * @example cy.compareSnapshot('empty-canvas', 0.1)
        */
-      compareSnapshot(
-        name: string,
-        testThreshold?: number,
-        retryOptions?: typeof RecurseDefaults
-      ): Chainable<Element>;
+      compareSnapshot(name: string, testThreshold?: number): Chainable<Element>;
     }
   }
 }
