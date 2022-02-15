@@ -5,7 +5,7 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
 import {BooleanValue, Value} from '@coveo/bueno';
-import {IRuntimeEnvironment} from 'coveo.analytics';
+import {EventDescription, IRuntimeEnvironment} from 'coveo.analytics';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 
@@ -170,4 +170,8 @@ export const setOriginLevel3 = createAction(
   'configuration/analytics/originlevel3',
   (payload: SetOriginLevel3ActionCreatorPayload) =>
     validatePayload(payload, {originLevel3: originSchemaOnUpdate()})
+);
+
+export const analyticsDescription = createAction<EventDescription>(
+  'configuration/analytics/description'
 );

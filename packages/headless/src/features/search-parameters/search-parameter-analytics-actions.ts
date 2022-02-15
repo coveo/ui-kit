@@ -1,5 +1,4 @@
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {
   logFacetClearAll,
@@ -17,9 +16,10 @@ export function logParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
 ) {
-  if (previousParameters.q !== newParameters.q) {
-    return logSearchboxSubmit();
-  }
+  // TODO: Temp change not compatible with upstream code calling old `executeSearch`
+  //if (previousParameters.q !== newParameters.q) {
+  //  return logSearchboxSubmit();
+  //}
 
   if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
     return logResultsSort();

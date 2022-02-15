@@ -10,6 +10,7 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
+  analyticsDescription,
 } from './configuration-actions';
 import {
   getConfigurationInitialState,
@@ -127,5 +128,9 @@ export const configurationReducer = createReducer(
       .addCase(restoreSearchParameters, (state, action) => {
         state.analytics.originLevel2 =
           action.payload.tab || state.analytics.originLevel2;
+      })
+      .addCase(analyticsDescription, (state, action) => {
+        state.analytics.actionCause = action.payload.actionCause;
+        state.analytics.customData = action.payload.customData;
       })
 );

@@ -9,8 +9,8 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {
-  executeSearch,
   prepareForSearchWithQuery,
+  temp__executeSearch,
 } from '../../features/search/search-actions';
 import {buildController, Controller} from '../controller/headless-controller';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
@@ -30,7 +30,6 @@ import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
-import {SearchAction} from '../../features/analytics/analytics-utils';
 import {
   getHighlightedSuggestion,
   SuggestionHighlightingOptions,
@@ -45,6 +44,10 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  AnalyticsType,
+  temp__MakeAnalyticsActionReturnType,
+} from '../../features/analytics/analytics-utils';
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -169,11 +172,13 @@ export function buildSearchBox(
 
   const getValue = () => engine.state.querySet[options.id];
 
-  const performSearch = async (analytics: SearchAction) => {
+  const performSearch = async (
+    analytics: temp__MakeAnalyticsActionReturnType<AnalyticsType.Search>
+  ) => {
     const {enableQuerySyntax} = options;
 
     dispatch(prepareForSearchWithQuery({q: getValue(), enableQuerySyntax}));
-    await dispatch(executeSearch(analytics));
+    await dispatch(temp__executeSearch(analytics));
   };
 
   return {

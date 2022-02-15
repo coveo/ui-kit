@@ -7,7 +7,11 @@ import {
   logSearchFromLink,
   logOmniboxFromLink,
 } from './analytics-actions';
-import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
+import {
+  AnalyticsType,
+  AsyncThunkAnalyticsOptions,
+  temp__MakeAnalyticsActionReturnType,
+} from './analytics-utils';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
   logCategoryFacetBreadcrumb,
@@ -402,13 +406,7 @@ export interface SearchAnalyticsActionCreators {
    *
    * @returns A dispatchable action.
    */
-  logSearchboxSubmit(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
+  logSearchboxSubmit(): temp__MakeAnalyticsActionReturnType<AnalyticsType.Search>;
 
   /**
    * The event to log when a query suggestion is selected.
@@ -418,13 +416,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logQuerySuggestionClick(
     payload: LogQuerySuggestionClickActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
+  ): temp__MakeAnalyticsActionReturnType<AnalyticsType.Search>;
 
   /**
    * The event to log when the results sort criterion is changed.

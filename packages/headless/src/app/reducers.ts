@@ -43,7 +43,6 @@ import {caseAssistConfigurationReducer} from '../features/case-assist-configurat
 import {caseInputReducer} from '../features/case-input/case-input-slice';
 import {caseFieldReducer} from '../features/case-field/case-field-slice';
 import {documentSuggestionReducer} from '../features/document-suggestion/document-suggestion-slice';
-import {analyticsReducer} from '../features/analytics/analytics-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -101,5 +100,3 @@ export const caseAssistConfiguration = caseAssistConfigurationReducer;
 export const caseInput = caseInputReducer;
 export const caseField = caseFieldReducer;
 export const documentSuggestion = documentSuggestionReducer;
-
-export const analytics = analyticsReducer;

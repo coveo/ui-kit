@@ -39,7 +39,11 @@ import {
   StateNeededByAnalyticsProvider,
 } from '../../api/analytics/analytics';
 import {getQueryInitialState} from '../query/query-state';
-import {SearchAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  SearchAction,
+  temp__MakeAnalyticsActionReturnType,
+} from '../analytics/analytics-utils';
 import {extractHistory} from '../history/history-state';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
@@ -118,6 +122,86 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   dispatch(updateQuery(payload));
   dispatch(updatePage(1));
 });
+
+export const temp__executeSearch = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  temp__MakeAnalyticsActionReturnType<AnalyticsType.Search>,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>(
+  'search/executeSearch',
+  async (
+    analyticsBuilder: temp__MakeAnalyticsActionReturnType<AnalyticsType.Search>,
+    {getState, dispatch, rejectWithValue, extra}
+  ) => {
+    if (typeof analyticsBuilder === 'function') {
+      // TODO: Warn if parameter is still the old `SearchActionFunction` and handle deprecation properly
+    }
+    dispatch(analyticsBuilder.description());
+    const analyticsAction = analyticsBuilder.action;
+    const state = getState();
+    addEntryInActionsHistory(state);
+    const fetched = await fetchFromAPI(
+      extra.apiClient,
+      state,
+      await buildSearchRequest(state)
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.response.error);
+    }
+
+    if (
+      !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
+    ) {
+      dispatch(snapshot(extractHistory(state)));
+      return {
+        ...fetched,
+        response: fetched.response.success,
+        automaticallyCorrected: false,
+        originalQuery: getOriginalQuery(state),
+        analyticsAction,
+      };
+    }
+    const {correctedQuery} = fetched.response.success.queryCorrections[0];
+    const retried = await automaticallyRetryQueryWithCorrection(
+      extra.apiClient,
+      correctedQuery,
+      getState,
+      dispatch
+    );
+
+    if (isErrorResponse(retried.response)) {
+      dispatch(logQueryError(retried.response.error));
+      return rejectWithValue(retried.response.error);
+    }
+
+    const fetchedResponse = fetched.response.success;
+    analyticsAction(
+      dispatch,
+      () =>
+        getStateAfterResponse(
+          fetched.queryExecuted,
+          fetched.duration,
+          state,
+          fetchedResponse
+        ),
+      extra
+    );
+    dispatch(snapshot(extractHistory(getState())));
+
+    return {
+      ...retried,
+      response: {
+        ...retried.response.success,
+        queryCorrections: fetched.response.success.queryCorrections,
+      },
+      automaticallyCorrected: true,
+      originalQuery: getOriginalQuery(state),
+      analyticsAction: logDidYouMeanAutomatic(),
+    };
+  }
+);
 
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,

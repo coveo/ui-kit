@@ -1,5 +1,5 @@
 import {analyticsUrl, platformUrl} from '../../api/platform-client';
-import {IRuntimeEnvironment} from 'coveo.analytics';
+import {EventDescription, IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -48,7 +48,7 @@ export interface ConfigurationState {
   analytics: AnalyticsState;
 }
 
-export interface AnalyticsState {
+export interface AnalyticsState extends EventDescription {
   /**
    * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
    */
@@ -129,6 +129,8 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     anonymous: false,
     deviceId: '',
     userDisplayName: '',
+    actionCause: '',
+    customData: {},
   },
 });
 
@@ -144,8 +146,8 @@ export const fromAnalyticsStateToAnalyticsParams = async (
       documentReferrer: s.originLevel3,
       originContext: s.originContext,
       userDisplayName: s.userDisplayName,
-      actionCause: 'TODO',
-      customData: {TODO: 'TODO'},
+      actionCause: s.actionCause,
+      customData: s.customData || {},
     },
   };
 };
