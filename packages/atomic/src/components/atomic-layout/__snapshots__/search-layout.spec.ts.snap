@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Search Layout #buildSearchLayout when the atomic-layout component contains a main & facets sections
+exports[`Search Layout #buildSearchLayout when the atomic-search-layout component contains a main & facets sections
     should match snapshot 1`] = `
-"atomic-layout[layout='search']#abc { display: grid }@media only screen and (min-width: 1024px) {
-      atomic-layout[layout='search']#abc {
+"atomic-search-layout#abc { display: grid }@media only screen and (min-width: 1024px) {
+      atomic-search-layout#abc {
         grid-template-areas:
           '. .                     atomic-section-search .'
           '. atomic-section-facets atomic-section-main   .'
@@ -13,28 +13,28 @@ exports[`Search Layout #buildSearchLayout when the atomic-layout component conta
         column-gap: var(--atomic-layout-spacing-x);
       }
 
-      atomic-layout[layout='search']#abc atomic-layout-section[section=\\"facets\\"] {
+      atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
         display: block;
       }
     }"
 `;
 
-exports[`Search Layout #buildSearchLayout when the atomic-layout component contains a status section which contains a atomic-refine-toggle component
+exports[`Search Layout #buildSearchLayout when the atomic-search-layout component contains a status section which contains a atomic-refine-toggle component
     should match snapshot 1`] = `
-"atomic-layout[layout='search']#abc { display: grid }atomic-layout[layout='search']#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
+"atomic-search-layout#abc { display: grid }atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
       display:none;
     }
 
     @media only screen and (min-width: 1024px) {
-     atomic-layout[layout='search']#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
+     atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
        display:block;
       }
 
-      atomic-layout[layout='search']#abc atomic-layout-section[section=\\"status\\"] atomic-refine-toggle {
+      atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-refine-toggle {
         display: none;
        }
     }"
 `;
 
-exports[`Search Layout #buildSearchLayout when the atomic-layout component is empty
-    should match snapshot 1`] = `"atomic-layout[layout='search']#abc { display: grid }"`;
+exports[`Search Layout #buildSearchLayout when the atomic-search-layout component is empty
+    should match snapshot 1`] = `"atomic-search-layout#abc { display: grid }"`;

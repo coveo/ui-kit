@@ -2,7 +2,7 @@ import {findSection, sectionSelector} from '../atomic-layout-section/sections';
 
 export function buildSearchLayout(element: HTMLElement, breakpoint: string) {
   const id = element.id;
-  const layoutSelector = `atomic-layout[layout='search']#${id}`;
+  const layoutSelector = `atomic-search-layout#${id}`;
   const mediaQuerySelector = `@media only screen and (min-width: ${breakpoint})`;
 
   const displayLayout = `${layoutSelector} { display: grid }`;

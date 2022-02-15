@@ -1,47 +1,45 @@
 import {buildSearchLayout} from './search-layout';
 import {newSpecPage} from '@stencil/core/testing';
 import {AtomicLayoutSection} from '../atomic-layout-section/atomic-layout-section';
-import {AtomicLayout} from './atomic-layout';
+import {AtomicSearchLayout} from './atomic-search-layout';
 
 describe('Search Layout', () => {
   describe('#buildSearchLayout', () => {
     async function getSearchLayout(html: string) {
       const page = await newSpecPage({
-        components: [AtomicLayoutSection, AtomicLayout],
+        components: [AtomicLayoutSection, AtomicSearchLayout],
         html,
       });
       return buildSearchLayout(
-        page.body.querySelector('atomic-layout')!,
+        page.body.querySelector('atomic-search-layout')!,
         '1024px'
       );
     }
 
-    it(`when the atomic-layout component is empty
+    it(`when the atomic-search-layout component is empty
     should match snapshot`, async () => {
       const result = await getSearchLayout(
-        '<atomic-layout id="abc" layout="search"></atomic-layout>'
+        '<atomic-search-layout id="abc"></atomic-search-layout>'
       );
       expect(result).toMatchSnapshot();
     });
 
-    it(`when the atomic-layout component contains a main & facets sections
+    it(`when the atomic-search-layout component contains a main & facets sections
     should match snapshot`, async () => {
-      const result =
-        await getSearchLayout(`<atomic-layout id="abc" layout="search">
+      const result = await getSearchLayout(`<atomic-search-layout id="abc">
             <atomic-layout-section section="facets" min-width="200px" max-width="300px"></atomic-layout-section>
             <atomic-layout-section section="main" min-width="1000px" max-width="1200px"></atomic-layout-section>
-        </atomic-layout>`);
+        </atomic-search-layout>`);
       expect(result).toMatchSnapshot();
     });
 
-    it(`when the atomic-layout component contains a status section which contains a atomic-refine-toggle component
+    it(`when the atomic-search-layout component contains a status section which contains a atomic-refine-toggle component
     should match snapshot`, async () => {
-      const result =
-        await getSearchLayout(`<atomic-layout id="abc" layout="search">
+      const result = await getSearchLayout(`<atomic-search-layout id="abc">
             <atomic-layout-section section="status">
                 <atomic-refine-toggle></atomic-refine-toggle>
             </atomic-layout-section>
-        </atomic-layout>`);
+        </atomic-search-layout>`);
       expect(result).toMatchSnapshot();
     });
   });
