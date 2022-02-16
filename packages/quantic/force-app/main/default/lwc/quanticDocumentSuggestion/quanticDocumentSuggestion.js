@@ -52,7 +52,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api fetchOnInit = false;
   /**
-   * The maximum number of document suggesions to display.
+   * The maximum number of document suggestions to display.
    * @api
    * @type {number}
    * @defaultValue `3`
