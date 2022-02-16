@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.8...@coveo/quantic@1.8.9) (2022-02-16)
+
+
+### Bug Fixes
+
+* **quantic:** fix quickview title too long ([#1729](https://github.com/coveo/ui-kit/issues/1729)) ([1f0c303](https://github.com/coveo/ui-kit/commit/1f0c3032310bc0ad73f028b33b310d2bf700f336))
+
+
+
+
+
 ## [1.8.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.7...@coveo/quantic@1.8.8) (2022-02-15)
 
 **Note:** Version bump only for package @coveo/quantic
