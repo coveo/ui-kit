@@ -32,23 +32,11 @@ export default class QuanticCaseAssistInterface extends LightningElement {
    * @type {string}
    */
   @api caseAssistId;
-  /**
-   * Whether or not we want to prevent logging a case start analytics event when initializing this component.
-   * @api
-   * @type {boolean}
-   * @defaultValue `false`
-   */
-  @api preventLogCaseStartOnInit = false;
-  /**
-   * Whether or not we want to prevent fetching classifications when initializing this component.
-   * @api
-   * @type {boolean}
-   * @defaultValue `false`
-   */
-  @api preventFetchClassificationOnInit = false;
 
   /** @type {CaseAssistEngineOptions} */
   engineOptions;
+  /** @type {boolean} */
+  isCaseStartLogged = false;
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.caseAssist).then(() => {
@@ -83,13 +71,10 @@ export default class QuanticCaseAssistInterface extends LightningElement {
     this.engine = engine;
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
-      ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
     };
-    if (!this.preventLogCaseStartOnInit) {
+    if (!this.isCaseStartLogged) {
       this.engine.dispatch(this.actions.logCaseStart());
-    }
-    if (!this.preventFetchClassificationOnInit) {
-      this.engine.dispatch(this.actions.fetchCaseClassifications());
+      this.isCaseStartLogged = true;
     }
   };
 }

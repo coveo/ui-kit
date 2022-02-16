@@ -4,9 +4,9 @@ import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-
-import tailwind from 'tailwindcss';
 import postcssNesting from 'postcss-nested';
+import tailwind from 'tailwindcss';
+import tailwindNesting from 'tailwindcss/nesting';
 import atImport from 'postcss-import';
 import focusVisible from 'postcss-focus-visible';
 import autoprefixer from 'autoprefixer';
@@ -113,6 +113,7 @@ export const config: Config = {
       plugins: [
         atImport(),
         mixins(),
+        tailwindNesting(),
         tailwind(),
         focusVisible(),
         postcssNesting(),

@@ -20,7 +20,7 @@ describe('Standalone Search Box Test Suites', () => {
   }
 
   function setupStandardSearchBox() {
-    new TestFixture().with(addSearchBox()).init();
+    new TestFixture().withRedirection().with(addSearchBox()).init();
   }
 
   it('should redirect to the default url when a search is submitted', () => {
@@ -41,8 +41,8 @@ describe('Standalone Search Box Test Suites', () => {
 
   describe('when being redirected to an Atomic Search Interface after submitting a query', () => {
     const query = 'hello';
-    before(() => {
-      setupStandaloneSearchBox('/test.html');
+    beforeEach(() => {
+      setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
       setupStandardSearchBox();
@@ -54,8 +54,8 @@ describe('Standalone Search Box Test Suites', () => {
 
   describe('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
     const query = 'awards';
-    before(() => {
-      setupStandaloneSearchBox('/test.html');
+    beforeEach(() => {
+      setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.querySuggestions().eq(0).click();
       setupStandardSearchBox();

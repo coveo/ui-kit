@@ -250,6 +250,7 @@ describe('quantic-breadcrumb-manager', () => {
       Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
 
       Actions.categoryFacet.selectChildValue(path[0]);
+      cy.wait(InterceptAliases.UA.Facet.Select);
 
       Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
       Expect.categoryFacetBreadcrumb.displayLabel(true);

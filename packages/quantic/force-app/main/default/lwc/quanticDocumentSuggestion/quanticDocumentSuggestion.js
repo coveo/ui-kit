@@ -174,7 +174,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       this.openedDocuments = this.suggestions
         .slice(0, this.numberOfAutoOpenedDocuments)
         .map((suggestion) => {
-          return suggestion.title;
+          return suggestion.uniqueId;
         });
     }
   }

@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.1...@coveo/headless@1.46.2) (2022-02-16)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.0...@coveo/headless@1.46.1) (2022-02-15)
+
+
+### Bug Fixes
+
+* **headless:** relevance inspector fetchFieldsDescription rename interface & enable by default ([#1733](https://github.com/coveo/ui-kit/issues/1733)) ([d1a3f3e](https://github.com/coveo/ui-kit/commit/d1a3f3eab52b54837c3f8cce3f1cbca147669c4c))
+
+
+
+
+
+# [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.45.2...@coveo/headless@1.46.0) (2022-02-11)
+
+
+### Features
+
+* **headless:** add originContext to analytics' state & configuration ([#1721](https://github.com/coveo/ui-kit/issues/1721)) ([e1974f8](https://github.com/coveo/ui-kit/commit/e1974f815c621604cdd0a8a2fbde87306a09c6a0))
+
+
+
+
+
+## [1.45.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.45.1...@coveo/headless@1.45.2) (2022-02-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.45.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.45.0...@coveo/headless@1.45.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* **headless:** cleanup Jenkinsfile, add test for missing parsed_doc.json file ([#1708](https://github.com/coveo/ui-kit/issues/1708)) ([cd38df9](https://github.com/coveo/ui-kit/commit/cd38df9b1c24159b9a82aef08af45bed6623e072))
+* **headless, quantic:** Prevent search analytics event when using QV in case assist ([#1701](https://github.com/coveo/ui-kit/issues/1701)) ([4c3d63a](https://github.com/coveo/ui-kit/commit/4c3d63aeabed28fe9ca808eb8e1a640f2347143a))
+
+
+
+
+
 # [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.44.0...@coveo/headless@1.45.0) (2022-02-02)
 
 

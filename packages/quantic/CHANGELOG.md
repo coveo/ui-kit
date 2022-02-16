@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.8...@coveo/quantic@1.8.9) (2022-02-16)
+
+
+### Bug Fixes
+
+* **quantic:** fix quickview title too long ([#1729](https://github.com/coveo/ui-kit/issues/1729)) ([1f0c303](https://github.com/coveo/ui-kit/commit/1f0c3032310bc0ad73f028b33b310d2bf700f336))
+
+
+
+
+
+## [1.8.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.7...@coveo/quantic@1.8.8) (2022-02-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.6...@coveo/quantic@1.8.7) (2022-02-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.5...@coveo/quantic@1.8.6) (2022-02-14)
+
+
+### Bug Fixes
+
+* **quantic:** fix flaky tests ([#1713](https://github.com/coveo/ui-kit/issues/1713)) ([21c1685](https://github.com/coveo/ui-kit/commit/21c168544f508a1b9dbf82c5f28e4adcbf8dd34f))
+
+
+
+
+
+## [1.8.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.4...@coveo/quantic@1.8.5) (2022-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.3...@coveo/quantic@1.8.4) (2022-02-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.2...@coveo/quantic@1.8.3) (2022-02-07)
+
+
+### Bug Fixes
+
+* **headless, quantic:** Prevent search analytics event when using QV in case assist ([#1701](https://github.com/coveo/ui-kit/issues/1701)) ([4c3d63a](https://github.com/coveo/ui-kit/commit/4c3d63aeabed28fe9ca808eb8e1a640f2347143a))
+
+
+
+
+
 ## [1.8.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.1...@coveo/quantic@1.8.2) (2022-02-04)
 
 **Note:** Version bump only for package @coveo/quantic
