@@ -206,7 +206,7 @@ describe('quantic-document-suggestion', () => {
   });
 
   describe('when using an invalid number of automatically opened documents', () => {
-    it('should open the default number of automatically opened documents if the value given of this property is inferior to 0', () => {
+    it('should render an error message', () => {
       const invalidValue = -1;
       visitDocumentSuggestion({
         numberOfAutoOpenedDocuments: invalidValue,
@@ -249,7 +249,7 @@ describe('quantic-document-suggestion', () => {
   });
 
   describe('when using an invalid number maxDocuments', () => {
-    it('should render the default number of max documents when the value of this property is equal to 0', () => {
+    it('should render an error message', () => {
       const invalidValue = 0;
       visitDocumentSuggestion({
         maxDocuments: invalidValue,
@@ -266,7 +266,7 @@ describe('quantic-document-suggestion', () => {
       });
     });
 
-    it('should render the default number of max documents when the value of this property is inferior to 0', () => {
+    it('should render an error message', () => {
       const invalidValue = -1;
       visitDocumentSuggestion({
         maxDocuments: invalidValue,
