@@ -58,3 +58,10 @@ export type {
   DocumentSuggestionListState as DocumentSuggestionState,
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
 export {buildDocumentSuggestionList as buildDocumentSuggestion} from './controllers/document-suggestion-list/headless-document-suggestion-list';
+
+export type {
+  CaseAssistInteractiveResult,
+  CaseAssistInteractiveResultOptions,
+  CaseAssistInteractiveResultProps,
+} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
+export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';

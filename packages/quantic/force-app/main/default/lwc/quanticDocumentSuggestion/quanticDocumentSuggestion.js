@@ -14,7 +14,7 @@ import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
  *
  * @category Case Assist
  * @example
- * <c-quantic-document-suggestion engine-id={engineId} search-engine-id={searchEngineId} max-documents="5"></c-quantic-document-suggestion>
+ * <c-quantic-document-suggestion engine-id={engineId} max-documents="5"></c-quantic-document-suggestion>
  */
 export default class QuanticDocumentSuggestion extends LightningElement {
   labels = {
@@ -28,13 +28,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /**
-   * The ID of the search engine instance the component registers to, this is used to instantiate the search interface to be able to show the quick view.
-   * @api
-   * @type {string}
-   * @defaultValue `'search-engine'`
-   */
-  @api searchEngineId = 'search-engine';
   /**
    * Whether or not we want to disply the quick view for the document suggestions.
    * @api

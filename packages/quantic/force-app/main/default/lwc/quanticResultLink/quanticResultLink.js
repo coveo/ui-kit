@@ -23,7 +23,7 @@ export default class QuanticResultLink extends LightningElement {
    * @api
    * @type {Result}
    */
-  @api result
+  @api result;
   /**
    * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    * The following keywords have special meanings for where to load the URL:
@@ -35,17 +35,26 @@ export default class QuanticResultLink extends LightningElement {
    * @type {string}
    * @defaultValue `'_self'`
    */
-  @api target = '_self';
+  @api target = '_blank';
+  /**
+   * Indicates the use case where this component is used.
+   * @api
+   * @type {'search'|'case-assist'}
+   * @defaultValue `'search'`
+   */
+  @api useCase = 'search';
 
   /** @type {SearchEngine} */
   engine;
 
   connectedCallback() {
-    getHeadlessEnginePromise(this.engineId).then((engine) => {
-      this.initialize(engine);
-    }).catch((error) => {
-      console.error(error.message);
-    });
+    getHeadlessEnginePromise(this.engineId)
+      .then((engine) => {
+        this.initialize(engine);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
 
   /**
@@ -57,7 +66,9 @@ export default class QuanticResultLink extends LightningElement {
       this.engine,
       this.result,
       this.template,
-      CoveoHeadless.buildInteractiveResult
+      this.useCase === 'case-assist'
+        ? CoveoHeadlessCaseAssist.buildCaseAssistInteractiveResult
+        : CoveoHeadless.buildInteractiveResult
     );
-  }
+  };
 }
