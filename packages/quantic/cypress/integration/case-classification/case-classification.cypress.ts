@@ -24,9 +24,9 @@ const incorrectSfFielNameError = (value: string) => {
   return `The Salesforce field API name "${value}" is not found.`;
 };
 const invalidMaxSuggestionsError = (value: string | number) => {
-  return `${Number(
+  return `"${Number(
     value
-  )} is an invalid maximum number of suggestions. A positive integer was expected.`;
+  )}" is an invalid maximum number of suggestions. A positive integer was expected.`;
 };
 const missingCoveoFieldNameError =
   'coveoFieldName is required, please set its value.';

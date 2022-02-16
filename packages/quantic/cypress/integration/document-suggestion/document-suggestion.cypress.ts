@@ -20,15 +20,15 @@ interface DocumentSuggestionOptions {
 }
 
 const invalidMaxSuggestionsError = (value: string | number) => {
-  return `${Number(
+  return `"${Number(
     value
-  )} is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
+  )}" is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
 };
 
 const invalidNumberOfAutoOpenedDocumentsError = (value: string | number) => {
-  return `${Number(
+  return `"${Number(
     value
-  )} is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
+  )}" is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
 };
 
 describe('quantic-document-suggestion', () => {

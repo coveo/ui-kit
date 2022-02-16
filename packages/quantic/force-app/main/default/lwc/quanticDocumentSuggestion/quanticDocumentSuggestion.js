@@ -38,7 +38,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api searchEngineId = 'search-engine';
   /**
-   * Whether or not we want to disply the quick view for the document suggestions.
+   * Whether or not we want to display the quick view for the document suggestions.
    * @api
    * @type {boolean}
    * @defaultValue `false`
@@ -124,10 +124,10 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   validateProps() {
     if (!(Number(this.maxDocuments) > 0)) {
-      this.renderingError = `${this.maxDocuments} is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
+      this.renderingError = `"${this.maxDocuments}" is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
     }
     if (!(Number(this.numberOfAutoOpenedDocuments) >= 0)) {
-      this.renderingError = `${this.numberOfAutoOpenedDocuments} is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
+      this.renderingError = `"${this.numberOfAutoOpenedDocuments}" is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
     }
   }
 

@@ -41,7 +41,7 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       attribute: 'showQuickview',
       label: 'Show quickview',
       description:
-        'Whether or not we want to disply the quick view for the document suggestions.',
+        'Whether or not we want to display the quick view for the document suggestions.',
       defaultValue: false,
     },
     {
