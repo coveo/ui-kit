@@ -67,9 +67,11 @@ describe('quantic-standalone-search-box', () => {
 
       scope('when submitting using ENTER key', () => {
         const query = 'query';
+        mockSuggestions();
         visitStandaloneSearchBox();
 
         Actions.typeAndPressEnter(query);
+        Actions.typeAndPressEnter();
         Expect.displayClearButton(true);
         Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
       });
@@ -125,7 +127,6 @@ describe('quantic-standalone-search-box', () => {
       });
 
       scope('with custom #numberOfSuggestions', () => {
-        mockSuggestions();
         visitStandaloneSearchBox({
           numberOfSuggestions: 1,
         });
