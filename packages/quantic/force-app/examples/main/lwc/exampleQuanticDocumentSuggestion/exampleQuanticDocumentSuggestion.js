@@ -27,7 +27,7 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       attribute: 'maxDocuments',
       label: 'Max documents',
       description:
-        "The maximum number of document suggesions to display, it's a value between 1 and 5.",
+        "The maximum number of document suggestions to display. The value must be between 1 and 5, inclusively.",
       defaultValue: 3,
     },
     {
