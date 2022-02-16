@@ -51,6 +51,20 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @defaultValue `false`
    */
   @api fetchOnInit = false;
+  /**
+   * The maximum number of document suggesions to display.
+   * @api
+   * @type {number}
+   * @defaultValue `3`
+   */
+  @api maxDocuments = 3;
+  /**
+   * The number of automatically opened document suggestions when fetching suggestions..
+   * @api
+   * @type {number}
+   * @defaultValue `1`
+   */
+  @api numberOfAutoOpenedDocuments = 1;
 
   /** @type {Array<object>} */
   @track suggestions = [];
@@ -64,19 +78,22 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   unsubscribeDocumentSuggestion;
   /** @type {Array<string>} */
   openedDocuments = [];
-  /** @type {number} */
-  _maxDocuments = 3;
-  /** @type {number} */
-  _numberOfAutoOpenedDocuments = 1;
+  /** @type {string} */
+  renderingError = '';
 
   connectedCallback() {
-    registerComponentForInit(this, this.engineId);
-    this.template.addEventListener('rating', this.onRating);
+    this.validateProps();
+    if (!this.renderingError) {
+      registerComponentForInit(this, this.engineId);
+      this.template.addEventListener('rating', this.onRating);
+    }
   }
 
   renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize);
-    this.injectIdToSlots();
+    if (!this.renderingError) {
+      initializeWithHeadless(this, this.engineId, this.initialize);
+      this.injectIdToSlots();
+    }
   }
 
   /**
@@ -105,6 +122,15 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     this.template.removeEventListener('rating', this.onRating);
   }
 
+  validateProps() {
+    if (!(Number(this.maxDocuments) > 0)) {
+      this.renderingError = `${this.maxDocuments} is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
+    }
+    if (!(Number(this.numberOfAutoOpenedDocuments) >= 0)) {
+      this.renderingError = `${this.numberOfAutoOpenedDocuments} is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
+    }
+  }
+
   updateDocumentSuggestionState() {
     this.suggestions =
       this.documentSuggestion.state.documents
@@ -115,7 +141,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
             uri: suggestion.fields.uri,
           };
         })
-        .slice(0, this._maxDocuments) ?? [];
+        .slice(0, this.maxDocuments) ?? [];
     this.openFirstDocuments();
     this.loading = this.documentSuggestion.state.loading;
   }
@@ -146,7 +172,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   openFirstDocuments() {
     if (this.suggestions.length) {
       this.openedDocuments = this.suggestions
-        .slice(0, this._numberOfAutoOpenedDocuments)
+        .slice(0, this.numberOfAutoOpenedDocuments)
         .map((suggestion) => {
           return suggestion.title;
         });
@@ -173,42 +199,5 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   get hasSuggestions() {
     return !!this.suggestions.length;
-  }
-
-  /**
-   * Set the number of automatically opened document suggestions when fetching suggestions.
-   * @param {number} value - the value to be set.
-   * @returns {void}
-   */
-  @api set numberOfAutoOpenedDocuments(value) {
-    if (isNaN(Number(value)) || Number(value) < 0) {
-      console.warn(
-        'Please enter a valid number of automatically opened documents.'
-      );
-    } else {
-      this._numberOfAutoOpenedDocuments = Number(value);
-    }
-  }
-  get numberOfAutoOpenedDocuments() {
-    return this._numberOfAutoOpenedDocuments;
-  }
-
-  /**
-   * Set the maximum number of document suggesions to display.
-   * @param {number} value - the value to be set.
-   * @returns {void}
-   */
-  @api set maxDocuments(value) {
-    if (isNaN(Number(value)) || Number(value) < 1) {
-      console.warn(
-        'Please enter a valid maximum number of document suggesions.'
-      );
-    } else {
-      this._maxDocuments = Number(value);
-    }
-  }
-
-  get maxDocuments() {
-    return this._maxDocuments;
   }
 }

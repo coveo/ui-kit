@@ -10,7 +10,6 @@ import {
 import {sendRating} from '../../page-objects/actions/action-send-rating';
 import allDocuments from '../../fixtures/documentSuggestions.json';
 import {fetchSuggestions} from '../../page-objects/actions/action-get-suggestions';
-import {stubConsoleWarning} from '../console-selectors';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;
@@ -18,6 +17,18 @@ interface DocumentSuggestionOptions {
   showQuickview: boolean;
   numberOfAutoOpenedDocuments: number;
 }
+
+const invalidMaxSuggestionsError = (value: string | number) => {
+  return `${Number(
+    value
+  )} is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
+};
+
+const invalidNumberOfAutoOpenedDocumentsError = (value: string | number) => {
+  return `${Number(
+    value
+  )} is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
+};
 
 describe('quantic-document-suggestion', () => {
   const pageUrl = 's/quantic-document-suggestion';
@@ -195,31 +206,19 @@ describe('quantic-document-suggestion', () => {
 
   describe('when using an invalid number of automatically opened documents', () => {
     it('should open the default number of automatically opened documents if the value given of this property is inferior to 0', () => {
-      interceptCaseAssist();
-      cy.visit(pageUrl, {
-        onBeforeLoad(win) {
-          stubConsoleWarning(win);
-        },
-      });
-      configure({
-        numberOfAutoOpenedDocuments: -1,
+      const invalidValue = -1;
+      visitDocumentSuggestion({
+        numberOfAutoOpenedDocuments: invalidValue,
       });
 
       scope('when loading the page', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
-        Expect.displayNoSuggestions(true);
-        Expect.console.warning(true);
-      });
-
-      scope('when fetching suggestions', () => {
-        mockDocumentSuggestion(allDocuments);
-        fetchSuggestions();
         Expect.displayNoSuggestions(false);
-        Expect.displayAccordion(true);
-        Expect.numberOfSuggestions(defaultMaxDocuments);
-        Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayRenderingError(
+          true,
+          invalidNumberOfAutoOpenedDocumentsError(invalidValue)
+        );
       });
     });
 
@@ -250,60 +249,36 @@ describe('quantic-document-suggestion', () => {
 
   describe('when using an invalid number maxDocuments', () => {
     it('should render the default number of max documents when the value of this property is equal to 0', () => {
-      interceptCaseAssist();
-      cy.visit(pageUrl, {
-        onBeforeLoad(win) {
-          stubConsoleWarning(win);
-        },
-      });
-      configure({
-        maxDocuments: 0,
+      const invalidValue = 0;
+      visitDocumentSuggestion({
+        maxDocuments: invalidValue,
       });
 
       scope('when loading the page', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
-        Expect.displayNoSuggestions(true);
-        Expect.console.warning(true);
-      });
-
-      scope('when fetching suggestions', () => {
-        mockDocumentSuggestion(allDocuments);
-        fetchSuggestions();
         Expect.displayNoSuggestions(false);
-        Expect.displayAccordion(true);
-        Expect.numberOfSuggestions(defaultMaxDocuments);
-        Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayRenderingError(
+          true,
+          invalidMaxSuggestionsError(invalidValue)
+        );
       });
     });
 
     it('should render the default number of max documents when the value of this property is inferior to 0', () => {
-      interceptCaseAssist();
-      cy.visit(pageUrl, {
-        onBeforeLoad(win) {
-          stubConsoleWarning(win);
-        },
-      });
-      configure({
-        maxDocuments: -1,
+      const invalidValue = -1;
+      visitDocumentSuggestion({
+        maxDocuments: invalidValue,
       });
 
       scope('when loading the page', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
-        Expect.displayNoSuggestions(true);
-        Expect.console.warning(true);
-      });
-
-      scope('when fetching suggestions', () => {
-        mockDocumentSuggestion(allDocuments);
-        fetchSuggestions();
         Expect.displayNoSuggestions(false);
-        Expect.displayAccordion(true);
-        Expect.numberOfSuggestions(defaultMaxDocuments);
-        Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayRenderingError(
+          true,
+          invalidMaxSuggestionsError(invalidValue)
+        );
       });
     });
 
