@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.5.0...@coveo/atomic-react@0.5.1) (2022-02-16)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [0.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.4.14...@coveo/atomic-react@0.5.0) (2022-02-15)
+
+
+### Features
+
+* **atomic:** add search layout ([#1730](https://github.com/coveo/ui-kit/issues/1730)) ([aed0cae](https://github.com/coveo/ui-kit/commit/aed0caea993016ed90b941c377ccd52895146246))
+
+
+
+
+
 ## [0.4.14](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.4.13...@coveo/atomic-react@0.4.14) (2022-02-11)
 
 
