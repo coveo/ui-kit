@@ -21,7 +21,7 @@
               <lightning-accordion-section data-id={it.value.uniqueId} onclick={handleSectionClick}
                 key={it.value.uniqueId} name={it.value.uniqueId} label={it.value.title}>
                 <div slot="actions" class="slds-var-p-horizontal_x-large">
-                  <slot name="rating" data-doc-id={it.value.uniqueId}> </slot>
+                  <slot name="rating" data-doc-id={it.value.uniqueId}></slot>
                 </div>
                 <div onclick={stopPropagation}>
                   <div class="
