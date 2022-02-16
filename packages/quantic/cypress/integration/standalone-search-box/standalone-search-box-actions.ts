@@ -23,8 +23,9 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
       selector.suggestionList().first().click({force: true});
     },
     typeAndPressEnter: () => {
-      selector.input().type('{downarrow}{enter}');
-      cy.wait(500);
+      selector.input().then((searchbox) => {
+        cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
+      });
     },
   };
 };

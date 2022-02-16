@@ -22,5 +22,5 @@ export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
   searchIcon: () =>
     StandaloneSearchBoxSelectors.get().find('.searchbox__search-icon'),
   searchButton: () =>
-    StandaloneSearchBoxSelectors.get().find('.searchbox__submit-button-icon'),
+    StandaloneSearchBoxSelectors.get().find('.searchbox__submit-button'),
 };
