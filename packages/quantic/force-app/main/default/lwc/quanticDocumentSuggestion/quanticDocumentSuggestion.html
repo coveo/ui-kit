@@ -3,10 +3,6 @@
     <div class="error-message slds-text-color_destructive">{renderingError}</div>
   </template>
   <template if:false={renderingError}>
-    <template if:true={showQuickview}>
-      <c-quantic-search-interface engine-id={searchEngineId}>
-      </c-quantic-search-interface>
-    </template>
     <template if:true={loading}>
       <div class="loading-holder">
         <lightning-spinner alternative-text={labels.loading}></lightning-spinner>
