@@ -332,19 +332,18 @@ export class AtomicSearchInterface {
   }
 
   private initUrlManager() {
-    if (!this.reflectStateInUrl) {
-      return;
-    }
-
     this.urlManager = buildUrlManager(this.engine!, {
-      initialState: {fragment: this.fragment},
+      initialState: {fragment: this.reflectStateInUrl ? this.fragment : ''},
     });
 
     this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
       this.updateHash()
     );
-    this.updateHash();
+    this.fixFacetDependencies();
 
+    if (!this.reflectStateInUrl) {
+      return;
+    }
     window.addEventListener('hashchange', this.onHashChange);
   }
 
@@ -363,17 +362,21 @@ export class AtomicSearchInterface {
     });
   }
 
-  private updateHash() {
-    if (this.ignoreUrlManagerStateChanges) {
-      return;
-    }
-    if (document.location.hash === `#${this.urlManager.state.fragment}`) {
-      return;
-    }
+  private fixFacetDependencies() {
     if (getIncorrectFacetEnableStates(this.engine!, this.store.state).length) {
       this.ignoreUrlManagerStateChanges = true;
       fixFacetDependencies(this.engine!, this.store);
       this.ignoreUrlManagerStateChanges = false;
+    }
+  }
+
+  private updateHash() {
+    if (this.ignoreUrlManagerStateChanges) {
+      return;
+    }
+    this.fixFacetDependencies();
+    if (!this.reflectStateInUrl) {
+      return;
     }
     history.pushState(
       null,
