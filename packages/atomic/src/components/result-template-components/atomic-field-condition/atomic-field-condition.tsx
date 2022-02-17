@@ -32,8 +32,8 @@ export class AtomicFieldCondition {
    * A list of conditions that must be fulfilled for this template to be selected.
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
-  @MapProp() mustMatch: Record<string, string[]> = {};
-  @MapProp() mustNotMatch: Record<string, string[]> = {};
+  @MapProp({splitValues: true}) mustMatch: Record<string, string[]> = {};
+  @MapProp({splitValues: true}) mustNotMatch: Record<string, string[]> = {};
 
   private shouldBeRemoved = false;
 

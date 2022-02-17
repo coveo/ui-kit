@@ -120,7 +120,7 @@ export class AtomicTimeframeFacet
    */
   @Prop() public injectionDepth = 1000;
 
-  @MapProp() public dependsOn: Record<string, string[]> = {};
+  @MapProp() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;

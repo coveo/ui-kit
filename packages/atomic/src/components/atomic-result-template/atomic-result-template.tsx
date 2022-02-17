@@ -37,14 +37,15 @@ export class AtomicResultTemplate {
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    */
-  @MapProp() public mustMatch: Record<string, string[]> = {};
+  @MapProp({splitValues: true}) public mustMatch: Record<string, string[]> = {};
 
   /**
    * Fields and field values that results must not match for the result template to apply.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    */
-  @MapProp() public mustNotMatch: Record<string, string[]> = {};
+  @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
+    {};
 
   constructor() {
     const isParentResultList =

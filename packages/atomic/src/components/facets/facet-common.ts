@@ -62,7 +62,7 @@ export const facetHasSelectedValue: DependencyCondition = ({request}) => {
 };
 
 export function buildFacetDependsOnValueCondition(
-  expectedValues: string[]
+  expectedValue: string
 ): DependencyCondition {
   return (args) => {
     if (!facetHasSelectedValue(args)) {
@@ -70,8 +70,7 @@ export function buildFacetDependsOnValueCondition(
     }
     if (args.type === 'facets' || args.type === 'categoryFacets') {
       return args.request.currentValues.some(
-        (value) =>
-          value.state === 'selected' && expectedValues.includes(value.value)
+        (value) => value.state === 'selected' && expectedValue === value.value
       );
     }
     return true;
@@ -79,10 +78,10 @@ export function buildFacetDependsOnValueCondition(
 }
 
 export function parseDependsOn(
-  dependsOn: Record<string, string[]>
+  dependsOn: Record<string, string>
 ): DependsOnParam[] {
-  return Object.entries(dependsOn).map(([facetId, values]) => {
-    if (values.length === 1 && values[0] === '') {
+  return Object.entries(dependsOn).map(([facetId, value]) => {
+    if (!value) {
       return {
         parentFacetId: facetId,
         isDependencyMet: facetHasSelectedValue,
@@ -90,7 +89,7 @@ export function parseDependsOn(
     } else {
       return {
         parentFacetId: facetId,
-        isDependencyMet: buildFacetDependsOnValueCondition(values),
+        isDependencyMet: buildFacetDependsOnValueCondition(value),
       };
     }
   });

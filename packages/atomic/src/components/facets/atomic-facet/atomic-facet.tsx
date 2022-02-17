@@ -148,7 +148,7 @@ export class AtomicFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
-  @MapProp() public dependsOn: Record<string, string[]> = {};
+  @MapProp() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;

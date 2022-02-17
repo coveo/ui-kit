@@ -1,8 +1,10 @@
 import {ComponentInterface, getElement} from '@stencil/core';
+import {mapValues} from 'lodash';
 import {camelToKebab, kebabToCamel} from './utils';
 
 interface MapPropOptions {
-  attributePrefix: string;
+  attributePrefix?: string;
+  splitValues?: boolean;
 }
 export function MapProp(opts?: MapPropOptions) {
   return (component: ComponentInterface, variableName: string) => {
@@ -15,20 +17,28 @@ export function MapProp(opts?: MapPropOptions) {
     }
 
     component.componentWillLoad = function () {
-      const prefix = (opts && opts.attributePrefix) || variableName;
-      const variable = this[variableName];
+      const prefix = opts?.attributePrefix ?? variableName;
       const attributes = getElement(this).attributes;
-      mapAttributesToProp(prefix, variable, Array.from(attributes));
+      const map = attributesToStringMap(prefix, Array.from(attributes));
+      this[variableName] = opts?.splitValues
+        ? stringMapToStringArrayMap(map)
+        : map;
       componentWillLoad.call(this);
     };
   };
 }
 
-export function mapAttributesToProp(
+export function stringMapToStringArrayMap(map: Record<string, string>) {
+  return mapValues(map, (value) =>
+    value.split(',').map((subValue) => subValue.trim())
+  );
+}
+
+export function attributesToStringMap(
   prefix: string,
-  mapVariable: Record<string, string[]>,
   attributes: {name: string; value: string}[]
 ) {
+  const mapVariable: Record<string, string> = {};
   const kebabPrefix = camelToKebab(prefix) + '-';
   for (let i = 0; i < attributes.length; i++) {
     const attribute = attributes[i];
@@ -37,8 +47,7 @@ export function mapAttributesToProp(
     }
 
     const property = kebabToCamel(attribute.name.replace(kebabPrefix, ''));
-    mapVariable[property] = `${attribute.value}`
-      .split(',')
-      .map((value) => value.trim());
+    mapVariable[property] = `${attribute.value}`;
   }
+  return mapVariable;
 }
