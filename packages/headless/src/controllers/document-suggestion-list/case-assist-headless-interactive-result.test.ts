@@ -51,11 +51,6 @@ describe('InteractiveResult', () => {
   beforeEach(() => {
     engine = buildMockCaseAssistEngine();
     initializeInteractiveResult();
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
   });
 
   it('it adds the correct reducers to engine', () => {

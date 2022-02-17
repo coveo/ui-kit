@@ -13,13 +13,13 @@ export interface CaseAssistInteractiveResultOptions
 export interface CaseAssistInteractiveResultProps
   extends InteractiveResultCoreProps {
   /**
-   * The options for the `InteractiveResult` controller.
+   * The options for the `CaseAssistInteractiveResult` controller.
    * */
   options: CaseAssistInteractiveResultOptions;
 }
 
 /**
- * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ * The `CaseAssistInteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
  */
 export interface CaseAssistInteractiveResult extends InteractiveResultCore {}
 

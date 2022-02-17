@@ -48,13 +48,11 @@ export default class QuanticResultLink extends LightningElement {
   engine;
 
   connectedCallback() {
-    getHeadlessEnginePromise(this.engineId)
-      .then((engine) => {
-        this.initialize(engine);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    getHeadlessEnginePromise(this.engineId).then((engine) => {
+      this.initialize(engine);
+    }).catch((error) => {
+      console.error(error.message);
+    });
   }
 
   /**
