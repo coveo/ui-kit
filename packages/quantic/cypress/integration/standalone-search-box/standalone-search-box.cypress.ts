@@ -49,47 +49,15 @@ describe('quantic-standalone-search-box', () => {
     it('should work as expected', () => {
       scope('when loading standalone search box', () => {
         visitStandaloneSearchBox();
+        mockSuggestions();
 
         Expect.displayInputSearchBox(true);
         Expect.displaySearchButton(true);
         Expect.placeholderContains('Search');
-      });
-
-      scope('when submitting a search', () => {
-        const query = 'test';
-        visitStandaloneSearchBox();
-
-        Actions.typeInSearchBox(query);
-        Expect.displayClearButton(true);
-        Actions.submitSearch();
-        Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
-      });
-
-      scope('when submitting using ENTER key', () => {
-        const query = 'query';
-        mockSuggestions();
-        visitStandaloneSearchBox();
-
-        Actions.typeInSearchBox(query);
-        Actions.typeAndPressEnter();
-        Expect.displayClearButton(true);
-        Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
-      });
-
-      scope('when submitting script', () => {
-        const query = '<script>alert("test")</script>';
-        visitStandaloneSearchBox();
-
-        Actions.typeInSearchBox(query);
-        Expect.displayClearButton(true);
-        Actions.submitSearch();
-        Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
+        Expect.inputInitialized();
       });
 
       scope('when setting suggestions', () => {
-        mockSuggestions();
-        visitStandaloneSearchBox();
-
         Actions.focusSearchBox();
         cy.wait(InterceptAliases.QuerySuggestions).then(() => {
           Expect.displaySuggestionList(true);
@@ -100,6 +68,40 @@ describe('quantic-standalone-search-box', () => {
       scope('when selecting from suggestions', () => {
         Actions.clickFirstSuggestion();
         Expect.inputContains('test');
+      });
+
+      scope('when submitting a search', () => {
+        const query = 'test';
+        visitStandaloneSearchBox();
+
+        Expect.inputInitialized();
+        Actions.typeInSearchBox(query);
+        Expect.displayClearButton(true);
+        Actions.submitSearch();
+        Expect.urlHashContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+      });
+
+      scope('when submitting using ENTER key', () => {
+        const query = 'query';
+        mockSuggestions();
+        visitStandaloneSearchBox();
+
+        Expect.inputInitialized();
+        Actions.typeInSearchBox(query);
+        Actions.pressEnter();
+        Expect.displayClearButton(true);
+        Expect.urlHashContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+      });
+
+      scope('when submitting script', () => {
+        const query = '<script>alert("test")</script>';
+        visitStandaloneSearchBox();
+
+        Expect.inputInitialized();
+        Actions.typeInSearchBox(query);
+        Expect.displayClearButton(true);
+        Actions.submitSearch();
+        Expect.urlHashContains(`/global-search/%40uri#q=${encodeURI(query)}`);
       });
     });
   });
@@ -131,6 +133,7 @@ describe('quantic-standalone-search-box', () => {
           numberOfSuggestions: 1,
         });
 
+        Expect.inputInitialized();
         Actions.focusSearchBox();
         cy.wait(InterceptAliases.QuerySuggestions).then(() => {
           Expect.displaySuggestionList(true);
@@ -144,10 +147,11 @@ describe('quantic-standalone-search-box', () => {
           redirectUrl: '/full-search-example',
         });
 
-        Actions.typeInSearchBox('test');
+        Expect.inputInitialized();
+        Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlHashContains(`/full-search-example#q=${query}`);
+        Expect.urlHashContains(`/full-search-example#q=${encodeURI(query)}`);
         Expect.logSearchFromLink(query);
       });
     });

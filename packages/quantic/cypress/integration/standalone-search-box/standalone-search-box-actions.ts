@@ -1,3 +1,4 @@
+import {InterceptAliases} from '../../page-objects/search';
 import {
   StandaloneSearchBoxSelector,
   StandaloneSearchBoxSelectors,
@@ -8,7 +9,16 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     typeInSearchBox: (query: string) => {
       selector
         .input()
-        .invoke('val', query)
+        .then((searchbox) => {
+          let updateText = '';
+          query.split('').forEach((letter) => {
+            updateText += letter;
+            cy.wrap(searchbox)
+              .invoke('val', updateText)
+              .trigger('keyup', {which: letter.charCodeAt(0)});
+            cy.wait(InterceptAliases.QuerySuggestions);
+          });
+        })
         .logAction(`when typing "${query}" in search box`);
     },
     submitSearch: () => {
@@ -16,15 +26,13 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     },
     focusSearchBox: () => {
       selector.input().then((searchbox) => {
-        cy.wrap(searchbox).trigger('keydown', {key: '27'});
-        cy.wait(500);
         cy.wrap(searchbox).trigger('keyup', {key: '27'});
       });
     },
     clickFirstSuggestion: () => {
       selector.suggestionList().first().click({force: true});
     },
-    typeAndPressEnter: () => {
+    pressEnter: () => {
       selector.input().then((searchbox) => {
         cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
       });

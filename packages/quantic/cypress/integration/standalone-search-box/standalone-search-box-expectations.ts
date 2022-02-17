@@ -15,6 +15,9 @@ function standaloneSearchBoxExpectations(
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the input search box`);
     },
+    inputInitialized: () => {
+      selector.input().invoke('attr', 'is-initialized').should('eq', 'true');
+    },
     displaySearchIcon: (display: boolean) => {
       selector
         .searchIcon()
