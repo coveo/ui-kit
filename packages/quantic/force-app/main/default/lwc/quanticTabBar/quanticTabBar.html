@@ -1,0 +1,15 @@
+<template>
+  <div class="tab-container slds-size_1-of-1">
+    <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
+      <slot onslotchange={handleSlotChange}></slot>  
+    </ul>
+  </div>
+  <template if:true={showMore}>
+    <lightning-combobox
+      name="hidden-tabs"
+      placeholder="More"
+      options={options}
+      onchange={handleChange}>
+    </lightning-combobox>
+  </template>
+</template>

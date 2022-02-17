@@ -1,5 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
-import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
+import {LightningElement, api, track} from 'lwc';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").Tab} Tab */
@@ -45,7 +48,7 @@ export default class QuanticTab extends LightningElement {
 
   /** @type {boolean} */
   @track shouldDisplay;
-  
+
   /** @type {Tab} */
   tab;
   /** @type {Function} */
@@ -62,8 +65,8 @@ export default class QuanticTab extends LightningElement {
   }
 
   /**
-  * @param {SearchEngine} engine
-  */
+   * @param {SearchEngine} engine
+   */
   initialize = (engine) => {
     this.tab = CoveoHeadless.buildTab(engine, {
       options: {
@@ -72,7 +75,7 @@ export default class QuanticTab extends LightningElement {
       },
       initialState: {
         isActive: this.isActive,
-      }
+      },
     });
     this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
 
@@ -80,7 +83,8 @@ export default class QuanticTab extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
-  }
+    this.dispatchEvent(new CustomEvent('tab_initialized', {bubbles: false}));
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -92,11 +96,14 @@ export default class QuanticTab extends LightningElement {
     this.shouldDisplay = this.searchStatus?.state?.firstSearchExecuted;
   }
 
-  select() {
+  @api select() {
     this.tab.select();
+    this.dispatchEvent(
+      new CustomEvent('tab_selected', {detail: this.expression, bubbles: false})
+    );
   }
 
   get tabClass() {
-    return `slds-tabs_default__item ${this.isActive ? 'slds-is-active' : ''}`
+    return `slds-tabs_default__item ${this.isActive ? 'slds-is-active' : ''}`;
   }
 }
