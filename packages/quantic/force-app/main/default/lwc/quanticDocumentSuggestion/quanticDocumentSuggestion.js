@@ -31,7 +31,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api engineId;
   /**
-   * Whether or not we want to disply the quick view for the document suggestions.
+   * Whether or not we want to dispaly the quick view for the document suggestions.
    * @api
    * @type {boolean}
    * @defaultValue `false`
