@@ -26,7 +26,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
@@ -37,6 +37,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -119,6 +120,8 @@ export class AtomicTimeframeFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  @MapProp() public dependsOn: Record<string, string[]> = {};
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
@@ -158,12 +161,17 @@ export class AtomicTimeframeFacet
   }
 
   private registerFacetToStore() {
-    registerFacetToStore(this.bindings.store, 'dateFacets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-      format: (value) => this.formatFacetValue(value),
-    });
+    registerFacetToStore(
+      this.bindings.store,
+      'dateFacets',
+      {
+        label: this.label,
+        facet: this.facet!,
+        element: this.host,
+        format: (value) => this.formatFacetValue(value),
+      },
+      parseDependsOn(this.dependsOn)
+    );
 
     if (this.filter) {
       this.bindings.store.state.dateFacets[this.filter.state.facetId] =
@@ -344,6 +352,10 @@ export class AtomicTimeframeFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.facetState?.enabled) {
       return <Hidden></Hidden>;
     }
 

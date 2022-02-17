@@ -34,6 +34,10 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../utils/local-storage-utils';
+import {
+  fixFacetDependencies,
+  getIncorrectFacetEnableStates,
+} from '../facets/facet-common';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -52,6 +56,7 @@ export class AtomicSearchInterface {
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
+  private ignoreUrlManagerStateChanges = false;
   private store = createStore<AtomicStore>(initialStore());
 
   @Element() private host!: HTMLElement;
@@ -338,6 +343,7 @@ export class AtomicSearchInterface {
     this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
       this.updateHash()
     );
+    this.updateHash();
 
     window.addEventListener('hashchange', this.onHashChange);
   }
@@ -358,6 +364,17 @@ export class AtomicSearchInterface {
   }
 
   private updateHash() {
+    if (this.ignoreUrlManagerStateChanges) {
+      return;
+    }
+    if (document.location.hash === `#${this.urlManager.state.fragment}`) {
+      return;
+    }
+    if (getIncorrectFacetEnableStates(this.engine!, this.store.state).length) {
+      this.ignoreUrlManagerStateChanges = true;
+      fixFacetDependencies(this.engine!, this.store);
+      this.ignoreUrlManagerStateChanges = false;
+    }
     history.pushState(
       null,
       document.title,

@@ -28,7 +28,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {
   getFieldCaptions,
@@ -40,6 +40,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -144,6 +145,8 @@ export class AtomicColorFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
+  @MapProp() public dependsOn: Record<string, string[]> = {};
+
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
 
@@ -166,11 +169,16 @@ export class AtomicColorFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'facets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-    });
+    registerFacetToStore(
+      this.bindings.store,
+      'facets',
+      {
+        label: this.label,
+        facet: this.facet,
+        element: this.host,
+      },
+      parseDependsOn(this.dependsOn)
+    );
   }
 
   public componentShouldUpdate(
@@ -361,6 +369,10 @@ export class AtomicColorFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.facetState.enabled) {
       return <Hidden></Hidden>;
     }
 

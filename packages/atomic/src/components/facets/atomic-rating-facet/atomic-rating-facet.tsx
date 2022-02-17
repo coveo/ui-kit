@@ -23,7 +23,7 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
@@ -32,6 +32,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -137,6 +138,8 @@ export class AtomicRatingFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  @MapProp() public dependsOn: Record<string, string[]> = {};
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
@@ -167,13 +170,18 @@ export class AtomicRatingFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'numericFacets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-      format: (value) => this.formatFacetValue(value),
-      content: (value) => this.ratingContent(value),
-    });
+    registerFacetToStore(
+      this.bindings.store,
+      'numericFacets',
+      {
+        label: this.label,
+        facet: this.facet,
+        element: this.host,
+        format: (value) => this.formatFacetValue(value),
+        content: (value) => this.ratingContent(value),
+      },
+      parseDependsOn(this.dependsOn)
+    );
   }
 
   private get scaleFactor() {
@@ -293,6 +301,10 @@ export class AtomicRatingFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.facetState.enabled) {
       return <Hidden></Hidden>;
     }
 

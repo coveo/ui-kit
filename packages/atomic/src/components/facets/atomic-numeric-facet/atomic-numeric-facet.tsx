@@ -28,7 +28,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -43,6 +43,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -152,6 +153,8 @@ export class AtomicNumericFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  @MapProp() public dependsOn: Record<string, string[]> = {};
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
@@ -204,12 +207,17 @@ export class AtomicNumericFacet
   }
 
   private registerFacetToStore() {
-    registerFacetToStore(this.bindings.store, 'numericFacets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-      format: (value) => this.formatFacetValue(value),
-    });
+    registerFacetToStore(
+      this.bindings.store,
+      'numericFacets',
+      {
+        label: this.label,
+        facet: this.facet!,
+        element: this.host,
+        format: (value) => this.formatFacetValue(value),
+      },
+      parseDependsOn(this.dependsOn)
+    );
 
     if (this.filter) {
       this.bindings.store.state.numericFacets[this.filter.state.facetId] =
@@ -421,6 +429,10 @@ export class AtomicNumericFacet
 
   public render() {
     if (this.searchStatusState.hasError) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.facetState?.enabled) {
       return <Hidden></Hidden>;
     }
 
