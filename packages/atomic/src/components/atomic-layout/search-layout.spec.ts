@@ -12,7 +12,7 @@ describe('Search Layout', () => {
       });
       return buildSearchLayout(
         page.body.querySelector('atomic-search-layout')!,
-        '1024px'
+        1024
       );
     }
 
@@ -27,8 +27,8 @@ describe('Search Layout', () => {
     it(`when the atomic-search-layout component contains a main & facets sections
     should match snapshot`, async () => {
       const result = await getSearchLayout(`<atomic-search-layout id="abc">
-            <atomic-layout-section section="facets" min-width="200px" max-width="300px"></atomic-layout-section>
-            <atomic-layout-section section="main" min-width="1000px" max-width="1200px"></atomic-layout-section>
+            <atomic-layout-section section="facets"></atomic-layout-section>
+            <atomic-layout-section section="main"></atomic-layout-section>
         </atomic-search-layout>`);
       expect(result).toMatchSnapshot();
     });

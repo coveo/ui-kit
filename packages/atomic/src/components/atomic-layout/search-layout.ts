@@ -16,7 +16,7 @@ export function buildSearchLayout(element: HTMLElement, breakpoint: number) {
 
     const facetsMin = facetsSection.minWidth || '272px';
     const facetsMax = facetsSection.maxWidth || '350px';
-    const mainMin = mainSection.minWidth || '60%';
+    const mainMin = mainSection.minWidth || '50%';
     const mainMax = mainSection.maxWidth || '1100px';
 
     return `${mediaQuerySelector} {
