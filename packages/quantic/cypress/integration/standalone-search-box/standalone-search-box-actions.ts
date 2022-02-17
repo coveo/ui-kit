@@ -15,16 +15,18 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
       selector.searchButton().click().logAction('when submitting query');
     },
     focusSearchBox: () => {
-      selector.input().trigger('keydown', {keyCode: 27});
-      cy.wait(500);
-      selector.input().trigger('keyup', {keyCode: 27});
+      selector.input().then((searchbox) => {
+        cy.wrap(searchbox).trigger('keydown', {key: '27'});
+        cy.wait(500);
+        cy.wrap(searchbox).trigger('keyup', {key: '27'});
+      });
     },
     clickFirstSuggestion: () => {
       selector.suggestionList().first().click({force: true});
     },
     typeAndPressEnter: () => {
       selector.input().then((searchbox) => {
-        cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
+        cy.wrap(searchbox).type('{enter}');
       });
     },
   };

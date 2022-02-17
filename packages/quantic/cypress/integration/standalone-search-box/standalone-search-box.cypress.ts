@@ -70,7 +70,7 @@ describe('quantic-standalone-search-box', () => {
         mockSuggestions();
         visitStandaloneSearchBox();
 
-        Actions.typeAndPressEnter(query);
+        Actions.typeInSearchBox(query);
         Actions.typeAndPressEnter();
         Expect.displayClearButton(true);
         Expect.urlHashContains(`/global-search/%40uri#q=${query}`);
