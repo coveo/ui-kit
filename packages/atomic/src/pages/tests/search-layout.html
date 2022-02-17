@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic</title>
-
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
+
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -22,6 +22,7 @@
               response.body.totalCountFiltered = 100;
               const firstResult = response.body.results[0];
               firstResult.title = 'First result';
+              // Randomization to enforce non-visited url
               firstResult.clickUri = 'https://docs.coveo.com/#' + Math.random();
               response.body.results = [firstResult];
               return response;
