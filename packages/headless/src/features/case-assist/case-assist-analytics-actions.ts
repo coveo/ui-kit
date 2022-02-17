@@ -68,20 +68,15 @@ export const logClassificationClick = (classificationId: string) =>
       })
   )();
 
-export const logDocumentSuggestionClick = (suggestionId: string) => {
-  return buildDocumentSuggestionClickThunk(suggestionId)();
-};
-
-export const buildDocumentSuggestionClickThunk = (suggestionId: string) => {
-  return makeCaseAssistAnalyticsAction(
+export const logDocumentSuggestionClick = (suggestionId: string) =>
+  makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/documentSuggestion/click',
     (client, state) =>
       client.logSelectDocumentSuggestion({
         suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
         ticket: caseAssistCaseSelector(state),
       })
-  );
-};
+  )();
 
 export const logQuickviewDocumentSuggestionClick = (suggestionId: string) => {
   return buildQuickviewDocumentSuggestionClickThunk(suggestionId)();
@@ -97,6 +92,26 @@ export const buildQuickviewDocumentSuggestionClickThunk = (
         suggestion: caseAssistDocumentSuggestionSelector(
           state,
           suggestionId,
+          true
+        ),
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
+};
+
+export const logDocumentSuggestionOpen = (suggestionId: string) => {
+  return buildDocumentSuggestionOpenThunk(suggestionId)();
+};
+
+export const buildDocumentSuggestionOpenThunk = (suggestionId: string) => {
+  return makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/click',
+    (client, state) =>
+      client.logSelectDocumentSuggestion({
+        suggestion: caseAssistDocumentSuggestionSelector(
+          state,
+          suggestionId,
+          false,
           true
         ),
         ticket: caseAssistCaseSelector(state),

@@ -1,5 +1,5 @@
 import {CaseAssistEngine} from '../../case-assist.index';
-import {logDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
+import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
@@ -41,7 +41,7 @@ export function buildCaseAssistInteractiveResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logDocumentSuggestionClick(props.options.result.uniqueId));
+    engine.dispatch(logDocumentSuggestionOpen(props.options.result.uniqueId));
   };
 
   return buildInteractiveResultCore(engine, props, logAnalyticsIfNeverOpened);

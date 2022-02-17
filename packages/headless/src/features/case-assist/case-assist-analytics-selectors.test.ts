@@ -268,6 +268,28 @@ describe('case assist analytics selectors', () => {
       });
     });
 
+    it('should return the document suggestion matching the specified ID with the field openDocument when the openDocument parameter is set to true', () => {
+      const suggestion = caseAssistDocumentSuggestionSelector(
+        buildStateWithDocumentSuggestions(),
+        'document-id',
+        false,
+        true
+      );
+
+      expect(suggestion).toMatchObject({
+        responseId: 'last-document-suggestion-response-id',
+        suggestionId: 'document-id',
+        openDocument: true,
+        suggestion: {
+          documentPosition: 0,
+          documentTitle: 'My Document',
+          documentUri: 'http://my.document.uri',
+          documentUriHash: 'document-uri-hash',
+          documentUrl: 'http://my.document.uri/clickable',
+        },
+      });
+    });
+
     it('should throw when the document suggestion is not found', () => {
       expect(() =>
         caseAssistDocumentSuggestionSelector(

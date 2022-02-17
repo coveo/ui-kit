@@ -33,7 +33,7 @@ export default class QuanticResultLink extends LightningElement {
    *   - `_top`: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
    * @api
    * @type {string}
-   * @defaultValue `'_self'`
+   * @defaultValue `'_blank'`
    */
   @api target = '_blank';
   /**
