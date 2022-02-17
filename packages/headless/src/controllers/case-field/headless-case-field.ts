@@ -9,6 +9,7 @@ import {
   documentSuggestion,
 } from '../../app/reducers';
 import {
+  logAutoSelectCaseField,
   logClassificationClick,
   logUpdateCaseField,
 } from '../../features/case-assist/case-assist-analytics-actions';
@@ -155,8 +156,10 @@ export function buildCaseField(
         options.field
       ]?.suggestions?.find((s) => s.value === value)?.id;
 
-      if (!autoSelection && suggestionId) {
-        dispatch(logClassificationClick(suggestionId));
+      if (suggestionId) {
+        autoSelection
+          ? dispatch(logAutoSelectCaseField(suggestionId))
+          : dispatch(logClassificationClick(suggestionId));
       }
 
       dispatch(

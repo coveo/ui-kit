@@ -81,7 +81,7 @@ describe('Case Field', () => {
       };
     });
 
-    it('dispatches a #logClassificationClick action when value is a suggestion and autoSelection is falsy', () => {
+    it('dispatches a #logClassificationClick action', () => {
       field.update('suggested value');
 
       expect(engine.actions).toContainEqual(
@@ -101,16 +101,6 @@ describe('Case Field', () => {
       );
     });
 
-    it('does not dispatch a #logClassificationClick action when value is a suggestion but autoSelection is truthy', () => {
-      field.update(testValue, undefined, true);
-
-      expect(engine.actions).not.toContainEqual(
-        expect.objectContaining({
-          type: 'analytics/caseAssist/classification/click/pending',
-        })
-      );
-    });
-
     it('dispatches a #updateCaseField action with the passed field value', () => {
       field.update(testValue);
 
@@ -119,7 +109,7 @@ describe('Case Field', () => {
       );
     });
 
-    it('dispatches a #logCaseFieldUpdate analytics action when autoSelection is falsy', () => {
+    it('dispatches a #logCaseFieldUpdate analytics action', () => {
       field.update(testValue);
 
       expect(engine.actions).toContainEqual(
@@ -129,7 +119,7 @@ describe('Case Field', () => {
       );
     });
 
-    it('does not dispatch a #logCaseFieldUpdate analytics action when autoSelection is truthy', () => {
+    it('does not dispatche a #logCaseFieldUpdate analytics action when the autoSelection parameter is set to true', () => {
       field.update(testValue, undefined, true);
 
       expect(engine.actions).not.toContainEqual(
