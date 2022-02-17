@@ -81,7 +81,7 @@ describe('Case Field', () => {
       };
     });
 
-    it('dispatches a #logClassificationClick action', () => {
+    it('dispatches a #logClassificationClick action when value is a suggestion', () => {
       field.update('suggested value');
 
       expect(engine.actions).toContainEqual(
