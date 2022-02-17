@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {registerCategoryFacet} from '../category-facet-set/category-facet-set-actions';
 import {registerFacet} from '../facet-set/facet-set-actions';
 import {registerDateFacet} from '../range-facets/date-facet-set/date-facet-actions';
@@ -30,6 +31,18 @@ export const anyFacetSetReducer = createReducer(
       })
       .addCase(disableFacet, (state, action) => {
         state[action.payload].enabled = false;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        [
+          ...Object.keys(action.payload.f ?? {}),
+          ...Object.keys(action.payload.cf ?? {}),
+          ...Object.keys(action.payload.nf ?? {}),
+          ...Object.keys(action.payload.df ?? {}),
+        ].forEach((facetId) => {
+          if (facetId in state) {
+            state[facetId].enabled = true;
+          }
+        });
       });
   }
 );
