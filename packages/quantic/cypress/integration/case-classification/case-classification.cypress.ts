@@ -70,6 +70,7 @@ describe('quantic-case-classification', () => {
 
       scope('when fetching suggestions', () => {
         const suggestionsCount = 3;
+        const firstSuggestionIndex = 0;
 
         mockCaseClassification(
           coveoDefaultField,
@@ -81,7 +82,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(0, true);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
       });
 
       scope('when selecting a suggestion', () => {
@@ -181,6 +182,7 @@ describe('quantic-case-classification', () => {
 
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
 
         mockCaseClassification(
           coveoDefaultField,
@@ -189,7 +191,7 @@ describe('quantic-case-classification', () => {
         fetchClassifications();
         Expect.displaySelectTitle(false);
         Expect.numberOfSuggestions(1);
-        Expect.logClickedSuggestion(0, true);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.numberOfInlineOptions(0);
         Expect.displaySelectInput(false);
         Expect.displaySelectTitle(true);
@@ -298,6 +300,7 @@ describe('quantic-case-classification', () => {
 
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
 
         mockCaseClassification(
           coveoDefaultField,
@@ -308,7 +311,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.displaySelectInput(false);
-        Expect.logClickedSuggestion(0, true);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
       });
 
       scope('when selecting a suggestion', () => {
@@ -351,6 +354,7 @@ describe('quantic-case-classification', () => {
 
       scope('when fetching suggestions', () => {
         const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
 
         mockCaseClassification(
           coveoDefaultField,
@@ -361,7 +365,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.displaySelectInput(false);
-        Expect.logClickedSuggestion(0, true);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
       });
     });
   });
