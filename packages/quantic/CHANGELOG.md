@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.10...@coveo/quantic@1.8.11) (2022-02-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.9...@coveo/quantic@1.8.10) (2022-02-16)
+
+
+### Bug Fixes
+
+* **quantic:** fix searchbox button style ([#1739](https://github.com/coveo/ui-kit/issues/1739)) ([19f480f](https://github.com/coveo/ui-kit/commit/19f480f7fa90a7e63088064419c0d08235277604))
+* **Quantic:** issue managing two document suggestions with the same title fixed ([#1736](https://github.com/coveo/ui-kit/issues/1736)) ([b34e937](https://github.com/coveo/ui-kit/commit/b34e937730b837a3842a5a916e2f30a37b7cfc4c))
+
+
+
+
+
+## [1.8.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.8...@coveo/quantic@1.8.9) (2022-02-16)
+
+
+### Bug Fixes
+
+* **quantic:** fix quickview title too long ([#1729](https://github.com/coveo/ui-kit/issues/1729)) ([1f0c303](https://github.com/coveo/ui-kit/commit/1f0c3032310bc0ad73f028b33b310d2bf700f336))
+
+
+
+
+
 ## [1.8.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.7...@coveo/quantic@1.8.8) (2022-02-15)
 
 **Note:** Version bump only for package @coveo/quantic

@@ -166,7 +166,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   validateProps() {
     if (!(Number(this.maxSuggestions) >= 0)) {
-      this.renderingError = `${this.maxSuggestions} is an invalid maximum number of suggestions. A positive integer was expected.`;
+      this.renderingError = `"${this.maxSuggestions}" is an invalid maximum number of suggestions. A positive integer was expected.`;
     }
     if (!this.coveoFieldName) {
       this.renderingError =

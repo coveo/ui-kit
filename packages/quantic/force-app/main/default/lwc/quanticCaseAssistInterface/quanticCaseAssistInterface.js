@@ -4,7 +4,7 @@ import {
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
-  HeadlessBundleNames
+  HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
@@ -26,7 +26,6 @@ export default class QuanticCaseAssistInterface extends LightningElement {
    * @type {string}
    */
   @api engineId;
-
   /**
    * The Case Assist configuration ID.
    * @api
@@ -36,6 +35,8 @@ export default class QuanticCaseAssistInterface extends LightningElement {
 
   /** @type {CaseAssistEngineOptions} */
   engineOptions;
+  /** @type {boolean} */
+  isCaseStartLogged = false;
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.caseAssist).then(() => {
@@ -71,6 +72,9 @@ export default class QuanticCaseAssistInterface extends LightningElement {
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
     };
-    this.engine.dispatch(this.actions.logCaseStart());
+    if (!this.isCaseStartLogged) {
+      this.engine.dispatch(this.actions.logCaseStart());
+      this.isCaseStartLogged = true;
+    }
   };
 }
