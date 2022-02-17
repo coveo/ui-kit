@@ -414,6 +414,7 @@ describe('quantic-case-classification', () => {
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
