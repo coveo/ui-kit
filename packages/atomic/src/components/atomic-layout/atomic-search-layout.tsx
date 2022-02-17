@@ -1,4 +1,4 @@
-import {Component, Element} from '@stencil/core';
+import {Component, Element, Prop} from '@stencil/core';
 import {randomID} from '../../utils/utils';
 import {buildSearchLayout} from './search-layout';
 
@@ -12,8 +12,10 @@ import {buildSearchLayout} from './search-layout';
 })
 export class AtomicSearchLayout {
   @Element() private host!: HTMLElement;
-  // TODO: make breakpoint configurable & reuse in templates
-  private breakpoint = '1024px';
+  /**
+   * CSS value, in px, that defines where the layout goes from mobile to desktop.
+   */
+  @Prop() public breakpoint = 1024;
 
   public connectedCallback() {
     const id = this.host.id || randomID('atomic-search-layout-');

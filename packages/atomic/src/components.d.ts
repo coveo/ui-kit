@@ -737,6 +737,10 @@ export namespace Components {
         "timezone"?: string;
     }
     interface AtomicSearchLayout {
+        /**
+          * CSS value, in px, that defines where the layout goes from mobile to desktop.
+         */
+        "breakpoint": number;
     }
     interface AtomicSortDropdown {
     }
@@ -1995,6 +1999,10 @@ declare namespace LocalJSX {
         "timezone"?: string;
     }
     interface AtomicSearchLayout {
+        /**
+          * CSS value, in px, that defines where the layout goes from mobile to desktop.
+         */
+        "breakpoint"?: number;
     }
     interface AtomicSortDropdown {
     }
