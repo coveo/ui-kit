@@ -33,6 +33,16 @@ describe('Search Layout', () => {
       expect(result).toMatchSnapshot();
     });
 
+    it(`when the atomic-search-layout has custom breakpoint & min-width, max-width values
+    should match snapshot`, async () => {
+      const result =
+        await getSearchLayout(`<atomic-search-layout id="abc" breakpoint=600>
+            <atomic-layout-section section="facets" min-width="250px" max-width="300px"></atomic-layout-section>
+            <atomic-layout-section section="main" min-width="300px" max-width="1200px"></atomic-layout-section>
+        </atomic-search-layout>`);
+      expect(result).toMatchSnapshot();
+    });
+
     it(`when the atomic-search-layout component contains a status section which contains a atomic-refine-toggle component
     should match snapshot`, async () => {
       const result = await getSearchLayout(`<atomic-search-layout id="abc">
