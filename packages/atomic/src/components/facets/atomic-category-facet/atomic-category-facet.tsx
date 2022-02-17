@@ -198,6 +198,7 @@ export class AtomicCategoryFacet
       'categoryFacets',
       {
         label: this.label,
+        facetId: this.facetId!,
         facet: this.facet,
         element: this.host,
       },

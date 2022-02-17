@@ -212,7 +212,8 @@ export class AtomicNumericFacet
       'numericFacets',
       {
         label: this.label,
-        facet: this.facet!,
+        facetId: this.facetId!,
+        facet: this.facet,
         element: this.host,
         format: (value) => this.formatFacetValue(value),
       },
@@ -432,7 +433,7 @@ export class AtomicNumericFacet
       return <Hidden></Hidden>;
     }
 
-    if (!this.facetState?.enabled) {
+    if (!(this.facetState?.enabled ?? true)) {
       return <Hidden></Hidden>;
     }
 

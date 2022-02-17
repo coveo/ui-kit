@@ -188,6 +188,7 @@ export class AtomicFacet
       'facets',
       {
         label: this.label,
+        facetId: this.facetId!,
         facet: this.facet,
         element: this.host,
       },

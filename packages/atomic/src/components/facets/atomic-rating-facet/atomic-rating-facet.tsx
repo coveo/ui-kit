@@ -175,6 +175,7 @@ export class AtomicRatingFacet
       'numericFacets',
       {
         label: this.label,
+        facetId: this.facetId!,
         facet: this.facet,
         element: this.host,
         format: (value) => this.formatFacetValue(value),

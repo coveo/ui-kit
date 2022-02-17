@@ -20,6 +20,7 @@ import {
   DependencyCondition,
   getFacet,
   DependantFacet,
+  FacetWithType,
 } from '../../utils/store';
 
 export interface BaseFacet<Facet, FacetState> {
@@ -46,7 +47,7 @@ export interface FacetValueProps {
 }
 
 export interface IncorrectFacetEnableState {
-  facetId: string;
+  facetWithType: FacetWithType;
   shouldBeEnabled: boolean;
 }
 
@@ -101,10 +102,13 @@ function checkIfAnyDependencyMet(
   dependencies: DependantFacet[]
 ) {
   return dependencies.some((dependency) => {
-    const {type, request} = getFacet(engine, state, dependency.parentFacetId)!;
+    const facetWithType = getFacet(engine, state, dependency.parentFacetId);
+    if (!facetWithType) {
+      return false;
+    }
     return dependency.isDependencyMet({
-      type,
-      request,
+      type: facetWithType.type,
+      request: facetWithType.request,
     } as FacetRequestWithType);
   });
 }
@@ -137,11 +141,14 @@ export function getIncorrectFacetEnableStates(
       state,
       dependencies
     );
-    const isFacetEnabled = getFacet(engine, state, dependantFacetId)!.facet
-      .state.enabled;
+    const facetWithType = getFacet(engine, state, dependantFacetId);
+    if (!facetWithType) {
+      return;
+    }
+    const isFacetEnabled = facetWithType.facet.state.enabled;
     if (areDependenciesMet !== isFacetEnabled) {
       incorrectFacetStates.push({
-        facetId: dependantFacetId,
+        facetWithType: facetWithType,
         shouldBeEnabled: areDependenciesMet,
       });
     }
@@ -158,14 +165,13 @@ export function fixFacetDependencies(
   let facetWasEnabled = false;
   let facetValuesWereCleared = false;
   while (facetStatesToUpdate.length) {
-    facetStatesToUpdate.forEach(({facetId, shouldBeEnabled}) => {
-      const facet = getFacet(engine, state, facetId)!;
+    facetStatesToUpdate.forEach(({facetWithType, shouldBeEnabled}) => {
       if (shouldBeEnabled) {
-        facet.facet.enable();
+        facetWithType.facet.enable();
         facetWasEnabled = true;
       } else {
-        facet.facet.disable();
-        facetValuesWereCleared ||= facetHasSelectedValue(facet);
+        facetWithType.facet.disable();
+        facetValuesWereCleared ||= facetHasSelectedValue(facetWithType);
       }
       facetStatesToUpdate = getIncorrectFacetEnableStates(engine, state);
     });

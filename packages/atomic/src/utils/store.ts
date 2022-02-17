@@ -19,7 +19,8 @@ interface FacetInfo<
   F extends Facet | CategoryFacet | NumericFacet | DateFacet
 > {
   label: string;
-  facet: F;
+  facetId: string;
+  facet?: F;
 }
 
 interface FacetValueFormat<ValueType> {
@@ -99,7 +100,7 @@ export const registerFacetToStore = <T extends FacetType, U extends string>(
   data: AtomicStore[T][U] & {element: HTMLElement},
   dependencies: DependsOnParam[]
 ) => {
-  const facetId = data.facet.state.facetId;
+  const facetId = data.facetId;
   if (store.state[facetType][facetId]) {
     return;
   }
@@ -126,31 +127,31 @@ export const getFacet: (
   store: AtomicStore,
   facetId: string
 ) => FacetWithType | null = (engine, store, facetId) => {
-  if (facetId in store.facets) {
+  if (facetId in store.facets && store.facets[facetId].facet) {
     return {
       type: 'facets',
-      facet: store.facets[facetId].facet,
+      facet: store.facets[facetId].facet!,
       request: engine.state.facetSet![facetId],
     };
   }
-  if (facetId in store.categoryFacets) {
+  if (facetId in store.categoryFacets && store.categoryFacets[facetId].facet) {
     return {
       type: 'categoryFacets',
-      facet: store.categoryFacets[facetId].facet,
+      facet: store.categoryFacets[facetId].facet!,
       request: engine.state.categoryFacetSet![facetId]!.request,
     };
   }
-  if (facetId in store.numericFacets) {
+  if (facetId in store.numericFacets && store.numericFacets[facetId].facet) {
     return {
       type: 'numericFacets',
-      facet: store.numericFacets[facetId].facet,
+      facet: store.numericFacets[facetId].facet!,
       request: engine.state.numericFacetSet![facetId],
     };
   }
-  if (facetId in store.dateFacets) {
+  if (facetId in store.dateFacets && store.dateFacets[facetId].facet) {
     return {
       type: 'dateFacets',
-      facet: store.dateFacets[facetId].facet,
+      facet: store.dateFacets[facetId].facet!,
       request: engine.state.dateFacetSet![facetId],
     };
   }
