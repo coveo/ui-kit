@@ -47,14 +47,16 @@
         </div>
       </template>
       <template if:false={hasSuggestions}>
-        <div class="
-            no-suggestion-message
-            slds-align_absolute-center
-            slds-var-p-vertical_xx-large
-            slds-text-color_weak
-          ">
-          {labels.noSuggestions}
-        </div>
+        <slot name="no-suggestions">
+          <div class="
+              no-suggestion-message
+              slds-align_absolute-center
+              slds-var-p-vertical_xx-large
+              slds-text-color_weak
+            ">
+            {labels.noSuggestions}
+          </div>
+        </slot>
       </template>
     </template>
   </template>
