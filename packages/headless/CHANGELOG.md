@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.1...@coveo/headless@1.46.2) (2022-02-16)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.0...@coveo/headless@1.46.1) (2022-02-15)
+
+
+### Bug Fixes
+
+* **headless:** relevance inspector fetchFieldsDescription rename interface & enable by default ([#1733](https://github.com/coveo/ui-kit/issues/1733)) ([d1a3f3e](https://github.com/coveo/ui-kit/commit/d1a3f3eab52b54837c3f8cce3f1cbca147669c4c))
+
+
+
+
+
 # [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.45.2...@coveo/headless@1.46.0) (2022-02-11)
 
 

@@ -9,7 +9,6 @@ import {CaseClassificationExpectations as Expect} from './case-classification-ex
 import {CaseClassificationActions as Actions} from './case-classification-actions';
 import {scope} from '../../reporters/detailed-collector';
 import {fetchClassifications} from '../../page-objects/actions/action-fetch-classifications';
-import {stubConsoleError} from '../console-selectors';
 
 interface CaseClassificationOptions {
   maxSuggestions: number;
@@ -20,6 +19,17 @@ interface CaseClassificationOptions {
   sfFieldApiName: string;
   coveoFieldName: string;
 }
+
+const incorrectSfFielNameError = (value: string) => {
+  return `The Salesforce field API name "${value}" is not found.`;
+};
+const invalidMaxSuggestionsError = (value: string | number) => {
+  return `"${Number(
+    value
+  )}" is an invalid maximum number of suggestions. A positive integer was expected.`;
+};
+const missingCoveoFieldNameError =
+  'coveoFieldName is required, please set its value.';
 
 describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
@@ -248,41 +258,35 @@ describe('quantic-case-classification', () => {
       });
     });
 
-    it('should display the select dropdown when maxSuggestion is inferior to 0', () => {
+    it('should render an error message when maxSuggestion is inferior to 0', () => {
       visitCaseClassification({
         maxSuggestions: -1,
       });
 
       scope('when loading the page', () => {
-        Expect.displayLabel(true);
+        Expect.displayLabel(false);
         Expect.numberOfInlineOptions(0);
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
-        Expect.displaySelectInput(true);
+        Expect.displaySelectInput(false);
+        Expect.displayRenderingError(true, invalidMaxSuggestionsError(-1));
+      });
+    });
+  });
+
+  describe('when maxSuggestions is not a number', () => {
+    it('should render an error message', () => {
+      visitCaseClassification({
+        maxSuggestions: NaN,
       });
 
-      scope('when fetching suggestions', () => {
-        const suggestionsCount = 2;
-        mockCaseClassification(
-          coveoDefaultField,
-          allOptions.slice(0, suggestionsCount)
-        );
-        fetchClassifications();
-        Expect.displaySelectTitle(false);
-        Expect.numberOfSuggestions(0);
+      scope('when loading the page', () => {
+        Expect.displayLabel(false);
         Expect.numberOfInlineOptions(0);
-        Expect.displaySelectInput(true);
-      });
-
-      scope('when selecting an option from the select input', () => {
-        const clickedIndex = 3;
-
-        Actions.openSelectInput();
-        Actions.clickSelectOption(clickedIndex);
-        Expect.logUpdatedClassificationFromSelectOption(
-          coveoDefaultField,
-          clickedIndex
-        );
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(false);
+        Expect.displayRenderingError(true, invalidMaxSuggestionsError(NaN));
       });
     });
   });
@@ -464,44 +468,39 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when incorrect Salesforce field API name is given', () => {
-    it('should log an error in the console', () => {
-      interceptCaseAssist();
-      cy.visit(pageUrl, {
-        onBeforeLoad(win) {
-          stubConsoleError(win);
-        },
-      });
-      configure({
-        sfFieldApiName: 'incorrect sfFieldApiName',
+    it('should render an error message', () => {
+      const incorrectSfField = 'incorrect sfFieldApiName';
+      visitCaseClassification({
+        sfFieldApiName: incorrectSfField,
       });
 
       scope('when loading the page', () => {
-        Expect.displayLabel(true);
+        Expect.displayLabel(false);
         Expect.numberOfInlineOptions(0);
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.console.error(true);
+        Expect.displayRenderingError(
+          true,
+          incorrectSfFielNameError(incorrectSfField)
+        );
+      });
+    });
+  });
+
+  describe('when the Coveo field name is missing', () => {
+    it('should render an error message', () => {
+      visitCaseClassification({
+        coveoFieldName: '',
       });
 
-      scope('when fetching suggestions', () => {
-        const suggestionsCount = 2;
-        const firstSuggestionIndex = 0;
-
-        mockCaseClassification(
-          coveoDefaultField,
-          allOptions.slice(0, suggestionsCount)
-        );
-        fetchClassifications();
-        Expect.displaySelectTitle(false);
-        Expect.numberOfSuggestions(suggestionsCount);
+      scope('when loading the page', () => {
+        Expect.displayLabel(false);
         Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.displayRenderingError(true, missingCoveoFieldNameError);
       });
     });
   });
