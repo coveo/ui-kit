@@ -33,6 +33,7 @@ export const InterceptAliases = {
     Breadcrumb: uaAlias('breadcrumbFacet'),
     DocumentOpen: uaAlias('documentOpen'),
     DocumentQuickview: uaAlias('documentQuickview'),
+    SearchFromLink: uaAlias('searchFromLink'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
