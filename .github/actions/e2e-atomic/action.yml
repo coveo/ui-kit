@@ -23,15 +23,8 @@ runs:
       env:
         CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-    - name: Cypress e2e screenshots artifacts
-      uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v2
       if: failure()
       with:
         name: cypress-screenshots
         path: packages/atomic/cypress/screenshots
-    - name: Cypress visual comparison artifacts
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: cypress-visual-screenshots
-        path: packages/atomic/cypress-visual-screenshots
