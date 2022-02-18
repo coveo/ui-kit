@@ -1,10 +1,6 @@
 // Must be declared global to be detected by typescript (allows import/export)
 import {SearchEventRequest} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import compareSnapshotCommand from 'cypress-image-diff-js/dist/command';
-compareSnapshotCommand();
 
 // eslint-disable @typescript/interface-name
 declare global {
@@ -18,13 +14,6 @@ declare global {
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
       expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
-      /**
-       * https://github.com/uktrade/cypress-image-diff/issues/65
-       * @param name The name of the snapshots that will be generated
-       * @param testThreshold @default 0 A number between 0 and 1 that represents the allowed percentage of pixels that can be different between the two snapshots
-       * @example cy.compareSnapshot('empty-canvas', 0.1)
-       */
-      compareSnapshot(name: string, testThreshold?: number): Chainable<Element>;
     }
   }
 }

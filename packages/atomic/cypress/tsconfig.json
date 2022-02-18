@@ -5,7 +5,8 @@
     "baseUrl": "../node_modules",
     "target": "es6",
     "lib": ["esnext", "dom"],
-    "types": ["cypress", "cypress-axe"]
+    "types": ["cypress", "cypress-axe", "@percy/cypress"]
+
   },
   "include": ["**/*.ts", "**/*.js"]
 }

@@ -7,10 +7,7 @@ describe('Layouts', () => {
     cy.visit('/tests/search-layout.html');
     cy.wait(RouteAlias.analytics);
     cy.wait(1000);
-    cy.get('atomic-search-interface').compareSnapshot(
-      'search-layout-desktop',
-      0.1
-    );
+    cy.percySnapshot();
   });
 
   it('should compare screenshot of a search layout on mobile', () => {
@@ -19,9 +16,6 @@ describe('Layouts', () => {
     cy.visit('/tests/search-layout.html');
     cy.wait(RouteAlias.analytics);
     cy.wait(1000);
-    cy.get('atomic-search-interface').compareSnapshot(
-      'search-layout-mobile',
-      0.1
-    );
+    cy.percySnapshot();
   });
 });
