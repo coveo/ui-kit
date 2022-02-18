@@ -2,29 +2,43 @@ import {LightningElement} from 'lwc';
 
 export default class QuanticTabBar extends LightningElement {
   hasRendered = false;
-  showMore = false;
   isComboboxOpen = false;
   options = [];
 
+  /** Lifecycle */
+
   connectedCallback() {
     window.addEventListener('resize', this.updateTabVisibility);
+    this.addEventListener('tab_selected', this.handleTabSelected);
   }
 
+  renderedCallback() {
+    if (!this.hasRendered) {
+      this.hideMoreButton();
+      this.hasRendered = true;
+    }
+  }
+
+  /** Helpers */
+
   updateTabVisibility = () => {
-    if (this.slottedWidth > this.containerWidth) {
-      this.showMore = true;
+    if (this.isOverflow) {
+      this.showMoreButton();
       this.overflowingTabs.forEach(
         (tabElement) => (tabElement.style.visibility = 'hidden')
       );
       this.updateComboboxOptions();
-      console.log(this.lastVisibleTabRightPosition);
       this.moreButton?.style.setProperty(
         'left',
         `${this.lastVisibleTabRightPosition}px`
       );
     } else {
-      this.showMore = false;
+      this.hideMoreButton();
+      this.isComboboxOpen = false;
       this.options = [];
+      this.getTabsFromSlot().forEach(
+        (tabElement) => (tabElement.style.visibility = 'visible')
+      );
     }
     this.displayedTabs.forEach(
       (tabElement) => (tabElement.style.visibility = 'visible')
@@ -35,37 +49,32 @@ export default class QuanticTabBar extends LightningElement {
     this.options = this.overflowingTabs.map((el) => ({
       label: el.label,
       value: el.expression,
+      selected:
+        this.options.find((option) => option.value === el.expression)
+          ?.selected ?? false,
     }));
   }
 
-  logSizes() {
-    console.log({
-      container: this.containerWidth,
-      slotted: this.slottedWidth,
-    });
+  showMoreButton() {
+    this.moreButton?.style.setProperty('display', 'block');
   }
 
-  getElementPadding(element) {
-    var styles = window.getComputedStyle(element);
-    return {
-      top: parseFloat(styles.paddingTop),
-      right: parseFloat(styles.paddingRight),
-      bottom: parseFloat(styles.paddingBottom),
-      left: parseFloat(styles.paddingLeft),
-    };
+  hideMoreButton() {
+    this.moreButton?.style.setProperty('display', 'none');
   }
 
-  getAbsoluteWidth(element) {
-    var paddings = this.getElementPadding(element);
-    var padding = paddings.left + paddings.right;
+  /** Getters */
 
-    return Math.ceil(element.offsetWidth + padding);
+  get isOverflow() {
+    return this.slottedWidth >= this.containerWidth;
+  }
+
+  get container() {
+    return this.template.querySelector('.tab-bar_container');
   }
 
   get containerWidth() {
-    return this.getAbsoluteWidth(
-      this.template.querySelector('.tab-bar_container')
-    );
+    return this.getAbsoluteWidth(this.container);
   }
 
   get slottedWidth() {
@@ -75,12 +84,20 @@ export default class QuanticTabBar extends LightningElement {
     );
   }
 
+  get moreButtonWidth() {
+    return this.moreButton ? this.getAbsoluteWidth(this.moreButton) : 0;
+  }
+
   get overflowingTabs() {
-    return this.getTabsFromSlot().filter(
-      (el) =>
-        el.getBoundingClientRect().left + this.getAbsoluteWidth(el) >
-        this.containerWidth
-    );
+    return this.getTabsFromSlot().filter((el) => {
+      const containerRight = this.container.getBoundingClientRect().right;
+      return (
+        el.getBoundingClientRect().right >
+        (this.isOverflow
+          ? containerRight - this.moreButtonWidth
+          : containerRight)
+      );
+    });
   }
 
   get displayedTabs() {
@@ -113,30 +130,63 @@ export default class QuanticTabBar extends LightningElement {
     return lastTabRelativePosition.right - tabContainerRelativePosition.left;
   }
 
+  /** Event Handlers */
+
   handleSlotChange() {
     this.updateTabVisibility();
   }
 
-  handleChange(event) {
+  handleDropdownTabSelect(event) {
     const targetValue = event.currentTarget.getAttribute('data-value');
     const clickedtab = this.overflowingTabs.find(
       (tab) => tab.expression === targetValue
     );
-    console.log(this.overflowingTabs);
-    console.log(targetValue);
     clickedtab?.select();
+    this.options = this.options.map((option) => {
+      option.selected = option.value === targetValue;
+      return option;
+    });
   }
 
   handleClick() {
     this.isComboboxOpen = !this.isComboboxOpen;
   }
 
-  tabSelectHandle() {}
+  handleBlur() {
+    this.isComboboxOpen = false;
+  }
+
+  handleTabSelected = (event) => {
+    event.stopPropagation();
+    this.options = this.options.map((option) => {
+      option.selected = false;
+      return option;
+    });
+  };
+
+  /** Utils */
 
   getTabsFromSlot() {
     const isTab = (tagName) => /-quantic-tab$/i.test(tagName);
     return Array.from(this.querySelectorAll('*')).filter((element) =>
       isTab(element.tagName)
     );
+  }
+
+  getElementPadding(element) {
+    var styles = window.getComputedStyle(element);
+    return {
+      top: parseFloat(styles.paddingTop),
+      right: parseFloat(styles.paddingRight),
+      bottom: parseFloat(styles.paddingBottom),
+      left: parseFloat(styles.paddingLeft),
+    };
+  }
+
+  getAbsoluteWidth(element) {
+    var paddings = this.getElementPadding(element);
+    var padding = paddings.left + paddings.right;
+
+    return Math.ceil(element.offsetWidth + padding);
   }
 }
