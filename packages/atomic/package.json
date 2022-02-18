@@ -61,6 +61,7 @@
     "focus-visible": "^5.2.0",
     "i18next": "^20.2.2",
     "i18next-http-backend": "^1.2.2",
+    "patch-package": "^6.4.7",
     "stencil-inline-svg": "^1.1.0"
   },
   "devDependencies": {
@@ -101,7 +102,6 @@
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "6.0.0",
     "ncp": "2.0.0",
-    "patch-package": "^6.4.7",
     "postcss-focus-visible": "6.0.4",
     "postcss-import": "14.0.2",
     "postcss-mixins": "9.0.1",
