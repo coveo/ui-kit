@@ -3,6 +3,7 @@ import {LightningElement} from 'lwc';
 export default class QuanticTabBar extends LightningElement {
   hasRendered = false;
   showMore = false;
+  isComboboxOpen = false;
   options = [];
 
   connectedCallback() {
@@ -16,8 +17,14 @@ export default class QuanticTabBar extends LightningElement {
         (tabElement) => (tabElement.style.visibility = 'hidden')
       );
       this.updateComboboxOptions();
+      console.log(this.lastVisibleTabRightPosition);
+      this.moreButton?.style.setProperty(
+        'left',
+        `${this.lastVisibleTabRightPosition}px`
+      );
     } else {
       this.showMore = false;
+      this.options = [];
     }
     this.displayedTabs.forEach(
       (tabElement) => (tabElement.style.visibility = 'visible')
@@ -56,7 +63,9 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   get containerWidth() {
-    return this.getAbsoluteWidth(this.template.querySelector('.tab-container'));
+    return this.getAbsoluteWidth(
+      this.template.querySelector('.tab-bar_container')
+    );
   }
 
   get slottedWidth() {
@@ -80,15 +89,46 @@ export default class QuanticTabBar extends LightningElement {
     );
   }
 
+  get dropdownClasses() {
+    return `slds-dropdown-trigger slds-dropdown-trigger_click ${
+      this.isComboboxOpen && 'slds-is-open'
+    }`;
+  }
+
+  get arrowIconName() {
+    return this.isComboboxOpen ? 'utility:up' : 'utility:down';
+  }
+
+  get moreButton() {
+    return this.template.querySelector('.tab-bar_more-button');
+  }
+
+  get lastVisibleTabRightPosition() {
+    const lastTabRelativePosition =
+      this.displayedTabs[this.displayedTabs.length - 1].getBoundingClientRect();
+    const tabContainerRelativePosition = this.template
+      .querySelector('.tab-bar_list-container')
+      ?.getBoundingClientRect();
+
+    return lastTabRelativePosition.right - tabContainerRelativePosition.left;
+  }
+
   handleSlotChange() {
     this.updateTabVisibility();
   }
 
   handleChange(event) {
+    const targetValue = event.currentTarget.getAttribute('data-value');
     const clickedtab = this.overflowingTabs.find(
-      (tab) => tab.expression === event.detail.value
+      (tab) => tab.expression === targetValue
     );
+    console.log(this.overflowingTabs);
+    console.log(targetValue);
     clickedtab?.select();
+  }
+
+  handleClick() {
+    this.isComboboxOpen = !this.isComboboxOpen;
   }
 
   tabSelectHandle() {}
