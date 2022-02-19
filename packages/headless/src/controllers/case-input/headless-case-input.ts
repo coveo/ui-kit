@@ -95,12 +95,14 @@ export function buildCaseInput(
 
   const fieldName = props.options.field;
 
-  dispatch(
-    updateCaseInput({
-      fieldName: fieldName,
-      fieldValue: '',
-    })
-  );
+  if (!getState().caseInput?.[fieldName]) {
+    dispatch(
+      updateCaseInput({
+        fieldName: fieldName,
+        fieldValue: '',
+      })
+    );
+  }
 
   return {
     ...controller,
