@@ -71,10 +71,10 @@ describe('quantic-result-quickview', () => {
         );
 
         Actions.clickPreview();
+        Expect.logDocumentQuickview('Test');
         Expect.displaySectionPreview(true);
         Expect.displayDate(true);
         Expect.displayTitle(true);
-        Expect.displaySpinner(true);
         Expect.noAlertShown();
       });
     });

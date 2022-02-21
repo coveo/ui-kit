@@ -51,16 +51,20 @@ export class ProductRecommendationAnalyticsProvider
     return '';
   }
 
+  public getOriginContext() {
+    return this.state.configuration.analytics.originContext;
+  }
+
   public getOriginLevel1() {
     return this.state.searchHub || getSearchHubInitialState();
   }
 
   public getOriginLevel2() {
-    return this.state.configuration.analytics.originLevel2 || 'default';
+    return this.state.configuration.analytics.originLevel2;
   }
 
   public getOriginLevel3() {
-    return this.state.configuration.analytics.originLevel3 || 'default';
+    return this.state.configuration.analytics.originLevel3;
   }
 
   public getIsAnonymous() {

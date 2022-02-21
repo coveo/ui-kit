@@ -8,6 +8,25 @@ import { Components } from '@coveo/atomic';
 
 
 
+export declare interface AtomicAriaLive extends Components.AtomicAriaLive {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-aria-live',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicAriaLive {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
@@ -288,6 +307,27 @@ export declare interface AtomicIcon extends Components.AtomicIcon {}
   inputs: ['icon']
 })
 export class AtomicIcon {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['maxWidth', 'minWidth', 'section']
+})
+@Component({
+  selector: 'atomic-layout-section',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['maxWidth', 'minWidth', 'section']
+})
+export class AtomicLayoutSection {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -1093,6 +1133,25 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
   inputs: ['analytics', 'engine', 'i18n', 'language', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
 })
 export class AtomicSearchInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSearchLayout extends Components.AtomicSearchLayout {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-search-layout',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicSearchLayout {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

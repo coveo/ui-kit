@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
+import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
@@ -16,6 +17,7 @@ import { InitializationOptions } from "./components/atomic-search-interface/atom
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
+        "updateMessage": (region: string, message: string) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
@@ -246,6 +248,20 @@ export namespace Components {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+    }
+    interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
+        "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
+        "minWidth"?: string;
+        /**
+          * The name of the layout section.
+         */
+        "section": Section;
     }
     interface AtomicLoadMoreResults {
     }
@@ -720,6 +736,8 @@ export namespace Components {
          */
         "timezone"?: string;
     }
+    interface AtomicSearchLayout {
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -905,6 +923,12 @@ declare global {
     var HTMLAtomicIconElement: {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
+    };
+    interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
+    }
+    var HTMLAtomicLayoutSectionElement: {
+        prototype: HTMLAtomicLayoutSectionElement;
+        new (): HTMLAtomicLayoutSectionElement;
     };
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
     }
@@ -1152,6 +1176,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSearchLayoutElement extends Components.AtomicSearchLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchLayoutElement: {
+        prototype: HTMLAtomicSearchLayoutElement;
+        new (): HTMLAtomicSearchLayoutElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1207,6 +1237,7 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -1248,6 +1279,7 @@ declare global {
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -1490,6 +1522,20 @@ declare namespace LocalJSX {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+    }
+    interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
+        "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
+        "minWidth"?: string;
+        /**
+          * The name of the layout section.
+         */
+        "section": Section;
     }
     interface AtomicLoadMoreResults {
     }
@@ -1948,6 +1994,8 @@ declare namespace LocalJSX {
          */
         "timezone"?: string;
     }
+    interface AtomicSearchLayout {
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -2043,6 +2091,7 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
+        "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -2084,6 +2133,7 @@ declare namespace LocalJSX {
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-search-layout": AtomicSearchLayout;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2114,6 +2164,7 @@ declare module "@stencil/core" {
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
@@ -2155,6 +2206,7 @@ declare module "@stencil/core" {
             "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
