@@ -20,6 +20,7 @@ runs:
         wait-on: 'http://localhost:3333'
         install: true
         record: ${{ github.ref == 'refs/heads/master' && true || false }}
+        command-prefix: 'percy exec -- npx'
       env:
         CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
