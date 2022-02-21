@@ -4,9 +4,17 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   updateFacetOptions,
   UpdateFacetOptionsActionCreatorPayload,
+  EnableFacetActionCreatorPayload,
+  DisableFacetActionCreatorPayload,
+  enableFacet,
+  disableFacet,
 } from './facet-options-actions';
 
-export type {UpdateFacetOptionsActionCreatorPayload};
+export type {
+  UpdateFacetOptionsActionCreatorPayload,
+  EnableFacetActionCreatorPayload,
+  DisableFacetActionCreatorPayload,
+};
 
 /**
  * The facetOptions action creators.
@@ -21,6 +29,20 @@ export interface FacetOptionsActionCreators {
   updateFacetOptions(
     payload: UpdateFacetOptionsActionCreatorPayload
   ): PayloadAction<UpdateFacetOptionsActionCreatorPayload>;
+  /**
+   * Enables a facet, undoing the effects of `disableFacet`.
+   *
+   * @param facetId - The unique identifier of the facet (e.g., "1").
+   * @returns A dispatchable action.
+   */
+  enableFacet(facetId: string): PayloadAction<string>;
+  /**
+   * Disables a facet, preventing it from filtering results.
+   *
+   * @param facetId - The unique identifier of the facet (e.g., "1").
+   * @returns A dispatchable action.
+   */
+  disableFacet(facetId: string): PayloadAction<string>;
 }
 
 /**
@@ -36,5 +58,7 @@ export function loadFacetOptionsActions(
 
   return {
     updateFacetOptions,
+    enableFacet,
+    disableFacet,
   };
 }

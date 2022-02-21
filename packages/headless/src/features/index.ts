@@ -1,6 +1,5 @@
 export * from './advanced-search-queries/advanced-search-queries-actions-loader';
 export * from './facets/category-facet-set/category-facet-set-actions-loader';
-export * from './facets/any-facet-set/any-facet-set-actions-loader';
 export * from './facets/facet-set/facet-set-actions-loader';
 export * from './configuration/configuration-actions-loader';
 export * from './configuration/search-configuration-actions-loader';

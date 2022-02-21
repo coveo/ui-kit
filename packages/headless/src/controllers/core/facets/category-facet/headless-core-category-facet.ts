@@ -13,11 +13,16 @@ import {categoryFacetResponseSelector} from '../../../../features/facets/categor
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
+  FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
@@ -32,7 +37,7 @@ import {CategoryFacetValue} from '../../../../features/facets/category-facet-set
 import {
   categoryFacetSearchSet,
   categoryFacetSet,
-  anyFacetSet,
+  facetOptions,
   configuration,
   search,
 } from '../../../../app/reducers';
@@ -40,11 +45,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {CoreEngine} from '../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
-import {
-  enableFacet,
-  disableFacet,
-} from '../../../../features/facets/any-facet-set/any-facet-set-actions';
-import {facetEnabledSelector} from '../../../../features/facets/any-facet-set/any-facet-set-selectors';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 
 export type {
   CategoryFacetValue,
@@ -111,12 +112,12 @@ export interface CoreCategoryFacet extends Controller {
   showLessValues(): void;
 
   /**
-   * Enables the facet
+   * Enables the facet, undoing the effects of `disable`
    */
   enable(): void;
 
   /**
-   * Disables the facet
+   * Disables the facet, preventing it from filtering results
    */
   disable(): void;
 
@@ -287,7 +288,7 @@ export function buildCoreCategoryFacet(
   };
 
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
-  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   dispatch(registerCategoryFacet(options));
 
@@ -374,6 +375,7 @@ function loadCategoryFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   CategoryFacetSection &
+    FacetOptionsSection &
     CategoryFacetSearchSection &
     ConfigurationSection &
     SearchSection
@@ -381,7 +383,7 @@ function loadCategoryFacetReducers(
   engine.addReducers({
     categoryFacetSet,
     categoryFacetSearchSet,
-    anyFacetSet,
+    facetOptions,
     configuration,
     search,
   });

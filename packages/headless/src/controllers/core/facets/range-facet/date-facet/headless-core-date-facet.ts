@@ -17,6 +17,7 @@ import {
 import {
   ConfigurationSection,
   DateFacetSection,
+  FacetOptionsSection,
   SearchSection,
 } from '../../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
@@ -32,17 +33,17 @@ import {RangeFacetSortCriterion} from '../../../../../features/facets/range-face
 import {
   configuration,
   dateFacetSet,
-  anyFacetSet,
+  facetOptions,
   search,
 } from '../../../../../app/reducers';
 import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
 import {
   enableFacet,
   disableFacet,
-} from '../../../../../features/facets/any-facet-set/any-facet-set-actions';
-import {facetEnabledSelector} from '../../../../../features/facets/any-facet-set/any-facet-set-selectors';
+} from '../../../../../features/facet-options/facet-options-actions';
 
 export type {
   DateFacetOptions,
@@ -105,12 +106,12 @@ export interface DateFacet extends Controller {
   toggleSingleSelect(selection: DateFacetValue): void;
 
   /**
-   * Enables the facet
+   * Enables the facet, undoing the effects of `disable`
    */
   enable(): void;
 
   /**
-   * Disables the facet
+   * Disables the facet, preventing it from filtering results
    */
   disable(): void;
 
@@ -181,7 +182,7 @@ export function buildCoreDateFacet(
 
   validateDateFacetOptions(engine, options);
 
-  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   dispatch(registerDateFacet(options));
 
@@ -229,8 +230,8 @@ export function buildCoreDateFacet(
 function loadDateFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  ConfigurationSection & SearchSection & DateFacetSection
+  ConfigurationSection & SearchSection & DateFacetSection & FacetOptionsSection
 > {
-  engine.addReducers({configuration, search, dateFacetSet, anyFacetSet});
+  engine.addReducers({configuration, search, dateFacetSet, facetOptions});
   return true;
 }

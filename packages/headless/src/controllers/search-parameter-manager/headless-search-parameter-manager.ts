@@ -250,7 +250,7 @@ function getFacets(state: Partial<SearchParametersState>) {
   }
 
   const f = Object.entries(state.facetSet)
-    .filter(([facetId]) => state.anyFacetSet?.[facetId]?.enabled ?? true)
+    .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, request]) => {
       const selectedValues = getSelectedValues(request.currentValues);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
@@ -270,7 +270,7 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
   }
 
   const cf = Object.entries(state.categoryFacetSet)
-    .filter(([facetId]) => state.anyFacetSet?.[facetId]?.enabled ?? true)
+    .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, slice]) => {
       const {parents} = partitionIntoParentsAndValues(
         slice!.request.currentValues
@@ -290,7 +290,7 @@ function getNumericFacets(state: Partial<SearchParametersState>) {
   }
 
   const nf = Object.entries(state.numericFacetSet)
-    .filter(([facetId]) => state.anyFacetSet?.[facetId]?.enabled ?? true)
+    .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, request]) => {
       const selectedRanges = getSelectedRanges(request.currentValues);
       return selectedRanges.length ? {[facetId]: selectedRanges} : {};
@@ -306,7 +306,7 @@ function getDateFacets(state: Partial<SearchParametersState>) {
   }
 
   const df = Object.entries(state.dateFacetSet)
-    .filter(([facetId]) => state.anyFacetSet?.[facetId]?.enabled ?? true)
+    .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, request]) => {
       const selectedRanges = getSelectedRanges(request.currentValues);
       return selectedRanges.length ? {[facetId]: selectedRanges} : {};

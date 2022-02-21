@@ -30,7 +30,7 @@ import {fetchProductListing} from '../../product-listing/product-listing-actions
 import {WritableDraft} from 'immer/dist/internal';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../any-facet-set/any-facet-set-actions';
+import {disableFacet} from '../../facet-options/facet-options-actions';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),

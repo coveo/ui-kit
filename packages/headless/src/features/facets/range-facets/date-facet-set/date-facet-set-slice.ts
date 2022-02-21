@@ -25,7 +25,7 @@ import {getDateFacetSetInitialState} from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../any-facet-set/any-facet-set-actions';
+import {disableFacet} from '../../../facet-options/facet-options-actions';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),
