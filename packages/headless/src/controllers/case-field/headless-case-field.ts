@@ -112,16 +112,20 @@ export function buildCaseField(
     'buildCaseField'
   ) as Required<CaseFieldOptions>;
 
-  dispatch(
-    registerCaseField({
-      fieldName: options.field,
-      fieldValue: '',
-    })
-  );
-
   const getState = () => {
     return engine.state;
   };
+
+  const isRegistered = getState().caseField?.fields?.[options.field];
+
+  if (!isRegistered) {
+    dispatch(
+      registerCaseField({
+        fieldName: options.field,
+        fieldValue: '',
+      })
+    );
+  }
 
   return {
     ...controller,

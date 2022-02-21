@@ -161,6 +161,31 @@ describe('analytics', () => {
       expect(provider.getOriginLevel1()).toEqual(searchHub);
     });
 
+    describe('#getOriginContext', () => {
+      it('when an originContext is not set, #getOriginContext returns "Search"', () => {
+        const state: StateNeededByAnalyticsProvider = {
+          configuration: getConfigurationInitialState(),
+        };
+        const provider = new AnalyticsProvider(state);
+
+        expect(provider.getOriginContext()).toBe('Search');
+      });
+
+      it('when an originContext is set, #originContext returns the value', () => {
+        const originContext = 'CommunitySearch';
+        const state: StateNeededByAnalyticsProvider = {
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: buildMockAnalyticsState({originContext}),
+          },
+        };
+
+        const provider = new AnalyticsProvider(state);
+
+        expect(provider.getOriginContext()).toBe(originContext);
+      });
+    });
+
     describe('#getOriginLevel2', () => {
       it('when an originLevel2 is not set, #getOriginLevel2 returns "default"', () => {
         const state: StateNeededByAnalyticsProvider = {

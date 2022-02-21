@@ -375,7 +375,7 @@ export class AtomicBreadbox implements InitializableComponent {
             text: this.bindings.i18n.t('filters'),
           })}
         </span>
-        <div class="relative flex-grow">
+        <div class="relative grow">
           <ul
             class={`flex gap-1 ${
               this.isCollapsed

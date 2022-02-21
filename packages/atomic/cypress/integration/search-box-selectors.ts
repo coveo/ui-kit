@@ -1,5 +1,3 @@
-import {AriaLiveSelectors} from './aria-live-selectors';
-
 export const searchBoxComponent = 'atomic-search-box';
 
 export const SearchBoxSelectors = {
@@ -8,7 +6,6 @@ export const SearchBoxSelectors = {
   submitButton: () =>
     SearchBoxSelectors.shadow().find('[part="submit-button"]'),
   querySuggestions: () => SearchBoxSelectors.shadow().find('[data-query]'),
-  liveRegion: () => AriaLiveSelectors.region('search-box'),
 };
 
 export const ButtonText = {

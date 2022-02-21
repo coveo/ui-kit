@@ -10,7 +10,12 @@ describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
   });
 
   it('should load', () => {
-    cy.visit('http://localhost:3000/atomic-react').wait(1000);
+    cy.intercept({
+      method: 'POST',
+      path: '**/rest/ua/v15/analytics/*',
+    }).as('analytics');
+
+    cy.visit('http://localhost:3000/atomic-react').wait('@analytics');
     cy.get('atomic-search-box')
       .should('exist')
       .shadow()

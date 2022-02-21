@@ -5,12 +5,14 @@ describe('External Test Suite', () => {
     before(() => {
       setupIntercept();
       cy.visit('examples/external.html');
-      cy.wait(RouteAlias.search);
+      cy.wait(RouteAlias.analytics);
+      cy.wait(RouteAlias.analytics);
 
       cy.get('atomic-external > atomic-search-box')
         .shadow()
         .find('input')
         .type('hello{enter}');
+      cy.wait(RouteAlias.analytics);
     });
 
     it("other components' state under the same atomic-external should be affected", () => {
