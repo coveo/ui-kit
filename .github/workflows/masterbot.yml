@@ -58,6 +58,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          percy-token: ${{ secrets.PERCY_TOKEN }}
   bump-version:
     name: "Bump version"
     needs:
