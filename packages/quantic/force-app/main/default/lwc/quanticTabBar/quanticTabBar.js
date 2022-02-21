@@ -81,8 +81,8 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   setTabVisibility(tabElements, isVisible) {
-    tabElements.forEach(
-      (tab) => (tab.style.visibility = isVisible ? 'visible' : 'hidden')
+    tabElements.forEach((tab) =>
+      tab.style.setProperty('visibility', isVisible ? 'visible' : 'hidden')
     );
   }
 
@@ -147,14 +147,28 @@ export default class QuanticTabBar extends LightningElement {
     return this.displayedTabs.length ? this.labels.more : this.labels.tabs;
   }
 
-  get lastVisibleTabRightPosition() {
-    const lastTabRelativePosition =
-      this.displayedTabs[this.displayedTabs.length - 1].getBoundingClientRect();
-    const tabContainerRelativePosition = this.template
+  get lastVisibleTab() {
+    return this.displayedTabs[this.displayedTabs.length - 1];
+  }
+
+  get tabContainerRelativePosition() {
+    return this.template
       .querySelector('.tab-bar_list-container')
       ?.getBoundingClientRect();
+  }
 
-    return lastTabRelativePosition.right - tabContainerRelativePosition.left;
+  get lastVisibleTabRightPosition() {
+    return (
+      this.lastVisibleTab.getBoundingClientRect().right -
+      this.tabContainerRelativePosition.left
+    );
+  }
+
+  get lastVisibleTabLeftPosition() {
+    return (
+      this.lastVisibleTab.getBoundingClientRect().left -
+      this.tabContainerRelativePosition.left
+    );
   }
 
   /** Event Handlers */
@@ -177,10 +191,6 @@ export default class QuanticTabBar extends LightningElement {
 
   handleClick() {
     this.isComboboxOpen = !this.isComboboxOpen;
-  }
-
-  handleBlur() {
-    this.isComboboxOpen = false;
   }
 
   handleTabSelected = (event) => {

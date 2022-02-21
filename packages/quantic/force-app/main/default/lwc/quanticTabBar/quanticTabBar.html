@@ -1,11 +1,11 @@
 <template>
   <div class="tab-bar_container slds-theme_shade slds-size_1-of-1">
-    <ul class="tab-bar_list-container slds-tabs_default slds-tabs_default__nav slds-is-relative" role="tablist">
+    <ul class="tab-bar_list-container slds-tabs_default slds-tabs_default__nav slds-is-relative">
       <slot onslotchange={handleSlotChange}></slot>
       <li class="tab-bar_more-button slds-tabs_default__item slds-tabs_default__overflow-button slds-is-absolute" title={labels.moreTabs} role="presentation">
-        <div class={dropdownClasses} onblur={handleBlur}>
+        <div class={dropdownClasses}>
           <button class="slds-button" aria-haspopup="true" onclick={handleClick}>{moreButtonLabel}
-            <lightning-icon class="slds-button__icon slds-button__icon_x-small slds-button__icon_right slds-var-m-bottom_x-small" icon-name={arrowIconName} size="xx-small"></lightning-icon>
+            <lightning-icon class="slds-button__icon slds-button__icon_x-small slds-button__icon_right slds-var-m-bottom_x-small" icon-name={arrowIconName} size="xx-small" aria-hidden="true"></lightning-icon>
           </button>
           <div class="slds-dropdown slds-dropdown_right">
             <ul class="slds-dropdown__list slds-dropdown_length-with-icon-10" role="menu">
