@@ -1,6 +1,16 @@
 import {LightningElement} from 'lwc';
 
+import more from '@salesforce/label/c.quantic_More';
+import tabs from '@salesforce/label/c.quantic_Tabs';
+import moreTabs from '@salesforce/label/c.quantic_MoreTabs';
+
 export default class QuanticTabBar extends LightningElement {
+  labels = {
+    more,
+    tabs,
+    moreTabs,
+  };
+
   hasRendered = false;
   isComboboxOpen = false;
   options = [];
@@ -24,25 +34,16 @@ export default class QuanticTabBar extends LightningElement {
   updateTabVisibility = () => {
     if (this.isOverflow) {
       this.showMoreButton();
-      this.overflowingTabs.forEach(
-        (tabElement) => (tabElement.style.visibility = 'hidden')
-      );
+      this.setTabVisibility(this.overflowingTabs, false);
       this.updateComboboxOptions();
-      this.moreButton?.style.setProperty(
-        'left',
-        `${this.lastVisibleTabRightPosition}px`
-      );
+      this.updateMoreButtonPosition();
     } else {
       this.hideMoreButton();
       this.isComboboxOpen = false;
       this.options = [];
-      this.getTabsFromSlot().forEach(
-        (tabElement) => (tabElement.style.visibility = 'visible')
-      );
+      this.setTabVisibility(this.getTabsFromSlot(), true);
     }
-    this.displayedTabs.forEach(
-      (tabElement) => (tabElement.style.visibility = 'visible')
-    );
+    this.setTabVisibility(this.displayedTabs, true);
   };
 
   updateComboboxOptions() {
@@ -50,9 +51,18 @@ export default class QuanticTabBar extends LightningElement {
       label: el.label,
       value: el.expression,
       selected:
+        el.isActive ||
         this.options.find((option) => option.value === el.expression)
-          ?.selected ?? false,
+          ?.selected ||
+        false,
     }));
+  }
+
+  updateMoreButtonPosition() {
+    this.moreButton?.style.setProperty(
+      'left',
+      `${this.displayedTabs.length ? this.lastVisibleTabRightPosition : 0}px`
+    );
   }
 
   showMoreButton() {
@@ -61,6 +71,12 @@ export default class QuanticTabBar extends LightningElement {
 
   hideMoreButton() {
     this.moreButton?.style.setProperty('display', 'none');
+  }
+
+  setTabVisibility(tabElements, isVisible) {
+    tabElements.forEach(
+      (tab) => (tab.style.visibility = isVisible ? 'visible' : 'hidden')
+    );
   }
 
   /** Getters */
@@ -118,6 +134,10 @@ export default class QuanticTabBar extends LightningElement {
 
   get moreButton() {
     return this.template.querySelector('.tab-bar_more-button');
+  }
+
+  get moreButtonLabel() {
+    return this.displayedTabs.length ? this.labels.more : this.labels.tabs;
   }
 
   get lastVisibleTabRightPosition() {

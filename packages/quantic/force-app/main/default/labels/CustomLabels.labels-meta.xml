@@ -1,794 +1,815 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
-    <labels>
-        <fullName>quantic_ShowingResultsOf</fullName>
-        <value>Result {{0}} of {{1}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>ex: Result 0-10 of 123,456</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowingResultsOf_plural</fullName>
-        <value>Results {{0}} of {{1}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>ex: Results 0-10 of 123,456</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowingResultsOf_zero</fullName>
-        <value>No results</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>No Results</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowingResultsOfWithQuery</fullName>
-        <value>Result {{0}} of {{1}} for {{2}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>ex: Result 0-10 of 123,456 for potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowingResultsOfWithQuery_plural</fullName>
-        <value>Results {{0}} of {{1}} for {{2}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>ex: Results 0-10 of 123,456 for potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowingResultsOfWithQuery_zero</fullName>
-        <value>No results for {{2}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>ex: No results for potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoResults</fullName>
-        <value>No Results</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>No Results</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoResultsFor</fullName>
-        <value>No Results for {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>No Results for potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Clear</fullName>
-        <value>Clear</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Clear</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ClearFilter</fullName>
-        <value>Clear filter</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Clear filter</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ClearFilter_plural</fullName>
-        <value>Clear {{0}} filters</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Clear 2 filters</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowMore</fullName>
-        <value>+ Show more</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>+ Show more</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowLess</fullName>
-        <value>- Show less</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>- Show less</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowMoreFacetValues</fullName>
-        <value>Show more values for the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Show more values for the potato facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ShowLessFacetValues</fullName>
-        <value>Show less values for the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Show less values for the potato facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_AllCategories</fullName>
-        <value>All Categories</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>All Categories</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_InLabel</fullName>
-        <value>in</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>in</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NMore</fullName>
-        <value>{{0}} more...</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>ex: 3 more...</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ClearAllFilters</fullName>
-        <value>Clear All Filters</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Clear All Filters</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Previous</fullName>
-        <value>Previous</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Previous</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Next</fullName>
-        <value>Next</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Search</fullName>
-        <value>Search...</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Search...</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_DidYouMean</fullName>
-        <value>Did you mean</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Did you mean</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_QueryCorrectedTo</fullName>
-        <value>Query was automatically corrected to {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Query was automatically corrected to potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_SortBy</fullName>
-        <value>Sort by</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Sort by</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Relevancy</fullName>
-        <value>Relevancy</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Relevancy</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Newest</fullName>
-        <value>Newest</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Newest</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Oldest</fullName>
-        <value>Oldest</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Oldest</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_CoveoOnlineHelpLink</fullName>
-        <value>Coveo Online Help</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Coveo Online Help</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_MoreInformation</fullName>
-        <value>More information</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>More Information</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_CheckForMore</fullName>
-        <value>Check the {{0}} for similar errors or {{1}} for more information.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Check the community for similar errors or contact Coveo for more information.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Community</fullName>
-        <value>community</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>community</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ContactCoveoSupportTeam</fullName>
-        <value>contact the Coveo Support team.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Contact the Coveo Support team.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_GoBack</fullName>
-        <value>Go back</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Go back</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_DisconnectedTitle</fullName>
-        <value>Could not connect.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Couldn't connect.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_DisconnectedDesc</fullName>
-        <value>Your query couldn't be sent. Verify your internet connection.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Your query couldn't be sent. Verify your internet connection.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoEndpointsTitle</fullName>
-        <value>The Coveo organization has no registered endpoints.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>The Coveo organization has no registered endpoints.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoEndpointsDesc</fullName>
-        <value>You will need to add sources in your index, or wait for the created sources to finish indexing.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Add sources in your index, or wait for the created sources to finish indexing.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_InvalidTokenTitle</fullName>
-        <value>The Coveo organization cannot be accessed.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>The Coveo organization cannot be accessed.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_InvalidTokenDesc</fullName>
-        <value>Invalid token.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Invalid token.</shortDescription>
-    </labels>
-     <labels>
-        <fullName>quantic_OrganizationIsPausedTitle</fullName>
-        <value>Your organization is resuming and will be available shortly.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Your organization is resuming and will be available shortly.</shortDescription>
-    </labels>
-     <labels>
-        <fullName>quantic_OrganizationIsPausedDesc</fullName>
-        <value>Your Coveo organization is paused due to inactivity and search is currently unavailable.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Your Coveo organization is paused.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_GenericErrorTitle</fullName>
-        <value>Something went wrong.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Something went wrong.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_GenericErrorDesc</fullName>
-        <value>If the problem persists, contact the administrator.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>If the problem persists, contact the administrator.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_CoveoDocsLink</fullName>
-        <value>https://docs.coveo.com/</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>https://docs.coveo.com/</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_OrganisationPausedLink</fullName>
-        <value>https://docs.coveo.com/l6af0467</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>https://docs.coveo.com/l6af0467</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoResultsTitle</fullName>
-        <value>No results</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>No results</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoResultsForTitle</fullName>
-        <value>We couldn’t find anything for {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>We couldn’t find anything for potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoResultsWithoutFilters</fullName>
-        <value>You may want to try using different keywords, or checking for spelling mistakes.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>You may want to try using different keywords, or checking for spelling mistakes.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoResultsWithFilters</fullName>
-        <value>You may want to try using different keywords, checking for spelling mistakes or select fewer filters.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Check for spelling mistakes or select fewer filters.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_UndoLastAction</fullName>
-        <value>Undo last action</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Undo last action</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_MoreMatchesFor</fullName>
-        <value>More matches for '{{0}}'</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>More matches for potato</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoMatchesFor</fullName>
-        <value>No matches found for '{{0}}'</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>No matches found for potato</shortDescription>
-    </labels>
-    <labels>
-     <fullName>quantic_RecentQueries</fullName>
-        <value>Recent Queries</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Recent Queries</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_EmptyRecentQueriesListLabel</fullName>
-      <value>Your recent searches will appear here.</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>Label displayed when recent queries list is empty.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_RecentResults</fullName>
-        <value>Recent Results</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Recent Results</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_EmptyRecentResultListLabel</fullName>
-        <value>Your recently clicked results will appear here.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Label displayed when recent results list is empty.</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_CollapseFacet</fullName>
-        <value>Collapse the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Collapse the [label] facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ExpandFacet</fullName>
-        <value>Expand the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Expand the [label] facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Collapse</fullName>
-        <value>Collapse {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Collapse [component label]</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Expand</fullName>
-        <value>Expand {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Expand [component label]</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Documentation</fullName>
-        <value>Documentation</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Documentation</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Message</fullName>
-        <value>Message</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Message</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Video</fullName>
-        <value>Video</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Video</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Recommended</fullName>
-        <value>Recommended</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Recommended</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Featured</fullName>
-        <value>Featured</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Featured</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Min</fullName>
-        <value>Min</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Min</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Max</fullName>
-        <value>Max</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Max</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NumberInputMinimum</fullName>
-        <value>Enter a minimum numerical value for the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Enter a minimum numerical value for the [component label] facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NumberInputMaximum</fullName>
-        <value>Enter a maximum numerical value for the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Enter a maximum numerical value for the [component label] facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Apply</fullName>
-        <value>Apply</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Apply</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NumberInputApply</fullName>
-        <value>Apply custom numerical values for the {{0}} facet</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Apply custom numerical values for the [component label] facet</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_MessageWhenRangeOverflow</fullName>
-        <value>This value must be less than or equal to {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>This value must be less than or equal to [value]</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_MessageWhenRangeUnderflow</fullName>
-        <value>This value must be greater than or equal to {{0}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>This value must be greater than or equal to [value]</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Close</fullName>
-        <value>Close</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Close</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_OpenPreview</fullName>
-        <value>Open preview</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Open preview</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NoPreviewAvailable</fullName>
-        <value>No preview available</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>No preview available</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_Colon</fullName>
-        <value>:</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>:</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastHour</fullName>
-        <value>Past hour</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past hour</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastHour_plural</fullName>
-        <value>Past {{0}} hours</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past N hours</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastDay</fullName>
-        <value>Past day</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past day</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastDay_plural</fullName>
-        <value>Past {{0}} days</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past N days</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastWeek</fullName>
-        <value>Past week</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past week</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastWeek_plural</fullName>
-        <value>Past {{0}} weeks</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past N weeks</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastMonth</fullName>
-        <value>Past month</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past month</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastMonth_plural</fullName>
-        <value>Past {{0}} months</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past N months</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastQuarter</fullName>
-        <value>Past quarter</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past quarter</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastQuarter_plural</fullName>
-        <value>Past {{0}} quarters</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past N quarters</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastYear</fullName>
-        <value>Past year</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past year</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_PastYear_plural</fullName>
-        <value>Past {{0}} years</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Past N years</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextHour</fullName>
-        <value>Next hour</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next hour</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextHour_plural</fullName>
-        <value>Next {{0}} hours</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next N hours</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextDay</fullName>
-        <value>Next day</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next day</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextDay_plural</fullName>
-        <value>Next {{0}} days</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next N days</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextWeek</fullName>
-        <value>Next week</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next week</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextWeek_plural</fullName>
-        <value>Next {{0}} weeks</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next N weeks</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextMonth</fullName>
-        <value>Next month</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next month</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextMonth_plural</fullName>
-        <value>Next {{0}} months</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next N months</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextQuarter</fullName>
-        <value>Next quarter</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next quarter</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextQuarter_plural</fullName>
-        <value>Next {{0}} quarters</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next N quarters</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextYear</fullName>
-        <value>Next year</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next year</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_NextYear_plural</fullName>
-        <value>Next {{0}} years</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Next N years</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_DatePatternDay</fullName>
-        <value>d</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Day part of the date pattern</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_DatePatternMonth</fullName>
-        <value>M</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Month part of the date pattern</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_DatePatternYear</fullName>
-        <value>y</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Year part of the date pattern</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_StartLabel</fullName>
-        <value>Start:</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Timeframe facet start label</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_EndLabel</fullName>
-        <value>End:</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Timeframe facet end label</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_CaseClassificationTitle</fullName>
-      <value>How can we help you? Please select a topic.</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>Which topic relates to your issue?</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_MoreTopics</fullName>
-      <value>More Topics</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>More topics</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_SelectOption</fullName>
-      <value>Select an option</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>Select an option</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_Loading</fullName>
-      <value>Loading</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>Loading</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_NoSuggestions</fullName>
-      <value>No suggestions</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>No suggestions</shortDescription>
-    </labels>
-    <labels>
-      <fullName>quantic_ReadMore</fullName>
-      <value>Read more</value>
-      <language>en_US</language>
-      <protected>false</protected>
-      <shortDescription>Read more</shortDescription>
-    </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOf</fullName>
+    <value>Result {{0}} of {{1}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Result 0-10 of 123,456</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOf_plural</fullName>
+    <value>Results {{0}} of {{1}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Results 0-10 of 123,456</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOf_zero</fullName>
+    <value>No results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No Results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfWithQuery</fullName>
+    <value>Result {{0}} of {{1}} for {{2}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Result 0-10 of 123,456 for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfWithQuery_plural</fullName>
+    <value>Results {{0}} of {{1}} for {{2}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Results 0-10 of 123,456 for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfWithQuery_zero</fullName>
+    <value>No results for {{2}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: No results for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoResults</fullName>
+    <value>No Results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No Results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoResultsFor</fullName>
+    <value>No Results for {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No Results for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Clear</fullName>
+    <value>Clear</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Clear</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ClearFilter</fullName>
+    <value>Clear filter</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Clear filter</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ClearFilter_plural</fullName>
+    <value>Clear {{0}} filters</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Clear 2 filters</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowMore</fullName>
+    <value>+ Show more</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>+ Show more</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowLess</fullName>
+    <value>- Show less</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>- Show less</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowMoreFacetValues</fullName>
+    <value>Show more values for the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show more values for the potato facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowLessFacetValues</fullName>
+    <value>Show less values for the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show less values for the potato facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AllCategories</fullName>
+    <value>All Categories</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>All Categories</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_InLabel</fullName>
+    <value>in</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>in</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NMore</fullName>
+    <value>{{0}} more...</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: 3 more...</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ClearAllFilters</fullName>
+    <value>Clear All Filters</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Clear All Filters</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Previous</fullName>
+    <value>Previous</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Previous</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Next</fullName>
+    <value>Next</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Search</fullName>
+    <value>Search...</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Search...</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_DidYouMean</fullName>
+    <value>Did you mean</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Did you mean</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_QueryCorrectedTo</fullName>
+    <value>Query was automatically corrected to {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Query was automatically corrected to potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SortBy</fullName>
+    <value>Sort by</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Sort by</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Relevancy</fullName>
+    <value>Relevancy</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Relevancy</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Newest</fullName>
+    <value>Newest</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Newest</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Oldest</fullName>
+    <value>Oldest</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Oldest</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_CoveoOnlineHelpLink</fullName>
+    <value>Coveo Online Help</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Coveo Online Help</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreInformation</fullName>
+    <value>More information</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>More Information</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_CheckForMore</fullName>
+    <value>Check the {{0}} for similar errors or {{1}} for more information.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Check the community for similar errors or contact Coveo for more information.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Community</fullName>
+    <value>community</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>community</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ContactCoveoSupportTeam</fullName>
+    <value>contact the Coveo Support team.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Contact the Coveo Support team.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GoBack</fullName>
+    <value>Go back</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Go back</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_DisconnectedTitle</fullName>
+    <value>Could not connect.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Couldn't connect.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_DisconnectedDesc</fullName>
+    <value>Your query couldn't be sent. Verify your internet connection.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Your query couldn't be sent. Verify your internet connection.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoEndpointsTitle</fullName>
+    <value>The Coveo organization has no registered endpoints.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>The Coveo organization has no registered endpoints.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoEndpointsDesc</fullName>
+    <value>You will need to add sources in your index, or wait for the created sources to finish indexing.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Add sources in your index, or wait for the created sources to finish indexing.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_InvalidTokenTitle</fullName>
+    <value>The Coveo organization cannot be accessed.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>The Coveo organization cannot be accessed.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_InvalidTokenDesc</fullName>
+    <value>Invalid token.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Invalid token.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_OrganizationIsPausedTitle</fullName>
+    <value>Your organization is resuming and will be available shortly.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Your organization is resuming and will be available shortly.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_OrganizationIsPausedDesc</fullName>
+    <value>Your Coveo organization is paused due to inactivity and search is currently unavailable.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Your Coveo organization is paused.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GenericErrorTitle</fullName>
+    <value>Something went wrong.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Something went wrong.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GenericErrorDesc</fullName>
+    <value>If the problem persists, contact the administrator.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>If the problem persists, contact the administrator.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_CoveoDocsLink</fullName>
+    <value>https://docs.coveo.com/</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>https://docs.coveo.com/</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_OrganisationPausedLink</fullName>
+    <value>https://docs.coveo.com/l6af0467</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>https://docs.coveo.com/l6af0467</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoResultsTitle</fullName>
+    <value>No results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoResultsForTitle</fullName>
+    <value>We couldn’t find anything for {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>We couldn’t find anything for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoResultsWithoutFilters</fullName>
+    <value>You may want to try using different keywords, or checking for spelling mistakes.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>You may want to try using different keywords, or checking for spelling mistakes.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoResultsWithFilters</fullName>
+    <value>You may want to try using different keywords, checking for spelling mistakes or select fewer filters.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Check for spelling mistakes or select fewer filters.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_UndoLastAction</fullName>
+    <value>Undo last action</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Undo last action</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreMatchesFor</fullName>
+    <value>More matches for '{{0}}'</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>More matches for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoMatchesFor</fullName>
+    <value>No matches found for '{{0}}'</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No matches found for potato</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_RecentQueries</fullName>
+    <value>Recent Queries</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Recent Queries</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_EmptyRecentQueriesListLabel</fullName>
+    <value>Your recent searches will appear here.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Label displayed when recent queries list is empty.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_RecentResults</fullName>
+    <value>Recent Results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Recent Results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_EmptyRecentResultListLabel</fullName>
+    <value>Your recently clicked results will appear here.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Label displayed when recent results list is empty.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_CollapseFacet</fullName>
+    <value>Collapse the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Collapse the [label] facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ExpandFacet</fullName>
+    <value>Expand the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Expand the [label] facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Collapse</fullName>
+    <value>Collapse {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Collapse [component label]</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Expand</fullName>
+    <value>Expand {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Expand [component label]</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Documentation</fullName>
+    <value>Documentation</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Documentation</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Message</fullName>
+    <value>Message</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Message</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Video</fullName>
+    <value>Video</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Video</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Recommended</fullName>
+    <value>Recommended</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Recommended</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Featured</fullName>
+    <value>Featured</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Featured</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Min</fullName>
+    <value>Min</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Min</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Max</fullName>
+    <value>Max</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Max</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NumberInputMinimum</fullName>
+    <value>Enter a minimum numerical value for the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Enter a minimum numerical value for the [component label] facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NumberInputMaximum</fullName>
+    <value>Enter a maximum numerical value for the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Enter a maximum numerical value for the [component label] facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Apply</fullName>
+    <value>Apply</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Apply</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NumberInputApply</fullName>
+    <value>Apply custom numerical values for the {{0}} facet</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Apply custom numerical values for the [component label] facet</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MessageWhenRangeOverflow</fullName>
+    <value>This value must be less than or equal to {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>This value must be less than or equal to [value]</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MessageWhenRangeUnderflow</fullName>
+    <value>This value must be greater than or equal to {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>This value must be greater than or equal to [value]</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Close</fullName>
+    <value>Close</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Close</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_OpenPreview</fullName>
+    <value>Open preview</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Open preview</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoPreviewAvailable</fullName>
+    <value>No preview available</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No preview available</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Colon</fullName>
+    <value>:</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>:</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastHour</fullName>
+    <value>Past hour</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past hour</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastHour_plural</fullName>
+    <value>Past {{0}} hours</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past N hours</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastDay</fullName>
+    <value>Past day</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past day</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastDay_plural</fullName>
+    <value>Past {{0}} days</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past N days</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastWeek</fullName>
+    <value>Past week</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past week</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastWeek_plural</fullName>
+    <value>Past {{0}} weeks</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past N weeks</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastMonth</fullName>
+    <value>Past month</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past month</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastMonth_plural</fullName>
+    <value>Past {{0}} months</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past N months</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastQuarter</fullName>
+    <value>Past quarter</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past quarter</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastQuarter_plural</fullName>
+    <value>Past {{0}} quarters</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past N quarters</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastYear</fullName>
+    <value>Past year</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past year</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_PastYear_plural</fullName>
+    <value>Past {{0}} years</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Past N years</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextHour</fullName>
+    <value>Next hour</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next hour</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextHour_plural</fullName>
+    <value>Next {{0}} hours</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next N hours</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextDay</fullName>
+    <value>Next day</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next day</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextDay_plural</fullName>
+    <value>Next {{0}} days</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next N days</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextWeek</fullName>
+    <value>Next week</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next week</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextWeek_plural</fullName>
+    <value>Next {{0}} weeks</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next N weeks</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextMonth</fullName>
+    <value>Next month</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next month</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextMonth_plural</fullName>
+    <value>Next {{0}} months</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next N months</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextQuarter</fullName>
+    <value>Next quarter</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next quarter</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextQuarter_plural</fullName>
+    <value>Next {{0}} quarters</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next N quarters</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextYear</fullName>
+    <value>Next year</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next year</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NextYear_plural</fullName>
+    <value>Next {{0}} years</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Next N years</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_DatePatternDay</fullName>
+    <value>d</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Day part of the date pattern</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_DatePatternMonth</fullName>
+    <value>M</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Month part of the date pattern</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_DatePatternYear</fullName>
+    <value>y</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Year part of the date pattern</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_StartLabel</fullName>
+    <value>Start:</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Timeframe facet start label</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_EndLabel</fullName>
+    <value>End:</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Timeframe facet end label</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_CaseClassificationTitle</fullName>
+    <value>How can we help you? Please select a topic.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Which topic relates to your issue?</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreTopics</fullName>
+    <value>More Topics</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>More topics</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SelectOption</fullName>
+    <value>Select an option</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Select an option</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Loading</fullName>
+    <value>Loading</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Loading</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoSuggestions</fullName>
+    <value>No suggestions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No suggestions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ReadMore</fullName>
+    <value>Read more</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Read more</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_More</fullName>
+    <value>More</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>More</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Tabs</fullName>
+    <value>Tabs</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Tabs</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_MoreTabs</fullName>
+    <value>More tabs</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>More tabs</shortDescription>
+  </labels>
 </CustomLabels>
