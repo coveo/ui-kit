@@ -62,6 +62,7 @@ export default class QuanticTab extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    this.dispatchEvent(new CustomEvent('tab_rendered', {bubbles: true}));
   }
 
   /**
@@ -83,7 +84,6 @@ export default class QuanticTab extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
-    this.dispatchEvent(new CustomEvent('tab_initialized', {bubbles: false}));
   };
 
   disconnectedCallback() {

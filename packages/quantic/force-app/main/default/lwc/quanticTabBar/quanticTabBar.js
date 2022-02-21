@@ -19,7 +19,14 @@ export default class QuanticTabBar extends LightningElement {
 
   connectedCallback() {
     window.addEventListener('resize', this.updateTabVisibility);
-    this.addEventListener('tab_selected', this.handleTabSelected);
+    this.addEventListener('tab_selected', (evt) => {
+      evt?.stopPropagation();
+      this.handleTabSelected();
+    });
+    this.addEventListener('tab_rendered', (evt) => {
+      evt?.stopPropagation();
+      this.updateTabVisibility();
+    });
   }
 
   renderedCallback() {
