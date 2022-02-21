@@ -195,7 +195,7 @@ describe('CaseAssistClient', () => {
         expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion(), fakeTicket);
     });
 
-    it('should send proper payload for #logSelectFieldSuggestion when the autoSelection property is set to true', async () => {
+    it('should send proper payload for #logSelectFieldSuggestion when the autoSelection parameter is set to true', async () => {
         await client.logSelectFieldSuggestion({
             suggestion: fakeFieldSuggestion(true),
             ticket: fakeTicket,
