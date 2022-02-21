@@ -12,6 +12,7 @@ import {
 } from '../../features/case-field/case-field-actions';
 import {getCaseFieldInitialState} from '../../features/case-field/case-field-state';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
@@ -53,6 +54,24 @@ describe('Case Field', () => {
 
   it('building a case field registers the case field in the state', () => {
     expect(engine.actions).toContainEqual(
+      registerCaseField({fieldName: testFieldName, fieldValue: ''})
+    );
+  });
+
+  it('building a case field that was already registered does not register the case field again', () => {
+    engine = buildMockCaseAssistEngine({
+      state: {
+        ...buildMockCaseAssistState(),
+        caseField: {
+          ...getCaseFieldInitialState(),
+          fields: {
+            [testFieldName]: {value: '', suggestions: []},
+          },
+        },
+      },
+    });
+    initCaseField();
+    expect(engine.actions).not.toContainEqual(
       registerCaseField({fieldName: testFieldName, fieldValue: ''})
     );
   });
