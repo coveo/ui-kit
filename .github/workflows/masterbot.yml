@@ -45,6 +45,7 @@ jobs:
         with:
           cypress-record-key: ${{ secrets.ATOMIC_CYPRESS_RECORD_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          percy-token: ${{ secrets.PERCY_TOKEN }}
   e2e-quantic-test:
     name: "Run e2e tests on Quantic"
     needs: build
@@ -58,7 +59,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-          percy-token: ${{ secrets.PERCY_TOKEN }}
   bump-version:
     name: "Bump version"
     needs:
