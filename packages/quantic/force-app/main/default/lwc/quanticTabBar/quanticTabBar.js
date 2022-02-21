@@ -19,14 +19,8 @@ export default class QuanticTabBar extends LightningElement {
 
   connectedCallback() {
     window.addEventListener('resize', this.updateTabVisibility);
-    this.addEventListener('tab_selected', (evt) => {
-      evt?.stopPropagation();
-      this.handleTabSelected();
-    });
-    this.addEventListener('tab_rendered', (evt) => {
-      evt?.stopPropagation();
-      this.updateTabVisibility();
-    });
+    this.addEventListener('tab_selected', this.handleTabSelected);
+    this.addEventListener('tab_rendered', this.updateTabVisibility);
   }
 
   renderedCallback() {
@@ -177,7 +171,11 @@ export default class QuanticTabBar extends LightningElement {
     this.updateTabVisibility();
   }
 
-  handleDropdownTabSelect(event) {
+  handleClick() {
+    this.isComboboxOpen = !this.isComboboxOpen;
+  }
+
+  handleDropdownTabSelect = (event) => {
     const targetValue = event.currentTarget.getAttribute('data-value');
     const clickedtab = this.overflowingTabs.find(
       (tab) => tab.expression === targetValue
@@ -187,11 +185,7 @@ export default class QuanticTabBar extends LightningElement {
       option.selected = option.value === targetValue;
       return option;
     });
-  }
-
-  handleClick() {
-    this.isComboboxOpen = !this.isComboboxOpen;
-  }
+  };
 
   handleTabSelected = (event) => {
     event.stopPropagation();
