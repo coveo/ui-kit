@@ -62,6 +62,14 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
         .logDetail(`${should(display)} display the no suggestions message`);
     },
 
+    displayRenderingError: (display: boolean, error: string) => {
+      selector
+        .renderingError()
+        .should(display ? 'exist' : 'not.exist')
+        .should(display ? 'contain' : 'not.contain', error)
+        .logDetail(`${should(display)} display a rendering error`);
+    },
+
     numberOfSuggestions: (value: number) => {
       selector
         .accordionSections()
@@ -134,7 +142,4 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
 
 export const DocumentSuggestionExpectations = {
   ...documentSuggestionExpectations(DocumentSuggestionSelectors),
-  console: {
-    ...ConsoleExpectations,
-  },
 };
