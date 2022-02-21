@@ -71,6 +71,7 @@ export interface FieldSuggestion {
         value: string;
         confidence: number;
     };
+    autoSelection?: boolean;
 }
 
 export interface DocumentSuggestion {
@@ -83,4 +84,6 @@ export interface DocumentSuggestion {
         documentUrl: string;
         documentPosition: number;
     };
+    fromQuickview?: boolean;
+    openDocument?: boolean;
 }

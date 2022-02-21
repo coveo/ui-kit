@@ -50,26 +50,33 @@ describe('CaseAssistClient', () => {
         },
     };
 
-    const fakeFieldSuggestion: FieldSuggestion = {
-        classification: {
-            value: 'some-field-value',
-            confidence: 0.5,
-        },
-        classificationId: 'field-suggestion-id',
-        fieldName: 'some-field',
-        responseId: 'field-suggestion-response-id',
+    const fakeFieldSuggestion = (autoSelection?: boolean): FieldSuggestion => {
+        return {
+            classification: {
+                value: 'some-field-value',
+                confidence: 0.5,
+            },
+            classificationId: 'field-suggestion-id',
+            fieldName: 'some-field',
+            responseId: 'field-suggestion-response-id',
+            ...(autoSelection && {autoSelection}),
+        };
     };
 
-    const fakeDocumentSuggestion: DocumentSuggestion = {
-        responseId: 'document-suggestion-response-id',
-        suggestionId: 'document-suggestion-id',
-        suggestion: {
-            documentPosition: 0,
-            documentTitle: 'the document title',
-            documentUri: 'some-document-uri',
-            documentUriHash: 'documenturihash',
-            documentUrl: 'some-document-url',
-        },
+    const fakeDocumentSuggestion = (fromQuickview?: boolean, openDocument?: boolean): DocumentSuggestion => {
+        return {
+            responseId: 'document-suggestion-response-id',
+            suggestionId: 'document-suggestion-id',
+            suggestion: {
+                documentPosition: 0,
+                documentTitle: 'the document title',
+                documentUri: 'some-document-uri',
+                documentUriHash: 'documenturihash',
+                documentUrl: 'some-document-url',
+            },
+            ...(fromQuickview && {fromQuickview}),
+            ...(openDocument && {openDocument}),
+        };
     };
 
     const expectMatchPayload = (actionName: CaseAssistActions, actionData: Object, ticket: TicketProperties) => {
@@ -181,20 +188,47 @@ describe('CaseAssistClient', () => {
 
     it('should send proper payload for #logSelectFieldSuggestion', async () => {
         await client.logSelectFieldSuggestion({
-            suggestion: fakeFieldSuggestion,
+            suggestion: fakeFieldSuggestion(),
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion, fakeTicket);
+        expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion(), fakeTicket);
+    });
+
+    it('should send proper payload for #logSelectFieldSuggestion when the autoSelection property is set to true', async () => {
+        await client.logSelectFieldSuggestion({
+            suggestion: fakeFieldSuggestion(true),
+            ticket: fakeTicket,
+        });
+
+        expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion(true), fakeTicket);
     });
 
     it('should send proper payload for #logSelectDocumentSuggestion', async () => {
         await client.logSelectDocumentSuggestion({
-            suggestion: fakeDocumentSuggestion,
+            suggestion: fakeDocumentSuggestion(),
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion, fakeTicket);
+        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(), fakeTicket);
+    });
+
+    it('should send proper payload for #logSelectDocumentSuggestion when the fromQuickview parameter is set to true', async () => {
+        await client.logSelectDocumentSuggestion({
+            suggestion: fakeDocumentSuggestion(true),
+            ticket: fakeTicket,
+        });
+
+        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(true), fakeTicket);
+    });
+
+    it('should send proper payload for #logSelectDocumentSuggestion when the openDocument parameter is set to true', async () => {
+        await client.logSelectDocumentSuggestion({
+            suggestion: fakeDocumentSuggestion(false, true),
+            ticket: fakeTicket,
+        });
+
+        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(false, true), fakeTicket);
     });
 
     it('should send proper payload for #logRateDocumentSuggestion', async () => {
@@ -202,14 +236,14 @@ describe('CaseAssistClient', () => {
 
         await client.logRateDocumentSuggestion({
             rating,
-            suggestion: fakeDocumentSuggestion,
+            suggestion: fakeDocumentSuggestion(),
             ticket: fakeTicket,
         });
 
         expectMatchPayload(
             CaseAssistActions.suggestionRate,
             {
-                ...fakeDocumentSuggestion,
+                ...fakeDocumentSuggestion(),
                 rate: rating,
             },
             fakeTicket
