@@ -116,7 +116,9 @@ export function buildCaseField(
     return engine.state;
   };
 
-  if (!getState().caseField?.fields?.[options.field]) {
+  const isRegistered = getState().caseField?.fields?.[options.field];
+
+  if (!isRegistered) {
     dispatch(
       registerCaseField({
         fieldName: options.field,

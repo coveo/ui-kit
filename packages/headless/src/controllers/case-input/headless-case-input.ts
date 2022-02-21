@@ -94,8 +94,9 @@ export function buildCaseInput(
   validateCaseInputOptions(engine, props.options);
 
   const fieldName = props.options.field;
+  const isRegistered = getState().caseInput?.[fieldName];
 
-  if (!getState().caseInput?.[fieldName]) {
+  if (!isRegistered) {
     dispatch(
       updateCaseInput({
         fieldName: fieldName,
