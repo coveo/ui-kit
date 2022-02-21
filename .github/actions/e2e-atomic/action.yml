@@ -24,7 +24,7 @@ runs:
       env:
         CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        PERCY_TOKEN: ${{ inputs.percy-token }}
+        PERCY_TOKEN: 5bc71ee71c20768ddca2f285c93278c1d3b37e41402332ba84c65a242beba32f
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
