@@ -16,6 +16,7 @@ import {
 } from '../headless-core-range-facet';
 import {
   ConfigurationSection,
+  FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections';
@@ -31,17 +32,17 @@ import {RangeFacetSortCriterion} from '../../../../../features/facets/range-face
 import {
   configuration,
   numericFacetSet,
-  anyFacetSet,
+  facetOptions,
   search,
 } from '../../../../../app/reducers';
 import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
 import {
   enableFacet,
   disableFacet,
-} from '../../../../../features/facets/any-facet-set/any-facet-set-actions';
-import {facetEnabledSelector} from '../../../../../features/facets/any-facet-set/any-facet-set-selectors';
+} from '../../../../../features/facet-options/facet-options-actions';
 
 export type {
   NumericRangeOptions,
@@ -180,7 +181,7 @@ export function buildCoreNumericFacet(
 
   validateNumericFacetOptions(engine, options);
 
-  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   dispatch(registerNumericFacet(options));
 
@@ -227,8 +228,11 @@ export function buildCoreNumericFacet(
 function loadNumericFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
+  NumericFacetSection &
+    FacetOptionsSection &
+    ConfigurationSection &
+    SearchSection
 > {
-  engine.addReducers({numericFacetSet, anyFacetSet, configuration, search});
+  engine.addReducers({numericFacetSet, facetOptions, configuration, search});
   return true;
 }

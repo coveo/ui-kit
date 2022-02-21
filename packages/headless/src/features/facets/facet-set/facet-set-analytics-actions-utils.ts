@@ -25,7 +25,6 @@ import {FacetValue} from './interfaces/response';
 import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 import {getProductListingInitialState} from '../../product-listing/product-listing-state';
 import {FacetResponseSection} from './facet-set-selectors';
-import {getAnyFacetSetInitialState} from '../any-facet-set/any-facet-set-state';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &
@@ -70,7 +69,6 @@ export function getStateNeededForFacetMetadata(
   s: Partial<SectionNeededForFacetMetadata>
 ): SectionNeededForFacetMetadata {
   return {
-    anyFacetSet: s.anyFacetSet || getAnyFacetSetInitialState(),
     facetSet: s.facetSet || getFacetSetInitialState(),
     categoryFacetSet: s.categoryFacetSet || getCategoryFacetSetInitialState(),
     dateFacetSet: s.dateFacetSet || getDateFacetSetInitialState(),

@@ -38,7 +38,6 @@ import {CaseAssistConfigurationState} from '../features/case-assist-configuratio
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
 import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
-import {AnyFacetSetState} from '../features/facets/any-facet-set/any-facet-set-state';
 
 export interface QuerySection {
   /**
@@ -68,35 +67,28 @@ export interface TabSection {
   tabSet: TabSetState;
 }
 
-export interface AnyFacetSection {
-  /**
-   * The set of non-request properties for any kind of facet.
-   */
-  anyFacetSet: AnyFacetSetState;
-}
-
-export interface FacetSection extends AnyFacetSection {
+export interface FacetSection {
   /**
    * The set of facets.
    */
   facetSet: FacetSetState;
 }
 
-export interface DateFacetSection extends AnyFacetSection {
+export interface DateFacetSection {
   /**
    * The set of date facets.
    */
   dateFacetSet: DateFacetSetState;
 }
 
-export interface NumericFacetSection extends AnyFacetSection {
+export interface NumericFacetSection {
   /**
    * The set of numeric facets.
    */
   numericFacetSet: NumericFacetSetState;
 }
 
-export interface CategoryFacetSection extends AnyFacetSection {
+export interface CategoryFacetSection {
   /**
    * The set of category facets.
    */

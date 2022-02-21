@@ -15,9 +15,14 @@ import {
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
 import {
   ConfigurationSection,
+  FacetOptionsSection,
   FacetSearchSection,
   FacetSection,
   ProductListingSection,
@@ -39,16 +44,12 @@ import {
   configuration,
   facetSearchSet,
   facetSet,
-  anyFacetSet,
+  facetOptions,
 } from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {CoreEngine} from '../../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
-import {
-  disableFacet,
-  enableFacet,
-} from '../../../../features/facets/any-facet-set/any-facet-set-actions';
-import {facetEnabledSelector} from '../../../../features/facets/any-facet-set/any-facet-set-selectors';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -307,7 +308,7 @@ export function buildCoreFacet(
   const getRequest = () => facetRequestSelector(engine.state, facetId);
   const getResponse = () => facetResponseSelector(engine.state, facetId);
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
-  const getIsEnabled = () => facetEnabledSelector(engine.state, facetId);
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   const getNumberOfActiveValues = () => {
     const {currentValues} = getRequest();
@@ -420,11 +421,12 @@ function loadFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   FacetSection &
+    FacetOptionsSection &
     ConfigurationSection &
     FacetSearchSection &
     (SearchSection | ProductListingSection),
   SearchThunkExtraArguments
 > {
-  engine.addReducers({facetSet, anyFacetSet, configuration, facetSearchSet});
+  engine.addReducers({facetSet, facetOptions, configuration, facetSearchSet});
   return true;
 }

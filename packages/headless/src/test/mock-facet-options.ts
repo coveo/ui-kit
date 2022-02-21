@@ -5,6 +5,7 @@ export function buildMockFacetOptions(
 ): FacetOptionsState {
   return {
     freezeFacetOrder: false,
+    facets: {},
     ...config,
   };
 }

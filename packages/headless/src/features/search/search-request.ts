@@ -27,7 +27,7 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
       firstResult: state.pagination.firstResult,
     }),
     ...(state.facetOptions && {
-      facetOptions: state.facetOptions,
+      facetOptions: {freezeFacetOrder: state.facetOptions.freezeFacetOrder},
     }),
     ...(state.folding?.enabled && {
       filterField: state.folding.fields.collection,
@@ -44,7 +44,7 @@ function getFacets(state: StateNeededBySearchRequest) {
 
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {
   return getAllFacets(state).filter(
-    ({facetId}) => state.anyFacetSet?.[facetId]?.enabled ?? true
+    ({facetId}) => state.facetOptions?.facets[facetId]?.enabled ?? true
   );
 }
 
