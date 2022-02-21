@@ -5,8 +5,7 @@ describe('Layouts', () => {
     setupIntercept();
     cy.visit('/tests/search-layout.html');
     cy.wait(RouteAlias.analytics);
-    cy.wait(1000);
-    cy.contains('atomic-search-interface');
+    cy.get('atomic-search-interface.hydrated').should('be.visible');
     cy.percySnapshot('Search layout', {widths: [500, 1200]});
   });
 });
