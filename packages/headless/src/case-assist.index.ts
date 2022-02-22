@@ -34,6 +34,7 @@ export type {
   CaseInput,
   CaseInputOptions,
   CaseInputProps,
+  UpdateFetchOptions,
 } from './controllers/case-input/headless-case-input';
 export {buildCaseInput} from './controllers/case-input/headless-case-input';
 
@@ -42,9 +43,18 @@ export type {
   CaseField,
   CaseFieldOptions,
   CaseFieldProps,
+  UpdateCaseFieldFetchOptions,
 } from './controllers/case-field/headless-case-field';
 export {buildCaseField} from './controllers/case-field/headless-case-field';
 
+export type {CaseFieldSuggestion} from './features/case-field/case-field-state';
+
+export type {
+  QuickviewCore,
+  QuickviewCoreOptions,
+  QuickviewCoreProps,
+  QuickviewCoreState,
+} from './controllers/core/quickview/headless-core-quickview';
 export type {
   CaseAssistQuickviewState,
   CaseAssistQuickview,
@@ -53,8 +63,14 @@ export type {
 } from './controllers/quickview/case-assist-headless-quickview';
 export {buildCaseAssistQuickview} from './controllers/quickview/case-assist-headless-quickview';
 
+export type {Result} from './api/search/search/result';
+export type {Raw} from './api/search/search/raw';
+export type {HighlightKeyword} from './utils/highlight';
+
+export type {DocumentSuggestion} from './api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+
 export type {
-  DocumentSuggestionList as DocumentSuggestion,
-  DocumentSuggestionListState as DocumentSuggestionState,
+  DocumentSuggestionList,
+  DocumentSuggestionListState,
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
-export {buildDocumentSuggestionList as buildDocumentSuggestion} from './controllers/document-suggestion-list/headless-document-suggestion-list';
+export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
