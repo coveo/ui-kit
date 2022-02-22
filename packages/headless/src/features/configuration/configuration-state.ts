@@ -144,8 +144,6 @@ export const fromAnalyticsStateToAnalyticsParams = async (
       documentReferrer: s.originLevel3,
       originContext: s.originContext,
       userDisplayName: s.userDisplayName,
-      actionCause: 'TODO',
-      customData: {TODO: 'TODO'},
     },
   };
 };

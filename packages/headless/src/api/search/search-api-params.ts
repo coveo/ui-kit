@@ -98,8 +98,6 @@ export interface AnalyticsParam {
     documentReferrer: string;
     originContext: string;
     userDisplayName: string;
-    actionCause: string;
-    customData: Record<string, unknown>;
   };
 }
 
