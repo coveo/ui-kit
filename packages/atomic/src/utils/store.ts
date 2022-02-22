@@ -8,12 +8,10 @@ import {
   DateFacet,
   SearchEngine,
 } from '@coveo/headless';
-import {CategoryFacetRequest} from '@coveo/headless/dist/definitions/features/facets/category-facet-set/interfaces/request';
-import {FacetRequest} from '@coveo/headless/dist/definitions/features/facets/facet-set/interfaces/request';
-import {DateFacetRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/date-facet-set/interfaces/request';
-import {NumericFacetRequest} from '@coveo/headless/dist/definitions/features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {VNode} from '@stencil/core';
 import {ObservableMap} from '@stencil/store';
+import {DependencyCondition} from '../components/facets/facet-depends-on/facet-dependency-conditions';
+import {FacetWithType} from '../components/facets/facet-depends-on/facet-union-types';
 
 interface FacetInfo<
   F extends Facet | CategoryFacet | NumericFacet | DateFacet
@@ -28,28 +26,7 @@ interface FacetValueFormat<ValueType> {
   content?(facetValue: ValueType): VNode;
 }
 
-export type FacetRequestWithType =
-  | {type: 'facets'; request: FacetRequest}
-  | {
-      type: 'categoryFacets';
-      request: CategoryFacetRequest;
-    }
-  | {type: 'numericFacets'; request: NumericFacetRequest}
-  | {type: 'dateFacets'; request: DateFacetRequest};
-
-export type FacetWithType =
-  | {type: 'facets'; facet: Facet; request: FacetRequest}
-  | {
-      type: 'categoryFacets';
-      facet: CategoryFacet;
-      request: CategoryFacetRequest;
-    }
-  | {type: 'numericFacets'; facet: NumericFacet; request: NumericFacetRequest}
-  | {type: 'dateFacets'; facet: DateFacet; request: DateFacetRequest};
-
-export type DependencyCondition = (state: FacetRequestWithType) => boolean;
-
-export interface DependantFacet {
+export interface FacetDependency {
   parentFacetId: string;
   dependantFacetId: string;
   isDependencyMet: DependencyCondition;
@@ -62,7 +39,7 @@ export interface DependsOnParam {
 
 type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
 type FacetStore<F extends FacetInfo<any>> = Record<string, F>;
-type FacetDependencyStore = DependantFacet[];
+type FacetDependencyStore = FacetDependency[];
 
 export interface SortDropdownOption {
   expression: string;

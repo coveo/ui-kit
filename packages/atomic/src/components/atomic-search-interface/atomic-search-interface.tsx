@@ -36,8 +36,8 @@ import {
 } from '../../utils/local-storage-utils';
 import {
   fixFacetDependencies,
-  getIncorrectFacetEnableStates,
-} from '../facets/facet-common';
+  getIncorrectFacetStates,
+} from '../facets/facet-depends-on/facet-dependency-resolver';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -368,7 +368,7 @@ export class AtomicSearchInterface {
   }
 
   private fixFacetDependencies() {
-    if (getIncorrectFacetEnableStates(this.engine!, this.store.state).length) {
+    if (getIncorrectFacetStates(this.engine!, this.store.state).length) {
       this.ignoreUrlManagerStateChanges = true;
       fixFacetDependencies(this.engine!, this.store);
       this.ignoreUrlManagerStateChanges = false;
