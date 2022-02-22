@@ -11,14 +11,14 @@ function replaceStyleSheet(element: HTMLElement, mobileBreakpoint: string) {
   // Not adopted by all browsers, not part of Typescript yet
   // https://caniuse.com/mdn-api_document_adoptedstylesheets
   // https://github.com/microsoft/TypeScript/issues/30022
-  const stylesheets = (element.shadowRoot as any).adoptedStyleSheets;
+  const stylesheets = element.shadowRoot?.adoptedStyleSheets;
   if (!stylesheets || !stylesheets.length) {
     return;
   }
 
   const stylesheet = stylesheets[0];
   const style = Object.values(stylesheet.cssRules)
-    .map((rule: any) => rule.cssText)
+    .map((rule) => rule.cssText)
     .join('');
   stylesheet.replaceSync(replaceMediaQuery(style, mobileBreakpoint));
 }
