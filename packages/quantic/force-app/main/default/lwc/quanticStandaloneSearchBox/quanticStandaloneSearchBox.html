@@ -14,7 +14,7 @@
                 <div class={searchBoxContainerClass} role="none">
                   <template if:true={withoutSubmitButton}>
                     <lightning-icon
-                      class="slds-icon slds-input__icon slds-input__icon_left"
+                      class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
                       icon-name="utility:search"
                       size="x-small"
                     ></lightning-icon>
@@ -37,7 +37,7 @@
                       onclick={clearInput}
                       icon-name="utility:close"
                       variant="bare"
-                      class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                      class="slds-input__icon slds-input__icon_right input__icon_cursor searchbox__clear-button"
                       size="medium"
                       name={labels.clear}
                       title={labels.clear}

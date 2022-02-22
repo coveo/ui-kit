@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.15](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.14...@coveo/quantic@1.8.15) (2022-02-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.14](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.13...@coveo/quantic@1.8.14) (2022-02-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.12...@coveo/quantic@1.8.13) (2022-02-18)
+
+
+### Bug Fixes
+
+* **quantic:** not trauncate the date in quickview  ([#1744](https://github.com/coveo/ui-kit/issues/1744)) ([544bc50](https://github.com/coveo/ui-kit/commit/544bc5012868fda9972a0ba0a2ef0f9013d80f7c))
+
+
+
+
+
+## [1.8.12](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.11...@coveo/quantic@1.8.12) (2022-02-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.8.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.10...@coveo/quantic@1.8.11) (2022-02-16)
 
 **Note:** Version bump only for package @coveo/quantic
