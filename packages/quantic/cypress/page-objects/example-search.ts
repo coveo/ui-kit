@@ -27,7 +27,7 @@ export const selectRegularFacetValue = (value: string) =>
 export const sortByDateDescending = () =>
   cy
     .get(selectors.sort)
-    .find('input[role="combobox"]')
+    .find('lightning-combobox')
     .click()
     .get(selectors.sort)
     .find('div[role="listbox"]')

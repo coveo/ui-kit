@@ -22,7 +22,7 @@ interface NumericFacetOptions {
   isCollapsed: boolean;
 }
 
-describe('Numeric Facet Test Suite', () => {
+describe('quantic-numeric-facet', () => {
   const pageUrl = 's/quantic-numeric-facet';
 
   const defaultField = 'ytlikecount';
@@ -97,12 +97,13 @@ describe('Numeric Facet Test Suite', () => {
 
       scope('when selecting multiple values', () => {
         visitNumericFacetPage(defaultSettings);
-        Actions.checkFirstIdleCheckbox();
 
-        for (let index = 1; index < defaultNumberOfValues; index++) {
+        for (let index = 0; index < defaultNumberOfValues; index++) {
           scope(`when selecting ${index + 1} values`, () => {
-            const filterLabel = `Clear ${index + 1} filters`;
+            const filterLabel =
+              index === 0 ? 'Clear filter' : `Clear ${index + 1} filters`;
             Actions.checkFirstIdleCheckbox();
+            cy.wait(InterceptAliases.UA.Facet.Select);
 
             Expect.displayClearButton(true);
             Expect.clearFilterContains(filterLabel);

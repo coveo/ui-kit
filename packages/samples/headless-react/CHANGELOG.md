@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.20](https://github.com/coveo/ui-kit/compare/headless-react@0.50.19...headless-react@0.50.20) (2022-02-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.19](https://github.com/coveo/ui-kit/compare/headless-react@0.50.18...headless-react@0.50.19) (2022-02-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.18](https://github.com/coveo/ui-kit/compare/headless-react@0.50.17...headless-react@0.50.18) (2022-02-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.17](https://github.com/coveo/ui-kit/compare/headless-react@0.50.16...headless-react@0.50.17) (2022-02-16)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.16](https://github.com/coveo/ui-kit/compare/headless-react@0.50.15...headless-react@0.50.16) (2022-02-15)
+
+
+### Bug Fixes
+
+* **headless:** relevance inspector fetchFieldsDescription rename interface & enable by default ([#1733](https://github.com/coveo/ui-kit/issues/1733)) ([d1a3f3e](https://github.com/coveo/ui-kit/commit/d1a3f3eab52b54837c3f8cce3f1cbca147669c4c))
+
+
+
+
+
+## [0.50.15](https://github.com/coveo/ui-kit/compare/headless-react@0.50.14...headless-react@0.50.15) (2022-02-11)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.50.14](https://github.com/coveo/ui-kit/compare/headless-react@0.50.13...headless-react@0.50.14) (2022-02-09)
 
 **Note:** Version bump only for package headless-react

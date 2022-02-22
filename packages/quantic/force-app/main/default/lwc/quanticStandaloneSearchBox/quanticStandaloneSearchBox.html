@@ -14,7 +14,7 @@
                 <div class={searchBoxContainerClass} role="none">
                   <template if:true={withoutSubmitButton}>
                     <lightning-icon
-                      class="slds-icon slds-input__icon slds-input__icon_left"
+                      class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
                       icon-name="utility:search"
                       size="x-small"
                     ></lightning-icon>
@@ -37,7 +37,7 @@
                       onclick={clearInput}
                       icon-name="utility:close"
                       variant="bare"
-                      class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                      class="slds-input__icon slds-input__icon_right input__icon_cursor searchbox__clear-button"
                       size="medium"
                       name={labels.clear}
                       title={labels.clear}
@@ -47,19 +47,10 @@
                   </template>
                 </div>
                 <template if:false={withoutSubmitButton}>
-                  <div
-                    class="searchbox__submit-button slds-button_brand"
-                    onclick={onSubmit}
-                  >
-                    <lightning-button-icon
-                      title="Submit"
-                      id="fixed-text-addon-post"
-                      icon-class="searchbox__submit-button-icon"
-                      variant="bare-inverse"
-                      icon-name="utility:search"
-                      size="medium"
-                    ></lightning-button-icon>
-                  </div>
+                  <button class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand" title={labels.search} onclick={onSubmit}>
+                    <lightning-icon class="slds-current-color" size="x-small" icon-name="utility:search" alternative-text={labels.search} title={labels.search}></lightning-icon>
+                    <span class="slds-assistive-text">{labels.search}</span>
+                  </button>
                 </template>
               </div>
 
