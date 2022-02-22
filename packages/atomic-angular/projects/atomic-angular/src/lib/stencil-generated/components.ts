@@ -1145,13 +1145,13 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['breakpoint']
+  inputs: ['mobileBreakpoint']
 })
 @Component({
   selector: 'atomic-search-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['breakpoint']
+  inputs: ['mobileBreakpoint']
 })
 export class AtomicSearchLayout {
   protected el: HTMLElement;

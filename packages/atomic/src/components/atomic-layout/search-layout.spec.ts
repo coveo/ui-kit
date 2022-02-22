@@ -12,7 +12,7 @@ describe('Search Layout', () => {
       });
       return buildSearchLayout(
         page.body.querySelector('atomic-search-layout')!,
-        1024
+        '1024px'
       );
     }
 
@@ -36,7 +36,7 @@ describe('Search Layout', () => {
     it(`when the atomic-search-layout has custom breakpoint & min-width, max-width values
     should match snapshot`, async () => {
       const result =
-        await getSearchLayout(`<atomic-search-layout id="abc" breakpoint=600>
+        await getSearchLayout(`<atomic-search-layout id="abc" breakpoint="600px">
             <atomic-layout-section section="facets" min-width="250px" max-width="300px"></atomic-layout-section>
             <atomic-layout-section section="main" min-width="300px" max-width="1200px"></atomic-layout-section>
         </atomic-search-layout>`);

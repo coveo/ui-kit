@@ -13,16 +13,17 @@ import {buildSearchLayout} from './search-layout';
 export class AtomicSearchLayout {
   @Element() private host!: HTMLElement;
   /**
-   * CSS value, in px, that defines where the layout goes from mobile to desktop.
+   * CSS valuethat defines where the layout goes from mobile to desktop.
+   * e.g., 800px, 65rem.
    */
-  @Prop() public breakpoint = 1024;
+  @Prop() public mobileBreakpoint = '1024px';
 
   public connectedCallback() {
     const id = this.host.id || randomID('atomic-search-layout-');
     this.host.id = id;
 
     const styleTag = document.createElement('style');
-    styleTag.innerHTML = buildSearchLayout(this.host, this.breakpoint);
+    styleTag.innerHTML = buildSearchLayout(this.host, this.mobileBreakpoint);
     this.host.appendChild(styleTag);
   }
 }
