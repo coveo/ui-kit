@@ -20,7 +20,7 @@ function replaceStyleSheet(element: HTMLElement, mobileBreakpoint: string) {
   const style = Object.values(stylesheet.cssRules)
     .map((rule) => rule.cssText)
     .join('');
-  stylesheet.replaceSync(replaceMediaQuery(style, mobileBreakpoint));
+  stylesheet.replaceSync?.(replaceMediaQuery(style, mobileBreakpoint));
 }
 
 function replateStyleContent(element: HTMLElement, breakpoint: string) {

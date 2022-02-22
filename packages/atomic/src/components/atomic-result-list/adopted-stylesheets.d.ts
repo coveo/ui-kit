@@ -1,7 +1,7 @@
 interface CSSStyleSheet {
-  replaceSync(content: string): void;
+  replaceSync?(content: string): void;
 }
 
 interface ShadowRoot {
-  adoptedStyleSheets: CSSStyleSheet[];
+  adoptedStyleSheets?: CSSStyleSheet[];
 }
