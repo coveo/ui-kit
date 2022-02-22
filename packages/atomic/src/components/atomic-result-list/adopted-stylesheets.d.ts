@@ -1,12 +1,7 @@
-interface CssRule {
-  cssText: string;
-}
-
-interface StyleSheet {
-  cssRules: Record<string, CssRule>;
+interface CSSStyleSheet {
   replaceSync(content: string): void;
 }
 
 interface ShadowRoot {
-  adoptedStyleSheets: StyleSheet[];
+  adoptedStyleSheets: CSSStyleSheet[];
 }
