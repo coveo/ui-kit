@@ -1,5 +1,8 @@
 import {configure} from '../../page-objects/configurator';
-import {interceptSearch} from '../../page-objects/search';
+import {
+  interceptSearch,
+  mockResultHtmlContent,
+} from '../../page-objects/search';
 import {ResultQuickviewExpectations as Expect} from './result-quickview-expectations';
 import {ResultQuickviewActions as Actions} from './result-quickview-actions';
 import {scope} from '../../reporters/detailed-collector';
@@ -10,17 +13,6 @@ interface ResultQuickviewOptions {
   previewButtonIcon: string;
   previewButtonLabel: string;
   previewButtonVariant: string;
-}
-
-function mockResultHtmlContent(tag: string, innerHtml?: string) {
-  cy.intercept('POST', '**/rest/search/v2/html?*', (req) => {
-    req.continue((res) => {
-      const element = document.createElement(tag);
-      element.innerHTML = innerHtml ? innerHtml : 'this is a response';
-      res.body = element;
-      res.send();
-    });
-  });
 }
 
 describe('quantic-result-quickview', () => {

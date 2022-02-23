@@ -1,7 +1,7 @@
 <template>
   <template if:true={expectsEvents}>
     <div class="slds-m-bottom_small">
-      <lightning-card title="Events">
+      <c-quantic-card-container title="Events">
         <template for:each={events} for:item="event">
           <div key={event.type} class="slds-card__body_inner">
             <div class="grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
@@ -20,7 +20,7 @@
             </div>
           </div>
         </template>
-      </lightning-card>
+      </c-quantic-card-container>
     </div>
   </template>
 
