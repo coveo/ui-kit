@@ -18,6 +18,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: szenius/set-timezone@v1.0
+      with:
+        timezoneLinux: "GMT"
     - run: |
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
         npx --no-install sfdx force:auth:jwt:grant \
