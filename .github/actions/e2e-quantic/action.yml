@@ -18,9 +18,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: szenius/set-timezone@v1.0
-      with:
-        timezoneLinux: "GMT"
     - run: |
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
         npx --no-install sfdx force:auth:jwt:grant \
@@ -49,6 +46,7 @@ runs:
       env:
         CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
+        TZ: "/usr/share/zoneinfo/GMT"
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
