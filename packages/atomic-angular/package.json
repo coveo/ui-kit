@@ -4,8 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && npm run copy:assets",
-    "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang projects/atomic-angular/dist/lang"
+    "build": "ng build && npm run copy:assets && npm run npm:modify:dist",
+    "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
+    "npm:publish:alpha": "npm --prefix projects/atomic-angular/dist run npm:publish:alpha",
+    "npm:modify:dist": "node modify-package-json.js"
   },
   "private": true,
   "dependencies": {
