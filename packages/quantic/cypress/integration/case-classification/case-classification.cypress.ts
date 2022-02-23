@@ -465,6 +465,67 @@ describe('quantic-case-classification', () => {
         Expect.displayError(false);
       });
     });
+
+    it('should hide the error after fetching suggestions and autoselecting the one with the highest confidence', () => {
+      visitCaseClassification({
+        required: true,
+      });
+
+      scope('when reporting validity and no option is selected', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+        Actions.reportValidity();
+        Expect.displayError(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        const suggestionsCount = 2;
+        const firstSuggestionIndex = 0;
+
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+        Expect.logClickedSuggestion(firstSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstSuggestionIndex
+        );
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.displayError(false);
+      });
+    });
+
+    it('should keep the error after fetching suggestions but not finding any', () => {
+      visitCaseClassification({
+        required: true,
+      });
+
+      scope('when reporting validity and no suggestion is selected', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+        Actions.reportValidity();
+        Expect.displayError(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockCaseClassification(coveoDefaultField, []);
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+        Expect.numberOfSuggestions(0);
+        Expect.displayError(true);
+      });
+    });
   });
 
   describe('when incorrect Salesforce field API name is given', () => {
