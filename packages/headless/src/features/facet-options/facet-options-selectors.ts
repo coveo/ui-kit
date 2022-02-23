@@ -4,5 +4,5 @@ export const isFacetEnabledSelector = (
   state: FacetOptionsSection,
   id: string
 ) => {
-  return state.facetOptions.facets[id].enabled;
+  return state.facetOptions.facets[id]?.enabled ?? true;
 };
