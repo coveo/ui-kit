@@ -320,6 +320,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     async getVisit(): Promise<VisitResponse> {
+        // deepcode ignore Ssrf: url is supplied by script owner
         const response = await fetch(`${this.baseUrl}/analytics/visit`);
         const visit = (await response.json()) as VisitResponse;
         this.visitorId = visit.visitorId;
@@ -327,6 +328,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     async getHealth(): Promise<HealthResponse> {
+        // deepcode ignore Ssrf: url is supplied by script owner
         const response = await fetch(`${this.baseUrl}/analytics/monitoring/health`);
         return (await response.json()) as HealthResponse;
     }
