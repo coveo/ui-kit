@@ -1,7 +1,5 @@
-atomic-search-layout {
-  width: 100%;
-  height: 100%;
-  display: grid;
+.atomic-modal-opened {
+  overflow-y: hidden;
 }
 
 atomic-layout-section[section='search'] {
@@ -25,9 +23,13 @@ atomic-layout-section[section='pagination'] {
 }
 
 atomic-search-layout {
+  width: 100%;
+  height: 100%;
+  display: none;
   grid-template-areas:
-    'atomic-section-search'
-    'atomic-section-main';
+    '. atomic-section-search .'
+    '. atomic-section-main .';
+  grid-template-columns: var(--atomic-layout-spacing-x) 1fr var(--atomic-layout-spacing-x);
 
   atomic-layout-section[section='search'] {
     margin: var(--atomic-layout-spacing-y) 0;
