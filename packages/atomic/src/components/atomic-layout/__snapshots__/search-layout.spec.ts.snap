@@ -11,7 +11,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
           '. atomic-section-facets atomic-section-main   .'
           '. atomic-section-facets .                     .';
         grid-template-columns: 
-          1fr minmax(272px, 350px) minmax(50%, 1100px) 1fr;
+          1fr minmax(17rem, 22rem) minmax(50%, 70rem) 1fr;
           column-gap: var(--atomic-layout-spacing-x);
       }
 

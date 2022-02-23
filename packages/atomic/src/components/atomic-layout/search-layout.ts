@@ -17,10 +17,10 @@ export function buildSearchLayout(
       return '';
     }
 
-    const facetsMin = facetsSection.minWidth || '272px';
-    const facetsMax = facetsSection.maxWidth || '350px';
+    const facetsMin = facetsSection.minWidth || '17rem';
+    const facetsMax = facetsSection.maxWidth || '22rem';
     const mainMin = mainSection.minWidth || '50%';
-    const mainMax = mainSection.maxWidth || '1100px';
+    const mainMax = mainSection.maxWidth || '70rem';
 
     return `${mediaQuerySelector} {
       ${layoutSelector} {
