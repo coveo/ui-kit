@@ -102,9 +102,6 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.deviceId)) {
           state.analytics.deviceId = action.payload.deviceId;
         }
-        if (!isNullOrUndefined(action.payload.deviceId)) {
-          state.analytics.deviceId = action.payload.deviceId;
-        }
         if (!isNullOrUndefined(action.payload.userDisplayName)) {
           state.analytics.userDisplayName = action.payload.userDisplayName;
         }
