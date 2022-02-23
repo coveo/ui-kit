@@ -120,7 +120,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   renderedCallback() {
     initializeWithHeadless(this, this.standaloneEngineId, this.initialize);
     if (!this.isInitialized && !!this.standaloneSearchBox && !!this.input) {
-      this.input?.setAttribute('is-initialized', 'true');
+      this.input.setAttribute('is-initialized', 'true');
       this.isInitialized = true;
     }
   }
