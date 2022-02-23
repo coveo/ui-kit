@@ -50,7 +50,7 @@ describe('CaseAssistClient', () => {
         },
     };
 
-    const fakeFieldSuggestion = (autoSelection?: boolean): FieldSuggestion => {
+    const fakeFieldSuggestion = (): FieldSuggestion => {
         return {
             classification: {
                 value: 'some-field-value',
@@ -59,11 +59,10 @@ describe('CaseAssistClient', () => {
             classificationId: 'field-suggestion-id',
             fieldName: 'some-field',
             responseId: 'field-suggestion-response-id',
-            ...(autoSelection && {autoSelection}),
         };
     };
 
-    const fakeDocumentSuggestion = (fromQuickview?: boolean, openDocument?: boolean): DocumentSuggestion => {
+    const fakeDocumentSuggestion = (): DocumentSuggestion => {
         return {
             responseId: 'document-suggestion-response-id',
             suggestionId: 'document-suggestion-id',
@@ -74,8 +73,6 @@ describe('CaseAssistClient', () => {
                 documentUriHash: 'documenturihash',
                 documentUrl: 'some-document-url',
             },
-            ...(fromQuickview && {fromQuickview}),
-            ...(openDocument && {openDocument}),
         };
     };
 
@@ -196,12 +193,14 @@ describe('CaseAssistClient', () => {
     });
 
     it('should send proper payload for #logSelectFieldSuggestion when the autoSelection parameter is set to true', async () => {
+        const myFakeFieldSuggestion = fakeFieldSuggestion();
+        myFakeFieldSuggestion.autoSelection = true;
         await client.logSelectFieldSuggestion({
-            suggestion: fakeFieldSuggestion(true),
+            suggestion: myFakeFieldSuggestion,
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion(true), fakeTicket);
+        expectMatchPayload(CaseAssistActions.fieldSuggestionClick, myFakeFieldSuggestion, fakeTicket);
     });
 
     it('should send proper payload for #logSelectDocumentSuggestion', async () => {
@@ -214,21 +213,25 @@ describe('CaseAssistClient', () => {
     });
 
     it('should send proper payload for #logSelectDocumentSuggestion when the fromQuickview parameter is set to true', async () => {
+        const myFakeDocumentSuggestion = fakeDocumentSuggestion();
+        myFakeDocumentSuggestion.fromQuickview = true;
         await client.logSelectDocumentSuggestion({
-            suggestion: fakeDocumentSuggestion(true),
+            suggestion: myFakeDocumentSuggestion,
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(true), fakeTicket);
+        expectMatchPayload(CaseAssistActions.suggestionClick, myFakeDocumentSuggestion, fakeTicket);
     });
 
     it('should send proper payload for #logSelectDocumentSuggestion when the openDocument parameter is set to true', async () => {
+        const myFakeDocumentSuggestion = fakeDocumentSuggestion();
+        myFakeDocumentSuggestion.openDocument = true;
         await client.logSelectDocumentSuggestion({
-            suggestion: fakeDocumentSuggestion(false, true),
+            suggestion: myFakeDocumentSuggestion,
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(false, true), fakeTicket);
+        expectMatchPayload(CaseAssistActions.suggestionClick, myFakeDocumentSuggestion, fakeTicket);
     });
 
     it('should send proper payload for #logRateDocumentSuggestion', async () => {
