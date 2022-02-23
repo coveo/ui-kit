@@ -9,7 +9,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
           '. atomic-section-facets atomic-section-main   .'
           '. atomic-section-facets .                     .';
         grid-template-columns: 
-          1fr minmax(200px, 300px) minmax(1000px, 1200px) 1fr;
+          1fr minmax(272px, 350px) minmax(50%, 1100px) 1fr;
         column-gap: var(--atomic-layout-spacing-x);
       }
 
@@ -38,3 +38,22 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout component is empty
     should match snapshot 1`] = `"atomic-search-layout#abc { display: grid }"`;
+
+exports[`Search Layout #buildSearchLayout when the atomic-search-layout has custom breakpoint & min-width, max-width values
+    should match snapshot 1`] = `
+"atomic-search-layout#abc { display: grid }@media only screen and (min-width: 1024px) {
+      atomic-search-layout#abc {
+        grid-template-areas:
+          '. .                     atomic-section-search .'
+          '. atomic-section-facets atomic-section-main   .'
+          '. atomic-section-facets .                     .';
+        grid-template-columns: 
+          1fr minmax(250px, 300px) minmax(300px, 1200px) 1fr;
+        column-gap: var(--atomic-layout-spacing-x);
+      }
+
+      atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
+        display: block;
+      }
+    }"
+`;

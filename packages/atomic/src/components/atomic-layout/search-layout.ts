@@ -1,9 +1,12 @@
 import {findSection, sectionSelector} from '../atomic-layout-section/sections';
 
-export function buildSearchLayout(element: HTMLElement, breakpoint: string) {
+export function buildSearchLayout(
+  element: HTMLElement,
+  mobileBreakpoint: string
+) {
   const id = element.id;
   const layoutSelector = `atomic-search-layout#${id}`;
-  const mediaQuerySelector = `@media only screen and (min-width: ${breakpoint})`;
+  const mediaQuerySelector = `@media only screen and (min-width: ${mobileBreakpoint})`;
 
   const displayLayout = `${layoutSelector} { display: grid }`;
 
@@ -16,7 +19,7 @@ export function buildSearchLayout(element: HTMLElement, breakpoint: string) {
 
     const facetsMin = facetsSection.minWidth || '272px';
     const facetsMax = facetsSection.maxWidth || '350px';
-    const mainMin = mainSection.minWidth || '656px';
+    const mainMin = mainSection.minWidth || '50%';
     const mainMax = mainSection.maxWidth || '1100px';
 
     return `${mediaQuerySelector} {
