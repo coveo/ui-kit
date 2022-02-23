@@ -38,11 +38,6 @@ import {
 import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
-import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
-import {
-  enableFacet,
-  disableFacet,
-} from '../../../../../features/facet-options/facet-options-actions';
 
 export type {
   NumericRangeOptions,
@@ -181,8 +176,6 @@ export function buildCoreNumericFacet(
 
   validateNumericFacetOptions(engine, options);
 
-  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
-
   dispatch(registerNumericFacet(options));
 
   const rangeFacet = buildCoreRangeFacet<
@@ -206,21 +199,8 @@ export function buildCoreNumericFacet(
       this.toggleSelect(selection);
     },
 
-    enable() {
-      dispatch(enableFacet(facetId));
-    },
-
-    disable() {
-      dispatch(disableFacet(facetId));
-    },
-
     get state() {
-      const enabled = getIsEnabled();
-
-      return {
-        ...rangeFacet.state,
-        enabled,
-      };
+      return rangeFacet.state;
     },
   };
 }
