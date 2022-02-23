@@ -2,15 +2,17 @@
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout component contains a main & facets sections
     should match snapshot 1`] = `
-"atomic-search-layout#abc { display: grid }@media only screen and (min-width: 1024px) {
+"atomic-search-layout#abc { display: grid }
+
+@media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
         grid-template-areas:
           '. .                     atomic-section-search .'
           '. atomic-section-facets atomic-section-main   .'
           '. atomic-section-facets .                     .';
         grid-template-columns: 
-          1fr minmax(272px, 350px) minmax(50%, 1100px) 1fr;
-        column-gap: var(--atomic-layout-spacing-x);
+          1fr minmax(17rem, 22rem) minmax(50%, 70rem) 1fr;
+          column-gap: var(--atomic-layout-spacing-x);
       }
 
       atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
@@ -21,7 +23,9 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout component contains a status section which contains a atomic-refine-toggle component
     should match snapshot 1`] = `
-"atomic-search-layout#abc { display: grid }atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
+"atomic-search-layout#abc { display: grid }
+
+atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
       display:none;
     }
 
@@ -41,7 +45,9 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout has custom breakpoint & min-width, max-width values
     should match snapshot 1`] = `
-"atomic-search-layout#abc { display: grid }@media only screen and (min-width: 1024px) {
+"atomic-search-layout#abc { display: grid }
+
+@media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
         grid-template-areas:
           '. .                     atomic-section-search .'
@@ -49,7 +55,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
           '. atomic-section-facets .                     .';
         grid-template-columns: 
           1fr minmax(250px, 300px) minmax(300px, 1200px) 1fr;
-        column-gap: var(--atomic-layout-spacing-x);
+          column-gap: var(--atomic-layout-spacing-x);
       }
 
       atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {

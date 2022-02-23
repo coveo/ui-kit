@@ -14,6 +14,28 @@ Since Atomic Angular is built on top of the core [Atomic](https://docs.coveo.com
 
 However, there are still some special considerations.
 
+## Importing AtomicAngularModule
+
+In the module where you wish to make available Atomic Angular components, you must declare and import the `AtomicAngular` module.
+
+For example:
+
+```typescript
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {AtomicAngularModule} from '@coveo/atomic-angular';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, AtomicAngularModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+Once this is done, you will be able to reference all atomic components inside that module.
+
 ## Static Assets - Languages and SVGs
 
 For performance reasons, the generated JavaScript bundle does not automatically include static assets that are loaded on demand. This impacts language support, as well as the use of included SVG icons.

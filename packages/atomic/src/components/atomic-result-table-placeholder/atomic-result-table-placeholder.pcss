@@ -1,6 +1,10 @@
 @import '../../global/global.pcss';
 @import '../atomic-result-list/atomic-result-table.pcss';
 
+:host {
+  display: grid;
+}
+
 .list-root.display-table {
   @mixin atomic-result-table;
   border: 1px solid var(--atomic-neutral);

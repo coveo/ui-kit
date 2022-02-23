@@ -8,19 +8,19 @@ export function buildSearchLayout(
   const layoutSelector = `atomic-search-layout#${id}`;
   const mediaQuerySelector = `@media only screen and (min-width: ${mobileBreakpoint})`;
 
-  const displayLayout = `${layoutSelector} { display: grid }`;
+  const display = `${layoutSelector} { display: grid }`;
 
-  const facetsDeclarations = () => {
+  const facets = () => {
     const facetsSection = findSection(element, 'facets');
     const mainSection = findSection(element, 'main');
     if (!facetsSection || !mainSection) {
       return '';
     }
 
-    const facetsMin = facetsSection.minWidth || '272px';
-    const facetsMax = facetsSection.maxWidth || '350px';
+    const facetsMin = facetsSection.minWidth || '17rem';
+    const facetsMax = facetsSection.maxWidth || '22rem';
     const mainMin = mainSection.minWidth || '50%';
-    const mainMax = mainSection.maxWidth || '1100px';
+    const mainMax = mainSection.maxWidth || '70rem';
 
     return `${mediaQuerySelector} {
       ${layoutSelector} {
@@ -30,7 +30,7 @@ export function buildSearchLayout(
           '. atomic-section-facets .                     .';
         grid-template-columns: 
           1fr minmax(${facetsMin}, ${facetsMax}) minmax(${mainMin}, ${mainMax}) 1fr;
-        column-gap: var(--atomic-layout-spacing-x);
+          column-gap: var(--atomic-layout-spacing-x);
       }
 
       ${layoutSelector} ${sectionSelector('facets')} {
@@ -39,7 +39,7 @@ export function buildSearchLayout(
     }`;
   };
 
-  const refineDeclarations = () => {
+  const refine = () => {
     const statusSection = findSection(element, 'status');
     if (!statusSection) {
       return '';
@@ -66,5 +66,7 @@ export function buildSearchLayout(
     }`;
   };
 
-  return [displayLayout, facetsDeclarations(), refineDeclarations()].join('');
+  return [display, facets(), refine()]
+    .filter((declaration) => declaration !== '')
+    .join('\n\n');
 }

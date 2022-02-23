@@ -1,12 +1,19 @@
 const {promisify} = require('util');
 const exec = promisify(require('child_process').exec);
 
-const packageDirs = ['atomic', 'auth', 'bueno', 'headless', 'atomic-react'];
+const packageDirs = [
+  'atomic',
+  'auth',
+  'bueno',
+  'headless',
+  'atomic-react',
+  'atomic-angular/projects/atomic-angular/dist',
+];
 
 async function main() {
   const requests = packageDirs
-    .map(dir => require(`../../packages/${dir}/package.json`))
-    .map(({name, version}) => updateNpmTag(name, version))
+    .map((dir) => require(`../../packages/${dir}/package.json`))
+    .map(({name, version}) => updateNpmTag(name, version));
 
   await Promise.all(requests);
 }
@@ -16,12 +23,14 @@ async function updateNpmTag(packageName, version) {
   const latestVersion = await getLatestVersion(packageName);
 
   if (!isGreaterThanLatestVersion(version, latestVersion)) {
-    console.log(`skipping tag update for ${packageName} because version "${version}" is not greater than latest version "${latestVersion}".`)
+    console.log(
+      `skipping tag update for ${packageName} because version "${version}" is not greater than latest version "${latestVersion}".`
+    );
     return;
   }
-  
+
   console.log(`updating ${packageName}@${version} to ${tag}.`);
-  await exec(`npm dist-tag add ${packageName}@${version} ${tag}`)
+  await exec(`npm dist-tag add ${packageName}@${version} ${tag}`);
 }
 
 async function getLatestVersion(packageName) {
@@ -32,12 +41,12 @@ async function getLatestVersion(packageName) {
 function isGreaterThanLatestVersion(version, latestVersion) {
   const candidate = parseVersion(version);
   const latest = parseVersion(latestVersion);
-  
+
   return isCandidateGreaterThanLatestVersion(candidate, latest, 0);
 }
 
 function parseVersion(version) {
-  return version.split('.').map(num => parseInt(num, 10));
+  return version.split('.').map((num) => parseInt(num, 10));
 }
 
 function isCandidateGreaterThanLatestVersion(candidate, latest, i) {
