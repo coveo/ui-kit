@@ -192,7 +192,7 @@ describe('CaseAssistClient', () => {
         expectMatchPayload(CaseAssistActions.fieldSuggestionClick, fakeFieldSuggestion(), fakeTicket);
     });
 
-    it('should send proper payload for #logSelectFieldSuggestion when the autoSelection parameter is set to true', async () => {
+    it('should send proper payload for #logSelectFieldSuggestion when the autoSelection property is set to true', async () => {
         const myFakeFieldSuggestion = fakeFieldSuggestion();
         myFakeFieldSuggestion.autoSelection = true;
         await client.logSelectFieldSuggestion({
@@ -212,7 +212,7 @@ describe('CaseAssistClient', () => {
         expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(), fakeTicket);
     });
 
-    it('should send proper payload for #logSelectDocumentSuggestion when the fromQuickview parameter is set to true', async () => {
+    it('should send proper payload for #logSelectDocumentSuggestion when the fromQuickview property is set to true', async () => {
         const myFakeDocumentSuggestion = fakeDocumentSuggestion();
         myFakeDocumentSuggestion.fromQuickview = true;
         await client.logSelectDocumentSuggestion({
@@ -223,7 +223,7 @@ describe('CaseAssistClient', () => {
         expectMatchPayload(CaseAssistActions.suggestionClick, myFakeDocumentSuggestion, fakeTicket);
     });
 
-    it('should send proper payload for #logSelectDocumentSuggestion when the openDocument parameter is set to true', async () => {
+    it('should send proper payload for #logSelectDocumentSuggestion when the openDocument property is set to true', async () => {
         const myFakeDocumentSuggestion = fakeDocumentSuggestion();
         myFakeDocumentSuggestion.openDocument = true;
         await client.logSelectDocumentSuggestion({
