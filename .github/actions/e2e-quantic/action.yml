@@ -46,7 +46,6 @@ runs:
       env:
         CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        TZ: "/usr/share/zoneinfo/GMT"
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
