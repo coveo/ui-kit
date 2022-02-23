@@ -34,6 +34,8 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {updateBreakpoints} from './replace-breakpoint';
+import {once} from '../../utils/utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -377,7 +379,10 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
+
   public render() {
+    this.updateBreakpoints();
     if (this.resultListState.hasError) {
       return;
     }
