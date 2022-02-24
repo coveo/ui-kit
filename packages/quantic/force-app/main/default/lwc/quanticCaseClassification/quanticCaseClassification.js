@@ -128,6 +128,8 @@ export default class QuanticCaseClassification extends LightningElement {
   _isSuggestionsVisible = true;
   /** @type {string} */
   renderingError = '';
+  /** @type {boolean} */
+  hideSuggestions = false;
 
   connectedCallback() {
     this.validateProps();
@@ -169,8 +171,7 @@ export default class QuanticCaseClassification extends LightningElement {
       this.renderingError = `"${this.maxSuggestions}" is an invalid maximum number of suggestions. A positive integer was expected.`;
     }
     if (!this.coveoFieldName) {
-      this.renderingError =
-        'coveoFieldName is required, please set its value.';
+      this.renderingError = 'coveoFieldName is required, please set its value.';
     }
   }
 
@@ -183,13 +184,14 @@ export default class QuanticCaseClassification extends LightningElement {
           Math.max(Number(this.maxSuggestions), 0)
         ) ?? [];
       this.loading = this.field.state.loading;
-      if (
-        JSON.stringify(this.classifications) !==
-        JSON.stringify(this.previousClassifications)
-      ) {
-        const value = this.classifications.length
-          ? this.classifications[0].value
-          : '';
+      if (this.newSuggestionsrecieved()) {
+        const value = this.field.state.value
+          ? this.field.state.value
+          : this.classifications[0].value;
+        if (!this.isSuggestion(value)) {
+          this.hideSuggestions = true;
+          this.showSelect();
+        }
         this.setFieldValue(value);
       }
     }
@@ -326,7 +328,7 @@ export default class QuanticCaseClassification extends LightningElement {
     const value = event.target.value;
     this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
-      this.hideSuggestions();
+      this.animateHideSuggestions();
     }
   }
 
@@ -334,7 +336,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * Hide the suggested options.
    * @returns {void}
    */
-  hideSuggestions() {
+  animateHideSuggestions() {
     const suggestions = this.template.querySelectorAll(
       '.case-classification-suggestion'
     );
@@ -350,7 +352,30 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   setFieldValue(value) {
-    this.field.update(value);
+    if (this.field.state.value !== value) {
+      this.field.update(value);
+    }
     this._value = value;
+  }
+
+  /**
+   * Indicates whether new suggestions have been received
+   * @returns {boolean}
+   */
+  newSuggestionsrecieved() {
+    return (
+      this.classifications.length &&
+      JSON.stringify(this.classifications) !==
+        JSON.stringify(this.previousClassifications)
+    );
+  }
+
+  /**
+   * Indicates whether a value is one of the proposed suggestions.
+   * @param {string} value
+   * @returns {boolean}
+   */
+  isSuggestion(value) {
+    return this.suggestions.find((suggestion) => suggestion.value === value);
   }
 }

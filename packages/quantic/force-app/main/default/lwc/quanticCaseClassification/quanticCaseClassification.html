@@ -1,6 +1,8 @@
 <template>
   <template if:true={renderingError}>
-    <div class="error-message slds-text-color_destructive">{renderingError}</div>
+    <div class="error-message slds-text-color_destructive">
+      {renderingError}
+    </div>
   </template>
   <template if:false={renderingError}>
     <fieldset class={formClass}>
@@ -18,30 +20,32 @@
       <template if:false={loading}>
         <div class="slds-form-element__control" aria-describedby="case-classification-error-message">
           <div class="row">
-            <template for:each={suggestions} for:item="suggestion">
-              <div key={suggestion.value} class="
-                  case-classification-suggestion
-                  slds-visual-picker slds-visual-picker_medium
-                  slds-m-left_none
-                  slds-var-m-right_medium
-                  slds-var-m-top_x-small
-                ">
-                <input type="checkbox" checked={suggestion.checked} data-suggestion-id={suggestion.id}
-                  onchange={handleSelectSuggestion} id={suggestion.value} value={suggestion.value} name="options" />
-                <label for={suggestion.value} title={suggestion.value}>
-                  <span class="
-                      slds-visual-picker__figure slds-visual-picker__text
-                      slds-var-p-horizontal_medium
-                      content-center
-                    ">
-                    <span class="slds-truncate">{suggestion.value}</span>
-                  </span>
-                  <span class="slds-icon_container slds-visual-picker__text-check">
-                    <lightning-icon size="xx-small" icon-name="utility:check">
-                    </lightning-icon>
-                  </span>
-                </label>
-              </div>
+            <template if:false={hideSuggestions}>
+              <template for:each={suggestions} for:item="suggestion">
+                <div key={suggestion.value} class="
+                    case-classification-suggestion
+                    slds-visual-picker slds-visual-picker_medium
+                    slds-m-left_none
+                    slds-var-m-right_medium
+                    slds-var-m-top_x-small
+                  ">
+                  <input type="checkbox" checked={suggestion.checked} data-suggestion-id={suggestion.id}
+                    onchange={handleSelectSuggestion} id={suggestion.value} value={suggestion.value} name="options" />
+                  <label for={suggestion.value} title={suggestion.value}>
+                    <span class="
+                        slds-visual-picker__figure slds-visual-picker__text
+                        slds-var-p-horizontal_medium
+                        content-center
+                      ">
+                      <span class="slds-truncate">{suggestion.value}</span>
+                    </span>
+                    <span class="slds-icon_container slds-visual-picker__text-check">
+                      <lightning-icon size="xx-small" icon-name="utility:check">
+                      </lightning-icon>
+                    </span>
+                  </label>
+                </div>
+              </template>
             </template>
             <template if:true={isMoreOptionsVisible}>
               <template if:false={isSelectVisible}>

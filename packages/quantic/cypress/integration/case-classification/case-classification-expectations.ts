@@ -43,7 +43,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`${should(display)} display the loading spinner`);
     },
 
-    displayRenderingError: (display: boolean, error) => {
+    displayRenderingError: (display: boolean, error: string) => {
       selector
         .renderingError()
         .should(display ? 'exist' : 'not.exist')
@@ -82,6 +82,13 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .inlineOptions()
         .should('have.length', value)
         .logDetail(`should display ${value} inline options`);
+    },
+
+    correctValue: (value: string) => {
+      selector
+        .get()
+        .should('have.value', value)
+        .logDetail(`should have the following value: "${value}"`);
     },
 
     logUpdatedClassificationFromSuggestion: (field: string, index: number) => {
