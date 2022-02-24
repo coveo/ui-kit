@@ -48,9 +48,6 @@ jobs:
             })
       - name: Setup
         uses: ./.github/actions/setup
-      - name: Build Quantic project
-        working-directory: ./packages/quantic
-        run: npm run build
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
