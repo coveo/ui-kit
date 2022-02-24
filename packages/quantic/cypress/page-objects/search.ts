@@ -38,6 +38,7 @@ export const InterceptAliases = {
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
+  ResultHtml: '@coveoResultHtml',
 };
 
 export const routeMatchers = {
@@ -45,6 +46,7 @@ export const routeMatchers = {
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
+  html: '**/rest/search/v2/html?*',
 };
 
 export function interceptSearch() {
@@ -142,4 +144,22 @@ export function mockSearchNoResults() {
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function interceptResultHtmlContent() {
+  cy.intercept('POST', routeMatchers.html).as(
+    InterceptAliases.ResultHtml.substring(1)
+  );
+}
+
+export function mockResultHtmlContent(tag: string, innerHtml?: string) {
+  cy.intercept('POST', routeMatchers.html, (req) => {
+    req.alias = InterceptAliases.ResultHtml.substring(1);
+    req.continue((res) => {
+      const element = document.createElement(tag);
+      element.innerHTML = innerHtml ? innerHtml : 'this is a response';
+      res.body = element;
+      res.send();
+    });
+  });
 }
