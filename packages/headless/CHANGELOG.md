@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.3...@coveo/headless@1.47.0) (2022-02-24)
+
+
+### Bug Fixes
+
+* **headless:** add warning on missing permanentid ([#1758](https://github.com/coveo/ui-kit/issues/1758)) ([dd0a3d7](https://github.com/coveo/ui-kit/commit/dd0a3d74929cd38a5988a9c5497e7938e2582925))
+
+
+### Features
+
+* **headless:** add support for analytics parameter in search API ([#1752](https://github.com/coveo/ui-kit/issues/1752)) ([3dc96a7](https://github.com/coveo/ui-kit/commit/3dc96a745675ea6bd01198af2bc92a6b6bfaee53))
+
+
+
+
+
 ## [1.46.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.2...@coveo/headless@1.46.3) (2022-02-21)
 
 **Note:** Version bump only for package @coveo/headless
