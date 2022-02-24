@@ -51,6 +51,6 @@ jobs:
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
-          echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
+          echo "$SFDX_AUTH_JWT_KEY" > server.key
           npx --no-install ts-node scripts/build/create-package.ts --remove-translations --ci
           rm server.key
