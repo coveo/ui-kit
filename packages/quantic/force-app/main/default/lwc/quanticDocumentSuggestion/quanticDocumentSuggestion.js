@@ -102,7 +102,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   initialize = (engine) => {
     this.engine = engine;
     this.documentSuggestion =
-      CoveoHeadlessCaseAssist.buildDocumentSuggestion(engine);
+      CoveoHeadlessCaseAssist.buildDocumentSuggestionList(engine);
     this.unsubscribeDocumentSuggestion = this.documentSuggestion.subscribe(() =>
       this.updateDocumentSuggestionState()
     );
