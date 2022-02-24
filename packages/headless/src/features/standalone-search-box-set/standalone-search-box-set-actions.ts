@@ -19,6 +19,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
@@ -133,5 +134,9 @@ export const buildPlanRequest = async (
     ...(state.configuration.analytics.enabled && {
       visitorId: await getVisitorID(),
     }),
+    ...(state.configuration.analytics.enabled &&
+      (await fromAnalyticsStateToAnalyticsParams(
+        state.configuration.analytics
+      ))),
   };
 };
