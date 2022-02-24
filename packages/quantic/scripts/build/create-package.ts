@@ -23,7 +23,6 @@ interface Options {
 
 function ensureEnvVariables() {
   [
-    'GITHUB_TOKEN',
     'SFDX_AUTH_CLIENT_ID',
     'SFDX_AUTH_JWT_KEY',
     'SFDX_AUTH_JWT_USERNAME',
