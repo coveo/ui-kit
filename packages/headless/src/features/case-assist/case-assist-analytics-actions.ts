@@ -99,6 +99,26 @@ export const buildQuickviewDocumentSuggestionClickThunk = (
   );
 };
 
+export const logDocumentSuggestionOpen = (suggestionId: string) => {
+  return buildDocumentSuggestionOpenThunk(suggestionId)();
+};
+
+export const buildDocumentSuggestionOpenThunk = (suggestionId: string) => {
+  return makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/click',
+    (client, state) =>
+      client.logSelectDocumentSuggestion({
+        suggestion: caseAssistDocumentSuggestionSelector(
+          state,
+          suggestionId,
+          false,
+          true
+        ),
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
+};
+
 export const logDocumentSuggestionRating = (
   suggestionId: string,
   rating: number

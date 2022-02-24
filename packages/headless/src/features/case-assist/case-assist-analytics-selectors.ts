@@ -108,7 +108,8 @@ export const caseAssistCaseClassificationSelector = (
 export const caseAssistDocumentSuggestionSelector = (
   state: Partial<CaseAssistAppState>,
   suggestionId: string,
-  fromQuickview = false
+  fromQuickview = false,
+  openDocument = false
 ) => {
   let suggestionIdx;
   const suggestion = state.documentSuggestion?.documents.find((s, idx) => {
@@ -139,6 +140,9 @@ export const caseAssistDocumentSuggestionSelector = (
 
   if (fromQuickview) {
     return {...result, fromQuickview};
+  }
+  if (openDocument) {
+    return {...result, openDocument};
   }
   return result;
 };
