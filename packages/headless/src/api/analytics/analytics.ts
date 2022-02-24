@@ -194,6 +194,17 @@ export const getVisitorID = () =>
 
 export const historyStore = new history.HistoryStore();
 
+export const getPageID = () => {
+  const actions = historyStore.getHistory();
+  const lastPageView = actions.reverse().find((action) => {
+    return action.name === 'PageView';
+  });
+  if (!lastPageView) {
+    return '';
+  }
+  return lastPageView.value;
+};
+
 interface ConfigureCaseAssistAnalyticsOptions {
   state: StateNeededByCaseAssistAnalytics;
   logger: Logger;
