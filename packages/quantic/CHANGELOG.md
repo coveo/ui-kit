@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.16](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.15...@coveo/quantic@1.8.16) (2022-02-24)
+
+
+### Bug Fixes
+
+* **quantic:** fix standalone searchbox cypress tests ([#1756](https://github.com/coveo/ui-kit/issues/1756)) ([cf516df](https://github.com/coveo/ui-kit/commit/cf516df1117c8daacac928382eef4a699a000710))
+
+
+
+
+
 ## [1.8.15](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.14...@coveo/quantic@1.8.15) (2022-02-21)
 
 **Note:** Version bump only for package @coveo/quantic

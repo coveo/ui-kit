@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.31.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.30.3...@coveo/atomic@1.31.0) (2022-02-24)
+
+
+### Bug Fixes
+
+* **atomic:** search layout optimization for table results & more ([#1755](https://github.com/coveo/ui-kit/issues/1755)) ([e9dfd38](https://github.com/coveo/ui-kit/commit/e9dfd38ef1578bdcf7268e29f97cf9fa90d2e1fe))
+* **atomic:** update index.html example layout y gap ([#1757](https://github.com/coveo/ui-kit/issues/1757)) ([60405c0](https://github.com/coveo/ui-kit/commit/60405c033311084e01305c74d11261f7cacc38b9))
+
+
+### Features
+
+* **atomic:** add configurable breakpoint for layouts ([#1742](https://github.com/coveo/ui-kit/issues/1742)) ([9096363](https://github.com/coveo/ui-kit/commit/9096363c13d0d44e73a8ae2923bd28b20667b2b4))
+
+
+
+
+
 ## [1.30.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.30.2...@coveo/atomic@1.30.3) (2022-02-21)
 
 **Note:** Version bump only for package @coveo/atomic
