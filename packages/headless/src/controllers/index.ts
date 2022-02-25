@@ -360,3 +360,9 @@ export {
    */
   buildInteractiveResultCore,
 } from './core/interactive-result/headless-core-interactive-result';
+
+export type {
+  FacetDependenciesManager,
+  AnyFacetDependency,
+} from './core/facets/facet-dependencies-manager/headless-facet-dependencies-manager';
+export {buildFacetDependenciesManager} from './core/facets/facet-dependencies-manager/headless-facet-dependencies-manager';
