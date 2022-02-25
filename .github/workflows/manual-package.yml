@@ -2,12 +2,12 @@ name: Manual package creation
 on:
   workflow_dispatch:
     inputs:
-      skipAtomicIntegrationTests:
-        description: 'Skip Atomic integration tests'
+      skipAtomicE2E:
+        description: 'Skip Atomic end to end tests'
         type: boolean
         required: false
-      skipQuanticIntegrationTests:
-        description: 'Skip Quantic integration tests'
+      skipQuanticE2E:
+        description: 'Skip Quantic end to end tests'
         type: boolean
         required: false
       skipUnitTests:
@@ -41,7 +41,7 @@ jobs:
       - run: npm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
-    if: ${{ github.event.inputs.skipAtomicIntegrationTests != 'true' }}
+    if: ${{ github.event.inputs.skipAtomicE2E != 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
   e2e-quantic-test:
     name: 'Run e2e tests on Quantic'
-    if: ${{ github.event.inputs.skipQuanticIntegrationTests != 'true' }}
+    if: ${{ github.event.inputs.skipQuanticE2E != 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +73,17 @@ jobs:
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
     runs-on: ubuntu-latest
+    if: always()
     steps:
+      - name: fail if unit test failed
+        if: ${{ needs.unit-test.result == 'failure' }}
+        run: exit 1
+      - name: fail if atomic e2e failed
+        if: ${{ needs.e2e-atomic-test.result == 'failure' }}
+        run: exit 1
+      - name: fail if quantic e2e failed
+        if: ${{ needs.e2e-quantic-test == 'failure' }}
+        run: exit 1
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
