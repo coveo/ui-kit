@@ -217,6 +217,25 @@ describe('case assist analytics selectors', () => {
       });
     });
 
+    it('should return the classification matching the specified ID with the field autoSelection when the autoSelection parameter is set to true', () => {
+      const classification = caseAssistCaseClassificationSelector(
+        buildStateWithCaseField(),
+        'service-suggestion-id',
+        true
+      );
+
+      expect(classification).toMatchObject({
+        autoSelection: true,
+        classificationId: 'service-suggestion-id',
+        responseId: 'last-response-id',
+        fieldName: 'category',
+        classification: {
+          value: 'service',
+          confidence: 0.765,
+        },
+      });
+    });
+
     it('should throw when the classification is not found', () => {
       expect(() =>
         caseAssistCaseClassificationSelector(
