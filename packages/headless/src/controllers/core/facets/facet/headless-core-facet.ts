@@ -134,7 +134,7 @@ export interface CoreFacet extends Controller {
   enable(): void;
 
   /**
-   * Disables the facet, preventing it from filtering results
+   * Disables the facet. I.e., prevents it from filtering results.
    */
   disable(): void;
 
