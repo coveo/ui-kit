@@ -38,7 +38,7 @@ describe('search-slice', () => {
   });
 
   it('the initial response #totalCountFiltered is 0', () => {
-    expect(state.response.totalCountFiltered).toBe(0);
+    expect(state.response.totalCountFiltered).toBe(1);
   });
 
   it('the initial isloading state is set to false', () => {
