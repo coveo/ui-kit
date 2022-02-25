@@ -129,7 +129,7 @@ export interface CoreFacet extends Controller {
   showLessValues(): void;
 
   /**
-   * Enables the facet, undoing the effects of `disable`
+   * Enables the facet. I.e., undoes the effects of `disable`.
    */
   enable(): void;
 
