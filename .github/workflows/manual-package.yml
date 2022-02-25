@@ -90,4 +90,9 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Clean directory
-        run: echo BUMP
+        run: git clean -xfd -e node_modules/ -e .husky
+      - name: Commit & push
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
+          npm run bump:version
