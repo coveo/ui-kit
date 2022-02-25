@@ -74,8 +74,8 @@ async function buildOptions(): Promise<Options> {
 
   return {
     packageId: sfdxProject.packageAliases.Quantic,
-    promote: !!promote,
-    removeTranslations: !!removeTranslations,
+    promote: promote,
+    removeTranslations: removeTranslations,
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,
       keyFile: process.env.SFDX_AUTH_JWT_KEY,
