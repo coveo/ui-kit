@@ -1,6 +1,11 @@
 import {Component, Element, h, Host, Prop, State, Watch} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
+import {
+  InitializableComponent,
+  InitializeBindings,
+  Bindings,
+} from '../../utils/initialization-utils';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -13,8 +18,10 @@ import {sanitize} from 'dompurify';
   shadow: false,
   assetsDirs: ['assets'],
 })
-export class AtomicIcon {
+export class AtomicIcon implements InitializableComponent {
   @Element() host!: HTMLElement;
+
+  @InitializeBindings() public bindings!: Bindings;
 
   /**
    * The SVG icon to display.
@@ -25,7 +32,7 @@ export class AtomicIcon {
    */
   @Prop() icon!: string;
 
-  private error: Error | null = null;
+  public error!: Error;
   @State() private svg: string | null = null;
   private deferRenderingPromise?: Promise<unknown>;
 
@@ -37,7 +44,6 @@ export class AtomicIcon {
           `Could not fetch icon from ${url}, got status code ${response.status} (${response.statusText}).`
         );
       }
-      this.error = null;
       return await response.text();
     } catch (e) {
       this.error = e as Error;
@@ -46,7 +52,10 @@ export class AtomicIcon {
   }
 
   private async getIcon() {
-    const url = parseAssetURL(this.icon);
+    const url = parseAssetURL(
+      this.icon,
+      this.bindings.interfaceComponent.iconAssetsPath
+    );
     const svg = url ? await this.fetchIcon(url) : this.icon;
     const sanitizedSvg = svg
       ? sanitize(svg, {
@@ -63,7 +72,7 @@ export class AtomicIcon {
     this.svg = await svgPromise;
   }
 
-  public componentWillLoad() {
+  public initialize() {
     this.updateIcon();
   }
 

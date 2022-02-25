@@ -5,6 +5,7 @@ import {ObservableMap} from '@stencil/store';
 import {buildCustomEvent} from './event-utils';
 import {AtomicStore} from './store';
 import {Hidden} from '../components/common/hidden';
+import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
 
 declare global {
   interface Window {
@@ -32,6 +33,10 @@ export interface Bindings {
    * A reference to the `AtomicSearchInterface` element.
    */
   interfaceElement: HTMLElement;
+  /**
+   * A reference to the `AtomicSearchInterface` component.
+   */
+  interfaceComponent: AtomicSearchInterface;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;

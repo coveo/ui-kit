@@ -67,7 +67,7 @@ export function containsVisualElement(node: Node) {
   return false;
 }
 
-export function parseAssetURL(url: string) {
+export function parseAssetURL(url: string, assetPath = './assets') {
   const [, protocol, remainder] =
     url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
@@ -80,7 +80,7 @@ export function parseAssetURL(url: string) {
     return url;
   }
   if (protocol === 'assets') {
-    return getAssetPath(`./assets/${remainder}.svg`);
+    return getAssetPath(`${assetPath}/${remainder}.svg`);
   }
   return null;
 }

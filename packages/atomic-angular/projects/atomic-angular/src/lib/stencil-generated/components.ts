@@ -1123,14 +1123,14 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['analytics', 'engine', 'i18n', 'language', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
   methods: ['initialize', 'executeFirstSearch']
 })
 @Component({
   selector: 'atomic-search-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['analytics', 'engine', 'i18n', 'language', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
+  inputs: ['analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
 })
 export class AtomicSearchInterface {
   protected el: HTMLElement;

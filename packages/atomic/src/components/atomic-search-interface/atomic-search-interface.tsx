@@ -112,6 +112,22 @@ export class AtomicSearchInterface {
    */
   @Prop() public scrollContainer = 'atomic-search-interface';
 
+  /**
+   * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+   *
+   * @example /mypublicpath/languages
+   *
+   */
+  @Prop() public languageAssetsPath = './lang';
+
+  /**
+   * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+   *
+   * @example /mypublicpath/icons
+   *
+   */
+  @Prop() public iconAssetsPath = './assets';
+
   public constructor() {
     setCoveoGlobal();
   }
@@ -314,6 +330,7 @@ export class AtomicSearchInterface {
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
+      interfaceComponent: this,
     };
   }
 
@@ -396,7 +413,7 @@ export class AtomicSearchInterface {
 
   private get i18nBackendOptions(): BackendOptions {
     return {
-      loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
     };
   }
 }
