@@ -1,0 +1,43 @@
+name: Manual package creation
+on:
+  workflow_dispatch:
+    inputs:
+      skipAtomicIntegrationTests:
+        description: 'Skip Atomic integration tests'
+        type: boolean
+        required: false
+      skipQuanticIntegrationTests:
+        description: 'Skip Quantic integration tests'
+        type: boolean
+        required: false
+      skipUnitTests:
+        description: 'Skip Unit tests'
+        type: boolean
+        required: false
+jobs:
+  build:
+    name: 'Build'
+    needs: allow-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+  lint-check:
+    name: 'Check with linter'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npm run lint:check
+  unit-test:
+    name: 'Run unit tests'
+    if: inputs.skipUnitTests != 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
+      - run: npm test
+  
