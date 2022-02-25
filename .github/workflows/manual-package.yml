@@ -31,7 +31,7 @@ jobs:
       - run: npm run lint:check
   unit-test:
     name: 'Run unit tests'
-    if: inputs.skipUnitTests != 'true'
+    if: ${{ github.event.inputs.skipUnitTests != 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -41,7 +41,7 @@ jobs:
       - run: npm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
-    if: inputs.skipAtomicIntegrationTests != 'true'
+    if: ${{ github.event.inputs.skipAtomicIntegrationTests != 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
   e2e-quantic-test:
     name: 'Run e2e tests on Quantic'
-    if: inputs.skipQuanticIntegrationTests != 'true'
+    if: ${{ github.event.inputs.skipQuanticIntegrationTests != 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
