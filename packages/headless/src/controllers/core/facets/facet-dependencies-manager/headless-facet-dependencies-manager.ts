@@ -4,6 +4,7 @@ import {
   disableFacet,
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions';
+import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response';
 import {
@@ -94,6 +95,18 @@ export function buildFacetDependenciesManager(
     });
   };
 
+  const thawFacets = () => {
+    if (engine.state.facetSet) {
+      Object.entries(engine.state.facetSet).forEach(
+        ([facetId, request]) =>
+          request.freezeCurrentValues &&
+          engine.dispatch(
+            updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
+          )
+      );
+    }
+  };
+
   const ensureDependenciesAreMet = () => {
     const isEnabled = isFacetEnabled(props.dependentFacetId);
     const shouldBeEnabled = areDependenciesMet();
@@ -103,6 +116,7 @@ export function buildFacetDependenciesManager(
           ? enableFacet(props.dependentFacetId)
           : disableFacet(props.dependentFacetId)
       );
+      thawFacets();
     }
   };
 
