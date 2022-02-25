@@ -66,4 +66,19 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  
+  bump-version:
+    name: 'Bump version'
+    needs:
+      - 'lint-check'
+      - 'unit-test'
+      - 'e2e-atomic-test'
+      - 'e2e-quantic-test'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Clean directory
+        run: echo BUMP
