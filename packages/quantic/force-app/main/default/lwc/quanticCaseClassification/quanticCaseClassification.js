@@ -368,7 +368,7 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Indicates whether new suggestions have been received
+   * Indicates whether new suggestions have been received.
    * @returns {boolean}
    */
   get newSuggestionsRecieved() {
@@ -378,7 +378,10 @@ export default class QuanticCaseClassification extends LightningElement {
         JSON.stringify(this.previousClassifications)
     );
   }
-
+  /**
+   * Indicates whether auto-selecting the suggestion with the highest confidence is needed.
+   * @returns {boolean}
+   */
   get isAutoSelectionNeeded() {
     return (
       !this.field.state.value ||
