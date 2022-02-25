@@ -2,7 +2,7 @@ name: Create Quantic Package
 
 env:
   SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com
-  SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}
+  SFDX_AUTH_JWT_KEY: server.key
   SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_PACKAGE_CLIENT_ID }}
 
 on:
@@ -51,6 +51,6 @@ jobs:
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
-          echo "$SFDX_AUTH_JWT_KEY" > server.key
+          echo "${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}" > server.key
           npx --no-install ts-node scripts/build/create-package.ts --remove-translations --ci
           rm server.key
