@@ -55,6 +55,20 @@ export const logUpdateCaseField = (fieldName: string) =>
       })
   )();
 
+export const logAutoSelectCaseField = (classificationId: string) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/classification/click',
+    (client, state) =>
+      client.logSelectFieldSuggestion({
+        suggestion: caseAssistCaseClassificationSelector(
+          state,
+          classificationId,
+          true
+        ),
+        ticket: caseAssistCaseSelector(state),
+      })
+  )();
+
 export const logClassificationClick = (classificationId: string) =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/classification/click',

@@ -43,7 +43,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`${should(display)} display the loading spinner`);
     },
 
-    displayRenderingError: (display: boolean, error) => {
+    displayRenderingError: (display: boolean, error: string) => {
       selector
         .renderingError()
         .should(display ? 'exist' : 'not.exist')
@@ -139,7 +139,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_field_update" UA event');
     },
 
-    logClickedSuggestion: (index: number) => {
+    logClickedSuggestion: (index: number, autoSelection = false) => {
       cy.wait(InterceptAliases.UA.ClassificationClick)
         .then((interception) => {
           const analyticsBody = interception.request.body;
@@ -147,6 +147,12 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .suggestedOptionInput(index)
             .invoke('attr', 'data-suggestion-id')
             .should('eq', analyticsBody.svc_action_data.classificationId);
+          if (autoSelection) {
+            expect(analyticsBody.svc_action_data).to.have.property(
+              'autoSelection',
+              true
+            );
+          }
         })
         .logDetail('should log the "ticket_classification_click" UA event');
     },
