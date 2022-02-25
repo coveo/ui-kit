@@ -519,7 +519,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when selecting a suggestion and then receiving new suggestions', () => {
-    it('should render the component and all parts', () => {
+    it('should keep the suggestion selected by the user', () => {
       const clickedIndex = 1;
       visitCaseClassification({
         maxSuggestions: defaultMaxSuggestions,
@@ -584,7 +584,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when selecting a specific suggestion and then receiving new suggestions that does not contain the previously selected option ', () => {
-    it('should render the component and all parts', () => {
+    it('should keep the suggestion selected by the user and display it in the select input', () => {
       const clickedIndex = 2;
       visitCaseClassification({
         maxSuggestions: defaultMaxSuggestions,
@@ -648,7 +648,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when selecting an option from the select input and then fetching suggestions', () => {
-    it('should render the component and all parts', () => {
+    it('should keep the option selected by the user and display it in the select input', () => {
       const clickedIndex = 3;
       visitCaseClassification({
         maxSuggestions: defaultMaxSuggestions,
@@ -685,6 +685,75 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.numberOfInlineOptions(0);
         Expect.correctValue(allOptions[clickedIndex].value);
+      });
+    });
+  });
+
+  describe('when receiving new suggestions without changing the by default auto-selected suggestion', () => {
+    it('should auto-select the suggestion with the highest confidence from the newly recieved suggestions', () => {
+      visitCaseClassification({
+        maxSuggestions: defaultMaxSuggestions,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        const suggestionsCount = 3;
+        const firstSuggestionIndex = 0;
+
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.numberOfInlineOptions(0);
+        Expect.logClickedSuggestion(firstSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstSuggestionIndex
+        );
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
+      });
+
+      scope('when fetching suggestions again', () => {
+        const suggestionsCount = 2;
+        const firstDisplayedSuggestionIndex = 0;
+        const firstSuggestionsIndex = 1;
+
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(
+            firstSuggestionsIndex,
+            firstSuggestionsIndex + suggestionsCount
+          )
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.correctSugestionsOrder(
+          allOptions.slice(
+            firstSuggestionsIndex,
+            firstSuggestionsIndex + suggestionsCount
+          )
+        );
+        Expect.numberOfInlineOptions(0);
+        Expect.logClickedSuggestion(firstDisplayedSuggestionIndex);
+        Expect.logUpdatedClassificationFromSuggestion(
+          coveoDefaultField,
+          firstDisplayedSuggestionIndex
+        );
+        Expect.correctValue(allOptions[firstSuggestionsIndex].value);
       });
     });
   });
