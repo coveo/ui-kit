@@ -37,7 +37,7 @@ export interface FacetOptionsActionCreators {
    */
   enableFacet(facetId: string): PayloadAction<string>;
   /**
-   * Disables a facet, preventing it from filtering results.
+   * Disables a facet. I.e., prevents it from filtering results.
    *
    * @param facetId - The unique identifier of the facet (e.g., "1").
    * @returns A dispatchable action.
