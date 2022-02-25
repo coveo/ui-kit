@@ -617,6 +617,7 @@ describe('quantic-case-classification', () => {
           coveoDefaultField,
           firstSuggestionIndex
         );
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
       scope('when selecting a suggestion', () => {
@@ -626,6 +627,7 @@ describe('quantic-case-classification', () => {
           coveoDefaultField,
           clickedIndex
         );
+        Expect.correctValue(allOptions[clickedIndex].value);
       });
 
       scope('when fetching suggestions again', () => {
