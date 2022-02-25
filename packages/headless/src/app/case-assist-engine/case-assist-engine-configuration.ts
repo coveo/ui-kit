@@ -17,7 +17,7 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
    */
   caseAssistId: string;
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   * The locale of the current user. Must comply with IETF’s [BCP 47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) definition.
    *
    * Notes:
    *  Coveo Machine Learning models use this information to provide contextually relevant output.
