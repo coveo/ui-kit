@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.47.1...@coveo/headless@1.48.0) (2022-02-25)
+
+
+### Features
+
+* **case-assist:** add JSDoc support ([#1762](https://github.com/coveo/ui-kit/issues/1762)) ([bdf24cb](https://github.com/coveo/ui-kit/commit/bdf24cb0178b20fa2ff503ad86149cc04d43828b))
+
+
+
+
+
 ## [1.47.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.47.0...@coveo/headless@1.47.1) (2022-02-24)
 
 **Note:** Version bump only for package @coveo/headless
