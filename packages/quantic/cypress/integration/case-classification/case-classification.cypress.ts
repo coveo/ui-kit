@@ -483,11 +483,8 @@ describe('quantic-case-classification', () => {
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
