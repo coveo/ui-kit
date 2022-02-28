@@ -583,7 +583,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('when selecting a specific suggestion and then receiving new suggestions that does not contain the previously selected option ', () => {
+  describe('when selecting a specific suggestion and then receiving new suggestions that does not contain the previously selected option', () => {
     it('should keep the suggestion selected by the user and display it in the select input', () => {
       const clickedIndex = 2;
       visitCaseClassification({
@@ -648,7 +648,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when selecting an option from the select input and then fetching suggestions', () => {
-    it('should keep the option selected by the user and display it in the select input', () => {
+    it('should keep the option selected by the user, display it in the select input and hide the suggestions', () => {
       const clickedIndex = 3;
       visitCaseClassification({
         maxSuggestions: defaultMaxSuggestions,
@@ -680,6 +680,7 @@ describe('quantic-case-classification', () => {
           allOptions.slice(0, suggestionsCount)
         );
         fetchClassifications();
+        Expect.displayLoading(false);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(true);
         Expect.numberOfSuggestions(0);
@@ -754,6 +755,47 @@ describe('quantic-case-classification', () => {
           firstDisplayedSuggestionIndex
         );
         Expect.correctValue(allOptions[firstSuggestionsIndex].value);
+      });
+    });
+  });
+
+  describe('when selecting an inline option and then fetching suggestions', () => {
+    it('should keep the option selected by the user, display it in an inline option and display the suggestions', () => {
+      const suggestionsCount = 3;
+      const clickedIndex = 4;
+      visitCaseClassification({
+        maxSuggestions: allOptions.length,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(allOptions.length);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(false);
+      });
+
+      scope('when selecting an inline option', () => {
+        Actions.clickInlineOption(clickedIndex);
+        Expect.logUpdatedClassificationFromInlineOption(
+          coveoDefaultField,
+          clickedIndex
+        );
+        Expect.correctValue(allOptions[clickedIndex].value);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockCaseClassification(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
+        Expect.correctValue(allOptions[clickedIndex].value);
       });
     });
   });

@@ -130,6 +130,8 @@ export default class QuanticCaseClassification extends LightningElement {
   renderingError = '';
   /** @type {boolean} */
   hideSuggestions = false;
+  /** @type {boolean} */
+  lockedState = false;
 
   connectedCallback() {
     this.validateProps();
@@ -176,7 +178,7 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   updateFieldState() {
-    if (this.maxSuggestions > 0) {
+    if (this.maxSuggestions > 0 && !this.lockedState) {
       this.previousClassifications = this.classifications;
       this.classifications =
         this.field.state.suggestions.slice(
@@ -184,11 +186,11 @@ export default class QuanticCaseClassification extends LightningElement {
           Math.max(Number(this.maxSuggestions), 0)
         ) ?? [];
       this.loading = this.field.state.loading;
-      if (this.newSuggestionsRecieved) {
+      if (this.newSuggestionsReceived) {
         const value = this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-        if (!this.isSuggestion(value)) {
+        if (!this.isSuggestion(value) && this.isMoreOptionsVisible) {
           this.hideSuggestions = true;
           this.showSelect();
         }
@@ -330,6 +332,7 @@ export default class QuanticCaseClassification extends LightningElement {
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.animateHideSuggestions();
     }
+    this.lockedState = true;
   }
 
   /**
@@ -364,14 +367,14 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   isSuggestion(value) {
-    return this.suggestions.find((suggestion) => suggestion.value === value);
+    return this.suggestions.some((suggestion) => suggestion.value === value);
   }
 
   /**
    * Indicates whether new suggestions have been received.
    * @returns {boolean}
    */
-  get newSuggestionsRecieved() {
+  get newSuggestionsReceived() {
     return (
       this.classifications.length &&
       JSON.stringify(this.classifications) !==
