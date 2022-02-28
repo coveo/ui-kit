@@ -316,7 +316,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectSuggestion(event) {
-    this._errorMessage = '';
     const value = event.target.checked ? event.target.value : '';
     this.setFieldValue(value);
   }
@@ -326,7 +325,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
-    this._errorMessage = '';
     const value = event.target.value;
     this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
@@ -359,6 +357,9 @@ export default class QuanticCaseClassification extends LightningElement {
       this.field.update(value, undefined, autoSelection);
     }
     this._value = value;
+    if(this._errorMessage && value){
+      this._errorMessage = '';
+    }
   }
 
   /**

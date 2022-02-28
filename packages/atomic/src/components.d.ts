@@ -703,6 +703,11 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath": string;
+        /**
           * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
@@ -710,6 +715,11 @@ export namespace Components {
           * The search interface language.
          */
         "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath": string;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1969,9 +1979,19 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath"?: string;
+        /**
           * The search interface language.
          */
         "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath"?: string;
         /**
           * The severity level of the messages to log in the console.
          */
