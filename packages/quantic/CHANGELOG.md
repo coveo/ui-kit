@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.9.0...@coveo/quantic@1.9.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* **headless, quantic:**  Update analytics events sent when auto selecting the classification with the highest confidence ([#1740](https://github.com/coveo/ui-kit/issues/1740)) ([4145187](https://github.com/coveo/ui-kit/commit/414518781cbb7791b841e9596eb5317608fcb7a7))
+
+
+
+
+
 # [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.17...@coveo/quantic@1.9.0) (2022-02-25)
 
 
