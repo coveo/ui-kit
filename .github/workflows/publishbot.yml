@@ -3,10 +3,17 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      deployWithNoVersionBump:
+        description: 'Start deploy even if last commit is not a version bump'
+        type: boolean
+        required: false
+
 jobs:
   allow-workflow:
     name: 'Allow workflow'
-    if: "startsWith(github.event.head_commit.message, '[Version Bump]')"
+    if: "startsWith(github.event.head_commit.message, '[Version Bump]') || ${{ github.event.inputs.deployWithNoVersionBump == 'true' }}"
     runs-on: ubuntu-latest
     steps:
       - run: echo "Workflow allowed to start"
@@ -37,7 +44,7 @@ jobs:
           name: artifacts-atomic
           path: |
             packages/atomic/dist
-            
+
       - name: Archive build artifacts Atomic Storybook
         uses: actions/upload-artifact@v2
         with:
