@@ -107,6 +107,19 @@
         background-repeat: no-repeat;
         background-color: transparent;
       }
+
+      body {
+        margin: 0;
+      }
+
+      .header-bg {
+        background-color: var(--atomic-neutral-light);
+        grid-area: 1 / -1 / 1 / 1;
+      }
+
+      atomic-search-layout {
+        row-gap: var(--atomic-layout-spacing-y);
+      }
     </style>
   </head>
 
@@ -114,6 +127,7 @@
     <atomic-aria-live></atomic-aria-live>
     <atomic-search-interface>
       <atomic-search-layout>
+        <div class="header-bg"></div>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
         </atomic-layout-section>

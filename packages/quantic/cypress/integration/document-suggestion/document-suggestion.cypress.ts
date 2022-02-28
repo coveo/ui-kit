@@ -11,6 +11,10 @@ import {sendRating} from '../../page-objects/actions/action-send-rating';
 import allDocuments from '../../fixtures/documentSuggestions.json';
 import similarDocuments from '../../fixtures/similarDocumentSuggestions.json';
 import {fetchSuggestions} from '../../page-objects/actions/action-get-suggestions';
+import {
+  InterceptAliases,
+  interceptResultHtmlContent,
+} from '../../page-objects/search';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;
@@ -40,6 +44,7 @@ describe('quantic-document-suggestion', () => {
     options: Partial<DocumentSuggestionOptions> = {}
   ) {
     interceptCaseAssist();
+    interceptResultHtmlContent();
     cy.visit(pageUrl);
     configure(options);
   }
@@ -391,6 +396,7 @@ describe('quantic-document-suggestion', () => {
         const clickIndex = 0;
 
         Actions.openQuickview(clickIndex);
+        cy.wait(InterceptAliases.ResultHtml);
         Expect.logClickingSuggestion(clickIndex, allDocuments, true);
         Actions.closeQuickview();
       });

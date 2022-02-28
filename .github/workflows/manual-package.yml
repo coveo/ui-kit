@@ -1,0 +1,69 @@
+name: Manual package creation
+on:
+  workflow_dispatch:
+    inputs:
+      skipAtomicIntegrationTests:
+        description: 'Skip Atomic integration tests'
+        type: boolean
+        required: false
+      skipQuanticIntegrationTests:
+        description: 'Skip Quantic integration tests'
+        type: boolean
+        required: false
+      skipUnitTests:
+        description: 'Skip Unit tests'
+        type: boolean
+        required: false
+jobs:
+  build:
+    name: 'Build'
+    needs: allow-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+  lint-check:
+    name: 'Check with linter'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npm run lint:check
+  unit-test:
+    name: 'Run unit tests'
+    if: inputs.skipUnitTests != 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
+      - run: npm test
+  e2e-atomic-test:
+    name: 'Run e2e tests on Atomic'
+    if: inputs.skipAtomicIntegrationTests != 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic
+        with:
+          cypress-record-key: ${{ secrets.ATOMIC_CYPRESS_RECORD_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  e2e-quantic-test:
+    name: 'Run e2e tests on Quantic'
+    if: inputs.skipQuanticIntegrationTests != 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-quantic
+        with:
+          cypress-record-key: ${{ secrets.QUANTIC_CYPRESS_RECORD_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  
