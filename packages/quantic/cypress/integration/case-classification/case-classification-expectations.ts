@@ -84,6 +84,13 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`should display ${value} inline options`);
     },
 
+    correctValue: (value: string) => {
+      selector
+        .get()
+        .should('have.value', value)
+        .logDetail(`should have the following value: "${value}"`);
+    },
+
     logUpdatedClassificationFromSuggestion: (field: string, index: number) => {
       cy.wait(InterceptAliases.UA.FieldUpdate)
         .then((interception) => {
