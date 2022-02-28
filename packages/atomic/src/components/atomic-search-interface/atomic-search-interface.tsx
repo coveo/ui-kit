@@ -233,6 +233,7 @@ export class AtomicSearchInterface {
     this.initSearchStatus();
     this.initUrlManager();
     this.initAriaLive();
+    this.store.set('iconAssetsPath', this.iconAssetsPath);
 
     this.initialized = true;
   }
@@ -330,7 +331,6 @@ export class AtomicSearchInterface {
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
-      interfaceComponent: this,
     };
   }
 

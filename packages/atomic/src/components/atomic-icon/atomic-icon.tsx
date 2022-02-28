@@ -54,7 +54,7 @@ export class AtomicIcon implements InitializableComponent {
   private async getIcon() {
     const url = parseAssetURL(
       this.icon,
-      this.bindings.interfaceComponent.iconAssetsPath
+      this.bindings.store.get('iconAssetsPath')
     );
     const svg = url ? await this.fetchIcon(url) : this.icon;
     const sanitizedSvg = svg
