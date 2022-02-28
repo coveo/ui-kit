@@ -98,7 +98,6 @@ describe('InitializeBindings decorator', () => {
         i18n: i18next,
         store: createStore<AtomicStore>(initialStore()),
         interfaceElement: document.createElement('atomic-search-interface'),
-        interfaceComponent: (() => {}) as unknown as AtomicSearchInterface,
       };
       InitializeBindings()(component, 'bindings');
       component.initialize!();
@@ -121,7 +120,6 @@ describe('BindStateToController decorator', () => {
         i18n: i18next,
         store: createStore<AtomicStore>(initialStore()),
         interfaceElement: document.createElement('atomic-search-interface'),
-        interfaceComponent: (() => {}) as unknown as AtomicSearchInterface,
       },
       error: {} as Error,
     };
@@ -218,7 +216,6 @@ describe('initializeBindings method', () => {
       i18n: searchInterface.i18n,
       store: expect.anything(),
       engine: searchInterface.engine,
-      interfaceComponent: expect.any(AtomicSearchInterface),
     });
   });
 });
