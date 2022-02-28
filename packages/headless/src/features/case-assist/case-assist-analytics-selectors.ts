@@ -72,7 +72,8 @@ export const caseAssistCustomCaseFieldValuesSelector = (
 
 export const caseAssistCaseClassificationSelector = (
   state: Partial<CaseAssistAppState>,
-  classificationId: string
+  classificationId: string,
+  autoSelection = false
 ) => {
   const classificationFieldName = Object.keys(
     state?.caseField?.fields ?? {}
@@ -94,7 +95,7 @@ export const caseAssistCaseClassificationSelector = (
     (suggestion) => suggestion.id === classificationId
   );
 
-  return {
+  const result = {
     classificationId: classification?.id ?? '',
     responseId: state.caseField?.status.lastResponseId ?? '',
     fieldName: classificationFieldName,
@@ -103,12 +104,18 @@ export const caseAssistCaseClassificationSelector = (
       confidence: classification?.confidence ?? 0,
     },
   };
+
+  if (autoSelection) {
+    return {...result, autoSelection};
+  }
+  return result;
 };
 
 export const caseAssistDocumentSuggestionSelector = (
   state: Partial<CaseAssistAppState>,
   suggestionId: string,
-  fromQuickview = false
+  fromQuickview = false,
+  openDocument = false
 ) => {
   let suggestionIdx;
   const suggestion = state.documentSuggestion?.documents.find((s, idx) => {
@@ -139,6 +146,9 @@ export const caseAssistDocumentSuggestionSelector = (
 
   if (fromQuickview) {
     return {...result, fromQuickview};
+  }
+  if (openDocument) {
+    return {...result, openDocument};
   }
   return result;
 };
