@@ -74,6 +74,7 @@ export interface CaseField extends Controller {
    *
    * @param value - The field value to set.
    * @param updatesToFetch - A set of flags dictating whether to fetch case assist data after updating the field value.
+   * @param autoSelection - A flag indicating whether the update was triggered by an automatic selection.
    */
   update(
     value: string,
