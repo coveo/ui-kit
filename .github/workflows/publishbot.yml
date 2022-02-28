@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   allow-workflow:
-    name: "Allow workflow"
+    name: 'Allow workflow'
     if: "startsWith(github.event.head_commit.message, '[Version Bump]')"
     runs-on: ubuntu-latest
     steps:
@@ -23,6 +23,28 @@ jobs:
       - run: npm run npm:publish:alpha
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Archive build artifacts Headless
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-headless
+          path: |
+            packages/headless/dist
+
+      - name: Archive build artifacts Atomic
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-atomic
+          path: |
+            packages/atomic/dist
+            
+      - name: Archive build artifacts Atomic Storybook
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-atomic-storybook
+          path: |
+            packages/atomic/storybook-static
+
   deploy:
     name: 'Deploy the package'
     needs: npm-publish
@@ -31,7 +53,19 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifacts-headless
+          path: packages/headless/dist
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifacts-atomic
+          path: packages/atomic/dist
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifacts-atomic-storybook
+          path: packages/atomic/storybook-static
+
       - run: rm -rf veracode && mkdir veracode
       - run: mkdir veracode/auth
       - run: cp -R packages/auth/src packages/auth/package.json packages/auth/package-lock.json veracode/auth
