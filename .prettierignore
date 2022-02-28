@@ -4,3 +4,4 @@
 **/lwc/**/*.xml
 **/stencil-generated/**/*
 .sfdx
+**/atomic-angular/dist/**/*
