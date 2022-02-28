@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.32.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.3...@coveo/atomic@1.32.0) (2022-02-28)
+
+
+### Features
+
+* **atomic:** allow to specify assets path on search interface ([#1768](https://github.com/coveo/ui-kit/issues/1768)) ([734ca66](https://github.com/coveo/ui-kit/commit/734ca668f9fbb86bb92bce03bf3da528f9b08f6a))
+
+
+
+
+
 ## [1.31.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.2...@coveo/atomic@1.31.3) (2022-02-28)
 
 **Note:** Version bump only for package @coveo/atomic

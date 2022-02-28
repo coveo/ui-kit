@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.3.3...@coveo/atomic-angular@0.4.0) (2022-02-28)
+
+
+### Features
+
+* **atomic:** allow to specify assets path on search interface ([#1768](https://github.com/coveo/ui-kit/issues/1768)) ([734ca66](https://github.com/coveo/ui-kit/commit/734ca668f9fbb86bb92bce03bf3da528f9b08f6a))
+
+
+
+
+
 ## [0.3.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.3.2...@coveo/atomic-angular@0.3.3) (2022-02-28)
 
 **Note:** Version bump only for package @coveo/atomic-angular

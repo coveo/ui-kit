@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.0...@coveo/quantic@1.10.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* **Quantic:** hide error message when fetching new classifications ([#1759](https://github.com/coveo/ui-kit/issues/1759)) ([0665702](https://github.com/coveo/ui-kit/commit/06657025def1fd76dc8fe767656ed64fdc710a87))
+
+
+
+
+
 # [1.10.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.9.1...@coveo/quantic@1.10.0) (2022-02-28)
 
 
