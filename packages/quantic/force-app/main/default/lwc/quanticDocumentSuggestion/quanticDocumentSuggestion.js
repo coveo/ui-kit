@@ -15,7 +15,7 @@ import readMore from '@salesforce/label/c.quantic_ReadMore';
  *
  * @category Case Assist
  * @example
- * <c-quantic-document-suggestion engine-id={engineId} search-engine-id={searchEngineId} max-documents="5"></c-quantic-document-suggestion>
+ * <c-quantic-document-suggestion engine-id={engineId} max-documents="5"></c-quantic-document-suggestion>
  */
 export default class QuanticDocumentSuggestion extends LightningElement {
   labels = {
@@ -30,13 +30,6 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /**
-   * The ID of the search engine instance the component registers to, this is used to instantiate the search interface to be able to show the quick view.
-   * @api
-   * @type {string}
-   * @defaultValue `'search-engine'`
-   */
-  @api searchEngineId = 'search-engine';
   /**
    * Whether or not we want to display the quick view for the document suggestions.
    * @api
@@ -102,7 +95,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   initialize = (engine) => {
     this.engine = engine;
     this.documentSuggestion =
-      CoveoHeadlessCaseAssist.buildDocumentSuggestion(engine);
+      CoveoHeadlessCaseAssist.buildDocumentSuggestionList(engine);
     this.unsubscribeDocumentSuggestion = this.documentSuggestion.subscribe(() =>
       this.updateDocumentSuggestionState()
     );

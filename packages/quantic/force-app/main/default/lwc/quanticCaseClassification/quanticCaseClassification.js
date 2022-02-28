@@ -194,7 +194,7 @@ export default class QuanticCaseClassification extends LightningElement {
           this.hideSuggestions = true;
           this.showSelect();
         }
-        this.setFieldValue(value);
+        this.setFieldValue(value, true);
       }
     }
   }
@@ -354,9 +354,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value) {
+  setFieldValue(value, autoSelection) {
     if (this.field.state.value !== value) {
-      this.field.update(value);
+      this.field.update(value, undefined, autoSelection);
     }
     this._value = value;
   }

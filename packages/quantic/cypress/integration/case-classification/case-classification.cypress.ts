@@ -82,11 +82,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
@@ -201,11 +197,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfInlineOptions(0);
         Expect.displaySelectInput(false);
         Expect.displaySelectTitle(true);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
@@ -325,11 +317,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.displaySelectInput(false);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
@@ -386,11 +374,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.displaySelectInput(false);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
     });
@@ -443,11 +427,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
         Actions.clickSuggestion(firstSuggestionIndex);
         Expect.logDeselect(coveoDefaultField);
@@ -547,11 +527,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
@@ -612,11 +588,7 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
@@ -718,24 +690,20 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(firstSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstSuggestionIndex
-        );
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
 
       scope('when fetching suggestions again', () => {
         const suggestionsCount = 2;
         const firstDisplayedSuggestionIndex = 0;
-        const firstSuggestionsIndex = 1;
+        const firstSuggestionIndex = 1;
 
         mockCaseClassification(
           coveoDefaultField,
           allOptions.slice(
-            firstSuggestionsIndex,
-            firstSuggestionsIndex + suggestionsCount
+            firstSuggestionIndex,
+            firstSuggestionIndex + suggestionsCount
           )
         );
         fetchClassifications();
@@ -744,17 +712,13 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(suggestionsCount);
         Expect.correctSugestionsOrder(
           allOptions.slice(
-            firstSuggestionsIndex,
-            firstSuggestionsIndex + suggestionsCount
+            firstSuggestionIndex,
+            firstSuggestionIndex + suggestionsCount
           )
         );
         Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(firstDisplayedSuggestionIndex);
-        Expect.logUpdatedClassificationFromSuggestion(
-          coveoDefaultField,
-          firstDisplayedSuggestionIndex
-        );
-        Expect.correctValue(allOptions[firstSuggestionsIndex].value);
+        Expect.logClickedSuggestion(firstDisplayedSuggestionIndex, true);
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
     });
   });

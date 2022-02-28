@@ -55,6 +55,20 @@ export const logUpdateCaseField = (fieldName: string) =>
       })
   )();
 
+export const logAutoSelectCaseField = (classificationId: string) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/classification/click',
+    (client, state) =>
+      client.logSelectFieldSuggestion({
+        suggestion: caseAssistCaseClassificationSelector(
+          state,
+          classificationId,
+          true
+        ),
+        ticket: caseAssistCaseSelector(state),
+      })
+  )();
+
 export const logClassificationClick = (classificationId: string) =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/classification/click',
@@ -92,6 +106,26 @@ export const buildQuickviewDocumentSuggestionClickThunk = (
         suggestion: caseAssistDocumentSuggestionSelector(
           state,
           suggestionId,
+          true
+        ),
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
+};
+
+export const logDocumentSuggestionOpen = (suggestionId: string) => {
+  return buildDocumentSuggestionOpenThunk(suggestionId)();
+};
+
+export const buildDocumentSuggestionOpenThunk = (suggestionId: string) => {
+  return makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/documentSuggestion/click',
+    (client, state) =>
+      client.logSelectDocumentSuggestion({
+        suggestion: caseAssistDocumentSuggestionSelector(
+          state,
+          suggestionId,
+          false,
           true
         ),
         ticket: caseAssistCaseSelector(state),

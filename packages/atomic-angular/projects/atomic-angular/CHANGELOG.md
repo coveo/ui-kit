@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.3.1...@coveo/atomic-angular@0.3.2) (2022-02-25)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [0.3.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.3.0...@coveo/atomic-angular@0.3.1) (2022-02-24)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [0.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.2.3...@coveo/atomic-angular@0.3.0) (2022-02-24)
+
+
+### Features
+
+* **atomic:** add configurable breakpoint for layouts ([#1742](https://github.com/coveo/ui-kit/issues/1742)) ([9096363](https://github.com/coveo/ui-kit/commit/9096363c13d0d44e73a8ae2923bd28b20667b2b4))
+
+
+
+
+
 ## [0.2.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@0.2.2...@coveo/atomic-angular@0.2.3) (2022-02-21)
 
 **Note:** Version bump only for package @coveo/atomic-angular

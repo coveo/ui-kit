@@ -77,6 +77,11 @@ describe('#buildSpecificFacetSearchRequest', () => {
     expect((await buildParams()).searchContext).toEqual({
       ...request,
       visitorId: expect.any(String),
+      analytics: {
+        ...request.analytics,
+        clientId: expect.any(String),
+        clientTimestamp: expect.any(String),
+      },
     });
   });
 });
