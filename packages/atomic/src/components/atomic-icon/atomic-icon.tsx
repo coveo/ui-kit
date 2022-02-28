@@ -1,4 +1,13 @@
-import {Component, Element, h, Host, Prop, State, Watch} from '@stencil/core';
+import {
+  Component,
+  Element,
+  forceUpdate,
+  h,
+  Host,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
 import {
@@ -47,6 +56,7 @@ export class AtomicIcon implements InitializableComponent {
       return await response.text();
     } catch (e) {
       this.error = e as Error;
+      forceUpdate(this);
       return null;
     }
   }

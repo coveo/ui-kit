@@ -183,6 +183,11 @@ export class AtomicSearchInterface {
     );
   }
 
+  @Watch('iconAssetsPath')
+  public updateIconAssetsPath() {
+    this.store.set('iconAssetsPath', this.iconAssetsPath);
+  }
+
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
     this.unsubscribeSearchStatus();
@@ -226,14 +231,13 @@ export class AtomicSearchInterface {
       );
       return;
     }
-
+    this.updateIconAssetsPath();
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();
     this.initAriaLive();
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
 
     this.initialized = true;
   }
