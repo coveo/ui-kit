@@ -112,6 +112,22 @@ export class AtomicSearchInterface {
    */
   @Prop() public scrollContainer = 'atomic-search-interface';
 
+  /**
+   * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+   *
+   * @example /mypublicpath/languages
+   *
+   */
+  @Prop() public languageAssetsPath = './lang';
+
+  /**
+   * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+   *
+   * @example /mypublicpath/icons
+   *
+   */
+  @Prop() public iconAssetsPath = './assets';
+
   public constructor() {
     setCoveoGlobal();
   }
@@ -167,6 +183,11 @@ export class AtomicSearchInterface {
     );
   }
 
+  @Watch('iconAssetsPath')
+  public updateIconAssetsPath() {
+    this.store.set('iconAssetsPath', this.iconAssetsPath);
+  }
+
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
     this.unsubscribeSearchStatus();
@@ -210,7 +231,7 @@ export class AtomicSearchInterface {
       );
       return;
     }
-
+    this.updateIconAssetsPath();
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
@@ -396,7 +417,7 @@ export class AtomicSearchInterface {
 
   private get i18nBackendOptions(): BackendOptions {
     return {
-      loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
     };
   }
 }
