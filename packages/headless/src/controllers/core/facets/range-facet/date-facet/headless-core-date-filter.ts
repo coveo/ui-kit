@@ -65,11 +65,6 @@ export interface DateFilterOptions {
    * @defaultValue `1000`
    */
   injectionDepth?: number;
-
-  /**
-   * Whether the filter is enabled and its value is used to filter search results.
-   */
-  enabled: boolean;
 }
 
 export interface DateFilterInitialState {
@@ -117,6 +112,11 @@ export interface DateFilterState {
    * Returns `true` if a search is in progress, and `false` if not.
    */
   isLoading: boolean;
+
+  /**
+   * Whether the filter is enabled and its value is used to filter search results.
+   */
+  enabled: boolean;
 }
 
 /**
