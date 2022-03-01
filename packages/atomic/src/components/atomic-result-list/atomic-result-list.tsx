@@ -34,6 +34,8 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {updateBreakpoints} from './replace-breakpoint';
+import {once} from '../../utils/utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -266,10 +268,7 @@ export class AtomicResultList implements InitializableComponent {
     }
 
     return (
-      <table
-        class={`list-root ${this.getClasses().join(' ')}`}
-        part="result-table"
-      >
+      <table class={`list-root ${this.classes}`} part="result-table">
         <thead part="result-table-heading">
           <tr part="result-table-heading-row">
             {fieldColumns.map((column) => (
@@ -310,10 +309,7 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildList() {
     return (
-      <div
-        class={`list-root ${this.getClasses().join(' ')}`}
-        part="result-list"
-      >
+      <div class={`list-root ${this.classes}`} part="result-list">
         {this.buildListPlaceholders()}
         {this.resultListState.results.length ? this.buildListResults() : null}
       </div>
@@ -334,7 +330,7 @@ export class AtomicResultList implements InitializableComponent {
   private buildResultWrapper() {
     return (
       <div
-        class="list-wrapper placeholder"
+        class={`list-wrapper placeholder ${this.classes}`}
         ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
       >
         {this.buildResultRoot()}
@@ -342,7 +338,7 @@ export class AtomicResultList implements InitializableComponent {
     );
   }
 
-  private getClasses() {
+  private get classes() {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
@@ -354,7 +350,7 @@ export class AtomicResultList implements InitializableComponent {
     ) {
       classes.push('loading');
     }
-    return classes;
+    return classes.join(' ');
   }
 
   @Listen('scroll', {target: 'window'})
@@ -377,7 +373,10 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
+
   public render() {
+    this.updateBreakpoints();
     if (this.resultListState.hasError) {
       return;
     }

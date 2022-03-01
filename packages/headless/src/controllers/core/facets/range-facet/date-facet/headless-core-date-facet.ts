@@ -101,12 +101,12 @@ export interface DateFacet extends Controller {
   toggleSingleSelect(selection: DateFacetValue): void;
 
   /**
-   * Enables the facet, undoing the effects of `disable`
+   * Enables the facet. I.e., undoes the effects of `disable`.
    */
   enable(): void;
 
   /**
-   * Disables the facet, preventing it from filtering results
+   * Disables the facet. I.e., prevents it from filtering results.
    */
   disable(): void;
 

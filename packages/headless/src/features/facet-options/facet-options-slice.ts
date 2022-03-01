@@ -62,9 +62,10 @@ export const facetOptionsReducer = createReducer(
           ...Object.keys(action.payload.nf ?? {}),
           ...Object.keys(action.payload.df ?? {}),
         ].forEach((facetId) => {
-          if (facetId in state) {
-            state.facets[facetId].enabled = true;
+          if (!(facetId in state)) {
+            state.facets[facetId] = getFacetOptionsSliceInitialState();
           }
+          state.facets[facetId].enabled = true;
         });
       });
   }
