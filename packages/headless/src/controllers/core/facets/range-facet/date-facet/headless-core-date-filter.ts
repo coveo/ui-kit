@@ -1,6 +1,7 @@
 import {
   ConfigurationSection,
   DateFacetSection,
+  FacetOptionsSection,
   SearchSection,
 } from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
@@ -8,10 +9,19 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  facetOptions,
+  search,
+} from '../../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../../features/facet-options/facet-options-actions';
 import {
   registerDateFacet,
   RegisterDateFacetActionCreatorPayload,
@@ -21,6 +31,7 @@ import {validateDateFacetOptions} from './headless-date-facet-options';
 import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {CoreEngine} from '../../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
 
 /**
  * The options defining a `DateFilter`.
@@ -54,6 +65,11 @@ export interface DateFilterOptions {
    * @defaultValue `1000`
    */
   injectionDepth?: number;
+
+  /**
+   * Whether the filter is enabled and its value is used to filter search results.
+   */
+  enabled: boolean;
 }
 
 export interface DateFilterInitialState {
@@ -123,7 +139,17 @@ export interface DateFilter extends Controller {
   setRange(range: DateFilterRange): boolean;
 
   /**
-   * The state of the `DateFacet` controller.
+   * Enables the filter. I.e., undoes the effects of `disable`.
+   */
+  enable(): void;
+
+  /**
+   * Disables the filter. I.e., prevents it from filtering results.
+   */
+  disable(): void;
+
+  /**
+   * The state of the `DateFilter` controller.
    */
   state: DateFilterState;
 }
@@ -151,6 +177,8 @@ export function buildCoreDateFilter(
 
   validateDateFacetOptions(engine, options);
   dispatch(registerDateFacet(options));
+
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   return {
     ...controller,
@@ -184,9 +212,16 @@ export function buildCoreDateFilter(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       return true;
     },
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
 
     get state() {
       const isLoading = isFacetLoadingResponseSelector(getState());
+      const enabled = getIsEnabled();
       const selectedRanges = dateFacetSelectedValuesSelector(
         getState(),
         facetId
@@ -197,6 +232,7 @@ export function buildCoreDateFilter(
         facetId,
         isLoading,
         range,
+        enabled,
       };
     },
   };
@@ -205,8 +241,8 @@ export function buildCoreDateFilter(
 function loadDateFilterReducer(
   engine: CoreEngine
 ): engine is CoreEngine<
-  DateFacetSection & ConfigurationSection & SearchSection
+  DateFacetSection & FacetOptionsSection & ConfigurationSection & SearchSection
 > {
-  engine.addReducers({dateFacetSet, configuration, search});
+  engine.addReducers({dateFacetSet, facetOptions, configuration, search});
   return true;
 }
