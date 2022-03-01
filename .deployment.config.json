@@ -160,11 +160,8 @@
       }
     ]
   },
-  "veracode": {
-    "sandbox_name": "UI Kit",
-    "app_name": "JSUI",
-    "source": "veracode",
-    "scan_include_patterns": "*"
+  "snyk_code": {
+    "no_scan": false
   },
   "observatory": {
     "no_endpoint": true
