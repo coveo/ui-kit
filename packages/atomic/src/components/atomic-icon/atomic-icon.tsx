@@ -47,6 +47,7 @@ export class AtomicIcon implements InitializableComponent {
 
   private async fetchIcon(url: string) {
     try {
+      // deepcode ignore Ssrf: client side code
       const response = await fetch(url);
       if (response.status !== 200 && response.status !== 304) {
         throw new Error(
@@ -92,10 +93,12 @@ export class AtomicIcon implements InitializableComponent {
 
   public render() {
     if (this.error) {
+      // deepcode ignore FormatString: client-side code.
       console.error(this.error, this.host);
       this.host.remove();
       return;
     }
+    // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code
     return <Host innerHTML={this.svg}></Host>;
   }
 }

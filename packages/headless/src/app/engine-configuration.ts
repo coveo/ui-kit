@@ -148,6 +148,7 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {
     organizationId: 'searchuisamples',
+    // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   };
 }

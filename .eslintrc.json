@@ -1,7 +1,6 @@
 {
   "ignorePatterns": [
     "node_modules",
-    "veracode",
     "stencil-generated",
     "atomic-angular/dist"
   ],

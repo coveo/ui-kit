@@ -40,21 +40,6 @@ node('linux && docker') {
     }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
-      stage('Veracode package') {
-        sh 'rm -rf veracode && mkdir veracode'
-        
-        sh 'mkdir veracode/auth'
-        sh 'cp -R packages/auth/src packages/auth/package.json packages/auth/package-lock.json veracode/auth'
-
-        sh 'mkdir veracode/bueno'
-        sh 'cp -R packages/bueno/src packages/bueno/package.json packages/bueno/package-lock.json veracode/bueno'
-
-        sh 'mkdir veracode/headless'
-        sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
-
-        sh 'mkdir veracode/atomic'
-        sh 'cp -R packages/atomic/src packages/atomic/package.json packages/atomic/package-lock.json veracode/atomic'
-      }
 
       stage('Deployment pipeline upload') {
         headless = readJSON file: 'packages/headless/package.json'
