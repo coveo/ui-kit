@@ -9,6 +9,7 @@ import {TimeSpan} from 'c/quanticUtils';
 
 /**
  * The `QuanticResult` component is used internally by the `QuanticResultList` component.
+ * @category Search
  * @example
  * <c-quantic-result engine-id={engineId} result={result} result-templates-manager={resultTemplatesManager}></c-quantic-result>
  */
@@ -20,7 +21,7 @@ export default class QuanticResult extends LightningElement {
    */
   @api engineId;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
    * @type {Result}
    */

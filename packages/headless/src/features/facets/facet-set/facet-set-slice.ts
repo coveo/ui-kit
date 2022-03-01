@@ -10,7 +10,7 @@ import {
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
-import {executeSearch} from '../../search/search-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
@@ -21,7 +21,10 @@ import {
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
 import {getFacetSetInitialState} from './facet-set-state';
-import {deselectAllFacets} from '../generic/facet-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {WritableDraft} from 'immer/dist/internal';
@@ -76,19 +79,19 @@ export const facetSetReducer = createReducer(
           return;
         }
 
-        const targetValue = facetRequest.currentValues.find(
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.currentValues.find(
           (req) => req.value === selection.value
         );
-
-        if (!targetValue) {
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
           return;
         }
 
-        const isSelected = targetValue.state === 'selected';
-        targetValue.state = isSelected ? 'idle' : 'selected';
-
+        const isSelected = existingValue.state === 'selected';
+        existingValue.state = isSelected ? 'idle' : 'selected';
         facetRequest.freezeCurrentValues = true;
-        facetRequest.preventAutoSelect = true;
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
@@ -116,6 +119,11 @@ export const facetSetReducer = createReducer(
           handleFacetDeselectAll(request);
         });
       })
+      .addCase(updateFacetAutoSelection, (state, action) =>
+        Object.keys(state).forEach((facetId) => {
+          state[facetId].preventAutoSelect = !action.payload.allow;
+        })
+      )
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
       })
@@ -154,6 +162,15 @@ export const facetSetReducer = createReducer(
           )
         );
       })
+      .addCase(fetchFacetValues.fulfilled, (state, action) => {
+        const facets = action.payload.response.facets;
+        facets.forEach((facetResponse) =>
+          mutateStateFromFacetResponse(
+            state[facetResponse.facetId],
+            facetResponse
+          )
+        );
+      })
       .addCase(selectFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId];
@@ -172,26 +189,28 @@ export const facetSetReducer = createReducer(
         }
 
         const searchResultValue = buildSelectedFacetValueRequest(rawValue);
-        const firstIdleIndex = currentValues.findIndex(
-          (v) => v.state === 'idle'
-        );
-        const indexToInsertAt =
-          firstIdleIndex === -1 ? currentValues.length : firstIdleIndex;
-
-        const valuesBefore = currentValues.slice(0, indexToInsertAt);
-        const valuesAfter = currentValues.slice(indexToInsertAt + 1);
-
-        facetRequest.currentValues = [
-          ...valuesBefore,
-          searchResultValue,
-          ...valuesAfter,
-        ];
-        facetRequest.numberOfValues = facetRequest.currentValues.length;
+        insertNewValue(facetRequest, searchResultValue);
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       });
   }
 );
+
+function insertNewValue(
+  facetRequest: FacetRequest,
+  facetValue: FacetValueRequest
+) {
+  const {currentValues} = facetRequest;
+  const firstIdleIndex = currentValues.findIndex((v) => v.state === 'idle');
+  const indexToInsertAt =
+    firstIdleIndex === -1 ? currentValues.length : firstIdleIndex;
+
+  const valuesBefore = currentValues.slice(0, indexToInsertAt);
+  const valuesAfter = currentValues.slice(indexToInsertAt + 1);
+
+  facetRequest.currentValues = [...valuesBefore, facetValue, ...valuesAfter];
+  facetRequest.numberOfValues = facetRequest.currentValues.length;
+}
 
 function mutateStateFromFacetResponse(
   facetRequest: WritableDraft<FacetRequest> | undefined,

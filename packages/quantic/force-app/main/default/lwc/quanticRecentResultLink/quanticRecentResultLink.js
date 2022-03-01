@@ -6,11 +6,12 @@ import {ResultUtils} from 'c/quanticUtils';
 /** @typedef {import("coveo").Result} Result*/
 
 /**
- * The `QuanticResultLink` component is used internally by the `QuanticRecentResultsList` component.
+ * The `QuanticRecentResultLink` component is used internally by the `QuanticRecentResultsList` component.
+ * @category Search
  * @example
  * <c-quantic-recent-result-link engine-id={engineId} result={result}></c-quantic-recent-result-link>
  */
-export default class QuanticResultLink extends LightningElement {
+export default class QuanticRecentResultLink extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
    * @api

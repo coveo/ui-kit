@@ -23,7 +23,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
       {
         cwd: process.cwd(),
         env: process.env,
-        maxBuffer: 1024 * 1024,
+        maxBuffer: 1024 * 1024 * 1.5,
       },
       (error, stdout) => {
         (error ? reject : resolve)(

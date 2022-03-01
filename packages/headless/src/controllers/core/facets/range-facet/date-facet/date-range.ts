@@ -22,12 +22,12 @@ export type DateRangeInput = AbsoluteDate | RelativeDate;
 
 export interface DateRangeOptions {
   /**
-   * The starting value for the date range. A date range can be either absolute or [relative](https://docs.coveo.com/en/headless/latest/reference/controllers/date-facet/relative-date-format/).
+   * The starting value for the date range. A date range can be either absolute or [relative](https://docs.coveo.com/en/headless/latest/reference/search/search-date-facet-controller/relative-date-format/).
    */
   start: DateRangeInput;
 
   /**
-   * The ending value for the date range. A date range can be either absolute or [relative](https://docs.coveo.com/en/headless/latest/reference/controllers/date-facet/relative-date-format/).
+   * The ending value for the date range. A date range can be either absolute or [relative](https://docs.coveo.com/en/headless/latest/reference/search/search-date-facet-controller/relative-date-format/).
    */
   end: DateRangeInput;
 

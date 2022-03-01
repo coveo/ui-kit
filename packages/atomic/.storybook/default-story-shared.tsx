@@ -1,7 +1,6 @@
 import {h} from '@stencil/core';
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {Args} from '@storybook/api';
-import {DocsPage} from '@storybook/addon-docs';
 import {render, TemplateResult} from 'lit-html';
 import {mapPropsToArgTypes} from './map-props-to-args';
 import {resultComponentArgTypes} from './map-result-list-props-to-args';
@@ -100,7 +99,6 @@ export default function sharedDefaultStory(
   title: string,
   componentTag: string,
   defaultArgs: Args,
-  docPage: typeof DocsPage,
   isResultComponent: boolean,
   advancedConfig: DefaultStoryAdvancedConfig = {}
 ) {
@@ -112,11 +110,13 @@ export default function sharedDefaultStory(
 
   const defaultModuleExport = {
     title,
+    id: componentTag,
     argTypes: mapPropsToArgTypes(componentTag),
     parameters: {
       docs: {
-        page: docPage,
+        page: null,
       },
+      viewMode: 'canvas',
       [ADDON_PARAMETER_KEY]: {
         componentTag,
         isResultComponent,
@@ -147,6 +147,7 @@ export default function sharedDefaultStory(
 
   exportedStory.loaders = [defaultLoader];
   exportedStory.decorators = [defaultDecorator];
+  exportedStory.storyName = componentTag;
 
   return {
     defaultModuleExport,

@@ -3,6 +3,515 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.25](https://github.com/coveo/ui-kit/compare/headless-react@0.50.24...headless-react@0.50.25) (2022-02-28)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.24](https://github.com/coveo/ui-kit/compare/headless-react@0.50.23...headless-react@0.50.24) (2022-02-28)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.23](https://github.com/coveo/ui-kit/compare/headless-react@0.50.22...headless-react@0.50.23) (2022-02-25)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.22](https://github.com/coveo/ui-kit/compare/headless-react@0.50.21...headless-react@0.50.22) (2022-02-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.21](https://github.com/coveo/ui-kit/compare/headless-react@0.50.20...headless-react@0.50.21) (2022-02-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.20](https://github.com/coveo/ui-kit/compare/headless-react@0.50.19...headless-react@0.50.20) (2022-02-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.19](https://github.com/coveo/ui-kit/compare/headless-react@0.50.18...headless-react@0.50.19) (2022-02-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.18](https://github.com/coveo/ui-kit/compare/headless-react@0.50.17...headless-react@0.50.18) (2022-02-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.17](https://github.com/coveo/ui-kit/compare/headless-react@0.50.16...headless-react@0.50.17) (2022-02-16)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.16](https://github.com/coveo/ui-kit/compare/headless-react@0.50.15...headless-react@0.50.16) (2022-02-15)
+
+
+### Bug Fixes
+
+* **headless:** relevance inspector fetchFieldsDescription rename interface & enable by default ([#1733](https://github.com/coveo/ui-kit/issues/1733)) ([d1a3f3e](https://github.com/coveo/ui-kit/commit/d1a3f3eab52b54837c3f8cce3f1cbca147669c4c))
+
+
+
+
+
+## [0.50.15](https://github.com/coveo/ui-kit/compare/headless-react@0.50.14...headless-react@0.50.15) (2022-02-11)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.14](https://github.com/coveo/ui-kit/compare/headless-react@0.50.13...headless-react@0.50.14) (2022-02-09)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.13](https://github.com/coveo/ui-kit/compare/headless-react@0.50.12...headless-react@0.50.13) (2022-02-07)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.12](https://github.com/coveo/ui-kit/compare/headless-react@0.50.11...headless-react@0.50.12) (2022-02-04)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.11](https://github.com/coveo/ui-kit/compare/headless-react@0.50.10...headless-react@0.50.11) (2022-02-04)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.10](https://github.com/coveo/ui-kit/compare/headless-react@0.50.9...headless-react@0.50.10) (2022-02-03)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.9](https://github.com/coveo/ui-kit/compare/headless-react@0.50.8...headless-react@0.50.9) (2022-02-02)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.8](https://github.com/coveo/ui-kit/compare/headless-react@0.50.7...headless-react@0.50.8) (2022-01-26)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.7](https://github.com/coveo/ui-kit/compare/headless-react@0.50.6...headless-react@0.50.7) (2022-01-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.6](https://github.com/coveo/ui-kit/compare/headless-react@0.50.5...headless-react@0.50.6) (2022-01-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.5](https://github.com/coveo/ui-kit/compare/headless-react@0.50.4...headless-react@0.50.5) (2022-01-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.4](https://github.com/coveo/ui-kit/compare/headless-react@0.50.3...headless-react@0.50.4) (2022-01-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.3](https://github.com/coveo/ui-kit/compare/headless-react@0.50.2...headless-react@0.50.3) (2022-01-20)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.2](https://github.com/coveo/ui-kit/compare/headless-react@0.50.1...headless-react@0.50.2) (2022-01-20)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.50.1](https://github.com/coveo/ui-kit/compare/headless-react@0.50.0...headless-react@0.50.1) (2022-01-19)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.50.0](https://github.com/coveo/ui-kit/compare/headless-react@0.49.2...headless-react@0.50.0) (2022-01-19)
+
+
+### Features
+
+* **atomic:** expose idiomatic react templating functionality ([#1677](https://github.com/coveo/ui-kit/issues/1677)) ([0876408](https://github.com/coveo/ui-kit/commit/0876408ef1ae5aeda7d731b0bede8f69ccdeaa35))
+
+
+
+
+
+## [0.49.2](https://github.com/coveo/ui-kit/compare/headless-react@0.49.1...headless-react@0.49.2) (2022-01-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.49.1](https://github.com/coveo/ui-kit/compare/headless-react@0.49.0...headless-react@0.49.1) (2022-01-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.49.0](https://github.com/coveo/ui-kit/compare/headless-react@0.48.0...headless-react@0.49.0) (2022-01-18)
+
+
+### Features
+
+* **headless:** Add FrequentlyViewedSameCategory and FrequentlyViewedDifferentCategory strategies ([#1667](https://github.com/coveo/ui-kit/issues/1667)) ([48af22f](https://github.com/coveo/ui-kit/commit/48af22f30173517bf28b62d88f49009621aaa073))
+
+
+
+
+
+# [0.48.0](https://github.com/coveo/ui-kit/compare/headless-react@0.47.5...headless-react@0.48.0) (2022-01-17)
+
+
+### Features
+
+* **atomic:** make assets and language available for atomic-react ([#1663](https://github.com/coveo/ui-kit/issues/1663)) ([514ba25](https://github.com/coveo/ui-kit/commit/514ba255453a94e8c901687a3cbc8dd65033c043))
+
+
+
+
+
+## [0.47.5](https://github.com/coveo/ui-kit/compare/headless-react@0.47.4...headless-react@0.47.5) (2022-01-14)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.47.4](https://github.com/coveo/ui-kit/compare/headless-react@0.47.3...headless-react@0.47.4) (2022-01-14)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.47.3](https://github.com/coveo/ui-kit/compare/headless-react@0.47.2...headless-react@0.47.3) (2022-01-13)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.47.2](https://github.com/coveo/ui-kit/compare/headless-react@0.47.1...headless-react@0.47.2) (2022-01-13)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.47.1](https://github.com/coveo/ui-kit/compare/headless-react@0.47.0...headless-react@0.47.1) (2022-01-12)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.47.0](https://github.com/coveo/ui-kit/compare/headless-react@0.46.0...headless-react@0.47.0) (2022-01-12)
+
+
+### Features
+
+* **atomic:** support result list templating for atomic-react  ([#1649](https://github.com/coveo/ui-kit/issues/1649)) ([d3cd34c](https://github.com/coveo/ui-kit/commit/d3cd34ca9b32e63e47aaf6b7e2ec8b5e13d39570))
+
+
+
+
+
+# [0.46.0](https://github.com/coveo/ui-kit/compare/headless-react@0.45.20...headless-react@0.46.0) (2022-01-12)
+
+
+### Features
+
+* atomic-react package initial commit ([#1645](https://github.com/coveo/ui-kit/issues/1645)) ([ce2b570](https://github.com/coveo/ui-kit/commit/ce2b570107a8ed68efedb9aff97573ab0f7ddc75))
+
+
+
+
+
+## [0.45.20](https://github.com/coveo/ui-kit/compare/headless-react@0.45.19...headless-react@0.45.20) (2022-01-05)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.19](https://github.com/coveo/ui-kit/compare/headless-react@0.45.18...headless-react@0.45.19) (2022-01-05)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.18](https://github.com/coveo/ui-kit/compare/headless-react@0.45.17...headless-react@0.45.18) (2022-01-05)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.17](https://github.com/coveo/ui-kit/compare/headless-react@0.45.16...headless-react@0.45.17) (2022-01-04)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.16](https://github.com/coveo/ui-kit/compare/headless-react@0.45.15...headless-react@0.45.16) (2021-12-17)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.15](https://github.com/coveo/ui-kit/compare/headless-react@0.45.14...headless-react@0.45.15) (2021-12-16)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.14](https://github.com/coveo/ui-kit/compare/headless-react@0.45.13...headless-react@0.45.14) (2021-12-16)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.13](https://github.com/coveo/ui-kit/compare/headless-react@0.45.12...headless-react@0.45.13) (2021-12-13)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.12](https://github.com/coveo/ui-kit/compare/headless-react@0.45.11...headless-react@0.45.12) (2021-12-09)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.11](https://github.com/coveo/ui-kit/compare/headless-react@0.45.10...headless-react@0.45.11) (2021-12-09)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.10](https://github.com/coveo/ui-kit/compare/headless-react@0.45.9...headless-react@0.45.10) (2021-12-09)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.9](https://github.com/coveo/ui-kit/compare/headless-react@0.45.8...headless-react@0.45.9) (2021-12-03)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.8](https://github.com/coveo/ui-kit/compare/headless-react@0.45.7...headless-react@0.45.8) (2021-12-02)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.7](https://github.com/coveo/ui-kit/compare/headless-react@0.45.6...headless-react@0.45.7) (2021-12-02)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.6](https://github.com/coveo/ui-kit/compare/headless-react@0.45.5...headless-react@0.45.6) (2021-12-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.5](https://github.com/coveo/ui-kit/compare/headless-react@0.45.4...headless-react@0.45.5) (2021-12-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.4](https://github.com/coveo/ui-kit/compare/headless-react@0.45.3...headless-react@0.45.4) (2021-12-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.3](https://github.com/coveo/ui-kit/compare/headless-react@0.45.2...headless-react@0.45.3) (2021-12-01)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.2](https://github.com/coveo/ui-kit/compare/headless-react@0.45.1...headless-react@0.45.2) (2021-11-30)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.45.1](https://github.com/coveo/ui-kit/compare/headless-react@0.45.0...headless-react@0.45.1) (2021-11-30)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.45.0](https://github.com/coveo/ui-kit/compare/headless-react@0.44.4...headless-react@0.45.0) (2021-11-29)
+
+
+### Features
+
+* **case-assist:** connect Case Assist analytics client in Headless ([#1518](https://github.com/coveo/ui-kit/issues/1518)) ([6e4a399](https://github.com/coveo/ui-kit/commit/6e4a399dd5187642631e0cca4a3daa3bc99aa26b))
+
+
+
+
+
+## [0.44.4](https://github.com/coveo/ui-kit/compare/headless-react@0.44.3...headless-react@0.44.4) (2021-11-26)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.44.3](https://github.com/coveo/ui-kit/compare/headless-react@0.44.2...headless-react@0.44.3) (2021-11-26)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.44.2](https://github.com/coveo/ui-kit/compare/headless-react@0.44.1...headless-react@0.44.2) (2021-11-26)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.44.1](https://github.com/coveo/ui-kit/compare/headless-react@0.44.0...headless-react@0.44.1) (2021-11-26)
 
 **Note:** Version bump only for package headless-react

@@ -1,14 +1,36 @@
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../../src/components/atomic-result/atomic-result-display-options';
 import {resultListComponent} from './result-list-selectors';
 
-export function withAnySectionnableResultList(assertions: () => void) {
-  const viewports = {mobile: 1023, desktop: 1024};
+interface WithAnySectionnableResultListOptions {
+  viewports?: Record<string, number>;
+  layouts?: ResultDisplayLayout[];
+  imageSizes?: ResultDisplayImageSize[];
+  densities?: ResultDisplayDensity[];
+}
+
+export function withAnySectionnableResultList(
+  assertions: (
+    display: ResultDisplayLayout,
+    imageSize: ResultDisplayImageSize,
+    density: ResultDisplayDensity
+  ) => void,
+  options?: WithAnySectionnableResultListOptions
+) {
+  const viewports = options?.viewports ?? {mobile: 1023, desktop: 1024};
+  const layouts = options?.layouts ?? ['list', 'grid'];
+  const imageSizes = options?.imageSizes ?? ['none', 'icon', 'small', 'large'];
+  const densities = options?.densities ?? ['compact', 'normal', 'comfortable'];
   Object.entries(viewports).forEach(([viewport, width]) =>
     describe(`with a ${viewport} viewport`, () =>
-      ['list', 'grid'].forEach((display) =>
+      layouts.forEach((display) =>
         describe(`in a result ${display}`, () =>
-          ['none', 'icon', 'small', 'large'].forEach((image) =>
+          imageSizes.forEach((image) =>
             describe(`with image-size="${image}"`, () =>
-              ['compact', 'normal', 'comfortable'].forEach((density) =>
+              densities.forEach((density) =>
                 describe(`with density="${density}"`, () => {
                   before(() => {
                     const aspectRatio = 16 / 9;
@@ -21,7 +43,7 @@ export function withAnySectionnableResultList(assertions: () => void) {
                     });
                   });
 
-                  assertions();
+                  assertions(display, image, density);
                 })
               ))
           ))

@@ -3,7 +3,7 @@ import * as RatingRangeFacetAssertions from './rating-range-facet-assertions';
 import * as RatingFacetAssertions from '../rating-facet/rating-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import {selectIdleLinkValueAt} from '../facet-common-actions';
+import {pressClearButton, selectIdleLinkValueAt} from '../facet-common-actions';
 import {
   addRatingRangeFacet,
   ratingRangeFacetField,
@@ -73,7 +73,6 @@ describe('Rating Range Test Suites', () => {
       function setupSelectLinkValue() {
         setupRatingRangeFacet();
         selectIdleLinkValueAt(RatingRangeFacetSelectors, selectionIndex);
-        cy.wait(TestFixture.interceptAliases.Search);
       }
 
       describe('verify rendering', () => {
@@ -97,6 +96,37 @@ describe('Rating Range Test Suites', () => {
       describe('verify analytic', () => {
         before(setupSelectLinkValue);
         RatingFacetAssertions.assertLogRatingFacetSelect(ratingRangeFacetField);
+      });
+
+      describe('when selecting the "Clear filter" button', () => {
+        function setupClearCheckboxValues() {
+          setupSelectLinkValue();
+          pressClearButton(RatingRangeFacetSelectors);
+        }
+        describe('verify rendering', () => {
+          before(setupClearCheckboxValues);
+
+          CommonFacetAssertions.assertDisplayClearButton(
+            RatingRangeFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertNumberOfSelectedLinkValues(
+            RatingRangeFacetSelectors,
+            0
+          );
+          CommonFacetAssertions.assertNumberOfIdleLinkValues(
+            RatingRangeFacetSelectors,
+            ratingRangeFacetDefaultNumberOfIntervals
+          );
+          CommonFacetAssertions.assertFocusHeader(RatingRangeFacetSelectors);
+        });
+
+        describe('verify analytics', () => {
+          before(setupClearCheckboxValues);
+          CommonFacetAssertions.assertLogClearFacetValues(
+            ratingRangeFacetField
+          );
+        });
       });
     });
   });

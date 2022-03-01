@@ -749,4 +749,46 @@
         <protected>false</protected>
         <shortDescription>Timeframe facet end label</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_CaseClassificationTitle</fullName>
+      <value>How can we help you? Please select a topic.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Which topic relates to your issue?</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_MoreTopics</fullName>
+      <value>More Topics</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>More topics</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SelectOption</fullName>
+      <value>Select an option</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Select an option</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Loading</fullName>
+      <value>Loading</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Loading</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_NoSuggestions</fullName>
+      <value>No suggestions</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No suggestions</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ReadMore</fullName>
+      <value>Read more</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Read more</shortDescription>
+    </labels>
 </CustomLabels>

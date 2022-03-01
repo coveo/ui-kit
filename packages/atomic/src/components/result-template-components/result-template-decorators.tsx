@@ -10,13 +10,23 @@ export class MissingResultParentError extends Error {
   }
 }
 
+/**
+ * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.
+ * This allows the Stencil component to fetch the current result from its rendered parent, the `atomic-result` component.
+ *
+ *
+ * @example
+ * @ResultContext() private result!: Result;
+ *
+ * For more information and examples, view the "Utilities" section of the readme.
+ */
 export function ResultContext() {
   return (component: ComponentInterface, resultVariable: string) => {
     const {connectedCallback, render} = component;
     component.connectedCallback = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
-        'atomic/resolveResult',
+        resultContextEventName,
         (result: Result) => {
           this[resultVariable] = result;
         }
@@ -34,12 +44,13 @@ export function ResultContext() {
 
     component.render = function () {
       if (this.error) {
-        this.host?.remove();
+        const element = getElement(this);
+        element.remove();
         console.error(
           'Result component is in error and has been removed from the DOM',
           this.error,
           this,
-          this.host
+          element
         );
         return;
       }
@@ -47,3 +58,30 @@ export function ResultContext() {
     };
   };
 }
+
+type ResultContextEventHandler = (result: Result) => void;
+export type ResultContextEvent = CustomEvent<ResultContextEventHandler>;
+const resultContextEventName = 'atomic/resolveResult';
+
+/**
+ * Retrieves `Result` on a rendered `atomic-result`.
+ *
+ * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
+ *
+ * You should use the method in the [connectedCallback lifecycle method](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks).
+ *
+ * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
+ * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
+ */
+export const resultContext = (element: Element) =>
+  new Promise<Result>((resolve, reject) => {
+    const event = buildCustomEvent<ResultContextEventHandler>(
+      resultContextEventName,
+      (result: Result) => resolve(result)
+    );
+    element.dispatchEvent(event);
+
+    if (!element.closest('atomic-result')) {
+      reject(new MissingResultParentError(element.nodeName.toLowerCase()));
+    }
+  });

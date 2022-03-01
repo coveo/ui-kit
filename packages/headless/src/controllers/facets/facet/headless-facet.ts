@@ -1,4 +1,7 @@
-import {executeSearch} from '../../../features/search/search-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -41,7 +44,7 @@ import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/f
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
-export {
+export type {
   FacetOptions,
   FacetSearchOptions,
   FacetValueState,
@@ -123,12 +126,12 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
 
     showMoreValues() {
       coreController.showMoreValues();
-      dispatch(executeSearch(logFacetShowMore(getFacetId())));
+      dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
     },
 
     showLessValues() {
       coreController.showLessValues();
-      dispatch(executeSearch(logFacetShowLess(getFacetId())));
+      dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
     },
 
     get state() {

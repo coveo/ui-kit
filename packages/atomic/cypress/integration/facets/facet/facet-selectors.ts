@@ -11,14 +11,36 @@ export const FacetSelectors = {
     FacetSelectors.shadow().find(
       '[part="value-checkbox"][aria-checked="false"]'
     ),
+  checkboxValueWithText: (text: string) =>
+    FacetSelectors.shadow()
+      .find(`[part="value-label"]:contains("${text}")`)
+      .parent()
+      .parent()
+      .find('[part="value-checkbox"]'),
+  idleCheckboxValueLabel: () =>
+    FacetSelectors.idleCheckboxValue().parent().find('[part="value-label"]'),
   selectedLinkValue: () =>
     FacetSelectors.shadow().find('[part="value-link"][aria-pressed="true"]'),
   idleLinkValue: () =>
     FacetSelectors.shadow().find('[part="value-link"][aria-pressed="false"]'),
+  selectedLinkValueWithText: (text: string) =>
+    FacetSelectors.shadow().find(
+      `[part="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
+    ),
+  idleLinkValueLabel: () =>
+    FacetSelectors.shadow().find(
+      '[part="value-link"][aria-pressed="false"] [part="value-label"]'
+    ),
   selectedBoxValue: () =>
     FacetSelectors.shadow().find('[part="value-box"][aria-pressed="true"]'),
   idleBoxValue: () =>
     FacetSelectors.shadow().find('[part="value-box"][aria-pressed="false"]'),
+  selectedBoxValueWithText: (text: string) =>
+    FacetSelectors.shadow().find(
+      `[part="value-box"][aria-pressed="true"]:contains("${text}")`
+    ),
+  idleBoxValueLabel: () =>
+    FacetSelectors.idleBoxValue().find('[part="value-label"]'),
   values: () => FacetSelectors.shadow().find('[part="values"]'),
   showMoreButton: () => FacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () => FacetSelectors.shadow().find('[part="show-less"]'),

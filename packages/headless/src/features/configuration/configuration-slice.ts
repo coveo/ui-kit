@@ -80,6 +80,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.enabled)) {
           state.analytics.enabled = action.payload.enabled;
         }
+        if (!isNullOrUndefined(action.payload.originContext)) {
+          state.analytics.originContext = action.payload.originContext;
+        }
         if (!isNullOrUndefined(action.payload.originLevel2)) {
           state.analytics.originLevel2 = action.payload.originLevel2;
         }
@@ -95,6 +98,12 @@ export const configurationReducer = createReducer(
         }
         if (!isNullOrUndefined(action.payload.anonymous)) {
           state.analytics.anonymous = action.payload.anonymous;
+        }
+        if (!isNullOrUndefined(action.payload.deviceId)) {
+          state.analytics.deviceId = action.payload.deviceId;
+        }
+        if (!isNullOrUndefined(action.payload.userDisplayName)) {
+          state.analytics.userDisplayName = action.payload.userDisplayName;
         }
       })
       .addCase(disableAnalytics, (state) => {

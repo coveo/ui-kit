@@ -28,6 +28,7 @@ const CLASS_WITHOUT_SUBMIT =
 /**
  * The `QuanticStandaloneSearchBox` component creates a search box with built-in support for query suggestions.
  * See [Use a Standalone Search Box](https://docs.coveo.com/en/quantic/latest/usage/ssb-usage/).
+ * @category Search
  * @example
  * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri"></c-quantic-standalone-search-box>
  */
@@ -95,6 +96,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   standaloneSearchBox;
   /** @type {Function} */
   unsubscribe;
+  /** @type {boolean} */
+  isInitialized;
 
   /** @type {Suggestion[]} */
   get suggestions() {
@@ -116,6 +119,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   renderedCallback() {
     initializeWithHeadless(this, this.standaloneEngineId, this.initialize);
+    if (!this.isInitialized && !!this.standaloneSearchBox && !!this.input) {
+      this.input.setAttribute('is-initialized', 'true');
+      this.isInitialized = true;
+    }
   }
 
   @wire(CurrentPageReference)

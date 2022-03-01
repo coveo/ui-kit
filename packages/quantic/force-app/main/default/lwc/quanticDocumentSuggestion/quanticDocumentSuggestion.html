@@ -1,0 +1,59 @@
+<template>
+  <template if:true={renderingError}>
+    <div class="error-message slds-text-color_destructive">{renderingError}</div>
+  </template>
+  <template if:false={renderingError}>
+    <template if:true={loading}>
+      <div class="loading-holder">
+        <lightning-spinner alternative-text={labels.loading}></lightning-spinner>
+      </div>
+    </template>
+    <template if:false={loading}>
+      <template if:true={hasSuggestions}>
+        <div class="slds-card">
+          <lightning-accordion active-section-name={openedDocuments} allow-multiple-sections-open
+            class="slds-p-vertical_xx-small">
+            <template iterator:it={suggestions}>
+              <lightning-accordion-section data-id={it.value.uniqueId} onclick={handleSectionClick}
+                key={it.value.uniqueId} name={it.value.uniqueId} label={it.value.title}>
+                <div slot="actions" class="slds-var-p-horizontal_x-large">
+                  <slot name="rating" data-doc-id={it.value.uniqueId}></slot>
+                </div>
+                <div onclick={stopPropagation}>
+                  <div class="
+                      slds-var-p-horizontal_large
+                      slds-var-p-vertical_x-small
+                    ">
+                    <p class="excerpt">{it.value.excerpt}</p>
+                    <div class="row slds-var-p-top_medium">
+                      <template if:true={showQuickview}>
+                        <c-quantic-result-quickview use-case="case-assist" engine-id={engineId}
+                          preview-button-icon="utility:new_window" preview-button-label={labels.readMore}
+                          preview-button-variant="outline-brand" result={it.value}>
+                          <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
+                        </c-quantic-result-quickview>
+                      </template>
+                      <slot name="actions" data-doc-id={it.value.uniqueId}></slot>
+                    </div>
+                  </div>
+                </div>
+              </lightning-accordion-section>
+            </template>
+          </lightning-accordion>
+        </div>
+      </template>
+      <template if:false={hasSuggestions}>
+        <slot name="no-suggestions">
+          <div class="
+              no-suggestion-message
+              slds-align_absolute-center
+              slds-var-p-vertical_xx-large
+              slds-text-color_weak
+            ">
+            {labels.noSuggestions}
+          </div>
+        </slot>
+      </template>
+    </template>
+  </template>
+</template>

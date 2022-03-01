@@ -22,7 +22,7 @@ import {
   buildCoreNumericFilter,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
 
-export {
+export type {
   NumericFilterOptions,
   NumericFilterInitialState,
   NumericFilterRange,
@@ -31,6 +31,12 @@ export {
   NumericFilter,
 };
 
+/**
+ * Creates a `NumericFilter` controller instance.
+ * @param engine - The headless engine.
+ * @param props - The configurable `NumericFilter` controller properties.
+ * @returns A `NumericFilter` controller instance.
+ */
 export function buildNumericFilter(
   engine: SearchEngine,
   props: NumericFilterProps

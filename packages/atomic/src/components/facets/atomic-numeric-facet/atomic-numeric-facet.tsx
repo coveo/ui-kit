@@ -39,6 +39,10 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -147,6 +151,9 @@ export class AtomicNumericFacet
    * Minimum: `0`
    */
   @Prop() public injectionDepth = 1000;
+
+  @FocusTarget()
+  private headerFocus!: FocusTargetController;
 
   private validateProps() {
     new Schema({
@@ -265,6 +272,7 @@ export class AtomicNumericFacet
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => {
+          this.headerFocus.focusAfterSearch();
           if (this.filterState?.range) {
             this.filter?.clear();
             return;
@@ -274,6 +282,7 @@ export class AtomicNumericFacet
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+        headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
     );
   }
@@ -382,9 +391,12 @@ export class AtomicNumericFacet
     return this.shouldRenderInput || this.shouldRenderValues;
   }
 
+  private get hasInputRange() {
+    return !!this.filterState?.range;
+  }
+
   private get shouldRenderValues() {
-    const hasInputRange = !!this.filterState?.range;
-    return !hasInputRange && !!this.valuesToRender.length;
+    return !this.hasInputRange && !!this.valuesToRender.length;
   }
 
   private get shouldRenderInput() {
@@ -392,7 +404,19 @@ export class AtomicNumericFacet
       return false;
     }
 
-    return this.searchStatusState.hasResults || !!this.filterState?.range;
+    if (this.hasInputRange) {
+      return true;
+    }
+
+    if (!this.searchStatusState.hasResults) {
+      return false;
+    }
+
+    if (!this.valuesToRender.length && this.numberOfValues > 0) {
+      return false;
+    }
+
+    return true;
   }
 
   public render() {

@@ -1,13 +1,9 @@
 import {
   doSortAlphanumeric,
-  doSortOccurences,
+  doSortOccurrences,
 } from '../../../utils/componentUtils';
-import {RouteAlias} from '../../../utils/setupComponent';
 import {ResultListSelectors} from '../../result-list/result-list-selectors';
-import {
-  CategoryFacetSelectors,
-  BreadcrumbSelectors,
-} from './category-facet-selectors';
+import {CategoryFacetSelectors} from './category-facet-selectors';
 import {hierarchicalField} from './category-facet-actions';
 import {should} from '../../common-assertions';
 
@@ -39,16 +35,6 @@ export function assertNumberOfParentValues(value: number) {
   });
 }
 
-export function assertPathInBreadcrumb(path: string[]) {
-  const ellipsedPath =
-    path.length > 3 ? path.slice(0, 1).concat(['...'], path.slice(-2)) : path;
-  const joinedPath = ellipsedPath.join(' / ');
-  // TODO: fix breadcrumb tests
-  it.skip(`should display the selected path "${joinedPath}" in the breadcrumbs`, () => {
-    BreadcrumbSelectors.breadcrumbButton().first().contains(joinedPath);
-  });
-}
-
 export function assertPathInUrl(path: string[]) {
   const categoryFacetListInUrl = path.join(',');
   it(`should display the selected path "${categoryFacetListInUrl}" in the url`, () => {
@@ -56,13 +42,6 @@ export function assertPathInUrl(path: string[]) {
       categoryFacetListInUrl
     )}`;
     cy.url().should('include', urlHash);
-  });
-}
-
-export function assertNoBreadcrumb() {
-  // TODO: fix breadcrumb tests
-  it.skip('should not have any breadcrumb', () => {
-    BreadcrumbSelectors.breadcrumbButton().should('not.exist');
   });
 }
 
@@ -74,9 +53,7 @@ export function assertNoPathInUrl() {
 
 export function assertLogFacetSelect(path: string[]) {
   it('should log the facet selection to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property(
         'facetValue',
         path.join(';')
@@ -86,12 +63,15 @@ export function assertLogFacetSelect(path: string[]) {
         hierarchicalField
       );
 
-      expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
-      expect(analyticsBody.facetState[0]).to.have.property(
+      expect(analyticsBody.facetState?.[0]).to.have.property(
+        'state',
+        'selected'
+      );
+      expect(analyticsBody.facetState?.[0]).to.have.property(
         'field',
         hierarchicalField
       );
-      expect(analyticsBody.facetState[0]).to.have.property(
+      expect(analyticsBody.facetState?.[0]).to.have.property(
         'facetType',
         'hierarchical'
       );
@@ -101,9 +81,7 @@ export function assertLogFacetSelect(path: string[]) {
 
 export function assertLogFacetShowMore() {
   it('should log the facet show more results to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('eventType', 'facet');
+    cy.expectCustomEvent('facet').then((analyticsBody) => {
       expect(analyticsBody).to.have.property(
         'eventValue',
         'showMoreFacetResults'
@@ -118,10 +96,8 @@ export function assertLogFacetShowMore() {
 
 export function assertLogClearFacetValues() {
   it('should log the facet clear all to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
-      expect(analyticsBody.customData).to.have.property(
+    cy.expectSearchEvent('facetClearAll').then((analyticsBody) => {
+      expect(analyticsBody?.customData).to.have.property(
         'facetField',
         hierarchicalField
       );
@@ -131,9 +107,7 @@ export function assertLogClearFacetValues() {
 
 export function assertLogFacetShowLess() {
   it('should log the facet show less results to UA', () => {
-    cy.wait(RouteAlias.analytics).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('eventType', 'facet');
+    cy.expectCustomEvent('facet').then((analyticsBody) => {
       expect(analyticsBody).to.have.property(
         'eventValue',
         'showLessFacetResults'
@@ -146,12 +120,12 @@ export function assertLogFacetShowLess() {
   });
 }
 
-export function assertValuesSortedByOccurences() {
-  it('values should be ordered by occurences', () => {
+export function assertValuesSortedByOccurrences() {
+  it('values should be ordered by occurrences', () => {
     CategoryFacetSelectors.valueCount().as('categoryFacetAllValuesCount');
     cy.getTextOfAllElements('@categoryFacetAllValuesCount').then(
       (originalValues) => {
-        expect(originalValues).to.eql(doSortOccurences(originalValues));
+        expect(originalValues).to.eql(doSortOccurrences(originalValues));
       }
     );
   });
@@ -204,5 +178,11 @@ export function assertDisplayAllCategoriesButton(display: boolean) {
     CategoryFacetSelectors.allCategoriesButton().should(
       display ? 'be.visible' : 'not.exist'
     );
+  });
+}
+
+export function assertFocusActiveParent() {
+  it('should focus on the active parent', () => {
+    CategoryFacetSelectors.activeParentValue().should('be.focused');
   });
 }

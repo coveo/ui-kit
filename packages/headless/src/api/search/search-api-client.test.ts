@@ -241,7 +241,8 @@ describe('search api client', () => {
     it(`when calling SearchAPIClient.querySuggest
     should call PlatformClient.call with the right options`, async () => {
       const id = 'someid123';
-      const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
+      const qs = buildMockQuerySuggest({id, count: 11});
+      state.querySet[id] = 'some query';
       state.querySuggest[id] = qs;
 
       const req = await buildQuerySuggestRequest(id, state);
@@ -257,7 +258,7 @@ describe('search api client', () => {
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
         requestParams: {
-          q: state.querySuggest[id]!.q,
+          q: state.querySet[id],
           count: state.querySuggest[id]!.count,
           context: state.context.contextValues,
           pipeline: state.pipeline,
@@ -314,6 +315,8 @@ describe('search api client', () => {
         const {query} = facetSearchState.options;
         const newQuery = `*${query}*`;
 
+        const searchRequest = (await buildSearchRequest(state)).request;
+
         expect(request).toMatchObject({
           requestParams: {
             type: 'specific',
@@ -323,8 +326,13 @@ describe('search api client', () => {
             field: facetState.field,
             ignoreValues: [],
             searchContext: {
-              ...(await buildSearchRequest(state)).request,
+              ...searchRequest,
               visitorId: expect.any(String),
+              analytics: {
+                ...searchRequest.analytics,
+                clientId: expect.any(String),
+                clientTimestamp: expect.any(String),
+              },
             },
           },
         });
@@ -350,6 +358,8 @@ describe('search api client', () => {
         const {query} = categoryFacetSearch.options;
         const newQuery = `*${query}*`;
 
+        const searchRequest = (await buildSearchRequest(state)).request;
+
         expect(request).toMatchObject({
           requestParams: {
             type: 'hierarchical',
@@ -361,8 +371,13 @@ describe('search api client', () => {
             delimitingCharacter: categoryFacet.delimitingCharacter,
             ignorePaths: [],
             searchContext: {
-              ...(await buildSearchRequest(state)).request,
+              ...searchRequest,
               visitorId: expect.any(String),
+              analytics: {
+                ...searchRequest.analytics,
+                clientId: expect.any(String),
+                clientTimestamp: expect.any(String),
+              },
             },
           },
         });

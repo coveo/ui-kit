@@ -1,5 +1,4 @@
 import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
-import ResultImageDoc from './atomic-result-image.mdx';
 
 // TODO: This will require KIT-1178 to actually be usable properly
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
@@ -8,7 +7,6 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {
     field: 'randomimage',
   },
-  ResultImageDoc,
   {
     engineConfig: {
       search: {

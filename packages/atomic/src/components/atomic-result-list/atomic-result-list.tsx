@@ -1,4 +1,13 @@
-import {Component, h, Element, State, Prop, Listen, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  Element,
+  State,
+  Prop,
+  Listen,
+  Host,
+  Method,
+} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -25,6 +34,8 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {updateBreakpoints} from './replace-breakpoint';
+import {once} from '../../utils/utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -70,7 +81,8 @@ export class AtomicResultList implements InitializableComponent {
    */
   private enableInfiniteScroll = false;
   /**
-   * A list of fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results, separated by commas.
+   * The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
    */
   @Prop() public fieldsToInclude = '';
   /**
@@ -89,6 +101,22 @@ export class AtomicResultList implements InitializableComponent {
    * @deprecated use `imageSize` instead.
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
+
+  private renderingFunction?: (result: Result) => HTMLElement = undefined;
+
+  /**
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   *
+   * Do not use this method if you integrate Atomic in a plain HTML deployment.
+   *
+   * @param render
+   */
+  @Method() public async setRenderFunction(
+    render: (result: Result) => HTMLElement
+  ) {
+    this.renderingFunction = render;
+  }
 
   private listWrapperRef?: HTMLDivElement;
 
@@ -182,7 +210,9 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildListResults() {
     return this.resultListState.results.map((result) => {
-      const template = this.getTemplate(result);
+      const content = this.renderingFunction
+        ? this.renderingFunction(result)
+        : this.getTemplate(result);
 
       const atomicResult = (
         <atomic-result
@@ -192,7 +222,7 @@ export class AtomicResultList implements InitializableComponent {
           display={this.display}
           density={this.density}
           imageSize={this.imageSize ?? this.image}
-          content={template}
+          content={content}
         ></atomic-result>
       );
 
@@ -238,10 +268,7 @@ export class AtomicResultList implements InitializableComponent {
     }
 
     return (
-      <table
-        class={`list-root ${this.getClasses().join(' ')}`}
-        part="result-table"
-      >
+      <table class={`list-root ${this.classes}`} part="result-table">
         <thead part="result-table-heading">
           <tr part="result-table-heading-row">
             {fieldColumns.map((column) => (
@@ -282,10 +309,7 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildList() {
     return (
-      <div
-        class={`list-root ${this.getClasses().join(' ')}`}
-        part="result-list"
-      >
+      <div class={`list-root ${this.classes}`} part="result-list">
         {this.buildListPlaceholders()}
         {this.resultListState.results.length ? this.buildListResults() : null}
       </div>
@@ -306,7 +330,7 @@ export class AtomicResultList implements InitializableComponent {
   private buildResultWrapper() {
     return (
       <div
-        class="list-wrapper placeholder"
+        class={`list-wrapper placeholder ${this.classes}`}
         ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
       >
         {this.buildResultRoot()}
@@ -314,11 +338,11 @@ export class AtomicResultList implements InitializableComponent {
     );
   }
 
-  private getClasses() {
+  private get classes() {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
-      this.image
+      this.imageSize ?? this.image
     );
     if (
       this.resultListState.firstSearchExecuted &&
@@ -326,7 +350,7 @@ export class AtomicResultList implements InitializableComponent {
     ) {
       classes.push('loading');
     }
-    return classes;
+    return classes.join(' ');
   }
 
   @Listen('scroll', {target: 'window'})
@@ -349,7 +373,10 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
+
   public render() {
+    this.updateBreakpoints();
     if (this.resultListState.hasError) {
       return;
     }

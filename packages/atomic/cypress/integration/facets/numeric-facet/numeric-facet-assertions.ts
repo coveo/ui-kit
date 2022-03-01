@@ -1,4 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
 import {should} from '../../common-assertions';
 import {NumericFacetSelectors} from './numeric-facet-selectors';
 
@@ -54,9 +53,7 @@ export function assertLogNumericFacetInputSubmit(
   max: number
 ) {
   it('should log the facet select results to UA ', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
       expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
       expect(analyticsBody.facetState[0]).to.have.property('field', field);
@@ -70,9 +67,7 @@ export function assertLogNumericFacetInputSubmit(
 
 export function assertLogNumericFacetSelect(field: string, index: number) {
   it('should log the facet select results to UA ', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
       expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
       expect(analyticsBody.facetState[0]).to.have.property('field', field);

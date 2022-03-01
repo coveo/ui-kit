@@ -4,7 +4,6 @@ import {
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
-  SearchSection,
 } from '../../../state/state-sections';
 import {getSearchInitialState} from '../../search/search-state';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
@@ -24,12 +23,14 @@ import {getFacetSetInitialState} from './facet-set-state';
 import {FacetRequest} from './interfaces/request';
 import {FacetValue} from './interfaces/response';
 import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
+import {getProductListingInitialState} from '../../product-listing/product-listing-state';
+import {FacetResponseSection} from './facet-set-selectors';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &
   DateFacetSection &
   NumericFacetSection &
-  SearchSection;
+  Partial<FacetResponseSection>;
 
 export type FacetSelectionChangeMetadata = {
   facetId: string;
@@ -72,7 +73,14 @@ export function getStateNeededForFacetMetadata(
     categoryFacetSet: s.categoryFacetSet || getCategoryFacetSetInitialState(),
     dateFacetSet: s.dateFacetSet || getDateFacetSetInitialState(),
     numericFacetSet: s.numericFacetSet || getNumericFacetSetInitialState(),
-    search: s.search || getSearchInitialState(),
+    ...('search' in s && {
+      search: s.search ? s.search : getSearchInitialState(),
+    }),
+    ...('productListing' in s && {
+      productListing: s.productListing
+        ? s.productListing
+        : getProductListingInitialState(),
+    }),
   };
 }
 
@@ -81,7 +89,7 @@ export const buildFacetStateMetadata = (
 ) => {
   const facetState: FacetStateMetadata[] = [];
 
-  state.search.response.facets.forEach((facetResponse, facetIndex) => {
+  getFacetResponse(state).forEach((facetResponse, facetIndex) => {
     const facetType = getFacetType(state, facetResponse.facetId);
     const facetResponseAnalytics = mapFacetResponseToAnalytics(
       facetResponse,
@@ -137,6 +145,13 @@ export const buildFacetStateMetadata = (
   });
 
   return facetState;
+};
+
+const getFacetResponse = (state: SectionNeededForFacetMetadata) => {
+  if ('productListing' in state && state.productListing)
+    return state.productListing.facets.results;
+  if ('search' in state && state.search) return state.search.response.facets;
+  return [];
 };
 
 const mapFacetValueToAnalytics = (

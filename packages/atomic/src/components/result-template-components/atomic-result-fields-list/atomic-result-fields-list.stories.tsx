@@ -1,12 +1,10 @@
 import {html} from 'lit-html';
 import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
-import ResultFieldsListDoc from './atomic-result-fields-list.mdx';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultFieldsList',
   'atomic-result-fields-list',
   {},
-  ResultFieldsListDoc,
   {
     additionalChildMarkup: () => html`
       <style>

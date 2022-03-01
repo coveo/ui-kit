@@ -7,6 +7,7 @@ import featured from '@salesforce/label/c.quantic_Featured';
 
 /**
  * The `QuanticResultBadge` component displays a badge to be used in result templates.
+ * @category Result Template
  * @example
  * <c-quantic-result-badge variant="recommended"></c-quantic-result-badge>
  */
@@ -18,7 +19,7 @@ export default class QuanticResultBadge extends LightningElement {
    */
   @api variant;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
    * @type {Result}
    */

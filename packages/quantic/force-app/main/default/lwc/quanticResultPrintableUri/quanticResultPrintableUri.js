@@ -5,12 +5,13 @@ import {parseXML} from 'c/quanticUtils';
 
 /**
  * The `QuanticResultPrintableUri` component displays the URI, or path, to access a result.
+ * @category Result Template
  * @example
  * <c-quantic-result-printable-uri result={result} max-number-of-parts="3"></c-quantic-result-printable-uri>
  */
 export default class QuanticResultPrintableUri extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
    * @type {Result}
    */

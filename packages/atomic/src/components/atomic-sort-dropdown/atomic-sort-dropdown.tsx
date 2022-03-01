@@ -109,11 +109,13 @@ export class AtomicSortDropdown implements InitializableComponent {
   private renderLabel() {
     return (
       <label
-        class="m-2 font-bold text-sm with-colon cursor-pointer"
+        class="m-2 font-bold text-sm cursor-pointer"
         part="label"
         htmlFor={this.id}
       >
-        {this.bindings.i18n.t('sort-by')}
+        {this.bindings.i18n.t('with-colon', {
+          text: this.bindings.i18n.t('sort-by'),
+        })}
       </label>
     );
   }

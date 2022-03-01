@@ -1,5 +1,7 @@
+import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
 
 export type SearchResponseModifierPredicate = (
@@ -34,6 +36,7 @@ export class TestFixture {
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
+  private redirected = false;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -72,6 +75,11 @@ export class TestFixture {
 
   public withoutAnalytics() {
     this.disabledAnalytics = true;
+    return this;
+  }
+
+  public withRedirection() {
+    this.redirected = true;
     return this;
   }
 
@@ -116,7 +124,8 @@ export class TestFixture {
   }
 
   public init() {
-    cy.visit(buildTestUrl(this.hash)).injectAxe();
+    !this.redirected && cy.visit(buildTestUrl(this.hash));
+    cy.injectAxe();
     this.intercept();
     this.stubConsole();
 
@@ -135,6 +144,15 @@ export class TestFixture {
 
       if (this.disabledAnalytics) {
         searchInterfaceComponent.setAttribute('analytics', 'false');
+      } else {
+        AnalyticsTracker.reset();
+        cy.intercept(
+          {
+            method: 'POST',
+            url: '**/rest/ua/v15/analytics/*',
+          },
+          (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
+        );
       }
 
       if (this.responseModifiers.length) {
@@ -240,6 +258,19 @@ export class TestFixture {
       warn: '@consoleWarn',
       log: '@consoleLog',
     };
+  }
+
+  public static getUABody() {
+    return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
+      request: CyHttpMessages.IncomingHttpRequest;
+    }>;
+  }
+
+  public static getUACustomData() {
+    return TestFixture.getUABody().then(
+      ({request}) =>
+        request.body.customData as {[key: string]: string | string[]}
+    );
   }
 
   private intercept() {

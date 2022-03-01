@@ -1,3 +1,9 @@
+library(
+    identifier: "jenkins-common-lib@master",
+    retriever: modernSCM(github(credentialsId: "github-app-dev", repository: "jenkins-common-lib", repoOwner: "coveo")),
+    changelog: false
+)
+
 node('linux && docker') {
   def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
 
@@ -8,7 +14,7 @@ node('linux && docker') {
     userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/ui-kit']]
   ])
 
-  withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+  dockerUtils.withDocker(image: 'node:16', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     stage('Setup') {
       sh 'npm run setup'
     }
@@ -16,23 +22,24 @@ node('linux && docker') {
     stage('Npm publish') {
       withCredentials([
       string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-        sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+        sh 'echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc'
         sh 'npm run npm:tag:latest'
       }
     }
 
     stage('Quantic publish') {
       withCredentials([
-        usernamePassword(credentialsId: 'github-coveobot-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
+        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN'),
         string(credentialsId: 'sfdx-auth-pkg-client-id', variable: 'SFDX_AUTH_CLIENT_ID'),
         file(credentialsId: 'sfdx-auth-pkg-jwt-key', variable: 'SFDX_AUTH_JWT_KEY'),
       ]) {
         withEnv([
           'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
         ]) {
-          sh 'cd packages/quantic && npm run build'
+          sh 'npm run build'
           sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote --ci'
         }
+      }
     }
 
     stage('Notify Docs') {

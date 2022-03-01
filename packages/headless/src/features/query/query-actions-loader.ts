@@ -3,7 +3,7 @@ import {query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {updateQuery, UpdateQueryActionCreatorPayload} from './query-actions';
 
-export {UpdateQueryActionCreatorPayload};
+export type {UpdateQueryActionCreatorPayload};
 
 /**
  * The query action creators.

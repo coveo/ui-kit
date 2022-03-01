@@ -6,7 +6,7 @@ import {
   UpdateFacetOptionsActionCreatorPayload,
 } from './facet-options-actions';
 
-export {UpdateFacetOptionsActionCreatorPayload};
+export type {UpdateFacetOptionsActionCreatorPayload};
 
 /**
  * The facetOptions action creators.

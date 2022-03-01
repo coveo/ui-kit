@@ -4,15 +4,18 @@ import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-
-import tailwind from 'tailwindcss';
 import postcssNesting from 'postcss-nested';
+import tailwind from 'tailwindcss';
+import tailwindNesting from 'tailwindcss/nesting';
 import atImport from 'postcss-import';
 import focusVisible from 'postcss-focus-visible';
 import autoprefixer from 'autoprefixer';
 import replacePlugin from '@rollup/plugin-replace';
 import mixins from 'postcss-mixins';
 import {readFileSync} from 'fs';
+import {reactOutputTarget as react} from '@stencil/react-output-target';
+import {angularOutputTarget as angular} from '@stencil/angular-output-target';
+import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 
@@ -26,6 +29,7 @@ function replace() {
   return replacePlugin({
     'process.env.NODE_ENV': JSON.stringify(env),
     'process.env.VERSION': JSON.stringify(version),
+    preventAssignment: true,
   });
 }
 
@@ -40,8 +44,27 @@ export const config: Config = {
   sourceMap: true,
   globalScript: 'node_modules/focus-visible/dist/focus-visible.min.js',
   outputTargets: [
+    react({
+      componentCorePackage: '@coveo/atomic',
+      proxiesFile: '../atomic-react/src/components/stencil-generated/index.ts',
+      includeDefineCustomElements: true,
+      excludeComponents: ['atomic-result-template', 'atomic-field-condition'],
+    }),
+    angular({
+      componentCorePackage: '@coveo/atomic',
+      directivesProxyFile:
+        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
+    }),
+    angularModule({
+      moduleFile:
+        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
+    }),
+    {
+      type: 'dist-custom-elements',
+    },
     {
       type: 'dist',
+      collectionDir: null,
       esmLoaderPath: '../loader',
       copy: [
         {src: 'themes'},
@@ -77,16 +100,20 @@ export const config: Config = {
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['headless'],
+    setupFiles: ['jest-localstorage-mock'],
+    resetMocks: false,
   },
   devServer: {
     reloadStrategy: 'pageReload',
   },
   plugins: [
+    // https://github.com/fabriciomendonca/stencil-inline-svg/issues/16
     inlineSvg(),
     postcss({
       plugins: [
         atImport(),
         mixins(),
+        tailwindNesting(),
         tailwind(),
         focusVisible(),
         postcssNesting(),

@@ -25,6 +25,7 @@ describe('buildCaseAssistEngine', () => {
   beforeEach(() => {
     options = {
       configuration: getSampleCaseAssistEngineConfiguration(),
+      loggerOptions: {level: 'silent'},
     };
 
     initEngine();

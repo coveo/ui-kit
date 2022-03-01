@@ -5,7 +5,7 @@ import {buildSamlFlow, SamlFlow, SamlFlowOptions} from './saml-flow';
 describe('buildSamlFlow', () => {
   const handshakeToken = 'token';
   let options: SamlFlowOptions;
-  let request: jest.Mock<any, any>;
+  let request: jest.Mock;
   let provider: SamlFlow;
 
   function initSamlFlow() {
@@ -72,14 +72,17 @@ describe('buildSamlFlow', () => {
   describe('#exchangeHandshakeToken', () => {
     describe('url hash contains handshake token', () => {
       beforeEach(() => {
+        options.organizationId = '1';
         options.location!.hash = `#t=All&sort=relevancy&handshake_token=${handshakeToken}`;
+
+        initSamlFlow();
       });
 
       it('sends a request with the token', () => {
         provider.exchangeHandshakeToken();
 
         expect(request).toHaveBeenCalledWith(
-          'https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token',
+          `https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token?organizationId=${options.organizationId}`,
           {
             method: 'POST',
             body: JSON.stringify({handshakeToken}),
@@ -87,6 +90,17 @@ describe('buildSamlFlow', () => {
               'content-type': 'application/json; charset=UTF-8',
             },
           }
+        );
+      });
+
+      it('if the organization id has an unsafe url character, it encodes it', () => {
+        options.organizationId = '>';
+        initSamlFlow();
+
+        provider.exchangeHandshakeToken();
+        expect(request).toHaveBeenCalledWith(
+          'https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token?organizationId=%3E',
+          expect.any(Object)
         );
       });
 

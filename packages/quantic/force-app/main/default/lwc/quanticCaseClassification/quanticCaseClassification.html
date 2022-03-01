@@ -1,0 +1,75 @@
+<template>
+  <template if:true={renderingError}>
+    <div class="error-message slds-text-color_destructive">
+      {renderingError}
+    </div>
+  </template>
+  <template if:false={renderingError}>
+    <fieldset class={formClass}>
+      <legend class="slds-form-element__legend slds-form-element__label slds-text-heading_small">
+        {label}
+      </legend>
+      <template if:true={loading}>
+        <div class="loading-holder slds-var-m-top_x-small">
+          <lightning-spinner alternative-text={labels.loading} size="small"></lightning-spinner>
+        </div>
+      </template>
+      <template if:false={loading}>
+        <div class="slds-form-element__control" aria-describedby="case-classification-error-message">
+          <div class="row">
+            <template if:false={hideSuggestions}>
+              <template for:each={suggestions} for:item="suggestion">
+                <div key={suggestion.value} class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+                  <input type="checkbox" checked={suggestion.checked} data-suggestion-id={suggestion.id}
+                    onchange={handleSelectSuggestion} id={suggestion.value} value={suggestion.value} name="options" />
+                  <label for={suggestion.value} title={suggestion.value}>
+                    <span class="slds-visual-picker__figure slds-visual-picker__text slds-var-p-horizontal_medium content-center">
+                      <span class="slds-truncate">{suggestion.value}</span>
+                    </span>
+                    <span class="slds-icon_container slds-visual-picker__text-check">
+                      <lightning-icon size="xx-small" icon-name="utility:check">
+                      </lightning-icon>
+                    </span>
+                  </label>
+                </div>
+              </template>
+            </template>
+            <template if:true={isMoreOptionsVisible}>
+              <template if:false={isSelectVisible}>
+                <lightning-button class="slds-var-m-top_x-small" variant="base" label={selectPlaceholder}
+                  title={selectPlaceholder} onclick={showSelect}>
+                </lightning-button>
+              </template>
+              <template if:true={isSelectVisible}>
+                <lightning-combobox class="slds-var-m-top_x-small" value={value} variant="label-hidden"
+                  placeholder={selectPlaceholder} options={options} onchange={handleSelectChange}></lightning-combobox>
+              </template>
+            </template>
+            <template if:false={isMoreOptionsVisible}>
+              <template for:each={filteredOptions} for:item="option">
+                <div key={option.value} class="case-classification-option slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+                  <input type="checkbox" checked={option.checked} onchange={handleSelectSuggestion} id={option.value}
+                    value={option.value} name="options" />
+                  <label for={option.value} title={option.value}>
+                    <span class="slds-visual-picker__figure slds-visual-picker__text slds-var-p-horizontal_medium content-center">
+                      <span class="slds-truncate">{option.value}</span>
+                    </span>
+                    <span class="slds-icon_container slds-visual-picker__text-check">
+                      <lightning-icon size="xx-small" icon-name="utility:check">
+                      </lightning-icon>
+                    </span>
+                  </label>
+                </div>
+              </template>
+            </template>
+          </div>
+        </div>
+        <template if:true={hasError}>
+          <div class="slds-form-element__help" id="case-classification-error-message">
+            {errorMessage}
+          </div>
+        </template>
+      </template>
+    </fieldset>
+  </template>
+</template>

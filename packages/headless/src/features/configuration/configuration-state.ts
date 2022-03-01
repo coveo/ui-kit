@@ -3,6 +3,8 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import {AnalyticsParam} from '../../api/search/search-api-params';
+import {getPageID, getVisitorID} from '../../api/analytics/analytics';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -56,6 +58,17 @@ export interface AnalyticsState {
    * By default, will append /rest/ua to the platformUrl value.
    */
   apiBaseUrl: string;
+
+  /**
+   * Sets the Origin Context dimension on the analytic events.
+   *
+   * You can use this dimension to specify the context of your application.
+   * Suggested values are "Search", "InternalSearch" and "CommunitySearch"
+   *
+   * By default, `Search`.
+   */
+  originContext: string;
+
   /**
    * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
    *
@@ -73,16 +86,26 @@ export interface AnalyticsState {
    * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
    */
   originLevel3: string;
+
   /**
    * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
    * See https://github.com/coveo/coveo.analytics.js for more info
    */
   runtimeEnvironment?: IRuntimeEnvironment;
+
   /**
    * Whether analytics events should be logged anonymously.
    * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
    */
   anonymous: boolean;
+  /**
+   *  The name of the device that the end user is using. It should be explicitly configured in the context of a native mobile app.
+   */
+  deviceId: string;
+  /**
+   * Specifies the user display name for the usage analytics logs.
+   */
+  userDisplayName: string;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -100,8 +123,27 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   analytics: {
     enabled: true,
     apiBaseUrl: `${analyticsUrl()}${analyticsAPIEndpoint}`,
+    originContext: 'Search',
     originLevel2: 'default',
     originLevel3: 'default',
     anonymous: false,
+    deviceId: '',
+    userDisplayName: '',
   },
 });
+
+export const fromAnalyticsStateToAnalyticsParams = async (
+  s: AnalyticsState
+): Promise<AnalyticsParam> => {
+  return {
+    analytics: {
+      clientId: await getVisitorID(),
+      deviceId: s.deviceId,
+      pageId: getPageID(),
+      clientTimestamp: new Date().toISOString(),
+      documentReferrer: s.originLevel3,
+      originContext: s.originContext,
+      userDisplayName: s.userDisplayName,
+    },
+  };
+};

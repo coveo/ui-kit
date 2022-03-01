@@ -4,6 +4,8 @@ import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
 import {RecommendationPage} from './pages/RecommendationPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {SamlPage} from './pages/SamlPage';
+import {DependentFacetPage} from './pages/DependentFacetPage';
+import {AtomicReactPage} from './pages/AtomicReactPage';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
@@ -37,6 +39,16 @@ function App(props: SearchPageProps) {
               Saml
             </NavLink>
           </button>
+          <button>
+            <NavLink to="/dependent-facet" activeStyle={activeNavLink}>
+              Dependent facet
+            </NavLink>
+          </button>
+          <button>
+            <NavLink to="/atomic-react" activeStyle={activeNavLink}>
+              Atomic React
+            </NavLink>
+          </button>
         </nav>
         <Switch>
           <Route path="/recommendation">
@@ -50,6 +62,12 @@ function App(props: SearchPageProps) {
           </Route>
           <Route path="/saml">
             <SamlPage organizationId="" provider="" />
+          </Route>
+          <Route path="/dependent-facet">
+            <DependentFacetPage />
+          </Route>
+          <Route path="/atomic-react">
+            <AtomicReactPage />
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />

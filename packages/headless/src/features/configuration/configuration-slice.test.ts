@@ -30,10 +30,13 @@ describe('configuration slice', () => {
     },
     analytics: {
       enabled: true,
+      originContext: '0',
       originLevel2: '2',
       originLevel3: '3',
       apiBaseUrl: `${url}/rest/ua`,
       anonymous: false,
+      deviceId: 'Chrome',
+      userDisplayName: 'Someone',
     },
   };
 
@@ -132,10 +135,13 @@ describe('configuration slice', () => {
         ...getConfigurationInitialState(),
         analytics: {
           enabled: false,
+          originContext: 'wizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
+          deviceId: 'wozz',
+          userDisplayName: 'wazz',
         },
       };
       expect(
@@ -143,10 +149,13 @@ describe('configuration slice', () => {
           undefined,
           updateAnalyticsConfiguration({
             enabled: false,
+            originContext: 'wizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
+            deviceId: 'wozz',
+            userDisplayName: 'wazz',
           })
         )
       ).toEqual(expectedState);
@@ -157,10 +166,13 @@ describe('configuration slice', () => {
         ...existingState,
         analytics: {
           enabled: true,
+          originContext: 'wizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
+          deviceId: 'wozz',
+          userDisplayName: 'wazz',
         },
       };
 
@@ -169,10 +181,13 @@ describe('configuration slice', () => {
           existingState,
           updateAnalyticsConfiguration({
             enabled: true,
+            originContext: 'wizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
+            deviceId: 'wozz',
+            userDisplayName: 'wazz',
           })
         )
       ).toEqual(expectedState);

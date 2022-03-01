@@ -14,16 +14,20 @@ import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
+  QuerySetSection,
   QuerySuggestionSection,
   SearchHubSection,
 } from '../../state/state-sections';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
-  Partial<ContextSection & PipelineSection & SearchHubSection>;
+  Partial<
+    QuerySetSection & ContextSection & PipelineSection & SearchHubSection
+  >;
 
 const idDefinition = {
   id: requiredNonEmptyString,
@@ -52,12 +56,6 @@ export interface RegisterQuerySuggestActionCreatorPayload {
   count?: number;
 }
 
-/**
- * Registers a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
- * @param id (string) A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- * @param q (string) The partial basic query expression for which to request query suggestions (e.g., `cov`).
- * @param count (number) The number of query suggestions to request from Coveo ML (e.g., `3`). Default: `5`.
- */
 export const registerQuerySuggest = createAction(
   'querySuggest/register',
   (payload: RegisterQuerySuggestActionCreatorPayload) =>
@@ -68,10 +66,6 @@ export const registerQuerySuggest = createAction(
     })
 );
 
-/**
- * Unregisters an existing query suggest entity from the headless state.
- * @param id (string) The unique identifier of the query suggest entity to unregister (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- */
 export const unregisterQuerySuggest = createAction(
   'querySuggest/unregister',
   (payload: {id: string}) => validatePayload(payload, idDefinition)
@@ -89,11 +83,6 @@ export interface SelectQuerySuggestionActionCreatorPayload {
   expression: string;
 }
 
-/**
- * Selects a suggestion provided through a specific query suggest entity.
- * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- * @param expression (string) The selected query suggestion (e.g., `coveo`).
- */
 export const selectQuerySuggestion = createAction(
   'querySuggest/selectSuggestion',
   (payload: SelectQuerySuggestionActionCreatorPayload) =>
@@ -110,10 +99,6 @@ export interface ClearQuerySuggestActionCreatorPayload {
   id: string;
 }
 
-/**
- * Clears the list of query suggestions in a specific query suggest entity.
- * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- */
 export const clearQuerySuggest = createAction(
   'querySuggest/clear',
   (payload: ClearQuerySuggestActionCreatorPayload) =>
@@ -129,12 +114,13 @@ export interface FetchQuerySuggestionsActionCreatorPayload {
 
 export interface FetchQuerySuggestionsThunkReturn
   extends FetchQuerySuggestionsActionCreatorPayload,
-    QuerySuggestSuccessResponse {}
+    QuerySuggestSuccessResponse {
+  /**
+   * The query for which query suggestions were retrieved.
+   */
+  q: string | undefined;
+}
 
-/**
- * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
- * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- */
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
   FetchQuerySuggestionsActionCreatorPayload,
@@ -148,9 +134,8 @@ export const fetchQuerySuggestions = createAsyncThunk<
   ) => {
     validatePayload(payload, idDefinition);
     const id = payload.id;
-    const response = await apiClient.querySuggest(
-      await buildQuerySuggestRequest(id, getState())
-    );
+    const request = await buildQuerySuggestRequest(id, getState());
+    const response = await apiClient.querySuggest(request);
 
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
@@ -158,6 +143,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
     return {
       id,
+      q: request.q,
       ...response.success,
     };
   }
@@ -172,7 +158,10 @@ export const buildQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
-    q: s.querySuggest[id]!.q,
+    /**
+     * @deprecated - Adjust `StateNeededByQuerySuggest` to make `querySet` required in v2.
+     */
+    q: s.querySet?.[id],
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
@@ -183,6 +172,8 @@ export const buildQuerySuggestRequest = async (
     ...(s.searchHub && {searchHub: s.searchHub}),
     ...(s.configuration.analytics.enabled && {
       visitorId: await getVisitorID(),
+      ...(s.configuration.analytics.enabled &&
+        (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
     }),
   };
 };

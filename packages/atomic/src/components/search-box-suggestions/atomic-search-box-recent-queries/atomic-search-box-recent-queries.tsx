@@ -11,9 +11,11 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {once} from '../../../utils/utils';
+import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 
-const localStorageKey = 'coveo-recent-queries';
-
+/**
+ * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
+ */
 @Component({
   tag: 'atomic-search-box-recent-queries',
   shadow: true,
@@ -21,12 +23,19 @@ const localStorageKey = 'coveo-recent-queries';
 export class AtomicSearchBoxRecentQueries {
   private bindings!: SearchBoxSuggestionsBindings;
   private recentQueriesList!: RecentQueriesList;
+  private storage!: SafeStorage;
 
   @Element() private host!: HTMLElement;
 
   @State() public error!: Error;
 
+  /**
+   * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+   */
   @Prop() public maxWithQuery = 3;
+  /**
+   * The maximum number of suggestions that will be displayed initially when the input field is empty.
+   */
   @Prop() public maxWithoutQuery?: number;
 
   componentWillLoad() {
@@ -41,6 +50,7 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private initialize() {
+    this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
       options: {maxLength: 1000},
@@ -56,13 +66,7 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private retrieveLocalStorage() {
-    try {
-      return JSON.parse(
-        window.localStorage.getItem(localStorageKey) || '[]'
-      ) as string[];
-    } catch (error) {
-      return [];
-    }
+    return this.storage.getParsedJSON(StorageItems.RECENT_QUERIES, []);
   }
 
   private updateLocalStorage() {
@@ -70,14 +74,10 @@ export class AtomicSearchBoxRecentQueries {
       return this.disableFeature();
     }
 
-    try {
-      window.localStorage.setItem(
-        localStorageKey,
-        JSON.stringify(this.recentQueriesList.state.queries)
-      );
-    } catch (error) {
-      return null;
-    }
+    return this.storage.setJSON(
+      StorageItems.RECENT_QUERIES,
+      this.recentQueriesList.state.queries
+    );
   }
 
   private warnUser = once(() =>
@@ -88,11 +88,7 @@ export class AtomicSearchBoxRecentQueries {
 
   private disableFeature() {
     this.warnUser();
-    try {
-      window.localStorage.removeItem(localStorageKey);
-    } catch (error) {
-      return;
-    }
+    this.storage.removeItem(StorageItems.RECENT_QUERIES);
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
@@ -146,10 +142,7 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       content: (
         <div class="flex items-center">
-          <atomic-icon
-            icon={Clock}
-            class="w-5 h-5 text-neutral mr-2 -ml-1"
-          ></atomic-icon>
+          <atomic-icon icon={Clock} class="w-5 h-5 mr-2 -ml-1"></atomic-icon>
           {query === '' ? (
             <span>{value}</span>
           ) : (
@@ -170,10 +163,16 @@ export class AtomicSearchBoxRecentQueries {
         </div>
       ),
       onSelect: () => {
+        if (this.bindings.isStandalone) {
+          this.bindings.searchBoxController.updateText(value);
+          this.bindings.searchBoxController.submit();
+          return;
+        }
+
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );
-        this.bindings.inputRef.blur();
+        this.bindings.clearSuggestions();
       },
     };
   }

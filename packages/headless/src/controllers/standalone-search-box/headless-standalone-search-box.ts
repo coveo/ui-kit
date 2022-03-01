@@ -3,7 +3,6 @@ import {
   query,
   querySuggest,
   standaloneSearchBoxSet,
-  redirection,
 } from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
@@ -36,7 +35,7 @@ import {
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options';
 
-export {StandaloneSearchBoxOptions, StandaloneSearchBoxAnalytics};
+export type {StandaloneSearchBoxOptions, StandaloneSearchBoxAnalytics};
 
 export interface StandaloneSearchBoxProps {
   options: StandaloneSearchBoxOptions;
@@ -67,7 +66,7 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
    * The Url to redirect to.
    */
-  redirectTo: string | null;
+  redirectTo: string;
 }
 
 /**
@@ -164,7 +163,6 @@ function loadStandaloneSearchBoxReducers(
     configuration,
     query,
     querySuggest,
-    redirection,
   });
   return true;
 }

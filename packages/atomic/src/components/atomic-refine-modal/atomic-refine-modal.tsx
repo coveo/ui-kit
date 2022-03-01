@@ -182,7 +182,7 @@ export class AtomicRefineModal implements InitializableComponent {
       </h1>,
       <div class="relative">
         <select
-          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold flex-grow appearance-none rounded-lg px-6 py-5"
+          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
           part="select"
           aria-label={this.bindings.i18n.t('sort-by')}
           onChange={(option) => this.select(option)}
@@ -232,10 +232,12 @@ export class AtomicRefineModal implements InitializableComponent {
           <span class="truncate mr-1">
             {this.bindings.i18n.t('view-results')}
           </span>
-          <span class="with-parentheses">
-            {this.querySummaryState.total.toLocaleString(
-              this.bindings.i18n.language
-            )}
+          <span>
+            {this.bindings.i18n.t('between-parentheses', {
+              text: this.querySummaryState.total.toLocaleString(
+                this.bindings.i18n.language
+              ),
+            })}
           </span>
         </Button>
       </div>
@@ -263,18 +265,18 @@ export class AtomicRefineModal implements InitializableComponent {
           class={`w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10 ${
             isOpened
               ? 'animate-scaleUpRefineModal'
-              : 'animate-scaleDownRefineModal'
+              : 'animate-slideDownRefineModal'
           }`}
           aria-modal={isOpened.toString()}
         >
           <div class="px-6">{this.renderHeader()}</div>
           <hr class="border-neutral"></hr>
-          <div class="overflow-auto px-6 flex-grow">
+          <div class="overflow-auto px-6 grow">
             <div class="adjust-for-scroll-bar">
-              <div class="centered">
+              <aside class="centered">
                 {this.renderSort()}
                 {this.renderFilters()}
-              </div>
+              </aside>
             </div>
           </div>
           {this.renderFooter()}

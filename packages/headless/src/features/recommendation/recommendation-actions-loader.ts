@@ -10,7 +10,7 @@ import {
   SetRecommendationIdActionCreatorPayload,
 } from './recommendation-actions';
 
-export {SetRecommendationIdActionCreatorPayload};
+export type {SetRecommendationIdActionCreatorPayload};
 
 /**
  * The recommendation action creators.

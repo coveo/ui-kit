@@ -1,4 +1,4 @@
-import {PlatformClient, PlatformResponse} from '../platform-client';
+import {PlatformClient} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -8,7 +8,6 @@ import {SearchRequest} from './search/search-request';
 import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
-  SearchAPIErrorWithExceptionInBody,
   buildAPIResponseFromErrorOrThrow,
 } from './search-api-error-response';
 import {PlanRequest} from './plan/plan-request';
@@ -18,16 +17,12 @@ import {SearchAppState} from '../../state/search-app-state';
 import {baseSearchRequest} from './search-api-params';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
-import {Logger} from 'pino';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
-import {PreprocessRequest} from '../preprocess-request';
 import {HtmlRequest} from './html/html-request';
-import {findEncoding} from './encoding-finder';
-import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {isNullOrUndefined} from '@coveo/bueno';
@@ -38,6 +33,8 @@ import {
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
+import {pickNonBaseParams, unwrapError} from '../api-client-utils';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
@@ -63,9 +60,7 @@ export interface AsyncThunkSearchOptions<
   rejectValue: SearchAPIErrorWithStatusCode;
 }
 
-export interface SearchAPIClientOptions {
-  logger: Logger;
-  preprocessRequest: PreprocessRequest;
+export interface SearchAPIClientOptions extends HtmlAPIClientOptions {
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
@@ -214,31 +209,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 
   async html(req: HtmlRequest) {
-    const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/x-www-form-urlencoded',
-        '/html'
-      ),
-      requestParams: pickNonBaseParams(req),
-      ...this.options,
-    });
-
-    if (response instanceof Error) {
-      throw response;
-    }
-
-    const encoding = findEncoding(response);
-    const buffer = await response.arrayBuffer();
-    const decoder = new TextDecoder(encoding);
-    const body = decoder.decode(buffer);
-
-    if (isSuccessHtmlResponse(body)) {
-      return {success: body};
-    }
-
-    return {error: unwrapError({response, body})};
+    return getHtml(req, this.options);
   }
 
   async productRecommendations(req: ProductRecommendationsRequest) {
@@ -300,54 +271,6 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 }
 
-const unwrapError = (
-  payload: PlatformResponse<AllSearchAPIResponse>
-): SearchAPIErrorWithStatusCode => {
-  const {response} = payload;
-
-  if (response.body) {
-    return unwrapSearchApiError(payload);
-  }
-
-  return unwrapClientError(response);
-};
-
-const unwrapSearchApiError = (
-  payload: PlatformResponse<AllSearchAPIResponse>
-) => {
-  if (isSearchAPIException(payload)) {
-    return unwrapErrorByException(payload);
-  }
-
-  if (isSearchAPIErrorWithStatusCode(payload)) {
-    return payload.body;
-  }
-
-  return {message: 'unknown', statusCode: 0, type: 'unknown'};
-};
-
-const unwrapClientError = (response: Response) => {
-  // Transform an error to an object https://stackoverflow.com/a/26199752
-  const body = JSON.parse(
-    JSON.stringify(response, Object.getOwnPropertyNames(response))
-  ) as Error;
-
-  return {
-    ...body,
-    message: `Client side error: ${body.message || ''}`,
-    statusCode: 400,
-    type: 'ClientError',
-  };
-};
-
-const unwrapErrorByException = (
-  res: PlatformResponse<SearchAPIErrorWithExceptionInBody>
-): SearchAPIErrorWithStatusCode => ({
-  message: res.body.exception.code,
-  statusCode: res.response.status,
-  type: res.body.exception.code,
-});
-
 export const isSuccessResponse = <T>(
   r: SearchAPIClientResponse<T>
 ): r is {success: T} => {
@@ -370,10 +293,6 @@ function isSuccessPlanResponse(body: unknown): body is PlanResponseSuccess {
   return (body as PlanResponseSuccess).preprocessingOutput !== undefined;
 }
 
-function isSuccessHtmlResponse(body: unknown): body is string {
-  return typeof body === 'string';
-}
-
 function isSuccessFieldsDescriptionResponse(
   body: unknown
 ): body is FieldDescriptionsResponseSuccess {
@@ -382,31 +301,6 @@ function isSuccessFieldsDescriptionResponse(
 
 function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {
   return (body as SearchResponseSuccess).results !== undefined;
-}
-
-function isSearchAPIErrorWithStatusCode(
-  r: PlatformResponse<AllSearchAPIResponse>
-): r is PlatformResponse<SearchAPIErrorWithStatusCode> {
-  return (
-    (r as PlatformResponse<SearchAPIErrorWithStatusCode>).body.statusCode !==
-    undefined
-  );
-}
-
-function isSearchAPIException(
-  r: PlatformResponse<AllSearchAPIResponse>
-): r is PlatformResponse<SearchAPIErrorWithExceptionInBody> {
-  return (
-    (r as PlatformResponse<SearchAPIErrorWithExceptionInBody>).body
-      .exception !== undefined
-  );
-}
-
-function pickNonBaseParams<Params extends BaseParam>(req: Params) {
-  // cheap version of _.omit
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {url, accessToken, organizationId, ...nonBase} = req;
-  return nonBase;
 }
 
 function shimResponse(response: SearchResponseSuccess) {

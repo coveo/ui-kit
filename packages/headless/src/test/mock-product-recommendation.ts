@@ -8,6 +8,8 @@ export function buildMockProductRecommendation(
     clickUri: '',
     ec_name: '',
     additionalFields: {},
+    childResults: [],
+    totalNumberOfChildResults: 0,
     ...config,
   };
 }

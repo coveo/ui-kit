@@ -15,12 +15,13 @@ const CHATTER='Chatter';
 /**
  * The `QuanticResultLabel` component displays an [SLDS icon](https://www.lightningdesignsystem.com/icons/) and label for a result.
  * If the `Result` option is set this component can infer default label and icon based on the result properties. Otherwise the `label` and `icon` properties are required.
+ * @category Result Template
  * @example
  * <c-quantic-result-label label="Account" icon="standard:account" size="medium" icon-only></c-quantic-result-label>
  */
 export default class QuanticResultLabel extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result) to use to infer label and icon.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use to infer label and icon.
    * @api
    * @type {Result}
    */

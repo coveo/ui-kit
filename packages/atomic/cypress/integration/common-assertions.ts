@@ -10,9 +10,23 @@ export function should(should: boolean) {
   return should ? 'should' : 'should not';
 }
 
-export function assertAccessibility(component: string) {
+export function assertAccessibility(
+  component: string | (() => Cypress.Chainable<JQuery<HTMLElement>>)
+) {
+  const rulesToIgnore = ['landmark-one-main', 'page-has-heading-one', 'region'];
+  const rules = rulesToIgnore.reduce(
+    (obj, rule) => ({...obj, [rule]: {enabled: false}}),
+    {}
+  );
+
   it('should pass accessibility tests', () => {
-    cy.checkA11y(component);
+    if (typeof component === 'string') {
+      cy.checkA11y(component, {rules});
+    } else {
+      component().should(([el]) => {
+        cy.checkA11y(el, {rules});
+      });
+    }
   });
 }
 
@@ -44,19 +58,8 @@ export function assertRemovesComponent(
   });
 }
 
-export function assertAriaLiveMessage(
-  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
-  message: string
-) {
+export function assertAriaLiveMessage(message: string) {
   it(`screen readers should read out "${message}".`, () => {
-    selector().should('contain.text', message);
-  });
-}
-
-export function assertNoAriaLiveMessage(
-  selector: () => Cypress.Chainable<JQuery<HTMLElement>>
-) {
-  it('screen readers should not read out anything.', () => {
-    selector().should('not.exist');
+    AriaLiveSelectors.element().should('contain.text', message);
   });
 }

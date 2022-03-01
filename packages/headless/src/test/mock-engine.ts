@@ -28,6 +28,9 @@ import {ProductListingEngine} from '../app/product-listing-engine/product-listin
 import {ProductListingAppState} from '../state/product-listing-app-state';
 import {buildMockProductListingState} from './mock-product-listing-state';
 import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
+import {CaseAssistAppState} from '../state/case-assist-app-state';
+import {CaseAssistEngine} from '../case-assist.index';
+import {buildMockCaseAssistState} from './mock-case-assist-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -41,7 +44,8 @@ type AppState =
   | SearchAppState
   | RecommendationAppState
   | ProductRecommendationsAppState
-  | ProductListingAppState;
+  | ProductListingAppState
+  | CaseAssistAppState;
 
 interface MockEngine {
   actions: AnyAction[];
@@ -56,6 +60,12 @@ export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `SearchEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockSearchAppEngine(
   config: Partial<SearchEngine<SearchAppState>> = {}
 ): MockSearchEngine {
@@ -71,6 +81,12 @@ export interface MockRecommendationEngine
   extends RecommendationEngine,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `RecommendationEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
 ): MockRecommendationEngine {
@@ -81,6 +97,12 @@ export interface MockProductRecommendationEngine
   extends ProductRecommendationEngine,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `ProductRecommendationEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
     ProductRecommendationEngine<ProductRecommendationsAppState>
@@ -93,10 +115,32 @@ export interface MockProductListingEngine
   extends ProductListingEngine<ProductListingAppState>,
     MockEngine {}
 
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `ProductListingEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
 export function buildMockProductListingEngine(
   config: Partial<ProductListingEngine<ProductListingAppState>> = {}
 ): MockProductListingEngine {
   return buildMockCoreEngine(config, buildMockProductListingState);
+}
+
+export interface MockCaseAssistEngine
+  extends CaseAssistEngine<CaseAssistAppState>,
+    MockEngine {}
+
+/**
+ * For internal use only.
+ *
+ * Returns a non-functionnal `CaseAssistEngine`.
+ * To be used only for unit testing controllers, not for functionnal tests.
+ */
+export function buildMockCaseAssistEngine(
+  config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}
+): MockCaseAssistEngine {
+  return buildMockCoreEngine(config, buildMockCaseAssistState);
 }
 
 interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}

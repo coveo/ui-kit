@@ -6,7 +6,8 @@ import {ResultUtils} from 'c/quanticUtils';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
- * The `QuanticResultLink component creates a clickable link from a result that points to the original item.
+ * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
+ * @category Result Template
  * @example
  * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
  */
@@ -18,11 +19,11 @@ export default class QuanticResultLink extends LightningElement {
    */
   @api engineId;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
    * @type {Result}
    */
-  @api result
+  @api result;
   /**
    * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    * The following keywords have special meanings for where to load the URL:
@@ -35,6 +36,13 @@ export default class QuanticResultLink extends LightningElement {
    * @defaultValue `'_self'`
    */
   @api target = '_self';
+  /**
+   * Indicates the use case where this component is used.
+   * @api
+   * @type {'search'|'case-assist'}
+   * @defaultValue `'search'`
+   */
+  @api useCase = 'search';
 
   /** @type {SearchEngine} */
   engine;
@@ -56,7 +64,9 @@ export default class QuanticResultLink extends LightningElement {
       this.engine,
       this.result,
       this.template,
-      CoveoHeadless.buildInteractiveResult
+      this.useCase === 'case-assist'
+        ? CoveoHeadlessCaseAssist.buildCaseAssistInteractiveResult
+        : CoveoHeadless.buildInteractiveResult
     );
-  }
+  };
 }

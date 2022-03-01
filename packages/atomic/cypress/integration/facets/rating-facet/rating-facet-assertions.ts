@@ -1,4 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   BaseFacetSelector,
   FacetWithLinkSelector,
@@ -48,9 +47,7 @@ export function assertNumberofYellowStar(
 
 export function assertLogRatingFacetSelect(field: string) {
   it('should log the facet select results to UA ', () => {
-    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-      const analyticsBody = intercept.request.body;
-      expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
       expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
       expect(analyticsBody.facetState[0]).to.have.property('field', field);

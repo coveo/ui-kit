@@ -1,10 +1,12 @@
-import { api, LightningElement} from 'lwc';
+import {api, LightningElement} from 'lwc';
 
 /**
  * The `QuanticTimeframe` component defines a timeframe of a `c-quantic-timeframe-facet`, and therefore must be defined within a `c-quantic-timeframe-facet` component.
- * 
- * 
+ *
  * A timeframe is a span of time from now to a specific time in the past, or the future.
+ * @category Search
+ * @example
+ * <c-quantic-timeframe amount="6" unit="month"></c-quantic-timeframe>
  */
 export default class QuanticTimeframe extends LightningElement {
   /**
@@ -37,6 +39,7 @@ export default class QuanticTimeframe extends LightningElement {
    * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
    * @api
    * @type {string}
+   * @defaultValue Defaults to the formatted value based on amount, unit & period.
    */
   @api label;
 }

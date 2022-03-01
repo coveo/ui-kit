@@ -27,4 +27,13 @@ export const parameters = {
     element: 'atomic-search-interface',
     manual: true,
   },
+  docs: {
+    page: null,
+    disable: true,
+  },
+  previewTabs: {
+    'storybook/docs/panel': {
+      hidden: true
+    }
+  }
 };

@@ -10,21 +10,25 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    interpolation: {escapeValue: false},
   });
 
   return (
-    <li key={props.displayValue}>
+    <li key={props.displayValue} class={props.class}>
       <Button
         style="text-neutral"
-        part="value-link"
+        part={props.part ?? 'value-link'}
         onClick={() => props.onClick()}
-        class="w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
+        class="group w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
+        ref={props.buttonRef}
       >
         {children}
         <span part="value-count" class="value-count">
-          {count}
+          {props.i18n.t('between-parentheses', {
+            text: count,
+          })}
         </span>
       </Button>
     </li>

@@ -7,12 +7,13 @@ import inLabel from "@salesforce/label/c.quantic_InLabel";
 /**
  * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and the number of results with that value.
  * @fires CustomEvent#selectvalue
+ * @category Search
  * @example
  * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
  */
 export default class QuanticCategoryFacetValue extends LightningElement {
   /**
-   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/controllers/category-facet/#categoryfacetvalue) to display.
+   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/search/controllers/category-facet/#categoryfacetvalue) to display.
    * @api
    * @type {CategoryFacetValue} */
   @api item;

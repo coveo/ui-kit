@@ -65,7 +65,10 @@ export class AtomicNoResults {
   }
 
   private wrapHighlight(content: string) {
-    return `<span class="font-bold quotations" part="highlight">${content}</span>`;
+    return `<span class="font-bold" part="highlight">${this.bindings.i18n.t(
+      'between-quotations',
+      {text: content}
+    )}</span>`;
   }
 
   private renderMagnifyingGlass() {

@@ -2,7 +2,6 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
-export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippet,
   logDislikeSmartSnippet,
@@ -17,6 +16,8 @@ import {
   likeSmartSnippet,
 } from '../../features/question-answering/question-answering-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
+
+export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .

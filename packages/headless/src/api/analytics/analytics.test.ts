@@ -1,7 +1,9 @@
+const mockGetHistory = jest.fn();
 import {createMockState} from '../../test/mock-state';
 import {
   AnalyticsProvider,
   configureAnalytics,
+  getPageID,
   StateNeededByAnalyticsProvider,
 } from './analytics';
 import {CoveoAnalyticsClient} from 'coveo.analytics';
@@ -13,6 +15,22 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {getProductListingInitialState} from '../../features/product-listing/product-listing-state';
+import {buildMockProductListingState} from '../../test/mock-product-listing-state';
+
+jest.mock('coveo.analytics', () => {
+  const originalModule = jest.requireActual('coveo.analytics');
+  return {
+    ...originalModule,
+    history: {
+      HistoryStore: jest.fn().mockImplementation(() => {
+        return {
+          getHistory: mockGetHistory,
+        };
+      }),
+    },
+  };
+});
 
 describe('analytics', () => {
   const logger = pino({level: 'silent'});
@@ -42,14 +60,59 @@ describe('analytics', () => {
         CoveoAnalyticsClient
     ).toBe(false);
   });
+
+  it('should extract pageId from last page view in action history', () => {
+    [
+      {
+        in: [
+          {name: 'PageView', value: 'foo'},
+          {name: 'PageView', value: 'bar'},
+        ],
+        out: 'bar',
+      },
+      {
+        in: [
+          {name: 'PageView', value: 'foo'},
+          {name: 'not a page view', value: 'qwerty'},
+          {name: 'PageView', value: 'bar'},
+          {name: 'not a page view', value: 'azerty'},
+        ],
+        out: 'bar',
+      },
+      {
+        in: [],
+        out: '',
+      },
+      {
+        in: [
+          {name: 'not a page view', value: 'qwerty'},
+          {name: 'not a page view', value: 'azerty'},
+        ],
+        out: '',
+      },
+      {
+        in: [
+          {name: 'pageview', value: 'qwerty'},
+          {name: 'pageView', value: 'azerty'},
+        ],
+        out: '',
+      },
+    ].forEach((expectation) => {
+      mockGetHistory.mockReturnValueOnce(expectation.in);
+      expect(getPageID()).toEqual(expectation.out);
+    });
+  });
+
   describe('analytics provider', () => {
     const baseState: StateNeededByAnalyticsProvider = {
       configuration: getConfigurationInitialState(),
     };
 
-    it('when context is not provided, #getBaseMetadata returns an empty object', () => {
+    it('when context is not provided, #getBaseMetadata returns an object with version', () => {
       const provider = new AnalyticsProvider(baseState);
-      expect(provider.getBaseMetadata()).toEqual({});
+      expect(provider.getBaseMetadata()).toEqual({
+        coveoHeadlessVersion: expect.any(String),
+      });
     });
 
     it('when context is provided, #getBaseMetadata returns the correct object', () => {
@@ -62,7 +125,10 @@ describe('analytics', () => {
         },
       };
       const provider = new AnalyticsProvider(state);
-      expect(provider.getBaseMetadata()).toEqual({context_test: 'value'});
+      expect(provider.getBaseMetadata()).toEqual({
+        context_test: 'value',
+        coveoHeadlessVersion: expect.any(String),
+      });
     });
 
     it('when search is not provided, #getSearchUID returns the default id', () => {
@@ -154,6 +220,31 @@ describe('analytics', () => {
       expect(provider.getOriginLevel1()).toEqual(searchHub);
     });
 
+    describe('#getOriginContext', () => {
+      it('when an originContext is not set, #getOriginContext returns "Search"', () => {
+        const state: StateNeededByAnalyticsProvider = {
+          configuration: getConfigurationInitialState(),
+        };
+        const provider = new AnalyticsProvider(state);
+
+        expect(provider.getOriginContext()).toBe('Search');
+      });
+
+      it('when an originContext is set, #originContext returns the value', () => {
+        const originContext = 'CommunitySearch';
+        const state: StateNeededByAnalyticsProvider = {
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: buildMockAnalyticsState({originContext}),
+          },
+        };
+
+        const provider = new AnalyticsProvider(state);
+
+        expect(provider.getOriginContext()).toBe(originContext);
+      });
+    });
+
     describe('#getOriginLevel2', () => {
       it('when an originLevel2 is not set, #getOriginLevel2 returns "default"', () => {
         const state: StateNeededByAnalyticsProvider = {
@@ -203,6 +294,38 @@ describe('analytics', () => {
       };
       const provider = new AnalyticsProvider(state);
       expect(provider.getLanguage()).toEqual('en');
+    });
+
+    it('when productListing is provided, #getSearchUID returns the correct id', () => {
+      const searchUid = 'test';
+      const state = {
+        ...baseState,
+        productListing: {
+          ...getProductListingInitialState(),
+          responseId: searchUid,
+        },
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getSearchUID()).toEqual(searchUid);
+    });
+
+    it('when facets for productListing are provided, #getFacetState returns the facet state', () => {
+      const state = buildMockProductListingState({
+        productListing: {
+          ...getProductListingInitialState(),
+          facets: {
+            results: [
+              buildMockFacetResponse({
+                values: [
+                  {numberOfResults: 1, value: 'helloooo', state: 'selected'},
+                ],
+              }),
+            ],
+          },
+        },
+      });
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getFacetState().length).toBe(1);
     });
   });
 });

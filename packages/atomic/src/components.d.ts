@@ -8,13 +8,16 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
+import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
+        "updateMessage": (region: string, message: string) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
@@ -117,6 +120,9 @@ export namespace Components {
     interface AtomicDidYouMean {
     }
     interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
         "selector": string;
     }
     interface AtomicFacet {
@@ -243,6 +249,20 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
+        "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
+        "minWidth"?: string;
+        /**
+          * The name of the layout section.
+         */
+        "section": Section;
+    }
     interface AtomicLoadMoreResults {
     }
     interface AtomicNoResults {
@@ -326,6 +346,7 @@ export namespace Components {
     interface AtomicQuerySummary {
         /**
           * Whether to display the duration of the last query execution.
+          * @deprecated Use the `duration` part.
          */
         "enableDuration": boolean;
     }
@@ -461,15 +482,15 @@ export namespace Components {
     }
     interface AtomicResultBadge {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
          */
         "field"?: string;
         /**
-          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
-          * The text to display instead of the field.
+          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
     }
@@ -509,7 +530,7 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
          */
         "fieldsToInclude": string;
         /**
@@ -520,6 +541,11 @@ export namespace Components {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param render
+         */
+        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -634,13 +660,29 @@ export namespace Components {
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
+        /**
+          * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchBoxQuerySuggestions {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery": number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchInterface {
@@ -661,6 +703,11 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath": string;
+        /**
           * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
@@ -668,6 +715,11 @@ export namespace Components {
           * The search interface language.
          */
         "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath": string;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -693,6 +745,12 @@ export namespace Components {
           * @example America/Montreal
          */
         "timezone"?: string;
+    }
+    interface AtomicSearchLayout {
+        /**
+          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
     }
     interface AtomicSortDropdown {
     }
@@ -879,6 +937,12 @@ declare global {
     var HTMLAtomicIconElement: {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
+    };
+    interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
+    }
+    var HTMLAtomicLayoutSectionElement: {
+        prototype: HTMLAtomicLayoutSectionElement;
+        new (): HTMLAtomicLayoutSectionElement;
     };
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
     }
@@ -1126,6 +1190,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSearchLayoutElement extends Components.AtomicSearchLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchLayoutElement: {
+        prototype: HTMLAtomicSearchLayoutElement;
+        new (): HTMLAtomicSearchLayoutElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1181,6 +1251,7 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -1222,6 +1293,7 @@ declare global {
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -1334,6 +1406,9 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
         "selector"?: string;
     }
     interface AtomicFacet {
@@ -1462,6 +1537,20 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
+    interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
+        "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
+        "minWidth"?: string;
+        /**
+          * The name of the layout section.
+         */
+        "section": Section;
+    }
     interface AtomicLoadMoreResults {
     }
     interface AtomicNoResults {
@@ -1546,6 +1635,7 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
         /**
           * Whether to display the duration of the last query execution.
+          * @deprecated Use the `duration` part.
          */
         "enableDuration"?: boolean;
     }
@@ -1681,15 +1771,15 @@ declare namespace LocalJSX {
     }
     interface AtomicResultBadge {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
          */
         "field"?: string;
         /**
-          * Specifies the icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
          */
         "icon"?: string;
         /**
-          * The text to display instead of the field.
+          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
     }
@@ -1729,7 +1819,7 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
          */
         "fieldsToInclude"?: string;
         /**
@@ -1850,13 +1940,29 @@ declare namespace LocalJSX {
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries"?: number;
+        /**
+          * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchBoxQuerySuggestions {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
         "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchInterface {
@@ -1873,9 +1979,19 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath"?: string;
+        /**
           * The search interface language.
          */
         "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath"?: string;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1901,6 +2017,12 @@ declare namespace LocalJSX {
           * @example America/Montreal
          */
         "timezone"?: string;
+    }
+    interface AtomicSearchLayout {
+        /**
+          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -1997,6 +2119,7 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
+        "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -2038,6 +2161,7 @@ declare namespace LocalJSX {
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-search-layout": AtomicSearchLayout;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2068,6 +2192,7 @@ declare module "@stencil/core" {
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
@@ -2109,6 +2234,7 @@ declare module "@stencil/core" {
             "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;

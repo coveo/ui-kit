@@ -16,7 +16,8 @@ import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_Showin
 /** @typedef {import("coveo").QuerySummaryState} QuerySummaryState */
 
 /**
- * The `QuanticSummary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+ * The `QuanticSummary` component displays information about the current range of results (e.g., "Results 1-10 of 123").
+ * @category Search
  * @example
  * <c-quantic-summary engine-id={engineId}></c-quantic-summary>
  */
@@ -92,7 +93,7 @@ export default class QuanticSummary extends LightningElement {
   get noResultsLabel() {
     return I18nUtils.format(
         this.hasQuery ? this.labels.noResultsFor : this.labels.noResults,
-        I18nUtils.getTextBold(this.query));
+        I18nUtils.getTextBold(I18nUtils.escapeHTML(this.query)));
   }
 
   get summaryLabel() {
@@ -101,8 +102,8 @@ export default class QuanticSummary extends LightningElement {
       : I18nUtils.getLabelNameWithCount('showingResultsOf', this.state?.lastResult);
     return I18nUtils.format(
       this.labels[labelName],
-      I18nUtils.getTextBold(this.range),
-      I18nUtils.getTextBold(this.total),
-      I18nUtils.getTextBold(this.query));
+      I18nUtils.getTextWithDecorator(this.range, '<b class="summary__range">', '</b>'),
+      I18nUtils.getTextWithDecorator(this.total, '<b class="summary__total">', '</b>'),
+      I18nUtils.getTextWithDecorator(I18nUtils.escapeHTML(this.query), '<b class="summary__query">', '</b>'));
   }
 }

@@ -12,9 +12,10 @@ import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 
 /**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
+ * @category Result Template
  * @fires CustomEvent#haspreview
  * @example
- * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100"></c-quantic-result-quickview>
+ * <c-quantic-result-quickview engine-id={engineId} result={result} maximum-preview-size="100" use-case="search"></c-quantic-result-quickview>
  */
 export default class QuanticResultQuickview extends LightningElement {
   /**
@@ -30,12 +31,40 @@ export default class QuanticResultQuickview extends LightningElement {
    */
   @api result;
   /**
-  * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
-  * @api
-  * @type {number}
-  * @defaultValue `undefined`
-  */
+   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+   * @api
+   * @type {number}
+   * @defaultValue `undefined`
+   */
   @api maximumPreviewSize;
+  /**
+   * The icon to be shown in the preview button.
+   * @api
+   * @type {string}
+   * @defaultValue `'utility:preview'`
+   */
+  @api previewButtonIcon = 'utility:preview';
+  /**
+   * The label to be shown in the preview button.
+   * @api
+   * @type {string}
+   * @defaultValue `undefined`
+   */
+  @api previewButtonLabel;
+  /**
+   * The variant of the preview button.
+   * @api
+   * @type {undefined|'brand'|'outline-brand'}
+   * @defaultValue `undefined`
+   */
+  @api previewButtonVariant;
+  /**
+   * Indicates the use case where this quickview component is used.
+   * @api
+   * @type {'search'|'case-assist'}
+   * @defaultValue `'search'`
+   */
+  @api useCase = 'search';
 
   /** @type {QuickviewState} */
   @track state;
@@ -66,6 +95,7 @@ export default class QuanticResultQuickview extends LightningElement {
       // eslint-disable-next-line @lwc/lwc/no-inner-html
       this.contentContainer.innerHTML = this.state.content;
     }
+    this.injectIdToSlots();
   }
 
   /**
@@ -75,8 +105,10 @@ export default class QuanticResultQuickview extends LightningElement {
     const options = {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
-    }
-    this.quickview = CoveoHeadless.buildQuickview(engine, {options});
+    };
+    this.quickview = this.useCase === 'case-assist'
+      ? CoveoHeadlessCaseAssist.buildCaseAssistQuickview(engine, {options})
+      : CoveoHeadless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);
@@ -93,7 +125,9 @@ export default class QuanticResultQuickview extends LightningElement {
   openQuickview() {
     this.isQuickviewOpen = true;
     this.quickview.fetchResultContent();
-    this.addRecentResult();
+    if(this.useCase !== 'case-assist'){
+      this.addRecentResult();
+    }
   }
 
   addRecentResult() {
@@ -110,7 +144,7 @@ export default class QuanticResultQuickview extends LightningElement {
   stopPropagation(evt) {
     evt.stopPropagation();
   }
-  
+
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(new CustomEvent('haspreview', {
       detail: {
@@ -121,12 +155,30 @@ export default class QuanticResultQuickview extends LightningElement {
     }));
   }
 
+  injectIdToSlots() {
+    const slots = this.template.querySelectorAll('slot');
+    slots.forEach((slot) => {
+      let slotContent = slot;
+      while (slotContent?.tagName === 'SLOT') {
+        // @ts-ignore
+        slotContent = slotContent.assignedNodes()[0];
+      }
+      if (slotContent) {
+        slotContent.dataset.id = this.result.uniqueId;
+      }
+    });
+  }
+
   get isLoading() {
     return this.state?.isLoading;
   }
 
   get hasNoPreview() {
     return !this.state?.resultHasPreview;
+  }
+
+  get hasIcon() {
+    return !!this.previewButtonIcon;
   }
 
   get contentContainer() {
@@ -139,5 +191,23 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get buttonLabel() {
     return this.hasNoPreview ? this.labels.noPreview : this.labels.openPreview;
+  }
+
+  get buttonClass() {
+    return [
+      'slds-button',
+      this.previewButtonVariant ? `slds-button_${this.previewButtonVariant}` : 'quickview__button-base'
+    ].join(' ')
+  }
+
+  get buttonIconClass() {
+    return [
+      'slds-current-color',
+      this.previewButtonLabel && 'slds-button__icon_right'
+    ].join(' ');
+  }
+
+  get hasButtonLabel() {
+    return !!this.previewButtonLabel;
   }
 }

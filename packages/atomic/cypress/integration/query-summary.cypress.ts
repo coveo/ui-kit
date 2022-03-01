@@ -1,8 +1,8 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {addSearchBox} from '../fixtures/test-fixture-search-box';
 import {addQuerySummary} from './query-summary-actions';
 import {QuerySummarySelectors} from './query-summary-selectors';
 import * as CommonAssertions from './common-assertions';
+import {addSearchBox} from './search-box-actions';
 
 const addResultsPerPage = (count: number) => (fixture: TestFixture) => {
   fixture.withElement(
@@ -26,8 +26,6 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertNoAriaLiveMessage(QuerySummarySelectors.liveRegion);
-
     it('placeholder should be displayed', () => {
       QuerySummarySelectors.placeholder().should('be.visible');
     });
@@ -44,8 +42,6 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertNoAriaLiveMessage(QuerySummarySelectors.liveRegion);
-
     it('container should be empty', () => {
       QuerySummarySelectors.container().should('be.empty');
     });
@@ -59,10 +55,7 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertAriaLiveMessage(
-      QuerySummarySelectors.liveRegion,
-      '27'
-    );
+    CommonAssertions.assertAriaLiveMessage('27');
   });
 
   describe('should match text content', () => {
@@ -95,6 +88,6 @@ describe('Query Summary Test Suites', () => {
       .with(addSearchBox())
       .withHash('q=test')
       .init();
-    contentShouldMatch(/Results 1-10 of [\d,]+ for test$/);
+    QuerySummarySelectors.duration().should('not.be.visible');
   });
 });

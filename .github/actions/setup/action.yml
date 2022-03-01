@@ -1,0 +1,57 @@
+name: 'Setup & build'
+description: 'Setup node, install dependencies & build'
+inputs:
+  with-registry:
+    description: Whether we should use the npmjs.org registry
+    required: false
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - if: ${{ inputs.with-registry != 'true' }}
+      uses: actions/setup-node@v2
+      with:
+        node-version-file: '.nvmrc'
+    - if: ${{ inputs.with-registry == 'true' }}
+      uses: actions/setup-node@v2
+      with:
+        node-version-file: '.nvmrc'
+        registry-url: 'https://registry.npmjs.org'
+    - uses: actions/cache@v2
+      id: build-cache
+      with:
+        path: |
+          packages/bueno/dist
+          packages/headless/dist
+          packages/auth/dist
+          packages/atomic/dist
+          packages/atomic/docs
+          packages/atomic/headless
+          packages/atomic/loader
+          packages/atomic/storybook-static
+          packages/atomic/www
+          packages/quantic/docs/out
+          packages/atomic-react/dist
+          packages/atomic-angular/projects/atomic-angular/dist
+          packages/samples/headless-react
+          packages/quantic/force-app/main/default/staticresources/coveoheadless
+          !node_modules
+          !**/node_modules
+        key: ${{ github.sha }}
+    - uses: actions/cache@v2
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}
+    - run: |
+        npm ci
+        npx --no-install lerna bootstrap --ci
+      shell: bash
+    - if: steps.build-cache.outputs.cache-hit != 'true'
+      run: npm run build
+
+      shell: bash
+    - if: steps.build-cache.outputs.cache-hit != 'true'
+      run: npm run doc:generate
+      shell: bash

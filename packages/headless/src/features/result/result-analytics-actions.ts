@@ -20,9 +20,5 @@ export const logDocumentOpenThunk = (result: Result) =>
     }
   );
 
-/**
- * Logs a click event with an `actionCause` value of `documentOpen`.
- * @param result (Result) The result that was opened.
- */
 export const logDocumentOpen = (result: Result) =>
   logDocumentOpenThunk(result)();

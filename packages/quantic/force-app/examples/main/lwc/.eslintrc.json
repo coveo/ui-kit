@@ -2,6 +2,7 @@
     "extends": ["@salesforce/eslint-config-lwc/recommended"],
     "root": true,
     "globals": {
-      "CoveoHeadless": "readonly"
+      "CoveoHeadless": "readonly",
+      "CoveoHeadlessCaseAssist": "readonly"
     }
   }

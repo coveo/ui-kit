@@ -23,6 +23,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
+ * @category Search
  * @example
  * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
  */
@@ -94,7 +95,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * The sort criterion to apply to the returned facet values.
    * Possible values are:
    *   - `alphanumeric`: Filters are sorted in alphanumerical order.
-   *   - `occurrences`: Filters are sorted in descending order of number of occurences.
+   *   - `occurrences`: Filters are sorted in descending order of number of occurrences.
    * @api
    * @type {'alphanumeric' | 'occurrences'}
    * @defaultValue `'occurrences'`

@@ -14,6 +14,7 @@ import {
   RatingFacetSelectors,
 } from './rating-facet-selectors';
 import {
+  pressClearButton,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from '../facet-common-actions';
@@ -70,7 +71,6 @@ describe('Rating Facet Test Suites', () => {
         function setupSelectCheckboxValue() {
           setupRatingFacet();
           selectIdleCheckboxValueAt(RatingFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -152,7 +152,6 @@ describe('Rating Facet Test Suites', () => {
         function setupSelectLinkValue() {
           setupRatingFacetWithLinkValues();
           selectIdleLinkValueAt(RatingFacetSelectors, selectionIndex);
-          cy.wait(TestFixture.interceptAliases.Search);
         }
 
         describe('verify rendering', () => {
@@ -176,6 +175,36 @@ describe('Rating Facet Test Suites', () => {
         describe('verify analytic', () => {
           before(setupSelectLinkValue);
           RatingFacetAssertions.assertLogRatingFacetSelect(ratingFacetField);
+        });
+
+        describe('when selecting the "Clear" button', () => {
+          function setupClearCheckboxValues() {
+            setupSelectLinkValue();
+            pressClearButton(RatingFacetSelectors);
+          }
+
+          describe('verify rendering', () => {
+            before(setupClearCheckboxValues);
+
+            CommonFacetAssertions.assertDisplayClearButton(
+              RatingFacetSelectors,
+              false
+            );
+            CommonFacetAssertions.assertNumberOfSelectedLinkValues(
+              RatingFacetSelectors,
+              0
+            );
+            CommonFacetAssertions.assertNumberOfIdleLinkValues(
+              RatingFacetSelectors,
+              ratingFacetDefaultNumberOfIntervals
+            );
+            CommonFacetAssertions.assertFocusHeader(RatingFacetSelectors);
+          });
+          describe('verify analytics', () => {
+            before(setupClearCheckboxValues);
+
+            CommonFacetAssertions.assertLogClearFacetValues(ratingFacetField);
+          });
         });
       });
     });

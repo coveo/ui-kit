@@ -11,6 +11,8 @@ interface FacetShowMoreProps {
   canShowMoreValues: boolean;
   onShowMore(): void;
   onShowLess(): void;
+  showMoreRef?: (element?: HTMLButtonElement) => void;
+  showLessRef?: (element?: HTMLButtonElement) => void;
 }
 
 export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
@@ -27,7 +29,6 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   });
   const btnClasses = 'flex items-baseline text-left p-2 text-sm max-w-full';
   const iconClasses = 'w-2 h-2 mr-1';
-
   if (!props.canShowLessValues && !props.canShowMoreValues) {
     return;
   }
@@ -40,6 +41,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         class={`${btnClasses} ${props.canShowLessValues ? '' : 'hidden'}`}
         aria-label={showLessFacetValues}
         onClick={() => props.onShowLess()}
+        ref={props.showLessRef}
       >
         <atomic-icon
           part="show-more-less-icon"
@@ -54,6 +56,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         class={`${btnClasses} ${props.canShowMoreValues ? '' : 'hidden'}`}
         aria-label={showMoreFacetValues}
         onClick={() => props.onShowMore()}
+        ref={props.showMoreRef}
       >
         <atomic-icon
           part="show-more-less-icon"

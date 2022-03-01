@@ -37,13 +37,13 @@ import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
 
-export {
-  buildNumericRange,
+export type {
   NumericRangeOptions,
   NumericRangeRequest,
   NumericFacetValue,
   NumericFacetOptions,
 };
+export {buildNumericRange};
 
 export interface NumericFacetProps {
   /**
