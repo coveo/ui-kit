@@ -28,6 +28,7 @@ export const FacetSearchMatches: FunctionalComponent<
   if (!props.numberOfMatches) {
     return (
       <div class="px-2">
+        {/* file deepcode ignore ReactSetInnerHtml: This is not React code */}
         <div
           part="no-matches"
           class="truncate p-3 bg-neutral-light text-neutral-dark text-sm rounded"

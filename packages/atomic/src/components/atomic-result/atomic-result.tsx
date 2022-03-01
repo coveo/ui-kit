@@ -119,6 +119,7 @@ export class AtomicResult {
 
   public render() {
     return (
+      // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
         class={`result-root ${this.getClasses().join(' ')}`}
         innerHTML={this.getContentHTML()}
