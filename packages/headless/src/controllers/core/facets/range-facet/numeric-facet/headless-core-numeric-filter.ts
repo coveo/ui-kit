@@ -1,5 +1,6 @@
 import {
   ConfigurationSection,
+  FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections';
@@ -10,12 +11,17 @@ import {
 } from '../../../../controller/headless-controller';
 import {
   configuration,
+  facetOptions,
   numericFacetSet,
   search,
 } from '../../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../../features/facet-options/facet-options-actions';
 import {
   registerNumericFacet,
   RegisterNumericFacetActionCreatorPayload,
@@ -25,6 +31,7 @@ import {validateNumericFacetOptions} from './headless-numeric-facet-options';
 import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {CoreEngine} from '../../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
 
 /**
  * The options defining a `NumericFilter`.
@@ -105,6 +112,11 @@ export interface NumericFilterState {
    * Returns `true` if a search is in progress, and `false` if not.
    */
   isLoading: boolean;
+
+  /**
+   * Whether the filter is enabled and its value is used to filter search results.
+   */
+  enabled: boolean;
 }
 
 /**
@@ -125,7 +137,17 @@ export interface NumericFilter extends Controller {
   setRange(range: NumericFilterRange): boolean;
 
   /**
-   * The state of the `NumericFacet` controller.
+   * Enables the filter. I.e., undoes the effects of `disable`.
+   */
+  enable(): void;
+
+  /**
+   * Disables the filter. I.e., prevents it from filtering results.
+   */
+  disable(): void;
+
+  /**
+   * The state of the `NumericFilter` controller.
    */
   state: NumericFilterState;
 }
@@ -153,6 +175,8 @@ export function buildCoreNumericFilter(
 
   validateNumericFacetOptions(engine, options);
   dispatch(registerNumericFacet(options));
+
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   return {
     ...controller,
@@ -186,9 +210,16 @@ export function buildCoreNumericFilter(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       return true;
     },
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
 
     get state() {
       const isLoading = isFacetLoadingResponseSelector(getState());
+      const enabled = getIsEnabled();
       const selectedRanges = numericFacetSelectedValuesSelector(
         getState(),
         facetId
@@ -199,6 +230,7 @@ export function buildCoreNumericFilter(
         facetId,
         isLoading,
         range,
+        enabled,
       };
     },
   };
@@ -207,8 +239,11 @@ export function buildCoreNumericFilter(
 function loadNumericFilterReducer(
   engine: CoreEngine
 ): engine is CoreEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
+  NumericFacetSection &
+    FacetOptionsSection &
+    ConfigurationSection &
+    SearchSection
 > {
-  engine.addReducers({numericFacetSet, configuration, search});
+  engine.addReducers({numericFacetSet, facetOptions, configuration, search});
   return true;
 }

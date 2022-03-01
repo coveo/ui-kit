@@ -144,7 +144,9 @@ export interface NumericFacetState {
    */
   hasActiveValues: boolean;
 
-  /** Whether the facet is enabled and its values are used to filter search results. */
+  /**
+   * Whether the facet is enabled and its values are used to filter search results.
+   */
   enabled: boolean;
 }
 
